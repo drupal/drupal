@@ -6872,6 +6872,9 @@ function drupal_common_theme() {
     'textfield' => array(
       'render element' => 'element',
     ),
+    'tel' => array(
+      'render element' => 'element',
+    ),
     'form' => array(
       'render element' => 'element',
     ),

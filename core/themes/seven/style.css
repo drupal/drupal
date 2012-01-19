@@ -609,6 +609,7 @@ div.teaser-checkbox .form-item,
 }
 .form-disabled input.form-autocomplete,
 .form-disabled input.form-text,
+.form-disabled input.form-tel,
 .form-disabled input.form-file,
 .form-disabled textarea.form-textarea,
 .form-disabled select.form-select {
@@ -696,6 +697,7 @@ input.form-button-disabled:active {
 }
 input.form-autocomplete,
 input.form-text,
+input.form-tel,
 input.form-file,
 textarea.form-textarea,
 select.form-select {
@@ -709,6 +711,7 @@ select.form-select {
   transition: border linear 0.2s, box-shadow linear 0.2s;
 }
 input.form-text:focus,
+input.form-tel:focus,
 input.form-file:focus,
 textarea.form-textarea:focus,
 select.form-select:focus {

@@ -2235,6 +2235,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       if (isset($edit[$name])) {
         switch ($type) {
           case 'text':
+          case 'tel':
           case 'textarea':
           case 'hidden':
           case 'password':
