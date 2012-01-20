@@ -1030,7 +1030,7 @@ function user_account_form(&$form, &$form_state) {
     '#title' => t('Status'),
     '#default_value' => $status,
     '#options' => array(t('Blocked'), t('Active')),
-    '#access' => $admin && ($user->uid != $account->uid),
+    '#access' => $admin,
   );
 
   $roles = array_map('check_plain', user_roles(TRUE));

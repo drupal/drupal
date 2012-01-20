@@ -1268,11 +1268,6 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $account1 = user_load($user_d->uid, TRUE);
     $this->assertEqual($account1->status, 1, 'User D unblocked');
     $this->assertMail("to", $account1->mail, "Activation mail sent to user D");
-
-    // Test that a user cannot block their own account.
-    $this->drupalLogin($admin_user);
-    $this->drupalGet('user/' . $admin_user->uid . '/edit');
-    $this->assertNoFieldByName('status', 0, t('Radio button to block own account was not found.'));
   }
 }
 
