@@ -746,7 +746,7 @@ function update_fix_d7_requirements() {
     // Rename 'site_offline_message' variable to 'maintenance_mode_message'
     // and 'site_offline' variable to 'maintenance_mode'.
     // Old variable is removed in update for system.module, see
-    // system_update_7036().
+    // system_update_7072().
     if ($message = variable_get('site_offline_message', NULL)) {
       variable_set('maintenance_mode_message', $message);
     }
