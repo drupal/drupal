@@ -164,7 +164,7 @@ Drupal.formatString = function(str, args) {
     str = str.replace(key, args[key]);
   }
   return str;
-}
+};
 
 /**
  * Translate strings to the page language or a given language.
