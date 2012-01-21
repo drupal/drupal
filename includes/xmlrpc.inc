@@ -622,4 +622,3 @@ function xmlrpc_error_msg() {
 function xmlrpc_clear_error() {
   xmlrpc_error(NULL, NULL, TRUE);
 }
-

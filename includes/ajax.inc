@@ -1209,4 +1209,3 @@ function ajax_command_restripe($selector) {
     'selector' => $selector,
   );
 }
-

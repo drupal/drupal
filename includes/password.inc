@@ -285,4 +285,3 @@ function user_needs_new_hash($account) {
   // Check whether the iteration count used differs from the standard number.
   return (_password_get_count_log2($account->pass) !== $count_log2);
 }
-

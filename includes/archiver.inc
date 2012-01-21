@@ -66,4 +66,3 @@ interface ArchiverInterface {
    */
   public function listContents();
 }
-
