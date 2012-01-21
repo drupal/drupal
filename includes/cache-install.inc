@@ -6,7 +6,7 @@
  */
 
 /**
- * A stub cache implementation to be used during the installation process.
+ * Defines a stub cache implementation to be used during installation.
  *
  * The stub implementation is needed when database access is not yet available.
  * Because Drupal's caching system never requires that cached data be present,
@@ -15,17 +15,30 @@
  * normal operations would have a negative impact on performance.
  */
 class DrupalFakeCache extends DrupalDatabaseCache implements DrupalCacheInterface {
+
+  /**
+   * Overrides DrupalDatabaseCache::get().
+   */
   function get($cid) {
     return FALSE;
   }
 
+  /**
+   * Overrides DrupalDatabaseCache::getMultiple().
+   */
   function getMultiple(&$cids) {
     return array();
   }
 
+  /**
+   * Overrides DrupalDatabaseCache::set().
+   */
   function set($cid, $data, $expire = CACHE_PERMANENT) {
   }
 
+  /**
+   * Overrides DrupalDatabaseCache::clear().
+   */
   function clear($cid = NULL, $wildcard = FALSE) {
     // If there is a database cache, attempt to clear it whenever possible. The
     // reason for doing this is that the database cache can accumulate data
@@ -52,6 +65,9 @@ class DrupalFakeCache extends DrupalDatabaseCache implements DrupalCacheInterfac
     }
   }
 
+  /**
+   * Overrides DrupalDatabaseCache::isEmpty().
+   */
   function isEmpty() {
     return TRUE;
   }

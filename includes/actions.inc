@@ -48,6 +48,7 @@
  *   Passed along to the callback.
  * @param $a2
  *   Passed along to the callback.
+ *
  * @return
  *   An associative array containing the results of the functions that
  *   perform the actions, keyed on action ID.
@@ -149,6 +150,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
  *
  * @param $reset
  *   Reset the action info static cache.
+ *
  * @return
  *   An associative array keyed on action function name, with the same format
  *   as the return value of hook_action_info(), containing all
@@ -176,9 +178,9 @@ function actions_list($reset = FALSE) {
  * function and the actions returned by actions_list() are partially
  * synchronized. Non-configurable actions from hook_action_info()
  * implementations are put into the database when actions_synchronize() is
- * called, which happens when admin/config/system/actions is visited. Configurable
- * actions are not added to the database until they are configured in the
- * user interface, in which case a database row is created for each
+ * called, which happens when admin/config/system/actions is visited.
+ * Configurable actions are not added to the database until they are configured
+ * in the user interface, in which case a database row is created for each
  * configuration of each action.
  *
  * @return
@@ -205,6 +207,7 @@ function actions_get_all_actions() {
  *   An associative array with function names or action IDs as keys
  *   and associative arrays with keys 'label', 'type', etc. as values.
  *   This is usually the output of actions_list() or actions_get_all_actions().
+ *
  * @return
  *   An associative array whose keys are hashes of the input array keys, and
  *   whose corresponding values are associative arrays with components
@@ -223,7 +226,7 @@ function actions_actions_map($actions) {
 }
 
 /**
- * Given a hash of an action array key, returns the key (function or ID).
+ * Returns an action array key (function or ID), given its hash.
  *
  * Faster than actions_actions_map() when you only need the function name or ID.
  *
@@ -231,6 +234,7 @@ function actions_actions_map($actions) {
  *   Hash of a function name or action ID array key. The array key
  *   is a key into the return value of actions_list() (array key is the action
  *   function name) or actions_get_all_actions() (array key is the action ID).
+ *
  * @return
  *   The corresponding array key, or FALSE if no match is found.
  */
@@ -332,6 +336,7 @@ function actions_synchronize($delete_orphans = FALSE) {
  *   to Jim'.
  * @param $aid
  *   The ID of this action. If omitted, a new action is created.
+ *
  * @return
  *   The ID of the action.
  */
@@ -361,6 +366,7 @@ function actions_save($function, $type, $params, $label, $aid = NULL) {
  *
  * @param $aid
  *   The ID of the action to retrieve.
+ *
  * @return
  *   The appropriate action row from the database as an object.
  */
