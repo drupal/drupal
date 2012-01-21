@@ -7,7 +7,7 @@ Branch maintainers
 ------------------
 
 The Drupal Core branch maintainers oversee the development of Drupal as a whole.
-The branch mainainers for Drupal 7 are:
+The branch maintainers for Drupal 7 are:
 
 - Dries Buytaert 'dries' <http://drupal.org/user/1>
 - Angela Byron 'webchick' <http://drupal.org/user/24967>
