@@ -194,8 +194,10 @@ function _field_invoke($op, $entity_type, $entity, &$a = NULL, &$b = NULL, $opti
   // Iterate through the instances and collect results.
   $return = array();
   foreach ($instances as $instance) {
-    $field_name = $instance['field_name'];
-    $field = field_info_field($field_name);
+    // field_info_field() is not available for deleted fields, so use
+    // field_info_field_by_id().
+    $field = field_info_field_by_id($instance['field_id']);
+    $field_name = $field['field_name'];
     $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
     if (function_exists($function)) {
       // Determine the list of languages to iterate on.
@@ -703,7 +705,8 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
     }
 
     // Invoke field-type module's hook_field_load().
-    _field_invoke_multiple('load', $entity_type, $queried_entities, $age, $options);
+    $null = NULL;
+    _field_invoke_multiple('load', $entity_type, $queried_entities, $age, $null, $options);
 
     // Invoke hook_field_attach_load(): let other modules act on loading the
     // entitiy.

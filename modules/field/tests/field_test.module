@@ -183,30 +183,6 @@ function field_test_field_create_field($field) {
 }
 
 /**
- * Memorize calls to hook_field_insert().
- */
-function field_test_field_insert($entity_type, $entity, $field, $instance, $items) {
-  $args = func_get_args();
-  field_test_memorize(__FUNCTION__, $args);
-}
-
-/**
- * Memorize calls to hook_field_update().
- */
-function field_test_field_update($entity_type, $entity, $field, $instance, $items) {
-  $args = func_get_args();
-  field_test_memorize(__FUNCTION__, $args);
-}
-
-/**
- * Memorize calls to hook_field_delete().
- */
-function field_test_field_delete($entity_type, $entity, $field, $instance, $items) {
-  $args = func_get_args();
-  field_test_memorize(__FUNCTION__, $args);
-}
-
-/**
  * Implements hook_entity_query_alter().
  */
 function field_test_entity_query_alter(&$query) {

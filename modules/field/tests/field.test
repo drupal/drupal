@@ -2990,22 +2990,54 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
    */
   function _generateStubEntities($entity_type, $entities, $field_name = NULL) {
     $stubs = array();
-    foreach ($entities as $entity) {
+    foreach ($entities as $id => $entity) {
       $stub = entity_create_stub_entity($entity_type, entity_extract_ids($entity_type, $entity));
       if (isset($field_name)) {
         $stub->{$field_name} = $entity->{$field_name};
       }
-      $stubs[] = $stub;
+      $stubs[$id] = $stub;
     }
     return $stubs;
+  }
+
+  /**
+   * Tests that the expected hooks have been invoked on the expected entities.
+   *
+   * @param $expected_hooks
+   *   An array keyed by hook name, with one entry per expected invocation.
+   *   Each entry is the value of the "$entity" parameter the hook is expected
+   *   to have been passed.
+   * @param $actual_hooks
+   *   The array of actual hook invocations recorded by field_test_memorize().
+   */
+  function checkHooksInvocations($expected_hooks, $actual_hooks) {
+    foreach ($expected_hooks as $hook => $invocations) {
+      $actual_invocations = $actual_hooks[$hook];
+
+      // Check that the number of invocations is correct.
+      $this->assertEqual(count($actual_invocations), count($invocations), "$hook() was called the expected number of times.");
+
+      // Check that the hook was called for each expected argument.
+      foreach ($invocations as $argument) {
+        $found = FALSE;
+        foreach ($actual_invocations as $actual_arguments) {
+          if ($actual_arguments[1] == $argument) {
+            $found = TRUE;
+            break;
+          }
+        }
+        $this->assertTrue($found, "$hook() was called on expected argument");
+      }
+    }
   }
 
   function setUp() {
     parent::setUp('field_test');
 
-    // Clean up data from previous test cases.
     $this->fields = array();
     $this->instances = array();
+    $this->entities = array();
+    $this->entities_by_bundles = array();
 
     // Create two bundles.
     $this->bundles = array('bb_1' => 'bb_1', 'bb_2' => 'bb_2');
@@ -3041,7 +3073,10 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
         foreach ($this->fields as $field) {
           $entity->{$field['field_name']}[LANGUAGE_NONE] = $this->_generateTestFieldValues($field['cardinality']);
         }
+
         $this->entities[$id] = $entity;
+        // Also keep track of the entities per bundle.
+        $this->entities_by_bundles[$bundle][$id] = $entity;
         field_attach_insert($this->entity_type, $entity);
         $id++;
       }
@@ -3106,6 +3141,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
    * instance is deleted.
    */
   function testPurgeInstance() {
+    // Start recording hook invocations.
     field_test_memorize();
 
     $bundle = reset($this->bundles);
@@ -3120,7 +3156,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     $this->assertEqual(count($mem), 0, 'No field hooks were called');
 
     $batch_size = 2;
-    for ($count = 8; $count >= 0; $count -= 2) {
+    for ($count = 8; $count >= 0; $count -= $batch_size) {
       // Purge two entities.
       field_purge_batch($batch_size);
 
@@ -3134,19 +3170,21 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
       $this->assertEqual($count ? count($found['test_entity']) : count($found), $count, 'Correct number of entities found after purging 2');
     }
 
-    // hook_field_delete() was called on a pseudo-entity for each entity. Each
-    // pseudo entity has a $field property that matches the original entity,
-    // but no others.
-    $mem = field_test_memorize();
-    $this->assertEqual(count($mem['field_test_field_delete']), 10, 'hook_field_delete was called for the right number of entities');
-    $stubs = $this->_generateStubEntities($this->entity_type, $this->entities, $field['field_name']);
-    $count = count($stubs);
-    foreach ($mem['field_test_field_delete'] as $args) {
-      $entity = $args[1];
-      $this->assertEqual($stubs[$entity->ftid], $entity, 'hook_field_delete() called with the correct stub');
-      unset($stubs[$entity->ftid]);
+    // Check hooks invocations.
+    // - hook_field_load() (multiple hook) should have been called on all
+    // entities by pairs of two.
+    // - hook_field_delete() should have been called once for each entity in the
+    // bundle.
+    $actual_hooks = field_test_memorize();
+    $hooks = array();
+    $stubs = $this->_generateStubEntities($this->entity_type, $this->entities_by_bundles[$bundle], $field['field_name']);
+    foreach (array_chunk($stubs, $batch_size, TRUE) as $chunk) {
+      $hooks['field_test_field_load'][] = $chunk;
     }
-    $this->assertEqual(count($stubs), $count-10, 'hook_field_delete was called with each entity once');
+    foreach ($stubs as $stub) {
+      $hooks['field_test_field_delete'][] = $stub;
+    }
+    $this->checkHooksInvocations($hooks, $actual_hooks);
 
     // The instance still exists, deleted.
     $instances = field_read_instances(array('field_id' => $field['id'], 'deleted' => 1), array('include_deleted' => 1, 'include_inactive' => 1));
@@ -3169,14 +3207,36 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
    * instances are deleted and purged.
    */
   function testPurgeField() {
+    // Start recording hook invocations.
+    field_test_memorize();
+
     $field = reset($this->fields);
 
     // Delete the first instance.
-    $instance = field_info_instance($this->entity_type, $field['field_name'], 'bb_1');
+    $bundle = reset($this->bundles);
+    $instance = field_info_instance($this->entity_type, $field['field_name'], $bundle);
     field_delete_instance($instance);
+
+    // Assert that hook_field_delete() was not called yet.
+    $mem = field_test_memorize();
+    $this->assertEqual(count($mem), 0, 'No field hooks were called.');
 
     // Purge the data.
     field_purge_batch(10);
+
+    // Check hooks invocations.
+    // - hook_field_load() (multiple hook) should have been called once, for all
+    // entities in the bundle.
+    // - hook_field_delete() should have been called once for each entity in the
+    // bundle.
+    $actual_hooks = field_test_memorize();
+    $hooks = array();
+    $stubs = $this->_generateStubEntities($this->entity_type, $this->entities_by_bundles[$bundle], $field['field_name']);
+    $hooks['field_test_field_load'][] = $stubs;
+    foreach ($stubs as $stub) {
+      $hooks['field_test_field_delete'][] = $stub;
+    }
+    $this->checkHooksInvocations($hooks, $actual_hooks);
 
     // Purge again to purge the instance.
     field_purge_batch(0);
@@ -3186,11 +3246,26 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     $this->assertTrue(isset($fields[$field['id']]) && !$fields[$field['id']]['deleted'], 'The field exists and is not deleted');
 
     // Delete the second instance.
-    $instance = field_info_instance($this->entity_type, $field['field_name'], 'bb_2');
+    $bundle = next($this->bundles);
+    $instance = field_info_instance($this->entity_type, $field['field_name'], $bundle);
     field_delete_instance($instance);
+
+    // Assert that hook_field_delete() was not called yet.
+    $mem = field_test_memorize();
+    $this->assertEqual(count($mem), 0, 'No field hooks were called.');
 
     // Purge the data.
     field_purge_batch(10);
+
+    // Check hooks invocations (same as above, for the 2nd bundle).
+    $actual_hooks = field_test_memorize();
+    $hooks = array();
+    $stubs = $this->_generateStubEntities($this->entity_type, $this->entities_by_bundles[$bundle], $field['field_name']);
+    $hooks['field_test_field_load'][] = $stubs;
+    foreach ($stubs as $stub) {
+      $hooks['field_test_field_delete'][] = $stub;
+    }
+    $this->checkHooksInvocations($hooks, $actual_hooks);
 
     // The field still exists, deleted.
     $fields = field_read_fields(array('id' => $field['id']), array('include_deleted' => 1));
