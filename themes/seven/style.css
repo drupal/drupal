@@ -835,6 +835,7 @@ body.in-maintenance .form-submit {
 }
 body.in-maintenance #logo {
   margin-bottom: 1.5em;
+  max-width: 180px;
 }
 ol.task-list {
   margin-left: 0; /* LTR */
