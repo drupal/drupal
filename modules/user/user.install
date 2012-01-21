@@ -743,7 +743,7 @@ function user_update_7012(&$sandbox) {
         // Create a file object.
         $file = new stdClass();
         $file->uri      = $user->picture;
-        $file->filename = basename($file->uri);
+        $file->filename = drupal_basename($file->uri);
         $file->filemime = file_get_mimetype($file->uri);
         $file->uid      = $user->uid;
         $file->status   = FILE_STATUS_PERMANENT;

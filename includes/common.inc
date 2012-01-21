@@ -2974,7 +2974,7 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
   foreach ($css as $key => $item) {
     if ($item['type'] == 'file') {
       // If defined, force a unique basename for this file.
-      $basename = isset($item['basename']) ? $item['basename'] : basename($item['data']);
+      $basename = isset($item['basename']) ? $item['basename'] : drupal_basename($item['data']);
       if (isset($previous_item[$basename])) {
         // Remove the previous item that shared the same base name.
         unset($css[$previous_item[$basename]]);

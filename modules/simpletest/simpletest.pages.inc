@@ -254,7 +254,7 @@ function simpletest_result_form($form, &$form_state, $test_id) {
       $row = array();
       $row[] = $assertion->message;
       $row[] = $assertion->message_group;
-      $row[] = basename($assertion->file);
+      $row[] = drupal_basename($assertion->file);
       $row[] = $assertion->line;
       $row[] = $assertion->function;
       $row[] = simpletest_result_status_image($assertion->status);

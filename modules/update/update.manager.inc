@@ -816,7 +816,7 @@ function update_manager_file_get($url) {
 
   // Check the cache and download the file if needed.
   $cache_directory = _update_manager_cache_directory();
-  $local = $cache_directory . '/' . basename($parsed_url['path']);
+  $local = $cache_directory . '/' . drupal_basename($parsed_url['path']);
 
   if (!file_exists($local) || update_delete_file_if_stale($local)) {
     return system_retrieve_file($url, $local, FALSE, FILE_EXISTS_REPLACE);

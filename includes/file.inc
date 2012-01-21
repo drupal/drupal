@@ -770,7 +770,7 @@ function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
     $file = clone $source;
     $file->fid = NULL;
     $file->uri = $uri;
-    $file->filename = basename($uri);
+    $file->filename = drupal_basename($uri);
     // If we are replacing an existing file re-use its database record.
     if ($replace == FILE_EXISTS_REPLACE) {
       $existing_files = file_load_multiple(array(), array('uri' => $uri));
@@ -783,7 +783,7 @@ function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
     // If we are renaming around an existing file (rather than a directory),
     // use its basename for the filename.
     elseif ($replace == FILE_EXISTS_RENAME && is_file($destination)) {
-      $file->filename = basename($destination);
+      $file->filename = drupal_basename($destination);
     }
 
     $file = file_save($file);
@@ -871,14 +871,14 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
 
   // Build a destination URI if necessary.
   if (!isset($destination)) {
-    $destination = file_build_uri(basename($source));
+    $destination = file_build_uri(drupal_basename($source));
   }
 
 
   // Prepare the destination directory.
   if (file_prepare_directory($destination)) {
     // The destination is already a directory, so append the source basename.
-    $destination = file_stream_wrapper_uri_normalize($destination . '/' . basename($source));
+    $destination = file_stream_wrapper_uri_normalize($destination . '/' . drupal_basename($source));
   }
   else {
     // Perhaps $destination is a dir/file?
@@ -958,7 +958,7 @@ function file_destination($destination, $replace) {
         break;
 
       case FILE_EXISTS_RENAME:
-        $basename = basename($destination);
+        $basename = drupal_basename($destination);
         $directory = drupal_dirname($destination);
         $destination = file_create_filename($basename, $directory);
         break;
@@ -1033,7 +1033,7 @@ function file_move(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
     // If we are renaming around an existing file (rather than a directory),
     // use its basename for the filename.
     elseif ($replace == FILE_EXISTS_RENAME && is_file($destination)) {
-      $file->filename = basename($destination);
+      $file->filename = drupal_basename($destination);
     }
 
     $file = file_save($file);
@@ -1451,7 +1451,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
   $file = new stdClass();
   $file->uid      = $user->uid;
   $file->status   = 0;
-  $file->filename = trim(basename($_FILES['files']['name'][$source]), '.');
+  $file->filename = trim(drupal_basename($_FILES['files']['name'][$source]), '.');
   $file->uri      = $_FILES['files']['tmp_name'][$source];
   $file->filemime = file_get_mimetype($file->filename);
   $file->filesize = $_FILES['files']['size'][$source];
@@ -1849,7 +1849,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
     $file = new stdClass();
     $file->fid = NULL;
     $file->uri = $uri;
-    $file->filename = basename($uri);
+    $file->filename = drupal_basename($uri);
     $file->filemime = file_get_mimetype($file->uri);
     $file->uid      = $user->uid;
     $file->status   = FILE_STATUS_PERMANENT;
@@ -1865,7 +1865,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
     // If we are renaming around an existing file (rather than a directory),
     // use its basename for the filename.
     elseif ($replace == FILE_EXISTS_RENAME && is_file($destination)) {
-      $file->filename = basename($destination);
+      $file->filename = drupal_basename($destination);
     }
 
     return file_save($file);
@@ -2275,6 +2275,35 @@ function drupal_dirname($uri) {
 }
 
 /**
+ * Gets the filename from a given path.
+ *
+ * PHP's basename() does not properly support streams or filenames beginning
+ * with a non-US-ASCII character.
+ *
+ * @see http://bugs.php.net/bug.php?id=37738
+ * @see basename()
+ *
+ * @ingroup php_wrappers
+ */
+function drupal_basename($uri, $suffix = NULL) {
+  $separators = '/';
+  if (DIRECTORY_SEPARATOR != '/') {
+    // For Windows OS add special separator.
+    $separators .= DIRECTORY_SEPARATOR;
+  }
+  // Remove right-most slashes when $uri points to directory.
+  $uri = rtrim($uri, $separators);
+  // Returns the trailing part of the $uri starting after one of the directory
+  // separators.
+  $filename = preg_match('@[^' . preg_quote($separators, '@') . ']+$@', $uri, $matches) ? $matches[0] : '';
+  // Cuts off a suffix from the filename.
+  if ($suffix) {
+    $filename = preg_replace('@' . preg_quote($suffix, '@') . '$@', '', $filename);
+  }
+  return $filename;
+}
+
+/**
  * Creates a directory using Drupal's default mode.
  *
  * PHP's mkdir() does not respect Drupal's default permissions mode. If a mode
@@ -2370,7 +2399,7 @@ function drupal_tempnam($directory, $prefix) {
     $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
 
     if ($filename = tempnam($wrapper->getDirectoryPath(), $prefix)) {
-      return $scheme . '://' . basename($filename);
+      return $scheme . '://' . drupal_basename($filename);
     }
     else {
       return FALSE;

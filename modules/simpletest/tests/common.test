@@ -2072,7 +2072,7 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
   function assertError($error, $group, $function, $file, $message = NULL) {
     $this->assertEqual($error['group'], $group, t("Group was %group", array('%group' => $group)));
     $this->assertEqual($error['caller']['function'], $function, t("Function was %function", array('%function' => $function)));
-    $this->assertEqual(basename($error['caller']['file']), $file, t("File was %file", array('%file' => $file)));
+    $this->assertEqual(drupal_basename($error['caller']['file']), $file, t("File was %file", array('%file' => $file)));
     if (isset($message)) {
       $this->assertEqual($error['message'], $message, t("Message was %message", array('%message' => $message)));
     }

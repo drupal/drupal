@@ -3439,12 +3439,12 @@ function system_image_toolkits() {
 function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $replace = FILE_EXISTS_RENAME) {
   $parsed_url = parse_url($url);
   if (!isset($destination)) {
-    $path = file_build_uri(basename($parsed_url['path']));
+    $path = file_build_uri(drupal_basename($parsed_url['path']));
   }
   else {
     if (is_dir(drupal_realpath($destination))) {
       // Prevent URIs with triple slashes when glueing parts together.
-      $path = str_replace('///', '//', "$destination/") . basename($parsed_url['path']);
+      $path = str_replace('///', '//', "$destination/") . drupal_basename($parsed_url['path']);
     }
     else {
       $path = $destination;

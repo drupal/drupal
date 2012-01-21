@@ -192,7 +192,7 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
     $this->assertNotIdentical(FALSE, $original_uri, t('Created the generated image file.'));
 
     // Get the URL of a file that has not been generated and try to create it.
-    $generated_uri = $scheme . '://styles/' . $this->style_name . '/' . $scheme . '/'. basename($original_uri);
+    $generated_uri = $scheme . '://styles/' . $this->style_name . '/' . $scheme . '/'. drupal_basename($original_uri);
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $generate_url = image_style_url($this->style_name, $original_uri);
 
@@ -959,7 +959,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     // Create a style.
     $style = image_style_save(array('name' => 'test'));
-    $generated_uri = 'public://styles/test/public/'. basename($original_uri);
+    $generated_uri = 'public://styles/test/public/'. drupal_basename($original_uri);
     $url = image_style_url('test', $original_uri);
 
     $variables = array(

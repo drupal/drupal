@@ -138,7 +138,7 @@ function _file_test_form_submit(&$form, &$form_state) {
 /**
  * Reset/initialize the history of calls to the file_* hooks.
  *
- * @see file_test_get_calls() 
+ * @see file_test_get_calls()
  * @see file_test_reset()
  */
 function file_test_reset() {
