@@ -504,3 +504,16 @@ function simpletest_clean_results_table($test_id = NULL) {
   }
   return 0;
 }
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Aborts sending of messages with ID 'simpletest_cancel_test'.
+ *
+ * @see MailTestCase::testCancelMessage()
+ */
+function simpletest_mail_alter(&$message) {
+  if ($message['id'] == 'simpletest_cancel_test') {
+    $message['send'] = FALSE;
+  }
+}
