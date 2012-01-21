@@ -1232,8 +1232,8 @@ function comment_form_node_form_alter(&$form, $form_state) {
   // If the node doesn't have any comments, the "hidden" option makes no
   // sense, so don't even bother presenting it to the user.
   if (empty($comment_count)) {
-    unset($form['comment_settings']['comment']['#options'][COMMENT_NODE_HIDDEN]);
-    unset($form['comment_settings']['comment'][COMMENT_NODE_HIDDEN]);
+    $form['comment_settings']['comment'][COMMENT_NODE_HIDDEN]['#access'] = FALSE;
+    // Also adjust the description of the "closed" option.
     $form['comment_settings']['comment'][COMMENT_NODE_CLOSED]['#description'] = t('Users cannot post comments.');
   }
 }
