@@ -51,6 +51,38 @@ class NodeBodyUpgradePathTestCase extends UpgradePathTestCase {
 }
 
 /**
+ * Tests the upgrade path for node disabled node types.
+ *
+ * Load a filled installation of Drupal 6 and run the upgrade process on it.
+ */
+class DisabledNodeTypeTestCase extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Disabled node type upgrade path',
+      'description'  => 'Disabled node type upgrade path tests.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.node_type_broken.database.php',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Tests a successful upgrade.
+   */
+  public function testDisabledNodeTypeUpgrade() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue(field_info_instance('comment', 'comment_body', 'comment_node_broken'), 'Comment body field instance was created for comments attached to the disabled broken node type');
+  }
+}
+
+/**
  * Upgrade test for node type poll.
  *
  * Load a bare installation of Drupal 6 and run the upgrade process on it.
