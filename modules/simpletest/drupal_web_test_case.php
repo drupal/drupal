@@ -3110,8 +3110,21 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByName($name, $value = '', $message = '') {
-    return $this->assertFieldByXPath($this->constructFieldXpath('name', $name), $value, $message ? $message : t('Found field by name @name', array('@name' => $name)), t('Browser'));
+  protected function assertFieldByName($name, $value = NULL, $message = NULL) {
+    if (!isset($message)) {
+      if (!isset($value)) {
+        $message = t('Found field with name @name', array(
+          '@name' => var_export($name, TRUE),
+        ));
+      }
+      else {
+        $message = t('Found field with name @name and value @value', array(
+          '@name' => var_export($name, TRUE),
+          '@value' => var_export($value, TRUE),
+        ));
+      }
+    }
+    return $this->assertFieldByXPath($this->constructFieldXpath('name', $name), $value, $message, t('Browser'));
   }
 
   /**
