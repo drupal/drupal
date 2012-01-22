@@ -98,10 +98,6 @@ Drupal.tableHeader.prototype.eventhandlerRecalculateStickyHeader = function (eve
     // Resize header and its cell widths.
     this.stickyHeaderCells.each(function (index) {
       var cellWidth = self.originalHeaderCells.eq(index).css('width');
-      // Exception for IE7.
-      if (cellWidth == 'auto') {
-        cellWidth = self.originalHeaderCells.get(index).clientWidth + 'px';
-      }
       $(this).css('width', cellWidth);
     });
     this.stickyTable.css('width', this.originalTable.css('width'));
