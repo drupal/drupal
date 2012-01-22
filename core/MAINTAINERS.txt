@@ -264,9 +264,6 @@ Tracker module
 Translation module
 - Francesco Placella 'plach' <http://drupal.org/user/183211>
 
-Trigger module
-- ?
-
 Update module
 - Derek Wright 'dww' <http://drupal.org/user/46549>
 

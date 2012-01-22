@@ -3061,7 +3061,7 @@ function system_actions_configure($form, &$form_state, $action = NULL) {
     '#title' => t('Label'),
     '#default_value' => $edit['actions_label'],
     '#maxlength' => '255',
-    '#description' => t('A unique label for this advanced action. This label will be displayed in the interface of modules that integrate with actions, such as Trigger module.'),
+    '#description' => t('A unique label for this advanced action. This label will be displayed in the interface of modules that integrate with actions.'),
     '#weight' => -10
   );
   $action_form = $function . '_form';
