@@ -134,7 +134,7 @@ function drupal_xml_parser_create(&$data) {
   }
 
   // Check for an encoding declaration in the XML prolog if no BOM was found.
-  if (!$bom && ereg('^<\?xml[^>]+encoding="([^"]+)"', $data, $match)) {
+  if (!$bom && @ereg('^<\?xml[^>]+encoding="([^"]+)"', $data, $match)) {
     $encoding = $match[1];
   }
 
@@ -144,7 +144,7 @@ function drupal_xml_parser_create(&$data) {
     $out = drupal_convert_to_utf8($data, $encoding);
     if ($out !== FALSE) {
       $encoding = 'utf-8';
-      $data = ereg_replace('^(<\?xml[^>]+encoding)="([^"]+)"', '\\1="utf-8"', $out);
+      $data = @ereg_replace('^(<\?xml[^>]+encoding)="([^"]+)"', '\\1="utf-8"', $out);
     }
     else {
       watchdog('php', 'Could not convert XML encoding %s to UTF-8.', array('%s' => $encoding), WATCHDOG_WARNING);
