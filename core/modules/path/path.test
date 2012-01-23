@@ -420,7 +420,7 @@ class PathLanguageUITestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['source'] = 'admin/config/search/path';
     $edit['alias'] = $name;
-    $edit['language'] = 'en';
+    $edit['langcode'] = 'en';
     $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
 
     $this->drupalGet($name);
@@ -435,7 +435,7 @@ class PathLanguageUITestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['source'] = 'admin/config/search/path';
     $edit['alias'] = $name;
-    $edit['language'] = 'fr';
+    $edit['langcode'] = 'fr';
     $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
 
     $this->drupalGet('fr/' . $name);

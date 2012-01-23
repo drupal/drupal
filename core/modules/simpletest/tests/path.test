@@ -278,7 +278,7 @@ class PathLookupTest extends DrupalWebTestCase {
     $path = array(
       'source' => "user/$uid",
       'alias' => "users/$name",
-      'language' => 'en',
+      'langcode' => 'en',
     );
     path_save($path);
     $this->assertEqual(drupal_lookup_path('alias', $path['source']), $path['alias'], t('English alias overrides language-neutral alias.'));
@@ -296,7 +296,7 @@ class PathLookupTest extends DrupalWebTestCase {
     $path = array(
       'source' => "user/$uid",
       'alias' => 'LOL',
-      'language' => 'xx-lolspeak',
+      'langcode' => 'xx-lolspeak',
     );
     path_save($path);
     $this->assertEqual(drupal_lookup_path('alias', $path['source']), "users/$name", t('English alias still returned after entering a LOLspeak alias.'));
@@ -308,7 +308,7 @@ class PathLookupTest extends DrupalWebTestCase {
     $path = array(
       'source' => "user/$uid",
       'alias' => 'users/my-new-path',
-      'language' => 'en',
+      'langcode' => 'en',
     );
     path_save($path);
     $this->assertEqual(drupal_lookup_path('alias', $path['source']), $path['alias'], t('Recently created English alias returned.'));
@@ -317,7 +317,7 @@ class PathLookupTest extends DrupalWebTestCase {
     // Remove the English aliases, which should cause a fallback to the most
     // recently created language-neutral alias, 'bar'.
     db_delete('url_alias')
-      ->condition('language', 'en')
+      ->condition('langcode', 'en')
       ->execute();
     drupal_clear_path_cache();
     $this->assertEqual(drupal_lookup_path('alias', $path['source']), 'bar', t('Path lookup falls back to recently created language-neutral alias.'));

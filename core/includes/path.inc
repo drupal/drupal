@@ -33,7 +33,7 @@ function drupal_path_initialize() {
  *   - source: return the Drupal system URL for a path alias (if one exists).
  * @param $path
  *   The path to investigate for corresponding aliases or system URLs.
- * @param $path_language
+ * @param $langcode
  *   Optional language code to search the path with. Defaults to the page language.
  *   If there's no path defined for that language it will search paths without
  *   language.
@@ -42,7 +42,7 @@ function drupal_path_initialize() {
  *   Either a Drupal system path, an aliased path, or FALSE if no path was
  *   found.
  */
-function drupal_lookup_path($action, $path = '', $path_language = NULL) {
+function drupal_lookup_path($action, $path = '', $langcode = NULL) {
   global $language_url;
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
@@ -74,7 +74,7 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
   // language. If we used a language different from the one conveyed by the
   // requested URL, we might end up being unable to check if there is a path
   // alias matching the URL path.
-  $path_language = $path_language ? $path_language : $language_url->langcode;
+  $langcode = $langcode ? $langcode : $language_url->langcode;
 
   if ($action == 'wipe') {
     $cache = array();
@@ -87,7 +87,7 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
       if (!empty($cache['first_call'])) {
         $cache['first_call'] = FALSE;
 
-        $cache['map'][$path_language] = array();
+        $cache['map'][$langcode] = array();
         // Load system paths from cache.
         $cid = current_path();
         if ($cached = cache('path')->get($cid)) {
@@ -95,7 +95,7 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
           // Now fetch the aliases corresponding to these system paths.
           $args = array(
             ':system' => $cache['system_paths'],
-            ':language' => $path_language,
+            ':langcode' => $langcode,
             ':language_none' => LANGUAGE_NONE,
           );
           // Always get the language-specific alias before the language-neutral
@@ -105,25 +105,25 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
           // the most recently created alias for each source. Subsequent queries
           // using fetchField() must use pid DESC to have the same effect.
           // For performance reasons, the query builder is not used here.
-          if ($path_language == LANGUAGE_NONE) {
+          if ($langcode == LANGUAGE_NONE) {
             // Prevent PDO from complaining about a token the query doesn't use.
-            unset($args[':language']);
-            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND language = :language_none ORDER BY pid ASC', $args);
+            unset($args[':langcode']);
+            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode = :language_none ORDER BY pid ASC', $args);
           }
-          elseif ($path_language < LANGUAGE_NONE) {
-            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND language IN (:language, :language_none) ORDER BY language ASC, pid ASC', $args);
+          elseif ($langcode < LANGUAGE_NONE) {
+            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode IN (:langcode, :language_none) ORDER BY langcode ASC, pid ASC', $args);
           }
           else {
-            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND language IN (:language, :language_none) ORDER BY language DESC, pid ASC', $args);
+            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode IN (:langcode, :language_none) ORDER BY langcode DESC, pid ASC', $args);
           }
-          $cache['map'][$path_language] = $result->fetchAllKeyed();
+          $cache['map'][$langcode] = $result->fetchAllKeyed();
           // Keep a record of paths with no alias to avoid querying twice.
-          $cache['no_aliases'][$path_language] = array_flip(array_diff_key($cache['system_paths'], array_keys($cache['map'][$path_language])));
+          $cache['no_aliases'][$langcode] = array_flip(array_diff_key($cache['system_paths'], array_keys($cache['map'][$langcode])));
         }
       }
       // If the alias has already been loaded, return it.
-      if (isset($cache['map'][$path_language][$path])) {
-        return $cache['map'][$path_language][$path];
+      if (isset($cache['map'][$langcode][$path])) {
+        return $cache['map'][$langcode][$path];
       }
       // Check the path whitelist, if the top_level part before the first /
       // is not in the list, then there is no need to do anything further,
@@ -132,57 +132,57 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
         return FALSE;
       }
       // For system paths which were not cached, query aliases individually.
-      elseif (!isset($cache['no_aliases'][$path_language][$path])) {
+      elseif (!isset($cache['no_aliases'][$langcode][$path])) {
         $args = array(
           ':source' => $path,
-          ':language' => $path_language,
+          ':langcode' => $langcode,
           ':language_none' => LANGUAGE_NONE,
         );
         // See the queries above.
-        if ($path_language == LANGUAGE_NONE) {
-          unset($args[':language']);
-          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND language = :language_none ORDER BY pid DESC", $args)->fetchField();
+        if ($langcode == LANGUAGE_NONE) {
+          unset($args[':langcode']);
+          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode = :language_none ORDER BY pid DESC", $args)->fetchField();
         }
-        elseif ($path_language > LANGUAGE_NONE) {
-          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND language IN (:language, :language_none) ORDER BY language DESC, pid DESC", $args)->fetchField();
+        elseif ($langcode > LANGUAGE_NONE) {
+          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode IN (:langcode, :language_none) ORDER BY langcode DESC, pid DESC", $args)->fetchField();
         }
         else {
-          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND language IN (:language, :language_none) ORDER BY language ASC, pid DESC", $args)->fetchField();
+          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode IN (:langcode, :language_none) ORDER BY langcode ASC, pid DESC", $args)->fetchField();
         }
-        $cache['map'][$path_language][$path] = $alias;
+        $cache['map'][$langcode][$path] = $alias;
         return $alias;
       }
     }
     // Check $no_source for this $path in case we've already determined that there
     // isn't a path that has this alias
-    elseif ($action == 'source' && !isset($cache['no_source'][$path_language][$path])) {
+    elseif ($action == 'source' && !isset($cache['no_source'][$langcode][$path])) {
       // Look for the value $path within the cached $map
       $source = FALSE;
-      if (!isset($cache['map'][$path_language]) || !($source = array_search($path, $cache['map'][$path_language]))) {
+      if (!isset($cache['map'][$langcode]) || !($source = array_search($path, $cache['map'][$langcode]))) {
         $args = array(
           ':alias' => $path,
-          ':language' => $path_language,
+          ':langcode' => $langcode,
           ':language_none' => LANGUAGE_NONE,
         );
         // See the queries above.
-        if ($path_language == LANGUAGE_NONE) {
-          unset($args[':language']);
-          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND language = :language_none ORDER BY pid DESC", $args);
+        if ($langcode == LANGUAGE_NONE) {
+          unset($args[':langcode']);
+          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode = :language_none ORDER BY pid DESC", $args);
         }
-        elseif ($path_language > LANGUAGE_NONE) {
-          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND language IN (:language, :language_none) ORDER BY language DESC, pid DESC", $args);
+        elseif ($langcode > LANGUAGE_NONE) {
+          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode IN (:langcode, :language_none) ORDER BY langcode DESC, pid DESC", $args);
         }
         else {
-          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND language IN (:language, :language_none) ORDER BY language ASC, pid DESC", $args);
+          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode IN (:langcode, :language_none) ORDER BY langcode ASC, pid DESC", $args);
         }
         if ($source = $result->fetchField()) {
-          $cache['map'][$path_language][$source] = $path;
+          $cache['map'][$langcode][$source] = $path;
         }
         else {
           // We can't record anything into $map because we do not have a valid
           // index and there is no need because we have not learned anything
           // about any Drupal path. Thus cache to $no_source.
-          $cache['no_source'][$path_language][$path] = TRUE;
+          $cache['no_source'][$langcode][$path] = TRUE;
         }
       }
       return $source;
@@ -225,20 +225,20 @@ function drupal_cache_system_paths() {
  *
  * @param $path
  *   An internal Drupal path.
- * @param $path_language
+ * @param $langcode
  *   An optional language code to look up the path in.
  *
  * @return
  *   An aliased path if one was found, or the original path if no alias was
  *   found.
  */
-function drupal_get_path_alias($path = NULL, $path_language = NULL) {
+function drupal_get_path_alias($path = NULL, $langcode = NULL) {
   // If no path is specified, use the current page's path.
   if ($path == NULL) {
     $path = $_GET['q'];
   }
   $result = $path;
-  if ($alias = drupal_lookup_path('alias', $path, $path_language)) {
+  if ($alias = drupal_lookup_path('alias', $path, $langcode)) {
     $result = $alias;
   }
   return $result;
@@ -249,18 +249,18 @@ function drupal_get_path_alias($path = NULL, $path_language = NULL) {
  *
  * @param $path
  *   A Drupal path alias.
- * @param $path_language
+ * @param $langcode
  *   An optional language code to look up the path in.
  *
  * @return
  *   The internal path represented by the alias, or the original alias if no
  *   internal path was found.
  */
-function drupal_get_normal_path($path, $path_language = NULL) {
+function drupal_get_normal_path($path, $langcode = NULL) {
   $original_path = $path;
 
   // Lookup the path alias first.
-  if ($source = drupal_lookup_path('source', $path, $path_language)) {
+  if ($source = drupal_lookup_path('source', $path, $langcode)) {
     $path = $source;
   }
 
@@ -269,7 +269,7 @@ function drupal_get_normal_path($path, $path_language = NULL) {
   // of hook_url_outbound_alter().
   foreach (array_reverse(module_implements('url_inbound_alter')) as $module) {
     $function = $module . '_url_inbound_alter';
-    $function($path, $original_path, $path_language);
+    $function($path, $original_path, $langcode);
   }
 
   return $path;
@@ -398,7 +398,7 @@ function drupal_path_alias_whitelist_rebuild($source = NULL) {
  *   - source: The internal system path.
  *   - alias: The URL alias.
  *   - pid: Unique path alias identifier.
- *   - language: The language of the alias.
+ *   - langcode: The language code of the alias.
  */
 function path_load($conditions) {
   if (is_numeric($conditions)) {
@@ -428,10 +428,10 @@ function path_load($conditions) {
  *   - source: The internal system path.
  *   - alias: The URL alias.
  *   - pid: (optional) Unique path alias identifier.
- *   - language: (optional) The language of the alias.
+ *   - langcode: (optional) The language code of the alias.
  */
 function path_save(&$path) {
-  $path += array('pid' => NULL, 'language' => LANGUAGE_NONE);
+  $path += array('pid' => NULL, 'langcode' => LANGUAGE_NONE);
 
   // Insert or update the alias.
   $status = drupal_write_record('url_alias', $path, (!empty($path['pid']) ? 'pid' : array()));

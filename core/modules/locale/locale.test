@@ -1654,7 +1654,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'source'   => 'node/' . $node->nid,
       'alias'    => $english_path,
-      'language' => 'en',
+      'langcode' => 'en',
     );
     $this->drupalPost($path, $edit, t('Save'));
 
@@ -1663,7 +1663,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'source'   => 'node/' . $node->nid,
       'alias'    => $custom_language_path,
-      'language' => $langcode,
+      'langcode' => $langcode,
     );
     $this->drupalPost($path, $edit, t('Save'));
 
@@ -1682,7 +1682,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'source'   => 'node/' . $node->nid,
       'alias'    => $custom_path,
-      'language' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NONE,
     );
     path_save($edit);
     $lookup_path = drupal_lookup_path('alias', 'node/' . $node->nid, 'en');
@@ -1700,7 +1700,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'source'   => 'node/' . $first_node->nid,
       'alias'    => $custom_path,
-      'language' => 'en',
+      'langcode' => 'en',
     );
     path_save($edit);
 
@@ -1708,7 +1708,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'source'   => 'node/' . $second_node->nid,
       'alias'    => $custom_path,
-      'language' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NONE,
     );
     path_save($edit);
 

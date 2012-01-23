@@ -19,7 +19,7 @@
  *   - source: The internal system path.
  *   - alias: The URL alias.
  *   - pid: Unique path alias identifier.
- *   - language: The language of the alias.
+ *   - langcode: The language code of the alias.
  *
  * @see path_save()
  */
@@ -40,7 +40,7 @@ function hook_path_insert($path) {
  *   - source: The internal system path.
  *   - alias: The URL alias.
  *   - pid: Unique path alias identifier.
- *   - language: The language of the alias.
+ *   - langcode: The language code of the alias.
  *
  * @see path_save()
  */
@@ -59,7 +59,7 @@ function hook_path_update($path) {
  *   - source: The internal system path.
  *   - alias: The URL alias.
  *   - pid: Unique path alias identifier.
- *   - language: The language of the alias.
+ *   - langcode: The language code of the alias.
  *
  * @see path_delete()
  */

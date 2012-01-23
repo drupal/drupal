@@ -1592,8 +1592,8 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'language' => array(
-        'description' => "The language this alias is for; if 'und', the alias will be used for unknown languages. Each Drupal path can have an alias for each supported language.",
+      'langcode' => array(
+        'description' => "The language code this alias is for; if 'und', the alias will be used for unknown languages. Each Drupal path can have an alias for each supported language.",
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
@@ -1602,8 +1602,8 @@ function system_schema() {
     ),
     'primary key' => array('pid'),
     'indexes' => array(
-      'alias_language_pid' => array('alias', 'language', 'pid'),
-      'source_language_pid' => array('source', 'language', 'pid'),
+      'alias_langcode_pid' => array('alias', 'langcode', 'pid'),
+      'source_langcode_pid' => array('source', 'langcode', 'pid'),
     ),
   );
 
