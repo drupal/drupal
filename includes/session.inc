@@ -13,6 +13,25 @@ function sess_close() {
   return TRUE;
 }
 
+/**
+ * Reads an entire session from the database (internal use only).
+ *
+ * Also initializes the $user object for the user associated with the session.
+ * This function is registered with session_set_save_handler() to support
+ * database-backed sessions. It is called on every page load when PHP sets
+ * up the $_SESSION superglobal.
+ *
+ * This function is an internal function and must not be called directly.
+ * Doing so may result in logging out the current user, corrupting session data
+ * or other unexpected behavior. Session data must always be accessed via the
+ * $_SESSION superglobal.
+ *
+ * @param $key
+ *   The session ID of the session to retrieve.
+ *
+ * @return
+ *   The user's session, or an empty string if no session exists.
+ */
 function sess_read($key) {
   global $user;
 
@@ -54,6 +73,24 @@ function sess_read($key) {
   return $user->session;
 }
 
+/**
+ * Writes an entire session to the database (internal use only).
+ *
+ * This function is registered with session_set_save_handler() to support
+ * database-backed sessions.
+ *
+ * This function is an internal function and must not be called directly.
+ * Doing so may result in corrupted session data or other unexpected behavior.
+ * Session data must always be accessed via the $_SESSION superglobal.
+ *
+ * @param $key
+ *   The session ID of the session to write to.
+ * @param $value
+ *   Session data to write as a serialized string.
+ *
+ * @return
+ *   Always returns TRUE.
+ */
 function sess_write($key, $value) {
   global $user;
 
