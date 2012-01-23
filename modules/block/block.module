@@ -301,8 +301,12 @@ function _block_rehash($theme = NULL) {
 
   // Remove blocks that are no longer defined by the code from the database.
   foreach ($old_blocks as $module => $old_module_blocks) {
-    foreach ($old_module_blocks as $delta => $block) {
-      db_query("DELETE FROM {blocks} WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $module, $delta, $theme);
+    // This cleanup does not apply to disabled modules, to avoid configuration
+    // being lost when modules are disabled.
+    if (module_exists($module)) {
+      foreach ($old_module_blocks as $delta => $block) {
+        db_query("DELETE FROM {blocks} WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $module, $delta, $theme);
+      }
     }
   }
   return $blocks;
