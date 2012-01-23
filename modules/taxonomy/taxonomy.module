@@ -827,7 +827,8 @@ function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
  *   for the entire vocabulary.
  *
  * @param $depth
- *   Internal use only.
+ *   Internal use only. Now deprecated and isn't used. It is left here only
+ *   because of @link http://drupal.org/node/556842 compatibility issues. @endlink
  *
  * @param $max_depth
  *   The number of levels of the tree to return. Leave NULL to return all levels.
@@ -840,12 +841,12 @@ function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
 function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
   static $children, $parents, $terms;
 
-  $depth++;
-
   // We cache trees, so it's not CPU-intensive to call get_tree() on a term
   // and its children, too.
   if (!isset($children[$vid])) {
     $children[$vid] = array();
+    $parents[$vid] = array();
+    $terms[$vid] = array();
 
     $result = db_query(db_rewrite_sql('SELECT t.tid, t.*, parent FROM {term_data} t INNER JOIN {term_hierarchy} h ON t.tid = h.tid WHERE t.vid = %d ORDER BY weight, name', 't', 'tid'), $vid);
     while ($term = db_fetch_object($result)) {
@@ -855,18 +856,58 @@ function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
     }
   }
 
-  $max_depth = (is_null($max_depth)) ? count($children[$vid]) : $max_depth;
+  $max_depth = (!isset($max_depth)) ? count($children[$vid]) : $max_depth;
   $tree = array();
-  if ($max_depth > $depth && !empty($children[$vid][$parent])) {
-    foreach ($children[$vid][$parent] as $child) {
-      $term = drupal_clone($terms[$vid][$child]);
-      $term->depth = $depth;
-      // The "parent" attribute is not useful, as it would show one parent only.
-      unset($term->parent);
-      $term->parents = $parents[$vid][$child];
-      $tree[] = $term;
-      if (!empty($children[$vid][$child])) {
-        $tree = array_merge($tree, taxonomy_get_tree($vid, $child, $depth, $max_depth));
+
+  // Keeps track of the parents we have to process, the last entry is used
+  // for the next processing step.
+  $process_parents = array();
+  $process_parents[] = $parent;
+
+  // Loops over the parent terms and adds its children to the tree array.
+  // Uses a loop instead of a recursion, because it's more efficient.
+  while (count($process_parents)) {
+    $parent = array_pop($process_parents);
+    // The number of parents determines the current depth.
+    $depth = count($process_parents);
+    if ($max_depth > $depth && !empty($children[$vid][$parent])) {
+      $has_children = FALSE;
+      $child = current($children[$vid][$parent]);
+      do {
+        if (empty($child)) {
+          break;
+        }
+        $term = $terms[$vid][$child];
+        if (count($parents[$vid][$term->tid]) > 1) {
+          // We have a term with multi parents here. Clone the term,
+          // so that the depth attribute remains correct.
+          $term = clone $term;
+        }
+        $term->depth = $depth;
+        unset($term->parent);
+        $term->parents = $parents[$vid][$term->tid];
+        $tree[] = $term;
+        if (!empty($children[$vid][$term->tid])) {
+          $has_children = TRUE;
+
+          // We have to continue with this parent later.
+          $process_parents[] = $parent;
+          // Use the current term as parent for the next iteration.
+          $process_parents[] = $term->tid;
+
+          // Reset pointers for child lists because we step in there more often
+          // with multi parents.
+          reset($children[$vid][$term->tid]);
+          // Move pointer so that we get the correct term the next time.
+          next($children[$vid][$parent]);
+          break;
+        }
+      } while ($child = next($children[$vid][$parent]));
+
+      if (!$has_children) {
+        // We processed all terms in this hierarchy-level, reset pointer
+        // so that this function works the next time it gets called.
+        reset($children[$vid][$parent]);
       }
     }
   }
