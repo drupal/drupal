@@ -5,7 +5,7 @@
  * Definition of InstallBackend.
  */
 
-namespace Drupal\Cache;
+namespace Drupal\Core\Cache;
 
 use Exception;
 

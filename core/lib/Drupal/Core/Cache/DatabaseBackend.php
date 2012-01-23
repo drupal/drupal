@@ -5,7 +5,7 @@
  * Definition of DatabaseBackend.
  */
 
-namespace Drupal\Cache;
+namespace Drupal\Core\Cache;
 
 use Exception;
 

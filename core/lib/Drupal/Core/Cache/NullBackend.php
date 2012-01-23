@@ -5,7 +5,7 @@
  * Definition of NullBackend.
  */
 
-namespace Drupal\Cache;
+namespace Drupal\Core\Cache;
 
 /**
  * Defines a stub cache implementation.

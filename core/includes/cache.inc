@@ -18,10 +18,10 @@
  *   The cache bin for which the cache object should be returned, defaults to
  *   'cache'.
  *
- * @return Drupal\Cache\CacheBackendInterface
+ * @return Drupal\Core\Cache\CacheBackendInterface
  *   The cache object associated with the specified bin.
  *
- * @see Drupal\Cache\CacheBackendInterface
+ * @see Drupal\Core\Cache\CacheBackendInterface
  */
 function cache($bin = 'cache') {
   // Temporary backwards compatibiltiy layer, allow old style prefixed cache
@@ -34,7 +34,7 @@ function cache($bin = 'cache') {
   if (!isset($cache_objects[$bin])) {
     $class = variable_get('cache_class_' . $bin);
     if (!isset($class)) {
-      $class = variable_get('cache_default_class', 'Drupal\Cache\DatabaseBackend');
+      $class = variable_get('cache_default_class', 'Drupal\Core\Cache\DatabaseBackend');
     }
     $cache_objects[$bin] = new $class($bin);
   }
