@@ -18,8 +18,8 @@
  * @ingroup themeable
  */
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $language->langcode; ?>" xml:lang="<?php print $language->langcode; ?>">
+<!DOCTYPE html >
+<html<?php print $html_attributes; ?>>
   <head>
     <title><?php print $title; ?></title>
     <?php print $head; ?>

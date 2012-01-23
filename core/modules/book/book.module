@@ -1208,7 +1208,7 @@ function book_toc($bid, $depth_limit, $exclude = array()) {
 }
 
 /**
- * Processes variables for book-export-html.tpl.php.
+ * Preprocesses variables for book-export-html.tpl.php.
  *
  * The $variables array contains the following elements:
  * - title
@@ -1225,6 +1225,20 @@ function template_preprocess_book_export_html(&$variables) {
   $variables['language'] = $language;
   $variables['language_rtl'] = ($language->direction == LANGUAGE_RTL);
   $variables['head'] = drupal_get_html_head();
+
+  // HTML element attributes.
+  $variables['html_attributes_array']['lang'] = $language->langcode;
+  $variables['html_attributes_array']['dir'] = $language->direction ? 'rtl' : 'ltr';
+}
+
+/**
+ * Processes variables for book-export-html.tpl.php.
+ *
+ * @see book-export-html.tpl.php
+ */
+function template_process_book_export_html(&$variables) {
+  // Flatten out html_attributes
+  $variables['html_attributes'] = drupal_attributes($variables['html_attributes_array']);
 }
 
 /**
