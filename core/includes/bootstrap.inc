@@ -2294,7 +2294,7 @@ function _drupal_bootstrap_configuration() {
   // Register explicit vendor namespaces.
   $loader->registerNamespaces(array(
     // All Symfony-borrowed code lives in /core/includes/Symfony.
-    'Symfony' => DRUPAL_ROOT . '/core/includes',
+    'Symfony' => DRUPAL_ROOT . '/core/vendor',
   ));
   // Register the Drupal namespace for classes in core as a fallback.
   // This allows to register additional namespaces within the Drupal namespace
@@ -2304,7 +2304,7 @@ function _drupal_bootstrap_configuration() {
   // register/overload namespaces in Drupal core.
   $loader->registerNamespaceFallbacks(array(
     // All Drupal-namespaced code in core lives in /core/includes/Drupal.
-    'Drupal' => DRUPAL_ROOT . '/core/includes',
+    'Drupal' => DRUPAL_ROOT . '/core/lib',
   ));
 }
 
@@ -3022,7 +3022,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
  */
 function drupal_classloader() {
   // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
-  require_once DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+  require_once DRUPAL_ROOT . '/core/vendor/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 
   // By default, use the UniversalClassLoader which is best for development,
   // as it does not break when code is moved on the file system. However, as it
@@ -3034,7 +3034,7 @@ function drupal_classloader() {
     switch (variable_get('autoloader_mode', 'default')) {
       case 'apc':
         if (function_exists('apc_store')) {
-          require_once DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
+          require_once DRUPAL_ROOT . '/core/vendor/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
           $loader = new ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
           break;
         }
