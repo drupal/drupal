@@ -34,26 +34,26 @@ use Exception;
 class InstallBackend extends DatabaseBackend {
 
   /**
-   * Overrides Drupal\Cache\DatabaseBackend::get().
+   * Overrides Drupal\Core\Cache\CacheBackendInterface::get().
    */
   function get($cid) {
     return FALSE;
   }
 
   /**
-   * Overrides Drupal\Cache\DatabaseBackend::getMultiple().
+   * Overrides Drupal\Core\Cache\CacheBackendInterface::getMultiple().
    */
   function getMultiple(&$cids) {
     return array();
   }
 
   /**
-   * Overrides Drupal\Cache\DatabaseBackend::set().
+   * Overrides Drupal\Core\Cache\CacheBackendInterface::set().
    */
   function set($cid, $data, $expire = CACHE_PERMANENT) {}
 
   /**
-   * Implements Drupal\Cache\DatabaseBackend::delete().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
    */
   function delete($cid) {
     try {
@@ -65,7 +65,7 @@ class InstallBackend extends DatabaseBackend {
   }
 
   /**
-   * Implements Drupal\Cache\DatabaseBackend::deleteMultiple().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
    */
   function deleteMultiple(array $cids) {
     try {
@@ -77,7 +77,7 @@ class InstallBackend extends DatabaseBackend {
   }
 
   /**
-   * Implements Drupal\Cache\DatabaseBackend::deletePrefix().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::deletePrefix().
    */
   function deletePrefix($prefix) {
     try {
@@ -89,7 +89,7 @@ class InstallBackend extends DatabaseBackend {
   }
 
   /**
-   * Implements Drupal\Cache\DatabaseBackend::flush().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::flush().
    */
   function flush() {
     try {
@@ -101,7 +101,7 @@ class InstallBackend extends DatabaseBackend {
   }
 
   /**
-   * Overrides Drupal\Cache\DatabaseBackend::isEmpty().
+   * Overrides Drupal\Core\Cache\CacheBackendInterface::isEmpty().
    */
   function isEmpty() {
     return TRUE;
