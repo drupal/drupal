@@ -8,10 +8,10 @@
 /**
  * Instantiates and statically caches the correct class for a cache bin.
  *
- * By default, this returns an instance of the Drupal\Cache\DatabaseBackend
+ * By default, this returns an instance of the Drupal\Core\Cache\DatabaseBackend
  * class.
  *
- * Classes implementing Drupal\Cache\CacheBackendInterface can register themselves
+ * Classes implementing Drupal\Core\Cache\CacheBackendInterface can register themselves
  * both as a default implementation and for specific bins.
  *
  * @param $bin
