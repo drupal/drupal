@@ -2158,35 +2158,12 @@ function _locale_rebuild_js($langcode = NULL) {
   }
 
   // Construct the array for JavaScript translations.
-  // We sort on plural so that we have all plural forms before singular forms.
-  $result = db_query("SELECT s.lid, s.source, t.plid, t.plural, t.translation FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.location LIKE '%%.js%%' AND s.textgroup = 'default' ORDER BY t.plural DESC", $language->language);
+  // Only add strings with a translation to the translations array.
+  $result = db_query("SELECT s.lid, s.source, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.location LIKE '%%.js%%' AND s.textgroup = 'default'", $language->language);
 
-  $translations = $plurals = array();
+  $translations = array();
   while ($data = db_fetch_object($result)) {
-    // Only add this to the translations array when there is actually a translation.
-    if (!empty($data->translation)) {
-      if ($data->plural) {
-        // When the translation is a plural form, first add it to another array and
-        // wait for the singular (parent) translation.
-        if (!isset($plurals[$data->plid])) {
-          $plurals[$data->plid] = array($data->plural => $data->translation);
-        }
-        else {
-          $plurals[$data->plid] += array($data->plural => $data->translation);
-        }
-      }
-      elseif (isset($plurals[$data->lid])) {
-        // There are plural translations for this translation, so get them from
-        // the plurals array and add them to the final translations array.
-        $translations[$data->source] = array($data->plural => $data->translation) + $plurals[$data->lid];
-        unset($plurals[$data->lid]);
-      }
-      else {
-        // There are no plural forms for this translation, so just add it to
-        // the translations array.
-        $translations[$data->source] = $data->translation;
-      }
-    }
+    $translations[$data->source] = $data->translation;
   }
 
   // Construct the JavaScript file, if there are translations.

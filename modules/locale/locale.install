@@ -225,6 +225,24 @@ function locale_update_6006() {
  */
 
 /**
+ * @defgroup updates-6.x-extra Locale updates for 6.x
+ * @{
+ */
+
+/**
+ * Fix Drupal.formatPlural().
+ */
+function locale_update_6007() {
+  locale_inc_callback('_locale_invalidate_js');
+  return array();
+}
+
+/**
+ * @} End of "defgroup updates-6.x-extra"
+ * The next series of updates should start at 7000.
+ */
+
+/**
  * Implementation of hook_uninstall().
  */
 function locale_uninstall() {

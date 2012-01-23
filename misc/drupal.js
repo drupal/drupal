@@ -149,7 +149,7 @@ Drupal.formatPlural = function(count, singular, plural, args) {
   else {
     args['@count['+ index +']'] = args['@count'];
     delete args['@count'];
-    return Drupal.t(plural.replace('@count', '@count['+ index +']'));
+    return Drupal.t(plural.replace('@count', '@count['+ index +']'), args);
   }
 };
 
