@@ -6,6 +6,35 @@
  */
 
 /**
+ * Implements hook_install().
+ *
+ * Enable URL language negotiation by default in order to have a basic working
+ * system on multilingual sites without needing any preliminary configuration.
+ */
+function locale_install() {
+  require_once DRUPAL_ROOT . '/core/includes/language.inc';
+
+  // We cannot rely on language negotiation hooks here, because locale module is
+  // not enabled yet. Therefore language_negotiation_set() cannot be used.
+  $info = locale_language_negotiation_info();
+  $provider = $info[LOCALE_LANGUAGE_NEGOTIATION_URL];
+  $provider_fields = array('callbacks', 'file', 'cache');
+  $negotiation = array();
+
+  // Store only the needed data.
+  foreach ($provider_fields as $field) {
+    if (isset($provider[$field])) {
+      $negotiation[LOCALE_LANGUAGE_NEGOTIATION_URL][$field] = $provider[$field];
+    }
+  }
+
+  // Enable URL language detection for each (core) configurable language type.
+  foreach (language_types_configurable() as $type) {
+    variable_set("language_negotiation_$type", $negotiation);
+  }
+}
+
+/**
  * Fill in the path prefixes and domains when enabled.
  *
  * Language module might change the list of languages, so we need to sync our

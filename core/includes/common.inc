@@ -2141,8 +2141,8 @@ function url($path = NULL, array $options = array()) {
     $path = '';
   }
   elseif (!empty($path) && !$options['alias']) {
-    $language = isset($options['language']) && isset($options['language']->langcode) ? $options['language']->langcode : '';
-    $alias = drupal_get_path_alias($original_path, $language);
+    $langcode = isset($options['language']) && isset($options['language']->langcode) ? $options['language']->langcode : '';
+    $alias = drupal_get_path_alias($original_path, $langcode);
     if ($alias != $original_path) {
       $path = $alias;
     }

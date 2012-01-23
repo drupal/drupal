@@ -1640,15 +1640,10 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array( "prefix[$langcode]" => $prefix );
     $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
 
-    // Check that the "xx" front page is not available when path prefixes are
-    // not enabled yet.
-    $this->drupalPost('admin/config/regional/language/configure', array(), t('Save settings'));
+    // Check that the "xx" front page is readily available because path prefix
+    // negotiation is pre-configured.
     $this->drupalGet($prefix);
-    $this->assertResponse(404, t('The "xx" front page is not available yet.'));
-
-    // Enable URL language detection and selection.
-    $edit = array('language[enabled][locale-url]' => 1);
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->assertText(t('Welcome to Drupal'), t('The "xx" front page is readibly available.'));
 
     // Create a node.
     $node = $this->drupalCreateNode(array('type' => 'page'));
@@ -2187,7 +2182,6 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $edit = array('prefix[en]' => 'en');
     $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
 
-
     // Enable browser and URL language detection.
     $edit = array(
       'language[enabled][locale-browser]' => TRUE,
@@ -2205,7 +2199,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // Access the front page without specifying any valid URL language prefix
     // and having as browser language preference a non-default language.
     $http_header = array("Accept-Language: $langcode_browser_fallback;q=1");
-    $this->drupalGet('', array(), $http_header);
+    $language = (object) array('langcode' => '');
+    $this->drupalGet('', array('language' => $language), $http_header);
 
     // Check that the language switcher active link matches the given browser
     // language.
