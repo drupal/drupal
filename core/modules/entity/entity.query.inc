@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\Database\Query\Select;
+use Drupal\Core\Database\Query\Select;
 
 /**
  * @file

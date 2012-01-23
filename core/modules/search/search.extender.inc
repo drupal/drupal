@@ -1,7 +1,7 @@
 <?php
 
-use Drupal\Database\Query\SelectExtender;
-use Drupal\Database\StatementEmpty;
+use Drupal\Core\Database\Query\SelectExtender;
+use Drupal\Core\Database\StatementEmpty;
 
 /**
  * @file

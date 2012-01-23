@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\Database\Database;
+use Drupal\Core\Database\Database;
 
 /**
  * Indicates that a module has not been installed yet.
@@ -256,7 +256,7 @@ function drupal_get_database_types() {
   // Because we have no registry yet, we need to also include the install.inc
   // file for the driver explicitly.
   require_once DRUPAL_ROOT . '/core/includes/database/database.inc';
-  foreach (file_scan_directory(DRUPAL_ROOT . '/core/includes/Drupal/Database/Driver', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
+  foreach (file_scan_directory(DRUPAL_ROOT . '/core/lib/Drupal/Core/Database/Driver', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
     if (file_exists($file->uri . '/Install/Tasks.php')) {
       $drivers[$file->filename] = $file->uri;
     }
@@ -1006,6 +1006,6 @@ function db_run_tasks($driver) {
 function db_installer_object($driver) {
   // We cannot use Database::getConnection->getDriverClass() here, because
   // the connection object is not yet functional.
-  $task_class = "Drupal\\Database\\Driver\\{$driver}\\Install\\Tasks";
+  $task_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Install\\Tasks";
   return new $task_class();
 }

@@ -1,8 +1,8 @@
 <?php
 
-use Drupal\Database\Query\AlterableInterface;
-use Drupal\Database\Query\SelectExtender;
-use Drupal\Database\Query\SelectInterface;
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectExtender;
+use Drupal\Core\Database\Query\SelectInterface;
 
 /**
  * @file

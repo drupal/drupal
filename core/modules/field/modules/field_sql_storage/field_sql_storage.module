@@ -1,7 +1,7 @@
 <?php
 
-use Drupal\Database\Database;
-use Drupal\Database\Query\Select;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\Select;
 
 /**
  * @file

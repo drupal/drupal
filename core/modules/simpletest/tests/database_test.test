@@ -1,13 +1,13 @@
 <?php
 
-use Drupal\Database\Database;
-use Drupal\Database\StatementEmpty;
-use Drupal\Database\StatementInterface;
-use Drupal\Database\TransactionOutOfOrderException;
-use Drupal\Database\TransactionNoActiveException;
-use Drupal\Database\Query\Merge;
-use Drupal\Database\Query\InvalidMergeQueryException;
-use Drupal\Database\Query\NoFieldsException;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\StatementEmpty;
+use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Database\TransactionOutOfOrderException;
+use Drupal\Core\Database\TransactionNoActiveException;
+use Drupal\Core\Database\Query\Merge;
+use Drupal\Core\Database\Query\InvalidMergeQueryException;
+use Drupal\Core\Database\Query\NoFieldsException;
 
 /**
  * Dummy class for fetching into a class.
