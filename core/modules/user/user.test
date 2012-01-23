@@ -914,7 +914,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
       // user's profile page.
       $text = t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', array('%dimensions' => $test_dim));
       $this->assertRaw($text, t('Image was resized.'));
-      $alt = t("@user's picture", array('@user' => format_username($this->user)));
+      $alt = t("@user's picture", array('@user' => user_format_name($this->user)));
       $style = variable_get('user_picture_style', '');
       $this->assertRaw(image_style_url($style, $pic_path), t("Image is displayed in user's edit page"));
 
@@ -1914,15 +1914,15 @@ class UserTokenReplaceTestCase extends DrupalWebTestCase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[user:uid]'] = $account->uid;
-    $tests['[user:name]'] = check_plain(format_username($account));
+    $tests['[user:name]'] = check_plain(user_format_name($account));
     $tests['[user:mail]'] = check_plain($account->mail);
     $tests['[user:url]'] = url("user/$account->uid", $url_options);
     $tests['[user:edit-url]'] = url("user/$account->uid/edit", $url_options);
-    $tests['[user:last-login]'] = format_date($account->login, 'medium', '', NULL, $language->language);
-    $tests['[user:last-login:short]'] = format_date($account->login, 'short', '', NULL, $language->language);
-    $tests['[user:created]'] = format_date($account->created, 'medium', '', NULL, $language->language);
-    $tests['[user:created:short]'] = format_date($account->created, 'short', '', NULL, $language->language);
-    $tests['[current-user:name]'] = check_plain(format_username($global_account));
+    $tests['[user:last-login]'] = format_date($account->login, 'medium', '', NULL, $language->langcode);
+    $tests['[user:last-login:short]'] = format_date($account->login, 'short', '', NULL, $language->langcode);
+    $tests['[user:created]'] = format_date($account->created, 'medium', '', NULL, $language->langcode);
+    $tests['[user:created:short]'] = format_date($account->created, 'short', '', NULL, $language->langcode);
+    $tests['[current-user:name]'] = check_plain(user_format_name($global_account));
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
@@ -1933,9 +1933,9 @@ class UserTokenReplaceTestCase extends DrupalWebTestCase {
     }
 
     // Generate and test unsanitized tokens.
-    $tests['[user:name]'] = format_username($account);
+    $tests['[user:name]'] = user_format_name($account);
     $tests['[user:mail]'] = $account->mail;
-    $tests['[current-user:name]'] = format_username($global_account);
+    $tests['[current-user:name]'] = user_format_name($global_account);
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('user' => $account), array('language' => $language, 'sanitize' => FALSE));

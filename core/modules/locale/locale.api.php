@@ -26,7 +26,7 @@
 function hook_language_init() {
   global $language, $conf;
 
-  switch ($language->language) {
+  switch ($language->langcode) {
     case 'it':
       $conf['site_name'] = 'Il mio sito Drupal';
       break;
@@ -54,8 +54,8 @@ function hook_language_init() {
 function hook_language_switch_links_alter(array &$links, $type, $path) {
   global $language;
 
-  if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language->language])) {
-    foreach ($links[$language->language] as $link) {
+  if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language->langcode])) {
+    foreach ($links[$language->langcode] as $link) {
       $link['attributes']['class'][] = 'active-language';
     }
   }
@@ -208,7 +208,7 @@ function hook_locale_language_delete($language) {
   // On nodes with this language, unset the language
   db_update('node')
     ->fields(array('language' => ''))
-    ->condition('language', $language->language)
+    ->condition('language', $language->langcode)
     ->execute();
 }
 

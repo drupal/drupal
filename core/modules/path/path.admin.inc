@@ -15,14 +15,14 @@ function path_admin_overview($keys = NULL) {
   // Add the filter form above the overview table.
   $build['path_admin_filter_form'] = drupal_get_form('path_admin_filter_form', $keys);
   // Enable language column if locale is enabled or if we have any alias with language
-  $alias_exists = (bool) db_query_range('SELECT 1 FROM {url_alias} WHERE language <> :language', 0, 1, array(':language' => LANGUAGE_NONE))->fetchField();
+  $alias_exists = (bool) db_query_range('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => LANGUAGE_NONE))->fetchField();
   $multilanguage = (module_exists('locale') || $alias_exists);
 
   $header = array();
   $header[] = array('data' => t('Alias'), 'field' => 'alias', 'sort' => 'asc');
   $header[] = array('data' => t('System'), 'field' => 'source');
   if ($multilanguage) {
-    $header[] = array('data' => t('Language'), 'field' => 'language');
+    $header[] = array('data' => t('Language'), 'field' => 'langcode');
   }
   $header[] = array('data' => t('Operations'));
 
@@ -44,7 +44,7 @@ function path_admin_overview($keys = NULL) {
     $row['data']['alias'] = l($data->alias, $data->source);
     $row['data']['source'] = l($data->source, $data->source, array('alias' => TRUE));
     if ($multilanguage) {
-      $row['data']['language'] = module_invoke('locale', 'language_name', $data->language);
+      $row['data']['langcode'] = module_invoke('locale', 'language_name', $data->langcode);
     }
 
     $operations = array();
@@ -68,7 +68,7 @@ function path_admin_overview($keys = NULL) {
 
     // If the system path maps to a different URL alias, highlight this table
     // row to let the user know of old aliases.
-    if ($data->alias != drupal_get_path_alias($data->source, $data->language)) {
+    if ($data->alias != drupal_get_path_alias($data->source, $data->langcode)) {
       $row['class'] = array('warning');
     }
 
@@ -108,7 +108,7 @@ function path_admin_edit($path = array()) {
  * @see path_admin_form_validate()
  * @see path_admin_form_submit()
  */
-function path_admin_form($form, &$form_state, $path = array('source' => '', 'alias' => '', 'language' => LANGUAGE_NONE, 'pid' => NULL)) {
+function path_admin_form($form, &$form_state, $path = array('source' => '', 'alias' => '', 'langcode' => LANGUAGE_NONE, 'pid' => NULL)) {
   $form['source'] = array(
     '#type' => 'textfield',
     '#title' => t('Existing system path'),
@@ -132,19 +132,19 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
 
   // A hidden value unless locale module is enabled.
   if (module_exists('locale')) {
-    $form['language'] = array(
+    $form['langcode'] = array(
       '#type' => 'select',
       '#title' => t('Language'),
       '#options' => array(LANGUAGE_NONE => t('All languages')) + locale_language_list('name'),
-      '#default_value' => $path['language'],
+      '#default_value' => $path['langcode'],
       '#weight' => -10,
       '#description' => t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set for <em>All languages</em>.'),
     );
   }
   else {
-    $form['language'] = array(
+    $form['langcode'] = array(
       '#type' => 'value',
-      '#value' => $path['language']
+      '#value' => $path['langcode']
     );
   }
 
@@ -189,12 +189,12 @@ function path_admin_form_validate($form, &$form_state) {
   $alias = $form_state['values']['alias'];
   $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
   // Language is only set if locale module is enabled, otherwise save for all languages.
-  $language = isset($form_state['values']['language']) ? $form_state['values']['language'] : LANGUAGE_NONE;
+  $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : LANGUAGE_NONE;
 
-  $has_alias = db_query("SELECT COUNT(alias) FROM {url_alias} WHERE pid <> :pid AND alias = :alias AND language = :language", array(
+  $has_alias = db_query("SELECT COUNT(alias) FROM {url_alias} WHERE pid <> :pid AND alias = :alias AND langcode = :langcode", array(
       ':pid' => $pid,
       ':alias' => $alias,
-      ':language' => $language,
+      ':langcode' => $langcode,
     ))
     ->fetchField();
 

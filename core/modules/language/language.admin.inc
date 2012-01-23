@@ -10,7 +10,7 @@
  */
 function language_admin_overview_form($form, &$form_state) {
   drupal_static_reset('language_list');
-  $languages = language_list('language');
+  $languages = language_list();
   $default = language_default();
 
   $form['languages'] = array(
@@ -37,7 +37,7 @@ function language_admin_overview_form($form, &$form_state) {
       '#title' => t('Enable @title', array('@title' => $language->name)),
       '#title_display' => 'invisible',
       '#default_value' => (int) $language->enabled,
-      '#disabled' => $langcode == $default->language,
+      '#disabled' => $langcode == $default->langcode,
     );
     $form['languages'][$langcode]['default'] = array(
       '#type' => 'radio',
@@ -45,7 +45,7 @@ function language_admin_overview_form($form, &$form_state) {
       '#title' => t('Set @title as default', array('@title' => $language->name)),
       '#title_display' => 'invisible',
       '#return_value' => $langcode,
-      '#default_value' => ($langcode == $default->language ? $langcode : NULL),
+      '#default_value' => ($langcode == $default->langcode ? $langcode : NULL),
       '#id' => 'edit-site-default-' . $langcode,
     );
     $form['languages'][$langcode]['weight'] = array(
@@ -70,7 +70,7 @@ function language_admin_overview_form($form, &$form_state) {
       '#type' => 'link',
       '#title' => t('delete'),
       '#href' => 'admin/config/regional/language/delete/' . $langcode,
-      '#access' => $langcode != $default->language,
+      '#access' => $langcode != $default->langcode,
     );
   }
 
@@ -155,7 +155,7 @@ function language_admin_overview_form_submit($form, &$form_state) {
     $language->default = ($form_state['values']['site_default'] == $langcode);
     $language->weight = $form_state['values']['languages'][$langcode]['weight'];
 
-    if ($language->default || $old_default->language == $langcode) {
+    if ($language->default || $old_default->langcode == $langcode) {
       // Automatically enable the default language and the language
       // which was default previously (because we will not get the
       // value from that disabled checkbox).
@@ -244,15 +244,15 @@ function _language_admin_common_controls(&$form, $language = NULL) {
   if (!is_object($language)) {
     $language = new stdClass();
   }
-  if (isset($language->language)) {
+  if (isset($language->langcode)) {
     $form['langcode_view'] = array(
       '#type' => 'item',
       '#title' => t('Language code'),
-      '#markup' => $language->language
+      '#markup' => $language->langcode
     );
     $form['langcode'] = array(
       '#type' => 'value',
-      '#value' => $language->language
+      '#value' => $language->langcode
     );
   }
   else {
@@ -261,8 +261,8 @@ function _language_admin_common_controls(&$form, $language = NULL) {
       '#title' => t('Language code'),
       '#maxlength' => 12,
       '#required' => TRUE,
-      '#default_value' => @$language->language,
-      '#disabled' => (isset($language->language)),
+      '#default_value' => @$language->langcode,
+      '#disabled' => (isset($language->langcode)),
       '#description' => t('Use language codes as <a href="@w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array('@w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
     );
   }
@@ -325,7 +325,7 @@ function language_admin_add_custom_form_submit($form, &$form_state) {
   $langcode = $form_state['values']['langcode'];
   // Custom language form.
   $language = (object) array(
-    'language' => $langcode,
+    'langcode' => $langcode,
     'name' => $form_state['values']['name'],
     'direction' => $form_state['values']['direction'],
   );
@@ -343,7 +343,7 @@ function language_admin_add_predefined_form_submit($form, &$form_state) {
   include_once DRUPAL_ROOT . '/core/includes/standard.inc';
   $predefined = standard_language_list();
   $language = (object) array(
-    'language' => $langcode,
+    'langcode' => $langcode,
   );
   language_save($language);
   drupal_set_message(t('The language %language has been created and can now be used.', array('%language' => t($predefined[$langcode][0]))));
@@ -381,9 +381,9 @@ function language_admin_edit_form_submit($form, &$form_state) {
  * User interface for the language deletion confirmation screen.
  */
 function language_admin_delete_form($form, &$form_state, $language) {
-  $langcode = $language->language;
+  $langcode = $language->langcode;
 
-  if (language_default()->language == $langcode) {
+  if (language_default()->langcode == $langcode) {
     drupal_set_message(t('The default language cannot be deleted.'));
     drupal_goto('admin/config/regional/language');
   }
@@ -412,7 +412,7 @@ function language_admin_delete_form_submit($form, &$form_state) {
   $success = language_delete($langcode);
 
   if ($success) {
-    $t_args = array('%language' => $language->name, '%langcode' => $language->language);
+    $t_args = array('%language' => $language->name, '%langcode' => $language->langcode);
     drupal_set_message(t('The %language (%langcode) language has been removed.', $t_args));
   }
 

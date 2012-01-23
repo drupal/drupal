@@ -11,9 +11,10 @@
  */
 
 /**
- * The comment passed validation and is about to be saved.
+ * Act on a comment being inserted or updated.
  *
- * Modules may make changes to the comment before it is saved to the database.
+ * This hook is invoked from comment_save() before the comment is saved to the
+ * database.
  *
  * @param $comment
  *   The comment object.
@@ -24,7 +25,7 @@ function hook_comment_presave($comment) {
 }
 
 /**
- * The comment is being inserted.
+ * Respond to creation of a new comment.
  *
  * @param $comment
  *   The comment object.
@@ -35,7 +36,7 @@ function hook_comment_insert($comment) {
 }
 
 /**
- * The comment is being updated.
+ * Respond to updates to a comment.
  *
  * @param $comment
  *   The comment object.
@@ -46,7 +47,7 @@ function hook_comment_update($comment) {
 }
 
 /**
- * Comments are being loaded from the database.
+ * Act on comments being loaded from the database.
  *
  * @param $comments
  *  An array of comment objects indexed by cid.
@@ -59,7 +60,7 @@ function hook_comment_load($comments) {
 }
 
 /**
- * The comment is being viewed. This hook can be used to add additional data to the comment before theming.
+ * Act on a comment that is being assembled before rendering.
  *
  * @param $comment
  *   Passes in the comment the action is being performed on.
@@ -76,16 +77,16 @@ function hook_comment_view($comment, $view_mode, $langcode) {
 }
 
 /**
- * The comment was built; the module may modify the structured content.
+ * Alter the results of comment_view().
  *
- * This hook is called after the content has been assembled in a structured array
- * and may be used for doing processing which requires that the complete comment
- * content structure has been built.
+ * This hook is called after the content has been assembled in a structured
+ * array and may be used for doing processing which requires that the complete
+ * comment content structure has been built.
  *
- * If the module wishes to act on the rendered HTML of the comment rather than the
- * structured content array, it may use this hook to add a #post_render callback.
- * Alternatively, it could also implement hook_preprocess_comment(). See
- * drupal_render() and theme() documentation respectively for details.
+ * If the module wishes to act on the rendered HTML of the comment rather than
+ * the structured content array, it may use this hook to add a #post_render
+ * callback. Alternatively, it could also implement hook_preprocess_comment().
+ * See drupal_render() and theme() documentation respectively for details.
  *
  * @param $build
  *   A renderable array representing the comment.
@@ -105,24 +106,20 @@ function hook_comment_view_alter(&$build) {
 }
 
 /**
- * The comment is being published by the moderator.
+ * Respond to a comment being published by a moderator.
  *
  * @param $comment
- *   Passes in the comment the action is being performed on.
- * @return
- *   Nothing.
+ *   The comment the action is being performed on.
  */
 function hook_comment_publish($comment) {
   drupal_set_message(t('Comment: @subject has been published', array('@subject' => $comment->subject)));
 }
 
 /**
- * The comment is being unpublished by the moderator.
+ * Respond to a comment being unpublished by a moderator.
  *
  * @param $comment
- *   Passes in the comment the action is being performed on.
- * @return
- *   Nothing.
+ *   The comment the action is being performed on.
  */
 function hook_comment_unpublish($comment) {
   drupal_set_message(t('Comment: @subject has been unpublished', array('@subject' => $comment->subject)));

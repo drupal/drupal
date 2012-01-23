@@ -274,19 +274,6 @@ class EnableDisableTestCase extends ModuleTestCase {
   }
 
   /**
-   * Tests entity cache after enabling a module with a dependency on an enitity
-   * providing module.
-   *
-   * @see entity_cache_test_watchdog()
-   */
-  function testEntityCache() {
-    module_enable(array('entity_cache_test'));
-    $info = variable_get('entity_cache_test');
-    $this->assertEqual($info['label'], 'Entity Cache Test', 'Entity info label is correct.');
-    $this->assertEqual($info['controller class'], 'DrupalDefaultEntityController', 'Entity controller class info is correct.');
-  }
-
-  /**
    * Disables and uninstalls a module and asserts that it was done correctly.
    *
    * @param $module
@@ -1247,7 +1234,7 @@ class DateTimeFunctionalTest extends DrupalWebTestCase {
 
     // Enable German language
     $language = (object) array(
-      'language' => 'de',
+      'langcode' => 'de',
       'default' => TRUE,
     );
     language_save($language);
@@ -1843,9 +1830,9 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     $target  = check_plain($node->title);
     $target .= check_plain($account->name);
-    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language->language);
+    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language->langcode);
     $target .= check_plain($user->name);
-    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language->language);
+    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language->langcode);
 
     // Test that the clear parameter cleans out non-existent tokens.
     $result = token_replace($source, array('node' => $node), array('language' => $language, 'clear' => TRUE));
@@ -1950,11 +1937,11 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     // Generate and test tokens.
     $tests = array();
-    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language->language);
-    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language->language);
-    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language->language);
-    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language->language);
-    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language->language);
+    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language->langcode);
+    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language->langcode);
+    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language->langcode);
+    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language->langcode);
+    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language->langcode);
     $tests['[date:raw]'] = filter_xss($date);
 
     // Test to make sure that we generated something for each token.
@@ -2280,7 +2267,7 @@ class RetrieveFileTestCase extends DrupalWebTestCase {
   function testFileRetrieving() {
     // Test 404 handling by trying to fetch a randomly named file.
     drupal_mkdir($sourcedir = 'public://' . $this->randomName());
-    $filename = $this->randomName();
+    $filename = 'Файл для тестирования ' . $this->randomName();
     $url = file_create_url($sourcedir . '/' . $filename);
     $retrieved_file = system_retrieve_file($url);
     $this->assertFalse($retrieved_file, t('Non-existent file not fetched.'));
@@ -2288,7 +2275,12 @@ class RetrieveFileTestCase extends DrupalWebTestCase {
     // Actually create that file, download it via HTTP and test the returned path.
     file_put_contents($sourcedir . '/' . $filename, 'testing');
     $retrieved_file = system_retrieve_file($url);
-    $this->assertEqual($retrieved_file, 'public://' . $filename, t('Sane path for downloaded file returned (public:// scheme).'));
+
+    // URLs could not contains characters outside the ASCII set so $filename
+    // has to be encoded.
+    $encoded_filename = rawurlencode($filename);
+
+    $this->assertEqual($retrieved_file, 'public://' . $encoded_filename, t('Sane path for downloaded file returned (public:// scheme).'));
     $this->assertTrue(is_file($retrieved_file), t('Downloaded file does exist (public:// scheme).'));
     $this->assertEqual(filesize($retrieved_file), 7, t('File size of downloaded file is correct (public:// scheme).'));
     file_unmanaged_delete($retrieved_file);
@@ -2296,7 +2288,7 @@ class RetrieveFileTestCase extends DrupalWebTestCase {
     // Test downloading file to a different location.
     drupal_mkdir($targetdir = 'temporary://' . $this->randomName());
     $retrieved_file = system_retrieve_file($url, $targetdir);
-    $this->assertEqual($retrieved_file, "$targetdir/$filename", t('Sane path for downloaded file returned (temporary:// scheme).'));
+    $this->assertEqual($retrieved_file, "$targetdir/$encoded_filename", t('Sane path for downloaded file returned (temporary:// scheme).'));
     $this->assertTrue(is_file($retrieved_file), t('Downloaded file does exist (temporary:// scheme).'));
     $this->assertEqual(filesize($retrieved_file), 7, t('File size of downloaded file is correct (temporary:// scheme).'));
     file_unmanaged_delete($retrieved_file);

@@ -1,3 +1,7 @@
+/**
+ * @file
+ * Attaches comment behaviors to the node form.
+ */
 
 (function ($) {
 

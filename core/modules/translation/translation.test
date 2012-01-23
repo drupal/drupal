@@ -47,11 +47,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $edit = array("blocks[locale_$language_type][region]" => 'sidebar_first');
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
-    // Enable URL language detection and selection to make the language switcher
-    // block appear.
-    $edit = array('language[enabled][locale-url]' => TRUE);
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
-    $this->assertRaw(t('Language negotiation configuration saved.'), t('URL language detection enabled.'));
+    // Reset static caches in our local language environment.
     $this->resetCaches();
 
     $this->drupalLogin($this->translator);
@@ -200,6 +196,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
     $edit = array('languages[it][enabled]' => TRUE);
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->resetCaches();
     $this->drupalLogin($this->translator);
 
     // Create a Basic page in English.
@@ -258,7 +255,9 @@ class TranslationTestCase extends DrupalWebTestCase {
    * Reset static caches to make the test code match the client site behavior.
    */
   function resetCaches() {
+    drupal_static_reset('language_list');
     drupal_static_reset('locale_url_outbound_alter');
+    drupal_static_reset('locale_language_url_rewrite_url');
   }
 
   /**
@@ -287,7 +286,7 @@ class TranslationTestCase extends DrupalWebTestCase {
 
       // Make sure we are not using a stale list.
       drupal_static_reset('language_list');
-      $languages = language_list('language');
+      $languages = language_list();
       $this->assertTrue(array_key_exists($language_code, $languages), t('Language was installed successfully.'));
 
       if (array_key_exists($language_code, $languages)) {

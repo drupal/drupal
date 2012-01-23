@@ -321,7 +321,7 @@ function truncate_utf8($string, $max_length, $wordsafe = FALSE, $add_ellipsis = 
 
   if ($add_ellipsis) {
     // Truncate ellipsis in case $max_length is small.
-    $ellipsis = drupal_substr(t('...'), 0, $max_length);
+    $ellipsis = drupal_substr(t('…'), 0, $max_length);
     $max_length -= drupal_strlen($ellipsis);
     $max_length = max($max_length, 0);
   }
@@ -349,6 +349,9 @@ function truncate_utf8($string, $max_length, $wordsafe = FALSE, $add_ellipsis = 
   }
 
   if ($add_ellipsis) {
+    // If we're adding an ellipsis, remove any trailing periods.
+    $string = rtrim($string, '.');
+
     $string .= $ellipsis;
   }
 

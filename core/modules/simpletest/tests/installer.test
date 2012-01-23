@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Tests for the installer.
+ */
+
+/**
+ * Tests installer language detection.
+ */
+class InstallerLanguageTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Installer language tests',
+      'description' => 'Tests for installer language support.',
+      'group' => 'Installer',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    variable_set('locale_translate_file_directory', drupal_get_path('module', 'simpletest') . '/files/translations');
+  }
+
+  /**
+   * Tests that the installer can find translation files.
+   */
+  function testInstallerTranslationFiles() {
+    include_once DRUPAL_ROOT . '/core/includes/install.core.inc';
+
+    // Different translation files would be found depending on which language
+    // we are looking for.
+    $expected_translation_files = array(
+      NULL => array('install.hu.po', 'install.de.po'),
+      'de' => array('install.de.po'),
+      'hu' => array('install.hu.po'),
+      'it' => array(),
+    );
+
+    foreach ($expected_translation_files as $langcode => $files_expected) {
+      $files_found = install_find_translation_files($langcode);
+      $this->assertTrue(count($files_found) == count($files_expected), t('@count installer languages found.', array('@count' => count($files_expected))));
+      foreach ($files_found as $file) {
+        $this->assertTrue(in_array($file->filename, $files_expected), t('@file found.', array('@file' => $file->filename)));
+      }
+    }
+  }
+
+}

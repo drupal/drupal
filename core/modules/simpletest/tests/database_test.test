@@ -28,7 +28,12 @@ class DatabaseTestCase extends DrupalWebTestCase {
   protected $profile = 'testing';
 
   function setUp() {
-    parent::setUp('database_test');
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules[] = 'database_test';
+    parent::setUp($modules);
 
     $schema['test'] = drupal_get_schema('test');
     $schema['test_people'] = drupal_get_schema('test_people');
@@ -384,10 +389,6 @@ class DatabaseFetch2TestCase extends DatabaseTestCase {
       'description' => 'Test the Database system\'s various fetch capabilities.',
       'group' => 'Database',
     );
-  }
-
-  function setUp() {
-    parent::setUp();
   }
 
   // Confirm that we can fetch a record into an indexed array explicitly.
@@ -2227,24 +2228,14 @@ class DatabaseSelectComplexTestCase2 extends DatabaseTestCase {
   }
 
   function setUp() {
-    DrupalWebTestCase::setUp('database_test', 'node_access_test');
-
-    $schema['test'] = drupal_get_schema('test');
-    $schema['test_people'] = drupal_get_schema('test_people');
-    $schema['test_one_blob'] = drupal_get_schema('test_one_blob');
-    $schema['test_two_blobs'] = drupal_get_schema('test_two_blobs');
-    $schema['test_task'] = drupal_get_schema('test_task');
-
-    $this->installTables($schema);
-
-    $this->addSampleData();
+    parent::setUp(array('node_access_test'));
   }
 
   /**
    * Test that we can join on a query.
    */
   function testJoinSubquery() {
-    $acct = $this->drupalCreateUser(array('access content'));
+    $acct = $this->drupalCreateUser();
     $this->drupalLogin($acct);
 
     $query = db_select('test_task', 'tt', array('target' => 'slave'));
@@ -2763,6 +2754,10 @@ class DatabaseRegressionTestCase extends DatabaseTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp(array('node'));
+  }
+
   /**
    * Regression test for #310447.
    *
@@ -3054,10 +3049,6 @@ class DatabaseBasicSyntaxTestCase extends DatabaseTestCase {
     );
   }
 
-  function setUp() {
-    parent::setUp('database_test');
-  }
-
   /**
    * Test for string concatenation.
    */
@@ -3155,10 +3146,6 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
     );
   }
 
-  function setUp() {
-    parent::setUp('database_test');
-  }
-
   /**
    * Traditional SQL database systems abort inserts when invalid data is encountered.
    */
@@ -3226,10 +3213,6 @@ class DatabaseQueryTestCase extends DatabaseTestCase {
       'description' => 'Test Drupal\'s extended prepared statement syntax..',
       'group' => 'Database',
     );
-  }
-
-  function setUp() {
-    parent::setUp('database_test');
   }
 
   /**

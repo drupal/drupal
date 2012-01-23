@@ -196,10 +196,10 @@ function user_uri($user) {
  * @return
  *   The name of the user.
  *
- * @see format_username
+ * @see user_format_name()
  */
 function user_label($entity_type, $entity) {
-  return format_username($entity);
+  return user_format_name($entity);
 }
 
 /**
@@ -900,7 +900,7 @@ function user_search_execute($keys = NULL, $conditions = NULL) {
   $results = array();
   foreach ($accounts as $account) {
     $result = array(
-      'title' => format_username($account),
+      'title' => user_format_name($account),
       'link' => url('user/' . $account->uid, array('absolute' => TRUE)),
     );
     if (user_access('administer users')) {
@@ -1355,13 +1355,33 @@ function user_block_view($delta = '') {
 }
 
 /**
+ * Implements hook_preprocess_block().
+ */
+function user_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'user') {
+    switch ($variables['block']->delta) {
+      case 'login':
+        $variables['attributes_array']['role'] = 'form';
+        break;
+      case 'new':
+        $variables['attributes_array']['role'] = 'complementary';
+        break;
+      case 'online':
+        $variables['attributes_array']['role'] = 'complementary';
+        break;
+    }
+  }
+}
+
+/**
  * Format a username.
  *
  * By default, the passed-in object's 'name' property is used if it exists, or
  * else, the site-defined value for the 'anonymous' variable. However, a module
- * may override this by implementing hook_username_alter(&$name, $account).
+ * may override this by implementing
+ * hook_user_format_name_alter(&$name, $account).
  *
- * @see hook_username_alter()
+ * @see hook_user_format_name_alter()
  *
  * @param $account
  *   The account object for the user whose name is to be formatted.
@@ -1371,9 +1391,9 @@ function user_block_view($delta = '') {
  *   this result must ensure that check_plain() is called on it before it is
  *   printed to the page.
  */
-function format_username($account) {
+function user_format_name($account) {
   $name = !empty($account->name) ? $account->name : variable_get('anonymous', t('Anonymous'));
-  drupal_alter('username', $name, $account);
+  drupal_alter('user_format_name', $name, $account);
   return $name;
 }
 
@@ -1409,7 +1429,7 @@ function template_preprocess_user_picture(&$variables) {
       $filepath = variable_get('user_picture_default', '');
     }
     if (isset($filepath)) {
-      $alt = t("@user's picture", array('@user' => format_username($account)));
+      $alt = t("@user's picture", array('@user' => user_format_name($account)));
       // If the image does not have a valid Drupal scheme (for eg. HTTP),
       // don't load image styles.
       if (module_exists('image') && file_valid_uri($filepath) && $style = variable_get('user_picture_style', '')) {
@@ -1454,7 +1474,7 @@ function template_preprocess_username(&$variables) {
   // unsanitized version, in case other preprocess functions want to implement
   // their own shortening logic or add markup. If they do so, they must ensure
   // that $variables['name'] is safe for printing.
-  $name = $variables['name_raw'] = format_username($account);
+  $name = $variables['name_raw'] = user_format_name($account);
   if (drupal_strlen($name) > 20) {
     $name = drupal_substr($name, 0, 15) . '...';
   }
@@ -1966,7 +1986,7 @@ function user_menu_title() {
  * Menu item title callback - use the user name.
  */
 function user_page_title($account) {
-  return is_object($account) ? format_username($account) : '';
+  return is_object($account) ? user_format_name($account) : '';
 }
 
 /**
@@ -2519,7 +2539,7 @@ function user_view_page($account) {
  */
 function user_view($account, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   // Retrieve all profile fields and attach to $account->content.
@@ -2556,7 +2576,7 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
  */
 function user_build_content($account, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   // Remove previously built content, if exists.
@@ -2588,7 +2608,7 @@ function user_mail($key, &$message, $params) {
  * Used by user_mail() and the settings forms to retrieve strings.
  */
 function _user_mail_text($key, $language = NULL, $variables = array(), $replace = TRUE) {
-  $langcode = isset($language) ? $language->language : NULL;
+  $langcode = isset($language) ? $language->langcode : NULL;
 
   if ($admin_setting = variable_get('user_mail_' . $key, FALSE)) {
     // An admin setting overrides the default string.

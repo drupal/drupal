@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Tests for comment.module.
+ * Tests for the Comment module.
  */
 
 class CommentHelperCase extends DrupalWebTestCase {
@@ -19,7 +19,7 @@ class CommentHelperCase extends DrupalWebTestCase {
   }
 
   /**
-   * Post comment.
+   * Posts a comment.
    *
    * @param $node
    *   Node to post comment on.
@@ -94,9 +94,13 @@ class CommentHelperCase extends DrupalWebTestCase {
   /**
    * Checks current page for specified comment.
    *
-   * @param object $comment Comment object.
-   * @param boolean $reply The comment is a reply to another comment.
-   * @return boolean Comment found.
+   * @param object $comment
+   *   The comment object.
+   * @param boolean $reply
+   *   Boolean indicating whether the comment is a reply to another comment.
+   *
+   * @return boolean
+   *   Boolean indicating whether the comment was found.
    */
   function commentExists($comment, $reply = FALSE) {
     if ($comment && is_object($comment)) {
@@ -115,7 +119,7 @@ class CommentHelperCase extends DrupalWebTestCase {
   }
 
   /**
-   * Delete comment.
+   * Deletes a comment.
    *
    * @param object $comment
    *   Comment to delete.
@@ -126,20 +130,20 @@ class CommentHelperCase extends DrupalWebTestCase {
   }
 
   /**
-   * Set comment subject setting.
+   * Sets the value governing whether the subject field should be enabled.
    *
    * @param boolean $enabled
-   *   Subject value.
+   *   Boolean specifying whether the subject field should be enabled.
    */
   function setCommentSubject($enabled) {
     $this->setCommentSettings('comment_subject_field', ($enabled ? '1' : '0'), 'Comment subject ' . ($enabled ? 'enabled' : 'disabled') . '.');
   }
 
   /**
-   * Set comment preview setting.
+   * Sets the value governing the previewing mode for the comment form.
    *
    * @param int $mode
-   *   Preview value.
+   *   The preview mode: DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
    */
   function setCommentPreview($mode) {
     switch ($mode) {
@@ -159,27 +163,31 @@ class CommentHelperCase extends DrupalWebTestCase {
   }
 
   /**
-   * Set comment form location setting.
+   * Sets the value governing whether the comment form is on its own page.
    *
    * @param boolean $enabled
-   *   Form value.
+   *   TRUE if the comment form should be displayed on the same page as the
+   *   comments; FALSE if it should be displayed on its own page.
    */
   function setCommentForm($enabled) {
     $this->setCommentSettings('comment_form_location', ($enabled ? COMMENT_FORM_BELOW : COMMENT_FORM_SEPARATE_PAGE), 'Comment controls ' . ($enabled ? 'enabled' : 'disabled') . '.');
   }
 
   /**
-   * Set comment anonymous level setting.
+   * Sets the value governing restrictions on anonymous comments.
    *
    * @param integer $level
-   *   Anonymous level.
+   *   The level of the contact information allowed for anonymous comments:
+   *   - 0: No contact information allowed.
+   *   - 1: Contact information allowed but not required.
+   *   - 2: Contact information required.
    */
   function setCommentAnonymous($level) {
     $this->setCommentSettings('comment_anonymous', $level, 'Anonymous commenting set to level ' . $level . '.');
   }
 
   /**
-   * Set the default number of comments per page.
+   * Sets the value specifying the default number of comments per page.
    *
    * @param integer $comments
    *   Comments per page value.
@@ -189,7 +197,7 @@ class CommentHelperCase extends DrupalWebTestCase {
   }
 
   /**
-   * Set comment setting for article content type.
+   * Sets a comment settings variable for the article content type.
    *
    * @param string $name
    *   Name of variable.
@@ -204,16 +212,17 @@ class CommentHelperCase extends DrupalWebTestCase {
   }
 
   /**
-   * Check for contact info.
+   * Checks whether the commenter's contact information is displayed.
    *
-   * @return boolean Contact info is available.
+   * @return boolean
+   *   Contact info is available.
    */
   function commentContactInfoAvailable() {
     return preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->drupalGetContent());
   }
 
   /**
-   * Perform the specified operation on the specified comment.
+   * Performs the specified operation on the specified comment.
    *
    * @param object $comment
    *   Comment to perform operation on.
@@ -238,10 +247,11 @@ class CommentHelperCase extends DrupalWebTestCase {
   }
 
   /**
-   * Get the comment ID for an unapproved comment.
+   * Gets the comment ID for an unapproved comment.
    *
    * @param string $subject
    *   Comment subject to find.
+   *
    * @return integer
    *   Comment id.
    */
@@ -250,56 +260,6 @@ class CommentHelperCase extends DrupalWebTestCase {
     preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->drupalGetContent(), $match);
 
     return $match[2];
-  }
-
-  /**
-   * Tests new comment marker.
-   */
-  public function testCommentNewCommentsIndicator() {
-    // Test if the right links are displayed when no comment is present for the
-    // node.
-    $this->drupalLogin($this->admin_user);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_OPEN));
-    $this->drupalGet('node');
-    $this->assertNoLink(t('@count comments', array('@count' => 0)));
-    $this->assertNoLink(t('@count new comments', array('@count' => 0)));
-    $this->assertLink(t('Read more'));
-    $count = $this->xpath('//div[@id=:id]/div[@class=:class]/ul/li', array(':id' => 'node-' . $this->node->nid, ':class' => 'link-wrapper'));
-    $this->assertTrue(count($count) == 1, t('One child found'));
-
-    // Create a new comment. This helper function may be run with different
-    // comment settings so use comment_save() to avoid complex setup.
-    $comment = entity_create('comment', array(
-      'cid' => NULL,
-      'nid' => $this->node->nid,
-      'node_type' => $this->node->type,
-      'pid' => 0,
-      'uid' => $this->loggedInUser->uid,
-      'status' => COMMENT_PUBLISHED,
-      'subject' => $this->randomName(),
-      'hostname' => ip_address(),
-      'language' => LANGUAGE_NONE,
-      'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
-    ));
-    comment_save($comment);
-    $this->drupalLogout();
-
-    // Log in with 'web user' and check comment links.
-    $this->drupalLogin($this->web_user);
-    $this->drupalGet('node');
-    $this->assertLink(t('1 new comment'));
-    $this->clickLink(t('1 new comment'));
-    $this->assertRaw('<a id="new"></a>', t('Found "new" marker.'));
-    $this->assertTrue($this->xpath('//a[@id=:new]/following-sibling::a[1][@id=:comment_id]', array(':new' => 'new', ':comment_id' => 'comment-1')), t('The "new" anchor is positioned at the right comment.'));
-
-    // Test if "new comment" link is correctly removed.
-    $this->drupalGet('node');
-    $this->assertLink(t('1 comment'));
-    $this->assertLink(t('Read more'));
-    $this->assertNoLink(t('1 new comment'));
-    $this->assertNoLink(t('@count new comments', array('@count' => 0)));
-    $count = $this->xpath('//div[@id=:id]/div[@class=:class]/ul/li', array(':id' => 'node-' . $this->node->nid, ':class' => 'link-wrapper'));
-    $this->assertTrue(count($count) == 2, print_r($count, TRUE));
   }
 }
 
@@ -313,7 +273,7 @@ class CommentInterfaceTest extends CommentHelperCase {
   }
 
   /**
-   * Test comment interface.
+   * Tests the comment interface.
    */
   function testCommentInterface() {
     $langcode = LANGUAGE_NONE;
@@ -470,6 +430,56 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->drupalLogout();
     $this->drupalLogin($this->admin_user);
     $this->setCommentForm(FALSE);
+  }
+
+  /**
+   * Tests new comment marker.
+   */
+  public function testCommentNewCommentsIndicator() {
+    // Test if the right links are displayed when no comment is present for the
+    // node.
+    $this->drupalLogin($this->admin_user);
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_OPEN));
+    $this->drupalGet('node');
+    $this->assertNoLink(t('@count comments', array('@count' => 0)));
+    $this->assertNoLink(t('@count new comments', array('@count' => 0)));
+    $this->assertLink(t('Read more'));
+    $count = $this->xpath('//div[@id=:id]/div[@class=:class]/ul/li', array(':id' => 'node-' . $this->node->nid, ':class' => 'link-wrapper'));
+    $this->assertTrue(count($count) == 1, t('One child found'));
+
+    // Create a new comment. This helper function may be run with different
+    // comment settings so use comment_save() to avoid complex setup.
+    $comment = entity_create('comment', array(
+      'cid' => NULL,
+      'nid' => $this->node->nid,
+      'node_type' => $this->node->type,
+      'pid' => 0,
+      'uid' => $this->loggedInUser->uid,
+      'status' => COMMENT_PUBLISHED,
+      'subject' => $this->randomName(),
+      'hostname' => ip_address(),
+      'language' => LANGUAGE_NONE,
+      'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
+    ));
+    comment_save($comment);
+    $this->drupalLogout();
+
+    // Log in with 'web user' and check comment links.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('node');
+    $this->assertLink(t('1 new comment'));
+    $this->clickLink(t('1 new comment'));
+    $this->assertRaw('<a id="new"></a>', t('Found "new" marker.'));
+    $this->assertTrue($this->xpath('//a[@id=:new]/following-sibling::a[1][@id=:comment_id]', array(':new' => 'new', ':comment_id' => 'comment-1')), t('The "new" anchor is positioned at the right comment.'));
+
+    // Test if "new comment" link is correctly removed.
+    $this->drupalGet('node');
+    $this->assertLink(t('1 comment'));
+    $this->assertLink(t('Read more'));
+    $this->assertNoLink(t('1 new comment'));
+    $this->assertNoLink(t('@count new comments', array('@count' => 0)));
+    $count = $this->xpath('//div[@id=:id]/div[@class=:class]/ul/li', array(':id' => 'node-' . $this->node->nid, ':class' => 'link-wrapper'));
+    $this->assertTrue(count($count) == 2, print_r($count, TRUE));
   }
 
   /**
@@ -735,7 +745,7 @@ class CommentInterfaceTest extends CommentHelperCase {
   }
 
   /**
-   * Asserts that comment links appear according to the passed environment setup.
+   * Asserts that comment links appear according to the passed environment.
    *
    * @param $info
    *   An associative array describing the environment to pass to
@@ -831,7 +841,7 @@ class CommentInterfaceTest extends CommentHelperCase {
 }
 
 /**
- * Test previewing comments.
+ * Tests previewing comments.
  */
 class CommentPreviewTest extends CommentHelperCase {
   public static function getInfo() {
@@ -843,7 +853,7 @@ class CommentPreviewTest extends CommentHelperCase {
   }
 
   /**
-   * Test comment preview.
+   * Tests comment preview.
    */
   function testCommentPreview() {
     $langcode = LANGUAGE_NONE;
@@ -874,7 +884,7 @@ class CommentPreviewTest extends CommentHelperCase {
   }
 
   /**
-   * Test comment edit, preview, and save.
+   * Tests comment edit, preview, and save.
    */
   function testCommentEditPreviewSave() {
     $langcode = LANGUAGE_NONE;
@@ -938,7 +948,9 @@ class CommentPreviewTest extends CommentHelperCase {
   }
 
 }
-
+/**
+ * Tests anonymous commenting.
+ */
 class CommentAnonymous extends CommentHelperCase {
   public static function getInfo() {
     return array(
@@ -954,7 +966,7 @@ class CommentAnonymous extends CommentHelperCase {
   }
 
   /**
-   * Test anonymous comment functionality.
+   * Tests anonymous comment functionality.
    */
   function testAnonymous() {
     $this->drupalLogin($this->admin_user);
@@ -1092,7 +1104,7 @@ class CommentAnonymous extends CommentHelperCase {
 }
 
 /**
- * Verify pagination of comments.
+ * Verifies pagination of comments.
  */
 class CommentPagerTest extends CommentHelperCase {
 
@@ -1105,7 +1117,7 @@ class CommentPagerTest extends CommentHelperCase {
   }
 
   /**
-   * Confirm comment paging works correctly with flat and threaded comments.
+   * Confirms comment paging works correctly with flat and threaded comments.
    */
   function testCommentPaging() {
     $this->drupalLogin($this->admin_user);
@@ -1178,7 +1190,7 @@ class CommentPagerTest extends CommentHelperCase {
   }
 
   /**
-   * Test comment ordering and threading.
+   * Tests comment ordering and threading.
    */
   function testCommentOrderingThreading() {
     $this->drupalLogin($this->admin_user);
@@ -1253,7 +1265,7 @@ class CommentPagerTest extends CommentHelperCase {
   }
 
   /**
-   * Helper function: assert that the comments are displayed in the correct order.
+   * Asserts that the comments are displayed in the correct order.
    *
    * @param $comments
    *   And array of comments.
@@ -1278,7 +1290,7 @@ class CommentPagerTest extends CommentHelperCase {
   }
 
   /**
-   * Test comment_new_page_count().
+   * Tests comment_new_page_count().
    */
   function testCommentNewPageIndicator() {
     $this->drupalLogin($this->admin_user);
@@ -1425,7 +1437,9 @@ class CommentNodeAccessTest extends CommentHelperCase {
     $this->assertText($reply_subject);
   }
 }
-
+/**
+ * Tests comment approval functionality.
+ */
 class CommentApprovalTest extends CommentHelperCase {
   public static function getInfo() {
     return array(
@@ -1505,7 +1519,7 @@ class CommentApprovalTest extends CommentHelperCase {
   }
 
   /**
-   * Test comment approval functionality through node interface.
+   * Tests comment approval functionality through the node interface.
    */
   function testApprovalNodeInterface() {
     // Set anonymous comments to require approval.
@@ -1548,7 +1562,7 @@ class CommentApprovalTest extends CommentHelperCase {
 }
 
 /**
- * Functional tests for the comment module blocks.
+ * Tests the Comment module blocks.
  */
 class CommentBlockFunctionalTest extends CommentHelperCase {
   public static function getInfo() {
@@ -1560,7 +1574,7 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
   }
 
   /**
-   * Test the recent comments block.
+   * Tests the recent comments block.
    */
   function testRecentCommentBlock() {
     $this->drupalLogin($this->admin_user);
@@ -1643,7 +1657,7 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
 }
 
 /**
- * Unit tests for comment module integration with RSS feeds.
+ * Unit tests for Comment module integration with RSS feeds.
  */
 class CommentRSSUnitTest extends CommentHelperCase {
   public static function getInfo() {
@@ -1655,7 +1669,7 @@ class CommentRSSUnitTest extends CommentHelperCase {
   }
 
   /**
-   * Test comments as part of an RSS feed.
+   * Tests comments as part of an RSS feed.
    */
   function testCommentRSS() {
     // Find comment in RSS feed.
@@ -1675,7 +1689,7 @@ class CommentRSSUnitTest extends CommentHelperCase {
 
 
 /**
- * Test to make sure comment content is rebuilt.
+ * Tests comment content rebuilding.
  */
 class CommentContentRebuild extends CommentHelperCase {
   public static function getInfo() {
@@ -1687,8 +1701,7 @@ class CommentContentRebuild extends CommentHelperCase {
   }
 
   /**
-   * Test to ensure that the comment's content array is rebuilt for every
-   * call to comment_view().
+   * Tests the rebuilding of comment's content arrays on calling comment_view().
    */
   function testCommentRebuild() {
     // Update the comment settings so preview isn't required.
@@ -1715,7 +1728,7 @@ class CommentContentRebuild extends CommentHelperCase {
 }
 
 /**
- * Test comment token replacement in strings.
+ * Tests comment token replacement in strings.
  */
 class CommentTokenReplaceTestCase extends CommentHelperCase {
   public static function getInfo() {
@@ -1766,8 +1779,8 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:body]'] = _text_sanitize($instance, LANGUAGE_NONE, $comment->comment_body[LANGUAGE_NONE][0], 'value');
     $tests['[comment:url]'] = url('comment/' . $comment->cid, $url_options + array('fragment' => 'comment-' . $comment->cid));
     $tests['[comment:edit-url]'] = url('comment/' . $comment->cid . '/edit', $url_options);
-    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created, 2, $language->language);
-    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed, 2, $language->language);
+    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created, 2, $language->langcode);
+    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed, 2, $language->langcode);
     $tests['[comment:parent:cid]'] = $comment->pid;
     $tests['[comment:parent:title]'] = check_plain($parent_comment->subject);
     $tests['[comment:node:nid]'] = $comment->nid;
@@ -1815,7 +1828,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
 }
 
 /**
- * Test actions provided by the comment module.
+ * Tests actions provided by the Comment module.
  */
 class CommentActionsTestCase extends CommentHelperCase {
   public static function getInfo() {
@@ -1827,7 +1840,7 @@ class CommentActionsTestCase extends CommentHelperCase {
   }
 
   /**
-   * Test comment publish and unpublish actions.
+   * Tests comment publish and unpublish actions.
    */
   function testCommentPublishUnpublishActions() {
     $this->drupalLogin($this->web_user);
@@ -1861,7 +1874,7 @@ class CommentActionsTestCase extends CommentHelperCase {
   }
 
   /**
-   * Verify that a watchdog message has been entered.
+   * Verifies that a watchdog message has been entered.
    *
    * @param $watchdog_message
    *   The watchdog message.
@@ -1876,7 +1889,7 @@ class CommentActionsTestCase extends CommentHelperCase {
   }
 
   /**
-   * Helper function: clear the watchdog.
+   * Clears watchdog.
    */
   function clearWatchdog() {
     db_truncate('watchdog')->execute();
@@ -1884,7 +1897,7 @@ class CommentActionsTestCase extends CommentHelperCase {
 }
 
 /**
- * Test fields on comments.
+ * Tests fields on comments.
  */
 class CommentFieldsTest extends CommentHelperCase {
   public static function getInfo() {
@@ -1929,7 +1942,7 @@ class CommentFieldsTest extends CommentHelperCase {
   }
 
   /**
-   * Test that comment module works when enabled after a content module.
+   * Tests that comment module works when enabled after a content module.
    */
   function testCommentEnable() {
     // Create a user to do module administration.
@@ -1973,7 +1986,7 @@ class CommentFieldsTest extends CommentHelperCase {
   }
 
   /**
-   * Test that comment module works correctly with plain text format.
+   * Tests that comment module works correctly with plain text format.
    */
   function testCommentFormat() {
     // Disable text processing for comments.

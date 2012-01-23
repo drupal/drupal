@@ -1,5 +1,0 @@
-name = "Trigger Test"
-description = "Support module for Trigger tests."
-package = Testing
-core = 8.x
-hidden = TRUE

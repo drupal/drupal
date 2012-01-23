@@ -21,10 +21,10 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp(array('field_test'));
 
-    field_attach_create_bundle('test_entity_bundle_key', 'bundle1');
-    field_attach_create_bundle('test_entity_bundle_key', 'bundle2');
-    field_attach_create_bundle('test_entity', 'test_bundles');
-    field_attach_create_bundle('test_entity_bundle', 'test_entity_bundle');
+    field_test_create_bundle('bundle1');
+    field_test_create_bundle('bundle2');
+    field_test_create_bundle('test_bundle');
+    field_test_create_bundle('test_entity_bundle');
 
     $instances = array();
     $this->fields = array();

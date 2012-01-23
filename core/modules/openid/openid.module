@@ -569,7 +569,7 @@ function _openid_xrds_discovery($claimed_id) {
         }
         else {
           // Look for meta http-equiv link in HTML head
-          $xrds_url = _openid_meta_httpequiv('X-XRDS-Location', $result->data);
+          $xrds_url = _openid_meta_httpequiv($result->data);
         }
         if (!empty($xrds_url)) {
           $headers = array('Accept' => 'application/xrds+xml');

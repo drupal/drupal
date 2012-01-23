@@ -1217,6 +1217,7 @@ select.form-select {
   padding: 4px;
 }
 input.form-text,
+input.form-tel,
 textarea.form-textarea,
 select.form-select {
   border: 1px solid #ccc;

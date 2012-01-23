@@ -68,13 +68,13 @@ function locale_translate_import_form_submit($form, &$form_state) {
 
     // Add language, if not yet supported
     drupal_static_reset('language_list');
-    $languages = language_list('language');
+    $languages = language_list();
     $langcode = $form_state['values']['langcode'];
     if (!isset($languages[$langcode])) {
       include_once DRUPAL_ROOT . '/core/includes/standard.inc';
       $predefined = standard_language_list();
       $language = (object) array(
-        'language' => $langcode,
+        'langcode' => $langcode,
       );
       language_save($language);
       drupal_set_message(t('The language %language has been created.', array('%language' => t($predefined[$langcode][0]))));
@@ -254,7 +254,7 @@ function locale_translate_batch_import($filepath, &$context) {
   // The filename is either {langcode}.po or {prefix}.{langcode}.po, so
   // we can extract the language code to use for the import from the end.
   if (preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $langcode)) {
-    $file = (object) array('filename' => basename($filepath), 'uri' => $filepath);
+    $file = (object) array('filename' => drupal_basename($filepath), 'uri' => $filepath);
     _locale_import_read_po('db-store', $file, LOCALE_IMPORT_KEEP, $langcode[2]);
     $context['results'][] = $filepath;
   }

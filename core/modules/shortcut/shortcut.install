@@ -13,18 +13,19 @@ function shortcut_install() {
   // Create an initial default shortcut set.
   $shortcut_set = new stdClass();
   $shortcut_set->title = $t('Default');
-  $shortcut_set->links = array(
-    array(
+  $shortcut_set->links = array();
+  if (module_exists('node')) {
+    $shortcut_set->links[] = array(
       'link_path' => 'node/add',
       'link_title' => $t('Add content'),
       'weight' => -20,
-    ),
-    array(
+    );
+    $shortcut_set->links[] = array(
       'link_path' => 'admin/content',
       'link_title' => $t('Find content'),
       'weight' => -19,
-    ),
-  );
+    );
+  }
   // If Drupal is being installed, rebuild the menu before saving the shortcut
   // set, to make sure the links defined above can be correctly saved. (During
   // installation, the menu might not have been built at all yet, or it might

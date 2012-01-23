@@ -172,7 +172,7 @@ function file_file_download($uri, $field_type = 'file') {
           // Find the field item with the matching URI.
           foreach ($field_items as $field_item) {
             if ($field_item['uri'] == $uri) {
-              $field = $field_item;
+              $field = field_info_field($field_name);
               break;
             }
           }

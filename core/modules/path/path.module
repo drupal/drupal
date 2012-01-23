@@ -98,7 +98,7 @@ function path_form_node_form_alter(&$form, $form_state) {
   if (!empty($form['#node']->nid)) {
     $conditions = array('source' => 'node/' . $form['#node']->nid);
     if ($form['#node']->language != LANGUAGE_NONE) {
-      $conditions['language'] = $form['#node']->language;
+      $conditions['langcode'] = $form['#node']->language;
     }
     $path = path_load($conditions);
     if ($path === FALSE) {
@@ -109,7 +109,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     'pid' => NULL,
     'source' => isset($form['#node']->nid) ? 'node/' . $form['#node']->nid : NULL,
     'alias' => '',
-    'language' => isset($form['#node']->language) ? $form['#node']->language : LANGUAGE_NONE,
+    'langcode' => isset($form['#node']->language) ? $form['#node']->language : LANGUAGE_NONE,
   );
 
   $form['path'] = array(
@@ -140,7 +140,7 @@ function path_form_node_form_alter(&$form, $form_state) {
   );
   $form['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
   $form['path']['source'] = array('#type' => 'value', '#value' => $path['source']);
-  $form['path']['language'] = array('#type' => 'value', '#value' => $path['language']);
+  $form['path']['langcode'] = array('#type' => 'value', '#value' => $path['langcode']);
 }
 
 /**
@@ -151,14 +151,14 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
     // Trim the submitted value.
     $alias = trim($form_state['values']['path']['alias']);
     form_set_value($element['alias'], $alias, $form_state);
-    // Node language (Locale module) needs special care. Since the language of
-    // the URL alias depends on the node language, and the node language can be
-    // switched right within the same form, we need to conditionally overload
-    // the originally assigned URL alias language.
+    // Node language needs special care. Since the language of the URL alias
+    // depends on the node language, and the node language can be switched
+    // right within the same form, we need to conditionally overload the
+    // originally assigned URL alias language.
     // @todo Remove this after converting Path module to a field, and, after
     //   stopping Locale module from abusing the content language system.
     if (isset($form_state['values']['language'])) {
-      form_set_value($element['language'], $form_state['values']['language'], $form_state);
+      form_set_value($element['langcode'], $form_state['values']['language'], $form_state);
     }
 
     $path = $form_state['values']['path'];
@@ -166,7 +166,7 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
     // Ensure that the submitted alias does not exist yet.
     $query = db_select('url_alias')
       ->condition('alias', $path['alias'])
-      ->condition('language', $path['language']);
+      ->condition('langcode', $path['langcode']);
     if (!empty($path['source'])) {
       $query->condition('source', $path['source'], '<>');
     }
@@ -189,7 +189,7 @@ function path_node_insert($node) {
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $path['source'] = 'node/' . $node->nid;
-      $path['language'] = isset($node->language) ? $node->language : LANGUAGE_NONE;
+      $path['langcode'] = isset($node->language) ? $node->language : LANGUAGE_NONE;
       path_save($path);
     }
   }
@@ -210,7 +210,7 @@ function path_node_update($node) {
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $path['source'] = 'node/' . $node->nid;
-      $path['language'] = isset($node->language) ? $node->language : LANGUAGE_NONE;
+      $path['langcode'] = isset($node->language) ? $node->language : LANGUAGE_NONE;
       path_save($path);
     }
   }
@@ -238,7 +238,7 @@ function path_form_taxonomy_form_term_alter(&$form, $form_state) {
       'pid' => NULL,
       'source' => isset($form['#term']['tid']) ? 'taxonomy/term/' . $form['#term']['tid'] : NULL,
       'alias' => '',
-      'language' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NONE,
     );
     $form['path'] = array(
       '#access' => user_access('create url aliases') || user_access('administer url aliases'),
@@ -255,7 +255,7 @@ function path_form_taxonomy_form_term_alter(&$form, $form_state) {
     );
     $form['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
     $form['path']['source'] = array('#type' => 'value', '#value' => $path['source']);
-    $form['path']['language'] = array('#type' => 'value', '#value' => $path['language']);
+    $form['path']['langcode'] = array('#type' => 'value', '#value' => $path['langcode']);
   }
 }
 
@@ -270,7 +270,7 @@ function path_taxonomy_term_insert($term) {
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $path['source'] = 'taxonomy/term/' . $term->tid;
-      $path['language'] = LANGUAGE_NONE;
+      $path['langcode'] = LANGUAGE_NONE;
       path_save($path);
     }
   }
@@ -291,7 +291,7 @@ function path_taxonomy_term_update($term) {
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $path['source'] = 'taxonomy/term/' . $term->tid;
-      $path['language'] = LANGUAGE_NONE;
+      $path['langcode'] = LANGUAGE_NONE;
       path_save($path);
     }
   }

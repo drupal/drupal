@@ -63,7 +63,7 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *           $message['send'] = FALSE;
  *           break;
  *         }
- *         $langcode = $message['language']->language;
+ *         $langcode = $message['language']->langcode;
  *         $message['subject'] = t('Notification from !site', $variables, array('langcode' => $langcode));
  *         $message['body'][] = t("Dear !username\n\nThere is new content available on the site.", $variables, array('langcode' => $langcode));
  *         break;

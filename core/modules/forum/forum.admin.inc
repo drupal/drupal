@@ -275,7 +275,7 @@ function forum_overview($form, &$form_state) {
  */
 function _forum_parent_select($tid, $title, $child_type) {
 
-  $parents = taxonomy_get_parents($tid);
+  $parents = taxonomy_term_load_parents($tid);
   if ($parents) {
     $parent = array_shift($parents);
     $parent = $parent->tid;

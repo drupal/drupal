@@ -317,7 +317,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
     }
 
     $extension = '';
-    $file_parts = explode('.', basename($uri));
+    $file_parts = explode('.', drupal_basename($uri));
 
     // Remove the first part: a full filename should not match an extension.
     array_shift($file_parts);
@@ -377,7 +377,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
     $realpath = realpath($path);
     if (!$realpath) {
       // This file does not yet exist.
-      $realpath = realpath(dirname($path)) . '/' . basename($path);
+      $realpath = realpath(dirname($path)) . '/' . drupal_basename($path);
     }
     $directory = realpath($this->getDirectoryPath());
     if (!$realpath || !$directory || strpos($realpath, $directory) !== 0) {

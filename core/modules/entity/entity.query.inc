@@ -45,6 +45,7 @@ class EntityFieldQueryException extends Exception {}
  * other storage engines might not do this.
  */
 class EntityFieldQuery {
+
   /**
    * Indicates that both deleted and non-deleted fields should be returned.
    *
@@ -592,7 +593,8 @@ class EntityFieldQuery {
    * Enables sortable tables for this query.
    *
    * @param $headers
-   *   An EFQ Header array based on which the order clause is added to the query.
+   *   An EFQ Header array based on which the order clause is added to the
+   *   query.
    *
    * @return EntityFieldQuery
    *   The called object.

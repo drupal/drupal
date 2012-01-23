@@ -8,7 +8,7 @@
  * Variables:
  * - $css: An array of CSS files for the current page.
  * - $language: (object) The language the site is being displayed in.
- *   $language->language contains its textual representation.
+ *   $language->langcode contains its textual representation.
  *   $language->dir contains the language direction.
  *   It will either be 'ltr' or 'rtl'.
  * - $head_title: A modified version of the page title, for use in the TITLE

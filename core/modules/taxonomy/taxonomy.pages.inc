@@ -24,7 +24,7 @@ function taxonomy_term_page($term) {
   // @todo This overrides any other possible breadcrumb and is a pure hard-coded
   //   presumption. Make this behavior configurable per vocabulary or term.
   $breadcrumb = array();
-  while ($parents = taxonomy_get_parents($current->tid)) {
+  while ($parents = taxonomy_term_load_parents($current->tid)) {
     $current = array_shift($parents);
     $breadcrumb[] = l($current->name, 'taxonomy/term/' . $current->tid);
   }

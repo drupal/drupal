@@ -13,7 +13,7 @@
  * @see theme_taxonomy_overview_vocabularies()
  */
 function taxonomy_overview_vocabularies($form) {
-  $vocabularies = taxonomy_get_vocabularies();
+  $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
   $form['#tree'] = TRUE;
   foreach ($vocabularies as $vocabulary) {
     $form[$vocabulary->vid]['#vocabulary'] = $vocabulary;
@@ -666,7 +666,7 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     }
   }
 
-  $parent = array_keys(taxonomy_get_parents($term->tid));
+  $parent = array_keys(taxonomy_term_load_parents($term->tid));
   $form['#term'] = (array) $term;
   $form['#term']['parent'] = $parent;
   $form['#vocabulary'] = $vocabulary;
@@ -707,12 +707,12 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     '#weight' => 10,
   );
 
-  // taxonomy_get_tree and taxonomy_get_parents may contain large numbers of
+  // taxonomy_get_tree and taxonomy_term_load_parents may contain large numbers of
   // items so we check for taxonomy_override_selector before loading the
   // full vocabulary. Contrib modules can then intercept before
   // hook_form_alter to provide scalable alternatives.
   if (!variable_get('taxonomy_override_selector', FALSE)) {
-    $parent = array_keys(taxonomy_get_parents($term->tid));
+    $parent = array_keys(taxonomy_term_load_parents($term->tid));
     $children = taxonomy_get_tree($vocabulary->vid, $term->tid);
 
     // A term can't be the child of itself, nor of its children.

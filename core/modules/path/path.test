@@ -297,9 +297,11 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $this->drupalGet('fr/' . $edit['path[alias]']);
     $this->assertText($french_node->title, 'Alias for French translation works.');
 
-    // Confirm that the alias is returned by url().
+    // Confirm that the alias is returned by url(). Languages are cached on
+    // many levels, and we need to clear those caches.
     drupal_static_reset('language_list');
     drupal_static_reset('locale_url_outbound_alter');
+    drupal_static_reset('locale_language_url_rewrite_url');
     $languages = language_list();
     $url = url('node/' . $french_node->nid, array('language' => $languages[$french_node->language]));
     $this->assertTrue(strpos($url, $edit['path[alias]']), t('URL contains the path alias.'));
@@ -418,7 +420,7 @@ class PathLanguageUITestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['source'] = 'admin/config/search/path';
     $edit['alias'] = $name;
-    $edit['language'] = 'en';
+    $edit['langcode'] = 'en';
     $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
 
     $this->drupalGet($name);
@@ -433,7 +435,7 @@ class PathLanguageUITestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['source'] = 'admin/config/search/path';
     $edit['alias'] = $name;
-    $edit['language'] = 'fr';
+    $edit['langcode'] = 'fr';
     $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
 
     $this->drupalGet('fr/' . $name);
@@ -476,8 +478,8 @@ class PathMonolingualTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Verify that French is the only language.
-    $this->assertFalse(drupal_multilingual(), t('Site is mono-lingual'));
-    $this->assertEqual(language_default()->language, 'fr', t('French is the default language'));
+    $this->assertFalse(language_multilingual(), t('Site is mono-lingual'));
+    $this->assertEqual(language_default()->langcode, 'fr', t('French is the default language'));
 
     // Set language detection to URL.
     $edit = array('language[enabled][locale-url]' => TRUE);

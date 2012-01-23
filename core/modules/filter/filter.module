@@ -395,7 +395,7 @@ function filter_formats($account = NULL) {
 
   // All available formats are cached for performance.
   if (!isset($formats['all'])) {
-    if ($cache = cache()->get("filter_formats:{$language->language}")) {
+    if ($cache = cache()->get("filter_formats:{$language->langcode}")) {
       $formats['all'] = $cache->data;
     }
     else {
@@ -407,7 +407,7 @@ function filter_formats($account = NULL) {
         ->execute()
         ->fetchAllAssoc('format');
 
-      cache()->set("filter_formats:{$language->language}", $formats['all']);
+      cache()->set("filter_formats:{$language->langcode}", $formats['all']);
     }
   }
 
