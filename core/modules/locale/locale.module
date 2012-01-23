@@ -219,8 +219,8 @@ function locale_permission() {
  */
 function locale_language_selector_form($user) {
   global $language;
-  $languages = language_list('enabled');
-  $languages = $languages[1];
+  // Get list of enabled languages only.
+  $languages = language_list(TRUE);
 
   // If the user is being created, we set the user language to the page language.
   $user_preferred_language = $user->uid ? user_preferred_language($user) : $language;
@@ -296,11 +296,16 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
  */
 function locale_form_node_form_alter(&$form, &$form_state) {
   if (isset($form['#node']->type) && locale_multilingual_node_type($form['#node']->type)) {
+    $languages = language_list(TRUE);
+    $language_options = array(LANGUAGE_NONE => t('Language neutral'));
+    foreach ($languages as $langcode => $language) {
+      $language_options[$langcode] = $language->name;
+    }
     $form['language'] = array(
       '#type' => 'select',
       '#title' => t('Language'),
       '#default_value' => (isset($form['#node']->language) ? $form['#node']->language : ''),
-      '#options' => array(LANGUAGE_NONE => t('Language neutral')) + locale_language_list('name'),
+      '#options' => $language_options,
     );
   }
   // Node type without language selector: assign the default for new nodes
@@ -764,37 +769,12 @@ function locale_get_plural($count, $langcode = NULL) {
 
 
 /**
- * Returns a language name
+ * Returns a language name.
  */
-function locale_language_name($lang) {
-  $list = &drupal_static(__FUNCTION__);
-  if (!isset($list)) {
-    $list = locale_language_list();
-  }
-  return ($lang && isset($list[$lang])) ? $list[$lang] : t('All');
-}
-
-/**
- * Returns array of language names
- *
- * @param $field
- *   Name of language object field.
- * @param $all
- *   Boolean to return all languages or only enabled ones
- */
-function locale_language_list($field = 'name', $all = FALSE) {
-  if ($all) {
-    $languages = language_list();
-  }
-  else {
-    $languages = language_list('enabled');
-    $languages = $languages[1];
-  }
-  $list = array();
-  foreach ($languages as $language) {
-    $list[$language->langcode] = $language->$field;
-  }
-  return $list;
+function locale_language_name($langcode) {
+  // Consider enabled languages only.
+  $languages = language_list(TRUE);
+  return ($langcode && isset($languages[$langcode])) ? $languages[$langcode]->name : t('All');
 }
 
 /**

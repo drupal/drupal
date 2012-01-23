@@ -2032,8 +2032,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // is for some reason not found when doing translate search. This might
     // be some bug.
     drupal_static_reset('language_list');
-    $languages = language_list('enabled');
-    variable_set('language_default', $languages[1]['vi']);
+    $languages = language_list(TRUE);
+    variable_set('language_default', $languages['vi']);
     // First visit this page to make sure our target string is searchable.
     $this->drupalGet('admin/config');
     // Now the t()'ed string is in db so switch the language back to default.

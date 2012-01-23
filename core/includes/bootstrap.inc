@@ -2652,53 +2652,45 @@ function language_types() {
 }
 
 /**
- * Returns a list of installed languages, indexed by the specified key.
+ * Returns a list of configured languages.
  *
- * @param $field
- *   (optional) The field to index the list with.
+ * @param $only_enabled
+ *   (optional) Whether to return only enabled languages.
  *
  * @return
- *   An associative array, keyed on the values of $field.
- *   - If $field is 'weight' or 'enabled', the array is nested, with the outer
- *     array's values each being associative arrays with language codes as
- *     keys and language objects as values.
- *   - For all other values of $field, the array is only one level deep, and
- *     the array's values are language objects.
+ *   An associative array of languages, keyed by the language code, ordered by
+ *   weight ascending and name ascending.
  */
-function language_list($field = 'langcode') {
+function language_list($only_enabled = FALSE) {
   $languages = &drupal_static(__FUNCTION__);
-  // Init language list
+  // Initialize master language list.
   if (!isset($languages)) {
+    // Initialize local language list caches.
+    $languages = array('all' => array(), 'enabled' => array());
+
+    // Fill in master language list based on current configuration.
     $default = language_default();
     if (language_multilingual() || module_exists('language')) {
-      $languages['langcode'] = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode');
+      // Use language module configuration if available.
+      $languages['all'] = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode');
     }
     else {
-      // No locale module, so use the default language only.
-      $languages['langcode'][$default->langcode] = $default;
+      // No language module, so use the default language only.
+      $languages['all'][$default->langcode] = $default;
     }
 
-    // Initialize default property so callers have an easy reference and
-    // can save the same object without data loss.
-    foreach ($languages['langcode'] as $langcode => $language) {
-      $languages['langcode'][$langcode]->default = ($langcode == $default->langcode);
-    }
-  }
-
-  // Return the array indexed by the right field
-  if (!isset($languages[$field])) {
-    $languages[$field] = array();
-    foreach ($languages['langcode'] as $lang) {
-      // Some values should be collected into an array
-      if (in_array($field, array('enabled', 'weight'))) {
-        $languages[$field][$lang->$field][$lang->langcode] = $lang;
-      }
-      else {
-        $languages[$field][$lang->$field] = $lang;
+    // Initialize default property so callers have an easy reference and can
+    // save the same object without data loss. Also fill in the filtered list
+    // of enabled languages only.
+    foreach ($languages['all'] as $langcode => $language) {
+      $languages['all'][$langcode]->default = ($langcode == $default->langcode);
+      if ($language->enabled) {
+        $languages['enabled'][$langcode] = $languages['all'][$langcode];
       }
     }
   }
-  return $languages[$field];
+
+  return $only_enabled ? $languages['enabled'] : $languages['all'];
 }
 
 /**
@@ -3204,29 +3196,29 @@ function registry_update() {
  *
  * Example:
  * @code
- * function language_list($field = 'langcode') {
- *   $languages = &drupal_static(__FUNCTION__);
- *   if (!isset($languages)) {
+ * function example_list($field = 'default') {
+ *   $examples = &drupal_static(__FUNCTION__);
+ *   if (!isset($examples)) {
  *     // If this function is being called for the first time after a reset,
  *     // query the database and execute any other code needed to retrieve
- *     // information about the supported languages.
+ *     // information.
  *     ...
  *   }
- *   if (!isset($languages[$field])) {
+ *   if (!isset($examples[$field])) {
  *     // If this function is being called for the first time for a particular
  *     // index field, then execute code needed to index the information already
- *     // available in $languages by the desired field.
+ *     // available in $examples by the desired field.
  *     ...
  *   }
  *   // Subsequent invocations of this function for a particular index field
  *   // skip the above two code blocks and quickly return the already indexed
  *   // information.
- *   return $languages[$field];
+ *   return $examples[$field];
  * }
- * function locale_translate_overview_screen() {
- *   // When building the content for the translations overview page, make
- *   // sure to get completely fresh information about the supported languages.
- *   drupal_static_reset('language_list');
+ * function examples_admin_overview() {
+ *   // When building the content for the overview page, make sure to get
+ *   // completely fresh information.
+ *   drupal_static_reset('example_list');
  *   ...
  * }
  * @endcode
