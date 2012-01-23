@@ -1026,9 +1026,9 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
           break;
         }
         $term = $load_entities ? $term_entities[$child] : $terms[$vid][$child];
-        if (count($parents[$vid][$term->tid]) > 1) {
-          // We have a term with multi parents here. Clone the term,
-          // so that the depth attribute remains correct.
+        if (isset($parents[$vid][$term->tid])) {
+          // Clone the term so that the depth attribute remains correct
+          // in the event of multiple parents.
           $term = clone $term;
         }
         $term->depth = $depth;
