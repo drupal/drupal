@@ -2292,7 +2292,7 @@ function _drupal_bootstrap_configuration() {
 
   // Register explicit vendor namespaces.
   $loader->registerNamespaces(array(
-    // All Symfony-borrowed code lives in /core/includes/Symfony.
+    // All Symfony-borrowed code lives in /core/vendor/Symfony.
     'Symfony' => DRUPAL_ROOT . '/core/vendor',
   ));
   // Register the Drupal namespace for classes in core as a fallback.
@@ -2302,7 +2302,7 @@ function _drupal_bootstrap_configuration() {
   // namespace match based on a string comparison. It further allows modules to
   // register/overload namespaces in Drupal core.
   $loader->registerNamespaceFallbacks(array(
-    // All Drupal-namespaced code in core lives in /core/includes/Drupal.
+    // All Drupal-namespaced code in core lives in /core/lib/Drupal.
     'Drupal' => DRUPAL_ROOT . '/core/lib',
   ));
 }
