@@ -3407,15 +3407,6 @@ function user_build_filter_query(SelectQuery $query) {
 }
 
 /**
- * Implements hook_forms().
- */
-function user_forms() {
-  $forms['user_admin_access_add_form']['callback'] = 'user_admin_access_form';
-  $forms['user_admin_access_edit_form']['callback'] = 'user_admin_access_form';
-  return $forms;
-}
-
-/**
  * Implements hook_comment_view().
  */
 function user_comment_view($comment) {
