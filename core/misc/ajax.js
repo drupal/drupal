@@ -536,7 +536,7 @@ Drupal.ajax.prototype.commands = {
     // Attach all JavaScript behaviors to the new content, if it was successfully
     // added to the page, this if statement allows #ajax['wrapper'] to be
     // optional.
-    if (new_content.parents('html').length > 0) {
+    if ($('html').find(new_content).length > 0) {
       // Apply any settings from the returned JSON if available.
       var settings = response.settings || ajax.settings || Drupal.settings;
       Drupal.attachBehaviors(new_content, settings);
