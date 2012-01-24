@@ -436,7 +436,7 @@ class TranslationTestCase extends DrupalWebTestCase {
         $xpath = '//div[contains(@class, :type)]//a[@href=:url]';
       }
       else {
-        $xpath = '//div[contains(@class, :type)]//span[@class="locale-untranslated"]';
+        $xpath = '//div[contains(@class, :type)]//span[contains(@class, "locale-untranslated")]';
       }
 
       $found = $this->findContentByXPath($xpath, array(':type' => $type, ':url' => $url), $translation_language->name);
