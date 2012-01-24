@@ -33,7 +33,7 @@ Drupal.behaviors.shortcutDrag = {
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         var disabledIndex = $(table).find('tr').index($(table).find('tr.shortcut-status-disabled')) - slots - 2,
           count = 0;
-        $(table).find('tr.shortcut-status-enabled').nextAll().filter(':not(.shortcut-slot-empty)').each(function(index) {
+        $(table).find('tr.shortcut-status-enabled').nextAll(':not(.shortcut-slot-empty)').each(function(index) {
           if (index < disabledIndex) {
             count++;
           }
@@ -41,15 +41,18 @@ Drupal.behaviors.shortcutDrag = {
         var total = slots - count;
         if (total == -1) {
           var disabled = $(table).find('tr.shortcut-status-disabled');
-          disabled.after(disabled.prevAll().filter(':not(.shortcut-slot-empty)').get(0));
-          if ($(swappedRow).hasClass('draggable')) {
+          // To maintain the shortcut links limit, we need to move the last
+          // element from the enabled section to the disabled section.
+          var changedRow = disabled.prevAll(':not(.shortcut-slot-empty)').not($(this.element)).get(0);
+          disabled.after(changedRow);
+          if ($(changedRow).hasClass('draggable')) {
             // The dropped element will automatically be marked as changed by
             // the tableDrag system. However, the row that swapped with it
             // has moved to the "disabled" section, so we need to force its
             // status to be disabled and mark it also as changed.
-            swappedRowObject = new tableDrag.row(swappedRow, 'mouse', self.indentEnabled, self.maxDepth, true);
-            swappedRowObject.markChanged();
-            rowStatusChange(swappedRowObject);
+            var changedRowObject = new tableDrag.row(changedRow, 'mouse', self.indentEnabled, self.maxDepth, true);
+            changedRowObject.markChanged();
+            rowStatusChange(changedRowObject);
           }
         }
         else if (total != visibleLength) {
