@@ -2962,7 +2962,6 @@ function node_node_access($node, $op, $account) {
  */
 function node_list_permissions($type) {
   $info = node_type_get_type($type);
-  $type = check_plain($info->type);
 
   // Build standard list of node permissions for this type.
   $perms = array(
