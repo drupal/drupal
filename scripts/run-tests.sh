@@ -585,9 +585,8 @@ function simpletest_script_reporter_display_results() {
 
   if ($args['verbose']) {
     // Report results.
-    echo "Detailed test results:\n";
-    echo "----------------------\n";
-    echo "\n";
+    echo "Detailed test results\n";
+    echo "---------------------\n";
 
     $results = db_query("SELECT * FROM {simpletest} WHERE test_id = :test_id ORDER BY test_class, message_id", array(':test_id' => $test_id));
     $test_class = '';
@@ -597,6 +596,10 @@ function simpletest_script_reporter_display_results() {
           // Display test class every time results are for new test class.
           echo "\n\n---- $result->test_class ----\n\n\n";
           $test_class = $result->test_class;
+
+  // Print table header.
+  echo "Status    Group      Filename          Line Function                            \n";
+  echo "--------------------------------------------------------------------------------\n";
         }
 
         simpletest_script_format_result($result);
@@ -614,8 +617,8 @@ function simpletest_script_reporter_display_results() {
 function simpletest_script_format_result($result) {
   global $results_map, $color;
 
-  $summary = sprintf("%-10.10s %-10.10s %-30.30s %-5.5s %-20.20s\n",
-    $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $result->caller);
+  $summary = sprintf("%-9.9s %-10.10s %-17.17s %4.4s %-35.35s\n",
+    $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $result->function);
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
 
