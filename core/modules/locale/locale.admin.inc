@@ -256,10 +256,11 @@ function locale_language_providers_url_form($form, &$form_state) {
     ),
   );
 
-  $languages = language_list('enabled');
+  // Get the enabled languages only.
+  $languages = language_list(TRUE);
   $prefixes = locale_language_negotiation_url_prefixes();
   $domains = locale_language_negotiation_url_domains();
-  foreach ($languages[1] as $langcode => $language) {
+  foreach ($languages as $langcode => $language) {
     $form['prefix'][$langcode] = array(
       '#type' => 'textfield',
       '#title' => t('%language (%langcode) path prefix', array('%language' => $language->name, '%langcode' => $language->langcode)),
@@ -292,40 +293,41 @@ function locale_language_providers_url_form($form, &$form_state) {
  * the prefix and domain are only blank for the default.
  */
 function locale_language_providers_url_form_validate($form, &$form_state) {
-  $languages = locale_language_list();
+  // Get the enabled languages only.
+  $languages = language_list(TRUE);
   $default = language_default();
 
   // Count repeated values for uniqueness check.
   $count = array_count_values($form_state['values']['prefix']);
-  foreach ($languages as $langcode => $name) {
+  foreach ($languages as $langcode => $language) {
     $value = $form_state['values']['prefix'][$langcode];
 
     if ($value === '') {
-      if ($default->langcode != $langcode && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
+      if (!$language->default && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
         // Validation error if the prefix is blank for a non-default language, and value is for selected negotiation type.
         form_error($form['prefix'][$langcode], t('The prefix may only be left blank for the default language.'));
       }
     }
     else if (isset($count[$value]) && $count[$value] > 1) {
       // Validation error if there are two languages with the same domain/prefix.
-      form_error($form['prefix'][$langcode], t('The prefix for %language, %value, is not unique.', array( '%language' => $name, '%value' => $value )));
+      form_error($form['prefix'][$langcode], t('The prefix for %language, %value, is not unique.', array('%language' => $language->name, '%value' => $value)));
     }
   }
 
   // Count repeated values for uniqueness check.
   $count = array_count_values($form_state['values']['domain']);
-  foreach ($languages as $langcode => $name) {
+  foreach ($languages as $langcode => $language) {
     $value = $form_state['values']['domain'][$langcode];
 
     if ($value === '') {
-      if ($default->langcode != $langcode && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN) {
+      if (!$language->default && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN) {
         // Validation error if the domain is blank for a non-default language, and value is for selected negotiation type.
         form_error($form['domain'][$langcode], t('The domain may only be left blank for the default language.'));
       }
     }
     else if (isset($count[$value]) && $count[$value] > 1) {
       // Validation error if there are two languages with the same domain/domain.
-      form_error($form['domain'][$langcode], t('The domain for %language, %value, is not unique.', array( '%language' => $name, '%value' => $value )));
+      form_error($form['domain'][$langcode], t('The domain for %language, %value, is not unique.', array('%language' => $language->name, '%value' => $value)));
     }
   }
 }
@@ -405,12 +407,12 @@ function locale_date_format_language_overview_page() {
     array('data' => t('Operations'), 'colspan' => '2'),
   );
 
-  // Get list of languages.
-  $languages = locale_language_list();
+  // Get the enabled languages only.
+  $languages = language_list(TRUE);
 
-  foreach ($languages as $langcode => $info) {
+  foreach ($languages as $langcode => $language) {
     $row = array();
-    $row[] = $languages[$langcode];
+    $row[] = $language->name;
     $row[] = l(t('edit'), 'admin/config/regional/date-time/locale/' . $langcode . '/edit');
     $row[] = l(t('reset'), 'admin/config/regional/date-time/locale/' . $langcode . '/reset');
     $rows[] = $row;
@@ -423,14 +425,11 @@ function locale_date_format_language_overview_page() {
  * Provide date localization configuration options to users.
  */
 function locale_date_format_form($form, &$form_state, $langcode) {
-  $languages = locale_language_list();
-  $language_name = $languages[$langcode];
-
   // Display the current language name.
   $form['language'] = array(
     '#type' => 'item',
     '#title' => t('Language'),
-    '#markup' => check_plain($language_name),
+    '#markup' => language_load($langcode)->name,
     '#weight' => -10,
   );
   $form['langcode'] = array(
@@ -509,9 +508,8 @@ function locale_date_format_form_submit($form, &$form_state) {
  */
 function locale_date_format_reset_form($form, &$form_state, $langcode) {
   $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-  $languages = language_list();
   return confirm_form($form,
-    t('Are you sure you want to reset the date formats for %language to the global defaults?', array('%language' => $languages[$langcode]->name)),
+    t('Are you sure you want to reset the date formats for %language to the global defaults?', array('%language' => language_load($langcode)->name)),
     'admin/config/regional/date-time/locale',
     t('Resetting will remove all localized date formats for this language. This action cannot be undone.'),
     t('Reset'), t('Cancel'));

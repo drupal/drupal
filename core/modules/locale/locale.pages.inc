@@ -152,9 +152,12 @@ function locale_translation_filters() {
 
   // Get all languages, except English
   drupal_static_reset('language_list');
-  $languages = locale_language_list('name');
-  if (!locale_translate_english()) {
-    unset($languages['en']);
+  $languages = language_list(TRUE);
+  $language_options = array();
+  foreach ($languages as $langcode => $language) {
+    if ($langcode != 'en' || locale_translate_english()) {
+      $language_options[$langcode] = $language->name;
+    }
   }
 
   $filters['string'] = array(
@@ -164,7 +167,7 @@ function locale_translation_filters() {
 
   $filters['language'] = array(
     'title' => t('Language'),
-    'options' => array_merge(array('all' => t('All languages'), LANGUAGE_SYSTEM => t('System (English)')), $languages),
+    'options' => array_merge(array('all' => t('All languages'), LANGUAGE_SYSTEM => t('System (English)')), $language_options),
   );
 
   $filters['translation'] = array(

@@ -329,9 +329,8 @@ function language_provider_invoke($provider_id, $provider = NULL) {
   if (!isset($results[$provider_id])) {
     global $user;
 
-    // Get languages grouped by status and select only the enabled ones.
-    $languages = language_list('enabled');
-    $languages = $languages[1];
+    // Get the enabled languages only.
+    $languages = language_list(TRUE);
 
     if (!isset($provider)) {
       $providers = language_negotiation_info();
@@ -454,17 +453,8 @@ function language_fallback_get_candidates($type = LANGUAGE_TYPE_CONTENT) {
   $fallback_candidates = &drupal_static(__FUNCTION__);
 
   if (!isset($fallback_candidates)) {
-    $fallback_candidates = array();
-
-    // Get languages ordered by weight.
-    // Use array keys to avoid duplicated entries.
-    foreach (language_list('weight') as $languages) {
-      foreach ($languages as $language) {
-        $fallback_candidates[$language->langcode] = NULL;
-      }
-    }
-
-    $fallback_candidates = array_keys($fallback_candidates);
+    // Get languages ordered by weight, add LANGUAGE_NONE as the last one.
+    $fallback_candidates = array_keys(language_list());
     $fallback_candidates[] = LANGUAGE_NONE;
 
     // Let other modules hook in and add/change candidates.

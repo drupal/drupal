@@ -349,14 +349,16 @@ function locale_language_url_fallback($language = NULL, $language_type = LANGUAG
 }
 
 /**
- * Return the URL language switcher block. Translation links may be provided by
- * other modules.
+ * Return links for the URL language switcher block.
+ *
+ * Translation links may be provided by other modules.
  */
 function locale_language_switcher_url($type, $path) {
-  $languages = language_list('enabled');
+  // Get the enabled languages only.
+  $languages = language_list(TRUE);
   $links = array();
 
-  foreach ($languages[1] as $language) {
+  foreach ($languages as $language) {
     $links[$language->langcode] = array(
       'href'       => $path,
       'title'      => $language->name,
@@ -377,13 +379,14 @@ function locale_language_switcher_session($type, $path) {
   $param = variable_get('locale_language_negotiation_session_param', 'language');
   $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : $GLOBALS[$type]->langcode;
 
-  $languages = language_list('enabled');
+  // Get the enabled languages only.
+  $languages = language_list(TRUE);
   $links = array();
 
   $query = $_GET;
   unset($query['q']);
 
-  foreach ($languages[1] as $language) {
+  foreach ($languages as $language) {
     $langcode = $language->langcode;
     $links[$langcode] = array(
       'href'       => $path,
@@ -413,8 +416,9 @@ function locale_language_url_rewrite_url(&$path, &$options) {
   $languages = &$drupal_static_fast['languages'];
 
   if (!isset($languages)) {
-    $languages = language_list('enabled');
-    $languages = array_flip(array_keys($languages[1]));
+    // Get the enabled languages only.
+    $languages = language_list(TRUE);
+    $languages = array_flip(array_keys($languages));
   }
 
   // Language can be passed as an option, or we go for current URL language.
@@ -488,8 +492,8 @@ function locale_language_url_rewrite_session(&$path, &$options) {
   if (!isset($query_rewrite)) {
     global $user;
     if (!$user->uid) {
-      $languages = language_list('enabled');
-      $languages = $languages[1];
+      // Get the enabled languages only.
+      $languages = language_list(TRUE);
       $query_param = check_plain(variable_get('locale_language_negotiation_session_param', 'language'));
       $query_value = isset($_GET[$query_param]) ? check_plain($_GET[$query_param]) : NULL;
       $query_rewrite = isset($languages[$query_value]) && language_negotiation_get_any(LOCALE_LANGUAGE_NEGOTIATION_SESSION);

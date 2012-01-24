@@ -125,20 +125,25 @@ function translation_form_node_type_form_alter(&$form, &$form_state) {
 function translation_form_node_form_alter(&$form, &$form_state) {
   if (translation_supported_type($form['#node']->type)) {
     $node = $form['#node'];
-    $languages = language_list('enabled');
-    $disabled_languages = isset($languages[0]) ? $languages[0] : FALSE;
-    $translator_widget = $disabled_languages && user_access('translate content');
+
+    // Build two lists with the disabled and enabled languages.
+    $languages = language_list();
+    $grouped_languages = array();
+    foreach ($languages as $langcode => $language) {
+      $grouped_languages[(int) $language->enabled][$langcode] = $language;
+    }
+
+    $translator_widget = !empty($grouped_languages[0]) && user_access('translate content');
     $groups = array(t('Disabled'), t('Enabled'));
     // Allow translators to enter content in disabled languages. Translators
     // might need to distinguish between enabled and disabled languages, hence
     // we divide them in two option groups.
     if ($translator_widget) {
       $options = array($groups[1] => array(LANGUAGE_NONE => t('Language neutral')));
-      $language_list = locale_language_list('name', TRUE);
       foreach (array(1, 0) as $status) {
         $group = $groups[$status];
-        foreach ($languages[$status] as $langcode => $language) {
-          $options[$group][$langcode] = $language_list[$langcode];
+        foreach ($grouped_languages[$status] as $langcode => $language) {
+          $options[$group][$langcode] = $language->name;
         }
       }
       $form['language']['#options'] = $options;
@@ -208,8 +213,7 @@ function translation_node_view($node, $view_mode) {
   // If the site has no translations or is not multilingual we have no content
   // translation links to display.
   if (isset($node->tnid) && language_multilingual() && $translations = translation_node_get_translations($node->tnid)) {
-    $languages = language_list('enabled');
-    $languages = $languages[1];
+    $languages = language_list(TRUE);
 
     // There might be a language provider enabled defining custom language
     // switch links which need to be taken into account while generating the
