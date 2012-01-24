@@ -11,24 +11,32 @@ include_once DRUPAL_ROOT . '/core/includes/gettext.inc';
  * User interface for the translation import screen.
  */
 function locale_translate_import_form($form, &$form_state) {
-  // Get all languages, except English
   drupal_static_reset('language_list');
-  $names = locale_language_list('name');
-  if (!locale_translate_english()) {
-    unset($names['en']);
+  $languages = language_list(TRUE);
+
+  // Initialize a language list to the ones available, including English if we
+  // are to translate Drupal to English as well.
+  $existing_languages = array();
+  foreach ($languages as $langcode => $language) {
+    if ($langcode != 'en' || locale_translate_english()) {
+      $existing_languages[$langcode] = $language->name;
+    }
   }
 
+  // If we have no languages available, present the list of predefined languages
+  // only. If we do have already added languages, set up two option groups with
+  // the list of existing and then predefined languages.
   form_load_include($form_state, 'inc', 'language', 'language.admin');
-  if (!count($names)) {
-    $languages = language_admin_predefined_list();
-    $default = key($languages);
+  if (empty($existing_languages)) {
+    $language_options = language_admin_predefined_list();
+    $default = key($language_options);
   }
   else {
-    $languages = array(
-      t('Already added languages') => $names,
+    $default = key($existing_languages);
+    $language_options = array(
+      t('Already added languages') => $existing_languages,
       t('Languages not yet added') => language_admin_predefined_list()
     );
-    $default = key($names);
   }
 
   $form['import'] = array('#type' => 'fieldset',
@@ -41,7 +49,7 @@ function locale_translate_import_form($form, &$form_state) {
   );
   $form['import']['langcode'] = array('#type' => 'select',
     '#title' => t('Import into'),
-    '#options' => $languages,
+    '#options' => $language_options,
     '#default_value' => $default,
     '#description' => t('Choose the language you want to add strings into. If you choose a language which is not yet set up, it will be added.'),
   );
@@ -101,16 +109,20 @@ function locale_translate_import_form_submit($form, &$form_state) {
  * User interface for the translation export screen.
  */
 function locale_translate_export_screen() {
-  // Get all languages, except English
+  // Get all enabled languages, except English, if we should not translate that.
   drupal_static_reset('language_list');
-  $names = locale_language_list('name');
-  if (!locale_translate_english()) {
-    unset($names['en']);
+  $languages = language_list(TRUE);
+  $language_options = array();
+  foreach ($languages as $langcode => $language) {
+    if ($langcode != 'en' || locale_translate_english()) {
+      $language_options[$langcode] = $language->name;
+    }
   }
+
   $output = '';
   // Offer translation export if any language is set up.
-  if (count($names)) {
-    $elements = drupal_get_form('locale_translate_export_po_form', $names);
+  if (!empty($language_options)) {
+    $elements = drupal_get_form('locale_translate_export_po_form', $language_options);
     $output = drupal_render($elements);
   }
   $elements = drupal_get_form('locale_translate_export_pot_form');

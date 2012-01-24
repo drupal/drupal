@@ -106,14 +106,18 @@ function node_filters() {
     ) + node_type_get_names(),
   );
 
-  // Language filter if there is a list of languages
-  if ($languages = module_invoke('locale', 'language_list')) {
-    $languages = array(LANGUAGE_NONE => t('Language neutral')) + $languages;
+  // Language filter if the site is multilingual.
+  if (language_multilingual()) {
+    $languages = language_list(TRUE);
+    $language_options = array(LANGUAGE_NONE => t('Language neutral'));
+    foreach ($languages as $langcode => $language) {
+      $language_options[$langcode] = $language->name;
+    }
     $filters['language'] = array(
       'title' => t('language'),
       'options' => array(
         '[any]' => t('any'),
-      ) + $languages,
+      ) + $language_options,
     );
   }
   return $filters;
