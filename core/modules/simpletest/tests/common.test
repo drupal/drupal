@@ -524,7 +524,7 @@ class CommonSizeUnitTestCase extends DrupalUnitTestCase {
 /**
  * Test drupal_explode_tags() and drupal_implode_tags().
  */
-class CommonAutocompleteTagsTestCase extends DrupalWebTestCase {
+class CommonAutocompleteTagsTestCase extends DrupalUnitTestCase {
   var $validTags = array(
     'Drupal' => 'Drupal',
     'Drupal with some spaces' => 'Drupal with some spaces',
@@ -2202,7 +2202,7 @@ class CommonSimpleTestErrorCollectorTestCase extends DrupalWebTestCase {
 /**
  * Tests the drupal_parse_info_file() API function.
  */
-class CommonDrupalParseInfoFileTestCase extends DrupalWebTestCase {
+class CommonDrupalParseInfoFileTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Parsing .info files',
