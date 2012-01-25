@@ -1806,7 +1806,7 @@ function format_size($size, $langcode = NULL) {
 /**
  * Formats a time interval with the requested granularity.
  *
- * @param $timestamp
+ * @param $interval
  *   The length of the interval in seconds.
  * @param $granularity
  *   How many different units to display in the string.
@@ -1817,7 +1817,7 @@ function format_size($size, $langcode = NULL) {
  * @return
  *   A translated string representation of the interval.
  */
-function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
+function format_interval($interval, $granularity = 2, $langcode = NULL) {
   $units = array(
     '1 year|@count years' => 31536000,
     '1 month|@count months' => 2592000,
@@ -1830,9 +1830,9 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
   $output = '';
   foreach ($units as $key => $value) {
     $key = explode('|', $key);
-    if ($timestamp >= $value) {
-      $output .= ($output ? ' ' : '') . format_plural(floor($timestamp / $value), $key[0], $key[1], array(), array('langcode' => $langcode));
-      $timestamp %= $value;
+    if ($interval >= $value) {
+      $output .= ($output ? ' ' : '') . format_plural(floor($interval / $value), $key[0], $key[1], array(), array('langcode' => $langcode));
+      $interval %= $value;
       $granularity--;
     }
 
