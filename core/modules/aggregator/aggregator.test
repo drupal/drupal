@@ -928,6 +928,6 @@ class FeedParserTestCase extends AggregatorTestCase {
     aggregator_refresh($feed);
     $this->drupalGet('aggregator/sources/' . $feed->fid);
     $this->assertResponse(200, t('Feed %name exists.', array('%name' => $feed->title)));
-    $this->assertText("Quote&quot; Amp&amp;");
+    $this->assertRaw("Quote&quot; Amp&amp;");
   }
 }
