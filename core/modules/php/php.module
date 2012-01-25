@@ -36,7 +36,7 @@ function php_permission() {
 }
 
 /**
- * Implements hook_filter_FILTER_process().
+ * Evaluates a string of PHP code.
  *
  * This is a wrapper around PHP's eval(). It uses output buffering to capture
  * both returned and printed text. Unlike eval(), we require code to be
@@ -45,6 +45,9 @@ function php_permission() {
  *
  * Using this wrapper also ensures that the PHP code which is evaluated can not
  * overwrite any variables in the calling code, unlike a regular eval() call.
+ *
+ * This function is also used as an implementation of
+ * hook_filter_FILTER_process().
  *
  * @param $code
  *   The code to evaluate.
@@ -113,7 +116,7 @@ print t(\'Welcome visitor! Thank you for visiting.\');
 <pre>
 global $user;
 if ($user->uid) {
-  print t(\'Welcome @name! Thank you for visiting.\', array(\'@name\' => format_username($user)));
+  print t(\'Welcome @name! Thank you for visiting.\', array(\'@name\' => user_format_name($user)));
 }
 else {
   print t(\'Welcome visitor! Thank you for visiting.\');

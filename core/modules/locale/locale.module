@@ -190,7 +190,7 @@ function locale_init() {
   // settings page, where we want to display the site default and not the
   // localized version.
   if (strpos($_GET['q'], 'admin/config/regional/date-time/formats') !== 0) {
-    $languages = array($language->language);
+    $languages = array($language->langcode);
 
     // Setup appropriate date formats for this locale.
     $formats = locale_get_localized_date_format($languages);
@@ -219,8 +219,8 @@ function locale_permission() {
  */
 function locale_language_selector_form($user) {
   global $language;
-  $languages = language_list('enabled');
-  $languages = $languages[1];
+  // Get list of enabled languages only.
+  $languages = language_list(TRUE);
 
   // If the user is being created, we set the user language to the page language.
   $user_preferred_language = $user->uid ? user_preferred_language($user) : $language;
@@ -239,7 +239,7 @@ function locale_language_selector_form($user) {
   $form['locale']['language'] = array(
     '#type' => (count($names) <= 5 ? 'radios' : 'select'),
     '#title' => t('Language'),
-    '#default_value' => $user_preferred_language->language,
+    '#default_value' => $user_preferred_language->langcode,
     '#options' => $names,
     '#description' => $mode ? t("This account's default language for e-mails, and preferred language for site presentation.") : t("This account's default language for e-mails."),
   );
@@ -296,11 +296,16 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
  */
 function locale_form_node_form_alter(&$form, &$form_state) {
   if (isset($form['#node']->type) && locale_multilingual_node_type($form['#node']->type)) {
+    $languages = language_list(TRUE);
+    $language_options = array(LANGUAGE_NONE => t('Language neutral'));
+    foreach ($languages as $langcode => $language) {
+      $language_options[$langcode] = $language->name;
+    }
     $form['language'] = array(
       '#type' => 'select',
       '#title' => t('Language'),
       '#default_value' => (isset($form['#node']->language) ? $form['#node']->language : ''),
-      '#options' => array(LANGUAGE_NONE => t('Language neutral')) + locale_language_list('name'),
+      '#options' => $language_options,
     );
   }
   // Node type without language selector: assign the default for new nodes
@@ -308,7 +313,7 @@ function locale_form_node_form_alter(&$form, &$form_state) {
     $default = language_default();
     $form['language'] = array(
       '#type' => 'value',
-      '#value' => $default->language
+      '#value' => $default->langcode
     );
   }
   $form['#submit'][] = 'locale_field_node_form_submit';
@@ -547,19 +552,19 @@ function locale_modules_disabled($modules) {
 function locale_language_insert($language) {
   // Add new language to the list of language prefixes.
   $prefixes = locale_language_negotiation_url_prefixes();
-  $prefixes[$language->language] = (empty($language->default) ? $language->language : '');
+  $prefixes[$language->langcode] = (empty($language->default) ? $language->langcode : '');
   locale_language_negotiation_url_prefixes_save($prefixes);
 
   // Add language to the list of language domains.
   $domains = locale_language_negotiation_url_domains();
-  $domains[$language->language] = '';
+  $domains[$language->langcode] = '';
   locale_language_negotiation_url_domains_save($domains);
 
   // @todo move these two cache clears out. See http://drupal.org/node/1293252
   // Changing the language settings impacts the interface.
   cache('page')->flush();
   // Force JavaScript translation file re-creation for the new language.
-  _locale_invalidate_js($language->language);
+  _locale_invalidate_js($language->langcode);
 }
 
 /**
@@ -572,7 +577,7 @@ function locale_language_update($language) {
   if (!empty($language->default)) {
     $prefixes = locale_language_negotiation_url_prefixes();
     foreach ($prefixes as $langcode => $prefix) {
-      if ($prefix == '' && $langcode != $language->language) {
+      if ($prefix == '' && $langcode != $language->langcode) {
         $prefixes[$langcode] = $langcode;
       }
     }
@@ -583,7 +588,7 @@ function locale_language_update($language) {
   // Changing the language settings impacts the interface.
   cache('page')->flush();
   // Force JavaScript translation file re-creation for the modified language.
-  _locale_invalidate_js($language->language);
+  _locale_invalidate_js($language->langcode);
 }
 
 /**
@@ -592,26 +597,26 @@ function locale_language_update($language) {
 function locale_language_delete($language) {
   // Remove language from language prefix list.
   $prefixes = locale_language_negotiation_url_prefixes();
-  unset($prefixes[$language->language]);
+  unset($prefixes[$language->langcode]);
   locale_language_negotiation_url_prefixes_save($prefixes);
 
   // Remove language from language domain list.
   $domains = locale_language_negotiation_url_domains();
-  unset($domains[$language->language]);
+  unset($domains[$language->langcode]);
   locale_language_negotiation_url_domains_save($domains);
 
   // Remove translations.
   db_delete('locales_target')
-    ->condition('language', $language->language)
+    ->condition('language', $language->langcode)
     ->execute();
 
-  _locale_invalidate_js($language->language);
+  _locale_invalidate_js($language->langcode);
 
   // Changing the language settings impacts the interface:
   cache('page')->flush();
 
   // Clearing all locale cache from database
-  cache()->delete('locale:' . $language->language);
+  cache()->delete('locale:' . $language->langcode);
 }
 
 
@@ -648,7 +653,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
     return $locale_t;
   }
 
-  $langcode = isset($langcode) ? $langcode : $language->language;
+  $langcode = isset($langcode) ? $langcode : $language->langcode;
 
   // Store database cached translations in a static variable. Only build the
   // cache after $language has been set to avoid an unnecessary cache rebuild.
@@ -743,7 +748,7 @@ function locale_get_plural($count, $langcode = NULL) {
   $locale_plurals = &drupal_static(__FUNCTION__, array());
   $plurals = &drupal_static(__FUNCTION__ . ':plurals', array());
 
-  $langcode = $langcode ? $langcode : $language->language;
+  $langcode = $langcode ? $langcode : $language->langcode;
 
   if (!isset($plurals[$langcode][$count])) {
     if (empty($locale_plural_formulas)) {
@@ -764,37 +769,12 @@ function locale_get_plural($count, $langcode = NULL) {
 
 
 /**
- * Returns a language name
+ * Returns a language name.
  */
-function locale_language_name($lang) {
-  $list = &drupal_static(__FUNCTION__);
-  if (!isset($list)) {
-    $list = locale_language_list();
-  }
-  return ($lang && isset($list[$lang])) ? $list[$lang] : t('All');
-}
-
-/**
- * Returns array of language names
- *
- * @param $field
- *   Name of language object field.
- * @param $all
- *   Boolean to return all languages or only enabled ones
- */
-function locale_language_list($field = 'name', $all = FALSE) {
-  if ($all) {
-    $languages = language_list();
-  }
-  else {
-    $languages = language_list('enabled');
-    $languages = $languages[1];
-  }
-  $list = array();
-  foreach ($languages as $language) {
-    $list[$language->language] = $language->$field;
-  }
-  return $list;
+function locale_language_name($langcode) {
+  // Consider enabled languages only.
+  $languages = language_list(TRUE);
+  return ($langcode && isset($languages[$langcode])) ? $languages[$langcode]->name : t('All');
 }
 
 /**
@@ -878,11 +858,11 @@ function locale_js_alter(&$javascript) {
   }
 
   // If necessary, rebuild the translation file for the current language.
-  if (!empty($parsed['refresh:' . $language->language])) {
+  if (!empty($parsed['refresh:' . $language->langcode])) {
     // Don't clear the refresh flag on failure, so that another try will
     // be performed later.
     if (_locale_rebuild_js()) {
-      unset($parsed['refresh:' . $language->language]);
+      unset($parsed['refresh:' . $language->langcode]);
     }
     // Store any changes after refresh was attempted.
     variable_set('javascript_parsed', $parsed);
@@ -895,37 +875,10 @@ function locale_js_alter(&$javascript) {
 
   // Add the translation JavaScript file to the page.
   $locale_javascripts = variable_get('locale_translation_javascript', array());
-  if ($files && !empty($locale_javascripts[$language->language])) {
+  if ($files && !empty($locale_javascripts[$language->langcode])) {
     // Add the translation JavaScript file to the page.
-    $file = $dir . '/' . $language->language . '_' . $locale_javascripts[$language->language] . '.js';
+    $file = $dir . '/' . $language->langcode . '_' . $locale_javascripts[$language->langcode] . '.js';
     $javascript[$file] = drupal_js_defaults($file);
-  }
-}
-
-/**
- * Implements hook_css_alter().
- *
- * This function checks all CSS files currently added via drupal_add_css() and
- * and checks to see if a related right to left CSS file should be included.
- */
-function locale_css_alter(&$css) {
-  global $language;
-
-  // If the current language is RTL, add the CSS file with the RTL overrides.
-  if ($language->direction == LANGUAGE_RTL) {
-    foreach ($css as $data => $item) {
-      // Only provide RTL overrides for files.
-      if ($item['type'] == 'file') {
-        $rtl_path = str_replace('.css', '-rtl.css', $item['data']);
-        if (file_exists($rtl_path) && !isset($css[$rtl_path])) {
-          // Replicate the same item, but with the RTL path and a little larger
-          // weight so that it appears directly after the original CSS file.
-          $item['data'] = $rtl_path;
-          $item['weight'] += 0.01;
-          $css[$rtl_path] = $item;
-        }
-      }
-    }
   }
 }
 
@@ -993,6 +946,15 @@ function locale_block_view($type) {
 }
 
 /**
+ * Implements hook_preprocess_block().
+ */
+function locale_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'locale') {
+    $variables['attributes_array']['role'] = 'navigation';
+  }
+}
+
+/**
  * Implements hook_url_outbound_alter().
  *
  * Rewrite outbound URLs with language based prefixes.
@@ -1048,7 +1010,7 @@ function locale_form_comment_form_alter(&$form, &$form_state, $form_id) {
   // comment language.
   if ($form['language']['#value'] == LANGUAGE_NONE && locale_multilingual_node_type($form['#node']->type)) {
     global $language_content;
-    $form['language']['#value'] = $language_content->language;
+    $form['language']['#value'] = $language_content->langcode;
   }
 }
 
@@ -1177,7 +1139,7 @@ function locale_preprocess_node(&$variables) {
     global $language;
 
     $node_language = language_load($variables['language']);
-    if ($node_language->language != $language->language) {
+    if ($node_language->langcode != $language->langcode) {
       // If the node language was different from the page language, we should
       // add markup to identify the language. Otherwise the page language is
       // inherited.

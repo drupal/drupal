@@ -945,7 +945,7 @@ function comment_prepare_thread(&$comments) {
  */
 function comment_view($comment, $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   // Populate $comment->content with a render() array.
@@ -1012,7 +1012,7 @@ function comment_view($comment, $node, $view_mode = 'full', $langcode = NULL) {
  */
 function comment_build_content($comment, $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   // Remove previously built content, if exists.
@@ -1260,8 +1260,8 @@ function comment_form_node_form_alter(&$form, $form_state) {
   // If the node doesn't have any comments, the "hidden" option makes no
   // sense, so don't even bother presenting it to the user.
   if (empty($comment_count)) {
-    unset($form['comment_settings']['comment']['#options'][COMMENT_NODE_HIDDEN]);
-    unset($form['comment_settings']['comment'][COMMENT_NODE_HIDDEN]);
+    $form['comment_settings']['comment'][COMMENT_NODE_HIDDEN]['#access'] = FALSE;
+    // Also adjust the description of the "closed" option.
     $form['comment_settings']['comment'][COMMENT_NODE_CLOSED]['#description'] = t('Users cannot post comments.');
   }
 }
@@ -2087,6 +2087,15 @@ function comment_form_submit($form, &$form_state) {
   // Clear the block and page caches so that anonymous users see the comment
   // they have posted.
   cache_clear_all();
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function comment_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'comment') {
+    $variables['attributes_array']['role'] = 'navigation';
+  }
 }
 
 /**

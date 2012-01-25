@@ -13,7 +13,7 @@
  * @see theme_taxonomy_overview_vocabularies()
  */
 function taxonomy_overview_vocabularies($form) {
-  $vocabularies = taxonomy_get_vocabularies();
+  $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
   $form['#tree'] = TRUE;
   foreach ($vocabularies as $vocabulary) {
     $form[$vocabulary->vid]['#vocabulary'] = $vocabulary;
@@ -392,7 +392,15 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
         '#default_value' => $term->weight,
       );
     }
-    $form[$key]['edit'] = array('#type' => 'link', '#title' => t('edit'), '#href' => 'taxonomy/term/' . $term->tid . '/edit', '#options' => array('query' => drupal_get_destination()));
+    $operations = array(
+      'edit' => array('title' => t('edit'), 'href' => 'taxonomy/term/' . $term->tid . '/edit', 'query' => drupal_get_destination()),
+      'delete' => array('title' => t('delete'), 'href' => 'taxonomy/term/' . $term->tid . '/delete', 'query' => drupal_get_destination()),
+    );
+    $form[$key]['operations'] = array(
+      '#theme' => 'links',
+      '#links' => $operations,
+      '#attributes' => array('class' => array('links', 'inline')),
+    );
   }
 
   $form['#total_entries'] = $total_entries;
@@ -580,7 +588,7 @@ function theme_taxonomy_overview_terms($variables) {
       }
       $term['weight']['#attributes']['class'] = array('term-weight');
       $row[] = drupal_render($term['weight']);
-      $row[] = drupal_render($term['edit']);
+      $row[] = drupal_render($term['operations']);
       $row = array('data' => $row);
       $rows[$key] = $row;
     }
@@ -666,15 +674,10 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     }
   }
 
-  $parent = array_keys(taxonomy_get_parents($term->tid));
+  $parent = array_keys(taxonomy_term_load_parents($term->tid));
   $form['#term'] = (array) $term;
   $form['#term']['parent'] = $parent;
   $form['#vocabulary'] = $vocabulary;
-
-  // Check for confirmation forms.
-  if (isset($form_state['confirm_delete'])) {
-    return array_merge($form, taxonomy_term_confirm_delete($form, $form_state, $term->tid));
-  }
 
   $form['name'] = array(
     '#type' => 'textfield',
@@ -707,12 +710,12 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     '#weight' => 10,
   );
 
-  // taxonomy_get_tree and taxonomy_get_parents may contain large numbers of
+  // taxonomy_get_tree and taxonomy_term_load_parents may contain large numbers of
   // items so we check for taxonomy_override_selector before loading the
   // full vocabulary. Contrib modules can then intercept before
   // hook_form_alter to provide scalable alternatives.
   if (!variable_get('taxonomy_override_selector', FALSE)) {
-    $parent = array_keys(taxonomy_get_parents($term->tid));
+    $parent = array_keys(taxonomy_term_load_parents($term->tid));
     $children = taxonomy_get_tree($vocabulary->vid, $term->tid);
 
     // A term can't be the child of itself, nor of its children.
@@ -768,8 +771,9 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
-      '#access' => user_access("delete terms in $vocabulary->vid") || user_access('administer taxonomy'),
+      '#access' => taxonomy_term_access('delete', $term),
       '#weight' => 10,
+      '#submit' => array('taxonomy_form_term_delete_submit'),
     );
   }
   else {
@@ -799,17 +803,6 @@ function taxonomy_form_term_validate($form, &$form_state) {
  * @see taxonomy_form_term()
  */
 function taxonomy_form_term_submit($form, &$form_state) {
-  if ($form_state['triggering_element']['#value'] == t('Delete')) {
-    // Execute the term deletion.
-    if ($form_state['values']['delete'] === TRUE) {
-      return taxonomy_term_confirm_delete_submit($form, $form_state);
-    }
-    // Rebuild the form to confirm term deletion.
-    $form_state['rebuild'] = TRUE;
-    $form_state['confirm_delete'] = TRUE;
-    return;
-  }
-
   $term = taxonomy_form_term_submit_build_taxonomy_term($form, $form_state);
 
   $status = taxonomy_term_save($term);
@@ -865,18 +858,33 @@ function taxonomy_form_term_submit_build_taxonomy_term($form, &$form_state) {
 }
 
 /**
+ * Form submission handler for the 'Delete' button for taxonomy_form_term().
+ *
+ * @see taxonomy_form_term_validate()
+ * @see taxonomy_form_term_submit()
+ */
+function taxonomy_form_term_delete_submit($form, &$form_state) {
+  $destination = array();
+  if (isset($_GET['destination'])) {
+    $destination = drupal_get_destination();
+    unset($_GET['destination']);
+  }
+  $term = $form['#term'];
+  $form_state['redirect'] = array('taxonomy/term/' . $term['tid'] . '/delete', array('query' => $destination));
+}
+
+/**
  * Form builder for the term delete form.
  *
  * @ingroup forms
  * @see taxonomy_term_confirm_delete_submit()
  */
-function taxonomy_term_confirm_delete($form, &$form_state, $tid) {
-  $term = taxonomy_term_load($tid);
-
+function taxonomy_term_confirm_delete($form, &$form_state, $term) {
   // Always provide entity id in the same form key as in the entity edit form.
-  $form['tid'] = array('#type' => 'value', '#value' => $tid);
+  $form['tid'] = array('#type' => 'value', '#value' => $term->tid);
 
   $form['#term'] = $term;
+  $form['#vocabulary'] = taxonomy_vocabulary_load($term->vid);;
   $form['type'] = array('#type' => 'value', '#value' => 'term');
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
   $form['vocabulary_machine_name'] = array('#type' => 'value', '#value' => $term->vocabulary_machine_name);
@@ -900,7 +908,9 @@ function taxonomy_term_confirm_delete_submit($form, &$form_state) {
   taxonomy_check_vocabulary_hierarchy($form['#vocabulary'], $form_state['values']);
   drupal_set_message(t('Deleted term %name.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Deleted term %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
-  $form_state['redirect'] = 'admin/structure/taxonomy';
+  if (!isset($_GET['destination'])) {
+    $form_state['redirect'] = 'admin/structure/taxonomy';
+  }
   cache_clear_all();
   return;
 }

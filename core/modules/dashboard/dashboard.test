@@ -5,6 +5,9 @@
  * Tests for dashboard.module.
  */
 
+/**
+ * Tests the Dashboard module blocks.
+ */
 class DashboardBlocksTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -33,7 +36,7 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test adding a block to the dashboard and checking access to it.
+   * Tests adding a block to the dashboard and checking access to it.
    */
   function testDashboardAccess() {
     // Add a new custom block to a dashboard region.
@@ -58,7 +61,7 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test that dashboard regions are displayed or hidden properly.
+   * Tests that dashboard regions are displayed or hidden properly.
    */
   function testDashboardRegions() {
     $dashboard_regions = dashboard_region_descriptions();
@@ -80,8 +83,7 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test that the dashboard module can be disabled and enabled again,
-   * retaining its blocks.
+   * Tests that the dashboard module can be re-enabled, retaining its blocks.
    */
   function testDisableEnable() {
     // Add a new custom block to a dashboard region.
@@ -113,8 +115,7 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test that defining a block with ['properties']['administrative'] = TRUE
-   * adds it as an available block for the dashboard.
+   * Tests that administrative blocks are available for the dashboard.
    */
   function testBlockAvailability() {
     // Test "Recent comments", which should be available (defined as

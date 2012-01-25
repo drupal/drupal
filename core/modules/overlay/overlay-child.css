@@ -1,9 +1,9 @@
 
-html.js {
+.js {
   background: transparent !important;
   overflow-y: scroll;
 }
-html.js body {
+.js body {
   background: transparent !important;
   margin-left: 0;
   margin-right: 0;

@@ -18,12 +18,8 @@
 }
 .book-pager li {
   display: inline-block;
-  *display: inline;
-  /* Prevents a line break caused by the float in .page-next in IE7. */
-  *float: left; /* LTR */
   list-style-type: none;
   vertical-align: top;
-  zoom: 1;
 }
 .book-pager .previous {
   text-align: left; /* LTR */

@@ -98,7 +98,7 @@
  *   generate the same form (or very similar forms) using different $form_ids
  *   can implement hook_forms(), which maps different $form_id values to the
  *   proper form constructor function. Examples may be found in node_forms(),
- *   search_forms(), and user_forms().
+ *   and search_forms().
  * @param ...
  *   Any additional arguments are passed on to the functions called by
  *   drupal_get_form(), including the unique form constructor function. For
@@ -136,7 +136,7 @@ function drupal_get_form($form_id) {
  *   generate the same form (or very similar forms) using different $form_ids
  *   can implement hook_forms(), which maps different $form_id values to the
  *   proper form constructor function. Examples may be found in node_forms(),
- *   search_forms(), and user_forms().
+ *   and search_forms().
  * @param $form_state
  *   An array which stores information about the form. This is passed as a
  *   reference so that the caller can use it to examine what in the form changed
@@ -421,7 +421,7 @@ function form_state_defaults() {
  *   Modules that need to generate the same form (or very similar forms)
  *   using different $form_ids can implement hook_forms(), which maps
  *   different $form_id values to the proper form constructor function. Examples
- *   may be found in node_forms(), search_forms(), and user_forms().
+ *   may be found in node_forms() and search_forms().
  * @param $form_state
  *   A keyed array containing the current state of the form.
  * @param $old_form
@@ -627,7 +627,7 @@ function form_load_include(&$form_state, $type, $module, $name = NULL) {
  *   Modules that need to generate the same form (or very similar forms)
  *   using different $form_ids can implement hook_forms(), which maps
  *   different $form_id values to the proper form constructor function. Examples
- *   may be found in node_forms(), search_forms(), and user_forms().
+ *   may be found in node_forms() and search_forms().
  * @param $form_state
  *   A keyed array containing the current state of the form. Most important is
  *   the $form_state['values'] collection, a tree of data used to simulate the
@@ -3702,6 +3702,42 @@ function theme_textfield($variables) {
   $element['#attributes']['type'] = 'text';
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-text'));
+
+  $extra = '';
+  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
+    drupal_add_library('system', 'drupal.autocomplete');
+    $element['#attributes']['class'][] = 'form-autocomplete';
+
+    $attributes = array();
+    $attributes['type'] = 'hidden';
+    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
+    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
+    $attributes['disabled'] = 'disabled';
+    $attributes['class'][] = 'autocomplete';
+    $extra = '<input' . drupal_attributes($attributes) . ' />';
+  }
+
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  return $output . $extra;
+}
+
+/**
+ * Returns HTML for a tel form element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #size, #maxlength,
+ *     #placeholder, #required, #attributes, #autocomplete_path.
+ *
+ * @ingroup themeable
+ */
+function theme_tel($variables) {
+  $element = $variables['element'];
+  $element['#attributes']['type'] = 'tel';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  _form_set_class($element, array('form-tel'));
 
   $extra = '';
   if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {

@@ -52,28 +52,6 @@ function color_form_system_theme_settings_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
- */
-function color_form_system_themes_alter(&$form, &$form_state) {
-  _color_theme_select_form_alter($form, $form_state);
-}
-
-/**
- * Helper for hook_form_FORM_ID_alter() implementations.
- */
-function _color_theme_select_form_alter(&$form, &$form_state) {
-  // Use the generated screenshot in the theme list.
-  $themes = list_themes();
-  foreach (element_children($form) as $theme) {
-    if ($screenshot = variable_get('color_' . $theme . '_screenshot')) {
-      if (isset($form[$theme]['screenshot'])) {
-        $form[$theme]['screenshot']['#markup'] = theme('image', array('uri' => $screenshot, 'title' => '', 'attributes' => array('class' => array('screenshot'))));
-      }
-    }
-  }
-}
-
-/**
  * Replaces style sheets with color-altered style sheets.
  *
  * A theme that supports the color module should call this function from its
@@ -96,7 +74,7 @@ function _color_html_alter(&$vars) {
       foreach ($color_paths as $color_path) {
         // Color module currently requires unique file names to be used,
         // which allows us to compare different file paths.
-        if (basename($old_path) == basename($color_path)) {
+        if (drupal_basename($old_path) == drupal_basename($color_path)) {
           // Replace the path to the new css file.
           // This keeps the order of the stylesheets intact.
           $vars['css'][$old_path]['data'] = $color_path;
@@ -389,7 +367,7 @@ function color_scheme_form_submit($form, &$form_state) {
 
   // Copy over neutral images.
   foreach ($info['copy'] as $file) {
-    $base = basename($file);
+    $base = drupal_basename($file);
     $source = $paths['source'] . $file;
     $filepath = file_unmanaged_copy($source, $paths['target'] . $base);
     $paths['map'][$file] = $base;
@@ -431,7 +409,7 @@ function color_scheme_form_submit($form, &$form_state) {
 
       // Rewrite stylesheet with new colors.
       $style = _color_rewrite_stylesheet($theme, $info, $paths, $palette, $style);
-      $base_file = basename($file);
+      $base_file = drupal_basename($file);
       $css[] = $paths['target'] . $base_file;
       _color_save_stylesheet($paths['target'] . $base_file, $style, $paths);
     }
@@ -571,7 +549,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
   // Cut out slices.
   foreach ($info['slices'] as $file => $coord) {
     list($x, $y, $width, $height) = $coord;
-    $base = basename($file);
+    $base = drupal_basename($file);
     $image = drupal_realpath($paths['target'] . $base);
 
     // Cut out slice.

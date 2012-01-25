@@ -103,10 +103,9 @@ function field_schema() {
       'active' => array('active'),
       'storage_active' => array('storage_active'),
       'deleted' => array('deleted'),
-      // Used by field_modules_disabled().
+      // Used by field_sync_field_status().
       'module' => array('module'),
       'storage_module' => array('storage_module'),
-      // Used by field_associate_fields().
       'type' => array('type'),
       'storage_type' => array('storage_type'),
     ),

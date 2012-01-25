@@ -29,12 +29,12 @@
   white-space: pre;
 }
 /* Animated throbber */
-html.js input.form-autocomplete {
+.js input.form-autocomplete {
   background-image: url(../../misc/throbber.gif);
   background-position: 100% 2px; /* LTR */
   background-repeat: no-repeat;
 }
-html.js input.throbbing {
+.js input.throbbing {
   background-position: 100% -18px; /* LTR */
 }
 
@@ -43,13 +43,13 @@ html.js input.throbbing {
  *
  * @see collapse.js
  */
-html.js fieldset.collapsed {
+.js fieldset.collapsed {
   border-bottom-width: 0;
   border-left-width: 0;
   border-right-width: 0;
   height: 1em;
 }
-html.js fieldset.collapsed .fieldset-wrapper {
+.js fieldset.collapsed .fieldset-wrapper {
   display: none;
 }
 fieldset.collapsible {
@@ -201,7 +201,7 @@ tr .ajax-progress-throbber .throbber {
  * For anything you want to hide on page load when JS is enabled, so
  * that you can use the JS to control visibility and avoid flicker.
  */
-html.js .js-hide {
+.js .js-hide {
   display: none;
 }
 
@@ -227,7 +227,6 @@ html.js .js-hide {
  */
 .element-invisible {
   position: absolute !important;
-  clip: rect(1px 1px 1px 1px); /* IE7 */
   clip: rect(1px, 1px, 1px, 1px);
 }
 
@@ -253,10 +252,6 @@ html.js .js-hide {
   content: "";
   display: table;
   clear: both;
-}
-
-.clearfix {
-  zoom: 1; /* hasLayout trigger to clear floats in IE */
 }
 
 /**

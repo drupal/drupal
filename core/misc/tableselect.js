@@ -29,7 +29,7 @@ Drupal.tableSelect = function () {
       checkboxes.each(function () {
         this.checked = event.target.checked;
         // Either add or remove the selected class based on the state of the check all checkbox.
-        $(this).parents('tr:first')[ this.checked ? 'addClass' : 'removeClass' ]('selected');
+        $(this).closest('tr').toggleClass('selected', this.checked);
       });
       // Update the title and the state of the check all box.
       updateSelectAll(event.target.checked);
@@ -39,14 +39,14 @@ Drupal.tableSelect = function () {
   // For each of the checkboxes within the table that are not disabled.
   checkboxes = $('td input:checkbox:enabled', table).click(function (e) {
     // Either add or remove the selected class based on the state of the check all checkbox.
-    $(this).parents('tr:first')[ this.checked ? 'addClass' : 'removeClass' ]('selected');
+    $(this).closest('tr').toggleClass('selected', this.checked);
 
     // If this is a shift click, we need to highlight everything in the range.
     // Also make sure that we are actually checking checkboxes over a range and
     // that a checkbox has been checked or unchecked before.
     if (e.shiftKey && lastChecked && lastChecked != e.target) {
       // We use the checkbox's parent TR to do our range searching.
-      Drupal.tableSelectRange($(e.target).parents('tr')[0], $(lastChecked).parents('tr')[0], e.target.checked);
+      Drupal.tableSelectRange($(e.target).closest('tr')[0], $(lastChecked).closest('tr')[0], e.target.checked);
     }
 
     // If all checkboxes are checked, make sure the select-all one is checked too, otherwise keep unchecked.

@@ -77,7 +77,7 @@ Drupal.file = Drupal.file || {
           '%filename': this.value,
           '%extensions': extensionPattern.replace(/\|/g, ', ')
         });
-        $(this).parents('div.form-managed-file').prepend('<div class="messages error file-upload-js-error">' + error + '</div>');
+        $(this).closest('div.form-managed-file').prepend('<div class="messages error file-upload-js-error">' + error + '</div>');
         this.value = '';
         return false;
       }
@@ -96,8 +96,8 @@ Drupal.file = Drupal.file || {
 
     // Check if we're working with an "Upload" button.
     var $enabledFields = [];
-    if ($(this).parents('div.form-managed-file').size() > 0) {
-      $enabledFields = $(this).parents('div.form-managed-file').find('input.form-file');
+    if ($(this).closest('div.form-managed-file').size() > 0) {
+      $enabledFields = $(this).closest('div.form-managed-file').find('input.form-file');
     }
 
     // Temporarily disable upload fields other than the one we're currently
@@ -119,7 +119,7 @@ Drupal.file = Drupal.file || {
    */
   progressBar: function (event) {
     var clickedButton = this;
-    var $progressId = $(clickedButton).parents('div.form-managed-file').find('input.file-progress');
+    var $progressId = $(clickedButton).closest('div.form-managed-file').find('input.file-progress');
     if ($progressId.size()) {
       var originalName = $progressId.attr('name');
 
@@ -133,7 +133,7 @@ Drupal.file = Drupal.file || {
     }
     // Show the progress bar if the upload takes longer than half a second.
     setTimeout(function () {
-      $(clickedButton).parents('div.form-managed-file').find('div.ajax-progress-bar').slideDown();
+      $(clickedButton).closest('div.form-managed-file').find('div.ajax-progress-bar').slideDown();
     }, 500);
   },
   /**

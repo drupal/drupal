@@ -682,7 +682,7 @@ function node_type_update_nodes($old_type, $type) {
  *   type object by $type->disabled being set to TRUE.
  */
 function _node_types_build($rebuild = FALSE) {
-  $cid = 'node_types:' . $GLOBALS['language']->language;
+  $cid = 'node_types:' . $GLOBALS['language']->langcode;
 
   if (!$rebuild) {
     $_node_types = &drupal_static(__FUNCTION__);
@@ -1326,7 +1326,7 @@ function node_revision_delete($revision_id) {
  */
 function node_view($node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   // Populate $node->content with a render() array.
@@ -1388,7 +1388,7 @@ function node_view($node, $view_mode = 'full', $langcode = NULL) {
  */
 function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   // Remove previously built content, if exists.
@@ -1478,6 +1478,22 @@ function node_show($node, $message = FALSE) {
 function node_is_page($node) {
   $page_node = menu_get_object();
   return (!empty($page_node) ? $page_node->nid == $node->nid : FALSE);
+}
+
+ /**
+ * Implements hook_preprocess_block().
+ */
+function node_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'node') {
+    switch ($variables['block']->delta) {
+      case 'syndicate':
+        $variables['attributes_array']['role'] = 'complementary';
+        break;
+      case 'recent':
+        $variables['attributes_array']['role'] = 'navigation';
+        break;
+    }
+  }
 }
 
 /**
@@ -2612,7 +2628,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     'title'       => variable_get('site_name', 'Drupal'),
     'link'        => $base_url,
     'description' => variable_get('feed_description', ''),
-    'language'    => $language_content->language
+    'language'    => $language_content->langcode
   );
   $channel_extras = array_diff_key($channel, $channel_defaults);
   $channel = array_merge($channel_defaults, $channel);
@@ -2832,7 +2848,7 @@ function node_form_search_form_alter(&$form, $form_state) {
 
     // Languages:
     $language_options = array();
-    foreach (language_list('language') as $key => $entity) {
+    foreach (language_list() as $key => $entity) {
       if ($entity->enabled) {
         $language_options[$key] = $entity->name;
       }
@@ -2893,6 +2909,31 @@ function node_search_validate($form, &$form_state) {
   if (!empty($keys)) {
     form_set_value($form['basic']['processed_keys'], trim($keys), $form_state);
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Alters the theme form to use the admin theme on node editing.
+ *
+ * @see node_form_system_themes_admin_form_submit()
+ */
+function node_form_system_themes_admin_form_alter(&$form, &$form_state, $form_id) {
+  $form['admin_theme']['node_admin_theme'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use the administration theme when editing or creating content'),
+    '#default_value' => variable_get('node_admin_theme', '0'),
+  );
+  $form['#submit'][] = 'node_form_system_themes_admin_form_submit';
+}
+
+/**
+ * Form submission handler for system_themes_admin_form().
+ *
+ * @see node_form_system_themes_admin_form_alter()
+ */
+function node_form_system_themes_admin_form_submit($form, &$form_state) {
+  variable_set('node_admin_theme', $form_state['values']['node_admin_theme']);
 }
 
 /**
@@ -3100,7 +3141,6 @@ function node_node_access($node, $op, $account) {
  */
 function node_list_permissions($type) {
   $info = node_type_get_type($type);
-  $type = check_plain($info->type);
 
   // Build standard list of node permissions for this type.
   $perms = array(
@@ -4081,6 +4121,28 @@ function node_modules_enabled($modules) {
 }
 
 /**
+ * Implements hook_modules_disabled().
+ */
+function node_modules_disabled($modules) {
+  // Check whether any of the disabled modules implemented hook_node_grants(),
+  // in which case the node access table needs to be rebuilt.
+  foreach ($modules as $module) {
+    // At this point, the module is already disabled, but its code is still
+    // loaded in memory. Module functions must no longer be called. We only
+    // check whether a hook implementation function exists and do not invoke it.
+    if (!node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
+      node_access_needs_rebuild(TRUE);
+    }
+  }
+
+  // If there remains no more node_access module, rebuilding will be
+  // straightforward, we can do it right now.
+  if (node_access_needs_rebuild() && count(module_implements('node_grants')) == 0) {
+    node_access_rebuild();
+  }
+}
+
+/**
  * Controller class for nodes.
  *
  * This extends the DrupalDefaultEntityController class, adding required
@@ -4145,6 +4207,6 @@ function node_language_delete($language) {
   // On nodes with this language, unset the language
   db_update('node')
     ->fields(array('language' => ''))
-    ->condition('language', $language->language)
+    ->condition('language', $language->langcode)
     ->execute();
 }

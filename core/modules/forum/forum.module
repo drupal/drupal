@@ -268,7 +268,7 @@ function forum_node_view($node, $view_mode) {
       // Breadcrumb navigation
       $breadcrumb[] = l(t('Home'), NULL);
       $breadcrumb[] = l($vocabulary->name, 'forum');
-      if ($parents = taxonomy_get_parents_all($node->forum_tid)) {
+      if ($parents = taxonomy_term_load_parents_all($node->forum_tid)) {
         $parents = array_reverse($parents);
         foreach ($parents as $parent) {
           $breadcrumb[] = l($parent->name, 'forum/' . $parent->tid);
@@ -765,7 +765,7 @@ function forum_forum_load($tid = NULL) {
   }
 
   // Load parent terms.
-  $forum_term->parents = taxonomy_get_parents_all($forum_term->tid);
+  $forum_term->parents = taxonomy_term_load_parents_all($forum_term->tid);
 
   // Load the tree below.
   $forums = array();
@@ -959,6 +959,15 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   }
 
   return $topics;
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function forum_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'forum') {
+    $variables['attributes_array']['role'] = 'navigation';
+  }
 }
 
 /**

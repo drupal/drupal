@@ -468,6 +468,10 @@ function ajax_forms_test_validation_form_callback($form, $form_state) {
  * Form builder: Builds a form that triggers a simple AJAX callback.
  */
 function ajax_forms_test_lazy_load_form($form, &$form_state) {
+  $form['add_files'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => FALSE,
+  );
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
@@ -482,9 +486,11 @@ function ajax_forms_test_lazy_load_form($form, &$form_state) {
  * Form submit handler: Adds JavaScript and CSS that wasn't on the original form.
  */
 function ajax_forms_test_lazy_load_form_submit($form, &$form_state) {
-  drupal_add_js(array('ajax_forms_test_lazy_load_form_submit' => 'executed'), 'setting');
-  drupal_add_css(drupal_get_path('module', 'system') . '/system.admin.css');
-  drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
+  if ($form_state['values']['add_files']) {
+    drupal_add_js(array('ajax_forms_test_lazy_load_form_submit' => 'executed'), 'setting');
+    drupal_add_css(drupal_get_path('module', 'system') . '/system.admin.css');
+    drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
+  }
   $form_state['rebuild'] = TRUE;
 }
 

@@ -69,7 +69,7 @@ function contact_site_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Your name'),
     '#maxlength' => 255,
-    '#default_value' => $user->uid ? format_username($user) : '',
+    '#default_value' => $user->uid ? user_format_name($user) : '',
     '#required' => TRUE,
   );
   $form['mail'] = array(
@@ -195,7 +195,7 @@ function contact_personal_form($form, &$form_state, $recipient) {
     drupal_exit();
   }
 
-  drupal_set_title(t('Contact @username', array('@username' => format_username($recipient))), PASS_THROUGH);
+  drupal_set_title(t('Contact @username', array('@username' => user_format_name($recipient))), PASS_THROUGH);
 
   if (!$user->uid) {
     $form['#attached']['library'][] = array('system', 'jquery.cookie');
@@ -211,7 +211,7 @@ function contact_personal_form($form, &$form_state, $recipient) {
     '#type' => 'textfield',
     '#title' => t('Your name'),
     '#maxlength' => 255,
-    '#default_value' => $user->uid ? format_username($user) : '',
+    '#default_value' => $user->uid ? user_format_name($user) : '',
     '#required' => TRUE,
   );
   $form['mail'] = array(

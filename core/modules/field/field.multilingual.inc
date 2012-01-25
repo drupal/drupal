@@ -245,7 +245,7 @@ function field_valid_language($langcode, $default = TRUE) {
     return $langcode;
   }
   global $language_content;
-  return $default ? language_default()->language : $language_content->language;
+  return $default ? language_default()->langcode : $language_content->langcode;
 }
 
 /**

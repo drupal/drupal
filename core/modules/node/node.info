@@ -5,7 +5,6 @@ version = VERSION
 core = 8.x
 files[] = node.module
 files[] = node.test
-required = TRUE
 dependencies[] = entity
 configure = admin/structure/types
 stylesheets[all][] = node.css

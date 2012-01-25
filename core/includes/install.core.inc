@@ -277,8 +277,7 @@ function install_begin_request(&$install_state) {
   // because any data put in the cache during the installer is inherently
   // suspect, due to the fact that Drupal is not fully set up yet.
   require_once DRUPAL_ROOT . '/core/includes/cache.inc';
-  require_once DRUPAL_ROOT . '/core/includes/cache-install.inc';
-  $conf['cache_default_class'] = 'DrupalFakeCache';
+  $conf['cache_default_class'] = 'Drupal\\Cache\\InstallBackend';
 
   // Prepare for themed output. We need to run this at the beginning of the
   // page request to avoid a different theme accidentally getting set. (We also
@@ -1184,10 +1183,21 @@ function install_find_translations() {
 
 /**
  * Find installer translations either for a specific langcode or all languages.
+ *
+ * @param $langcode
+ *   (optional) The language code corresponding to the language for which we
+ *   want to find translation files. If omitted, information on all available
+ *   files will be returned.
+ *
+ * @return
+ *   An associative array of file information objects keyed by file URIs as
+ *   returned by file_scan_directory().
+ *
+ * @see file_scan_directory()
  */
 function install_find_translation_files($langcode = NULL) {
   $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
-  $files = file_scan_directory($directory, '!install\.' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
+  $files = file_scan_directory($directory, '!install\.' . (!empty($langcode) ? preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
   return $files;
 }
 
@@ -1296,7 +1306,7 @@ function install_select_language_form($form, &$form_state, $files) {
     }
     // Build a list of languages simulated for browser detection.
     $languages[$file->langcode] = (object) array(
-      'language' => $file->langcode,
+      'langcode' => $file->langcode,
     );
   }
 
@@ -1442,7 +1452,7 @@ function install_import_translations(&$install_state) {
     // Drupal does not know about this language, so we prefill its values with
     // our best guess. The user will be able to edit afterwards.
     $language = (object) array(
-      'language' => $langcode,
+      'langcode' => $langcode,
       'name' => $langcode,
       'default' => TRUE,
     );
@@ -1451,7 +1461,7 @@ function install_import_translations(&$install_state) {
   else {
     // A known predefined language, details will be filled in properly.
     $language = (object) array(
-      'language' => $langcode,
+      'langcode' => $langcode,
       'default' => TRUE,
     );
     language_save($language);

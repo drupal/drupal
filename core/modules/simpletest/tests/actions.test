@@ -67,6 +67,8 @@ class ActionsConfigurationTestCase extends DrupalWebTestCase {
  * Test actions executing in a potential loop, and make sure they abort properly.
  */
 class ActionLoopTestCase extends DrupalWebTestCase {
+  protected $aid;
+
   public static function getInfo() {
     return array(
       'name' => 'Actions executing in a potentially infinite loop',
@@ -76,7 +78,7 @@ class ActionLoopTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('dblog', 'trigger', 'actions_loop_test');
+    parent::setUp('dblog', 'actions_loop_test');
   }
 
   /**
@@ -86,9 +88,8 @@ class ActionLoopTestCase extends DrupalWebTestCase {
     $user = $this->drupalCreateUser(array('administer actions'));
     $this->drupalLogin($user);
 
-    $hash = drupal_hash_base64('actions_loop_test_log');
-    $edit = array('aid' => $hash);
-    $this->drupalPost('admin/structure/trigger/actions_loop_test', $edit, t('Assign'));
+    $info = actions_loop_test_action_info();
+    $this->aid = actions_save('actions_loop_test_log', $info['actions_loop_test_log']['type'], array(), $info['actions_loop_test_log']['label']);
 
     // Delete any existing watchdog messages to clear the plethora of
     // "Action added" messages from when Drupal was installed.
@@ -107,7 +108,7 @@ class ActionLoopTestCase extends DrupalWebTestCase {
    * times.
    */
   protected function triggerActions() {
-    $this->drupalGet('<front>', array('query' => array('trigger_actions_on_watchdog' => TRUE)));
+    $this->drupalGet('<front>', array('query' => array('trigger_actions_on_watchdog' => $this->aid)));
     $expected = array();
     $expected[] = 'Triggering action loop';
     for ($i = 1; $i <= variable_get('actions_max_stack', 35); $i++) {

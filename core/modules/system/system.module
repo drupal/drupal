@@ -90,7 +90,7 @@ function system_help($path, $arg) {
       $output .= '<dt>' . t('Configuring basic site settings') . '</dt>';
       $output .= '<dd>' . t('The System module also handles basic configuration options for your site, including <a href="@date-time-settings">Date and time settings</a>, <a href="@file-system">File system settings</a>, <a href="@clean-url">Clean URL support</a>, <a href="@site-info">Site name and other information</a>, and a <a href="@maintenance-mode">Maintenance mode</a> for taking your site temporarily offline.', array('@date-time-settings' => url('admin/config/regional/date-time'), '@file-system' => url('admin/config/media/file-system'), '@clean-url' => url('admin/config/search/clean-urls'), '@site-info' => url('admin/config/system/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</dd>';
       $output .= '<dt>' . t('Configuring actions') . '</dt>';
-      $output .= '<dd>' . t('Actions are individual tasks that the system can do, such as unpublishing a piece of content or banning a user. Modules, such as the <a href="@trigger-help">Trigger module</a>, can fire these actions when certain system events happen; for example, when a new post is added or when a user logs in. Modules may also provide additional actions. Visit the <a href="@actions">Actions page</a> to configure actions.', array('@trigger-help' => url('admin/help/trigger'), '@actions' => url('admin/config/system/actions'))) . '</dd>';
+      $output .= '<dd>' . t('Actions are individual tasks that the system can do, such as unpublishing a piece of content or banning a user. Other modules can fire these actions when certain system events happen; for example, when a new post is added or when a user logs in. Modules may also provide additional actions. Visit the <a href="@actions">Actions page</a> to configure actions.', array('@actions' => url('admin/config/system/actions'))) . '</dd>';
       $output .= '</dl>';
       return $output;
     case 'admin/index':
@@ -135,12 +135,9 @@ function system_help($path, $arg) {
     case 'admin/config/system/actions/manage':
       $output = '';
       $output .= '<p>' . t('There are two types of actions: simple and advanced. Simple actions do not require any additional configuration and are listed here automatically. Advanced actions need to be created and configured before they can be used because they have options that need to be specified; for example, sending an e-mail to a specified address or unpublishing content containing certain words. To create an advanced action, select the action from the drop-down list in the advanced action section below and click the <em>Create</em> button.') . '</p>';
-      if (module_exists('trigger')) {
-        $output .= '<p>' . t('You may proceed to the <a href="@url">Triggers</a> page to assign these actions to system events.', array('@url' => url('admin/structure/trigger'))) . '</p>';
-      }
       return $output;
     case 'admin/config/system/actions/configure':
-      return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended in order to better identify the precise action taking place. This description will be displayed in modules such as the Trigger module when assigning actions to system events, so it is best if it is as descriptive as possible (for example, "Send e-mail to Moderation Team" rather than simply "Send e-mail").');
+      return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended in order to better identify the precise action taking place.');
     case 'admin/config/people/ip-blocking':
       return '<p>' . t('IP addresses listed here are blocked from your site. Blocked addresses are completely forbidden from accessing the site and instead see a brief message explaining the situation.') . '</p>';
     case 'admin/reports/status':
@@ -366,6 +363,15 @@ function system_element_info() {
     '#autocomplete_path' => FALSE,
     '#process' => array('ajax_process_form'),
     '#theme' => 'textfield',
+    '#theme_wrappers' => array('form_element'),
+  );
+  $types['tel'] = array(
+    '#input' => TRUE,
+    '#size' => 30,
+    '#maxlength' => 128,
+    '#autocomplete_path' => FALSE,
+    '#process' => array('ajax_process_form'),
+    '#theme' => 'tel',
     '#theme_wrappers' => array('form_element'),
   );
   $types['machine_name'] = array(
@@ -982,7 +988,7 @@ function system_menu() {
   );
   $items['admin/config/system/site-information'] = array(
     'title' => 'Site information',
-    'description' => t('Change site name, e-mail address, slogan, default front page, and number of posts per page, error pages.'),
+    'description' => 'Change site name, e-mail address, slogan, default front page, and number of posts per page, error pages.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_information_settings'),
     'access arguments' => array('administer site configuration'),
@@ -990,8 +996,8 @@ function system_menu() {
     'weight' => -20,
   );
   $items['admin/config/system/cron'] = array(
-    'title' => t('Cron'),
-    'description' => t('Manage automatic site maintenance tasks.'),
+    'title' => 'Cron',
+    'description' => 'Manage automatic site maintenance tasks.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_cron_settings'),
     'access arguments' => array('administer site configuration'),
@@ -2089,9 +2095,23 @@ function system_block_view($delta = '') {
  * Implements hook_preprocess_block().
  */
 function system_preprocess_block(&$variables) {
-  // System menu blocks should get the same class as menu module blocks.
-  if ($variables['block']->module == 'system' && in_array($variables['block']->delta, array_keys(menu_list_system_menus()))) {
-    $variables['classes_array'][] = 'block-menu';
+  if ($variables['block']->module == 'system') {
+
+    switch ($variables['block']->delta) {
+      case 'powered-by':
+        $variables['attributes_array']['role'] = 'complementary';
+        break;
+      case 'help':
+        $variables['attributes_array']['role'] = 'complementary';
+        break;
+
+      // System menu blocks should get the same class as menu module blocks.
+      default:
+        if (in_array($variables['block']->delta, array_keys(menu_list_system_menus()))) {
+          $variables['attributes_array']['role'] = 'navigation';
+          $variables['classes_array'][] = 'block-menu';
+        }
+    }
   }
 }
 
@@ -3462,12 +3482,12 @@ function system_image_toolkits() {
 function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $replace = FILE_EXISTS_RENAME) {
   $parsed_url = parse_url($url);
   if (!isset($destination)) {
-    $path = file_build_uri(basename($parsed_url['path']));
+    $path = file_build_uri(drupal_basename($parsed_url['path']));
   }
   else {
     if (is_dir(drupal_realpath($destination))) {
       // Prevent URIs with triple slashes when glueing parts together.
-      $path = str_replace('///', '//', "$destination/") . basename($parsed_url['path']);
+      $path = str_replace('///', '//', "$destination/") . drupal_basename($parsed_url['path']);
     }
     else {
       $path = $destination;
@@ -3903,10 +3923,7 @@ function system_date_format_save($date_format, $dfid = 0) {
   }
 
   // Retrieve an array of language objects for enabled languages.
-  $languages = language_list('enabled');
-  // This list is keyed off the value of $language->enabled; we want the ones
-  // that are enabled (value of 1).
-  $languages = $languages[1];
+  $languages = language_list(TRUE);
 
   $locale_format = array();
   $locale_format['type'] = $date_format['type'];

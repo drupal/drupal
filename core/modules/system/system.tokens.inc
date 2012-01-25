@@ -132,7 +132,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
-    $language_code = $options['language']->language;
+    $language_code = $options['language']->langcode;
   }
   else {
     $language_code = NULL;
@@ -250,7 +250,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
 
         case 'owner':
           $account = user_load($file->uid);
-          $name = format_username($account);
+          $name = user_format_name($account);
           $replacements[$original] = $sanitize ? check_plain($name) : $name;
           break;
       }

@@ -7,6 +7,9 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test_template_test'] = array(
     'template' => 'theme_test.template_test',
   );
+  $items['theme_test_template_test_2'] = array(
+    'template' => 'theme_test.template_test',
+  );
 
   return $items;
 }
@@ -26,14 +29,14 @@ function theme_test_menu() {
   $items['theme-test/suggestion'] = array(
     'title' => 'Suggestion',
     'page callback' => '_theme_test_suggestion',
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'theme callback' => '_theme_custom_theme',
     'type' => MENU_CALLBACK,
   );
   $items['theme-test/alter'] = array(
     'title' => 'Suggestion',
     'page callback' => '_theme_test_alter',
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'theme callback' => '_theme_custom_theme',
     'type' => MENU_CALLBACK,
   );

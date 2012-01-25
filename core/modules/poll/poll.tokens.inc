@@ -42,7 +42,7 @@ function poll_tokens($type, $tokens, array $data = array(), array $options = arr
   $sanitize = !empty($options['sanitize']);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
-    $language_code = $options['language']->language;
+    $language_code = $options['language']->langcode;
   }
   else {
     $language_code = NULL;

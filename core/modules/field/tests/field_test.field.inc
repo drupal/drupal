@@ -58,6 +58,9 @@ function field_test_field_update_forbid($field, $prior_field, $has_data) {
  * Implements hook_field_load().
  */
 function field_test_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
+  $args = func_get_args();
+  field_test_memorize(__FUNCTION__, $args);
+
   foreach ($items as $id => $item) {
     // To keep the test non-intrusive, only act for instances with the
     // test_hook_field_load setting explicitly set to TRUE.
@@ -73,12 +76,39 @@ function field_test_field_load($entity_type, $entities, $field, $instances, $lan
 }
 
 /**
+ * Implements hook_field_insert().
+ */
+function field_test_field_insert($entity_type, $entity, $field, $instance, $items) {
+  $args = func_get_args();
+  field_test_memorize(__FUNCTION__, $args);
+}
+
+/**
+ * Implements hook_field_update().
+ */
+function field_test_field_update($entity_type, $entity, $field, $instance, $items) {
+  $args = func_get_args();
+  field_test_memorize(__FUNCTION__, $args);
+}
+
+/**
+ * Implements hook_field_delete().
+ */
+function field_test_field_delete($entity_type, $entity, $field, $instance, $items) {
+  $args = func_get_args();
+  field_test_memorize(__FUNCTION__, $args);
+}
+
+/**
  * Implements hook_field_validate().
  *
  * Possible error codes:
  * - 'field_test_invalid': The value is invalid.
  */
 function field_test_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  $args = func_get_args();
+  field_test_memorize(__FUNCTION__, $args);
+
   foreach ($items as $delta => $item) {
     if ($item['value'] == -1) {
       $errors[$field['field_name']][$langcode][$delta][] = array(

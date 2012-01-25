@@ -428,3 +428,11 @@ function statistics_ranking() {
 function statistics_update_index() {
   variable_set('node_cron_views_scale', 1.0 / max(1, db_query('SELECT MAX(totalcount) FROM {node_counter}')->fetchField()));
 }
+/**
+ * Implements hook_preprocess_block().
+ */
+function statistics_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'statistics') {
+    $variables['attributes_array']['role'] = 'navigation';
+  }
+}

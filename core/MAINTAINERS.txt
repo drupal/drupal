@@ -6,7 +6,7 @@ Branch maintainers
 ------------------
 
 The Drupal Core branch maintainers oversee the development of Drupal as a
-whole. The branch mainainers for Drupal 8 are:
+whole. The branch maintainers for Drupal 8 are:
 
 - Dries Buytaert 'dries' <http://drupal.org/user/1>
 - Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
@@ -36,6 +36,7 @@ Batch system
 Cache system
 - Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
 - Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
+- Mark Sonnabaum 'msonnabaum' <http://drupal.org/user/75278>
 
 Cron system
 - Károly Négyesi 'chx' <http://drupal.org/user/9446>
@@ -133,7 +134,6 @@ Accessibility
 - Brandon Bowersox 'brandonojc' <http://drupal.org/user/186415>
 
 Documentation
-- Ariane Khachatourians 'arianek' <http://drupal.org/user/158886>
 - Jennifer Hodgdon 'jhodgdon' <http://drupal.org/user/155601>
 
 Security
@@ -263,9 +263,6 @@ Tracker module
 
 Translation module
 - Francesco Placella 'plach' <http://drupal.org/user/183211>
-
-Trigger module
-- ?
 
 Update module
 - Derek Wright 'dww' <http://drupal.org/user/46549>

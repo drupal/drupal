@@ -113,7 +113,7 @@ const LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN = 1;
  */
 function locale_language_from_interface() {
   global $language;
-  return isset($language->language) ? $language->language : FALSE;
+  return isset($language->langcode) ? $language->langcode : FALSE;
 }
 
 /**
@@ -193,7 +193,7 @@ function locale_language_from_browser($languages) {
 
     // Find the best match.
     if ($qvalue > $max_qvalue) {
-      $best_match_langcode = $language->language;
+      $best_match_langcode = $language->langcode;
       $max_qvalue = $qvalue;
     }
   }
@@ -274,7 +274,7 @@ function locale_language_from_url($languages) {
       // path initialization runs after the language bootstrap phase.
       list($language, $_GET['q']) = language_url_split_prefix(isset($_GET['q']) ? $_GET['q'] : NULL, $languages);
       if ($language !== FALSE) {
-        $language_url = $language->language;
+        $language_url = $language->langcode;
       }
       break;
 
@@ -282,13 +282,13 @@ function locale_language_from_url($languages) {
       $domains = locale_language_negotiation_url_domains();
       foreach ($languages as $language) {
         // Skip check if the language doesn't have a domain.
-        if (!empty($domains[$language->language])) {
+        if (!empty($domains[$language->langcode])) {
           // Only compare the domains not the protocols or ports.
           // Remove protocol and add http:// so parse_url works
-          $host = 'http://' . str_replace(array('http://', 'https://'), '', $domains[$language->language]);
+          $host = 'http://' . str_replace(array('http://', 'https://'), '', $domains[$language->langcode]);
           $host = parse_url($host, PHP_URL_HOST);
           if ($_SERVER['HTTP_HOST'] == $host) {
-            $language_url = $language->language;
+            $language_url = $language->langcode;
             break;
           }
         }
@@ -340,24 +340,26 @@ function locale_language_url_fallback($language = NULL, $language_type = LANGUAG
   // the default one, otherwise we fall back to an already detected language.
   $domains = locale_language_negotiation_url_domains();
   $prefixes = locale_language_negotiation_url_prefixes();
-  if (($prefix && empty($prefixes[$default->language])) || (!$prefix && empty($domains[$default->language]))) {
-    return $default->language;
+  if (($prefix && empty($prefixes[$default->langcode])) || (!$prefix && empty($domains[$default->langcode]))) {
+    return $default->langcode;
   }
   else {
-    return $GLOBALS[$language_type]->language;
+    return $GLOBALS[$language_type]->langcode;
   }
 }
 
 /**
- * Return the URL language switcher block. Translation links may be provided by
- * other modules.
+ * Return links for the URL language switcher block.
+ *
+ * Translation links may be provided by other modules.
  */
 function locale_language_switcher_url($type, $path) {
-  $languages = language_list('enabled');
+  // Get the enabled languages only.
+  $languages = language_list(TRUE);
   $links = array();
 
-  foreach ($languages[1] as $language) {
-    $links[$language->language] = array(
+  foreach ($languages as $language) {
+    $links[$language->langcode] = array(
       'href'       => $path,
       'title'      => $language->name,
       'language'   => $language,
@@ -375,16 +377,17 @@ function locale_language_switcher_session($type, $path) {
   drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css');
 
   $param = variable_get('locale_language_negotiation_session_param', 'language');
-  $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : $GLOBALS[$type]->language;
+  $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : $GLOBALS[$type]->langcode;
 
-  $languages = language_list('enabled');
+  // Get the enabled languages only.
+  $languages = language_list(TRUE);
   $links = array();
 
   $query = $_GET;
   unset($query['q']);
 
-  foreach ($languages[1] as $language) {
-    $langcode = $language->language;
+  foreach ($languages as $language) {
+    $langcode = $language->langcode;
     $links[$langcode] = array(
       'href'       => $path,
       'title'      => $language->name,
@@ -413,8 +416,9 @@ function locale_language_url_rewrite_url(&$path, &$options) {
   $languages = &$drupal_static_fast['languages'];
 
   if (!isset($languages)) {
-    $languages = language_list('enabled');
-    $languages = array_flip(array_keys($languages[1]));
+    // Get the enabled languages only.
+    $languages = language_list(TRUE);
+    $languages = array_flip(array_keys($languages));
   }
 
   // Language can be passed as an option, or we go for current URL language.
@@ -423,7 +427,7 @@ function locale_language_url_rewrite_url(&$path, &$options) {
     $options['language'] = $language_url;
   }
   // We allow only enabled languages here.
-  elseif (!isset($languages[$options['language']->language])) {
+  elseif (!isset($languages[$options['language']->langcode])) {
     unset($options['language']);
     return;
   }
@@ -432,17 +436,17 @@ function locale_language_url_rewrite_url(&$path, &$options) {
     switch (variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX)) {
       case LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN:
         $domains = locale_language_negotiation_url_domains();
-        if (!empty($domains[$options['language']->language])) {
+        if (!empty($domains[$options['language']->langcode])) {
           // Ask for an absolute URL with our modified base_url.
           $options['absolute'] = TRUE;
-          $options['base_url'] = $domains[$options['language']->language];
+          $options['base_url'] = $domains[$options['language']->langcode];
         }
         break;
 
       case LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX:
         $prefixes = locale_language_negotiation_url_prefixes();
-        if (!empty($prefixes[$options['language']->language])) {
-          $options['prefix'] = $prefixes[$options['language']->language] . '/';
+        if (!empty($prefixes[$options['language']->langcode])) {
+          $options['prefix'] = $prefixes[$options['language']->langcode] . '/';
         }
         break;
     }
@@ -488,8 +492,8 @@ function locale_language_url_rewrite_session(&$path, &$options) {
   if (!isset($query_rewrite)) {
     global $user;
     if (!$user->uid) {
-      $languages = language_list('enabled');
-      $languages = $languages[1];
+      // Get the enabled languages only.
+      $languages = language_list(TRUE);
       $query_param = check_plain(variable_get('locale_language_negotiation_session_param', 'language'));
       $query_value = isset($_GET[$query_param]) ? check_plain($_GET[$query_param]) : NULL;
       $query_rewrite = isset($languages[$query_value]) && language_negotiation_get_any(LOCALE_LANGUAGE_NEGOTIATION_SESSION);
@@ -709,7 +713,7 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Construct the array for JavaScript translations.
   // Only add strings with a translation to the translations array.
-  $result = db_query("SELECT s.lid, s.source, s.context, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.location LIKE '%.js%'", array(':language' => $language->language));
+  $result = db_query("SELECT s.lid, s.source, s.context, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.location LIKE '%.js%'", array(':language' => $language->langcode));
 
   $translations = array();
   foreach ($result as $data) {
@@ -724,8 +728,8 @@ function _locale_rebuild_js($langcode = NULL) {
     $data = "Drupal.locale = { ";
 
     $locale_plurals = variable_get('locale_translation_plurals', array());
-    if (!empty($locale_plurals[$language->language])) {
-      $data .= "'pluralFormula': function (\$n) { return Number({$locale_plurals[$language->language]['formula']}); }, ";
+    if (!empty($locale_plurals[$language->langcode])) {
+      $data .= "'pluralFormula': function (\$n) { return Number({$locale_plurals[$language->langcode]['formula']}); }, ";
     }
 
     $data .= "'strings': " . drupal_json_encode($translations) . " };";
@@ -738,23 +742,23 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Delete old file, if we have no translations anymore, or a different file to be saved.
   $locale_javascripts = variable_get('locale_translation_javascript', array());
-  $changed_hash = !isset($locale_javascripts[$language->language]) || ($locale_javascripts[$language->language] != $data_hash);
-  if (!empty($locale_javascripts[$language->language]) && (!$data || $changed_hash)) {
-    file_unmanaged_delete($dir . '/' . $language->language . '_' . $locale_javascripts[$language->language] . '.js');
-    $locale_javascripts[$language->language] = '';
+  $changed_hash = !isset($locale_javascripts[$language->langcode]) || ($locale_javascripts[$language->langcode] != $data_hash);
+  if (!empty($locale_javascripts[$language->langcode]) && (!$data || $changed_hash)) {
+    file_unmanaged_delete($dir . '/' . $language->langcode . '_' . $locale_javascripts[$language->langcode] . '.js');
+    $locale_javascripts[$language->langcode] = '';
     $status = 'deleted';
   }
 
   // Only create a new file if the content has changed or the original file got
   // lost.
-  $dest = $dir . '/' . $language->language . '_' . $data_hash . '.js';
+  $dest = $dir . '/' . $language->langcode . '_' . $data_hash . '.js';
   if ($data && ($changed_hash || !file_exists($dest))) {
     // Ensure that the directory exists and is writable, if possible.
     file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
 
     // Save the file.
     if (file_unmanaged_save_data($data, $dest)) {
-      $locale_javascripts[$language->language] = $data_hash;
+      $locale_javascripts[$language->langcode] = $data_hash;
       // If we deleted a previous version of the file and we replace it with a
       // new one we have an update.
       if ($status == 'deleted') {
@@ -772,7 +776,7 @@ function _locale_rebuild_js($langcode = NULL) {
       }
     }
     else {
-      $locale_javascripts[$language->language] = '';
+      $locale_javascripts[$language->langcode] = '';
       $status = 'error';
     }
   }
@@ -790,7 +794,7 @@ function _locale_rebuild_js($langcode = NULL) {
       watchdog('locale', 'Updated JavaScript translation file for the language %language.', array('%language' => $language->name));
       return TRUE;
     case 'rebuilt':
-      watchdog('locale', 'JavaScript translation file %file.js was lost.', array('%file' => $locale_javascripts[$language->language]), WATCHDOG_WARNING);
+      watchdog('locale', 'JavaScript translation file %file.js was lost.', array('%file' => $locale_javascripts[$language->langcode]), WATCHDOG_WARNING);
       // Proceed to the 'created' case as the JavaScript translation file has
       // been created again.
     case 'created':

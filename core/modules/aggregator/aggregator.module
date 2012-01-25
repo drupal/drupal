@@ -786,3 +786,12 @@ function aggregator_sanitize_configuration() {
 function _aggregator_items($count) {
   return format_plural($count, '1 item', '@count items');
 }
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function aggregator_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'aggregator') {
+    $variables['attributes_array']['role'] = 'complementary';
+  }
+}

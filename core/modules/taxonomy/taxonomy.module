@@ -85,7 +85,7 @@ function taxonomy_permission() {
       'title' => t('Administer vocabularies and terms'),
     ),
   );
-  foreach (taxonomy_get_vocabularies() as $vocabulary) {
+  foreach (taxonomy_vocabulary_load_multiple(FALSE) as $vocabulary) {
     $permissions += array(
       'edit terms in ' . $vocabulary->vid => array(
         'title' => t('Edit terms in %vocabulary', array('%vocabulary' => $vocabulary->name)),
@@ -313,10 +313,20 @@ function taxonomy_menu() {
     // Pass a NULL argument to ensure that additional path components are not
     // passed to taxonomy_form_term() as the vocabulary machine name argument.
     'page arguments' => array('taxonomy_form_term', 2, NULL),
-    'access callback' => 'taxonomy_term_edit_access',
-    'access arguments' => array(2),
+    'access callback' => 'taxonomy_term_access',
+    'access arguments' => array('edit', 2),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
+    'file' => 'taxonomy.admin.inc',
+  );
+  $items['taxonomy/term/%taxonomy_term/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_term_confirm_delete', 2),
+    'access callback' => 'taxonomy_term_access',
+    'access arguments' => array('delete', 2),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 11,
     'file' => 'taxonomy.admin.inc',
   );
   $items['taxonomy/term/%taxonomy_term/feed'] = array(
@@ -378,15 +388,35 @@ function taxonomy_menu() {
 function taxonomy_admin_paths() {
   $paths = array(
     'taxonomy/term/*/edit' => TRUE,
+    'taxonomy/term/*/delete' => TRUE,
   );
   return $paths;
 }
 
 /**
- * Return edit access for a given term.
+ * Access callback: Checks a user's permission for performing a taxonomy term
+ * operation.
+ *
+ * @param $op
+ *   The operation to be performed on the taxonomy term. Possible values are:
+ *   - "edit"
+ *   - "delete"
+ * @param $term
+ *   The $term object on which the operation is to be performed.
+ *
+ * @return
+ *   TRUE if the operation may be performed, FALSE otherwise.
+ *
+ * @see taxonomy_menu()
  */
-function taxonomy_term_edit_access($term) {
-  return user_access("edit terms in $term->vid") || user_access('administer taxonomy');
+function taxonomy_term_access($op, $term) {
+  if (!$term || !in_array($op, array('edit', 'delete'), TRUE)) {
+    // If there was no term to check against, or the $op was not one of the
+    // supported ones, we return access denied.
+    return FALSE;
+  }
+
+  return user_access("$op terms in $term->vid") || user_access('administer taxonomy');
 }
 
 /**
@@ -705,10 +735,10 @@ function taxonomy_term_delete($tid) {
         }
 
         // See if any of the term's children are about to be become orphans:
-        if ($children = taxonomy_get_children($tid)) {
+        if ($children = taxonomy_term_load_children($tid)) {
           foreach ($children as $child) {
             // If the term has multiple parents, we don't delete it.
-            $parents = taxonomy_get_parents($child->tid);
+            $parents = taxonomy_term_load_parents($child->tid);
             if (count($parents) == 1) {
               $orphans[] = $child->tid;
             }
@@ -759,7 +789,7 @@ function taxonomy_term_delete($tid) {
  */
 function taxonomy_term_view($term, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   field_attach_prepare_view('taxonomy_term', array($term->tid => $term), $view_mode, $langcode);
@@ -848,9 +878,9 @@ function taxonomy_terms_static_reset() {
   drupal_static_reset('taxonomy_get_tree');
   drupal_static_reset('taxonomy_get_tree:parents');
   drupal_static_reset('taxonomy_get_tree:terms');
-  drupal_static_reset('taxonomy_get_parents');
-  drupal_static_reset('taxonomy_get_parents_all');
-  drupal_static_reset('taxonomy_get_children');
+  drupal_static_reset('taxonomy_term_load_parents');
+  drupal_static_reset('taxonomy_term_load_parents_all');
+  drupal_static_reset('taxonomy_term_load_children');
   entity_get_controller('taxonomy_term')->resetCache();
 }
 
@@ -863,16 +893,6 @@ function taxonomy_terms_static_reset() {
 function taxonomy_vocabulary_static_reset($ids = NULL) {
   drupal_static_reset('taxonomy_vocabulary_get_names');
   entity_get_controller('taxonomy_vocabulary')->resetCache($ids);
-}
-
-/**
- * Return an array of all vocabulary objects.
- *
- * @return
- *   An array of all vocabulary objects, indexed by vid.
- */
-function taxonomy_get_vocabularies() {
-  return taxonomy_vocabulary_load_multiple(FALSE, array());
 }
 
 /**
@@ -901,7 +921,7 @@ function taxonomy_vocabulary_get_names() {
  *   An array of term objects which are the parents of the term $tid, or an
  *   empty array if parents are not found.
  */
-function taxonomy_get_parents($tid) {
+function taxonomy_term_load_parents($tid) {
   $parents = &drupal_static(__FUNCTION__, array());
 
   if ($tid && !isset($parents[$tid])) {
@@ -922,7 +942,7 @@ function taxonomy_get_parents($tid) {
 /**
  * Find all ancestors of a given term ID.
  */
-function taxonomy_get_parents_all($tid) {
+function taxonomy_term_load_parents_all($tid) {
   $cache = &drupal_static(__FUNCTION__, array());
 
   if (isset($cache[$tid])) {
@@ -933,7 +953,7 @@ function taxonomy_get_parents_all($tid) {
   if ($term = taxonomy_term_load($tid)) {
     $parents[] = $term;
     $n = 0;
-    while ($parent = taxonomy_get_parents($parents[$n]->tid)) {
+    while ($parent = taxonomy_term_load_parents($parents[$n]->tid)) {
       $parents = array_merge($parents, $parent);
       $n++;
     }
@@ -956,7 +976,7 @@ function taxonomy_get_parents_all($tid) {
  *   An array of term objects that are the children of the term $tid, or an
  *   empty array when no children exist.
  */
-function taxonomy_get_children($tid, $vid = 0) {
+function taxonomy_term_load_children($tid, $vid = 0) {
   $children = &drupal_static(__FUNCTION__, array());
 
   if ($tid && !isset($children[$tid])) {
@@ -1058,9 +1078,9 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
           break;
         }
         $term = $load_entities ? $term_entities[$child] : $terms[$vid][$child];
-        if (count($parents[$vid][$term->tid]) > 1) {
-          // We have a term with multi parents here. Clone the term,
-          // so that the depth attribute remains correct.
+        if (isset($parents[$vid][$term->tid])) {
+          // Clone the term so that the depth attribute remains correct
+          // in the event of multiple parents.
           $term = clone $term;
         }
         $term->depth = $depth;
@@ -1103,12 +1123,25 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
  *
  * @param $name
  *   Name of the term to search for.
+ * @param $vocabulary
+ *   (optional) Vocabulary machine name to limit the search. Defaults to NULL.
  *
  * @return
  *   An array of matching term objects.
  */
-function taxonomy_get_term_by_name($name) {
-  return taxonomy_term_load_multiple(array(), array('name' => trim($name)));
+function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
+  $conditions = array('name' => trim($name));
+  if (isset($vocabulary)) {
+    $vocabularies = taxonomy_vocabulary_get_names();
+    if (isset($vocabularies[$vocabulary])){
+      $conditions['vid'] = $vocabularies[$vocabulary]->vid;
+    }
+    else {
+      // Return an empty array when filtering by a non-existing vocabulary.
+      return array();
+    }
+  }
+  return taxonomy_term_load_multiple(array(), $conditions);
 }
 
 /**
@@ -1405,9 +1438,9 @@ function taxonomy_field_validate($entity_type, $entity, $field, $instance, $lang
             }
           }
           // If a parent is specified, then to validate it must appear in the
-          // array returned by taxonomy_get_parents_all().
+          // array returned by taxonomy_term_load_parents_all().
           elseif (!empty($settings['parent'])) {
-            $ancestors = taxonomy_get_parents_all($item['tid']);
+            $ancestors = taxonomy_term_load_parents_all($item['tid']);
             foreach ($ancestors as $ancestor) {
               if ($ancestor->tid == $settings['parent']) {
                 $validate = TRUE;
@@ -1655,7 +1688,7 @@ function taxonomy_field_widget_error($element, $error, $form, &$form_state) {
  */
 function taxonomy_field_settings_form($field, $instance, $has_data) {
   // Get proper values for 'allowed_values_function', which is a core setting.
-  $vocabularies = taxonomy_get_vocabularies();
+  $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
   $options = array();
   foreach ($vocabularies as $vocabulary) {
     $options[$vocabulary->machine_name] = $vocabulary->name;

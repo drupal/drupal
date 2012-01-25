@@ -640,6 +640,15 @@ function shortcut_renderable_links($shortcut_set = NULL) {
 }
 
 /**
+ * Implements hook_preprocess_block().
+ */
+function shortcut_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'shortcut') {
+    $variables['attributes_array']['role'] = 'navigation';
+  }
+}
+
+/**
  * Implements hook_preprocess_page().
  */
 function shortcut_preprocess_page(&$variables) {

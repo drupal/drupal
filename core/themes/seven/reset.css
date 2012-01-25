@@ -200,10 +200,3 @@ ul.inline:after {
   display: none;
   clear: none;
 }
-/* IE7 */
-*:first-child + html .form-item,
-*:first-child + html ul.links,
-*:first-child + html div.admin-panel .body,
-*:first-child + html .clearfix {
-  min-height: 1%;
-}

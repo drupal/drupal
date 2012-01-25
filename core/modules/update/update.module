@@ -499,7 +499,7 @@ function _update_get_cached_available_releases() {
  */
 function update_mail($key, &$message, $params) {
   $language = $message['language'];
-  $langcode = $language->language;
+  $langcode = $language->langcode;
   $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => variable_get('site_name', 'Drupal')), array('langcode' => $langcode));
   foreach ($params as $msg_type => $msg_reason) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $language);
@@ -538,7 +538,7 @@ function update_mail($key, &$message, $params) {
  *   The properly translated error message for the given key.
  */
 function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $language = NULL) {
-  $langcode = isset($language) ? $language->language : NULL;
+  $langcode = isset($language) ? $language->langcode : NULL;
   $text = '';
   switch ($msg_reason) {
     case UPDATE_NOT_SECURE:
@@ -695,14 +695,14 @@ function update_verify_update_archive($project, $archive_file, $directory) {
   }
 
   if (empty($files)) {
-    $errors[] = t('%archive_file does not contain any .info files.', array('%archive_file' => basename($archive_file)));
+    $errors[] = t('%archive_file does not contain any .info files.', array('%archive_file' => drupal_basename($archive_file)));
   }
   elseif (!$compatible_project) {
     $errors[] = format_plural(
       count($incompatible),
       '%archive_file contains a version of %names that is not compatible with Drupal !version.',
       '%archive_file contains versions of modules or themes that are not compatible with Drupal !version: %names',
-      array('!version' => DRUPAL_CORE_COMPATIBILITY, '%archive_file' => basename($archive_file), '%names' => implode(', ', $incompatible))
+      array('!version' => DRUPAL_CORE_COMPATIBILITY, '%archive_file' => drupal_basename($archive_file), '%names' => implode(', ', $incompatible))
     );
   }
 

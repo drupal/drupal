@@ -1,8 +1,14 @@
 <?php
 
 /**
- * Test invocation of hooks when inserting, loading, updating or deleting an
- * entity. Tested hooks are:
+ * @file
+ * CRUD hook tests for the Entity CRUD API.
+ */
+
+/**
+ * Tests invocation of hooks when performing an action.
+ *
+ * Tested hooks are:
  * - hook_entity_insert()
  * - hook_entity_load()
  * - hook_entity_update()
@@ -53,7 +59,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test hook invocations for CRUD operations on comments.
+   * Tests hook invocations for CRUD operations on comments.
    */
   public function testCommentHooks() {
     $node = (object) array(
@@ -124,7 +130,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test hook invocations for CRUD operations on files.
+   * Tests hook invocations for CRUD operations on files.
    */
   public function testFileHooks() {
     $url = 'public://entity_crud_hook_test.file';
@@ -180,7 +186,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test hook invocations for CRUD operations on nodes.
+   * Tests hook invocations for CRUD operations on nodes.
    */
   public function testNodeHooks() {
     $node = (object) array(
@@ -236,7 +242,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test hook invocations for CRUD operations on taxonomy terms.
+   * Tests hook invocations for CRUD operations on taxonomy terms.
    */
   public function testTaxonomyTermHooks() {
     $vocabulary = (object) array(
@@ -294,7 +300,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test hook invocations for CRUD operations on taxonomy vocabularies.
+   * Tests hook invocations for CRUD operations on taxonomy vocabularies.
    */
   public function testTaxonomyVocabularyHooks() {
     $vocabulary = (object) array(
@@ -344,7 +350,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test hook invocations for CRUD operations on users.
+   * Tests hook invocations for CRUD operations on users.
    */
   public function testUserHooks() {
     $edit = array(
