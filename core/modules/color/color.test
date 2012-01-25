@@ -92,7 +92,9 @@ class ColorTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($stylesheet_content, 'color: ' . $test_values['scheme_color']) !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
 
     // Test with aggregated CSS turned on.
-    variable_set('preprocess_css', 1);
+    $config = config('system.performance');
+    $config->set('preprocess_css', 1);
+    $config->save();
     $this->drupalGet('<front>');
     $stylesheets = variable_get('drupal_css_cache_files', array());
     $stylesheet_content = '';
@@ -100,7 +102,8 @@ class ColorTestCase extends DrupalWebTestCase {
       $stylesheet_content .= join("\n", file(drupal_realpath($uri)));
     }
     $this->assertTrue(strpos($stylesheet_content, 'public://') === FALSE, 'Make sure the color paths have been translated to local paths. (' . $theme . ')');
-    variable_set('preprocess_css', 0);
+    $config->set('preprocess_css', 0);
+    $config->save();
   }
 
   /**
