@@ -77,8 +77,13 @@
  *   Text with tokens replaced.
  */
 function token_replace($text, array $data = array(), array $options = array()) {
+  $text_tokens = token_scan($text);
+  if (empty($text_tokens)) {
+    return $text;
+  }
+
   $replacements = array();
-  foreach (token_scan($text) as $type => $tokens) {
+  foreach ($text_tokens as $type => $tokens) {
     $replacements += token_generate($type, $tokens, $data, $options);
     if (!empty($options['clear'])) {
       $replacements += array_fill_keys($tokens, '');
