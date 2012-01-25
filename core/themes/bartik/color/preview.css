@@ -9,7 +9,7 @@
 
 /* ---------- Preview Styles ----------- */
 
-html.js #preview {
+.js #preview {
   clear: both;
   float: none !important;
 }

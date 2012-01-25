@@ -245,13 +245,14 @@ function forum_overview($form, &$form_state) {
     if (isset($form[$key]['#term'])) {
       $term = $form[$key]['#term'];
       $form[$key]['view']['#href'] = 'forum/' . $term['tid'];
+      unset($form[$key]['operations']['#links']['delete']);
       if (in_array($form[$key]['#term']['tid'], variable_get('forum_containers', array()))) {
-        $form[$key]['edit']['#title'] = t('edit container');
-        $form[$key]['edit']['#href'] = 'admin/structure/forum/edit/container/' . $term['tid'];
+        $form[$key]['operations']['#links']['edit']['title'] = t('edit container');
+        $form[$key]['operations']['#links']['edit']['href'] = 'admin/structure/forum/edit/container/' . $term['tid'];
       }
       else {
-        $form[$key]['edit']['#title'] = t('edit forum');
-        $form[$key]['edit']['#href'] = 'admin/structure/forum/edit/forum/' . $term['tid'];
+        $form[$key]['operations']['#links']['edit']['title'] = t('edit forum');
+        $form[$key]['operations']['#links']['edit']['href'] = 'admin/structure/forum/edit/forum/' . $term['tid'];
       }
     }
   }

@@ -7,9 +7,9 @@ Drupal.behaviors.filterGuidelines = {
   attach: function (context) {
     $('.filter-guidelines', context).once('filter-guidelines')
       .find(':header').hide()
-      .parents('.filter-wrapper').find('select.filter-list')
+      .closest('.filter-wrapper').find('select.filter-list')
       .bind('change', function () {
-        $(this).parents('.filter-wrapper')
+        $(this).closest('.filter-wrapper')
           .find('.filter-guidelines-item').hide()
           .siblings('.filter-guidelines-' + this.value).show();
       })

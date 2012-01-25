@@ -8,10 +8,10 @@
  * Autocomplete.
  */
 /* Animated throbber */
-html.js input.form-autocomplete {
+.js input.form-autocomplete {
   background-position: 0% 2px;
 }
-html.js input.throbbing {
+.js input.throbbing {
   background-position: 0% -18px;
 }
 

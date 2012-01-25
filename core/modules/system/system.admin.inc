@@ -106,23 +106,6 @@ function system_admin_index() {
 }
 
 /**
- * Menu callback; displays a module's settings page.
- */
-function system_settings_overview() {
-  // Check database setup if necessary
-  if (function_exists('db_check_setup') && empty($_POST)) {
-    db_check_setup();
-  }
-
-  $item = menu_get_item('admin/config');
-  $content = system_admin_menu_block($item);
-
-  $output = theme('admin_block_content', array('content' => $content));
-
-  return $output;
-}
-
-/**
  * Menu callback; displays a listing of all themes.
  */
 function system_themes_page() {
