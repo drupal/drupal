@@ -565,7 +565,7 @@ fieldset .fieldset-wrapper {
 fieldset.collapsed {
   background-color: transparent;
 }
-html.js fieldset.collapsed {
+.js fieldset.collapsed {
   border-width: 1px;
   height: auto;
 }
@@ -722,10 +722,10 @@ select.form-select:focus {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(220, 220, 220, 0.4);
   outline-color: rgba(0, 116, 189, 0.5);
 }
-html.js input.form-autocomplete {
+.js input.form-autocomplete {
   background-position: 100% 4px;
 }
-html.js input.throbbing {
+.js input.throbbing {
   background-position: 100% -16px;
 }
 ul.action-links {
