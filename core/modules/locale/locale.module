@@ -977,13 +977,12 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
         $negotiation = variable_get("language_negotiation_$type", array());
 
         foreach ($negotiation as $id => $provider) {
-          if (isset($provider['file'])) {
-            require_once DRUPAL_ROOT . '/' . $provider['file'];
-          }
-
-          // Avoid duplicate callback entries.
           if (isset($provider['callbacks']['url_rewrite'])) {
-            $callbacks[$provider['callbacks']['url_rewrite']] = NULL;
+            if (isset($provider['file'])) {
+              require_once DRUPAL_ROOT . '/' . $provider['file'];
+            }
+            // Avoid duplicate callback entries.
+            $callbacks[$provider['callbacks']['url_rewrite']] = TRUE;
           }
         }
       }
