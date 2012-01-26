@@ -141,7 +141,7 @@ class Updater {
       return FALSE;
     }
     foreach ($info_files as $info_file) {
-      if (drupal_substr($info_file->filename, 0, -5) == basename($directory)) {
+      if (drupal_substr($info_file->filename, 0, -5) == drupal_basename($directory)) {
         // Info file Has the same name as the directory, return it.
         return $info_file->uri;
       }
@@ -163,7 +163,7 @@ class Updater {
    *   The name of the project.
    */
   public static function getProjectName($directory) {
-    return basename($directory);
+    return drupal_basename($directory);
   }
 
   /**

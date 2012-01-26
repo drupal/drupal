@@ -1597,7 +1597,7 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
  */
 function format_rss_channel($title, $link, $description, $items, $langcode = NULL, $args = array()) {
   global $language_content;
-  $langcode = $langcode ? $langcode : $language_content->language;
+  $langcode = $langcode ? $langcode : $language_content->langcode;
 
   $output = "<channel>\n";
   $output .= ' <title>' . check_plain($title) . "</title>\n";
@@ -1806,7 +1806,7 @@ function format_size($size, $langcode = NULL) {
 /**
  * Formats a time interval with the requested granularity.
  *
- * @param $timestamp
+ * @param $interval
  *   The length of the interval in seconds.
  * @param $granularity
  *   How many different units to display in the string.
@@ -1817,7 +1817,7 @@ function format_size($size, $langcode = NULL) {
  * @return
  *   A translated string representation of the interval.
  */
-function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
+function format_interval($interval, $granularity = 2, $langcode = NULL) {
   $units = array(
     '1 year|@count years' => 31536000,
     '1 month|@count months' => 2592000,
@@ -1830,9 +1830,9 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
   $output = '';
   foreach ($units as $key => $value) {
     $key = explode('|', $key);
-    if ($timestamp >= $value) {
-      $output .= ($output ? ' ' : '') . format_plural(floor($timestamp / $value), $key[0], $key[1], array(), array('langcode' => $langcode));
-      $timestamp %= $value;
+    if ($interval >= $value) {
+      $output .= ($output ? ' ' : '') . format_plural(floor($interval / $value), $key[0], $key[1], array(), array('langcode' => $langcode));
+      $interval %= $value;
       $granularity--;
     }
 
@@ -1891,7 +1891,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   // Use the default langcode if none is set.
   global $language;
   if (empty($langcode)) {
-    $langcode = isset($language->language) ? $language->language : LANGUAGE_SYSTEM;
+    $langcode = isset($language->langcode) ? $language->langcode : LANGUAGE_SYSTEM;
   }
 
   switch ($type) {
@@ -2141,8 +2141,8 @@ function url($path = NULL, array $options = array()) {
     $path = '';
   }
   elseif (!empty($path) && !$options['alias']) {
-    $language = isset($options['language']) && isset($options['language']->language) ? $options['language']->language : '';
-    $alias = drupal_get_path_alias($original_path, $language);
+    $langcode = isset($options['language']) && isset($options['language']->langcode) ? $options['language']->langcode : '';
+    $alias = drupal_get_path_alias($original_path, $langcode);
     if ($alias != $original_path) {
       $path = $alias;
     }
@@ -2314,7 +2314,7 @@ function l($text, $path, array $options = array()) {
 
   // Append active class.
   if (($path == $_GET['q'] || ($path == '<front>' && drupal_is_front_page())) &&
-      (empty($options['language']) || $options['language']->language == $language_url->language)) {
+      (empty($options['language']) || $options['language']->langcode == $language_url->langcode)) {
     $options['attributes']['class'][] = 'active';
   }
 
@@ -2336,7 +2336,7 @@ function l($text, $path, array $options = array()) {
     // rendering.
     if (variable_get('theme_link', TRUE)) {
       drupal_theme_initialize();
-      $registry = theme_get_registry();
+      $registry = theme_get_registry(FALSE);
       // We don't want to duplicate functionality that's in theme(), so any
       // hint of a module or theme doing anything at all special with the 'link'
       // theme hook should simply result in theme() being called. This includes
@@ -2466,7 +2466,7 @@ function drupal_deliver_html_page($page_callback_result) {
 
   // Send appropriate HTTP-Header for browsers and search engines.
   global $language;
-  drupal_add_http_header('Content-Language', $language->language);
+  drupal_add_http_header('Content-Language', $language->langcode);
 
   // Menu status constants are integers; page content is a string or array.
   if (is_int($page_callback_result)) {
@@ -2566,8 +2566,7 @@ function drupal_page_footer() {
   // Commit the user session, if needed.
   drupal_session_commit();
 
-  $config = config('system.performance');
-  if ($config->get('cache') && ($cache = drupal_page_set_cache())) {
+  if (variable_get('cache', 0) && ($cache = drupal_page_set_cache())) {
     drupal_serve_page_from_cache($cache);
   }
   else {
@@ -2941,7 +2940,7 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
   foreach ($css as $key => $item) {
     if ($item['type'] == 'file') {
       // If defined, force a unique basename for this file.
-      $basename = isset($item['basename']) ? $item['basename'] : basename($item['data']);
+      $basename = isset($item['basename']) ? $item['basename'] : drupal_basename($item['data']);
       if (isset($previous_item[$basename])) {
         // Remove the previous item that shared the same base name.
         unset($css[$previous_item[$basename]]);
@@ -2958,8 +2957,13 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
 
   // Provide the page with information about the individual CSS files used,
   // information not otherwise available when CSS aggregation is enabled.
-  $setting['ajaxPageState']['css'] = array_fill_keys(array_keys($css), 1);
-  $styles['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
+  // Skip if no files were added to the page or jQuery.extend() will overwrite
+  // the Drupal.settings.ajaxPageState.css object with an empty array.
+  // Cast the array to an object to be on the safe side even if not empty.
+  if (!empty($css)) {
+    $setting['ajaxPageState']['css'] = (object) array_fill_keys(array_keys($css), 1);
+    $styles['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
+  }
 
   return drupal_render($styles);
 }
@@ -3135,14 +3139,7 @@ function drupal_group_css($css) {
  * @see system_element_info()
  */
 function drupal_aggregate_css(&$css_groups) {
-  // Only aggregate during normal site operation.
-  if (defined('MAINTENANCE_MODE')) {
-    $preprocess_css = FALSE;
-  }
-  else {
-    $config = config('system.performance');
-    $preprocess_css = $config->get('preprocess_css');
-  }
+  $preprocess_css = (variable_get('preprocess_css', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
 
   // For each group that needs aggregation, aggregate its items.
   foreach ($css_groups as $key => $group) {
@@ -4375,18 +4372,9 @@ function drupal_group_js($javascript) {
  * @see drupal_pre_render_scripts()
  */
 function drupal_aggregate_js(&$js_groups) {
-  // Only aggregate during normal site operation.
-  if (defined('MAINTENANCE_MODE')) {
-    $preprocess_js = FALSE;
-  }
-  else {
-    $config = config('system.performance');
-    $preprocess_js = $config->get('preprocess_js');
-  }
-
   // Only aggregate when the site is configured to do so, and not during an
   // update.
-  if ($preprocess_js) {
+  if (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update')) {
     foreach ($js_groups as $key => $group) {
       if ($group['type'] == 'file' && $group['preprocess']) {
         $js_groups[$key]['data'] = drupal_build_js_cache($group['items']);
@@ -5135,7 +5123,6 @@ function _drupal_bootstrap_full() {
  */
 function drupal_page_set_cache() {
   global $base_root;
-  $config = config('system.performance');
 
   if (drupal_page_is_cacheable()) {
     $cache = (object) array(
@@ -5162,7 +5149,7 @@ function drupal_page_set_cache() {
     }
 
     if ($cache->data['body']) {
-      if ($config->get('page_compression') && extension_loaded('zlib')) {
+      if (variable_get('page_compression', TRUE) && extension_loaded('zlib')) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
       cache('page')->set($cache->cid, $cache->data, $cache->expire);
@@ -5779,8 +5766,11 @@ function drupal_render(&$elements) {
   }
 
   // Try to fetch the element's markup from cache and return.
-  if (isset($elements['#cache']) && $cached_output = drupal_render_cache_get($elements)) {
-    return $cached_output;
+  if (isset($elements['#cache'])) {
+    $cached_output = drupal_render_cache_get($elements);
+    if ($cached_output !== FALSE) {
+      return $cached_output;
+    }
   }
 
   // If #markup is set, ensure #type is set. This allows to specify just #markup
@@ -6156,7 +6146,7 @@ function drupal_render_cid_parts($granularity = NULL) {
   // part.
   if (language_multilingual()) {
     foreach (language_types_configurable() as $language_type) {
-      $cid_parts[] = $GLOBALS[$language_type]->language;
+      $cid_parts[] = $GLOBALS[$language_type]->langcode;
     }
   }
 
@@ -6461,6 +6451,78 @@ function element_set_attributes(array &$element, array $map) {
 }
 
 /**
+ * Retrieves a value from a nested array with variable depth.
+ *
+ * This helper function should be used when the depth of the array element being
+ * retrieved may vary (that is, the number of parent keys is variable). It is
+ * primarily used for form structures and renderable arrays.
+ *
+ * Without this helper function the only way to get a nested array value with
+ * variable depth in one line would be using eval(), which should be avoided:
+ * @code
+ * // Do not do this! Avoid eval().
+ * // May also throw a PHP notice, if the variable array keys do not exist.
+ * eval('$value = $array[\'' . implode("']['", $parents) . "'];");
+ * @endcode
+ *
+ * Instead, use this helper function:
+ * @code
+ * $value = drupal_array_get_nested_value($form, $parents);
+ * @endcode
+ *
+ * The return value will be NULL, regardless of whether the actual value is NULL
+ * or whether the requested key does not exist. If it is required to know
+ * whether the nested array key actually exists, pass a third argument that is
+ * altered by reference:
+ * @code
+ * $key_exists = NULL;
+ * $value = drupal_array_get_nested_value($form, $parents, $key_exists);
+ * if ($key_exists) {
+ *   // ... do something with $value ...
+ * }
+ * @endcode
+ *
+ * However if the number of array parent keys is static, the value should always
+ * be retrieved directly rather than calling this function. For instance:
+ * @code
+ * $value = $form['signature_settings']['signature'];
+ * @endcode
+ *
+ * @param $array
+ *   The array from which to get the value.
+ * @param $parents
+ *   An array of parent keys of the value, starting with the outermost key.
+ * @param $key_exists
+ *   (optional) If given, an already defined variable that is altered by
+ *   reference.
+ *
+ * @return
+ *   The requested nested value. Possibly NULL if the value is NULL or not all
+ *   nested parent keys exist. $key_exists is altered by reference and is a
+ *   Boolean that indicates whether all nested parent keys exist (TRUE) or not
+ *   (FALSE). This allows to distinguish between the two possibilities when NULL
+ *   is returned.
+ *
+ * @see drupal_array_set_nested_value()
+ * @see drupal_array_unset_nested_value()
+ */
+function &drupal_array_get_nested_value(array &$array, array $parents, &$key_exists = NULL) {
+  $ref = &$array;
+  foreach ($parents as $parent) {
+    if (is_array($ref) && array_key_exists($parent, $ref)) {
+      $ref = &$ref[$parent];
+    }
+    else {
+      $key_exists = FALSE;
+      $null = NULL;
+      return $null;
+    }
+  }
+  $key_exists = TRUE;
+  return $ref;
+}
+
+/**
  * Sets a value in a nested array with variable depth.
  *
  * This helper function should be used when the depth of the array element you
@@ -6518,6 +6580,7 @@ function element_set_attributes(array &$element, array $map) {
  *   FALSE, PHP throws an error if trying to add into a value that is not an
  *   array. Defaults to FALSE.
  *
+ * @see drupal_array_unset_nested_value()
  * @see drupal_array_get_nested_value()
  */
 function drupal_array_set_nested_value(array &$array, array $parents, $value, $force = FALSE) {
@@ -6584,87 +6647,23 @@ function drupal_array_set_nested_value(array &$array, array $parents, $value, $f
  * @param $parents
  *   An array of parent keys, starting with the outermost key and including the
  *   key to be unset.
- *
- * @see drupal_array_set_nested_value()
- */
-function drupal_array_unset_nested_value(array &$array, array $parents) {
-  $ref = &$array;
-  $unset_key = array_pop($parents);
-  foreach ($parents as $parent) {
-    $ref = &$ref[$parent];
-  }
-  unset($ref[$unset_key]);
-}
-
-/**
- * Retrieves a value from a nested array with variable depth.
- *
- * This helper function should be used when the depth of the array element being
- * retrieved may vary (that is, the number of parent keys is variable). It is
- * primarily used for form structures and renderable arrays.
- *
- * Without this helper function the only way to get a nested array value with
- * variable depth in one line would be using eval(), which should be avoided:
- * @code
- * // Do not do this! Avoid eval().
- * // May also throw a PHP notice, if the variable array keys do not exist.
- * eval('$value = $array[\'' . implode("']['", $parents) . "'];");
- * @endcode
- *
- * Instead, use this helper function:
- * @code
- * $value = drupal_array_get_nested_value($form, $parents);
- * @endcode
- *
- * The return value will be NULL, regardless of whether the actual value is NULL
- * or whether the requested key does not exist. If it is required to know
- * whether the nested array key actually exists, pass a third argument that is
- * altered by reference:
- * @code
- * $key_exists = NULL;
- * $value = drupal_array_get_nested_value($form, $parents, $key_exists);
- * if ($key_exists) {
- *   // ... do something with $value ...
- * }
- * @endcode
- *
- * However if the number of array parent keys is static, the value should always
- * be retrieved directly rather than calling this function. For instance:
- * @code
- * $value = $form['signature_settings']['signature'];
- * @endcode
- *
- * @param $array
- *   The array from which to get the value.
- * @param $parents
- *   An array of parent keys of the value, starting with the outermost key.
- * @param $key_exists
+ * @param $key_existed
  *   (optional) If given, an already defined variable that is altered by
  *   reference.
  *
- * @return
- *   The requested nested value. Possibly NULL if the value is NULL or not all
- *   nested parent keys exist. $key_exists is altered by reference and is a
- *   Boolean that indicates whether all nested parent keys exist (TRUE) or not
- *   (FALSE). This allows to distinguish between the two possibilities when NULL
- *   is returned.
- *
  * @see drupal_array_set_nested_value()
+ * @see drupal_array_get_nested_value()
  */
-function &drupal_array_get_nested_value(array &$array, array $parents, &$key_exists = NULL) {
-  $ref = &$array;
-  foreach ($parents as $parent) {
-    if (is_array($ref) && array_key_exists($parent, $ref)) {
-      $ref = &$ref[$parent];
-    }
-    else {
-      $key_exists = FALSE;
-      $null = NULL;
-      return $null;
-    }
+function drupal_array_unset_nested_value(array &$array, array $parents, &$key_existed = NULL) {
+  $unset_key = array_pop($parents);
+  $ref = &drupal_array_get_nested_value($array, $parents, $key_existed);
+  if ($key_existed && is_array($ref) && array_key_exists($unset_key, $ref)) {
+    $key_existed = TRUE;
+    unset($ref[$unset_key]);
   }
-  $key_exists = TRUE;
-  return $ref;
+  else {
+    $key_existed = FALSE;
+  }
 }
 
 /**
@@ -6871,6 +6870,9 @@ function drupal_common_theme() {
       'render element' => 'element',
     ),
     'textfield' => array(
+      'render element' => 'element',
+    ),
+    'tel' => array(
       'render element' => 'element',
     ),
     'form' => array(
@@ -7448,7 +7450,13 @@ function drupal_flush_all_caches() {
   system_rebuild_theme_data();
   drupal_theme_rebuild();
 
-  node_types_rebuild();
+  entity_info_cache_clear();
+
+  // @todo D8: Split cache flushing from rebuilding.
+  // @see http://drupal.org/node/996236
+  if (module_exists('node')) {
+    node_types_rebuild();
+  }
   // node_menu() defines menu items based on node types so it needs to come
   // after node types are rebuilt.
   menu_rebuild();

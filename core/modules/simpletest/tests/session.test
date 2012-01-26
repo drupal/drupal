@@ -139,7 +139,10 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->assertSessionEmpty(TRUE);
 
     // The same behavior is expected when caching is enabled.
-    variable_set('cache', 1);
+    $config = config('system.performance');
+    $config->set('cache', 1);
+    $config->save();
+
     $this->drupalGet('');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(TRUE);
@@ -455,7 +458,7 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
       }
     }
 
-    // Test that session data saved before login is not available using the 
+    // Test that session data saved before login is not available using the
     // pre-login anonymous cookie.
     $this->cookies = array();
     $this->drupalGet('session-test/get', array('Cookie: ' . $anonymous_cookie));

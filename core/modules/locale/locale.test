@@ -1080,7 +1080,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('locale');
-    $this->language = 'en';
+    $this->langcode = 'en';
   }
 
   /**
@@ -1093,15 +1093,15 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     require_once DRUPAL_ROOT . '/core/includes/locale.inc';
 
     $language = (object) array(
-      'language' => 'fr',
+      'langcode' => 'fr',
       'name' => 'French',
-      'default' => $this->language == 'fr',
+      'default' => $this->langcode == 'fr',
     );
     language_save($language);
 
     // Check the UI language.
     drupal_language_initialize();
-    $this->assertEqual($GLOBALS['language']->language, $this->language, t('Current language: %lang', array('%lang' => $GLOBALS['language']->language)));
+    $this->assertEqual($GLOBALS['language']->langcode, $this->langcode, t('Current language: %lang', array('%lang' => $GLOBALS['language']->langcode)));
 
     // Enable multilingual workflow option for articles.
     variable_set('language_content_type_article', 1);
@@ -1146,7 +1146,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Check the init language logic.
     drupal_language_initialize();
-    $this->assertEqual($GLOBALS['language']->language, 'en', t('Language after uninstall: %lang', array('%lang' => $GLOBALS['language']->language)));
+    $this->assertEqual($GLOBALS['language']->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => $GLOBALS['language']->langcode)));
 
     // Check JavaScript files deletion.
     $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
@@ -1206,7 +1206,7 @@ class LocaleUninstallFrenchFunctionalTest extends LocaleUninstallFunctionalTest 
 
   function setUp() {
     parent::setUp();
-    $this->language = 'fr';
+    $this->langcode = 'fr';
   }
 }
 
@@ -1312,30 +1312,30 @@ class LocaleBrowserDetectionTest extends DrupalUnitTestCase {
     $languages = array(
       // In our test case, 'en' has priority over 'en-US'.
       'en' => (object) array(
-        'language' => 'en',
+        'langcode' => 'en',
       ),
       'en-US' => (object) array(
-        'language' => 'en-US',
+        'langcode' => 'en-US',
       ),
       // But 'fr-CA' has priority over 'fr'.
       'fr-CA' => (object) array(
-        'language' => 'fr-CA',
+        'langcode' => 'fr-CA',
       ),
       'fr' => (object) array(
-        'language' => 'fr',
+        'langcode' => 'fr',
       ),
       // 'es-MX' is alone.
       'es-MX' => (object) array(
-        'language' => 'es-MX',
+        'langcode' => 'es-MX',
       ),
       // 'pt' is alone.
       'pt' => (object) array(
-        'language' => 'pt',
+        'langcode' => 'pt',
       ),
       // Language codes with more then one dash are actually valid.
       // eh-oh-laa-laa is the official language code of the Teletubbies.
       'eh-oh-laa-laa' => (object) array(
-        'language' => 'eh-oh-laa-laa',
+        'langcode' => 'eh-oh-laa-laa',
       ),
     );
 
@@ -1640,15 +1640,10 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array( "prefix[$langcode]" => $prefix );
     $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
 
-    // Check that the "xx" front page is not available when path prefixes are
-    // not enabled yet.
-    $this->drupalPost('admin/config/regional/language/configure', array(), t('Save settings'));
+    // Check that the "xx" front page is readily available because path prefix
+    // negotiation is pre-configured.
     $this->drupalGet($prefix);
-    $this->assertResponse(404, t('The "xx" front page is not available yet.'));
-
-    // Enable URL language detection and selection.
-    $edit = array('language[enabled][locale-url]' => 1);
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->assertText(t('Welcome to Drupal'), t('The "xx" front page is readibly available.'));
 
     // Create a node.
     $node = $this->drupalCreateNode(array('type' => 'page'));
@@ -1659,7 +1654,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'source'   => 'node/' . $node->nid,
       'alias'    => $english_path,
-      'language' => 'en',
+      'langcode' => 'en',
     );
     $this->drupalPost($path, $edit, t('Save'));
 
@@ -1668,7 +1663,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'source'   => 'node/' . $node->nid,
       'alias'    => $custom_language_path,
-      'language' => $langcode,
+      'langcode' => $langcode,
     );
     $this->drupalPost($path, $edit, t('Save'));
 
@@ -1687,7 +1682,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'source'   => 'node/' . $node->nid,
       'alias'    => $custom_path,
-      'language' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NONE,
     );
     path_save($edit);
     $lookup_path = drupal_lookup_path('alias', 'node/' . $node->nid, 'en');
@@ -1705,7 +1700,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'source'   => 'node/' . $first_node->nid,
       'alias'    => $custom_path,
-      'language' => 'en',
+      'langcode' => 'en',
     );
     path_save($edit);
 
@@ -1713,7 +1708,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'source'   => 'node/' . $second_node->nid,
       'alias'    => $custom_path,
-      'language' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NONE,
     );
     path_save($edit);
 
@@ -2020,11 +2015,11 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // Setup the site languages by installing two languages.
     require_once DRUPAL_ROOT . '/core/includes/locale.inc';
     $language = (object) array(
-      'language' => $langcode_browser_fallback,
+      'langcode' => $langcode_browser_fallback,
     );
     language_save($language);
     $language = (object) array(
-      'language' => $langcode,
+      'langcode' => $langcode,
     );
     language_save($language);
 
@@ -2037,8 +2032,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // is for some reason not found when doing translate search. This might
     // be some bug.
     drupal_static_reset('language_list');
-    $languages = language_list('enabled');
-    variable_set('language_default', $languages[1]['vi']);
+    $languages = language_list(TRUE);
+    variable_set('language_default', $languages['vi']);
     // First visit this page to make sure our target string is searchable.
     $this->drupalGet('admin/config');
     // Now the t()'ed string is in db so switch the language back to default.
@@ -2177,7 +2172,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // Add the Italian language.
     $langcode_browser_fallback = 'it';
     $language = (object) array(
-      'language' => $langcode_browser_fallback,
+      'langcode' => $langcode_browser_fallback,
     );
     language_save($language);
     $languages = language_list();
@@ -2186,7 +2181,6 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // URL must have a valid fallback value.
     $edit = array('prefix[en]' => 'en');
     $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
-
 
     // Enable browser and URL language detection.
     $edit = array(
@@ -2205,7 +2199,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // Access the front page without specifying any valid URL language prefix
     // and having as browser language preference a non-default language.
     $http_header = array("Accept-Language: $langcode_browser_fallback;q=1");
-    $this->drupalGet('', array(), $http_header);
+    $language = (object) array('langcode' => '');
+    $this->drupalGet('', array('language' => $language), $http_header);
 
     // Check that the language switcher active link matches the given browser
     // language.
@@ -2272,7 +2267,7 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
 
     // Check URL rewriting with a non-installed language.
     $non_existing = language_default();
-    $non_existing->language = $this->randomName();
+    $non_existing->langcode = $this->randomName();
     $this->checkUrl($non_existing, t('Path language is ignored if language is not installed.'), t('URL language negotiation does not work with non-installed languages'));
   }
 
@@ -2294,7 +2289,7 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
     // If the rewritten URL has not a language prefix we pick a random prefix so
     // we can always check the prefixed URL.
     $prefixes = locale_language_negotiation_url_prefixes();
-    $stored_prefix = isset($prefixes[$language->language]) ? $prefixes[$language->language] : $this->randomName();
+    $stored_prefix = isset($prefixes[$language->langcode]) ? $prefixes[$language->langcode] : $this->randomName();
     if ($this->assertNotEqual($stored_prefix, $prefix, $message1)) {
       $prefix = $stored_prefix;
     }
@@ -2325,7 +2320,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     // Add a new language.
     require_once DRUPAL_ROOT . '/core/includes/locale.inc';
     $language = (object) array(
-      'language' => 'it',
+      'langcode' => 'it',
       'name' => 'Italian',
     );
     language_save($language);

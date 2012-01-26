@@ -318,7 +318,7 @@ Drupal.ajax.prototype.beforeSerialize = function (element, options) {
 Drupal.ajax.prototype.beforeSubmit = function (form_values, element, options) {
   // This function is left empty to make it simple to override for modules
   // that wish to add functionality here.
-}
+};
 
 /**
  * Prepare the Ajax request before it is sent.

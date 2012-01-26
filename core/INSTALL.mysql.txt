@@ -18,7 +18,7 @@ initial database files. Next you must log in and set the access database rights:
   mysql -u username -p
 
 Again, you will be asked for the 'username' database password. At the MySQL
-prompt, enter following command:
+prompt, enter the following command:
 
   GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER
   ON databasename.*

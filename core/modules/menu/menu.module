@@ -793,3 +793,12 @@ function menu_get_menus($all = TRUE) {
   }
   return $custom_menus;
 }
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function menu_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'menu') {
+    $variables['attributes_array']['role'] = 'navigation';
+  }
+}

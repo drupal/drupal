@@ -26,7 +26,7 @@ Drupal.behaviors.machineName = {
       var $source = $(source_id, context).addClass('machine-name-source');
       var $target = $(options.target, context).addClass('machine-name-target');
       var $suffix = $(options.suffix, context);
-      var $wrapper = $target.parents('.form-item:first');
+      var $wrapper = $target.closest('.form-item');
       // All elements have to exist.
       if (!$source.length || !$target.length || !$suffix.length || !$wrapper.length) {
         return;

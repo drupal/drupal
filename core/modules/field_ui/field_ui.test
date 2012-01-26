@@ -18,6 +18,7 @@ class FieldUITestCase extends DrupalWebTestCase {
     if (isset($modules[0]) && is_array($modules[0])) {
       $modules = $modules[0];
     }
+    $modules[] = 'node';
     $modules[] = 'field_ui';
     $modules[] = 'field_test';
     $modules[] = 'taxonomy';

@@ -106,23 +106,6 @@ function system_admin_index() {
 }
 
 /**
- * Menu callback; displays a module's settings page.
- */
-function system_settings_overview() {
-  // Check database setup if necessary
-  if (function_exists('db_check_setup') && empty($_POST)) {
-    db_check_setup();
-  }
-
-  $item = menu_get_item('admin/config');
-  $content = system_admin_menu_block($item);
-
-  $output = theme('admin_block_content', array('content' => $content));
-
-  return $output;
-}
-
-/**
  * Menu callback; displays a listing of all themes.
  */
 function system_themes_page() {
@@ -260,11 +243,6 @@ function system_themes_admin_form($form, &$form_state, $theme_options) {
     '#description' => t('Choose "Default theme" to always use the same theme as the rest of the site.'),
     '#default_value' => variable_get('admin_theme', 0),
   );
-  $form['admin_theme']['node_admin_theme'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Use the administration theme when editing or creating content'),
-    '#default_value' => variable_get('node_admin_theme', '0'),
-  );
   $form['admin_theme']['actions'] = array('#type' => 'actions');
   $form['admin_theme']['actions']['submit'] = array(
     '#type' => 'submit',
@@ -279,7 +257,6 @@ function system_themes_admin_form($form, &$form_state, $theme_options) {
 function system_themes_admin_form_submit($form, &$form_state) {
   drupal_set_message(t('The configuration options have been saved.'));
   variable_set('admin_theme', $form_state['values']['admin_theme']);
-  variable_set('node_admin_theme', $form_state['values']['node_admin_theme']);
 }
 
 /**
@@ -622,7 +599,7 @@ function system_theme_settings_validate($form, &$form_state) {
     }
     else {
       // File upload failed.
-      form_set_error('logo_upload', t('The favicon could not be uploaded.'));
+      form_set_error('favicon_upload', t('The favicon could not be uploaded.'));
     }
   }
 
@@ -672,6 +649,11 @@ function _system_theme_settings_validate_path($path) {
  * Process system_theme_settings form submissions.
  */
 function system_theme_settings_submit($form, &$form_state) {
+  // Exclude unnecessary elements before saving.
+  form_state_values_clean($form_state);
+  $key = $form_state['values']['var'];
+  unset($form_state['values']['var']);
+
   $values = $form_state['values'];
 
   // If the user uploaded a new logo or favicon, save it to a permanent location
@@ -703,10 +685,7 @@ function system_theme_settings_submit($form, &$form_state) {
   if (empty($values['default_favicon']) && !empty($values['favicon_path'])) {
     $values['favicon_mimetype'] = file_get_mimetype($values['favicon_path']);
   }
-  $key = $values['var'];
 
-  // Exclude unnecessary elements before saving.
-  unset($values['var'], $values['submit'], $values['reset'], $values['form_id'], $values['op'], $values['form_build_id'], $values['form_token']);
   variable_set($key, $values);
   drupal_set_message(t('The configuration options have been saved.'));
 
@@ -1487,7 +1466,7 @@ function system_site_information_settings() {
   $form['front_page']['site_frontpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Default front page'),
-    '#default_value' => (variable_get('site_frontpage')!='node'?drupal_get_path_alias(variable_get('site_frontpage', 'node')):''),
+    '#default_value' => (variable_get('site_frontpage') != 'user' ? drupal_get_path_alias(variable_get('site_frontpage', 'user')) : ''),
     '#size' => 40,
     '#description' => t('Optionally, specify a relative URL to display as the front page.  Leave blank to display the default content feed.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
@@ -1497,8 +1476,8 @@ function system_site_information_settings() {
     '#default_value' => variable_get('default_nodes_main', 10),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('The maximum number of posts displayed on overview pages such as the front page.'),
-    '#access' => (variable_get('site_frontpage')=='node'),
-  );  
+    '#access' => (variable_get('site_frontpage') == 'node'),
+  );
   $form['error_page'] = array(
     '#type' => 'fieldset',
     '#title' => t('Error pages'),
@@ -1535,8 +1514,8 @@ function system_site_information_settings_validate($form, &$form_state) {
   }
   // Check for empty front page path.
   if (empty($form_state['values']['site_frontpage'])) {
-    // Set to default "node".
-    form_set_value($form['front_page']['site_frontpage'], 'node', $form_state);
+    // Set to default "user".
+    form_set_value($form['front_page']['site_frontpage'], 'user', $form_state);
   }
   else {
     // Get the normal path of the front page.
@@ -3088,7 +3067,7 @@ function system_actions_configure($form, &$form_state, $action = NULL) {
     '#title' => t('Label'),
     '#default_value' => $edit['actions_label'],
     '#maxlength' => '255',
-    '#description' => t('A unique label for this advanced action. This label will be displayed in the interface of modules that integrate with actions, such as Trigger module.'),
+    '#description' => t('A unique label for this advanced action. This label will be displayed in the interface of modules that integrate with actions.'),
     '#weight' => -10
   );
   $action_form = $function . '_form';

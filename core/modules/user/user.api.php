@@ -171,6 +171,28 @@ function hook_user_cancel_methods_alter(&$methods) {
 }
 
 /**
+ * Alter the username that is displayed for a user.
+ *
+ * Called by user_format_name() to allow modules to alter the username that's
+ * displayed. Can be used to ensure user privacy in situations where
+ * $account->name is too revealing.
+ *
+ * @param $name
+ *   The string that user_format_name() will return.
+ *
+ * @param $account
+ *   The account object passed to user_format_name().
+ *
+ * @see user_format_name()
+ */
+function hook_user_format_name_alter(&$name, $account) {
+  // Display the user's uid instead of name.
+  if (isset($account->uid)) {
+    $name = t('User !uid', array('!uid' => $account->uid));
+  }
+}
+
+/**
  * Add mass user operations.
  *
  * This hook enables modules to inject custom operations into the mass operations

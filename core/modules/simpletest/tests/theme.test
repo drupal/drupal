@@ -66,7 +66,8 @@ class ThemeUnitTest extends DrupalWebTestCase {
     $q = $_GET['q'];
     // Set $_GET['q'] to node because theme_get_suggestions() will query it to
     // see if we are on the front page.
-    $_GET['q'] = variable_get('site_frontpage', 'node');
+    variable_set('site_frontpage', 'node');
+    $_GET['q'] = 'node';
     $suggestions = theme_get_suggestions(explode('/', $_GET['q']), 'page');
     // Set it back to not annoy the batch runner.
     $_GET['q'] = $q;
@@ -91,7 +92,9 @@ class ThemeUnitTest extends DrupalWebTestCase {
     // what is output to the HTML HEAD based on what is in a theme's .info file,
     // so it doesn't matter what page we get, as long as it is themed with the
     // test theme. First we test with CSS aggregation disabled.
-    variable_set('preprocess_css', 0);
+    $config = config('system.performance');
+    $config->set('preprocess_css', 0);
+    $config->save();
     $this->drupalGet('theme-test/suggestion');
     $this->assertNoText('system.base.css', t('The theme\'s .info file is able to override a module CSS file from being added to the page.'));
 
@@ -99,9 +102,11 @@ class ThemeUnitTest extends DrupalWebTestCase {
     // triggered during drupal_build_css_cache() when a source file doesn't
     // exist. Then allow remaining tests to continue with aggregation disabled
     // by default.
-    variable_set('preprocess_css', 1);
+    $config->set('preprocess_css', 1);
+    $config->save();
     $this->drupalGet('theme-test/suggestion');
-    variable_set('preprocess_css', 0);
+    $config->set('preprocess_css', 0);
+    $config->save();
   }
 
   /**
@@ -264,7 +269,7 @@ class ThemeFunctionsTestCase extends DrupalWebTestCase {
     // Required to verify the "active" class in expected links below, and
     // because the current path is different when running tests manually via
     // simpletest.module ('batch') and via the testing framework ('').
-    $_GET['q'] = variable_get('site_frontpage', 'node');
+    $_GET['q'] = variable_get('site_frontpage', 'user');
 
     // Verify that a list of links is properly rendered.
     $variables = array();
@@ -538,5 +543,56 @@ class ThemeHtmlTplPhpAttributesTestCase extends DrupalWebTestCase {
     $this->assertTrue(count($attributes) == 1, t('Attribute set in the html element via hook_preprocess_html() found.'));
     $attributes = $this->xpath('/html/body[@theme_test_body_attribute="theme test body attribute value"]');
     $this->assertTrue(count($attributes) == 1, t('Attribute set in the body element via hook_preprocess_html() found.'));
+  }
+}
+
+/**
+ * Tests for the ThemeRegistry class.
+ */
+class ThemeRegistryTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
+  public static function getInfo() {
+    return array(
+      'name' => 'ThemeRegistry',
+      'description' => 'Tests the behavior of the ThemeRegistry class',
+      'group' => 'Theme',
+    );
+  }
+  function setUp() {
+    parent::setUp('theme_test');
+  }
+
+  /**
+   * Tests the behavior of the theme registry class.
+   */
+  function testRaceCondition() {
+    $_SERVER['REQUEST_METHOD'] = 'GET';
+    $cid = 'test_theme_registry';
+
+    // Directly instantiate the theme registry, this will cause a base cache
+    // entry to be written in __construct().
+    $registry = new ThemeRegistry($cid, 'cache');
+
+    $this->assertTrue(cache()->get($cid), 'Cache entry was created.');
+
+    // Trigger a cache miss for an offset.
+    $this->assertTrue($registry['theme_test_template_test'], 'Offset was returned correctly from the theme registry.');
+    // This will cause the ThemeRegistry class to write an updated version of
+    // the cache entry when it is destroyed, usually at the end of the request.
+    // Before that happens, manually delete the cache entry we created earlier
+    // so that the new entry is written from scratch.
+    cache()->delete($cid);
+
+    // Destroy the class so that it triggers a cache write for the offset.
+    unset($registry);
+
+    $this->assertTrue(cache()->get($cid), 'Cache entry was created.');
+
+    // Create a new instance of the class. Confirm that both the offset
+    // requested previously, and one that has not yet been requested are both
+    // available.
+    $registry = new ThemeRegistry($cid, 'cache');
+    $this->assertTrue($registry['theme_test_template_test'], 'Offset was returned correctly from the theme registry');
+    $this->assertTrue($registry['theme_test_template_test_2'], 'Offset was returned correctly from the theme registry');
   }
 }

@@ -33,7 +33,7 @@ function node_schema() {
         'default' => '',
       ),
       'language' => array(
-        'description' => 'The {language}.language of this node.',
+        'description' => 'The {language}.langcode of this node.',
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
@@ -444,6 +444,38 @@ function node_install() {
 }
 
 /**
+ * Implements hook_uninstall().
+ */
+function node_uninstall() {
+  // Delete node type variables.
+  $types = db_query('SELECT type FROM {node_type}')->fetchCol();
+  foreach ($types as $type) {
+    db_delete('variable')
+      ->condition(db_or()
+        ->condition('name', 'node_preview_' . $type)
+        ->condition('name', 'node_options_' . $type)
+        ->condition('name', 'node_submitted_' . $type)
+        ->condition('name', 'node_permissions_' . $type)
+      )
+      ->execute();
+  }
+
+  // Delete node search ranking variables.
+  // @see node_ranking(), _node_rankings()
+  variable_del('node_rank_relevance');
+  variable_del('node_rank_sticky');
+  variable_del('node_rank_promote');
+  variable_del('node_rank_recent');
+
+  // Delete remaining general module variables.
+  variable_del('node_access_needs_rebuild');
+  variable_del('node_admin_theme');
+  variable_del('node_cron_last');
+  variable_del('node_recent_block_count');
+  variable_del('default_nodes_main');
+}
+
+/**
  * Fetches node types directly from the database.
  *
  * @ingroup update-api-7.x-to-8.x
@@ -469,3 +501,30 @@ function _update_7000_node_get_types() {
   }
   return $node_types;
 }
+
+/**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
+
+/**
+ * Set 'node' as front page path if it implicitly was before.
+ *
+ * Node module became optional. The default front page path was changed to
+ * 'user'. Since 'node' was the implicit default front page path previously and
+ * may not have been explicitly configured as such, this update ensures that the
+ * old implicit default is still the default.
+ *
+ * @see http://drupal.org/node/375397
+ */
+function node_update_8000() {
+  $front_page = variable_get('site_frontpage');
+  if (!isset($front_page)) {
+    variable_set('site_frontpage', 'node');
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-8.x"
+ * The next series of updates should start at 9000.
+ */

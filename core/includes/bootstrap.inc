@@ -1,5 +1,8 @@
 <?php
 
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
+
 /**
  * @file
  * Functions that need to be loaded on every Drupal request.
@@ -299,12 +302,12 @@ abstract class DrupalCacheArray implements ArrayAccess {
   /**
    * A cid to pass to cache()->set() and cache()->get().
    */
-  private $cid;
+  protected $cid;
 
   /**
    * A bin to pass to cache()->set() and cache()->get().
    */
-  private $bin;
+  protected $bin;
 
   /**
    * An array of keys to add to the cache at the end of the request.
@@ -403,24 +406,20 @@ abstract class DrupalCacheArray implements ArrayAccess {
   /**
    * Writes a value to the persistent cache immediately.
    *
-   * @param $cid
-   *   The cache ID.
-   * @param $bin
-   *   The cache bin.
    * @param $data
    *   The data to write to the persistent cache.
    * @param $lock
    *   Whether to acquire a lock before writing to cache.
    */
-  protected function set($cid, $data, $bin, $lock = TRUE) {
+  protected function set($data, $lock = TRUE) {
     // Lock cache writes to help avoid stampedes.
     // To implement locking for cache misses, override __construct().
-    $lock_name = $cid . ':' . $bin;
+    $lock_name = $this->cid . ':' . $this->bin;
     if (!$lock || lock_acquire($lock_name)) {
-      if ($cached = cache($bin)->get($cid)) {
+      if ($cached = cache($this->bin)->get($this->cid)) {
         $data = $cached->data + $data;
       }
-      cache($bin)->set($cid, $data);
+      cache($this->bin)->set($this->cid, $data);
       if ($lock) {
         lock_release($lock_name);
       }
@@ -438,7 +437,7 @@ abstract class DrupalCacheArray implements ArrayAccess {
       }
     }
     if (!empty($data)) {
-      $this->set($this->cid, $data, $this->bin);
+      $this->set($data);
     }
   }
 }
@@ -770,7 +769,7 @@ function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root;
 
   // Export the following settings.php variables to the global namespace
-  global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $drupal_config_directory_name, $drupal_config_key;
+  global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directory_name, $config_signature_key;
   $conf = array();
 
   if (file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.php')) {
@@ -1490,7 +1489,7 @@ function drupal_unpack($obj, $field = 'data') {
  * variable text such as user names or link URLs into translated text. Variable
  * substitution looks like this:
  * @code
- * $text = t("@name's blog", array('@name' => format_username($account)));
+ * $text = t("@name's blog", array('@name' => user_format_name($account)));
  * @endcode
  * Basically, you can put variables like @name into your string, and t() will
  * substitute their sanitized values at translation time. (See the
@@ -1529,7 +1528,7 @@ function t($string, array $args = array(), array $options = array()) {
 
   // Merge in default.
   if (empty($options['langcode'])) {
-    $options['langcode'] = isset($language->language) ? $language->language : LANGUAGE_SYSTEM;
+    $options['langcode'] = isset($language->langcode) ? $language->langcode : LANGUAGE_SYSTEM;
   }
   if (empty($options['context'])) {
     $options['context'] = '';
@@ -2293,39 +2292,24 @@ function _drupal_bootstrap_configuration() {
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
 
-  // Hook up the Symfony ClassLoader for loading PSR-0-compatible classes.
-  require_once(DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/UniversalClassLoader.php');
+  // Include and activate the class loader.
+  $loader = drupal_classloader();
 
-  // By default, use the UniversalClassLoader which is best for development,
-  // as it does not break when code is moved on the file system. It is slow,
-  // however, so for production the APC class loader should be used instead.
-  // @todo Switch to a cleaner way to switch autoloaders than variable_get().
-  switch (variable_get('autoloader_mode', 'default')) {
-    case 'apc':
-      if (function_exists('apc_store')) {
-        require_once(DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php');
-        $loader = new \Symfony\Component\ClassLoader\ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
-        break;
-      }
-      // If APC was not loaded, fall through to the default loader so that
-      // the site does not fail completely.
-    case 'dev':
-    case 'default':
-    default:
-      $loader = new \Symfony\Component\ClassLoader\UniversalClassLoader();
-      break;
-  }
-
-  // Register classes with namespaces.
+  // Register explicit vendor namespaces.
   $loader->registerNamespaces(array(
     // All Symfony-borrowed code lives in /core/includes/Symfony.
     'Symfony' => DRUPAL_ROOT . '/core/includes',
+  ));
+  // Register the Drupal namespace for classes in core as a fallback.
+  // This allows to register additional namespaces within the Drupal namespace
+  // (e.g., for modules) and avoids an additional file_exists() on the Drupal
+  // core namespace, since the class loader can already determine the best
+  // namespace match based on a string comparison. It further allows modules to
+  // register/overload namespaces in Drupal core.
+  $loader->registerNamespaceFallbacks(array(
     // All Drupal-namespaced code in core lives in /core/includes/Drupal.
     'Drupal' => DRUPAL_ROOT . '/core/includes',
   ));
-
-  // Activate the autoloader.
-  $loader->register();
 }
 
 /**
@@ -2674,53 +2658,45 @@ function language_types() {
 }
 
 /**
- * Returns a list of installed languages, indexed by the specified key.
+ * Returns a list of configured languages.
  *
- * @param $field
- *   (optional) The field to index the list with.
+ * @param $only_enabled
+ *   (optional) Whether to return only enabled languages.
  *
  * @return
- *   An associative array, keyed on the values of $field.
- *   - If $field is 'weight' or 'enabled', the array is nested, with the outer
- *     array's values each being associative arrays with language codes as
- *     keys and language objects as values.
- *   - For all other values of $field, the array is only one level deep, and
- *     the array's values are language objects.
+ *   An associative array of languages, keyed by the language code, ordered by
+ *   weight ascending and name ascending.
  */
-function language_list($field = 'language') {
+function language_list($only_enabled = FALSE) {
   $languages = &drupal_static(__FUNCTION__);
-  // Init language list
+  // Initialize master language list.
   if (!isset($languages)) {
+    // Initialize local language list caches.
+    $languages = array('all' => array(), 'enabled' => array());
+
+    // Fill in master language list based on current configuration.
     $default = language_default();
     if (language_multilingual() || module_exists('language')) {
-      $languages['language'] = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('language');
+      // Use language module configuration if available.
+      $languages['all'] = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode');
     }
     else {
-      // No locale module, so use the default language only.
-      $languages['language'][$default->language] = $default;
+      // No language module, so use the default language only.
+      $languages['all'][$default->langcode] = $default;
     }
 
-    // Initialize default property so callers have an easy reference and
-    // can save the same object without data loss.
-    foreach ($languages['language'] as $langcode => $language) {
-      $languages['language'][$langcode]->default = ($langcode == $default->language);
-    }
-  }
-
-  // Return the array indexed by the right field
-  if (!isset($languages[$field])) {
-    $languages[$field] = array();
-    foreach ($languages['language'] as $lang) {
-      // Some values should be collected into an array
-      if (in_array($field, array('enabled', 'weight'))) {
-        $languages[$field][$lang->$field][$lang->language] = $lang;
-      }
-      else {
-        $languages[$field][$lang->$field] = $lang;
+    // Initialize default property so callers have an easy reference and can
+    // save the same object without data loss. Also fill in the filtered list
+    // of enabled languages only.
+    foreach ($languages['all'] as $langcode => $language) {
+      $languages['all'][$langcode]->default = ($langcode == $default->langcode);
+      if ($language->enabled) {
+        $languages['enabled'][$langcode] = $languages['all'][$langcode];
       }
     }
   }
-  return $languages[$field];
+
+  return $only_enabled ? $languages['enabled'] : $languages['all'];
 }
 
 /**
@@ -2733,7 +2709,7 @@ function language_default() {
   $default = variable_get(
     'language_default',
     (object) array(
-      'language' => 'en',
+      'langcode' => 'en',
       'name' => 'English',
       'direction' => 0,
       'enabled' => 1,
@@ -3031,6 +3007,48 @@ function drupal_get_complete_schema($rebuild = FALSE) {
  */
 
 /**
+ * Initializes and returns the class loader.
+ *
+ * The class loader is responsible for lazy-loading all PSR-0 compatible
+ * classes, interfaces, and traits (PHP 5.4 and later). Its only dependencies
+ * are DRUPAL_ROOT and variable_get(). Otherwise it may be called as early as
+ * possible.
+ *
+ * @return Symfony\Component\ClassLoader\UniversalClassLoader
+ *   A UniversalClassLoader class instance (or extension thereof).
+ */
+function drupal_classloader() {
+  // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
+  require_once DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+
+  // By default, use the UniversalClassLoader which is best for development,
+  // as it does not break when code is moved on the file system. However, as it
+  // is slow, allow to use the APC class loader in production.
+  static $loader;
+
+  if (!isset($loader)) {
+    // @todo Use a cleaner way than variable_get() to switch autoloaders.
+    switch (variable_get('autoloader_mode', 'default')) {
+      case 'apc':
+        if (function_exists('apc_store')) {
+          require_once DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
+          $loader = new ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
+          break;
+        }
+      // Fall through to the default loader if APC was not loaded, so that the
+      // site does not fail completely.
+      case 'dev':
+      case 'default':
+      default:
+        $loader = new UniversalClassLoader();
+        break;
+    }
+    $loader->register();
+  }
+  return $loader;
+}
+
+/**
  * Confirms that an interface is available.
  *
  * This function is rarely called directly. Instead, it is registered as an
@@ -3184,29 +3202,29 @@ function registry_update() {
  *
  * Example:
  * @code
- * function language_list($field = 'language') {
- *   $languages = &drupal_static(__FUNCTION__);
- *   if (!isset($languages)) {
+ * function example_list($field = 'default') {
+ *   $examples = &drupal_static(__FUNCTION__);
+ *   if (!isset($examples)) {
  *     // If this function is being called for the first time after a reset,
  *     // query the database and execute any other code needed to retrieve
- *     // information about the supported languages.
+ *     // information.
  *     ...
  *   }
- *   if (!isset($languages[$field])) {
+ *   if (!isset($examples[$field])) {
  *     // If this function is being called for the first time for a particular
  *     // index field, then execute code needed to index the information already
- *     // available in $languages by the desired field.
+ *     // available in $examples by the desired field.
  *     ...
  *   }
  *   // Subsequent invocations of this function for a particular index field
  *   // skip the above two code blocks and quickly return the already indexed
  *   // information.
- *   return $languages[$field];
+ *   return $examples[$field];
  * }
- * function locale_translate_overview_screen() {
- *   // When building the content for the translations overview page, make
- *   // sure to get completely fresh information about the supported languages.
- *   drupal_static_reset('language_list');
+ * function examples_admin_overview() {
+ *   // When building the content for the overview page, make sure to get
+ *   // completely fresh information.
+ *   drupal_static_reset('example_list');
  *   ...
  * }
  * @endcode

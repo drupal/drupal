@@ -875,7 +875,7 @@ function _locale_import_parse_quoted($string) {
  */
 function _locale_export_get_strings($language = NULL) {
   if (isset($language)) {
-    $result = db_query("SELECT s.lid, s.source, s.context, s.location, t.translation, t.plid, t.plural FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language ORDER BY t.plid, t.plural", array(':language' => $language->language));
+    $result = db_query("SELECT s.lid, s.source, s.context, s.location, t.translation, t.plid, t.plural FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language ORDER BY t.plid, t.plural", array(':language' => $language->langcode));
   }
   else {
     $result = db_query("SELECT s.lid, s.source, s.context, s.location, t.plid, t.plural FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid ORDER BY t.plid, t.plural");
@@ -934,8 +934,8 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
       $header .= "\"MIME-Version: 1.0\\n\"\n";
       $header .= "\"Content-Type: text/plain; charset=utf-8\\n\"\n";
       $header .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
-      if (!empty($locale_plurals[$language->language]['formula'])) {
-        $header .= "\"Plural-Forms: nplurals=" . $locale_plurals[$language->language]['plurals'] . "; plural=" . strtr($locale_plurals[$language->language]['formula'], array('$' => '')) . ";\\n\"\n";
+      if (!empty($locale_plurals[$language->langcode]['formula'])) {
+        $header .= "\"Plural-Forms: nplurals=" . $locale_plurals[$language->langcode]['plurals'] . "; plural=" . strtr($locale_plurals[$language->langcode]['formula'], array('$' => '')) . ";\\n\"\n";
       }
     }
     else {
@@ -973,7 +973,7 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
         $output .= 'msgid_plural ' . _locale_export_string($strings[$plural]['source']);
         if (isset($language)) {
           $translation = $string['translation'];
-          for ($i = 0; $i < $locale_plurals[$language->language]['plurals']; $i++) {
+          for ($i = 0; $i < $locale_plurals[$language->langcode]['plurals']; $i++) {
             $output .= 'msgstr[' . $i . '] ' . _locale_export_string($translation);
             if ($plural) {
               $translation = _locale_export_remove_plural($strings[$plural]['translation']);
@@ -1011,7 +1011,7 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
 function _locale_export_po($language = NULL, $output = NULL) {
   // Log the export event.
   if (isset($language)) {
-    $filename = $language->language . '.po';
+    $filename = $language->langcode . '.po';
     watchdog('locale', 'Exported %locale translation file: %filename.', array('%locale' => $language->name, '%filename' => $filename));
   }
   else {

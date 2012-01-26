@@ -523,11 +523,6 @@ function module_disable($module_list, $disable_dependents = TRUE) {
 
   foreach ($module_list as $module) {
     if (module_exists($module)) {
-      // Check if node_access table needs rebuilding.
-      if (!node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
-        node_access_needs_rebuild(TRUE);
-      }
-
       module_load_install($module);
       module_invoke($module, 'disable');
       db_update('system')
@@ -551,12 +546,6 @@ function module_disable($module_list, $disable_dependents = TRUE) {
     // Update the registry to remove the newly-disabled module.
     registry_update();
     _system_update_bootstrap_status();
-  }
-
-  // If there remains no more node_access module, rebuilding will be
-  // straightforward, we can do it right now.
-  if (node_access_needs_rebuild() && count(module_implements('node_grants')) == 0) {
-    node_access_rebuild();
   }
 }
 

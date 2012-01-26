@@ -1058,6 +1058,15 @@ function _book_link_defaults($nid) {
   return array('original_bid' => 0, 'menu_name' => '', 'nid' => $nid, 'bid' => 0, 'router_path' => 'node/%', 'plid' => 0, 'mlid' => 0, 'has_children' => 0, 'weight' => 0, 'module' => 'book', 'options' => array());
 }
 
+ /**
+ * Implements hook_preprocess_block().
+ */
+function book_preprocess_block(&$variables) {
+  if ($variables['block']-> module == 'book') {
+    $variables['attributes_array']['role'] = 'navigation';
+  }
+}
+
 /**
  * Processes variables for book-all-books-block.tpl.php.
  *
@@ -1199,7 +1208,7 @@ function book_toc($bid, $depth_limit, $exclude = array()) {
 }
 
 /**
- * Processes variables for book-export-html.tpl.php.
+ * Preprocesses variables for book-export-html.tpl.php.
  *
  * The $variables array contains the following elements:
  * - title
@@ -1216,6 +1225,20 @@ function template_preprocess_book_export_html(&$variables) {
   $variables['language'] = $language;
   $variables['language_rtl'] = ($language->direction == LANGUAGE_RTL);
   $variables['head'] = drupal_get_html_head();
+
+  // HTML element attributes.
+  $variables['html_attributes_array']['lang'] = $language->langcode;
+  $variables['html_attributes_array']['dir'] = $language->direction ? 'rtl' : 'ltr';
+}
+
+/**
+ * Processes variables for book-export-html.tpl.php.
+ *
+ * @see book-export-html.tpl.php
+ */
+function template_process_book_export_html(&$variables) {
+  // Flatten out html_attributes
+  $variables['html_attributes'] = drupal_attributes($variables['html_attributes_array']);
 }
 
 /**

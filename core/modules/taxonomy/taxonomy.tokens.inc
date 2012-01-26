@@ -128,7 +128,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'parent':
-          if ($parents = taxonomy_get_parents($term->tid)) {
+          if ($parents = taxonomy_term_load_parents($term->tid)) {
             $parent = array_pop($parents);
             $replacements[$original] = check_plain($parent->name);
           }
@@ -141,7 +141,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
       $replacements += token_generate('vocabulary', $vocabulary_tokens, array('vocabulary' => $vocabulary), $options);
     }
 
-    if (($vocabulary_tokens = token_find_with_prefix($tokens, 'parent')) && $parents = taxonomy_get_parents($term->tid)) {
+    if (($vocabulary_tokens = token_find_with_prefix($tokens, 'parent')) && $parents = taxonomy_term_load_parents($term->tid)) {
       $parent = array_pop($parents);
       $replacements += token_generate('term', $vocabulary_tokens, array('term' => $parent), $options);
     }

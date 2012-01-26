@@ -2024,7 +2024,7 @@ function hook_mail($key, &$message, $params) {
   $context = $params['context'];
   $variables = array(
     '%site_name' => variable_get('site_name', 'Drupal'),
-    '%username' => format_username($account),
+    '%username' => user_format_name($account),
   );
   if ($context['hook'] == 'taxonomy') {
     $entity = $params['entity'];
@@ -3384,9 +3384,7 @@ function hook_file_mimetype_mapping_alter(&$mapping) {
  * Declares information about actions.
  *
  * Any module can define actions, and then call actions_do() to make those
- * actions happen in response to events. The trigger module provides a user
- * interface for associating actions with module-defined triggers, and it makes
- * sure the core triggers fire off actions when their events happen.
+ * actions happen in response to events.
  *
  * An action consists of two or three parts:
  * - an action definition (returned by this hook)
@@ -3417,14 +3415,9 @@ function hook_file_mimetype_mapping_alter(&$mapping) {
  *     declare support for any trigger by returning array('any') for this value.
  *   - 'behavior': (optional) A machine-readable array of behaviors of this
  *     action, used to signal additionally required actions that may need to be
- *     triggered. Currently recognized behaviors by Trigger module:
- *     - 'changes_property': If an action with this behavior is assigned to a
- *       trigger other than a "presave" hook, any save actions also assigned to
- *       this trigger are moved later in the list. If no save action is present,
- *       one will be added.
- *       Modules that are processing actions (like Trigger module) should take
- *       special care for the "presave" hook, in which case a dependent "save"
- *       action should NOT be invoked.
+ *     triggered. Modules that are processing actions should take special care
+ *     for the "presave" hook, in which case a dependent "save" action should
+ *     NOT be invoked.
  *
  * @ingroup actions
  */
@@ -3470,8 +3463,6 @@ function hook_actions_delete($aid) {
  *
  * Called by actions_list() to allow modules to alter the return values from
  * implementations of hook_action_info().
- *
- * @see trigger_example_action_info_alter()
  */
 function hook_action_info_alter(&$actions) {
   $actions['node_unpublish_action']['label'] = t('Unpublish and remove from public view.');
@@ -3777,28 +3768,6 @@ function hook_url_outbound_alter(&$path, &$options, $original_path) {
 }
 
 /**
- * Alter the username that is displayed for a user.
- *
- * Called by format_username() to allow modules to alter the username that's
- * displayed. Can be used to ensure user privacy in situations where
- * $account->name is too revealing.
- *
- * @param $name
- *   The string that format_username() will return.
- *
- * @param $account
- *   The account object passed to format_username().
- *
- * @see format_username()
- */
-function hook_username_alter(&$name, $account) {
-  // Display the user's uid instead of name.
-  if (isset($account->uid)) {
-    $name = t('User !uid', array('!uid' => $account->uid));
-  }
-}
-
-/**
  * Provide replacement values for placeholder tokens.
  *
  * This hook is invoked when someone calls token_replace(). That function first
@@ -3836,7 +3805,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
-    $language_code = $options['language']->language;
+    $language_code = $options['language']->langcode;
   }
   else {
     $language_code = NULL;
@@ -3909,7 +3878,7 @@ function hook_tokens_alter(array &$replacements, array $context) {
 
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
-    $language_code = $options['language']->language;
+    $language_code = $options['language']->langcode;
   }
   else {
     $language_code = NULL;

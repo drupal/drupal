@@ -372,21 +372,29 @@ class ThemeRegistry Extends DrupalCacheArray {
       $data = $cached->data;
     }
     else {
-      $complete_registry = theme_get_registry();
+      // If there is no runtime cache stored, fetch the full theme registry,
+      // but then initialize each value to NULL. This allows offsetExists()
+      // to function correctly on non-registered theme hooks without triggering
+      // a call to resolveCacheMiss().
+      $data = $this->initializeRegistry();
       if ($this->persistable) {
-        // If there is no runtime cache stored, fetch the full theme registry,
-        // but then initialize each value to NULL. This allows
-        // offsetExists() to function correctly on non-registered theme hooks
-        // without triggering a call to resolveCacheMiss().
-        $data = array_fill_keys(array_keys($complete_registry), NULL);
-        $this->set($this->cid, $data, $this->bin);
-        $this->completeRegistry = $complete_registry;
-      }
-      else {
-        $data = $complete_registry;
+        $this->set($data);
       }
     }
     $this->storage = $data;
+  }
+
+  /**
+   * Initializes the full theme registry.
+   *
+   * @return
+   *   An array with the keys of the full theme registry, but the values
+   *   initialized to NULL.
+   */
+  function initializeRegistry() {
+    $this->completeRegistry = theme_get_registry();
+
+    return array_fill_keys(array_keys($this->completeRegistry), NULL);
   }
 
   public function offsetExists($offset) {
@@ -420,15 +428,19 @@ class ThemeRegistry Extends DrupalCacheArray {
     return $this->storage[$offset];
   }
 
-  public function set($cid, $data, $bin, $lock = TRUE) {
-    $lock_name = $cid . ':' . $bin;
+  public function set($data, $lock = TRUE) {
+    $lock_name = $this->cid . ':' . $this->bin;
     if (!$lock || lock_acquire($lock_name)) {
-      if ($cached = cache($bin)->get($cid)) {
+      if ($cached = cache($this->bin)->get($this->cid)) {
         // Use array merge instead of union so that filled in values in $data
         // overwrite empty values in the current cache.
         $data = array_merge($cached->data, $data);
       }
-      cache($bin)->set($cid, $data);
+      else {
+        $registry = $this->initializeRegistry();
+        $data = array_merge($registry, $data);
+      }
+      cache($this->bin)->set($this->cid, $data);
       if ($lock) {
         lock_release($lock_name);
       }
@@ -1531,7 +1543,7 @@ function theme_link($variables) {
  * @param $variables
  *   An associative array containing:
  *   - links: An associative array of links to be themed. The key for each link
- *     is used as its css class. Each link should be itself an array, with the
+ *     is used as its CSS class. Each link should be itself an array, with the
  *     following elements:
  *     - title: The link text.
  *     - href: The link URL. If omitted, the 'title' is shown as a plain text
@@ -1612,7 +1624,7 @@ function theme_links($variables) {
       // Handle links.
       if (isset($link['href'])) {
         $is_current_path = ($link['href'] == $_GET['q'] || ($link['href'] == '<front>' && drupal_is_front_page()));
-        $is_current_language = (empty($link['language']) || $link['language']->language == $language_url->language);
+        $is_current_language = (empty($link['language']) || $link['language']->langcode == $language_url->langcode);
         if ($is_current_path && $is_current_language) {
           $class[] = 'active';
         }
@@ -2341,7 +2353,7 @@ function template_preprocess_html(&$variables) {
   $variables['body_attributes_array'] = array();
 
   // HTML element attributes.
-  $variables['html_attributes_array']['lang'] = $GLOBALS['language']->language;
+  $variables['html_attributes_array']['lang'] = $GLOBALS['language']->langcode;
   $variables['html_attributes_array']['dir'] = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
 
   // Add favicon.

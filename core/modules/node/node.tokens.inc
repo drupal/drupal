@@ -93,7 +93,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
-    $language_code = $options['language']->language;
+    $language_code = $options['language']->langcode;
   }
   else {
     $language_code = NULL;
@@ -158,7 +158,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
         // Default values for the chained tokens handled below.
         case 'author':
           $account = user_load($node->uid);
-          $name = format_username($account);
+          $name = user_format_name($account);
           $replacements[$original] = $sanitize ? check_plain($name) : $name;
           break;
 

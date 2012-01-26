@@ -181,7 +181,7 @@ function openid_test_yadis_http_equiv() {
   $element = array(
     '#tag' => 'meta',
     '#attributes' => array(
-      'http-equiv' => 'X-XRDS-Location',
+      'http-equiv' => "X-XRDS-Location\n",
       'content' => url('openid-test/yadis/xrds', array('absolute' => TRUE)),
     ),
   );
@@ -202,7 +202,8 @@ function openid_test_html_openid1() {
  * Menu callback; regular HTML page with OpenID 2.0 <link> element.
  */
 function openid_test_html_openid2() {
-  drupal_add_html_head_link(array('rel' => 'openid2.provider', 'href' => url('openid-test/endpoint', array('absolute' => TRUE))));
+  // Use unusual values in order to test proper parsing of HTML attributes.
+  drupal_add_html_head_link(array('rel' => "foo\nopenid2.PROVIDER\tbar", 'href' => "\n" . url('openid-test/endpoint', array('absolute' => TRUE))));
   drupal_add_html_head_link(array('rel' => 'openid2.local_id', 'href' => 'http://example.com/html-openid2'));
   return t('This page includes a &lt;link rel=...&gt; element containing the URL of an OpenID Provider Endpoint.');
 }

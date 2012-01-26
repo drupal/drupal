@@ -2,12 +2,10 @@
 div.vertical-tabs {
   margin: 1em 0 1em 15em; /* LTR */
   border: 1px solid #ccc;
-  position: relative; /* IE7 */
 }
 .vertical-tabs ul.vertical-tabs-list {
   width: 15em;
   list-style: none;
-  list-style-image: none; /* IE7 */
   border-top: 1px solid #ccc;
   padding: 0;
   margin: -1px 0 -1px -15em; /* LTR */
@@ -18,7 +16,7 @@ div.vertical-tabs {
   padding: 0 1em;
   border: 0;
 }
-.vertical-tabs legend {
+fieldset.vertical-tabs-pane > legend {
   display: none;
 }
 
@@ -29,7 +27,6 @@ div.vertical-tabs {
   border-top: 0;
   padding: 0;
   margin: 0;
-  min-width: 0; /* IE7 */
 }
 .vertical-tabs ul.vertical-tabs-list li a {
   display: block;

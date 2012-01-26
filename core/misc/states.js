@@ -249,9 +249,18 @@ states.Trigger.states = {
 
   checked: {
     'change': function () {
-      // Use prop() here as we want a boolean of the checkbox state. See
-      // http://api.jquery.com/prop/ for more information.
-      return this.prop('checked');
+      // prop() and attr() only takes the first element into account. To support
+      // selectors matching multiple checkboxes, iterate over all and return
+      // whether any is checked.
+      var checked = false;
+      this.each(function () {
+        // Use prop() here as we want a boolean of the checkbox state.
+        // @see http://api.jquery.com/prop/
+        checked = $(this).prop('checked');
+        // Break the each() loop if this is checked.
+        return !checked;
+      });
+      return checked;
     }
   },
 

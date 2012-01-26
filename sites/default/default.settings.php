@@ -245,16 +245,16 @@ $drupal_hash_salt = '';
  * @todo Flesh this out, provide more details, etc.
  *
  * Example:
- *   $drupal_config_directory_name = '/some/directory/outside/webroot';
+ *   $config_directory_name = '/some/directory/outside/webroot';
  */
-$drupal_config_directory_name = '';
+$config_directory_name = '';
 
 /**
- * Configuration key.
+ * Configuration signature key.
  *
  * Drupal configuration files are signed using this key.
  */
-$drupal_config_key = '';
+$config_signature_key = '';
 
 /**
  * Base URL (optional).

@@ -103,6 +103,26 @@ function update_prepare_d8_bootstrap() {
     if ($has_required_schema) {
       // Update the environment for the language bootstrap if needed.
       update_prepare_d8_language();
+
+      // Change language column to langcode in url_alias.
+      if (db_table_exists('url_alias') && db_field_exists('url_alias', 'language')) {
+        db_drop_index('url_alias', 'alias_language_pid');
+        db_drop_index('url_alias', 'source_language_pid');
+        $langcode_spec = array(
+          'description' => "The language code this alias is for; if 'und', the alias will be used for unknown languages. Each Drupal path can have an alias for each supported language.",
+          'type' => 'varchar',
+          'length' => 12,
+          'not null' => TRUE,
+         'default' => '',
+        );
+        $langcode_indexes = array('indexes' =>
+          array(
+            'alias_langcode_pid' => array('alias', 'langcode', 'pid'),
+            'source_langcode_pid' => array('source', 'langcode', 'pid'),
+          ),
+        );
+        db_change_field('url_alias', 'language', 'langcode', $langcode_spec, $langcode_indexes);
+      }
     }
   }
 }
@@ -140,6 +160,17 @@ function update_prepare_d8_language() {
     db_drop_field('languages', 'prefix');
     db_drop_field('languages', 'domain');
     db_drop_field('languages', 'native');
+
+    // Rename language column to langcode and set it again as the primary key.
+    db_drop_primary_key('languages');
+    $langcode_spec = array(
+      'type' => 'varchar',
+      'length' => 12,
+      'not null' => TRUE,
+      'default' => '',
+      'description' => "Language code, e.g. 'de' or 'en-US'.",
+    );
+    db_change_field('languages', 'language', 'langcode', $langcode_spec, array('primary key' => array('langcode')));
 
     // Rename the languages table to language.
     db_rename_table('languages', 'language');

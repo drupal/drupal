@@ -22,13 +22,11 @@
  * on your module's type of content. If you want to have your content
  * indexed in the standard search index, your module should also implement
  * hook_update_index(). If your search type has settings, you can implement
- * hook_search_admin() to add them to the search settings page. You can also
- * alter the display of your module's search results by implementing
- * hook_search_page(). You can use hook_form_FORM_ID_alter(), with
- * FORM_ID set to 'search', to add fields to the search form (see
- * node_form_search_form_alter() for an example). You can use
- * hook_search_access() to limit access to searching, and hook_search_page() to
- * override how search results are displayed.
+ * hook_search_admin() to add them to the search settings page. You can use
+ * hook_form_FORM_ID_alter(), with FORM_ID set to 'search_form', to add fields
+ * to the search form (see node_form_search_form_alter() for an example).
+ * You can use hook_search_access() to limit access to searching,
+ * and hook_search_page() to override how search results are displayed.
  *
  * @return
  *   Array with optional keys:

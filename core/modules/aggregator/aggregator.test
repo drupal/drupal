@@ -266,6 +266,10 @@ EOF;
     return $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'aggregator') . '/tests/aggregator_test_atom.xml';
   }
 
+  function getHtmlEntitiesSample() {
+    return $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'aggregator') . '/tests/aggregator_test_title_entities.xml';
+  }
+
   /**
    * Creates sample article nodes.
    *
@@ -308,6 +312,7 @@ class AggregatorConfigurationTestCase extends AggregatorTestCase {
       'aggregator_teaser_length' => 200,
     );
     $this->drupalPost('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'));
 
     foreach ($edit as $name => $value) {
       $this->assertFieldByName($name, $value, t('"@name" has correct default value.', array('@name' => $name)));
@@ -913,5 +918,16 @@ class FeedParserTestCase extends AggregatorTestCase {
     $this->assertLinkByHref('http://example.org/2003/12/13/atom03');
     $this->assertText('Some text.');
     $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', db_query('SELECT guid FROM {aggregator_item} WHERE link = :link', array(':link' => 'http://example.org/2003/12/13/atom03'))->fetchField(), 'Atom entry id element is parsed correctly.');
+  }
+
+  /**
+   * Tests a feed that uses HTML entities in item titles.
+   */
+  function testHtmlEntitiesSample() {
+    $feed = $this->createFeed($this->getHtmlEntitiesSample());
+    aggregator_refresh($feed);
+    $this->drupalGet('aggregator/sources/' . $feed->fid);
+    $this->assertResponse(200, t('Feed %name exists.', array('%name' => $feed->title)));
+    $this->assertText("Quote&quot; Amp&amp;");
   }
 }

@@ -116,7 +116,9 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
    * Test support for requests containing If-Modified-Since and If-None-Match headers.
    */
   function testConditionalRequests() {
-    variable_set('cache', 1);
+    $config = config('system.performance');
+    $config->set('cache', 1);
+    $config->save();
 
     // Fill the cache.
     $this->drupalGet('');
@@ -154,7 +156,9 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
    * Test cache headers.
    */
   function testPageCache() {
-    variable_set('cache', 1);
+    $config = config('system.performance');
+    $config->set('cache', 1);
+    $config->save();
 
     // Fill the cache.
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
@@ -198,7 +202,9 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
    * mod_deflate Apache module.
    */
   function testPageCompression() {
-    variable_set('cache', 1);
+    $config = config('system.performance');
+    $config->set('cache', 1);
+    $config->save();
 
     // Fill the cache and verify that output is compressed.
     $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
