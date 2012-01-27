@@ -1854,6 +1854,9 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     $generated = token_generate('node', $raw_tokens, array('node' => $node), array('sanitize' => FALSE));
     $this->assertEqual($generated['[node:title]'], $node->title, t('Unsanitized token generated properly.'));
+
+    // Test token replacement when the string contains no tokens.
+    $this->assertEqual(token_replace('No tokens here.'), 'No tokens here.');
   }
 
   /**

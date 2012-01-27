@@ -78,7 +78,7 @@
 #preview {
   display: none;
 }
-html.js #preview {
+.js #preview {
   display: block;
   position: relative;
   float: left; /* LTR */

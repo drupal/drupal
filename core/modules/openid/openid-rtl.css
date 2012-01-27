@@ -7,8 +7,8 @@
 #user-login .openid-links {
   padding-right: 0;
 }
-html.js #user-login-form li.openid-link,
-html.js #user-login li.openid-link {
+.js #user-login-form li.openid-link,
+.js #user-login li.openid-link {
   margin-right: 0;
 }
 #user-login-form li.openid-link a,

@@ -8,8 +8,8 @@
 div.form-item-openid-identifier {
   display: block;
 }
-html.js #user-login-form div.form-item-openid-identifier,
-html.js #user-login div.form-item-openid-identifier {
+.js #user-login-form div.form-item-openid-identifier,
+.js #user-login div.form-item-openid-identifier {
   display: none;
 }
 #user-login-form ul {
@@ -32,8 +32,8 @@ html.js #user-login div.form-item-openid-identifier {
   display: none;
   list-style: none;
 }
-html.js #user-login-form li.openid-link,
-html.js #user-login li.openid-link {
+.js #user-login-form li.openid-link,
+.js #user-login li.openid-link {
   display: block;
   margin-left: 0; /* LTR */
 }

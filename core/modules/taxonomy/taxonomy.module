@@ -313,10 +313,20 @@ function taxonomy_menu() {
     // Pass a NULL argument to ensure that additional path components are not
     // passed to taxonomy_form_term() as the vocabulary machine name argument.
     'page arguments' => array('taxonomy_form_term', 2, NULL),
-    'access callback' => 'taxonomy_term_edit_access',
-    'access arguments' => array(2),
+    'access callback' => 'taxonomy_term_access',
+    'access arguments' => array('edit', 2),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
+    'file' => 'taxonomy.admin.inc',
+  );
+  $items['taxonomy/term/%taxonomy_term/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_term_confirm_delete', 2),
+    'access callback' => 'taxonomy_term_access',
+    'access arguments' => array('delete', 2),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 11,
     'file' => 'taxonomy.admin.inc',
   );
   $items['taxonomy/term/%taxonomy_term/feed'] = array(
@@ -378,15 +388,35 @@ function taxonomy_menu() {
 function taxonomy_admin_paths() {
   $paths = array(
     'taxonomy/term/*/edit' => TRUE,
+    'taxonomy/term/*/delete' => TRUE,
   );
   return $paths;
 }
 
 /**
- * Return edit access for a given term.
+ * Access callback: Checks a user's permission for performing a taxonomy term
+ * operation.
+ *
+ * @param $op
+ *   The operation to be performed on the taxonomy term. Possible values are:
+ *   - "edit"
+ *   - "delete"
+ * @param $term
+ *   The $term object on which the operation is to be performed.
+ *
+ * @return
+ *   TRUE if the operation may be performed, FALSE otherwise.
+ *
+ * @see taxonomy_menu()
  */
-function taxonomy_term_edit_access($term) {
-  return user_access("edit terms in $term->vid") || user_access('administer taxonomy');
+function taxonomy_term_access($op, $term) {
+  if (!$term || !in_array($op, array('edit', 'delete'), TRUE)) {
+    // If there was no term to check against, or the $op was not one of the
+    // supported ones, we return access denied.
+    return FALSE;
+  }
+
+  return user_access("$op terms in $term->vid") || user_access('administer taxonomy');
 }
 
 /**

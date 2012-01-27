@@ -25,7 +25,7 @@ div.contextual-links-wrapper {
   top: 2px;
   z-index: 999;
 }
-html.js div.contextual-links-wrapper {
+.js div.contextual-links-wrapper {
   display: block;
 }
 a.contextual-links-trigger {

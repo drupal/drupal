@@ -532,7 +532,7 @@ function translation_language_switch_links_alter(array &$links, $type, $path) {
       else {
         // No translation in this language, or no permission to view.
         unset($links[$langcode]['href']);
-        $links[$langcode]['attributes']['class'] = 'locale-untranslated';
+        $links[$langcode]['attributes']['class'][] = 'locale-untranslated';
       }
     }
   }

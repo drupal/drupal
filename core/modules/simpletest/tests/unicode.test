@@ -8,7 +8,7 @@
 /**
  * Test unicode handling features implemented in unicode.inc.
  */
-class UnicodeUnitTest extends DrupalWebTestCase {
+class UnicodeUnitTest extends DrupalUnitTestCase {
 
   /**
    * Whether to run the extended version of the tests (including non latin1 characters).

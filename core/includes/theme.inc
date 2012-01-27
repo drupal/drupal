@@ -1543,7 +1543,7 @@ function theme_link($variables) {
  * @param $variables
  *   An associative array containing:
  *   - links: An associative array of links to be themed. The key for each link
- *     is used as its css class. Each link should be itself an array, with the
+ *     is used as its CSS class. Each link should be itself an array, with the
  *     following elements:
  *     - title: The link text.
  *     - href: The link URL. If omitted, the 'title' is shown as a plain text

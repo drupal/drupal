@@ -3253,6 +3253,41 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
+   * Asserts that a select option in the current page exists.
+   *
+   * @param $id
+   *   Id of select field to assert.
+   * @param $option
+   *   Option to assert.
+   * @param $message
+   *   Message to display.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertOption($id, $option, $message = '') {
+    $options = $this->xpath('//select[@id=:id]/option[@value=:option]', array(':id' => $id, ':option' => $option));
+    return $this->assertTrue(isset($options[0]), $message ? $message : t('Option @option for field @id exists.', array('@option' => $option, '@id' => $id)), t('Browser'));
+  }
+
+  /**
+   * Asserts that a select option in the current page does not exist.
+   *
+   * @param $id
+   *   Id of select field to assert.
+   * @param $option
+   *   Option to assert.
+   * @param $message
+   *   Message to display.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertNoOption($id, $option, $message = '') {
+    $selects = $this->xpath('//select[@id=:id]', array(':id' => $id));
+    $options = $this->xpath('//select[@id=:id]/option[@value=:option]', array(':id' => $id, ':option' => $option));
+    return $this->assertTrue(isset($selects[0]) && !isset($options[0]), $message ? $message : t('Option @option for field @id does not exist.', array('@option' => $option, '@id' => $id)), t('Browser'));
+  }
+
+  /**
    * Asserts that a select option in the current page is checked.
    *
    * @param $id

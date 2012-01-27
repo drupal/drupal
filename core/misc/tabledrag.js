@@ -125,7 +125,7 @@ Drupal.tableDrag.prototype.initColumns = function () {
       var field = $('.' + this.tableSettings[group][d].target + ':first', this.table);
       if (field.size() && this.tableSettings[group][d].hidden) {
         var hidden = this.tableSettings[group][d].hidden;
-        var cell = field.parents('td:first');
+        var cell = field.closest('td');
         break;
       }
     }
@@ -744,7 +744,7 @@ Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
     switch (rowSettings.action) {
       case 'depth':
         // Get the depth of the target row.
-        targetElement.value = $('.indentation', $(sourceElement).parents('tr:first')).size();
+        targetElement.value = $('.indentation', $(sourceElement).closest('tr')).size();
         break;
       case 'match':
         // Update the value.
@@ -876,7 +876,7 @@ Drupal.tableDrag.prototype.row = function (tableRow, method, indentEnabled, maxD
   this.group = [tableRow];
   this.groupDepth = $('.indentation', tableRow).size();
   this.changed = false;
-  this.table = $(tableRow).parents('table:first').get(0);
+  this.table = $(tableRow).closest('table').get(0);
   this.indentEnabled = indentEnabled;
   this.maxDepth = maxDepth;
   this.direction = ''; // Direction the row is being moved.
