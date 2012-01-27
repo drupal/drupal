@@ -3238,13 +3238,10 @@ function hook_install() {
  *
  * A good rule of thumb is to remove updates older than two major releases of
  * Drupal. See hook_update_last_removed() to notify Drupal about the removals.
+ * For further information about releases and release numbers see:
+ * @link http://drupal.org/node/711070 Maintaining a drupal.org project with Git @endlink
  *
  * Never renumber update functions.
- *
- * Further information about releases and release numbers:
- * - @link http://drupal.org/handbook/version-info http://drupal.org/handbook/version-info @endlink
- * - @link http://drupal.org/node/93999 http://drupal.org/node/93999 @endlink (Overview of contributions branches and tags)
- * - @link http://drupal.org/handbook/cvs/releases http://drupal.org/handbook/cvs/releases @endlink
  *
  * Implementations of this hook should be placed in a mymodule.install file in
  * the same directory as mymodule.module. Drupal core's updates are implemented
