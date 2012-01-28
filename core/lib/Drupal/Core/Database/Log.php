@@ -142,11 +142,14 @@ class Log {
    */
   public function findCaller() {
     $stack = debug_backtrace();
-    $stack_count = count($stack);
-    $blacklist_fragment = 'includes' . DIRECTORY_SEPARATOR . 'Drupal' . DIRECTORY_SEPARATOR . 'Database';
-
-    for ($i = 0; $i < $stack_count; ++$i) {
-      if (strpos($stack[$i]['file'], $blacklist_fragment) === FALSE && strpos($stack[$i + 1]['function'], 'db_') === FALSE) {
+    for ($i = 0, $stack_count = count($stack); $i < $stack_count; ++$i) {
+      // If the call was made from a function, 'class' will be empty. It's
+      // just easier to give it a default value than to try and integrate
+      // that into the if statement below.
+      if (empty($stack[$i]['class'])) {
+        $stack[$i]['class'] = '';
+      }
+      if (strpos($stack[$i]['class'], __NAMESPACE__) === FALSE && strpos($stack[$i + 1]['function'], 'db_') === FALSE) {
         return array(
           'file' => $stack[$i]['file'],
           'line' => $stack[$i]['line'],
