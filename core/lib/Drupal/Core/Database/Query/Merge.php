@@ -120,10 +120,10 @@ class Merge extends Query implements ConditionInterface {
   protected $needsUpdate = FALSE;
 
   /**
-  * Constructs a MergeQuery object.
+  * Constructs a Merge object.
   *
-  * @param DatabaseConnection $connection
-  *   A DatabaseConnection object.
+  * @param Drupal\Core\Database\Connection $connection
+  *   A Drupal\Core\Database\Connection object.
   * @param string $table
   *   Name of the table to associate with this query.
   * @param array $options
@@ -141,10 +141,10 @@ class Merge extends Query implements ConditionInterface {
    * Sets the table or subquery to be used for the condition.
    *
    * @param $table
-   *   The table name or the subquery to be used. Use a SelectQuery object to
+   *   The table name or the subquery to be used. Use a Select query object to
    *   pass in a subquery.
    *
-   * @return MergeQuery
+   * @return Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   protected function conditionTable($table) {
@@ -159,7 +159,7 @@ class Merge extends Query implements ConditionInterface {
    *   An associative array of fields to write into the database. The array keys
    *   are the field names and the values are the values to which to set them.
    *
-   * @return MergeQuery
+   * @return Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function updateFields(array $fields) {
@@ -184,7 +184,7 @@ class Merge extends Query implements ConditionInterface {
    *   If specified, this is an array of key/value pairs for named placeholders
    *   corresponding to the expression.
    *
-   * @return MergeQuery
+   * @return Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function expression($field, $expression, array $arguments = NULL) {
@@ -209,7 +209,7 @@ class Merge extends Query implements ConditionInterface {
    *   An array of fields to insert into the database. The values must be
    *   specified in the same order as the $fields array.
    *
-   * @return MergeQuery
+   * @return Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function insertFields(array $fields, array $values = array()) {
@@ -236,7 +236,7 @@ class Merge extends Query implements ConditionInterface {
    *   An array of values for which to use the default values
    *   specified in the table definition.
    *
-   * @return MergeQuery
+   * @return Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function useDefaults(array $fields) {
@@ -262,7 +262,7 @@ class Merge extends Query implements ConditionInterface {
    *   An array of values to set into the database. The values must be
    *   specified in the same order as the $fields array.
    *
-   * @return MergeQuery
+   * @return Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function fields(array $fields, array $values = array()) {
@@ -296,7 +296,7 @@ class Merge extends Query implements ConditionInterface {
    *   An array of values to set into the database. The values must be
    *   specified in the same order as the $fields array.
    *
-   * @return MergeQuery
+   * @return Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function key(array $fields, array $values = array()) {
@@ -311,7 +311,7 @@ class Merge extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::condition().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::condition().
    */
   public function condition($field, $value = NULL, $operator = NULL) {
     $this->condition->condition($field, $value, $operator);
@@ -319,7 +319,7 @@ class Merge extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::isNull().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::isNull().
    */
   public function isNull($field) {
     $this->condition->isNull($field);
@@ -327,7 +327,7 @@ class Merge extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::isNotNull().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::isNotNull().
    */
   public function isNotNull($field) {
     $this->condition->isNotNull($field);
@@ -335,7 +335,7 @@ class Merge extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::exists().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::exists().
    */
   public function exists(SelectInterface $select) {
     $this->condition->exists($select);
@@ -343,7 +343,7 @@ class Merge extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::notExists().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::notExists().
    */
   public function notExists(SelectInterface $select) {
     $this->condition->notExists($select);
@@ -351,21 +351,21 @@ class Merge extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::conditions().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::conditions().
    */
   public function &conditions() {
     return $this->condition->conditions();
   }
 
   /**
-   * Implements QueryConditionInterface::arguments().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::arguments().
    */
   public function arguments() {
     return $this->condition->arguments();
   }
 
   /**
-   * Implements QueryConditionInterface::where().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::where().
    */
   public function where($snippet, $args = array()) {
     $this->condition->where($snippet, $args);
@@ -373,14 +373,14 @@ class Merge extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::compile().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::compile().
    */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
     return $this->condition->compile($connection, $queryPlaceholder);
   }
 
   /**
-   * Implements QueryConditionInterface::compiled().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::compiled().
    */
   public function compiled() {
     return $this->condition->compiled();

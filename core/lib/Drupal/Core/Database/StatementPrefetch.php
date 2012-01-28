@@ -34,7 +34,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
    *
    * The name $dbh is inherited from PDOStatement.
    *
-   * @var DatabaseConnection
+   * @var Drupal\Core\Database\Connection
    */
   public $dbh;
 

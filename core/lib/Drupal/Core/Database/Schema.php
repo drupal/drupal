@@ -277,8 +277,8 @@ abstract class Schema implements PlaceholderInterface {
    * @param $add_prefix
    *   Boolean to indicate whether the table name needs to be prefixed.
    *
-   * @return QueryConditionInterface
-   *   A DatabaseCondition object.
+   * @return Drupal\Core\Database\Query\ConditionInterface
+   *   A Drupal\Core\Database\Query\Condition object.
    */
   protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
     $info = $this->connection->getConnectionOptions();
@@ -378,9 +378,9 @@ abstract class Schema implements PlaceholderInterface {
    * @param $new_name
    *   The new name for the table.
    *
-   * @throws DatabaseSchemaObjectDoesNotExistException
+   * @throws Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
-   * @throws DatabaseSchemaObjectExistsException
+   * @throws Drupal\Core\Database\SchemaObjectExistsException
    *   If a table with the specified new name already exists.
    */
   abstract public function renameTable($table, $new_name);
@@ -418,9 +418,9 @@ abstract class Schema implements PlaceholderInterface {
    *   or index including it in this array. See db_change_field() for more
    *   explanation why.
    *
-   * @throws DatabaseSchemaObjectDoesNotExistException
+   * @throws Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
-   * @throws DatabaseSchemaObjectExistsException
+   * @throws Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has a field by that name.
    */
   abstract public function addField($table, $field, $spec, $keys_new = array());
@@ -449,7 +449,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $default
    *   Default value to be set. NULL for 'default NULL'.
    *
-   * @throws DatabaseSchemaObjectDoesNotExistException
+   * @throws Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table or field doesn't exist.
    */
   abstract public function fieldSetDefault($table, $field, $default);
@@ -462,7 +462,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $field
    *   The field to be altered.
    *
-   * @throws DatabaseSchemaObjectDoesNotExistException
+   * @throws Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table or field doesn't exist.
    */
   abstract public function fieldSetNoDefault($table, $field);
@@ -488,9 +488,9 @@ abstract class Schema implements PlaceholderInterface {
    * @param $fields
    *   Fields for the primary key.
    *
-   * @throws DatabaseSchemaObjectDoesNotExistException
+   * @throws Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
-   * @throws DatabaseSchemaObjectExistsException
+   * @throws Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has a primary key.
    */
   abstract public function addPrimaryKey($table, $fields);
@@ -517,9 +517,9 @@ abstract class Schema implements PlaceholderInterface {
    * @param $fields
    *   An array of field names.
    *
-   * @throws DatabaseSchemaObjectDoesNotExistException
+   * @throws Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
-   * @throws DatabaseSchemaObjectExistsException
+   * @throws Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has a key by that name.
    */
   abstract public function addUniqueKey($table, $name, $fields);
@@ -548,9 +548,9 @@ abstract class Schema implements PlaceholderInterface {
    * @param $fields
    *   An array of field names.
    *
-   * @throws DatabaseSchemaObjectDoesNotExistException
+   * @throws Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
-   * @throws DatabaseSchemaObjectExistsException
+   * @throws Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has an index by that name.
    */
   abstract public function addIndex($table, $name, $fields);
@@ -644,7 +644,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $table
    *   A Schema API table definition array.
    *
-   * @throws DatabaseSchemaObjectExistsException
+   * @throws Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already exists.
    */
   public function createTable($name, $table) {

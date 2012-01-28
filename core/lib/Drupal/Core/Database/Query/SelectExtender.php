@@ -10,9 +10,9 @@ use Drupal\Core\Database\Connection;
 class SelectExtender implements SelectInterface {
 
   /**
-   * The SelectQuery object we are extending/decorating.
+   * The Select query object we are extending/decorating.
    *
-   * @var SelectQueryInterface
+   * @var Drupal\Core\Database\Query\SelectInterface
    */
   protected $query;
 
@@ -40,20 +40,20 @@ class SelectExtender implements SelectInterface {
   }
 
   /**
-   * Implements QueryPlaceholderInterface::uniqueIdentifier().
+   * Implements Drupal\Core\Database\Query\PlaceholderInterface::uniqueIdentifier().
    */
   public function uniqueIdentifier() {
     return $this->uniqueIdentifier;
   }
 
   /**
-   * Implements QueryPlaceholderInterface::nextPlaceholder().
+   * Implements Drupal\Core\Database\Query\PlaceholderInterface::nextPlaceholder().
    */
   public function nextPlaceholder() {
     return $this->placeholder++;
   }
 
-  /* Implementations of AlterableInterface. */
+  /* Implementations of Drupal\Core\Database\Query\AlterableInterface. */
 
   public function addTag($tag) {
     $this->query->addTag($tag);
@@ -81,7 +81,7 @@ class SelectExtender implements SelectInterface {
     return $this->query->getMetaData($key);
   }
 
-  /* Implementations of QueryConditionInterface for the WHERE clause. */
+  /* Implementations of Drupal\Core\Database\Query\ConditionInterface for the WHERE clause. */
 
   public function condition($field, $value = NULL, $operator = NULL) {
     $this->query->condition($field, $value, $operator);
@@ -109,7 +109,7 @@ class SelectExtender implements SelectInterface {
     return $this->query->compiled();
   }
 
-  /* Implementations of QueryConditionInterface for the HAVING clause. */
+  /* Implementations of Drupal\Core\Database\Query\ConditionInterface for the HAVING clause. */
 
   public function havingCondition($field, $value = NULL, $operator = '=') {
     $this->query->havingCondition($field, $value, $operator);
@@ -133,7 +133,7 @@ class SelectExtender implements SelectInterface {
     return $this->query->havingCompile($connection);
   }
 
-  /* Implementations of QueryExtendableInterface. */
+  /* Implementations of Drupal\Core\Database\Query\ExtendableInterface. */
 
   public function extend($extender_name) {
     $class = $this->connection->getDriverClass($extender_name);

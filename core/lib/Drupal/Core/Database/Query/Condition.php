@@ -41,7 +41,7 @@ class Condition implements ConditionInterface, Countable {
   protected $queryPlaceholderIdentifier;
 
   /**
-   * Constructs a DataBaseCondition object.
+   * Constructs a Condition object.
    *
    * @param string $conjunction
    *   The operator to use to combine conditions: 'AND' or 'OR'.
@@ -62,7 +62,7 @@ class Condition implements ConditionInterface, Countable {
   }
 
   /**
-   * Implements QueryConditionInterface::condition().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::condition().
    */
   public function condition($field, $value = NULL, $operator = NULL) {
     if (!isset($operator)) {
@@ -85,7 +85,7 @@ class Condition implements ConditionInterface, Countable {
   }
 
   /**
-   * Implements QueryConditionInterface::where().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::where().
    */
   public function where($snippet, $args = array()) {
     $this->conditions[] = array(
@@ -99,42 +99,42 @@ class Condition implements ConditionInterface, Countable {
   }
 
   /**
-   * Implements QueryConditionInterface::isNull().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::isNull().
    */
   public function isNull($field) {
     return $this->condition($field, NULL, 'IS NULL');
   }
 
   /**
-   * Implements QueryConditionInterface::isNotNull().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::isNotNull().
    */
   public function isNotNull($field) {
     return $this->condition($field, NULL, 'IS NOT NULL');
   }
 
   /**
-   * Implements QueryConditionInterface::exists().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::exists().
    */
   public function exists(SelectInterface $select) {
     return $this->condition('', $select, 'EXISTS');
   }
 
   /**
-   * Implements QueryConditionInterface::notExists().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::notExists().
    */
   public function notExists(SelectInterface $select) {
     return $this->condition('', $select, 'NOT EXISTS');
   }
 
   /**
-   * Implements QueryConditionInterface::conditions().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::conditions().
    */
   public function &conditions() {
     return $this->conditions;
   }
 
   /**
-   * Implements QueryConditionInterface::arguments().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::arguments().
    */
   public function arguments() {
     // If the caller forgot to call compile() first, refuse to run.
@@ -145,7 +145,7 @@ class Condition implements ConditionInterface, Countable {
   }
 
   /**
-   * Implements QueryConditionInterface::compile().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::compile().
    */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
     // Re-compile if this condition changed or if we are compiled against a
@@ -226,7 +226,7 @@ class Condition implements ConditionInterface, Countable {
   }
 
   /**
-   * Implements QueryConditionInterface::compiled().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::compiled().
    */
   public function compiled() {
     return !$this->changed;
@@ -249,7 +249,7 @@ class Condition implements ConditionInterface, Countable {
   /**
    * PHP magic __clone() method.
    *
-   * Only copies fields that implement QueryConditionInterface. Also sets
+   * Only copies fields that implement Drupal\Core\Database\Query\ConditionInterface. Also sets
    * $this->changed to TRUE.
    */
   function __clone() {

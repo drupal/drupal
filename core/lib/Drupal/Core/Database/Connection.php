@@ -70,7 +70,7 @@ abstract class Connection extends PDO {
    *
    * @var string
    */
-  protected $statementClass = '\\Drupal\\Core\\Database\\StatementBase';
+  protected $statementClass = 'Drupal\Core\Database\StatementBase';
 
   /**
    * Whether this database connection supports transactions.
@@ -291,7 +291,7 @@ abstract class Connection extends PDO {
    *   The query string as SQL, with curly-braces surrounding the
    *   table names.
    *
-   * @return DatabaseStatementInterface
+   * @return Drupal\Core\Database\StatementInterface
    *   A PDO prepared statement ready for its execute() method.
    */
   public function prepareQuery($query) {
@@ -471,7 +471,7 @@ abstract class Connection extends PDO {
    *   An associative array of options to control how the query is run. See
    *   the documentation for DatabaseConnection::defaultOptions() for details.
    *
-   * @return DatabaseStatementInterface
+   * @return Drupal\Core\Database\StatementInterface
    *   This method will return one of: the executed statement, the number of
    *   rows affected by the query (not the number matched), or the generated
    *   insert IT of the last query, depending on the value of
@@ -611,12 +611,12 @@ abstract class Connection extends PDO {
    * @param $options
    *   An array of options on the query.
    *
-   * @return SelectQueryInterface
+   * @return Drupal\Core\Database\Query\SelectInterface
    *   An appropriate SelectQuery object for this database connection. Note that
    *   it may be a driver-specific subclass of SelectQuery, depending on the
    *   driver.
    *
-   * @see SelectQuery
+   * @see Drupal\Core\Database\Query\Select
    */
   public function select($table, $alias = NULL, array $options = array()) {
     $class = $this->getDriverClass('Select');
@@ -629,10 +629,10 @@ abstract class Connection extends PDO {
    * @param $options
    *   An array of options on the query.
    *
-   * @return InsertQuery
-   *   A new InsertQuery object.
+   * @return Drupal\Core\Database\Query\Insert
+   *   A new Insert query object.
    *
-   * @see InsertQuery
+   * @see Drupal\Core\Database\Query\Insert
    */
   public function insert($table, array $options = array()) {
     $class = $this->getDriverClass('Insert');
@@ -645,10 +645,10 @@ abstract class Connection extends PDO {
    * @param $options
    *   An array of options on the query.
    *
-   * @return MergeQuery
-   *   A new MergeQuery object.
+   * @return Drupal\Core\Database\Query\Merge
+   *   A new Merge query object.
    *
-   * @see MergeQuery
+   * @see Drupal\Core\Database\Query\Merge
    */
   public function merge($table, array $options = array()) {
     $class = $this->getDriverClass('Merge');
@@ -662,10 +662,10 @@ abstract class Connection extends PDO {
    * @param $options
    *   An array of options on the query.
    *
-   * @return UpdateQuery
-   *   A new UpdateQuery object.
+   * @return Drupal\Core\Database\Query\Update
+   *   A new Update query object.
    *
-   * @see UpdateQuery
+   * @see Drupal\Core\Database\Query\Update
    */
   public function update($table, array $options = array()) {
     $class = $this->getDriverClass('Update');
@@ -678,10 +678,10 @@ abstract class Connection extends PDO {
    * @param $options
    *   An array of options on the query.
    *
-   * @return DeleteQuery
-   *   A new DeleteQuery object.
+   * @return Drupal\Core\Database\Query\Delete
+   *   A new Delete query object.
    *
-   * @see DeleteQuery
+   * @see Drupal\Core\Database\Query\Delete
    */
   public function delete($table, array $options = array()) {
     $class = $this->getDriverClass('Delete');
@@ -694,10 +694,10 @@ abstract class Connection extends PDO {
    * @param $options
    *   An array of options on the query.
    *
-   * @return TruncateQuery
-   *   A new TruncateQuery object.
+   * @return Drupal\Core\Database\Query\Truncate
+   *   A new Truncate query object.
    *
-   * @see TruncateQuery
+   * @see Drupal\Core\Database\Query\Truncate
    */
   public function truncate($table, array $options = array()) {
     $class = $this->getDriverClass('Truncate');
@@ -709,8 +709,8 @@ abstract class Connection extends PDO {
    *
    * This method will lazy-load the appropriate schema library file.
    *
-   * @return DatabaseSchema
-   *   The DatabaseSchema object for this connection.
+   * @return Drupal\Core\Database\Schema
+   *   The database Schema object for this connection.
    */
   public function schema() {
     if (empty($this->schema)) {
@@ -780,7 +780,7 @@ abstract class Connection extends PDO {
    * @endcode
    *
    * Backslash is defined as escape character for LIKE patterns in
-   * DatabaseCondition::mapConditionOperator().
+   * Drupal\Core\Database\Query\Condition::mapConditionOperator().
    *
    * @param $string
    *   The string to escape.
@@ -815,7 +815,7 @@ abstract class Connection extends PDO {
    * @param $name
    *   Optional name of the savepoint.
    *
-   * @see DatabaseTransaction
+   * @see Drupal\Core\Database\Transaction
    */
   public function startTransaction($name = '') {
     $class = $this->getDriverClass('Transaction');
@@ -831,7 +831,7 @@ abstract class Connection extends PDO {
    *   The name of the savepoint. The default, 'drupal_transaction', will roll
    *   the entire transaction back.
    *
-   * @throws TransactionNoActiveException
+   * @throws Drupal\Core\Database\TransactionNoActiveException
    *
    * @see DatabaseTransaction::rollback()
    */
@@ -882,9 +882,9 @@ abstract class Connection extends PDO {
    *
    * If no transaction is already active, we begin a new transaction.
    *
-   * @throws TransactionNameNonUniqueException
+   * @throws Drupal\Core\Database\TransactionNameNonUniqueException
    *
-   * @see DatabaseTransaction
+   * @see Drupal\Core\Database\Transaction
    */
   public function pushTransaction($name) {
     if (!$this->supportsTransactions()) {
@@ -914,8 +914,8 @@ abstract class Connection extends PDO {
    * @param $name
    *   The name of the savepoint
    *
-   * @throws TransactionNoActiveException
-   * @throws TransactionCommitFailedException
+   * @throws Drupal\Core\Database\TransactionNoActiveException
+   * @throws Drupal\Core\Database\TransactionCommitFailedException
    *
    * @see DatabaseTransaction
    */
@@ -979,7 +979,7 @@ abstract class Connection extends PDO {
    * @param $options
    *   An array of options on the query.
    *
-   * @return DatabaseStatementInterface
+   * @return Drupal\Core\Database\StatementInterface
    *   A database query result resource, or NULL if the query was not executed
    *   correctly.
    */
@@ -1080,7 +1080,7 @@ abstract class Connection extends PDO {
    * @return
    *   The extra handling directives for the specified operator, or NULL.
    *
-   * @see DatabaseCondition::compile()
+   * @see Drupal\Core\Database\Query\Condition::compile()
    */
   abstract public function mapConditionOperator($operator);
 
@@ -1092,9 +1092,9 @@ abstract class Connection extends PDO {
    * A direct commit bypasses all of the safety checks we've built on top of
    * PDO's transaction routines.
    *
-   * @throws TransactionExplicitCommitNotAllowedException
+   * @throws Drupal\Core\Database\TransactionExplicitCommitNotAllowedException
    *
-   * @see DatabaseTransaction
+   * @see Drupal\Core\Database\Transaction
    */
   public function commit() {
     throw new TransactionExplicitCommitNotAllowedException();

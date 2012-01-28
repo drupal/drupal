@@ -34,8 +34,8 @@ interface ConditionInterface {
    * @return QueryConditionInterface
    *   The called object.
    *
-   * @see QueryConditionInterface::isNull()
-   * @see QueryConditionInterface::isNotNull()
+   * @see Drupal\Core\Database\Query\ConditionInterface::isNull()
+   * @see Drupal\Core\Database\Query\ConditionInterface::isNotNull()
    */
   public function condition($field, $value = NULL, $operator = NULL);
 
@@ -48,7 +48,7 @@ interface ConditionInterface {
    * @param $args
    *   An associative array of arguments.
    *
-   * @return QueryConditionInterface
+   * @return Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function where($snippet, $args = array());
@@ -59,7 +59,7 @@ interface ConditionInterface {
    * @param $field
    *   The name of the field to check.
    *
-   * @return QueryConditionInterface
+   * @return Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function isNull($field);
@@ -70,7 +70,7 @@ interface ConditionInterface {
    * @param $field
    *   The name of the field to check.
    *
-   * @return QueryConditionInterface
+   * @return Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function isNotNull($field);
@@ -78,10 +78,10 @@ interface ConditionInterface {
   /**
    * Sets a condition that the specified subquery returns values.
    *
-   * @param SelectQueryInterface $select
+   * @param Drupal\Core\Database\Query\SelectInterface $select
    *   The subquery that must contain results.
    *
-   * @return QueryConditionInterface
+   * @return Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function exists(SelectInterface $select);
@@ -89,10 +89,10 @@ interface ConditionInterface {
   /**
    * Sets a condition that the specified subquery returns no values.
    *
-   * @param SelectQueryInterface $select
+   * @param Drupal\Core\Database\Query\SelectInterface $select
    *   The subquery that must not contain results.
    *
-   * @return QueryConditionInterface
+   * @return Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function notExists(SelectInterface $select);

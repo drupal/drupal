@@ -14,13 +14,13 @@ use Traversable;
  *
  * Child implementations should either extend PDOStatement:
  * @code
- * class DatabaseStatement_oracle extends PDOStatement implements DatabaseStatementInterface {}
+ * class Drupal\Core\Database\Driver\oracle\Statement extends PDOStatement implements Drupal\Core\Database\StatementInterface {}
  * @endcode
  * or define their own class. If defining their own class, they will also have
  * to implement either the Iterator or IteratorAggregate interface before
- * DatabaseStatementInterface:
+ * Drupal\Core\Database\StatementInterface:
  * @code
- * class DatabaseStatement_oracle implements Iterator, DatabaseStatementInterface {}
+ * class Drupal\Core\Database\Driver\oracle\Statement implements Iterator, Drupal\Core\Database\StatementInterface {}
  * @endcode
  */
 interface StatementInterface extends Traversable {

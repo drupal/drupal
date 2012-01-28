@@ -36,7 +36,7 @@ class Update extends Query implements ConditionInterface {
    *
    * Condition handling is handled via composition.
    *
-   * @var Condition
+   * @var Drupal\Core\Database\Query\Condition
    */
   protected $condition;
 
@@ -56,10 +56,10 @@ class Update extends Query implements ConditionInterface {
   protected $expressionFields = array();
 
   /**
-   * Constructs an UpdateQuery object.
+   * Constructs an Update query object.
    *
-   * @param DatabaseConnection $connection
-   *   A DatabaseConnection object.
+   * @param Drupal\Core\Database\Connection $connection
+   *   A Connection object.
    * @param string $table
    *   Name of the table to associate with this query.
    * @param array $options
@@ -74,7 +74,7 @@ class Update extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::condition().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::condition().
    */
   public function condition($field, $value = NULL, $operator = NULL) {
     $this->condition->condition($field, $value, $operator);
@@ -82,7 +82,7 @@ class Update extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::isNull().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::isNull().
    */
   public function isNull($field) {
     $this->condition->isNull($field);
@@ -90,7 +90,7 @@ class Update extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::isNotNull().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::isNotNull().
    */
   public function isNotNull($field) {
     $this->condition->isNotNull($field);
@@ -98,7 +98,7 @@ class Update extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::exists().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::exists().
    */
   public function exists(SelectInterface $select) {
     $this->condition->exists($select);
@@ -106,7 +106,7 @@ class Update extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::notExists().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::notExists().
    */
   public function notExists(SelectInterface $select) {
     $this->condition->notExists($select);
@@ -114,21 +114,21 @@ class Update extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::conditions().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::conditions().
    */
   public function &conditions() {
     return $this->condition->conditions();
   }
 
   /**
-   * Implements QueryConditionInterface::arguments().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::arguments().
    */
   public function arguments() {
     return $this->condition->arguments();
   }
 
   /**
-   * Implements QueryConditionInterface::where().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::where().
    */
   public function where($snippet, $args = array()) {
     $this->condition->where($snippet, $args);
@@ -136,14 +136,14 @@ class Update extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements QueryConditionInterface::compile().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::compile().
    */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
     return $this->condition->compile($connection, $queryPlaceholder);
   }
 
   /**
-   * Implements QueryConditionInterface::compiled().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::compiled().
    */
   public function compiled() {
     return $this->condition->compiled();
@@ -156,7 +156,7 @@ class Update extends Query implements ConditionInterface {
    *   An associative array of fields to write into the database. The array keys
    *   are the field names and the values are the values to which to set them.
    *
-   * @return UpdateQuery
+   * @return Drupal\Core\Database\Query\Update
    *   The called object.
    */
   public function fields(array $fields) {
@@ -179,7 +179,7 @@ class Update extends Query implements ConditionInterface {
    *   If specified, this is an array of key/value pairs for named placeholders
    *   corresponding to the expression.
    *
-   * @return UpdateQuery
+   * @return Drupal\Core\Database\Query\Update
    *   The called object.
    */
   public function expression($field, $expression, array $arguments = NULL) {

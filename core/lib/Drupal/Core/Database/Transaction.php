@@ -26,7 +26,7 @@ class Transaction {
   /**
    * The connection object for this transaction.
    *
-   * @var DatabaseConnection
+   * @var Drupal\Core\Database\Connection
    */
   protected $connection;
 
@@ -86,7 +86,7 @@ class Transaction {
    * transaction has been rolled back or the log messages will be rolled back
    * too.
    *
-   * @see DatabaseConnection::rollback()
+   * @see Drupal\Core\Database\Connection::rollback()
    * @see watchdog_exception()
    */
   public function rollback() {

@@ -19,7 +19,7 @@ class Truncate extends Query {
   protected $table;
 
   /**
-   * Constructs a TruncateQuery object.
+   * Constructs a Truncate query object.
    *
    * @param DatabaseConnection $connection
    *   A DatabaseConnection object.
@@ -35,14 +35,14 @@ class Truncate extends Query {
   }
 
   /**
-   * Implements QueryConditionInterface::compile().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::compile().
    */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
     return $this->condition->compile($connection, $queryPlaceholder);
   }
 
   /**
-   * Implements QueryConditionInterface::compiled().
+   * Implements Drupal\Core\Database\Query\ConditionInterface::compiled().
    */
   public function compiled() {
     return $this->condition->compiled();

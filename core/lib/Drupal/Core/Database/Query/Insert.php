@@ -55,9 +55,9 @@ class Insert extends Query {
   protected $fromQuery;
 
   /**
-   * Constructs an InsertQuery object.
+   * Constructs an Insert object.
    *
-   * @param DatabaseConnection $connection
+   * @param Drupal\Core\Database\Connection $connection
    *   A DatabaseConnection object.
    * @param string $table
    *   Name of the table to associate with this query.
@@ -89,7 +89,7 @@ class Insert extends Query {
    *   An array of fields to insert into the database. The values must be
    *   specified in the same order as the $fields array.
    *
-   * @return InsertQuery
+   * @return Drupal\Core\Database\Query\Insert
    *   The called object.
    */
   public function fields(array $fields, array $values = array()) {
@@ -120,7 +120,7 @@ class Insert extends Query {
    * @param $values
    *   An array of values to add to the query.
    *
-   * @return InsertQuery
+   * @return Drupal\Core\Database\Query\Insert
    *   The called object.
    */
   public function values(array $values) {
@@ -154,7 +154,7 @@ class Insert extends Query {
    *   An array of values for which to use the default values
    *   specified in the table definition.
    *
-   * @return InsertQuery
+   * @return Drupal\Core\Database\Query\Insert
    *   The called object.
    */
   public function useDefaults(array $fields) {
@@ -261,8 +261,8 @@ class Insert extends Query {
    * @return
    *   TRUE if the validation was successful, FALSE if not.
    *
-   * @throws FieldsOverlapException
-   * @throws NoFieldsException
+   * @throws Drupal\Core\Database\Query\FieldsOverlapException
+   * @throws Drupal\Core\Database\Query\NoFieldsException
    */
   public function preExecute() {
     // Confirm that the user did not try to specify an identical

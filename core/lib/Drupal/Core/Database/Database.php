@@ -85,12 +85,12 @@ abstract class Database {
    * @param $key
    *   The database connection key for which we want to log.
    *
-   * @return DatabaseLog
+   * @return Drupal\Core\Database\Log
    *   The query log object. Note that the log object does support richer
    *   methods than the few exposed through the Database class, so in some
    *   cases it may be desirable to access it directly.
    *
-   * @see Log
+   * @see Drupal\Core\Database\Log
    */
   final public static function startLog($logging_key, $key = 'default') {
     if (empty(self::$logs[$key])) {
@@ -125,7 +125,7 @@ abstract class Database {
    * @return array
    *   The query log for the specified logging key and connection.
    *
-   * @see Log
+   * @see Drupal\Core\Database\Log
    */
   final public static function getLog($logging_key, $key = 'default') {
     if (empty(self::$logs[$key])) {
@@ -144,7 +144,7 @@ abstract class Database {
    * @param $key
    *   The database connection key. Defaults to NULL which means the active key.
    *
-   * @return Connection
+   * @return Drupal\Core\Database\Connection
    *   The corresponding connection object.
    */
   final public static function getConnection($target = 'default', $key = NULL) {
@@ -351,8 +351,8 @@ abstract class Database {
    * @param $target
    *   The database target to open.
    *
-   * @throws ConnectionNotDefinedException
-   * @throws DriverNotSpecifiedException
+   * @throws Drupal\Core\Database\ConnectionNotDefinedException
+   * @throws Drupal\Core\Database\DriverNotSpecifiedException
    */
   final protected static function openConnection($key, $target) {
     if (empty(self::$databaseInfo)) {

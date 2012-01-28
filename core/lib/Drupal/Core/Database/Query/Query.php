@@ -16,7 +16,7 @@ abstract class Query implements PlaceholderInterface {
   /**
    * The connection object on which to run this query.
    *
-   * @var DatabaseConnection
+   * @var Drupal\Core\Database\Connection
    */
   protected $connection;
 
@@ -61,7 +61,7 @@ abstract class Query implements PlaceholderInterface {
   /**
    * Constructs a Query object.
    *
-   * @param DatabaseConnection $connection
+   * @param Drupal\Core\Database\Connection $connection
    *   Database connection object.
    * @param array $options
    *   Array of query options.
@@ -146,7 +146,7 @@ abstract class Query implements PlaceholderInterface {
    * @param $comment
    *   The comment string to be inserted into the query.
    *
-   * @return Query
+   * @return Drupal\Core\Database\Query\Query
    *   The called object.
    */
   public function comment($comment) {

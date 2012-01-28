@@ -41,7 +41,7 @@ class Select extends Query implements SelectInterface {
    * )
    *
    * If $table is a string, it is taken as the name of a table. If it is
-   * a SelectQuery object, it is taken as a subquery.
+   * a Select query object, it is taken as a subquery.
    *
    * @var array
    */
@@ -67,14 +67,14 @@ class Select extends Query implements SelectInterface {
   /**
    * The conditional object for the WHERE clause.
    *
-   * @var Condition
+   * @var Drupal\Core\Database\Query\Condition
    */
   protected $where;
 
   /**
    * The conditional object for the HAVING clause.
    *
-   * @var Condition
+   * @var Drupal\Core\Database\Query\Condition
    */
   protected $having;
 
@@ -124,7 +124,7 @@ class Select extends Query implements SelectInterface {
     $this->addJoin(NULL, $table, $alias);
   }
 
-  /* Implementations of QueryAlterableInterface. */
+  /* Implementations of Drupal\Core\Database\Query\AlterableInterface. */
 
   public function addTag($tag) {
     $this->alterTags[$tag] = 1;
@@ -152,7 +152,7 @@ class Select extends Query implements SelectInterface {
     return isset($this->alterMetaData[$key]) ? $this->alterMetaData[$key] : NULL;
   }
 
-  /* Implementations of QueryConditionInterface for the WHERE clause. */
+  /* Implementations of Drupal\Core\Database\Query\ConditionInterface for the WHERE clause. */
 
   public function condition($field, $value = NULL, $operator = NULL) {
     $this->where->condition($field, $value, $operator);
@@ -260,7 +260,7 @@ class Select extends Query implements SelectInterface {
     return TRUE;
   }
 
-  /* Implementations of QueryConditionInterface for the HAVING clause. */
+  /* Implementations of Drupal\Core\Database\Query\ConditionInterface for the HAVING clause. */
 
   public function havingCondition($field, $value = NULL, $operator = NULL) {
     $this->having->condition($field, $value, $operator);
@@ -284,7 +284,7 @@ class Select extends Query implements SelectInterface {
     return $this->having->compile($connection, $this);
   }
 
-  /* Implementations of QueryExtendableInterface. */
+  /* Implementations of Drupal\Core\Database\Query\ExtendableInterface. */
 
   public function extend($extender_name) {
     $override_class = $extender_name . '_' . $this->connection->driver();
