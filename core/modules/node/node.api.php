@@ -984,6 +984,7 @@ function hook_ranking() {
  *   The node type object that is being created.
  */
 function hook_node_type_insert($info) {
+  drupal_set_message(t('You have just created a content type with a machine name %type.', array('%type' => $info->type)));
 }
 
 /**
