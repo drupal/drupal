@@ -2,8 +2,8 @@
 
 namespace Drupal\Core\Database;
 
-use Drupal\Core\Database\DatabaseTransactionNoActiveException;
-use Drupal\Core\Database\DatabaseTransactionOutOfOrderException;
+use Drupal\Core\Database\TransactionNoActiveException;
+use Drupal\Core\Database\TransactionOutOfOrderException;
 
 use PDO;
 use PDOException;
