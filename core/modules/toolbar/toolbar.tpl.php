@@ -21,7 +21,7 @@
  * @see template_preprocess_toolbar()
  */
 ?>
-<div id="toolbar" class="<?php print $classes; ?> clearfix">
+<nav id="toolbar" role="navigation" class="<?php print $classes; ?> clearfix">
   <div class="toolbar-menu clearfix">
     <?php print render($toolbar['toolbar_home']); ?>
     <?php print render($toolbar['toolbar_user']); ?>
@@ -32,4 +32,4 @@
   </div>
 
   <?php print render($toolbar['toolbar_drawer']); ?>
-</div>
+</nav>
