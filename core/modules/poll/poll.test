@@ -228,10 +228,10 @@ class PollCreateTestCase extends PollTestCase {
     $this->clickLink($title);
     $this->assertText($new_option, 'New option found.');
 
-    $option = $this->xpath('//div[@id="node-1"]//div[@class="poll"]//div[@class="text"]');
+    $option = $this->xpath('//div[@id="node-1"]//article[@class="poll"]//div[@class="choice-title"]');
     $this->assertEqual(end($option), $new_option, 'Last item is equal to new option.');
 
-    $votes = $this->xpath('//div[@id="node-1"]//div[@class="poll"]//div[@class="percent"]');
+    $votes = $this->xpath('//div[@id="node-1"]//article[@class="poll"]//div[@class="percent"]');
     $this->assertTrue(strpos(end($votes), $vote_count) > 0, t("Votes saved."));
   }
 

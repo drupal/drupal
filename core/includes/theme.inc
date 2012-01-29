@@ -2143,6 +2143,49 @@ function theme_progress_bar($variables) {
 }
 
 /**
+ * Returns HTML for a meter.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - display_value: The textual representation of the meter bar.
+ *   - form: A string specifying one or more forms to which the <meter> element
+ *     belongs separated by spaces.
+ *   - high: A number specifying the range that is considered to be a high
+ *     value.
+ *   - low: A number specifying the range that is considered to be a low value.
+ *   - max: A number specifying the maximum value of the range.
+ *   - min: A number specifying the minimum value of the range.
+ *   - optimum: A number specifying what value is the optimal value for the
+ *     gauge.
+ *   - value: A number specifying the current value of the gauge.
+ *   - percentage: A number specifying the current percentage of the gauge.
+ *   - attributes: Associative array of attributes to be placed in the meter
+ *     tag.
+ */
+function theme_meter($variables) {
+  $attributes = $variables['attributes'];
+
+  foreach (array('form', 'high', 'low', 'max', 'min', 'optimum', 'value') as $attribute) {
+    if (!empty($variables[$attribute])) {
+      // This function was initially designed for the <meter> tag, but due to
+      // the lack of browser and styling support for it, we're currently using
+      // it's attributes as HTML5 data attributes.
+      $attributes['data-' . $attribute] = $variables[$attribute];
+    }
+  }
+
+  $output = '<div' . drupal_attributes($attributes) . '>';
+  $output .= '  <div style="width: '. $variables['percentage'] .'%;" class="foreground"></div>';
+  $output .= "</div>\n";
+
+  if (!empty($variables['display_value'])) {
+    $output .= '<div class="percent">' . $variables['display_value'] . '</div>';
+  }
+
+  return $output;
+}
+
+/**
  * Returns HTML for an indentation div; used for drag and drop tables.
  *
  * @param $variables
