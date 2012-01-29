@@ -1032,8 +1032,8 @@ Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow
 Drupal.tableDrag.prototype.row.prototype.indent = function (indentDiff) {
   // Determine the valid indentations interval if not available yet.
   if (!this.interval) {
-    prevRow = $(this.element).prev('tr').get(0);
-    nextRow = $(this.group).filter(':last').next('tr').get(0);
+    var prevRow = $(this.element).prev('tr').get(0);
+    var nextRow = $(this.group).filter(':last').next('tr').get(0);
     this.interval = this.validIndentInterval(prevRow, nextRow);
   }
 
