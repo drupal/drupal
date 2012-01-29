@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\ConnectionNotDefinedException
+ */
+
 namespace Drupal\Core\Database;
 
 use RuntimeException;

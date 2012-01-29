@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\StatementEmpty
+ */
+
 namespace Drupal\Core\Database;
 
 use Iterator;

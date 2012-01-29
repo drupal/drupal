@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\StatementPrefetch
+ */
+
 namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Connection;

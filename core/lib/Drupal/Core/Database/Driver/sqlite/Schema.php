@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\Driver\sqlite\Schema
+ */
+
 namespace Drupal\Core\Database\Driver\sqlite;
 
 use Drupal\Core\Database\SchemaObjectExistsException;
@@ -7,11 +12,6 @@ use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
 
 use Exception;
-
-/**
- * @file
- * Database schema code for SQLite databases.
- */
 
 
 /**

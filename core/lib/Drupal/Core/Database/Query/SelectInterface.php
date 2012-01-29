@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\Query\SelectInterface
+ */
+
 namespace Drupal\Core\Database\Query;
 
 /**

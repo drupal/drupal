@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\Driver\mysql\Insert
+ */
+
 namespace Drupal\Core\Database\Driver\mysql;
 
 use Drupal\Core\Database\Query\Insert as QueryInsert;

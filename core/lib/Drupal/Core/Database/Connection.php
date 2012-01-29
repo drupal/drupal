@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\Connection
+ */
+
 namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\TransactionNoActiveException;

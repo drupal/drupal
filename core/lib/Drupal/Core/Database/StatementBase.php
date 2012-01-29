@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\StatementBase
+ */
+
 namespace Drupal\Core\Database;
 
 use PDO;

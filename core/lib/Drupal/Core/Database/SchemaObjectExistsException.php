@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\SchemaObjectExistsException
+ */
+
 namespace Drupal\Core\Database;
 
 /**

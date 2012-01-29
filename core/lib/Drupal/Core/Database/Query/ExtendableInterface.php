@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\Query\ExtendableInterface
+ */
+
 namespace Drupal\Core\Database\Query;
 
 /**

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\Transaction
+ */
+
 namespace Drupal\Core\Database;
 
 /**

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\Driver\sqlite\Merge
+ */
+
 namespace Drupal\Core\Database\Driver\sqlite;
 
 use Drupal\Core\Database\Query\Merge as QueryMerge;

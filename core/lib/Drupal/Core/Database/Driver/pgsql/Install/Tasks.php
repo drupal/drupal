@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\Driver\pgsql\Install\Tasks
+ */
+
 namespace Drupal\Core\Database\Driver\pgsql\Install;
 
 use Drupal\Core\Database\Install\Tasks as InstallTasks;

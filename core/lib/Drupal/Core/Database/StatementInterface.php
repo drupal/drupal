@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\StatementInterface
+ */
+
 namespace Drupal\Core\Database;
 
 use Traversable;

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Database\Query\FieldsOverlapExceptoin
+ */
+
 namespace Drupal\Core\Database\Query;
 
 use RuntimeException;
