@@ -82,7 +82,7 @@ Drupal.behaviors.shortcutDrag = {
         var statusName = statusRow.className.replace(/([^ ]+[ ]+)*shortcut-status-([^ ]+)([ ]+[^ ]+)*/, '$2');
         var statusField = $('select.shortcut-status-select', rowObject.element);
         statusField.val(statusName);
-      };
+      }
 
       tableDrag.restripeTable = function () {
         // :even and :odd are reversed because jQuery counts from 0 and

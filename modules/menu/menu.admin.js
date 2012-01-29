@@ -10,7 +10,7 @@
         });
       });
     }
-  }
+  };
 
   /**
    * Function to set the options of the menu parent item dropdown.
@@ -42,6 +42,6 @@
         });
       }
     });
-  }
+  };
 
 })(jQuery);

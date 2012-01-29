@@ -168,7 +168,7 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
 
   // Assemble the final message.
   msg = translate.hasWeaknesses + '<ul><li>' + msg.join('</li><li>') + '</li></ul>';
-  return { strength: strength, message: msg, indicatorText: indicatorText }
+  return { strength: strength, message: msg, indicatorText: indicatorText };
 
 };
 
