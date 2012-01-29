@@ -41,7 +41,7 @@ Drupal.autocompleteSubmit = function () {
 Drupal.jsAC = function ($input, db) {
   var ac = this;
   this.input = $input[0];
-  this.ariaLive = $('#' + $input.attr('id') + '-autocomplete-aria-live');
+  this.ariaLive = $('#' + this.input.id + '-autocomplete-aria-live');
   this.db = db;
 
   $input
