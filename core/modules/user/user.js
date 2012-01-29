@@ -180,7 +180,7 @@ Drupal.behaviors.fieldUserRegistration = {
   attach: function (context, settings) {
     var $checkbox = $('form#field-ui-field-edit-form input#edit-instance-settings-user-register-form');
 
-    if ($checkbox.size()) {
+    if ($checkbox.length) {
       $('input#edit-instance-required', context).once('user-register-form-checkbox', function () {
         $(this).bind('change', function (e) {
           if ($(this).attr('checked')) {

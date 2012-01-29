@@ -32,7 +32,7 @@ Drupal.behaviors.autocomplete = {
 Drupal.autocompleteSubmit = function () {
   return $('#autocomplete').each(function () {
     this.owner.hidePopup();
-  }).size() == 0;
+  }).length == 0;
 };
 
 /**
@@ -123,7 +123,7 @@ Drupal.jsAC.prototype.selectDown = function () {
   }
   else if (this.popup) {
     var lis = $('li', this.popup);
-    if (lis.size() > 0) {
+    if (lis.length > 0) {
       this.highlight(lis.get(0));
     }
   }
@@ -227,7 +227,7 @@ Drupal.jsAC.prototype.found = function (matches) {
 
   // Show popup with matches, if any.
   if (this.popup) {
-    if (ul.children().size()) {
+    if (ul.children().length) {
       $(this.popup).empty().append(ul).show();
       $(this.ariaLive).html(Drupal.t('Autocomplete popup'));
     }

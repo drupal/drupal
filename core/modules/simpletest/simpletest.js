@@ -16,7 +16,7 @@ Drupal.behaviors.simpleTestMenuCollapse = {
     $('div.simpletest-image').click(function () {
       var trs = $(this).closest('tbody').children('.' + settings.simpleTest[this.id].testClass);
       var direction = settings.simpleTest[this.id].imageDirection;
-      var row = direction ? trs.size() - 1 : 0;
+      var row = direction ? trs.length - 1 : 0;
 
       // If clicked in the middle of expanding a group, stop so we can switch directions.
       if (timeout) {
@@ -35,7 +35,7 @@ Drupal.behaviors.simpleTestMenuCollapse = {
           }
         }
         else {
-          if (row < trs.size()) {
+          if (row < trs.length) {
             $(trs[row]).removeClass('js-hide').show();
             row++;
             timeout = setTimeout(rowToggle, 20);
