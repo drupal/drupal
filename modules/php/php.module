@@ -36,23 +36,29 @@ function php_permission() {
 }
 
 /**
- * Evaluate a string of PHP code.
+ * Evaluates a string of PHP code.
  *
- * This is a wrapper around PHP's eval(). It uses output buffering to capture both
- * returned and printed text. Unlike eval(), we require code to be surrounded by
- * <?php ?> tags; in other words, we evaluate the code as if it were a stand-alone
- * PHP file.
+ * This is a wrapper around PHP's eval(). It uses output buffering to capture
+ * both returned and printed text. Unlike eval(), we require code to be
+ * surrounded by <?php ?> tags; in other words, we evaluate the code as if it
+ * were a stand-alone PHP file.
  *
  * Using this wrapper also ensures that the PHP code which is evaluated can not
  * overwrite any variables in the calling code, unlike a regular eval() call.
  *
+ * This function is also used as an implementation of
+ * hook_filter_FILTER_process().
+ *
  * @param $code
  *   The code to evaluate.
+ *
  * @return
- *   A string containing the printed output of the code, followed by the returned
- *   output of the code.
+ *   A string containing the printed output of the code, followed by the
+ *   returned output of the code.
  *
  * @ingroup php_wrappers
+ *
+ * @see php_filter_info()
  */
 function php_eval($code) {
   global $theme_path, $theme_info, $conf;
@@ -82,7 +88,9 @@ function php_eval($code) {
 }
 
 /**
- * Tips callback for php filter.
+ * Implements hook_filter_FILTER_tips().
+ *
+ * @see php_filter_info()
  */
 function _php_filter_tips($filter, $format, $long = FALSE) {
   global $base_url;
@@ -137,4 +145,3 @@ function php_filter_info() {
   );
   return $filters;
 }
-
