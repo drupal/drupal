@@ -2149,23 +2149,25 @@ function template_preprocess_comment(&$variables) {
   else {
     $variables['status'] = ($comment->status == COMMENT_NOT_PUBLISHED) ? 'comment-unpublished' : 'comment-published';
   }
+
   // Gather comment classes.
-  if ($comment->uid == 0) {
+  // 'comment-published' class is not needed, it is either 'comment-preview' or
+  // 'comment-unpublished'.
+  if ($variables['status'] != 'comment-published') {
+    $variables['classes_array'][] = $variables['status'];
+  }
+  if ($variables['new']) {
+    $variables['classes_array'][] = 'comment-new';
+  }
+  if (!$comment->uid) {
     $variables['classes_array'][] = 'comment-by-anonymous';
   }
   else {
-    // Published class is not needed. It is either 'comment-preview' or 'comment-unpublished'.
-    if ($variables['status'] != 'comment-published') {
-      $variables['classes_array'][] = $variables['status'];
-    }
-    if ($comment->uid === $variables['node']->uid) {
+    if ($comment->uid == $variables['node']->uid) {
       $variables['classes_array'][] = 'comment-by-node-author';
     }
-    if ($comment->uid === $variables['user']->uid) {
+    if ($comment->uid == $variables['user']->uid) {
       $variables['classes_array'][] = 'comment-by-viewer';
-    }
-    if ($variables['new']) {
-      $variables['classes_array'][] = 'comment-new';
     }
   }
 }
