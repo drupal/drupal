@@ -483,14 +483,16 @@ class CommentInterfaceTest extends CommentHelperCase {
       $node = $this->drupalCreateNode(array('type' => 'article', 'uid' => $case['node_uid']));
 
       // Add a comment.
-      $comment = entity_create('comment', array(
+      $comment = (object) array(
+        'cid' => NULL,
         'nid' => $node->nid,
+        'pid' => 0,
         'uid' => $case['comment_uid'],
         'status' => $case['comment_status'],
         'subject' => $this->randomName(),
         'language' => LANGUAGE_NONE,
         'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
-      ));
+      );
       comment_save($comment);
 
       // Adjust the current/viewing user.
