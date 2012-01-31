@@ -159,7 +159,7 @@ function node_access_entity_test_page() {
 }
 
 /**
- * Implements hook_form_node_form_alter().
+ * Implements hook_form_BASE_FORM_ID_alter().
  */
 function node_access_test_form_node_form_alter(&$form, $form_state) {
   // Only show this checkbox for NodeAccessBaseTableTestCase.
