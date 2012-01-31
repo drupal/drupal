@@ -49,6 +49,8 @@ function _cache_get_object($bin) {
  *
  * @return
  *   The cache or FALSE on failure.
+ *
+ * @see cache_set()
  */
 function cache_get($cid, $bin = 'cache') {
   return _cache_get_object($bin)->get($cid);
@@ -138,6 +140,8 @@ function cache_get_multiple(array &$cids, $bin = 'cache') {
  *     general cache wipe.
  *   - A Unix timestamp: Indicates that the item should be kept at least until
  *     the given time, after which it behaves like CACHE_TEMPORARY.
+ *
+ * @see cache_get()
  */
 function cache_set($cid, $data, $bin = 'cache', $expire = CACHE_PERMANENT) {
   return _cache_get_object($bin)->set($cid, $data, $expire);
