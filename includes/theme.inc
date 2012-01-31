@@ -372,21 +372,29 @@ class ThemeRegistry Extends DrupalCacheArray {
       $data = $cached->data;
     }
     else {
-      $complete_registry = theme_get_registry();
+      // If there is no runtime cache stored, fetch the full theme registry,
+      // but then initialize each value to NULL. This allows offsetExists()
+      // to function correctly on non-registered theme hooks without triggering
+      // a call to resolveCacheMiss().
+      $data = $this->initializeRegistry();
       if ($this->persistable) {
-        // If there is no runtime cache stored, fetch the full theme registry,
-        // but then initialize each value to NULL. This allows
-        // offsetExists() to function correctly on non-registered theme hooks
-        // without triggering a call to resolveCacheMiss().
-        $data = array_fill_keys(array_keys($complete_registry), NULL);
-        $this->set($this->cid, $data, $this->bin);
-        $this->completeRegistry = $complete_registry;
-      }
-      else {
-        $data = $complete_registry;
+        $this->set($data);
       }
     }
     $this->storage = $data;
+  }
+
+  /**
+   * Initializes the full theme registry.
+   *
+   * @return
+   *   An array with the keys of the full theme registry, but the values
+   *   initialized to NULL.
+   */
+  function initializeRegistry() {
+    $this->completeRegistry = theme_get_registry();
+
+    return array_fill_keys(array_keys($this->completeRegistry), NULL);
   }
 
   public function offsetExists($offset) {
@@ -420,15 +428,19 @@ class ThemeRegistry Extends DrupalCacheArray {
     return $this->storage[$offset];
   }
 
-  public function set($cid, $data, $bin, $lock = TRUE) {
-    $lock_name = $cid . ':' . $bin;
+  public function set($data, $lock = TRUE) {
+    $lock_name = $this->cid . ':' . $this->bin;
     if (!$lock || lock_acquire($lock_name)) {
-      if ($cached = cache_get($cid, $this->bin)) {
+      if ($cached = cache_get($this->cid, $this->bin)) {
         // Use array merge instead of union so that filled in values in $data
         // overwrite empty values in the current cache.
         $data = array_merge($cached->data, $data);
       }
-      cache_set($cid, $data, $bin);
+      else {
+        $registry = $this->initializeRegistry();
+        $data = array_merge($registry, $data);
+      }
+      cache_set($this->cid, $data, $this->bin);
       if ($lock) {
         lock_release($lock_name);
       }
