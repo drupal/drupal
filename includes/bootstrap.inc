@@ -2018,7 +2018,8 @@ function drupal_hash_base64($data) {
  * @see drupal_array_merge_deep_array()
  */
 function drupal_array_merge_deep() {
-  return drupal_array_merge_deep_array(func_get_args());
+  $args = func_get_args();
+  return drupal_array_merge_deep_array($args);
 }
 
 /**

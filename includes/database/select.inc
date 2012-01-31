@@ -590,11 +590,13 @@ class SelectQueryExtender implements SelectQueryInterface {
   }
 
   public function hasAllTags() {
-    return call_user_func_array(array($this->query, 'hasAllTags'), func_get_args());
+    $args = func_get_args();
+    return call_user_func_array(array($this->query, 'hasAllTags'), $args);
   }
 
   public function hasAnyTag() {
-    return call_user_func_array(array($this->query, 'hasAnyTags'), func_get_args());
+    $args = func_get_args();
+    return call_user_func_array(array($this->query, 'hasAnyTags'), $args);
   }
 
   public function addMetaData($key, $object) {
@@ -981,11 +983,13 @@ class SelectQuery extends Query implements SelectQueryInterface {
   }
 
   public function hasAllTags() {
-    return !(boolean)array_diff(func_get_args(), array_keys($this->alterTags));
+    $args = func_get_args();
+    return !(boolean)array_diff($args, array_keys($this->alterTags));
   }
 
   public function hasAnyTag() {
-    return (boolean)array_intersect(func_get_args(), array_keys($this->alterTags));
+    $args = func_get_args();
+    return (boolean)array_intersect($args, array_keys($this->alterTags));
   }
 
   public function addMetaData($key, $object) {

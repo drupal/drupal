@@ -265,7 +265,8 @@ function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $acc
   // part of _menu_check_access().
   if ($visibility) {
     // Grab the variable 'access arguments' part.
-    $args = array_slice(func_get_args(), 4);
+    $all_args = func_get_args();
+    $args = array_slice($all_args, 4);
     $callback = empty($access_callback) ? 0 : trim($access_callback);
     if (is_numeric($callback)) {
       return (bool) $callback;
