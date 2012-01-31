@@ -14,7 +14,7 @@ function trigger_schema() {
     'fields' => array(
       'hook' => array(
         'type' => 'varchar',
-        'length' => 128,
+        'length' => 32,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Primary Key: The name of the internal Drupal hook; for example, node_insert.',
@@ -67,12 +67,4 @@ function trigger_update_7000() {
       ->execute();
   }
   db_drop_field('trigger_assignments', 'op');
-}
-
-/**
- * Implements hook_update_N().
- */
-function trigger_update_7001() {
-  db_drop_primary_key('trigger_assignments');
-  db_change_field('trigger_assignments', 'hook', 'hook', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => '', 'description' => 'Primary Key: The name of the internal Drupal hook; for example, node_insert.', ), array('primary key' => array('hook', 'aid')));
 }
