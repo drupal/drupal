@@ -1396,7 +1396,7 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
  * @param $message
  *   A flag which sets a page title relevant to the revision being viewed.
  * @return
- *   A $page element suitable for use by drupal_page_render().
+ *   A $page element suitable for use by drupal_render().
  */
 function node_show($node, $message = FALSE) {
   if ($message) {
