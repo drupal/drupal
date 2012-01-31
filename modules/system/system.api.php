@@ -1019,7 +1019,11 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  * @endcode
  * This 'abc' object will then be passed into the callback functions defined
  * for the menu item, such as the page callback function mymodule_abc_edit()
- * to replace the integer 1 in the argument array.
+ * to replace the integer 1 in the argument array. Note that a load function
+ * should return FALSE when it is unable to provide a loadable object. For 
+ * example, the node_load() function for the 'node/%node/edit' menu item will
+ * return FALSE for the path 'node/999/edit' if a node with a node ID of 999
+ * does not exist. The menu routing system will return a 404 error in this case.
  *
  * You can also define a %wildcard_to_arg() function (for the example menu
  * entry above this would be 'mymodule_abc_to_arg()'). The _to_arg() function
