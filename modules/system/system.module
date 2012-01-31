@@ -2719,8 +2719,8 @@ function system_region_list($theme_key, $show = REGIONS_ALL) {
  * Implements hook_system_info_alter().
  */
 function system_system_info_alter(&$info, $file, $type) {
-  // Remove page-top from the blocks UI since it is reserved for modules to
-  // populate from outside the blocks system.
+  // Remove page-top and page-bottom from the blocks UI since they are reserved for
+  // modules to populate from outside the blocks system.
   if ($type == 'theme') {
     $info['regions_hidden'][] = 'page_top';
     $info['regions_hidden'][] = 'page_bottom';
