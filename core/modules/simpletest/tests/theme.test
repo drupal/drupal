@@ -592,3 +592,65 @@ class ThemeRegistryTestCase extends DrupalWebTestCase {
     $this->assertTrue($registry['theme_test_template_test_2'], 'Offset was returned correctly from the theme registry');
   }
 }
+
+/**
+ * Tests for theme_datetime().
+ */
+class ThemeDatetime extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Theme Datetime',
+      'description' => 'Test the theme_datetime() function.',
+      'group' => 'Theme',
+    );
+  }
+
+  /**
+   * Test function theme_datetime().
+   */
+  function testThemeDatetime() {
+    // Create timestamp and formatted date for testing.
+    $timestamp = 280281600;
+    $date = format_date($timestamp);
+
+    // Test with timestamp.
+    $variables = array(
+      'timestamp' => $timestamp,
+    );
+    $this->assertEqual('<time datetime="1978-11-19T00:00:00+0000">' . $date . '</time>', theme('datetime', $variables));
+
+    // Test with text and timestamp.
+    $variables = array(
+      'timestamp' => $timestamp,
+      'text' => "Dries' birthday",
+    );
+    $this->assertEqual('<time datetime="1978-11-19T00:00:00+0000">Dries&#039; birthday</time>', theme('datetime', $variables));
+
+    // Test with datetime attribute.
+    $variables = array(
+      'attributes' => array(
+        'datetime' => '1978-11-19',
+      ),
+    );
+    $this->assertEqual('<time datetime="1978-11-19">1978-11-19</time>', theme('datetime', $variables));
+
+    // Test with text and datetime attribute.
+    $variables = array(
+      'text' => "Dries' birthday",
+      'attributes' => array(
+        'datetime' => '1978-11-19',
+      ),
+    );
+    $this->assertEqual('<time datetime="1978-11-19">Dries&#039; birthday</time>', theme('datetime', $variables));
+
+    // Test with HTML text.
+    $variables = array(
+      'timestamp' => $timestamp,
+      'text' => "<span>Dries' birthday</span>",
+      'html' => TRUE,
+    );
+    $this->assertEqual('<time datetime="1978-11-19T00:00:00+0000"><span>Dries\' birthday</span></time>', theme('datetime', $variables));
+  }
+}
