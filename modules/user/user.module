@@ -3466,23 +3466,27 @@ function user_preferred_language($account, $default = NULL) {
  * @see drupal_mail()
  *
  * @param $op
- *  The operation being performed on the account. Possible values:
- *  'register_admin_created': Welcome message for user created by the admin
- *  'register_no_approval_required': Welcome message when user self-registers
- *  'register_pending_approval': Welcome message, user pending admin approval
- *  'password_reset': Password recovery request
- *  'status_activated': Account activated
- *  'status_blocked': Account blocked
- *  'cancel_confirm': Account cancellation request
- *  'status_canceled': Account canceled
+ *   The operation being performed on the account. Possible values:
+ *   - 'register_admin_created': Welcome message for user created by the admin.
+ *   - 'register_no_approval_required': Welcome message when user
+ *     self-registers.
+ *   - 'register_pending_approval': Welcome message, user pending admin
+ *     approval.
+ *   - 'password_reset': Password recovery request.
+ *   - 'status_activated': Account activated.
+ *   - 'status_blocked': Account blocked.
+ *   - 'cancel_confirm': Account cancellation request.
+ *   - 'status_canceled': Account canceled.
  *
  * @param $account
- *  The user object of the account being notified. Must contain at
- *  least the fields 'uid', 'name', and 'mail'.
+ *   The user object of the account being notified. Must contain at
+ *   least the fields 'uid', 'name', and 'mail'.
  * @param $language
- *  Optional language to use for the notification, overriding account language.
+ *   Optional language to use for the notification, overriding account language.
+ *
  * @return
- *  The return value from drupal_mail_system()->mail(), if ends up being called.
+ *   The return value from drupal_mail_system()->mail(), if ends up being
+ *   called.
  */
 function _user_mail_notify($op, $account, $language = NULL) {
   // By default, we always notify except for canceled and blocked.
