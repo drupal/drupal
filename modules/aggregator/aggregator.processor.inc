@@ -117,7 +117,7 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
     $form['modules']['aggregator']['aggregator_teaser_length'] = array(
       '#type' => 'select',
       '#title' => t('Length of trimmed description'),
-      '#default_value' => 600,
+      '#default_value' => variable_get('aggregator_teaser_length', 600),
       '#options' => drupal_map_assoc(array(0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000), '_aggregator_characters'),
       '#description' => t("The maximum number of characters used in the trimmed version of content.")
     );
