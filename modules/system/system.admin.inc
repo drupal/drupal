@@ -622,7 +622,7 @@ function system_theme_settings_validate($form, &$form_state) {
     }
     else {
       // File upload failed.
-      form_set_error('logo_upload', t('The favicon could not be uploaded.'));
+      form_set_error('favicon_upload', t('The favicon could not be uploaded.'));
     }
   }
 
