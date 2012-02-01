@@ -83,8 +83,27 @@ function path_admin_delete($pid = 0) {
 
 /**
  * Set an aliased path for a given Drupal path, preventing duplicates.
+ * 
+ * @param $path
+ *   Path URL. Set to NULL to delete alias.
+ * @param $alias
+ *   Alias URL. Set to NULL to delete alias.
+ * @param $pid
+ *   Path id to update. Set to NULL to create a new alias or to delete a group of aliases.
+ * @param $language
+ *   The language this alias is valid for.
  */
 function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = '') {
+  /* This function claimed to prevent duplicate aliases but has not done
+   * so since the end of 2007.
+   * The uniqueness of dst+language pairs was enforced on the database level
+   * until D6.16 (march 2010); trying to insert duplicate aliass would yield a
+   * database error.
+   * From D6.16 onwards, duplicates would silently be inserted, and
+   * drupal_lookup_path() consistently uses those newer aliases.
+   * While fixing an issue in D6.23, the behavior was reverted to preventing
+   * duplicates by the below code. Watchdog errors are now logged instead.
+   */
   $path = urldecode($path);
   $alias = urldecode($alias);
   // First we check if we deal with an existing alias and delete or modify it based on pid.
@@ -96,19 +115,42 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
     }
     else {
       // Update the existing alias.
-      db_query("UPDATE {url_alias} SET src = '%s', dst = '%s', language = '%s' WHERE pid = %d", $path, $alias, $language, $pid);
+      // Check if the alias exists already.
+      $existing = db_fetch_array(db_query("SELECT pid, src FROM {url_alias} WHERE dst = '%s' AND language = '%s' ORDER BY pid DESC", $alias, $language));
+      if (!$existing || ($existing['pid'] == $pid && $existing['src'] != $path)) {
+        db_query("UPDATE {url_alias} SET src = '%s', dst = '%s', language = '%s' WHERE pid = %d", $path, $alias, $language, $pid);
+      }
+      else {
+        if ($existing['src'] != $path) {
+          watchdog('path', "The alias for path '@path' (language '@lang') was not updated to '@alias', because the path '@expath' already has the same alias.",
+            array('@path' => $path, '@lang' => $language, '@alias' => $alias, '@expath' => $existing['src']),
+            WATCHDOG_ERROR);
+        }
+        // Don't clear cache if we didn't change anything
+        return;
+      }
     }
   }
-  else if ($path && $alias) {
-    // Check for existing aliases.
-    if ($alias == drupal_get_path_alias($path, $language)) {
-      // There is already such an alias, neutral or in this language.
-      // Update the alias based on alias; setting the language if not yet done.
-      db_query("UPDATE {url_alias} SET src = '%s', dst = '%s', language = '%s' WHERE dst = '%s'", $path, $alias, $language, $alias);
-    }
-    else {
+  elseif ($path && $alias) {
+    // Add this alias to the database, if it's new & doesn't cause conflicts.
+    $existing = db_fetch_array(db_query("SELECT src, language, pid FROM {url_alias} WHERE dst = '%s' AND language IN('%s', '') ORDER BY language DESC, pid DESC", $alias, $language));
+    if (!$existing || ($existing['language'] != $language && $existing['src'] != $path)) {
       // A new alias. Add it to the database.
       db_query("INSERT INTO {url_alias} (src, dst, language) VALUES ('%s', '%s', '%s')", $path, $alias, $language);
+    }
+    elseif ($existing['language'] != $language) {
+      // This alias already exists ONLY for 'language neutral': update language.
+      // (We can only get here if $language != '')
+      db_query("UPDATE {url_alias} SET language = '%s' WHERE pid = %d", $language, $existing['pid']);
+    }
+    else {
+      if ($existing['src'] != $path) {
+        watchdog('path', "The alias '@alias' for path '@path' (language '@lang') was not created, because the path '@expath' already has the same alias.",
+          array('@path' => $path, '@lang' => $language, '@alias' => $alias, '@expath' => $existing['src']),
+          WATCHDOG_ERROR);
+      }
+      // Don't clear cache if we didn't change anything
+      return;
     }
   }
   else {
@@ -161,6 +203,10 @@ function path_nodeapi(&$node, $op, $arg = NULL) {
         break;
 
       case 'update':
+        // $node->pid is usually only set when updating from a node edit form
+        // (see path_form_alter). If it is not set (e.g. on most node_save()
+        // commands), we cannot be sure whether a change in $node->path is meant
+        // to replace an existing alias or add one extra, so we do the latter.
         path_set_alias('node/'. $node->nid, isset($node->path) ? $node->path : NULL, isset($node->pid) ? $node->pid : NULL, $language);
         break;
 
