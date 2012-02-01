@@ -226,8 +226,11 @@ function comment_update_7004() {
   ));
   db_add_index('node_comment_statistics', 'cid', array('cid'));
 
-  // Add an index on the comment_count.
-  db_add_index('node_comment_statistics', 'comment_count', array('comment_count'));
+  // The comment_count index may have been added in Drupal 6.
+  if (!db_index_exists('node_comment_statistics', 'comment_count')) {
+    // Add an index on the comment_count.
+    db_add_index('node_comment_statistics', 'comment_count', array('comment_count'));
+  }
 }
 
 /**
