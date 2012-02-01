@@ -189,7 +189,7 @@ function _batch_process() {
       call_user_func_array($function, array_merge($args, array(&$batch_context)));
     }
 
-    if ($finished == 1) {
+    if ($finished >= 1) {
       // Make sure this step isn't counted double when computing $current.
       $finished = 0;
       // Remove the operation and clear the sandbox.
