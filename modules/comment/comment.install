@@ -66,6 +66,25 @@ function comment_update_6003() {
   return $ret;
 }
 
+/**
+ * @defgroup updates-6.x-extra Extra system updates for 6.x
+ * @{
+ */
+
+/**
+ * Add index to to node_comment_statistics on comment_count
+ */
+function comment_update_6004() {
+  $ret = array();
+  db_add_index($ret, 'node_comment_statistics', 'comment_count', array('comment_count'));
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-6.x-extra"
+ * The next series of updates should start at 7000.
+ */
+
 
 /**
  * Implementation of hook_schema().
@@ -209,7 +228,8 @@ function comment_schema() {
     ),
     'primary key' => array('nid'),
     'indexes' => array(
-      'node_comment_timestamp' => array('last_comment_timestamp')
+      'node_comment_timestamp' => array('last_comment_timestamp'),
+      'comment_count' => array('comment_count'),
     ),
   );
 
