@@ -1475,6 +1475,66 @@ function theme_disable($theme_list) {
  */
 
 /**
+ * Preprocess variables for theme_datetime().
+ */
+function template_preprocess_datetime(&$variables) {
+  // Format the 'datetime' attribute based on the timestamp.
+  // @see http://www.w3.org/TR/html5-author/the-time-element.html#attr-time-datetime
+  if (!isset($variables['attributes']['datetime']) && isset($variables['timestamp'])) {
+    $variables['attributes']['datetime'] = format_date($variables['timestamp'], 'html_datetime', '', 'UTC');
+  }
+
+  // If no text was provided, try to auto-generate it.
+  if (!isset($variables['text'])) {
+    // Format and use a human-readable version of the timestamp, if any.
+    if (isset($variables['timestamp'])) {
+      $variables['text'] = format_date($variables['timestamp']);
+      $variables['html'] = FALSE;
+    }
+    // Otherwise, use the literal datetime attribute.
+    elseif (isset($variables['attributes']['datetime'])) {
+      $variables['text'] = $variables['attributes']['datetime'];
+      $variables['html'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Returns HTML for a date / time.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - timestamp: (optional) A UNIX timestamp for the datetime attribute. If the
+ *     datetime cannot be represented as a UNIX timestamp, use a valid datetime
+ *     attribute value in $variables['attributes']['datetime'].
+ *   - text: (optional) The content to display within the <time> element. Set
+ *     'html' to TRUE if this value is already sanitized for output in HTML.
+ *     Defaults to a human-readable representation of the timestamp value or the
+ *     datetime attribute value using format_date().
+ *     When invoked as #theme or #theme_wrappers of a render element, the
+ *     rendered #children are autoamtically taken over as 'text', unless #text
+ *     is explicitly set.
+ *   - attributes: (optional) An associative array of HTML attributes to apply
+ *     to the <time> element. A datetime attribute in 'attributes' overrides the
+ *     'timestamp'. To create a valid datetime attribute value from a UNIX
+ *     timestamp, use format_date() with one of the predefined 'html_*' formats.
+ *   - html: (optional) Whether 'text' is HTML markup (TRUE) or plain-text
+ *     (FALSE). Defaults to FALSE. For example, to use a SPAN tag within the
+ *     TIME element, this must be set to TRUE, or the SPAN tag will be escaped.
+ *     It is the responsibility of the caller to properly sanitize the value
+ *     contained in 'text' (or within the SPAN tag in aforementioned example).
+ *
+ * @see template_preprocess_datetime()
+ * @see http://www.w3.org/TR/html5-author/the-time-element.html#attr-time-datetime
+ */
+function theme_datetime($variables) {
+  $output = '<time' . drupal_attributes($variables['attributes']) . '>';
+  $output .= !empty($variables['html']) ? $variables['text'] : check_plain($variables['text']);
+  $output .= '</time>';
+  return $output;
+}
+
+/**
  * Returns HTML for status and/or error messages, grouped by type.
  *
  * An invisible heading identifies the messages for assistive technology.
@@ -2138,6 +2198,49 @@ function theme_progress_bar($variables) {
   $output .= '<div class="percentage">' . $variables['percent'] . '%</div>';
   $output .= '<div class="message">' . $variables['message'] . '</div>';
   $output .= '</div>';
+
+  return $output;
+}
+
+/**
+ * Returns HTML for a meter.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - display_value: The textual representation of the meter bar.
+ *   - form: A string specifying one or more forms to which the <meter> element
+ *     belongs separated by spaces.
+ *   - high: A number specifying the range that is considered to be a high
+ *     value.
+ *   - low: A number specifying the range that is considered to be a low value.
+ *   - max: A number specifying the maximum value of the range.
+ *   - min: A number specifying the minimum value of the range.
+ *   - optimum: A number specifying what value is the optimal value for the
+ *     gauge.
+ *   - value: A number specifying the current value of the gauge.
+ *   - percentage: A number specifying the current percentage of the gauge.
+ *   - attributes: Associative array of attributes to be placed in the meter
+ *     tag.
+ */
+function theme_meter($variables) {
+  $attributes = $variables['attributes'];
+
+  foreach (array('form', 'high', 'low', 'max', 'min', 'optimum', 'value') as $attribute) {
+    if (!empty($variables[$attribute])) {
+      // This function was initially designed for the <meter> tag, but due to
+      // the lack of browser and styling support for it, we're currently using
+      // it's attributes as HTML5 data attributes.
+      $attributes['data-' . $attribute] = $variables[$attribute];
+    }
+  }
+
+  $output = '<div' . drupal_attributes($attributes) . '>';
+  $output .= '  <div style="width: '. $variables['percentage'] .'%;" class="foreground"></div>';
+  $output .= "</div>\n";
+
+  if (!empty($variables['display_value'])) {
+    $output .= '<div class="percent">' . $variables['display_value'] . '</div>';
+  }
 
   return $output;
 }

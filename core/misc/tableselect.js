@@ -8,7 +8,7 @@ Drupal.behaviors.tableSelect = {
 
 Drupal.tableSelect = function () {
   // Do not add a "Select all" checkbox if there are no rows with checkboxes in the table
-  if ($('td input:checkbox', this).size() == 0) {
+  if ($('td input:checkbox', this).length == 0) {
     return;
   }
 

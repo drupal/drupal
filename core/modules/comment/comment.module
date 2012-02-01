@@ -1672,7 +1672,7 @@ function comment_forms() {
  * @ingroup forms
  */
 function comment_form($form, &$form_state, $comment) {
-  global $user;
+  global $user, $language_content;
 
   // During initial form build, add the comment entity to the form state for
   // use during form building and processing. During a rebuild, use what is in
@@ -1833,10 +1833,21 @@ function comment_form($form, &$form_state, $comment) {
   );
 
   // Add internal comment properties.
-  foreach (array('cid', 'pid', 'nid', 'language', 'uid') as $key) {
+  foreach (array('cid', 'pid', 'nid', 'uid') as $key) {
     $form[$key] = array('#type' => 'value', '#value' => $comment->$key);
   }
   $form['node_type'] = array('#type' => 'value', '#value' => 'comment_node_' . $node->type);
+
+  // If a content type has multilingual support we set the comment to inherit the
+  // content language. Otherwise mark the comment as language neutral.
+  $comment_langcode = $comment->language;
+  if (($comment_langcode == LANGUAGE_NONE) && variable_get('language_content_type_' . $node->type, 0)) {
+    $comment_langcode = $language_content->langcode;
+  }
+  $form['language'] = array(
+    '#type' => 'value',
+    '#value' => $comment_langcode,
+  );
 
   // Only show the save button if comment previews are optional or if we are
   // already previewing the submission.
@@ -2138,23 +2149,25 @@ function template_preprocess_comment(&$variables) {
   else {
     $variables['status'] = ($comment->status == COMMENT_NOT_PUBLISHED) ? 'comment-unpublished' : 'comment-published';
   }
+
   // Gather comment classes.
-  if ($comment->uid == 0) {
+  // 'comment-published' class is not needed, it is either 'comment-preview' or
+  // 'comment-unpublished'.
+  if ($variables['status'] != 'comment-published') {
+    $variables['classes_array'][] = $variables['status'];
+  }
+  if ($variables['new']) {
+    $variables['classes_array'][] = 'comment-new';
+  }
+  if (!$comment->uid) {
     $variables['classes_array'][] = 'comment-by-anonymous';
   }
   else {
-    // Published class is not needed. It is either 'comment-preview' or 'comment-unpublished'.
-    if ($variables['status'] != 'comment-published') {
-      $variables['classes_array'][] = $variables['status'];
-    }
-    if ($comment->uid === $variables['node']->uid) {
+    if ($comment->uid == $variables['node']->uid) {
       $variables['classes_array'][] = 'comment-by-node-author';
     }
-    if ($comment->uid === $variables['user']->uid) {
+    if ($comment->uid == $variables['user']->uid) {
       $variables['classes_array'][] = 'comment-by-viewer';
-    }
-    if ($variables['new']) {
-      $variables['classes_array'][] = 'comment-new';
     }
   }
 }

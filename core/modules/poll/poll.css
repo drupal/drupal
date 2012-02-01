@@ -24,12 +24,10 @@
 .poll .vote-form {
   text-align: center;
 }
-.poll .vote-form .choices {
+.poll .vote-form {
   text-align: left; /* LTR */
-  margin: 0 auto;
-  display: table;
 }
-.poll .vote-form .choices .title {
+.poll .vote-form .poll-title {
   font-weight: bold;
 }
 .node-form #edit-poll-more {

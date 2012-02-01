@@ -2747,8 +2747,8 @@ function system_region_list($theme_key, $show = REGIONS_ALL) {
  * Implements hook_system_info_alter().
  */
 function system_system_info_alter(&$info, $file, $type) {
-  // Remove page-top from the blocks UI since it is reserved for modules to
-  // populate from outside the blocks system.
+  // Remove page-top and page-bottom from the blocks UI since they are reserved for
+  // modules to populate from outside the blocks system.
   if ($type == 'theme') {
     $info['regions_hidden'][] = 'page_top';
     $info['regions_hidden'][] = 'page_bottom';
@@ -2926,7 +2926,18 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 }
 
 /**
- * Determines if the current user is in compact mode.
+ * Determines whether the current user is in compact mode.
+ *
+ * Compact mode shows certain administration pages with less description text,
+ * such as the configuration page and the permissions page.
+ *
+ * Whether the user is in compact mode is determined by a cookie, which is set
+ * for the user by system_admin_compact_page().
+ *
+ * If the user does not have the cookie, the default value is given by the
+ * system variable 'admin_compact_mode', which itself defaults to FALSE. This
+ * does not have a user interface to set it: it is a hidden variable which can
+ * be set in the settings.php file.
  *
  * @return
  *   TRUE when in compact mode, FALSE when in expanded mode.

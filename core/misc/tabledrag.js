@@ -123,7 +123,7 @@ Drupal.tableDrag.prototype.initColumns = function () {
     // Find the first field in this group.
     for (var d in this.tableSettings[group]) {
       var field = $('.' + this.tableSettings[group][d].target + ':first', this.table);
-      if (field.size() && this.tableSettings[group][d].hidden) {
+      if (field.length && this.tableSettings[group][d].hidden) {
         var hidden = this.tableSettings[group][d].hidden;
         var cell = field.closest('td');
         break;
@@ -256,7 +256,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
   if ($('td:first .indentation:last', item).length) {
     $('td:first .indentation:last', item).after(handle);
     // Update the total width of indentation in this entire table.
-    self.indentCount = Math.max($('.indentation', item).size(), self.indentCount);
+    self.indentCount = Math.max($('.indentation', item).length, self.indentCount);
   }
   else {
     $('td:first', item).prepend(handle);
@@ -357,7 +357,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
           if ($(item).is('.tabledrag-root')) {
             // Swap with the previous top-level row.
             var groupHeight = 0;
-            while (previousRow && $('.indentation', previousRow).size()) {
+            while (previousRow && $('.indentation', previousRow).length) {
               previousRow = $(previousRow).prev('tr').get(0);
               groupHeight += $(previousRow).is(':hidden') ? 0 : previousRow.offsetHeight;
             }
@@ -678,7 +678,7 @@ Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
     var sourceRow = changedRow;
     if ($(previousRow).is('.draggable') && $('.' + group, previousRow).length) {
       if (this.indentEnabled) {
-        if ($('.indentations', previousRow).size() == $('.indentations', changedRow)) {
+        if ($('.indentations', previousRow).length == $('.indentations', changedRow)) {
           sourceRow = previousRow;
         }
       }
@@ -688,7 +688,7 @@ Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
     }
     else if ($(nextRow).is('.draggable') && $('.' + group, nextRow).length) {
       if (this.indentEnabled) {
-        if ($('.indentations', nextRow).size() == $('.indentations', changedRow)) {
+        if ($('.indentations', nextRow).length == $('.indentations', changedRow)) {
           sourceRow = nextRow;
         }
       }
@@ -744,7 +744,7 @@ Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
     switch (rowSettings.action) {
       case 'depth':
         // Get the depth of the target row.
-        targetElement.value = $('.indentation', $(sourceElement).closest('tr')).size();
+        targetElement.value = $('.indentation', $(sourceElement).closest('tr')).length;
         break;
       case 'match':
         // Update the value.
@@ -874,7 +874,7 @@ Drupal.tableDrag.prototype.row = function (tableRow, method, indentEnabled, maxD
   this.element = tableRow;
   this.method = method;
   this.group = [tableRow];
-  this.groupDepth = $('.indentation', tableRow).size();
+  this.groupDepth = $('.indentation', tableRow).length;
   this.changed = false;
   this.table = $(tableRow).closest('table').get(0);
   this.indentEnabled = indentEnabled;
@@ -882,12 +882,12 @@ Drupal.tableDrag.prototype.row = function (tableRow, method, indentEnabled, maxD
   this.direction = ''; // Direction the row is being moved.
 
   if (this.indentEnabled) {
-    this.indents = $('.indentation', tableRow).size();
+    this.indents = $('.indentation', tableRow).length;
     this.children = this.findChildren(addClasses);
     this.group = $.merge(this.group, this.children);
     // Find the depth of this entire group.
     for (var n = 0; n < this.group.length; n++) {
-      this.groupDepth = Math.max($('.indentation', this.group[n]).size(), this.groupDepth);
+      this.groupDepth = Math.max($('.indentation', this.group[n]).length, this.groupDepth);
     }
   }
 };
@@ -999,7 +999,7 @@ Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow
 
   // Minimum indentation:
   // Do not orphan the next row.
-  minIndent = nextRow ? $('.indentation', nextRow).size() : 0;
+  minIndent = nextRow ? $('.indentation', nextRow).length : 0;
 
   // Maximum indentation:
   if (!prevRow || $(prevRow).is(':not(.draggable)') || $(this.element).is('.tabledrag-root')) {
@@ -1011,7 +1011,7 @@ Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow
   }
   else {
     // Do not go deeper than as a child of the previous row.
-    maxIndent = $('.indentation', prevRow).size() + ($(prevRow).is('.tabledrag-leaf') ? 0 : 1);
+    maxIndent = $('.indentation', prevRow).length + ($(prevRow).is('.tabledrag-leaf') ? 0 : 1);
     // Limit by the maximum allowed depth for the table.
     if (this.maxDepth) {
       maxIndent = Math.min(maxIndent, this.maxDepth - (this.groupDepth - this.indents));
@@ -1032,8 +1032,8 @@ Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow
 Drupal.tableDrag.prototype.row.prototype.indent = function (indentDiff) {
   // Determine the valid indentations interval if not available yet.
   if (!this.interval) {
-    prevRow = $(this.element).prev('tr').get(0);
-    nextRow = $(this.group).filter(':last').next('tr').get(0);
+    var prevRow = $(this.element).prev('tr').get(0);
+    var nextRow = $(this.group).filter(':last').next('tr').get(0);
     this.interval = this.validIndentInterval(prevRow, nextRow);
   }
 

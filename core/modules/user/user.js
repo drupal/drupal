@@ -168,7 +168,7 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
 
   // Assemble the final message.
   msg = translate.hasWeaknesses + '<ul><li>' + msg.join('</li><li>') + '</li></ul>';
-  return { strength: strength, message: msg, indicatorText: indicatorText }
+  return { strength: strength, message: msg, indicatorText: indicatorText };
 
 };
 
@@ -180,7 +180,7 @@ Drupal.behaviors.fieldUserRegistration = {
   attach: function (context, settings) {
     var $checkbox = $('form#field-ui-field-edit-form input#edit-instance-settings-user-register-form');
 
-    if ($checkbox.size()) {
+    if ($checkbox.length) {
       $('input#edit-instance-required', context).once('user-register-form-checkbox', function () {
         $(this).bind('change', function (e) {
           if ($(this).attr('checked')) {

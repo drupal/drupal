@@ -51,12 +51,12 @@ interface ArchiverInterface {
    * @param $files
    *   Optionally specify a list of files to be extracted. Files are
    *   relative to the root of the archive. If not specified, all files
-   *   in the archive will be extracted
+   *   in the archive will be extracted.
    *
    * @return ArchiverInterface
    *   The called object.
    */
-  public function extract($path, Array $files = array());
+  public function extract($path, array $files = array());
 
   /**
    * Lists all files in the archive.
