@@ -165,9 +165,11 @@ function comment_update_7001() {
 function comment_update_7002() {
   db_rename_table('comments', 'comment');
 
-  // Add user-related indexes.
-  db_add_index('comment', 'comment_uid', array('uid'));
-  db_add_index('node_comment_statistics', 'last_comment_uid', array('last_comment_uid'));
+  // Add user-related indexes. These may already exist from Drupal 6.
+  if (!db_index_exists('comment', 'comment_uid')) {
+    db_add_index('comment', 'comment_uid', array('uid'));
+    db_add_index('node_comment_statistics', 'last_comment_uid', array('last_comment_uid'));
+  }
 
   // Create a language column.
   db_add_field('comment', 'language', array(
