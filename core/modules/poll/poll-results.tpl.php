@@ -17,7 +17,10 @@
  * @see template_preprocess_poll_results()
  */
 ?>
-<div class="poll">
+<article class="poll">
+  <?php if ($block): ?>
+    <h3 class="poll-title"><?php print $title; ?></h3>
+  <?php endif; ?>
   <?php print $results; ?>
   <div class="total">
     <?php print t('Total votes: @votes', array('@votes' => $votes)); ?>
@@ -25,4 +28,7 @@
   <?php if (!empty($cancel_form)): ?>
     <?php print $cancel_form; ?>
   <?php endif; ?>
-</div>
+</article>
+<?php if ($block): ?>
+  <div class="links"><?php print $links; ?></div>
+<?php endif; ?>

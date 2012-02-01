@@ -5,6 +5,6 @@
 .poll .percent {
   text-align: left;
 }
-.poll .vote-form .choices {
+.poll .vote-form {
   text-align: right;
 }

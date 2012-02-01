@@ -42,25 +42,8 @@ function poll_theme() {
       'template' => 'poll-results',
       'variables' => array('raw_title' => NULL, 'results' => NULL, 'votes' => NULL, 'raw_links' => NULL, 'block' => NULL, 'nid' => NULL, 'vote' => NULL),
     ),
-    'poll_bar' => array(
-      'template' => 'poll-bar',
-      'variables' => array('title' => NULL, 'votes' => NULL, 'total_votes' => NULL, 'vote' => NULL, 'block' => NULL),
-    ),
   );
-  // The theme system automatically discovers the theme's functions and
-  // templates that implement more targeted "suggestions" of generic theme
-  // hooks. But suggestions implemented by a module must be explicitly
-  // registered.
-  $theme_hooks += array(
-    'poll_results__block' => array(
-      'template' => 'poll-results--block',
-      'variables' => $theme_hooks['poll_results']['variables'],
-    ),
-    'poll_bar__block' => array(
-      'template' => 'poll-bar--block',
-      'variables' => $theme_hooks['poll_bar']['variables'],
-    ),
-  );
+
   return $theme_hooks;
 }
 
@@ -832,15 +815,25 @@ function poll_view_results($node, $view_mode, $block = FALSE) {
     }
   }
 
-  $poll_results = '';
+  $poll_results = array();
   foreach ($node->choice as $i => $choice) {
-    if (!empty($choice['chtext'])) {
-      $chvotes = isset($choice['chvotes']) ? $choice['chvotes'] : NULL;
-      $poll_results .= theme('poll_bar', array('title' => $choice['chtext'], 'votes' => $chvotes, 'total_votes' => $total_votes, 'vote' => isset($node->vote) && $node->vote == $i, 'block' => $block));
-    }
+    $chvotes = isset($choice['chvotes']) ? $choice['chvotes'] : NULL;
+    $percentage = round($chvotes * 100 / max($total_votes, 1));
+    $display_votes = !$block ? ' (' . format_plural($chvotes, '1 vote', '@count votes') . ')' : '';
+
+    $poll_results[] = array(
+      '#theme' => 'meter',
+      '#prefix' => '<div class="choice-title">' . check_plain($choice['chtext']) . '</div>',
+      '#display_value' =>  t('!percentage%', array('!percentage' => $percentage)) . $display_votes,
+      '#min' => 0,
+      '#max' => $total_votes,
+      '#value' => $chvotes,
+      '#percentage' => $percentage,
+      '#attributes' => array('class' => 'bar'),
+    );
   }
 
-  return theme('poll_results', array('raw_title' => $node->title, 'results' => $poll_results, 'votes' => $total_votes, 'raw_links' => isset($node->links) ? $node->links : array(), 'block' => $block, 'nid' => $node->nid, 'vote' => isset($node->vote) ? $node->vote : NULL));
+  return theme('poll_results', array('raw_title' => $node->title, 'results' => drupal_render($poll_results), 'votes' => $total_votes, 'raw_links' => isset($node->links) ? $node->links : array(), 'block' => $block, 'nid' => $node->nid, 'vote' => isset($node->vote) ? $node->vote : NULL));
 }
 
 
@@ -917,27 +910,6 @@ function template_preprocess_poll_results(&$variables) {
     $variables['cancel_form'] = drupal_render($elements);
   }
   $variables['title'] = check_plain($variables['raw_title']);
-
-  if ($variables['block']) {
-    $variables['theme_hook_suggestions'][] = 'poll_results__block';
-  }
-}
-
-/**
- * Preprocess the poll_bar theme hook.
- *
- * Inputs: $title, $votes, $total_votes, $voted, $block
- *
- * @see poll-bar.tpl.php
- * @see poll-bar--block.tpl.php
- * @see theme_poll_bar()
- */
-function template_preprocess_poll_bar(&$variables) {
-  if ($variables['block']) {
-    $variables['theme_hook_suggestions'][] = 'poll_bar__block';
-  }
-  $variables['title'] = check_plain($variables['title']);
-  $variables['percentage'] = round($variables['votes'] * 100 / max($variables['total_votes'], 1));
 }
 
 /**

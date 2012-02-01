@@ -1584,8 +1584,6 @@ div.admin-panel .description {
 }
 .poll .vote-form {
   text-align: left; /* LTR */
-}
-.poll .vote-form .choices {
   margin: 0;
 }
 .poll .percent {
@@ -1596,7 +1594,7 @@ div.admin-panel .description {
   float: right;
   text-align: right;
 }
-.poll .text {
+.poll .choice-title {
   clear: right;
   margin-right: 2.25em;
 }
