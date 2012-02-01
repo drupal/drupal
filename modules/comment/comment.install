@@ -81,6 +81,16 @@ function comment_update_6004() {
 }
 
 /**
+ * Add indices to uid fields.
+ */
+function comment_update_6005() {
+  $ret = array();
+  db_add_index($ret, 'comments', 'comment_uid', array('uid'));
+  db_add_index($ret, 'node_comment_statistics', 'last_comment_uid', array('last_comment_uid'));
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-extra"
  * The next series of updates should start at 7000.
  */
@@ -185,6 +195,7 @@ function comment_schema() {
     'indexes' => array(
       'pid'    => array('pid'),
       'nid'    => array('nid'),
+      'comment_uid'    => array('uid'),
       'status' => array('status'), // This index is probably unused
     ),
     'primary key' => array('cid'),
@@ -230,9 +241,9 @@ function comment_schema() {
     'indexes' => array(
       'node_comment_timestamp' => array('last_comment_timestamp'),
       'comment_count' => array('comment_count'),
+      'last_comment_uid' => array('last_comment_uid'),
     ),
   );
 
   return $schema;
 }
-
