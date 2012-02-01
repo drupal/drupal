@@ -48,8 +48,9 @@
  * Access to the callback functions is also protected by the menu system.
  * The "access callback" with an optional "access arguments" of each menu
  * item is called before the page callback proceeds. If this returns TRUE,
- * then access is granted; if FALSE, then access is denied. Menu items may
- * omit this attribute to use the value provided by an ancestor item.
+ * then access is granted; if FALSE, then access is denied. Default local task
+ * menu items (see next paragraph) may omit this attribute to use the value
+ * provided by the parent item.
  *
  * In the default Drupal interface, you will notice many links rendered as
  * tabs. These are known in the menu system as "local tasks", and they are
