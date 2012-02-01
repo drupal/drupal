@@ -26,7 +26,15 @@ function aggregator_view() {
   $header = array(t('Title'), t('Items'), t('Last update'), t('Next update'), array('data' => t('Operations'), 'colspan' => '3'));
   $rows = array();
   while ($feed = db_fetch_object($result)) {
-    $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '@count items'), ($feed->checked ? t('@time ago', array('@time' => format_interval(time() - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')), l(t('edit'), "admin/content/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/content/aggregator/remove/$feed->fid"), l(t('update items'), "admin/content/aggregator/update/$feed->fid"));
+    $rows[] = array(
+      l($feed->title, "aggregator/sources/$feed->fid"),
+      format_plural($feed->items, '1 item', '@count items'),
+      ($feed->checked ? t('@time ago', array('@time' => format_interval(time() - $feed->checked))) : t('never')),
+      ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')),
+      l(t('edit'), "admin/content/aggregator/edit/feed/$feed->fid"),
+      l(t('remove items'), "admin/content/aggregator/remove/$feed->fid"),
+      l(t('update items'), "admin/content/aggregator/update/$feed->fid", array('query' => array('token' => drupal_get_token("aggregator/update/$feed->fid")))),
+    );
   }
   $output .= theme('table', $header, $rows);
 
@@ -209,6 +217,9 @@ function aggregator_admin_remove_feed_submit($form, &$form_state) {
  *   An associative array describing the feed to be refreshed.
  */
 function aggregator_admin_refresh_feed($feed) {
+  if (!isset($_GET['token']) || !drupal_valid_token($_GET['token'], 'aggregator/update/' . $feed['fid'])) {
+    return drupal_access_denied();
+  }
   aggregator_refresh($feed);
   drupal_goto('admin/content/aggregator');
 }
