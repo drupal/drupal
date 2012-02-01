@@ -2517,7 +2517,8 @@ if (Drupal.jsEnabled) {
 }
 
 function user_register_validate($form, &$form_state) {
-  user_module_invoke('validate', $form_state['values'], $form_state['values'], 'account');
+  $account = (object) $form_state['values'];
+  user_module_invoke('validate', $form_state['values'], $account, 'account');
 }
 
 /**
