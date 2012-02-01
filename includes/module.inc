@@ -93,6 +93,14 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_
  *   The array of filesystem objects used to rebuild the cache.
  */
 function module_rebuild_cache() {
+  $write_database = TRUE;
+  // If lock not acquired, return $files data without writing to database.
+  if (!lock_acquire('module_rebuild_cache')) {
+    $write_database = FALSE;
+    // Wait for the parallel thread to be done so we are more likely
+    // to get updated and consistent data.
+    lock_wait('module_rebuild_cache');
+  }
   // Get current list of modules
   $files = drupal_system_listing('\.module$', 'modules', 'name', 0);
 
@@ -119,32 +127,39 @@ function module_rebuild_cache() {
       unset($files[$filename]);
       continue;
     }
-    // Merge in defaults and save.
-    $files[$filename]->info = $file->info + $defaults;
 
     // Invoke hook_system_info_alter() to give installed modules a chance to
     // modify the data in the .info files if necessary.
     drupal_alter('system_info', $files[$filename]->info, $files[$filename]);
 
-    // Log the critical hooks implemented by this module.
-    $bootstrap = 0;
-    foreach (bootstrap_hooks() as $hook) {
-      if (module_hook($file->name, $hook)) {
-        $bootstrap = 1;
-        break;
+    // Merge in defaults and save.
+    $files[$filename]->info = $file->info + $defaults;
+  }
+
+  // If lock not acquired, return $files data without writing to database.
+  if ($write_database) {
+    foreach ($files as $filename => $file) {
+      // Log the critical hooks implemented by this module.
+      $bootstrap = 0;
+      foreach (bootstrap_hooks() as $hook) {
+        if (module_hook($file->name, $hook)) {
+          $bootstrap = 1;
+          break;
+        }
+      }
+
+      // Update the contents of the system table:
+      if (isset($file->status)) {
+        db_query("UPDATE {system} SET info = '%s', name = '%s', filename = '%s', bootstrap = %d WHERE filename = '%s'", serialize($files[$filename]->info), $file->name, $file->filename, $bootstrap, $file->old_filename);
+      }
+      else {
+        // This is a new module.
+        $files[$filename]->status = 0;
+        $files[$filename]->throttle = 0;
+        db_query("INSERT INTO {system} (name, info, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, serialize($files[$filename]->info), 'module', $file->filename, 0, 0, $bootstrap);
       }
     }
-
-    // Update the contents of the system table:
-    if (isset($file->status) || (isset($file->old_filename) && $file->old_filename != $file->filename)) {
-      db_query("UPDATE {system} SET info = '%s', name = '%s', filename = '%s', bootstrap = %d WHERE filename = '%s'", serialize($files[$filename]->info), $file->name, $file->filename, $bootstrap, $file->old_filename);
-    }
-    else {
-      // This is a new module.
-      $files[$filename]->status = 0;
-      $files[$filename]->throttle = 0;
-      db_query("INSERT INTO {system} (name, info, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, serialize($files[$filename]->info), 'module', $file->filename, 0, 0, $bootstrap);
-    }
+    lock_release('module_rebuild_cache');
   }
   $files = _module_build_dependencies($files);
   return $files;
