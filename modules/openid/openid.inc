@@ -617,18 +617,31 @@ function _openid_get_params($str) {
  * @param $fallback_prefix
  *   An optional prefix that will be used in case no prefix is found for the
  *   target extension namespace.
+ * @param $only_signed
+ *   Return only keys that are included in the message signature in openid.sig.
+ *   Unsigned fields may have been modified or added by other parties than the
+ *   OpenID Provider.
+ *
  * @return
  *   An associative array containing all the parameters in the response message
  *   that belong to the extension. The keys are stripped from their namespace
  *   prefix.
+ *
  * @see http://openid.net/specs/openid-authentication-2_0.html#extensions
  */
-function openid_extract_namespace($response, $extension_namespace, $fallback_prefix = NULL) {
+function openid_extract_namespace($response, $extension_namespace, $fallback_prefix = NULL, $only_signed = FALSE) {
+  $signed_keys = explode(',', $response['openid.signed']);
+
   // Find the namespace prefix.
   $prefix = $fallback_prefix;
   foreach ($response as $key => $value) {
     if ($value == $extension_namespace && preg_match('/^openid\.ns\.([^.]+)$/', $key, $matches)) {
       $prefix = $matches[1];
+      if ($only_signed && !in_array('ns.' . $matches[1], $signed_keys)) {
+        // The namespace was defined but was not signed as required. In this
+        // case we do not fall back to $fallback_prefix.
+        $prefix = NULL;
+      }
       break;
     }
   }
@@ -641,7 +654,9 @@ function openid_extract_namespace($response, $extension_namespace, $fallback_pre
   foreach ($response as $key => $value) {
     if (preg_match('/^openid\.' . $prefix . '\.(.+)$/', $key, $matches)) {
       $local_key = $matches[1];
-      $output[$local_key] = $value;
+      if (!$only_signed || in_array($prefix . '.' . $local_key, $signed_keys)) {
+        $output[$local_key] = $value;
+      }
     }
   }
 
@@ -837,8 +852,8 @@ function _openid_invalid_openid_transition($identity, $response) {
     // Try to extract e-mail address from Simple Registration (SREG) or
     // Attribute Exchanges (AX) keys.
     $email = '';
-    $sreg_values = openid_extract_namespace($response, OPENID_NS_SREG, 'sreg');
-    $ax_values = openid_extract_namespace($response, OPENID_NS_AX, 'ax');
+    $sreg_values = openid_extract_namespace($response, OPENID_NS_SREG, 'sreg', TRUE);
+    $ax_values = openid_extract_namespace($response, OPENID_NS_AX, 'ax', TRUE);
     if (!empty($sreg_values['email']) && valid_email_address($sreg_values['email'])) {
       $email = $sreg_values['email'];
     }

@@ -324,9 +324,7 @@ function _openid_test_endpoint_authenticate() {
   // Generate unique identifier for this authentication.
   $nonce = _openid_nonce();
 
-  // Generate response containing the user's identity. The openid.sreg.xxx
-  // entries contain profile data stored by the OpenID Provider (see OpenID
-  // Simple Registration Extension 1.0).
+  // Generate response containing the user's identity.
   $response = variable_get('openid_test_response', array()) + array(
     'openid.ns' => OPENID_NS_2_0,
     'openid.mode' => 'id_res',
@@ -336,14 +334,27 @@ function _openid_test_endpoint_authenticate() {
     'openid.return_to' => $_REQUEST['openid_return_to'],
     'openid.response_nonce' => $nonce,
     'openid.assoc_handle' => 'openid-test',
-    'openid.signed' => 'op_endpoint,claimed_id,identity,return_to,response_nonce,assoc_handle',
   );
+
+  if (isset($response['openid.signed'])) {
+    $keys_to_sign = explode(',', $response['openid.signed']);
+  }
+  else {
+    // Unless openid.signed is explicitly defined, all keys are signed.
+    $keys_to_sign = array();
+    foreach ($response as $key => $value) {
+      // Strip off the "openid." prefix.
+      $keys_to_sign[] = substr($key, 7);
+    }
+    $response['openid.signed'] = implode(',', $keys_to_sign);
+  }
 
   // Sign the message using the MAC key that was exchanged during association.
   $association = new stdClass();
   $association->mac_key = variable_get('mac_key');
-  $keys_to_sign = explode(',', $response['openid.signed']);
-  $response['openid.sig'] = _openid_signature($association, $response, $keys_to_sign);
+  if (!isset($response['openid.sig'])) {
+    $response['openid.sig'] = _openid_signature($association, $response, $keys_to_sign);
+  }
 
   // Put the signed message into the query string of a URL supplied by the
   // Relying Party, and redirect the user.

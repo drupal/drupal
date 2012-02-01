@@ -164,24 +164,27 @@ function file_file_download($uri, $field_type = 'file') {
         // Try to load $entity and $field.
         $entity = entity_load($entity_type, array($id));
         $entity = reset($entity);
-        $field = NULL;
+        $field = field_info_field($field_name);
+
+        // Load the field item that references the file.
+        $field_item = NULL;
         if ($entity) {
-          // Load all fields for that entity.
+          // Load all field items for that entity.
           $field_items = field_get_items($entity_type, $entity, $field_name);
 
           // Find the field item with the matching URI.
-          foreach ($field_items as $field_item) {
-            if ($field_item['uri'] == $uri) {
-              $field = $field_item;
+          foreach ($field_items as $item) {
+            if ($item['uri'] == $uri) {
+              $field_item = $item;
               break;
             }
           }
         }
 
-        // Check that $entity and $field were loaded successfully and check if
-        // access to that field is not disallowed. If any of these checks fail,
-        // stop checking access for this reference.
-        if (empty($entity) || empty($field) || !field_access('view', $field, $entity_type, $entity)) {
+        // Check that $entity, $field and $field_item were loaded successfully
+        // and check if access to that field is not disallowed. If any of these
+        // checks fail, stop checking access for this reference.
+        if (empty($entity) || empty($field) || empty($field_item) || !field_access('view', $field, $entity_type, $entity)) {
           $denied = TRUE;
           break;
         }
@@ -190,10 +193,10 @@ function file_file_download($uri, $field_type = 'file') {
         // Default to FALSE and let entities overrule this ruling.
         $grants = array('system' => FALSE);
         foreach (module_implements('file_download_access') as $module) {
-          $grants = array_merge($grants, array($module => module_invoke($module, 'file_download_access', $field, $entity_type, $entity)));
+          $grants = array_merge($grants, array($module => module_invoke($module, 'file_download_access', $field_item, $entity_type, $entity)));
         }
         // Allow other modules to alter the returned grants/denies.
-        drupal_alter('file_download_access', $grants, $field, $entity_type, $entity);
+        drupal_alter('file_download_access', $grants, $field_item, $entity_type, $entity);
 
         if (in_array(TRUE, $grants)) {
           // If TRUE is returned, access is granted and no further checks are

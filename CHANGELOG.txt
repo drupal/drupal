@@ -1,7 +1,44 @@
 
-Drupal 7.11 xxxx-xx-xx (development version)
+Drupal 7.13 xxxx-xx-xx (development version)
 ----------------------
 
+Drupal 7.12, 2012-02-01
+----------------------
+- Fixed bug preventing custom menus from receiving an active trail.
+- Fixed hook_field_delete() no longer invoked during field_purge_data().
+- Fixed bug causing entity info cache to not be cleared with the rest of caches.
+- Fixed file_unmanaged_copy() fails with Drupal 7.7+ and safe_mode() or
+  open_basedir().
+- Fixed Nested transactions throw exceptions when they got out of scope.
+- Fixed bugs with the Return-Path when sending mail on both Windows and
+  non-Windows systems.
+- Fixed bug with DrupalCacheArray property visibility preventing others from
+  extending it (API change: http://drupal.org/node/1422264).
+- Fixed bug with handling of non-ASCII characters in file names (API change:
+  http://drupal.org/node/1424840).
+- Reconciled field maximum length with database column size in image and
+  aggregator modules.
+- Fixes to various core JavaScript files to allow for minification and
+  aggregation.
+- Fixed Prevent tests from deleting main installation's tables when
+  parent::setUp() is not called.
+- Fixed several Poll module bugs.
+- Fixed several Shortcut module bugs.
+- Added new hook_system_theme_info() to provide ability for contributed modules
+  to test theme functionality.
+- Added ability to cancel mail sending from hook_mail_alter().
+- Added support for configurable PDO connection options, enabling master-master
+  database replication.
+- Numerous improvements to tests and test runner to pave the way for faster test
+  runs.
+- Expanded test coverage.
+- Numerous API documentation improvements.
+- Numerous performance improvements, including token replacement and render
+  cache.
+
+Drupal 7.11, 2012-02-01
+----------------------
+- Fixed security issues (Multiple vulnerabilities), see SA-CORE-2012-001.
 
 Drupal 7.10, 2011-12-05
 ----------------------
