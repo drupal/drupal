@@ -1,4 +1,14 @@
 
+Drupal 6.24, 2012-02-01
+----------------------
+- Improved performance of search indexing and user operations by adding indexes.
+- Fixed issues with themes getting disabled due to missing locking in
+  system_theme_data().
+- Fix issue with blocks being disabled on updates in _block_rehash().
+- Further improvements to PHP 5.3, PHP 4 and PostgreSQL compatibility.
+- Improved code documentation at various places.
+- Fixed a variety of other bugs.
+
 Drupal 6.23, 2012-02-01
 ----------------------
 - Fixed security issues (Cross site scripting), see SA-CORE-2012-001.
