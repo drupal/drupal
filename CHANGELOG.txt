@@ -1,4 +1,7 @@
 
+Drupal 6.25-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.24, 2012-02-01
 ----------------------
 - Improved performance of search indexing and user operations by adding indexes.
