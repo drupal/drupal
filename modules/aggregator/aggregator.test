@@ -92,8 +92,13 @@ class AggregatorTestCase extends DrupalWebTestCase {
     $this->drupalGet($feed->url);
     $this->assertResponse(200, t('!url is reachable.', array('!url' => $feed->url)));
 
-    // Refresh the feed (simulated link click).
+    // Attempt to access the update link directly without an access token.
     $this->drupalGet('admin/config/services/aggregator/update/' . $feed->fid);
+    $this->assertResponse(403);
+
+    // Refresh the feed (simulated link click).
+    $this->drupalGet('admin/config/services/aggregator');
+    $this->clickLink('update items');
 
     // Ensure we have the right number of items.
     $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid));
@@ -466,8 +471,8 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), t('The feed !name has been added.', array('!name' => $edit['title'])));
 
     $feed = db_query("SELECT * FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url']))->fetchObject();
-    $this->drupalGet('admin/config/services/aggregator/update/' . $feed->fid);
 
+    aggregator_refresh($feed);
     $before = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
 
     // Sleep for 3 second.
@@ -481,10 +486,9 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
         'modified' => 0,
       ))
       ->execute();
-    $this->drupalGet('admin/config/services/aggregator/update/' . $feed->fid);
+    aggregator_refresh($feed);
 
     $after = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
-
     $this->assertTrue($before === $after, t('Publish timestamp of feed item was not updated (!before === !after)', array('!before' => $before, '!after' => $after)));
   }
 }
@@ -884,4 +888,3 @@ class FeedParserTestCase extends AggregatorTestCase {
     $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', db_query('SELECT guid FROM {aggregator_item} WHERE link = :link', array(':link' => 'http://example.org/2003/12/13/atom03'))->fetchField(), 'Atom entry id element is parsed correctly.');
   }
 }
-

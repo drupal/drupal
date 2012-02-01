@@ -33,7 +33,7 @@ function aggregator_view() {
       ($feed->checked && $feed->refresh ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - REQUEST_TIME))) : t('never')),
       l(t('edit'), "admin/config/services/aggregator/edit/feed/$feed->fid"),
       l(t('remove items'), "admin/config/services/aggregator/remove/$feed->fid"),
-      l(t('update items'), "admin/config/services/aggregator/update/$feed->fid"),
+      l(t('update items'), "admin/config/services/aggregator/update/$feed->fid", array('query' => array('token' => drupal_get_token("aggregator/update/$feed->fid")))),
     );
   }
   $output .= theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No feeds available. <a href="@link">Add feed</a>.', array('@link' => url('admin/config/services/aggregator/add/feed')))));
@@ -386,6 +386,9 @@ function _aggregator_parse_opml($opml) {
  *   An object describing the feed to be refreshed.
  */
 function aggregator_admin_refresh_feed($feed) {
+  if (!isset($_GET['token']) || !drupal_valid_token($_GET['token'], 'aggregator/update/' . $feed->fid)) {
+    return MENU_ACCESS_DENIED;
+  }
   aggregator_refresh($feed);
   drupal_goto('admin/config/services/aggregator');
 }
