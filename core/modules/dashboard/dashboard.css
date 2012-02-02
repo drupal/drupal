@@ -34,7 +34,6 @@
 #dashboard .block-placeholder {
   background: #E2E1DC;
   -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
   float: left; /* LTR */
   margin: 3px 3px 3px 0; /* LTR */

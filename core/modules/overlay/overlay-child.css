@@ -65,7 +65,6 @@
 #overlay-close:hover {
   background: transparent url(images/close.png) no-repeat; /* LTR */
   -moz-border-radius-topleft: 0; /* LTR */
-  -webkit-border-top-left-radius: 0; /* LTR */
   border-top-left-radius: 0; /* LTR */
   display: block;
   height: 26px;
@@ -98,8 +97,6 @@
 #overlay-tabs li a:hover {
   background-color: #a6a7a2;
   -moz-border-radius: 8px 8px 0 0;
-  -webkit-border-top-left-radius: 8px;
-  -webkit-border-top-right-radius: 8px;
   border-radius: 8px 8px 0 0;
   color: #000;
   display: inline-block;
@@ -142,8 +139,6 @@
   margin: -20px auto 20px;
   width: 80%;
   -moz-border-radius: 0 0 8px 8px;
-  -webkit-border-bottom-left-radius: 8px;
-  -webkit-border-bottom-right-radius: 8px;
   border-radius: 0 0 8px 8px;
 }
 .overlay-disable-message-focused {

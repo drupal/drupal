@@ -31,8 +31,6 @@
 .add-or-remove-shortcuts a:focus span.text,
 .add-or-remove-shortcuts a:hover span.text {
   -moz-border-radius: 5px 0 0 5px;
-  -webkit-border-top-left-radius: 5px;
-  -webkit-border-bottom-left-radius: 5px;
   border-radius: 5px 0 0 5px;
   padding-left: 6px;
 }
