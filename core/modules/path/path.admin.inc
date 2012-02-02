@@ -14,9 +14,10 @@
 function path_admin_overview($keys = NULL) {
   // Add the filter form above the overview table.
   $build['path_admin_filter_form'] = drupal_get_form('path_admin_filter_form', $keys);
-  // Enable language column if locale is enabled or if we have any alias with language
+  // Enable language column if language.module is enabled or if we have any
+  // alias with a language.
   $alias_exists = (bool) db_query_range('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => LANGUAGE_NONE))->fetchField();
-  $multilanguage = (module_exists('locale') || $alias_exists);
+  $multilanguage = (module_exists('language') || $alias_exists);
 
   $header = array();
   $header[] = array('data' => t('Alias'), 'field' => 'alias', 'sort' => 'asc');
@@ -44,7 +45,7 @@ function path_admin_overview($keys = NULL) {
     $row['data']['alias'] = l($data->alias, $data->source);
     $row['data']['source'] = l($data->source, $data->source, array('alias' => TRUE));
     if ($multilanguage) {
-      $row['data']['langcode'] = module_invoke('locale', 'language_name', $data->langcode);
+      $row['data']['language_name'] = language_name($data->langcode);
     }
 
     $operations = array();
@@ -130,10 +131,9 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
     '#required' => TRUE,
   );
 
-  // A hidden value unless locale module is enabled.
-  if (module_exists('locale')) {
+  // A hidden value unless language.module is enabled.
+  if (module_exists('language')) {
     $languages = language_list(TRUE);
-    $language_options = array(LANGUAGE_NONE => t('All languages'));
     foreach ($languages as $langcode => $language) {
       $language_options[$langcode] = $language->name;
     }
@@ -142,9 +142,11 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
       '#type' => 'select',
       '#title' => t('Language'),
       '#options' => $language_options,
+      '#empty_value' => LANGUAGE_NONE,
+      '#empty_option' => t('- None -'),
       '#default_value' => $path['langcode'],
       '#weight' => -10,
-      '#description' => t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set for <em>All languages</em>.'),
+      '#description' => t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set as <em>- None -</em>.'),
     );
   }
   else {
@@ -194,7 +196,8 @@ function path_admin_form_validate($form, &$form_state) {
   $source = drupal_get_normal_path($source);
   $alias = $form_state['values']['alias'];
   $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
-  // Language is only set if locale module is enabled, otherwise save for all languages.
+  // Language is only set if language.module is enabled, otherwise save for all
+  // languages.
   $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : LANGUAGE_NONE;
 
   $has_alias = db_query("SELECT COUNT(alias) FROM {url_alias} WHERE pid <> :pid AND alias = :alias AND langcode = :langcode", array(

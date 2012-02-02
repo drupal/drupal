@@ -2704,6 +2704,41 @@ function language_list($only_enabled = FALSE) {
 }
 
 /**
+ * Loads a language object from the database.
+ *
+ * @param $langcode
+ *   The language code.
+ *
+ * @return
+ *   A fully-populated language object or FALSE.
+ */
+function language_load($langcode) {
+  $languages = language_list();
+  return isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
+}
+
+/**
+ * Produced the printed name for a language for display.
+ *
+ * @param $langcode
+ *   The language code.
+ *
+ * @return
+ *   The printed name of the language.
+ */
+function language_name($langcode) {
+  if ($langcode == LANGUAGE_NONE) {
+    return t('None');
+  }
+
+  if ($language = language_load($langcode)) {
+    return $language->name;
+  }
+
+  return t('Unknown (@langcode)', array('@langcode' => $langcode));
+}
+
+/**
  * Returns the default language used on the site.
  *
  * @return
