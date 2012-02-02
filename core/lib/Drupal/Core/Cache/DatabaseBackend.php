@@ -5,7 +5,7 @@
  * Definition of DatabaseBackend.
  */
 
-namespace Drupal\Cache;
+namespace Drupal\Core\Cache;
 
 use Exception;
 
@@ -23,7 +23,7 @@ class DatabaseBackend implements CacheBackendInterface {
   protected $bin;
 
   /**
-   * Implements Drupal\Cache\CacheBackendInterface::__construct().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::__construct().
    */
   function __construct($bin) {
     // All cache tables should be prefixed with 'cache_', except for the
@@ -35,7 +35,7 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Cache\CacheBackendInterface::get().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::get().
    */
   function get($cid) {
     $cids = array($cid);
@@ -44,7 +44,7 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Cache\CacheBackendInterface::getMultiple().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::getMultiple().
    */
   function getMultiple(&$cids) {
     try {
@@ -114,7 +114,7 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Cache\CacheBackendInterface::set().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
   function set($cid, $data, $expire = CACHE_PERMANENT) {
     $fields = array(
@@ -143,7 +143,7 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Cache\CacheBackendInterface::delete().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
    */
   function delete($cid) {
     db_delete($this->bin)
@@ -152,7 +152,7 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Cache\CacheBackendInterface::deleteMultiple().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
    */
   function deleteMultiple(Array $cids) {
     // Delete in chunks when a large array is passed.
@@ -165,7 +165,7 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Cache\CacheBackendInterface::deletePrefix().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::deletePrefix().
    */
   function deletePrefix($prefix) {
     db_delete($this->bin)
@@ -174,14 +174,14 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Cache\CacheBackendInterface::flush().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::flush().
    */
   function flush() {
     db_truncate($this->bin)->execute();
   }
 
   /**
-   * Implements Drupal\Cache\CacheBackendInterface::expire().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::expire().
    */
   function expire() {
     if (variable_get('cache_lifetime', 0)) {
@@ -216,7 +216,7 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Cache\CacheBackendInterface::garbageCollection().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::garbageCollection().
    */
   function garbageCollection() {
     global $user;
@@ -236,7 +236,7 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Cache\CacheBackendInterface::isEmpty().
+   * Implements Drupal\Core\Cache\CacheBackendInterface::isEmpty().
    */
   function isEmpty() {
     $this->garbageCollection();
