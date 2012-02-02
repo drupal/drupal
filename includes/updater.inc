@@ -330,7 +330,7 @@ class Updater {
           }
           catch (FileTransferException $e) {
             $message = t($e->getMessage(), $e->arguments);
-            $throw_message = t('Unable to create %directory due to the following: %reason', array('%directory' => $install_location, '%reason' => $message));
+            $throw_message = t('Unable to create %directory due to the following: %reason', array('%directory' => $directory, '%reason' => $message));
             throw new UpdaterException($throw_message);
           }
         }
