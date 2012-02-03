@@ -14,3 +14,5 @@ hidden = TRUE
 ; version from being loaded, and that errors aren't caused by the lack of this
 ; file within the theme folder.
 stylesheets[all][] = system.base.css
+
+settings[theme_test_setting] = default value
