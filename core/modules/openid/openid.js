@@ -7,7 +7,7 @@ Drupal.behaviors.openid = {
     var cookie = $.cookie('Drupal.visitor.openid_identifier');
 
     // This behavior attaches by ID, so is only valid once on a page.
-    if (!$('#edit-openid-identifier.openid-processed').size()) {
+    if (!$('#edit-openid-identifier.openid-processed').length) {
       if (cookie) {
         $('#edit-openid-identifier').val(cookie);
       }

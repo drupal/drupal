@@ -11,8 +11,8 @@
  * By default, this returns an instance of the Drupal\Core\Cache\DatabaseBackend
  * class.
  *
- * Classes implementing Drupal\Core\Cache\CacheBackendInterface can register themselves
- * both as a default implementation and for specific bins.
+ * Classes implementing Drupal\Core\Cache\CacheBackendInterface can register
+ * themselves both as a default implementation and for specific bins.
  *
  * @param $bin
  *   The cache bin for which the cache object should be returned, defaults to

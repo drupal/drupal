@@ -297,7 +297,6 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
 function locale_form_node_form_alter(&$form, &$form_state) {
   if (isset($form['#node']->type) && locale_multilingual_node_type($form['#node']->type)) {
     $languages = language_list(TRUE);
-    $language_options = array(LANGUAGE_NONE => t('Language neutral'));
     foreach ($languages as $langcode => $language) {
       $language_options[$langcode] = $language->name;
     }
@@ -306,6 +305,8 @@ function locale_form_node_form_alter(&$form, &$form_state) {
       '#title' => t('Language'),
       '#default_value' => (isset($form['#node']->language) ? $form['#node']->language : ''),
       '#options' => $language_options,
+      '#empty_value' => LANGUAGE_NONE,
+      '#empty_option' => t('- None -'),
     );
   }
   // Node type without language selector: assign the default for new nodes
@@ -767,15 +768,6 @@ function locale_get_plural($count, $langcode = NULL) {
   return $plurals[$langcode][$count];
 }
 
-
-/**
- * Returns a language name.
- */
-function locale_language_name($langcode) {
-  // Consider enabled languages only.
-  $languages = language_list(TRUE);
-  return ($langcode && isset($languages[$langcode])) ? $languages[$langcode]->name : t('All');
-}
 
 /**
  * Implements hook_modules_installed().

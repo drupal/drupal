@@ -617,8 +617,9 @@ function field_info_fields() {
  *
  * @param $field_name
  *   The name of the field to retrieve. $field_name can only refer to a
- *   non-deleted, active field. Use field_read_fields() to retrieve information
- *   on deleted or inactive fields.
+ *   non-deleted, active field. For deleted fields, use
+ *   field_info_field_by_id(). To retrieve information about inactive fields,
+ *   use field_read_fields().
  *
  * @return
  *   The field array, as returned by field_read_fields(), with an
@@ -639,7 +640,7 @@ function field_info_field($field_name) {
  *
  * @param $field_id
  *   The id of the field to retrieve. $field_id can refer to a
- *   deleted field.
+ *   deleted field, but not an inactive one.
  *
  * @return
  *   The field array, as returned by field_read_fields(), with an

@@ -1852,7 +1852,9 @@ function format_interval($interval, $granularity = 2, $langcode = NULL) {
  *   A UNIX timestamp to format.
  * @param $type
  *   (optional) The format to use, one of:
- *   - 'short', 'medium', or 'long' (the corresponding built-in date formats).
+ *   - One of the built-in formats: 'short', 'medium', 'long', 'html_datetime',
+ *     'html_date', 'html_time', 'html_yearless_date', 'html_week',
+ *     'html_month', 'html_year'.
  *   - The name of a date type defined by a module in hook_date_format_types(),
  *     if it's been assigned a format.
  *   - The machine name of an administrator-defined date format.
@@ -1903,6 +1905,34 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
 
     case 'long':
       $format = variable_get('date_format_long', 'l, F j, Y - H:i');
+      break;
+
+    case 'html_datetime':
+      $format = variable_get('date_format_html_datetime', 'Y-m-d\TH:i:sO');
+      break;
+
+    case 'html_date':
+      $format = variable_get('date_format_html_date', 'Y-m-d');
+      break;
+
+    case 'html_time':
+      $format = variable_get('date_format_html_time', 'H:i:s');
+      break;
+
+    case 'html_yearless_date':
+      $format = variable_get('date_format_html_yearless_date', 'm-d');
+      break;
+
+    case 'html_week':
+      $format = variable_get('date_format_html_week', 'Y-\WW');
+      break;
+
+    case 'html_month':
+      $format = variable_get('date_format_html_month', 'Y-m');
+      break;
+
+    case 'html_year':
+      $format = variable_get('date_format_html_year', 'Y');
       break;
 
     case 'custom':
@@ -6722,6 +6752,9 @@ function drupal_common_theme() {
       'render element' => 'elements',
       'template' => 'region',
     ),
+    'datetime' => array(
+      'variables' => array('timestamp' => NULL, 'text' => NULL, 'attributes' => array(), 'html' => FALSE),
+    ),
     'status_messages' => array(
       'variables' => array('display' => NULL),
     ),
@@ -6754,6 +6787,9 @@ function drupal_common_theme() {
     ),
     'table' => array(
       'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => TRUE, 'empty' => ''),
+    ),
+    'meter' => array(
+      'variables' => array('display_value' => NULL, 'form' => NULL, 'high' => NULL, 'low' => NULL, 'max' => NULL, 'min' => NULL, 'optimum' => NULL, 'value' => NULL, 'percentage' => NULL, 'attributes' => array()),
     ),
     'tablesort_indicator' => array(
       'variables' => array('style' => NULL),

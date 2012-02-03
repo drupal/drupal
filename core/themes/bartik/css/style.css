@@ -86,7 +86,6 @@ kbd {
   display: inline-block;
   padding: 0 6px;
   -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
   border-radius: 5px;
 }
 pre {
@@ -279,10 +278,6 @@ ul.tips {
   padding: 1px 10px 2px 10px;
   text-decoration: none;
   -moz-border-radius: 0 0 10px 10px;
-  -webkit-border-top-left-radius: 0;
-  -webkit-border-top-right-radius: 0;
-  -webkit-border-bottom-left-radius: 10px;
-  -webkit-border-bottom-right-radius: 10px;
   border-radius: 0 0 10px 10px;
 }
 #skip-link a:hover,
@@ -480,8 +475,6 @@ h1#site-name {
   text-shadow: 0 1px #eee;
   -moz-border-radius-topleft: 8px;
   -moz-border-radius-topright: 8px;
-  -webkit-border-top-left-radius: 8px;
-  -webkit-border-top-right-radius: 8px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
@@ -979,10 +972,8 @@ ul.links {
   margin: 0;
   text-shadow: 0 1px 0 #fff;
   -moz-border-radius-topleft: 6px;
-  -webkit-border-top-left-radius: 6px;
   border-top-left-radius: 6px;
   -moz-border-radius-topright: 6px;
-  -webkit-border-top-right-radius: 6px;
   border-top-right-radius: 6px;
 }
 .tabs ul.primary li.active a {
@@ -1009,7 +1000,6 @@ ul.links {
   background: #f2f2f2;
   border-bottom: none;
   -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
   border-radius: 5px;
 }
 ul.action-links {
@@ -1094,7 +1084,6 @@ a.button {
   margin-right: 0.6em; /* LTR */
   padding: 4px 17px;
   -moz-border-radius: 20px;
-  -webkit-border-radius: 15px;
   border-radius: 15px;
 }
 a.button:link,
@@ -1117,7 +1106,6 @@ fieldset {
   position: relative;
   top: 12px; /* Offsets the negative margin of legends */
   -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
 }
 .fieldset-wrapper {
@@ -1131,8 +1119,6 @@ fieldset {
   padding: 1em 0 0.2em;
   -moz-border-radius-topright: 0;
   -moz-border-radius-topleft: 0;
-  -webkit-border-top-left-radius: 0;
-  -webkit-border-top-right-radius: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
@@ -1152,7 +1138,6 @@ fieldset {
 fieldset.collapsed {
   background: transparent;
   -moz-border-radius: 0;
-  -webkit-border-radius: 0;
   border-radius: 0;
 }
 fieldset legend {
@@ -1172,15 +1157,12 @@ fieldset legend {
   top: -12px;
   width: 100%;
   -moz-border-radius-topleft: 4px;
-  -webkit-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 4px;
-  -webkit-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
 }
 fieldset.collapsed legend {
   -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
 }
 fieldset legend a {
@@ -1251,27 +1233,22 @@ input.form-submit:focus {
 .contact-form #edit-name {
   width: 75%;
   -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
 }
 .contact-form #edit-mail {
   width: 75%;
   -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
 }
 .contact-form #edit-subject {
   width: 75%;
   -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
 }
 .contact-form #edit-message {
   width: 76.3%;
   -moz-border-radius-topleft: 4px;
   -moz-border-radius-topright: 4px;
-  -webkit-border-top-left-radius: 4px;
-  -webkit-border-top-right-radius: 4px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
@@ -1279,8 +1256,6 @@ input.form-submit:focus {
   width: 76%;
   -moz-border-radius-bottomleft: 4px;
   -moz-border-radius-bottomright: 4px;
-  -webkit-border-bottom-left-radius: 4px;
-  -webkit-border-bottom-right-radius: 4px;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
@@ -1323,7 +1298,6 @@ input.form-button-disabled:active,
 .comment-form .form-select {
   margin: 0;
   -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
 }
 .comment-form .form-type-textarea label {
@@ -1368,8 +1342,6 @@ input.form-button-disabled:active,
 .comment-form .form-textarea {
   -moz-border-radius-topleft: 4px;
   -moz-border-radius-topright: 4px;
-  -webkit-border-top-left-radius: 4px;
-  -webkit-border-top-right-radius: 4px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
@@ -1584,8 +1556,6 @@ div.admin-panel .description {
 }
 .poll .vote-form {
   text-align: left; /* LTR */
-}
-.poll .vote-form .choices {
   margin: 0;
 }
 .poll .percent {
@@ -1596,7 +1566,7 @@ div.admin-panel .description {
   float: right;
   text-align: right;
 }
-.poll .text {
+.poll .choice-title {
   clear: right;
   margin-right: 2.25em;
 }

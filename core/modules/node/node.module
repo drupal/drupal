@@ -1452,7 +1452,7 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
  *   viewed.
  *
  * @return
- *   A $page element suitable for use by drupal_page_render().
+ *   A $page element suitable for use by drupal_render().
  *
  * @see node_menu()
  */

@@ -23,7 +23,6 @@
   padding: 0 5px 0 5px;
   margin-right: 5px; /* LTR */
   -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
   border-radius: 5px;
 }
 
@@ -45,7 +44,6 @@
   height: 30px;
   margin-right: 5px; /* LTR */
   -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
   border-radius: 5px;
 }
 
@@ -90,8 +88,6 @@
   padding-right: 6px; /* LTR */
   cursor: pointer;
   -moz-border-radius: 0 5px 5px 0; /* LTR */
-  -webkit-border-top-right-radius: 5px; /* LTR */
-  -webkit-border-bottom-right-radius: 5px; /* LTR */
   border-radius: 0 5px 5px 0; /* LTR */
 }
 

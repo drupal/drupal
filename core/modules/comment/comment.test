@@ -291,8 +291,6 @@ class CommentInterfaceTest extends CommentHelperCase {
     $comment = $this->postComment($this->node, $comment_text);
     $comment_loaded = comment_load($comment->id);
     $this->assertTrue($this->commentExists($comment), t('Comment found.'));
-    $by_viewer_class = $this->xpath('//a[@id=:comment_id]/following-sibling::div[1][contains(@class, "comment-by-viewer")]', array(':comment_id' => 'comment-' . $comment->id));
-    $this->assertTrue(!empty($by_viewer_class), t('HTML class for comments by viewer found.'));
 
     // Set comments to have subject and preview to required.
     $this->drupalLogout();
@@ -378,11 +376,6 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->drupalGet('node/' . $this->node->nid, array('query' => array('page' => 1)));
     $this->assertTrue($this->commentExists($reply, TRUE), t('Page two exists. %s'));
     $this->setCommentsPerPage(50);
-
-    // Create comment #5 to assert HTML class.
-    $comment = $this->postComment($this->node, $this->randomName(), $this->randomName());
-    $by_node_author_class = $this->xpath('//a[@id=:comment_id]/following-sibling::div[1][contains(@class, "comment-by-node-author")]', array(':comment_id' => 'comment-' . $comment->id));
-    $this->assertTrue(!empty($by_node_author_class), t('HTML class for node author found.'));
 
     // Attempt to post to node with comments disabled.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_HIDDEN));
@@ -480,6 +473,111 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->assertNoLink(t('@count new comments', array('@count' => 0)));
     $count = $this->xpath('//div[@id=:id]/div[@class=:class]/ul/li', array(':id' => 'node-' . $this->node->nid, ':class' => 'link-wrapper'));
     $this->assertTrue(count($count) == 2, print_r($count, TRUE));
+  }
+
+  /**
+   * Tests CSS classes on comments.
+   */
+  function testCommentClasses() {
+    // Create all permutations for comments, users, and nodes.
+    $parameters = array(
+      'node_uid' => array(0, $this->web_user->uid),
+      'comment_uid' => array(0, $this->web_user->uid, $this->admin_user->uid),
+      'comment_status' => array(COMMENT_PUBLISHED, COMMENT_NOT_PUBLISHED),
+      'user' => array('anonymous', 'authenticated', 'admin'),
+    );
+    $permutations = $this->generatePermutations($parameters);
+
+    foreach ($permutations as $case) {
+      // Create a new node.
+      $node = $this->drupalCreateNode(array('type' => 'article', 'uid' => $case['node_uid']));
+
+      // Add a comment.
+      $comment = entity_create('comment', array(
+        'nid' => $node->nid,
+        'uid' => $case['comment_uid'],
+        'status' => $case['comment_status'],
+        'subject' => $this->randomName(),
+        'language' => LANGUAGE_NONE,
+        'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
+      ));
+      comment_save($comment);
+
+      // Adjust the current/viewing user.
+      switch ($case['user']) {
+        case 'anonymous':
+          $this->drupalLogout();
+          $case['user_uid'] = 0;
+          break;
+
+        case 'authenticated':
+          $this->drupalLogin($this->web_user);
+          $case['user_uid'] = $this->web_user->uid;
+          break;
+
+        case 'admin':
+          $this->drupalLogin($this->admin_user);
+          $case['user_uid'] = $this->admin_user->uid;
+          break;
+      }
+      // Request the node with the comment.
+      $this->drupalGet('node/' . $node->nid);
+
+      // Verify classes if the comment is visible for the current user.
+      if ($case['comment_status'] == COMMENT_PUBLISHED || $case['user'] == 'admin') {
+        // Verify the comment-by-anonymous class.
+        $comments = $this->xpath('//*[contains(@class, "comment-by-anonymous")]');
+        if ($case['comment_uid'] == 0) {
+          $this->assertTrue(count($comments) == 1, 'comment-by-anonymous class found.');
+        }
+        else {
+          $this->assertFalse(count($comments), 'comment-by-anonymous class not found.');
+        }
+
+        // Verify the comment-by-node-author class.
+        $comments = $this->xpath('//*[contains(@class, "comment-by-node-author")]');
+        if ($case['comment_uid'] > 0 && $case['comment_uid'] == $case['node_uid']) {
+          $this->assertTrue(count($comments) == 1, 'comment-by-node-author class found.');
+        }
+        else {
+          $this->assertFalse(count($comments), 'comment-by-node-author class not found.');
+        }
+
+        // Verify the comment-by-viewer class.
+        $comments = $this->xpath('//*[contains(@class, "comment-by-viewer")]');
+        if ($case['comment_uid'] > 0 && $case['comment_uid'] == $case['user_uid']) {
+          $this->assertTrue(count($comments) == 1, 'comment-by-viewer class found.');
+        }
+        else {
+          $this->assertFalse(count($comments), 'comment-by-viewer class not found.');
+        }
+      }
+
+      // Verify the comment-unpublished class.
+      $comments = $this->xpath('//*[contains(@class, "comment-unpublished")]');
+      if ($case['comment_status'] == COMMENT_NOT_PUBLISHED && $case['user'] == 'admin') {
+        $this->assertTrue(count($comments) == 1, 'comment-unpublished class found.');
+      }
+      else {
+        $this->assertFalse(count($comments), 'comment-unpublished class not found.');
+      }
+
+      // Verify the comment-new class.
+      if ($case['comment_status'] == COMMENT_PUBLISHED || $case['user'] == 'admin') {
+        $comments = $this->xpath('//*[contains(@class, "comment-new")]');
+        if ($case['user'] != 'anonymous') {
+          $this->assertTrue(count($comments) == 1, 'comment-new class found.');
+
+          // Request the node again. The comment-new class should disappear.
+          $this->drupalGet('node/' . $node->nid);
+          $comments = $this->xpath('//*[contains(@class, "comment-new")]');
+          $this->assertFalse(count($comments), 'comment-new class not found.');
+        }
+        else {
+          $this->assertFalse(count($comments), 'comment-new class not found.');
+        }
+      }
+    }
   }
 
   /**
@@ -982,8 +1080,6 @@ class CommentAnonymous extends CommentHelperCase {
     // Post anonymous comment without contact info.
     $anonymous_comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($anonymous_comment1), t('Anonymous comment without contact info found.'));
-    $anonymous_class = $this->xpath('//a[@id=:comment_id]/following-sibling::div[1][contains(@class, "comment-by-anonymous")]', array(':comment_id' => 'comment-' . $anonymous_comment1->id));
-    $this->assertTrue(!empty($anonymous_class), t('HTML class for anonymous comments found.'));
 
     // Allow contact info.
     $this->drupalLogin($this->admin_user);
