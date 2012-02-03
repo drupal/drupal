@@ -12,4 +12,4 @@ use RuntimeException;
 /**
  * Exception thrown by an error in a database transaction.
  */
-class TransactionException extends RuntimeException { }
+class TransactionException extends RuntimeException implements DatabaseException { }

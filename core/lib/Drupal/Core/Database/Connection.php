@@ -75,7 +75,7 @@ abstract class Connection extends PDO {
    *
    * @var string
    */
-  protected $statementClass = 'Drupal\Core\Database\StatementBase';
+  protected $statementClass = 'Drupal\Core\Database\Statement';
 
   /**
    * Whether this database connection supports transactions.

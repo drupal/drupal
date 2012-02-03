@@ -14,4 +14,4 @@ namespace Drupal\Core\Database;
  * create a new database table, field, or index that already exists in the
  * database schema.
  */
-class SchemaObjectExistsException extends SchemaException {}
+class SchemaObjectExistsException extends SchemaException implements DatabaseException { }
