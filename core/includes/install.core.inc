@@ -213,11 +213,6 @@ function install_begin_request(&$install_state) {
   // Add any installation parameters passed in via the URL.
   $install_state['parameters'] += $_GET;
 
-  // @todo: remove this testbot compatibility layer once the testbot is fixed.
-  if (isset($_GET['locale'])) {
-    $install_state['parameters']['langcode'] = $_GET['locale'];
-  }
-
   // Validate certain core settings that are used throughout the installation.
   if (!empty($install_state['parameters']['profile'])) {
     $install_state['parameters']['profile'] = preg_replace('/[^a-zA-Z_0-9]/', '', $install_state['parameters']['profile']);
