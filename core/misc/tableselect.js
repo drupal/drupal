@@ -70,7 +70,7 @@ Drupal.tableSelectRange = function (from, to, state) {
     }
 
     // Either add or remove the selected class based on the state of the target checkbox.
-    $(i)[ state ? 'addClass' : 'removeClass' ]('selected');
+    $(i).toggleClass('selected', state);
     $('input:checkbox', i).each(function () {
       this.checked = state;
     });
