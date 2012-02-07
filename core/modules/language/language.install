@@ -73,3 +73,31 @@ function language_schema() {
   );
   return $schema;
 }
+
+/**
+ * Rename {language}.language to {language}.langcode.
+ *
+ * @see update_prepare_d8_language()
+ */
+function language_update_8000() {
+  // Rename language column to langcode and set it again as the primary key.
+  if (db_field_exists('language', 'language')) {
+    db_drop_primary_key('language');
+    $langcode_spec = array(
+      'type' => 'varchar',
+      'length' => 12,
+      'not null' => TRUE,
+      'default' => '',
+      'description' => "Language code, e.g. 'de' or 'en-US'.",
+    );
+    db_change_field('language', 'language', 'langcode', $langcode_spec, array('primary key' => array('langcode')));
+  }
+
+  // Update the 'language_default' system variable, if configured.
+  $language_default = variable_get('language_default');
+  if (!empty($language_default) && isset($language_default->language)) {
+    $language_default->langcode = $language_default->language;
+    unset($language_default->language);
+    variable_set('language_default', $language_default);
+  }
+}

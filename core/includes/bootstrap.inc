@@ -2745,16 +2745,13 @@ function language_name($langcode) {
  *   A language object.
  */
 function language_default() {
-  $default = variable_get(
-    'language_default',
-    (object) array(
-      'langcode' => 'en',
-      'name' => 'English',
-      'direction' => 0,
-      'enabled' => 1,
-      'weight' => 0,
-    )
-  );
+  $default = variable_get('language_default', (object) array(
+    'langcode' => 'en',
+    'name' => 'English',
+    'direction' => 0,
+    'enabled' => 1,
+    'weight' => 0,
+  ));
   $default->default = TRUE;
   return $default;
 }

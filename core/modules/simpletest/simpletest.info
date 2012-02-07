@@ -40,3 +40,4 @@ files[] = tests/xmlrpc.test
 files[] = tests/upgrade/upgrade.test
 files[] = tests/upgrade/upgrade_bare.test
 files[] = tests/upgrade/upgrade_filled.test
+files[] = tests/upgrade/upgrade.language.test

@@ -119,7 +119,7 @@ function update_prepare_d8_bootstrap() {
           'type' => 'varchar',
           'length' => 12,
           'not null' => TRUE,
-         'default' => '',
+          'default' => '',
         );
         $langcode_indexes = array('indexes' =>
           array(
@@ -183,17 +183,6 @@ function update_prepare_d8_language() {
     db_drop_field('languages', 'domain');
     db_drop_field('languages', 'native');
 
-    // Rename language column to langcode and set it again as the primary key.
-    db_drop_primary_key('languages');
-    $langcode_spec = array(
-      'type' => 'varchar',
-      'length' => 12,
-      'not null' => TRUE,
-      'default' => '',
-      'description' => "Language code, e.g. 'de' or 'en-US'.",
-    );
-    db_change_field('languages', 'language', 'langcode', $langcode_spec, array('primary key' => array('langcode')));
-
     // Rename the languages table to language.
     db_rename_table('languages', 'language');
 
@@ -203,6 +192,10 @@ function update_prepare_d8_language() {
     $modules = array('language');
     update_module_add_to_system($modules);
     update_module_enable($modules);
+
+    // Rename 'language' column to 'langcode'.
+    require_once DRUPAL_ROOT . '/core/modules/language/language.install';
+    language_update_8000();
   }
 }
 

@@ -243,9 +243,9 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
    *   TRUE if the upgrade succeeded, FALSE otherwise.
    */
   protected function performUpgrade($register_errors = TRUE) {
-    $update_url = $GLOBALS['base_url'] . '/core/update.php';
 
     // Load the first update screen.
+    $update_url = $GLOBALS['base_url'] . '/core/update.php';
     $this->drupalGet($update_url, array('external' => TRUE));
     if (!$this->assertResponse(200)) {
       return FALSE;
