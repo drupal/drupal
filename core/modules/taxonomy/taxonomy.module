@@ -210,7 +210,7 @@ function taxonomy_field_extra_fields() {
  * @param $limit
  *   Integer. The maximum number of nodes to find.
  *   Set to FALSE for no limit.
- * @order
+ * @param $order
  *   An array of fields and directions.
  *
  * @return
