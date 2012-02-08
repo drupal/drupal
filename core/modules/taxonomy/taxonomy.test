@@ -706,6 +706,14 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $input = substr($term_objects['term4']->name, 0, 3);
     $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
     $this->assertRaw('{"' . $term_objects['term4']->name . '":"' . $term_objects['term4']->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term4']->name)));
+
+     // Test taxonomy autocomplete with a nonexistent field.
+     $field_name = $this->randomName();
+     $tag = $this->randomName();
+     $message = t("Taxonomy field @field_name not found.", array('@field_name' => $field_name));
+     $this->assertFalse(field_info_field($field_name), t('Field %field_name does not exist.', array('%field_name' => $field_name)));
+     $this->drupalGet('taxonomy/autocomplete/' . $field_name . '/' . $tag);
+     $this->assertRaw($message, t('Autocomplete returns correct error message when the taxonomy field does not exist.'));
   }
 
   /**
