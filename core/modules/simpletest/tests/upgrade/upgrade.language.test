@@ -1,0 +1,44 @@
+<?php
+/**
+ * @file
+ * Upgrade tests for the Language module.
+ */
+
+/**
+ * Tests upgrading a filled database with language data.
+ *
+ * Loads a filled installation of Drupal 7 with language data and runs the
+ * upgrade process on it.
+ */
+class LanguageUpgradePathTestCase extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Language upgrade test',
+      'description'  => 'Upgrade tests with language data.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-7.filled.database.php.gz',
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-7.language.database.php',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Tests a successful upgrade.
+   */
+  public function testLanguageUpgrade() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // Ensure Catalan was properly upgraded to be the new default language.
+    $this->assertTrue(language_default()->langcode == 'ca', t('Catalan is the default language'));
+    $languages = language_list();
+    foreach ($languages as $language) {
+      $this->assertTrue($language->default == ($language->langcode == 'ca'), t('@language default property properly set', array('@language' => $language->name)));
+    }
+  }
+}
