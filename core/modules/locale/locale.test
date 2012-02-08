@@ -1134,7 +1134,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     variable_set('language_negotiation_' . LANGUAGE_TYPE_URL, locale_language_negotiation_info());
 
     // Change language providers settings.
-    variable_set('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX);
+    variable_set('locale_language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX);
     variable_set('locale_language_negotiation_session_param', TRUE);
 
     // Uninstall Locale.
@@ -2059,7 +2059,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $tests = array(
       // Default, browser preference should have no influence.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
         'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
@@ -2068,34 +2068,34 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
       ),
       // Language prefix.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => "$langcode/admin/config",
         'expect' => $language_string,
-        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
+        'expected_provider' => LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > DEFAULT: with language prefix, UI language is switched based on path prefix',
       ),
       // Default, go by browser preference.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER),
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER),
         'path' => 'admin/config',
         'expect' => $language_browser_fallback_string,
-        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_BROWSER,
+        'expected_provider' => LANGUAGE_NEGOTIATION_BROWSER,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > BROWSER: no language prefix, UI language is determined by browser language preference',
       ),
       // Prefix, switch to the language.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER),
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER),
         'path' => "$langcode/admin/config",
         'expect' => $language_string,
-        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
+        'expected_provider' => LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > BROWSER: with langage prefix, UI language is based on path prefix',
       ),
       // Default, browser language preference is not one of site's lang.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER, LANGUAGE_NEGOTIATION_DEFAULT),
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
         'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
@@ -2122,8 +2122,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $tests = array(
       // Default domain, browser preference should have no influence.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
-        'locale_language_negotiation_url_part' => LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN,
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
+        'locale_language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,
         'path' => 'admin/config',
         'expect' => $default_string,
         'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
@@ -2133,12 +2133,12 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
       // Language domain specific URL, we set the $_SERVER['HTTP_HOST'] in
       // locale_test.module hook_boot() to simulate this.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
-        'locale_language_negotiation_url_part' => LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN,
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
+        'locale_language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,
         'locale_test_domain' => $language_domain,
         'path' => 'admin/config',
         'expect' => $language_string,
-        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
+        'expected_provider' => LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (DOMAIN) > DEFAULT: domain example.cn should switch to Chinese',
       ),
@@ -2381,7 +2381,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     $this->assertTrue($assert, t('Field language correctly changed.'));
 
     // Enable content language URL detection.
-    language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LOCALE_LANGUAGE_NEGOTIATION_URL => 0));
+    language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));
 
     // Test multilingual field language fallback logic.
     $this->drupalGet("it/node/$node->nid");
@@ -2628,7 +2628,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     // Enable some core and custom language providers. The test language type is
     // supposed to be configurable.
     $test_type = 'test_language_type';
-    $provider = LOCALE_LANGUAGE_NEGOTIATION_INTERFACE;
+    $provider = LANGUAGE_NEGOTIATION_INTERFACE;
     $test_provider = 'test_language_provider';
     $form_field = $type . '[enabled]['. $provider .']';
     $edit = array(

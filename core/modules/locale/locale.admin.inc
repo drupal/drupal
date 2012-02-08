@@ -223,10 +223,10 @@ function locale_language_providers_url_form($form, &$form_state) {
     '#title' => t('Part of the URL that determines language'),
     '#type' => 'radios',
     '#options' => array(
-      LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX => t('Path prefix'),
-      LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN => t('Domain'),
+      LANGUAGE_NEGOTIATION_URL_PREFIX => t('Path prefix'),
+      LANGUAGE_NEGOTIATION_URL_DOMAIN => t('Domain'),
     ),
-    '#default_value' => variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX),
+    '#default_value' => variable_get('locale_language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX),
   );
 
   $form['prefix'] = array(
@@ -237,7 +237,7 @@ function locale_language_providers_url_form($form, &$form_state) {
     '#states' => array(
       'visible' => array(
         ':input[name="locale_language_negotiation_url_part"]' => array(
-          'value' => (string) LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX,
+          'value' => (string) LANGUAGE_NEGOTIATION_URL_PREFIX,
         ),
       ),
     ),
@@ -250,7 +250,7 @@ function locale_language_providers_url_form($form, &$form_state) {
     '#states' => array(
       'visible' => array(
         ':input[name="locale_language_negotiation_url_part"]' => array(
-          'value' => (string) LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN,
+          'value' => (string) LANGUAGE_NEGOTIATION_URL_DOMAIN,
         ),
       ),
     ),
@@ -303,7 +303,7 @@ function locale_language_providers_url_form_validate($form, &$form_state) {
     $value = $form_state['values']['prefix'][$langcode];
 
     if ($value === '') {
-      if (!$language->default && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
+      if (!$language->default && $form_state['values']['locale_language_negotiation_url_part'] == LANGUAGE_NEGOTIATION_URL_PREFIX) {
         // Validation error if the prefix is blank for a non-default language, and value is for selected negotiation type.
         form_error($form['prefix'][$langcode], t('The prefix may only be left blank for the default language.'));
       }
@@ -320,7 +320,7 @@ function locale_language_providers_url_form_validate($form, &$form_state) {
     $value = $form_state['values']['domain'][$langcode];
 
     if ($value === '') {
-      if (!$language->default && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN) {
+      if (!$language->default && $form_state['values']['locale_language_negotiation_url_part'] == LANGUAGE_NEGOTIATION_URL_DOMAIN) {
         // Validation error if the domain is blank for a non-default language, and value is for selected negotiation type.
         form_error($form['domain'][$langcode], t('The domain may only be left blank for the default language.'));
       }
