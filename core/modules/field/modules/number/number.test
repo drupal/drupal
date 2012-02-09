@@ -93,7 +93,7 @@ class NumberFieldTestCase extends DrupalWebTestCase {
       );
     }
 
-    // Try to create entries with minus sign not in the first position
+    // Try to create entries with minus sign not in the first position.
     $wrong_entries = array(
       '3-3',
       '4-',
