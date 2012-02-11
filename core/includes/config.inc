@@ -650,21 +650,36 @@ class DrupalConfig {
   }
 
   /**
-   * Gets value in this config object.
+   * Gets data from this config object.
    *
    * @param $key
-   *   @todo
+   *   A string that maps to a key within the configuration data. 
+   *   For instance in the following XML:
+   *  
+   *   <foo>
+   *     <bar>baz</bar>
+   *   </foo>
+   * 
+   *  A key of 'foo.bar' would return the string 'baz'. However
+   *  a key of 'foo' would return array('bar' => 'baz').
+   *
+   * If no key is specified, then the entire data array is returned.
    *
    * @return
-   *   @todo
+   *   The data that was requested.
    */
-  public function get($key) {
-    $parts = explode('.', $key);
-    if (count($parts) == 1) {
-      return isset($this->data[$key]) ? $this->data[$key] : NULL;
+  public function get($key = '') {
+    if (empty($key)) {
+      return $this->data;
     }
     else {
-      return drupal_array_get_nested_value($this->data, $parts);
+      $parts = explode('.', $key);
+      if (count($parts) == 1) {
+        return isset($this->data[$key]) ? $this->data[$key] : NULL;
+      }
+      else {
+        return drupal_array_get_nested_value($this->data, $parts);
+      }      
     }
   }
 
