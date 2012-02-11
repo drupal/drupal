@@ -2212,6 +2212,60 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $fields = $this->xpath('//div[@id="site-name"]//a[@rel="home" and @href=:url]//span', $args);
     $this->assertTrue($fields[0] == 'Drupal', t('URLs are rewritten using the browser language.'));
   }
+
+  /**
+   * Test if the url function returns the right url when using different domains for different languages.
+   */
+  function testLanguageDomain() {
+    // Add the Italian language.
+    $langcode = 'it';
+    $language = (object) array(
+      'langcode' => $langcode,
+    );
+    language_save($language);
+    $languages = language_list();
+
+    // Enable browser and URL language detection.
+    $edit = array(
+      'language[enabled][locale-url]' => TRUE,
+      'language[weight][locale-url]' => -10,
+    );
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+
+    // Change the domain for the Italian language.
+    $edit = array(
+      'locale_language_negotiation_url_part' => 1,
+      'domain[it]' => 'it.example.com',
+    );
+    $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
+
+    // Build the link we're going to test based on the clean url setting.
+    $link = (!empty($GLOBALS['conf']['clean_url'])) ? 'it.example.com/admin' : 'it.example.com/?q=admin';
+
+    global $is_https;
+    // Test URL in another language: http://it.example.com/?q=admin.
+    // Base path gives problems on the testbot, so $correct_link is hard-coded.
+    // @see UrlAlterFunctionalTest::assertUrlOutboundAlter (path.test).
+    $italian_url = url('admin', array('language' => $languages['it']));
+    $url_scheme = ($is_https) ? 'https://' : 'http://';
+    $correct_link = $url_scheme . $link;
+    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right url (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+
+    // Test https via options.
+    variable_set('https', TRUE);
+    $italian_url = url('admin', array('https' => TRUE, 'language' => $languages['it']));
+    $correct_link = 'https://' . $link;
+    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right https url (via options) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+    variable_set('https', FALSE);
+
+    // Test https via current url scheme.
+    $temp_https = $is_https;
+    $is_https = TRUE;
+    $italian_url = url('admin', array('language' => $languages['it']));
+    $correct_link = 'https://' . $link;
+    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right url (via current url scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+    $is_https = $temp_https;
+  }
 }
 
 /**
