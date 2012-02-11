@@ -2498,7 +2498,8 @@ function drupal_valid_test_ua() {
     }
   }
 
-  return FALSE;
+  $test_prefix = FALSE;
+  return $test_prefix;
 }
 
 /**
