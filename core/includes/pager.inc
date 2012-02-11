@@ -630,7 +630,13 @@ function theme_pager_link($variables) {
     }
   }
 
-  return l($text, $_GET['q'], array('attributes' => $attributes, 'query' => $query));
+  // @todo l() cannot be used here, since it adds an 'active' class based on the
+  //   path only (which is always the current path for pager links). Apparently,
+  //   none of the pager links is active at any time - but it should still be
+  //   possible to use l() here.
+  // @see http://drupal.org/node/1410574
+  $attributes['href'] = url($_GET['q'], array('query' => $query));
+  return '<a' . drupal_attributes($attributes) . '>' . check_plain($text) . '</a>';
 }
 
 /**
