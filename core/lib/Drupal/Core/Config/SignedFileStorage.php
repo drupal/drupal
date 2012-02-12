@@ -31,7 +31,6 @@ class SignedFileStorage {
    *   Exception
    */
   protected function readWithSignature() {
-    // @todo Optimize with explicit offsets?
     $content = file_get_contents($this->getFilePath());
     if ($content === FALSE) {
       throw new Exception('Read file is invalid.');
