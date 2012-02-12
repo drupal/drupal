@@ -5091,6 +5091,7 @@ function _drupal_bootstrap_full() {
   require_once DRUPAL_ROOT . '/core/includes/theme.inc';
   require_once DRUPAL_ROOT . '/core/includes/pager.inc';
   require_once DRUPAL_ROOT . '/' . variable_get('menu_inc', 'core/includes/menu.inc');
+  require_once DRUPAL_ROOT . '/core/includes/router.inc';
   require_once DRUPAL_ROOT . '/core/includes/tablesort.inc';
   require_once DRUPAL_ROOT . '/core/includes/file.inc';
   require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
