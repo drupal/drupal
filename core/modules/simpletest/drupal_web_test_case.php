@@ -1351,7 +1351,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Create and set a new configuration directory and signature key.
     // The child site automatically adjusts the global $config_directory_name to
     // a test-prefix-specific directory within the public files directory.
-    $GLOBALS['config_directory_name'] = 'simpletest/config_' . substr($this->databasePrefix, 10);
+    $GLOBALS['config_directory_name'] = 'simpletest/config_' . $this->databasePrefix;
     $this->configFileDirectory = $this->originalFileDirectory . '/' . $GLOBALS['config_directory_name'];
     file_prepare_directory($this->configFileDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     $GLOBALS['config_signature_key'] = drupal_hash_base64(drupal_random_bytes(55));
