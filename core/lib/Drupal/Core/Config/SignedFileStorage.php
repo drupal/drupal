@@ -33,11 +33,11 @@ class SignedFileStorage {
   protected function readWithSignature() {
     $content = file_get_contents($this->getFilePath());
     if ($content === FALSE) {
-      throw new Exception('Read file is invalid.');
+      throw new \Exception('Read file is invalid.');
     }
     $signature = file_get_contents($this->getFilePath() . '.sig');
     if ($signature === FALSE) {
-      throw new Exception('Signature file is invalid.');
+      throw new \Exception('Signature file is invalid.');
     }
     return array('data' => $content, 'signature' => $signature);
   }
@@ -111,10 +111,10 @@ class SignedFileStorage {
   public function write($data) {
     $signature = config_sign_data($data);
     if (!file_put_contents($this->getFilePath(), $data)) {
-      throw new Exception('Failed to write configuration file.');
+      throw new \Exception('Failed to write configuration file.');
     }
     if (!file_put_contents($this->getFilePath() . '.sig', $signature)) {
-      throw new Exception('Failed to write signature file.');
+      throw new \Exception('Failed to write signature file.');
     }
   }
 
@@ -128,7 +128,7 @@ class SignedFileStorage {
     if ($this->exists()) {
       $verification = $this->verify(TRUE);
       if ($verification === FALSE) {
-        throw new Exception('Invalid signature in file header.');
+        throw new \Exception('Invalid signature in file header.');
       }
       return $verification;
     }
@@ -143,3 +143,4 @@ class SignedFileStorage {
     @drupal_unlink($this->getFilePath() . '.sig');
   }
 }
+
