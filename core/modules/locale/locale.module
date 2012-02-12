@@ -297,7 +297,6 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
 function locale_form_node_form_alter(&$form, &$form_state) {
   if (isset($form['#node']->type) && locale_multilingual_node_type($form['#node']->type)) {
     $languages = language_list(TRUE);
-    $language_options = array(LANGUAGE_NONE => t('Language neutral'));
     foreach ($languages as $langcode => $language) {
       $language_options[$langcode] = $language->name;
     }
@@ -306,6 +305,8 @@ function locale_form_node_form_alter(&$form, &$form_state) {
       '#title' => t('Language'),
       '#default_value' => (isset($form['#node']->language) ? $form['#node']->language : ''),
       '#options' => $language_options,
+      '#empty_value' => LANGUAGE_NONE,
+      '#empty_option' => t('- None -'),
     );
   }
   // Node type without language selector: assign the default for new nodes
@@ -449,10 +450,10 @@ function locale_language_types_info() {
     LANGUAGE_TYPE_CONTENT => array(
       'name' => t('Content'),
       'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
-      'fixed' => array(LOCALE_LANGUAGE_NEGOTIATION_INTERFACE),
+      'fixed' => array(LANGUAGE_NEGOTIATION_INTERFACE),
     ),
     LANGUAGE_TYPE_URL => array(
-      'fixed' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_URL_FALLBACK),
+      'fixed' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_URL_FALLBACK),
     ),
   );
 }
@@ -465,7 +466,7 @@ function locale_language_negotiation_info() {
   $file = '/core/includes/locale.inc';
   $providers = array();
 
-  $providers[LOCALE_LANGUAGE_NEGOTIATION_URL] = array(
+  $providers[LANGUAGE_NEGOTIATION_URL] = array(
     'types' => array(LANGUAGE_TYPE_CONTENT, LANGUAGE_TYPE_INTERFACE, LANGUAGE_TYPE_URL),
     'callbacks' => array(
       'language' => 'locale_language_from_url',
@@ -479,7 +480,7 @@ function locale_language_negotiation_info() {
     'config' => 'admin/config/regional/language/configure/url',
   );
 
-  $providers[LOCALE_LANGUAGE_NEGOTIATION_SESSION] = array(
+  $providers[LANGUAGE_NEGOTIATION_SESSION] = array(
     'callbacks' => array(
       'language' => 'locale_language_from_session',
       'switcher' => 'locale_language_switcher_session',
@@ -492,7 +493,7 @@ function locale_language_negotiation_info() {
     'config' => 'admin/config/regional/language/configure/session',
   );
 
-  $providers[LOCALE_LANGUAGE_NEGOTIATION_USER] = array(
+  $providers[LANGUAGE_NEGOTIATION_USER] = array(
     'callbacks' => array('language' => 'locale_language_from_user'),
     'file' => $file,
     'weight' => -4,
@@ -500,7 +501,7 @@ function locale_language_negotiation_info() {
     'description' => t("Follow the user's language preference."),
   );
 
-  $providers[LOCALE_LANGUAGE_NEGOTIATION_BROWSER] = array(
+  $providers[LANGUAGE_NEGOTIATION_BROWSER] = array(
     'callbacks' => array('language' => 'locale_language_from_browser'),
     'file' => $file,
     'weight' => -2,
@@ -509,7 +510,7 @@ function locale_language_negotiation_info() {
     'description' => t("Determine the language from the browser's language settings."),
   );
 
-  $providers[LOCALE_LANGUAGE_NEGOTIATION_INTERFACE] = array(
+  $providers[LANGUAGE_NEGOTIATION_INTERFACE] = array(
     'types' => array(LANGUAGE_TYPE_CONTENT),
     'callbacks' => array('language' => 'locale_language_from_interface'),
     'file' => $file,
@@ -518,7 +519,7 @@ function locale_language_negotiation_info() {
     'description' => t('Use the detected interface language.'),
   );
 
-  $providers[LOCALE_LANGUAGE_NEGOTIATION_URL_FALLBACK] = array(
+  $providers[LANGUAGE_NEGOTIATION_URL_FALLBACK] = array(
     'types' => array(LANGUAGE_TYPE_URL),
     'callbacks' => array('language' => 'locale_language_url_fallback'),
     'file' => $file,
@@ -767,15 +768,6 @@ function locale_get_plural($count, $langcode = NULL) {
   return $plurals[$langcode][$count];
 }
 
-
-/**
- * Returns a language name.
- */
-function locale_language_name($langcode) {
-  // Consider enabled languages only.
-  $languages = language_list(TRUE);
-  return ($langcode && isset($languages[$langcode])) ? $languages[$langcode]->name : t('All');
-}
 
 /**
  * Implements hook_modules_installed().

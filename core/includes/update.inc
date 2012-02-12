@@ -101,6 +101,12 @@ function update_prepare_d8_bootstrap() {
       ),
     );
     if ($has_required_schema) {
+      // Bootstrap variables so we can update theme while preparing the update
+      // process.
+      drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
+      // Update the dynamic include paths that might be used before running the
+      // proper update functions.
+      update_prepare_stored_includes();
       // Update the environment for the language bootstrap if needed.
       update_prepare_d8_language();
 
@@ -113,7 +119,7 @@ function update_prepare_d8_bootstrap() {
           'type' => 'varchar',
           'length' => 12,
           'not null' => TRUE,
-         'default' => '',
+          'default' => '',
         );
         $langcode_indexes = array('indexes' =>
           array(
@@ -124,6 +130,22 @@ function update_prepare_d8_bootstrap() {
         db_change_field('url_alias', 'language', 'langcode', $langcode_spec, $langcode_indexes);
       }
     }
+  }
+}
+
+/**
+ * Fix stored include paths to match the "/core" migration.
+ */
+function update_prepare_stored_includes() {
+  // Update language negotiation settings.
+  foreach (language_types() as $language_type) {
+    $negotiation = variable_get("language_negotiation_$language_type", array());
+    foreach ($negotiation as $id => &$provider) {
+      if (isset($negotiation[$id]['file']) && $negotiation[$id]['file'] == 'includes/locale.inc') {
+        $negotiation[$id]['file'] = 'core/includes/locale.inc';
+      }
+    }
+    variable_set("language_negotiation_$language_type", $negotiation);
   }
 }
 
@@ -161,17 +183,6 @@ function update_prepare_d8_language() {
     db_drop_field('languages', 'domain');
     db_drop_field('languages', 'native');
 
-    // Rename language column to langcode and set it again as the primary key.
-    db_drop_primary_key('languages');
-    $langcode_spec = array(
-      'type' => 'varchar',
-      'length' => 12,
-      'not null' => TRUE,
-      'default' => '',
-      'description' => "Language code, e.g. 'de' or 'en-US'.",
-    );
-    db_change_field('languages', 'language', 'langcode', $langcode_spec, array('primary key' => array('langcode')));
-
     // Rename the languages table to language.
     db_rename_table('languages', 'language');
 
@@ -181,6 +192,10 @@ function update_prepare_d8_language() {
     $modules = array('language');
     update_module_add_to_system($modules);
     update_module_enable($modules);
+
+    // Rename 'language' column to 'langcode'.
+    require_once DRUPAL_ROOT . '/core/modules/language/language.install';
+    language_update_8000();
   }
 }
 

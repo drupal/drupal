@@ -92,6 +92,28 @@ class NumberFieldTestCase extends DrupalWebTestCase {
         t('Correctly failed to save decimal value with more than one decimal point.')
       );
     }
+
+    // Try to create entries with minus sign not in the first position.
+    $wrong_entries = array(
+      '3-3',
+      '4-',
+      '1.3-',
+      '1.2-4',
+      '-10-10',
+    );
+
+    foreach ($wrong_entries as $wrong_entry) {
+      $this->drupalGet('test-entity/add/test-bundle');
+      $edit = array(
+        "{$this->field['field_name']}[$langcode][0][value]" => $wrong_entry,
+      );
+      $this->drupalPost(NULL, $edit, t('Save'));
+      $this->assertText(
+        t('Only numbers and the decimal separator (@separator) allowed in ',
+          array('@separator' => $this->field['settings']['decimal_separator'])),
+        'Correctly failed to save decimal value with minus sign in the wrong position.'
+      );
+    }
   }
 
   /**

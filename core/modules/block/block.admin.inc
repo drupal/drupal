@@ -84,12 +84,21 @@ function block_admin_display_prepare_blocks($theme) {
  * @see block_admin_display_form_submit()
  */
 function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_regions = NULL) {
-
-  $form['#attached']['css'] = array(drupal_get_path('module', 'block') . '/block.admin.css');
+  $path = drupal_get_path('module', 'block');
+  $form['#attached']['css'][] = $path . '/block.admin.css';
+  $form['#attached']['js'][] = 'core/misc/tableheader.js';
+  $form['#attached']['js'][] = $path . '/block.js';
 
   // Get a list of block regions if one was not provided.
   if (!isset($block_regions)) {
     $block_regions = system_region_list($theme, REGIONS_VISIBLE);
+  }
+  // Add a last region for disabled blocks.
+  $block_regions_with_disabled = $block_regions + array(BLOCK_REGION_NONE => BLOCK_REGION_NONE);
+
+  foreach ($block_regions_with_disabled as $region => $title) {
+    $form['#attached']['drupal_add_tabledrag'][] = array('blocks', 'match', 'sibling', 'block-region-select', 'block-region-' . $region, NULL, FALSE);
+    $form['#attached']['drupal_add_tabledrag'][] = array('blocks', 'order', 'sibling', 'block-weight', 'block-weight-' . $region);
   }
 
   // Weights range from -delta to +delta, so delta should be at least half
@@ -104,8 +113,7 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
   );
   $form['block_regions'] = array(
     '#type' => 'value',
-    // Add a last region for disabled blocks.
-    '#value' => $block_regions + array(BLOCK_REGION_NONE => BLOCK_REGION_NONE),
+    '#value' => $block_regions_with_disabled,
   );
   $form['blocks'] = array();
   $form['#tree'] = TRUE;

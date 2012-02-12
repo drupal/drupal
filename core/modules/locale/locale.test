@@ -1134,7 +1134,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     variable_set('language_negotiation_' . LANGUAGE_TYPE_URL, locale_language_negotiation_info());
 
     // Change language providers settings.
-    variable_set('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX);
+    variable_set('locale_language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX);
     variable_set('locale_language_negotiation_session_param', TRUE);
 
     // Uninstall Locale.
@@ -2059,7 +2059,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $tests = array(
       // Default, browser preference should have no influence.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
         'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
@@ -2068,34 +2068,34 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
       ),
       // Language prefix.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => "$langcode/admin/config",
         'expect' => $language_string,
-        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
+        'expected_provider' => LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > DEFAULT: with language prefix, UI language is switched based on path prefix',
       ),
       // Default, go by browser preference.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER),
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER),
         'path' => 'admin/config',
         'expect' => $language_browser_fallback_string,
-        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_BROWSER,
+        'expected_provider' => LANGUAGE_NEGOTIATION_BROWSER,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > BROWSER: no language prefix, UI language is determined by browser language preference',
       ),
       // Prefix, switch to the language.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER),
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER),
         'path' => "$langcode/admin/config",
         'expect' => $language_string,
-        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
+        'expected_provider' => LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > BROWSER: with langage prefix, UI language is based on path prefix',
       ),
       // Default, browser language preference is not one of site's lang.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER, LANGUAGE_NEGOTIATION_DEFAULT),
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
         'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
@@ -2122,8 +2122,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $tests = array(
       // Default domain, browser preference should have no influence.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
-        'locale_language_negotiation_url_part' => LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN,
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
+        'locale_language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,
         'path' => 'admin/config',
         'expect' => $default_string,
         'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
@@ -2133,12 +2133,12 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
       // Language domain specific URL, we set the $_SERVER['HTTP_HOST'] in
       // locale_test.module hook_boot() to simulate this.
       array(
-        'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
-        'locale_language_negotiation_url_part' => LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN,
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
+        'locale_language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,
         'locale_test_domain' => $language_domain,
         'path' => 'admin/config',
         'expect' => $language_string,
-        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
+        'expected_provider' => LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (DOMAIN) > DEFAULT: domain example.cn should switch to Chinese',
       ),
@@ -2211,6 +2211,60 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // Check that URLs are rewritten using the given browser language.
     $fields = $this->xpath('//div[@id="site-name"]//a[@rel="home" and @href=:url]//span', $args);
     $this->assertTrue($fields[0] == 'Drupal', t('URLs are rewritten using the browser language.'));
+  }
+
+  /**
+   * Test if the url function returns the right url when using different domains for different languages.
+   */
+  function testLanguageDomain() {
+    // Add the Italian language.
+    $langcode = 'it';
+    $language = (object) array(
+      'langcode' => $langcode,
+    );
+    language_save($language);
+    $languages = language_list();
+
+    // Enable browser and URL language detection.
+    $edit = array(
+      'language[enabled][locale-url]' => TRUE,
+      'language[weight][locale-url]' => -10,
+    );
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+
+    // Change the domain for the Italian language.
+    $edit = array(
+      'locale_language_negotiation_url_part' => 1,
+      'domain[it]' => 'it.example.com',
+    );
+    $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
+
+    // Build the link we're going to test based on the clean url setting.
+    $link = (!empty($GLOBALS['conf']['clean_url'])) ? 'it.example.com/admin' : 'it.example.com/?q=admin';
+
+    global $is_https;
+    // Test URL in another language: http://it.example.com/?q=admin.
+    // Base path gives problems on the testbot, so $correct_link is hard-coded.
+    // @see UrlAlterFunctionalTest::assertUrlOutboundAlter (path.test).
+    $italian_url = url('admin', array('language' => $languages['it']));
+    $url_scheme = ($is_https) ? 'https://' : 'http://';
+    $correct_link = $url_scheme . $link;
+    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right url (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+
+    // Test https via options.
+    variable_set('https', TRUE);
+    $italian_url = url('admin', array('https' => TRUE, 'language' => $languages['it']));
+    $correct_link = 'https://' . $link;
+    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right https url (via options) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+    variable_set('https', FALSE);
+
+    // Test https via current url scheme.
+    $temp_https = $is_https;
+    $is_https = TRUE;
+    $italian_url = url('admin', array('language' => $languages['it']));
+    $correct_link = 'https://' . $link;
+    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right url (via current url scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+    $is_https = $temp_https;
   }
 }
 
@@ -2381,7 +2435,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     $this->assertTrue($assert, t('Field language correctly changed.'));
 
     // Enable content language URL detection.
-    language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LOCALE_LANGUAGE_NEGOTIATION_URL => 0));
+    language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));
 
     // Test multilingual field language fallback logic.
     $this->drupalGet("it/node/$node->nid");
@@ -2628,7 +2682,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     // Enable some core and custom language providers. The test language type is
     // supposed to be configurable.
     $test_type = 'test_language_type';
-    $provider = LOCALE_LANGUAGE_NEGOTIATION_INTERFACE;
+    $provider = LANGUAGE_NEGOTIATION_INTERFACE;
     $test_provider = 'test_language_provider';
     $form_field = $type . '[enabled]['. $provider .']';
     $edit = array(

@@ -52,7 +52,7 @@ Drupal.behaviors.shortcutDrag = {
             // status to be disabled and mark it also as changed.
             var changedRowObject = new tableDrag.row(changedRow, 'mouse', self.indentEnabled, self.maxDepth, true);
             changedRowObject.markChanged();
-            rowStatusChange(changedRowObject);
+            tableDrag.rowStatusChange(changedRowObject);
           }
         }
         else if (total != visibleLength) {
@@ -71,18 +71,18 @@ Drupal.behaviors.shortcutDrag = {
 
       // Add a handler so when a row is dropped, update fields dropped into new regions.
       tableDrag.onDrop = function () {
-        rowStatusChange(this.rowObject);
+        tableDrag.rowStatusChange(this.rowObject);
         return true;
       };
 
-      function rowStatusChange(rowObject) {
+      tableDrag.rowStatusChange = function (rowObject) {
         // Use "status-message" row instead of "status" row because
         // "status-{status_name}-message" is less prone to regexp match errors.
         var statusRow = $(rowObject.element).prevAll('tr.shortcut-status').get(0);
         var statusName = statusRow.className.replace(/([^ ]+[ ]+)*shortcut-status-([^ ]+)([ ]+[^ ]+)*/, '$2');
         var statusField = $('select.shortcut-status-select', rowObject.element);
         statusField.val(statusName);
-      }
+      };
 
       tableDrag.restripeTable = function () {
         // :even and :odd are reversed because jQuery counts from 0 and

@@ -9,33 +9,33 @@
  * The language is determined using a URL language indicator:
  * path prefix or domain according to the configuration.
  */
-const LOCALE_LANGUAGE_NEGOTIATION_URL = 'locale-url';
+const LANGUAGE_NEGOTIATION_URL = 'locale-url';
 
 /**
  * The language is set based on the browser language settings.
  */
-const LOCALE_LANGUAGE_NEGOTIATION_BROWSER = 'locale-browser';
+const LANGUAGE_NEGOTIATION_BROWSER = 'locale-browser';
 
 /**
  * The language is determined using the current interface language.
  */
-const LOCALE_LANGUAGE_NEGOTIATION_INTERFACE = 'locale-interface';
+const LANGUAGE_NEGOTIATION_INTERFACE = 'locale-interface';
 
 /**
  * If no URL language is available language is determined using an already
  * detected one.
  */
-const LOCALE_LANGUAGE_NEGOTIATION_URL_FALLBACK = 'locale-url-fallback';
+const LANGUAGE_NEGOTIATION_URL_FALLBACK = 'locale-url-fallback';
 
 /**
  * The language is set based on the user language settings.
  */
-const LOCALE_LANGUAGE_NEGOTIATION_USER = 'locale-user';
+const LANGUAGE_NEGOTIATION_USER = 'locale-user';
 
 /**
  * The language is set based on the request/session parameters.
  */
-const LOCALE_LANGUAGE_NEGOTIATION_SESSION = 'locale-session';
+const LANGUAGE_NEGOTIATION_SESSION = 'locale-session';
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
@@ -88,13 +88,13 @@ const LOCALE_IMPORT_KEEP = 1;
  * URL language negotiation: use the path prefix as URL language
  * indicator.
  */
-const LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX = 0;
+const LANGUAGE_NEGOTIATION_URL_PREFIX = 0;
 
 /**
  * URL language negotiation: use the domain as URL language
  * indicator.
  */
-const LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN = 1;
+const LANGUAGE_NEGOTIATION_URL_DOMAIN = 1;
 
 /**
  * @defgroup locale-languages-negotiation Language negotiation options
@@ -264,12 +264,12 @@ function locale_language_from_session($languages) {
 function locale_language_from_url($languages) {
   $language_url = FALSE;
 
-  if (!language_negotiation_get_any(LOCALE_LANGUAGE_NEGOTIATION_URL)) {
+  if (!language_negotiation_get_any(LANGUAGE_NEGOTIATION_URL)) {
     return $language_url;
   }
 
-  switch (variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX)) {
-    case LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX:
+  switch (variable_get('locale_language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX)) {
+    case LANGUAGE_NEGOTIATION_URL_PREFIX:
       // $_GET['q'] might not be available at this time, because
       // path initialization runs after the language bootstrap phase.
       list($language, $_GET['q']) = language_url_split_prefix(isset($_GET['q']) ? $_GET['q'] : NULL, $languages);
@@ -278,7 +278,7 @@ function locale_language_from_url($languages) {
       }
       break;
 
-    case LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN:
+    case LANGUAGE_NEGOTIATION_URL_DOMAIN:
       $domains = locale_language_negotiation_url_domains();
       foreach ($languages as $language) {
         // Skip check if the language doesn't have a domain.
@@ -333,7 +333,7 @@ function locale_language_from_url($languages) {
  */
 function locale_language_url_fallback($language = NULL, $language_type = LANGUAGE_TYPE_INTERFACE) {
   $default = language_default();
-  $prefix = (variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX);
+  $prefix = (variable_get('locale_language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX) == LANGUAGE_NEGOTIATION_URL_PREFIX);
 
   // If the default language is not configured to convey language information,
   // a missing URL language information indicates that URL language should be
@@ -433,17 +433,27 @@ function locale_language_url_rewrite_url(&$path, &$options) {
   }
 
   if (isset($options['language'])) {
-    switch (variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX)) {
-      case LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN:
+    switch (variable_get('locale_language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX)) {
+      case LANGUAGE_NEGOTIATION_URL_DOMAIN:
         $domains = locale_language_negotiation_url_domains();
         if (!empty($domains[$options['language']->langcode])) {
           // Ask for an absolute URL with our modified base_url.
+          global $is_https;
+          $url_scheme = ($is_https) ? 'https://' : 'http://';
           $options['absolute'] = TRUE;
-          $options['base_url'] = $domains[$options['language']->langcode];
+          $options['base_url'] = $url_scheme . $domains[$options['language']->langcode];
+          if (isset($options['https']) && variable_get('https', FALSE)) {
+            if ($options['https'] === TRUE) {
+              $options['base_url'] = str_replace('http://', 'https://', $options['base_url']);
+            }
+            elseif ($options['https'] === FALSE) {
+              $options['base_url'] = str_replace('https://', 'http://', $options['base_url']);
+            }
+          }
         }
         break;
 
-      case LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX:
+      case LANGUAGE_NEGOTIATION_URL_PREFIX:
         $prefixes = locale_language_negotiation_url_prefixes();
         if (!empty($prefixes[$options['language']->langcode])) {
           $options['prefix'] = $prefixes[$options['language']->langcode] . '/';
@@ -496,7 +506,7 @@ function locale_language_url_rewrite_session(&$path, &$options) {
       $languages = language_list(TRUE);
       $query_param = check_plain(variable_get('locale_language_negotiation_session_param', 'language'));
       $query_value = isset($_GET[$query_param]) ? check_plain($_GET[$query_param]) : NULL;
-      $query_rewrite = isset($languages[$query_value]) && language_negotiation_get_any(LOCALE_LANGUAGE_NEGOTIATION_SESSION);
+      $query_rewrite = isset($languages[$query_value]) && language_negotiation_get_any(LANGUAGE_NEGOTIATION_SESSION);
     }
     else {
       $query_rewrite = FALSE;

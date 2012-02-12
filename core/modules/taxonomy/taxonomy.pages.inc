@@ -108,7 +108,13 @@ function taxonomy_term_feed($term) {
  * @see taxonomy_field_widget_info()
  */
 function taxonomy_autocomplete($field_name, $tags_typed = '') {
-  $field = field_info_field($field_name);
+  // Make sure the field exists and is a taxonomy field.
+  if (!($field = field_info_field($field_name)) || $field['type'] !== 'taxonomy_term_reference') {
+    // Error string. The JavaScript handler will realize this is not JSON and
+    // will display it as debugging information.
+    print t('Taxonomy field @field_name not found.', array('@field_name' => $field_name));
+    exit;
+  }
 
   // The user enters a comma-separated list of tags. We only autocomplete the last tag.
   $tags_typed = drupal_explode_tags($tags_typed);

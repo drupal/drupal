@@ -101,20 +101,6 @@ function language_theme() {
 }
 
 /**
- * Loads a language object from the database.
- *
- * @param $langcode
- *   The language code.
- *
- * @return
- *   A fully-populated language object or FALSE.
- */
-function language_load($langcode) {
-  $languages = language_list();
-  return isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
-}
-
-/**
  * API function to add or update a language.
  *
  * @param $language

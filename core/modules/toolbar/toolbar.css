@@ -109,7 +109,6 @@ body.toolbar-drawer {
 #toolbar div.toolbar-menu ul li a {
   padding: 0 10px;
   -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
   border-radius: 10px;
 }
 #toolbar div.toolbar-menu ul li a:focus,

@@ -2109,7 +2109,7 @@ class UpdateScriptFunctionalTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('update_script_test');
+    parent::setUp(array('update_script_test', 'dblog'));
     $this->update_url = $GLOBALS['base_url'] . '/core/update.php';
     $this->update_user = $this->drupalCreateUser(array('administer software updates'));
   }
@@ -2209,6 +2209,56 @@ class UpdateScriptFunctionalTest extends DrupalWebTestCase {
     $this->drupalGet($this->update_url, array('external' => TRUE));
     $final_theme_data = db_query("SELECT * FROM {system} WHERE type = 'theme' ORDER BY name")->fetchAll();
     $this->assertEqual($original_theme_data, $final_theme_data, t('Visiting update.php does not alter the information about themes stored in the database.'));
+  }
+
+  /**
+   * Tests update.php when there are no updates to apply.
+   */
+  function testNoUpdateFunctionality() {
+    // Click through update.php with 'administer software updates' permission.
+    $this->drupalLogin($this->update_user);
+    $this->drupalPost($this->update_url, array(), t('Continue'), array('external' => TRUE));
+    $this->assertText(t('No pending updates.'));
+    $this->assertNoLink('Administration pages');
+    $this->clickLink('Front page');
+    $this->assertResponse(200);
+
+    // Click through update.php with 'access administration pages' permission.
+    $admin_user = $this->drupalCreateUser(array('administer software updates', 'access administration pages'));
+    $this->drupalLogin($admin_user);
+    $this->drupalPost($this->update_url, array(), t('Continue'), array('external' => TRUE));
+    $this->assertText(t('No pending updates.'));
+    $this->clickLink('Administration pages');
+    $this->assertResponse(200);
+  }
+
+  /**
+   * Tests update.php after performing a successful update.
+   */
+  function testSuccessfulUpdateFunctionality() {
+    drupal_set_installed_schema_version('update_script_test', drupal_get_installed_schema_version('update_script_test') - 1);
+    // Click through update.php with 'administer software updates' permission.
+    $this->drupalLogin($this->update_user);
+    $this->drupalPost($this->update_url, array(), t('Continue'), array('external' => TRUE));
+    $this->drupalPost(NULL, array(), t('Apply pending updates'));
+    $this->assertText('Updates were attempted.');
+    $this->assertLink('site');
+    $this->assertNoLink('Administration pages');
+    $this->assertNoLink('logged');
+    $this->clickLink('Front page');
+    $this->assertResponse(200);
+
+    drupal_set_installed_schema_version('update_script_test', drupal_get_installed_schema_version('update_script_test') - 1);
+    // Click through update.php with 'access administration pages' and
+    // 'access site reports' permissions.
+    $admin_user = $this->drupalCreateUser(array('administer software updates', 'access administration pages', 'access site reports'));
+    $this->drupalLogin($admin_user);
+    $this->drupalPost($this->update_url, array(), t('Continue'), array('external' => TRUE));
+    $this->drupalPost(NULL, array(), t('Apply pending updates'));
+    $this->assertText('Updates were attempted.');
+    $this->assertLink('logged');
+    $this->clickLink('Administration pages');
+    $this->assertResponse(200);
   }
 }
 

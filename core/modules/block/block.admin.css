@@ -20,7 +20,6 @@ a.block-demo-backlink:link,
 a.block-demo-backlink:visited {
   background-color: #B4D7F0;
   -moz-border-radius: 0 0 10px 10px;
-  -webkit-border-radius: 0 0 10px 10px;
   border-radius: 0 0 10px 10px;
   color: #000;
   font-family: "Lucida Grande", Verdana, sans-serif;

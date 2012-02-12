@@ -85,7 +85,7 @@ function locale_test_language_negotiation_info() {
  */
 function locale_test_language_negotiation_info_alter(array &$language_providers) {
   if (variable_get('locale_test_language_negotiation_info_alter', FALSE)) {
-    unset($language_providers[LOCALE_LANGUAGE_NEGOTIATION_INTERFACE]);
+    unset($language_providers[LANGUAGE_NEGOTIATION_INTERFACE]);
   }
 }
 

@@ -2504,7 +2504,8 @@ function drupal_valid_test_ua() {
     }
   }
 
-  return FALSE;
+  $test_prefix = FALSE;
+  return $test_prefix;
 }
 
 /**
@@ -2710,22 +2711,54 @@ function language_list($only_enabled = FALSE) {
 }
 
 /**
+ * Loads a language object from the database.
+ *
+ * @param $langcode
+ *   The language code.
+ *
+ * @return
+ *   A fully-populated language object or FALSE.
+ */
+function language_load($langcode) {
+  $languages = language_list();
+  return isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
+}
+
+/**
+ * Produced the printed name for a language for display.
+ *
+ * @param $langcode
+ *   The language code.
+ *
+ * @return
+ *   The printed name of the language.
+ */
+function language_name($langcode) {
+  if ($langcode == LANGUAGE_NONE) {
+    return t('None');
+  }
+
+  if ($language = language_load($langcode)) {
+    return $language->name;
+  }
+
+  return t('Unknown (@langcode)', array('@langcode' => $langcode));
+}
+
+/**
  * Returns the default language used on the site.
  *
  * @return
  *   A language object.
  */
 function language_default() {
-  $default = variable_get(
-    'language_default',
-    (object) array(
-      'langcode' => 'en',
-      'name' => 'English',
-      'direction' => 0,
-      'enabled' => 1,
-      'weight' => 0,
-    )
-  );
+  $default = variable_get('language_default', (object) array(
+    'langcode' => 'en',
+    'name' => 'English',
+    'direction' => 0,
+    'enabled' => 1,
+    'weight' => 0,
+  ));
   $default->default = TRUE;
   return $default;
 }

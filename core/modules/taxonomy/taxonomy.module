@@ -210,7 +210,7 @@ function taxonomy_field_extra_fields() {
  * @param $limit
  *   Integer. The maximum number of nodes to find.
  *   Set to FALSE for no limit.
- * @order
+ * @param $order
  *   An array of fields and directions.
  *
  * @return
@@ -1483,6 +1483,10 @@ function taxonomy_field_formatter_info() {
       'label' => t('Plain text'),
       'field types' => array('taxonomy_term_reference'),
     ),
+    'taxonomy_term_reference_rss_category' => array(
+      'label' => t('RSS category'),
+      'field types' => array('taxonomy_term_reference'),
+    ),
   );
 }
 
@@ -1522,6 +1526,18 @@ function taxonomy_field_formatter_view($entity_type, $entity, $field, $instance,
         $name = ($item['tid'] != 'autocreate' ? $item['taxonomy_term']->name : $item['name']);
         $element[$delta] = array(
           '#markup' => check_plain($name),
+        );
+      }
+      break;
+
+    case 'taxonomy_term_reference_rss_category':
+      foreach ($items as $delta => $item) {
+        $entity->rss_elements[] = array(
+          'key' => 'category',
+          'value' => $item['tid'] != 'autocreate' ? $item['taxonomy_term']->name : $item['name'],
+          'attributes' => array(
+            'domain' => $item['tid'] != 'autocreate' ? url('taxonomy/term/' . $item['tid'], array('absolute' => TRUE)) : '',
+          ),
         );
       }
       break;

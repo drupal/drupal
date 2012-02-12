@@ -19,7 +19,6 @@ html {
 #overlay-close:hover {
   background: transparent url(images/close-rtl.png) no-repeat;
   -moz-border-radius-topright: 0;
-  -webkit-border-top-right-radius: 0;
   border-top-right-radius: 0;
 }
 

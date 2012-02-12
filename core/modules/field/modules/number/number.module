@@ -377,12 +377,12 @@ function number_field_widget_validate($element, &$form_state) {
     switch ($type) {
       case 'float':
       case 'decimal':
-        $regexp = '@[^-0-9\\' . $field['settings']['decimal_separator'] . ']@';
+        $regexp = '@([^-0-9\\' . $field['settings']['decimal_separator'] . '])|(.-)@';
         $message = t('Only numbers and the decimal separator (@separator) allowed in %field.', array('%field' => $instance['label'], '@separator' => $field['settings']['decimal_separator']));
         break;
 
       case 'integer':
-        $regexp = '@[^-0-9]@';
+        $regexp = '@([^-0-9])|(.-)@';
         $message = t('Only numbers are allowed in %field.', array('%field' => $instance['label']));
         break;
     }

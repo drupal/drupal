@@ -310,7 +310,7 @@ function image_file_download($uri) {
  */
 function image_file_move($file, $source) {
   // Delete any image derivatives at the original image path.
-  image_path_flush($file->uri);
+  image_path_flush($source->uri);
 }
 
 /**
