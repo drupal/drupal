@@ -53,16 +53,6 @@ class DrupalConfig {
   }
 
   /**
-   * Returns all values in the config object as a stdClass.
-   *
-   * @return object
-   *  All values of $this->data.
-   */
-  public function getData() {
-    return (object) $this->data;
-  }
-
-  /**
    * Gets data from this config object.
    *
    * @param $key
