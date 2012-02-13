@@ -16,7 +16,13 @@ use Drupal\Core\Config\DrupalVerifiedStorageSQL;
 function config_get_config_directory() {
   global $config_directory_name;
 
-  return conf_path() . '/files/' . $config_directory_name;
+  if ($test_prefix = drupal_valid_test_ua()) {
+    $path = conf_path() . '/files/simpletest/config_' . $test_prefix;
+  }
+  else {
+    $path = conf_path() . '/files/' . $config_directory_name;
+  }
+  return $path;
 }
 
 /**

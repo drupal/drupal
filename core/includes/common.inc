@@ -5180,7 +5180,7 @@ function drupal_page_set_cache() {
     }
 
     if ($cache->data['body']) {
-      if (variable_get('page_compression', TRUE) && extension_loaded('zlib')) {
+      if (config('system.performance')->get('page_compression') && extension_loaded('zlib')) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
       cache('page')->set($cache->cid, $cache->data, $cache->expire);
