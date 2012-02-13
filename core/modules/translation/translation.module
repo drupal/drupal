@@ -36,7 +36,7 @@ function translation_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Configuring content types for translation') . '</dt>';
-      $output .= '<dd>' . t('To configure a particular content type for translation, visit the <a href="@content-types">Content types</a> page, and click the <em>edit</em> link for the content type. In the <em>Publishing options</em> section, select <em>Enabled, with translation</em> under <em>Multilingual support</em>.', array('@content-types' => url('admin/structure/types'))) . '</li></ul><dd>';
+      $output .= '<dd>' . t('To configure a particular content type for translation, visit the <a href="@content-types">Content types</a> page, and click the <em>edit</em> link for the content type. In the <em>Publishing options</em> section, select <em>Enabled, with translation</em> under <em>Multilingual support</em>.', array('@content-types' => url('admin/structure/types'))) . '</dd>';
       $output .= '<dt>' . t('Assigning a language to content') . '</dt>';
       $output .= '<dd>' . t('Use the <em>Language</em> drop down to select the appropriate language when creating or editing content.') . '</dd>';
       $output .= '<dt>' . t('Translating content') . '</dt>';
