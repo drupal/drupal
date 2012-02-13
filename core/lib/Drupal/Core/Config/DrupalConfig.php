@@ -131,6 +131,7 @@ class DrupalConfig {
    * Deletes the configuration object on disk.
    */
   public function delete() {
+    $this->data = array();
     $this->_verifiedStorage->delete();
   }
 }
