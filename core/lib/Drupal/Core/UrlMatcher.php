@@ -49,6 +49,8 @@ class UrlMatcher extends SymfonyUrlMatcher {
       $routes->add(hash('sha256', $router_item['path']), $this->convertDrupalItem($router_item));
 
       if ($ret = $this->matchCollection($pathinfo, $routes)) {
+        // Stash the router item in the attributes why we're transitioning.
+        $ret['drupal_menu_item'] = $router_item;
         return $ret;
       }
     }
