@@ -111,10 +111,10 @@ class SignedFileStorage {
   public function write($data) {
     $signature = config_sign_data($data);
     if (!file_put_contents($this->getFilePath(), $data)) {
-      throw new \Exception('Failed to write configuration file.');
+      throw new \Exception('Failed to write configuration file: ' . $this->getFilePath());
     }
     if (!file_put_contents($this->getFilePath() . '.sig', $signature)) {
-      throw new \Exception('Failed to write signature file.');
+      throw new \Exception('Failed to write signature file: ' . $this->getFilePath());
     }
   }
 
