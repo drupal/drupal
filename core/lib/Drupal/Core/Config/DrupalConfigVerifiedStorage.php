@@ -11,6 +11,13 @@ use Drupal\Core\Config\SignedFileStorage;
 abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorageInterface {
 
   /**
+   * The local signed file object to read from and write to.
+   *
+   * @var SignedFileStorage
+   */
+  protected $signedFile;
+
+  /**
    * Implements DrupalConfigVerifiedStorageInterface::__construct().
    */
   function __construct($name) {
@@ -18,13 +25,16 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
   }
 
   /**
-   * @todo
+   * Instantiates a new signed file object or returns the existing one.
    *
-   * @return
-   *   @todo
+   * @return SignedFileStorage
+   *   The signed file object for this configuration object.
    */
   protected function signedFileStorage() {
-    return new SignedFileStorage($this->name);
+    if (!isset($this->signedFile)) {
+      $this->signedFile = new SignedFileStorage($this->name);
+    }
+    return $this->signedFile;
   }
 
   /**
