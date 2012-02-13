@@ -81,7 +81,9 @@ class DrupalConfig {
         return isset($this->data[$key]) ? $this->data[$key] : NULL;
       }
       else {
-        return drupal_array_get_nested_value($this->data, $parts);
+        $key_exists = NULL;
+        $value = drupal_array_get_nested_value($this->data, $parts, $key_exists);
+        return $key_exists ? $value : NULL;
       }      
     }
   }
