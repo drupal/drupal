@@ -48,6 +48,14 @@ interface DrupalConfigVerifiedStorageInterface {
   function isOutOfSync();
 
   /**
+   * Writes the configuration data into the active storage and the file.
+   *
+   * @param $data
+   *   The configuration data to write.
+   */
+  function write($data);
+
+  /**
    * Writes the configuration data into the active storage but not the file.
    *
    * Use this function if you need to make temporary changes to your
@@ -59,12 +67,12 @@ interface DrupalConfigVerifiedStorageInterface {
   function writeToActive($data);
 
   /**
-   * Writes the configuration data into the active storage and the file.
+   * Writes the configuration data into the file.
    *
    * @param $data
-   *   The configuration data to write.
+   *   The configuration data to write into the file.
    */
-  function write($data);
+  function writeToFile($data);
 
   /**
    * Gets names starting with this prefix.

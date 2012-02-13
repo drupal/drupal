@@ -41,7 +41,7 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
    * Implements DrupalConfigVerifiedStorageInterface::copyToFile().
    */
   public function copyToFile() {
-    return $this->signedFileStorage()->write($this->read());
+    return $this->writeToFile($this->read());
   }
 
   /**
@@ -80,7 +80,14 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
    */
   public function write($data) {
     $this->writeToActive($data);
-    $this->copyToFile();
+    $this->writeToFile($data);
+  }
+
+  /**
+   * Implements DrupalConfigVerifiedStorageInterface::writeToFile().
+   */
+  public function writeToFile($data) {
+    return $this->signedFileStorage()->write($data);
   }
 
   /**
