@@ -4,9 +4,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing;
 use Symfony\Component\HttpKernel;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\Event;
 use Drupal\Core\UrlMatcher;
-
 
 /**
  * Execute the page callback associated with given request.
@@ -33,6 +34,11 @@ function router_execute_request(Request $request) {
     $arguments = $resolver->getArguments($request, $controller);
 
     $dispatcher = new EventDispatcher();
+    // Quick and dirty attempt at wrapping our rendering logic as is.
+    $dispatcher->addListener(KernelEvents::VIEW, function(Event $event) {
+      $page_callback_result = $event->getControllerResult();
+      $event->setResponse(new Response(drupal_render_page($page_callback_result)));
+    });
 
     $kernel = new HttpKernel\HttpKernel($dispatcher, $resolver);
     return $kernel->handle($request);
