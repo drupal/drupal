@@ -1667,7 +1667,7 @@ function user_menu() {
   $items['user/register'] = array(
     'title' => 'Create new account',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_register_form'),
+    'page arguments' => array('form_id' => 'user_register_form'),
     'access callback' => 'user_register_access',
     'type' => MENU_LOCAL_TASK,
   );
