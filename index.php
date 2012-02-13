@@ -25,6 +25,6 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 // A request object from the HTTPFoundation to tell us about the request.
 $request = Request::createFromGlobals();
 // Run our router, get a response.
-$response = router_execute_active_handler($request);
+$response = router_execute_request($request);
 // Output response.
 $response->send();

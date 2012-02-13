@@ -9,17 +9,14 @@ use Drupal\Core\UrlMatcher;
 
 
 /**
- * Execute the page callback associated with the current path.
+ * Execute the page callback associated with given request.
  *
- * @param $path
- *   The drupal path whose handler is to be be executed. If set to NULL, then
- *   the current path is used.
- * @param $deliver
- *   (optional) A boolean to indicate whether the content should be sent to the
- *   browser using the appropriate delivery callback (TRUE) or whether to return
- *   the result to the caller (FALSE).
+ * @param Request $request
+ *   The Symfony Request object used to determine what will be executed.
+ * @return Response
+ *   A Symfony Response object describing the response to deliver to the client.
  */
-function router_execute_active_handler($request) {
+function router_execute_request(Request $request) {
 
   try {
     // Resolve a routing context(path, etc) using the routes object to a
