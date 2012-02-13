@@ -68,6 +68,14 @@ class DrupalConfig {
    *
    * If no key is specified, then the entire data array is returned.
    *
+   * Note that unlike variable_get(), the config system does not maintain
+   * type information, and everything saved into it gets cast to a string.
+   * In most cases this is not an issue, however it can cause tricky problems
+   * with booleans, which get cast to "1" (TRUE) or "" (FALSE). In particular,
+   * code relying on === or !== will no longer function properly.
+   *
+   * @see http://php.net/manual/en/language.operators.comparison.php.
+   *
    * @return
    *   The data that was requested.
    */
