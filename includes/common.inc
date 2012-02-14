@@ -2991,8 +2991,13 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
 
   // Provide the page with information about the individual CSS files used,
   // information not otherwise available when CSS aggregation is enabled.
-  $setting['ajaxPageState']['css'] = array_fill_keys(array_keys($css), 1);
-  $styles['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
+  // Skip if no files were added to the page or jQuery.extend() will overwrite
+  // the Drupal.settings.ajaxPageState.css object with an empty array.
+  // Cast the array to an object to be on the safe side even if not empty.
+  if (!empty($css)) {
+    $setting['ajaxPageState']['css'] = (object) array_fill_keys(array_keys($css), 1);
+    $styles['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
+  }
 
   return drupal_render($styles);
 }
