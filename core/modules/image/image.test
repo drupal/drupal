@@ -468,7 +468,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
 
     // Load the style by the new name with the new weights.
     drupal_static_reset('image_styles');
-    $style = image_style_load($style_name, NULL);
+    $style = image_style_load($style_name);
 
     // Confirm the new style order was saved.
     $effect_edits_order = array_reverse($effect_edits_order);

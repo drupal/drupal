@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Config\DrupalConfigVerifiedStorageInterface;
+use Drupal\Core\Config\ConfigException;
 
 /**
  * Represents the default configuration storage object.
@@ -105,6 +106,13 @@ class DrupalConfig {
    *   @todo
    */
   public function set($key, $value) {
+    // Remove all non-alphanumeric characters from the key.
+    // @todo Reverse this and throw an exception when encountering a key with
+    //   invalid name. The identical validation also needs to happen in get().
+    //   Furthermore, the dot/period is a reserved character; it may appear
+    //   between keys, but not within keys.
+    $key = preg_replace('@[^a-zA-Z0-9_.-]@', '', $key);
+
     $parts = explode('.', $key);
     if (count($parts) == 1) {
       $this->data[$key] = $value;
@@ -119,6 +127,8 @@ class DrupalConfig {
    *
    * @param $key
    *   @todo
+   *
+   * @todo Rename into unset().
    */
   public function clear($key) {
     $parts = explode('.', $key);

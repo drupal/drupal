@@ -435,33 +435,30 @@ function image_path_flush($path) {
  * @see image_style_load()
  */
 function image_styles() {
-  $styles = &drupal_static(__FUNCTION__);
+  // @todo Configuration must not be statically cached nor cache-system cached.
+  //   However, there's a drupal_alter() involved here.
 
-  // Grab from cache or build the array.
-  if (!isset($styles)) {
-    if ($cache = cache()->get('image_styles')) {
-      $styles = $cache->data;
-    }
-    else {
+//  $styles = &drupal_static(__FUNCTION__);
+//
+//  // Grab from cache or build the array.
+//  if (!isset($styles)) {
+//    if ($cache = cache()->get('image_styles')) {
+//      $styles = $cache->data;
+//    }
+//    else {
       $styles = array();
 
       // Select the styles we have configured.
-      foreach (config_get_signed_file_storage_names_with_prefix('image.styles') as $config_name) {
-        $style = array();
-        $config = config($config_name);
-        $style['name'] = $config->get('name');
-        $style['effects'] = array();
-        foreach ($config->get('effects') as $key => $effect) {
-          $definition = image_effect_definition_load($effect['name']);
-          $effect = array_merge($definition, $effect);
-          $style['effects'][$key] = $effect;
-        }
+      $configured_styles = config_get_verified_storage_names_with_prefix('image.styles');
+      foreach ($configured_styles as $config_name) {
+        // @todo Allow to retrieve the name without prefix only.
+        $style = image_style_load(str_replace('image.styles.', '', $config_name));
         $styles[$style['name']] = $style;
       }
       drupal_alter('image_styles', $styles);
-      cache()->set('image_styles', $styles);
-    }
-  }
+//      cache()->set('image_styles', $styles);
+//    }
+//  }
 
   return $styles;
 }
@@ -478,16 +475,24 @@ function image_styles() {
  *   If the image style name is not valid, an empty array is returned.
  * @see image_effect_load()
  */
-function image_style_load($name = NULL) {
-  $styles = image_styles();
+function image_style_load($name) {
+  $style = config('image.styles.' . $name)->get();
 
-  // If retrieving by name.
-  if (isset($name) && isset($styles[$name])) {
-    return $styles[$name];
+  // @todo Requires a more reliable + generic method to check for whether the
+  //   configuration object exists.
+  if (!isset($style['name'])) {
+    return FALSE;
   }
 
-  // Otherwise the style was not found.
-  return FALSE;
+  foreach ($style['effects'] as $ieid => $effect) {
+    $definition = image_effect_definition_load($effect['name']);
+    $effect = array_merge($definition, $effect);
+    $style['effects'][$ieid] = $effect;
+  }
+  // Sort effects by weight.
+  uasort($style['effects'], 'drupal_sort_weight');
+
+  return $style;
 }
 
 /**
@@ -508,6 +513,8 @@ function image_style_save($style) {
     $config->set('effects', array());
   }
   $config->save();
+  // @todo is_new must only be set when the configuration object did not exist
+  //   yet.
   $style['is_new'] = TRUE;
 
   // Let other modules update as necessary on save.
@@ -554,8 +561,7 @@ function image_style_delete($style, $replacement_style_name = '') {
  *   format array('isid' => array()), or an empty array if the specified style
  *   has no effects.
  *
- * @todo I think this function can be deprecated since we automatically
- *       load all effects with a style now.
+ * @todo Remove this function; it's entirely obsolete.
  */
 function image_style_effects($style) {
   return $style['effects'];
@@ -754,11 +760,11 @@ function image_style_flush($style) {
   // Let other modules update as necessary on flush.
   module_invoke_all('image_style_flush', $style);
 
-  // Clear image style and effect caches.
-  cache()->delete('image_styles');
-  cache()->deletePrefix('image_effects:');
-  drupal_static_reset('image_styles');
-  drupal_static_reset('image_effects');
+//  // Clear image style and effect caches.
+//  cache()->delete('image_styles');
+//  cache()->deletePrefix('image_effects:');
+//  drupal_static_reset('image_styles');
+//  drupal_static_reset('image_effects');
 
   // Clear field caches so that formatters may be added for this style.
   field_info_cache_clear();
@@ -899,6 +905,8 @@ function image_effect_definition_load($effect) {
  * @return
  *   An array of all image effects.
  * @see image_effect_load()
+ *
+ * @todo Remove after moving/resolving the todo.
  */
 function image_effects() {
   $effects = &drupal_static(__FUNCTION__);
@@ -907,6 +915,9 @@ function image_effects() {
     $effects = array();
 
     // Add database image effects.
+    // @todo Strictly speaking, this is obsolete. However, it demonstrates a
+    //   use-case for retrieving/listing configuration objects using a wildcard
+    //   within the name (instead of only the suffix).
     $result = db_select('image_effects', NULL, array('fetch' => PDO::FETCH_ASSOC))
       ->fields('image_effects')
       ->orderBy('image_effects.weight', 'ASC')
@@ -928,13 +939,11 @@ function image_effects() {
 /**
  * Load a single image effect.
  *
- * @param $name
- *   The image effect name.
+ * @param $ieid
+ *   The image effect ID.
  * @param $style_name
  *   The image style name.
- * @param $include
- *   If set, this loader will restrict to a specific type of image style, may be
- *   one of the defined Image style storage constants.
+ *
  * @return
  *   An image effect array, consisting of the following keys:
  *   - "ieid": The unique image effect ID.
@@ -947,9 +956,20 @@ function image_effects() {
  * @see image_style_load()
  * @see image_effect_definition_load()
  */
-function image_effect_load($name, $style_name) {
-  if (($style = image_style_load($style_name)) && isset($style['effects'][$name])) {
-    return $style['effects'][$name];
+function image_effect_load($ieid, $style_name) {
+  if (($style = image_style_load($style_name)) && isset($style['effects'][$ieid])) {
+    $effect = $style['effects'][$ieid];
+    $definition = image_effect_definition_load($effect['name']);
+    $effect = array_merge($definition, $effect);
+    // @todo The effect's key name within the style is unknown. It *should* be
+    //   identical to the ieid, but that is in no way guaranteed. And of course,
+    //   the ieid key *within* the effect is senseless duplication in the first
+    //   place. This problem can be eliminated in many places, but especially
+    //   for loaded menu arguments like %image_effect, the actual router
+    //   callbacks don't have access to 'ieid' anymore (unless resorting to
+    //   dirty %index and %map tricks).
+    $effect['ieid'] = $ieid;
+    return $effect;
   }
   return FALSE;
 }
@@ -979,15 +999,18 @@ function image_effect_save($style_name, $effect) {
     // The machine name is all the elements of the data array concatenated
     // together, delimited by underscores.
     $machine_name = $effect['name'];
-
     foreach ($effect['data'] as $key => $value) {
       $machine_name .= '_' . $value;
     }
+    // @todo The machine name must not use any special non-alphanumeric
+    //   characters, and may also not contain dots/periods, as that is the
+    //   config system's nested key syntax.
+    $machine_name = preg_replace('@[^a-zA-Z0-9_-]@', '', $machine_name);
     $effect['ieid'] = $machine_name;
     $config->set('effects.' . $machine_name, $effect);
   }
   $config->save();
-  $style = image_style_load(NULL, $style_name);
+  $style = image_style_load($style_name);
   image_style_flush($style);
   return $effect;
 }

@@ -188,7 +188,7 @@ function config_xml_to_array($data) {
   }
   foreach ($xmlObject as $index => $content) {
     if (is_object($content)) {
-      $out[$index] = config_xml2array($content);
+      $out[$index] = config_xml_to_array($content);
     }
   }
 
@@ -219,6 +219,8 @@ function config_encode($data) {
   $dom->preserveWhiteSpace = false;
   $dom->formatOutput = true;
   $dom->loadXML($xml_object->asXML());
+  // @todo The loaded XML can be invalid; throwing plenty of PHP warnings but no
+  //   catchable error.
   return $dom->saveXML();
 }
 
@@ -246,7 +248,9 @@ function config_array_to_xml($array, &$xml_object) {
       }
     }
     else {
-      $xml_object->addChild("$key", "$value");
+      // @todo Cast to string must happen in DrupalConfig::set() already. But
+      //   over there, $value may also be an array, so the result is "Array".
+      $xml_object->addChild($key, (string) $value);
     }
   }
 }
