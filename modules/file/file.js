@@ -96,7 +96,7 @@ Drupal.file = Drupal.file || {
 
     // Check if we're working with an "Upload" button.
     var $enabledFields = [];
-    if ($(this).parents('div.form-managed-file').size() > 0) {
+    if ($(this).parents('div.form-managed-file').length > 0) {
       $enabledFields = $(this).parents('div.form-managed-file').find('input.form-file');
     }
 
@@ -120,7 +120,7 @@ Drupal.file = Drupal.file || {
   progressBar: function (event) {
     var clickedButton = this;
     var $progressId = $(clickedButton).parents('div.form-managed-file').find('input.file-progress');
-    if ($progressId.size()) {
+    if ($progressId.length) {
       var originalName = $progressId.attr('name');
 
       // Replace the name with the required identifier.

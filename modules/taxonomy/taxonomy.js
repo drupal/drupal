@@ -10,7 +10,7 @@ Drupal.behaviors.termDrag = {
   attach: function (context, settings) {
     var table = $('#taxonomy', context);
     var tableDrag = Drupal.tableDrag.taxonomy; // Get the blocks tableDrag object.
-    var rows = $('tr', table).size();
+    var rows = $('tr', table).length;
 
     // When a row is swapped, keep previous and next page classes set.
     tableDrag.row.prototype.onSwap = function (swappedRow) {
