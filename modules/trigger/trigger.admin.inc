@@ -6,13 +6,16 @@
  */
 
 /**
- * Builds the form that allows users to assign actions to triggers.
+ * Builds a form that allows users to assign actions to triggers.
  *
  * @param $module_to_display
- *   Which tab of triggers to display. E.g., 'node' for all
- *   node-related triggers.
+ *   Which tab of triggers to display. E.g., 'node' for all node-related
+ *   triggers.
+ *
  * @return
  *   HTML form.
+ *
+ * @see trigger_menu()
  */
 function trigger_assign($module_to_display = NULL) {
   // If no type is specified we default to node actions, since they
@@ -36,16 +39,18 @@ function trigger_assign($module_to_display = NULL) {
 }
 
 /**
- * Confirm removal of an assigned action.
+ * Form constructor for confirmation page for removal of an assigned action.
  *
  * @param $module
  *   The tab of triggers the user will be directed to after successful
  *   removal of the action, or if the confirmation form is cancelled.
  * @param $hook
+ *   The name of the trigger hook, e.g., 'node_insert'.
  * @param $aid
  *   The action ID.
- * @ingroup forms
+ *
  * @see trigger_unassign_submit()
+ * @ingroup forms
  */
 function trigger_unassign($form, $form_state, $module, $hook = NULL, $aid = NULL) {
   if (!($hook && $aid)) {
@@ -79,7 +84,7 @@ function trigger_unassign($form, $form_state, $module, $hook = NULL, $aid = NULL
 }
 
 /**
- * Submit callback for trigger_unassign() form.
+ * Form submission handler for trigger_unassign().
  */
 function trigger_unassign_submit($form, &$form_state) {
   if ($form_state['values']['confirm'] == 1) {
@@ -108,9 +113,9 @@ function trigger_unassign_submit($form, &$form_state) {
  * @param $label
  *   A plain English description of what this trigger does.
  *
- * @ingoup forms
  * @see trigger_assign_form_validate()
  * @see trigger_assign_form_submit()
+ * @ingroup forms
  */
 function trigger_assign_form($form, $form_state, $module, $hook, $label) {
   $form['module'] = array(
@@ -197,9 +202,11 @@ function trigger_assign_form($form, $form_state, $module, $hook, $label) {
 }
 
 /**
- * Validation function for trigger_assign_form().
+ * Form validation handler for trigger_assign_form().
  *
  * Makes sure that the user is not re-assigning an action to an event.
+ *
+ * @see trigger_assign_form_submit()
  */
 function trigger_assign_form_validate($form, $form_state) {
   $form_values = $form_state['values'];
@@ -216,7 +223,9 @@ function trigger_assign_form_validate($form, $form_state) {
 }
 
 /**
- * Submit function for trigger_assign_form().
+ * Form submission handler for trigger_assign_form().
+ *
+ * @see trigger_assign_form_validate()
  */
 function trigger_assign_form_submit($form, &$form_state) {
   if (!empty($form_state['values']['aid'])) {
@@ -306,4 +315,3 @@ function theme_trigger_display($variables) {
   }
   return $output;
 }
-
