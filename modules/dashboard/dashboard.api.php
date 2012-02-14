@@ -11,7 +11,7 @@
  */
 
 /**
- * Adds regions to the dashboard.
+ * Add regions to the dashboard.
  *
  * @return
  *   An array whose keys are the names of the dashboard regions and whose

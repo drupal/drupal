@@ -1,7 +1,12 @@
+/**
+ * @file
+ * Attaches behaviors for the Dashboard module.
+ */
+
 (function ($) {
 
 /**
- * Implementation of Drupal.behaviors for dashboard.
+ * Implements Drupal.behaviors for the Dashboard module.
  */
 Drupal.behaviors.dashboard = {
     attach: function (context, settings) {
@@ -39,7 +44,7 @@ Drupal.behaviors.dashboard = {
   },
 
   /**
-   * Enter "customize" mode by displaying disabled blocks.
+   * Enters "customize" mode by displaying disabled blocks.
    */
   enterCustomizeMode: function () {
     $('#dashboard').addClass('customize-mode customize-inactive');
@@ -51,7 +56,7 @@ Drupal.behaviors.dashboard = {
   },
 
   /**
-   * Exit "customize" mode by simply forcing a page refresh.
+   * Exits "customize" mode by simply forcing a page refresh.
    */
   exitCustomizeMode: function () {
     $('#dashboard').removeClass('customize-mode customize-inactive');
@@ -60,7 +65,7 @@ Drupal.behaviors.dashboard = {
   },
 
   /**
-   * Helper for enterCustomizeMode; sets up drag-and-drop and close button.
+   * Sets up the drag-and-drop behavior and the 'close' button.
    */
   setupDrawer: function () {
     $('div.customize .canvas-content input').click(Drupal.behaviors.dashboard.exitCustomizeMode);
@@ -84,7 +89,7 @@ Drupal.behaviors.dashboard = {
   },
 
   /**
-   * While dragging, make the block appear as a disabled block
+   * Makes the block appear as a disabled block while dragging.
    *
    * This function is called on the jQuery UI Sortable "start" event.
    *
@@ -104,8 +109,7 @@ Drupal.behaviors.dashboard = {
   },
 
   /**
-   * While dragging, adapt block's width to the width of the region it is moved
-   * into.
+   * Adapts block's width to the region it is moved into while dragging.
    *
    * This function is called on the jQuery UI Sortable "over" event.
    *
@@ -127,8 +131,7 @@ Drupal.behaviors.dashboard = {
   },
 
   /**
-   * While dragging, adapt block's position to stay connected with the position
-   * of the mouse pointer.
+   * Adapts a block's position to stay connected with the mouse pointer.
    *
    * This function is called on the jQuery UI Sortable "sort" event.
    *
@@ -146,7 +149,7 @@ Drupal.behaviors.dashboard = {
   },
 
   /**
-   * Send block order to the server, and expand previously disabled blocks.
+   * Sends block order to the server, and expand previously disabled blocks.
    *
    * This function is called on the jQuery UI Sortable "update" event.
    *
@@ -198,8 +201,10 @@ Drupal.behaviors.dashboard = {
   },
 
   /**
-   * Return the current order of the blocks in each of the sortable regions,
-   * in query string format.
+   * Returns the current order of the blocks in each of the sortable regions.
+   *
+   * @return
+   *   The current order of the blocks, in query string format.
    */
   getOrder: function () {
     var order = [];

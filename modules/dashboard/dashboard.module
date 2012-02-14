@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Provides a dashboard page in the administrative interface.
+ */
 
 /**
  * Implements hook_help().
@@ -263,7 +267,7 @@ function dashboard_forms() {
 }
 
 /**
- * Dashboard page callback.
+ * Page callback: Displays the dashboard.
  *
  * @param $launch_customize
  *   Whether to launch in customization mode right away. TRUE or FALSE.
@@ -298,7 +302,7 @@ function dashboard_admin($launch_customize = FALSE) {
 }
 
 /**
- * Menu page callback: builds the page for administering dashboard blocks.
+ * Page callback: Builds the page for administering dashboard blocks.
  *
  * This page reuses the Block module's administration form but limits editing
  * to blocks that are available to appear on the dashboard.
@@ -454,7 +458,7 @@ function dashboard_is_visible() {
 }
 
 /**
- * Return an array of dashboard region descriptions, keyed by region name.
+ * Returns an array of dashboard region descriptions, keyed by region name.
  */
 function dashboard_region_descriptions() {
   $regions = module_invoke_all('dashboard_regions');
@@ -463,7 +467,7 @@ function dashboard_region_descriptions() {
 }
 
 /**
- * Return an array of dashboard region names.
+ * Returns an array of dashboard region names.
  */
 function dashboard_regions() {
   $regions = &drupal_static(__FUNCTION__);
@@ -485,7 +489,7 @@ function dashboard_dashboard_regions() {
 }
 
 /**
- * Ajax callback to show disabled blocks in the dashboard customization mode.
+ * Ajax callback: Shows disabled blocks in the dashboard customization mode.
  */
 function dashboard_show_disabled() {
   global $theme_key;
@@ -506,7 +510,7 @@ function dashboard_show_disabled() {
 }
 
 /**
- * Ajax callback to display the rendered contents of a specific block.
+ * Ajax callback: Displays the rendered contents of a specific block.
  *
  * @param $module
  *   The block's module name.
@@ -534,7 +538,7 @@ function dashboard_show_block_content($module, $delta) {
 }
 
 /**
- * Set the new weight of each region according to the drag-and-drop order.
+ * Sets the new weight of each region according to the drag-and-drop order.
  */
 function dashboard_update() {
   drupal_theme_initialize();
@@ -631,7 +635,7 @@ function theme_dashboard_region($variables) {
 }
 
 /**
- * Returns HTML for a set of disabled blocks, for display in dashboard customization mode.
+ * Returns HTML for disabled blocks, for use in dashboard customization mode.
  *
  * @param $variables
  *   An associative array containing:
@@ -653,7 +657,7 @@ function theme_dashboard_disabled_blocks($variables) {
 }
 
 /**
- * Returns HTML for a disabled block, for display in dashboard customization mode.
+ * Returns HTML for disabled blocks, for use in dashboard customization mode.
  *
  * @param $variables
  *   An associative array containing:
