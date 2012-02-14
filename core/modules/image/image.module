@@ -987,28 +987,20 @@ function image_effect_load($ieid, $style_name) {
 function image_effect_save($style_name, $effect) {
   $config = config('image.styles.' . $style_name);
 
-  if (!empty($effect['ieid'])) {
-    $old_effect = $config->get('effects.' . $effect['ieid']);
-    foreach ($old_effect as $key => $value) {
-      $old_effect[$key] = $effect[$key];
-      $config->set('effects.' . $effect['ieid'], $old_effect);
-    }
-  }
-  else {
+  if (empty($effect['ieid'])) {
     // We need to generate the ieid and save the new effect.
     // The machine name is all the elements of the data array concatenated
     // together, delimited by underscores.
-    $machine_name = $effect['name'];
+    $effect['ieid'] = $effect['name'];
     foreach ($effect['data'] as $key => $value) {
-      $machine_name .= '_' . $value;
+      $effect['ieid'] .= '_' . $value;
     }
     // @todo The machine name must not use any special non-alphanumeric
     //   characters, and may also not contain dots/periods, as that is the
     //   config system's nested key syntax.
-    $machine_name = preg_replace('@[^a-zA-Z0-9_-]@', '', $machine_name);
-    $effect['ieid'] = $machine_name;
-    $config->set('effects.' . $machine_name, $effect);
+    $effect['ieid'] = preg_replace('@[^a-zA-Z0-9_-]@', '', $effect['ieid']);
   }
+  $config->set('effects.' . $effect['ieid'], $effect);
   $config->save();
   $style = image_style_load($style_name);
   image_style_flush($style);
