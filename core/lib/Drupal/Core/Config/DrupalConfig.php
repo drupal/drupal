@@ -23,6 +23,8 @@ class DrupalConfig {
    *
    * @param DrupalConfigVerifiedStorageInterface $verified_storage
    *   The storage engine where this config object should be saved.
+   *
+   * @todo $this should really know about $name and make it publicly accessible.
    */
   public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage) {
     $this->_verifiedStorage = $verified_storage;

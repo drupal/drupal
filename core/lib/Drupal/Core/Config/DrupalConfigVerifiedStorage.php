@@ -10,6 +10,8 @@ use Drupal\Core\Config\SignedFileStorage;
  */
 abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorageInterface {
 
+  protected $name;
+
   /**
    * The local signed file object to read from and write to.
    *
