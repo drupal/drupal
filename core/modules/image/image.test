@@ -865,6 +865,7 @@ class ImageFieldValidateTestCase extends ImageFieldTestCase {
  * Tests that images have correct dimensions when styled.
  */
 class ImageDimensionsUnitTest extends DrupalWebTestCase {
+  protected $profile = 'testing';
 
   public static function getInfo() {
     return array(
@@ -875,7 +876,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('image_module_test');
+    parent::setUp('rdf', 'image', 'image_module_test');
   }
 
   /**
@@ -898,6 +899,10 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
       'width' => 40,
       'height' => 20,
     );
+    // Verify that the original image matches the hard-coded values.
+    $image_info = image_get_info($original_uri);
+    $this->assertEqual($image_info['width'], $variables['width']);
+    $this->assertEqual($image_info['height'], $variables['height']);
 
     // Scale an image that is wider than it is high.
     $effect = array(
@@ -907,6 +912,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'height' => 90,
         'upscale' => TRUE,
       ),
+      'weight' => 0,
     );
 
     image_effect_save('test', $effect);
@@ -917,8 +923,8 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 120, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 60, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 120);
+    $this->assertEqual($image_info['height'], 60);
 
     // Rotate 90 degrees anticlockwise.
     $effect = array(
@@ -927,6 +933,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'degrees' => -90,
         'random' => FALSE,
       ),
+      'weight' => 1,
     );
 
     image_effect_save('test', $effect);
@@ -937,17 +944,18 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 60, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 120, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 60);
+    $this->assertEqual($image_info['height'], 120);
 
     // Scale an image that is higher than it is wide (rotated by previous effect).
     $effect = array(
       'name' => 'image_scale',
       'data' => array(
-        'width' => 45,
+        'width' => 120,
         'height' => 90,
         'upscale' => TRUE,
       ),
+      'weight' => 2,
     );
 
     image_effect_save('test', $effect);
@@ -958,8 +966,8 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 45);
+    $this->assertEqual($image_info['height'], 90);
 
     // Test upscale disabled.
     $effect = array(
@@ -969,6 +977,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'height' => 200,
         'upscale' => FALSE,
       ),
+      'weight' => 3,
     );
 
     image_effect_save('test', $effect);
@@ -979,13 +988,14 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 45);
+    $this->assertEqual($image_info['height'], 90);
 
     // Add a desaturate effect.
     $effect = array(
       'name' => 'image_desaturate',
       'data' => array(),
+      'weight' => 4,
     );
 
     image_effect_save('test', $effect);
@@ -996,8 +1006,8 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 45);
+    $this->assertEqual($image_info['height'], 90);
 
     // Add a random rotate effect.
     $effect = array(
@@ -1006,6 +1016,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'degrees' => 180,
         'random' => TRUE,
       ),
+      'weight' => 5,
     );
 
     image_effect_save('test', $effect);
@@ -1025,6 +1036,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'height' => 30,
         'anchor' => 'center-center',
       ),
+      'weight' => 6,
     );
 
     image_effect_save('test', $effect);
@@ -1035,8 +1047,8 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 30, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 30, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 30);
+    $this->assertEqual($image_info['height'], 30);
 
     // Rotate to a non-multiple of 90 degrees.
     $effect = array(
@@ -1045,6 +1057,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'degrees' => 57,
         'random' => FALSE,
       ),
+      'weight' => 7,
     );
 
     $effect = image_effect_save('test', $effect);
@@ -1062,6 +1075,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
     $effect = array(
       'name' => 'image_module_test_null',
       'data' => array(),
+      'weight' => 8,
     );
 
     image_effect_save('test', $effect);
