@@ -5,10 +5,14 @@
  * Tests for Configuration module.
  */
 
+use Drupal\Core\Config\SignedFileStorage;
+
 /**
  * Tests the secure file writer.
  */
-class SecureFileTestCase extends DrupalUnitTestCase {
+class SecureFileTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
   protected $filename = 'foo.bar';
 
   /**
@@ -89,6 +93,8 @@ class SecureFileTestCase extends DrupalUnitTestCase {
  * Tests reading and writing file contents.
  */
 class FileContentsTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
   public static function getInfo() {
     return array(
       'name' => 'Config file content tests',
