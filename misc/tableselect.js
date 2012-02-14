@@ -2,7 +2,8 @@
 
 Drupal.behaviors.tableSelect = {
   attach: function (context, settings) {
-    $('table:has(th.select-all)', context).once('table-select', Drupal.tableSelect);
+    // Select the inner-most table in case of nested tables.
+    $('th.select-all', context).closest('table').once('table-select', Drupal.tableSelect);
   }
 };
 
