@@ -123,6 +123,7 @@ class DrupalConfig {
     else {
       drupal_array_set_nested_value($this->data, $parts, $value);
     }
+    return $this;
   }
 
   public function castValue($value) {
