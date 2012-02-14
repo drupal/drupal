@@ -1913,7 +1913,7 @@ function drupal_block_denied($ip) {
  */
 function drupal_random_bytes($count)  {
   // $random_state does not use drupal_static as it stores random bytes.
-  static $random_state, $bytes;
+  static $random_state, $bytes, $php_compatible;
   // Initialize on the first call. The contents of $_SERVER includes a mix of
   // user-specific and system information that varies a little with each page.
   if (!isset($random_state)) {
@@ -1925,6 +1925,11 @@ function drupal_random_bytes($count)  {
     $bytes = '';
   }
   if (strlen($bytes) < $count) {
+    // PHP versions prior 5.3.4 experienced openssl_random_pseudo_bytes()
+    // locking on Windows and rendered it unusable.
+    if (!isset($php_compatible)) {
+      $php_compatible = version_compare(PHP_VERSION, '5.3.4', '>=');
+    }
     // /dev/urandom is available on many *nix systems and is considered the
     // best commonly available pseudo-random source.
     if ($fh = @fopen('/dev/urandom', 'rb')) {
@@ -1933,6 +1938,11 @@ function drupal_random_bytes($count)  {
       // that much so as to speed any additional invocations.
       $bytes .= fread($fh, max(4096, $count));
       fclose($fh);
+    }
+    // openssl_random_pseudo_bytes() will find entropy in a system-dependent
+    // way.
+    elseif ($php_compatible && function_exists('openssl_random_pseudo_bytes')) {
+      $bytes .= openssl_random_pseudo_bytes($count - strlen($bytes));
     }
     // If /dev/urandom is not available or returns no bytes, this loop will
     // generate a good set of pseudo-random bytes on any system.
