@@ -16,6 +16,10 @@ blockquote:before {
 blockquote:after {
   content: "\201C";
 }
+tr td,
+tr th {
+  text-align: right;
+}
 
 /* ------------------ List Styles ------------------ */
 
