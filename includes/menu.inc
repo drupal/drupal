@@ -452,18 +452,10 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     }
     $original_map = arg(NULL, $path);
 
-    // Since there is no limit to the length of $path, use a hash to keep it
-    // short yet unique.
-    $cid = 'menu_item:' . hash('sha256', $path);
-    if ($cached = cache_get($cid, 'cache_menu')) {
-      $router_item = $cached->data;
-    }
-    else {
-      $parts = array_slice($original_map, 0, MENU_MAX_PARTS);
-      $ancestors = menu_get_ancestors($parts);
-      $router_item = db_query_range('SELECT * FROM {menu_router} WHERE path IN (:ancestors) ORDER BY fit DESC', 0, 1, array(':ancestors' => $ancestors))->fetchAssoc();
-      cache_set($cid, $router_item, 'cache_menu');
-    }
+    $parts = array_slice($original_map, 0, MENU_MAX_PARTS);
+    $ancestors = menu_get_ancestors($parts);
+    $router_item = db_query_range('SELECT * FROM {menu_router} WHERE path IN (:ancestors) ORDER BY fit DESC', 0, 1, array(':ancestors' => $ancestors))->fetchAssoc();
+
     if ($router_item) {
       // Allow modules to alter the router item before it is translated and
       // checked for access.
