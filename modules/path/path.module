@@ -147,9 +147,9 @@ function path_form_node_form_alter(&$form, $form_state) {
  * Form element validation handler for URL alias form element.
  */
 function path_form_element_validate($element, &$form_state, $complete_form) {
-  if (!empty($form_state['values']['path']['alias'])) {
-    // Trim the submitted value.
-    $alias = trim($form_state['values']['path']['alias']);
+  // Trim the submitted value.
+  $alias = trim($form_state['values']['path']['alias']);
+  if (!empty($alias)) {
     form_set_value($element['alias'], $alias, $form_state);
     // Node language (Locale module) needs special care. Since the language of
     // the URL alias depends on the node language, and the node language can be
