@@ -1208,15 +1208,15 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  * http://drupal.org/node/102338.
  */
 function hook_menu() {
-  $items['blog'] = array(
-    'title' => 'blogs',
-    'page callback' => 'blog_page',
+  $items['example'] = array(
+    'title' => 'Example Page',
+    'page callback' => 'example_page',
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,
   );
-  $items['blog/feed'] = array(
-    'title' => 'RSS feed',
-    'page callback' => 'blog_feed',
+  $items['example/feed'] = array(
+    'title' => 'Example RSS feed',
+    'page callback' => 'example_feed',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
