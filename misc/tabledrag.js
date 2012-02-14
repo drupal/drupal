@@ -402,12 +402,12 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
           if ($(item).is('.tabledrag-root')) {
             // Swap with the next group (necessarily a top-level one).
             var groupHeight = 0;
-            nextGroup = new self.row(nextRow, 'keyboard', self.indentEnabled, self.maxDepth, false);
+            var nextGroup = new self.row(nextRow, 'keyboard', self.indentEnabled, self.maxDepth, false);
             if (nextGroup) {
               $(nextGroup.group).each(function () {
                 groupHeight += $(this).is(':hidden') ? 0 : this.offsetHeight;
               });
-              nextGroupRow = $(nextGroup.group).filter(':last').get(0);
+              var nextGroupRow = $(nextGroup.group).filter(':last').get(0);
               self.rowObject.swap('after', nextGroupRow);
               // No need to check for indentation, 0 is the only valid one.
               window.scrollBy(0, parseInt(groupHeight, 10));
@@ -1042,8 +1042,8 @@ Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow
 Drupal.tableDrag.prototype.row.prototype.indent = function (indentDiff) {
   // Determine the valid indentations interval if not available yet.
   if (!this.interval) {
-    prevRow = $(this.element).prev('tr').get(0);
-    nextRow = $(this.group).filter(':last').next('tr').get(0);
+    var prevRow = $(this.element).prev('tr').get(0);
+    var nextRow = $(this.group).filter(':last').next('tr').get(0);
     this.interval = this.validIndentInterval(prevRow, nextRow);
   }
 
