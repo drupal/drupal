@@ -147,6 +147,7 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     $this->assertIdentical($db_config, FALSE);
     $this->assertFalse(file_exists($config_dir . '/' . $name . '.' . $this->fileExtension));
 
+    // Attempt to delete non-existing configuration.
     // Write and read an array value.
     // Add an array value to a nested key.
     // Type casting into string.
