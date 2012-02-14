@@ -496,12 +496,12 @@ function image_style_load($name = NULL) {
  * @param style
  *   An image style array.
  * @return
- *   An image style array. In the case of a new style, 'isid' will be populated.
+ *   An image style array.
  */
 function image_style_save($style) {
   $config = config('image.styles.' . $style['name']);
   $config->set('name', $style['name']);
-  if ($style['effects']) {
+  if (isset($style['effects'])) {
     $config->set('effects', $style['effects']);
   }
   else {
@@ -553,17 +553,12 @@ function image_style_delete($style, $replacement_style_name = '') {
  *   An array of image effects associated with specified image style in the
  *   format array('isid' => array()), or an empty array if the specified style
  *   has no effects.
+ *
+ * @todo I think this function can be deprecated since we automatically
+ *       load all effects with a style now.
  */
 function image_style_effects($style) {
-  $effects = image_effects();
-  $style_effects = array();
-  foreach ($effects as $effect) {
-    if ($style['isid'] == $effect['isid']) {
-      $style_effects[$effect['ieid']] = $effect;
-    }
-  }
-
-  return $style_effects;
+  return $style['effects'];
 }
 
 /**
@@ -943,7 +938,6 @@ function image_effects() {
  * @return
  *   An image effect array, consisting of the following keys:
  *   - "ieid": The unique image effect ID.
- *   - "isid": The unique image style ID that contains this image effect.
  *   - "weight": The weight of this image effect within the image style.
  *   - "name": The name of the effect definition that powers this image effect.
  *   - "data": An array of configuration options for this image effect.
