@@ -353,7 +353,7 @@ class CommonURLUnitTest extends DrupalWebTestCase {
 }
 
 /**
- * Tests for the check_plain(), filter_xss() and format_string() functions.
+ * Tests for check_plain(), filter_xss(), format_string(), and check_url().
  */
 class CommonXssUnitTest extends DrupalUnitTestCase {
 
@@ -424,6 +424,9 @@ class CommonXssUnitTest extends DrupalUnitTestCase {
   }
 }
 
+/**
+ * Tests file size parsing and formatting functions.
+ */
 class CommonSizeTestCase extends DrupalUnitTestCase {
   protected $exact_test_cases;
   protected $rounded_test_cases;
