@@ -180,7 +180,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // negotiation is configured.
     $this->drupalLogin($this->admin_user);
     $edit = array('language[enabled][locale-url]' => FALSE);
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->resetCaches();
     $edit = array('status' => TRUE);
     $this->drupalPost("node/$translation_es->nid/edit", $edit, t('Save'));

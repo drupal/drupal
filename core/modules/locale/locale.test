@@ -48,7 +48,7 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Check if the Default English language has no path prefix.
-    $this->drupalGet('admin/config/regional/language/configure/url');
+    $this->drupalGet('admin/config/regional/language/detection/url');
     $this->assertFieldByXPath('//input[@name="prefix[en]"]', '', t('Default English has no path prefix.'));
 
     // Add predefined language.
@@ -60,10 +60,10 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
 
     // Check if the Default English language has no path prefix.
-    $this->drupalGet('admin/config/regional/language/configure/url');
+    $this->drupalGet('admin/config/regional/language/detection/url');
     $this->assertFieldByXPath('//input[@name="prefix[en]"]', '', t('Default English has no path prefix.'));
     // Check if French has a path prefix.
-    $this->drupalGet('admin/config/regional/language/configure/url');
+    $this->drupalGet('admin/config/regional/language/detection/url');
     $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'fr', t('French has a path prefix.'));
 
     // Check if we can change the default language.
@@ -79,10 +79,10 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
 
     // Check if a valid language prefix is added afrer changing the default
     // language.
-    $this->drupalGet('admin/config/regional/language/configure/url');
+    $this->drupalGet('admin/config/regional/language/detection/url');
     $this->assertFieldByXPath('//input[@name="prefix[en]"]', 'en', t('A valid path prefix has been added to the previous default language.'));
     // Check if French still has a path prefix.
-    $this->drupalGet('admin/config/regional/language/configure/url');
+    $this->drupalGet('admin/config/regional/language/detection/url');
     $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'fr', t('French still has a path prefix.'));
   }
 }
@@ -1251,7 +1251,7 @@ class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
 
     // Enable URL language detection and selection.
     $edit = array('language[enabled][locale-url]' => '1');
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
@@ -1532,7 +1532,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
     $edit = array(
       'language[enabled][locale-url]' => TRUE,
     );
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->assertText(t('Language negotiation configuration saved.'), t('Set language negotiation.'));
 
     // Check if the language selector is available on admin/people/create and
@@ -1638,7 +1638,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
 
     // Set path prefix.
     $edit = array( "prefix[$langcode]" => $prefix );
-    $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
     // Check that the "xx" front page is readily available because path prefix
     // negotiation is pre-configured.
@@ -2116,7 +2116,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // Setup for domain negotiation, first configure the language to have domain
     // URL. We use https and a port to make sure that only the domain name is used.
     $edit = array("domain[$langcode]" => "https://$language_domain:99");
-    $this->drupalPost("admin/config/regional/language/configure/url", $edit, t('Save configuration'));
+    $this->drupalPost("admin/config/regional/language/detection/url", $edit, t('Save configuration'));
     // Set the site to use domain language negotiation.
 
     $tests = array(
@@ -2180,7 +2180,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // Enable the path prefix for the default language: this way any unprefixed
     // URL must have a valid fallback value.
     $edit = array('prefix[en]' => 'en');
-    $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
     // Enable browser and URL language detection.
     $edit = array(
@@ -2189,8 +2189,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
       'language[weight][locale-browser]' => -8,
       'language[weight][locale-url]' => -10,
     );
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
-    $this->drupalGet('admin/config/regional/language/configure');
+    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalGet('admin/config/regional/language/detection');
 
     // Enable the language switcher block.
     $edit = array('blocks[locale_language][region]' => 'sidebar_first');
@@ -2230,14 +2230,14 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
       'language[enabled][locale-url]' => TRUE,
       'language[weight][locale-url]' => -10,
     );
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Change the domain for the Italian language.
     $edit = array(
       'locale_language_negotiation_url_part' => 1,
       'domain[it]' => 'it.example.com',
     );
-    $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
     // Build the link we're going to test based on the clean url setting.
     $link = (!empty($GLOBALS['conf']['clean_url'])) ? 'it.example.com/admin' : 'it.example.com/?q=admin';
@@ -2303,7 +2303,7 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
 
     // Enable URL language detection and selection.
     $edit = array('language[enabled][locale-url]' => 1);
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Reset static caching.
     drupal_static_reset('language_list');
@@ -2381,7 +2381,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
 
     // Enable URL language detection and selection.
     $edit = array('language[enabled][locale-url]' => '1');
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Set "Basic page" content type to use multilingual support.
     $edit = array(
@@ -2514,7 +2514,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
       'language_content[enabled][locale-url]' => TRUE,
       'language_content[enabled][locale-interface]' => FALSE,
     );
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Change user language preference, this way interface language is always
     // French no matter what path prefix the URLs have.
@@ -2604,7 +2604,7 @@ class LocaleDateFormatsFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       "{$language_type}[enabled][locale-url]" => TRUE,
     );
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Configure date formats.
     $this->drupalGet('admin/config/regional/date-time/locale');
@@ -2690,7 +2690,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
       $type . '[enabled][' . $test_provider . ']' => TRUE,
       $test_type . '[enabled][' . $test_provider . ']' => TRUE,
     );
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Remove the interface language provider by updating the language
     // negotiation settings with the proper flag enabled.
@@ -2770,7 +2770,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
       $function($modules);
     }
 
-    $this->drupalGet('admin/config/regional/language/configure');
+    $this->drupalGet('admin/config/regional/language/detection');
   }
 
   /**
