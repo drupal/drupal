@@ -57,7 +57,7 @@ function trigger_test_action_info() {
 function trigger_test_trigger_info() {
   // Register triggers that this module provides. The first is an additional
   // node trigger and the second is our own, which should create a new tab
-  // on the trigger assignment page.
+  // on the trigger assignment page. The last tests long trigger names.
   return array(
     'node' => array(
       'node_triggertest' => array(
@@ -67,6 +67,9 @@ function trigger_test_trigger_info() {
     'trigger_test' => array(
       'trigger_test_triggertest' => array(
         'label' => t('Another test trigger is fired'),
+      ),
+      'trigger_test_we_sweat_it_out_in_the_streets_of_a_runaway_american_dream' => array(
+        'label' => t('A test trigger with a name over 64 characters'),
       ),
     ),
   );

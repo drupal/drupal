@@ -46,5 +46,6 @@ files[] = tests/upgrade/upgrade.menu.test
 files[] = tests/upgrade/upgrade.node.test
 files[] = tests/upgrade/upgrade.taxonomy.test
 files[] = tests/upgrade/upgrade.translatable.test
+files[] = tests/upgrade/update.trigger.test
 files[] = tests/upgrade/upgrade.upload.test
 files[] = tests/upgrade/upgrade.user.test

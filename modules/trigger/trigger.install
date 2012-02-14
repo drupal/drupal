@@ -9,12 +9,14 @@
  * Implements hook_schema().
  */
 function trigger_schema() {
+  // The total index length (hook and aid) must be less than 333. Since the aid
+  // field is 255 characters, the hook field can have a maximum length of 78.
   $schema['trigger_assignments'] = array(
     'description' => 'Maps trigger to hook and operation assignments from trigger.module.',
     'fields' => array(
       'hook' => array(
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 78,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Primary Key: The name of the internal Drupal hook; for example, node_insert.',
@@ -67,4 +69,12 @@ function trigger_update_7000() {
       ->execute();
   }
   db_drop_field('trigger_assignments', 'op');
+}
+
+/**
+ * Increase length of hook name field to 78 characters.
+ */
+function trigger_update_7001() {
+  db_drop_primary_key('trigger_assignments');
+  db_change_field('trigger_assignments', 'hook', 'hook', array('type' => 'varchar', 'length' => 78, 'not null' => TRUE, 'default' => '', 'description' => 'Primary Key: The name of the internal Drupal hook; for example, node_insert.', ), array('primary key' => array('hook', 'aid')));
 }
