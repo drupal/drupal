@@ -106,6 +106,7 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
    * Tests setting, writing, and reading of a configuration setting.
    */
   function testReadWriteConfig() {
+    $config_dir = config_get_config_directory();
     $name = 'foo.bar';
     $key = 'foo';
     $value = 'bar';
@@ -131,7 +132,6 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     $db_config = db_query('SELECT * FROM {config} WHERE name = :name', array(':name' => $name))->fetch();
     $this->assertEqual($db_config->name, $name);
     // Verify the file exists.
-    $config_dir = config_get_config_directory();
     $this->assertTrue(file_exists($config_dir . '/' . $name . '.' . $this->fileExtension));
 
     // Read the configuration.
