@@ -248,9 +248,7 @@ function config_array_to_xml($array, &$xml_object) {
       }
     }
     else {
-      // @todo Cast to string must happen in DrupalConfig::set() already. But
-      //   over there, $value may also be an array, so the result is "Array".
-      $xml_object->addChild($key, (string) $value);
+      $xml_object->addChild($key, $value);
     }
   }
 }

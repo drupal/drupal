@@ -113,6 +113,9 @@ class DrupalConfig {
     //   between keys, but not within keys.
     $key = preg_replace('@[^a-zA-Z0-9_.-]@', '', $key);
 
+    // Type-cast value into a string.
+    $value = $this->castValue($value);
+
     $parts = explode('.', $key);
     if (count($parts) == 1) {
       $this->data[$key] = $value;
@@ -120,6 +123,29 @@ class DrupalConfig {
     else {
       drupal_array_set_nested_value($this->data, $parts, $value);
     }
+  }
+
+  public function castValue($value) {
+    if (is_scalar($value)) {
+      // Handle special case of FALSE, which should be '0' instead of ''.
+      if ($value === FALSE) {
+        $value = '0';
+      }
+      else {
+        $value = (string) $value;
+      }
+    }
+    else {
+      // Any non-scalar value must be an array.
+      if (!is_array($value)) {
+        $value = (array) $value;
+      }
+      // Recurse into any nested keys.
+      foreach ($value as $key => $nested_value) {
+        $value[$key] = $this->castValue($nested_value);
+      }
+    }
+    return $value;
   }
 
   /**
