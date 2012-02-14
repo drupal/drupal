@@ -10,20 +10,17 @@ use Drupal\Core\Config\SignedFileStorage;
 /**
  * Tests the secure file writer.
  */
-class SecureFileTestCase extends DrupalWebTestCase {
+class ConfigFileSecurityTestCase extends DrupalWebTestCase {
   protected $profile = 'testing';
 
   protected $filename = 'foo.bar';
 
-  /**
-   * @todo
-   */
   protected $testContent = 'Good morning, Denver!';
 
   public static function getInfo() {
     return array(
-      'name' => 'Secure file tests',
-      'description' => 'Tests the saving of secure files.',
+      'name' => 'File security',
+      'description' => 'Tests security of saved configuration files.',
       'group' => 'Configuration',
     );
   }
@@ -92,13 +89,13 @@ class SecureFileTestCase extends DrupalWebTestCase {
 /**
  * Tests reading and writing file contents.
  */
-class FileContentsTestCase extends DrupalWebTestCase {
+class ConfigFileContentTestCase extends DrupalWebTestCase {
   protected $profile = 'testing';
 
   public static function getInfo() {
     return array(
-      'name' => 'Config file content tests',
-      'description' => 'Tests the reading and writing of config settings.',
+      'name' => 'File content',
+      'description' => 'Tests reading and writing of configuration files.',
       'group' => 'Configuration',
     );
   }
@@ -106,7 +103,7 @@ class FileContentsTestCase extends DrupalWebTestCase {
   /**
    * Tests that a simple setting can be written and read.
    */
-  public function testReadWriteConfig() {
+  function testReadWriteConfig() {
     $config = config('foo.bar');
     $config->set('foo', 'bar');
     $config->save();
