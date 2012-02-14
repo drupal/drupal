@@ -58,23 +58,21 @@ class DrupalConfig {
    * Gets data from this config object.
    *
    * @param $key
-   *   A string that maps to a key within the configuration data. 
+   *   A string that maps to a key within the configuration data.
    *   For instance in the following XML:
-   *  
+   *   @code
    *   <foo>
    *     <bar>baz</bar>
    *   </foo>
-   * 
-   *  A key of 'foo.bar' would return the string 'baz'. However
-   *  a key of 'foo' would return array('bar' => 'baz').
+   *   @endcode
+   *   A key of 'foo.bar' would return the string 'baz'. However, a key of 'foo'
+   *   would return array('bar' => 'baz').
+   *   If no key is specified, then the entire data array is returned.
    *
-   * If no key is specified, then the entire data array is returned.
-   *
-   * Note that unlike variable_get(), the config system does not maintain
-   * type information, and everything saved into it gets cast to a string.
-   * In most cases this is not an issue, however it can cause tricky problems
-   * with booleans, which get cast to "1" (TRUE) or "" (FALSE). In particular,
-   * code relying on === or !== will no longer function properly.
+   * The configuration system does not retain data types. Every saved value is
+   * casted to a string. In most cases this is not an issue; however, it can
+   * cause issues with Booleans, which are casted to "1" (TRUE) or "0" (FALSE).
+   * In particular, code relying on === or !== will no longer function properly.
    *
    * @see http://php.net/manual/en/language.operators.comparison.php.
    *
@@ -94,7 +92,7 @@ class DrupalConfig {
         $key_exists = NULL;
         $value = drupal_array_get_nested_value($this->data, $parts, $key_exists);
         return $key_exists ? $value : NULL;
-      }      
+      }
     }
   }
 
