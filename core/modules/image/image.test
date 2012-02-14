@@ -1055,7 +1055,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
 
-    image_effect_delete($effect);
+    image_effect_delete('test', $effect);
 
     // Ensure that an effect with no dimensions callback unsets the dimensions.
     // This ensures compatibility with 7.0 contrib modules.
