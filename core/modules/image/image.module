@@ -1030,7 +1030,7 @@ function image_effect_apply($image, $effect) {
  * @param $variables
  *   An associative array containing:
  *   - style_name: The name of the style to be used to alter the original image.
- *   - path: The path of the image file relative to the Drupal files directory.
+ *   - uri: The path of the image file relative to the Drupal files directory.
  *     This function does not work with images outside the files directory nor
  *     with remotely hosted images.
  *   - width: The width of the source image (if known).
@@ -1055,7 +1055,7 @@ function theme_image_style($variables) {
   $variables['height'] = $dimensions['height'];
 
   // Determine the url for the styled image.
-  $variables['path'] = image_style_url($variables['style_name'], $variables['path']);
+  $variables['uri'] = image_style_url($variables['style_name'], $variables['uri']);
   return theme('image', $variables);
 }
 
