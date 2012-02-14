@@ -516,10 +516,6 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     $delete_path = 'admin/config/media/image-styles/delete/' . $style_name;
     $revert_path = 'admin/config/media/image-styles/revert/' . $style_name;
 
-    // Ensure deleting a default is not possible.
-    $this->drupalGet($delete_path);
-    $this->assertText(t('Page not found'), t('Default styles may not be deleted.'));
-
     // Ensure that editing a default is not possible (without overriding).
     $this->drupalGet($edit_path);
     $this->assertNoField('edit-name', t('Default styles may not be renamed.'));
