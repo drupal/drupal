@@ -1119,6 +1119,7 @@ function template_preprocess_book_export_html(&$variables) {
   $variables['language'] = $language;
   $variables['language_rtl'] = ($language->direction == LANGUAGE_RTL);
   $variables['head'] = drupal_get_html_head();
+  $variables['dir'] = $language->direction ? 'rtl' : 'ltr';
 }
 
 /**
