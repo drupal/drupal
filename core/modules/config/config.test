@@ -112,17 +112,16 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     $value = 'bar';
 
     // Attempt to read non-existing configuration.
-    $nonexisting = $this->randomName();
-    $config = config($nonexisting);
+    $config = config($name);
     // Verify an configuration object is returned.
 //    $this->assertEqual($config->name, $name);
     $this->assertTrue($config);
     // Verify the configuration object is empty.
     $this->assertEqual($config->get(), array());
     // Verify nothing was saved.
-    $db_config = db_query('SELECT * FROM {config} WHERE name = :name', array(':name' => $nonexisting))->fetch();
+    $db_config = db_query('SELECT * FROM {config} WHERE name = :name', array(':name' => $name))->fetch();
     $this->assertIdentical($db_config, FALSE);
-    $this->assertFalse(file_exists($config_dir . '/' . $nonexisting . '.' . $this->fileExtension));
+    $this->assertFalse(file_exists($config_dir . '/' . $name . '.' . $this->fileExtension));
 
     // Save the configuration.
     $config = config($name);
