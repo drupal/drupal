@@ -516,12 +516,6 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     $delete_path = 'admin/config/media/image-styles/delete/' . $style_name;
     $revert_path = 'admin/config/media/image-styles/revert/' . $style_name;
 
-    // Ensure that editing a default is not possible (without overriding).
-    $this->drupalGet($edit_path);
-    $this->assertNoField('edit-name', t('Default styles may not be renamed.'));
-    $this->assertNoField('edit-submit', t('Default styles may not be edited.'));
-    $this->assertNoField('edit-add', t('Default styles may not have new effects added.'));
-
     // Create an image to make sure the default works before overriding.
     drupal_static_reset('image_styles');
     $style = image_style_load($style_name);
