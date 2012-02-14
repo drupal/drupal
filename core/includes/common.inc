@@ -4405,7 +4405,7 @@ function drupal_group_js($javascript) {
 function drupal_aggregate_js(&$js_groups) {
   // Only aggregate when the site is configured to do so, and not during an
   // update.
-  if (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update')) {
+  if (config('system.performance')->get('preprocess_js') && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update')) {
     foreach ($js_groups as $key => $group) {
       if ($group['type'] == 'file' && $group['preprocess']) {
         $js_groups[$key]['data'] = drupal_build_js_cache($group['items']);
