@@ -1011,11 +1011,11 @@ function install_settings_form_submit($form, &$form_state) {
   if (!file_prepare_directory($config_path, FILE_CREATE_DIRECTORY)) {
     // How best to handle errors here?
   };
-  
+
   // Write out a .htaccess file that will protect the config directory from
   // prying eyes.
   file_save_htaccess($config_path, TRUE);
-  
+
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This
   // last step is important since we want to trigger an error if the new

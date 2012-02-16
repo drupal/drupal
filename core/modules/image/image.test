@@ -414,7 +414,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     // Revisit each form to make sure the effect was saved.
     drupal_static_reset('image_styles');
     $style = image_style_load($style_name);
-
+    
     foreach ($style['effects'] as $ieid => $effect) {
       $this->drupalGet($style_path . '/effects/' . $ieid);
       foreach ($effect_edits[$effect['name']] as $field => $value) {

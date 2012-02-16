@@ -477,7 +477,7 @@ function image_styles() {
  */
 function image_style_load($name) {
   $style = config('image.styles.' . $name)->get();
-
+  
   // @todo Requires a more reliable + generic method to check for whether the
   //   configuration object exists.
   if (!isset($style['name'])) {
@@ -987,7 +987,7 @@ function image_effect_load($ieid, $style_name) {
 function image_effect_save($style_name, $effect) {
   $config = config('image.styles.' . $style_name);
 
-  if (empty($effect['ieid'])) {
+  if (!isset($effect['ieid']) || empty($effect['ieid'])) {
     // We need to generate the ieid and save the new effect.
     // The machine name is all the elements of the data array concatenated
     // together, delimited by underscores.
