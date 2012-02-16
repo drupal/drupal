@@ -143,4 +143,3 @@ class SignedFileStorage {
     @drupal_unlink($this->getFilePath() . '.sig');
   }
 }
-
