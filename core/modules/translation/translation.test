@@ -38,7 +38,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // translation.
     $this->drupalGet('admin/structure/types/manage/page');
     $edit = array();
-    $edit['language_content_type'] = 2;
+    $edit['node_type_language'] = TRANSLATION_ENABLED;
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
 
@@ -180,7 +180,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // negotiation is configured.
     $this->drupalLogin($this->admin_user);
     $edit = array('language[enabled][locale-url]' => FALSE);
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->resetCaches();
     $edit = array('status' => TRUE);
     $this->drupalPost("node/$translation_es->nid/edit", $edit, t('Save'));
@@ -231,7 +231,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Disable translation support to check that the language switcher is left
     // untouched only for new nodes.
     $this->drupalLogin($this->admin_user);
-    $edit = array('language_content_type' => 0);
+    $edit = array('node_type_language' => 0);
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->drupalLogin($this->translator);
 

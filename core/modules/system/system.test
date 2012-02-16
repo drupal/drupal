@@ -2446,8 +2446,8 @@ class SystemAdminTestCase extends DrupalWebTestCase {
       $this->assertLinkByHref('admin/config/regional/settings');
       $this->assertLinkByHref('admin/config/regional/date-time');
       $this->assertLinkByHref('admin/config/regional/language');
-      $this->assertNoLinkByHref('admin/config/regional/language/configure/session');
-      $this->assertNoLinkByHref('admin/config/regional/language/configure/url');
+      $this->assertNoLinkByHref('admin/config/regional/language/detection/session');
+      $this->assertNoLinkByHref('admin/config/regional/language/detection/url');
       $this->assertLinkByHref('admin/config/regional/translate');
       // On admin/index only, the administrator should also see a "Configure
       // permissions" link for the Locale module.
@@ -2463,8 +2463,8 @@ class SystemAdminTestCase extends DrupalWebTestCase {
       $this->assertNoLinkByHref('admin/config/regional/settings');
       $this->assertNoLinkByHref('admin/config/regional/date-time');
       $this->assertNoLinkByHref('admin/config/regional/language');
-      $this->assertNoLinkByHref('admin/config/regional/language/configure/session');
-      $this->assertNoLinkByHref('admin/config/regional/language/configure/url');
+      $this->assertNoLinkByHref('admin/config/regional/language/detection/session');
+      $this->assertNoLinkByHref('admin/config/regional/language/detection/url');
       $this->assertLinkByHref('admin/config/regional/translate');
       // This user cannot configure permissions, so even on admin/index should
       // not see a "Configure permissions" link for the Locale module.

@@ -600,7 +600,14 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
       else {
         // Add the overlay-context state to the link, so "overlay-restore" links
         // can restore the context.
-        $target.attr('href', $.param.fragment(href, { 'overlay-context': this.getPath(window.location) + window.location.search }));
+        if ($target[0].hash) {
+          // Leave links with an existing fragment alone. Adding an extra
+          // parameter to a link like "node/1#section-1" breaks the link.
+        }
+        else {
+          // For links with no existing fragment, add the overlay context.
+          $target.attr('href', $.param.fragment(href, { 'overlay-context': this.getPath(window.location) + window.location.search }));
+        }
 
         // When the link has a destination query parameter and that destination
         // is an admin link we need to fragmentize it. This will make it reopen
@@ -611,8 +618,11 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
           $target.attr('href', $.param.querystring(href, { destination: fragmentizedDestination }));
         }
 
-        // Make the link open in the immediate parent of the frame.
-        $target.attr('target', '_parent');
+        // Make the link open in the immediate parent of the frame, unless the
+        // link already has a different target.
+        if (!$target.attr('target')) {
+          $target.attr('target', '_parent');
+        }
       }
     }
   }

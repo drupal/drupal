@@ -2375,7 +2375,7 @@ class CommonFormatDateTestCase extends DrupalWebTestCase {
 
     // Set language prefix.
     $edit = array('prefix[' . self::LANGCODE . ']' => self::LANGCODE);
-    $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
     // Create a test user to carry out the tests.
     $test_user = $this->drupalCreateUser();

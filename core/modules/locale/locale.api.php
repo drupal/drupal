@@ -150,7 +150,7 @@ function hook_language_negotiation_info() {
  */
 function hook_language_negotiation_info_alter(array &$language_providers) {
   if (isset($language_providers['custom_language_provider'])) {
-    $language_providers['custom_language_provider']['config'] = 'admin/config/regional/language/configure/custom-language-provider';
+    $language_providers['custom_language_provider']['config'] = 'admin/config/regional/language/detection/custom-language-provider';
   }
 }
 

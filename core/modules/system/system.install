@@ -292,8 +292,13 @@ function system_requirements($phase) {
   }
 
   // Test files directories.
+  // If we are installing Drupal, the settings.php file might not exist yet in
+  // the intended conf_path() directory, so don't require it. The conf_path()
+  // cache must also be reset in this case.
+  $require_settings = ($phase != 'install');
+  $reset_cache = !$require_settings;
   $directories = array(
-    variable_get('file_public_path', conf_path() . '/files'),
+    variable_get('file_public_path', conf_path($require_settings, $reset_cache) . '/files'),
     // By default no private files directory is configured. For private files
     // to be secure the admin needs to provide a path outside the webroot.
     variable_get('file_private_path', FALSE),

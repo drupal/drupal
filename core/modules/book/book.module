@@ -221,7 +221,17 @@ function _book_outline_access($node) {
  * @see book_menu()
  */
 function _book_outline_remove_access($node) {
-  return isset($node->book) && ($node->book['bid'] != $node->nid) && _book_outline_access($node);
+  return _book_node_is_removable($node) && _book_outline_access($node);
+}
+
+/**
+ * Determines if a node can be removed from the book.
+ *
+ * A node can be removed from a book if it is actually in a book and it either
+ * is not a top-level page or is a top-level page with no children.
+ */
+function _book_node_is_removable($node) {
+  return (!empty($node->book['bid']) && (($node->book['bid'] != $node->nid) || !$node->book['has_children']));
 }
 
 /**
