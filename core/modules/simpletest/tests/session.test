@@ -142,7 +142,6 @@ class SessionTestCase extends DrupalWebTestCase {
     $config = config('system.performance');
     $config->set('cache', 1);
     $config->save();
-
     $this->drupalGet('');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(TRUE);
