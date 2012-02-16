@@ -586,6 +586,129 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
 }
 
 /**
+ * Tests plural index computation functionality.
+ */
+class LocalePluralFormatTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Plural formula evaluation',
+      'description' => 'Tests plural formula evaluation for various languages.',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale', 'locale_test');
+
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Tests locale_get_plural() functionality.
+   */
+  function testGetPluralFormat() {
+    // Import some .po files with formulas to set up the environment.
+    // These will also add the languages to the system and enable them.
+    $this->importPoFile($this->getPoFileWithSimplePlural(), array(
+      'langcode' => 'fr',
+    ));
+    $this->importPoFile($this->getPoFileWithComplexPlural(), array(
+      'langcode' => 'hr',
+    ));
+
+    // Reset static caches from locale_get_plural() to ensure we get fresh data.
+    drupal_static_reset('locale_get_plural');
+    drupal_static_reset('locale_get_plural:plurals');
+
+    // Test locale_get_plural() for English (no formula presnt).
+    $this->assertIdentical(locale_get_plural(1, 'en'), 0, t("Computed plural index for 'en' with count 1 is 0."));
+    $this->assertIdentical(locale_get_plural(0, 'en'), 1, t("Computed plural index for 'en' with count 0 is 1."));
+    $this->assertIdentical(locale_get_plural(5, 'en'), 1, t("Computed plural index for 'en' with count 5 is 1."));
+
+    // Test locale_get_plural() for French (simpler formula).
+    $this->assertIdentical(locale_get_plural(1, 'fr'), 0, t("Computed plural index for 'fr' with count 1 is 0."));
+    $this->assertIdentical(locale_get_plural(0, 'fr'), 0, t("Computed plural index for 'fr' with count 0 is 0."));
+    $this->assertIdentical(locale_get_plural(5, 'fr'), 1, t("Computed plural index for 'fr' with count 5 is 1."));
+
+    // Test locale_get_plural() for Croatian (more complex formula).
+    $this->assertIdentical(locale_get_plural( 1, 'hr'), 0, t("Computed plural index for 'hr' with count 1 is 0."));
+    $this->assertIdentical(locale_get_plural(21, 'hr'), 0, t("Computed plural index for 'hr' with count 21 is 0."));
+    $this->assertIdentical(locale_get_plural( 0, 'hr'), 2, t("Computed plural index for 'hr' with count 0 is 2."));
+    $this->assertIdentical(locale_get_plural( 2, 'hr'), 1, t("Computed plural index for 'hr' with count 2 is 1."));
+    $this->assertIdentical(locale_get_plural( 8, 'hr'), 2, t("Computed plural index for 'hr' with count 8 is 2."));
+
+    // Test locale_get_plural() for Hungarian (nonexistent language).
+    $this->assertIdentical(locale_get_plural( 1, 'hu'), -1, t("Computed plural index for 'hu' with count 1 is -1."));
+    $this->assertIdentical(locale_get_plural(21, 'hu'), -1, t("Computed plural index for 'hu' with count 21 is -1."));
+    $this->assertIdentical(locale_get_plural( 0, 'hu'), -1, t("Computed plural index for 'hu' with count 0 is -1."));
+  }
+
+  /**
+   * Imports a standalone .po file in a given language.
+   *
+   * @param $contents
+   *   Contents of the .po file to import.
+   * @param $options
+   *   Additional options to pass to the translation import form.
+   */
+  function importPoFile($contents, array $options = array()) {
+    $name = tempnam('temporary://', "po_") . '.po';
+    file_put_contents($name, $contents);
+    $options['files[file]'] = $name;
+    $this->drupalPost('admin/config/regional/translate/import', $options, t('Import'));
+    drupal_unlink($name);
+  }
+
+  /**
+   * Returns a .po file with a simple plural formula.
+   */
+  function getPoFileWithSimplePlural() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 7\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "1 heure"
+msgstr[1] "@count heures"
+
+msgid "Monday"
+msgstr "lundi"
+EOF;
+  }
+
+  /**
+   * Returns a .po file with a complex plural formula.
+   */
+  function getPoFileWithComplexPlural() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 7\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\\n"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "@count sat"
+msgstr[1] "@count sata"
+msgstr[2] "@count sati"
+
+msgid "Monday"
+msgstr "Ponedjeljak"
+EOF;
+  }
+}
+
+/**
  * Functional tests for the import of translation files.
  */
 class LocaleImportFunctionalTest extends DrupalWebTestCase {
