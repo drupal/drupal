@@ -477,7 +477,7 @@ function image_styles() {
  */
 function image_style_load($name) {
   $style = config('image.styles.' . $name)->get();
-  
+
   // @todo Requires a more reliable + generic method to check for whether the
   //   configuration object exists.
   if (!isset($style['name'])) {
