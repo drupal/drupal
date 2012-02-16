@@ -146,7 +146,7 @@ function image_style_form_add_submit($form, &$form_state) {
   $style = $form_state['image_style'];
   // Check if this field has any configuration options.
   $effect = image_effect_definition_load($form_state['values']['new']);
-
+  
   // Load the configuration form for this option.
   if (isset($effect['form callback'])) {
     $path = 'admin/config/media/image-styles/edit/' . $form_state['image_style']['name'] . '/add/' . $form_state['values']['new'];
@@ -178,6 +178,7 @@ function image_style_form_submit($form, &$form_state) {
           'name' => $style['effects'][$ieid]['name'],
           'data' => $style['effects'][$ieid]['data'],
           'weight' => $effect_data['weight'],
+          'ieid' => $ieid,
         );
         $style['effects'][$ieid] = $effect;
       }
