@@ -260,7 +260,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
    */
   function testAliasTranslation() {
     // Set 'page' content type to enable translation.
-    variable_set('language_content_type_page', 2);
+    variable_set('node_type_language_page', TRANSLATION_ENABLED);
 
     $english_node = $this->drupalCreateNode(array('type' => 'page'));
     $english_alias = $this->randomName();

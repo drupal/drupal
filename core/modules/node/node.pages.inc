@@ -181,6 +181,29 @@ function node_form($form, &$form_state, $node) {
   // @todo D8: Remove. Modules should access the node using $form_state['node'].
   $form['#node'] = $node;
 
+  if (variable_get('node_type_language_' . $node->type, 0) && module_exists('language')) {
+    $languages = language_list(TRUE);
+    $language_options = array();
+    foreach ($languages as $langcode => $language) {
+      $language_options[$langcode] = $language->name;
+    }
+    $form['language'] = array(
+      '#type' => 'select',
+      '#title' => t('Language'),
+      '#default_value' => (isset($node->language) ? $node->language : ''),
+      '#options' => $language_options,
+      '#empty_value' => LANGUAGE_NONE,
+    );
+  }
+  else {
+    $form['language'] = array(
+      '#type' => 'value',
+      // New nodes without multilingual support get the default language, old
+      // nodes keep their language if language.module is not available.
+      '#value' => !isset($form['#node']->nid) ? language_default()->langcode : $node->language,
+    );
+  }
+
   $form['additional_settings'] = array(
     '#type' => 'vertical_tabs',
     '#weight' => 99,

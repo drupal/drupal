@@ -187,6 +187,14 @@ function node_type_form($form, &$form_state, $type = NULL) {
     ),
     '#description' => t('Users with the <em>Administer content</em> permission will be able to override these options.'),
   );
+  if (module_exists('language')) {
+    $form['workflow']['node_type_language'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Multilingual support'),
+      '#default_value' => variable_get('node_type_language_' . $type->type, 0),
+      '#description' => t('Add a language selection field to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/config/regional/language'))),
+    );
+  }
   $form['display'] = array(
     '#type' => 'fieldset',
     '#title' => t('Display settings'),

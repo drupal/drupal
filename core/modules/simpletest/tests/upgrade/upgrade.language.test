@@ -40,5 +40,11 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
     foreach ($languages as $language) {
       $this->assertTrue($language->default == ($language->langcode == 'ca'), t('@language default property properly set', array('@language' => $language->name)));
     }
+
+    // Check for node content type settings upgrade.
+    $this->drupalGet('node/add/article');
+    $this->assertFieldByName('language');
+    $this->drupalGet('node/add/page');
+    $this->assertNoFieldByName('language');
   }
 }

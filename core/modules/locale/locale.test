@@ -1227,7 +1227,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     $this->assertEqual($GLOBALS['language']->langcode, $this->langcode, t('Current language: %lang', array('%lang' => $GLOBALS['language']->langcode)));
 
     // Enable multilingual workflow option for articles.
-    variable_set('language_content_type_article', 1);
+    variable_set('node_type_language_article', 1);
 
     // Change JavaScript translations directory.
     variable_set('locale_js_directory', 'js_translations');
@@ -1295,10 +1295,6 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     // Check JavaScript parsed.
     $javascript_parsed_count = count(variable_get('javascript_parsed', array()));
     $this->assertEqual($javascript_parsed_count, 0, t('JavaScript parsed count: %count', array('%count' => $javascript_parsed_count)));
-
-    // Check multilingual workflow option for articles.
-    $multilingual = variable_get('language_content_type_article', 0);
-    $this->assertEqual($multilingual, 0, t('Multilingual workflow option: %status', array('%status' => t($multilingual ? 'enabled': 'disabled'))));
 
     // Check JavaScript translations directory.
     $locale_js_directory = variable_get('locale_js_directory', 'languages');
@@ -1946,7 +1942,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $this->drupalGet('admin/structure/types/manage/page');
     $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
     $edit = array(
-      'language_content_type' => 1,
+      'node_type_language' => 1,
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
@@ -2016,7 +2012,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     // Set "Article" content type to use multilingual support.
     $this->drupalGet('admin/structure/types/manage/article');
     $edit = array(
-      'language_content_type' => 1,
+      'node_type_language' => 1,
     );
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Article')), t('Article content type has been updated.'));
@@ -2508,7 +2504,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
 
     // Set "Basic page" content type to use multilingual support.
     $edit = array(
-      'language_content_type' => 1,
+      'node_type_language' => 1,
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
@@ -2622,7 +2618,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Set "Article" content type to use multilingual support.
-    $edit = array('language_content_type' => 1);
+    $edit = array('node_type_language' => 1);
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
 
     // Enable content language negotiation UI.

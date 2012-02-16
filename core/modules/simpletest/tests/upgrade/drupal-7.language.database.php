@@ -510,6 +510,10 @@ db_insert('variable')->fields(array(
   'name' => 'locale_language_providers_weight_language',
   'value' => 'a:5:{s:10:"locale-url";s:2:"-8";s:14:"locale-session";s:2:"-6";s:11:"locale-user";s:2:"-4";s:14:"locale-browser";s:2:"-2";s:16:"language-default";s:2:"10";}',
 ))
+->values(array(
+  'name' => 'language_content_type_article',
+  'value' => 's:1:"1";',
+))
 ->execute();
 
 // Enable the locale module.
