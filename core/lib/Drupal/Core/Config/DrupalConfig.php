@@ -170,9 +170,8 @@ class DrupalConfig {
    *
    * @param $key
    *   @todo
-   *
    */
-  public function unset($key) {
+  public function clear($key) {
     $parts = explode('.', $key);
     if (count($parts) == 1) {
       unset($this->data[$key]);
