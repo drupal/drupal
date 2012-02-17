@@ -169,7 +169,7 @@ class DrupalConfig {
    * Unsets value in this config object.
    *
    * @param $key
-   *   @todo
+   *   Name of the key whose value should be unset.
    */
   public function clear($key) {
     $parts = explode('.', $key);
