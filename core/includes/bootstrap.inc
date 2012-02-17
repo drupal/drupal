@@ -239,7 +239,6 @@ const REGISTRY_WRITE_LOOKUP_CACHE = 2;
  */
 const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 
-// Will go away when we've converted to PSR-0
 require_once DRUPAL_ROOT . '/core/includes/config.inc';
 
 /**
