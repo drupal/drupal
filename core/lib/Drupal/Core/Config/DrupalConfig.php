@@ -126,6 +126,22 @@ class DrupalConfig {
     return $this;
   }
 
+  /**
+   * Casts a saved value to a string.
+   *
+   * The configuration system only saves strings or arrays. Any scalar
+   * non-string value is cast to a string. The one exception is boolean FALSE
+   * which would normally become '' when cast to a string, but is manually
+   * cast to '0' here for convenience and consistency.
+   *
+   * Any non-scalar value that is not an array (aka objects) gets cast
+   * to an array.
+   *
+   * @param $value
+   *   A value being saved into the configuration system.
+   * @param $value
+   *   The value cast to a string or array.
+   */
   public function castValue($value) {
     if (is_scalar($value)) {
       // Handle special case of FALSE, which should be '0' instead of ''.
