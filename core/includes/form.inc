@@ -4281,7 +4281,7 @@ function element_validate_number($element, &$form_state) {
  * clean code independence, ensuring that several batches submitted by
  * different parts of the code (core / contrib modules) can be processed
  * correctly while not interfering or having to cope with each other. Each
- * batch set gets to specify his own UI messages, operates on its own set
+ * batch set gets to specify its own UI messages, operates on its own set
  * of operations and results, and triggers its own 'finished' callback.
  * Batch sets are processed sequentially, with the progress bar starting
  * fresh for every new set.
