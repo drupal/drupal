@@ -171,9 +171,8 @@ class DrupalConfig {
    * @param $key
    *   @todo
    *
-   * @todo Rename into unset().
    */
-  public function clear($key) {
+  public function unset($key) {
     $parts = explode('.', $key);
     if (count($parts) == 1) {
       unset($this->data[$key]);

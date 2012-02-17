@@ -1017,7 +1017,7 @@ function image_effect_save($style_name, $effect) {
  */
 function image_effect_delete($style_name, $effect) {
   $config = config('image.styles.' . $style_name);
-  $config->clear('effects.' . $effect['ieid']);
+  $config->unset('effects.' . $effect['ieid']);
   $config->save();
   $style = image_style_load($style_name);
   image_style_flush($style);
