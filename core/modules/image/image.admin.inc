@@ -188,12 +188,20 @@ function image_style_form_submit($form, &$form_state) {
   // Update the image style name if it has changed. We also need to delete the
   // old style, because there is no concept of rename at the moment, just
   // create and delete.
+  // @todo The config API does not yet support the concept of a rename, but
+  //   hooks need to be able to change old style name references to the new
+  //   name, so first save the new style, then delete the old, so that the
+  //   delete function can receive the name of a fully saved style to update
+  //   references to.
   if (isset($form_state['values']['name']) && $style['name'] != $form_state['values']['name']) {
-    image_style_delete($style);
+    $old_style = $style;
     $style['name'] = $form_state['values']['name'];
   }
-
   image_style_save($style);
+  if (isset($old_style)) {
+    image_style_delete($old_style, $style['name']);
+  }
+
   if ($form_state['values']['op'] == t('Update style')) {
     drupal_set_message(t('Changes to the style have been saved.'));
   }
