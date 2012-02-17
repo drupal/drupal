@@ -192,6 +192,20 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     // Read true value
     $this->assertEqual($config->get($true_key), '1', t('Boolean TRUE value returned the string \'1\'.'));
 
+    // Unset a top level value
+    $config->clear($key);
+    
+    // Unset a nested value
+    $config->clear($nested_key);
+    $config->save();
+    $config = config($name);
+    
+    // Read unset top level value
+    $this->assertNull($config->get($key), t('Top level value unset.'));
+
+    // Read unset nested value
+    $this->assertNull($config->get($nested_key), t('Nested value unset.'));
+
     // Delete the configuration.
     $config = config($name);
     $config->delete();
