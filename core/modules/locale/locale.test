@@ -2333,7 +2333,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test if the url function returns the right url when using different domains for different languages.
+   * Tests url() when separate domains are used for multiple languages.
    */
   function testLanguageDomain() {
     // Add the Italian language.
