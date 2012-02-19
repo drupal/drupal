@@ -17,7 +17,7 @@
  */
 
 /**
- * Parses Gettext Portable Object file information and inserts into database
+ * Parses Gettext Portable Object information and inserts it into the database.
  *
  * @param $file
  *   Drupal file object corresponding to the PO file to import.
@@ -74,7 +74,7 @@ function _locale_import_po($file, $langcode, $mode) {
 }
 
 /**
- * Parses Gettext Portable Object file into an array
+ * Parses a Gettext Portable Object file into an array.
  *
  * @param $op
  *   Storage operation type: db-store or mem-store.
@@ -335,7 +335,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
 }
 
 /**
- * Sets an error message occurred during locale file parsing.
+ * Sets an error message if an error occurred during locale file parsing.
  *
  * @param $message
  *   The message to be translated.
@@ -354,7 +354,7 @@ function _locale_import_message($message, $file, $lineno = NULL) {
 }
 
 /**
- * Imports a string into the database
+ * Performs the specified operation for one string.
  *
  * @param $op
  *   Operation to perform: 'db-store', 'db-report', 'mem-store' or 'mem-report'.
@@ -448,7 +448,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
 }
 
 /**
- * Import one string into the database.
+ * Imports one string into the database.
  *
  * @param $report
  *   Report array summarizing the number of changes done in the form:
@@ -562,7 +562,7 @@ function _locale_import_one_string_db(&$report, $langcode, $context, $source, $t
 }
 
 /**
- * Parses a Gettext Portable Object file header
+ * Parses a Gettext Portable Object file header.
  *
  * @param $header
  *   A string containing the complete header.
@@ -583,7 +583,7 @@ function _locale_import_parse_header($header) {
 }
 
 /**
- * Parses a Plural-Forms entry from a Gettext Portable Object file header
+ * Parses a Plural-Forms entry from a Gettext Portable Object file header.
  *
  * @param $pluralforms
  *   A string containing the Plural-Forms entry.
@@ -627,7 +627,7 @@ function _locale_import_parse_plural_forms($pluralforms, $filepath) {
 }
 
 /**
- * Parses and sanitizes an arithmetic formula into a PHP expression
+ * Parses and sanitizes an arithmetic formula into a PHP expression.
  *
  * While parsing, we ensure, that the operators have the right
  * precedence and associativity.
@@ -730,7 +730,7 @@ function _locale_import_parse_arithmetic($string) {
 }
 
 /**
- * Backward compatible implementation of token_get_all() for formula parsing
+ * Provides backward-compatible formula parsing for token_get_all().
  *
  * @param $string
  *   A string containing the arithmetic formula.
@@ -795,9 +795,9 @@ function _locale_import_tokenize_formula($formula) {
 }
 
 /**
- * Modify a string to contain proper count indices
+ * Adds count indices to a string.
  *
- * This is a callback function used via array_map()
+ * Callback for array_map() within _locale_import_one_string().
  *
  * @param $entry
  *   An array element.
@@ -816,13 +816,13 @@ function _locale_import_append_plural($entry, $key) {
 }
 
 /**
- * Generate a short, one string version of the passed comment array
+ * Generates a short, one-string version of the passed comment array.
  *
  * @param $comment
  *   An array of strings containing a comment.
  *
  * @return
- *   Short one string version of the comment.
+ *   Short one-string version of the comment.
  */
 function _locale_import_shorten_comments($comment) {
   $comm = '';
@@ -839,7 +839,7 @@ function _locale_import_shorten_comments($comment) {
 }
 
 /**
- * Parses a string in quotes
+ * Parses a string in quotes.
  *
  * @param $string
  *   A string specified with enclosing quotes.
@@ -865,13 +865,14 @@ function _locale_import_parse_quoted($string) {
 }
 
 /**
- * Generates a structured array of all strings with translations in
- * $language, if given. This array can be used to generate an export
- * of the string in the database.
+ * Generates a structured array of all translated strings for the language.
  *
  * @param $language
  *   Language object to generate the output for, or NULL if generating
  *   translation template.
+ *
+ * @return
+ *   An array of translated strings that can be used to generate an export.
  */
 function _locale_export_get_strings($language = NULL) {
   if (isset($language)) {
@@ -902,7 +903,7 @@ function _locale_export_get_strings($language = NULL) {
 }
 
 /**
- * Generates the PO(T) file contents for given strings.
+ * Generates the PO(T) file contents for the given strings.
  *
  * @param $language
  *   Language object to generate the output for, or NULL if generating
@@ -999,7 +1000,7 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
 }
 
 /**
- * Write a generated PO or POT file to the output.
+ * Writes a generated PO or POT file to the output.
  *
  * @param $language
  *   Language object to generate the output for, or NULL if generating
@@ -1026,7 +1027,7 @@ function _locale_export_po($language = NULL, $output = NULL) {
 }
 
 /**
- * Print out a string on multiple lines
+ * Prints a string on multiple lines.
  */
 function _locale_export_string($str) {
   $stri = addcslashes($str, "\0..\37\\\"");
@@ -1062,7 +1063,7 @@ function _locale_export_string($str) {
 }
 
 /**
- * Custom word wrapping for Portable Object (Template) files.
+ * Wraps text for Portable Object (Template) files.
  */
 function _locale_export_wrap($str, $len) {
   $words = explode(' ', $str);
@@ -1090,7 +1091,7 @@ function _locale_export_wrap($str, $len) {
 }
 
 /**
- * Removes plural index information from a string
+ * Removes plural index information from a string.
  */
 function _locale_export_remove_plural($entry) {
   return preg_replace('/(@count)\[[0-9]\]/', '\\1', $entry);
