@@ -667,13 +667,17 @@ function comment_node_view($node, $view_mode) {
         }
       }
       if ($node->comment == COMMENT_NODE_OPEN) {
+        $comment_form_location = variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW);
         if (user_access('post comments')) {
           $links['comment-add'] = array(
             'title' => t('Add new comment'),
-            'href' => "comment/reply/$node->nid",
+            'href' => "node/$node->nid",
             'attributes' => array('title' => t('Add a new comment to this page.')),
             'fragment' => 'comment-form',
           );
+          if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
+            $links['comment-add']['href'] = "comment/reply/$node->nid";
+          }
         }
         else {
           $links['comment-forbidden'] = array(

@@ -920,6 +920,17 @@ class CommentInterfaceTest extends CommentHelperCase {
         }
         else {
           $this->assertLink('Add new comment');
+
+          // Verify that the "Add new comment" link points to the correct URL
+          // based on the comment form location configuration.
+          if ($info['form'] == COMMENT_FORM_SEPARATE_PAGE) {
+            $this->assertLinkByHref("comment/reply/$nid#comment-form", 0, 'Comment form link destination is on a separate page.');
+            $this->assertNoLinkByHref("node/$nid#comment-form");
+          }
+          else {
+            $this->assertLinkByHref("node/$nid#comment-form", 0, 'Comment form link destination is on node.');
+            $this->assertNoLinkByHref("comment/reply/$nid#comment-form");
+          }
         }
 
         // Also verify that the comment form appears according to the configured
