@@ -1907,6 +1907,8 @@ function comment_preview($comment) {
     if (!empty($account->uid)) {
       $comment->uid = $account->uid;
       $comment->name = check_plain($account->name);
+      $comment->signature = $account->signature;
+      $comment->signature_format = $account->signature_format;
     }
     elseif (empty($comment->name)) {
       $comment->name = variable_get('anonymous', t('Anonymous'));
