@@ -876,7 +876,7 @@ function locale_block_info() {
   include_once DRUPAL_ROOT . '/core/includes/language.inc';
   $block = array();
   $info = language_types_info();
-  foreach (language_types_configurable(FALSE) as $type) {
+  foreach (language_types_get_configurable(FALSE) as $type) {
     $block[$type] = array(
       'info' => t('Language switcher (@type)', array('@type' => $info[$type]['name'])),
       // Not worth caching.
@@ -934,7 +934,7 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
       $callbacks = array();
       include_once DRUPAL_ROOT . '/core/includes/language.inc';
 
-      foreach (language_types_configurable() as $type) {
+      foreach (language_types_get_configurable() as $type) {
         // Get url rewriter callbacks only from enabled language providers.
         $negotiation = variable_get("language_negotiation_$type", array());
 

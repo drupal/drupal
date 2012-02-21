@@ -11,11 +11,42 @@
 const LANGUAGE_NEGOTIATION_DEFAULT = 'language-default';
 
 /**
- * Return all the defined language types.
+ * Chooses a language for the given type based on language negotiation settings.
+ *
+ * @param $type
+ *   The language type key.
  *
  * @return
- *   An array of language type names. The name will be used as the global
- *   variable name the language value will be stored in.
+ *   The negotiated language object.
+ */
+function language_types_initialize($type) {
+  // Execute the language providers in the order they were set up and return the
+  // first valid language found.
+  $negotiation = variable_get("language_negotiation_$type", array());
+
+  foreach ($negotiation as $provider_id => $provider) {
+    $language = language_provider_invoke($provider_id, $provider);
+    if ($language) {
+      // Remember the provider key used to detect the language.
+      $language->provider = $provider_id;
+      return $language;
+    }
+  }
+
+  // If no other language was found use the default one.
+  $language = language_default();
+  $language->provider = LANGUAGE_NEGOTIATION_DEFAULT;
+  return $language;
+}
+
+/**
+ * Returns information about all defined language types.
+ *
+ * @return
+ *   An associative array of language type information arrays keyed by type
+ *   names. Based on information from hook_language_types_info().
+ *
+ * @see hook_language_types_info().
  */
 function language_types_info() {
   $language_types = &drupal_static(__FUNCTION__);
@@ -30,7 +61,7 @@ function language_types_info() {
 }
 
 /**
- * Return only the configurable language types.
+ * Returns only the configurable language types.
  *
  * A language type maybe configurable or fixed. A fixed language type is a type
  * whose negotiation values are unchangeable and defined while defining the
@@ -46,11 +77,11 @@ function language_types_info() {
  * @return
  *   An array of language type names.
  */
-function language_types_configurable($stored = TRUE) {
+function language_types_get_configurable($stored = TRUE) {
   $configurable = &drupal_static(__FUNCTION__);
 
   if ($stored && !isset($configurable)) {
-    $types = variable_get('language_types', drupal_language_types());
+    $types = variable_get('language_types', language_types_get_default());
     $configurable = array_keys(array_filter($types));
   }
 
@@ -74,7 +105,7 @@ function language_types_configurable($stored = TRUE) {
  *   An array of language types.
  */
 function language_types_disable($types) {
-  $enabled_types = variable_get('language_types', drupal_language_types());
+  $enabled_types = variable_get('language_types', language_types_get_default());
 
   foreach ($types as $type) {
     unset($enabled_types[$type]);
@@ -96,6 +127,7 @@ function language_types_set() {
   // Determine which language types are configurable and which not by checking
   // whether the 'fixed' key is defined. Non-configurable (fixed) language types
   // have their language negotiation settings stored there.
+  $language_types = array();
   $defined_providers = language_negotiation_info();
   foreach (language_types_info() as $type => $info) {
     if (isset($info['fixed'])) {
@@ -113,12 +145,12 @@ function language_types_set() {
     }
   }
 
-  // Save language types.
+  // Save enabled language types.
   variable_set('language_types', $language_types);
 
-  // Ensure that subsequent calls of language_types_configurable() return the
-  // updated language type information.
-  drupal_static_reset('language_types_configurable');
+  // Ensure that subsequent calls of language_types_get_configurable() return
+  // the updated language type information.
+  drupal_static_reset('language_types_get_configurable');
 }
 
 /**
@@ -166,7 +198,7 @@ function language_negotiation_get($type, $provider_id = NULL) {
  *   provider is enabled, FALSE otherwise.
  */
 function language_negotiation_get_any($provider_id) {
-  foreach (language_types_configurable() as $type) {
+  foreach (language_types_get_configurable() as $type) {
     if (language_negotiation_get($type, $provider_id)) {
       return TRUE;
     }
@@ -250,7 +282,7 @@ function language_negotiation_set($type, $language_providers) {
   $negotiation = array();
   $providers_weight = array();
   $defined_providers = language_negotiation_info();
-  $default_types = language_types_configurable(FALSE);
+  $default_types = language_types_get_configurable(FALSE);
 
   // Initialize the providers weight list.
   foreach ($language_providers as $id => $provider) {
@@ -367,34 +399,6 @@ function language_provider_invoke($provider_id, $provider = NULL) {
 function language_provider_weight($provider) {
   $default = is_numeric($provider) ? $provider : 0;
   return isset($provider['weight']) && is_numeric($provider['weight']) ? $provider['weight'] : $default;
-}
-
-/**
- * Choose a language for the given type based on language negotiation settings.
- *
- * @param $type
- *   The language type.
- *
- * @return
- *   The negotiated language object.
- */
-function language_initialize($type) {
-  // Execute the language providers in the order they were set up and return the
-  // first valid language found.
-  $negotiation = variable_get("language_negotiation_$type", array());
-
-  foreach ($negotiation as $provider_id => $provider) {
-    $language = language_provider_invoke($provider_id, $provider);
-    if ($language) {
-      $language->provider = $provider_id;
-      return $language;
-    }
-  }
-
-  // If no other language was found use the default one.
-  $language = language_default();
-  $language->provider = LANGUAGE_NEGOTIATION_DEFAULT;
-  return $language;
 }
 
 /**

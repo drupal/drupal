@@ -29,7 +29,7 @@ function locale_install() {
   }
 
   // Enable URL language detection for each (core) configurable language type.
-  foreach (language_types_configurable() as $type) {
+  foreach (language_types_get_configurable() as $type) {
     variable_set("language_negotiation_$type", $negotiation);
   }
 }
@@ -97,7 +97,7 @@ function locale_uninstall() {
   variable_del('locale_translation_plurals');
   variable_del('locale_translation_javascript');
 
-  foreach (language_types() as $type) {
+  foreach (language_types_get_all() as $type) {
     variable_del("language_negotiation_$type");
     variable_del("locale_language_providers_weight_$type");
   }

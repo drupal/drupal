@@ -1251,7 +1251,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Change language negotiation options.
     drupal_load('module', 'locale');
-    variable_set('language_types', drupal_language_types() + array('language_custom' => TRUE));
+    variable_set('language_types', language_types_get_default() + array('language_custom' => TRUE));
     variable_set('language_negotiation_' . LANGUAGE_TYPE_INTERFACE, locale_language_negotiation_info());
     variable_set('language_negotiation_' . LANGUAGE_TYPE_CONTENT, locale_language_negotiation_info());
     variable_set('language_negotiation_' . LANGUAGE_TYPE_URL, locale_language_negotiation_info());
@@ -1280,7 +1280,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Check language negotiation.
     require_once DRUPAL_ROOT . '/core/includes/language.inc';
-    $this->assertTrue(count(language_types()) == count(drupal_language_types()), t('Language types reset'));
+    $this->assertTrue(count(language_types_get_all()) == count(language_types_get_default()), t('Language types reset'));
     $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_DEFAULT;
     $this->assertTrue($language_negotiation, t('Interface language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
     $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_CONTENT) == LANGUAGE_NEGOTIATION_DEFAULT;
@@ -2795,7 +2795,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     variable_set('locale_test_content_language_type', TRUE);
     $this->languageNegotiationUpdate();
     $type = LANGUAGE_TYPE_CONTENT;
-    $language_types = variable_get('language_types', drupal_language_types());
+    $language_types = variable_get('language_types', language_types_get_default());
     $this->assertTrue($language_types[$type], t('Content language type is configurable.'));
 
     // Enable some core and custom language providers. The test language type is
@@ -2821,7 +2821,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
 
     // Check that type-specific language providers can be assigned only to the
     // corresponding language types.
-    foreach (language_types_configurable() as $type) {
+    foreach (language_types_get_configurable() as $type) {
       $form_field = $type . '[enabled][test_language_provider_ts]';
       if ($type == $test_type) {
         $this->assertFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language provider available for %type.', array('%type' => $type)));
@@ -2834,7 +2834,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     // Check language negotiation results.
     $this->drupalGet('');
     $last = variable_get('locale_test_language_negotiation_last', array());
-    foreach (language_types() as $type) {
+    foreach (language_types_get_all() as $type) {
       $langcode = $last[$type];
       $value = $type == LANGUAGE_TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
       $this->assertEqual($langcode, $value, t('The negotiated language for %type is %language', array('%type' => $type, '%language' => $langcode)));
@@ -2845,7 +2845,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     $this->languageNegotiationUpdate('disable');
 
     // Check that only the core language types are available.
-    foreach (language_types() as $type) {
+    foreach (language_types_get_all() as $type) {
       $this->assertTrue(strpos($type, 'test') === FALSE, t('The %type language is still available', array('%type' => $type)));
     }
 
