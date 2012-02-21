@@ -41,6 +41,7 @@ class UrlMatcher extends SymfonyUrlMatcher {
     // Do our fancy frontpage logic.
     if (empty($dpathinfo)) {
       $dpathinfo = variable_get('site_frontpage', 'user');
+      $pathinfo = '/' . $dpathinfo;
     }
 
     if ($router_item = $this->matchDrupalItem($dpathinfo)) {
