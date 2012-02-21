@@ -275,8 +275,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
   else {
     $form['langcode'] = array('#type' => 'textfield',
       '#title' => t('Language code'),
-      '#size' => 12,
-      '#maxlength' => 60,
+      '#maxlength' => 12,
       '#required' => TRUE,
       '#default_value' => @$language->language,
       '#disabled' => (isset($language->language)),
