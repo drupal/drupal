@@ -41,6 +41,16 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
       $this->assertTrue($language->default == ($language->langcode == 'ca'), t('@language default property properly set', array('@language' => $language->name)));
     }
 
+    // Check that both comments display on the node.
+    $this->drupalGet('node/38');
+    $this->assertText('Node title 38', t('Node 38 displayed after update.'));
+    $this->assertText('First test comment', t('Comment 1 displayed after update.'));
+    $this->assertText('Reply to first test comment', t('Comment 2 displayed after update.'));
+
+    // Directly check the comment language property on the first comment.
+    $comment = db_query('SELECT * FROM {comment} WHERE cid = :cid', array(':cid' => 1))->fetchObject();
+    $this->assertTrue($comment->langcode == 'und', t('Comment 1 language code found.'));
+
     // Check for node content type settings upgrade.
     $this->drupalGet('node/add/article');
     $this->assertFieldByName('language');
