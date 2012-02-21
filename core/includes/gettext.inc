@@ -399,19 +399,15 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
           // data untouched or if we don't have an existing plural formula.
           $header = _locale_import_parse_header($value['msgstr']);
 
-          // Get the plural formula and update in database.
+          // Get and store the plural formula if available.
           if (isset($header["Plural-Forms"]) && $p = _locale_import_parse_plural_forms($header["Plural-Forms"], $file->uri)) {
             list($nplurals, $formula) = $p;
+            $locale_plurals[$lang] = array(
+              'plurals' => $nplurals,
+              'formula' => $formula,
+            );
+            variable_set('locale_translation_plurals', $locale_plurals);
           }
-          else {
-            $nplurals = 0;
-            $formula = '';
-          }
-          $locale_plurals[$lang] = array(
-            'plurals' => $nplurals,
-            'formula' => $formula,
-          );
-          variable_set('locale_translation_plurals', $locale_plurals);
         }
         $header_done = TRUE;
       }
