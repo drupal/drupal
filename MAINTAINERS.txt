@@ -247,7 +247,7 @@ Simpletest module
 - Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
 Statistics module
-- Dave Reid 'davereid' <http://drupal.org/user/53892>
+- Tim Millwood 'timmillwood' <http://drupal.org/user/227849>
 
 Syslog module
 - Khalid Baheyeldin 'kbahey' <http://drupal.org/user/4063>
