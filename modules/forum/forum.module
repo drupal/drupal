@@ -773,7 +773,7 @@ function forum_forum_load($tid = NULL) {
     $query->addExpression('SUM(ncs.comment_count)', 'comment_count');
     $counts = $query
       ->fields('f', array('tid'))
-      ->condition('status', 1)
+      ->condition('n.status', 1)
       ->groupBy('tid')
       ->addTag('node_access')
       ->execute()
