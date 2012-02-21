@@ -66,14 +66,16 @@
  *     Most modules do not provide an initial value, and any value provided can
  *     be modified by a user on the block configuration screen.
  *   - 'status': (optional) Initial value for block enabled status. (1 =
- *     enabled, 0 = disabled). Most modules do not provide an initial value,
- *     and any value provided can be modified by a user on the block
- *     configuration screen.
+ *     enabled, 0 = disabled). An initial value for 'region' is required for
+ *     'status' to take effect.
+ *     Most modules do not provide an initial value, and any value provided can
+ *     be modified by a user on the block configuration screen.
  *   - 'region': (optional) Initial value for theme region within which this
- *     block is set. Most modules do not provide an initial value, and
- *     any value provided can be modified by a user on the block configuration
- *     screen. Note: If you set a region that isn't available in the currently
- *     enabled theme, the block will be disabled.
+ *     block is set. If the specified region is not available in a theme, the
+ *     block will be disabled. The initial value for 'status' must be enabled or
+ *     the initial region value is ignored.
+ *     Most modules do not provide an initial value, and any value provided can
+ *     be modified by a user on the block configuration screen.
  *   - 'visibility': (optional) Initial value for the visibility flag, which
  *     tells how to interpret the 'pages' value. Possible values are:
  *     - BLOCK_VISIBILITY_NOTLISTED: Show on all pages except listed pages.
