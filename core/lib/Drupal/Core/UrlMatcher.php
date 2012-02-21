@@ -52,6 +52,13 @@ class UrlMatcher extends SymfonyUrlMatcher {
       if ($ret = $this->matchCollection($pathinfo, $routes)) {
         // Stash the router item in the attributes while we're transitioning.
         $ret['drupal_menu_item'] = $router_item;
+
+        // Most legacy controllers (aka page callbacks) are in a separate file,
+        // so we have to include that.
+        if ($router_item['include_file']) {
+          require_once DRUPAL_ROOT . '/' . $router_item['include_file'];
+        }
+
         return $ret;
       }
     }
