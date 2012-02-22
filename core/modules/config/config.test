@@ -116,13 +116,14 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     $array_value = array(
       'foo' => 'bar',
       'biff' => array(
-        'bang' => FALSE,
+        'bang' => 'pow',
       )
     );
-    $cast_array_value = array(
-      'foo' => 'bar',
-      'biff' => array(
-        'bang' => '0',
+    $casting_array_key = 'casting_array';
+    $casting_array_false_value_key = 'casting_array.cast.false';
+    $casting_array_value = array(
+      'cast' => array(
+        'false' => FALSE,
       )
     );
     $nested_array_key = 'nested.array';
@@ -162,6 +163,9 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
 
     // Add a boolean true value. Should get cast to 1
     $config->set($true_key, TRUE);
+
+    // Add an array with a nested boolean false that should get cast to 0.
+    $config->set($casting_array_key, $casting_array_value);
     $config->save();
 
     // Verify the database entry exists.
@@ -181,10 +185,10 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     $this->assertEqual($config->get($nested_key), $nested_value, t('Nested configuration value found.'));
 
     // Read array
-    $this->assertEqual($config->get($array_key), $cast_array_value, t('Top level array configuration value found.'));
+    $this->assertEqual($config->get($array_key), $array_value, t('Top level array configuration value found.'));
     
     // Read nested array
-    $this->assertEqual($config->get($nested_array_key), $cast_array_value, t('Nested array configuration value found.'));
+    $this->assertEqual($config->get($nested_array_key), $array_value, t('Nested array configuration value found.'));
 
     // Read a top level value that doesn't exist
     $this->assertNull($config->get('i_dont_exist'), t('Non-existent top level value returned NULL.'));
@@ -197,6 +201,9 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
 
     // Read true value
     $this->assertEqual($config->get($true_key), '1', t('Boolean TRUE value returned the string \'1\'.'));
+
+    // Read false that had been nested in an array value
+    $this->assertEqual($config->get($casting_array_false_value_key), '0', t('Nested boolean FALSE value returned the string \'0\'.'));
 
     // Unset a top level value
     $config->clear($key);
