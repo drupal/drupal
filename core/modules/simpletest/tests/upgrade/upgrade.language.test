@@ -51,6 +51,11 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
     $comment = db_query('SELECT * FROM {comment} WHERE cid = :cid', array(':cid' => 1))->fetchObject();
     $this->assertTrue($comment->langcode == 'und', t('Comment 1 language code found.'));
 
+    // Ensure that the language switcher has been correctly upgraded. We need to
+    // assert the expected HTML id because the block might appear even if the
+    // language negotiation settings are not properly upgraded.
+    $this->assertTrue($this->xpath('//div[@id="block-locale-language-interface"]'), t('The language switcher block is being correctly showed.'));
+
     // Check for node content type settings upgrade.
     $this->drupalGet('node/add/article');
     $this->assertFieldByName('language');

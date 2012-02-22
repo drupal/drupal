@@ -1860,10 +1860,10 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
    * Creates a comment, then tests the tokens generated from it.
    */
   function testCommentTokenReplacement() {
-    global $language;
+    global $language_interface;
     $url_options = array(
       'absolute' => TRUE,
-      'language' => $language,
+      'language' => $language_interface,
     );
 
     $this->drupalLogin($this->admin_user);
@@ -1896,8 +1896,8 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:body]'] = _text_sanitize($instance, LANGUAGE_NONE, $comment->comment_body[LANGUAGE_NONE][0], 'value');
     $tests['[comment:url]'] = url('comment/' . $comment->cid, $url_options + array('fragment' => 'comment-' . $comment->cid));
     $tests['[comment:edit-url]'] = url('comment/' . $comment->cid . '/edit', $url_options);
-    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created, 2, $language->langcode);
-    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed, 2, $language->langcode);
+    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created, 2, $language_interface->langcode);
+    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed, 2, $language_interface->langcode);
     $tests['[comment:parent:cid]'] = $comment->pid;
     $tests['[comment:parent:title]'] = check_plain($parent_comment->subject);
     $tests['[comment:node:nid]'] = $comment->nid;
@@ -1909,7 +1909,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('comment' => $comment), array('language' => $language));
+      $output = token_replace($input, array('comment' => $comment), array('language' => $language_interface));
       $this->assertEqual($output, $expected, t('Sanitized comment token %token replaced.', array('%token' => $input)));
     }
 
@@ -1925,7 +1925,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:author:name]'] = $this->admin_user->name;
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('comment' => $comment), array('language' => $language, 'sanitize' => FALSE));
+      $output = token_replace($input, array('comment' => $comment), array('language' => $language_interface, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, t('Unsanitized comment token %token replaced.', array('%token' => $input)));
     }
 
@@ -1938,7 +1938,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[node:comment-count-new]'] = 2;
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('language' => $language));
+      $output = token_replace($input, array('node' => $node), array('language' => $language_interface));
       $this->assertEqual($output, $expected, t('Node comment token %token replaced.', array('%token' => $input)));
     }
   }

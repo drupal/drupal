@@ -112,8 +112,8 @@ const LANGUAGE_NEGOTIATION_URL_DOMAIN = 1;
  *   The current interface language code.
  */
 function locale_language_from_interface() {
-  global $language;
-  return isset($language->langcode) ? $language->langcode : FALSE;
+  global $language_interface;
+  return isset($language_interface->langcode) ? $language_interface->langcode : FALSE;
 }
 
 /**
@@ -553,8 +553,6 @@ function locale_string_is_safe($string) {
  * Drupal.formatPlural() and inserts them into the database.
  */
 function _locale_parse_js_file($filepath) {
-  global $language;
-
   // The file path might contain a query string, so make sure we only use the
   // actual file.
   $parsed_url = drupal_parse_url($filepath);
@@ -708,12 +706,13 @@ function _locale_invalidate_js($langcode = NULL) {
 /**
  * (Re-)Creates the JavaScript translation file for a language.
  *
- * @param $language
+ * @param $langcode
  *   The language, the translation file should be (re)created for.
  */
 function _locale_rebuild_js($langcode = NULL) {
   if (!isset($langcode)) {
-    global $language;
+    global $language_interface;
+    $language = $language_interface;
   }
   else {
     // Get information about the locale.

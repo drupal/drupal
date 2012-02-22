@@ -1269,7 +1269,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Check the UI language.
     drupal_language_initialize();
-    $this->assertEqual($GLOBALS['language']->langcode, $this->langcode, t('Current language: %lang', array('%lang' => $GLOBALS['language']->langcode)));
+    $this->assertEqual($GLOBALS['language_interface']->langcode, $this->langcode, t('Current language: %lang', array('%lang' => $GLOBALS['language_interface']->langcode)));
 
     // Enable multilingual workflow option for articles.
     variable_set('node_type_language_article', 1);
@@ -1314,7 +1314,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Check the init language logic.
     drupal_language_initialize();
-    $this->assertEqual($GLOBALS['language']->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => $GLOBALS['language']->langcode)));
+    $this->assertEqual($GLOBALS['language_interface']->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => $GLOBALS['language_interface']->langcode)));
 
     // Check JavaScript files deletion.
     $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
@@ -1414,7 +1414,7 @@ class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable URL language detection and selection.
-    $edit = array('language[enabled][locale-url]' => '1');
+    $edit = array('language_interface[enabled][locale-url]' => '1');
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Assert that the language switching block is displayed on the frontpage.
@@ -1422,7 +1422,7 @@ class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
     $this->assertText(t('Languages'), t('Language switcher block found.'));
 
     // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-locale-' . $language_type));
+    list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-locale-' . str_replace('_', '-', $language_type)));
     $links = array(
       'active' => array(),
       'inactive' => array(),
@@ -1694,7 +1694,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
 
     // Set language negotiation.
     $edit = array(
-      'language[enabled][locale-url]' => TRUE,
+      'language_interface[enabled][locale-url]' => TRUE,
     );
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->assertText(t('Language negotiation configuration saved.'), t('Set language negotiation.'));
@@ -2348,16 +2348,16 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
 
     // Enable browser and URL language detection.
     $edit = array(
-      'language[enabled][locale-browser]' => TRUE,
-      'language[enabled][locale-url]' => TRUE,
-      'language[weight][locale-browser]' => -8,
-      'language[weight][locale-url]' => -10,
+      'language_interface[enabled][locale-browser]' => TRUE,
+      'language_interface[enabled][locale-url]' => TRUE,
+      'language_interface[weight][locale-browser]' => -8,
+      'language_interface[weight][locale-url]' => -10,
     );
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->drupalGet('admin/config/regional/language/detection');
 
     // Enable the language switcher block.
-    $edit = array('blocks[locale_language][region]' => 'sidebar_first');
+    $edit = array('blocks[locale_language_interface][region]' => 'sidebar_first');
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Access the front page without specifying any valid URL language prefix
@@ -2369,7 +2369,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // Check that the language switcher active link matches the given browser
     // language.
     $args = array(':url' => base_path() . (!empty($GLOBALS['conf']['clean_url']) ? $langcode_browser_fallback : "?q=$langcode_browser_fallback"));
-    $fields = $this->xpath('//div[@id="block-locale-language"]//a[@class="language-link active" and @href=:url]', $args);
+    $fields = $this->xpath('//div[@id="block-locale-language-interface"]//a[@class="language-link active" and @href=:url]', $args);
     $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->name, t('The browser language is the URL active language'));
 
     // Check that URLs are rewritten using the given browser language.
@@ -2391,8 +2391,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
 
     // Enable browser and URL language detection.
     $edit = array(
-      'language[enabled][locale-url]' => TRUE,
-      'language[weight][locale-url]' => -10,
+      'language_interface[enabled][locale-url]' => TRUE,
+      'language_interface[weight][locale-url]' => -10,
     );
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
@@ -2466,7 +2466,7 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Enable URL language detection and selection.
-    $edit = array('language[enabled][locale-url]' => 1);
+    $edit = array('language_interface[enabled][locale-url]' => 1);
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Reset static caching.
@@ -2544,7 +2544,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     language_save($language);
 
     // Enable URL language detection and selection.
-    $edit = array('language[enabled][locale-url]' => '1');
+    $edit = array('language_interface[enabled][locale-url]' => '1');
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Set "Basic page" content type to use multilingual support.
@@ -2674,7 +2674,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     // language will fall back to the default language if no URL language can be
     // detected.
     $edit = array(
-      'language[enabled][locale-user]' => TRUE,
+      'language_interface[enabled][locale-user]' => TRUE,
       'language_content[enabled][locale-url]' => TRUE,
       'language_content[enabled][locale-interface]' => FALSE,
     );

@@ -183,7 +183,7 @@ const LANGUAGE_TYPE_CONTENT = 'language_content';
 /**
  * The type of language used to select the user interface.
  */
-const LANGUAGE_TYPE_INTERFACE = 'language';
+const LANGUAGE_TYPE_INTERFACE = 'language_interface';
 
 /**
  * The type of language used for URLs.
@@ -1518,12 +1518,12 @@ function drupal_unpack($obj, $field = 'data') {
  * @ingroup sanitization
  */
 function t($string, array $args = array(), array $options = array()) {
-  global $language;
+  global $language_interface;
   static $custom_strings;
 
   // Merge in default.
   if (empty($options['langcode'])) {
-    $options['langcode'] = isset($language->langcode) ? $language->langcode : LANGUAGE_SYSTEM;
+    $options['langcode'] = isset($language_interface->langcode) ? $language_interface->langcode : LANGUAGE_SYSTEM;
   }
   if (empty($options['context'])) {
     $options['context'] = '';

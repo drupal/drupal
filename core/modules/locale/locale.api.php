@@ -24,9 +24,9 @@
  * did not happen yet and thus they cannot rely on translated variables.
  */
 function hook_language_init() {
-  global $language, $conf;
+  global $language_interface, $conf;
 
-  switch ($language->langcode) {
+  switch ($language_interface->langcode) {
     case 'it':
       $conf['site_name'] = 'Il mio sito Drupal';
       break;
@@ -52,10 +52,10 @@ function hook_language_init() {
  *   The current path.
  */
 function hook_language_switch_links_alter(array &$links, $type, $path) {
-  global $language;
+  global $language_interface;
 
-  if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language->langcode])) {
-    foreach ($links[$language->langcode] as $link) {
+  if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language_interface->langcode])) {
+    foreach ($links[$language_interface->langcode] as $link) {
       $link['attributes']['class'][] = 'active-language';
     }
   }

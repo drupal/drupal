@@ -321,7 +321,7 @@ function hook_block_view_MODULE_DELTA_alter(&$data, $block) {
  *   An array of $blocks, keyed by the block ID.
  */
 function hook_block_list_alter(&$blocks) {
-  global $language, $theme_key;
+  global $language_interface, $theme_key;
 
   // This example shows how to achieve language specific visibility setting for
   // blocks.
@@ -345,7 +345,7 @@ function hook_block_list_alter(&$blocks) {
       continue;
     }
 
-    if (!isset($block_languages[$block->module][$block->delta][$language->language])) {
+    if (!isset($block_languages[$block->module][$block->delta][$language_interface->language])) {
       // This block should not be displayed with the active language, remove
       // from the list.
       unset($blocks[$key]);

@@ -232,6 +232,49 @@ function locale_update_8000() {
 }
 
 /**
+ * Language type 'language' renamed to 'language_interface'.
+ */
+function locale_update_8001() {
+  // Only change language_types if we had this setting saved. Keep order
+  // of types because that is significant for value dependency.
+  $types = variable_get('language_types', NULL);
+  if (!empty($types) && isset($types['language'])) {
+    $new_types = array();
+    foreach ($types as $key => $type) {
+      $new_types[$key == 'language' ? 'language_interface' : $key] = $type;
+    }
+    variable_set('language_types', $new_types);
+  }
+
+  // Rename language_negotiation_language setting if exists.
+  $setting = variable_get('language_negotiation_language', NULL);
+  if ($setting !== NULL) {
+    variable_set('language_negotiation_language_interface', $setting);
+    variable_del('language_negotiation_language');
+  }
+
+  // Rename locale_language_providers_weight_language setting if exists.
+  $weight = variable_get('locale_language_providers_weight_language', NULL);
+  if ($weight !== NULL) {
+    variable_set('locale_language_providers_weight_language_interface', $weight);
+    variable_del('locale_language_providers_weight_language');
+  }
+
+  // Update block data in all core block related tables. Contributed modules
+  // storing data for blocks will need to update for themselves.
+  $block_tables = array('block', 'block_node_type', 'block_role');
+  foreach ($block_tables as $table) {
+    db_update($table)
+    ->fields(array(
+        'delta' => 'language_interface',
+    ))
+    ->condition('delta', 'language')
+    ->condition('module', 'locale')
+    ->execute();
+  }
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x"
  * The next series of updates should start at 9000.
  */
