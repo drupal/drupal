@@ -224,25 +224,21 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     // Get file listing for all files starting with 'foo'. Should return
     // two elements.
     $files = config_get_signed_file_storage_names_with_prefix('foo');
-    debug($files);
     $this->assertEqual(count($files), 2, 'Two files listed with the prefix \'foo\'.');
     
     // Get file listing for all files starting with 'biff'. Should return
     // one element.
     $files = config_get_signed_file_storage_names_with_prefix('biff');
-    debug($files);
     $this->assertEqual(count($files), 1, 'One file listed with the prefix \'biff\'.');
     
     // Get file listing for all files starting with 'foo.bar'. Should return 
     // one element.
     $files = config_get_signed_file_storage_names_with_prefix('foo.bar');
-    debug($files);
     $this->assertEqual(count($files), 1, 'One file listed with the prefix \'foo.bar\'.');
 
     // Get file listing for all files starting with 'bar'. Should return 
     // an empty array.
     $files = config_get_signed_file_storage_names_with_prefix('bar');
-    debug($files);
     $this->assertEqual($files, array(), 'No files listed with the prefix \'bar\'.');
 
     // Delete the configuration.
@@ -256,6 +252,5 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     
     // Chainable ->set()->save()
     // Attempt to delete non-existing configuration.
-    // Type casting into string. (recursively)
   }
 }
