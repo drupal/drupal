@@ -14,7 +14,7 @@ function language_negotiation_configure_form() {
   $form = array(
     '#submit' => array('language_negotiation_configure_form_submit'),
     '#theme' => 'language_negotiation_configure_form',
-    '#language_types' => language_types_configurable(FALSE),
+    '#language_types' => language_types_get_configurable(FALSE),
     '#language_types_info' => language_types_info(),
     '#language_providers' => language_negotiation_info(),
   );

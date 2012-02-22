@@ -1921,7 +1921,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $account = $this->drupalCreateUser();
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
     $node->title = '<blink>Blinking Text</blink>';
-    global $user, $language;
+    global $user, $language_interface;
 
     $source  = '[node:title]';         // Title of the node we passed in
     $source .= '[node:author:name]';   // Node author's name
@@ -1933,18 +1933,18 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     $target  = check_plain($node->title);
     $target .= check_plain($account->name);
-    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language->langcode);
+    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language_interface->langcode);
     $target .= check_plain($user->name);
-    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language->langcode);
+    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language_interface->langcode);
 
     // Test that the clear parameter cleans out non-existent tokens.
-    $result = token_replace($source, array('node' => $node), array('language' => $language, 'clear' => TRUE));
+    $result = token_replace($source, array('node' => $node), array('language' => $language_interface, 'clear' => TRUE));
     $result = $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens cleared out.');
 
     // Test without using the clear parameter (non-existent token untouched).
     $target .= '[user:name]';
     $target .= '[bogus:token]';
-    $result = token_replace($source, array('node' => $node), array('language' => $language));
+    $result = token_replace($source, array('node' => $node), array('language' => $language_interface));
     $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens ignored.');
 
     // Check that the results of token_generate are sanitized properly. This does NOT
@@ -1966,7 +1966,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
    * Test whether token-replacement works in various contexts.
    */
   function testSystemTokenRecognition() {
-    global $language;
+    global $language_interface;
 
     // Generate prefixes and suffixes for the token context.
     $tests = array(
@@ -1986,7 +1986,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     foreach ($tests as $test) {
       $input = $test['prefix'] . '[site:name]' . $test['suffix'];
       $expected = $test['prefix'] . 'Drupal' . $test['suffix'];
-      $output = token_replace($input, array(), array('language' => $language));
+      $output = token_replace($input, array(), array('language' => $language_interface));
       $this->assertTrue($output == $expected, t('Token recognized in string %string', array('%string' => $input)));
     }
   }
@@ -1995,10 +1995,10 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
    * Tests the generation of all system site information tokens.
    */
   function testSystemSiteTokenReplacement() {
-    global $language;
+    global $language_interface;
     $url_options = array(
       'absolute' => TRUE,
-      'language' => $language,
+      'language' => $language_interface,
     );
 
     // Set a few site variables.
@@ -2018,7 +2018,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array(), array('language' => $language));
+      $output = token_replace($input, array(), array('language' => $language_interface));
       $this->assertEqual($output, $expected, t('Sanitized system site information token %token replaced.', array('%token' => $input)));
     }
 
@@ -2027,7 +2027,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[site:slogan]'] = variable_get('site_slogan', '');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array(), array('language' => $language, 'sanitize' => FALSE));
+      $output = token_replace($input, array(), array('language' => $language_interface, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, t('Unsanitized system site information token %token replaced.', array('%token' => $input)));
     }
   }
@@ -2036,25 +2036,25 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
    * Tests the generation of all system date tokens.
    */
   function testSystemDateTokenReplacement() {
-    global $language;
+    global $language_interface;
 
     // Set time to one hour before request.
     $date = REQUEST_TIME - 3600;
 
     // Generate and test tokens.
     $tests = array();
-    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language->langcode);
-    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language->langcode);
-    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language->langcode);
-    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language->langcode);
-    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language->langcode);
+    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language_interface->langcode);
+    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language_interface->langcode);
+    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language_interface->langcode);
+    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language_interface->langcode);
+    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language_interface->langcode);
     $tests['[date:raw]'] = filter_xss($date);
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('date' => $date), array('language' => $language));
+      $output = token_replace($input, array('date' => $date), array('language' => $language_interface));
       $this->assertEqual($output, $expected, t('Date token %token replaced.', array('%token' => $input)));
     }
   }
@@ -2684,7 +2684,6 @@ class SystemIndexPhpTest extends DrupalWebTestCase {
     $this->assertResponse(404, t("Make sure index.php/user returns a 'page not found'."));
   }
 }
-
 /**
  * Tests uuid.inc and related functions.
  */

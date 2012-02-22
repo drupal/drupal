@@ -1946,7 +1946,7 @@ function hook_xmlrpc_alter(&$methods) {
  *   - message: The text of the message to be logged.
  */
 function hook_watchdog(array $log_entry) {
-  global $base_url, $language;
+  global $base_url, $language_interface;
 
   $severity_list = array(
     WATCHDOG_EMERGENCY     => t('Emergency'),
@@ -1992,7 +1992,7 @@ function hook_watchdog(array $log_entry) {
     '@message'       => strip_tags($log_entry['message']),
   ));
 
-  drupal_mail('emaillog', 'entry', $to, $language, $params);
+  drupal_mail('emaillog', 'entry', $to, $language_interface, $params);
 }
 
 /**

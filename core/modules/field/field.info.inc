@@ -67,7 +67,7 @@ function field_info_cache_clear() {
  * @see _field_info_collate_types_reset()
  */
 function _field_info_collate_types() {
-  global $language;
+  global $language_interface;
 
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
@@ -79,7 +79,7 @@ function _field_info_collate_types() {
 
   // The _info() hooks invoked below include translated strings, so each
   // language is cached separately.
-  $langcode = $language->langcode;
+  $langcode = $language_interface->langcode;
 
   if (!isset($info)) {
     if ($cached = cache('field')->get("field_info_types:$langcode")) {

@@ -741,7 +741,7 @@ function install_verify_requirements(&$install_state) {
     if ($install_state['interactive']) {
       drupal_set_title(st('Requirements problem'));
       $status_report = theme('status_report', array('requirements' => $requirements));
-      $status_report .= st('Check the messages and <a href="!url">proceed with the installation</a>.', array('!url' => check_url(drupal_requirements_url($severity))));
+      $status_report .= st('Check the messages and <a href="!url">try again</a>.', array('!url' => check_url(drupal_requirements_url($severity))));
       return $status_report;
     }
     else {

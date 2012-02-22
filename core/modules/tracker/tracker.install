@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Install, update, and uninstall functions for tracker.module.
+ */
+
+/**
  * Implements hook_uninstall().
  */
 function tracker_uninstall() {

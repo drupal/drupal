@@ -96,19 +96,22 @@ Drupal.behaviors.copyFieldValue = {
  */
 Drupal.behaviors.dateTime = {
   attach: function (context, settings) {
-    for (var value in settings.dateTime) {
-      var settings = settings.dateTime[value];
-      var source = '#edit-' + value;
-      var suffix = source + '-suffix';
+    for (var fieldName in settings.dateTime) {
+      if (settings.dateTime.hasOwnProperty(fieldName)) {
+        (function (fieldSettings, fieldName) {
+          var source = '#edit-' + fieldName;
+          var suffix = source + '-suffix';
 
-      // Attach keyup handler to custom format inputs.
-      $('input' + source, context).once('date-time').keyup(function () {
-        var input = $(this);
-        var url = settings.lookup + (settings.lookup.match(/\?q=/) ? '&format=' : '?format=') + encodeURIComponent(input.val());
-        $.getJSON(url, function (data) {
-          $(suffix).empty().append(' ' + settings.text + ': <em>' + data + '</em>');
-        });
-      });
+          // Attach keyup handler to custom format inputs.
+          $('input' + source, context).once('date-time').keyup(function () {
+            var input = $(this);
+            var url = fieldSettings.lookup + (fieldSettings.lookup.match(/\?q=/) ? '&format=' : '?format=') + encodeURIComponent(input.val());
+            $.getJSON(url, function (data) {
+              $(suffix).empty().append(' ' + fieldSettings.text + ': <em>' + data + '</em>');
+            });
+          });
+        })(settings.dateTime[fieldName], fieldName);
+      }
     }
   }
 };

@@ -134,7 +134,7 @@ function contact_site_form_validate($form, &$form_state) {
  * @see contact_site_form_validate()
  */
 function contact_site_form_submit($form, &$form_state) {
-  global $user, $language;
+  global $user, $language_interface;
 
   $values = $form_state['values'];
   $values['sender'] = $user;
@@ -156,12 +156,12 @@ function contact_site_form_submit($form, &$form_state) {
 
   // If the user requests it, send a copy using the current language.
   if ($values['copy']) {
-    drupal_mail('contact', 'page_copy', $from, $language, $values, $from);
+    drupal_mail('contact', 'page_copy', $from, $language_interface, $values, $from);
   }
 
   // Send an auto-reply if necessary using the current language.
   if ($values['category']['reply']) {
-    drupal_mail('contact', 'page_autoreply', $from, $language, $values, $to);
+    drupal_mail('contact', 'page_autoreply', $from, $language_interface, $values, $to);
   }
 
   flood_register_event('contact', variable_get('contact_threshold_window', 3600));
@@ -270,7 +270,7 @@ function contact_personal_form_validate($form, &$form_state) {
  * @see contact_personal_form_validate()
  */
 function contact_personal_form_submit($form, &$form_state) {
-  global $user, $language;
+  global $user, $language_interface;
 
   $values = $form_state['values'];
   $values['sender'] = $user;
@@ -291,7 +291,7 @@ function contact_personal_form_submit($form, &$form_state) {
 
   // Send a copy if requested, using current page language.
   if ($values['copy']) {
-    drupal_mail('contact', 'user_copy', $from, $language, $values, $from);
+    drupal_mail('contact', 'user_copy', $from, $language_interface, $values, $from);
   }
 
   flood_register_event('contact', variable_get('contact_threshold_window', 3600));
