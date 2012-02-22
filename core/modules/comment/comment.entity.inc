@@ -25,11 +25,11 @@ class Comment extends Entity {
   public $pid;
 
   /**
-   * The comment language.
+   * The comment language code.
    *
    * @var string
    */
-  public $language = LANGUAGE_NONE;
+  public $langcode = LANGUAGE_NONE;
 
   /**
    * The comment title.

@@ -682,7 +682,7 @@ function node_type_update_nodes($old_type, $type) {
  *   type object by $type->disabled being set to TRUE.
  */
 function _node_types_build($rebuild = FALSE) {
-  $cid = 'node_types:' . $GLOBALS['language']->langcode;
+  $cid = 'node_types:' . $GLOBALS['language_interface']->langcode;
 
   if (!$rebuild) {
     $_node_types = &drupal_static(__FUNCTION__);

@@ -28,9 +28,9 @@ db_insert('block')->fields(array(
   'module' => 'locale',
   'delta' => 'language',
   'theme' => 'bartik',
-  'status' => '0',
+  'status' => '1',
   'weight' => '0',
-  'region' => '-1',
+  'region' => 'sidebar_first',
   'custom' => '0',
   'visibility' => '0',
   'pages' => '',
@@ -523,4 +523,262 @@ db_update('system')->fields(array(
 ))
 ->condition('type', 'module')
 ->condition('name', 'locale')
+->execute();
+
+// Add a sample node to test comments on.
+db_insert('node')->fields(array(
+  'nid',
+  'vid',
+  'type',
+  'language',
+  'title',
+  'uid',
+  'status',
+  'created',
+  'changed',
+  'comment',
+  'promote',
+  'sticky',
+  'tnid',
+  'translate',
+))
+->values(array(
+  'nid' => '38',
+  'vid' => '50',
+  'type' => 'article',
+  'language' => 'und',
+  'title' => 'Node title 38',
+  'uid' => '6',
+  'status' => '1',
+  'created' => '1263769200',
+  'changed' => '1314997642',
+  'comment' => '2',
+  'promote' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
+->execute();
+
+// Add its node comment statistics.
+db_insert('node_comment_statistics')->fields(array(
+  'nid',
+  'cid',
+  'last_comment_timestamp',
+  'last_comment_name',
+  'last_comment_uid',
+  'comment_count',
+))
+->values(array(
+  'nid' => '38',
+  'cid' => '0',
+  'last_comment_timestamp' => '1314997642',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '6',
+  'comment_count' => '1',
+))
+->execute();
+
+// Add node revision information.
+db_insert('node_revision')->fields(array(
+  'nid',
+  'vid',
+  'uid',
+  'title',
+  'log',
+  'timestamp',
+  'status',
+  'comment',
+  'promote',
+  'sticky',
+))
+->values(array(
+  'nid' => '38',
+  'vid' => '50',
+  'uid' => '6',
+  'title' => 'Node title 38',
+  'log' => 'added a node to comment on',
+  'timestamp' => '1314997642',
+  'status' => '1',
+  'comment' => '2',
+  'promote' => '0',
+  'sticky' => '0',
+))
+->execute();
+
+// Add the body field value.
+db_insert('field_data_body')->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'body_value',
+  'body_summary',
+  'body_format',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'deleted' => '0',
+  'entity_id' => '38',
+  'revision_id' => '50',
+  'language' => 'und',
+  'delta' => '0',
+  'body_value' => 'Node body',
+  'body_summary' => 'Node body',
+  'body_format' => 'filtered_html',
+))
+->execute();
+
+// Add revision information for the body field value.
+db_insert('field_revision_body')->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'body_value',
+  'body_summary',
+  'body_format',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'deleted' => '0',
+  'entity_id' => '38',
+  'revision_id' => '50',
+  'language' => 'und',
+  'delta' => '0',
+  'body_value' => 'Node body',
+  'body_summary' => 'Node body',
+  'body_format' => 'filtered_html',
+))
+->execute();
+
+// Add two comments to this node in a thread.
+db_insert('comment')->fields(array(
+  'cid',
+  'pid',
+  'nid',
+  'uid',
+  'subject',
+  'hostname',
+  'created',
+  'changed',
+  'status',
+  'thread',
+  'name',
+  'mail',
+  'homepage',
+  'language',
+))
+->values(array(
+  'cid' => '1',
+  'pid' => '0',
+  'nid' => '38',
+  'uid' => '6',
+  'subject' => 'First test comment',
+  'hostname' => '127.0.0.1',
+  'created' => '1314997642',
+  'changed' => '1314997642',
+  'status' => '1',
+  'thread' => '01/',
+  'name' => 'test user 4',
+  'mail' => '',
+  'homepage' => '',
+  'language' => 'und',
+))
+->values(array(
+  'cid' => '2',
+  'pid' => '0',
+  'nid' => '38',
+  'uid' => '6',
+  'subject' => 'Reply to first test comment',
+  'hostname' => '127.0.0.1',
+  'created' => '1314997642',
+  'changed' => '1314997642',
+  'status' => '1',
+  'thread' => '01.00/',
+  'name' => 'test user 4',
+  'mail' => '',
+  'homepage' => '',
+  'language' => 'und',
+))
+->execute();
+
+// Add both comment bodies.
+db_insert('field_data_comment_body')->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'comment_body_value',
+  'comment_body_format',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_article',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'und',
+  'delta' => '0',
+  'comment_body_value' => 'Comment body',
+  'comment_body_format' => 'filtered_html',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_article',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'und',
+  'delta' => '0',
+  'comment_body_value' => 'Second comment body',
+  'comment_body_format' => 'filtered_html',
+))
+->execute();
+
+// Add revisions for comment bodies.
+db_insert('field_revision_comment_body')->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'comment_body_value',
+  'comment_body_format',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_article',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'und',
+  'delta' => '0',
+  'comment_body_value' => 'Comment body',
+  'comment_body_format' => 'filtered_html',
+))
+->values(array(
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_article',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'und',
+  'delta' => '0',
+  'comment_body_value' => 'Second comment body',
+  'comment_body_format' => 'filtered_html',
+))
 ->execute();

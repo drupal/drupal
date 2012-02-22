@@ -138,7 +138,7 @@ function update_prepare_d8_bootstrap() {
  */
 function update_prepare_stored_includes() {
   // Update language negotiation settings.
-  foreach (language_types() as $language_type) {
+  foreach (language_types_get_all() as $language_type) {
     $negotiation = variable_get("language_negotiation_$language_type", array());
     foreach ($negotiation as $id => &$provider) {
       if (isset($negotiation[$id]['file']) && $negotiation[$id]['file'] == 'includes/locale.inc') {

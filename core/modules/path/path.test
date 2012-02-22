@@ -251,7 +251,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable URL language detection and selection.
-    $edit = array('language[enabled][locale-url]' => 1);
+    $edit = array('language_interface[enabled][locale-url]' => 1);
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
   }
 
@@ -309,10 +309,10 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     // Confirm that the alias works even when changing language negotiation
     // options. Enable User language detection and selection over URL one.
     $edit = array(
-      'language[enabled][locale-user]' => 1,
-      'language[weight][locale-user]' => -9,
-      'language[enabled][locale-url]' => 1,
-      'language[weight][locale-url]' => -8,
+      'language_interface[enabled][locale-user]' => 1,
+      'language_interface[weight][locale-user]' => -9,
+      'language_interface[enabled][locale-url]' => 1,
+      'language_interface[weight][locale-url]' => -8,
     );
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
@@ -336,7 +336,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $this->assertText($french_node->title, 'Alias for French translation works.');
 
     // Disable URL language negotiation.
-    $edit = array('language[enabled][locale-url]' => FALSE);
+    $edit = array('language_interface[enabled][locale-url]' => FALSE);
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Check that the English alias still works.
@@ -394,7 +394,7 @@ class PathLanguageUITestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable URL language detection and selection.
-    $edit = array('language[enabled][locale-url]' => 1);
+    $edit = array('language_interface[enabled][locale-url]' => 1);
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
   }
 
@@ -457,7 +457,6 @@ class PathMonolingualTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    global $language;
     parent::setUp('path', 'locale', 'translation');
 
     // Create and login user.
@@ -482,7 +481,7 @@ class PathMonolingualTestCase extends DrupalWebTestCase {
     $this->assertEqual(language_default()->langcode, 'fr', t('French is the default language'));
 
     // Set language detection to URL.
-    $edit = array('language[enabled][locale-url]' => TRUE);
+    $edit = array('language_interface[enabled][locale-url]' => TRUE);
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Force languages to be initialized.
