@@ -18,7 +18,7 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
     // catch the exception and just return an empty array so the caller can
     // handle it if need be.
     try {
-      return db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $this->name), array('throw_exception' => TRUE))->fetchField();
+      return db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $this->name))->fetchField();
     } catch (Exception $e) {
       return array();
     }
