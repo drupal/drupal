@@ -224,10 +224,18 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     $config->set($key, $value);
     $config->save();
     
-    $config = config('biff.bang');
-    $config->set($key, $value);
-    $config->save();
+    // Test chained set()->save()
+    $chained_name = 'biff.bang';
+    $config = config($chained_name);
+    $config->set($key, $value)->save();
     
+    // Verify the database entry exists from a chained save.
+    $db_config = db_query('SELECT * FROM {config} WHERE name = :name', array(':name' => $chained_name))->fetch();
+    $this->assertEqual($db_config->name, $chained_name, t('After saving configuration by chaining through set(), active store has a record for %name', array('%name' => $chained_name)));
+
+    // Verify the file exists from a chained save.
+    $this->assertTrue(file_exists($config_dir . '/' . $chained_name . '.' . $this->fileExtension), t('After saving configuration by chaining through set(), config file exists.'));
+
     // Get file listing for all files starting with 'foo'. Should return
     // two elements.
     $files = config_get_signed_file_storage_names_with_prefix('foo');
@@ -257,7 +265,6 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     $this->assertIdentical($db_config, FALSE);
     $this->assertFalse(file_exists($config_dir . '/' . $name . '.' . $this->fileExtension));
     
-    // Chainable ->set()->save()
     // Attempt to delete non-existing configuration.
   }
 }
