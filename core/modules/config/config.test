@@ -116,7 +116,13 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     $array_value = array(
       'foo' => 'bar',
       'biff' => array(
-        'bang' => 'pow',
+        'bang' => FALSE,
+      )
+    );
+    $cast_array_value = array(
+      'foo' => 'bar',
+      'biff' => array(
+        'bang' => '0',
       )
     );
     $nested_array_key = 'nested.array';
@@ -175,10 +181,10 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     $this->assertEqual($config->get($nested_key), $nested_value, t('Nested configuration value found.'));
 
     // Read array
-    $this->assertEqual($config->get($array_key), $array_value, t('Top level array configuration value found.'));
+    $this->assertEqual($config->get($array_key), $cast_array_value, t('Top level array configuration value found.'));
     
     // Read nested array
-    $this->assertEqual($config->get($nested_array_key), $array_value, t('Nested array configuration value found.'));
+    $this->assertEqual($config->get($nested_array_key), $cast_array_value, t('Nested array configuration value found.'));
 
     // Read a top level value that doesn't exist
     $this->assertNull($config->get('i_dont_exist'), t('Non-existent top level value returned NULL.'));
@@ -251,6 +257,5 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     // Chainable ->set()->save()
     // Attempt to delete non-existing configuration.
     // Type casting into string. (recursively)
-    // List config names by prefix. (and without prefix)
   }
 }
