@@ -196,8 +196,6 @@ function config_xml_to_array($data) {
  * @return
  *   A representation of this array or object in the native configuration
  *   format.
- *
- * @todo This needs to work for objects as well and currently doesn't.
  */
 function config_encode($data) {
   // Convert the supplied array into a SimpleXMLElement.
