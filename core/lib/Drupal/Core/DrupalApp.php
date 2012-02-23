@@ -32,23 +32,14 @@ class DrupalApp {
   function execute(Request $request) {
     try {
 
-      $dispatcher = new EventDispatcher();
+      $dispatcher = $this->getDispatcher();
 
-      // @todo Make this extensible rather than just hard coding some.
-      $dispatcher->addSubscriber(new HtmlSubscriber());
+      $matcher = $this->getMatcher($request);
 
-      // Resolve a routing context(path, etc) using the routes object to a
-      // Set a routing context to translate.
-      $context = new RequestContext();
-      $context->fromRequest($request);
-      $matcher = new UrlMatcher($context);
       // Push path paramaters into attributes.
       $request->attributes->add($matcher->match($request->getPathInfo()));
 
-      // Get the controller(page callback) from the resolver.
-      $resolver = new ControllerResolver();
-      $controller = $resolver->getController($request);
-      $arguments = $resolver->getArguments($request, $controller);
+      $resolver = $this->getControllerResolver($request);
 
       $kernel = new HttpKernel($dispatcher, $resolver);
       $response = $kernel->handle($request);
@@ -66,4 +57,35 @@ class DrupalApp {
 
     return $response;
   }
+
+  protected function getDispatcher() {
+    $dispatcher = new EventDispatcher();
+
+    // @todo Make this extensible rather than just hard coding some.
+    // @todo Add a subscriber to handle other things, too, like our Ajax
+    // replacement system.
+    $dispatcher->addSubscriber(new HtmlSubscriber());
+
+    return $dispatcher;
+  }
+
+  protected function getMatcher(Request $request) {
+    // Resolve a routing context(path, etc) using the routes object to a
+    // Set a routing context to translate.
+    $context = new RequestContext();
+    $context->fromRequest($request);
+    $matcher = new UrlMatcher($context);
+
+    return $matcher;
+  }
+
+  protected function getControllerResolver($request) {
+    // Get the controller(page callback) from the resolver.
+    $resolver = new ControllerResolver();
+    $controller = $resolver->getController($request);
+    $arguments = $resolver->getArguments($request, $controller);
+
+    return $resolver;
+  }
+
 }
