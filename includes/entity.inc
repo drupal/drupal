@@ -1106,12 +1106,13 @@ class EntityFieldQuery {
    * contains everything necessary for processing.
    *
    * @return
-   *   Either a number if count() was called or an array of associative
-   *   arrays of stub entities. The outer array keys are entity types, and the
-   *   inner array keys are the relevant ID. (In most this cases this will be
-   *   the entity ID. The only exception is when age=FIELD_LOAD_REVISION is used
-   *   and field conditions or sorts are present -- in this case, the key will
-   *   be the revision ID.) The inner array values are always stub entities, as
+   *   Either a number if count() was called or an array of associative arrays
+   *   of stub entities. The outer array keys are entity types, and the inner
+   *   array keys are the relevant ID. (In most cases this will be the entity
+   *   ID. The only exception is when age=FIELD_LOAD_REVISION is used and field
+   *   conditions or sorts are present -- in this case, the key will be the
+   *   revision ID.) The entity type will only exist in the outer array if
+   *   results were found. The inner array values are always stub entities, as
    *   returned by entity_create_stub_entity(). To traverse the returned array:
    *   @code
    *     foreach ($query->execute() as $entity_type => $entities) {
@@ -1121,7 +1122,9 @@ class EntityFieldQuery {
    *   the entities found:
    *   @code
    *     $result = $query->execute();
-   *     $entities = entity_load($my_type, array_keys($result[$my_type]));
+   *     if (!empty($result[$my_type])) {
+   *       $entities = entity_load($my_type, array_keys($result[$my_type]));
+   *     }
    *   @endcode
    */
   public function execute() {
