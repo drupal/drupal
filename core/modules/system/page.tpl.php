@@ -68,7 +68,7 @@
 ?>
 
   <div id="page">
-    <header id="header" role="banner">
+    <header id="header" role="banner" class="clearfix">
 
       <?php if ($logo): ?>
         <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home" id="logo">

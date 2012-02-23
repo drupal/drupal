@@ -119,6 +119,13 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
         'bang' => 'pow',
       )
     );
+    $casting_array_key = 'casting_array';
+    $casting_array_false_value_key = 'casting_array.cast.false';
+    $casting_array_value = array(
+      'cast' => array(
+        'false' => FALSE,
+      )
+    );
     $nested_array_key = 'nested.array';
     $true_key = 'true';
     $false_key = 'false';
@@ -156,6 +163,9 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
 
     // Add a boolean true value. Should get cast to 1
     $config->set($true_key, TRUE);
+
+    // Add an array with a nested boolean false that should get cast to 0.
+    $config->set($casting_array_key, $casting_array_value);
     $config->save();
 
     // Verify the database entry exists.
@@ -192,6 +202,9 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     // Read true value
     $this->assertEqual($config->get($true_key), '1', t('Boolean TRUE value returned the string \'1\'.'));
 
+    // Read false that had been nested in an array value
+    $this->assertEqual($config->get($casting_array_false_value_key), '0', t('Nested boolean FALSE value returned the string \'0\'.'));
+
     // Unset a top level value
     $config->clear($key);
     
@@ -206,6 +219,43 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     // Read unset nested value
     $this->assertNull($config->get($nested_key), t('Nested value unset.'));
 
+    // Create two new configuration files to test listing
+    $config = config('foo.baz');
+    $config->set($key, $value);
+    $config->save();
+    
+    // Test chained set()->save()
+    $chained_name = 'biff.bang';
+    $config = config($chained_name);
+    $config->set($key, $value)->save();
+    
+    // Verify the database entry exists from a chained save.
+    $db_config = db_query('SELECT * FROM {config} WHERE name = :name', array(':name' => $chained_name))->fetch();
+    $this->assertEqual($db_config->name, $chained_name, t('After saving configuration by chaining through set(), active store has a record for %name', array('%name' => $chained_name)));
+
+    // Verify the file exists from a chained save.
+    $this->assertTrue(file_exists($config_dir . '/' . $chained_name . '.' . $this->fileExtension), t('After saving configuration by chaining through set(), config file exists.'));
+
+    // Get file listing for all files starting with 'foo'. Should return
+    // two elements.
+    $files = config_get_signed_file_storage_names_with_prefix('foo');
+    $this->assertEqual(count($files), 2, 'Two files listed with the prefix \'foo\'.');
+    
+    // Get file listing for all files starting with 'biff'. Should return
+    // one element.
+    $files = config_get_signed_file_storage_names_with_prefix('biff');
+    $this->assertEqual(count($files), 1, 'One file listed with the prefix \'biff\'.');
+    
+    // Get file listing for all files starting with 'foo.bar'. Should return 
+    // one element.
+    $files = config_get_signed_file_storage_names_with_prefix('foo.bar');
+    $this->assertEqual(count($files), 1, 'One file listed with the prefix \'foo.bar\'.');
+
+    // Get file listing for all files starting with 'bar'. Should return 
+    // an empty array.
+    $files = config_get_signed_file_storage_names_with_prefix('bar');
+    $this->assertEqual($files, array(), 'No files listed with the prefix \'bar\'.');
+
     // Delete the configuration.
     $config = config($name);
     $config->delete();
@@ -214,10 +264,7 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     $db_config = db_query('SELECT * FROM {config} WHERE name = :name', array(':name' => $name))->fetch();
     $this->assertIdentical($db_config, FALSE);
     $this->assertFalse(file_exists($config_dir . '/' . $name . '.' . $this->fileExtension));
-
-    // Chainable ->set()->save()
+    
     // Attempt to delete non-existing configuration.
-    // Type casting into string. (recursively)
-    // List config names by prefix. (and without prefix)
   }
 }

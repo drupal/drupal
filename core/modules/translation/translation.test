@@ -179,7 +179,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Check that content translation links are shown even when no language
     // negotiation is configured.
     $this->drupalLogin($this->admin_user);
-    $edit = array('language[enabled][locale-url]' => FALSE);
+    $edit = array('language_interface[enabled][locale-url]' => FALSE);
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->resetCaches();
     $edit = array('status' => TRUE);

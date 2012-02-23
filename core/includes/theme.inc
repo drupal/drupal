@@ -2500,8 +2500,8 @@ function template_preprocess_html(&$variables) {
   $variables['body_attributes_array'] = array();
 
   // HTML element attributes.
-  $variables['html_attributes_array']['lang'] = $GLOBALS['language']->langcode;
-  $variables['html_attributes_array']['dir'] = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
+  $variables['html_attributes_array']['lang'] = $GLOBALS['language_interface']->langcode;
+  $variables['html_attributes_array']['dir'] = $GLOBALS['language_interface']->direction ? 'rtl' : 'ltr';
 
   // Add favicon.
   if (theme_get_setting('toggle_favicon')) {
@@ -2571,8 +2571,8 @@ function template_preprocess_page(&$variables) {
   $variables['base_path']         = base_path();
   $variables['front_page']        = url();
   $variables['feed_icons']        = drupal_get_feeds();
-  $variables['language']          = $GLOBALS['language'];
-  $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
+  $variables['language']          = $GLOBALS['language_interface'];
+  $variables['language']->dir     = $GLOBALS['language_interface']->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo');
   $variables['main_menu']         = theme_get_setting('toggle_main_menu') ? menu_main_menu() : array();
   $variables['secondary_menu']    = theme_get_setting('toggle_secondary_menu') ? menu_secondary_menu() : array();
@@ -2774,7 +2774,7 @@ function template_preprocess_maintenance_page(&$variables) {
   }
 
   // set the default language if necessary
-  $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : language_default();
+  $language = isset($GLOBALS['language_interface']) ? $GLOBALS['language_interface'] : language_default();
 
   $variables['head_title_array']  = $head_title;
   $variables['head_title']        = implode(' | ', $head_title);

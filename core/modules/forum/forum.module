@@ -468,10 +468,10 @@ function forum_permission() {
 /**
  * Implements hook_taxonomy_term_delete().
  */
-function forum_taxonomy_term_delete($tid) {
+function forum_taxonomy_term_delete(stdClass $term) {
   // For containers, remove the tid from the forum_containers variable.
   $containers = variable_get('forum_containers', array());
-  $key = array_search($tid, $containers);
+  $key = array_search($term->tid, $containers);
   if ($key !== FALSE) {
     unset($containers[$key]);
   }

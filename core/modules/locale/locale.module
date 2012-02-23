@@ -181,7 +181,7 @@ function locale_menu() {
  * Initialize date formats according to the user's current locale.
  */
 function locale_init() {
-  global $conf, $language;
+  global $conf, $language_interface;
   include_once DRUPAL_ROOT . '/core/includes/locale.inc';
 
   // For each date type (e.g. long, short), get the localized date format
@@ -190,7 +190,7 @@ function locale_init() {
   // settings page, where we want to display the site default and not the
   // localized version.
   if (strpos($_GET['q'], 'admin/config/regional/date-time/formats') !== 0) {
-    $languages = array($language->langcode);
+    $languages = array($language_interface->langcode);
 
     // Setup appropriate date formats for this locale.
     $formats = locale_get_localized_date_format($languages);
@@ -218,12 +218,12 @@ function locale_permission() {
  * @see locale_form_alter()
  */
 function locale_language_selector_form($user) {
-  global $language;
+  global $language_interface;
   // Get list of enabled languages only.
   $languages = language_list(TRUE);
 
   // If the user is being created, we set the user language to the page language.
-  $user_preferred_language = $user->uid ? user_preferred_language($user) : $language;
+  $user_preferred_language = $user->uid ? user_preferred_language($user) : $language_interface;
 
   $names = array();
   foreach ($languages as $langcode => $item) {
@@ -592,7 +592,7 @@ function locale_language_delete($language) {
  *   Language code to use for the lookup.
  */
 function locale($string = NULL, $context = NULL, $langcode = NULL) {
-  global $language;
+  global $language_interface;
 
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
@@ -607,11 +607,12 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
     return $locale_t;
   }
 
-  $langcode = isset($langcode) ? $langcode : $language->langcode;
+  $langcode = isset($langcode) ? $langcode : $language_interface->langcode;
 
   // Store database cached translations in a static variable. Only build the
-  // cache after $language has been set to avoid an unnecessary cache rebuild.
-  if (!isset($locale_t[$langcode]) && isset($language)) {
+  // cache after $language_interface has been set to avoid an unnecessary cache
+  // rebuild.
+  if (!isset($locale_t[$langcode]) && isset($language_interface)) {
     $locale_t[$langcode] = array();
     // Disabling the usage of string caching allows a module to watch for
     // the exact list of strings used on a page. From a performance
@@ -702,7 +703,7 @@ function locale_reset() {
  *   plural formula.
  */
 function locale_get_plural($count, $langcode = NULL) {
-  global $language;
+  global $language_interface;
 
   // Used to locally cache the plural formulas for all languages.
   $plural_formulas = &drupal_static(__FUNCTION__, array());
@@ -710,7 +711,7 @@ function locale_get_plural($count, $langcode = NULL) {
   // individually for each language.
   $plural_indexes = &drupal_static(__FUNCTION__ . ':plurals', array());
 
-  $langcode = $langcode ? $langcode : $language->langcode;
+  $langcode = $langcode ? $langcode : $language_interface->langcode;
 
   if (!isset($plural_indexes[$langcode][$count])) {
     // Retrieve and statically cache the plural formulas for all languages.
@@ -788,7 +789,7 @@ function locale_system_update($components) {
  * file if necessary, and adds it to the page.
  */
 function locale_js_alter(&$javascript) {
-  global $language;
+  global $language_interface;
 
   $dir = 'public://' . variable_get('locale_js_directory', 'languages');
   $parsed = variable_get('javascript_parsed', array());
@@ -820,11 +821,11 @@ function locale_js_alter(&$javascript) {
   }
 
   // If necessary, rebuild the translation file for the current language.
-  if (!empty($parsed['refresh:' . $language->langcode])) {
+  if (!empty($parsed['refresh:' . $language_interface->langcode])) {
     // Don't clear the refresh flag on failure, so that another try will
     // be performed later.
     if (_locale_rebuild_js()) {
-      unset($parsed['refresh:' . $language->langcode]);
+      unset($parsed['refresh:' . $language_interface->langcode]);
     }
     // Store any changes after refresh was attempted.
     variable_set('javascript_parsed', $parsed);
@@ -837,9 +838,9 @@ function locale_js_alter(&$javascript) {
 
   // Add the translation JavaScript file to the page.
   $locale_javascripts = variable_get('locale_translation_javascript', array());
-  if ($files && !empty($locale_javascripts[$language->langcode])) {
+  if ($files && !empty($locale_javascripts[$language_interface->langcode])) {
     // Add the translation JavaScript file to the page.
-    $file = $dir . '/' . $language->langcode . '_' . $locale_javascripts[$language->langcode] . '.js';
+    $file = $dir . '/' . $language_interface->langcode . '_' . $locale_javascripts[$language_interface->langcode] . '.js';
     $javascript[$file] = drupal_js_defaults($file);
   }
 }
@@ -850,14 +851,14 @@ function locale_js_alter(&$javascript) {
  * Provides the language support for the jQuery UI Date Picker.
  */
 function locale_library_info_alter(&$libraries, $module) {
-  global $language;
+  global $language_interface;
   if ($module == 'system' && isset($libraries['system']['ui.datepicker'])) {
     $datepicker = drupal_get_path('module', 'locale') . '/locale.datepicker.js';
     $libraries['system']['ui.datepicker']['js'][$datepicker] = array('group' => JS_THEME);
     $libraries['system']['ui.datepicker']['js'][] = array(
       'data' => array(
         'jqueryuidatepicker' => array(
-          'rtl' => $language->direction == LANGUAGE_RTL,
+          'rtl' => $language_interface->direction == LANGUAGE_RTL,
           'firstDay' => variable_get('date_first_day', 0),
         ),
       ),
@@ -876,7 +877,7 @@ function locale_block_info() {
   include_once DRUPAL_ROOT . '/core/includes/language.inc';
   $block = array();
   $info = language_types_info();
-  foreach (language_types_configurable(FALSE) as $type) {
+  foreach (language_types_get_configurable(FALSE) as $type) {
     $block[$type] = array(
       'info' => t('Language switcher (@type)', array('@type' => $info[$type]['name'])),
       // Not worth caching.
@@ -934,7 +935,7 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
       $callbacks = array();
       include_once DRUPAL_ROOT . '/core/includes/language.inc';
 
-      foreach (language_types_configurable() as $type) {
+      foreach (language_types_get_configurable() as $type) {
         // Get url rewriter callbacks only from enabled language providers.
         $negotiation = variable_get("language_negotiation_$type", array());
 
@@ -1085,15 +1086,15 @@ function locale_form_system_file_system_settings_alter(&$form, $form_state) {
  */
 function locale_preprocess_node(&$variables) {
   if ($variables['language'] != LANGUAGE_NONE) {
-    global $language;
+    global $language_interface;
 
     $node_language = language_load($variables['language']);
-    if ($node_language->langcode != $language->langcode) {
+    if ($node_language->langcode != $language_interface->langcode) {
       // If the node language was different from the page language, we should
       // add markup to identify the language. Otherwise the page language is
       // inherited.
       $variables['attributes_array']['lang'] = $variables['language'];
-      if ($node_language->direction != $language->direction) {
+      if ($node_language->direction != $language_interface->direction) {
         // If text direction is different form the page's text direction, add
         // direction information as well.
         $dir = array('ltr', 'rtl');

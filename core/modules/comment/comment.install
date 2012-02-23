@@ -167,7 +167,7 @@ function comment_schema() {
         'not null' => FALSE,
         'description' => "The comment author's home page address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on.",
       ),
-      'language' => array(
+      'langcode' => array(
         'description' => 'The {language}.langcode of this comment.',
         'type' => 'varchar',
         'length' => 12,
@@ -179,7 +179,7 @@ function comment_schema() {
       'comment_status_pid' => array('pid', 'status'),
       'comment_num_new' => array('nid', 'status', 'created', 'cid', 'thread'),
       'comment_uid' => array('uid'),
-      'comment_nid_language' => array('nid', 'language'),
+      'comment_nid_langcode' => array('nid', 'langcode'),
       'comment_created' => array('created'),
     ),
     'primary key' => array('cid'),
@@ -259,3 +259,29 @@ function comment_schema() {
 
   return $schema;
 }
+
+/**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
+
+/**
+ * Renames {comment}.language to {comment}.langcode.
+ */
+function comment_update_8000() {
+  db_drop_index('comment', 'comment_nid_langcode');
+  $langcode_spec = array(
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "Language code, e.g. 'de' or 'en-US'.",
+  );
+  db_change_field('comment', 'language', 'langcode', $langcode_spec);
+  db_add_index('comment', 'comment_nid_langcode', array('nid', 'langcode'));
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-8.x"
+ * The next series of updates should start at 9000.
+ */

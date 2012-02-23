@@ -62,8 +62,7 @@ function config_install_default_config($module) {
  *
  * You can pass a prefix 'core.entity.node_type' and get back an array of the
  * filenames that match. This allows you to iterate through all files in a
- * branch. Note that this will only work on the level above the tips, so
- * a prefix of 'core.entity' would return an empty array.
+ * branch. 
  *
  * @param $prefix
  *   The prefix of the files we are searching for.

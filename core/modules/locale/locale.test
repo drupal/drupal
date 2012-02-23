@@ -617,6 +617,15 @@ class LocalePluralFormatTest extends DrupalWebTestCase {
       'langcode' => 'hr',
     ));
 
+    // Attempt to import some broken .po files as well to prove that these
+    // will not overwrite the proper plural formula imported above.
+    $this->importPoFile($this->getPoFileWithMissingPlural(), array(
+      'langcode' => 'fr',
+    ));
+    $this->importPoFile($this->getPoFileWithBrokenPlural(), array(
+      'langcode' => 'hr',
+    ));
+
     // Reset static caches from locale_get_plural() to ensure we get fresh data.
     drupal_static_reset('locale_get_plural');
     drupal_static_reset('locale_get_plural:plurals');
@@ -656,6 +665,7 @@ class LocalePluralFormatTest extends DrupalWebTestCase {
     $name = tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $contents);
     $options['files[file]'] = $name;
+    $options['mode'] = LOCALE_IMPORT_OVERWRITE;
     $this->drupalPost('admin/config/regional/translate/import', $options, t('Import'));
     drupal_unlink($name);
   }
@@ -701,6 +711,41 @@ msgid_plural "@count hours"
 msgstr[0] "@count sat"
 msgstr[1] "@count sata"
 msgstr[2] "@count sati"
+
+msgid "Monday"
+msgstr "Ponedjeljak"
+EOF;
+  }
+
+  /**
+   * Returns a .po file with a missing plural formula.
+   */
+  function getPoFileWithMissingPlural() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 7\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+
+msgid "Monday"
+msgstr "lundi"
+EOF;
+  }
+
+  /**
+   * Returns a .po file with a broken plural formula.
+   */
+  function getPoFileWithBrokenPlural() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 7\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: broken, will not parse\\n"
 
 msgid "Monday"
 msgstr "Ponedjeljak"
@@ -1224,7 +1269,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Check the UI language.
     drupal_language_initialize();
-    $this->assertEqual($GLOBALS['language']->langcode, $this->langcode, t('Current language: %lang', array('%lang' => $GLOBALS['language']->langcode)));
+    $this->assertEqual($GLOBALS['language_interface']->langcode, $this->langcode, t('Current language: %lang', array('%lang' => $GLOBALS['language_interface']->langcode)));
 
     // Enable multilingual workflow option for articles.
     variable_set('node_type_language_article', 1);
@@ -1251,7 +1296,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Change language negotiation options.
     drupal_load('module', 'locale');
-    variable_set('language_types', drupal_language_types() + array('language_custom' => TRUE));
+    variable_set('language_types', language_types_get_default() + array('language_custom' => TRUE));
     variable_set('language_negotiation_' . LANGUAGE_TYPE_INTERFACE, locale_language_negotiation_info());
     variable_set('language_negotiation_' . LANGUAGE_TYPE_CONTENT, locale_language_negotiation_info());
     variable_set('language_negotiation_' . LANGUAGE_TYPE_URL, locale_language_negotiation_info());
@@ -1269,7 +1314,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Check the init language logic.
     drupal_language_initialize();
-    $this->assertEqual($GLOBALS['language']->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => $GLOBALS['language']->langcode)));
+    $this->assertEqual($GLOBALS['language_interface']->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => $GLOBALS['language_interface']->langcode)));
 
     // Check JavaScript files deletion.
     $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
@@ -1280,7 +1325,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Check language negotiation.
     require_once DRUPAL_ROOT . '/core/includes/language.inc';
-    $this->assertTrue(count(language_types()) == count(drupal_language_types()), t('Language types reset'));
+    $this->assertTrue(count(language_types_get_all()) == count(language_types_get_default()), t('Language types reset'));
     $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_DEFAULT;
     $this->assertTrue($language_negotiation, t('Interface language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
     $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_CONTENT) == LANGUAGE_NEGOTIATION_DEFAULT;
@@ -1369,7 +1414,7 @@ class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable URL language detection and selection.
-    $edit = array('language[enabled][locale-url]' => '1');
+    $edit = array('language_interface[enabled][locale-url]' => '1');
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Assert that the language switching block is displayed on the frontpage.
@@ -1377,7 +1422,7 @@ class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
     $this->assertText(t('Languages'), t('Language switcher block found.'));
 
     // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-locale-' . $language_type));
+    list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-locale-' . str_replace('_', '-', $language_type)));
     $links = array(
       'active' => array(),
       'inactive' => array(),
@@ -1649,7 +1694,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
 
     // Set language negotiation.
     $edit = array(
-      'language[enabled][locale-url]' => TRUE,
+      'language_interface[enabled][locale-url]' => TRUE,
     );
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->assertText(t('Language negotiation configuration saved.'), t('Set language negotiation.'));
@@ -2303,16 +2348,16 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
 
     // Enable browser and URL language detection.
     $edit = array(
-      'language[enabled][locale-browser]' => TRUE,
-      'language[enabled][locale-url]' => TRUE,
-      'language[weight][locale-browser]' => -8,
-      'language[weight][locale-url]' => -10,
+      'language_interface[enabled][locale-browser]' => TRUE,
+      'language_interface[enabled][locale-url]' => TRUE,
+      'language_interface[weight][locale-browser]' => -8,
+      'language_interface[weight][locale-url]' => -10,
     );
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->drupalGet('admin/config/regional/language/detection');
 
     // Enable the language switcher block.
-    $edit = array('blocks[locale_language][region]' => 'sidebar_first');
+    $edit = array('blocks[locale_language_interface][region]' => 'sidebar_first');
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Access the front page without specifying any valid URL language prefix
@@ -2324,7 +2369,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // Check that the language switcher active link matches the given browser
     // language.
     $args = array(':url' => base_path() . (!empty($GLOBALS['conf']['clean_url']) ? $langcode_browser_fallback : "?q=$langcode_browser_fallback"));
-    $fields = $this->xpath('//div[@id="block-locale-language"]//a[@class="language-link active" and @href=:url]', $args);
+    $fields = $this->xpath('//div[@id="block-locale-language-interface"]//a[@class="language-link active" and @href=:url]', $args);
     $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->name, t('The browser language is the URL active language'));
 
     // Check that URLs are rewritten using the given browser language.
@@ -2333,7 +2378,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test if the url function returns the right url when using different domains for different languages.
+   * Tests url() when separate domains are used for multiple languages.
    */
   function testLanguageDomain() {
     // Add the Italian language.
@@ -2346,8 +2391,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
 
     // Enable browser and URL language detection.
     $edit = array(
-      'language[enabled][locale-url]' => TRUE,
-      'language[weight][locale-url]' => -10,
+      'language_interface[enabled][locale-url]' => TRUE,
+      'language_interface[weight][locale-url]' => -10,
     );
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
@@ -2421,7 +2466,7 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Enable URL language detection and selection.
-    $edit = array('language[enabled][locale-url]' => 1);
+    $edit = array('language_interface[enabled][locale-url]' => 1);
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Reset static caching.
@@ -2499,7 +2544,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     language_save($language);
 
     // Enable URL language detection and selection.
-    $edit = array('language[enabled][locale-url]' => '1');
+    $edit = array('language_interface[enabled][locale-url]' => '1');
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Set "Basic page" content type to use multilingual support.
@@ -2629,7 +2674,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     // language will fall back to the default language if no URL language can be
     // detected.
     $edit = array(
-      'language[enabled][locale-user]' => TRUE,
+      'language_interface[enabled][locale-user]' => TRUE,
       'language_content[enabled][locale-url]' => TRUE,
       'language_content[enabled][locale-interface]' => FALSE,
     );
@@ -2680,8 +2725,8 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
           ->orderBy('cid', 'DESC')
           ->execute()
           ->fetchObject();
-        $args = array('%node_language' => $node_langcode, '%comment_language' => $comment->language, '%langcode' => $langcode);
-        $this->assertEqual($comment->language, $langcode, t('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
+        $args = array('%node_language' => $node_langcode, '%comment_language' => $comment->langcode, '%langcode' => $langcode);
+        $this->assertEqual($comment->langcode, $langcode, t('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
       }
     }
   }
@@ -2795,7 +2840,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     variable_set('locale_test_content_language_type', TRUE);
     $this->languageNegotiationUpdate();
     $type = LANGUAGE_TYPE_CONTENT;
-    $language_types = variable_get('language_types', drupal_language_types());
+    $language_types = variable_get('language_types', language_types_get_default());
     $this->assertTrue($language_types[$type], t('Content language type is configurable.'));
 
     // Enable some core and custom language providers. The test language type is
@@ -2821,7 +2866,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
 
     // Check that type-specific language providers can be assigned only to the
     // corresponding language types.
-    foreach (language_types_configurable() as $type) {
+    foreach (language_types_get_configurable() as $type) {
       $form_field = $type . '[enabled][test_language_provider_ts]';
       if ($type == $test_type) {
         $this->assertFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language provider available for %type.', array('%type' => $type)));
@@ -2834,7 +2879,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     // Check language negotiation results.
     $this->drupalGet('');
     $last = variable_get('locale_test_language_negotiation_last', array());
-    foreach (language_types() as $type) {
+    foreach (language_types_get_all() as $type) {
       $langcode = $last[$type];
       $value = $type == LANGUAGE_TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
       $this->assertEqual($langcode, $value, t('The negotiated language for %type is %language', array('%type' => $type, '%language' => $langcode)));
@@ -2845,7 +2890,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     $this->languageNegotiationUpdate('disable');
 
     // Check that only the core language types are available.
-    foreach (language_types() as $type) {
+    foreach (language_types_get_all() as $type) {
       $this->assertTrue(strpos($type, 'test') === FALSE, t('The %type language is still available', array('%type' => $type)));
     }
 

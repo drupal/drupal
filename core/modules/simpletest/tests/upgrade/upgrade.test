@@ -43,7 +43,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
    * Override of DrupalWebTestCase::setUp() specialized for upgrade testing.
    */
   protected function setUp() {
-    global $user, $language, $conf;
+    global $user, $language_interface, $conf;
 
     // Load the Update API.
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
@@ -72,7 +72,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     Database::addConnectionInfo('default', 'default', $connection_info['default']);
 
     // Store necessary current values before switching to prefixed database.
-    $this->originalLanguage = $language;
+    $this->originalLanguage = $language_interface;
     $this->originalLanguageDefault = variable_get('language_default');
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
@@ -147,7 +147,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
    * Override of DrupalWebTestCase::tearDown() specialized for upgrade testing.
    */
   protected function tearDown() {
-    global $user, $language;
+    global $user, $language_interface;
 
     // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.
@@ -186,7 +186,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     parent::refreshVariables();
 
     // Reset language.
-    $language = $this->originalLanguage;
+    $language_interface = $this->originalLanguage;
     if ($this->originalLanguageDefault) {
       $GLOBALS['conf']['language_default'] = $this->originalLanguageDefault;
     }

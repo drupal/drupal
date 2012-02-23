@@ -242,7 +242,7 @@ class ForumTestCase extends DrupalWebTestCase {
     // Save forum overview.
     $this->drupalPost('admin/structure/forum/', array(), t('Save'));
     $this->assertRaw(t('The configuration options have been saved.'));
-    // Delete this second form.
+    // Delete this second forum.
     $this->deleteForum($this->delete_forum['tid']);
     // Create forum at the top (root) level.
     $this->root_forum = $this->createForum('forum');
@@ -341,6 +341,11 @@ class ForumTestCase extends DrupalWebTestCase {
     // Assert that the forum no longer exists.
     $this->drupalGet('forum/' . $tid);
     $this->assertResponse(404, 'The forum was not found');
+
+    // Assert that the associated term has been removed from the
+    // forum_containers variable.
+    $containers = variable_get('forum_containers', array());
+    $this->assertFalse(in_array($tid, $containers), 'The forum_containers variable has been updated.');
   }
 
   /**

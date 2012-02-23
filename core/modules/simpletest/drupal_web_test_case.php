@@ -1284,7 +1284,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   either a single array or a variable number of string arguments.
    */
   protected function setUp() {
-    global $user, $language, $conf;
+    global $user, $language_interface, $conf;
 
     // Generate a temporary prefixed database to ensure that tests have a clean starting point.
     $this->databasePrefix = 'simpletest' . mt_rand(1000, 1000000);
@@ -1308,7 +1308,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     Database::addConnectionInfo('default', 'default', $connection_info['default']);
 
     // Store necessary current values before switching to prefixed database.
-    $this->originalLanguage = $language;
+    $this->originalLanguage = $language_interface;
     $this->originalLanguageDefault = variable_get('language_default');
     $this->originalConfigDirectory = $GLOBALS['config_directory_name'];
     $this->originalConfigSignatureKey = $GLOBALS['config_signature_key'];
@@ -1435,7 +1435,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     variable_set('date_default_timezone', date_default_timezone_get());
     // Set up English language.
     unset($GLOBALS['conf']['language_default']);
-    $language = language_default();
+    $language_interface = language_default();
 
     // Use the test mail class instead of the default mail handler class.
     variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
@@ -1529,7 +1529,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * and reset the database prefix.
    */
   protected function tearDown() {
-    global $user, $language;
+    global $user, $language_interface;
 
     // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.
@@ -1583,7 +1583,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $GLOBALS['config_signature_key'] = $this->originalConfigSignatureKey;
 
     // Reset language.
-    $language = $this->originalLanguage;
+    $language_interface = $this->originalLanguage;
     if ($this->originalLanguageDefault) {
       $GLOBALS['conf']['language_default'] = $this->originalLanguageDefault;
     }

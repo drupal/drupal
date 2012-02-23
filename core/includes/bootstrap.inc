@@ -183,7 +183,7 @@ const LANGUAGE_TYPE_CONTENT = 'language_content';
 /**
  * The type of language used to select the user interface.
  */
-const LANGUAGE_TYPE_INTERFACE = 'language';
+const LANGUAGE_TYPE_INTERFACE = 'language_interface';
 
 /**
  * The type of language used for URLs.
@@ -1522,12 +1522,12 @@ function drupal_unpack($obj, $field = 'data') {
  * @ingroup sanitization
  */
 function t($string, array $args = array(), array $options = array()) {
-  global $language;
+  global $language_interface;
   static $custom_strings;
 
   // Merge in default.
   if (empty($options['langcode'])) {
-    $options['langcode'] = isset($language->langcode) ? $language->langcode : LANGUAGE_SYSTEM;
+    $options['langcode'] = isset($language_interface->langcode) ? $language_interface->langcode : LANGUAGE_SYSTEM;
   }
   if (empty($options['context'])) {
     $options['context'] = '';
@@ -2614,7 +2614,7 @@ function get_t() {
  * Initializes all the defined language types.
  */
 function drupal_language_initialize() {
-  $types = language_types();
+  $types = language_types_get_all();
 
   // Ensure the language is correctly returned, even without multilanguage
   // support. Also make sure we have a $language fallback, in case a language
@@ -2627,7 +2627,7 @@ function drupal_language_initialize() {
   if (language_multilingual()) {
     include_once DRUPAL_ROOT . '/core/includes/language.inc';
     foreach ($types as $type) {
-      $GLOBALS[$type] = language_initialize($type);
+      $GLOBALS[$type] = language_types_initialize($type);
     }
     // Allow modules to react on language system initialization in multilingual
     // environments.
@@ -2636,13 +2636,19 @@ function drupal_language_initialize() {
 }
 
 /**
+ * Returns an array of the available language types.
+ */
+function language_types_get_all() {
+  return array_keys(variable_get('language_types', language_types_get_default()));
+}
+/**
  * Returns a list of the built-in language types.
  *
  * @return
- *   An array of key-values pairs where the key is the language type and the
- *   value is its configurability.
+ *   An array of key-values pairs where the key is the language type name and
+ *   the value is its configurability (TRUE/FALSE).
  */
-function drupal_language_types() {
+function language_types_get_default() {
   return array(
     LANGUAGE_TYPE_INTERFACE => TRUE,
     LANGUAGE_TYPE_CONTENT => FALSE,
@@ -2658,13 +2664,6 @@ function language_multilingual() {
   // avoid unnecessarily querying the database when building the list of
   // enabled languages on monolingual sites.
   return variable_get('language_count', 1) > 1;
-}
-
-/**
- * Returns an array of the available language types.
- */
-function language_types() {
-  return array_keys(variable_get('language_types', drupal_language_types()));
 }
 
 /**
