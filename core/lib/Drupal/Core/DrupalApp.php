@@ -19,11 +19,11 @@ use Exception;
 /**
  * @file
  *
- * Definition of Drupal\Core\DrupalKernel.
+ * Definition of Drupal\Core\DrupalApp.
  */
 
 /**
- * The DrupalKernel is the main routing and dispatching routine in Drupal.
+ * The DrupalApp class is the core of Drupal itself.
  */
 class DrupalApp {
 
@@ -31,9 +31,6 @@ class DrupalApp {
     try {
 
       $dispatcher = new EventDispatcher();
-
-      //$dispatcher->addSubscriber(new \Symfony\Component\HttpKernel\EventListener\ExceptionListener());
-
 
       // Quick and dirty attempt at wrapping our rendering logic as is.
       $dispatcher->addListener(KernelEvents::VIEW, function(Event $event) {
@@ -76,13 +73,7 @@ class DrupalApp {
       else {
         $response = new Response('An error occurred', 500);
       }
-
-
-      //$response = new Response('Not Found', 404);
     }
-    //catch (Exception $e) {
-    //  $response = new Response('An error occurred', 500);
-    //}
 
     return $response;
   }
