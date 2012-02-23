@@ -14,6 +14,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
+use Drupal\Core\EventSubscriber\HtmlSubscriber;
+
 use Exception;
 
 /**
@@ -32,21 +34,8 @@ class DrupalApp {
 
       $dispatcher = new EventDispatcher();
 
-      // Quick and dirty attempt at wrapping our rendering logic as is.
-      $dispatcher->addListener(KernelEvents::VIEW, function(Event $event) {
-        $page_callback_result = $event->getControllerResult();
-        $event->setResponse(new Response(drupal_render_page($page_callback_result)));
-      });
-      $dispatcher->addListener(KernelEvents::EXCEPTION, function(Event $event) use ($request) {
-        debug($request->getAcceptableContentTypes());
-
-        if (in_array('text/html', $request->getAcceptableContentTypes())) {
-          if ($event->getException() instanceof ResourceNotFoundException) {
-            $event->setResponse(new Response('Not Found', 404));
-          }
-        }
-      });
-
+      // @todo Make this extensible rather than just hard coding some.
+      $dispatcher->addSubscriber(new HtmlSubscriber());
 
       // Resolve a routing context(path, etc) using the routes object to a
       // Set a routing context to translate.
@@ -65,7 +54,7 @@ class DrupalApp {
       $response = $kernel->handle($request);
     }
     catch (Exception $e) {
-      $error_event = new GetResponseForExceptionEvent($this, $request, $this->type, $e);
+      $error_event = new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $e);
       $dispatcher->dispatch(KernelEvents::EXCEPTION, $error_event);
       if ($error_event->hasResponse()) {
         $response = $error_event->getResponse();
