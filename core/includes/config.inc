@@ -110,19 +110,6 @@ function config_get_verified_storage_names_with_prefix($prefix = '') {
 }
 
 /**
- * @todo
- *
- * @param $prefix
- *   @todo
- *
- * @return
- *   @todo
- */
-function config_get_names_with_prefix($prefix) {
-  return config_get_verified_storage_names_with_prefix($prefix);
-}
-
-/**
  * Retrieves a configuration object.
  *
  * This is the main entry point to the configuration API. Calling
