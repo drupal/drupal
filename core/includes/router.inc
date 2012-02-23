@@ -2,8 +2,10 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing;
-use Symfony\Component\HttpKernel;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
@@ -22,14 +24,14 @@ function router_execute_request(Request $request) {
   try {
     // Resolve a routing context(path, etc) using the routes object to a
     // Set a routing context to translate.
-    $context = new Routing\RequestContext();
+    $context = new RequestContext();
     $context->fromRequest($request);
     $matcher = new UrlMatcher($context);
     // Push path paramaters into attributes.
     $request->attributes->add($matcher->match($request->getPathInfo()));
 
     // Get the controller(page callback) from the resolver.
-    $resolver = new HttpKernel\Controller\ControllerResolver();
+    $resolver = new ControllerResolver();
     $controller = $resolver->getController($request);
     $arguments = $resolver->getArguments($request, $controller);
 
@@ -40,10 +42,10 @@ function router_execute_request(Request $request) {
       $event->setResponse(new Response(drupal_render_page($page_callback_result)));
     });
 
-    $kernel = new HttpKernel\HttpKernel($dispatcher, $resolver);
+    $kernel = new HttpKernel($dispatcher, $resolver);
     return $kernel->handle($request);
   }
-  catch (Routing\Exception\ResourceNotFoundException $e) {
+  catch (ResourceNotFoundException $e) {
     $response = new Response('Not Found', 404);
   }
   //catch (Exception $e) {
