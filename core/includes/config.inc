@@ -200,13 +200,11 @@ function config_xml_to_array($data) {
  * @todo This needs to work for objects as well and currently doesn't.
  */
 function config_encode($data) {
-  // creating object of SimpleXMLElement
+  // Convert the supplied array into a SimpleXMLElement.
   $xml_object = new SimpleXMLElement("<?xml version=\"1.0\"?><config></config>");
-
-  // function call to convert array to xml
   config_array_to_xml($data, $xml_object);
 
-  // Pretty print the result
+  // Pretty print the result.
   $dom = new DOMDocument('1.0');
   $dom->preserveWhiteSpace = false;
   $dom->formatOutput = true;
