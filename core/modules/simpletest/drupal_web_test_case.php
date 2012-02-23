@@ -932,7 +932,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       'sticky'    => 0,
       'type'      => 'page',
       'revisions' => NULL,
-      'language'  => LANGUAGE_NONE,
+      'langcode'  => LANGUAGE_NONE,
     );
 
     // Use the original node's created time for existing nodes.
@@ -957,7 +957,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       'value' => $this->randomName(32),
       'format' => filter_default_format(),
     );
-    $settings['body'][$settings['language']][0] += $body;
+    $settings['body'][$settings['langcode']][0] += $body;
 
     $node = (object) $settings;
     node_save($node);

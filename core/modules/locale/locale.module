@@ -292,13 +292,13 @@ function locale_field_node_form_submit($form, &$form_state) {
     foreach (field_info_instances('node', $bundle) as $instance) {
       $field_name = $instance['field_name'];
       $field = field_info_field($field_name);
-      $previous_language = $form[$field_name]['#language'];
+      $previous_langcode = $form[$field_name]['#language'];
 
       // Handle a possible language change: new language values are inserted,
       // previous ones are deleted.
-      if ($field['translatable'] && $previous_language != $node->language) {
-        $form_state['values'][$field_name][$node->language] = $node->{$field_name}[$previous_language];
-        $form_state['values'][$field_name][$previous_language] = array();
+      if ($field['translatable'] && $previous_langcode != $node->langcode) {
+        $form_state['values'][$field_name][$node->langcode] = $node->{$field_name}[$previous_langcode];
+        $form_state['values'][$field_name][$previous_langcode] = array();
       }
     }
   }
@@ -1085,15 +1085,15 @@ function locale_form_system_file_system_settings_alter(&$form, $form_state) {
  * Implements MODULE_preprocess_HOOK().
  */
 function locale_preprocess_node(&$variables) {
-  if ($variables['language'] != LANGUAGE_NONE) {
+  if ($variables['langcode'] != LANGUAGE_NONE) {
     global $language_interface;
 
-    $node_language = language_load($variables['language']);
+    $node_language = language_load($variables['langcode']);
     if ($node_language->langcode != $language_interface->langcode) {
       // If the node language was different from the page language, we should
       // add markup to identify the language. Otherwise the page language is
       // inherited.
-      $variables['attributes_array']['lang'] = $variables['language'];
+      $variables['attributes_array']['lang'] = $variables['langcode'];
       if ($node_language->direction != $language_interface->direction) {
         // If text direction is different form the page's text direction, add
         // direction information as well.

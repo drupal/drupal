@@ -62,7 +62,6 @@ class TranslationTestCase extends DrupalWebTestCase {
     $node_title = $this->randomName();
     $node_body =  $this->randomName();
     $node = $this->createPage($node_title, $node_body, 'en');
-
     // Unpublish the original node to check that this has no impact on the
     // translation overview page, publish it again afterwards.
     $this->drupalLogin($this->admin_user);
@@ -126,14 +125,14 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Confirm that disabled languages are an option for translators when
     // creating nodes.
     $this->drupalGet('node/add/page');
-    $this->assertFieldByXPath('//select[@name="language"]//option', 'it', t('Italian (disabled) is available in language selection.'));
+    $this->assertFieldByXPath('//select[@name="langcode"]//option', 'it', t('Italian (disabled) is available in language selection.'));
     $translation_it = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'it');
     $this->assertRaw($translation_it->body[LANGUAGE_NONE][0]['value'], t('Content created in Italian (disabled).'));
 
     // Confirm that language neutral is an option for translators when there are
     // disabled languages.
     $this->drupalGet('node/add/page');
-    $this->assertFieldByXPath('//select[@name="language"]//option', LANGUAGE_NONE, t('Language neutral is available in language selection with disabled languages.'));
+    $this->assertFieldByXPath('//select[@name="langcode"]//option', LANGUAGE_NONE, t('Language neutral is available in language selection with disabled languages.'));
     $node2 = $this->createPage($this->randomName(), $this->randomName(), LANGUAGE_NONE);
     $this->assertRaw($node2->body[LANGUAGE_NONE][0]['value'], t('Language neutral content created with disabled languages available.'));
 
@@ -221,9 +220,9 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Create a language neutral node and check that the language switcher is
     // left untouched.
     $node2 = $this->createPage($this->randomName(), $this->randomName(), LANGUAGE_NONE);
-    $node2_en = (object) array('nid' => $node2->nid, 'language' => 'en');
-    $node2_es = (object) array('nid' => $node2->nid, 'language' => 'es');
-    $node2_it = (object) array('nid' => $node2->nid, 'language' => 'it');
+    $node2_en = (object) array('nid' => $node2->nid, 'langcode' => 'en');
+    $node2_es = (object) array('nid' => $node2->nid, 'langcode' => 'es');
+    $node2_it = (object) array('nid' => $node2->nid, 'langcode' => 'it');
     $this->assertLanguageSwitchLinks($node2_en, $node2_en, TRUE, $type);
     $this->assertLanguageSwitchLinks($node2_en, $node2_es, TRUE, $type);
     $this->assertLanguageSwitchLinks($node2_en, $node2_it, TRUE, $type);
@@ -244,8 +243,8 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Check that new nodes with a language assigned do not trigger language
     // switcher alterations when translation support is disabled.
     $node = $this->createPage($this->randomName(), $this->randomName());
-    $node_es = (object) array('nid' => $node->nid, 'language' => 'es');
-    $node_it = (object) array('nid' => $node->nid, 'language' => 'it');
+    $node_es = (object) array('nid' => $node->nid, 'langcode' => 'es');
+    $node_it = (object) array('nid' => $node->nid, 'langcode' => 'it');
     $this->assertLanguageSwitchLinks($node, $node, TRUE, $type);
     $this->assertLanguageSwitchLinks($node, $node_es, TRUE, $type);
     $this->assertLanguageSwitchLinks($node, $node_it, TRUE, $type);
@@ -264,7 +263,7 @@ class TranslationTestCase extends DrupalWebTestCase {
    * Return an empty node data structure.
    */
   function emptyNode($langcode) {
-    return (object) array('nid' => NULL, 'language' => $langcode);
+    return (object) array('nid' => NULL, 'langcode' => $langcode);
   }
 
   /**
@@ -312,16 +311,16 @@ class TranslationTestCase extends DrupalWebTestCase {
    *   Title of basic page in specified language.
    * @param $body
    *   Body of basic page in specified language.
-   * @param
-   *   $language Language code.
+   * @param $langcode
+   *   (optional) Language code.
    */
-  function createPage($title, $body, $language = NULL) {
+  function createPage($title, $body, $langcode = NULL) {
     $edit = array();
-    $langcode = LANGUAGE_NONE;
+    $field_langcode = LANGUAGE_NONE;
     $edit["title"] = $title;
-    $edit["body[$langcode][0][value]"] = $body;
-    if (!empty($language)) {
-      $edit['language'] = $language;
+    $edit["body[$field_langcode][0][value]"] = $body;
+    if (!empty($langcode)) {
+      $edit['langcode'] = $langcode;
     }
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been created.', array('%title' => $title)), t('Basic page created.'));
@@ -343,14 +342,14 @@ class TranslationTestCase extends DrupalWebTestCase {
    *   Title of basic page in specified language.
    * @param $body
    *   Body of basic page in specified language.
-   * @param $language
+   * @param $langcode
    *   Language code.
    */
-  function createTranslation($node, $title, $body, $language) {
-    $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'target' => $language)));
+  function createTranslation($node, $title, $body, $langcode) {
+    $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'target' => $langcode)));
 
-    $langcode = LANGUAGE_NONE;
-    $body_key = "body[$langcode][0][value]";
+    $field_langcode = LANGUAGE_NONE;
+    $body_key = "body[$field_langcode][0][value]";
     $this->assertFieldByXPath('//input[@id="edit-title"]', $node->title, "Original title value correctly populated.");
     $this->assertFieldByXPath("//textarea[@name='$body_key']", $node->body[LANGUAGE_NONE][0]['value'], "Original body value correctly populated.");
 
@@ -417,8 +416,8 @@ class TranslationTestCase extends DrupalWebTestCase {
 
     $result = TRUE;
     $languages = language_list();
-    $page_language = $languages[$node->language];
-    $translation_language = $languages[$translation->language];
+    $page_language = $languages[$node->langcode];
+    $translation_language = $languages[$translation->langcode];
     $url = url("node/$translation->nid", array('language' => $translation_language));
 
     $this->drupalGet("node/$node->nid", array('language' => $page_language));
