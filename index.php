@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\DrupalKernel;
+
 /**
  * @file
  * The PHP page that serves all page requests on a Drupal installation.
@@ -24,7 +26,10 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 // A request object from the HTTPFoundation to tell us about the request.
 $request = Request::createFromGlobals();
-// Run our router, get a response.
-$response = router_execute_request($request);
+// Run our kernel, get a response, and send it.
+$kernel = new DrupalKernel();
+$kernel->handle($request)->send();
+
+//$response = router_execute_request($request);
 // Output response.
-$response->send();
+//$response->send();
