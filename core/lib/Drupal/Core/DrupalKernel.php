@@ -12,6 +12,9 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+
+use Exception;
 
 /**
  * @file
@@ -26,6 +29,31 @@ class DrupalKernel implements HttpKernelInterface {
 
   function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true) {
     try {
+
+      $dispatcher = new EventDispatcher();
+
+      //$dispatcher->addSubscriber(new \Symfony\Component\HttpKernel\EventListener\ExceptionListener());
+
+
+      // Quick and dirty attempt at wrapping our rendering logic as is.
+      $dispatcher->addListener(KernelEvents::VIEW, function(Event $event) {
+        $page_callback_result = $event->getControllerResult();
+        $event->setResponse(new Response(drupal_render_page($page_callback_result)));
+      });
+      $dispatcher->addListener(KernelEvents::EXCEPTION, function(Event $event) use ($request) {
+        debug($request->getAcceptableContentTypes());
+
+        if (in_array('text/html', $request->getAcceptableContentTypes())) {
+          if ($event->getException() instanceof ResourceNotFoundException) {
+            $event->setResponse(new Response('Not Found', 404));
+          }
+        }
+
+
+
+      });
+
+
       // Resolve a routing context(path, etc) using the routes object to a
       // Set a routing context to translate.
       $context = new RequestContext();
@@ -39,18 +67,21 @@ class DrupalKernel implements HttpKernelInterface {
       $controller = $resolver->getController($request);
       $arguments = $resolver->getArguments($request, $controller);
 
-      $dispatcher = new EventDispatcher();
-      // Quick and dirty attempt at wrapping our rendering logic as is.
-      $dispatcher->addListener(KernelEvents::VIEW, function(Event $event) {
-        $page_callback_result = $event->getControllerResult();
-        $event->setResponse(new Response(drupal_render_page($page_callback_result)));
-      });
-
       $kernel = new HttpKernel($dispatcher, $resolver);
-      return $kernel->handle($request);
+      $response = $kernel->handle($request);
     }
-    catch (ResourceNotFoundException $e) {
-      $response = new Response('Not Found', 404);
+    catch (Exception $e) {
+      $error_event = new GetResponseForExceptionEvent($this, $request, $this->type, $e);
+      $dispatcher->dispatch(KernelEvents::EXCEPTION, $error_event);
+      if ($error_event->hasResponse()) {
+        $response = $error_event->getResponse();
+      }
+      else {
+        $response = new Response('An error occurred', 500);
+      }
+
+
+      //$response = new Response('Not Found', 404);
     }
     //catch (Exception $e) {
     //  $response = new Response('An error occurred', 500);
