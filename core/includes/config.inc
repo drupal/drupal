@@ -146,6 +146,11 @@ function config_decode($data) {
   if (empty($data)) {
     return array();
   }
+
+  // This is the fastest and easiest way to get from a string of XML to a PHP
+  // array since SimpleXML and json_decode()/encode() are native to PHP. Our
+  // only other choice would be a custom userspace implementation which would
+  // be a lot less performant and more complex. 
   $xml = new SimpleXMLElement($data);
   $json = json_encode($xml);
   return json_decode($json, TRUE);
