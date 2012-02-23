@@ -62,7 +62,7 @@ function config_install_default_config($module) {
  *
  * You can pass a prefix 'core.entity.node_type' and get back an array of the
  * filenames that match. This allows you to iterate through all files in a
- * branch. 
+ * branch.
  *
  * @param $prefix
  *   The prefix of the files we are searching for.
@@ -127,7 +127,7 @@ function config_get_verified_storage_names_with_prefix($prefix = '') {
  *   An instance of the class specified in the $class parameter.
  *
  * @todo Replace this with an appropriate factory / ability to inject in
- *   alternate storage engines.. 
+ *   alternate storage engines..
  */
 function config($name, $class = 'Drupal\Core\Config\DrupalConfig') {
   return new $class(new DrupalVerifiedStorageSQL($name));
@@ -150,7 +150,7 @@ function config_decode($data) {
   // This is the fastest and easiest way to get from a string of XML to a PHP
   // array since SimpleXML and json_decode()/encode() are native to PHP. Our
   // only other choice would be a custom userspace implementation which would
-  // be a lot less performant and more complex. 
+  // be a lot less performant and more complex.
   $xml = new SimpleXMLElement($data);
   $json = json_encode($xml);
   return json_decode($json, TRUE);
