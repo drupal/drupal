@@ -105,8 +105,6 @@ class SignedFileStorage {
    *
    * @throws
    *   Exception
-   *
-   * @todo What format is $data in?
    */
   public function write($data) {
     $signature = config_sign_data($data);

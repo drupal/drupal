@@ -30,6 +30,9 @@ function config_get_config_directory() {
  *
  * @param
  *   The name of the module we are installing.
+ *
+ * @todo Make this acknowledge other storage engines rather than having
+ *   SQL be hardcoded.
  */
 function config_install_default_config($module) {
   $module_config_dir = drupal_get_path('module', $module) . '/config';
@@ -40,8 +43,6 @@ function config_install_default_config($module) {
       // Load config data into the active store and write it out to the
       // file system in the drupal config directory. Note the config name
       // needs to be the same as the file name WITHOUT the extension.
-      // @todo Make this acknowledge other storage engines rather than having
-      //   SQL be hardcoded.
       $parts = explode('/', $file);
       $file = array_pop($parts);
       $config_name = str_replace('.xml', '', $file);
@@ -92,7 +93,6 @@ function config_sign_data($data) {
   global $config_signature_key;
 
   // SHA-512 is both secure and very fast on 64 bit CPUs.
-  // @todo What about 32-bit CPUs?
   return hash_hmac('sha512', $data, $config_signature_key);
 }
 
@@ -127,9 +127,10 @@ function config_get_verified_storage_names_with_prefix($prefix = '') {
  * @return
  *   An instance of the class specified in the $class parameter.
  *
+ * @todo Replace this with an appropriate factory / ability to inject in
+ *   alternate storage engines.. 
  */
 function config($name, $class = 'Drupal\Core\Config\DrupalConfig') {
-  // @todo Replace this with an appropriate factory.
   return new $class(new DrupalVerifiedStorageSQL($name));
 }
 
@@ -196,6 +197,9 @@ function config_xml_to_array($data) {
  * @return
  *   A representation of this array or object in the native configuration
  *   format.
+ *
+ * @todo The loaded XML can be invalid; throwing plenty of PHP warnings but no
+ *   catchable error.
  */
 function config_encode($data) {
   // Convert the supplied array into a SimpleXMLElement.
@@ -207,8 +211,7 @@ function config_encode($data) {
   $dom->preserveWhiteSpace = false;
   $dom->formatOutput = true;
   $dom->loadXML($xml_object->asXML());
-  // @todo The loaded XML can be invalid; throwing plenty of PHP warnings but no
-  //   catchable error.
+
   return $dom->saveXML();
 }
 
@@ -221,8 +224,6 @@ function config_encode($data) {
  * @return
  *   A representation of this array or object in the native configuration
  *   format.
- *
- * @todo This needs to work for objects as well and currently doesn't.
  */
 function config_array_to_xml($array, &$xml_object) {
   foreach ($array as $key => $value) {
