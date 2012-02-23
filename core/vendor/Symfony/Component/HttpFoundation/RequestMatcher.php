@@ -135,7 +135,7 @@ class RequestMatcher implements RequestMatcherInterface
     protected function checkIp4($requestIp, $ip)
     {
         if (false !== strpos($ip, '/')) {
-            list($address, $netmask) = explode('/', $ip);
+            list($address, $netmask) = explode('/', $ip, 2);
 
             if ($netmask < 1 || $netmask > 32) {
                 return false;
@@ -158,14 +158,14 @@ class RequestMatcher implements RequestMatcherInterface
             throw new \RuntimeException('Unable to check Ipv6. Check that PHP was not compiled with option "disable-ipv6".');
         }
 
-        list($address, $netmask) = explode('/', $ip);
+        list($address, $netmask) = explode('/', $ip, 2);
 
         $bytes_addr = unpack("n*", inet_pton($address));
         $bytes_test = unpack("n*", inet_pton($requestIp));
 
         for ($i = 1, $ceil = ceil($netmask / 16); $i <= $ceil; $i++) {
             $left = $netmask - 16 * ($i-1);
-            $left = ($left <= 16) ?: 16;
+            $left = ($left <= 16) ? $left : 16;
             $mask = ~(0xffff >> $left) & 0xffff;
             if (($bytes_addr[$i] & $mask) != ($bytes_test[$i] & $mask)) {
                 return false;
