@@ -25,9 +25,9 @@ use Exception;
 /**
  * The DrupalKernel is the main routing and dispatching routine in Drupal.
  */
-class DrupalKernel implements HttpKernelInterface {
+class DrupalApp {
 
-  function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true) {
+  function execute(Request $request) {
     try {
 
       $dispatcher = new EventDispatcher();
@@ -48,9 +48,6 @@ class DrupalKernel implements HttpKernelInterface {
             $event->setResponse(new Response('Not Found', 404));
           }
         }
-
-
-
       });
 
 

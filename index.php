@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\Core\DrupalKernel;
+use Drupal\Core\DrupalApp;
 
 /**
  * @file
@@ -26,9 +26,9 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 // A request object from the HTTPFoundation to tell us about the request.
 $request = Request::createFromGlobals();
-// Run our kernel, get a response, and send it.
-$kernel = new DrupalKernel();
-$kernel->handle($request)->send();
+
+$kernel = new DrupalApp();
+$kernel->execute($request)->send();
 
 //$response = router_execute_request($request);
 // Output response.
