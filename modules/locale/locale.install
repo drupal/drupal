@@ -233,6 +233,7 @@ function locale_update_6006() {
  * Fix Drupal.formatPlural().
  */
 function locale_update_6007() {
+  drupal_load('module', 'locale');
   locale_inc_callback('_locale_invalidate_js');
   return array();
 }
