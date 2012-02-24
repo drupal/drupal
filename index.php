@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\DrupalApp;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @file
@@ -17,8 +18,6 @@ use Drupal\Core\DrupalApp;
  * Root directory of Drupal installation.
  */
 define('DRUPAL_ROOT', getcwd());
-
-use Symfony\Component\HttpFoundation\Request;
 
 // Bootstrap the lowest level of what we need.
 require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
