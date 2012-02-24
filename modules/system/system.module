@@ -826,24 +826,28 @@ function system_theme_data() {
 
   // If lock not acquired, return $themes data without writing to database.
   if ($write_database) {
-    $names = array();
+    $filenames = array();
 
     foreach ($themes as $theme) {
-      // Record the name of each theme found in the file system.
-      $names[] = $theme->name;
-      // Update the contents of the system table.
-      if (isset($theme->status) && !(defined('MAINTENANCE_MODE') && MAINTENANCE_MODE != 'install')) {
+      // Record the filename of each theme that was found.
+      $filenames[] = $theme->filename;
+      // Existing themes will always have $theme->status set, since it's a
+      // property that is only stored in the database.
+      if (isset($theme->status)) {
         db_query("UPDATE {system} SET owner = '%s', info = '%s', filename = '%s' WHERE name = '%s' AND type = '%s'", $theme->owner, serialize($theme->info), $theme->filename, $theme->name, 'theme');
       }
+      // New themes must get a $theme->status before they are inserted into the
+      // database. For the default theme, we force it to be enabled (to handle
+      // the initial installation of Drupal), but otherwise new themes should
+      // always start off as disabled.
       else {
         $theme->status = ($theme->name == variable_get('theme_default', 'garland'));
-        // This is a new theme.
         db_query("INSERT INTO {system} (name, owner, info, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d)", $theme->name, $theme->owner, serialize($theme->info), 'theme', $theme->filename, $theme->status, 0, 0);
       }
     }
     // Delete from the system table any themes missing from the file system.
-    if ($names) {
-      db_query("DELETE FROM {system} WHERE type = 'theme' AND name NOT IN (". db_placeholders($names, 'varchar') .")", $names);
+    if ($filenames) {
+      db_query("DELETE FROM {system} WHERE type = 'theme' AND filename NOT IN (". db_placeholders($filenames, 'varchar') .")", $filenames);
     }
     lock_release('system_theme_data');
   }
