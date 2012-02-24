@@ -19,8 +19,8 @@ class UrlMatcher extends SymfonyUrlMatcher {
   /**
    * Constructor.
    *
-   * @param RouteCollection $routes  A RouteCollection instance
-   * @param RequestContext  $context The context
+   * @param RequestContext  $context
+   *   The request context object.
    */
   public function __construct(RequestContext $context) {
     $this->context = $context;
@@ -71,8 +71,11 @@ class UrlMatcher extends SymfonyUrlMatcher {
   /**
    * Get a drupal menu item.
    *
+   * @todo Make this return multiple possible candidates for the resolver to
+   * consider.
+   *
    * @param string $path
-   * The path being looked up by
+   *   The path being looked up by
    */
   protected function matchDrupalItem($path) {
     // For now we can just proxy our procedural method. At some point this will
