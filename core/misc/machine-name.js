@@ -77,9 +77,11 @@ Drupal.behaviors.machineName = {
         $source.bind('keyup.machineName change.machineName', function () {
           machine = self.transliterate($(this).val(), options);
           // Set the machine name to the transliterated value.
-          if (machine != options.replace && machine != '') {
-            $target.val(machine);
-            $preview.text(machine);
+          if (machine != '') {
+            if (machine != options.replace) {
+              $target.val(machine);
+              $preview.text(machine);
+            }
             $suffix.show();
           }
           else {
