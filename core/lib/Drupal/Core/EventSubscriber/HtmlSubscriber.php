@@ -40,7 +40,7 @@ class HtmlSubscriber implements EventSubscriberInterface {
    * @param GetResponseEvent $event
    *   The Event to process.
    */
-  public function onAccessDeniedException(Event $event) {
+  public function onAccessDeniedException(GetResponseEvent $event) {
     if ($this->isHtmlRequestEvent($event) && $event->getException() instanceof AccessDeniedHttpException) {
       $event->setResponse(new Response('Access Denied', 403));
     }
