@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 
 use Drupal\Core\EventSubscriber\HtmlSubscriber;
+use Drupal\Core\EventSubscriber\AccessSubscriber;
 
 use Exception;
 
@@ -43,6 +44,7 @@ class DrupalApp {
 
       $matcher = $this->getMatcher($request);
       $dispatcher->addSubscriber(new RouterListener($matcher));
+      $dispatcher->addSubscriber(new AccessSubscriber());
 
       $resolver = new ControllerResolver();
 
