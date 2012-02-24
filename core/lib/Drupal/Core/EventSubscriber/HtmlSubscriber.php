@@ -8,6 +8,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @file
@@ -24,9 +26,15 @@ class HtmlSubscriber implements EventSubscriberInterface {
     return in_array('text/html', $event->getRequest()->getAcceptableContentTypes());
   }
 
-  public function onResourceNotFoundException(GetResponseEvent $event) {
-    if ($this->isHtmlRequestEvent($event) && $event->getException() instanceof ResourceNotFoundException) {
+  public function onNotFoundHttpException(GetResponseEvent $event) {
+    if ($this->isHtmlRequestEvent($event) && $event->getException() instanceof NotFoundHttpException) {
       $event->setResponse(new Response('Not Found', 404));
+    }
+  }
+
+  public function onMethodAllowedException(GetResponseEvent $event) {
+    if ($this->isHtmlRequestEvent($event) && $event->getException() instanceof MethodNotAllowedException) {
+      $event->setResponse(new Response('Method Not Allowed', 405));
     }
   }
 
@@ -42,8 +50,9 @@ class HtmlSubscriber implements EventSubscriberInterface {
   }
 
   static function getSubscribedEvents() {
-    $events[KernelEvents::EXCEPTION][] = array('onResourceNotFoundException');
+    $events[KernelEvents::EXCEPTION][] = array('onNotFoundHttpException');
     $events[KernelEvents::EXCEPTION][] = array('onAccessDeniedException');
+    $events[KernelEvents::EXCEPTION][] = array('onMethodAllowedException');
 
     $events[KernelEvents::VIEW][] = array('onView');
 

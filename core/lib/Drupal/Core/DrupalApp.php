@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
 
 use Drupal\Core\EventSubscriber\HtmlSubscriber;
 
@@ -35,9 +36,7 @@ class DrupalApp {
       $dispatcher = $this->getDispatcher();
 
       $matcher = $this->getMatcher($request);
-
-      // Push path paramaters into attributes.
-      $request->attributes->add($matcher->match($request->getPathInfo()));
+      $dispatcher->addSubscriber(new RouterListener($matcher));
 
       $resolver = $this->getControllerResolver($request);
 
@@ -51,7 +50,7 @@ class DrupalApp {
         $response = $error_event->getResponse();
       }
       else {
-        $response = new Response('An error occurred', 500);
+        $response = new Response('An error occurred in the wrong place', 500);
       }
     }
 
@@ -79,12 +78,8 @@ class DrupalApp {
     return $matcher;
   }
 
-  protected function getControllerResolver($request) {
-    // Get the controller(page callback) from the resolver.
+  protected function getControllerResolver() {
     $resolver = new ControllerResolver();
-    $controller = $resolver->getController($request);
-    $arguments = $resolver->getArguments($request, $controller);
-
     return $resolver;
   }
 
