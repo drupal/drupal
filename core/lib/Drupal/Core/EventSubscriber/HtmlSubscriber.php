@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * @file
@@ -46,7 +47,9 @@ class HtmlSubscriber implements EventSubscriberInterface {
   }
 
   public function onAccessDeniedException(Event $event) {
-
+    if ($this->isHtmlRequestEvent($event) && $event->getException() instanceof AccessDeniedHttpException) {
+      $event->setResponse(new Response('Access Denied', 403));
+    }
   }
 
   static function getSubscribedEvents() {
