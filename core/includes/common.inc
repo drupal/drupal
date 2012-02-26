@@ -2181,31 +2181,20 @@ function url($path = NULL, array $options = array()) {
   $base = $options['absolute'] ? $options['base_url'] . '/' : base_path();
   $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
 
-  // With Clean URLs.
-  if (!empty($GLOBALS['conf']['clean_url'])) {
-    $path = drupal_encode_path($prefix . $path);
-    if ($options['query']) {
-      return $base . $path . '?' . drupal_http_build_query($options['query']) . $options['fragment'];
-    }
-    else {
-      return $base . $path . $options['fragment'];
-    }
+  // If Clean URLs are not enabled, we need to prefix the script name onto
+  // the link.
+  // @todo: Make this dynamic based on the request object without using a global
+  // request object.
+  if (empty($GLOBALS['conf']['clean_url'])) {
+    $base .= 'index.php/';
   }
-  // Without Clean URLs.
+
+  $path = drupal_encode_path($prefix . $path);
+  if ($options['query']) {
+    return $base . $path . '?' . drupal_http_build_query($options['query']) . $options['fragment'];
+  }
   else {
-    $path = $prefix . $path;
-    $query = array();
-    if (!empty($path)) {
-      $query['q'] = $path;
-    }
-    if ($options['query']) {
-      // We do not use array_merge() here to prevent overriding $path via query
-      // parameters.
-      $query += $options['query'];
-    }
-    $query = $query ? ('?' . drupal_http_build_query($query)) : '';
-    $script = isset($options['script']) ? $options['script'] : '';
-    return $base . $script . $query . $options['fragment'];
+    return $base . $path . $options['fragment'];
   }
 }
 
