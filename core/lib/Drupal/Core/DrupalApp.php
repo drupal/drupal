@@ -58,7 +58,7 @@ class DrupalApp {
       // Either way, treat it as a server-level error and return an HTTP 500.
       // By default, this will be an HTML-type response because that's a decent
       // best guess if we don't know otherwise.
-      $response = new Response('An error occurred in the wrong place', 500);
+      $response = new Response('A fatal error occurred: ' . $e->getMessage(), 500);
     }
 
     return $response;
