@@ -28,7 +28,3 @@ $request = Request::createFromGlobals();
 
 $kernel = new DrupalApp();
 $kernel->execute($request)->send();
-
-//$response = router_execute_request($request);
-// Output response.
-//$response->send();
