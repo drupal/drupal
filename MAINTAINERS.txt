@@ -61,6 +61,7 @@ Database update system
 - Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
 Entity system
+- Wolfgang Ziegler 'fago' <http://drupal.org/user/16747>
 - Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
 - Franz Heinzmann 'Frando' <http://drupal.org/user/21850>
 
