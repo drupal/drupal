@@ -87,7 +87,7 @@ function node_add($type) {
   global $user;
 
   $types = node_type_get_types();
-  $node = (object) array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => LANGUAGE_NONE);
+  $node = (object) array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'langcode' => LANGUAGE_NONE);
   drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)), PASS_THROUGH);
   $output = drupal_get_form($type . '_node_form', $node);
 
@@ -153,7 +153,7 @@ function node_form($form, &$form_state, $node) {
 
   // Basic node information.
   // These elements are just values so they are not even sent to the client.
-  foreach (array('nid', 'vid', 'uid', 'created', 'type', 'language') as $key) {
+  foreach (array('nid', 'vid', 'uid', 'created', 'type') as $key) {
     $form[$key] = array(
       '#type' => 'value',
       '#value' => isset($node->$key) ? $node->$key : NULL,
@@ -187,20 +187,20 @@ function node_form($form, &$form_state, $node) {
     foreach ($languages as $langcode => $language) {
       $language_options[$langcode] = $language->name;
     }
-    $form['language'] = array(
+    $form['langcode'] = array(
       '#type' => 'select',
       '#title' => t('Language'),
-      '#default_value' => (isset($node->language) ? $node->language : ''),
+      '#default_value' => (isset($node->langcode) ? $node->langcode : ''),
       '#options' => $language_options,
       '#empty_value' => LANGUAGE_NONE,
     );
   }
   else {
-    $form['language'] = array(
+    $form['langcode'] = array(
       '#type' => 'value',
       // New nodes without multilingual support get the default language, old
       // nodes keep their language if language.module is not available.
-      '#value' => !isset($form['#node']->nid) ? language_default()->langcode : $node->language,
+      '#value' => !isset($form['#node']->nid) ? language_default()->langcode : $node->langcode,
     );
   }
 
@@ -358,7 +358,7 @@ function node_form($form, &$form_state, $node) {
   }
   $form += array('#submit' => array());
 
-  field_attach_form('node', $node, $form, $form_state, $node->language);
+  field_attach_form('node', $node, $form, $form_state, $node->langcode);
   return $form;
 }
 

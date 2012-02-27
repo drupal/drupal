@@ -525,6 +525,30 @@ function taxonomy_vocabulary_delete($vid) {
     module_invoke_all('taxonomy_vocabulary_delete', $vocabulary);
     module_invoke_all('entity_delete', $vocabulary, 'taxonomy_vocabulary');
 
+    // Load all Taxonomy module fields and delete those which use only this
+    // vocabulary.
+    $taxonomy_fields = field_read_fields(array('module' => 'taxonomy'));
+    foreach ($taxonomy_fields as $field_name => $taxonomy_field) {
+      $modified_field = FALSE;
+      // Term reference fields may reference terms from more than one
+      // vocabulary.
+      foreach ($taxonomy_field['settings']['allowed_values'] as $key => $allowed_value) {
+        if ($allowed_value['vocabulary'] == $vocabulary->machine_name) {
+          unset($taxonomy_field['settings']['allowed_values'][$key]);
+          $modified_field = TRUE;
+        }
+      }
+      if ($modified_field) {
+        if (empty($taxonomy_field['settings']['allowed_values'])) {
+          field_delete_field($field_name);
+        }
+        else {
+          // Update the field definition with the new allowed values.
+          field_update_field($taxonomy_field);
+        }
+      }
+    }
+
     cache_clear_all();
     taxonomy_vocabulary_static_reset();
 

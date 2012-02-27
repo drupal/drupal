@@ -512,11 +512,11 @@ db_insert('variable')->fields(array(
 ))
 ->values(array(
   'name' => 'language_content_type_article',
-  'value' => 's:1:"1";',
+  'value' => 's:1:"2";',
 ))
 ->execute();
 
-// Enable the locale module.
+// Enable Locale and Translation module.
 db_update('system')->fields(array(
   'status' => 1,
   'schema_version' => '7001',
@@ -524,8 +524,20 @@ db_update('system')->fields(array(
 ->condition('type', 'module')
 ->condition('name', 'locale')
 ->execute();
+db_update('system')->fields(array(
+  'status' => 1,
+  'schema_version' => '7001',
+))
+->condition('type', 'module')
+->condition('name', 'translation')
+->execute();
 
-// Add a sample node to test comments on.
+// Add sample nodes to test language assignment and translation functionality.
+// The first node is also used for testing comment language functionality. This
+// is a simple node with LANGUAGE_NONE as language code. The second node is a
+// Catalan node (language code 'ca'). The third and fourth node are a
+// translation set with an English source translation (language code 'en') and a
+// Chuvash translation (language code 'cv').
 db_insert('node')->fields(array(
   'nid',
   'vid',
@@ -558,9 +570,57 @@ db_insert('node')->fields(array(
   'tnid' => '0',
   'translate' => '0',
 ))
+->values(array(
+  'nid' => '39',
+  'vid' => '55',
+  'type' => 'article',
+  'language' => 'ca',
+  'title' => 'Node title 39',
+  'uid' => '6',
+  'status' => '1',
+  'created' => '1263769300',
+  'changed' => '1263769300',
+  'comment' => '0',
+  'promote' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '40',
+  'vid' => '60',
+  'type' => 'article',
+  'language' => 'en',
+  'title' => 'Node title 40',
+  'uid' => '6',
+  'status' => '1',
+  'created' => '1263769534',
+  'changed' => '1263769534',
+  'comment' => '0',
+  'promote' => '0',
+  'sticky' => '0',
+  'tnid' => '40',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '41',
+  'vid' => '65',
+  'type' => 'article',
+  'language' => 'cv',
+  'title' => 'Node title 41',
+  'uid' => '6',
+  'status' => '1',
+  'created' => '1263770064',
+  'changed' => '1263770064',
+  'comment' => '0',
+  'promote' => '0',
+  'sticky' => '0',
+  'tnid' => '40',
+  'translate' => '0',
+))
 ->execute();
 
-// Add its node comment statistics.
+// Add node comment statistics for the first node.
 db_insert('node_comment_statistics')->fields(array(
   'nid',
   'cid',
@@ -597,10 +657,46 @@ db_insert('node_revision')->fields(array(
   'vid' => '50',
   'uid' => '6',
   'title' => 'Node title 38',
-  'log' => 'added a node to comment on',
+  'log' => 'Added a LANGUAGE_NONE node to comment on.',
   'timestamp' => '1314997642',
   'status' => '1',
   'comment' => '2',
+  'promote' => '0',
+  'sticky' => '0',
+))
+->values(array(
+  'nid' => '39',
+  'vid' => '55',
+  'uid' => '6',
+  'title' => 'Node title 39',
+  'log' => 'Created a Catalan node.',
+  'timestamp' => '1263769300',
+  'status' => '1',
+  'comment' => '0',
+  'promote' => '0',
+  'sticky' => '0',
+))
+->values(array(
+  'nid' => '40',
+  'vid' => '60',
+  'uid' => '6',
+  'title' => 'Node title 40',
+  'log' => 'Created source translation in English.',
+  'timestamp' => '1263769534',
+  'status' => '1',
+  'comment' => '0',
+  'promote' => '0',
+  'sticky' => '0',
+))
+->values(array(
+  'nid' => '41',
+  'vid' => '65',
+  'uid' => '6',
+  'title' => 'Node title 41',
+  'log' => 'Created Chuvash translation.',
+  'timestamp' => '1263770064',
+  'status' => '1',
+  'comment' => '0',
   'promote' => '0',
   'sticky' => '0',
 ))
@@ -660,7 +756,7 @@ db_insert('field_revision_body')->fields(array(
 ))
 ->execute();
 
-// Add two comments to this node in a thread.
+// Add two comments to the first node in a thread.
 db_insert('comment')->fields(array(
   'cid',
   'pid',

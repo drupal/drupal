@@ -510,7 +510,7 @@ class NodeCreationTestCase extends DrupalWebTestCase {
       'uid'      => $this->loggedInUser->uid,
       'name'     => $this->loggedInUser->name,
       'type'     => 'page',
-      'language' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NONE,
       'title'    => 'testing_transaction_exception',
     );
 
@@ -2190,7 +2190,7 @@ class NodeEntityFieldQueryAlter extends DrupalWebTestCase {
     // Creating 4 nodes with an entity field so we can test that sort of query
     // alter. All field values starts with 'A' so we can identify and fetch them
     // in the node_access_test module.
-    $settings = array('language' => LANGUAGE_NONE);
+    $settings = array('langcode' => LANGUAGE_NONE);
     for ($i = 0; $i < 4; $i++) {
       $body = array(
         'value' => 'A' . $this->randomName(32),
@@ -2268,9 +2268,9 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[node:type]'] = 'article';
     $tests['[node:type-name]'] = 'Article';
     $tests['[node:title]'] = check_plain($node->title);
-    $tests['[node:body]'] = _text_sanitize($instance, $node->language, $node->body[$node->language][0], 'value');
-    $tests['[node:summary]'] = _text_sanitize($instance, $node->language, $node->body[$node->language][0], 'summary');
-    $tests['[node:language]'] = check_plain($node->language);
+    $tests['[node:body]'] = _text_sanitize($instance, $node->langcode, $node->body[$node->langcode][0], 'value');
+    $tests['[node:summary]'] = _text_sanitize($instance, $node->langcode, $node->body[$node->langcode][0], 'summary');
+    $tests['[node:langcode]'] = check_plain($node->langcode);
     $tests['[node:url]'] = url('node/' . $node->nid, $url_options);
     $tests['[node:edit-url]'] = url('node/' . $node->nid . '/edit', $url_options);
     $tests['[node:author]'] = check_plain(user_format_name($account));
@@ -2289,9 +2289,9 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
 
     // Generate and test unsanitized tokens.
     $tests['[node:title]'] = $node->title;
-    $tests['[node:body]'] = $node->body[$node->language][0]['value'];
-    $tests['[node:summary]'] = $node->body[$node->language][0]['summary'];
-    $tests['[node:language]'] = $node->language;
+    $tests['[node:body]'] = $node->body[$node->langcode][0]['value'];
+    $tests['[node:summary]'] = $node->body[$node->langcode][0]['summary'];
+    $tests['[node:langcode]'] = $node->langcode;
     $tests['[node:author:name]'] = user_format_name($account);
 
     foreach ($tests as $input => $expected) {

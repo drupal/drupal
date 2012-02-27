@@ -853,7 +853,7 @@ class PollTranslateTestCase extends PollTestCase {
     // Set the poll's first choice count to 200.
     $edit['choice[chid:1][chvotes]'] = 200;
     // Set the language to Dutch.
-    $edit['language'] = 'nl';
+    $edit['langcode'] = 'nl';
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Translate the Dutch poll.
