@@ -1035,6 +1035,13 @@ function theme($hook, $variables = array()) {
   if (isset($info['base hook'])) {
     $base_hook = $info['base hook'];
     $base_hook_info = $hooks[$base_hook];
+    // Include files required by the base hook, since its variable processors
+    // might reside there.
+    if (!empty($base_hook_info['includes'])) {
+      foreach ($base_hook_info['includes'] as $include_file) {
+        include_once DRUPAL_ROOT . '/' . $include_file;
+      }
+    }
     if (isset($base_hook_info['preprocess functions']) || isset($base_hook_info['process functions'])) {
       $variables['theme_hook_suggestion'] = $hook;
       $hook = $base_hook;
