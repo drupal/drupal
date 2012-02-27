@@ -2083,6 +2083,8 @@ class DrupalWebTestCase extends DrupalTestCase {
       // them.
       $dom = new DOMDocument();
       @$dom->loadHTML($content);
+      // XPath allows for finding wrapper nodes better than DOM does.
+      $xpath = new DOMXPath($dom);
       foreach ($return as $command) {
         switch ($command['command']) {
           case 'settings':
@@ -2090,52 +2092,52 @@ class DrupalWebTestCase extends DrupalTestCase {
             break;
 
           case 'insert':
-            // @todo ajax.js can process commands that include a 'selector', but
-            //   these are hard to emulate with DOMDocument. For now, we only
-            //   implement 'insert' commands that use $ajax_settings['wrapper'].
+            $wrapperNode = NULL;
+            // When a command doesn't specify a selector, use the
+            // #ajax['wrapper'] which is always an HTML ID.
             if (!isset($command['selector'])) {
-              // $dom->getElementById() doesn't work when drupalPostAJAX() is
-              // invoked multiple times for a page, so use XPath instead. This
-              // also sets us up for adding support for $command['selector'] in
-              // the future, once we figure out how to transform a jQuery
-              // selector to XPath.
-              $xpath = new DOMXPath($dom);
               $wrapperNode = $xpath->query('//*[@id="' . $ajax_settings['wrapper'] . '"]')->item(0);
-              if ($wrapperNode) {
-                // ajax.js adds an enclosing DIV to work around a Safari bug.
-                $newDom = new DOMDocument();
-                $newDom->loadHTML('<div>' . $command['data'] . '</div>');
-                $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
-                $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
-                // The "method" is a jQuery DOM manipulation function. Emulate
-                // each one using PHP's DOMNode API.
-                switch ($method) {
-                  case 'replaceWith':
-                    $wrapperNode->parentNode->replaceChild($newNode, $wrapperNode);
-                    break;
-                  case 'append':
-                    $wrapperNode->appendChild($newNode);
-                    break;
-                  case 'prepend':
-                    // If no firstChild, insertBefore() falls back to
-                    // appendChild().
-                    $wrapperNode->insertBefore($newNode, $wrapperNode->firstChild);
-                    break;
-                  case 'before':
-                    $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode);
-                    break;
-                  case 'after':
-                    // If no nextSibling, insertBefore() falls back to
-                    // appendChild().
-                    $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode->nextSibling);
-                    break;
-                  case 'html':
-                    foreach ($wrapperNode->childNodes as $childNode) {
-                      $wrapperNode->removeChild($childNode);
-                    }
-                    $wrapperNode->appendChild($newNode);
-                    break;
-                }
+            }
+            // @todo Ajax commands can target any jQuery selector, but these are
+            //   hard to fully emulate with XPath. For now, just handle 'head'
+            //   and 'body', since these are used by ajax_render().
+            elseif (in_array($command['selector'], array('head', 'body'))) {
+              $wrapperNode = $xpath->query('//' . $command['selector'])->item(0);
+            }
+            if ($wrapperNode) {
+              // ajax.js adds an enclosing DIV to work around a Safari bug.
+              $newDom = new DOMDocument();
+              $newDom->loadHTML('<div>' . $command['data'] . '</div>');
+              $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
+              $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
+              // The "method" is a jQuery DOM manipulation function. Emulate
+              // each one using PHP's DOMNode API.
+              switch ($method) {
+                case 'replaceWith':
+                  $wrapperNode->parentNode->replaceChild($newNode, $wrapperNode);
+                  break;
+                case 'append':
+                  $wrapperNode->appendChild($newNode);
+                  break;
+                case 'prepend':
+                  // If no firstChild, insertBefore() falls back to
+                  // appendChild().
+                  $wrapperNode->insertBefore($newNode, $wrapperNode->firstChild);
+                  break;
+                case 'before':
+                  $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode);
+                  break;
+                case 'after':
+                  // If no nextSibling, insertBefore() falls back to
+                  // appendChild().
+                  $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode->nextSibling);
+                  break;
+                case 'html':
+                  foreach ($wrapperNode->childNodes as $childNode) {
+                    $wrapperNode->removeChild($childNode);
+                  }
+                  $wrapperNode->appendChild($newNode);
+                  break;
               }
             }
             break;
