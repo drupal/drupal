@@ -227,7 +227,7 @@ PHP module
 - ?
 
 Poll module
-- ?
+- Andrei Mateescu 'amateescu' <http://drupal.org/user/729614>
 
 Profile module
 - ?
