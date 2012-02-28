@@ -296,13 +296,25 @@ function locale_update_8001() {
   // storing data for blocks will need to update for themselves.
   $block_tables = array('block', 'block_node_type', 'block_role');
   foreach ($block_tables as $table) {
-    db_update($table)
-    ->fields(array(
-        'delta' => 'language_interface',
-    ))
-    ->condition('delta', 'language')
-    ->condition('module', 'locale')
-    ->execute();
+    // Perform the update only if the language switcher block data is available.
+    $block_data = db_query_range('SELECT 1 FROM {' . $table . '} WHERE delta = :delta AND module = :module', 0, 1, array(':delta' => 'language', ':module' => 'locale'))
+      ->fetchField();
+    if ($block_data) {
+      // If block information is rebuilt before performing the update, we might
+      // already have data for the new delta. In this case we need to remove it
+      // to avoid integrity constraint violation errors.
+      db_delete($table)
+        ->condition('delta', 'language_interface')
+        ->condition('module', 'locale')
+        ->execute();
+      db_update($table)
+        ->fields(array(
+          'delta' => 'language_interface',
+        ))
+        ->condition('delta', 'language')
+        ->condition('module', 'locale')
+        ->execute();
+    }
   }
 }
 
