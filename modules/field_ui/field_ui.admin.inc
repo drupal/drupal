@@ -540,8 +540,19 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
   }
 
   // Additional row: add existing field.
-  $existing_field_options = field_ui_existing_field_options($entity_type, $bundle);
-  if ($existing_field_options && $widget_type_options) {
+  $existing_fields = field_ui_existing_field_options($entity_type, $bundle);
+  if ($existing_fields && $widget_type_options) {
+    // Build list of options.
+    $existing_field_options = array();
+    foreach ($existing_fields as $field_name => $info) {
+      $text = t('@type: @field (@label)', array(
+        '@type' => $info['type_label'],
+        '@label' => $info['label'],
+        '@field' => $info['field'],
+      ));
+      $existing_field_options[$field_name] = truncate_utf8($text, 80, FALSE, TRUE);
+    }
+    asort($existing_field_options);
     $name = '_add_existing_field';
     $table[$name] = array(
       '#attributes' => array('class' => array('draggable', 'tabledrag-leaf', 'add-new')),
@@ -617,10 +628,8 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
 
   // Add settings for the update selects behavior.
   $js_fields = array();
-  foreach ($existing_field_options as $field_name => $fields) {
-    $field = field_info_field($field_name);
-    $instance = field_info_instance($form['#entity_type'], $field_name, $form['#bundle']);
-    $js_fields[$field_name] = array('label' => $instance['label'], 'type' => $field['type'], 'widget' => $instance['widget']['type']);
+  foreach ($existing_fields as $field_name => $info) {
+    $js_fields[$field_name] = array('label' => $info['label'], 'type' => $info['type'], 'widget' => $info['widget_type']);
   }
 
   $form['#attached']['js'][] = array(
@@ -1502,7 +1511,7 @@ function field_ui_formatter_options($field_type = NULL) {
  * Returns an array of existing fields to be added to a bundle.
  */
 function field_ui_existing_field_options($entity_type, $bundle) {
-  $options = array();
+  $info = array();
   $field_types = field_info_field_types();
 
   foreach (field_info_instances() as $existing_entity_type => $bundles) {
@@ -1521,19 +1530,19 @@ function field_ui_existing_field_options($entity_type, $bundle) {
             && !field_info_instance($entity_type, $field['field_name'], $bundle)
             && (empty($field['entity_types']) || in_array($entity_type, $field['entity_types']))
             && empty($field_types[$field['type']]['no_ui'])) {
-            $text = t('@type: @field (@label)', array(
-              '@type' => $field_types[$field['type']]['label'],
-              '@label' => t($instance['label']), '@field' => $instance['field_name'],
-            ));
-            $options[$instance['field_name']] = (drupal_strlen($text) > 80 ? truncate_utf8($text, 77) . '...' : $text);
+            $info[$instance['field_name']] = array(
+              'type' => $field['type'],
+              'type_label' => $field_types[$field['type']]['label'],
+              'field' => $field['field_name'],
+              'label' => t($instance['label']),
+              'widget_type' => $instance['widget']['type'],
+            );
           }
         }
       }
     }
   }
-  // Sort the list by field name.
-  asort($options);
-  return $options;
+  return $info;
 }
 
 /**
