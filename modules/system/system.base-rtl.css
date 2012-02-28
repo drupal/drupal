@@ -36,8 +36,12 @@ html.js input.throbbing {
  */
 .draggable a.tabledrag-handle {
   float: right;
-  margin: -0.4em -0.5em -0.4em 0;
-  padding: 0.42em 0.5em 0.42em 1.5em;
+  margin-right: -1em;
+  margin-left: 0;
+}
+a.tabledrag-handle .handle {
+  margin: -0.4em 0.5em;
+  padding: 0.42em 0.5em;
 }
 div.indentation {
   float: right;
