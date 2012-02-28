@@ -597,9 +597,9 @@ function simpletest_script_reporter_display_results() {
           echo "\n\n---- $result->test_class ----\n\n\n";
           $test_class = $result->test_class;
 
-  // Print table header.
-  echo "Status    Group      Filename          Line Function                            \n";
-  echo "--------------------------------------------------------------------------------\n";
+          // Print table header.
+          echo "Status    Group      Filename          Line Function                            \n";
+          echo "--------------------------------------------------------------------------------\n";
         }
 
         simpletest_script_format_result($result);
