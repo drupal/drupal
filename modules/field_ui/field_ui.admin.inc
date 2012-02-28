@@ -280,8 +280,8 @@ function theme_field_ui_table($variables) {
  *
  * Allows fields and pseudo-fields to be re-ordered.
  *
- * @see field_ui_overview_form_validate().
- * @see field_ui_overview_form_submit().
+ * @see field_ui_field_overview_form_validate()
+ * @see field_ui_field_overview_form_submit()
  * @ingroup forms
  */
 function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle) {
@@ -1705,7 +1705,7 @@ function field_ui_widget_type_form_submit($form, &$form_state) {
 /**
  * Form constructor for removing a field instance from a bundle.
  *
- * @see field_ui_delete_form_submit()
+ * @see field_ui_field_delete_form_submit()
  * @ingroup forms
  */
 function field_ui_field_delete_form($form, &$form_state, $instance) {
