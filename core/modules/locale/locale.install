@@ -207,38 +207,6 @@ function locale_schema() {
 }
 
 /**
- * Converts language domains to new format.
- */
-function locale_update_8001() {
-  $message = '';
-  $domains = locale_language_negotiation_url_domains();
-  // $used_domains keeps track of the domain names in use.
-  $used_domains = array();
-  foreach ($domains as $langcode => $domain) {
-    // Domain names can not contain protocol and/or ports.
-    if (!empty($domain)) {
-      $host = 'http://' . str_replace(array('http://', 'https://'), '', $domain);
-      if (parse_url($host, PHP_URL_HOST) != $domain) {
-        $domains[$langcode] = parse_url($host, PHP_URL_HOST);
-      }
-      if (array_key_exists($domain, $used_domains)) {
-        if (empty($message)) {
-          $message = 'Some languages are using the same domain name, you should change these domain names at ' . l('URL language detection configuration', 'admin/config/regional/language/configure/url' . '.');
-        }
-      }
-      else {
-        $used_domains[$domain] = $domain;
-      }
-    }
-  }
-  locale_language_negotiation_url_domains_save($domains);
-
-  if (!empty($message)) {
-    return $message;
-  }
-}
-
-/**
  * @addtogroup updates-7.x-to-8.x
  * @{
  */
@@ -315,6 +283,38 @@ function locale_update_8001() {
         ->condition('module', 'locale')
         ->execute();
     }
+  }
+}
+
+/**
+ * Converts language domains to new format.
+ */
+function locale_update_8002() {
+  $message = '';
+  $domains = locale_language_negotiation_url_domains();
+  // $used_domains keeps track of the domain names in use.
+  $used_domains = array();
+  foreach ($domains as $langcode => $domain) {
+    // Domain names can not contain protocol and/or ports.
+    if (!empty($domain)) {
+      $host = 'http://' . str_replace(array('http://', 'https://'), '', $domain);
+      if (parse_url($host, PHP_URL_HOST) != $domain) {
+        $domains[$langcode] = parse_url($host, PHP_URL_HOST);
+      }
+      if (array_key_exists($domain, $used_domains)) {
+        if (empty($message)) {
+          $message = 'Some languages are using the same domain name, you should change these domain names at ' . l('URL language detection configuration', 'admin/config/regional/language/configure/url' . '.');
+        }
+      }
+      else {
+        $used_domains[$domain] = $domain;
+      }
+    }
+  }
+  locale_language_negotiation_url_domains_save($domains);
+
+  if (!empty($message)) {
+    return $message;
   }
 }
 
