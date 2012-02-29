@@ -699,14 +699,14 @@ function system_schema() {
     'description' => 'Default active store for the configuration system.',
     'fields' => array(
       'name' => array(
-        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus .json.php).',
+        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus the file extension).',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'data' => array(
-        'description' => 'The raw JSON data for this configuration entry.',
+        'description' => 'The raw data for this configuration entry.',
         'type' => 'blob',
         'not null' => TRUE,
         'size' => 'big',
@@ -1699,7 +1699,7 @@ function system_update_8003() {
     'description' => 'Default active store for the configuration system.',
     'fields' => array(
       'name' => array(
-        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus the file extendion.).',
+        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus the file extension).',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
