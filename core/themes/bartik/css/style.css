@@ -187,7 +187,7 @@ table tr th {
 table tr th,
 table tr th a,
 table tr th a:hover {
-  color: #FFF;
+  color: #fff;
   font-weight: bold;
 }
 table tbody tr th {
@@ -1597,10 +1597,10 @@ div.admin-panel .description {
 
 /* ---------- book ----------- */
 .book-navigation .menu {
-  border-top: 1px solid #D6D6D6;
+  border-top: 1px solid #d6d6d6;
 }
 .book-navigation .book-pager {
-  border-bottom: 1px solid #D6D6D6;
-  border-top: 1px solid #D6D6D6;
+  border-bottom: 1px solid #d6d6d6;
+  border-top: 1px solid #d6d6d6;
   margin: 0;
 }

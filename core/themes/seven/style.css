@@ -8,7 +8,7 @@ body {
   font: normal 81.3%/1.538em "Lucida Grande", "Lucida Sans Unicode", sans-serif;
 }
 a {
-  color: #0074BD;
+  color: #0074bd;
   text-decoration: none;
 }
 a:hover {
@@ -939,13 +939,13 @@ div.add-or-remove-shortcuts {
   padding: 1px 8px;
 }
 #field-display-overview tr.field-formatter-settings-changed {
-  background: #FFFFBB;
+  background: #ffffbb;
 }
 #field-display-overview tr.drag {
-  background: #FFEE77;
+  background: #ffee77;
 }
 #field-display-overview tr.field-formatter-settings-editing {
-  background: #D5E9F2;
+  background: #d5e9f2;
 }
 #field-display-overview .field-formatter-settings-edit-form .form-item {
   margin: 10px 0;
