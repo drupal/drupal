@@ -347,6 +347,16 @@ function block_get_blocks_by_region($region) {
 function _block_get_renderable_region($list = array()) {
   $weight = 0;
   $build = array();
+  // Block caching is not compatible with node_access modules. We also
+  // preserve the submission of forms in blocks, by fetching from cache
+  // only if the request method is 'GET' (or 'HEAD'). User 1 being out of
+  // the regular 'roles define permissions' schema, it brings too many
+  // chances of having unwanted output get in the cache and later be served
+  // to other users. We therefore exclude user 1 from block caching.
+  $not_cacheable = $GLOBALS['user']->uid == 1 ||
+    count(module_implements('node_grants')) ||
+    !in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD'));
+
   foreach ($list as $key => $block) {
     $build[$key] = array(
       '#block' => $block,
@@ -354,18 +364,7 @@ function _block_get_renderable_region($list = array()) {
       '#theme_wrappers' => array('block'),
     );
 
-    // Block caching is not compatible with node_access modules. We also
-    // preserve the submission of forms in blocks, by fetching from cache
-    // only if the request method is 'GET' (or 'HEAD'). User 1 being out of
-    // the regular 'roles define permissions' schema, it brings too many
-    // chances of having unwanted output get in the cache and later be served
-    // to other users. We therefore exclude user 1 from block caching.
-    if (
-      $GLOBALS['user']->uid == 1 ||
-      count(module_implements('node_grants')) ||
-      !in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')) ||
-      in_array($block->cache, array(DRUPAL_NO_CACHE, DRUPAL_CACHE_CUSTOM))
-    ) {
+    if ($not_cacheable || in_array($block->cache, array(DRUPAL_NO_CACHE, DRUPAL_CACHE_CUSTOM))) {
       // Non-cached blocks get built immediately. Provides more content
       // that can be easily manipulated during hook_page_alter().
       $build[$key] = _block_get_renderable_block($build[$key]);
