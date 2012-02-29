@@ -4,3 +4,4 @@ package = Testing
 version = VERSION
 core = 7.x
 hidden = TRUE
+files[] = drupal_system_listing_compatible_test.test
