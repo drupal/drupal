@@ -1340,7 +1340,7 @@ function node_view($node, $view_mode = 'full', $langcode = NULL) {
     '#theme' => 'node',
     '#node' => $node,
     '#view_mode' => $view_mode,
-    '#language' => $langcode,
+    '#langcode' => $langcode,
   );
 
   // Add contextual links for this node, except when the node is already being
@@ -1724,7 +1724,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
 
   // Insert special keywords.
   $query->setOption('type', 'n.type');
-  $query->setOption('language', 'n.language');
+  $query->setOption('langcode', 'n.langcode');
   if ($query->setOption('term', 'ti.tid')) {
     $query->join('taxonomy_index', 'ti', 'n.nid = ti.nid');
   }
@@ -1764,7 +1764,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
       'extra' => $extra,
       'score' => $item->calculated_score,
       'snippet' => search_excerpt($keys, $node->rendered),
-      'language' => $node->language,
+      'langcode' => $node->langcode,
     );
   }
   return $results;
@@ -2848,10 +2848,8 @@ function node_form_search_form_alter(&$form, $form_state) {
 
     // Languages:
     $language_options = array();
-    foreach (language_list() as $key => $entity) {
-      if ($entity->enabled) {
-        $language_options[$key] = $entity->name;
-      }
+    foreach (language_list(TRUE) as $langcode => $language) {
+      $language_options[$langcode] = $language->name;
     }
     if (count($language_options) > 1) {
       $form['advanced']['language'] = array(
@@ -4204,9 +4202,9 @@ function node_file_download_access($field, $entity_type, $entity) {
  * Implements hook_language_delete().
  */
 function node_language_delete($language) {
-  // On nodes with this language, unset the language
+  // On nodes with this language, unset the language.
   db_update('node')
-    ->fields(array('language' => ''))
-    ->condition('language', $language->langcode)
+    ->fields(array('langcode' => ''))
+    ->condition('langcode', $language->langcode)
     ->execute();
 }

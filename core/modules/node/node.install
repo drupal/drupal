@@ -32,7 +32,7 @@ function node_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'language' => array(
+      'langcode' => array(
         'description' => 'The {language}.langcode of this node.',
         'type' => 'varchar',
         'length' => 12,
@@ -539,6 +539,20 @@ function node_update_8001() {
     }
     variable_del('language_content_type_' . $type);
   }
+}
+
+/**
+ * Rename node.language field to node.langcode.
+ */
+function node_update_8002() {
+  $spec = array(
+    'description' => 'The {language}.langcode of this node.',
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+  );
+  db_change_field('node', 'language', 'langcode', $spec);
 }
 
 /**

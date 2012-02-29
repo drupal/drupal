@@ -2002,7 +2002,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     // Verify language selection appears on add "Basic page" form.
     $this->drupalGet('node/add/page');
     // Verify language select list is present.
-    $this->assertFieldByName('language', NULL, t('Language select present on add Basic page form.'));
+    $this->assertFieldByName('langcode', NULL, t('Language select present on add Basic page form.'));
     // Ensure enabled language appears.
     $this->assertText($name, t('Enabled language present.'));
     // Ensure disabled language doesn't appear.
@@ -2015,7 +2015,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
       'type' => 'page',
       'title' => $node_title,
       'body' => array($langcode => array(array('value' => $node_body))),
-      'language' => $langcode,
+      'langcode' => $langcode,
     );
     $node = $this->drupalCreateNode($edit);
     // Edit the content and ensure correct language is selected.
@@ -2024,7 +2024,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $this->assertRaw('<option value="' . $langcode . '" selected="selected">' .  $name . '</option>', t('Correct language selected.'));
     // Ensure we can change the node language.
     $edit = array(
-      'language' => 'en',
+      'langcode' => 'en',
     );
     $this->drupalPost($path, $edit, t('Save'));
     $this->assertRaw(t('%title has been updated.', array('%title' => $node_title)), t('Basic page content updated.'));
@@ -2107,7 +2107,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
       'type' => 'article',
       'title' => $node_title,
       'body' => array($langcode => array(array('value' => $node_body))),
-      'language' => $langcode,
+      'langcode' => $langcode,
       'promote' => 1,
     );
     return $this->drupalCreateNode($edit);
@@ -2575,7 +2575,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     $edit = array();
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
-    $edit['language'] = 'en';
+    $edit['langcode'] = 'en';
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the node exists in the database.
@@ -2589,7 +2589,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     $this->drupalGet("node/$node->nid/edit");
     $edit = array(
       $title_key => $this->randomName(8),
-      'language' => 'it'
+      'langcode' => 'it'
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
@@ -2624,7 +2624,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     $edit = array();
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
-    $edit['language'] = 'en';
+    $edit['langcode'] = 'en';
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the node exists in the database.
@@ -2706,7 +2706,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
       $edit = array(
         "title" => $title,
         "body[$langcode_none][0][value]" => $this->randomName(),
-        "language" => $node_langcode,
+        "langcode" => $node_langcode,
       );
       $this->drupalPost("node/add/article", $edit, t('Save'));
       $node = $this->drupalGetNodeByTitle($title);

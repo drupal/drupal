@@ -453,7 +453,9 @@ class Request
             if ($this->server->has('HTTP_CLIENT_IP')) {
                 return $this->server->get('HTTP_CLIENT_IP');
             } elseif (self::$trustProxy && $this->server->has('HTTP_X_FORWARDED_FOR')) {
-                return $this->server->get('HTTP_X_FORWARDED_FOR');
+                $clientIp = explode(',', $this->server->get('HTTP_X_FORWARDED_FOR'), 2);
+
+                return isset($clientIp[0]) ? trim($clientIp[0]) : '';
             }
         }
 
@@ -560,7 +562,11 @@ class Request
      */
     public function getPort()
     {
-        return $this->headers->get('X-Forwarded-Port') ?: $this->server->get('SERVER_PORT');
+        if (self::$trustProxy && $this->headers->has('X-Forwarded-Port')) {
+            return $this->headers->get('X-Forwarded-Port');
+        } else {
+            return $this->server->get('SERVER_PORT');
+        }
     }
 
     /**
@@ -639,7 +645,7 @@ class Request
      * It builds a normalized query string, where keys/value pairs are alphabetized
      * and have consistent escaping.
      *
-     * @return string A normalized query string for the Request
+     * @return string|null A normalized query string for the Request
      *
      * @api
      */
@@ -845,6 +851,24 @@ class Request
         $this->format = $format;
     }
 
+    public function setLocale($locale)
+    {
+        if (!$this->hasSession()) {
+            throw new \LogicException('Forward compatibility for Request::setLocale() requires the session to be set.');
+        }
+
+        $this->session->setLocale($locale);
+    }
+
+    public function getLocale()
+    {
+        if (!$this->hasSession()) {
+            throw new \LogicException('Forward compatibility for Request::getLocale() requires the session to be set.');
+        }
+
+        return $this->session->getLocale();
+    }
+
     /**
      * Checks whether the method is safe or not.
      *
@@ -903,7 +927,7 @@ class Request
      *
      * @param  array  $locales  An array of ordered available locales
      *
-     * @return string The preferred locale
+     * @return string|null The preferred locale
      *
      * @api
      */
@@ -911,7 +935,7 @@ class Request
     {
         $preferredLanguages = $this->getLanguages();
 
-        if (null === $locales) {
+        if (empty($locales)) {
             return isset($preferredLanguages[0]) ? $preferredLanguages[0] : null;
         }
 
@@ -1017,6 +1041,8 @@ class Request
      * Splits an Accept-* HTTP header.
      *
      * @param string $header  Header to split
+     *
+     * @return array Array indexed by the values of the Accept-* header in preferred order
      */
     public function splitHttpAcceptHeader($header)
     {
@@ -1027,9 +1053,9 @@ class Request
         $values = array();
         foreach (array_filter(explode(',', $header)) as $value) {
             // Cut off any q-value that might come after a semi-colon
-            if ($pos = strpos($value, ';')) {
-                $q     = (float) trim(substr($value, strpos($value, '=') + 1));
-                $value = trim(substr($value, 0, $pos));
+            if (preg_match('/;\s*(q=.*$)/', $value, $match)) {
+                $q     = (float) substr(trim($match[1]), 2);
+                $value = trim(substr($value, 0, -strlen($match[0])));
             } else {
                 $q = 1;
             }
@@ -1057,7 +1083,7 @@ class Request
     {
         $requestUri = '';
 
-        if ($this->headers->has('X_REWRITE_URL')) {
+        if ($this->headers->has('X_REWRITE_URL') && false !== stripos(PHP_OS, 'WIN')) {
             // check this first so IIS will catch
             $requestUri = $this->headers->get('X_REWRITE_URL');
         } elseif ($this->server->get('IIS_WasUrlRewritten') == '1' && $this->server->get('UNENCODED_URL') != '') {

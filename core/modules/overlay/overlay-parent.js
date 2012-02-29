@@ -354,7 +354,7 @@ Drupal.overlay.isAdminLink = function (url) {
 
   // Turn the list of administrative paths into a regular expression.
   if (!this.adminPathRegExp) {
-    var regExpPrefix = '^' + Drupal.settings.pathPrefix + '(';
+    var regExpPrefix = '' + Drupal.settings.pathPrefix + '(';
     var adminPaths = regExpPrefix + Drupal.settings.overlay.paths.admin.replace(/\s+/g, ')$|' + regExpPrefix) + ')$';
     var nonAdminPaths = regExpPrefix + Drupal.settings.overlay.paths.non_admin.replace(/\s+/g, ')$|'+ regExpPrefix) + ')$';
     adminPaths = adminPaths.replace(/\*/g, '.*');
@@ -554,7 +554,7 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
   var target = $target[0];
   var href = target.href;
   // Only handle links that have an href attribute and use the http(s) protocol.
-  if (href != undefined && href != '' && target.protocol.match(/^https?\:/)) {
+  if (typeof href !== 'undefined' && href !== '' && (/^https?\:/).test(target.protocol)) {
     var anchor = href.replace(target.ownerDocument.location.href, '');
     // Skip anchor links.
     if (anchor.length == 0 || anchor.charAt(0) == '#') {

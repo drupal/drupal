@@ -50,9 +50,9 @@ function node_token_info() {
     'name' => t("Summary"),
     'description' => t("The summary of the node's main body text."),
   );
-  $node['language'] = array(
-    'name' => t("Language"),
-    'description' => t("The language the node is written in."),
+  $node['langcode'] = array(
+    'name' => t('Language code'),
+    'description' => t('The language code of the language the node is written in.'),
   );
   $node['url'] = array(
     'name' => t("URL"),
@@ -143,8 +143,8 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           }
           break;
 
-        case 'language':
-          $replacements[$original] = $sanitize ? check_plain($node->language) : $node->language;
+        case 'langcode':
+          $replacements[$original] = $sanitize ? check_plain($node->langcode) : $node->langcode;
           break;
 
         case 'url':
