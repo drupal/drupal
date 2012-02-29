@@ -1,4 +1,7 @@
 
+Drupal 6.26-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.25, 2012-02-29
 ----------------------
 - Fixed regressions introduced in Drupal 6.24 only.
