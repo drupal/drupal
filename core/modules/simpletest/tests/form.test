@@ -261,7 +261,7 @@ class FormsTestCase extends DrupalWebTestCase {
 
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
-    $this->assertEqual(count($disabled_elements), 33, t('The correct elements have the disabled property in the HTML code.'));
+    $this->assertEqual(count($disabled_elements), 34, t('The correct elements have the disabled property in the HTML code.'));
 
     $this->drupalPost(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);
@@ -390,14 +390,13 @@ class FormElementTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Tests placeholder text for textfield, password, and textarea.
+   * Tests placeholder text for elements that support placeholders.
    */
   function testPlaceHolderText() {
     $this->drupalGet('form-test/placeholder-text');
     $expected = 'placeholder-text';
-    // Test to make sure textfields and passwords have the proper placeholder
-    // text.
-    foreach (array('textfield', 'password') as $type) {
+    // Test to make sure non-textarea elements have the proper placeholder text.
+    foreach (array('textfield', 'tel', 'password') as $type) {
       $element = $this->xpath('//input[@id=:id and @placeholder=:expected]', array(
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
