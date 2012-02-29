@@ -568,7 +568,8 @@ function image_field_formatter_view($entity_type, $entity, $field, $instance, $l
  *
  * @param $variables
  *   An associative array containing:
- *   - item: An array of image data.
+ *   - item: Associative array of image data, which may include "uri", "alt",
+ *     "width", "height", "title" and "attributes".
  *   - image_style: An optional image style.
  *   - path: An array containing the link 'path' and link 'options'.
  *
@@ -580,6 +581,10 @@ function theme_image_formatter($variables) {
     'path' => $item['uri'],
     'alt' => $item['alt'],
   );
+
+  if (isset($item['attributes'])) {
+    $image['attributes'] = $item['attributes'];
+  }
 
   if (isset($item['width']) && isset($item['height'])) {
     $image['width'] = $item['width'];

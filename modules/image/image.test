@@ -808,6 +808,23 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
   }
 
   /**
+   * Test passing attributes into the image field formatters.
+   */
+  function testImageFieldFormatterAttributes() {
+    $image = theme('image_formatter', array(
+      'item' => array(
+        'uri' => 'http://example.com/example.png',
+        'attributes' => array(
+          'data-image-field-formatter' => 'testFound',
+        ),
+        'alt' => t('Image field formatter attribute test.'),
+        'title' => t('Image field formatter'),
+      ),
+    ));
+    $this->assertTrue(stripos($image, 'testFound') > 0, t('Image field formatters can have attributes.'));
+  }
+
+  /**
    * Test use of a default image with an image field.
    */
   function testImageFieldDefaultImage() {
