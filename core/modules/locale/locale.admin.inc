@@ -330,19 +330,6 @@ function language_negotiation_configure_url_form_validate($form, &$form_state) {
       form_error($form['domain'][$langcode], t('The domain for %language, %value, is not unique.', array('%language' => $language->name, '%value' => $value)));
     }
   }
-
-  // Domain names should not contain protocol and/or ports.
-  foreach ($languages as $langcode => $name) {
-    $value = $form_state['values']['domain'][$langcode];
-    if (!empty($value)) {
-      // Ensure we have a protocol but only one protocol in the setting for
-      // parse_url() checking against the hostname.
-      $host = 'http://' . str_replace(array('http://', 'https://'), '', $value);
-      if (parse_url($host, PHP_URL_HOST) != $value) {
-        form_error($form['domain'][$langcode], t('The domain for %language may only contain the domain name, not a protocol and/or port.', array( '%language' => $name)));
-      }
-    }
-  }
 }
 
 /**
