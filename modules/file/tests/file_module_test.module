@@ -36,6 +36,7 @@ function file_module_test_form($form, &$form_state, $tree = TRUE, $extended = FA
     '#upload_location' => 'public://test',
     '#progress_message' => t('Please wait...'),
     '#extended' => (bool) $extended,
+    '#size' => 13,
   );
   if ($default_fid) {
     $form['nested']['file']['#default_value'] = $extended ? array('fid' => $default_fid) : $default_fid;
