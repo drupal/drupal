@@ -956,8 +956,15 @@ class CommentPreviewTest extends CommentHelperCase {
     $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
     $this->drupalLogout();
 
-    // As web user, fill in node creation form and preview node.
+    // Login as web user and add a signature.
     $this->drupalLogin($this->web_user);
+    variable_set('user_signatures', 1);
+    $test_signature = $this->randomName();
+    $edit['signature[value]'] = '<a href="http://example.com/">' . $test_signature. '</a>';
+    $edit['signature[format]'] = 'filtered_html';
+    $this->drupalPost('user/' . $this->web_user->uid . '/edit', $edit, t('Save'));
+
+    // Fill in the comment form and preview the comment.
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
@@ -971,6 +978,9 @@ class CommentPreviewTest extends CommentHelperCase {
     // Check that the title and body fields are displayed with the correct values.
     $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
     $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], t('Comment field displayed.'));
+
+    // Check that the signature is displaying with the correct text format.
+    $this->assertLink($test_signature);
   }
 
   /**
