@@ -8,7 +8,7 @@
 /**
  * Test the node_load_multiple() function.
  */
-class NodeLoadMultipleUnitTest extends DrupalWebTestCase {
+class NodeLoadMultipleTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -821,7 +821,7 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
  * @todo Cover hook_node_access in a separate test class.
  * hook_node_access_records is covered in another test class.
  */
-class NodeAccessUnitTest extends DrupalWebTestCase {
+class NodeAccessTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node access',
@@ -888,7 +888,7 @@ class NodeAccessUnitTest extends DrupalWebTestCase {
 /**
  * Test case to verify hook_node_access_records functionality.
  */
-class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
+class NodeAccessRecordsTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node access records',

@@ -105,7 +105,7 @@ class ImageFieldTestCase extends DrupalWebTestCase {
 /**
  * Tests the functions for generating paths and URLs for image styles.
  */
-class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
+class ImageStylesPathAndUrlTestCase extends DrupalWebTestCase {
   protected $style_name;
   protected $image_info;
   protected $image_filepath;
@@ -951,7 +951,7 @@ class ImageFieldValidateTestCase extends ImageFieldTestCase {
 /**
  * Tests that images have correct dimensions when styled.
  */
-class ImageDimensionsUnitTest extends DrupalWebTestCase {
+class ImageDimensionsTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(

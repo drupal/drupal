@@ -3,7 +3,7 @@
 /**
  * Tests Drupal error and exception handlers.
  */
-class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
+class DrupalErrorHandlerTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Drupal error handlers',

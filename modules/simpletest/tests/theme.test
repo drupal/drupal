@@ -8,7 +8,7 @@
 /**
  * Unit tests for the Theme API.
  */
-class ThemeUnitTest extends DrupalWebTestCase {
+class ThemeTestCase extends DrupalWebTestCase {
   protected $profile = 'testing';
 
   public static function getInfo() {
@@ -116,7 +116,7 @@ class ThemeUnitTest extends DrupalWebTestCase {
 /**
  * Unit tests for theme_table().
  */
-class ThemeTableUnitTest extends DrupalWebTestCase {
+class ThemeTableTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Theme Table',
@@ -315,7 +315,7 @@ class ThemeLinksTest extends DrupalWebTestCase {
 /**
  * Functional test for initialization of the theme system in hook_init().
  */
-class ThemeHookInitUnitTest extends DrupalWebTestCase {
+class ThemeHookInitTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Theme initialization in hook_init()',

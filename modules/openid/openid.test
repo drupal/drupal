@@ -653,7 +653,7 @@ class OpenIDInvalidIdentifierTransitionTestCase extends OpenIDFunctionalTestCase
 /**
  * Test internal helper functions.
  */
-class OpenIDUnitTest extends DrupalWebTestCase {
+class OpenIDTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'OpenID helper functions',
