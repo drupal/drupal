@@ -185,10 +185,15 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
 
     $response = $_SESSION['openid']['response'];
 
-    // Extract Simple Registration keys from the response.
-    $sreg_values = openid_extract_namespace($response, OPENID_NS_SREG, 'sreg');
-    // Extract Attribute Exchanges keys from the response.
-    $ax_values = openid_extract_namespace($response, OPENID_NS_AX, 'ax');
+    // Extract Simple Registration keys from the response. We only include
+    // signed keys as required by OpenID Simple Registration Extension 1.0,
+    // section 4.
+    $sreg_values = openid_extract_namespace($response, OPENID_NS_SREG, 'sreg', TRUE);
+    // Extract Attribute Exchanges keys from the response. We only include
+    // signed keys. This is not required by the specification, but it is
+    // recommended by Google, see
+    // http://googlecode.blogspot.com/2011/05/security-advisory-to-websites-using.html
+    $ax_values = openid_extract_namespace($response, OPENID_NS_AX, 'ax', TRUE);
 
     if (!empty($sreg_values['nickname'])) {
       // Use the nickname returned by Simple Registration if available.

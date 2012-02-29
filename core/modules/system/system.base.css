@@ -93,21 +93,22 @@ body.drag {
   cursor: move;
   float: left; /* LTR */
   height: 1.7em;
-  margin: -0.4em 0 -0.4em -0.5em; /* LTR */
-  padding: 0.42em 1.5em 0.42em 0.5em; /* LTR */
+  margin-left: -1em; /* LTR */
+  overflow: hidden;
   text-decoration: none;
 }
 a.tabledrag-handle:hover {
   text-decoration: none;
 }
 a.tabledrag-handle .handle {
-  background: url(../../misc/draggable.png) no-repeat 0 0;
+  background: url(../../misc/draggable.png) no-repeat 6px 9px;
   height: 13px;
-  margin-top: 4px;
+  margin: -0.4em 0.5em; /* LTR */
+  padding: 0.42em 0.5em; /* LTR */
   width: 13px;
 }
 a.tabledrag-handle-hover .handle {
-  background-position: 0 -20px;
+  background-position: 6px -11px;
 }
 div.indentation {
   float: left; /* LTR */
