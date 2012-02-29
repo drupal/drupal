@@ -290,6 +290,8 @@ function locale_update_8001() {
  * Converts language domains to new format.
  */
 function locale_update_8002() {
+  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
+
   $message = '';
   $domains = locale_language_negotiation_url_domains();
   // $used_domains keeps track of the domain names in use.
