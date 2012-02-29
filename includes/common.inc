@@ -2969,6 +2969,18 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
   // Sort CSS items, so that they appear in the correct order.
   uasort($css, 'drupal_sort_css_js');
 
+  // Provide the page with information about the individual CSS files used,
+  // information not otherwise available when CSS aggregation is enabled. The
+  // setting is attached later in this function, but is set here, so that CSS
+  // files removed below are still considered "used" and prevented from being
+  // added in a later AJAX request.
+  // Skip if no files were added to the page or jQuery.extend() will overwrite
+  // the Drupal.settings.ajaxPageState.css object with an empty array.
+  if (!empty($css)) {
+    // Cast the array to an object to be on the safe side even if not empty.
+    $setting['ajaxPageState']['css'] = (object) array_fill_keys(array_keys($css), 1);
+  }
+
   // Remove the overridden CSS files. Later CSS files override former ones.
   $previous_item = array();
   foreach ($css as $key => $item) {
@@ -2989,13 +3001,7 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
     '#items' => $css,
   );
 
-  // Provide the page with information about the individual CSS files used,
-  // information not otherwise available when CSS aggregation is enabled.
-  // Skip if no files were added to the page or jQuery.extend() will overwrite
-  // the Drupal.settings.ajaxPageState.css object with an empty array.
-  // Cast the array to an object to be on the safe side even if not empty.
-  if (!empty($css)) {
-    $setting['ajaxPageState']['css'] = (object) array_fill_keys(array_keys($css), 1);
+  if (!empty($setting)) {
     $styles['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
   }
 

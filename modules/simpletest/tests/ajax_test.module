@@ -32,6 +32,14 @@ function ajax_test_menu() {
 }
 
 /**
+ * Implements hook_system_theme_info().
+ */
+function ajax_test_system_theme_info() {
+  $themes['test_theme'] = drupal_get_path('module', 'ajax_test') . '/themes/test_theme/test_theme.info';
+  return $themes;
+}
+
+/**
  * Menu callback; Return an element suitable for use by ajax_deliver().
  *
  * Additionally ensures that ajax_render() incorporates JavaScript settings
