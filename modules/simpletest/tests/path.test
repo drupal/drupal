@@ -333,3 +333,49 @@ class PathLookupTest extends DrupalWebTestCase {
     $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], t('Newer alias record is returned when comparing two LANGUAGE_NONE paths with the same alias.'));
   }
 }
+
+/**
+ * Tests the path_save() function.
+ */
+class PathSaveTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('Path save'),
+      'description' => t('Tests that path_save() exposes the previous alias value.'),
+      'group' => t('Path API'),
+    );
+  }
+
+  function setUp() {
+    // Enable a helper module that implements hook_path_update().
+    parent::setUp('path_test');
+    path_test_reset();
+  }
+
+  /**
+   * Tests that path_save() makes the original path available to modules.
+   */
+  function testDrupalSaveOriginalPath() {
+    $account = $this->drupalCreateUser();
+    $uid = $account->uid;
+    $name = $account->name;
+
+    // Create a language-neutral alias.
+    $path = array(
+      'source' => "user/$uid",
+      'alias' => 'foo',
+    );
+    $path_original = $path;
+    path_save($path);
+
+    // Alter the path.
+    $path['alias'] = 'bar';
+    path_save($path);
+
+    // Test to see if the original alias is available to modules during
+    // hook_path_update().
+    $results = variable_get('path_test_results', array());
+    $this->assertIdentical($results['hook_path_update']['original']['alias'], $path_original['alias'], t('Old path alias available to modules during hook_path_update.'));
+    $this->assertIdentical($results['hook_path_update']['original']['source'], $path_original['source'], t('Old path alias available to modules during hook_path_update.'));
+  }
+}

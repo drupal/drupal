@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the path tests.
+ */
+
+/**
+ * Resets the path test results.
+ */
+function path_test_reset() {
+  variable_set('path_test_results', array());
+}
+
+/**
+ * Implements hook_path_update().
+ */
+function path_test_path_update($path) {
+  $results = variable_get('path_test_results', array());
+  $results['hook_path_update'] = $path;
+  variable_set('path_test_results', $results);
+}
+
