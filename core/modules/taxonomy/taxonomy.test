@@ -180,7 +180,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
 /**
  * Tests for taxonomy vocabulary functions.
  */
-class TaxonomyVocabularyTestCase extends TaxonomyWebTestCase {
+class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -394,7 +394,7 @@ class TaxonomyVocabularyTestCase extends TaxonomyWebTestCase {
 /**
  * Unit tests for taxonomy term functions.
  */
-class TaxonomyTermFunctionTestCase extends TaxonomyWebTestCase {
+class TaxonomyTermUnitTest extends TaxonomyWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -1249,7 +1249,7 @@ class TaxonomyTermIndexTestCase extends TaxonomyWebTestCase {
 /**
  * Test the taxonomy_term_load_multiple() function.
  */
-class TaxonomyLoadMultipleTestCase extends TaxonomyWebTestCase {
+class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
 
   public static function getInfo() {
     return array(

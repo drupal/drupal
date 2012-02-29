@@ -632,7 +632,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
 /**
  * Test internal helper functions.
  */
-class OpenIDTestCase extends DrupalWebTestCase {
+class OpenIDUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'OpenID helper functions',
