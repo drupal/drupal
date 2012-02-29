@@ -18,12 +18,14 @@ function node_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
+      // Defaults to NULL in order to avoid a brief period of potential
+      // deadlocks on the index.
       'vid' => array(
         'description' => 'The current {node_revision}.vid version identifier.',
         'type' => 'int',
         'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
+        'not null' => FALSE,
+        'default' => NULL,
       ),
       'type' => array(
         'description' => 'The {node_type}.type of this node.',
