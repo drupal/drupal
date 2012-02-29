@@ -8,8 +8,6 @@
 /**
  * Page callback: Displays the most recent items gathered from any feed.
  *
- * Path: aggregator
- *
  * @see aggregator_menu()
  */
 function aggregator_page_last() {
@@ -22,8 +20,6 @@ function aggregator_page_last() {
 
 /**
  * Page callback: Displays all the items captured from a particular feed.
- *
- * Path: aggregator/sources/%aggregator_feed
  *
  * @param $feed
  *   The feed for which to display all items.
@@ -44,8 +40,6 @@ function aggregator_page_source($feed) {
 /**
  * Form constructor to show all items captured from a feed.
  *
- * Path: aggregator/sources/%aggregator_feed/categorize
- *
  * @param $feed
  *   The feed for which to list all the aggregated items.
  *
@@ -59,8 +53,6 @@ function aggregator_page_source_form($form, $form_state, $feed) {
 
 /**
  * Form constructor to list items aggregated in a category.
- *
- * Path: aggregator/categories
  *
  * @param $category
  *   The category for which to list all the aggregated items.
@@ -80,8 +72,6 @@ function aggregator_page_category($category) {
 
 /**
  * Form constructor to list items aggregated in a category.
- *
- * Path: aggregator/categories/%aggregator_category/categorize
  *
  * @param $category
  *   The category for which to list all the aggregated items.
@@ -342,8 +332,6 @@ function template_preprocess_aggregator_item(&$variables) {
 /**
  * Page callback: Displays all the feeds used by the aggregator.
  *
- * Path: aggregator/sources
- *
  * @see aggregator_menu()
  */
 function aggregator_page_sources() {
@@ -370,8 +358,6 @@ function aggregator_page_sources() {
 /**
  * Page callback: Displays all the categories used by the aggregator.
  *
- * Path: aggregator/categories
- *
  * @see aggregator_menu()
  */
 function aggregator_page_categories() {
@@ -395,8 +381,6 @@ function aggregator_page_categories() {
 
 /**
  * Page callback: Generates an RSS 0.92 feed of aggregator items or categories.
- *
- * Path: aggregator/rss
  *
  * @see aggregator_menu()
  */
@@ -467,8 +451,6 @@ function theme_aggregator_page_rss($variables) {
 
 /**
  * Page callback: Generates an OPML representation of all feeds.
- *
- * Path: aggregator/opml
  *
  * @param $cid
  *   If set, feeds are exported only from a category with this ID. Otherwise,

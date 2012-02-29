@@ -8,8 +8,6 @@
 /**
  * Page callback: Prints a page listing a glossary of Drupal terminology.
  *
- * Path: admin/help
- *
  * @see help_menu()
  */
 function help_main() {
@@ -21,8 +19,6 @@ function help_main() {
 
 /**
  * Page callback: Prints a page listing general help for a module.
- *
- * Path: admin/help/%
  *
  * @param $name
  *   A module name to display a help page for.

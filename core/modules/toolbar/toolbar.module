@@ -67,8 +67,6 @@ function toolbar_menu() {
 /**
  * Page callback: Toggles the visibility of the toolbar drawer.
  *
- * Path: toolbar/toggle
- *
  * @see toolbar_menu().
  */
 function toolbar_toggle_page() {

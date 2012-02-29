@@ -225,8 +225,6 @@ function file_file_download($uri, $field_type = 'file') {
 /**
  * Ajax callback: Processes file uploads and deletions.
  *
- * Path: file/ajax
- *
  * This rebuilds the form element for a particular field item. As long as the
  * form processing is properly encapsulated in the widget element the form
  * should rebuild correctly using FAPI without the need for additional callbacks
@@ -291,8 +289,6 @@ function file_ajax_upload() {
 
 /**
  * Ajax callback: Retrieves upload progress.
- *
- * Path: file/progress
  *
  * @param $key
  *   The unique key for this upload process.

@@ -351,8 +351,6 @@ function ajax_get_form() {
 /**
  * Page callback: Handles Ajax requests for the #ajax Form API property.
  *
- * Path: system/ajax
- *
  * This rebuilds the form from cache and invokes the defined #ajax['callback']
  * to return an Ajax command structure for JavaScript. In case no 'callback' has
  * been defined, nothing will happen.
@@ -387,11 +385,6 @@ function ajax_form_callback() {
 
 /**
  * Theme callback: Returns the correct theme for an Ajax request.
- *
- * Paths:
- *   - system/ajax
- *   - file/ajax
- *   - file/progress
  *
  * Many different pages can invoke an Ajax request to system/ajax or another
  * generic Ajax path. It is almost always desired for an Ajax response to be

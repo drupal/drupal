@@ -8,8 +8,6 @@
 /**
  * Page callback: Lists all defined fields for quick reference.
  *
- * Path: admin/reports/fields
- *
  * @see field_ui_menu()
  */
 function field_ui_fields_list() {
@@ -286,9 +284,6 @@ function theme_field_ui_table($variables) {
 
 /**
  * Form constructor for the 'Manage fields' form of a bundle.
- *
- * Path: BUNDLE_ADMIN_PATH/fields, where BUNDLE_ADMIN_PATH is the path stored in
- * the ['admin']['info'] property in the return value of hook_entity_info().
  *
  * The resulting form allows fields and pseudo-fields to be re-ordered.
  *
@@ -879,12 +874,6 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
 
 /**
  * Form constructor for the field display settings for a given view mode.
- *
- * Paths:
- * - BUNDLE_ADMIN_PATH/display
- * - BUNLDE_ADMIN_PATH/display/%view_mode
- * where BUNDLE_ADMIN_PATH is the path stored in the ['admin']['info'] property
- * in the return value of hook_entity_info().
  *
  * @see field_ui_menu()
  * @see field_ui_display_overview_multistep_submit()
@@ -1568,10 +1557,6 @@ function field_ui_existing_field_options($entity_type, $bundle) {
 /**
  * Form constructor for the field settings edit page.
  *
- * Path: BUNDLE_ADMIN_PATH/fields/%field/field-settings, where BUNDLE_ADMIN_PATH
- * is the path stored in the ['admin']['info'] property
- * in the return value of hook_entity_info().
- *
  * @see field_ui_menu()
  * @see field_ui_settings_form_submit()
  * @ingroups forms
@@ -1657,10 +1642,6 @@ function field_ui_field_settings_form_submit($form, &$form_state) {
 /**
  * Form constructor for the widget selection form.
  *
- * Path: BUNDLE_ADMIN_PATH/fields/%field/widget-type, where BUNDLE_ADMIN_PATH is
- * the path stored in the ['admin']['info'] property in the return value of
- * hook_entity_info().
- *
  * @see field_ui_menu()
  * @see field_ui_widget_type_form_submit()
  * @ingroup forms
@@ -1739,10 +1720,6 @@ function field_ui_widget_type_form_submit($form, &$form_state) {
 /**
  * Form constructor for removing a field instance from a bundle.
  *
- * Path: BUNDLE_ADMIN_PATH/fields/%field/delete, where BUNDLE_ADMIN_PATH is the
- * path stored in the ['admin']['info'] property in the return value of
- * hook_entity_info().
- *
  * @see field_ui_menu()
  * @see field_ui_field_delete_form_submit()
  * @ingroup forms
@@ -1813,12 +1790,6 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
 
 /**
  * Form constructor for the field instance settings form.
- *
- * Paths:
- * - BUNDLE_ADMIN_PATH/fields/%field
- * - BUNDLE_ADMIN_PATH/fields/%field/edit
- * where BUNDLE_ADMIN_PATH is the path stored in the ['admin']['info'] property
- * in the return value of hook_entity_info().
  *
  * @see field_ui_menu()
  * @see field_ui_field_edit_form_validate()

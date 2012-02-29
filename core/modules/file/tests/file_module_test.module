@@ -24,8 +24,6 @@ function file_module_test_menu() {
 /**
  * Form constructor for testing a 'managed_file' element.
  *
- * Path: file/test
- *
  * @see file_module_test_menu()
  * @see file_module_test_form_submit()
  * @ingroup forms

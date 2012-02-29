@@ -8,8 +8,6 @@
 /**
  * Page callback: Form constructor for the permission rebuild confirmation form.
  *
- * Path: admin/reports/status/rebuild
- *
  * @see node_menu()
  * @see node_configure_rebuild_confirm_submit()
  */
@@ -371,8 +369,6 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
 
 /**
  * Page callback: Form constructor for the content administration form.
- *
- * Path: admin/content
  *
  * @see node_multiple_delete_confirm()
  * @see node_multiple_delete_confirm_submit()

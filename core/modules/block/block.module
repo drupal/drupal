@@ -195,8 +195,6 @@ function _block_themes_access($theme) {
 /**
  * Theme callback: Uses the theme specified in the parameter.
  *
- * Path: admin/structure/block/demo/% (for each theme)
- *
  * @param $theme
  *   The theme whose blocks are being configured. If not set, the default theme
  *   is assumed.
