@@ -21,7 +21,7 @@ Drupal.behaviors.states = {
         new states.Dependent({
           element: $(selector),
           state: states.State.sanitize(state),
-          dependees: settings.states[selector][state]
+          constraints: settings.states[selector][state]
         });
       }
     }
@@ -40,12 +40,14 @@ Drupal.behaviors.states = {
  *   Object with the following keys (all of which are required):
  *   - element: A jQuery object of the dependent element
  *   - state: A State object describing the state that is dependent
- *   - dependees: An object with dependency specifications. Lists all elements
- *     that this element depends on.
+ *   - constraints: An object with dependency specifications. Lists all elements
+ *     that this element depends on. It can be nested and can contain arbitrary
+ *     AND and OR clauses.
  */
 states.Dependent = function (args) {
-  $.extend(this, { values: {}, oldValue: undefined }, args);
+  $.extend(this, { values: {}, oldValue: null }, args);
 
+  this.dependees = this.getDependees();
   for (var selector in this.dependees) {
     this.initializeDependee(selector, this.dependees[selector]);
   }
@@ -69,7 +71,7 @@ states.Dependent.comparisons = {
     // as a string before applying the strict comparison in compare(). Otherwise
     // numeric keys in the form's #states array fail to match string values
     // returned from jQuery's val().
-    return (value.constructor.name === 'String') ? compare(String(reference), value) : compare(reference, value);
+    return (typeof value === 'string') ? compare(reference.toString(), value) : compare(reference, value);
   }
 };
 
@@ -84,26 +86,33 @@ states.Dependent.prototype = {
    *   dependee's compliance status.
    */
   initializeDependee: function (selector, dependeeStates) {
-    var self = this;
+    var state;
 
     // Cache for the states of this dependee.
-    self.values[selector] = {};
+    this.values[selector] = {};
 
-    $.each(dependeeStates, function (state, value) {
-      state = states.State.sanitize(state);
+    for (var i in dependeeStates) {
+      if (dependeeStates.hasOwnProperty(i)) {
+        state = dependeeStates[i];
+        // Make sure we're not initializing this selector/state combination twice.
+        if ($.inArray(state, dependeeStates) === -1) {
+          continue;
+        }
 
-      // Initialize the value of this state.
-      self.values[selector][state.pristine] = undefined;
+        state = states.State.sanitize(state);
 
-      // Monitor state changes of the specified state for this dependee.
-      $(selector).bind('state:' + state, function (e) {
-        var complies = self.compare(value, e.value);
-        self.update(selector, state, complies);
-      });
+        // Initialize the value of this state.
+        this.values[selector][state.name] = null;
 
-      // Make sure the event we just bound ourselves to is actually fired.
-      new states.Trigger({ selector: selector, state: state });
-    });
+        // Monitor state changes of the specified state for this dependee.
+        $(selector).bind('state:' + state, $.proxy(function (e) {
+          this.update(selector, state, e.value);
+        }, this));
+
+        // Make sure the event we just bound ourselves to is actually fired.
+        new states.Trigger({ selector: selector, state: state });
+      }
+    }
   },
 
   /**
@@ -111,12 +120,16 @@ states.Dependent.prototype = {
    *
    * @param reference
    *   The value used for reference.
-   * @param value
-   *   The value to compare with the reference value.
+   * @param selector
+   *   CSS selector describing the dependee.
+   * @param state
+   *   A State object describing the dependee's updated state.
+   *
    * @return
-   *   true, undefined or false.
+   *   true or false.
    */
-  compare: function (reference, value) {
+  compare: function (reference, selector, state) {
+    var value = this.values[selector][state.name];
     if (reference.constructor.name in states.Dependent.comparisons) {
       // Use a custom compare function for certain reference value types.
       return states.Dependent.comparisons[reference.constructor.name](reference, value);
@@ -139,8 +152,8 @@ states.Dependent.prototype = {
    */
   update: function (selector, state, value) {
     // Only act when the 'new' value is actually new.
-    if (value !== this.values[selector][state.pristine]) {
-      this.values[selector][state.pristine] = value;
+    if (value !== this.values[selector][state.name]) {
+      this.values[selector][state.name] = value;
       this.reevaluate();
     }
   },
@@ -149,16 +162,8 @@ states.Dependent.prototype = {
    * Triggers change events in case a state changed.
    */
   reevaluate: function () {
-    var value = undefined;
-
-    // Merge all individual values to find out whether this dependee complies.
-    for (var selector in this.values) {
-      for (var state in this.values[selector]) {
-        state = states.State.sanitize(state);
-        var complies = this.values[selector][state.pristine];
-        value = ternary(value, invert(complies, state.invert));
-      }
-    }
+    // Check whether any constraint for this dependent state is satisifed.
+    var value = this.verifyConstraints(this.constraints);
 
     // Only invoke a state change event when the value actually changed.
     if (value !== this.oldValue) {
@@ -173,6 +178,124 @@ states.Dependent.prototype = {
       // infinite loops.
       this.element.trigger({ type: 'state:' + this.state, value: value, trigger: true });
     }
+  },
+
+  /**
+   * Evaluates child constraints to determine if a constraint is satisfied.
+   *
+   * @param constraints
+   *   A constraint object or an array of constraints.
+   * @param selector
+   *   The selector for these constraints. If undefined, there isn't yet a
+   *   selector that these constraints apply to. In that case, the keys of the
+   *   object are interpreted as the selector if encountered.
+   *
+   * @return
+   *   true or false, depending on whether these constraints are satisfied.
+   */
+  verifyConstraints: function(constraints, selector) {
+    var result;
+    if ($.isArray(constraints)) {
+      // This constraint is an array (OR or XOR).
+      var hasXor = $.inArray('xor', constraints) === -1;
+      for (var i = 0, len = constraints.length; i < len; i++) {
+        if (constraints[i] != 'xor') {
+          var constraint = this.checkConstraints(constraints[i], selector, i);
+          // Return if this is OR and we have a satisfied constraint or if this
+          // is XOR and we have a second satisfied constraint.
+          if (constraint && (hasXor || result)) {
+            return hasXor;
+          }
+          result = result || constraint;
+        }
+      }
+    }
+    // Make sure we don't try to iterate over things other than objects. This
+    // shouldn't normally occur, but in case the condition definition is bogus,
+    // we don't want to end up with an infinite loop.
+    else if ($.isPlainObject(constraints)) {
+      // This constraint is an object (AND).
+      for (var n in constraints) {
+        if (constraints.hasOwnProperty(n)) {
+          result = ternary(result, this.checkConstraints(constraints[n], selector, n));
+          // False and anything else will evaluate to false, so return when any
+          // false condition is found.
+          if (result === false) { return false; }
+        }
+      }
+    }
+    return result;
+  },
+
+  /**
+   * Checks whether the value matches the requirements for this constraint.
+   *
+   * @param value
+   *   Either the value of a state or an array/object of constraints. In the
+   *   latter case, resolving the constraint continues.
+   * @param selector
+   *   The selector for this constraint. If undefined, there isn't yet a
+   *   selector that this constraint applies to. In that case, the state key is
+   *   propagates to a selector and resolving continues.
+   * @param state
+   *   The state to check for this constraint. If undefined, resolving
+   *   continues.
+   *   If both selector and state aren't undefined and valid non-numeric
+   *   strings, a lookup for the actual value of that selector's state is
+   *   performed. This parameter is not a State object but a pristine state
+   *   string.
+   *
+   * @return
+   *   true or false, depending on whether this constraint is satisfied.
+   */
+  checkConstraints: function(value, selector, state) {
+    // Normalize the last parameter. If it's non-numeric, we treat it either as
+    // a selector (in case there isn't one yet) or as a trigger/state.
+    if (typeof state !== 'string' || (/[0-9]/).test(state[0])) {
+      state = null;
+    }
+    else if (typeof selector === 'undefined') {
+      // Propagate the state to the selector when there isn't one yet.
+      selector = state;
+      state = null;
+    }
+
+    if (state !== null) {
+      // constraints is the actual constraints of an element to check for.
+      state = states.State.sanitize(state);
+      return invert(this.compare(value, selector, state), state.invert);
+    }
+    else {
+      // Resolve this constraint as an AND/OR operator.
+      return this.verifyConstraints(value, selector);
+    }
+  },
+
+  /**
+   * Gathers information about all required triggers.
+   */
+  getDependees: function() {
+    var cache = {};
+    // Swivel the lookup function so that we can record all available selector-
+    // state combinations for initialization.
+    var _compare = this.compare;
+    this.compare = function(reference, selector, state) {
+      (cache[selector] || (cache[selector] = [])).push(state.name);
+      // Return nothing (=== undefined) so that the constraint loops are not
+      // broken.
+    };
+
+    // This call doesn't actually verify anything but uses the resolving
+    // mechanism to go through the constraints array, trying to look up each
+    // value. Since we swivelled the compare function, this comparison returns
+    // undefined and lookup continues until the very end. Instead of lookup up
+    // the value, we record that combination of selector and state so that we
+    // can initialize all triggers.
+    this.verifyConstraints(this.constraints);
+    // Restore the original function.
+    this.compare = _compare;
+
+    return cache;
   }
 };
 
@@ -192,7 +315,6 @@ states.Trigger = function (args) {
 
 states.Trigger.prototype = {
   initialize: function () {
-    var self = this;
     var trigger = states.Trigger.states[this.state];
 
     if (typeof trigger == 'function') {
@@ -200,9 +322,11 @@ states.Trigger.prototype = {
       trigger.call(window, this.element);
     }
     else {
-      $.each(trigger, function (event, valueFn) {
-        self.defaultTrigger(event, valueFn);
-      });
+      for (var event in trigger) {
+        if (trigger.hasOwnProperty(event)) {
+          this.defaultTrigger(event, trigger[event]);
+        }
+      }
     }
 
     // Mark this trigger as initialized for this element.
@@ -210,23 +334,22 @@ states.Trigger.prototype = {
   },
 
   defaultTrigger: function (event, valueFn) {
-    var self = this;
     var oldValue = valueFn.call(this.element);
 
     // Attach the event callback.
-    this.element.bind(event, function (e) {
-      var value = valueFn.call(self.element, e);
+    this.element.bind(event, $.proxy(function (e) {
+      var value = valueFn.call(this.element, e);
       // Only trigger the event if the value has actually changed.
       if (oldValue !== value) {
-        self.element.trigger({ type: 'state:' + self.state, value: value, oldValue: oldValue });
+        this.element.trigger({ type: 'state:' + this.state, value: value, oldValue: oldValue });
         oldValue = value;
       }
-    });
+    }, this));
 
-    states.postponed.push(function () {
+    states.postponed.push($.proxy(function () {
       // Trigger the event once for initialization purposes.
-      self.element.trigger({ type: 'state:' + self.state, value: oldValue, oldValue: undefined });
-    });
+      this.element.trigger({ type: 'state:' + this.state, value: oldValue, oldValue: null });
+    }, this));
   }
 };
 
@@ -275,7 +398,7 @@ states.Trigger.states = {
 
   collapsed: {
     'collapsed': function(e) {
-      return (e !== undefined && 'value' in e) ? e.value : this.is('.collapsed');
+      return (typeof e !== 'undefined' && 'value' in e) ? e.value : this.is('.collapsed');
     }
   }
 };
@@ -307,7 +430,7 @@ states.State = function(state) {
 };
 
 /**
- * Create a new State object by sanitizing the passed value.
+ * Creates a new State object by sanitizing the passed value.
  */
 states.State.sanitize = function (state) {
   if (state instanceof states.State) {
@@ -352,72 +475,69 @@ states.State.prototype = {
  * bubble up to these handlers. We use this system so that themes and modules
  * can override these state change handlers for particular parts of a page.
  */
-{
-  $(document).bind('state:disabled', function(e) {
-    // Only act when this change was triggered by a dependency and not by the
-    // element monitoring itself.
-    if (e.trigger) {
-      $(e.target)
-        .attr('disabled', e.value)
-        .filter('.form-element')
-          .closest('.form-item, .form-submit, .form-wrapper').toggleClass('form-disabled', e.value);
+$(document).bind('state:disabled', function(e) {
+  // Only act when this change was triggered by a dependency and not by the
+  // element monitoring itself.
+  if (e.trigger) {
+    $(e.target)
+      .attr('disabled', e.value)
+      .filter('.form-element')
+        .closest('.form-item, .form-submit, .form-wrapper').toggleClass('form-disabled', e.value);
 
-      // Note: WebKit nightlies don't reflect that change correctly.
-      // See https://bugs.webkit.org/show_bug.cgi?id=23789
+    // Note: WebKit nightlies don't reflect that change correctly.
+    // See https://bugs.webkit.org/show_bug.cgi?id=23789
+  }
+});
+
+$(document).bind('state:required', function(e) {
+  if (e.trigger) {
+    if (e.value) {
+      $(e.target).closest('.form-item, .form-wrapper').find('label').append('<abbr class="form-required" title="' + Drupal.t('This field is required.') + '">*</abbr>');
     }
-  });
-
-  $(document).bind('state:required', function(e) {
-    if (e.trigger) {
-      if (e.value) {
-        $(e.target).closest('.form-item, .form-wrapper').find('label').append('<span class="form-required">*</span>');
-      }
-      else {
-        $(e.target).closest('.form-item, .form-wrapper').find('label .form-required').remove();
-      }
+    else {
+      $(e.target).closest('.form-item, .form-wrapper').find('label .form-required').remove();
     }
-  });
+  }
+});
 
-  $(document).bind('state:visible', function(e) {
-    if (e.trigger) {
+$(document).bind('state:visible', function(e) {
+  if (e.trigger) {
       $(e.target).closest('.form-item, .form-submit, .form-wrapper').toggle(e.value);
-    }
-  });
+  }
+});
 
-  $(document).bind('state:checked', function(e) {
-    if (e.trigger) {
-      $(e.target).attr('checked', e.value);
-    }
-  });
+$(document).bind('state:checked', function(e) {
+  if (e.trigger) {
+    $(e.target).attr('checked', e.value);
+  }
+});
 
-  $(document).bind('state:collapsed', function(e) {
-    if (e.trigger) {
-      if ($(e.target).is('.collapsed') !== e.value) {
-        $('> legend a', e.target).click();
-      }
+$(document).bind('state:collapsed', function(e) {
+  if (e.trigger) {
+    if ($(e.target).is('.collapsed') !== e.value) {
+      $('> legend a', e.target).click();
     }
-  });
-}
+  }
+});
 
 /**
  * These are helper functions implementing addition "operators" and don't
  * implement any logic that is particular to states.
  */
-{
-  // Bitwise AND with a third undefined state.
-  function ternary (a, b) {
-    return a === undefined ? b : (b === undefined ? a : a && b);
-  };
 
-  // Inverts a (if it's not undefined) when invert is true.
-  function invert (a, invert) {
-    return (invert && a !== undefined) ? !a : a;
-  };
+// Bitwise AND with a third undefined state.
+function ternary (a, b) {
+  return typeof a === 'undefined' ? b : (typeof b === 'undefined' ? a : a && b);
+}
 
-  // Compares two values while ignoring undefined values.
-  function compare (a, b) {
-    return (a === b) ? (a === undefined ? a : true) : (a === undefined || b === undefined);
-  }
+// Inverts a (if it's not undefined) when invert is true.
+function invert (a, invert) {
+  return (invert && typeof a !== 'undefined') ? !a : a;
+}
+
+// Compares two values while ignoring undefined values.
+function compare (a, b) {
+  return (a === b) ? (typeof a === 'undefined' ? a : true) : (typeof a === 'undefined' || typeof b === 'undefined');
 }
 
 })(jQuery);
