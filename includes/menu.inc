@@ -2144,7 +2144,7 @@ function menu_contextual_links($module, $parent_path, $args) {
   $links = array();
   // Performance: In case a previous invocation for the same parent path did not
   // return any links, we immediately return here.
-  if (isset($path_empty[$parent_path])) {
+  if (isset($path_empty[$parent_path]) && strpos($parent_path, '%') !== FALSE) {
     return $links;
   }
   // Construct the item-specific parent path.
