@@ -1637,6 +1637,79 @@ alert("test")
  /* Styling */ body {color:red}
 /*--><!]]>*/
 </style></p>', t('HTML corrector -- CDATA added to a style element.'));
+
+    $filtered_data = _filter_htmlcorrector('<p><style>
+/*<![CDATA[*/
+/* Styling */
+body {color:red}
+/*]]>*/
+</style></p>');
+    $this->assertEqual($filtered_data, '<p><style>
+<!--/*--><![CDATA[/* ><!--*/
+
+/*<![CDATA[*/
+/* Styling */
+body {color:red}
+/*]]]]><![CDATA[>*/
+
+/*--><!]]>*/
+</style></p>',
+      t('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '/*<![CDATA[*/'))
+    );
+
+    $filtered_data = _filter_htmlcorrector('<p><style>
+  <!--/*--><![CDATA[/* ><!--*/
+  /* Styling */
+  body {color:red}
+  /*--><!]]>*/
+</style></p>');
+    $this->assertEqual($filtered_data, '<p><style>
+<!--/*--><![CDATA[/* ><!--*/
+
+  <!--/*--><![CDATA[/* ><!--*/
+  /* Styling */
+  body {color:red}
+  /*--><!]]]]><![CDATA[>*/
+
+/*--><!]]>*/
+</style></p>',
+      t('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'))
+    );
+
+    $filtered_data = _filter_htmlcorrector('<p><script type="text/javascript">
+<!--//--><![CDATA[// ><!--
+  alert("test");
+//--><!]]>
+</script></p>');
+    $this->assertEqual($filtered_data, '<p><script type="text/javascript">
+<!--//--><![CDATA[// ><!--
+
+<!--//--><![CDATA[// ><!--
+  alert("test");
+//--><!]]]]><![CDATA[>
+
+//--><!]]>
+</script></p>',
+      t('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '<!--//--><![CDATA[// ><!--'))
+    );
+
+    $filtered_data = _filter_htmlcorrector('<p><script type="text/javascript">
+// <![CDATA[
+  alert("test");
+// ]]>
+</script></p>');
+    $this->assertEqual($filtered_data, '<p><script type="text/javascript">
+<!--//--><![CDATA[// ><!--
+
+// <![CDATA[
+  alert("test");
+// ]]]]><![CDATA[>
+
+//--><!]]>
+</script></p>',
+      t('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '// <![CDATA['))
+    );
+
   }
 
   /**
