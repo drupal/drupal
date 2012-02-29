@@ -8,7 +8,7 @@ div.vertical-tabs {
   margin: 10px 0;
   position: relative;
 }
-div.vertical-tabs fieldset {
+fieldset.vertical-tabs-pane {
   border: 0;
   padding: 0;
   margin: 0;
@@ -69,8 +69,11 @@ div.vertical-tabs .vertical-tabs-panes {
   margin: 0 0 0 265px; /* LTR */
   padding: 10px 15px 10px 0; /* LTR */
 }
-div.vertical-tabs .vertical-tabs-panes legend {
+fieldset.vertical-tabs-pane legend {
   display: none;
+}
+fieldset.vertical-tabs-pane fieldset legend {
+  display: block;
 }
 .vertical-tabs-pane .fieldset-wrapper > div:first-child {
   padding-top: 5px;
