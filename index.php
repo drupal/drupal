@@ -27,4 +27,4 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 $request = Request::createFromGlobals();
 
 $kernel = new DrupalApp();
-$kernel->execute($request)->send();
+$kernel->handle($request)->send();

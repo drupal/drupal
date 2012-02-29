@@ -29,7 +29,7 @@ use Exception;
 /**
  * The DrupalApp class is the core of Drupal itself.
  */
-class DrupalApp {
+class DrupalApp implements HttpKernelInterface {
 
   /**
    *
@@ -38,7 +38,7 @@ class DrupalApp {
    * @return Response
    *   The response object to return to the requesting user agent.
    */
-  function execute(Request $request) {
+  function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true) {
     try {
 
       $dispatcher = $this->getDispatcher();
