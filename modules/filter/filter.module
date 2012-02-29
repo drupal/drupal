@@ -1121,7 +1121,7 @@ function filter_dom_serialize_escape_cdata_element($dom_document, $dom_element, 
  * @ingroup themeable
  */
 function theme_filter_tips_more_info() {
-  return '<p>' . l(t('More information about text formats'), 'filter/tips') . '</p>';
+  return '<p>' . l(t('More information about text formats'), 'filter/tips', array('attributes' => array('target' => '_blank'))) . '</p>';
 }
 
 /**
