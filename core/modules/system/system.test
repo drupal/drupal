@@ -480,7 +480,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $edit['modules[Core][forum][enable]'] = 'forum';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), FALSE);
-    $this->assertText(t('You must enable the Poll, PHP filter modules to install Forum.'), t('Dependency chain created.'));
+    $this->assertText(t('You must enable the Poll, PHP Filter modules to install Forum.'), t('Dependency chain created.'));
     $edit['modules[Core][poll][enable]'] = 'poll';
     $edit['modules[Core][php][enable]'] = 'php';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));

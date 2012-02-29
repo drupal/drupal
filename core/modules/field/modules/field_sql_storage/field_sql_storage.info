@@ -1,4 +1,4 @@
-name = Field SQL storage
+name = Field SQL Storage
 description = Stores field data in an SQL database.
 package = Core
 version = VERSION

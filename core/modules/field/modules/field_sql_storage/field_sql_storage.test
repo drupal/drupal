@@ -14,8 +14,8 @@
 class FieldSqlStorageTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name'  => 'Field SQL storage tests',
-      'description'  => "Test field SQL storage module.",
+      'name'  => 'Field SQL Storage tests',
+      'description'  => "Test Field SQL Storage module.",
       'group' => 'Field API'
     );
   }

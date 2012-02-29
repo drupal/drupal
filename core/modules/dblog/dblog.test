@@ -129,7 +129,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/help/dblog');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Database logging'), t('DBLog help was displayed'));
+      $this->assertText(t('Database Logging'), t('DBLog help was displayed'));
     }
 
     // View dblog report node.
