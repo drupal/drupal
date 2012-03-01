@@ -77,7 +77,8 @@ require_once dirname(__FILE__) . '/query.inc';
  *       (decimal digits right of the decimal point). Both values are
  *       mandatory. Ignored for other field types.
  *     All parameters apart from 'type' are optional except that type
- *     'numeric' columns must specify 'precision' and 'scale'.
+ *     'numeric' columns must specify 'precision' and 'scale', and type
+ *     'varchar' must specify the 'length' parameter.
  *  - 'primary key': An array of one or more key column specifiers (see below)
  *    that form the primary key.
  *  - 'unique keys': An associative array of unique keys ('keyname' =>
