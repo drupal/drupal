@@ -79,8 +79,6 @@ function taxonomy_term_feed($term) {
 /**
  * Page callback: Outputs JSON for taxonomy autocomplete suggestions.
  *
- * Path: taxonomy/autocomplete
- *
  * This callback outputs term name suggestions in response to Ajax requests
  * made by the taxonomy autocomplete widget for taxonomy term reference
  * fields. The output is a JSON object of plain-text term suggestions, keyed by

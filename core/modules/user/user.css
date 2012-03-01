@@ -42,14 +42,14 @@
   font-weight: bold;
 }
 .password-indicator {
-  background-color: #C4C4C4;
+  background-color: #c4c4c4;
   height: 0.3em;
   width: 100%;
 }
 .password-indicator div {
   height: 100%;
   width: 0%;
-  background-color: #47C965;
+  background-color: #47c965;
 }
 input.password-confirm,
 input.password-field {
@@ -66,7 +66,7 @@ div.form-item div.password-suggestions {
   padding: 0.2em 0.5em;
   margin: 0.7em 0;
   width: 38.5em;
-  border: 1px solid #B4B4B4;
+  border: 1px solid #b4b4b4;
 }
 div.password-suggestions ul {
   margin-bottom: 0;

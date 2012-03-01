@@ -1643,8 +1643,6 @@ function comment_get_display_page($cid, $node_type) {
 /**
  * Page callback: Displays the comment editing form.
  *
- * Path: comment/%comment/edit
- *
  * @param $comment
  *   The comment object representing the comment to be edited.
  *

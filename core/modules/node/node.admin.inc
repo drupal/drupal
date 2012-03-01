@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Database\Query\SelectInterface;
+
 /**
  * @file
  * Content administration and module settings UI.
@@ -7,8 +9,6 @@
 
 /**
  * Page callback: Form constructor for the permission rebuild confirmation form.
- *
- * Path: admin/reports/status/rebuild
  *
  * @see node_menu()
  * @see node_configure_rebuild_confirm_submit()
@@ -127,7 +127,7 @@ function node_filters() {
  * @param $query
  *   A SelectQuery to which the filters should be applied.
  */
-function node_build_filter_query(SelectQueryInterface $query) {
+function node_build_filter_query(SelectInterface $query) {
   // Build query
   $filter_data = isset($_SESSION['node_overview_filter']) ? $_SESSION['node_overview_filter'] : array();
   foreach ($filter_data as $index => $filter) {
@@ -371,8 +371,6 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
 
 /**
  * Page callback: Form constructor for the content administration form.
- *
- * Path: admin/content
  *
  * @see node_multiple_delete_confirm()
  * @see node_multiple_delete_confirm_submit()

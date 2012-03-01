@@ -522,7 +522,7 @@ $conf['404_fast_html'] = '<html xmlns="http://www.w3.org/1999/xhtml"><head><titl
 /**
  * Authorized file system operations:
  *
- * The Update manager module included with Drupal provides a mechanism for
+ * The Update Manager module included with Drupal provides a mechanism for
  * site administrators to securely install missing updates for the site
  * directly through the web user interface by providing either SSH or FTP
  * credentials. This allows the site to update the new files as the user who

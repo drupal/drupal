@@ -213,8 +213,6 @@ function _book_outline_access($node) {
 /**
  * Access callback: Determines if the user can remove nodes from the outline.
  *
- * Path: node/%node/outline/remove
- *
  * @param $node
  *   The node to remove from the outline.
  *

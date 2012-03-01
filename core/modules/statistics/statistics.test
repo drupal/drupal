@@ -329,12 +329,12 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
     $this->assertText('node/1', t('Test node found.'));
 
     // Hit the node again (the counter is incremented after the hit, so
-    // "1 read" will actually be shown when the node is hit the second time).
+    // "1 view" will actually be shown when the node is hit the second time).
     $this->drupalGet('node/' . $this->test_node->nid);
-    $this->assertText('1 read', t('Node is read once.'));
+    $this->assertText('1 view', t('Node is viewed once.'));
 
     $this->drupalGet('node/' . $this->test_node->nid);
-    $this->assertText('2 reads', t('Node is read 2 times.'));
+    $this->assertText('2 views', t('Node is viewed 2 times.'));
   }
 
   /**
@@ -400,7 +400,7 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('node/' . $this->test_node->nid);
     $this->drupalGet('node/' . $this->test_node->nid);
-    $this->assertText('1 read', t('Node is read once.'));
+    $this->assertText('1 view', t('Node is viewed once.'));
 
     $this->drupalGet('admin/reports/pages');
     $this->assertText('node/' . $this->test_node->nid, t('Hit URL found.'));

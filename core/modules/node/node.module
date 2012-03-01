@@ -1,5 +1,9 @@
 <?php
 
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectExtender;
+use Drupal\Core\Database\Query\SelectInterface;
+
 /**
  * @file
  * The core module that allows content to be submitted to the site.
@@ -603,17 +607,25 @@ function node_add_body_field($type, $label = 'Body') {
  */
 function node_field_extra_fields() {
   $extra = array();
+  $module_language_enabled = module_exists('language');
+  $description = t('Node module element');
 
-  foreach (node_type_get_types() as $type) {
-    if ($type->has_title) {
-      $extra['node'][$type->type] = array(
-        'form' => array(
-          'title' => array(
-            'label' => $type->title_label,
-            'description' => t('Node module element'),
-            'weight' => -5,
-          ),
-        ),
+  foreach (node_type_get_types() as $bundle) {
+    if ($bundle->has_title) {
+      $extra['node'][$bundle->type]['form']['title'] = array(
+        'label' => $bundle->title_label,
+        'description' => $description,
+        'weight' => -5,
+      );
+    }
+
+    // Add also the 'language' select if Language module is enabled and the
+    // bundle has multilingual support.
+    if ($module_language_enabled && variable_get('node_type_language_' . $bundle->type, 0)) {
+      $extra['node'][$bundle->type]['form']['language'] = array(
+        'label' => t('Language'),
+        'description' => $description,
+        'weight' => 0,
       );
     }
   }
@@ -1439,8 +1451,6 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
 /**
  * Page callback: Generates an array which displays a node detail page.
  *
- * Path: node/%node/revisions/%/view
- *
  * @param $node
  *   A node object.
  * @param $message
@@ -1559,19 +1569,19 @@ function template_preprocess_node(&$variables) {
   // Gather node classes.
   $variables['classes_array'][] = drupal_html_class('node-' . $node->type);
   if ($variables['promote']) {
-    $variables['classes_array'][] = 'node-promoted';
+    $variables['classes_array'][] = 'promoted';
   }
   if ($variables['sticky']) {
-    $variables['classes_array'][] = 'node-sticky';
+    $variables['classes_array'][] = 'sticky';
   }
   if (!$variables['status']) {
-    $variables['classes_array'][] = 'node-unpublished';
+    $variables['classes_array'][] = 'unpublished';
   }
-  if ($variables['teaser']) {
-    $variables['classes_array'][] = 'node-teaser';
+  if ($variables['view_mode']) {
+    $variables['classes_array'][] = drupal_html_class('view-mode-' . $variables['view_mode']);
   }
   if (isset($variables['preview'])) {
-    $variables['classes_array'][] = 'node-preview';
+    $variables['classes_array'][] = 'preview';
   }
 
   // Clean up name so there are no underscores.
@@ -1631,7 +1641,7 @@ function node_permission() {
  * @param $query
  *   A query object that has been extended with the Search DB Extender.
  */
-function _node_rankings(SelectQueryExtender $query) {
+function _node_rankings(SelectExtender $query) {
   if ($ranking = module_invoke_all('ranking')) {
     $tables = &$query->getTables();
     foreach ($ranking as $rank => $values) {
@@ -1898,12 +1908,6 @@ function theme_node_search_admin($variables) {
 /**
  * Access callback: Checks node revision access.
  *
- * Paths:
- * - node/%node/revisions
- * - node/%node/revisions/%/view
- * - node/%node/revisions/%/revert
- * - node/%node/revisions/%/delete
- *
  * @param $node
  *   The node to check.
  * @param $op
@@ -1950,8 +1954,6 @@ function _node_revision_access($node, $op = 'view') {
 
 /**
  * Access callback: Checks whether the user has permission to add a node.
- *
- * Paths: node/add
  *
  * @return
  *   TRUE if the user has permission, otherwise FALSE.
@@ -2174,8 +2176,6 @@ function node_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 /**
  * Title callback: Provides the title for a node type edit form.
  *
- * Path: admin/structure/types/manage/%node_type
- *
  * @param $type
  *   The node type object.
  *
@@ -2187,8 +2187,6 @@ function node_type_page_title($type) {
 
 /**
  * Title callback: Displays the node's title.
- *
- * Path: node/%node
  *
  * @param $node
  *   The node object.
@@ -2554,8 +2552,6 @@ function node_block_list_alter(&$blocks) {
 /**
  * Page callback: Generates and prints an RSS feed.
  *
- * Path: rss.xml
- *
  * Generates an RSS feed from an array of node IDs, and prints it with an HTTP
  * header, with Content Type set to RSS/XML.
  *
@@ -2674,8 +2670,6 @@ function node_view_multiple($nodes, $view_mode = 'teaser', $weight = 0, $langcod
 /**
  * Page callback: Generates a listing of promoted nodes.
  *
- * Path: node
- *
  * @see node_menu()
  */
 function node_page_default() {
@@ -2727,8 +2721,6 @@ function node_page_default() {
 
 /**
  * Page callback: Displays a single node.
- *
- * Path: node/%node
  *
  * @param $node
  *   The node object.
@@ -2979,12 +2971,6 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
 
 /**
  * Access callback: Checks a user's permission for performing a node operation.
- *
- * Paths:
- * - node/%node
- * - node/%node/edit
- * - node/%node/delete
- * - 'node/add/' . $type_url_str (part of foreach)
  *
  * @param $op
  *   The operation to be performed on the node. Possible values are:
@@ -3299,7 +3285,7 @@ function node_access_view_all_nodes($account = NULL) {
  * the 'op' meta-data (or 'view' if not provided; other possible values are
  * 'update' and 'delete').
  */
-function node_query_node_access_alter(QueryAlterableInterface $query) {
+function node_query_node_access_alter(AlterableInterface $query) {
   _node_query_node_access_alter($query, 'node');
 }
 
@@ -3310,7 +3296,7 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
  * node_query_node_access_alter() for the SQL field storage engine. Node access
  * conditions are added for field values belonging to nodes only.
  */
-function node_query_entity_field_access_alter(QueryAlterableInterface $query) {
+function node_query_entity_field_access_alter(AlterableInterface $query) {
   _node_query_node_access_alter($query, 'entity');
 }
 
@@ -3354,7 +3340,7 @@ function _node_query_node_access_alter($query, $type) {
   if (!$base_table) {
     $fallback = '';
     foreach ($tables as $alias => $table_info) {
-      if (!($table_info instanceof SelectQueryInterface)) {
+      if (!($table_info instanceof SelectInterface)) {
         $table = $table_info['table'];
         // If the node table is in the query, it wins immediately.
         if ($table == 'node') {
@@ -3426,7 +3412,7 @@ function _node_query_node_access_alter($query, $type) {
   }
   foreach ($tables as $nalias => $tableinfo) {
     $table = $tableinfo['table'];
-    if (!($table instanceof SelectQueryInterface) && $table == $base_table) {
+    if (!($table instanceof SelectInterface) && $table == $base_table) {
 
       // The node_access table has the access grants for any given node so JOIN
       // it to the table containing the nid which can be either the node

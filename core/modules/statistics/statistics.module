@@ -119,7 +119,7 @@ function statistics_node_view($node, $view_mode) {
     if (user_access('view post access counter')) {
       $statistics = statistics_get($node->nid);
       if ($statistics) {
-        $links['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 read', '@count reads');
+        $links['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 view', '@count views');
         $node->content['links']['statistics'] = array(
           '#theme' => 'links__node__statistics',
           '#links' => $links,

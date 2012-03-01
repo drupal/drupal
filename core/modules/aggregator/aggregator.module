@@ -268,8 +268,6 @@ function aggregator_menu() {
 /**
  * Title callback: Returns a title for aggregatory category pages.
  *
- * Path: aggregator/categories/%aggregator_category
- *
  * @param $category
  *   An aggregator category.
  *
@@ -282,8 +280,6 @@ function _aggregator_category_title($category) {
 
 /**
  * Access callback: Determines whether there are any aggregator categories.
- *
- * Path: aggregator/categories
  *
  * @return
  *   TRUE if there is at least one category and the user has access to them;

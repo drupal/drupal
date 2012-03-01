@@ -102,15 +102,6 @@ function bartik_process_maintenance_page(&$variables) {
 }
 
 /**
- * Override or insert variables into the node template.
- */
-function bartik_preprocess_node(&$variables) {
-  if ($variables['view_mode'] == 'full' && node_is_page($variables['node'])) {
-    $variables['classes_array'][] = 'node-full';
-  }
-}
-
-/**
  * Override or insert variables into the block template.
  */
 function bartik_preprocess_block(&$variables) {

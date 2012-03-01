@@ -8,8 +8,6 @@
 /**
  * Page callback: Displays the content type admin overview page.
  *
- * Path: admin/structure/types
- *
  * @see node_menu()
  */
 function node_overview_types() {
@@ -422,8 +420,6 @@ function node_type_reset($type) {
 
 /**
  * Page callback: Form constructor for the content type delete form.
- *
- * Path: admin/structure/types/manage/%node_type/delete
  *
  * @param $type
  *   Content type object.

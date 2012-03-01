@@ -8,8 +8,6 @@
 /**
  * Page callback: Lists contact categories.
  *
- * Path: admin/structure/contact
- *
  * @see contact_menu()
  */
 function contact_category_list() {
@@ -58,10 +56,6 @@ function contact_category_list() {
 
 /**
  * Form constructor for the category edit form.
- *
- * Paths:
- * - admin/structure/contact/add
- * - admin/structure/contact/edit/%contact
  *
  * @param $category
  *   An array describing the category to be edited. May be empty for new
@@ -196,8 +190,6 @@ function contact_category_edit_form_submit($form, &$form_state) {
 
 /**
  * Form constructor for the contact category deletion form.
- *
- * Path: admin/structure/contact/delete/%contact
  *
  * @param $contact
  *   Array describing the contact category to be deleted. See the documentation

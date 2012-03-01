@@ -100,7 +100,7 @@ table.update,
 }
 
 .update table.version-security .version-title {
-  color: #970F00;
+  color: #970f00;
 }
 
 .update table.version-recommended-strong .version-title {
@@ -109,7 +109,7 @@ table.update,
 
 .update .security-error {
   font-weight: bold;
-  color: #970F00;
+  color: #970f00;
 }
 
 .update .check-manually {
