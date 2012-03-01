@@ -1565,19 +1565,19 @@ function template_preprocess_node(&$variables) {
   // Gather node classes.
   $variables['classes_array'][] = drupal_html_class('node-' . $node->type);
   if ($variables['promote']) {
-    $variables['classes_array'][] = 'node-promoted';
+    $variables['classes_array'][] = 'promoted';
   }
   if ($variables['sticky']) {
-    $variables['classes_array'][] = 'node-sticky';
+    $variables['classes_array'][] = 'sticky';
   }
   if (!$variables['status']) {
-    $variables['classes_array'][] = 'node-unpublished';
+    $variables['classes_array'][] = 'unpublished';
   }
-  if ($variables['teaser']) {
-    $variables['classes_array'][] = 'node-teaser';
+  if ($variables['view_mode']) {
+    $variables['classes_array'][] = drupal_html_class('view-mode-' . $variables['view_mode']);
   }
   if (isset($variables['preview'])) {
-    $variables['classes_array'][] = 'node-preview';
+    $variables['classes_array'][] = 'preview';
   }
 
   // Clean up name so there are no underscores.

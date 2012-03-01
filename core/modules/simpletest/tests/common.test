@@ -806,7 +806,7 @@ class CommonCascadingStylesheetsTestCase extends DrupalWebTestCase {
   function testAddCssFileWithQueryString() {
     $this->drupalGet('common-test/query-string');
     $query_string = variable_get('css_js_query_string', '0');
-    $this->assertRaw(drupal_get_path('module', 'node') . '/node.css?' . $query_string, t('Query string was appended correctly to css.'));
+    $this->assertRaw(drupal_get_path('module', 'node') . '/node.admin.css?' . $query_string, t('Query string was appended correctly to css.'));
     $this->assertRaw(drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&amp;arg2=value2', t('Query string not escaped on a URI.'));
   }
 }

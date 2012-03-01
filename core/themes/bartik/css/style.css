@@ -570,33 +570,28 @@ h1#page-title {
 .node .content {
   font-size: 1.071em;
 }
-.node-teaser .content {
+.view-mode-teaser .content {
   font-size: 1em;
 }
-.node-teaser h2 {
+.view-mode-teaser h2 {
   margin-top: 0;
   padding-top: 0.5em;
 }
-.node-teaser h2 a {
+.view-mode-teaser h2 a {
   color: #181818;
 }
-.node-teaser {
+.view-mode-teaser {
   border-bottom: 1px solid #d3d7d9;
   margin-bottom: 30px;
   padding-bottom: 15px;
 }
-.node-sticky {
+.view-mode-teaser.sticky {
   background: #f9f9f9;
   background: rgba(0, 0, 0, 0.024);
   border: 1px solid #d3d7d9;
   padding: 0 15px 15px;
 }
-.node-full {
-  background: none;
-  border: none;
-  padding: 0;
-}
-.node-teaser .content {
+.view-mode-teaser .content {
   clear: none;
   line-height: 1.6;
 }
@@ -622,8 +617,8 @@ h1#page-title {
 .field-type-taxonomy-term-reference ul.links {
   font-size: 0.8em;
 }
-.node-teaser .field-type-taxonomy-term-reference .field-label,
-.node-teaser .field-type-taxonomy-term-reference ul.links {
+.view-mode-teaser .field-type-taxonomy-term-reference .field-label,
+.view-mode-teaser .field-type-taxonomy-term-reference ul.links {
   font-size: 0.821em;
 }
 .field-type-taxonomy-term-reference ul.links {
@@ -647,11 +642,11 @@ ul.links {
   color: #68696b;
   font-size: 0.821em;
 }
-.node-unpublished {
+.unpublished {
   margin: -20px -15px 0;
   padding: 20px 15px 0;
 }
-.node-unpublished .comment-text .comment-arrow {
+.unpublished .comment-text .comment-arrow {
   border-left: 1px solid #fff4f4;
   border-right: 1px solid #fff4f4;
 }

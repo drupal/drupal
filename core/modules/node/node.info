@@ -7,4 +7,3 @@ files[] = node.module
 files[] = node.test
 dependencies[] = entity
 configure = admin/structure/types
-stylesheets[all][] = node.css
