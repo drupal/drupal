@@ -1,5 +1,9 @@
 <?php
 
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectExtender;
+use Drupal\Core\Database\Query\SelectInterface;
+
 /**
  * @file
  * The core module that allows content to be submitted to the site.
@@ -1637,7 +1641,7 @@ function node_permission() {
  * @param $query
  *   A query object that has been extended with the Search DB Extender.
  */
-function _node_rankings(SelectQueryExtender $query) {
+function _node_rankings(SelectExtender $query) {
   if ($ranking = module_invoke_all('ranking')) {
     $tables = &$query->getTables();
     foreach ($ranking as $rank => $values) {
@@ -3281,7 +3285,7 @@ function node_access_view_all_nodes($account = NULL) {
  * the 'op' meta-data (or 'view' if not provided; other possible values are
  * 'update' and 'delete').
  */
-function node_query_node_access_alter(QueryAlterableInterface $query) {
+function node_query_node_access_alter(AlterableInterface $query) {
   _node_query_node_access_alter($query, 'node');
 }
 
@@ -3292,7 +3296,7 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
  * node_query_node_access_alter() for the SQL field storage engine. Node access
  * conditions are added for field values belonging to nodes only.
  */
-function node_query_entity_field_access_alter(QueryAlterableInterface $query) {
+function node_query_entity_field_access_alter(AlterableInterface $query) {
   _node_query_node_access_alter($query, 'entity');
 }
 
@@ -3336,7 +3340,7 @@ function _node_query_node_access_alter($query, $type) {
   if (!$base_table) {
     $fallback = '';
     foreach ($tables as $alias => $table_info) {
-      if (!($table_info instanceof SelectQueryInterface)) {
+      if (!($table_info instanceof SelectInterface)) {
         $table = $table_info['table'];
         // If the node table is in the query, it wins immediately.
         if ($table == 'node') {
@@ -3408,7 +3412,7 @@ function _node_query_node_access_alter($query, $type) {
   }
   foreach ($tables as $nalias => $tableinfo) {
     $table = $tableinfo['table'];
-    if (!($table instanceof SelectQueryInterface) && $table == $base_table) {
+    if (!($table instanceof SelectInterface) && $table == $base_table) {
 
       // The node_access table has the access grants for any given node so JOIN
       // it to the table containing the nid which can be either the node
