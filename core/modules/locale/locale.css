@@ -25,7 +25,7 @@
   padding: 3ex 0 0 1em; /* LTR */
 }
 .language-switcher-locale-session a.active {
-  color: #0062A0;
+  color: #0062a0;
 }
 .language-switcher-locale-session a.session-active {
   color: #000000;

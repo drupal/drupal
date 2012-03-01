@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Database\Database;
+
 /**
  * Perform end-to-end tests of the upgrade path.
  */

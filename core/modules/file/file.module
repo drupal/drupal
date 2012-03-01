@@ -72,6 +72,7 @@ function file_element_info() {
     '#progress_message' => NULL,
     '#upload_validators' => array(),
     '#upload_location' => NULL,
+    '#size' => 22,
     '#extended' => FALSE,
     '#attached' => array(
       'css' => array($file_path . '/file.admin.css'),
@@ -225,8 +226,6 @@ function file_file_download($uri, $field_type = 'file') {
 /**
  * Ajax callback: Processes file uploads and deletions.
  *
- * Path: file/ajax
- *
  * This rebuilds the form element for a particular field item. As long as the
  * form processing is properly encapsulated in the widget element the form
  * should rebuild correctly using FAPI without the need for additional callbacks
@@ -291,8 +290,6 @@ function file_ajax_upload() {
 
 /**
  * Ajax callback: Retrieves upload progress.
- *
- * Path: file/progress
  *
  * @param $key
  *   The unique key for this upload process.
@@ -447,7 +444,7 @@ function file_managed_file_process($element, &$form_state, $form) {
     '#type' => 'file',
     '#title' => t('Choose a file'),
     '#title_display' => 'invisible',
-    '#size' => 22,
+    '#size' => $element['#size'],
     '#theme_wrappers' => array(),
     '#weight' => -10,
   );

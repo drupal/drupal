@@ -8,8 +8,6 @@
 /**
  * Page callback: Returns an administrative overview of all books.
  *
- * Path: admin/content/book
- *
  * @see book_menu()
  */
 function book_admin_overview() {
@@ -27,8 +25,6 @@ function book_admin_overview() {
 
 /**
  * Form constructor for the book settings form.
- *
- * Path: admin/content/book/settings
  *
  * @see book_menu()
  * @see book_admin_settings_validate()
@@ -69,8 +65,6 @@ function book_admin_settings_validate($form, &$form_state) {
 
 /**
  * Form constructor for administering a single book's hierarchy.
- *
- * Path: admin/content/book/%node
  *
  * @param $node
  *   The node of the top-level page in the book.

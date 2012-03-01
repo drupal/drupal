@@ -8,8 +8,6 @@
 /**
  * Form constructor for the site-wide contact form.
  *
- * Path: contact
- *
  * @see contact_menu()
  * @see contact_site_form_validate()
  * @see contact_site_form_submit()
@@ -175,8 +173,6 @@ function contact_site_form_submit($form, &$form_state) {
 
 /**
  * Form constructor for the personal contact form.
- *
- * Path: user/%user/contact
  *
  * @see contact_menu()
  * @see contact_personal_form_validate()

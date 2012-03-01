@@ -1,4 +1,4 @@
-name = Update manager
+name = Update Manager
 description = Checks for available updates, and can securely install or update modules and themes via a web interface.
 version = VERSION
 package = Core

@@ -1,5 +1,14 @@
 <?php
 
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\StatementEmpty;
+use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Database\TransactionOutOfOrderException;
+use Drupal\Core\Database\TransactionNoActiveException;
+use Drupal\Core\Database\Query\Merge;
+use Drupal\Core\Database\Query\InvalidMergeQueryException;
+use Drupal\Core\Database\Query\NoFieldsException;
+
 /**
  * Dummy class for fetching into a class.
  *
@@ -307,7 +316,7 @@ class DatabaseFetchTestCase extends DatabaseTestCase {
   function testQueryFetchDefault() {
     $records = array();
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25));
-    $this->assertTrue($result instanceof DatabaseStatementInterface, t('Result set is a Drupal statement object.'));
+    $this->assertTrue($result instanceof StatementInterface, t('Result set is a Drupal statement object.'));
     foreach ($result as $record) {
       $records[] = $record;
       $this->assertTrue(is_object($record), t('Record is an object.'));
@@ -1090,7 +1099,7 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ))
       ->execute();
 
-    $this->assertEqual($result, MergeQuery::STATUS_INSERT, t('Insert status returned.'));
+    $this->assertEqual($result, Merge::STATUS_INSERT, t('Insert status returned.'));
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
     $this->assertEqual($num_records_before + 1, $num_records_after, t('Merge inserted properly.'));
@@ -1115,7 +1124,7 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ))
       ->execute();
 
-    $this->assertEqual($result, MergeQuery::STATUS_UPDATE, t('Update status returned.'));
+    $this->assertEqual($result, Merge::STATUS_UPDATE, t('Update status returned.'));
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
     $this->assertEqual($num_records_before, $num_records_after, t('Merge updated properly.'));
@@ -3512,7 +3521,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
         // "ROLLBACK" fails silently in MySQL if there is no transaction active.
         // $this->fail(t('Rolling back a transaction containing DDL should fail.'));
       }
-      catch (DatabaseTransactionNoActiveException $e) {
+      catch (TransactionNoActiveException $e) {
         $this->pass(t('Rolling back a transaction containing DDL should fail.'));
       }
       $this->assertRowPresent('row');
@@ -3680,7 +3689,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       unset($transaction);
       $this->fail(t('Rolling back the outer transaction while the inner transaction is active resulted in an exception.'));
     }
-    catch (DatabaseTransactionOutOfOrderException $e) {
+    catch (TransactionOutOfOrderException $e) {
       $this->pass(t('Rolling back the outer transaction while the inner transaction is active resulted in an exception.'));
     }
     $this->assertFalse($database->inTransaction(), t('No more in a transaction after rolling back the outer transaction'));
@@ -3693,7 +3702,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       unset($transaction2);
       $this->fail(t('Trying to commit an inner transaction resulted in an exception.'));
     }
-    catch (DatabaseTransactionNoActiveException $e) {
+    catch (TransactionNoActiveException $e) {
       $this->pass(t('Trying to commit an inner transaction resulted in an exception.'));
     }
     $this->assertRowAbsent('outer');
@@ -3746,9 +3755,9 @@ class DatabaseEmptyStatementTestCase extends DrupalWebTestCase {
    * Test that the empty result set behaves as empty.
    */
   function testEmpty() {
-    $result = new DatabaseStatementEmpty();
+    $result = new StatementEmpty();
 
-    $this->assertTrue($result instanceof DatabaseStatementInterface, t('Class implements expected interface'));
+    $this->assertTrue($result instanceof StatementInterface, t('Class implements expected interface'));
     $this->assertNull($result->fetchObject(), t('Null result returned.'));
   }
 
@@ -3756,7 +3765,7 @@ class DatabaseEmptyStatementTestCase extends DrupalWebTestCase {
    * Test that the empty result set iterates safely.
    */
   function testEmptyIteration() {
-    $result = new DatabaseStatementEmpty();
+    $result = new StatementEmpty();
 
     foreach ($result as $record) {
       $this->fail(t('Iterating empty result set should not iterate.'));
@@ -3770,7 +3779,7 @@ class DatabaseEmptyStatementTestCase extends DrupalWebTestCase {
    * Test that the empty result set mass-fetches in an expected way.
    */
   function testEmptyFetchAll() {
-    $result = new DatabaseStatementEmpty();
+    $result = new StatementEmpty();
 
     $this->assertEqual($result->fetchAll(), array(), t('Empty array returned from empty result set.'));
   }

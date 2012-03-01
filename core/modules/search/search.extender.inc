@@ -1,5 +1,8 @@
 <?php
 
+use Drupal\Core\Database\Query\SelectExtender;
+use Drupal\Core\Database\StatementEmpty;
+
 /**
  * @file
  * Search query extender and helper functions.
@@ -24,7 +27,7 @@
  * The used query object has the tag 'search_$module' and can be further
  * extended with hook_query_alter().
  */
-class SearchQuery extends SelectQueryExtender {
+class SearchQuery extends SelectExtender {
   /**
    * The search query that is used for searching.
    *
@@ -433,7 +436,7 @@ class SearchQuery extends SelectQueryExtender {
       $this->executeFirstPass();
     }
     if (!$this->normalize) {
-      return new DatabaseStatementEmpty();
+      return new StatementEmpty();
     }
 
     // Add conditions to query.

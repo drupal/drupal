@@ -8,8 +8,6 @@
 /**
  * Page callback: Displays the aggregator administration page.
  *
- * Path: admin/config/services/aggregator
- *
  * @see aggregator_menu()
  */
 function aggregator_admin_overview() {
@@ -58,8 +56,6 @@ function aggregator_view() {
 
 /**
  * Form constructor for adding and editing feed sources.
- *
- * Path: admin/config/services/aggregator/add/feed
  *
  * @param $feed
  *   If editing a feed, the feed to edit as a PHP stdClass value; if adding a
@@ -215,8 +211,6 @@ function aggregator_form_feed_submit($form, &$form_state) {
 /**
  * Page callback: Deletes a feed.
  *
- * Path: admin/config/services/aggregator/remove/%aggregator_feed
- *
  * @param $feed
  *   An associative array describing the feed to be cleared.
  *
@@ -251,8 +245,6 @@ function aggregator_admin_remove_feed_submit($form, &$form_state) {
 
 /**
  * Form constructor for importing feeds from OPML.
- *
- * Path: admin/config/services/aggregator/add/opml
  *
  * @ingroup forms
  * @see aggregator_menu()
@@ -413,8 +405,6 @@ function _aggregator_parse_opml($opml) {
 /**
  * Page callback: Refreshes a feed, then redirects to the overview page.
  *
- * Path: admin/config/services/aggregator/update/%aggregator_feed
- *
  * @param $feed
  *   An object describing the feed to be refreshed.
  *
@@ -430,8 +420,6 @@ function aggregator_admin_refresh_feed($feed) {
 
 /**
  * Form constructor for the aggregator system settings.
- *
- * Path: admin/config/services/aggregator/settings
  *
  * @see aggregator_menu()
  * @see aggregator_admin_form_submit()
@@ -554,8 +542,6 @@ function aggregator_admin_form_submit($form, &$form_state) {
 
 /**
  * Form constructor to add/edit/delete aggregator categories.
- *
- * Path: admin/config/services/aggregator/add/category
  *
  * @param $edit
  *   An associative array containing:

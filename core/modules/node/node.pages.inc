@@ -13,8 +13,6 @@
 /**
  * Page callback: Presents the node editing form.
  *
- * Path: node/%node/edit
- *
  * @see node_menu()
  */
 function node_page_edit($node) {
@@ -25,8 +23,6 @@ function node_page_edit($node) {
 
 /**
  * Page callback: Presents the node add form.
- *
- * Path: node/add
  *
  * @see node_menu()
  */
@@ -72,8 +68,6 @@ function theme_node_add_list($variables) {
 
 /**
  * Page callback: Provides the node submission form.
- *
- * Path: 'node/add/' . $type_url_str (part of a foreach)
  *
  * @param $type
  *   The node type for the submitted node.
@@ -455,7 +449,7 @@ function node_preview($node) {
 function theme_node_preview($variables) {
   $node = $variables['node'];
 
-  $output = '<div class="preview">';
+  $output = '';
 
   $preview_trimmed_version = FALSE;
 
@@ -475,7 +469,6 @@ function theme_node_preview($variables) {
   else {
     $output .= $full;
   }
-  $output .= "</div>\n";
 
   return $output;
 }
@@ -559,8 +552,6 @@ function node_form_submit_build_node($form, &$form_state) {
 /**
  * Page callback: Form constructor for node deletion confirmation form.
  *
- * Path: node/%node/delete
- *
  * @see node_menu()
  */
 function node_delete_confirm($form, &$form_state, $node) {
@@ -592,8 +583,6 @@ function node_delete_confirm_submit($form, &$form_state) {
 
 /**
  * Page callback: Generates an overview table of older revisions of a node.
- *
- * Path: node/%node/revisions
  *
  * @see node_menu()
  */
@@ -640,6 +629,9 @@ function node_revision_overview($node) {
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $header,
+    '#attached' => array (
+      'css' => array(drupal_get_path('module', 'node') . '/node.admin.css'),
+    ),
   );
 
   return $build;
@@ -647,8 +639,6 @@ function node_revision_overview($node) {
 
 /**
  * Page callback: Form constructor for the reversion confirmation form.
- *
- * Path: node/%node/revisions/%/revert
  *
  * This form prevents against CSRF attacks.
  *
@@ -677,8 +667,6 @@ function node_revision_revert_confirm_submit($form, &$form_state) {
 
 /**
  * Page callback: Form constructor for the revision deletion confirmation form.
- *
- * Path: node/%node/revisions/%/delete
  *
  * This form prevents against CSRF attacks.
  *

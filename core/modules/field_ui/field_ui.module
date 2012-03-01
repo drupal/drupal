@@ -239,10 +239,6 @@ function field_ui_menu_load($field_name, $entity_type, $bundle_name, $bundle_pos
 /**
  * Title callback: Returns the name of a given instance.
  *
- * Path: BUNDLE_ADMIN_PATH/fields/%field, where BUNDLE_ADMIN_PATH is the path
- * stored in the ['admin']['info'] property in the return value of
- * hook_entity_info().
- *
  * @see field_ui_menu()
  */
 function field_ui_menu_title($instance) {
@@ -251,9 +247,6 @@ function field_ui_menu_title($instance) {
 
 /**
  * Access callback: Checks access for the 'view mode display settings' pages.
- *
- * Path: BUNDLE_ADMIN_PATH/display, where BUNDLE_ADMIN_PATH is the path stored
- * in the ['admin']['info'] property in the return value of hook_entity_info().
  *
  * @see field_ui_menu()
  */

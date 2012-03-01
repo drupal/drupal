@@ -1,4 +1,4 @@
-name = Content translation
+name = Content Translation
 description = Allows content to be translated into different languages.
 dependencies[] = locale
 package = Core

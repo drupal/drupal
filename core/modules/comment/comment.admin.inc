@@ -8,8 +8,6 @@
 /**
  * Page callback: Presents an administrative comment listing.
  *
- * Path: admin/content/comment
- *
  * @param $type
  *   The type of the overview form ('approval' or 'new'). See
  *   comment_admin_overview() for details.
@@ -249,8 +247,6 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
 
 /**
  * Page callback: Shows a confirmation page for comment deletions.
- *
- * Path: comment/%/delete
  *
  * @param $cid
  *   The ID of the comment that is about to be deleted.
