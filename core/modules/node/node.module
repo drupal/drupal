@@ -2072,32 +2072,41 @@ function node_menu() {
       'title' => $type->name,
       'title callback' => 'check_plain',
       'page callback' => 'node_add',
-      'page arguments' => array($type->type),
+      'page arguments' => array('type' => $type->type),
       'access callback' => 'node_access',
       'access arguments' => array('create', $type->type),
       'description' => $type->description,
       'file' => 'node.pages.inc',
     );
   }
-  $items['node/%node'] = array(
+  $items['node/%'] = array(
+    'load functions' => array(
+      1 => 'node_load',
+    ),
     'title callback' => 'node_page_title',
     'title arguments' => array(1),
     // The page callback also invokes drupal_set_title() in case
     // the menu router's title is overridden by a menu link.
     'page callback' => 'node_page_view',
-    'page arguments' => array(1),
+    'page arguments' => array('node' => 1),
     'access callback' => 'node_access',
     'access arguments' => array('view', 1),
   );
-  $items['node/%node/view'] = array(
+  $items['node/%/view'] = array(
+    'load functions' => array(
+      1 => 'node_load',
+    ),
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-  $items['node/%node/edit'] = array(
+  $items['node/%/edit'] = array(
+    'load functions' => array(
+      1 => 'node_load',
+    ),
     'title' => 'Edit',
     'page callback' => 'node_page_edit',
-    'page arguments' => array(1),
+    'page arguments' => array('node' => 1),
     'access callback' => 'node_access',
     'access arguments' => array('update', 1),
     'weight' => 0,
@@ -2105,10 +2114,13 @@ function node_menu() {
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'file' => 'node.pages.inc',
   );
-  $items['node/%node/delete'] = array(
+  $items['node/%/delete'] = array(
+    'load functions' => array(
+      1 => 'node_load',
+    ),
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_delete_confirm', 1),
+    'page arguments' => array('form_id' => 'node_delete_confirm', 1),
     'access callback' => 'node_access',
     'access arguments' => array('delete', 1),
     'weight' => 1,

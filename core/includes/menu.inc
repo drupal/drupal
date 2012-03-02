@@ -3475,7 +3475,6 @@ function _menu_router_build($callbacks) {
   $menu = array();
   $masks = array();
   foreach ($callbacks as $path => $item) {
-    $load_functions = array();
     $to_arg_functions = array();
     $fit = 0;
     $move = FALSE;
@@ -3493,20 +3492,10 @@ function _menu_router_build($callbacks) {
       if (preg_match('/^%(|' . DRUPAL_PHP_FUNCTION_PATTERN . ')$/', $part, $matches)) {
         if (empty($matches[1])) {
           $match = TRUE;
-          $load_functions[$k] = NULL;
         }
         else {
           if (function_exists($matches[1] . '_to_arg')) {
             $to_arg_functions[$k] = $matches[1] . '_to_arg';
-            $load_functions[$k] = NULL;
-            $match = TRUE;
-          }
-          if (function_exists($matches[1] . '_load')) {
-            $function = $matches[1] . '_load';
-            // Create an array of arguments that will be passed to the _load
-            // function when this menu path is checked, if 'load arguments'
-            // exists.
-            $load_functions[$k] = isset($item['load arguments']) ? array($function => $item['load arguments']) : $function;
             $match = TRUE;
           }
         }
@@ -3526,7 +3515,6 @@ function _menu_router_build($callbacks) {
       $fit = (1 << $number_parts) - 1;
     }
     $masks[$fit] = 1;
-    $item['_load_functions'] = $load_functions;
     $item['to_arg_functions'] = empty($to_arg_functions) ? '' : serialize($to_arg_functions);
     $item += array(
       'title' => '',
@@ -3632,14 +3620,14 @@ function _menu_router_build($callbacks) {
         // Same for load arguments: if a loader doesn't have any explict
         // arguments, try to find arguments in the parent.
         if (!isset($item['load arguments'])) {
-          foreach ($item['_load_functions'] as $k => $function) {
+          foreach ($item['load functions'] as $k => $function) {
             // This loader doesn't have any explict arguments...
             if (!is_array($function)) {
               // ... check the parent for a loader at the same position
               // using the same function name and defining arguments...
-              if (isset($parent['_load_functions'][$k]) && is_array($parent['_load_functions'][$k]) && key($parent['_load_functions'][$k]) === $function) {
+              if (isset($parent['load functions'][$k]) && is_array($parent['load functions'][$k]) && key($parent['load functions'][$k]) === $function) {
                 // ... and inherit the arguments on the child.
-                $item['_load_functions'][$k] = $parent['_load_functions'][$k];
+                $item['load functions'][$k] = $parent['load functions'][$k];
               }
             }
           }
@@ -3657,7 +3645,7 @@ function _menu_router_build($callbacks) {
       $item['access callback'] = intval($item['access callback']);
     }
 
-    $item['load_functions'] = empty($item['_load_functions']) ? '' : serialize($item['_load_functions']);
+    $item['load_functions'] = empty($item['load functions']) ? '' : serialize($item['load functions']);
     $item += array(
       'access arguments' => array(),
       'access callback' => '',

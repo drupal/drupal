@@ -50,6 +50,7 @@ class UrlMatcher extends SymfonyUrlMatcher {
       $routes->add(hash('sha256', $router_item['path']), $this->convertDrupalItem($router_item));
 
       if ($ret = $this->matchCollection($pathinfo, $routes)) {
+        //drupal_set_message('<pre>' . var_export('test', TRUE) . '</pre>');
         // Stash the router item in the attributes while we're transitioning.
         $ret['drupal_menu_item'] = $router_item;
 
@@ -82,7 +83,17 @@ class UrlMatcher extends SymfonyUrlMatcher {
     // become more complicated because we'll need to get back candidates for a
     // path and them resolve them based on things like method and scheme which
     // we currently can't do.
-    return menu_get_item($path);
+    $item = menu_get_item($path);
+    $path_elements = explode('/', $item['path']);
+    $i = 0;
+    foreach ($path_elements as $key => $element) {
+      if ($element == '%') {
+        $path_elements[$key] = "{arg$i}";
+        $i++;
+      }
+    }
+    $item['path'] = implode('/', $path_elements);
+    return $item;
   }
 
   protected function convertDrupalItem($router_item) {

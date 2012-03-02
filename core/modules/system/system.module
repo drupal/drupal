@@ -796,7 +796,7 @@ function system_menu() {
     'title' => 'Performance',
     'description' => 'Enable or disable page caching for anonymous users and set CSS and JS bandwidth optimization options.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_performance_settings'),
+    'page arguments' => array('form_id' => 'system_performance_settings'),
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
     'weight' => -20,
