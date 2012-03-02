@@ -1731,7 +1731,7 @@ function system_update_8003() {
  *
  * @see http://drupal.org/node/1454538
  */
-function system_update_8003() {
+function system_update_8004() {
   $langcode_field = array(
     'description' => 'The {language}.langcode of this file.',
     'type' => 'varchar',
