@@ -195,6 +195,27 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
     $this->assertEqual($new_js, $original_js + array($expected['js'] => 1), t('Page state now has the %js file.', array('%js' => $expected['js'])));
     $this->assertCommand($commands, array('data' => $expected_js_html), t('Page now has the %js file.', array('%js' => $expected['js'])));
   }
+
+  /**
+   * Tests that overridden CSS files are not added during lazy load.
+   */
+  function testLazyLoadOverriddenCSS() {
+    // The test theme overrides system.base.css without an implementation,
+    // thereby removing it.
+    theme_enable(array('test_theme'));
+    variable_set('theme_default', 'test_theme');
+
+    // This gets the form, and emulates an Ajax submission on it, including
+    // adding markup to the HEAD and BODY for any lazy loaded JS/CSS files.
+    $this->drupalPostAJAX('ajax_forms_test_lazy_load_form', array('add_files' => TRUE), array('op' => t('Submit')));
+
+    // Verify that the resulting HTML does not load the overridden CSS file.
+    // We add a "?" to the assertion, because Drupal.settings may include
+    // information about the file; we only really care about whether it appears
+    // in a LINK or STYLE tag, for which Drupal always adds a query string for
+    // cache control.
+    $this->assertNoText('system.base.css?', 'Ajax lazy loading does not add overridden CSS files.');
+  }
 }
 
 /**

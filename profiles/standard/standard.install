@@ -1,9 +1,15 @@
 <?php
+/**
+ * @file
+ * Install, update and uninstall functions for the standard install profile.
+ */
 
 /**
  * Implements hook_install().
  *
  * Perform actions to set up the site for this profile.
+ *
+ * @see system_install()
  */
 function standard_install() {
   // Add text formats.

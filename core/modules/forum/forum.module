@@ -468,10 +468,10 @@ function forum_permission() {
 /**
  * Implements hook_taxonomy_term_delete().
  */
-function forum_taxonomy_term_delete($tid) {
+function forum_taxonomy_term_delete(stdClass $term) {
   // For containers, remove the tid from the forum_containers variable.
   $containers = variable_get('forum_containers', array());
-  $key = array_search($tid, $containers);
+  $key = array_search($term->tid, $containers);
   if ($key !== FALSE) {
     unset($containers[$key]);
   }
@@ -779,7 +779,7 @@ function forum_forum_load($tid = NULL) {
     $query->addExpression('SUM(ncs.comment_count)', 'comment_count');
     $counts = $query
       ->fields('f', array('tid'))
-      ->condition('status', 1)
+      ->condition('n.status', 1)
       ->groupBy('tid')
       ->addTag('node_access')
       ->execute()

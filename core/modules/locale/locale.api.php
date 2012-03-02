@@ -24,9 +24,9 @@
  * did not happen yet and thus they cannot rely on translated variables.
  */
 function hook_language_init() {
-  global $language, $conf;
+  global $language_interface, $conf;
 
-  switch ($language->langcode) {
+  switch ($language_interface->langcode) {
     case 'it':
       $conf['site_name'] = 'Il mio sito Drupal';
       break;
@@ -52,10 +52,10 @@ function hook_language_init() {
  *   The current path.
  */
 function hook_language_switch_links_alter(array &$links, $type, $path) {
-  global $language;
+  global $language_interface;
 
-  if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language->langcode])) {
-    foreach ($links[$language->langcode] as $link) {
+  if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language_interface->langcode])) {
+    foreach ($links[$language_interface->langcode] as $link) {
       $link['attributes']['class'][] = 'active-language';
     }
   }
@@ -65,13 +65,19 @@ function hook_language_switch_links_alter(array &$links, $type, $path) {
  * Allow modules to define their own language types.
  *
  * @return
- *   An array of language type definitions. Each language type has an identifier
- *   key. The language type definition is an associative array that may contain
- *   the following key-value pairs:
+ *   An associative array of language type definitions.
+ *
+ *   Each language type has an identifier key which is used as the name for the
+ *   global variable corresponding to the language type in the bootstrap phase.
+ *
+ *   The language type definition is an associative array that may contain the
+ *   following key-value pairs:
  *   - "name": The human-readable language type identifier.
  *   - "description": A description of the language type.
- *   - "fixed": An array of language provider identifiers. Defining this key
- *     makes the language type non-configurable.
+ *   - "fixed": A fixed array of language provider identifiers to use to
+ *     initialize this language. Defining this key makes the language type
+ *     non-configurable and will always use the specified providers in the given
+ *     priority order.
  */
 function hook_language_types_info() {
   return array(
@@ -87,6 +93,8 @@ function hook_language_types_info() {
 
 /**
  * Perform alterations on language types.
+ *
+ * @see hook_language_types_info().
  *
  * @param $language_types
  *   Array of language type definitions.
@@ -150,7 +158,7 @@ function hook_language_negotiation_info() {
  */
 function hook_language_negotiation_info_alter(array &$language_providers) {
   if (isset($language_providers['custom_language_provider'])) {
-    $language_providers['custom_language_provider']['config'] = 'admin/config/regional/language/configure/custom-language-provider';
+    $language_providers['custom_language_provider']['config'] = 'admin/config/regional/language/detection/custom-language-provider';
   }
 }
 

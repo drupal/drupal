@@ -8,8 +8,6 @@
 /**
  * Page callback: Attaches CSS for the block region demo.
  *
- * Path: admin/structure/block/demo/% (for each theme)
- *
  * @see block_menu()
  */
 function block_admin_demo($theme = NULL) {
@@ -19,8 +17,6 @@ function block_admin_demo($theme = NULL) {
 
 /**
  * Page callback: Shows the block administration page.
- *
- * Path: admin/structure/block
  *
  * @param $theme
  *   The theme to display the administration page for. If not provided, defaults
@@ -256,8 +252,6 @@ function _block_compare($a, $b) {
 
 /**
  * Form constructor for the block configuration form.
- *
- * Path: admin/structure/block/manage/%/%
  *
  * Also used by block_add_block_form() for adding a new custom block.
  *
@@ -539,8 +533,6 @@ function block_admin_configure_submit($form, &$form_state) {
 /**
  * Form constructor for the add block form.
  *
- * Path: admin/structure/block/add
- *
  * @see block_menu()
  * @see block_add_block_form_validate()
  * @see block_add_block_form_submit()
@@ -631,8 +623,6 @@ function block_add_block_form_submit($form, &$form_state) {
 
 /**
  * Form constructor for the custom block deletion form.
- *
- * Path: admin/structure/block/manage/%/%/delete
  *
  * @param $module
  *   The name of the module that implements the block to be deleted. This should

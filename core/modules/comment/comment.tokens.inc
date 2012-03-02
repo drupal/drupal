@@ -106,10 +106,10 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
-    $language_code = $options['language']->langcode;
+    $langcode = $options['language']->langcode;
   }
   else {
-    $language_code = NULL;
+    $langcode = NULL;
   }
   $sanitize = !empty($options['sanitize']);
 
@@ -155,9 +155,9 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'body':
-          if ($items = field_get_items('comment', $comment, 'comment_body', $language_code)) {
+          if ($items = field_get_items('comment', $comment, 'comment_body', $langcode)) {
             $instance = field_info_instance('comment', 'body', 'comment_body');
-            $field_langcode = field_language('comment', $comment, 'comment_body', $language_code);
+            $field_langcode = field_language('comment', $comment, 'comment_body', $langcode);
             $replacements[$original] = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], 'value') : $items[0]['value'];
           }
           break;
@@ -186,11 +186,11 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'created':
-          $replacements[$original] = format_date($comment->created, 'medium', '', NULL, $language_code);
+          $replacements[$original] = format_date($comment->created, 'medium', '', NULL, $langcode);
           break;
 
         case 'changed':
-          $replacements[$original] = format_date($comment->changed, 'medium', '', NULL, $language_code);
+          $replacements[$original] = format_date($comment->changed, 'medium', '', NULL, $langcode);
           break;
 
         case 'node':

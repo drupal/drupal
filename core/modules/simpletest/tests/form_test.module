@@ -1196,7 +1196,7 @@ function _form_test_disabled_elements($form, &$form_state) {
   $form['disabled_container'] = array(
     '#disabled' => TRUE,
   );
-  foreach (array('textfield', 'textarea', 'hidden') as $type) {
+  foreach (array('textfield', 'textarea', 'hidden', 'tel') as $type) {
     $form['disabled_container']['disabled_container_' . $type] = array(
       '#type' => $type,
       '#title' => $type,
@@ -1617,7 +1617,7 @@ function form_test_two_instances() {
     'uid' => $user->uid,
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => 'page',
-    'language' => LANGUAGE_NONE,
+    'langcode' => LANGUAGE_NONE,
   );
   $node2 = clone($node1);
   $return['node_form_1'] = drupal_get_form('page_node_form', $node1);

@@ -1,5 +1,9 @@
 <?php
 
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectExtender;
+use Drupal\Core\Database\Query\SelectInterface;
+
 /**
  * @file
  * The core module that allows content to be submitted to the site.
@@ -603,17 +607,25 @@ function node_add_body_field($type, $label = 'Body') {
  */
 function node_field_extra_fields() {
   $extra = array();
+  $module_language_enabled = module_exists('language');
+  $description = t('Node module element');
 
-  foreach (node_type_get_types() as $type) {
-    if ($type->has_title) {
-      $extra['node'][$type->type] = array(
-        'form' => array(
-          'title' => array(
-            'label' => $type->title_label,
-            'description' => t('Node module element'),
-            'weight' => -5,
-          ),
-        ),
+  foreach (node_type_get_types() as $bundle) {
+    if ($bundle->has_title) {
+      $extra['node'][$bundle->type]['form']['title'] = array(
+        'label' => $bundle->title_label,
+        'description' => $description,
+        'weight' => -5,
+      );
+    }
+
+    // Add also the 'language' select if Language module is enabled and the
+    // bundle has multilingual support.
+    if ($module_language_enabled && variable_get('node_type_language_' . $bundle->type, 0)) {
+      $extra['node'][$bundle->type]['form']['language'] = array(
+        'label' => t('Language'),
+        'description' => $description,
+        'weight' => 0,
       );
     }
   }
@@ -682,7 +694,7 @@ function node_type_update_nodes($old_type, $type) {
  *   type object by $type->disabled being set to TRUE.
  */
 function _node_types_build($rebuild = FALSE) {
-  $cid = 'node_types:' . $GLOBALS['language']->langcode;
+  $cid = 'node_types:' . $GLOBALS['language_interface']->langcode;
 
   if (!$rebuild) {
     $_node_types = &drupal_static(__FUNCTION__);
@@ -1340,7 +1352,7 @@ function node_view($node, $view_mode = 'full', $langcode = NULL) {
     '#theme' => 'node',
     '#node' => $node,
     '#view_mode' => $view_mode,
-    '#language' => $langcode,
+    '#langcode' => $langcode,
   );
 
   // Add contextual links for this node, except when the node is already being
@@ -1438,8 +1450,6 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
 
 /**
  * Page callback: Generates an array which displays a node detail page.
- *
- * Path: node/%node/revisions/%/view
  *
  * @param $node
  *   A node object.
@@ -1559,19 +1569,19 @@ function template_preprocess_node(&$variables) {
   // Gather node classes.
   $variables['classes_array'][] = drupal_html_class('node-' . $node->type);
   if ($variables['promote']) {
-    $variables['classes_array'][] = 'node-promoted';
+    $variables['classes_array'][] = 'promoted';
   }
   if ($variables['sticky']) {
-    $variables['classes_array'][] = 'node-sticky';
+    $variables['classes_array'][] = 'sticky';
   }
   if (!$variables['status']) {
-    $variables['classes_array'][] = 'node-unpublished';
+    $variables['classes_array'][] = 'unpublished';
   }
-  if ($variables['teaser']) {
-    $variables['classes_array'][] = 'node-teaser';
+  if ($variables['view_mode']) {
+    $variables['classes_array'][] = drupal_html_class('view-mode-' . $variables['view_mode']);
   }
   if (isset($variables['preview'])) {
-    $variables['classes_array'][] = 'node-preview';
+    $variables['classes_array'][] = 'preview';
   }
 
   // Clean up name so there are no underscores.
@@ -1631,7 +1641,7 @@ function node_permission() {
  * @param $query
  *   A query object that has been extended with the Search DB Extender.
  */
-function _node_rankings(SelectQueryExtender $query) {
+function _node_rankings(SelectExtender $query) {
   if ($ranking = module_invoke_all('ranking')) {
     $tables = &$query->getTables();
     foreach ($ranking as $rank => $values) {
@@ -1724,7 +1734,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
 
   // Insert special keywords.
   $query->setOption('type', 'n.type');
-  $query->setOption('language', 'n.language');
+  $query->setOption('langcode', 'n.langcode');
   if ($query->setOption('term', 'ti.tid')) {
     $query->join('taxonomy_index', 'ti', 'n.nid = ti.nid');
   }
@@ -1764,7 +1774,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
       'extra' => $extra,
       'score' => $item->calculated_score,
       'snippet' => search_excerpt($keys, $node->rendered),
-      'language' => $node->language,
+      'langcode' => $node->langcode,
     );
   }
   return $results;
@@ -1898,31 +1908,45 @@ function theme_node_search_admin($variables) {
 /**
  * Access callback: Checks node revision access.
  *
- * Paths:
- * - node/%node/revisions
- * - node/%node/revisions/%/view
- * - node/%node/revisions/%/revert
- * - node/%node/revisions/%/delete
- *
  * @param $node
  *   The node to check.
  * @param $op
  *   (optional) The specific operation being checked. Defaults to 'view.'
+ * @param object $account
+ *   (optional) A user object representing the user for whom the operation is
+ *   to be performed. Determines access for a user other than the current user.
  *
  * @return
- *   Access status for the revision.
+ *   TRUE if the operation may be performed, FALSE otherwise.
  *
  * @see node_menu()
  */
-function _node_revision_access($node, $op = 'view') {
+function _node_revision_access($node, $op = 'view', $account = NULL) {
   $access = &drupal_static(__FUNCTION__, array());
-  if (!isset($access[$node->vid])) {
-    // To save additional calls to the database, return early if the user
-    // doesn't have the required permissions.
-    $map = array('view' => 'view revisions', 'update' => 'revert revisions', 'delete' => 'delete revisions');
-    if (isset($map[$op]) && (!user_access($map[$op]) && !user_access('administer nodes'))) {
-      $access[$node->vid] = FALSE;
-      return FALSE;
+
+  $map = array(
+    'view' => 'view revisions',
+    'update' => 'revert revisions',
+    'delete' => 'delete revisions',
+  );
+
+  if (!$node || !isset($map[$op])) {
+    // If there was no node to check against, or the $op was not one of the
+    // supported ones, we return access denied.
+    return FALSE;
+  }
+
+  if (!isset($account)) {
+    $account = $GLOBALS['user'];
+  }
+
+  // Statically cache access by revision ID, user account ID, and operation.
+  $cid = $node->vid . ':' . $account->uid . ':' . $op;
+
+  if (!isset($access[$cid])) {
+    // Perform basic permission checks first.
+    if (!user_access($map[$op], $account) && !user_access('administer nodes', $account)) {
+      return $access[$cid] = FALSE;
     }
 
     $node_current_revision = node_load($node->nid);
@@ -1934,24 +1958,23 @@ function _node_revision_access($node, $op = 'view') {
     // Also, if you try to revert to or delete the current revision, that's
     // not good.
     if ($is_current_revision && (db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
-      $access[$node->vid] = FALSE;
+      $access[$cid] = FALSE;
     }
-    elseif (user_access('administer nodes')) {
-      $access[$node->vid] = TRUE;
+    elseif (user_access('administer nodes', $account)) {
+      $access[$cid] = TRUE;
     }
     else {
       // First check the access to the current revision and finally, if the
       // node passed in is not the current revision then access to that, too.
-      $access[$node->vid] = node_access($op, $node_current_revision) && ($is_current_revision || node_access($op, $node));
+      $access[$cid] = node_access($op, $node_current_revision, $account) && ($is_current_revision || node_access($op, $node, $account));
     }
   }
-  return $access[$node->vid];
+
+  return $access[$cid];
 }
 
 /**
  * Access callback: Checks whether the user has permission to add a node.
- *
- * Paths: node/add
  *
  * @return
  *   TRUE if the user has permission, otherwise FALSE.
@@ -2186,8 +2209,6 @@ function node_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 /**
  * Title callback: Provides the title for a node type edit form.
  *
- * Path: admin/structure/types/manage/%node_type
- *
  * @param $type
  *   The node type object.
  *
@@ -2199,8 +2220,6 @@ function node_type_page_title($type) {
 
 /**
  * Title callback: Displays the node's title.
- *
- * Path: node/%node
  *
  * @param $node
  *   The node object.
@@ -2566,8 +2585,6 @@ function node_block_list_alter(&$blocks) {
 /**
  * Page callback: Generates and prints an RSS feed.
  *
- * Path: rss.xml
- *
  * Generates an RSS feed from an array of node IDs, and prints it with an HTTP
  * header, with Content Type set to RSS/XML.
  *
@@ -2686,8 +2703,6 @@ function node_view_multiple($nodes, $view_mode = 'teaser', $weight = 0, $langcod
 /**
  * Page callback: Generates a listing of promoted nodes.
  *
- * Path: node
- *
  * @see node_menu()
  */
 function node_page_default() {
@@ -2739,8 +2754,6 @@ function node_page_default() {
 
 /**
  * Page callback: Displays a single node.
- *
- * Path: node/%node
  *
  * @param $node
  *   The node object.
@@ -2860,10 +2873,8 @@ function node_form_search_form_alter(&$form, $form_state) {
 
     // Languages:
     $language_options = array();
-    foreach (language_list() as $key => $entity) {
-      if ($entity->enabled) {
-        $language_options[$key] = $entity->name;
-      }
+    foreach (language_list(TRUE) as $langcode => $language) {
+      $language_options[$langcode] = $language->name;
     }
     if (count($language_options) > 1) {
       $form['advanced']['language'] = array(
@@ -2993,12 +3004,6 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
 
 /**
  * Access callback: Checks a user's permission for performing a node operation.
- *
- * Paths:
- * - node/%node
- * - node/%node/edit
- * - node/%node/delete
- * - 'node/add/' . $type_url_str (part of foreach)
  *
  * @param $op
  *   The operation to be performed on the node. Possible values are:
@@ -3313,7 +3318,7 @@ function node_access_view_all_nodes($account = NULL) {
  * the 'op' meta-data (or 'view' if not provided; other possible values are
  * 'update' and 'delete').
  */
-function node_query_node_access_alter(QueryAlterableInterface $query) {
+function node_query_node_access_alter(AlterableInterface $query) {
   _node_query_node_access_alter($query, 'node');
 }
 
@@ -3324,7 +3329,7 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
  * node_query_node_access_alter() for the SQL field storage engine. Node access
  * conditions are added for field values belonging to nodes only.
  */
-function node_query_entity_field_access_alter(QueryAlterableInterface $query) {
+function node_query_entity_field_access_alter(AlterableInterface $query) {
   _node_query_node_access_alter($query, 'entity');
 }
 
@@ -3368,7 +3373,7 @@ function _node_query_node_access_alter($query, $type) {
   if (!$base_table) {
     $fallback = '';
     foreach ($tables as $alias => $table_info) {
-      if (!($table_info instanceof SelectQueryInterface)) {
+      if (!($table_info instanceof SelectInterface)) {
         $table = $table_info['table'];
         // If the node table is in the query, it wins immediately.
         if ($table == 'node') {
@@ -3440,7 +3445,7 @@ function _node_query_node_access_alter($query, $type) {
   }
   foreach ($tables as $nalias => $tableinfo) {
     $table = $tableinfo['table'];
-    if (!($table instanceof SelectQueryInterface) && $table == $base_table) {
+    if (!($table instanceof SelectInterface) && $table == $base_table) {
 
       // The node_access table has the access grants for any given node so JOIN
       // it to the table containing the nid which can be either the node
@@ -4216,9 +4221,9 @@ function node_file_download_access($field, $entity_type, $entity) {
  * Implements hook_language_delete().
  */
 function node_language_delete($language) {
-  // On nodes with this language, unset the language
+  // On nodes with this language, unset the language.
   db_update('node')
-    ->fields(array('language' => ''))
-    ->condition('language', $language->langcode)
+    ->fields(array('langcode' => ''))
+    ->condition('langcode', $language->langcode)
     ->execute();
 }

@@ -84,7 +84,7 @@ Install system
 - David Rothstein 'David_Rothstein' <http://drupal.org/user/124982>
 
 JavaScript
-- ?
+- Théodore Biadala 'nod_' <http://drupal.org/user/598310>
 
 Language system
 - Francesco Placella 'plach' <http://drupal.org/user/183211>
@@ -174,7 +174,7 @@ Contextual module
 Dashboard module
 - ?
 
-Database logging module
+Database Logging module
 - Khalid Baheyeldin 'kbahey' <http://drupal.org/user/4063>
 
 Field module
@@ -225,7 +225,7 @@ PHP module
 - ?
 
 Poll module
-- ?
+- Andrei Mateescu 'amateescu' <http://drupal.org/user/729614>
 
 RDF module
 - Stéphane Corlosquet 'scor' <http://drupal.org/user/52142>
@@ -242,7 +242,7 @@ Simpletest module
 - Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
 Statistics module
-- Dave Reid 'davereid' <http://drupal.org/user/53892>
+- Tim Millwood 'timmillwood' <http://drupal.org/user/227849>
 
 Syslog module
 - Khalid Baheyeldin 'kbahey' <http://drupal.org/user/4063>

@@ -239,6 +239,10 @@ class FileManagedFileElementTestCase extends FileFieldTestCase {
    * Tests the managed_file element type.
    */
   function testManagedFile() {
+    // Check that $element['#size'] is passed to the child upload element.
+    $this->drupalGet('file/test');
+    $this->assertFieldByXpath('//input[@name="files[nested_file]" and @size="13"]', NULL, 'The custom #size attribute is passed to the child upload element.');
+
     // Perform the tests with all permutations of $form['#tree'] and
     // $element['#extended'].
     foreach (array(0, 1) as $tree) {
@@ -1051,10 +1055,10 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
    * Creates a file, then tests the tokens generated from it.
    */
   function testFileTokenReplacement() {
-    global $language;
+    global $language_interface;
     $url_options = array(
       'absolute' => TRUE,
-      'language' => $language,
+      'language' => $language_interface,
     );
 
     // Create file field.
@@ -1084,8 +1088,8 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
     $tests['[file:mime]'] = check_plain($file->filemime);
     $tests['[file:size]'] = format_size($file->filesize);
     $tests['[file:url]'] = check_plain(file_create_url($file->uri));
-    $tests['[file:timestamp]'] = format_date($file->timestamp, 'medium', '', NULL, $language->langcode);
-    $tests['[file:timestamp:short]'] = format_date($file->timestamp, 'short', '', NULL, $language->langcode);
+    $tests['[file:timestamp]'] = format_date($file->timestamp, 'medium', '', NULL, $language_interface->langcode);
+    $tests['[file:timestamp:short]'] = format_date($file->timestamp, 'short', '', NULL, $language_interface->langcode);
     $tests['[file:owner]'] = check_plain(user_format_name($this->admin_user));
     $tests['[file:owner:uid]'] = $file->uid;
 
@@ -1093,7 +1097,7 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('file' => $file), array('language' => $language));
+      $output = token_replace($input, array('file' => $file), array('language' => $language_interface));
       $this->assertEqual($output, $expected, t('Sanitized file token %token replaced.', array('%token' => $input)));
     }
 
@@ -1104,7 +1108,7 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
     $tests['[file:size]'] = format_size($file->filesize);
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('file' => $file), array('language' => $language, 'sanitize' => FALSE));
+      $output = token_replace($input, array('file' => $file), array('language' => $language_interface, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, t('Unsanitized file token %token replaced.', array('%token' => $input)));
     }
   }

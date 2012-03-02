@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Enables tracking of recent content for users.
+ * Tracks recent content posted by a user or users.
  */
 
 /**
@@ -70,6 +70,11 @@ function tracker_menu() {
 
 /**
  * Implements hook_cron().
+ *
+ * Updates tracking information for any items still to be tracked. The variable
+ * 'tracker_index_nid' is set to ((the last node ID that was indexed) - 1) and
+ * used to select the nodes to be processed. If there are no remaining nodes to
+ * process, 'tracker_index_nid' will be 0.
  */
 function tracker_cron() {
   $max_nid = variable_get('tracker_index_nid', 0);
@@ -148,7 +153,16 @@ function tracker_cron() {
 }
 
 /**
- * Access callback for tracker/%user_uid_optional.
+ * Access callback: Determines access permission for a user's own account.
+ *
+ * @param int $account
+ *   The account ID to check.
+ *
+ * @return boolean
+ *   TRUE if a user is accessing tracking info for their own account and
+ *   has permission to access the content.
+ *
+ * @see tracker_menu()
  */
 function _tracker_myrecent_access($account) {
   // This path is only allowed for authenticated users looking at their own content.
@@ -156,7 +170,16 @@ function _tracker_myrecent_access($account) {
 }
 
 /**
- * Access callback for user/%user/track.
+ * Access callback: Determines access permission for an account.
+ *
+ * @param int $account
+ *   The user account ID to track.
+ *
+ * @return boolean
+ *   TRUE if a user has permission to access the account for $account and
+ *   has permission to access the content.
+ *
+ * @see tracker_menu()
  */
 function _tracker_user_access($account) {
   return user_view_access($account) && user_access('access content');
@@ -164,6 +187,8 @@ function _tracker_user_access($account) {
 
 /**
  * Implements hook_node_insert().
+ *
+ * Adds new tracking information for this node since it's new.
  */
 function tracker_node_insert($node, $arg = 0) {
   _tracker_add($node->nid, $node->uid, $node->changed);
@@ -171,6 +196,8 @@ function tracker_node_insert($node, $arg = 0) {
 
 /**
  * Implements hook_node_update().
+ *
+ * Adds tracking information for this node since it's been updated.
  */
 function tracker_node_update($node, $arg = 0) {
   _tracker_add($node->nid, $node->uid, $node->changed);
@@ -178,6 +205,8 @@ function tracker_node_update($node, $arg = 0) {
 
 /**
  * Implements hook_node_predelete().
+ *
+ * Deletes tracking information for a node.
  */
 function tracker_node_predelete($node, $arg = 0) {
   db_delete('tracker_node')
@@ -196,7 +225,7 @@ function tracker_node_predelete($node, $arg = 0) {
  */
 function tracker_comment_update($comment) {
   // comment_save() calls hook_comment_publish() for all published comments
-  // so we to handle all other values here.
+  // so we need to handle all other values here.
   if ($comment->status != COMMENT_PUBLISHED) {
     _tracker_remove($comment->nid, $comment->uid, $comment->changed);
   }
@@ -227,7 +256,7 @@ function tracker_comment_delete($comment) {
 }
 
 /**
- * Update indexing tables when a node is added, updated or commented on.
+ * Updates indexing tables when a node is added, updated, or commented on.
  *
  * @param $nid
  *   A node ID.
@@ -266,7 +295,7 @@ function _tracker_add($nid, $uid, $changed) {
 }
 
 /**
- * Determine the max timestamp between $node->changed and the last comment.
+ * Determines the max timestamp between $node->changed and the last comment.
  *
  * @param $nid
  *   A node ID.
@@ -288,7 +317,7 @@ function _tracker_calculate_changed($nid) {
 }
 
 /**
- * Clean up indexed data when nodes or comments are removed.
+ * Cleans up indexed data when nodes or comments are removed.
  *
  * @param $nid
  *  The node ID.
@@ -301,8 +330,8 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
   $node = db_query('SELECT nid, status, uid, changed FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchObject();
 
   // The user only keeps his or her subscription if both of the following are true:
-  // (1) The node exists.
-  // (2) The user is either the node author or has commented on the node.
+  //   (1) The node exists.
+  //   (2) The user is either the node author or has commented on the node.
   $keep_subscription = FALSE;
 
   if ($node) {
@@ -311,7 +340,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
 
     // Comments are a second reason to keep the user's subscription.
     if (!$keep_subscription) {
-      // Check if the user has commented at least once on the given nid
+      // Check if the user has commented at least once on the given nid.
       $keep_subscription = db_query_range('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND uid = :uid AND status = :status', 0, 1, array(
         ':nid' => $nid,
         ':uid' => $uid,
@@ -329,9 +358,8 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
 
     // Now we need to update the (possibly) changed timestamps for other users
     // and the node itself.
-
     // We only need to do this if the removed item has a timestamp that equals
-    // or exceeds the listed changed timestamp for the node
+    // or exceeds the listed changed timestamp for the node.
     $tracker_node = db_query('SELECT nid, changed FROM {tracker_node} WHERE nid = :nid', array(':nid' => $nid))->fetchObject();
     if ($tracker_node && $changed >= $tracker_node->changed) {
       // If we're here, the item being removed is *possibly* the item that
@@ -356,7 +384,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
         ))
         ->condition('nid', $nid)
         ->execute();
-   }
+    }
   }
   else {
     // If the node doesn't exist, remove everything.

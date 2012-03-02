@@ -8,8 +8,6 @@
 /**
  * Page callback: Prints a listing of all books.
  *
- * Path: book
- *
  * @see book_menu()
  */
 function book_render() {
@@ -23,8 +21,6 @@ function book_render() {
 
 /**
  * Page callback: Generates representations of a book page and its children.
- *
- * Path: book/export/%/%
  *
  * The function delegates the generation of output to helper functions. The
  * function name is derived by prepending 'book_export_' to the given output
@@ -97,8 +93,6 @@ function book_export_html($nid) {
 /**
  * Page callback: Shows the outline form for a single node.
  *
- * Path: node/%node/outline
- *
  * @param $node
  *   The book node for which to show the outline.
  *
@@ -149,7 +143,7 @@ function book_outline_form($form, &$form_state, $node) {
   $form['remove'] = array(
     '#type' => 'submit',
     '#value' => t('Remove from book outline'),
-    '#access' => $node->nid != $node->book['bid'] && $node->book['bid'],
+    '#access' => _book_node_is_removable($node),
     '#weight' => 20,
     '#submit' => array('book_remove_button_submit'),
   );
@@ -203,8 +197,6 @@ function book_outline_form_submit($form, &$form_state) {
 /**
  * Form constructor to confirm removal of a node from a book.
  *
- * Path: node/%node/outline/remove
- *
  * @param $node
  *   The node to delete.
  *
@@ -231,8 +223,7 @@ function book_remove_form($form, &$form_state, $node) {
  */
 function book_remove_form_submit($form, &$form_state) {
   $node = $form['#node'];
-  if ($node->nid != $node->book['bid']) {
-    // Only allowed when this is not a book (top-level page).
+  if (_book_node_is_removable($node)) {
     menu_link_delete($node->book['mlid']);
     db_delete('book')
       ->condition('nid', $node->nid)

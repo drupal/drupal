@@ -134,7 +134,7 @@ class Response
         $charset = $this->charset ?: 'UTF-8';
         if (!$this->headers->has('Content-Type')) {
             $this->headers->set('Content-Type', 'text/html; charset='.$charset);
-        } elseif ('text/' === substr($this->headers->get('Content-Type'), 0, 5) && false === strpos($this->headers->get('Content-Type'), 'charset')) {
+        } elseif (0 === strpos($this->headers->get('Content-Type'), 'text/') && false === strpos($this->headers->get('Content-Type'), 'charset')) {
             // add the charset
             $this->headers->set('Content-Type', $this->headers->get('Content-Type').'; charset='.$charset);
         }
@@ -197,7 +197,7 @@ class Response
     }
 
     /**
-     * Sets the response content
+     * Sets the response content.
      *
      * Valid types are strings, numbers, and objects that implement a __toString() method.
      *
@@ -215,7 +215,7 @@ class Response
     }
 
     /**
-     * Gets the current response content
+     * Gets the current response content.
      *
      * @return string Content
      *
@@ -251,7 +251,7 @@ class Response
     }
 
     /**
-     * Sets response status code.
+     * Sets the response status code.
      *
      * @param integer $code HTTP status code
      * @param string  $text HTTP status text
@@ -271,7 +271,7 @@ class Response
     }
 
     /**
-     * Retrieves status code for the current web response.
+     * Retrieves the status code for the current web response.
      *
      * @return string Status code
      *
@@ -283,7 +283,7 @@ class Response
     }
 
     /**
-     * Sets response charset.
+     * Sets the response charset.
      *
      * @param string $charset Character set
      *
@@ -409,7 +409,7 @@ class Response
      *
      * @return \DateTime A \DateTime instance
      *
-     * @throws \RuntimeException when the header is not parseable
+     * @throws \RuntimeException When the header is not parseable
      *
      * @api
      */
@@ -470,7 +470,7 @@ class Response
     }
 
     /**
-     * Sets the Expires HTTP header with a \DateTime instance.
+     * Sets the Expires HTTP header with a DateTime instance.
      *
      * If passed a null value, it removes the header.
      *
@@ -522,7 +522,7 @@ class Response
      *
      * This methods sets the Cache-Control max-age directive.
      *
-     * @param integer $value A number of seconds
+     * @param integer $value Number of seconds
      *
      * @api
      */
@@ -536,7 +536,7 @@ class Response
      *
      * This methods sets the Cache-Control s-maxage directive.
      *
-     * @param integer $value A number of seconds
+     * @param integer $value Number of seconds
      *
      * @api
      */
@@ -572,7 +572,7 @@ class Response
      *
      * This method adjusts the Cache-Control/s-maxage directive.
      *
-     * @param integer $seconds The number of seconds
+     * @param integer $seconds Number of seconds
      *
      * @api
      */
@@ -586,7 +586,7 @@ class Response
      *
      * This method adjusts the Cache-Control/max-age directive.
      *
-     * @param integer $seconds The number of seconds
+     * @param integer $seconds Number of seconds
      *
      * @api
      */
@@ -608,7 +608,7 @@ class Response
     }
 
     /**
-     * Sets the Last-Modified HTTP header with a \DateTime instance.
+     * Sets the Last-Modified HTTP header with a DateTime instance.
      *
      * If passed a null value, it removes the header.
      *
@@ -628,7 +628,7 @@ class Response
     }
 
     /**
-     * Returns the literal value of ETag HTTP header.
+     * Returns the literal value of the ETag HTTP header.
      *
      * @return string The ETag HTTP header
      *
@@ -661,7 +661,7 @@ class Response
     }
 
     /**
-     * Sets Response cache headers (validation and/or expiration).
+     * Sets the response's cache headers (validation and/or expiration).
      *
      * Available options are: etag, last_modified, max_age, s_maxage, private, and public.
      *
@@ -672,7 +672,7 @@ class Response
     public function setCache(array $options)
     {
         if ($diff = array_diff(array_keys($options), array('etag', 'last_modified', 'max_age', 's_maxage', 'private', 'public'))) {
-            throw new \InvalidArgumentException(sprintf('Response does not support the following options: "%s".', implode('", "', array_keys($diff))));
+            throw new \InvalidArgumentException(sprintf('Response does not support the following options: "%s".', implode('", "', array_values($diff))));
         }
 
         if (isset($options['etag'])) {
@@ -771,15 +771,15 @@ class Response
     }
 
     /**
-     * Determines if the Response validators (ETag, Last-Modified) matches
+     * Determines if the Response validators (ETag, Last-Modified) match
      * a conditional value specified in the Request.
      *
      * If the Response is not modified, it sets the status code to 304 and
-     * remove the actual content by calling the setNotModified() method.
+     * removes the actual content by calling the setNotModified() method.
      *
      * @param Request $request A Request instance
      *
-     * @return Boolean true if the Response validators matches the Request, false otherwise
+     * @return Boolean true if the Response validators match the Request, false otherwise
      *
      * @api
      */

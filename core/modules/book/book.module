@@ -213,15 +213,23 @@ function _book_outline_access($node) {
 /**
  * Access callback: Determines if the user can remove nodes from the outline.
  *
- * Path: node/%node/outline/remove
- *
  * @param $node
  *   The node to remove from the outline.
  *
  * @see book_menu()
  */
 function _book_outline_remove_access($node) {
-  return isset($node->book) && ($node->book['bid'] != $node->nid) && _book_outline_access($node);
+  return _book_node_is_removable($node) && _book_outline_access($node);
+}
+
+/**
+ * Determines if a node can be removed from the book.
+ *
+ * A node can be removed from a book if it is actually in a book and it either
+ * is not a top-level page or is a top-level page with no children.
+ */
+function _book_node_is_removable($node) {
+  return (!empty($node->book['bid']) && (($node->book['bid'] != $node->nid) || !$node->book['has_children']));
 }
 
 /**
@@ -1218,17 +1226,17 @@ function book_toc($bid, $depth_limit, $exclude = array()) {
  * @see book-export-html.tpl.php
  */
 function template_preprocess_book_export_html(&$variables) {
-  global $base_url, $language;
+  global $base_url, $language_interface;
 
   $variables['title'] = check_plain($variables['title']);
   $variables['base_url'] = $base_url;
-  $variables['language'] = $language;
-  $variables['language_rtl'] = ($language->direction == LANGUAGE_RTL);
+  $variables['language'] = $language_interface;
+  $variables['language_rtl'] = ($language_interface->direction == LANGUAGE_RTL);
   $variables['head'] = drupal_get_html_head();
 
   // HTML element attributes.
-  $variables['html_attributes_array']['lang'] = $language->langcode;
-  $variables['html_attributes_array']['dir'] = $language->direction ? 'rtl' : 'ltr';
+  $variables['html_attributes_array']['lang'] = $language_interface->langcode;
+  $variables['html_attributes_array']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
 }
 
 /**

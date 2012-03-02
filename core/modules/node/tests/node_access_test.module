@@ -87,8 +87,6 @@ function node_access_test_menu() {
 /**
  * Page callback: Creates the node access test page.
  *
- * Path: node_access_test_page
- *
  * Page should say "No nodes" if there are no nodes, and "Yes, # nodes" (with
  * the number filled in) if there were nodes the user could access. Also, the
  * database query is shown, and a list of the node IDs, for debugging purposes.
@@ -130,8 +128,6 @@ function node_access_test_page() {
 
 /**
  * Page callback: Creates the node access entity test page.
- *
- * Path: node_access_entity_test_page
  *
  * Page should say "No nodes" if there are no nodes, and "Yes, # nodes" (with
  * the number filled in) if there were nodes the user could access. Also, the

@@ -434,7 +434,7 @@ class TextTranslationTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Set "Article" content type to use multilingual support with translation.
-    $edit = array('language_content_type' => 2);
+    $edit = array('node_type_language' => TRANSLATION_ENABLED);
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Article')), t('Article content type has been updated.'));
   }
@@ -454,8 +454,8 @@ class TextTranslationTestCase extends DrupalWebTestCase {
     $langcode = LANGUAGE_NONE;
     $body = $this->randomName();
     $edit = array(
-      "title" => $this->randomName(),
-      "language" => 'en',
+      'title' => $this->randomName(),
+      'langcode' => 'en',
       "body[$langcode][0][value]" => $body,
     );
 
@@ -487,7 +487,7 @@ class TextTranslationTestCase extends DrupalWebTestCase {
     $title = $this->randomName();
     $edit = array(
       'title' => $title,
-      'language' => 'en',
+      'langcode' => 'en',
     );
     $this->drupalPost('node/add/article', $edit, t('Save'));
 

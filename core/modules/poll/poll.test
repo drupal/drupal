@@ -631,7 +631,7 @@ class PollTokenReplaceTestCase extends PollTestCase {
    * Creates a poll, then tests the tokens generated from it.
    */
   function testPollTokenReplacement() {
-    global $language;
+    global $language_interface;
 
     // Craete a poll with three choices.
     $title = $this->randomName();
@@ -680,13 +680,13 @@ class PollTokenReplaceTestCase extends PollTestCase {
     $tests['[node:poll-winner]'] = filter_xss($poll->choice[1]['chtext']);
     $tests['[node:poll-winner-votes]'] = 2;
     $tests['[node:poll-winner-percent]'] = 50;
-    $tests['[node:poll-duration]'] = format_interval($poll->runtime, 1, $language->langcode);
+    $tests['[node:poll-duration]'] = format_interval($poll->runtime, 1, $language_interface->langcode);
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $poll), array('language' => $language));
+      $output = token_replace($input, array('node' => $poll), array('language' => $language_interface));
       $this->assertEqual($output, $expected, t('Sanitized poll token %token replaced.', array('%token' => $input)));
     }
 
@@ -694,7 +694,7 @@ class PollTokenReplaceTestCase extends PollTestCase {
     $tests['[node:poll-winner]'] = $poll->choice[1]['chtext'];
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $poll), array('language' => $language, 'sanitize' => FALSE));
+      $output = token_replace($input, array('node' => $poll), array('language' => $language_interface, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, t('Unsanitized poll token %token replaced.', array('%token' => $input)));
     }
   }
@@ -843,7 +843,7 @@ class PollTranslateTestCase extends PollTestCase {
     // Set "Poll" content type to use multilingual support with translation.
     $this->drupalGet('admin/structure/types/manage/poll');
     $edit = array();
-    $edit['language_content_type'] = 2;
+    $edit['node_type_language'] = TRANSLATION_ENABLED;
     $this->drupalPost('admin/structure/types/manage/poll', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Poll')), t('Poll content type has been updated.'));
 
@@ -853,7 +853,7 @@ class PollTranslateTestCase extends PollTestCase {
     // Set the poll's first choice count to 200.
     $edit['choice[chid:1][chvotes]'] = 200;
     // Set the language to Dutch.
-    $edit['language'] = 'nl';
+    $edit['langcode'] = 'nl';
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Translate the Dutch poll.

@@ -268,8 +268,6 @@ function aggregator_menu() {
 /**
  * Title callback: Returns a title for aggregatory category pages.
  *
- * Path: aggregator/categories/%aggregator_category
- *
  * @param $category
  *   An aggregator category.
  *
@@ -282,8 +280,6 @@ function _aggregator_category_title($category) {
 
 /**
  * Access callback: Determines whether there are any aggregator categories.
- *
- * Path: aggregator/categories
  *
  * @return
  *   TRUE if there is at least one category and the user has access to them;
@@ -537,6 +533,7 @@ function aggregator_save_feed($edit) {
         'url' => $edit['url'],
         'refresh' => $edit['refresh'],
         'block' => $edit['block'],
+        'link' => '',
         'description' => '',
         'image' => '',
       ))
@@ -573,15 +570,13 @@ function aggregator_remove($feed) {
   // Call hook_aggregator_remove() on all modules.
   module_invoke_all('aggregator_remove', $feed);
   // Reset feed.
-  db_merge('aggregator_feed')
-    ->key(array('fid' => $feed->fid))
+  db_update('aggregator_feed')
+    ->condition('fid', $feed->fid)
     ->fields(array(
       'checked' => 0,
       'hash' => '',
       'etag' => '',
       'modified' => 0,
-      'description' => $feed->description,
-      'image' => $feed->image,
     ))
     ->execute();
 }

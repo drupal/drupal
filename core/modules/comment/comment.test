@@ -451,7 +451,7 @@ class CommentInterfaceTest extends CommentHelperCase {
       'status' => COMMENT_PUBLISHED,
       'subject' => $this->randomName(),
       'hostname' => ip_address(),
-      'language' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NONE,
       'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
     ));
     comment_save($comment);
@@ -778,7 +778,7 @@ class CommentInterfaceTest extends CommentHelperCase {
           'status' => COMMENT_PUBLISHED,
           'subject' => $this->randomName(),
           'hostname' => ip_address(),
-          'language' => LANGUAGE_NONE,
+          'langcode' => LANGUAGE_NONE,
           'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
         ));
         comment_save($comment);
@@ -920,6 +920,17 @@ class CommentInterfaceTest extends CommentHelperCase {
         }
         else {
           $this->assertLink('Add new comment');
+
+          // Verify that the "Add new comment" link points to the correct URL
+          // based on the comment form location configuration.
+          if ($info['form'] == COMMENT_FORM_SEPARATE_PAGE) {
+            $this->assertLinkByHref("comment/reply/$nid#comment-form", 0, 'Comment form link destination is on a separate page.');
+            $this->assertNoLinkByHref("node/$nid#comment-form");
+          }
+          else {
+            $this->assertLinkByHref("node/$nid#comment-form", 0, 'Comment form link destination is on node.');
+            $this->assertNoLinkByHref("comment/reply/$nid#comment-form");
+          }
         }
 
         // Also verify that the comment form appears according to the configured
@@ -964,8 +975,18 @@ class CommentPreviewTest extends CommentHelperCase {
     $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
     $this->drupalLogout();
 
-    // As web user, fill in node creation form and preview node.
+    // Login as web user and add a signature and a user picture.
     $this->drupalLogin($this->web_user);
+    variable_set('user_signatures', 1);
+    variable_set('user_pictures', 1);
+    $test_signature = $this->randomName();
+    $edit['signature[value]'] = '<a href="http://example.com/">' . $test_signature. '</a>';
+    $edit['signature[format]'] = 'filtered_html';
+    $image = current($this->drupalGetTestFiles('image'));
+    $edit['files[picture_upload]'] = drupal_realpath($image->uri);
+    $this->drupalPost('user/' . $this->web_user->uid . '/edit', $edit, t('Save'));
+
+    // As the web user, fill in the comment form and preview the comment.
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
@@ -979,6 +1000,12 @@ class CommentPreviewTest extends CommentHelperCase {
     // Check that the title and body fields are displayed with the correct values.
     $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
     $this->assertFieldByName('comment_body[' . $langcode . '][0][value]', $edit['comment_body[' . $langcode . '][0][value]'], t('Comment field displayed.'));
+
+    // Check that the signature is displaying with the correct text format.
+    $this->assertLink($test_signature);
+
+    // Check that the user picture is displayed.
+    $this->assertFieldByXPath("//div[contains(@class, 'comment-preview')]//div[contains(@class, 'user-picture')]//img", NULL, 'User picture displayed.');
   }
 
   /**
@@ -1839,10 +1866,10 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
    * Creates a comment, then tests the tokens generated from it.
    */
   function testCommentTokenReplacement() {
-    global $language;
+    global $language_interface;
     $url_options = array(
       'absolute' => TRUE,
-      'language' => $language,
+      'language' => $language_interface,
     );
 
     $this->drupalLogin($this->admin_user);
@@ -1875,8 +1902,8 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:body]'] = _text_sanitize($instance, LANGUAGE_NONE, $comment->comment_body[LANGUAGE_NONE][0], 'value');
     $tests['[comment:url]'] = url('comment/' . $comment->cid, $url_options + array('fragment' => 'comment-' . $comment->cid));
     $tests['[comment:edit-url]'] = url('comment/' . $comment->cid . '/edit', $url_options);
-    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created, 2, $language->langcode);
-    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed, 2, $language->langcode);
+    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created, 2, $language_interface->langcode);
+    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed, 2, $language_interface->langcode);
     $tests['[comment:parent:cid]'] = $comment->pid;
     $tests['[comment:parent:title]'] = check_plain($parent_comment->subject);
     $tests['[comment:node:nid]'] = $comment->nid;
@@ -1888,7 +1915,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('comment' => $comment), array('language' => $language));
+      $output = token_replace($input, array('comment' => $comment), array('language' => $language_interface));
       $this->assertEqual($output, $expected, t('Sanitized comment token %token replaced.', array('%token' => $input)));
     }
 
@@ -1904,7 +1931,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:author:name]'] = $this->admin_user->name;
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('comment' => $comment), array('language' => $language, 'sanitize' => FALSE));
+      $output = token_replace($input, array('comment' => $comment), array('language' => $language_interface, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, t('Unsanitized comment token %token replaced.', array('%token' => $input)));
     }
 
@@ -1917,7 +1944,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[node:comment-count-new]'] = 2;
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('language' => $language));
+      $output = token_replace($input, array('node' => $node), array('language' => $language_interface));
       $this->assertEqual($output, $expected, t('Node comment token %token replaced.', array('%token' => $input)));
     }
   }
@@ -2094,5 +2121,100 @@ class CommentFieldsTest extends CommentHelperCase {
     $this->drupalLogin($this->web_user);
     $edit = array('comment_body[und][0][value]' => $this->randomName(8));
     $this->drupalPost('node/' . $this->node->nid, $edit, t('Save'));
+  }
+}
+
+/**
+ * Tests comment threading.
+ */
+class CommentThreadingTestCase extends CommentHelperCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Comment Threading',
+      'description' => 'Test to make sure the comment number increments properly.',
+      'group' => 'Comment',
+    );
+  }
+
+  /**
+   * Tests the comment threading.
+   */
+  function testCommentThreading() {
+    $langcode = LANGUAGE_NONE;
+    // Set comments to have a subject with preview disabled.
+    $this->drupalLogin($this->admin_user);
+    $this->setCommentPreview(DRUPAL_DISABLED);
+    $this->setCommentForm(TRUE);
+    $this->setCommentSubject(TRUE);
+    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
+    $this->drupalLogout();
+
+    // Create a node.
+    $this->drupalLogin($this->web_user);
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
+
+    // Post comment #1.
+    $this->drupalLogin($this->web_user);
+    $subject_text = $this->randomName();
+    $comment_text = $this->randomName();
+    $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
+    $comment_loaded = comment_load($comment->id);
+    $this->assertTrue($this->commentExists($comment), 'Comment #1. Comment found.');
+    $this->assertEqual($comment_loaded->thread, '01/');
+
+    // Reply to comment #1 creating comment #2.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $reply = $this->postComment(NULL, $this->randomName(), '', TRUE);
+    $reply_loaded = comment_load($reply->id);
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Comment #2. Reply found.');
+    $this->assertEqual($reply_loaded->thread, '01.00/');
+
+    // Reply to comment #2 creating comment #3.
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $reply->id);
+    $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $reply_loaded = comment_load($reply->id);
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Comment #3. Second reply found.');
+    $this->assertEqual($reply_loaded->thread, '01.00.00/');
+
+    // Reply to comment #1 creating comment #4.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $reply = $this->postComment(NULL, $this->randomName(), '', TRUE);
+    $reply_loaded = comment_load($reply->id);
+    $this->assertTrue($this->commentExists($comment), 'Comment #4. Third reply found.');
+    $this->assertEqual($reply_loaded->thread, '01.01/');
+
+    // Post comment #2 overall comment #5.
+    $this->drupalLogin($this->web_user);
+    $subject_text = $this->randomName();
+    $comment_text = $this->randomName();
+    $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
+    $comment_loaded = comment_load($comment->id);
+    $this->assertTrue($this->commentExists($comment), 'Comment #5. Second comment found.');
+    $this->assertEqual($comment_loaded->thread, '02/');
+
+    // Reply to comment #5 creating comment #6.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $reply = $this->postComment(NULL, $this->randomName(), '', TRUE);
+    $reply_loaded = comment_load($reply->id);
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Comment #6. Reply found.');
+    $this->assertEqual($reply_loaded->thread, '02.00/');
+
+    // Reply to comment #6 creating comment #7.
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $reply->id);
+    $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
+    $reply_loaded = comment_load($reply->id);
+    $this->assertTrue($this->commentExists($reply, TRUE), 'Comment #7. Second reply found.');
+    $this->assertEqual($reply_loaded->thread, '02.00.00/');
+
+    // Reply to comment #5 creating comment #8.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $reply = $this->postComment(NULL, $this->randomName(), '', TRUE);
+    $reply_loaded = comment_load($reply->id);
+    $this->assertTrue($this->commentExists($comment), 'Comment #8. Third reply found.');
+    $this->assertEqual($reply_loaded->thread, '02.01/');
   }
 }

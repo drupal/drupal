@@ -4,13 +4,16 @@
  * Implements hook_theme().
  */
 function theme_test_theme($existing, $type, $theme, $path) {
+  $items['theme_test'] = array(
+    'file' => 'theme_test.inc',
+    'variables' => array('foo' => ''),
+  );
   $items['theme_test_template_test'] = array(
     'template' => 'theme_test.template_test',
   );
   $items['theme_test_template_test_2'] = array(
     'template' => 'theme_test.template_test',
   );
-
   return $items;
 }
 
@@ -129,16 +132,7 @@ function _theme_test_alter() {
  * Page callback, calls a theme hook suggestion.
  */
 function _theme_test_suggestion() {
-  return theme(array('breadcrumb__suggestion', 'breadcrumb'), array());
-}
-
-/**
- * Implements hook_preprocess_breadcrumb().
- *
- * Set a variable that can later be tested to see if this function ran.
- */
-function theme_test_preprocess_breadcrumb(&$variables) {
-  $variables['theme_test_preprocess_breadcrumb'] = 1;
+  return theme(array('theme_test__suggestion', 'theme_test'), array());
 }
 
 /**

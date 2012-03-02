@@ -32,7 +32,7 @@ class BookTestCase extends DrupalWebTestCase {
     // Create users.
     $this->book_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
     $this->web_user = $this->drupalCreateUser(array('access printer-friendly version', 'node test view'));
-    $this->admin_user = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books', 'administer blocks', 'administer permissions'));
+    $this->admin_user = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'node test view'));
   }
 
   /**
@@ -332,4 +332,30 @@ class BookTestCase extends DrupalWebTestCase {
      $this->drupalGet('node/' . $this->book->nid);
      $this->assertText($block_title, t('Book navigation block is displayed to anonymous users.'));
    }
+
+  /**
+   * Tests the access for deleting top-level book nodes.
+   */
+   function testBookDelete() {
+     $nodes = $this->createBook();
+     $this->drupalLogin($this->admin_user);
+     $edit = array();
+
+     // Test access to delete top-level and child book nodes.
+     $this->drupalGet('node/' . $this->book->nid . '/outline/remove');
+     $this->assertResponse('403', t('Deleting top-level book node properly forbidden.'));
+     $this->drupalPost('node/' . $nodes[4]->nid . '/outline/remove', $edit, t('Remove'));
+     $node4 = node_load($nodes[4]->nid, NULL, TRUE);
+     $this->assertTrue(empty($node4->book), t('Deleting child book node properly allowed.'));
+
+     // Delete all child book nodes and retest top-level node deletion.
+     foreach ($nodes as $node) {
+       $nids[] = $node->nid;
+     }
+     node_delete_multiple($nids);
+     $this->drupalPost('node/' . $this->book->nid . '/outline/remove', $edit, t('Remove'));
+     $node = node_load($this->book->nid, NULL, TRUE);
+     $this->assertTrue(empty($node->book), t('Deleting childless top-level book node properly allowed.'));
+   }
 }
+

@@ -18,12 +18,14 @@ function node_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
+      // Defaults to NULL in order to avoid a brief period of potential
+      // deadlocks on the index.
       'vid' => array(
         'description' => 'The current {node_revision}.vid version identifier.',
         'type' => 'int',
         'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
+        'not null' => FALSE,
+        'default' => NULL,
       ),
       'type' => array(
         'description' => 'The {node_type}.type of this node.',
@@ -32,7 +34,7 @@ function node_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'language' => array(
+      'langcode' => array(
         'description' => 'The {language}.langcode of this node.',
         'type' => 'varchar',
         'length' => 12,
@@ -456,6 +458,7 @@ function node_uninstall() {
         ->condition('name', 'node_options_' . $type)
         ->condition('name', 'node_submitted_' . $type)
         ->condition('name', 'node_permissions_' . $type)
+        ->condition('name', 'node_type_language_' . $type)
       )
       ->execute();
   }
@@ -522,6 +525,36 @@ function node_update_8000() {
   if (!isset($front_page)) {
     variable_set('site_frontpage', 'node');
   }
+}
+
+/**
+ * Rename node type language variable names.
+ *
+ * @see http://drupal.org/node/540294
+ */
+function node_update_8001() {
+  $types = db_query('SELECT type FROM {node_type}')->fetchCol();
+  foreach ($types as $type) {
+    $language = variable_get('language_content_type_' . $type);
+    if (isset($language)) {
+      variable_set('node_type_language_' . $type, $language);
+    }
+    variable_del('language_content_type_' . $type);
+  }
+}
+
+/**
+ * Rename node.language field to node.langcode.
+ */
+function node_update_8002() {
+  $spec = array(
+    'description' => 'The {language}.langcode of this node.',
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+  );
+  db_change_field('node', 'language', 'langcode', $spec);
 }
 
 /**

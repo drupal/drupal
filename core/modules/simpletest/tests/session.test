@@ -455,7 +455,7 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
       }
     }
 
-    // Test that session data saved before login is not available using the 
+    // Test that session data saved before login is not available using the
     // pre-login anonymous cookie.
     $this->cookies = array();
     $this->drupalGet('session-test/get', array('Cookie: ' . $anonymous_cookie));
@@ -471,15 +471,10 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
     $this->drupalGet('user');
     $form = $this->xpath('//form[@id="user-login"]');
     $form[0]['action'] = $this->httpsUrl('user');
-    $this->drupalPost(NULL, $edit, t('Log in'), array(), array('Cookie: ' . $secure_session_name . '=' . $this->cookies[$secure_session_name]['value']));
-
-    // Get the insecure session cookie set by the secure login POST request.
-    $headers = $this->drupalGetHeaders(TRUE);
-    strtok($headers[0]['set-cookie'], ';=');
-    $session_id = strtok(';=');
+    $this->drupalPost(NULL, $edit, t('Log in'));
 
     // Test that the user is also authenticated on the insecure site.
-    $this->drupalGet("user/{$user->uid}/edit", array(), array('Cookie: ' . $insecure_session_name . '=' . $session_id));
+    $this->drupalGet("user/{$user->uid}/edit");
     $this->assertResponse(200);
   }
 

@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Database\Database;
+
 /**
  * @file
  * Install, update and uninstall functions for the system module.
@@ -180,7 +182,7 @@ function system_requirements($phase) {
   }
   else {
     // Database information.
-    $class = 'DatabaseTasks_' . Database::getConnection()->driver();
+    $class = Database::getConnection()->getDriverClass('Install\\Tasks');
     $tasks = new $class();
     $requirements['database_system'] = array(
       'title' => $t('Database system'),
@@ -292,8 +294,13 @@ function system_requirements($phase) {
   }
 
   // Test files directories.
+  // If we are installing Drupal, the settings.php file might not exist yet in
+  // the intended conf_path() directory, so don't require it. The conf_path()
+  // cache must also be reset in this case.
+  $require_settings = ($phase != 'install');
+  $reset_cache = !$require_settings;
   $directories = array(
-    variable_get('file_public_path', conf_path() . '/files'),
+    variable_get('file_public_path', conf_path($require_settings, $reset_cache) . '/files'),
     // By default no private files directory is configured. For private files
     // to be secure the admin needs to provide a path outside the webroot.
     variable_get('file_private_path', FALSE),
@@ -456,7 +463,7 @@ function system_requirements($phase) {
       $requirements['update status'] = array(
         'value' => $t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => $t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the update manager module from the <a href="@module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href="@update">Update status handbook page</a>.', array('@update' => 'http://drupal.org/handbook/modules/update', '@module' => url('admin/modules'))),
+        'description' => $t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the Update Manager module from the <a href="@module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href="@update">Update status handbook page</a>.', array('@update' => 'http://drupal.org/handbook/modules/update', '@module' => url('admin/modules'))),
       );
     }
     else {

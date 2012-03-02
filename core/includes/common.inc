@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Database\Database;
+
 /**
  * @file
  * Common functions that many Drupal modules will need to reference.
@@ -1723,7 +1725,8 @@ function format_plural($count, $singular, $plural, array $args = array(), array 
 
   // Get the plural index through the gettext formula.
   $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, isset($options['langcode']) ? $options['langcode'] : NULL) : -1;
-  // Backwards compatibility.
+  // If the index cannot be computed, use the plural as a fallback (which
+  // allows for most flexiblity with the replaceable @count value).
   if ($index < 0) {
     return t($plural, $args, $options);
   }
@@ -1891,9 +1894,9 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   }
 
   // Use the default langcode if none is set.
-  global $language;
+  global $language_interface;
   if (empty($langcode)) {
-    $langcode = isset($language->langcode) ? $language->langcode : LANGUAGE_SYSTEM;
+    $langcode = isset($language_interface->langcode) ? $language_interface->langcode : LANGUAGE_SYSTEM;
   }
 
   switch ($type) {
@@ -2484,8 +2487,8 @@ function drupal_deliver_html_page($page_callback_result) {
   }
 
   // Send appropriate HTTP-Header for browsers and search engines.
-  global $language;
-  drupal_add_http_header('Content-Language', $language->langcode);
+  global $language_interface;
+  drupal_add_http_header('Content-Language', $language_interface->langcode);
 
   // Menu status constants are integers; page content is a string or array.
   if (is_int($page_callback_result)) {
@@ -2954,6 +2957,18 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
   // Sort CSS items, so that they appear in the correct order.
   uasort($css, 'drupal_sort_css_js');
 
+  // Provide the page with information about the individual CSS files used,
+  // information not otherwise available when CSS aggregation is enabled. The
+  // setting is attached later in this function, but is set here, so that CSS
+  // files removed below are still considered "used" and prevented from being
+  // added in a later AJAX request.
+  // Skip if no files were added to the page or jQuery.extend() will overwrite
+  // the Drupal.settings.ajaxPageState.css object with an empty array.
+  if (!empty($css)) {
+    // Cast the array to an object to be on the safe side even if not empty.
+    $setting['ajaxPageState']['css'] = (object) array_fill_keys(array_keys($css), 1);
+  }
+
   // Remove the overridden CSS files. Later CSS files override former ones.
   $previous_item = array();
   foreach ($css as $key => $item) {
@@ -2973,14 +2988,7 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
     '#type' => 'styles',
     '#items' => $css,
   );
-
-  // Provide the page with information about the individual CSS files used,
-  // information not otherwise available when CSS aggregation is enabled.
-  // Skip if no files were added to the page or jQuery.extend() will overwrite
-  // the Drupal.settings.ajaxPageState.css object with an empty array.
-  // Cast the array to an object to be on the safe side even if not empty.
-  if (!empty($css)) {
-    $setting['ajaxPageState']['css'] = (object) array_fill_keys(array_keys($css), 1);
+  if (!empty($setting)) {
     $styles['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
   }
 
@@ -6179,7 +6187,7 @@ function drupal_render_cid_parts($granularity = NULL) {
   // If Locale is enabled but we have only one language we do not need it as cid
   // part.
   if (language_multilingual()) {
-    foreach (language_types_configurable() as $language_type) {
+    foreach (language_types_get_configurable() as $language_type) {
       $cid_parts[] = $GLOBALS[$language_type]->langcode;
     }
   }

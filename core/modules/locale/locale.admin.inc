@@ -6,21 +6,21 @@
  */
 
 /**
- * Setting for language negotiation options
+ * Builds the configuration form for language negotiation.
  */
-function locale_languages_configure_form() {
+function language_negotiation_configure_form() {
   include_once DRUPAL_ROOT . '/core/includes/language.inc';
 
   $form = array(
-    '#submit' => array('locale_languages_configure_form_submit'),
-    '#theme' => 'locale_languages_configure_form',
-    '#language_types' => language_types_configurable(FALSE),
+    '#submit' => array('language_negotiation_configure_form_submit'),
+    '#theme' => 'language_negotiation_configure_form',
+    '#language_types' => language_types_get_configurable(FALSE),
     '#language_types_info' => language_types_info(),
     '#language_providers' => language_negotiation_info(),
   );
 
   foreach ($form['#language_types'] as $type) {
-    _locale_languages_configure_form_language_table($form, $type);
+    language_negotiation_configure_form_table($form, $type);
   }
 
   $form['actions'] = array('#type' => 'actions');
@@ -35,7 +35,7 @@ function locale_languages_configure_form() {
 /**
  * Helper function to build a language provider table.
  */
-function _locale_languages_configure_form_language_table(&$form, $type) {
+function language_negotiation_configure_form_table(&$form, $type) {
   $info = $form['#language_types_info'][$type];
 
   $table_form = array(
@@ -117,7 +117,7 @@ function _locale_languages_configure_form_language_table(&$form, $type) {
 }
 
 /**
- * Returns HTML for a language configuration form.
+ * Returns HTML for the language negotiation configuration form.
  *
  * @param $variables
  *   An associative array containing:
@@ -125,7 +125,7 @@ function _locale_languages_configure_form_language_table(&$form, $type) {
  *
  * @ingroup themeable
  */
-function theme_locale_languages_configure_form($variables) {
+function theme_language_negotiation_configure_form($variables) {
   $form = $variables['form'];
   $output = '';
 
@@ -186,7 +186,7 @@ function theme_locale_languages_configure_form($variables) {
 /**
  * Submit handler for language negotiation settings.
  */
-function locale_languages_configure_form_submit($form, &$form_state) {
+function language_negotiation_configure_form_submit($form, &$form_state) {
   $configurable_types = $form['#language_types'];
 
   foreach ($configurable_types as $type) {
@@ -211,14 +211,14 @@ function locale_languages_configure_form_submit($form, &$form_state) {
   // configuration.
   language_types_set();
 
-  $form_state['redirect'] = 'admin/config/regional/language/configure';
+  $form_state['redirect'] = 'admin/config/regional/language/detection';
   drupal_set_message(t('Language negotiation configuration saved.'));
 }
 
 /**
- * The URL language provider configuration form.
+ * Builds the URL language provider configuration form.
  */
-function locale_language_providers_url_form($form, &$form_state) {
+function language_negotiation_configure_url_form($form, &$form_state) {
   $form['locale_language_negotiation_url_part'] = array(
     '#title' => t('Part of the URL that determines language'),
     '#type' => 'radios',
@@ -276,7 +276,7 @@ function locale_language_providers_url_form($form, &$form_state) {
     );
   }
 
-  $form_state['redirect'] = 'admin/config/regional/language/configure';
+  $form_state['redirect'] = 'admin/config/regional/language/detection';
 
   $form['actions']['#type'] = 'actions';
   $form['actions']['submit'] = array(
@@ -292,7 +292,7 @@ function locale_language_providers_url_form($form, &$form_state) {
  * Validate that the prefixes and domains are unique, and make sure that
  * the prefix and domain are only blank for the default.
  */
-function locale_language_providers_url_form_validate($form, &$form_state) {
+function language_negotiation_configure_url_form_validate($form, &$form_state) {
   // Get the enabled languages only.
   $languages = language_list(TRUE);
   $default = language_default();
@@ -335,7 +335,7 @@ function locale_language_providers_url_form_validate($form, &$form_state) {
 /**
  * Save URL negotiation provider settings.
  */
-function locale_language_providers_url_form_submit($form, &$form_state) {
+function language_negotiation_configure_url_form_submit($form, &$form_state) {
 
   // Save selected format (prefix or domain).
   variable_set('locale_language_negotiation_url_part', $form_state['values']['locale_language_negotiation_url_part']);
@@ -350,7 +350,7 @@ function locale_language_providers_url_form_submit($form, &$form_state) {
 /**
  * The URL language provider configuration form.
  */
-function locale_language_providers_session_form($form, &$form_state) {
+function language_negotiation_configure_session_form($form, &$form_state) {
   $form['locale_language_negotiation_session_param'] = array(
     '#title' => t('Request/session parameter'),
     '#type' => 'textfield',
@@ -358,7 +358,7 @@ function locale_language_providers_session_form($form, &$form_state) {
     '#description' => t('Name of the request/session parameter used to determine the desired language.'),
   );
 
-  $form_state['redirect'] = 'admin/config/regional/language/configure';
+  $form_state['redirect'] = 'admin/config/regional/language/detection';
 
   return system_settings_form($form);
 }

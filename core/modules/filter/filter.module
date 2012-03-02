@@ -390,12 +390,12 @@ function filter_modules_disabled($modules) {
  * @see filter_formats_reset()
  */
 function filter_formats($account = NULL) {
-  global $language;
+  global $language_interface;
   $formats = &drupal_static(__FUNCTION__, array());
 
   // All available formats are cached for performance.
   if (!isset($formats['all'])) {
-    if ($cache = cache()->get("filter_formats:{$language->langcode}")) {
+    if ($cache = cache()->get("filter_formats:{$language_interface->langcode}")) {
       $formats['all'] = $cache->data;
     }
     else {
@@ -407,7 +407,7 @@ function filter_formats($account = NULL) {
         ->execute()
         ->fetchAllAssoc('format');
 
-      cache()->set("filter_formats:{$language->langcode}", $formats['all']);
+      cache()->set("filter_formats:{$language_interface->langcode}", $formats['all']);
     }
   }
 
@@ -1128,7 +1128,7 @@ function filter_dom_serialize_escape_cdata_element($dom_document, $dom_element, 
  * @ingroup themeable
  */
 function theme_filter_tips_more_info() {
-  return '<p>' . l(t('More information about text formats'), 'filter/tips') . '</p>';
+  return '<p>' . l(t('More information about text formats'), 'filter/tips', array('attributes' => array('target' => '_blank'))) . '</p>';
 }
 
 /**

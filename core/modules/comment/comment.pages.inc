@@ -102,8 +102,6 @@ function comment_reply($node, $pid = NULL) {
 /**
  * Page callback: Publishes the specified comment.
  *
- * Path: comment/%/approve
- *
  * @param $cid
  *   A comment identifier.
  *

@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Database\Database;
+
 /**
  * @file
  * Tests for system.module.
@@ -480,7 +482,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $edit['modules[Core][forum][enable]'] = 'forum';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), FALSE);
-    $this->assertText(t('You must enable the Poll, PHP filter modules to install Forum.'), t('Dependency chain created.'));
+    $this->assertText(t('You must enable the Poll, PHP Filter modules to install Forum.'), t('Dependency chain created.'));
     $edit['modules[Core][poll][enable]'] = 'poll';
     $edit['modules[Core][php][enable]'] = 'php';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
@@ -1587,6 +1589,8 @@ class SystemMainContentFallback extends DrupalWebTestCase {
  * Tests for the theme interface functionality.
  */
 class SystemThemeFunctionalTest extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
   public static function getInfo() {
     return array(
       'name' => 'Theme interface functionality',
@@ -1596,7 +1600,9 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp();
+    parent::setUp(array('node', 'block'));
+
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer themes', 'bypass node access', 'administer blocks'));
     $this->drupalLogin($this->admin_user);
@@ -1609,26 +1615,127 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
   function testThemeSettings() {
     // Specify a filesystem path to be used for the logo.
     $file = current($this->drupalGetTestFiles('image'));
-    $fullpath = drupal_realpath($file->uri);
-    $edit = array(
-      'default_logo' => FALSE,
-      'logo_path' => $fullpath,
+    $file_relative = strtr($file->uri, array('public:/' => variable_get('file_public_path', conf_path() . '/files')));
+    $default_theme_path = 'core/themes/stark';
+
+    $supported_paths = array(
+      // Raw stream wrapper URI.
+      $file->uri => array(
+        'form' => file_uri_target($file->uri),
+        'src' => file_create_url($file->uri),
+      ),
+      // Relative path within the public filesystem.
+      file_uri_target($file->uri) => array(
+        'form' => file_uri_target($file->uri),
+        'src' => file_create_url($file->uri),
+      ),
+      // Relative path to a public file.
+      $file_relative => array(
+        'form' => $file_relative,
+        'src' => file_create_url($file->uri),
+      ),
+      // Relative path to an arbitrary file.
+      'core/misc/druplicon.png' => array(
+        'form' => 'core/misc/druplicon.png',
+        'src' => $GLOBALS['base_url'] . '/' . 'core/misc/druplicon.png',
+      ),
+      // Relative path to a file in a theme.
+      $default_theme_path . '/logo.png' => array(
+        'form' => $default_theme_path . '/logo.png',
+        'src' => $GLOBALS['base_url'] . '/' . $default_theme_path . '/logo.png',
+      ),
     );
-    $this->drupalPost('admin/appearance/settings', $edit, t('Save configuration'));
-    $this->drupalGet('node');
-    $this->assertRaw($fullpath, t('Logo path successfully changed.'));
+    foreach ($supported_paths as $input => $expected) {
+      $edit = array(
+        'default_logo' => FALSE,
+        'logo_path' => $input,
+      );
+      $this->drupalPost('admin/appearance/settings', $edit, t('Save configuration'));
+      $this->assertNoText('The custom logo path is invalid.');
+      $this->assertFieldByName('logo_path', $expected['form']);
+
+      // Verify logo path examples.
+      $elements = $this->xpath('//div[contains(@class, :item)]/div[@class=:description]/code', array(
+        ':item' => 'form-item-logo-path',
+        ':description' => 'description',
+      ));
+      // Expected default values (if all else fails).
+      $implicit_public_file = 'logo.png';
+      $explicit_file = 'public://logo.png';
+      $local_file = $default_theme_path . '/logo.png';
+      // Adjust for fully qualified stream wrapper URI in public filesystem.
+      if (file_uri_scheme($input) == 'public') {
+        $implicit_public_file = file_uri_target($input);
+        $explicit_file = $input;
+        $local_file = strtr($input, array('public:/' => variable_get('file_public_path', conf_path() . '/files')));
+      }
+      // Adjust for fully qualified stream wrapper URI elsewhere.
+      elseif (file_uri_scheme($input) !== FALSE) {
+        $explicit_file = $input;
+      }
+      // Adjust for relative path within public filesystem.
+      elseif ($input == file_uri_target($file->uri)) {
+        $implicit_public_file = $input;
+        $explicit_file = 'public://' . $input;
+        $local_file = variable_get('file_public_path', conf_path() . '/files') . '/' . $input;
+      }
+      $this->assertEqual((string) $elements[0], $implicit_public_file);
+      $this->assertEqual((string) $elements[1], $explicit_file);
+      $this->assertEqual((string) $elements[2], $local_file);
+
+      // Verify the actual 'src' attribute of the logo being output.
+      $this->drupalGet('');
+      $elements = $this->xpath('//*[@id=:id]/img', array(':id' => 'logo'));
+      $this->assertEqual((string) $elements[0]['src'], $expected['src']);
+    }
+
+    $unsupported_paths = array(
+      // Stream wrapper URI to non-existing file.
+      'public://whatever.png',
+      'private://whatever.png',
+      'temporary://whatever.png',
+      // Bogus stream wrapper URIs.
+      'public:/whatever.png',
+      '://whatever.png',
+      ':whatever.png',
+      'public://',
+      // Relative path within the public filesystem to non-existing file.
+      'whatever.png',
+      // Relative path to non-existing file in public filesystem.
+      variable_get('file_public_path', conf_path() . '/files') . '/whatever.png',
+      // Semi-absolute path to non-existing file in public filesystem.
+      '/' . variable_get('file_public_path', conf_path() . '/files') . '/whatever.png',
+      // Relative path to arbitrary non-existing file.
+      'core/misc/whatever.png',
+      // Semi-absolute path to arbitrary non-existing file.
+      '/core/misc/whatever.png',
+      // Absolute paths to any local file (even if it exists).
+      drupal_realpath($file->uri),
+    );
+    $this->drupalGet('admin/appearance/settings');
+    foreach ($unsupported_paths as $path) {
+      $edit = array(
+        'default_logo' => FALSE,
+        'logo_path' => $path,
+      );
+      $this->drupalPost(NULL, $edit, t('Save configuration'));
+      $this->assertText('The custom logo path is invalid.');
+    }
 
     // Upload a file to use for the logo.
-    $file = current($this->drupalGetTestFiles('image'));
     $edit = array(
       'default_logo' => FALSE,
       'logo_path' => '',
       'files[logo_upload]' => drupal_realpath($file->uri),
     );
-    $options = array();
-    $this->drupalPost('admin/appearance/settings', $edit, t('Save configuration'), $options);
-    $this->drupalGet('node');
-    $this->assertRaw($file->name, t('Logo file successfully uploaded.'));
+    $this->drupalPost('admin/appearance/settings', $edit, t('Save configuration'));
+
+    $fields = $this->xpath($this->constructFieldXpath('name', 'logo_path'));
+    $uploaded_filename = 'public://' . $fields[0]['value'];
+
+    $this->drupalGet('');
+    $elements = $this->xpath('//*[@id=:id]/img', array(':id' => 'logo'));
+    $this->assertEqual($elements[0]['src'], file_create_url($uploaded_filename));
   }
 
   /**
@@ -1687,20 +1794,20 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
    * Test switching the default theme.
    */
   function testSwitchDefaultTheme() {
-    // Enable "stark" and set it as the default theme.
-    theme_enable(array('stark'));
+    // Enable Bartik and set it as the default theme.
+    theme_enable(array('bartik'));
     $this->drupalGet('admin/appearance');
-    $this->clickLink(t('Set default'), 1);
-    $this->assertTrue(variable_get('theme_default', '') == 'stark', t('Site default theme switched successfully.'));
+    $this->clickLink(t('Set default'));
+    $this->assertEqual(variable_get('theme_default', ''), 'bartik');
 
     // Test the default theme on the secondary links (blocks admin page).
     $this->drupalGet('admin/structure/block');
-    $this->assertText('Stark(' . t('active tab') . ')', t('Default local task on blocks admin page is the default theme.'));
-    // Switch back to Bartik and test again to test that the menu cache is cleared.
+    $this->assertText('Bartik(' . t('active tab') . ')', t('Default local task on blocks admin page is the default theme.'));
+    // Switch back to Stark and test again to test that the menu cache is cleared.
     $this->drupalGet('admin/appearance');
     $this->clickLink(t('Set default'), 0);
     $this->drupalGet('admin/structure/block');
-    $this->assertText('Bartik(' . t('active tab') . ')', t('Default local task on blocks admin page has changed.'));
+    $this->assertText('Stark(' . t('active tab') . ')', t('Default local task on blocks admin page has changed.'));
   }
 }
 
@@ -1816,7 +1923,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $account = $this->drupalCreateUser();
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
     $node->title = '<blink>Blinking Text</blink>';
-    global $user, $language;
+    global $user, $language_interface;
 
     $source  = '[node:title]';         // Title of the node we passed in
     $source .= '[node:author:name]';   // Node author's name
@@ -1828,18 +1935,18 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     $target  = check_plain($node->title);
     $target .= check_plain($account->name);
-    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language->langcode);
+    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language_interface->langcode);
     $target .= check_plain($user->name);
-    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language->langcode);
+    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language_interface->langcode);
 
     // Test that the clear parameter cleans out non-existent tokens.
-    $result = token_replace($source, array('node' => $node), array('language' => $language, 'clear' => TRUE));
+    $result = token_replace($source, array('node' => $node), array('language' => $language_interface, 'clear' => TRUE));
     $result = $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens cleared out.');
 
     // Test without using the clear parameter (non-existent token untouched).
     $target .= '[user:name]';
     $target .= '[bogus:token]';
-    $result = token_replace($source, array('node' => $node), array('language' => $language));
+    $result = token_replace($source, array('node' => $node), array('language' => $language_interface));
     $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens ignored.');
 
     // Check that the results of token_generate are sanitized properly. This does NOT
@@ -1861,7 +1968,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
    * Test whether token-replacement works in various contexts.
    */
   function testSystemTokenRecognition() {
-    global $language;
+    global $language_interface;
 
     // Generate prefixes and suffixes for the token context.
     $tests = array(
@@ -1881,7 +1988,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     foreach ($tests as $test) {
       $input = $test['prefix'] . '[site:name]' . $test['suffix'];
       $expected = $test['prefix'] . 'Drupal' . $test['suffix'];
-      $output = token_replace($input, array(), array('language' => $language));
+      $output = token_replace($input, array(), array('language' => $language_interface));
       $this->assertTrue($output == $expected, t('Token recognized in string %string', array('%string' => $input)));
     }
   }
@@ -1890,10 +1997,10 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
    * Tests the generation of all system site information tokens.
    */
   function testSystemSiteTokenReplacement() {
-    global $language;
+    global $language_interface;
     $url_options = array(
       'absolute' => TRUE,
-      'language' => $language,
+      'language' => $language_interface,
     );
 
     // Set a few site variables.
@@ -1913,7 +2020,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array(), array('language' => $language));
+      $output = token_replace($input, array(), array('language' => $language_interface));
       $this->assertEqual($output, $expected, t('Sanitized system site information token %token replaced.', array('%token' => $input)));
     }
 
@@ -1922,7 +2029,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[site:slogan]'] = variable_get('site_slogan', '');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array(), array('language' => $language, 'sanitize' => FALSE));
+      $output = token_replace($input, array(), array('language' => $language_interface, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, t('Unsanitized system site information token %token replaced.', array('%token' => $input)));
     }
   }
@@ -1931,25 +2038,25 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
    * Tests the generation of all system date tokens.
    */
   function testSystemDateTokenReplacement() {
-    global $language;
+    global $language_interface;
 
     // Set time to one hour before request.
     $date = REQUEST_TIME - 3600;
 
     // Generate and test tokens.
     $tests = array();
-    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language->langcode);
-    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language->langcode);
-    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language->langcode);
-    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language->langcode);
-    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language->langcode);
+    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language_interface->langcode);
+    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language_interface->langcode);
+    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language_interface->langcode);
+    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language_interface->langcode);
+    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language_interface->langcode);
     $tests['[date:raw]'] = filter_xss($date);
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('date' => $date), array('language' => $language));
+      $output = token_replace($input, array('date' => $date), array('language' => $language_interface));
       $this->assertEqual($output, $expected, t('Date token %token replaced.', array('%token' => $input)));
     }
   }
@@ -2446,8 +2553,8 @@ class SystemAdminTestCase extends DrupalWebTestCase {
       $this->assertLinkByHref('admin/config/regional/settings');
       $this->assertLinkByHref('admin/config/regional/date-time');
       $this->assertLinkByHref('admin/config/regional/language');
-      $this->assertNoLinkByHref('admin/config/regional/language/configure/session');
-      $this->assertNoLinkByHref('admin/config/regional/language/configure/url');
+      $this->assertNoLinkByHref('admin/config/regional/language/detection/session');
+      $this->assertNoLinkByHref('admin/config/regional/language/detection/url');
       $this->assertLinkByHref('admin/config/regional/translate');
       // On admin/index only, the administrator should also see a "Configure
       // permissions" link for the Locale module.
@@ -2463,8 +2570,8 @@ class SystemAdminTestCase extends DrupalWebTestCase {
       $this->assertNoLinkByHref('admin/config/regional/settings');
       $this->assertNoLinkByHref('admin/config/regional/date-time');
       $this->assertNoLinkByHref('admin/config/regional/language');
-      $this->assertNoLinkByHref('admin/config/regional/language/configure/session');
-      $this->assertNoLinkByHref('admin/config/regional/language/configure/url');
+      $this->assertNoLinkByHref('admin/config/regional/language/detection/session');
+      $this->assertNoLinkByHref('admin/config/regional/language/detection/url');
       $this->assertLinkByHref('admin/config/regional/translate');
       // This user cannot configure permissions, so even on admin/index should
       // not see a "Configure permissions" link for the Locale module.
@@ -2579,7 +2686,6 @@ class SystemIndexPhpTest extends DrupalWebTestCase {
     $this->assertResponse(404, t("Make sure index.php/user returns a 'page not found'."));
   }
 }
-
 /**
  * Tests uuid.inc and related functions.
  */

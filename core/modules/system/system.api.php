@@ -1946,7 +1946,7 @@ function hook_xmlrpc_alter(&$methods) {
  *   - message: The text of the message to be logged.
  */
 function hook_watchdog(array $log_entry) {
-  global $base_url, $language;
+  global $base_url, $language_interface;
 
   $severity_list = array(
     WATCHDOG_EMERGENCY     => t('Emergency'),
@@ -1992,7 +1992,7 @@ function hook_watchdog(array $log_entry) {
     '@message'       => strip_tags($log_entry['message']),
   ));
 
-  drupal_mail('emaillog', 'entry', $to, $language, $params);
+  drupal_mail('emaillog', 'entry', $to, $language_interface, $params);
 }
 
 /**
@@ -2746,10 +2746,10 @@ function hook_schema_alter(&$schema) {
  *
  * @see hook_query_TAG_alter()
  * @see node_query_node_access_alter()
- * @see QueryAlterableInterface
- * @see SelectQueryInterface
+ * @see AlterableInterface
+ * @see SelectInterface
  */
-function hook_query_alter(QueryAlterableInterface $query) {
+function hook_query_alter(Drupal\Database\Query\AlterableInterface $query) {
   if ($query->hasTag('micro_limit')) {
     $query->range(0, 2);
   }
@@ -2763,10 +2763,10 @@ function hook_query_alter(QueryAlterableInterface $query) {
  *
  * @see hook_query_alter()
  * @see node_query_node_access_alter()
- * @see QueryAlterableInterface
- * @see SelectQueryInterface
+ * @see AlterableInterface
+ * @see SelectInterface
  */
-function hook_query_TAG_alter(QueryAlterableInterface $query) {
+function hook_query_TAG_alter(Drupal\Database\Query\AlterableInterface $query) {
   // Skip the extra expensive alterations if site has no node access control modules.
   if (!node_access_view_all_nodes()) {
     // Prevent duplicates records.

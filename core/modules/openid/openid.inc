@@ -83,10 +83,10 @@ function openid_redirect_http($url, $message) {
  * Creates a js auto-submit redirect for (for the 2.x protocol)
  */
 function openid_redirect($url, $message) {
-  global $language;
+  global $language_interface;
 
   $output = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
-  $output .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $language->langcode . '" lang="' . $language->langcode . '">' . "\n";
+  $output .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $language_interface->langcode . '" lang="' . $language_interface->langcode . '">' . "\n";
   $output .= "<head>\n";
   $output .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
   $output .= "<title>" . t('OpenID redirect') . "</title>\n";
@@ -610,18 +610,31 @@ function _openid_get_params($str) {
  * @param $fallback_prefix
  *   An optional prefix that will be used in case no prefix is found for the
  *   target extension namespace.
+ * @param $only_signed
+ *   Return only keys that are included in the message signature in openid.sig.
+ *   Unsigned fields may have been modified or added by other parties than the
+ *   OpenID Provider.
+ *
  * @return
  *   An associative array containing all the parameters in the response message
  *   that belong to the extension. The keys are stripped from their namespace
  *   prefix.
+ *
  * @see http://openid.net/specs/openid-authentication-2_0.html#extensions
  */
-function openid_extract_namespace($response, $extension_namespace, $fallback_prefix = NULL) {
+function openid_extract_namespace($response, $extension_namespace, $fallback_prefix = NULL, $only_signed = FALSE) {
+  $signed_keys = explode(',', $response['openid.signed']);
+
   // Find the namespace prefix.
   $prefix = $fallback_prefix;
   foreach ($response as $key => $value) {
     if ($value == $extension_namespace && preg_match('/^openid\.ns\.([^.]+)$/', $key, $matches)) {
       $prefix = $matches[1];
+      if ($only_signed && !in_array('ns.' . $matches[1], $signed_keys)) {
+        // The namespace was defined but was not signed as required. In this
+        // case we do not fall back to $fallback_prefix.
+        $prefix = NULL;
+      }
       break;
     }
   }
@@ -634,7 +647,9 @@ function openid_extract_namespace($response, $extension_namespace, $fallback_pre
   foreach ($response as $key => $value) {
     if (preg_match('/^openid\.' . $prefix . '\.(.+)$/', $key, $matches)) {
       $local_key = $matches[1];
-      $output[$local_key] = $value;
+      if (!$only_signed || in_array($prefix . '.' . $local_key, $signed_keys)) {
+        $output[$local_key] = $value;
+      }
     }
   }
 

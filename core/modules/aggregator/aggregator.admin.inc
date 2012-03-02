@@ -8,8 +8,6 @@
 /**
  * Page callback: Displays the aggregator administration page.
  *
- * Path: admin/config/services/aggregator
- *
  * @see aggregator_menu()
  */
 function aggregator_admin_overview() {
@@ -37,7 +35,7 @@ function aggregator_view() {
       ($feed->checked && $feed->refresh ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - REQUEST_TIME))) : t('never')),
       l(t('edit'), "admin/config/services/aggregator/edit/feed/$feed->fid"),
       l(t('remove items'), "admin/config/services/aggregator/remove/$feed->fid"),
-      l(t('update items'), "admin/config/services/aggregator/update/$feed->fid"),
+      l(t('update items'), "admin/config/services/aggregator/update/$feed->fid", array('query' => array('token' => drupal_get_token("aggregator/update/$feed->fid")))),
     );
   }
   $output .= theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No feeds available. <a href="@link">Add feed</a>.', array('@link' => url('admin/config/services/aggregator/add/feed')))));
@@ -58,8 +56,6 @@ function aggregator_view() {
 
 /**
  * Form constructor for adding and editing feed sources.
- *
- * Path: admin/config/services/aggregator/add/feed
  *
  * @param $feed
  *   If editing a feed, the feed to edit as a PHP stdClass value; if adding a
@@ -84,7 +80,7 @@ function aggregator_form_feed($form, &$form_state, stdClass $feed = NULL) {
   $form['url'] = array('#type' => 'textfield',
     '#title' => t('URL'),
     '#default_value' => isset($feed->url) ? $feed->url : '',
-    '#maxlength' => 255,
+    '#maxlength' => NULL,
     '#description' => t('The fully-qualified URL of the feed.'),
     '#required' => TRUE,
   );
@@ -215,8 +211,6 @@ function aggregator_form_feed_submit($form, &$form_state) {
 /**
  * Page callback: Deletes a feed.
  *
- * Path: admin/config/services/aggregator/remove/%aggregator_feed
- *
  * @param $feed
  *   An associative array describing the feed to be cleared.
  *
@@ -251,8 +245,6 @@ function aggregator_admin_remove_feed_submit($form, &$form_state) {
 
 /**
  * Form constructor for importing feeds from OPML.
- *
- * Path: admin/config/services/aggregator/add/opml
  *
  * @ingroup forms
  * @see aggregator_menu()
@@ -413,22 +405,21 @@ function _aggregator_parse_opml($opml) {
 /**
  * Page callback: Refreshes a feed, then redirects to the overview page.
  *
- * Path: admin/config/services/aggregator/update/%aggregator_feed
- *
  * @param $feed
  *   An object describing the feed to be refreshed.
  *
  * @see aggregator_menu()
  */
 function aggregator_admin_refresh_feed($feed) {
+  if (!isset($_GET['token']) || !drupal_valid_token($_GET['token'], 'aggregator/update/' . $feed->fid)) {
+    return MENU_ACCESS_DENIED;
+  }
   aggregator_refresh($feed);
   drupal_goto('admin/config/services/aggregator');
 }
 
 /**
  * Form constructor for the aggregator system settings.
- *
- * Path: admin/config/services/aggregator/settings
  *
  * @see aggregator_menu()
  * @see aggregator_admin_form_submit()
@@ -551,8 +542,6 @@ function aggregator_admin_form_submit($form, &$form_state) {
 
 /**
  * Form constructor to add/edit/delete aggregator categories.
- *
- * Path: admin/config/services/aggregator/add/category
  *
  * @param $edit
  *   An associative array containing:

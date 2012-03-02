@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Database\Database;
+
 /**
  * @file
  * Tests for node.module.
@@ -510,7 +512,7 @@ class NodeCreationTestCase extends DrupalWebTestCase {
       'uid'      => $this->loggedInUser->uid,
       'name'     => $this->loggedInUser->name,
       'type'     => 'page',
-      'language' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NONE,
       'title'    => 'testing_transaction_exception',
     );
 
@@ -2190,7 +2192,7 @@ class NodeEntityFieldQueryAlter extends DrupalWebTestCase {
     // Creating 4 nodes with an entity field so we can test that sort of query
     // alter. All field values starts with 'A' so we can identify and fetch them
     // in the node_access_test module.
-    $settings = array('language' => LANGUAGE_NONE);
+    $settings = array('langcode' => LANGUAGE_NONE);
     for ($i = 0; $i < 4; $i++) {
       $body = array(
         'value' => 'A' . $this->randomName(32),
@@ -2240,10 +2242,10 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
    * Creates a node, then tests the tokens generated from it.
    */
   function testNodeTokenReplacement() {
-    global $language;
+    global $language_interface;
     $url_options = array(
       'absolute' => TRUE,
-      'language' => $language,
+      'language' => $language_interface,
     );
 
     // Create a user and a node.
@@ -2268,35 +2270,134 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[node:type]'] = 'article';
     $tests['[node:type-name]'] = 'Article';
     $tests['[node:title]'] = check_plain($node->title);
-    $tests['[node:body]'] = _text_sanitize($instance, $node->language, $node->body[$node->language][0], 'value');
-    $tests['[node:summary]'] = _text_sanitize($instance, $node->language, $node->body[$node->language][0], 'summary');
-    $tests['[node:language]'] = check_plain($node->language);
+    $tests['[node:body]'] = _text_sanitize($instance, $node->langcode, $node->body[$node->langcode][0], 'value');
+    $tests['[node:summary]'] = _text_sanitize($instance, $node->langcode, $node->body[$node->langcode][0], 'summary');
+    $tests['[node:langcode]'] = check_plain($node->langcode);
     $tests['[node:url]'] = url('node/' . $node->nid, $url_options);
     $tests['[node:edit-url]'] = url('node/' . $node->nid . '/edit', $url_options);
     $tests['[node:author]'] = check_plain(user_format_name($account));
     $tests['[node:author:uid]'] = $node->uid;
     $tests['[node:author:name]'] = check_plain(user_format_name($account));
-    $tests['[node:created:since]'] = format_interval(REQUEST_TIME - $node->created, 2, $language->langcode);
-    $tests['[node:changed:since]'] = format_interval(REQUEST_TIME - $node->changed, 2, $language->langcode);
+    $tests['[node:created:since]'] = format_interval(REQUEST_TIME - $node->created, 2, $language_interface->langcode);
+    $tests['[node:changed:since]'] = format_interval(REQUEST_TIME - $node->changed, 2, $language_interface->langcode);
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('language' => $language));
+      $output = token_replace($input, array('node' => $node), array('language' => $language_interface));
       $this->assertEqual($output, $expected, t('Sanitized node token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
     $tests['[node:title]'] = $node->title;
-    $tests['[node:body]'] = $node->body[$node->language][0]['value'];
-    $tests['[node:summary]'] = $node->body[$node->language][0]['summary'];
-    $tests['[node:language]'] = $node->language;
+    $tests['[node:body]'] = $node->body[$node->langcode][0]['value'];
+    $tests['[node:summary]'] = $node->body[$node->langcode][0]['summary'];
+    $tests['[node:langcode]'] = $node->langcode;
     $tests['[node:author:name]'] = user_format_name($account);
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('language' => $language, 'sanitize' => FALSE));
+      $output = token_replace($input, array('node' => $node), array('language' => $language_interface, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, t('Unsanitized node token %token replaced.', array('%token' => $input)));
     }
+  }
+}
+
+/**
+ * Tests user permissions for node revisions.
+ */
+class NodeRevisionPermissionsTestCase extends DrupalWebTestCase {
+  protected $node_revisions = array();
+  protected $accounts = array();
+
+  // Map revision permission names to node revision access ops.
+  protected $map = array(
+    'view' => 'view revisions',
+    'update' => 'revert revisions',
+    'delete' => 'delete revisions',
+  );
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Node revision permissions',
+      'description' => 'Tests user permissions for node revision operations.',
+      'group' => 'Node',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Create a node with several revisions.
+    $node = $this->drupalCreateNode();
+    $this->node_revisions[] = $node;
+
+    for ($i = 0; $i < 3; $i++) {
+      // Create a revision for the same nid and settings with a random log.
+      $revision = clone $node;
+      $revision->revision = 1;
+      $revision->log = $this->randomName(32);
+      node_save($revision);
+      $this->node_revisions[] = $revision;
+    }
+
+    // Create three users, one with each revision permission.
+    foreach ($this->map as $op => $permission) {
+      // Create the user.
+      $account = $this->drupalCreateUser(
+        array(
+          'access content',
+          'edit any page content',
+          'delete any page content',
+          $permission,
+        )
+      );
+      $account->op = $op;
+      $this->accounts[] = $account;
+    }
+
+    // Create an admin account (returns TRUE for all revision permissions).
+    $admin_account = $this->drupalCreateUser(array('access content', 'administer nodes'));
+    $admin_account->is_admin = TRUE;
+    $this->accounts['admin'] = $admin_account;
+
+    // Create a normal account (returns FALSE for all revision permissions).
+    $normal_account = $this->drupalCreateUser();
+    $normal_account->op = FALSE;
+    $this->accounts[] = $normal_account;
+  }
+
+  /**
+   * Tests the _node_revision_access() function.
+   */
+  function testNodeRevisionAccess() {
+    $revision = $this->node_revisions[1];
+
+    $parameters = array(
+      'op' => array_keys($this->map),
+      'account' => $this->accounts,
+    );
+
+    $permutations = $this->generatePermutations($parameters);
+    foreach ($permutations as $case) {
+      if (!empty($case['account']->is_admin) || $case['op'] == $case['account']->op) {
+        $this->assertTrue(_node_revision_access($revision, $case['op'], $case['account']), "{$this->map[$case['op']]} granted.");
+      }
+      else {
+        $this->assertFalse(_node_revision_access($revision, $case['op'], $case['account']), "{$this->map[$case['op']]} not granted.");
+      }
+    }
+
+    // Test that access is FALSE for a node administrator with an invalid $node
+    // or $op parameters.
+    $admin_account = $this->accounts['admin'];
+    $this->assertFalse(_node_revision_access(FALSE, 'view', $admin_account), '_node_revision_access() returns FALSE with an invalid node.');
+    $this->assertFalse(_node_revision_access($revision, 'invalid-op', $admin_account), '_node_revision_access() returns FALSE with an invalid op.');
+
+    // Test that the $account parameter defaults to the "logged in" user.
+    $original_user = $GLOBALS['user'];
+    $GLOBALS['user'] = $admin_account;
+    $this->assertTrue(_node_revision_access($revision, 'view'), '_node_revision_access() returns TRUE when used with global user.');
+    $GLOBALS['user'] = $original_user;
   }
 }

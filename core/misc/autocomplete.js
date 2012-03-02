@@ -18,7 +18,7 @@ Drupal.behaviors.autocomplete = {
       $input.parent()
         .attr('role', 'application')
         .append($('<span class="element-invisible" aria-live="assertive"></span>')
-          .attr('id', $input.attr('id') + '-autocomplete-aria-live')
+          .attr('id', $input[0].id + '-autocomplete-aria-live')
         );
       new Drupal.jsAC($input, acdb[uri]);
     });
@@ -30,9 +30,11 @@ Drupal.behaviors.autocomplete = {
  * and closes the suggestions popup when doing so.
  */
 Drupal.autocompleteSubmit = function () {
-  return $('#autocomplete').each(function () {
-    this.owner.hidePopup();
-  }).length == 0;
+  var $autocomplete = $('#autocomplete');
+  if ($autocomplete.length !== 0) {
+    $autocomplete[0].owner.hidePopup();
+  }
+  return $autocomplete.length === 0;
 };
 
 /**
@@ -48,7 +50,6 @@ Drupal.jsAC = function ($input, db) {
     .keydown(function (event) { return ac.onkeydown(this, event); })
     .keyup(function (event) { ac.onkeyup(this, event); })
     .blur(function () { ac.hidePopup(); ac.db.cancel(); });
-
 };
 
 /**
@@ -99,10 +100,12 @@ Drupal.jsAC.prototype.onkeyup = function (input, e) {
       return true;
 
     default: // All other keys.
-      if (input.value.length > 0)
+      if (input.value.length > 0) {
         this.populatePopup();
-      else
+      }
+      else {
         this.hidePopup(e.keyCode);
+      }
       return true;
   }
 };
@@ -142,7 +145,8 @@ Drupal.jsAC.prototype.selectUp = function () {
  * Highlights a suggestion.
  */
 Drupal.jsAC.prototype.highlight = function (node) {
-  if (this.selected) {
+  // Unhighlights a suggestion for "keyup" and "keydown" events.
+  if (this.selected !== false) {
     $(this.selected).removeClass('selected');
   }
   $(node).addClass('selected');
@@ -164,7 +168,7 @@ Drupal.jsAC.prototype.unhighlight = function (node) {
  */
 Drupal.jsAC.prototype.hidePopup = function (keycode) {
   // Select item if the right key or mousebutton was pressed.
-  if (this.selected && ((keycode && keycode != 46 && keycode != 8 && keycode != 27) || !keycode)) {
+  if (this.selected && ((keycode && keycode !== 46 && keycode !== 8 && keycode !== 27) || !keycode)) {
     this.input.value = $(this.selected).data('autocompleteValue');
   }
   // Hide popup.
@@ -215,14 +219,16 @@ Drupal.jsAC.prototype.found = function (matches) {
   // Prepare matches.
   var ul = $('<ul></ul>');
   var ac = this;
-  for (key in matches) {
-    $('<li></li>')
-      .html($('<div></div>').html(matches[key]))
-      .mousedown(function () { ac.select(this); })
-      .mouseover(function () { ac.highlight(this); })
-      .mouseout(function () { ac.unhighlight(this); })
-      .data('autocompleteValue', key)
-      .appendTo(ul);
+  for (var key in matches) {
+    if (matches.hasOwnProperty(key)) {
+      $('<li></li>')
+        .html($('<div></div>').html(matches[key]))
+        .mousedown(function () { ac.select(this); })
+        .mouseover(function () { ac.highlight(this); })
+        .mouseout(function () { ac.unhighlight(this); })
+        .data('autocompleteValue', key)
+        .appendTo(ul);
+    }
   }
 
   // Show popup with matches, if any.
@@ -271,7 +277,7 @@ Drupal.ACDB.prototype.search = function (searchString) {
   // See if this string needs to be searched for anyway.
   searchString = searchString.replace(/^\s+|\s+$/, '');
   if (searchString.length <= 0 ||
-    searchString.charAt(searchString.length - 1) == ',') {
+    searchString.charAt(searchString.length - 1) === ',') {
     return;
   }
 
@@ -293,10 +299,10 @@ Drupal.ACDB.prototype.search = function (searchString) {
       url: db.uri + '/' + encodeURIComponent(searchString),
       dataType: 'json',
       success: function (matches) {
-        if (typeof matches.status == 'undefined' || matches.status != 0) {
+        if (typeof matches.status === 'undefined' || matches.status !== 0) {
           db.cache[searchString] = matches;
           // Verify if these are still the matches the user wants to see.
-          if (db.searchString == searchString) {
+          if (db.searchString === searchString) {
             db.owner.found(matches);
           }
           db.owner.setStatus('found');
@@ -313,8 +319,12 @@ Drupal.ACDB.prototype.search = function (searchString) {
  * Cancels the current autocomplete request.
  */
 Drupal.ACDB.prototype.cancel = function () {
-  if (this.owner) this.owner.setStatus('cancel');
-  if (this.timer) clearTimeout(this.timer);
+  if (this.owner) {
+    this.owner.setStatus('cancel');
+  }
+  if (this.timer) {
+    clearTimeout(this.timer);
+  }
   this.searchString = '';
 };
 

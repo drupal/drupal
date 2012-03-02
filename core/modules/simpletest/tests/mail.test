@@ -32,10 +32,10 @@ class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
    * Assert that the pluggable mail system is functional.
    */
   function testPluggableFramework() {
-    global $language;
+    global $language_interface;
 
     // Use MailTestCase for sending a message.
-    $message = drupal_mail('simpletest', 'mail_test', 'testing@example.com', $language);
+    $message = drupal_mail('simpletest', 'mail_test', 'testing@example.com', $language_interface);
 
     // Assert whether the message was sent through the send function.
     $this->assertEqual(self::$sent_message['to'], 'testing@example.com', t('Pluggable mail system is extendable.'));

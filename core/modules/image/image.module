@@ -971,11 +971,11 @@ function image_default_style_revert($style) {
  * @see image_effect_definition_load()
  */
 function image_effect_definitions() {
-  global $language;
+  global $language_interface;
 
   // hook_image_effect_info() includes translated strings, so each language is
   // cached separately.
-  $langcode = $language->langcode;
+  $langcode = $language_interface->langcode;
 
   $effects = &drupal_static(__FUNCTION__);
 

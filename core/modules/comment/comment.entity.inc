@@ -25,11 +25,11 @@ class Comment extends Entity {
   public $pid;
 
   /**
-   * The comment language.
+   * The comment language code.
    *
    * @var string
    */
-  public $language = LANGUAGE_NONE;
+  public $langcode = LANGUAGE_NONE;
 
   /**
    * The comment title.
@@ -141,8 +141,11 @@ class CommentStorageController extends EntityDatabaseStorageController {
         $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment->nid))->fetchField();
         // Strip the "/" from the end of the thread.
         $max = rtrim($max, '/');
+        // We need to get the value at the correct depth.
+        $parts = explode('.', $max);
+        $firstsegment = $parts[0];
         // Finally, build the thread field for this new comment.
-        $thread = comment_increment_alphadecimal($max) . '/';
+        $thread = comment_increment_alphadecimal($firstsegment) .'/';
       }
       else {
         // This is a comment with a parent comment, so increase the part of

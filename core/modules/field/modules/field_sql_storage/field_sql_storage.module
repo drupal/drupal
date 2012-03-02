@@ -1,5 +1,8 @@
 <?php
 
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\Select;
+
 /**
  * @file
  * Default implementation of the field storage API.
@@ -13,7 +16,7 @@ function field_sql_storage_help($path, $arg) {
     case 'admin/help#field_sql_storage':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Field SQL storage module stores field data in the database. It is the default field storage module; other field storage mechanisms may be available as contributed modules. See the <a href="@field-help">Field module help page</a> for more information about fields.', array('@field-help' => url('admin/help/field'))) . '</p>';
+      $output .= '<p>' . t('The Field SQL Storage module stores field data in the database. It is the default field storage module; other field storage mechanisms may be available as contributed modules. See the <a href="@field-help">Field module help page</a> for more information about fields.', array('@field-help' => url('admin/help/field'))) . '</p>';
       return $output;
   }
 }
@@ -592,7 +595,7 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
  * @return
  *   The name of the entity base table joined in.
  */
-function _field_sql_storage_query_join_entity(SelectQuery $select_query, $entity_type, $field_base_table) {
+function _field_sql_storage_query_join_entity(Select $select_query, $entity_type, $field_base_table) {
   $entity_info = entity_get_info($entity_type);
   $entity_base_table = $entity_info['base table'];
   $entity_field = $entity_info['entity keys']['id'];
@@ -615,7 +618,7 @@ function _field_sql_storage_query_join_entity(SelectQuery $select_query, $entity
  *   A callback that should return the column name to be used for the field
  *   conditions. Accepts a field name and a field column name as parameters.
  */
-function _field_sql_storage_query_field_conditions(EntityFieldQuery $query, SelectQuery $select_query, $conditions, $table_aliases, $column_callback) {
+function _field_sql_storage_query_field_conditions(EntityFieldQuery $query, Select $select_query, $conditions, $table_aliases, $column_callback) {
   $groups = &drupal_static(__FUNCTION__, array());
   foreach ($conditions as $key => $condition) {
     $table_alias = $table_aliases[$key];

@@ -26,13 +26,13 @@
  *   - node-[type]: The current node type. For example, if the node is a
  *     "Article" it would result in "node-article". Note that the machine
  *     name will often be in a short form of the human readable label.
- *   - node-teaser: Nodes in teaser form.
- *   - node-preview: Nodes in preview mode.
+ *   - view-mode-[view_mode]: The View Mode of the node e.g. teaser or full.
+ *   - preview: Nodes in preview mode.
  *   The following are controlled through the node publishing options.
- *   - node-promoted: Nodes promoted to the front page.
- *   - node-sticky: Nodes ordered above other non-sticky nodes in teaser
+ *   - promoted: Nodes promoted to the front page.
+ *   - sticky: Nodes ordered above other non-sticky nodes in teaser
  *     listings.
- *   - node-unpublished: Unpublished nodes visible only to administrators.
+ *   - unpublished: Unpublished nodes visible only to administrators.
  * - $title_prefix (array): An array containing additional output populated by
  *   modules, intended to be displayed in front of the main title tag that
  *   appears in the template.

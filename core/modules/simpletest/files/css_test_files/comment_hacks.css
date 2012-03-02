@@ -22,7 +22,7 @@ html .clear-block {
 
 /* v1 of the commented backslash hack. This \ character between rules appears to have the effect
 that macIE5 ignores the following rule. Odd, but extremely useful. */
-.bkslshv1 { background-color: #C00; }
+.bkslshv1 { background-color: #c00; }
 .test3 { display:block; }
 
 /**************** A multiline, multistar comment ***************
@@ -34,8 +34,8 @@ that macIE5 ignores the following rule. Odd, but extremely useful. */
   content: "/* ";
 }
 .this_rule_must_stay {
-  color: #F00;
-  background-color: #FFF;
+  color: #f00;
+  background-color: #fff;
 }
 .comment-in-double-quotes:after {
   content: " */";
@@ -45,8 +45,8 @@ that macIE5 ignores the following rule. Odd, but extremely useful. */
   content: '/*';
 }
 .this_rule_must_stay {
-  color: #F00;
-  background-color: #FFF;
+  color: #f00;
+  background-color: #fff;
 }
 .comment-in-single-quotes:after {
   content: '*/';
@@ -56,8 +56,8 @@ that macIE5 ignores the following rule. Odd, but extremely useful. */
   content: '"/*"';
 }
 .this_rule_must_stay {
-  color: #F00;
-  background-color: #FFF;
+  color: #f00;
+  background-color: #fff;
 }
 .comment-in-mixed-quotes:after {
   content: "'*/'";
@@ -67,8 +67,8 @@ that macIE5 ignores the following rule. Odd, but extremely useful. */
   content: '/* \" \' */';
 }
 .this_rule_must_stay {
-  color: #F00;
-  background-color: #FFF;
+  color: #f00;
+  background-color: #fff;
 }
 .comment-in-quotes-with-escaped:after {
   content: "*/ \" \ '";

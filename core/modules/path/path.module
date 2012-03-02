@@ -97,8 +97,8 @@ function path_form_node_form_alter(&$form, $form_state) {
   $path = array();
   if (!empty($form['#node']->nid)) {
     $conditions = array('source' => 'node/' . $form['#node']->nid);
-    if ($form['#node']->language != LANGUAGE_NONE) {
-      $conditions['langcode'] = $form['#node']->language;
+    if ($form['#node']->langcode != LANGUAGE_NONE) {
+      $conditions['langcode'] = $form['#node']->langcode;
     }
     $path = path_load($conditions);
     if ($path === FALSE) {
@@ -109,7 +109,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     'pid' => NULL,
     'source' => isset($form['#node']->nid) ? 'node/' . $form['#node']->nid : NULL,
     'alias' => '',
-    'langcode' => isset($form['#node']->language) ? $form['#node']->language : LANGUAGE_NONE,
+    'langcode' => isset($form['#node']->langcode) ? $form['#node']->langcode : LANGUAGE_NONE,
   );
 
   $form['path'] = array(
@@ -157,8 +157,8 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
     // originally assigned URL alias language.
     // @todo Remove this after converting Path module to a field, and, after
     //   stopping Locale module from abusing the content language system.
-    if (isset($form_state['values']['language'])) {
-      form_set_value($element['langcode'], $form_state['values']['language'], $form_state);
+    if (isset($form_state['values']['langcode'])) {
+      form_set_value($element['langcode'], $form_state['values']['langcode'], $form_state);
     }
 
     $path = $form_state['values']['path'];
@@ -173,7 +173,7 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
     $query->addExpression('1');
     $query->range(0, 1);
     if ($query->execute()->fetchField()) {
-      form_set_error('alias', t('The alias is already in use.'));
+      form_error($element, t('The alias is already in use.'));
     }
   }
 }
@@ -189,7 +189,7 @@ function path_node_insert($node) {
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $path['source'] = 'node/' . $node->nid;
-      $path['langcode'] = isset($node->language) ? $node->language : LANGUAGE_NONE;
+      $path['langcode'] = isset($node->langcode) ? $node->langcode : LANGUAGE_NONE;
       path_save($path);
     }
   }
@@ -210,7 +210,7 @@ function path_node_update($node) {
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $path['source'] = 'node/' . $node->nid;
-      $path['langcode'] = isset($node->language) ? $node->language : LANGUAGE_NONE;
+      $path['langcode'] = isset($node->langcode) ? $node->langcode : LANGUAGE_NONE;
       path_save($path);
     }
   }

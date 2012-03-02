@@ -1,5 +1,8 @@
 <?php
 
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Install\TaskException;
+
 /**
  * @file
  * API functions for installing Drupal.
@@ -223,6 +226,27 @@ function install_begin_request(&$install_state) {
 
   // Allow command line scripts to override server variables used by Drupal.
   require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+
+  // Ensure that the class loader is available so that we can leverage classes
+  // as part of the install routine.
+  $loader = drupal_classloader();
+
+  // Register explicit vendor namespaces.
+  $loader->registerNamespaces(array(
+    // All Symfony-borrowed code lives in /core/includes/Symfony.
+    'Symfony' => DRUPAL_ROOT . '/core/vendor',
+  ));
+  // Register the Drupal namespace for classes in core as a fallback.
+  // This allows to register additional namespaces within the Drupal namespace
+  // (e.g., for modules) and avoids an additional file_exists() on the Drupal
+  // core namespace, since the class loader can already determine the best
+  // namespace match based on a string comparison. It further allows modules to
+  // register/overload namespaces in Drupal core.
+  $loader->registerNamespaceFallbacks(array(
+    // All Drupal-namespaced code in core lives in /core/includes/Drupal.
+    'Drupal' => DRUPAL_ROOT . '/core/lib',
+  ));
+
   if (!$install_state['interactive']) {
     drupal_override_server_variables($install_state['server']);
   }
@@ -741,7 +765,7 @@ function install_verify_requirements(&$install_state) {
     if ($install_state['interactive']) {
       drupal_set_title(st('Requirements problem'));
       $status_report = theme('status_report', array('requirements' => $requirements));
-      $status_report .= st('Check the messages and <a href="!url">proceed with the installation</a>.', array('!url' => check_url(drupal_requirements_url($severity))));
+      $status_report .= st('Check the messages and <a href="!url">try again</a>.', array('!url' => check_url(drupal_requirements_url($severity))));
       return $status_report;
     }
     else {
@@ -961,7 +985,7 @@ function install_database_errors($database, $settings_file) {
     try {
       db_run_tasks($driver);
     }
-    catch (DatabaseTaskException $e) {
+    catch (TaskException $e) {
       // These are generic errors, so we do not have any specific key of the
       // database connection array to attach them to; therefore, we just put
       // them in the error array with standard numeric keys.

@@ -1,4 +1,4 @@
-name = PHP filter
+name = PHP Filter
 description = Allows embedded PHP code/snippets to be evaluated.
 package = Core
 version = VERSION

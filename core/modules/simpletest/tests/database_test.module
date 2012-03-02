@@ -1,9 +1,11 @@
 <?php
 
+use Drupal\Core\Database\Query\AlterableInterface;
+
 /**
  * Implements hook_query_alter().
  */
-function database_test_query_alter(QueryAlterableInterface $query) {
+function database_test_query_alter(AlterableInterface $query) {
 
   if ($query->hasTag('database_test_alter_add_range')) {
     $query->range(0, 2);
@@ -37,7 +39,7 @@ function database_test_query_alter(QueryAlterableInterface $query) {
  *
  * Called by DatabaseTestCase::testAlterRemoveRange.
  */
-function database_test_query_database_test_alter_remove_range_alter(QueryAlterableInterface $query) {
+function database_test_query_database_test_alter_remove_range_alter(AlterableInterface $query) {
   $query->range();
 }
 

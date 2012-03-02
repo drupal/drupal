@@ -192,10 +192,10 @@ function language_delete($langcode) {
  * and checks to see if a related right to left CSS file should be included.
  */
 function language_css_alter(&$css) {
-  global $language;
+  global $language_interface;
 
   // If the current language is RTL, add the CSS file with the RTL overrides.
-  if ($language->direction == LANGUAGE_RTL) {
+  if ($language_interface->direction == LANGUAGE_RTL) {
     foreach ($css as $data => $item) {
       // Only provide RTL overrides for files.
       if ($item['type'] == 'file') {
