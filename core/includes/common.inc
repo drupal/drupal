@@ -6934,6 +6934,9 @@ function drupal_common_theme() {
     'tel' => array(
       'render element' => 'element',
     ),
+    'email' => array(
+      'render element' => 'element',
+    ),
     'form' => array(
       'render element' => 'element',
     ),

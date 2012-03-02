@@ -374,6 +374,16 @@ function system_element_info() {
     '#theme' => 'tel',
     '#theme_wrappers' => array('form_element'),
   );
+  $types['email'] = array(
+    '#input' => TRUE,
+    '#size' => 60,
+    '#maxlength' => EMAIL_MAX_LENGTH,
+    '#autocomplete_path' => FALSE,
+    '#process' => array('ajax_process_form'),
+    '#element_validate' => array('form_validate_email'),
+    '#theme' => 'email',
+    '#theme_wrappers' => array('form_element'),
+  );
   $types['machine_name'] = array(
     '#input' => TRUE,
     '#default_value' => NULL,

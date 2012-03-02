@@ -71,9 +71,8 @@ function contact_site_form($form, &$form_state) {
     '#required' => TRUE,
   );
   $form['mail'] = array(
-    '#type' => 'textfield',
+    '#type' => 'email',
     '#title' => t('Your e-mail address'),
-    '#maxlength' => 255,
     '#default_value' => $user->uid ? $user->mail : '',
     '#required' => TRUE,
   );
@@ -120,9 +119,6 @@ function contact_site_form($form, &$form_state) {
 function contact_site_form_validate($form, &$form_state) {
   if (!$form_state['values']['cid']) {
     form_set_error('cid', t('You must select a valid category.'));
-  }
-  if (!valid_email_address($form_state['values']['mail'])) {
-    form_set_error('mail', t('You must enter a valid e-mail address.'));
   }
 }
 
@@ -211,9 +207,8 @@ function contact_personal_form($form, &$form_state, $recipient) {
     '#required' => TRUE,
   );
   $form['mail'] = array(
-    '#type' => 'textfield',
+    '#type' => 'email',
     '#title' => t('Your e-mail address'),
-    '#maxlength' => 255,
     '#default_value' => $user->uid ? $user->mail : '',
     '#required' => TRUE,
   );
@@ -247,17 +242,6 @@ function contact_personal_form($form, &$form_state, $recipient) {
     '#value' => t('Send message'),
   );
   return $form;
-}
-
-/**
- * Form validation handler for contact_personal_form().
- *
- * @see contact_personal_form_submit()
- */
-function contact_personal_form_validate($form, &$form_state) {
-  if (!valid_email_address($form_state['values']['mail'])) {
-    form_set_error('mail', t('You must enter a valid e-mail address.'));
-  }
 }
 
 /**
