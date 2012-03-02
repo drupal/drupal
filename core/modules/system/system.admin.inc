@@ -1637,10 +1637,11 @@ function system_logging_settings() {
  * Form builder; Configure site performance settings.
  *
  * @ingroup forms
- * @see system_settings_form()
+ * @see system_performance_settings_submit().
  */
-function system_performance_settings() {
+function system_performance_settings($form, &$form_state) {
   drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
+  $config = config('system.performance');
 
   $form['clear_cache'] = array(
     '#type' => 'fieldset',
@@ -1658,11 +1659,10 @@ function system_performance_settings() {
     '#title' => t('Caching'),
   );
 
-  $cache = variable_get('cache', 0);
   $form['caching']['cache'] = array(
     '#type' => 'checkbox',
     '#title' => t('Cache pages for anonymous users'),
-    '#default_value' => $cache,
+    '#default_value' => $config->get('cache'),
     '#weight' => -2,
   );
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
@@ -1670,16 +1670,16 @@ function system_performance_settings() {
   $form['caching']['cache_lifetime'] = array(
     '#type' => 'select',
     '#title' => t('Minimum cache lifetime'),
-    '#default_value' => variable_get('cache_lifetime', 0),
+    '#default_value' => $config->get('cache_lifetime'),
     '#options' => $period,
-    '#description' => t('Cached pages will not be re-created until at least this much time has elapsed.')
+    '#description' => t('Cached pages will not be re-created until at least this much time has elapsed.'),
   );
   $form['caching']['page_cache_maximum_age'] = array(
     '#type' => 'select',
     '#title' => t('Expiration of cached pages'),
-    '#default_value' => variable_get('page_cache_maximum_age', 0),
+    '#default_value' => $config->get('page_cache_maximum_age'),
     '#options' => $period,
-    '#description' => t('The maximum time an external cache can use an old version of a page.')
+    '#description' => t('The maximum time an external cache can use an old version of a page.'),
   );
 
   $directory = 'public://';
@@ -1696,25 +1696,31 @@ function system_performance_settings() {
     '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
   );
 
-  $js_hide = $cache ? '' : ' class="js-hide"';
+  $js_hide = $config->get('cache') ? '' : ' class="js-hide"';
   $form['bandwidth_optimization']['page_compression'] = array(
     '#type' => 'checkbox',
     '#title' => t('Compress cached pages.'),
-    '#default_value' => variable_get('page_compression', TRUE),
+    '#default_value' => $config->get('page_compression'),
     '#prefix' => '<div id="page-compression-wrapper"' . $js_hide . '>',
     '#suffix' => '</div>',
   );
   $form['bandwidth_optimization']['preprocess_css'] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate and compress CSS files.'),
-    '#default_value' => intval(variable_get('preprocess_css', 0) && $is_writable),
+    '#default_value' => $config->get('preprocess_css'),
     '#disabled' => $disabled,
   );
   $form['bandwidth_optimization']['preprocess_js'] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate JavaScript files.'),
-    '#default_value' => intval(variable_get('preprocess_js', 0) && $is_writable),
+    '#default_value' => $config->get('preprocess_js'),
     '#disabled' => $disabled,
+  );
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
   );
 
   $form['#submit'][] = 'drupal_clear_css_cache';
@@ -1722,8 +1728,25 @@ function system_performance_settings() {
   // This form allows page compression settings to be changed, which can
   // invalidate the page cache, so it needs to be cleared on form submit.
   $form['#submit'][] = 'system_clear_page_cache_submit';
+  $form['#submit'][] = 'system_performance_settings_submit';
 
-  return system_settings_form($form);
+  return $form;
+}
+
+/**
+ * Form submission handler for system_performance_settings().
+ *
+ * @ingroup forms
+ */
+function system_performance_settings_submit($form, &$form_state) {
+  $config = config('system.performance');
+  $config->set('cache', $form_state['values']['cache']);
+  $config->set('cache_lifetime', $form_state['values']['cache_lifetime']);
+  $config->set('page_cache_maximum_age', $form_state['values']['page_cache_maximum_age']);
+  $config->set('page_compression', $form_state['values']['page_compression']);
+  $config->set('preprocess_css', $form_state['values']['preprocess_css']);
+  $config->set('preprocess_js', $form_state['values']['preprocess_js']);
+  $config->save();
 }
 
 /**

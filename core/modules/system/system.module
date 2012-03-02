@@ -2772,11 +2772,26 @@ function system_settings_form_submit($form, &$form_state) {
   // Exclude unnecessary elements.
   form_state_values_clean($form_state);
 
+  $config_objects = array();
   foreach ($form_state['values'] as $key => $value) {
+    if (isset($form_state['config'][$key])) {
+      $config_name = $form_state['config'][$key]['name'];
+      $config_key = $form_state['config'][$key]['path'];
+      if (empty($config_objects[$config_name])) {
+        $config_objects[$config_name] = config($config_name);
+      }
+      if (!empty($config_objects[$config_name])) {
+        $config_objects[$config_name]->set($config_key, $value);
+        continue;
+      }
+    }
     if (is_array($value) && isset($form_state['values']['array_filter'])) {
       $value = array_keys(array_filter($value));
     }
     variable_set($key, $value);
+  }
+  foreach ($config_objects as $config) {
+    $config->save();
   }
 
   drupal_set_message(t('The configuration options have been saved.'));

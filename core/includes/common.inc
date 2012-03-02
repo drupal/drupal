@@ -2599,7 +2599,8 @@ function drupal_page_footer() {
   // Commit the user session, if needed.
   drupal_session_commit();
 
-  if (variable_get('cache', 0) && ($cache = drupal_page_set_cache())) {
+  $config = config('system.performance');
+  if ($config->get('cache') && ($cache = drupal_page_set_cache())) {
     drupal_serve_page_from_cache($cache);
   }
   else {
@@ -3177,7 +3178,14 @@ function drupal_group_css($css) {
  * @see system_element_info()
  */
 function drupal_aggregate_css(&$css_groups) {
-  $preprocess_css = (variable_get('preprocess_css', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
+  // Only aggregate during normal site operation.
+  if (defined('MAINTENANCE_MODE')) {
+    $preprocess_css = FALSE;
+  }
+  else {
+    $config = config('system.performance');
+    $preprocess_css = $config->get('preprocess_css');
+  }
 
   // For each group that needs aggregation, aggregate its items.
   foreach ($css_groups as $key => $group) {
@@ -4410,9 +4418,16 @@ function drupal_group_js($javascript) {
  * @see drupal_pre_render_scripts()
  */
 function drupal_aggregate_js(&$js_groups) {
-  // Only aggregate when the site is configured to do so, and not during an
-  // update.
-  if (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update')) {
+  // Only aggregate during normal site operation.
+  if (defined('MAINTENANCE_MODE')) {
+    $preprocess_js = FALSE;
+  }
+  else {
+    $config = config('system.performance');
+    $preprocess_js = $config->get('preprocess_js');
+  }
+
+  if ($preprocess_js) {
     foreach ($js_groups as $key => $group) {
       if ($group['type'] == 'file' && $group['preprocess']) {
         $js_groups[$key]['data'] = drupal_build_js_cache($group['items']);
@@ -5187,7 +5202,7 @@ function drupal_page_set_cache() {
     }
 
     if ($cache->data['body']) {
-      if (variable_get('page_compression', TRUE) && extension_loaded('zlib')) {
+      if (config('system.performance')->get('page_compression') && extension_loaded('zlib')) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
       cache('page')->set($cache->cid, $cache->data, $cache->expire);

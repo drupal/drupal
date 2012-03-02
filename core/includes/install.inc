@@ -434,6 +434,7 @@ function drupal_install_system() {
       ))
     ->execute();
   system_rebuild_module_data();
+  config_install_default_config('system');
 }
 
 /**

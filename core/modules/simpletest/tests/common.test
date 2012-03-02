@@ -1191,8 +1191,10 @@ class CommonJavaScriptTestCase extends DrupalWebTestCase {
     parent::setUp('locale', 'simpletest', 'common_test');
 
     // Disable preprocessing
-    $this->preprocess_js = variable_get('preprocess_js', 0);
-    variable_set('preprocess_js', 0);
+    $config = config('system.performance');
+    $this->preprocess_js = $config->get('preprocess_js');
+    $config->set('preprocess_js', 0);
+    $config->save();
 
     // Reset drupal_add_js() and drupal_add_library() statics before each test.
     drupal_static_reset('drupal_add_js');
@@ -1201,7 +1203,9 @@ class CommonJavaScriptTestCase extends DrupalWebTestCase {
 
   function tearDown() {
     // Restore configured value for JavaScript preprocessing.
-    variable_set('preprocess_js', $this->preprocess_js);
+    $config = config('system.performance');
+    $config->set('preprocess_js', $this->preprocess_js);
+    $config->save();
     parent::tearDown();
   }
 
@@ -1399,7 +1403,9 @@ class CommonJavaScriptTestCase extends DrupalWebTestCase {
     // Now ensure that with aggregation on, one file is made for the
     // 'every_page' files, and one file is made for the others.
     drupal_static_reset('drupal_add_js');
-    variable_set('preprocess_js', 1);
+    $config = config('system.performance');
+    $config->set('preprocess_js', 1);
+    $config->save();
     drupal_add_js('core/misc/ajax.js');
     drupal_add_js('core/misc/authorize.js', array('every_page' => TRUE));
     drupal_add_js('core/misc/autocomplete.js');

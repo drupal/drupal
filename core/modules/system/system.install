@@ -697,6 +697,28 @@ function system_schema() {
   $schema['cache_path'] = $schema['cache'];
   $schema['cache_path']['description'] = 'Cache table for path alias lookup.';
 
+  $schema['config'] = array(
+    'description' => 'Default active store for the configuration system.',
+    'fields' => array(
+      'name' => array(
+        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus the file extension).',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data' => array(
+        'description' => 'The raw data for this configuration entry.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'translatable' => TRUE,
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+
+
   $schema['date_format_type'] = array(
     'description' => 'Stores configured date format types.',
     'fields' => array(
@@ -1665,6 +1687,36 @@ function system_update_8002() {
   if (!isset($theme)) {
     variable_set('theme_default', 'bartik');
   }
+}
+
+/**
+ * Adds {config} table for new Configuration system.
+ */
+function system_update_8003() {
+  // @todo Temporary.
+  if (db_table_exists('config')) {
+    db_drop_table('config');
+  }
+  db_create_table('config', array(
+    'description' => 'Default active store for the configuration system.',
+    'fields' => array(
+      'name' => array(
+        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus the file extension).',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data' => array(
+        'description' => 'The raw data for this configuration entry.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'translatable' => TRUE,
+      ),
+    ),
+    'primary key' => array('name'),
+  ));
 }
 
 /**
