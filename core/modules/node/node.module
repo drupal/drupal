@@ -1912,21 +1912,41 @@ function theme_node_search_admin($variables) {
  *   The node to check.
  * @param $op
  *   (optional) The specific operation being checked. Defaults to 'view.'
+ * @param object $account
+ *   (optional) A user object representing the user for whom the operation is
+ *   to be performed. Determines access for a user other than the current user.
  *
  * @return
- *   Access status for the revision.
+ *   TRUE if the operation may be performed, FALSE otherwise.
  *
  * @see node_menu()
  */
-function _node_revision_access($node, $op = 'view') {
+function _node_revision_access($node, $op = 'view', $account = NULL) {
   $access = &drupal_static(__FUNCTION__, array());
-  if (!isset($access[$node->vid])) {
-    // To save additional calls to the database, return early if the user
-    // doesn't have the required permissions.
-    $map = array('view' => 'view revisions', 'update' => 'revert revisions', 'delete' => 'delete revisions');
-    if (isset($map[$op]) && (!user_access($map[$op]) && !user_access('administer nodes'))) {
-      $access[$node->vid] = FALSE;
-      return FALSE;
+
+  $map = array(
+    'view' => 'view revisions',
+    'update' => 'revert revisions',
+    'delete' => 'delete revisions',
+  );
+
+  if (!$node || !isset($map[$op])) {
+    // If there was no node to check against, or the $op was not one of the
+    // supported ones, we return access denied.
+    return FALSE;
+  }
+
+  if (!isset($account)) {
+    $account = $GLOBALS['user'];
+  }
+
+  // Statically cache access by revision ID, user account ID, and operation.
+  $cid = $node->vid . ':' . $account->uid . ':' . $op;
+
+  if (!isset($access[$cid])) {
+    // Perform basic permission checks first.
+    if (!user_access($map[$op], $account) && !user_access('administer nodes', $account)) {
+      return $access[$cid] = FALSE;
     }
 
     $node_current_revision = node_load($node->nid);
@@ -1938,18 +1958,19 @@ function _node_revision_access($node, $op = 'view') {
     // Also, if you try to revert to or delete the current revision, that's
     // not good.
     if ($is_current_revision && (db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
-      $access[$node->vid] = FALSE;
+      $access[$cid] = FALSE;
     }
-    elseif (user_access('administer nodes')) {
-      $access[$node->vid] = TRUE;
+    elseif (user_access('administer nodes', $account)) {
+      $access[$cid] = TRUE;
     }
     else {
       // First check the access to the current revision and finally, if the
       // node passed in is not the current revision then access to that, too.
-      $access[$node->vid] = node_access($op, $node_current_revision) && ($is_current_revision || node_access($op, $node));
+      $access[$cid] = node_access($op, $node_current_revision, $account) && ($is_current_revision || node_access($op, $node, $account));
     }
   }
-  return $access[$node->vid];
+
+  return $access[$cid];
 }
 
 /**
