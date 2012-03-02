@@ -1834,18 +1834,19 @@ function _node_revision_access($node, $op = 'view') {
     // Also, if you try to revert to or delete the current revision, that's
     // not good.
     if ($is_current_revision && (db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
-      $access[$node->vid] = FALSE;
+      $access[$cid] = FALSE;
     }
-    elseif (user_access('administer nodes')) {
-      $access[$node->vid] = TRUE;
+    elseif (user_access('administer nodes', $account)) {
+      $access[$cid] = TRUE;
     }
     else {
       // First check the access to the current revision and finally, if the
       // node passed in is not the current revision then access to that, too.
-      $access[$node->vid] = node_access($op, $node_current_revision) && ($is_current_revision || node_access($op, $node));
+      $access[$cid] = node_access($op, $node_current_revision, $account) && ($is_current_revision || node_access($op, $node, $account));
     }
   }
-  return $access[$node->vid];
+
+  return $access[$cid];
 }
 
 function _node_add_access() {
