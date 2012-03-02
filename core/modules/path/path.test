@@ -162,6 +162,23 @@ class PathTestCase extends DrupalWebTestCase {
   function getPID($alias) {
     return db_query("SELECT pid FROM {url_alias} WHERE alias = :alias", array(':alias' => $alias))->fetchField();
   }
+
+  /**
+   * Tests that duplicate aliases fail validation.
+   */
+  function testDuplicateNodeAlias() {
+    // Create one node with a random alias.
+    $node_one = $this->drupalCreateNode();
+    $edit = array();
+    $edit['path[alias]'] = $this->randomName();
+    $this->drupalPost('node/' . $node_one->nid . '/edit', $edit, t('Save'));
+
+    // Now create another node and try to set the same alias.
+    $node_two = $this->drupalCreateNode();
+    $this->drupalPost('node/' . $node_two->nid . '/edit', $edit, t('Save'));
+    $this->assertText(t('The alias is already in use.'));
+    $this->assertFieldByXPath("//input[@name='path[alias]' and contains(@class, 'error')]", $edit['path[alias]'], 'Textfield exists and has the error class.');
+  }
 }
 
 /**
