@@ -836,17 +836,18 @@ function block_block_list_alter(&$blocks) {
  *   An array of visible blocks as expected by drupal_render().
  */
 function _block_render_blocks($region_blocks) {
+  // Block caching is not compatible with node access modules. We also
+  // preserve the submission of forms in blocks, by fetching from cache only
+  // if the request method is 'GET' (or 'HEAD').
+  $cacheable = !count(module_implements('node_grants')) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD');
   foreach ($region_blocks as $key => $block) {
     // Render the block content if it has not been created already.
     if (!isset($block->content)) {
       // Erase the block from the static array - we'll put it back if it has
       // content.
       unset($region_blocks[$key]);
-      // Try fetching the block from cache. Block caching is not compatible
-      // with node_access modules. We also preserve the submission of forms in
-      // blocks, by fetching from cache only if the request method is 'GET'
-      // (or 'HEAD').
-      if (!count(module_implements('node_grants')) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD') && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
+      // Try fetching the block from cache.
+      if ($cacheable && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
         $array = $cache->data;
       }
       else {
