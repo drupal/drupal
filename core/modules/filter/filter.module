@@ -916,7 +916,7 @@ function filter_process_format($element) {
       $element['value']['#rows'] = 3;
     }
     $element['value']['#disabled'] = TRUE;
-    $element['value']['#resizable'] = FALSE;
+    $element['value']['#resizable'] = 'none';
 
     // Hide the text format selector and any other child element (such as text
     // field's summary).

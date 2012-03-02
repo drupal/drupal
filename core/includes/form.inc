@@ -3815,7 +3815,7 @@ function theme_form($variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #rows, #cols,
- *     #placeholder, #required, #attributes
+ *     #placeholder, #required, #attributes, #resizable
  *
  * @ingroup themeable
  */
@@ -3830,8 +3830,7 @@ function theme_textarea($variables) {
 
   // Add resizable behavior.
   if (!empty($element['#resizable'])) {
-    drupal_add_library('system', 'drupal.textarea');
-    $wrapper_attributes['class'][] = 'resizable';
+    $element['#attributes']['class'][] = 'resize-' . $element['#resizable'];
   }
 
   $output = '<div' . drupal_attributes($wrapper_attributes) . '>';

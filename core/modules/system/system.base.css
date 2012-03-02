@@ -61,8 +61,6 @@ fieldset.collapsible .fieldset-legend {
 
 /**
  * Resizable textareas.
- *
- * @see textarea.js
  */
 .form-textarea-wrapper textarea {
   display: block;
@@ -72,13 +70,21 @@ fieldset.collapsible .fieldset-legend {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-.resizable-textarea .grippie {
-  background: #eee url(../../misc/grippie.png) no-repeat center 2px;
-  border: 1px solid #ddd;
-  border-top-width: 0;
-  cursor: s-resize;
-  height: 9px;
-  overflow: hidden;
+.resize-none {
+  resize: none;
+}
+.resize-vertical {
+  resize: vertical;
+  min-height: 2em;
+}
+.resize-horizontal {
+  resize: horizontal;
+  max-width: 100%;
+}
+.resize-both {
+  resize: both;
+  max-width: 100%;
+  min-height: 2em;
 }
 
 /**
