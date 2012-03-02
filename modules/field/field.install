@@ -99,14 +99,13 @@ function field_schema() {
     'primary key' => array('id'),
     'indexes' => array(
       'field_name' => array('field_name'),
-      // Used by field_read_fields().
+      // Used by field_sync_field_status().
       'active' => array('active'),
       'storage_active' => array('storage_active'),
       'deleted' => array('deleted'),
       // Used by field_modules_disabled().
       'module' => array('module'),
       'storage_module' => array('storage_module'),
-      // Used by field_associate_fields().
       'type' => array('type'),
       'storage_type' => array('storage_type'),
     ),

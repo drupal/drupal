@@ -362,11 +362,12 @@ function field_theme() {
 
 /**
  * Implements hook_cron().
- *
- * Purges some deleted Field API data, if any exists.
  */
 function field_cron() {
+  // Refresh the 'active' status of fields.
   field_sync_field_status();
+
+  // Do a pass of purging on deleted Field API data, if any exists.
   $limit = variable_get('field_purge_batch_size', 10);
   field_purge_batch($limit);
 }
@@ -423,8 +424,27 @@ function field_system_info_alter(&$info, $file, $type) {
  * Implements hook_flush_caches().
  */
 function field_flush_caches() {
+  // Refresh the 'active' status of fields.
   field_sync_field_status();
+
+  // Request a flush of our cache table.
   return array('cache_field');
+}
+
+/**
+ * Implements hook_modules_enabled().
+ */
+function field_modules_enabled($modules) {
+  // Refresh the 'active' status of fields.
+  field_sync_field_status();
+}
+
+/**
+ * Implements hook_modules_disabled().
+ */
+function field_modules_disabled($modules) {
+  // Refresh the 'active' status of fields.
+  field_sync_field_status();
 }
 
 /**
@@ -460,18 +480,18 @@ function field_sync_field_status() {
 function field_associate_fields($module) {
   // Associate field types.
   $field_types = (array) module_invoke($module, 'field_info');
-  foreach ($field_types as $name => $field_info) {
+  if ($field_types) {
     db_update('field_config')
       ->fields(array('module' => $module, 'active' => 1))
-      ->condition('type', $name)
+      ->condition('type', array_keys($field_types))
       ->execute();
   }
   // Associate storage backends.
   $storage_types = (array) module_invoke($module, 'field_storage_info');
-  foreach ($storage_types as $name => $storage_info) {
+  if ($storage_types) {
     db_update('field_config')
       ->fields(array('storage_module' => $module, 'storage_active' => 1))
-      ->condition('storage_type', $name)
+      ->condition('storage_type', array_keys($storage_types))
       ->execute();
   }
 }

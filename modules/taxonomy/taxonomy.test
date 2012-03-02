@@ -369,7 +369,6 @@ class TaxonomyVocabularyTestCase extends TaxonomyWebTestCase {
     field_create_instance($this->instance);
 
     module_disable(array('taxonomy'));
-    drupal_flush_all_caches();
     require_once DRUPAL_ROOT . '/includes/install.inc';
     drupal_uninstall_modules(array('taxonomy'));
     module_enable(array('taxonomy'));
