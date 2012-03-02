@@ -76,7 +76,7 @@ function poll_permission() {
       'title' => t('Cancel and change own votes'),
     ),
     'inspect all votes' => array(
-      'title' => t('View voting results'),
+      'title' => t('View details for all votes'),
     ),
   );
 
