@@ -287,6 +287,36 @@ function locale_update_8001() {
 }
 
 /**
+ * Removes duplicates in {locales_source}.
+ *
+ * Aggressively removes duplicates that has not already been removed by
+ * locale_update_7004() in Drupal 7.x.
+ */
+function locale_update_8002() {
+  // Look up all duplicates.
+  $results = db_query("SELECT source, context FROM {locales_source} GROUP BY source, context HAVING COUNT(*) > 1");
+
+  // For each set of duplicates, select one row that should survive, preferably
+  // one that has been translated, and delete the rest.
+  foreach ($results as $row) {
+    $lid = db_query("SELECT s.lid FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = :source AND s.context = :context ORDER BY translation IS NULL", array(
+      ':source' => $row->source,
+      ':context' => $row->context,
+      ))->fetchField();
+    db_delete('locales_source')
+      ->condition('source', $row->source)
+      ->condition('context', $row->context)
+      ->condition('lid', $lid, '<>')
+      ->execute();
+  }
+
+  // Finally remove any rows from {locales_target} that refer to non-existing
+  // lids.
+  $subquery = db_select('locales_source', 't')->fields('t', array('lid'));
+  db_delete('locales_target')->condition('lid', $subquery, 'NOT IN')->execute();
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x"
  * The next series of updates should start at 9000.
  */
