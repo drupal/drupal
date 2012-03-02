@@ -975,15 +975,18 @@ class CommentPreviewTest extends CommentHelperCase {
     $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
     $this->drupalLogout();
 
-    // Login as web user and add a signature.
+    // Login as web user and add a signature and a user picture.
     $this->drupalLogin($this->web_user);
     variable_set('user_signatures', 1);
+    variable_set('user_pictures', 1);
     $test_signature = $this->randomName();
     $edit['signature[value]'] = '<a href="http://example.com/">' . $test_signature. '</a>';
     $edit['signature[format]'] = 'filtered_html';
+    $image = current($this->drupalGetTestFiles('image'));
+    $edit['files[picture_upload]'] = drupal_realpath($image->uri);
     $this->drupalPost('user/' . $this->web_user->uid . '/edit', $edit, t('Save'));
 
-    // Fill in the comment form and preview the comment.
+    // As the web user, fill in the comment form and preview the comment.
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
@@ -1000,6 +1003,9 @@ class CommentPreviewTest extends CommentHelperCase {
 
     // Check that the signature is displaying with the correct text format.
     $this->assertLink($test_signature);
+
+    // Check that the user picture is displayed.
+    $this->assertFieldByXPath("//div[contains(@class, 'comment-preview')]//div[contains(@class, 'user-picture')]//img", NULL, 'User picture displayed.');
   }
 
   /**

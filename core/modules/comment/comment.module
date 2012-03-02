@@ -1911,6 +1911,7 @@ function comment_preview($comment) {
       $comment->name = check_plain($account->name);
       $comment->signature = $account->signature;
       $comment->signature_format = $account->signature_format;
+      $comment->picture = $account->picture;
     }
     elseif (empty($comment->name)) {
       $comment->name = variable_get('anonymous', t('Anonymous'));
