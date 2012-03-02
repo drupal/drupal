@@ -2118,6 +2118,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
+        'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > DEFAULT: no language prefix, UI language is default and the browser language preference setting is not used.',
       ),
@@ -2126,6 +2127,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => "$language/admin/config",
         'expect' => $language_string,
+        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > DEFAULT: with language prefix, UI language is switched based on path prefix',
       ),
@@ -2134,6 +2136,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER),
         'path' => 'admin/config',
         'expect' => $language_browser_fallback_string,
+        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_BROWSER,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > BROWSER: no language prefix, UI language is determined by browser language preference',
       ),
@@ -2142,6 +2145,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER),
         'path' => "$language/admin/config",
         'expect' => $language_string,
+        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > BROWSER: with langage prefix, UI language is based on path prefix',
       ),
@@ -2150,6 +2154,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
+        'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
         'http_header' => $http_header_blah,
         'message' => 'URL (PATH) > BROWSER > DEFAULT: no language prefix and browser language preference set to unknown language should use default language',
       ),
@@ -2177,6 +2182,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'locale_language_negotiation_url_part' => LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN,
         'path' => 'admin/config',
         'expect' => $default_string,
+        'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (DOMAIN) > DEFAULT: default domain should get default language',
       ),
@@ -2188,6 +2194,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'locale_test_domain' => $language_domain,
         'path' => 'admin/config',
         'expect' => $language_string,
+        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (DOMAIN) > DEFAULT: domain example.cn should switch to Chinese',
       ),
@@ -2211,6 +2218,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     }
     $this->drupalGet($test['path'], array(), $test['http_header']);
     $this->assertText($test['expect'], $test['message']);
+    $this->assertText(t('Language negotiation provider: @name', array('@name' => $test['expected_provider'])));
   }
 
   /**

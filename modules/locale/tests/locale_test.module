@@ -32,6 +32,9 @@ function locale_test_boot() {
  */
 function locale_test_init() {
   locale_test_store_language_negotiation();
+  if (isset($GLOBALS['language']) && isset($GLOBALS['language']->provider)) {
+    drupal_set_message(t('Language negotiation provider: @name', array('@name' => $GLOBALS['language']->provider)));
+  }
 }
 
 /**
