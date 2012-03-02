@@ -2011,11 +2011,12 @@ class FileSaveTest extends FileHookTestCase {
     $this->assertEqual($loaded_file->status, $file->status, t("Status was saved correctly."));
     $this->assertEqual($saved_file->filesize, filesize($file->uri), t("File size was set correctly."), 'File');
     $this->assertTrue($saved_file->timestamp > 1, t("File size was set correctly."), 'File');
-
+    $this->assertEqual($loaded_file->langcode, LANGUAGE_NONE, t("Langcode was defaulted correctly."));
 
     // Resave the file, updating the existing record.
     file_test_reset();
     $saved_file->status = 7;
+    $saved_file->langcode = 'en';
     $resaved_file = file_save($saved_file);
 
     // Check that the correct hooks were called.
@@ -2026,6 +2027,7 @@ class FileSaveTest extends FileHookTestCase {
     $loaded_file = db_query('SELECT * FROM {file_managed} f WHERE f.fid = :fid', array(':fid' => $saved_file->fid))->fetch(PDO::FETCH_OBJ);
     $this->assertNotNull($loaded_file, t("Record still exists in the database."), 'File');
     $this->assertEqual($loaded_file->status, $saved_file->status, t("Status was saved correctly."));
+    $this->assertEqual($loaded_file->langcode, 'en', t("Langcode was saved correctly."));
   }
 }
 

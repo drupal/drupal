@@ -838,6 +838,13 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this file.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
       'filemime' => array(
         'description' => "The file's MIME type.",
         'type' => 'varchar',
@@ -1717,6 +1724,40 @@ function system_update_8003() {
     ),
     'primary key' => array('name'),
   ));
+}
+
+/**
+ * Adds {file_managed}.langcode field.
+ *
+ * @see http://drupal.org/node/1454538
+ */
+function system_update_8003() {
+  $langcode_field = array(
+    'description' => 'The {language}.langcode of this file.',
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+  );
+
+  // If a Drupal 7 contrib module already added a langcode field to support
+  // internationalization, keep it, but standardize the specification.
+  // Otherwise, add the field.
+  if (db_field_exists('file_managed', 'langcode')) {
+    // According to the documentation of db_change_field(), indeces using the
+    // field should be dropped first; if the contrib module created any indeces,
+    // it is its responsibility to drop them in an update function that runs
+    // before this one, which it can enforce via hook_update_dependencies().
+    db_change_field('file_managed', 'langcode', 'langcode', $langcode_field);
+  }
+  else {
+    // Files can be language-specific (e.g., a scanned document) or not (e.g.,
+    // a photograph). For a site being updated, Drupal does not have a way to
+    // determine which existing files are language-specific and in what
+    // language. Our best guess is to set all of them to LANGUAGE_NONE.
+    $langcode_field['initial'] = LANGUAGE_NONE;
+    db_add_field('file_managed', 'langcode', $langcode_field);
+  }
 }
 
 /**

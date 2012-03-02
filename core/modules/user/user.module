@@ -422,6 +422,10 @@ function user_save($account, $edit = array()) {
     foreach ($edit as $key => $value) {
       $account->$key = $value;
     }
+    // Default the user entity language to the user's preferred language.
+    if (!isset($account->langcode) && isset($account->preferred_langcode)) {
+      $account->langcode = $account->preferred_langcode;
+    }
     field_attach_presave('user', $account);
     module_invoke_all('entity_presave', $account, 'user');
 
@@ -3429,8 +3433,8 @@ function theme_user_signature($variables) {
  */
 function user_preferred_language($account, $default = NULL) {
   $language_list = language_list();
-  if (!empty($account->language) && isset($language_list[$account->language])) {
-    return $language_list[$account->language];
+  if (!empty($account->preferred_langcode) && isset($language_list[$account->preferred_langcode])) {
+    return $language_list[$account->preferred_langcode];
   }
   else {
     return $default ? $default : language_default();

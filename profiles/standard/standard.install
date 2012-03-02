@@ -289,6 +289,7 @@ function standard_install() {
     'name' => st('Tags'),
     'description' => $description,
     'machine_name' => 'tags',
+    'langcode' => language_default()->langcode,
     'help' => $help,
 
   );

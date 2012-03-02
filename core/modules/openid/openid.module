@@ -268,8 +268,8 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
       // specific) strings.
       foreach (array_reverse($candidate_languages) as $candidate_language) {
         if (isset($enabled_languages[$candidate_language])) {
-          $form['locale']['language']['#type'] = 'hidden';
-          $form['locale']['language']['#value'] = $candidate_language;
+          $form['locale']['preferred_langcode']['#type'] = 'hidden';
+          $form['locale']['preferred_langcode']['#value'] = $candidate_language;
         }
       }
     }

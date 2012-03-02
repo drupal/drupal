@@ -248,6 +248,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $vocabulary = (object) array(
       'name' => 'Test vocabulary',
       'machine_name' => 'test',
+      'langcode' => LANGUAGE_NONE,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
     );
@@ -256,6 +257,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $term = (object) array(
       'vid' => $vocabulary->vid,
       'name' => 'Test term',
+      'langcode' => LANGUAGE_NONE,
       'description' => NULL,
       'format' => 1,
     );
@@ -306,6 +308,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $vocabulary = (object) array(
       'name' => 'Test vocabulary',
       'machine_name' => 'test',
+      'langcode' => LANGUAGE_NONE,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
     );

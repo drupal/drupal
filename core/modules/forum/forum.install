@@ -33,6 +33,7 @@ function forum_enable() {
     $edit = array(
       'name' => t('Forums'),
       'machine_name' => 'forums',
+      'langcode' => language_default()->langcode,
       'description' => t('Forum navigation vocabulary'),
       'hierarchy' => 1,
       'module' => 'forum',
@@ -62,6 +63,7 @@ function forum_enable() {
     // Create a default forum so forum posts can be created.
     $edit = array(
       'name' => t('General discussion'),
+      'langcode' => language_default()->langcode,
       'description' => '',
       'parent' => array(0),
       'vid' => $vocabulary->vid,

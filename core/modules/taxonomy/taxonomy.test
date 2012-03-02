@@ -19,6 +19,7 @@ class TaxonomyWebTestCase extends DrupalWebTestCase {
     $vocabulary->name = $this->randomName();
     $vocabulary->description = $this->randomName();
     $vocabulary->machine_name = drupal_strtolower($this->randomName());
+    $vocabulary->langcode = LANGUAGE_NONE;
     $vocabulary->help = '';
     $vocabulary->nodes = array('article' => 'article');
     $vocabulary->weight = mt_rand(0, 10);
@@ -36,6 +37,7 @@ class TaxonomyWebTestCase extends DrupalWebTestCase {
     // Use the first available text format.
     $term->format = db_query_range('SELECT format FROM {filter_format}', 0, 1)->fetchField();
     $term->vid = $vocabulary->vid;
+    $term->langcode = LANGUAGE_NONE;
     taxonomy_term_save($term);
     return $term;
   }

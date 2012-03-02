@@ -2400,7 +2400,7 @@ class CommonFormatDateTestCase extends DrupalWebTestCase {
     // Create a test user to carry out the tests.
     $test_user = $this->drupalCreateUser();
     $this->drupalLogin($test_user);
-    $edit = array('language' => self::LANGCODE, 'mail' => $test_user->mail, 'timezone' => 'America/Los_Angeles');
+    $edit = array('preferred_langcode' => self::LANGCODE, 'mail' => $test_user->mail, 'timezone' => 'America/Los_Angeles');
     $this->drupalPost('user/' . $test_user->uid . '/edit', $edit, t('Save'));
 
     // Disable session saving as we are about to modify the global $user.
@@ -2409,7 +2409,7 @@ class CommonFormatDateTestCase extends DrupalWebTestCase {
     $real_user = $user;
     $user = user_load($test_user->uid, TRUE);
     $real_language = $language_interface->langcode;
-    $language_interface->langcode = $user->language;
+    $language_interface->langcode = $user->preferred_langcode;
     // Simulate a Drupal bootstrap with the logged-in user.
     date_default_timezone_set(drupal_get_user_timezone());
 

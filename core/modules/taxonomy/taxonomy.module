@@ -434,6 +434,7 @@ function taxonomy_admin_vocabulary_title_callback($vocabulary) {
  *   - vid: The ID of the vocabulary.
  *   - name: The human-readable name of the vocabulary.
  *   - machine_name: The machine name of the vocabulary.
+ *   - langcode: The language code of the vocabulary.
  *   - description: (optional) The vocabulary's description.
  *   - hierarchy: The hierarchy level of the vocabulary.
  *   - module: (optional) The module altering the vocabulary.
@@ -638,6 +639,7 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
  *   The taxonomy term object with the following properties:
  *   - vid: The ID of the vocabulary the term is assigned to.
  *   - name: The name of the term.
+ *   - langcode: The language code of the term.
  *   - tid: (optional) The unique ID for the term being saved. If $term->tid is
  *     empty or omitted, a new term will be inserted.
  *   - description: (optional) The term's description.
@@ -1829,6 +1831,7 @@ function taxonomy_field_presave($entity_type, $entity, $field, $instance, $langc
     if ($item['tid'] == 'autocreate') {
       $term = (object) $item;
       unset($term->tid);
+      $term->langcode = $langcode;
       taxonomy_term_save($term);
       $items[$delta]['tid'] = $term->tid;
     }

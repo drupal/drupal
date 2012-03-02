@@ -1644,13 +1644,13 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
     $this->assertNoText($name_disabled, t('Disabled language not present on form.'));
     // Switch to our custom language.
     $edit = array(
-      'language' => $langcode,
+      'preferred_langcode' => $langcode,
     );
     $this->drupalPost($path, $edit, t('Save'));
     // Ensure form was submitted successfully.
     $this->assertText(t('The changes have been saved.'), t('Changes were saved.'));
     // Check if language was changed.
-    $elements = $this->xpath('//input[@id=:id]', array(':id' => 'edit-language-' . $langcode));
+    $elements = $this->xpath('//input[@id=:id]', array(':id' => 'edit-preferred-langcode-' . $langcode));
     $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), t('Default language successfully updated.'));
 
     $this->drupalLogout();
@@ -1702,7 +1702,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
     // Check if the language selector is available on admin/people/create and
     // set to the currently active language.
     $this->drupalGet($langcode . '/admin/people/create');
-    $this->assertFieldChecked("edit-language-$langcode", t('Global language set in the language selector.'));
+    $this->assertFieldChecked("edit-preferred-langcode-$langcode", t('Global language set in the language selector.'));
 
     // Create a user with the admin/people/create form and check if the correct
     // language is set.
@@ -1717,7 +1717,8 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
     $this->drupalPost($langcode . '/admin/people/create', $edit, t('Create new account'));
 
     $user = user_load_by_name($username);
-    $this->assertEqual($user->language, $langcode, t('New user has correct language set.'));
+    $this->assertEqual($user->preferred_langcode, $langcode, t('New user has correct preferred language set.'));
+    $this->assertEqual($user->langcode, $langcode, t('New user has correct profile language set.'));
 
     // Register a new user and check if the language selector is hidden.
     $this->drupalLogout();
@@ -1734,7 +1735,8 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
     $this->drupalPost($langcode . '/user/register', $edit, t('Create new account'));
 
     $user = user_load_by_name($username);
-    $this->assertEqual($user->language, $langcode, t('New user has correct language set.'));
+    $this->assertEqual($user->preferred_langcode, $langcode, t('New user has correct preferred language set.'));
+    $this->assertEqual($user->langcode, $langcode, t('New user has correct profile language set.'));
 
     // Test if the admin can use the language selector and if the
     // correct language is was saved.
@@ -1742,7 +1744,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
 
     $this->drupalLogin($admin_user);
     $this->drupalGet($user_edit);
-    $this->assertFieldChecked("edit-language-$langcode", t('Language selector is accessible and correct language is selected.'));
+    $this->assertFieldChecked("edit-preferred-langcode-$langcode", t('Language selector is accessible and correct language is selected.'));
 
     // Set pass_raw so we can login the new user.
     $user->pass_raw = $this->randomName(10);
@@ -1755,7 +1757,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
 
     $this->drupalLogin($user);
     $this->drupalGet($user_edit);
-    $this->assertFieldChecked("edit-language-$langcode", t('Language selector is accessible and correct language is selected.'));
+    $this->assertFieldChecked("edit-preferred-langcode-$langcode", t('Language selector is accessible and correct language is selected.'));
   }
 }
 
@@ -2682,7 +2684,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
 
     // Change user language preference, this way interface language is always
     // French no matter what path prefix the URLs have.
-    $edit = array('language' => 'fr');
+    $edit = array('preferred_langcode' => 'fr');
     $this->drupalPost("user/{$admin_user->uid}/edit", $edit, t('Save'));
   }
 

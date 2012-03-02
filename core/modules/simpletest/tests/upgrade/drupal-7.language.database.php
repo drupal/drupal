@@ -878,3 +878,26 @@ db_insert('field_revision_comment_body')->fields(array(
   'comment_body_format' => 'filtered_html',
 ))
 ->execute();
+
+// Add a managed file.
+db_insert('file_managed')->fields(array(
+  'fid',
+  'uid',
+  'filename',
+  'uri',
+  'filemime',
+  'filesize',
+  'status',
+  'timestamp'
+))
+->values(array(
+  'fid' => '1',
+  'uid' => '1',
+  'filename' => 'foo.txt',
+  'uri' => 'public://foo.txt',
+  'filemime' => 'text/plain',
+  'filesize' => 0,
+  'status' => 1,
+  'timestamp' => '1314997642',
+))
+->execute();
