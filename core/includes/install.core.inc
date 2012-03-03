@@ -311,7 +311,7 @@ function install_begin_request(&$install_state) {
   if ($install_state['settings_verified']) {
     // Initialize the database system. Note that the connection
     // won't be initialized until it is actually requested.
-    require_once DRUPAL_ROOT . '/core/includes/database/database.inc';
+    require_once DRUPAL_ROOT . '/core/includes/database.inc';
 
     // Verify the last completed task in the database, if there is one.
     $task = install_verify_completed_task();

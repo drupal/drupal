@@ -2421,7 +2421,7 @@ function _drupal_bootstrap_database() {
 
   // Initialize the database system. Note that the connection
   // won't be initialized until it is actually requested.
-  require_once DRUPAL_ROOT . '/core/includes/database/database.inc';
+  require_once DRUPAL_ROOT . '/core/includes/database.inc';
 
   // Register autoload functions so that we can access classes and interfaces.
   // The database autoload routine comes first so that we can load the database

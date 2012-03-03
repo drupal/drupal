@@ -39,7 +39,7 @@ function _drupal_maintenance_theme() {
     // environment, we need to bootstrap just enough to allow hook invocations
     // to work. See _drupal_log_error().
     if (!class_exists('Database', FALSE)) {
-      require_once DRUPAL_ROOT . '/core/includes/database/database.inc';
+      require_once DRUPAL_ROOT . '/core/includes/database.inc';
     }
 
     // We use the default theme as the maintenance theme. If a default theme
