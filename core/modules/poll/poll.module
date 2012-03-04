@@ -823,7 +823,8 @@ function poll_view_results($node, $view_mode, $block = FALSE) {
 
     $poll_results[] = array(
       '#theme' => 'meter',
-      '#prefix' => '<div class="choice-title">' . check_plain($choice['chtext']) . '</div>',
+      '#prefix' => '<dt class="choice-title">' . check_plain($choice['chtext']) . '</dt>' . PHP_EOL . '<dd class="choice-result">',
+      '#suffix' => '</dd>' . PHP_EOL,
       '#display_value' =>  t('!percentage%', array('!percentage' => $percentage)) . $display_votes,
       '#min' => 0,
       '#max' => $total_votes,
