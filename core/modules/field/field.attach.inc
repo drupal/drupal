@@ -73,7 +73,7 @@ const FIELD_STORAGE_INSERT = 'insert';
  * @{
  * Operate on Field API data attached to Drupal entities.
  *
- * Field Attach API functions load, store, display, generate Form API
+ * Field Attach API functions load, store, display, generate Field API
  * structures, and perform a variety of other functions for field data attached
  * to individual entities.
  *
