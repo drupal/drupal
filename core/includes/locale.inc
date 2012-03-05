@@ -214,7 +214,7 @@ function locale_language_from_user($languages) {
   // User preference (only for logged users).
   global $user;
 
-  if ($user->uid) {
+  if ($user->uid && !empty($user->preferred_langcode)) {
     return $user->preferred_langcode;
   }
 

@@ -97,4 +97,18 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
     $file = db_query('SELECT * FROM {file_managed} WHERE fid = :fid', array(':fid' => 1))->fetchObject();
     $this->assertEqual($file->langcode, LANGUAGE_NONE);
   }
+
+  /**
+   * Tests language domain upgrade path.
+   */
+  public function testLanguageUrlUpgrade() {
+    $language_domain = 'ca.example.com';
+    db_update('languages')->fields(array('domain' => 'http://' . $language_domain . ':8888'))->condition('language', 'ca')->execute();
+    variable_set('locale_language_negotiation_url_part', 1);
+
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    $domains = locale_language_negotiation_url_domains();
+    $this->assertTrue($domains['ca'] == $language_domain, t('Language domain for Catalan properly upgraded.'));
+  }
 }
