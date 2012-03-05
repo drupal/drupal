@@ -1033,7 +1033,7 @@ function form_test_select_submit($form, &$form_state) {
  * Builds a form to test the placeholder attribute.
  */
 function form_test_placeholder_test($form, &$form_state) {
-  foreach (array('textfield', 'textarea', 'password', 'tel') as $type) {
+  foreach (array('textfield', 'textarea', 'password', 'tel', 'email') as $type) {
     $form[$type] = array(
       '#type' => $type,
       '#title' => $type,
@@ -1243,6 +1243,14 @@ function _form_test_disabled_elements($form, &$form_state) {
       '#test_hijack_value' => 'HIJACK',
     );
   }
+
+  // Try to hijack the email field with a valid email.
+  $form['disabled_container']['disabled_container_email'] = array(
+    '#type' => 'email',
+    '#title' => 'email',
+    '#default_value' => 'foo@example.com',
+    '#test_hijack_value' => 'bar@example.com',
+  );
 
   // Text format.
   $form['text_format'] = array(
