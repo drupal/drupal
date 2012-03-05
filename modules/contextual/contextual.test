@@ -31,8 +31,10 @@ class ContextualDynamicContextTestCase extends DrupalWebTestCase {
    * Tests contextual links on node lists with different permissions.
    */
   function testNodeLinks() {
-    // Promote nodes to the front page. One article node the user can edit, one
-    // page node he can not edit and another article node he can edit.
+    // Create three nodes in the following order:
+    // - An article, which should be user-editable.
+    // - A page, which should not be user-editable.
+    // - A second article, which should also be user-editable.
     $node1 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $node2 = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1));
     $node3 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
