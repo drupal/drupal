@@ -20,22 +20,22 @@ const LANGUAGE_NEGOTIATION_DEFAULT = 'language-default';
  *   The negotiated language object.
  */
 function language_types_initialize($type) {
-  // Execute the language providers in the order they were set up and return the
-  // first valid language found.
+  // Execute the language negotiation methods in the order they were set up and
+  // return the first valid language found.
   $negotiation = variable_get("language_negotiation_$type", array());
 
-  foreach ($negotiation as $provider_id => $provider) {
-    $language = language_provider_invoke($provider_id, $provider);
+  foreach ($negotiation as $method_id => $method) {
+    $language = language_negotiation_method_invoke($method_id, $method);
     if ($language) {
-      // Remember the provider key used to detect the language.
-      $language->provider = $provider_id;
+      // Remember the method ID used to detect the language.
+      $language->method_id = $method_id;
       return $language;
     }
   }
 
   // If no other language was found use the default one.
   $language = language_default();
-  $language->provider = LANGUAGE_NEGOTIATION_DEFAULT;
+  $language->method_id = LANGUAGE_NEGOTIATION_DEFAULT;
   return $language;
 }
 
@@ -68,11 +68,11 @@ function language_types_info() {
  * language type itself.
  *
  * @param $stored
- *   Optional. By default retrieves values from the 'language_types' variable to
- *   avoid unnecessary hook invocations.
- *   If set to FALSE retrieves values from the actual language type definitions.
- *   This allows to react to alterations performed on the definitions by modules
- *   installed after the 'language_types' variable is set.
+ *   (optional) By default, retrieves values from the 'language_types' variable
+ *   to avoid unnecessary hook invocations. If set to FALSE, retrieves values
+ *   from the actual language type definitions. This allows reaction to
+ *   alterations performed on the definitions by modules installed after the
+ *   'language_types' variable is set.
  *
  * @return
  *   An array of language type names.
@@ -99,7 +99,7 @@ function language_types_get_configurable($stored = TRUE) {
 }
 
 /**
- * Disable the given language types.
+ * Disables the given language types.
  *
  * @param $types
  *   An array of language types.
@@ -128,17 +128,17 @@ function language_types_set() {
   // whether the 'fixed' key is defined. Non-configurable (fixed) language types
   // have their language negotiation settings stored there.
   $language_types = array();
-  $defined_providers = language_negotiation_info();
+  $negotiation_info = language_negotiation_info();
   foreach (language_types_info() as $type => $info) {
     if (isset($info['fixed'])) {
       $language_types[$type] = FALSE;
-      $negotiation = array();
-      foreach ($info['fixed'] as $weight => $id) {
-        if (isset($defined_providers[$id])) {
-          $negotiation[$id] = $weight;
+      $method_weights = array();
+      foreach ($info['fixed'] as $weight => $method_id) {
+        if (isset($negotiation_info[$method_id])) {
+          $method_weights[$method_id] = $weight;
         }
       }
-      language_negotiation_set($type, $negotiation);
+      language_negotiation_set($type, $method_weights);
     }
     else {
       $language_types[$type] = TRUE;
@@ -154,52 +154,35 @@ function language_types_set() {
 }
 
 /**
- * Check if a language provider is enabled.
- *
- * This has two possible behaviors:
- *  - If $provider_id is given return its ID if enabled, FALSE otherwise.
- *  - If no ID is passed the first enabled language provider is returned.
+ * Returns the ID of the language type's first language negotiation method.
  *
  * @param $type
- *   The language negotiation type.
- * @param $provider_id
- *   The language provider ID.
- *
- * @return
- *   The provider ID if it is enabled, FALSE otherwise.
+ *   The language type.
  */
-function language_negotiation_get($type, $provider_id = NULL) {
+function language_negotiation_method_get_first($type) {
   $negotiation = variable_get("language_negotiation_$type", array());
-
-  if (empty($negotiation)) {
-    return empty($provider_id) ? LANGUAGE_NEGOTIATION_DEFAULT : FALSE;
-  }
-
-  if (empty($provider_id)) {
-    return key($negotiation);
-  }
-
-  if (isset($negotiation[$provider_id])) {
-    return $provider_id;
-  }
-
-  return FALSE;
+  return empty($negotiation) ? LANGUAGE_NEGOTIATION_DEFAULT : key($negotiation);
 }
 
 /**
- * Check if the given language provider is enabled for any configurable language
- * type.
+ * Checks if a language negotiation method is enabled for a language type.
  *
- * @param $provider_id
- *   The language provider ID.
+ * @param $method_id
+ *   The language negotiation method ID.
+ * @param $type
+ *   (optional) The language type. If none is passed, all the configurable
+ *   language types will be inspected.
  *
  * @return
- *   TRUE if there is at least one language type for which the give language
- *   provider is enabled, FALSE otherwise.
+ *   TRUE if the method is enabled for at least one of the given language
+ *   types, or FALSE otherwise.
  */
-function language_negotiation_get_any($provider_id) {
-  foreach (language_types_get_configurable() as $type) {
-    if (language_negotiation_get($type, $provider_id)) {
+function language_negotiation_method_enabled($method_id, $type = NULL) {
+  $language_types = !empty($type) ? array($type) : language_types_get_configurable();
+
+  foreach ($language_types as $type) {
+    $negotiation = variable_get("language_negotiation_$type", array());
+    if (isset($negotiation[$method_id])) {
       return TRUE;
     }
   }
@@ -208,10 +191,10 @@ function language_negotiation_get_any($provider_id) {
 }
 
 /**
- * Return the language switch links for the given language.
+ * Returns the language switch links for the given language type.
  *
  * @param $type
- *   The language negotiation type.
+ *   The language type.
  * @param $path
  *   The internal path the switch links will be relative to.
  *
@@ -222,19 +205,19 @@ function language_negotiation_get_switch_links($type, $path) {
   $links = FALSE;
   $negotiation = variable_get("language_negotiation_$type", array());
 
-  foreach ($negotiation as $id => $provider) {
-    if (isset($provider['callbacks']['switcher'])) {
-      if (isset($provider['file'])) {
-        require_once DRUPAL_ROOT . '/' . $provider['file'];
+  foreach ($negotiation as $method_id => $method) {
+    if (isset($method['callbacks']['language_switch'])) {
+      if (isset($method['file'])) {
+        require_once DRUPAL_ROOT . '/' . $method['file'];
       }
 
-      $callback = $provider['callbacks']['switcher'];
+      $callback = $method['callbacks']['language_switch'];
       $result = $callback($type, $path);
 
       if (!empty($result)) {
         // Allow modules to provide translations for specific links.
         drupal_alter('language_switch_links', $result, $type, $path);
-        $links = (object) array('links' => $result, 'provider' => $id);
+        $links = (object) array('links' => $result, 'method_id' => $method_id);
         break;
       }
     }
@@ -244,7 +227,7 @@ function language_negotiation_get_switch_links($type, $path) {
 }
 
 /**
- * Updates language configuration to remove any language provider that is no longer defined.
+ * Removes any language negotiation methods that are no longer defined.
  */
 function language_negotiation_purge() {
   // Ensure that we are getting the defined language negotiation information. An
@@ -253,60 +236,54 @@ function language_negotiation_purge() {
   drupal_static_reset('language_negotiation_info');
   drupal_static_reset('language_types_info');
 
-  $defined_providers = language_negotiation_info();
+  $negotiation_info = language_negotiation_info();
   foreach (language_types_info() as $type => $type_info) {
     $weight = 0;
-    $negotiation = array();
-    foreach (variable_get("language_negotiation_$type", array()) as $id => $provider) {
-      if (isset($defined_providers[$id])) {
-        $negotiation[$id] = $weight++;
+    $method_weights = array();
+    foreach (variable_get("language_negotiation_$type", array()) as $method_id => $method) {
+      if (isset($negotiation_info[$method_id])) {
+        $method_weights[$method_id] = $weight++;
       }
     }
-    language_negotiation_set($type, $negotiation);
+    language_negotiation_set($type, $method_weights);
   }
 }
 
 /**
- * Save a list of language providers.
+ * Saves a list of language negotiation methods for a language type.
  *
  * @param $type
- *   The language negotiation type.
- * @param $language_providers
- *   An array of language provider weights keyed by id.
- *   @see language_provider_weight()
+ *   The language type.
+ * @param $method_weights
+ *   An array of language negotiation method weights keyed by method id.
  */
-function language_negotiation_set($type, $language_providers) {
+function language_negotiation_set($type, $method_weights) {
   // Save only the necessary fields.
-  $provider_fields = array('callbacks', 'file', 'cache');
+  $method_fields = array('callbacks', 'file', 'cache');
 
   $negotiation = array();
-  $providers_weight = array();
-  $defined_providers = language_negotiation_info();
+  $negotiation_info = language_negotiation_info();
   $default_types = language_types_get_configurable(FALSE);
 
-  // Initialize the providers weight list.
-  foreach ($language_providers as $id => $provider) {
-    $providers_weight[$id] = language_provider_weight($provider);
-  }
+  // Order the language negotiation method list by weight.
+  asort($method_weights);
 
-  // Order providers list by weight.
-  asort($providers_weight);
-
-  foreach ($providers_weight as $id => $weight) {
-    if (isset($defined_providers[$id])) {
-      $provider = $defined_providers[$id];
-      // If the provider does not express any preference about types, make it
-      // available for any configurable type.
-      $types = array_flip(isset($provider['types']) ? $provider['types'] : $default_types);
-      // Check if the provider is defined and has the right type.
+  foreach ($method_weights as $method_id => $weight) {
+    if (isset($negotiation_info[$method_id])) {
+      $method = $negotiation_info[$method_id];
+      // If the language negotiation method does not express any preference
+      // about types, make it available for any configurable type.
+      $types = array_flip(isset($method['types']) ? $method['types'] : $default_types);
+      // Check if the language negotiation method is defined and has the right
+      // type.
       if (isset($types[$type])) {
-        $provider_data = array();
-        foreach ($provider_fields as $field) {
-          if (isset($provider[$field])) {
-            $provider_data[$field] = $provider[$field];
+        $method_data = array();
+        foreach ($method_fields as $field) {
+          if (isset($method[$field])) {
+            $method_data[$field] = $method[$field];
           }
         }
-        $negotiation[$id] = $provider_data;
+        $negotiation[$method_id] = $method_data;
       }
     }
   }
@@ -315,20 +292,20 @@ function language_negotiation_set($type, $language_providers) {
 }
 
 /**
- * Return all the defined language providers.
+ * Returns all defined language negotiation methods.
  *
  * @return
- *   An array of language providers.
+ *   An array of language negotiation methods.
  */
 function language_negotiation_info() {
-  $language_providers = &drupal_static(__FUNCTION__);
+  $negotiation_info = &drupal_static(__FUNCTION__);
 
-  if (!isset($language_providers)) {
-    // Collect all the module-defined language negotiation providers.
-    $language_providers = module_invoke_all('language_negotiation_info');
+  if (!isset($negotiation_info)) {
+    // Collect all the module-defined language negotiation methods.
+    $negotiation_info = module_invoke_all('language_negotiation_info');
 
-    // Add the default language provider.
-    $language_providers[LANGUAGE_NEGOTIATION_DEFAULT] = array(
+    // Add the default language negotiation method.
+    $negotiation_info[LANGUAGE_NEGOTIATION_DEFAULT] = array(
       'callbacks' => array('language' => 'language_from_default'),
       'weight' => 10,
       'name' => t('Default language'),
@@ -336,74 +313,60 @@ function language_negotiation_info() {
       'config' => 'admin/config/regional/language',
     );
 
-    // Let other modules alter the list of language providers.
-    drupal_alter('language_negotiation_info', $language_providers);
+     // Let other modules alter the list of language negotiation methods.
+     drupal_alter('language_negotiation_info', $negotiation_info);
   }
 
-  return $language_providers;
+  return $negotiation_info;
 }
 
 /**
- * Helper function used to cache the language providers results.
+ * Invokes a language negotiation method and caches the results.
  *
- * @param $provider_id
- *   The language provider ID.
- * @param $provider
- *   The language provider to be invoked. If not passed it will be explicitly
- *   loaded through language_negotiation_info().
+ * @param $method_id
+ *   The language negotiation method ID.
+ * @param $method
+ *   (optional) The language negotiation method to be invoked. If not passed it
+ *   will be explicitly loaded through language_negotiation_info().
  *
  * @return
- *   The language provider's return value.
+ *   The language negotiation method's return value.
  */
-function language_provider_invoke($provider_id, $provider = NULL) {
+function language_negotiation_method_invoke($method_id, $method = NULL) {
   $results = &drupal_static(__FUNCTION__);
 
-  if (!isset($results[$provider_id])) {
+  if (!isset($results[$method_id])) {
     global $user;
 
     // Get the enabled languages only.
     $languages = language_list(TRUE);
 
-    if (!isset($provider)) {
-      $providers = language_negotiation_info();
-      $provider = $providers[$provider_id];
+    if (!isset($method)) {
+      $negotiation_info = language_negotiation_info();
+      $method = $negotiation_info[$method_id];
     }
 
-    if (isset($provider['file'])) {
-      require_once DRUPAL_ROOT . '/' . $provider['file'];
+    if (isset($method['file'])) {
+      require_once DRUPAL_ROOT . '/' . $method['file'];
     }
 
-    // If the language provider has no cache preference or this is satisfied
-    // we can execute the callback.
-    $config = config('system.performance');
-    $cache = !isset($provider['cache']) || $user->uid || $provider['cache'] == $config->get('cache');
-    $callback = isset($provider['callbacks']['language']) ? $provider['callbacks']['language'] : FALSE;
+    // If the language negotiation method has no cache preference or this is
+    // satisfied we can execute the callback.
+    $cache = !isset($method['cache']) || $user->uid || $method['cache'] == variable_get('cache', 0);
+    $callback = isset($method['callbacks']['negotiation']) ? $method['callbacks']['negotiation'] : FALSE;
     $langcode = $cache && function_exists($callback) ? $callback($languages) : FALSE;
-    $results[$provider_id] = isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
+    $results[$method_id] = isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
   }
 
   // Since objects are resources we need to return a clone to prevent the
-  // provider cache to be unintentionally altered. The same providers might be
-  // used with different language types based on configuration.
-  return !empty($results[$provider_id]) ? clone($results[$provider_id]) : $results[$provider_id];
+  // language negotiation method cache to be unintentionally altered. The same
+  // language negotiation methods might be used with different language types
+  // based on configuration.
+  return !empty($results[$method_id]) ? clone($results[$method_id]) : $results[$method_id];
 }
 
 /**
- * Return the passed language provider weight or a default value.
- *
- * @param $provider
- *   A language provider data structure.
- *
- * @return
- *   A numeric weight.
- */
-function language_provider_weight($provider) {
-  $default = is_numeric($provider) ? $provider : 0;
-  return isset($provider['weight']) && is_numeric($provider['weight']) ? $provider['weight'] : $default;
-}
-
-/**
- * Default language provider.
+ * Returns the default language code.
  *
  * @return
  *   The default language code.

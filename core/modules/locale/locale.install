@@ -17,14 +17,14 @@ function locale_install() {
   // We cannot rely on language negotiation hooks here, because locale module is
   // not enabled yet. Therefore language_negotiation_set() cannot be used.
   $info = locale_language_negotiation_info();
-  $provider = $info[LANGUAGE_NEGOTIATION_URL];
-  $provider_fields = array('callbacks', 'file', 'cache');
+  $method = $info[LANGUAGE_NEGOTIATION_URL];
+  $method_fields = array('callbacks', 'file', 'cache');
   $negotiation = array();
 
   // Store only the needed data.
-  foreach ($provider_fields as $field) {
-    if (isset($provider[$field])) {
-      $negotiation[LANGUAGE_NEGOTIATION_URL][$field] = $provider[$field];
+  foreach ($method_fields as $field) {
+    if (isset($method[$field])) {
+      $negotiation[LANGUAGE_NEGOTIATION_URL][$field] = $method[$field];
     }
   }
 
@@ -99,7 +99,7 @@ function locale_uninstall() {
 
   foreach (language_types_get_all() as $type) {
     variable_del("language_negotiation_$type");
-    variable_del("locale_language_providers_weight_$type");
+    variable_del("locale_language_negotiation_methods_weight_$type");
   }
 
   // Remove all node type language variables. Node module might have been
@@ -345,6 +345,37 @@ function locale_update_8003() {
 
   if (!empty($message)) {
     return $message;
+  }
+}
+
+/**
+ * Rename language providers to language negotiation methods.
+ */
+function locale_update_8004() {
+  $types = variable_get('language_types', NULL);
+  if (!empty($types)) {
+    foreach ($types as $type => $configurable) {
+      // Rename the negotiation and language switch callback keys.
+      $negotiation = variable_get('language_negotiation_' . $type, NULL);
+      if (!empty($negotiation)) {
+        foreach ($negotiation as $method_id => &$method) {
+          $method['callbacks']['negotiation'] = $method['callbacks']['language'];
+          unset($method['callbacks']['language']);
+          if (isset($method['callbacks']['switcher'])) {
+            $method['callbacks']['language_switch'] = $method['callbacks']['switcher'];
+            unset($method['callbacks']['switcher']);
+          }
+        }
+        variable_set('language_negotiation_' . $type, $negotiation);
+      }
+
+      // Rename the language negotiation methods weight variable.
+      $weight = variable_get('locale_language_providers_weight_' . $type , NULL);
+      if ($weight !== NULL) {
+        variable_set('locale_language_negotiation_methods_weight_' . $type , $weight);
+        variable_del('locale_language_providers_weight_' . $type);
+      }
+    }
   }
 }
 

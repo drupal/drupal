@@ -74,9 +74,9 @@ function hook_language_switch_links_alter(array &$links, $type, $path) {
  *   following key-value pairs:
  *   - "name": The human-readable language type identifier.
  *   - "description": A description of the language type.
- *   - "fixed": A fixed array of language provider identifiers to use to
- *     initialize this language. Defining this key makes the language type
- *     non-configurable and will always use the specified providers in the given
+ *   - "fixed": A fixed array of language negotiation method identifiers to use
+ *     to initialize this language. Defining this key makes the language type
+ *     non-configurable and will always use the specified methods in the given
  *     priority order.
  */
 function hook_language_types_info() {
@@ -86,7 +86,7 @@ function hook_language_types_info() {
       'description' => t('A custom language type.'),
     ),
     'fixed_custom_language_type' => array(
-      'fixed' => array('custom_language_provider'),
+      'fixed' => array('custom_language_negotiation_method'),
     ),
   );
 }
@@ -106,59 +106,59 @@ function hook_language_types_info_alter(array &$language_types) {
 }
 
 /**
- * Allow modules to define their own language providers.
+ * Allow modules to define their own language negotiation methods.
  *
  * @return
- *   An array of language provider definitions. Each language provider has an
- *   identifier key. The language provider definition is an associative array
- *   that may contain the following key-value pairs:
- *   - "types": An array of allowed language types. If a language provider does
- *     not specify which language types it should be used with, it will be
- *     available for all the configurable language types.
+ *   An array of language negotiation method definitions. Each method has an
+ *   identifier key. The language negotiation method definition is an indexed
+ *   array that may contain the following key-value pairs:
+ *   - "types": An array of allowed language types. If a language negotiation
+ *     method does not specify which language types it should be used with, it
+ *     will be available for all the configurable language types.
  *   - "callbacks": An array of functions that will be called to perform various
  *     tasks. Possible key-value pairs are:
- *     - "language": Required. The callback that will determine the language
+ *     - "negotiation": Required. The callback that will determine the language
  *       value.
- *     - "switcher": The callback that will determine the language switch links
- *       associated to the current language provider.
+ *     - "language_switch": The callback that will determine the language
+ *       switch links associated to the current language method.
  *     - "url_rewrite": The callback that will provide URL rewriting.
  *   - "file": A file that will be included before the callback is invoked; this
  *     allows callback functions to be in separate files.
- *   - "weight": The default weight the language provider has.
+ *   - "weight": The default weight the language negotiation method has.
  *   - "name": A human-readable identifier.
- *   - "description": A description of the language provider.
- *   - "config": An internal path pointing to the language provider
+ *   - "description": A description of the language negotiation method.
+ *   - "config": An internal path pointing to the language negotiation method
  *     configuration page.
  *   - "cache": The value Drupal's page cache should be set to for the current
- *     language provider to be invoked.
+ *     language negotiation method to be invoked.
  */
 function hook_language_negotiation_info() {
   return array(
-    'custom_language_provider' => array(
+    'custom_language_negotiation_method' => array(
       'callbacks' => array(
-        'language' => 'custom_language_provider_callback',
-        'switcher' => 'custom_language_switcher_callback',
-        'url_rewrite' => 'custom_language_url_rewrite_callback',
+        'negotiation' => 'custom_negotiation_callback',
+        'language_switch' => 'custom_language_switch_callback',
+        'url_rewrite' => 'custom_url_rewrite_callback',
       ),
       'file' => drupal_get_path('module', 'custom') . '/custom.module',
       'weight' => -4,
       'types' => array('custom_language_type'),
-      'name' => t('Custom language provider'),
-      'description' => t('This is a custom language provider.'),
+      'name' => t('Custom language negotiation method'),
+      'description' => t('This is a custom language negotiation method.'),
       'cache' => 0,
     ),
   );
 }
 
 /**
- * Perform alterations on language providers.
+ * Perform alterations on language negotiation methods.
  *
- * @param $language_providers
- *   Array of language provider definitions.
+ * @param $negotiation_info
+ *   Array of language negotiation method definitions.
  */
-function hook_language_negotiation_info_alter(array &$language_providers) {
-  if (isset($language_providers['custom_language_provider'])) {
-    $language_providers['custom_language_provider']['config'] = 'admin/config/regional/language/detection/custom-language-provider';
+function hook_language_negotiation_info_alter(array &$negotiation_info) {
+  if (isset($negotiation_info['custom_language_method'])) {
+    $negotiation_info['custom_language_method']['config'] = 'admin/config/regional/language/detection/custom-language-method';
   }
 }
 

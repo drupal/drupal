@@ -16,7 +16,7 @@ function language_negotiation_configure_form() {
     '#theme' => 'language_negotiation_configure_form',
     '#language_types' => language_types_get_configurable(FALSE),
     '#language_types_info' => language_types_info(),
-    '#language_providers' => language_negotiation_info(),
+    '#language_negotiation_info' => language_negotiation_info(),
   );
 
   foreach ($form['#language_types'] as $type) {
@@ -33,7 +33,7 @@ function language_negotiation_configure_form() {
 }
 
 /**
- * Helper function to build a language provider table.
+ * Builds a language negotion method configuration table.
  */
 function language_negotiation_configure_form_table(&$form, $type) {
   $info = $form['#language_types_info'][$type];
@@ -42,74 +42,74 @@ function language_negotiation_configure_form_table(&$form, $type) {
     '#title' => t('@type language detection', array('@type' => $info['name'])),
     '#tree' => TRUE,
     '#description' => $info['description'],
-    '#language_providers' => array(),
+    '#language_negotiation_info' => array(),
     '#show_operations' => FALSE,
     'weight' => array('#tree' => TRUE),
     'enabled' => array('#tree' => TRUE),
   );
 
-  $language_providers = $form['#language_providers'];
-  $enabled_providers = variable_get("language_negotiation_$type", array());
-  $providers_weight = variable_get("locale_language_providers_weight_$type", array());
+  $negotiation_info = $form['#language_negotiation_info'];
+  $enabled_methods = variable_get("language_negotiation_$type", array());
+  $methods_weight = variable_get("locale_language_negotiation_methods_weight_$type", array());
 
-  // Add missing data to the providers lists.
-  foreach ($language_providers as $id => $provider) {
-    if (!isset($providers_weight[$id])) {
-      $providers_weight[$id] = language_provider_weight($provider);
+  // Add missing data to the methods lists.
+  foreach ($negotiation_info as $method_id => $method) {
+    if (!isset($methods_weight[$method_id])) {
+      $methods_weight[$method_id] = isset($method['weight']) ? $method['weight'] : 0;
     }
   }
 
-  // Order providers list by weight.
-  asort($providers_weight);
+  // Order methods list by weight.
+  asort($methods_weight);
 
-  foreach ($providers_weight as $id => $weight) {
-    // A language provider might be no more available if the defining module has
+  foreach ($methods_weight as $method_id => $weight) {
+    // A language method might be no more available if the defining module has
     // been disabled after the last configuration saving.
-    if (!isset($language_providers[$id])) {
+    if (!isset($negotiation_info[$method_id])) {
       continue;
     }
 
-    $enabled = isset($enabled_providers[$id]);
-    $provider = $language_providers[$id];
+    $enabled = isset($enabled_methods[$method_id]);
+    $method = $negotiation_info[$method_id];
 
-    // List the provider only if the current type is defined in its 'types' key.
+    // List the method only if the current type is defined in its 'types' key.
     // If it is not defined default to all the configurable language types.
-    $types = array_flip(isset($provider['types']) ? $provider['types'] : $form['#language_types']);
+    $types = array_flip(isset($method['types']) ? $method['types'] : $form['#language_types']);
 
     if (isset($types[$type])) {
-      $table_form['#language_providers'][$id] = $provider;
-      $provider_name = check_plain($provider['name']);
+      $table_form['#language_negotiation_info'][$method_id] = $method;
+      $method_name = check_plain($method['name']);
 
-      $table_form['weight'][$id] = array(
+      $table_form['weight'][$method_id] = array(
         '#type' => 'weight',
-        '#title' => t('Weight for !title language detection method', array('!title' => drupal_strtolower($provider_name))),
+        '#title' => t('Weight for !title language detection method', array('!title' => drupal_strtolower($method_name))),
         '#title_display' => 'invisible',
         '#default_value' => $weight,
-        '#attributes' => array('class' => array("language-provider-weight-$type")),
+        '#attributes' => array('class' => array("language-method-weight-$type")),
       );
 
-      $table_form['title'][$id] = array('#markup' => $provider_name);
+      $table_form['title'][$method_id] = array('#markup' => $method_name);
 
-      $table_form['enabled'][$id] = array(
+      $table_form['enabled'][$method_id] = array(
         '#type' => 'checkbox',
-        '#title' => t('Enable !title language detection method', array('!title' => drupal_strtolower($provider_name))),
+        '#title' => t('Enable !title language detection method', array('!title' => drupal_strtolower($method_name))),
         '#title_display' => 'invisible',
         '#default_value' => $enabled,
       );
-      if ($id === LANGUAGE_NEGOTIATION_DEFAULT) {
-        $table_form['enabled'][$id]['#default_value'] = TRUE;
-        $table_form['enabled'][$id]['#attributes'] = array('disabled' => 'disabled');
+      if ($method_id === LANGUAGE_NEGOTIATION_DEFAULT) {
+        $table_form['enabled'][$method_id]['#default_value'] = TRUE;
+        $table_form['enabled'][$method_id]['#attributes'] = array('disabled' => 'disabled');
       }
 
-      $table_form['description'][$id] = array('#markup' => filter_xss_admin($provider['description']));
+      $table_form['description'][$method_id] = array('#markup' => filter_xss_admin($method['description']));
 
       $config_op = array();
-      if (isset($provider['config'])) {
-        $config_op = array('#type' => 'link', '#title' => t('Configure'), '#href' => $provider['config']);
+      if (isset($method['config'])) {
+        $config_op = array('#type' => 'link', '#title' => t('Configure'), '#href' => $method['config']);
         // If there is at least one operation enabled show the operation column.
         $table_form['#show_operations'] = TRUE;
       }
-      $table_form['operation'][$id] = $config_op;
+      $table_form['operation'][$method_id] = $config_op;
     }
   }
 
@@ -169,12 +169,12 @@ function theme_language_negotiation_configure_form($variables) {
     $variables = array(
       'header' => $header,
       'rows' => $rows,
-      'attributes' => array('id' => "language-negotiation-providers-$type"),
+      'attributes' => array('id' => "language-negotiation-methods-$type"),
     );
     $table  = theme('table', $variables);
     $table .= drupal_render_children($form[$type]);
 
-    drupal_add_tabledrag("language-negotiation-providers-$type", 'order', 'sibling', "language-provider-weight-$type");
+    drupal_add_tabledrag("language-negotiation-methods-$type", 'order', 'sibling', "language-method-weight-$type");
 
     $output .= '<div class="form-item">' . $title . $description . $table . '</div>';
   }
@@ -190,21 +190,19 @@ function language_negotiation_configure_form_submit($form, &$form_state) {
   $configurable_types = $form['#language_types'];
 
   foreach ($configurable_types as $type) {
-    $negotiation = array();
-    $enabled_providers = $form_state['values'][$type]['enabled'];
-    $enabled_providers[LANGUAGE_NEGOTIATION_DEFAULT] = TRUE;
-    $providers_weight = $form_state['values'][$type]['weight'];
+    $method_weights = array();
+    $enabled_methods = $form_state['values'][$type]['enabled'];
+    $enabled_methods[LANGUAGE_NEGOTIATION_DEFAULT] = TRUE;
+    $method_weights_input = $form_state['values'][$type]['weight'];
 
-    foreach ($providers_weight as $id => $weight) {
-      if ($enabled_providers[$id]) {
-        $provider = $form[$type]['#language_providers'][$id];
-        $provider['weight'] = $weight;
-        $negotiation[$id] = $provider;
+    foreach ($method_weights_input as $method_id => $weight) {
+      if ($enabled_methods[$method_id]) {
+        $method_weights[$method_id] = $weight;
       }
     }
 
-    language_negotiation_set($type, $negotiation);
-    variable_set("locale_language_providers_weight_$type", $providers_weight);
+    language_negotiation_set($type, $method_weights);
+    variable_set("locale_language_negotiation_methods_weight_$type", $method_weights_input);
   }
 
   // Update non-configurable language types and the related language negotiation
@@ -216,7 +214,7 @@ function language_negotiation_configure_form_submit($form, &$form_state) {
 }
 
 /**
- * Builds the URL language provider configuration form.
+ * Builds the URL language negotiation method configuration form.
  */
 function language_negotiation_configure_url_form($form, &$form_state) {
   $form['locale_language_negotiation_url_part'] = array(
@@ -287,7 +285,7 @@ function language_negotiation_configure_url_form($form, &$form_state) {
 }
 
 /**
- * Validation handler for url provider configuration.
+ * Validates the URL language negotiation method configuration.
  *
  * Validate that the prefixes and domains are unique, and make sure that
  * the prefix and domain are only blank for the default.
@@ -346,7 +344,7 @@ function language_negotiation_configure_url_form_validate($form, &$form_state) {
 }
 
 /**
- * Save URL negotiation provider settings.
+ * Saves the URL language negotiation method settings.
  */
 function language_negotiation_configure_url_form_submit($form, &$form_state) {
 
@@ -361,7 +359,7 @@ function language_negotiation_configure_url_form_submit($form, &$form_state) {
 }
 
 /**
- * The URL language provider configuration form.
+ * Builds the session language negotiation method configuration form.
  */
 function language_negotiation_configure_session_form($form, &$form_state) {
   $form['locale_language_negotiation_session_param'] = array(

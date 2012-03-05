@@ -96,6 +96,14 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
     // assigned LANGUAGE_NONE.
     $file = db_query('SELECT * FROM {file_managed} WHERE fid = :fid', array(':fid' => 1))->fetchObject();
     $this->assertEqual($file->langcode, LANGUAGE_NONE);
+
+    // Check if language negotiation weights were renamed properly. This is a
+    // reproduction of the previous weights from the dump.
+    $expected_weights = array('locale-url' => '-8', 'locale-session' => '-6', 'locale-user' => '-4', 'locale-browser' => '-2', 'language-default' => '10');
+    // Check that locale_language_providers_weight_language is correctly
+    // renamed.
+    $current_weights = variable_get('locale_language_negotiation_methods_weight_language_interface', array());
+    $this->assertTrue(serialize($expected_weights) == serialize($current_weights), t('Language negotiation method weights upgraded.'));
   }
 
   /**
