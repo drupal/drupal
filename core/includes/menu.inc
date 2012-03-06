@@ -3524,6 +3524,7 @@ function _menu_router_build($callbacks) {
       '_number_parts' => $number_parts,
       '_parts' => $parts,
       '_fit' => $fit,
+      'load functions' => array(),
     );
     $item += array(
       '_visible' => (bool) ($item['type'] & MENU_VISIBLE_IN_BREADCRUMB),
