@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\Core\DrupalApp;
+use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -26,5 +26,5 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 // A request object from the HTTPFoundation to tell us about the request.
 $request = Request::createFromGlobals();
 
-$kernel = new DrupalApp();
+$kernel = new DrupalKernel();
 $kernel->handle($request)->send();

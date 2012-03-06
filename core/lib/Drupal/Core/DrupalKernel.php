@@ -29,7 +29,7 @@ use Exception;
 /**
  * The DrupalApp class is the core of Drupal itself.
  */
-class DrupalApp implements HttpKernelInterface {
+class DrupalKernel implements HttpKernelInterface {
 
   /**
    *
