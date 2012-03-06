@@ -7,8 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Drupal\Core\EventSubscriber\HtmlSubscriber;
 use Drupal\Core\EventSubscriber\AccessSubscriber;
 use Drupal\Core\EventSubscriber\PathSubscriber;
+use Drupal\Core\EventSubscriber\LegacyControllerSubscriber;
 
 use Exception;
 
@@ -47,6 +48,7 @@ class DrupalKernel implements HttpKernelInterface {
       $dispatcher->addSubscriber(new RouterListener($matcher));
       $dispatcher->addSubscriber(new AccessSubscriber());
       $dispatcher->addSubscriber(new PathSubscriber());
+      $dispatcher->addSubscriber(new LegacyControllerSubscriber());
 
       $resolver = new ControllerResolver();
 
