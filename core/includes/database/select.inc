@@ -1298,7 +1298,11 @@ class SelectQuery extends Query implements SelectQueryInterface {
     if ($fields) {
       foreach ($fields as $field) {
         // We don't care what alias was assigned.
-        $this->addField($table_alias, $field);
+        if (is_numeric($alias)) {
+          $this->addField($table_alias, $field);
+        } else {
+          $this->addField($table_alias, $field, $alias);
+        }
       }
     }
     else {
