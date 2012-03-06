@@ -1,0 +1,21 @@
+
+/**
+ * @file
+ * RTL styling for contextual module.
+ */
+
+.contextual {
+  left: 5px;
+  right: auto;
+}
+.contextual .contextual-links {
+  -moz-border-radius: 0 4px 4px 4px; /* FF3.6 */
+  border-radius: 0 4px 4px 4px;
+  left: 0;
+  right: auto;
+}
+
+.contextual-region .contextual .contextual-links a {
+ text-align: right;
+ padding: 0.4em 0.6em 0.4em 0.8em;
+}

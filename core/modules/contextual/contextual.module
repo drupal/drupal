@@ -48,7 +48,8 @@ function contextual_library_info() {
       $path . '/contextual.js' => array(),
     ),
     'css' => array(
-      $path . '/contextual.css' => array(),
+      $path . '/contextual.base.css' => array(),
+      $path . '/contextual.theme.css' => array(),
     ),
   );
   return $libraries;
@@ -62,11 +63,9 @@ function contextual_element_info() {
     '#pre_render' => array('contextual_pre_render_links'),
     '#theme' => 'links__contextual',
     '#links' => array(),
-    '#prefix' => '<div class="contextual-links-wrapper">',
+    '#prefix' => '<div class="contextual">',
     '#suffix' => '</div>',
-    '#attributes' => array(
-      'class' => array('contextual-links'),
-    ),
+    '#attributes' => array('class' => array('contextual-links')),
     '#attached' => array(
       'library' => array(
         array('contextual', 'contextual-links'),
@@ -109,7 +108,7 @@ function contextual_preprocess(&$variables, $hook) {
       '#element' => $element,
     );
     // Mark this element as potentially having contextual links attached to it.
-    $variables['classes_array'][] = 'contextual-links-region';
+    $variables['classes_array'][] = 'contextual-region';
   }
 }
 

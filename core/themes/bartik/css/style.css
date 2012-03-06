@@ -229,13 +229,8 @@ table ul.links li {
   margin: 0;
   padding: 0 0 0.25em 1em; /* LTR */
 }
-.contextual-links-wrapper {
-  font-size: small !important;
-}
-ul.contextual-links {
+.contextual-region .contextual .contextual-links a {
   font-size: 0.923em;
-}
-.contextual-links-wrapper a {
   text-shadow: 0 0 0 !important;
 }
 .item-list .pager {
