@@ -5,7 +5,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
 - Included the following Symfony2 components:
     * ClassLoader - PSR-0-compatible autoload routines.
     * HttpFoundation - Abstraction objects for HTTP requests and responses.
-- Removed modules from core
+- Removed modules from core.
     * The following modules have been removed from core, because contributed
       modules with similar functionality are available:
       * Blog
@@ -14,9 +14,40 @@ Drupal 8.0, xxxx-xx-xx (development version)
 - Removed the Garland theme from core.
 - Universally Unique IDentifier (UUID):
     * Support for generating and validating UUIDs.
-- JavaScript changes
+- JavaScript changes:
     * Updated to jQuery 1.7
-
+- Tremendously improved language support all around.
+    * Great language improvements for users:
+      * Improved language selection with user preference detection in the
+        installer.
+      * Moved base language support to Language module.
+      * Greatly simplified the interface for setting up languages.
+      * Improved browser language detection considerably.
+      * Language domain and path prefix configuraton simplified and centralized;
+        path prefix detection is now default.
+      * Added HTML 5 language markup; language information added in markup in
+        several more places.
+    * Simplified and added new features in interface translation:
+      * Made interface translation directly accessible from language list.
+      * Centralized interface translation import to one directory.
+      * Drupal can now be translated to English and English can be deleted.
+    * Improved content language support:
+      * Freely orderable language selector in forms.
+      * Made it possible to assign language to taxonomy terms, vocabularies
+        and files.
+    * Much improved language APIs for developers:
+      * Added simple APIs and hooks to save/delete/update languages.
+      * Unified database schemas and APIs to make it easier to spot where
+        language codes are referenced.
+      * Made the language negotiation system APIs more consistent for
+        developers.
+      * Made it possible for users to have a preferred language separate from
+        their user entity language.
+      * The text formatter from t() is now available as format_string().
+      * Added support for interface translation contexts in Drupal.t() and
+        Drupal.formatPlural() in JavaScript.
+      * Removed textgroups support from interface translation in favor of
+        native configuration language support.
 
 Drupal 7.0, 2011-01-05
 ----------------------
