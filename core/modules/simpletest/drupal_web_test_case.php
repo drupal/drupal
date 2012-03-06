@@ -1313,6 +1313,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Store necessary current values before switching to prefixed database.
     $this->originalLanguage = $language_interface;
     $this->originalLanguageDefault = variable_get('language_default');
+    $this->originalConfigDirectory = $GLOBALS['config_directory_name'];
+    $this->originalConfigSignatureKey = $GLOBALS['config_signature_key'];
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
     $clean_url_original = variable_get('clean_url', 0);
@@ -1348,6 +1350,14 @@ class DrupalWebTestCase extends DrupalTestCase {
     file_prepare_directory($private_files_directory, FILE_CREATE_DIRECTORY);
     file_prepare_directory($temp_files_directory, FILE_CREATE_DIRECTORY);
     $this->generatedTestFiles = FALSE;
+
+    // Create and set a new configuration directory and signature key.
+    // The child site automatically adjusts the global $config_directory_name to
+    // a test-prefix-specific directory within the public files directory.
+    $GLOBALS['config_directory_name'] = 'simpletest/config_' . $this->databasePrefix;
+    $this->configFileDirectory = $this->originalFileDirectory . '/' . $GLOBALS['config_directory_name'];
+    file_prepare_directory($this->configFileDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    $GLOBALS['config_signature_key'] = drupal_hash_base64(drupal_random_bytes(55));
 
     // Log fatal errors.
     ini_set('log_errors', 1);
@@ -1570,6 +1580,10 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Rebuild caches.
     $this->refreshVariables();
+
+    // Reset configuration globals.
+    $GLOBALS['config_directory_name'] = $this->originalConfigDirectory;
+    $GLOBALS['config_signature_key'] = $this->originalConfigSignatureKey;
 
     // Reset language.
     $language_interface = $this->originalLanguage;
@@ -2250,6 +2264,7 @@ class DrupalWebTestCase extends DrupalTestCase {
           case 'textarea':
           case 'hidden':
           case 'password':
+          case 'email':
             $post[$name] = $edit[$name];
             unset($edit[$name]);
             break;

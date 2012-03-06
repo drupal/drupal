@@ -395,9 +395,6 @@ function user_save($account, $edit = array()) {
       // Avoid overwriting an existing password with a blank password.
       unset($edit['pass']);
     }
-    if (isset($edit['mail'])) {
-      $edit['mail'] = trim($edit['mail']);
-    }
 
     // Load the stored entity, if any.
     if (!empty($account->uid) && !isset($account->original)) {
@@ -424,6 +421,10 @@ function user_save($account, $edit = array()) {
     // copy any new property values of $edit into it.
     foreach ($edit as $key => $value) {
       $account->$key = $value;
+    }
+    // Default the user entity language to the user's preferred language.
+    if (!isset($account->langcode) && isset($account->preferred_langcode)) {
+      $account->langcode = $account->preferred_langcode;
     }
     field_attach_presave('user', $account);
     module_invoke_all('entity_presave', $account, 'user');
@@ -605,28 +606,6 @@ function user_validate_name($name) {
   }
   if (drupal_strlen($name) > USERNAME_MAX_LENGTH) {
     return t('The username %name is too long: it must be %max characters or less.', array('%name' => $name, '%max' => USERNAME_MAX_LENGTH));
-  }
-}
-
-/**
- * Validates a user's email address.
- *
- * Checks that a user's email address exists and follows all standard
- * validation rules. Returns error messages when the address is invalid.
- *
- * @param $mail
- *   A user's email address.
- *
- * @return
- *   If the address is invalid, a human-readable error message is returned.
- *   If the address is valid, nothing is returned.
- */
-function user_validate_mail($mail) {
-  if (!$mail) {
-    return t('You must enter an e-mail address.');
-  }
-  if (!valid_email_address($mail)) {
-    return t('The e-mail address %mail is not valid.', array('%mail' => $mail));
   }
 }
 
@@ -965,9 +944,8 @@ function user_account_form(&$form, &$form_state) {
   );
 
   $form['account']['mail'] = array(
-    '#type' => 'textfield',
+    '#type' => 'email',
     '#title' => t('E-mail address'),
-    '#maxlength' => EMAIL_MAX_LENGTH,
     '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
     '#required' => TRUE,
     '#default_value' => (!$register ? $account->mail : ''),
@@ -1149,22 +1127,15 @@ function user_account_form_validate($form, &$form_state) {
     }
   }
 
-  // Trim whitespace from mail, to prevent confusing 'e-mail not valid'
-  // warnings often caused by cutting and pasting.
-  $mail = trim($form_state['values']['mail']);
-  form_set_value($form['account']['mail'], $mail, $form_state);
+  $mail = $form_state['values']['mail'];
 
-  // Validate the e-mail address, and check if it is taken by an existing user.
-  if ($error = user_validate_mail($form_state['values']['mail'])) {
-    form_set_error('mail', $error);
-  }
-  elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('mail', db_like($form_state['values']['mail']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+  if ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('mail', db_like($mail), 'LIKE')->range(0, 1)->execute()->fetchField()) {
     // Format error message dependent on whether the user is logged in or not.
     if ($GLOBALS['user']->uid) {
-      form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $form_state['values']['mail'])));
+      form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $mail)));
     }
     else {
-      form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $form_state['values']['mail'], '@password' => url('user/password'))));
+      form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $mail, '@password' => url('user/password'))));
     }
   }
 
@@ -3462,8 +3433,8 @@ function theme_user_signature($variables) {
  */
 function user_preferred_language($account, $default = NULL) {
   $language_list = language_list();
-  if (!empty($account->language) && isset($language_list[$account->language])) {
-    return $language_list[$account->language];
+  if (!empty($account->preferred_langcode) && isset($language_list[$account->preferred_langcode])) {
+    return $language_list[$account->preferred_langcode];
   }
   else {
     return $default ? $default : language_default();

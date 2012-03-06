@@ -374,6 +374,16 @@ function system_element_info() {
     '#theme' => 'tel',
     '#theme_wrappers' => array('form_element'),
   );
+  $types['email'] = array(
+    '#input' => TRUE,
+    '#size' => 60,
+    '#maxlength' => EMAIL_MAX_LENGTH,
+    '#autocomplete_path' => FALSE,
+    '#process' => array('ajax_process_form'),
+    '#element_validate' => array('form_validate_email'),
+    '#theme' => 'email',
+    '#theme_wrappers' => array('form_element'),
+  );
   $types['machine_name'] = array(
     '#input' => TRUE,
     '#default_value' => NULL,
@@ -403,7 +413,7 @@ function system_element_info() {
     '#input' => TRUE,
     '#cols' => 60,
     '#rows' => 5,
-    '#resizable' => TRUE,
+    '#resizable' => 'vertical',
     '#process' => array('ajax_process_form'),
     '#theme' => 'textarea',
     '#theme_wrappers' => array('form_element'),
@@ -1159,15 +1169,6 @@ function system_library_info() {
     'dependencies' => array(
       // collapse.js relies on drupalGetSummary in form.js
       array('system', 'drupal.form'),
-    ),
-  );
-
-  // Drupal's resizable textarea.
-  $libraries['drupal.textarea'] = array(
-    'title' => 'Drupal resizable textarea',
-    'version' => VERSION,
-    'js' => array(
-      'core/misc/textarea.js' => array('group' => JS_DEFAULT),
     ),
   );
 
@@ -2771,11 +2772,26 @@ function system_settings_form_submit($form, &$form_state) {
   // Exclude unnecessary elements.
   form_state_values_clean($form_state);
 
+  $config_objects = array();
   foreach ($form_state['values'] as $key => $value) {
+    if (isset($form_state['config'][$key])) {
+      $config_name = $form_state['config'][$key]['name'];
+      $config_key = $form_state['config'][$key]['path'];
+      if (empty($config_objects[$config_name])) {
+        $config_objects[$config_name] = config($config_name);
+      }
+      if (!empty($config_objects[$config_name])) {
+        $config_objects[$config_name]->set($config_key, $value);
+        continue;
+      }
+    }
     if (is_array($value) && isset($form_state['values']['array_filter'])) {
       $value = array_keys(array_filter($value));
     }
     variable_set($key, $value);
+  }
+  foreach ($config_objects as $config) {
+    $config->save();
   }
 
   drupal_set_message(t('The configuration options have been saved.'));

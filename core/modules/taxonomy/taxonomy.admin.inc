@@ -117,6 +117,10 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
       'description' => '',
       'hierarchy' => TAXONOMY_HIERARCHY_DISABLED,
       'weight' => 0,
+      // Default the new vocabulary to the site's default language. This is
+      // the most likely default value until we have better flexible settings.
+      // @todo See http://drupal.org/node/258785 and followups.
+      'langcode' => language_default()->langcode,
     );
     foreach ($defaults as $key => $value) {
       if (!isset($vocabulary->$key)) {
@@ -659,6 +663,10 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
       'vocabulary_machine_name' => isset($vocabulary) ? $vocabulary->machine_name : NULL,
       'tid' => NULL,
       'weight' => 0,
+      // Default the new term to the site's default language. This is the most
+      // likely default value until we have better flexible settings.
+      // @todo See http://drupal.org/node/258785 and followups.
+      'langcode' => language_default()->langcode,
     );
     foreach ($defaults as $key => $value) {
       if (!isset($term->$key)) {

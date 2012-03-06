@@ -166,7 +166,8 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertTrue(($new_user->created > REQUEST_TIME - 20 ), t('Correct creation time.'));
     $this->assertEqual($new_user->status, variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_VISITORS ? 1 : 0, t('Correct status field.'));
     $this->assertEqual($new_user->timezone, variable_get('date_default_timezone'), t('Correct time zone field.'));
-    $this->assertEqual($new_user->language, '', t('Correct language field.'));
+    $this->assertEqual($new_user->langcode, '', t('Correct language field.'));
+    $this->assertEqual($new_user->preferred_langcode, '', t('Correct preferred language field.'));
     $this->assertEqual($new_user->picture, '', t('Correct picture field.'));
     $this->assertEqual($new_user->init, $mail, t('Correct init field.'));
   }
@@ -289,20 +290,6 @@ class UserValidationTestCase extends DrupalWebTestCase {
     foreach ($test_cases as $name => $test_case) {
       list($description, $test) = $test_case;
       $result = user_validate_name($name);
-      $this->$test($result, $description . ' (' . $name . ')');
-    }
-  }
-
-  // Mail validation. More extensive tests can be found at common.test
-  function testMailAddresses() {
-    $test_cases = array( // '<username>' => array('<description>', 'assert<testName>'),
-      ''                => array('Empty mail address', 'assertNotNull'),
-      'foo'             => array('Invalid mail address', 'assertNotNull'),
-      'foo@example.com' => array('Valid mail address', 'assertNull'),
-    );
-    foreach ($test_cases as $name => $test_case) {
-      list($description, $test) = $test_case;
-      $result = user_validate_mail($name);
       $this->$test($result, $description . ' (' . $name . ')');
     }
   }

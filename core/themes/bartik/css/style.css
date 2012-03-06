@@ -1195,6 +1195,7 @@ select.form-select {
 }
 input.form-text,
 input.form-tel,
+input.form-email,
 textarea.form-textarea,
 select.form-select {
   border: 1px solid #ccc;
@@ -1247,13 +1248,6 @@ input.form-submit:focus {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
-.contact-form .resizable-textarea .grippie {
-  width: 76%;
-  -moz-border-radius-bottomleft: 4px;
-  -moz-border-radius-bottomright: 4px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
 
 /* Disabled form elements */
 input.form-button-disabled,
@@ -1266,10 +1260,6 @@ input.form-button-disabled:active,
   background: #ededed;
   border-color: #bbb;
   color: #717171;
-}
-.form-disabled .grippie {
-  background-color: #ededed;
-  border-color: #bbb;
 }
 .form-disabled label {
   color: #717171;

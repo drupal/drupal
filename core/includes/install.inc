@@ -255,7 +255,7 @@ function drupal_get_database_types() {
   // without modifying the installer.
   // Because we have no registry yet, we need to also include the install.inc
   // file for the driver explicitly.
-  require_once DRUPAL_ROOT . '/core/includes/database/database.inc';
+  require_once DRUPAL_ROOT . '/core/includes/database.inc';
   foreach (file_scan_directory(DRUPAL_ROOT . '/core/lib/Drupal/Core/Database/Driver', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
     if (file_exists($file->uri . '/Install/Tasks.php')) {
       $drivers[$file->filename] = $file->uri;
@@ -434,6 +434,7 @@ function drupal_install_system() {
       ))
     ->execute();
   system_rebuild_module_data();
+  config_install_default_config('system');
 }
 
 /**

@@ -100,7 +100,9 @@ class ThemeUnitTest extends DrupalWebTestCase {
     // what is output to the HTML HEAD based on what is in a theme's .info file,
     // so it doesn't matter what page we get, as long as it is themed with the
     // test theme. First we test with CSS aggregation disabled.
-    variable_set('preprocess_css', 0);
+    $config = config('system.performance');
+    $config->set('preprocess_css', 0);
+    $config->save();
     $this->drupalGet('theme-test/suggestion');
     $this->assertNoText('system.base.css', t('The theme\'s .info file is able to override a module CSS file from being added to the page.'));
 
@@ -108,9 +110,11 @@ class ThemeUnitTest extends DrupalWebTestCase {
     // triggered during drupal_build_css_cache() when a source file doesn't
     // exist. Then allow remaining tests to continue with aggregation disabled
     // by default.
-    variable_set('preprocess_css', 1);
+    $config->set('preprocess_css', 1);
+    $config->save();
     $this->drupalGet('theme-test/suggestion');
-    variable_set('preprocess_css', 0);
+    $config->set('preprocess_css', 0);
+    $config->save();
   }
 
   /**

@@ -697,6 +697,28 @@ function system_schema() {
   $schema['cache_path'] = $schema['cache'];
   $schema['cache_path']['description'] = 'Cache table for path alias lookup.';
 
+  $schema['config'] = array(
+    'description' => 'Default active store for the configuration system.',
+    'fields' => array(
+      'name' => array(
+        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus the file extension).',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data' => array(
+        'description' => 'The raw data for this configuration entry.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'translatable' => TRUE,
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+
+
   $schema['date_format_type'] = array(
     'description' => 'Stores configured date format types.',
     'fields' => array(
@@ -813,6 +835,13 @@ function system_schema() {
         'description' => 'The URI to access the file (either local or remote).',
         'type' => 'varchar',
         'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this file.',
+        'type' => 'varchar',
+        'length' => 12,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -1664,6 +1693,70 @@ function system_update_8002() {
   $theme = variable_get('theme_default');
   if (!isset($theme)) {
     variable_set('theme_default', 'bartik');
+  }
+}
+
+/**
+ * Adds {config} table for new Configuration system.
+ */
+function system_update_8003() {
+  // @todo Temporary.
+  if (db_table_exists('config')) {
+    db_drop_table('config');
+  }
+  db_create_table('config', array(
+    'description' => 'Default active store for the configuration system.',
+    'fields' => array(
+      'name' => array(
+        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus the file extension).',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data' => array(
+        'description' => 'The raw data for this configuration entry.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'translatable' => TRUE,
+      ),
+    ),
+    'primary key' => array('name'),
+  ));
+}
+
+/**
+ * Adds {file_managed}.langcode field.
+ *
+ * @see http://drupal.org/node/1454538
+ */
+function system_update_8004() {
+  $langcode_field = array(
+    'description' => 'The {language}.langcode of this file.',
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+  );
+
+  // If a Drupal 7 contrib module already added a langcode field to support
+  // internationalization, keep it, but standardize the specification.
+  // Otherwise, add the field.
+  if (db_field_exists('file_managed', 'langcode')) {
+    // According to the documentation of db_change_field(), indeces using the
+    // field should be dropped first; if the contrib module created any indeces,
+    // it is its responsibility to drop them in an update function that runs
+    // before this one, which it can enforce via hook_update_dependencies().
+    db_change_field('file_managed', 'langcode', 'langcode', $langcode_field);
+  }
+  else {
+    // Files can be language-specific (e.g., a scanned document) or not (e.g.,
+    // a photograph). For a site being updated, Drupal does not have a way to
+    // determine which existing files are language-specific and in what
+    // language. Our best guess is to set all of them to LANGUAGE_NONE.
+    $langcode_field['initial'] = LANGUAGE_NONE;
+    db_add_field('file_managed', 'langcode', $langcode_field);
   }
 }
 

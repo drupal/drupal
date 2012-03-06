@@ -468,7 +468,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
 
     // Load the style by the new name with the new weights.
     drupal_static_reset('image_styles');
-    $style = image_style_load($style_name, NULL);
+    $style = image_style_load($style_name);
 
     // Confirm the new style order was saved.
     $effect_edits_order = array_reverse($effect_edits_order);
@@ -504,76 +504,6 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     drupal_static_reset('image_styles');
     $this->assertFalse(image_style_load($style_name), t('Image style %style successfully deleted.', array('%style' => $style['name'])));
 
-  }
-
-  /**
-   * Test to override, edit, then revert a style.
-   */
-  function testDefaultStyle() {
-    // Setup a style to be created and effects to add to it.
-    $style_name = 'thumbnail';
-    $edit_path = 'admin/config/media/image-styles/edit/' . $style_name;
-    $delete_path = 'admin/config/media/image-styles/delete/' . $style_name;
-    $revert_path = 'admin/config/media/image-styles/revert/' . $style_name;
-
-    // Ensure deleting a default is not possible.
-    $this->drupalGet($delete_path);
-    $this->assertText(t('Page not found'), t('Default styles may not be deleted.'));
-
-    // Ensure that editing a default is not possible (without overriding).
-    $this->drupalGet($edit_path);
-    $this->assertNoField('edit-name', t('Default styles may not be renamed.'));
-    $this->assertNoField('edit-submit', t('Default styles may not be edited.'));
-    $this->assertNoField('edit-add', t('Default styles may not have new effects added.'));
-
-    // Create an image to make sure the default works before overriding.
-    drupal_static_reset('image_styles');
-    $style = image_style_load($style_name);
-    $image_path = $this->createSampleImage($style);
-    $this->assertEqual($this->getImageCount($style), 1, t('Image style %style image %file successfully generated.', array('%style' => $style['name'], '%file' => $image_path)));
-
-    // Verify that effects attached to a default style do not have an ieid key.
-    foreach ($style['effects'] as $effect) {
-      $this->assertFalse(isset($effect['ieid']), t('The %effect effect does not have an ieid.', array('%effect' => $effect['name'])));
-    }
-
-    // Override the default.
-    $this->drupalPost($edit_path, array(), t('Override defaults'));
-    $this->assertRaw(t('The %style style has been overridden, allowing you to change its settings.', array('%style' => $style_name)), t('Default image style may be overridden.'));
-
-    // Add sample effect to the overridden style.
-    $this->drupalPost($edit_path, array('new' => 'image_desaturate'), t('Add'));
-    drupal_static_reset('image_styles');
-    $style = image_style_load($style_name);
-
-    // Verify that effects attached to the style have an ieid now.
-    foreach ($style['effects'] as $effect) {
-      $this->assertTrue(isset($effect['ieid']), t('The %effect effect has an ieid.', array('%effect' => $effect['name'])));
-    }
-
-    // The style should now have 2 effect, the original scale provided by core
-    // and the desaturate effect we added in the override.
-    $effects = array_values($style['effects']);
-    $this->assertEqual($effects[0]['name'], 'image_scale', t('The default effect still exists in the overridden style.'));
-    $this->assertEqual($effects[1]['name'], 'image_desaturate', t('The added effect exists in the overridden style.'));
-
-    // Check that we are unable to rename an overridden style.
-    $this->drupalGet($edit_path);
-    $this->assertNoField('edit-name', t('Overridden styles may not be renamed.'));
-
-    // Create an image to ensure the override works properly.
-    $image_path = $this->createSampleImage($style);
-    $this->assertEqual($this->getImageCount($style), 1, t('Image style %style image %file successfully generated.', array('%style' => $style['name'], '%file' => $image_path)));
-
-    // Revert the image style.
-    $this->drupalPost($revert_path, array(), t('Revert'));
-    drupal_static_reset('image_styles');
-    $style = image_style_load($style_name);
-
-    // The style should now have the single effect for scale.
-    $effects = array_values($style['effects']);
-    $this->assertEqual($effects[0]['name'], 'image_scale', t('The default effect still exists in the reverted style.'));
-    $this->assertFalse(array_key_exists(1, $effects), t('The added effect has been removed in the reverted style.'));
   }
 
   /**
@@ -935,6 +865,7 @@ class ImageFieldValidateTestCase extends ImageFieldTestCase {
  * Tests that images have correct dimensions when styled.
  */
 class ImageDimensionsUnitTest extends DrupalWebTestCase {
+  protected $profile = 'testing';
 
   public static function getInfo() {
     return array(
@@ -945,7 +876,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('image_module_test');
+    parent::setUp('rdf', 'image', 'image_module_test');
   }
 
   /**
@@ -968,6 +899,10 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
       'width' => 40,
       'height' => 20,
     );
+    // Verify that the original image matches the hard-coded values.
+    $image_info = image_get_info($original_uri);
+    $this->assertEqual($image_info['width'], $variables['width']);
+    $this->assertEqual($image_info['height'], $variables['height']);
 
     // Scale an image that is wider than it is high.
     $effect = array(
@@ -977,19 +912,19 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'height' => 90,
         'upscale' => TRUE,
       ),
-      'isid' => $style['isid'],
+      'weight' => 0,
     );
 
-    image_effect_save($effect);
+    image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="120" height="60" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="120" height="60" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 120, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 60, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 120);
+    $this->assertEqual($image_info['height'], 60);
 
     // Rotate 90 degrees anticlockwise.
     $effect = array(
@@ -998,19 +933,19 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'degrees' => -90,
         'random' => FALSE,
       ),
-      'isid' => $style['isid'],
+      'weight' => 1,
     );
 
-    image_effect_save($effect);
+    image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="60" height="120" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="60" height="120" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 60, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 120, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 60);
+    $this->assertEqual($image_info['height'], 120);
 
     // Scale an image that is higher than it is wide (rotated by previous effect).
     $effect = array(
@@ -1020,19 +955,19 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'height' => 90,
         'upscale' => TRUE,
       ),
-      'isid' => $style['isid'],
+      'weight' => 2,
     );
 
-    image_effect_save($effect);
+    image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 45);
+    $this->assertEqual($image_info['height'], 90);
 
     // Test upscale disabled.
     $effect = array(
@@ -1042,37 +977,37 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'height' => 200,
         'upscale' => FALSE,
       ),
-      'isid' => $style['isid'],
+      'weight' => 3,
     );
 
-    image_effect_save($effect);
+    image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 45);
+    $this->assertEqual($image_info['height'], 90);
 
     // Add a desaturate effect.
     $effect = array(
       'name' => 'image_desaturate',
       'data' => array(),
-      'isid' => $style['isid'],
+      'weight' => 4,
     );
 
-    image_effect_save($effect);
+    image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 45);
+    $this->assertEqual($image_info['height'], 90);
 
     // Add a random rotate effect.
     $effect = array(
@@ -1081,12 +1016,12 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'degrees' => 180,
         'random' => TRUE,
       ),
-      'isid' => $style['isid'],
+      'weight' => 5,
     );
 
-    image_effect_save($effect);
+    image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1101,19 +1036,19 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'height' => 30,
         'anchor' => 'center-center',
       ),
-      'isid' => $style['isid'],
+      'weight' => 6,
     );
 
-    image_effect_save($effect);
+    image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="30" height="30" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="30" height="30" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
     $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 30, t('Expected width was found.'));
-    $this->assertEqual($image_info['height'], 30, t('Expected height was found.'));
+    $this->assertEqual($image_info['width'], 30);
+    $this->assertEqual($image_info['height'], 30);
 
     // Rotate to a non-multiple of 90 degrees.
     $effect = array(
@@ -1122,30 +1057,30 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
         'degrees' => 57,
         'random' => FALSE,
       ),
-      'isid' => $style['isid'],
+      'weight' => 7,
     );
 
-    $effect = image_effect_save($effect);
+    $effect = image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
     $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
 
-    image_effect_delete($effect);
+    image_effect_delete('test', $effect);
 
     // Ensure that an effect with no dimensions callback unsets the dimensions.
     // This ensures compatibility with 7.0 contrib modules.
     $effect = array(
       'name' => 'image_module_test_null',
       'data' => array(),
-      'isid' => $style['isid'],
+      'weight' => 8,
     );
 
-    image_effect_save($effect);
+    image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />');
   }
 }
 

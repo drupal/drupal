@@ -163,6 +163,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $vocabulary = (object) array(
       'name' => 'Tags',
       'machine_name' => 'tags',
+      'langcode' => LANGUAGE_NONE,
     );
     taxonomy_vocabulary_save($vocabulary);
 

@@ -261,7 +261,7 @@ class FormsTestCase extends DrupalWebTestCase {
 
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
-    $this->assertEqual(count($disabled_elements), 34, t('The correct elements have the disabled property in the HTML code.'));
+    $this->assertEqual(count($disabled_elements), 35, 'The correct elements have the disabled property in the HTML code.');
 
     $this->drupalPost(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);
@@ -396,7 +396,7 @@ class FormElementTestCase extends DrupalWebTestCase {
     $this->drupalGet('form-test/placeholder-text');
     $expected = 'placeholder-text';
     // Test to make sure non-textarea elements have the proper placeholder text.
-    foreach (array('textfield', 'tel', 'password') as $type) {
+    foreach (array('textfield', 'tel', 'password', 'email') as $type) {
       $element = $this->xpath('//input[@id=:id and @placeholder=:expected]', array(
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
@@ -1625,5 +1625,49 @@ class FormCheckboxTestCase extends DrupalWebTestCase {
       $name = (string) $checkbox['name'];
       $this->assertIdentical($checked, $name == 'checkbox_off[0]' || $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', t('Checkbox %name correctly checked', array('%name' => $name)));
     }
+  }
+}
+
+/**
+ * Tests email element.
+ */
+class FormEmailTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Form API email',
+      'description' => 'Tests the form API email element.',
+      'group' => 'Form API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Tests that #type 'email' fields are properly validated.
+   */
+  function testFormEmail() {
+    $edit = array();
+    $edit['email'] = 'invalid';
+    $edit['email_required'] = ' ';
+    $this->drupalPost('form-test/email', $edit, 'Submit');
+    $this->assertRaw(t('The e-mail address %mail is not valid.', array('%mail' => 'invalid')));
+    $this->assertRaw(t('!name field is required.', array('!name' => 'Address')));
+
+    $edit = array();
+    $edit['email_required'] = '  foo.bar@example.com ';
+    $values = drupal_json_decode($this->drupalPost('form-test/email', $edit, 'Submit'));
+    $this->assertIdentical($values['email'], '');
+    $this->assertEqual($values['email_required'], 'foo.bar@example.com');
+
+    $edit = array();
+    $edit['email'] = 'foo@example.com';
+    $edit['email_required'] = 'example@drupal.org';
+    $values = drupal_json_decode($this->drupalPost('form-test/email', $edit, 'Submit'));
+    $this->assertEqual($values['email'], 'foo@example.com');
+    $this->assertEqual($values['email_required'], 'example@drupal.org');
   }
 }

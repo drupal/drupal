@@ -334,7 +334,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Change user language preference.
-    $edit = array('language' => 'fr');
+    $edit = array('preferred_langcode' => 'fr');
     $this->drupalPost("user/{$this->web_user->uid}/edit", $edit, t('Save'));
 
     // Check that the English alias works. In this situation French is the

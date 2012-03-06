@@ -125,6 +125,12 @@ function form_test_menu() {
     'page arguments' => array('form_test_checkboxes_radios'),
     'access callback' => TRUE,
   );
+  $items['form-test/email'] = array(
+    'title' => 'E-Mail fields',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_email'),
+    'access callback' => TRUE,
+  );
 
   $items['form-test/disabled-elements'] = array(
     'title' => t('Form test'),
@@ -1027,7 +1033,7 @@ function form_test_select_submit($form, &$form_state) {
  * Builds a form to test the placeholder attribute.
  */
 function form_test_placeholder_test($form, &$form_state) {
-  foreach (array('textfield', 'textarea', 'password', 'tel') as $type) {
+  foreach (array('textfield', 'textarea', 'password', 'tel', 'email') as $type) {
     $form[$type] = array(
       '#type' => $type,
       '#title' => $type,
@@ -1095,6 +1101,39 @@ function form_test_checkboxes_radios($form, &$form_state, $customize = FALSE) {
   $form['submit'] = array('#type' => 'submit', '#value' => 'Submit');
 
   return $form;
+}
+
+/**
+ * Form constructor for testing #type 'email' elements.
+ *
+ * @see form_test_email_submit()
+ * @ingroup forms
+ */
+function form_test_email($form, &$form_state) {
+  $form['email'] = array(
+    '#type' => 'email',
+    '#title' => 'E-Mail address',
+    '#description' => 'An e-mail address.',
+  );
+  $form['email_required'] = array(
+    '#type' => 'email',
+    '#title' => 'Address',
+    '#required' => TRUE,
+    '#description' => 'A required e-mail address field.',
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  return $form;
+}
+
+/**
+ * Form submission handler for form_test_email().
+ */
+function form_test_email_submit($form, &$form_state) {
+  drupal_json_output($form_state['values']);
+  exit();
 }
 
 /**
@@ -1204,6 +1243,14 @@ function _form_test_disabled_elements($form, &$form_state) {
       '#test_hijack_value' => 'HIJACK',
     );
   }
+
+  // Try to hijack the email field with a valid email.
+  $form['disabled_container']['disabled_container_email'] = array(
+    '#type' => 'email',
+    '#title' => 'email',
+    '#default_value' => 'foo@example.com',
+    '#test_hijack_value' => 'bar@example.com',
+  );
 
   // Text format.
   $form['text_format'] = array(

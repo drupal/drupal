@@ -228,7 +228,7 @@ class PollCreateTestCase extends PollTestCase {
     $this->clickLink($title);
     $this->assertText($new_option, 'New option found.');
 
-    $option = $this->xpath('//div[@id="node-1"]//article[@class="poll"]//div[@class="choice-title"]');
+    $option = $this->xpath('//div[@id="node-1"]//article[@class="poll"]//dt[@class="choice-title"]');
     $this->assertEqual(end($option), $new_option, 'Last item is equal to new option.');
 
     $votes = $this->xpath('//div[@id="node-1"]//article[@class="poll"]//div[@class="percent"]');
@@ -496,7 +496,9 @@ class PollVoteCheckHostname extends PollTestCase {
 
     // Enable page cache to verify that the result page is not saved in the
     // cache when anonymous voting is allowed.
-    variable_set('cache', 1);
+    $config = config('system.performance');
+    $config->set('cache', 1);
+    $config->save();
 
     // Create poll.
     $title = $this->randomName();

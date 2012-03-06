@@ -464,6 +464,7 @@ function file_ensure_htaccess() {
     file_save_htaccess('private://', TRUE);
   }
   file_save_htaccess('temporary://', TRUE);
+  file_save_htaccess(config_get_config_directory(), TRUE);
 }
 
 /**
@@ -568,6 +569,13 @@ function file_load($fid) {
 function file_save(stdClass $file) {
   $file->timestamp = REQUEST_TIME;
   $file->filesize = filesize($file->uri);
+  if (!isset($file->langcode)) {
+    // Default the file's language code to none, because files are language
+    // neutral more often than language dependent. Until we have better flexible
+    // settings.
+    // @todo See http://drupal.org/node/258785 and followups.
+    $file->langcode = LANGUAGE_NONE;
+  }
 
   // Load the stored entity, if any.
   if (!empty($file->fid) && !isset($file->original)) {

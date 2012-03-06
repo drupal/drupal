@@ -22,8 +22,8 @@ function locale_test_boot() {
  */
 function locale_test_init() {
   locale_test_store_language_negotiation();
-  if (isset($GLOBALS['language_interface']) && isset($GLOBALS['language_interface']->provider)) {
-    drupal_set_message(t('Language negotiation provider: @name', array('@name' => $GLOBALS['language_interface']->provider)));
+  if (isset($GLOBALS['language_interface']) && isset($GLOBALS['language_interface']->method_id)) {
+    drupal_set_message(t('Language negotiation method: @name', array('@name' => $GLOBALS['language_interface']->method_id)));
   }
 }
 
@@ -38,7 +38,7 @@ function locale_test_language_types_info() {
         'description' => t('A test language type.'),
       ),
       'fixed_test_language_type' => array(
-        'fixed' => array('test_language_provider'),
+        'fixed' => array('test_language_negotiation_method'),
       ),
     );
   }
@@ -60,19 +60,19 @@ function locale_test_language_negotiation_info() {
   if (variable_get('locale_test_language_negotiation_info', FALSE)) {
     $info = array(
       'callbacks' => array(
-        'language' => 'locale_test_language_provider',
+        'negotiation' => 'locale_test_language_negotiation_method',
       ),
       'file' => drupal_get_path('module', 'locale_test') .'/locale_test.module',
       'weight' => -10,
-      'description' => t('This is a test language provider.'),
+      'description' => t('This is a test language negotiation method.'),
     );
 
     return array(
-      'test_language_provider' => array(
+      'test_language_negotiation_method' => array(
         'name' => t('Test'),
         'types' => array(LANGUAGE_TYPE_CONTENT, 'test_language_type', 'fixed_test_language_type'),
       ) + $info,
-      'test_language_provider_ts' => array(
+      'test_language_negotiation_method_ts' => array(
         'name' => t('Type-specific test'),
         'types' => array('test_language_type'),
       ) + $info,
@@ -83,9 +83,9 @@ function locale_test_language_negotiation_info() {
 /**
  * Implements hook_language_negotiation_info_alter().
  */
-function locale_test_language_negotiation_info_alter(array &$language_providers) {
+function locale_test_language_negotiation_info_alter(array &$negotiation_info) {
   if (variable_get('locale_test_language_negotiation_info_alter', FALSE)) {
-    unset($language_providers[LANGUAGE_NEGOTIATION_INTERFACE]);
+    unset($negotiation_info[LANGUAGE_NEGOTIATION_INTERFACE]);
   }
 }
 
@@ -101,8 +101,8 @@ function locale_test_store_language_negotiation() {
 }
 
 /**
- * Test language provider.
+ * Provides a test language negotiation method.
  */
-function locale_test_language_provider($languages) {
+function locale_test_language_negotiation_method($languages) {
   return 'it';
 }

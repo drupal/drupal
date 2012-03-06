@@ -2,6 +2,10 @@
 .poll {
   overflow: hidden;
 }
+.poll dl,
+.poll dd {
+  margin: 0;
+}
 .poll .bar {
   height: 1em;
   margin: 1px 0;

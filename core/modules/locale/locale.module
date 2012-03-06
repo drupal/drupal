@@ -230,20 +230,44 @@ function locale_language_selector_form($user) {
     $names[$langcode] = $item->name;
   }
   // Get language negotiation settings.
-  $mode = language_negotiation_get(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
+  $mode = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
   $form['locale'] = array(
     '#type' => 'fieldset',
     '#title' => t('Language settings'),
     '#weight' => 1,
   );
-  $form['locale']['language'] = array(
+  $form['locale']['preferred_langcode'] = array(
     '#type' => (count($names) <= 5 ? 'radios' : 'select'),
     '#title' => t('Language'),
     '#default_value' => $user_preferred_language->langcode,
     '#options' => $names,
-    '#description' => $mode ? t("This account's default language for e-mails, and preferred language for site presentation.") : t("This account's default language for e-mails."),
+    '#description' => $mode ? t("This account's preferred language for e-mails and site presentation.") : t("This account's preferred language for e-mails."),
+  );
+  // User entities contain both a langcode property (for identifying the
+  // language of the entity data) and a preferred_langcode property (see above).
+  // Rather than provide a UI forcing the user to choose both separately,
+  // assume that the user profile data is in the user's preferred language. This
+  // element provides that synchronization. For use-cases where this
+  // synchronization is not desired, a module can alter or remove this element.
+  $form['locale']['langcode'] = array(
+    '#type' => 'value',
+    '#value_callback' => '_locale_language_selector_langcode_value',
+    // For the synchronization to work, this element must have a larger weight
+    // than the preferred_langcode element. Set a large weight here in case
+    // a module alters the weight of the other element.
+    '#weight' => 100,
   );
   return $form;
+}
+
+/**
+ * Sets the value of the user register and profile forms' langcode element.
+ *
+ * @see locale_language_selector_form()
+ */
+function _locale_language_selector_langcode_value($element, $input, &$form_state) {
+  $form_state['complete_form']['locale']['preferred_langcode']['#description'] .= ' ' . t("This is also assumed to be the primary language of this account's profile information.");
+  return $form_state['values']['preferred_langcode'];
 }
 
 /**
@@ -390,8 +414,9 @@ function locale_entity_info_alter(&$entity_info) {
  *   language negotiated value. It is used by the Field API to determine the
  *   display language for fields if no explicit value is specified.
  * - URL language is by default non-configurable and is determined through the
- *   URL language provider or the URL fallback provider if no language can be
- *   detected. It is used by l() as the default language if none is specified.
+ *   URL language negotiation method or the URL fallback language negotiation
+ *   method if no language can be detected. It is used by l() as the default
+ *   language if none is specified.
  */
 function locale_language_types_info() {
   require_once DRUPAL_ROOT . '/core/includes/locale.inc';
@@ -417,13 +442,13 @@ function locale_language_types_info() {
 function locale_language_negotiation_info() {
   require_once DRUPAL_ROOT . '/core/includes/locale.inc';
   $file = '/core/includes/locale.inc';
-  $providers = array();
+  $negotiation_info = array();
 
-  $providers[LANGUAGE_NEGOTIATION_URL] = array(
+  $negotiation_info[LANGUAGE_NEGOTIATION_URL] = array(
     'types' => array(LANGUAGE_TYPE_CONTENT, LANGUAGE_TYPE_INTERFACE, LANGUAGE_TYPE_URL),
     'callbacks' => array(
-      'language' => 'locale_language_from_url',
-      'switcher' => 'locale_language_switcher_url',
+      'negotiation' => 'locale_language_from_url',
+      'language_switch' => 'locale_language_switcher_url',
       'url_rewrite' => 'locale_language_url_rewrite_url',
     ),
     'file' => $file,
@@ -433,10 +458,10 @@ function locale_language_negotiation_info() {
     'config' => 'admin/config/regional/language/detection/url',
   );
 
-  $providers[LANGUAGE_NEGOTIATION_SESSION] = array(
+  $negotiation_info[LANGUAGE_NEGOTIATION_SESSION] = array(
     'callbacks' => array(
-      'language' => 'locale_language_from_session',
-      'switcher' => 'locale_language_switcher_session',
+      'negotiation' => 'locale_language_from_session',
+      'language_switch' => 'locale_language_switcher_session',
       'url_rewrite' => 'locale_language_url_rewrite_session',
     ),
     'file' => $file,
@@ -446,16 +471,16 @@ function locale_language_negotiation_info() {
     'config' => 'admin/config/regional/language/detection/session',
   );
 
-  $providers[LANGUAGE_NEGOTIATION_USER] = array(
-    'callbacks' => array('language' => 'locale_language_from_user'),
+  $negotiation_info[LANGUAGE_NEGOTIATION_USER] = array(
+    'callbacks' => array('negotiation' => 'locale_language_from_user'),
     'file' => $file,
     'weight' => -4,
     'name' => t('User'),
     'description' => t("Follow the user's language preference."),
   );
 
-  $providers[LANGUAGE_NEGOTIATION_BROWSER] = array(
-    'callbacks' => array('language' => 'locale_language_from_browser'),
+  $negotiation_info[LANGUAGE_NEGOTIATION_BROWSER] = array(
+    'callbacks' => array('negotiation' => 'locale_language_from_browser'),
     'file' => $file,
     'weight' => -2,
     'cache' => 0,
@@ -463,25 +488,25 @@ function locale_language_negotiation_info() {
     'description' => t("Determine the language from the browser's language settings."),
   );
 
-  $providers[LANGUAGE_NEGOTIATION_INTERFACE] = array(
+  $negotiation_info[LANGUAGE_NEGOTIATION_INTERFACE] = array(
     'types' => array(LANGUAGE_TYPE_CONTENT),
-    'callbacks' => array('language' => 'locale_language_from_interface'),
+    'callbacks' => array('negotiation' => 'locale_language_from_interface'),
     'file' => $file,
     'weight' => 8,
     'name' => t('Interface'),
     'description' => t('Use the detected interface language.'),
   );
 
-  $providers[LANGUAGE_NEGOTIATION_URL_FALLBACK] = array(
+  $negotiation_info[LANGUAGE_NEGOTIATION_URL_FALLBACK] = array(
     'types' => array(LANGUAGE_TYPE_URL),
-    'callbacks' => array('language' => 'locale_language_url_fallback'),
+    'callbacks' => array('negotiation' => 'locale_language_url_fallback'),
     'file' => $file,
     'weight' => 8,
     'name' => t('URL fallback'),
     'description' => t('Use an already detected language for URLs if none is found.'),
   );
 
-  return $providers;
+  return $negotiation_info;
 }
 
 /**
@@ -901,7 +926,7 @@ function locale_block_view($type) {
 
     if (isset($links->links)) {
       drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css');
-      $class = "language-switcher-{$links->provider}";
+      $class = "language-switcher-{$links->method_id}";
       $variables = array('links' => $links->links, 'attributes' => array('class' => array($class)));
       $block['content'] = theme('links__locale_block', $variables);
       $block['subject'] = t('Languages');
@@ -938,16 +963,16 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
       include_once DRUPAL_ROOT . '/core/includes/language.inc';
 
       foreach (language_types_get_configurable() as $type) {
-        // Get url rewriter callbacks only from enabled language providers.
+        // Get URL rewriter callbacks only from enabled language methods.
         $negotiation = variable_get("language_negotiation_$type", array());
 
-        foreach ($negotiation as $id => $provider) {
-          if (isset($provider['callbacks']['url_rewrite'])) {
-            if (isset($provider['file'])) {
-              require_once DRUPAL_ROOT . '/' . $provider['file'];
+        foreach ($negotiation as $method_id => $method) {
+          if (isset($method['callbacks']['url_rewrite'])) {
+            if (isset($method['file'])) {
+              require_once DRUPAL_ROOT . '/' . $method['file'];
             }
             // Avoid duplicate callback entries.
-            $callbacks[$provider['callbacks']['url_rewrite']] = TRUE;
+            $callbacks[$method['callbacks']['url_rewrite']] = TRUE;
           }
         }
       }

@@ -1781,7 +1781,7 @@ function comment_form($form, &$form_state, $comment) {
 
   // Add author e-mail and homepage fields depending on the current user.
   $form['author']['mail'] = array(
-    '#type' => 'textfield',
+    '#type' => 'email',
     '#title' => t('E-mail'),
     '#default_value' => $comment->mail,
     '#required' => (!$user->uid && $anonymous_contact == COMMENT_ANONYMOUS_MUST_CONTACT),
@@ -1981,9 +1981,6 @@ function comment_form_validate($form, &$form_state) {
         form_set_error('name', t('The name you used belongs to a registered user.'));
       }
     }
-  }
-  if ($form_state['values']['mail'] && !valid_email_address($form_state['values']['mail'])) {
-    form_set_error('mail', t('The e-mail address you specified is not valid.'));
   }
   if ($form_state['values']['homepage'] && !valid_url($form_state['values']['homepage'], TRUE)) {
     form_set_error('homepage', t('The URL of your homepage is not valid. Remember that it must be fully qualified, i.e. of the form <code>http://example.com/directory</code>.'));

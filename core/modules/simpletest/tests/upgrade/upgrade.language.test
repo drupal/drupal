@@ -32,6 +32,7 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
    * Tests a successful upgrade.
    */
   public function testLanguageUpgrade() {
+    db_update('users')->fields(array('language' => 'ca'))->condition('uid', '1')->execute();
     $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
 
     // Ensure Catalan was properly upgraded to be the new default language.
@@ -77,5 +78,45 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
     $this->assertFieldByName('langcode');
     $this->drupalGet('node/add/page');
     $this->assertNoFieldByName('langcode');
+
+    // Check that the user language value was retained in both langcode and
+    // preferred_langcode.
+    $user = db_query('SELECT * FROM {users} WHERE uid = :uid', array(':uid' => 1))->fetchObject();
+    $this->assertEqual($user->langcode, 'ca');
+    $this->assertEqual($user->preferred_langcode, 'ca');
+
+    // A langcode property was added to vocabularies and terms. Check that
+    // existing vocabularies and terms got assigned the site default language.
+    $vocabulary = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE vid = :vid', array(':vid' => 1))->fetchObject();
+    $this->assertEqual($vocabulary->langcode, 'ca');
+    $term = db_query('SELECT * FROM {taxonomy_term_data} WHERE tid = :tid', array(':tid' => 1))->fetchObject();
+    $this->assertEqual($term->langcode, 'ca');
+
+    // A langcode property was added to files. Check that existing files got
+    // assigned LANGUAGE_NONE.
+    $file = db_query('SELECT * FROM {file_managed} WHERE fid = :fid', array(':fid' => 1))->fetchObject();
+    $this->assertEqual($file->langcode, LANGUAGE_NONE);
+
+    // Check if language negotiation weights were renamed properly. This is a
+    // reproduction of the previous weights from the dump.
+    $expected_weights = array('locale-url' => '-8', 'locale-session' => '-6', 'locale-user' => '-4', 'locale-browser' => '-2', 'language-default' => '10');
+    // Check that locale_language_providers_weight_language is correctly
+    // renamed.
+    $current_weights = variable_get('locale_language_negotiation_methods_weight_language_interface', array());
+    $this->assertTrue(serialize($expected_weights) == serialize($current_weights), t('Language negotiation method weights upgraded.'));
+  }
+
+  /**
+   * Tests language domain upgrade path.
+   */
+  public function testLanguageUrlUpgrade() {
+    $language_domain = 'ca.example.com';
+    db_update('languages')->fields(array('domain' => 'http://' . $language_domain . ':8888'))->condition('language', 'ca')->execute();
+    variable_set('locale_language_negotiation_url_part', 1);
+
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    $domains = locale_language_negotiation_url_domains();
+    $this->assertTrue($domains['ca'] == $language_domain, t('Language domain for Catalan properly upgraded.'));
   }
 }

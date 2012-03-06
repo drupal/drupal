@@ -137,6 +137,13 @@ function user_schema() {
         'default' => '',
         'description' => 'Unique user name.',
       ),
+      'langcode' => array(
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "The {language}.langcode of the user's profile.",
+      ),
       'pass' => array(
         'type' => 'varchar',
         'length' => 128,
@@ -202,12 +209,12 @@ function user_schema() {
         'not null' => FALSE,
         'description' => "User's time zone.",
       ),
-      'language' => array(
+      'preferred_langcode' => array(
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
-        'description' => "User's default language.",
+        'description' => 'The {language}.langcode that the user prefers for receiving emails and viewing the site.',
       ),
       'picture' => array(
         'type' => 'int',
@@ -351,6 +358,41 @@ function user_update_8000() {
     unset($settings['extra_fields']['display']['summary']);
     field_bundle_settings('user', 'user', $settings);
   }
+}
+
+/**
+ * Splits {users}.language field to langcode and preferred_langcode.
+ *
+ * @see http://drupal.org/node/1454538
+ */
+function user_update_8001() {
+  // The former language field is the language preference of the user. Rename
+  // this to preferred_langcode in order to distinguish it from the langcode
+  // field common to all entity types, used for identifying the language of the
+  // entity itself.
+  $preferred_langcode_field = array(
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The {language}.langcode that the user prefers for receiving emails and viewing the site.',
+  );
+  db_change_field('users', 'language', 'preferred_langcode', $preferred_langcode_field);
+
+  // Add the langcode field.
+  $langcode_field = array(
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => "The {language}.langcode of the user's profile.",
+  );
+  db_add_field('users', 'langcode', $langcode_field);
+
+  // Since distinguishing the language of the user entity from the user's
+  // preferred language is a new feature in Drupal 8, assume that for updated
+  // sites, existing user entities are in the user's preferred language.
+  db_update('users')->expression('langcode', 'preferred_langcode')->execute();
 }
 
 /**

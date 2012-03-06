@@ -21,7 +21,9 @@
   <?php if ($block): ?>
     <h3 class="poll-title"><?php print $title; ?></h3>
   <?php endif; ?>
-  <?php print $results; ?>
+  <dl>
+    <?php print $results; ?>
+  </dl>
   <div class="total">
     <?php print t('Total votes: @votes', array('@votes' => $votes)); ?>
   </div>

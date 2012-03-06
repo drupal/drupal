@@ -65,10 +65,10 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
-    $language_code = $options['language']->langcode;
+    $langcode = $options['language']->langcode;
   }
   else {
-    $language_code = NULL;
+    $langcode = NULL;
   }
   $sanitize = !empty($options['sanitize']);
 
@@ -103,12 +103,12 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
 
         // These tokens are default variations on the chained tokens handled below.
         case 'last-login':
-          $replacements[$original] = !empty($account->login) ? format_date($account->login, 'medium', '', NULL, $language_code) : t('never');
+          $replacements[$original] = !empty($account->login) ? format_date($account->login, 'medium', '', NULL, $langcode) : t('never');
           break;
 
         case 'created':
           // In the case of user_presave the created date may not yet be set.
-          $replacements[$original] = !empty($account->created) ? format_date($account->created, 'medium', '', NULL, $language_code) : t('not yet created');
+          $replacements[$original] = !empty($account->created) ? format_date($account->created, 'medium', '', NULL, $langcode) : t('not yet created');
           break;
       }
     }

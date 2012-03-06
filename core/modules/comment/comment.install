@@ -269,7 +269,7 @@ function comment_schema() {
  * Renames {comment}.language to {comment}.langcode.
  */
 function comment_update_8000() {
-  db_drop_index('comment', 'comment_nid_langcode');
+  db_drop_index('comment', 'comment_nid_language');
   $langcode_spec = array(
     'type' => 'varchar',
     'length' => 12,

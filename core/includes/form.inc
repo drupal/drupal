@@ -865,7 +865,8 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // We'll clear out the cached copies of the form and its stored data
       // here, as we've finished with them. The in-memory copies are still
       // here, though.
-      if (!variable_get('cache', 0) && !empty($form_state['values']['form_build_id'])) {
+      $config = config('system.performance');
+      if (!$config->get('cache') && !empty($form_state['values']['form_build_id'])) {
         cache('form')->delete('form_' . $form_state['values']['form_build_id']);
         cache('form')->delete('form_state_' . $form_state['values']['form_build_id']);
       }
@@ -3750,6 +3751,56 @@ function theme_textfield($variables) {
 }
 
 /**
+ * Returns HTML for an email form element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #size, #maxlength,
+ *     #placeholder, #required, #attributes, #autocomplete_path.
+ *
+ * @ingroup themeable
+ */
+function theme_email($variables) {
+  $element = $variables['element'];
+  $element['#attributes']['type'] = 'email';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  _form_set_class($element, array('form-email'));
+
+  $extra = '';
+  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
+    drupal_add_library('system', 'drupal.autocomplete');
+    $element['#attributes']['class'][] = 'form-autocomplete';
+
+    $attributes = array();
+    $attributes['type'] = 'hidden';
+    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
+    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
+    $attributes['disabled'] = 'disabled';
+    $attributes['class'][] = 'autocomplete';
+    $extra = '<input' . drupal_attributes($attributes) . ' />';
+  }
+
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  return $output . $extra;
+}
+
+/**
+ * Form element validation handler for #type 'email'.
+ *
+ * Note that #maxlength and #required is validated by _form_validate() already.
+ */
+function form_validate_email(&$element, &$form_state) {
+  $value = trim($element['#value']);
+  form_set_value($element, $value, $form_state);
+
+  if ($value !== '' && !valid_email_address($value)) {
+    form_error($element, t('The e-mail address %mail is not valid.', array('%mail' => $value)));
+  }
+}
+
+/**
  * Returns HTML for a tel form element.
  *
  * @param $variables
@@ -3815,7 +3866,7 @@ function theme_form($variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #rows, #cols,
- *     #placeholder, #required, #attributes
+ *     #placeholder, #required, #attributes, #resizable
  *
  * @ingroup themeable
  */
@@ -3830,8 +3881,7 @@ function theme_textarea($variables) {
 
   // Add resizable behavior.
   if (!empty($element['#resizable'])) {
-    drupal_add_library('system', 'drupal.textarea');
-    $wrapper_attributes['class'][] = 'resizable';
+    $element['#attributes']['class'][] = 'resize-' . $element['#resizable'];
   }
 
   $output = '<div' . drupal_attributes($wrapper_attributes) . '>';

@@ -214,8 +214,8 @@ function locale_language_from_user($languages) {
   // User preference (only for logged users).
   global $user;
 
-  if ($user->uid) {
-    return $user->language;
+  if ($user->uid && !empty($user->preferred_langcode)) {
+    return $user->preferred_langcode;
   }
 
   // No language preference from the user.
@@ -264,7 +264,7 @@ function locale_language_from_session($languages) {
 function locale_language_from_url($languages) {
   $language_url = FALSE;
 
-  if (!language_negotiation_get_any(LANGUAGE_NEGOTIATION_URL)) {
+  if (!language_negotiation_method_enabled(LANGUAGE_NEGOTIATION_URL)) {
     return $language_url;
   }
 
@@ -303,8 +303,8 @@ function locale_language_from_url($languages) {
  * Determines the language to be assigned to URLs when none is detected.
  *
  * The language negotiation process has a fallback chain that ends with the
- * default language provider. Each built-in language type has a separate
- * initialization:
+ * default language negotiation method. Each built-in language type has a
+ * separate initialization:
  * - Interface language, which is the only configurable one, always gets a valid
  *   value. If no request-specific language is detected, the default language
  *   will be used.
@@ -322,8 +322,8 @@ function locale_language_from_url($languages) {
  *
  * @param $languages
  *   (optional) An array of valid language objects. This is passed by
- *   language_provider_invoke() to every language provider callback, but it is
- *   not actually needed here. Defaults to NULL.
+ *   language_negotiation_method_invoke() to every language method callback,
+ *   but it is not actually needed here. Defaults to NULL.
  * @param $language_type
  *   (optional) The language type to fall back to. Defaults to the interface
  *   language.
@@ -406,7 +406,7 @@ function locale_language_switcher_session($type, $path) {
 }
 
 /**
- * Rewrite URLs for the URL language provider.
+ * Rewrite URLs for the URL language negotiation method.
  */
 function locale_language_url_rewrite_url(&$path, &$options) {
   static $drupal_static_fast;
@@ -492,7 +492,7 @@ function locale_language_negotiation_url_domains_save(array $domains) {
 }
 
 /**
- * Rewrite URLs for the Session language provider.
+ * Rewrite URLs for the Session language negotiation method.
  */
 function locale_language_url_rewrite_session(&$path, &$options) {
   static $query_rewrite, $query_param, $query_value;
@@ -506,16 +506,16 @@ function locale_language_url_rewrite_session(&$path, &$options) {
       $languages = language_list(TRUE);
       $query_param = check_plain(variable_get('locale_language_negotiation_session_param', 'language'));
       $query_value = isset($_GET[$query_param]) ? check_plain($_GET[$query_param]) : NULL;
-      $query_rewrite = isset($languages[$query_value]) && language_negotiation_get_any(LANGUAGE_NEGOTIATION_SESSION);
+      $query_rewrite = isset($languages[$query_value]) && language_negotiation_method_enabled(LANGUAGE_NEGOTIATION_SESSION);
     }
     else {
       $query_rewrite = FALSE;
     }
   }
 
-  // If the user is anonymous, the user language provider is enabled, and the
-  // corresponding option has been set, we must preserve any explicit user
-  // language preference even with cookies disabled.
+  // If the user is anonymous, the user language negotiation method is enabled,
+  // and the corresponding option has been set, we must preserve any explicit
+  // user language preference even with cookies disabled.
   if ($query_rewrite) {
     if (is_string($options['query'])) {
       $options['query'] = drupal_get_query_array($options['query']);

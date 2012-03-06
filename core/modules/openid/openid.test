@@ -453,7 +453,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     $this->assertTrue($user, t('User was registered with right username.'));
     $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
     $this->assertEqual($user->timezone, 'Europe/London', t('User was registered with right timezone.'));
-    $this->assertEqual($user->language, 'en', t('User was registered with right language.'));
+    $this->assertEqual($user->preferred_langcode, 'en', t('User was registered with right language.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     $this->submitLoginForm($identity);
@@ -495,7 +495,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     $this->assertTrue($user, t('User was registered with right username.'));
     $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
     $this->assertEqual($user->timezone, 'Europe/London', t('User was registered with right timezone.'));
-    $this->assertEqual($user->language, 'en', t('User was registered with right language.'));
+    $this->assertEqual($user->preferred_langcode, 'en', t('User was registered with right language.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     $this->drupalLogout();
@@ -540,7 +540,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
 
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
-    $this->assertFalse($user->language, t('No user language was saved.'));
+    $this->assertFalse($user->preferred_langcode, t('No user language was saved.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     // Follow the one-time login that was sent in the welcome e-mail.
@@ -580,7 +580,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
 
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
-    $this->assertFalse($user->language, t('No user language was saved.'));
+    $this->assertFalse($user->preferred_langcode, t('No user language was saved.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     // Follow the one-time login that was sent in the welcome e-mail.
@@ -625,7 +625,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     $this->assertTrue($user, t('User was registered with right username.'));
     $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
     $this->assertEqual($user->timezone, 'Europe/London', t('User was registered with right timezone.'));
-    $this->assertEqual($user->language, 'en', t('User was registered with right language.'));
+    $this->assertEqual($user->preferred_langcode, 'en', t('User was registered with right language.'));
   }
 }
 

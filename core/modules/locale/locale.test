@@ -1301,7 +1301,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     variable_set('language_negotiation_' . LANGUAGE_TYPE_CONTENT, locale_language_negotiation_info());
     variable_set('language_negotiation_' . LANGUAGE_TYPE_URL, locale_language_negotiation_info());
 
-    // Change language providers settings.
+    // Change language negotiation settings.
     variable_set('locale_language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX);
     variable_set('locale_language_negotiation_session_param', TRUE);
 
@@ -1326,16 +1326,16 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     // Check language negotiation.
     require_once DRUPAL_ROOT . '/core/includes/language.inc';
     $this->assertTrue(count(language_types_get_all()) == count(language_types_get_default()), t('Language types reset'));
-    $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_DEFAULT;
+    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_DEFAULT;
     $this->assertTrue($language_negotiation, t('Interface language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
-    $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_CONTENT) == LANGUAGE_NEGOTIATION_DEFAULT;
+    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_CONTENT) == LANGUAGE_NEGOTIATION_DEFAULT;
     $this->assertTrue($language_negotiation, t('Content language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
-    $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_URL) == LANGUAGE_NEGOTIATION_DEFAULT;
+    $language_negotiation = language_negotiation_method_get_first(LANGUAGE_TYPE_URL) == LANGUAGE_NEGOTIATION_DEFAULT;
     $this->assertTrue($language_negotiation, t('URL language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
 
-    // Check language providers settings.
-    $this->assertFalse(variable_get('locale_language_negotiation_url_part', FALSE), t('URL language provider indicator settings cleared.'));
-    $this->assertFalse(variable_get('locale_language_negotiation_session_param', FALSE), t('Visit language provider settings cleared.'));
+    // Check language negotiation method settings.
+    $this->assertFalse(variable_get('locale_language_negotiation_url_part', FALSE), t('URL language negotiation method indicator settings cleared.'));
+    $this->assertFalse(variable_get('locale_language_negotiation_session_param', FALSE), t('Visit language negotiation method settings cleared.'));
 
     // Check JavaScript parsed.
     $javascript_parsed_count = count(variable_get('javascript_parsed', array()));
@@ -1644,13 +1644,13 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
     $this->assertNoText($name_disabled, t('Disabled language not present on form.'));
     // Switch to our custom language.
     $edit = array(
-      'language' => $langcode,
+      'preferred_langcode' => $langcode,
     );
     $this->drupalPost($path, $edit, t('Save'));
     // Ensure form was submitted successfully.
     $this->assertText(t('The changes have been saved.'), t('Changes were saved.'));
     // Check if language was changed.
-    $elements = $this->xpath('//input[@id=:id]', array(':id' => 'edit-language-' . $langcode));
+    $elements = $this->xpath('//input[@id=:id]', array(':id' => 'edit-preferred-langcode-' . $langcode));
     $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), t('Default language successfully updated.'));
 
     $this->drupalLogout();
@@ -1702,7 +1702,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
     // Check if the language selector is available on admin/people/create and
     // set to the currently active language.
     $this->drupalGet($langcode . '/admin/people/create');
-    $this->assertFieldChecked("edit-language-$langcode", t('Global language set in the language selector.'));
+    $this->assertFieldChecked("edit-preferred-langcode-$langcode", t('Global language set in the language selector.'));
 
     // Create a user with the admin/people/create form and check if the correct
     // language is set.
@@ -1717,7 +1717,8 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
     $this->drupalPost($langcode . '/admin/people/create', $edit, t('Create new account'));
 
     $user = user_load_by_name($username);
-    $this->assertEqual($user->language, $langcode, t('New user has correct language set.'));
+    $this->assertEqual($user->preferred_langcode, $langcode, t('New user has correct preferred language set.'));
+    $this->assertEqual($user->langcode, $langcode, t('New user has correct profile language set.'));
 
     // Register a new user and check if the language selector is hidden.
     $this->drupalLogout();
@@ -1734,7 +1735,8 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
     $this->drupalPost($langcode . '/user/register', $edit, t('Create new account'));
 
     $user = user_load_by_name($username);
-    $this->assertEqual($user->language, $langcode, t('New user has correct language set.'));
+    $this->assertEqual($user->preferred_langcode, $langcode, t('New user has correct preferred language set.'));
+    $this->assertEqual($user->langcode, $langcode, t('New user has correct profile language set.'));
 
     // Test if the admin can use the language selector and if the
     // correct language is was saved.
@@ -1742,7 +1744,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
 
     $this->drupalLogin($admin_user);
     $this->drupalGet($user_edit);
-    $this->assertFieldChecked("edit-language-$langcode", t('Language selector is accessible and correct language is selected.'));
+    $this->assertFieldChecked("edit-preferred-langcode-$langcode", t('Language selector is accessible and correct language is selected.'));
 
     // Set pass_raw so we can login the new user.
     $user->pass_raw = $this->randomName(10);
@@ -1755,7 +1757,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
 
     $this->drupalLogin($user);
     $this->drupalGet($user_edit);
-    $this->assertFieldChecked("edit-language-$langcode", t('Language selector is accessible and correct language is selected.'));
+    $this->assertFieldChecked("edit-preferred-langcode-$langcode", t('Language selector is accessible and correct language is selected.'));
   }
 }
 
@@ -2226,7 +2228,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
-        'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_DEFAULT,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > DEFAULT: no language prefix, UI language is default and the browser language preference setting is not used.',
       ),
@@ -2235,7 +2237,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => "$langcode/admin/config",
         'expect' => $language_string,
-        'expected_provider' => LANGUAGE_NEGOTIATION_URL,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > DEFAULT: with language prefix, UI language is switched based on path prefix',
       ),
@@ -2244,7 +2246,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER),
         'path' => 'admin/config',
         'expect' => $language_browser_fallback_string,
-        'expected_provider' => LANGUAGE_NEGOTIATION_BROWSER,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_BROWSER,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > BROWSER: no language prefix, UI language is determined by browser language preference',
       ),
@@ -2253,7 +2255,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER),
         'path' => "$langcode/admin/config",
         'expect' => $language_string,
-        'expected_provider' => LANGUAGE_NEGOTIATION_URL,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > BROWSER: with langage prefix, UI language is based on path prefix',
       ),
@@ -2262,7 +2264,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
-        'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_DEFAULT,
         'http_header' => $http_header_blah,
         'message' => 'URL (PATH) > BROWSER > DEFAULT: no language prefix and browser language preference set to unknown language should use default language',
       ),
@@ -2278,8 +2280,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $this->assertResponse(404, "Unknown language path prefix should return 404");
 
     // Setup for domain negotiation, first configure the language to have domain
-    // URL. We use https and a port to make sure that only the domain name is used.
-    $edit = array("domain[$langcode]" => "https://$language_domain:99");
+    // URL.
+    $edit = array("domain[$langcode]" => $language_domain);
     $this->drupalPost("admin/config/regional/language/detection/url", $edit, t('Save configuration'));
     // Set the site to use domain language negotiation.
 
@@ -2290,7 +2292,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'locale_language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,
         'path' => 'admin/config',
         'expect' => $default_string,
-        'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_DEFAULT,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (DOMAIN) > DEFAULT: default domain should get default language',
       ),
@@ -2302,7 +2304,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'locale_test_domain' => $language_domain,
         'path' => 'admin/config',
         'expect' => $language_string,
-        'expected_provider' => LANGUAGE_NEGOTIATION_URL,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (DOMAIN) > DEFAULT: domain example.cn should switch to Chinese',
       ),
@@ -2315,8 +2317,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
 
   protected function runTest($test) {
     if (!empty($test['language_negotiation'])) {
-      $negotiation = array_flip($test['language_negotiation']);
-      language_negotiation_set(LANGUAGE_TYPE_INTERFACE, $negotiation);
+      $method_weights = array_flip($test['language_negotiation']);
+      language_negotiation_set(LANGUAGE_TYPE_INTERFACE, $method_weights);
     }
     if (!empty($test['locale_language_negotiation_url_part'])) {
       variable_set('locale_language_negotiation_url_part', $test['locale_language_negotiation_url_part']);
@@ -2326,7 +2328,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     }
     $this->drupalGet($test['path'], array(), $test['http_header']);
     $this->assertText($test['expect'], $test['message']);
-    $this->assertText(t('Language negotiation provider: @name', array('@name' => $test['expected_provider'])));
+    $this->assertText(t('Language negotiation method: @name', array('@name' => $test['expected_method_id'])));
   }
 
   /**
@@ -2682,7 +2684,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
 
     // Change user language preference, this way interface language is always
     // French no matter what path prefix the URLs have.
-    $edit = array('language' => 'fr');
+    $edit = array('preferred_langcode' => 'fr');
     $this->drupalPost("user/{$admin_user->uid}/edit", $edit, t('Save'));
   }
 
@@ -2843,36 +2845,36 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     $language_types = variable_get('language_types', language_types_get_default());
     $this->assertTrue($language_types[$type], t('Content language type is configurable.'));
 
-    // Enable some core and custom language providers. The test language type is
-    // supposed to be configurable.
+    // Enable some core and custom language negotiation methods. The test
+    // language type is supposed to be configurable.
     $test_type = 'test_language_type';
-    $provider = LANGUAGE_NEGOTIATION_INTERFACE;
-    $test_provider = 'test_language_provider';
-    $form_field = $type . '[enabled]['. $provider .']';
+    $interface_method_id = LANGUAGE_NEGOTIATION_INTERFACE;
+    $test_method_id = 'test_language_negotiation_method';
+    $form_field = $type . '[enabled]['. $interface_method_id .']';
     $edit = array(
       $form_field => TRUE,
-      $type . '[enabled][' . $test_provider . ']' => TRUE,
-      $test_type . '[enabled][' . $test_provider . ']' => TRUE,
+      $type . '[enabled][' . $test_method_id . ']' => TRUE,
+      $test_type . '[enabled][' . $test_method_id . ']' => TRUE,
     );
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
-    // Remove the interface language provider by updating the language
+    // Remove the interface language negotiation method by updating the language
     // negotiation settings with the proper flag enabled.
     variable_set('locale_test_language_negotiation_info_alter', TRUE);
     $this->languageNegotiationUpdate();
     $negotiation = variable_get("language_negotiation_$type", array());
-    $this->assertFalse(isset($negotiation[$provider]), t('Interface language provider removed from the stored settings.'));
-    $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Interface language provider unavailable.'));
+    $this->assertFalse(isset($negotiation[$interface_method_id]), t('Interface language negotiation method removed from the stored settings.'));
+    $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Interface language negotiation method unavailable.'));
 
-    // Check that type-specific language providers can be assigned only to the
-    // corresponding language types.
+    // Check that type-specific language negotiation methods can be assigned
+    // only to the corresponding language types.
     foreach (language_types_get_configurable() as $type) {
-      $form_field = $type . '[enabled][test_language_provider_ts]';
+      $form_field = $type . '[enabled][test_language_negotiation_method_ts]';
       if ($type == $test_type) {
-        $this->assertFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language provider available for %type.', array('%type' => $type)));
+        $this->assertFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language negotiation method available for %type.', array('%type' => $type)));
       }
       else {
-        $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language provider unavailable for %type.', array('%type' => $type)));
+        $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language negotiation method unavailable for %type.', array('%type' => $type)));
       }
     }
 
@@ -2898,14 +2900,14 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     // previously set to configurable.
     $this->checkFixedLanguageTypes();
 
-    // Check that unavailable language providers are not present in the
-    // negotiation settings.
+    // Check that unavailable language negotiation methods are not present in
+    // the negotiation settings.
     $negotiation = variable_get("language_negotiation_$type", array());
-    $this->assertFalse(isset($negotiation[$test_provider]), t('The disabled test language provider is not part of the content language negotiation settings.'));
+    $this->assertFalse(isset($negotiation[$test_method_id]), t('The disabled test language negotiation method is not part of the content language negotiation settings.'));
 
     // Check that configuration page presents the correct options and settings.
     $this->assertNoRaw(t('Test language detection'), t('No test language type configuration available.'));
-    $this->assertNoRaw(t('This is a test language provider'), t('No test language provider available.'));
+    $this->assertNoRaw(t('This is a test language negotiation method'), t('No test language negotiation method available.'));
   }
 
   /**

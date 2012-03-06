@@ -22,7 +22,7 @@ const DRUPAL_CORE_COMPATIBILITY = '8.x';
 /**
  * Minimum supported version of PHP.
  */
-const DRUPAL_MINIMUM_PHP = '5.3.2';
+const DRUPAL_MINIMUM_PHP = '5.3.3';
 
 /**
  * Minimum recommended value of PHP memory_limit.
@@ -239,6 +239,8 @@ const REGISTRY_WRITE_LOOKUP_CACHE = 2;
  * @see http://php.net/manual/en/language.functions.php
  */
 const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
+
+require_once DRUPAL_ROOT . '/core/includes/config.inc';
 
 /**
  * Provides a caching wrapper to be used in place of large array structures.
@@ -767,7 +769,7 @@ function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root;
 
   // Export the following settings.php variables to the global namespace
-  global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url;
+  global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directory_name, $config_signature_key;
   $conf = array();
 
   if (file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.php')) {
@@ -1343,8 +1345,10 @@ function drupal_page_header() {
  * response is sent.
  */
 function drupal_serve_page_from_cache(stdClass $cache) {
+  $config = config('system.performance');
+
   // Negotiate whether to use compression.
-  $page_compression = variable_get('page_compression', TRUE) && extension_loaded('zlib');
+  $page_compression = $config->get('page_compression') && extension_loaded('zlib');
   $return_compressed = $page_compression && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE;
 
   // Get headers set in hook_boot(). Keys are lower-case.
@@ -1370,7 +1374,7 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // max-age > 0, allowing the page to be cached by external proxies, when a
   // session cookie is present unless the Vary header has been replaced or
   // unset in hook_boot().
-  $max_age = !isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary']) ? variable_get('page_cache_maximum_age', 0) : 0;
+  $max_age = !isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary']) ? $config->get('page_cache_maximum_age') : 0;
   $default_headers['Cache-Control'] = 'public, max-age=' . $max_age;
 
   // Entity tag should change if the output changes.
@@ -2336,7 +2340,8 @@ function _drupal_bootstrap_page_cache() {
   }
   else {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
-    $cache_enabled = variable_get('cache');
+    $config = config('system.performance');
+    $cache_enabled = $config->get('cache');
   }
   drupal_block_denied(ip_address());
   // If there is no session cookie and cache is enabled (or forced), try
@@ -2416,7 +2421,7 @@ function _drupal_bootstrap_database() {
 
   // Initialize the database system. Note that the connection
   // won't be initialized until it is actually requested.
-  require_once DRUPAL_ROOT . '/core/includes/database/database.inc';
+  require_once DRUPAL_ROOT . '/core/includes/database.inc';
 
   // Register autoload functions so that we can access classes and interfaces.
   // The database autoload routine comes first so that we can load the database
