@@ -15,7 +15,7 @@ function node_access_test_node_grants($account, $op) {
   // First grant a grant to the author for own content.
   $grants['node_access_test_author'] = array($account->uid);
   if ($op == 'view' && user_access('node test view', $account)) {
-    $grants['node_access_test'] = array(8888);
+    $grants['node_access_test'] = array(8888, 8889);
   }
   if ($op == 'view' && $account->uid == variable_get('node_test_node_access_all_uid', 0)) {
     $grants['node_access_all'] = array(0);
@@ -33,6 +33,14 @@ function node_access_test_node_access_records($node) {
     $grants[] = array(
       'realm' => 'node_access_test',
       'gid' => 8888,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 0,
+    );
+    $grants[] = array(
+      'realm' => 'node_access_test',
+      'gid' => 8889,
       'grant_view' => 1,
       'grant_update' => 0,
       'grant_delete' => 0,
