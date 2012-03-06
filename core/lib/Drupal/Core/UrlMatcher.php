@@ -92,7 +92,13 @@ class UrlMatcher extends SymfonyUrlMatcher {
         $i++;
       }
     }
-    $item['path'] = implode('/', $path_elements);
+
+    // If there was no router item found, we'll get back FALSE. Just return
+    // that so we know not to do anything with it.
+    if ($item) {
+      $item['path'] = implode('/', $path_elements);
+    }
+
     return $item;
   }
 
