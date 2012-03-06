@@ -1,0 +1,34 @@
+
+/**
+ * @file
+ * Theme stylesheet for the Poll module.
+ */
+
+.poll dl,
+.poll dd {
+  margin: 0;
+}
+.poll .links {
+  text-align: center;
+}
+.poll .percent {
+  text-align: right; /* LTR */
+}
+.poll .total {
+  text-align: center;
+}
+.poll .vote-form {
+  text-align: center;
+}
+.poll .vote-form {
+  text-align: left; /* LTR */
+}
+.poll .vote-form .poll-title {
+  font-weight: bold;
+}
+td.poll-chtext {
+  width: 80%;
+}
+td.poll-chvotes .form-text {
+  width: 85%;
+}

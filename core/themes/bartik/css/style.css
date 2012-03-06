@@ -1543,12 +1543,11 @@ div.admin-panel .description {
   font-style: italic;
   margin-bottom: 3em;
   margin-top: -3.2em;
-  float: right;
-  text-align: right;
+  float: right; /* LTR */
+  text-align: right; /* LTR */
 }
 .poll .choice-title {
-  clear: right;
-  margin-right: 2.25em;
+  clear: right; /* LTR */
 }
 .poll .total {
   font-size: 0.929em;

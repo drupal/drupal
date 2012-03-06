@@ -5,4 +5,5 @@ version = VERSION
 core = 8.x
 dependencies[] = node
 files[] = poll.test
-stylesheets[all][] = poll.css
+stylesheets[all][] = poll.base.css
+stylesheets[all][] = poll.theme.css

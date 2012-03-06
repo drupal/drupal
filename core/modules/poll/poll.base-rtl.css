@@ -1,0 +1,9 @@
+
+/**
+ * @file
+ * Right-to-left specfic base stylesheet for the Poll module.
+ */
+
+.poll .bar .foreground {
+  float: right;
+}
