@@ -1,0 +1,9 @@
+
+/**
+ * @file
+ * RTL base styles for the Contextual module.
+ */
+
+.contextual .trigger {
+  text-align: left;
+}

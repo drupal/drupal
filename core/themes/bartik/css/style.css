@@ -229,13 +229,8 @@ table ul.links li {
   margin: 0;
   padding: 0 0 0.25em 1em; /* LTR */
 }
-.contextual-links-wrapper {
-  font-size: small !important;
-}
-ul.contextual-links {
+.contextual-region .contextual .contextual-links a {
   font-size: 0.923em;
-}
-.contextual-links-wrapper a {
   text-shadow: 0 0 0 !important;
 }
 .item-list .pager {
@@ -1548,12 +1543,11 @@ div.admin-panel .description {
   font-style: italic;
   margin-bottom: 3em;
   margin-top: -3.2em;
-  float: right;
-  text-align: right;
+  float: right; /* LTR */
+  text-align: right; /* LTR */
 }
 .poll .choice-title {
-  clear: right;
-  margin-right: 2.25em;
+  clear: right; /* LTR */
 }
 .poll .total {
   font-size: 0.929em;

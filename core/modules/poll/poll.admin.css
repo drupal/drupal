@@ -1,0 +1,17 @@
+
+/**
+ * @file
+ * Admin stylesheet for the Poll module.
+ */
+
+.node-form #edit-poll-more {
+  margin: 0;
+}
+.node-form #poll-choice-table .form-text {
+  display: inline;
+  width: auto;
+}
+.node-form #poll-choice-table td.choice-flag {
+  white-space: nowrap;
+  width: 4em;
+}

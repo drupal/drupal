@@ -330,6 +330,9 @@ function poll_form($node, &$form_state) {
     '#options' => $duration,
     '#description' => t('After this period, the poll will be closed automatically.'),
   );
+  $form['#attached']['css'] = array(
+    drupal_get_path('module', 'poll') . '/poll.admin.css',
+  );
 
   return $form;
 }

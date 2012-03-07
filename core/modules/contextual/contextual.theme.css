@@ -1,0 +1,90 @@
+
+/**
+ * @file
+ * Styling for contextual module.
+ */
+
+/**
+ * Contextual links wrappers.
+ */
+.contextual-region-active {
+  outline: 1px dashed #d6d6d6;
+  outline-offset: 1px;
+}
+.contextual {
+  right: 2px; /* LTR */
+  top: 2px;
+}
+
+/**
+ * Contextual trigger.
+ */
+.contextual .trigger {
+  background: transparent url(images/gear-select.png) no-repeat 2px 0;
+  border: 1px solid transparent;
+  height: 18px;
+  margin: 0;
+  outline: none;
+  overflow: hidden;
+  padding: 0 2px;
+  text-indent: 34px;
+  width: 28px;
+}
+.contextual .trigger:hover,
+.contextual-active .trigger {
+  background-position: 2px -18px;
+}
+.contextual-active .trigger {
+  background-color: #ffffff;
+  border-bottom: none;
+  border-color: #d6d6d6;
+  -moz-border-radius: 4px 4px 0 0; /* FF3.6 */
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  z-index: 1;
+}
+
+/**
+ * Contextual links.
+ */
+.contextual .contextual-links {
+  background-color: #fff;
+  border: 1px solid #d6d6d6;
+  -moz-border-radius: 4px 0 4px 4px; /* FF3.6 */
+  border-radius: 4px 0 4px 4px; /* LTR */
+  margin: 0;
+  padding: 0.25em 0;
+  position: absolute;
+  right: 0; /* LTR */
+  text-align: left;
+  top: 18px;
+  white-space: nowrap;
+}
+/* Reset the li to prevent accidential overrides by a theme. */
+.contextual-region .contextual .contextual-links li {
+  background-color: #fff;
+  border: none;
+  list-style: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 0;
+}
+.contextual-region .contextual .contextual-links a {
+  display: block;
+  font-family: sans-serif;
+  font-size: small;
+  line-height: 0.8em;
+  margin: 0.25em 0;
+  padding: 0.4em 0.8em 0.4em 0.6em; /* LTR */
+}
+.contextual-region .contextual .contextual-links a,
+.contextual-region .contextual .contextual-links a:hover,
+.contextual-region .contextual .contextual-links a:active,
+.contextual-region .contextual .contextual-links a:focus {
+  background-color: #fff;
+  color: #333;
+  text-decoration: none;
+}
+.contextual-region .contextual .contextual-links li a:hover {
+  background-color: #bfdcee;
+}

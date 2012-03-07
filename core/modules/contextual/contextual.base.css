@@ -1,0 +1,37 @@
+
+/**
+ * @file
+ * Generic base styles for contextual module.
+ */
+
+/**
+ * Contextual links behavior.
+ */
+.contextual,
+.contextual .contextual-links,
+.contextual .trigger {
+  display: none;
+}
+.contextual-region:hover .contextual,
+.contextual-region:hover .trigger,
+.contextual-active .trigger,
+.contextual-active .contextual-links {
+  display: block;
+}
+
+/**
+ * Contextual links structure.
+ */
+.contextual-region {
+  position: relative;
+}
+.contextual {
+  position: absolute;
+  z-index: 999;
+}
+.contextual .trigger {
+  overflow: hidden;
+  position: relative;
+  text-align: right; /* LTR */
+  z-index: 1;
+}

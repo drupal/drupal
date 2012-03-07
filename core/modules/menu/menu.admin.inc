@@ -48,7 +48,7 @@ function theme_menu_admin_overview($variables) {
  */
 function menu_overview_form($form, &$form_state, $menu) {
   global $menu_admin;
-  $form['#attached']['css'] = array(drupal_get_path('module', 'menu') . '/menu.css');
+  $form['#attached']['css'] = array(drupal_get_path('module', 'menu') . '/menu.admin.css');
   $sql = "
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.delivery_callback, m.title, m.title_callback, m.title_arguments, m.type, m.description, ml.*
     FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path

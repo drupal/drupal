@@ -12,23 +12,23 @@ Drupal.contextualLinks = Drupal.contextualLinks || {};
  */
 Drupal.behaviors.contextualLinks = {
   attach: function (context) {
-    $('div.contextual-links-wrapper', context).once('contextual-links', function () {
+    $('div.contextual', context).once('contextual-links', function () {
       var $wrapper = $(this);
-      var $region = $wrapper.closest('.contextual-links-region');
-      var $links = $wrapper.find('ul.contextual-links');
-      var $trigger = $('<a class="contextual-links-trigger" href="#" />').text(Drupal.t('Configure')).click(
+      var $region = $wrapper.closest('.contextual-region');
+      var $links = $wrapper.find('ul');
+      var $trigger = $('<a class="trigger" href="#" />').text(Drupal.t('Configure')).click(
         function () {
           $links.stop(true, true).slideToggle(100);
-          $wrapper.toggleClass('contextual-links-active');
+          $wrapper.toggleClass('contextual-active');
           return false;
         }
       );
       // Attach hover behavior to trigger and ul.contextual-links.
       $trigger.add($links).hover(
-        function () { $region.addClass('contextual-links-region-active'); },
-        function () { $region.removeClass('contextual-links-region-active'); }
+        function () { $region.addClass('contextual-region-active'); },
+        function () { $region.removeClass('contextual-region-active'); }
       );
-      // Hide the contextual links when user clicks a link or rolls out of the .contextual-links-region.
+      // Hide the contextual links when user clicks a link or rolls out of the .contextual-region.
       $region.bind('mouseleave click', Drupal.contextualLinks.mouseleave);
       // Prepend the trigger.
       $wrapper.prepend($trigger);
@@ -41,8 +41,8 @@ Drupal.behaviors.contextualLinks = {
  */
 Drupal.contextualLinks.mouseleave = function () {
   $(this)
-    .find('.contextual-links-active').removeClass('contextual-links-active')
-    .find('ul.contextual-links').hide();
+    .find('.contextual-active').removeClass('contextual-active')
+    .find('.contextual-links').hide();
 };
 
 })(jQuery);

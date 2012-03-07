@@ -259,6 +259,13 @@ ul.action-links li a {
 .poll .total {
   text-align: left;
 }
+.poll .choice-title {
+  clear: left;
+}
+.poll .percent {
+  float: left;
+  text-align: left;
+}
 
 /* ---------- Color Form ----------- */
 
