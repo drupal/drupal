@@ -699,13 +699,15 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
     }
     else {
       // We don't have the source string, cache this as untranslated.
-      db_insert('locales_source')
-        ->fields(array(
+      db_merge('locales_source')
+        ->insertFields(array(
           'location' => request_uri(),
+          'version' => VERSION,
+        ))
+        ->key(array(
           'source' => $string,
           'context' => (string) $context,
           'textgroup' => 'default',
-          'version' => VERSION,
         ))
         ->execute();
       $locale_t[$langcode][$context][$string] = TRUE;
