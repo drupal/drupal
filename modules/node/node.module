@@ -3252,9 +3252,6 @@ function _node_query_node_access_alter($query, $type) {
     }
   }
 
-  // Prevent duplicate records.
-  $query->distinct();
-
   // Find all instances of the base table being joined -- could appear
   // more than once in the query, and could be aliased. Join each one to
   // the node_access table.
@@ -3283,17 +3280,9 @@ function _node_query_node_access_alter($query, $type) {
   foreach ($tables as $nalias => $tableinfo) {
     $table = $tableinfo['table'];
     if (!($table instanceof SelectQueryInterface) && $table == $base_table) {
-
-      // The node_access table has the access grants for any given node so JOIN
-      // it to the table containing the nid which can be either the node
-      // table or a field value table.
-      if ($type == 'node') {
-        $access_alias = $query->join('node_access', 'na', '%alias.nid = ' . $nalias . '.nid');
-      }
-      else {
-        $access_alias = $query->leftJoin('node_access', 'na', '%alias.nid = ' . $nalias . '.entity_id');
-        $base_alias = $nalias;
-      }
+      // Set the subquery.
+      $subquery = db_select('node_access', 'na')
+       ->fields('na', array('nid'));
 
       $grant_conditions = db_or();
       // If any grant exists for the specified user, then user has access
@@ -3301,29 +3290,30 @@ function _node_query_node_access_alter($query, $type) {
       foreach ($grants as $realm => $gids) {
         foreach ($gids as $gid) {
           $grant_conditions->condition(db_and()
-            ->condition($access_alias . '.gid', $gid)
-            ->condition($access_alias . '.realm', $realm)
+            ->condition('na.gid', $gid)
+            ->condition('na.realm', $realm)
           );
         }
       }
 
-      $count = count($grant_conditions->conditions());
-      if ($type == 'node') {
-        if ($count) {
-          $query->condition($grant_conditions);
-        }
-        $query->condition($access_alias . '.grant_' . $op, 1, '>=');
+      // Attach conditions to the subquery for nodes.
+      if (count($grant_conditions->conditions())) {
+        $subquery->condition($grant_conditions);
       }
-      else {
-        if ($count) {
-          $entity_conditions->condition($grant_conditions);
-        }
-        $entity_conditions->condition($access_alias . '.grant_' . $op, 1, '>=');
+      $subquery->condition('na.grant_' . $op, 1, '>=');
+      $field = 'nid';
+      // Now handle entities.
+      if ($type == 'entity') {
+        // Set a common alias for entities.
+        $base_alias = $nalias;
+        $field = 'entity_id';
       }
+      $subquery->where("$nalias.$field = na.nid");
+      $query->exists($subquery);
     }
   }
 
-  if ($type == 'entity' && count($entity_conditions->conditions())) {
+  if ($type == 'entity' && count($subquery->conditions())) {
     // All the node access conditions are only for field values belonging to
     // nodes.
     $entity_conditions->condition("$base_alias.entity_type", 'node');
@@ -3335,6 +3325,7 @@ function _node_query_node_access_alter($query, $type) {
     // Add the compiled set of rules to the query.
     $query->condition($or);
   }
+
 }
 
 /**
