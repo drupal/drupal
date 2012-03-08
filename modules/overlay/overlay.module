@@ -641,6 +641,20 @@ function overlay_overlay_parent_initialize() {
     $type = str_replace('<front>', variable_get('site_frontpage', 'node'), $type);
   }
   drupal_add_js(array('overlay' => array('paths' => $paths)), 'setting');
+  $path_prefixes = array();
+  if (module_exists('locale') && variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
+    // Get languages grouped by status and select only the enabled ones.
+    $languages = language_list('enabled');
+    $languages = $languages[1];
+
+    $path_prefixes = array();
+    foreach ($languages as $language) {
+      if ($language->prefix) {
+        $path_prefixes[] = $language->prefix;
+      }
+    }
+  }
+  drupal_add_js(array('overlay' => array('pathPrefixes' => $path_prefixes)), 'setting');
   // Pass along the Ajax callback for rerendering sections of the parent window.
   drupal_add_js(array('overlay' => array('ajaxCallback' => 'overlay-ajax')), 'setting');
 }
