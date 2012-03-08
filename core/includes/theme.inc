@@ -1,5 +1,5 @@
 <?php
-
+use Drupal\Core\Utility\CacheArray;
 /**
  * @file
  * The theme system, which controls the output of Drupal.
@@ -346,7 +346,7 @@ function drupal_theme_rebuild() {
  * that are actually in use on the site. On cache misses the complete
  * theme registry is loaded and used to update the run-time cache.
  */
-class ThemeRegistry Extends DrupalCacheArray {
+class ThemeRegistry Extends CacheArray {
 
   /**
    * Whether the partial registry can be persisted to the cache.
