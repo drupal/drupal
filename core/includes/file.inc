@@ -574,7 +574,7 @@ function file_save(stdClass $file) {
     // neutral more often than language dependent. Until we have better flexible
     // settings.
     // @todo See http://drupal.org/node/258785 and followups.
-    $file->langcode = LANGUAGE_NONE;
+    $file->langcode = LANGUAGE_NOT_SPECIFIED;
   }
 
   // Load the stored entity, if any.

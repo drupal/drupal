@@ -43,7 +43,7 @@ class PHPTestCase extends DrupalWebTestCase {
    * @return stdObject Node object.
    */
   function createNodeWithCode() {
-    return $this->drupalCreateNode(array('body' => array(LANGUAGE_NONE => array(array('value' => '<?php print "SimpleTest PHP was executed!"; ?>')))));
+    return $this->drupalCreateNode(array('body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => '<?php print "SimpleTest PHP was executed!"; ?>')))));
   }
 }
 
@@ -77,7 +77,7 @@ class PHPFilterTestCase extends PHPTestCase {
 
     // Change filter to PHP filter and see that PHP code is evaluated.
     $edit = array();
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["body[$langcode][0][format]"] = $this->php_code_format->format;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node->title)), t('PHP code filter turned on.'));

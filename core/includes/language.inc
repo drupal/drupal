@@ -421,9 +421,9 @@ function language_fallback_get_candidates($type = LANGUAGE_TYPE_CONTENT) {
   $fallback_candidates = &drupal_static(__FUNCTION__);
 
   if (!isset($fallback_candidates)) {
-    // Get languages ordered by weight, add LANGUAGE_NONE as the last one.
+    // Get languages ordered by weight, add LANGUAGE_NOT_SPECIFIED at the end.
     $fallback_candidates = array_keys(language_list());
-    $fallback_candidates[] = LANGUAGE_NONE;
+    $fallback_candidates[] = LANGUAGE_NOT_SPECIFIED;
 
     // Let other modules hook in and add/change candidates.
     drupal_alter('language_fallback_candidates', $fallback_candidates);

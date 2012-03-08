@@ -111,7 +111,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
           '#type' => 'link',
           '#title' => $comment->subject,
           '#href' => 'comment/' . $comment->cid,
-          '#options' => array('attributes' => array('title' => truncate_utf8($comment->comment_body[LANGUAGE_NONE][0]['value'], 128)), 'fragment' => 'comment-' . $comment->cid),
+          '#options' => array('attributes' => array('title' => truncate_utf8($comment->comment_body[LANGUAGE_NOT_SPECIFIED][0]['value'], 128)), 'fragment' => 'comment-' . $comment->cid),
         ),
       ),
       'author' => theme('username', array('account' => $comment)),

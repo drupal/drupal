@@ -72,7 +72,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -126,7 +126,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -214,7 +214,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -310,7 +310,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -427,7 +427,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();

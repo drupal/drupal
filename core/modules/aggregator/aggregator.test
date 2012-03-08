@@ -282,7 +282,7 @@ EOF;
    *   (optional) The number of nodes to generate.
    */
   function createSampleNodes($count = 5) {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Post $count article nodes.
     for ($i = 0; $i < $count; $i++) {
       $edit = array();

@@ -97,7 +97,7 @@ class TrackerTest extends DrupalWebTestCase {
     ));
     $comment = array(
       'subject' => $this->randomName(),
-      'comment_body[' . LANGUAGE_NONE . '][0][value]' => $this->randomName(20),
+      'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
     $this->drupalPost('comment/reply/' . $other_published_my_comment->nid, $comment, t('Save'));
 
@@ -151,13 +151,13 @@ class TrackerTest extends DrupalWebTestCase {
 
     $node = $this->drupalCreateNode(array(
       'comment' => 2,
-      'title' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(8)))),
+      'title' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $this->randomName(8)))),
     ));
 
     // Add a comment to the page.
     $comment = array(
       'subject' => $this->randomName(),
-      'comment_body[' . LANGUAGE_NONE . '][0][value]' => $this->randomName(20),
+      'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
     // The new comment is automatically viewed by the current user.
     $this->drupalPost('comment/reply/' . $node->nid, $comment, t('Save'));
@@ -170,7 +170,7 @@ class TrackerTest extends DrupalWebTestCase {
     // Add another comment as other_user.
     $comment = array(
       'subject' => $this->randomName(),
-      'comment_body[' . LANGUAGE_NONE . '][0][value]' => $this->randomName(20),
+      'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
     // If the comment is posted in the same second as the last one then Drupal
     // can't tell the difference, so we wait one second here.
@@ -203,7 +203,7 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalLogin($this->other_user);
     $comment = array(
       'subject' => $this->randomName(),
-      'comment_body[' . LANGUAGE_NONE . '][0][value]' => $this->randomName(20),
+      'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
     $this->drupalPost('comment/reply/' . $nodes[3]->nid, $comment, t('Save'));
 

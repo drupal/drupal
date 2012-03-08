@@ -223,7 +223,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     // Check user fields.
     $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
-    $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][0]['value'], $value, t('The field value was correclty saved.'));
+    $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][0]['value'], $value, t('The field value was correclty saved.'));
 
     // Check that the 'add more' button works.
     $field['cardinality'] = FIELD_CARDINALITY_UNLIMITED;
@@ -251,9 +251,9 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
       // Check user fields.
       $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
       $new_user = reset($accounts);
-      $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][0]['value'], $value, t('@js : The field value was correclty saved.', array('@js' => $js)));
-      $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][1]['value'], $value + 1, t('@js : The field value was correclty saved.', array('@js' => $js)));
-      $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][2]['value'], $value + 2, t('@js : The field value was correclty saved.', array('@js' => $js)));
+      $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][0]['value'], $value, t('@js : The field value was correclty saved.', array('@js' => $js)));
+      $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][1]['value'], $value + 1, t('@js : The field value was correclty saved.', array('@js' => $js)));
+      $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][2]['value'], $value + 2, t('@js : The field value was correclty saved.', array('@js' => $js)));
     }
   }
 }
@@ -711,7 +711,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
 
     // Create comment.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
@@ -1720,7 +1720,7 @@ class UserSignatureTestCase extends DrupalWebTestCase {
     $this->assertFieldByName('signature[format]', $edit['signature[format]'], 'Submitted signature format found.');
 
     // Create a comment.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);

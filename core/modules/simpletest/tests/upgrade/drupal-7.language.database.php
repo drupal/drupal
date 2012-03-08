@@ -534,10 +534,10 @@ db_update('system')->fields(array(
 
 // Add sample nodes to test language assignment and translation functionality.
 // The first node is also used for testing comment language functionality. This
-// is a simple node with LANGUAGE_NONE as language code. The second node is a
-// Catalan node (language code 'ca'). The third and fourth node are a
-// translation set with an English source translation (language code 'en') and a
-// Chuvash translation (language code 'cv').
+// is a simple node with LANGUAGE_NOT_SPECIFIED as language code. The second
+// node is a Catalan node (language code 'ca'). The third and fourth node are a
+// translation set with an English source translation (language code 'en') and
+// a Chuvash translation (language code 'cv').
 db_insert('node')->fields(array(
   'nid',
   'vid',
@@ -657,7 +657,7 @@ db_insert('node_revision')->fields(array(
   'vid' => '50',
   'uid' => '6',
   'title' => 'Node title 38',
-  'log' => 'Added a LANGUAGE_NONE node to comment on.',
+  'log' => 'Added a LANGUAGE_NOT_SPECIFIED node to comment on.',
   'timestamp' => '1314997642',
   'status' => '1',
   'comment' => '2',

@@ -710,7 +710,7 @@ class CommonCascadingStylesheetsTestCase extends DrupalWebTestCase {
     $settings = array(
       'type' => 'page',
       'body' => array(
-        LANGUAGE_NONE => array(
+        LANGUAGE_NOT_SPECIFIED => array(
           array(
             'value' => t('This tests the inline CSS!') . "<?php drupal_add_css('$css', 'inline'); ?>",
             'format' => $php_format_id,

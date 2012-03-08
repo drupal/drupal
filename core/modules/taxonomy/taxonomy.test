@@ -19,7 +19,7 @@ class TaxonomyWebTestCase extends DrupalWebTestCase {
     $vocabulary->name = $this->randomName();
     $vocabulary->description = $this->randomName();
     $vocabulary->machine_name = drupal_strtolower($this->randomName());
-    $vocabulary->langcode = LANGUAGE_NONE;
+    $vocabulary->langcode = LANGUAGE_NOT_SPECIFIED;
     $vocabulary->help = '';
     $vocabulary->nodes = array('article' => 'article');
     $vocabulary->weight = mt_rand(0, 10);
@@ -37,7 +37,7 @@ class TaxonomyWebTestCase extends DrupalWebTestCase {
     // Use the first available text format.
     $term->format = db_query_range('SELECT format FROM {filter_format}', 0, 1)->fetchField();
     $term->vid = $vocabulary->vid;
-    $term->langcode = LANGUAGE_NONE;
+    $term->langcode = LANGUAGE_NOT_SPECIFIED;
     taxonomy_term_save($term);
     return $term;
   }
@@ -497,7 +497,7 @@ class TaxonomyLegacyTestCase extends TaxonomyWebTestCase {
    */
   function testTaxonomyLegacyNode() {
     // Posts an article with a taxonomy term and a date prior to 1970.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array();
     $edit['title'] = $this->randomName();
     $edit['date'] = '1969-01-01 00:00:00 -0500';
@@ -605,7 +605,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
     // Post an article.
     $edit = array();
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit[$this->instance['field_name'] . '[' . $langcode .'][]'] = $term1->tid;
@@ -647,7 +647,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     );
 
     $edit = array();
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
@@ -1013,7 +1013,7 @@ class TaxonomyRSSTestCase extends TaxonomyWebTestCase {
 
     // Post an article.
     $edit = array();
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
     $edit[$this->instance['field_name'] . '[' . $langcode .'][]'] = $term1->tid;
     $this->drupalPost('node/add/article', $edit, t('Save'));
@@ -1125,7 +1125,7 @@ class TaxonomyTermIndexTestCase extends TaxonomyWebTestCase {
 
     // Post an article.
     $edit = array();
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit["{$this->field_name_1}[$langcode][]"] = $term_1->tid;
@@ -1424,7 +1424,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
    */
   function testTaxonomyTermFieldValidation() {
     // Test valid and invalid values with field_attach_validate().
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $entity = field_test_create_stub_entity();
     $term = $this->createTerm($this->vocabulary);
     $entity->{$this->field_name}[$langcode][0]['tid'] = $term->tid;
@@ -1456,7 +1456,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $term = $this->createTerm($this->vocabulary);
 
     // Display creation form.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $this->drupalGet('test-entity/add/test-bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode]", '', t('Widget is displayed'));
 
@@ -1587,7 +1587,7 @@ class TaxonomyTermFieldMultipleVocabularyTestCase extends TaxonomyWebTestCase {
     $term2 = $this->createTerm($this->vocabulary2);
 
     // Submit an entity with both terms.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $this->drupalGet('test-entity/add/test-bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][]", '', 'Widget is displayed');
     $edit = array(
@@ -1656,7 +1656,7 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
     $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();
-    $this->langcode = LANGUAGE_NONE;
+    $this->langcode = LANGUAGE_NOT_SPECIFIED;
 
     $field = array(
       'field_name' => 'taxonomy_' . $this->vocabulary->machine_name,

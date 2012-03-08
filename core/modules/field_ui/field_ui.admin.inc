@@ -2026,7 +2026,7 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
   $instance['description'] = '';
 
   // @todo Allow multiple values (requires more work on 'add more' JS handler).
-  $element += field_default_form($instance['entity_type'], NULL, $field, $instance, LANGUAGE_NONE, $items, $element, $form_state, 0);
+  $element += field_default_form($instance['entity_type'], NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state, 0);
 
   return $element;
 }
@@ -2045,25 +2045,25 @@ function field_ui_field_edit_form_validate($form, &$form_state) {
   if (isset($form['instance']['default_value_widget'])) {
     $element = $form['instance']['default_value_widget'];
 
-    $field_state = field_form_get_state($element['#parents'], $field_name, LANGUAGE_NONE, $form_state);
+    $field_state = field_form_get_state($element['#parents'], $field_name, LANGUAGE_NOT_SPECIFIED, $form_state);
     $field = $field_state['field'];
 
     // Extract the 'default value'.
     $items = array();
-    field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $element, $form_state);
+    field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
 
     // Validate the value and report errors.
     $errors = array();
     $function = $field['module'] . '_field_validate';
     if (function_exists($function)) {
-      $function(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $errors);
+      $function(NULL, NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $errors);
     }
-    if (isset($errors[$field_name][LANGUAGE_NONE])) {
+    if (isset($errors[$field_name][LANGUAGE_NOT_SPECIFIED])) {
       // Store reported errors in $form_state.
-      $field_state['errors'] = $errors[$field_name][LANGUAGE_NONE];
-      field_form_set_state($element['#parents'], $field_name, LANGUAGE_NONE, $form_state, $field_state);
+      $field_state['errors'] = $errors[$field_name][LANGUAGE_NOT_SPECIFIED];
+      field_form_set_state($element['#parents'], $field_name, LANGUAGE_NOT_SPECIFIED, $form_state, $field_state);
       // Assign reported errors to the correct form element.
-      field_default_form_errors(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $element, $form_state);
+      field_default_form_errors(NULL, NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
     }
   }
 }
@@ -2094,8 +2094,8 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
 
     // Extract field values.
     $items = array();
-    field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $element, $form_state);
-    field_default_submit(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $element, $form_state);
+    field_default_extract_form_values(NULL, NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
+    field_default_submit(NULL, NULL, $field, $instance, LANGUAGE_NOT_SPECIFIED, $items, $element, $form_state);
 
     $instance['default_value'] = $items ? $items : NULL;
   }

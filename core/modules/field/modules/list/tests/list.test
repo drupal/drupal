@@ -46,7 +46,7 @@ class ListFieldTestCase extends FieldTestCase {
    * Test that allowed values can be updated.
    */
   function testUpdateAllowedValues() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // All three options appear.
     $entity = field_test_create_stub_entity();
@@ -168,7 +168,7 @@ class ListFieldUITestCase extends FieldTestCase {
     // Create a node with actual data for the field.
     $settings = array(
       'type' => $this->type,
-      $this->field_name => array(LANGUAGE_NONE => array(array('value' => 1))),
+      $this->field_name => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 1))),
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -218,7 +218,7 @@ class ListFieldUITestCase extends FieldTestCase {
     // Create a node with actual data for the field.
     $settings = array(
       'type' => $this->type,
-      $this->field_name => array(LANGUAGE_NONE => array(array('value' => .5))),
+      $this->field_name => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => .5))),
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -270,7 +270,7 @@ class ListFieldUITestCase extends FieldTestCase {
     // Create a node with actual data for the field.
     $settings = array(
       'type' => $this->type,
-      $this->field_name => array(LANGUAGE_NONE => array(array('value' => 'One'))),
+      $this->field_name => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'One'))),
     );
     $node = $this->drupalCreateNode($settings);
 

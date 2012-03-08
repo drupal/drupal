@@ -81,7 +81,7 @@ function node_add($type) {
   global $user;
 
   $types = node_type_get_types();
-  $node = (object) array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'langcode' => LANGUAGE_NONE);
+  $node = (object) array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'langcode' => LANGUAGE_NOT_SPECIFIED);
   drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)), PASS_THROUGH);
   $output = drupal_get_form($type . '_node_form', $node);
 
@@ -186,7 +186,7 @@ function node_form($form, &$form_state, $node) {
       '#title' => t('Language'),
       '#default_value' => (isset($node->langcode) ? $node->langcode : ''),
       '#options' => $language_options,
-      '#empty_value' => LANGUAGE_NONE,
+      '#empty_value' => LANGUAGE_NOT_SPECIFIED,
     );
   }
   else {

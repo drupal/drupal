@@ -398,7 +398,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
       $settings = array(
         'type' => 'page',
         'title' => 'Drupal rocks',
-        'body' => array(LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))),
+        'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "Drupal's search rocks"))),
       );
       foreach (array(0, 1) as $num) {
         if ($num == 1) {
@@ -408,7 +408,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
               $settings[$node_rank] = 1;
               break;
             case 'relevance':
-              $settings['body'][LANGUAGE_NONE][0]['value'] .= " really rocks";
+              $settings['body'][LANGUAGE_NOT_SPECIFIED][0]['value'] .= " really rocks";
               break;
             case 'recent':
               $settings['created'] = REQUEST_TIME + 3600;
@@ -432,7 +432,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     // Add a comment to one of the nodes.
     $edit = array();
     $edit['subject'] = 'my comment title';
-    $edit['comment_body[' . LANGUAGE_NONE . '][0][value]'] = 'some random comment';
+    $edit['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = 'some random comment';
     $this->drupalGet('comment/reply/' . $nodes['comments'][1]->nid);
     $this->drupalPost(NULL, $edit, t('Preview'));
     $this->drupalPost(NULL, $edit, t('Save'));
@@ -478,13 +478,13 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     foreach ($shuffled_tags as $tag) {
       switch ($tag) {
         case 'a':
-          $settings['body'] = array(LANGUAGE_NONE => array(array('value' => l('Drupal Rocks', 'node'), 'format' => 'full_html')));
+          $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => l('Drupal Rocks', 'node'), 'format' => 'full_html')));
           break;
         case 'notag':
-          $settings['body'] = array(LANGUAGE_NONE => array(array('value' => 'Drupal Rocks')));
+          $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'Drupal Rocks')));
           break;
         default:
-          $settings['body'] = array(LANGUAGE_NONE => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
+          $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
           break;
       }
       $nodes[$tag] = $this->drupalCreateNode($settings);
@@ -517,7 +517,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     // Test tags with the same weight against the sorted tags.
     $unsorted_tags = array('u', 'b', 'i', 'strong', 'em');
     foreach ($unsorted_tags as $tag) {
-      $settings['body'] = array(LANGUAGE_NONE => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
+      $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
       $node = $this->drupalCreateNode($settings);
 
       // Update the search index.
@@ -553,7 +553,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     $settings = array(
       'type' => 'page',
       'title' => 'Drupal rocks',
-      'body' => array(LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))),
+      'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "Drupal's search rocks"))),
       'sticky' => 1,
     );
 
@@ -686,12 +686,12 @@ class SearchExactTestCase extends DrupalWebTestCase {
     );
     // Create nodes with exact phrase.
     for ($i = 0; $i <= 17; $i++) {
-      $settings['body'] = array(LANGUAGE_NONE => array(array('value' => 'love pizza')));
+      $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'love pizza')));
       $this->drupalCreateNode($settings);
     }
     // Create nodes containing keywords.
     for ($i = 0; $i <= 17; $i++) {
-      $settings['body'] = array(LANGUAGE_NONE => array(array('value' => 'love cheesy pizza')));
+      $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'love cheesy pizza')));
       $this->drupalCreateNode($settings);
     }
 
@@ -776,9 +776,9 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
     $edit_comment['subject'] = 'Test comment subject';
-    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
+    $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
     $full_html_format_id = 'full_html';
-    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][format]'] = $full_html_format_id;
+    $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][format]'] = $full_html_format_id;
     $this->drupalPost('comment/reply/' . $node->nid, $edit_comment, t('Save'));
 
     // Invoke search index update.
@@ -803,7 +803,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Verify that comment is rendered using proper format.
     $this->assertText($comment_body, t('Comment body text found in search results.'));
     $this->assertNoRaw(t('n/a'), t('HTML in comment body is not hidden.'));
-    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]']), t('HTML in comment body is not escaped.'));
+    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]']), t('HTML in comment body is not escaped.'));
 
     // Hide comments.
     $this->drupalLogin($this->admin_user);
@@ -836,7 +836,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
     $edit_comment['subject'] = $this->comment_subject;
-    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
+    $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
     $this->drupalPost('comment/reply/' . $this->node->nid, $edit_comment, t('Save'));
 
     $this->drupalLogout();
@@ -916,7 +916,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $settings = array(
       'type' => 'article',
       'title' => 'short title',
-      'body' => array(LANGUAGE_NONE => array(array('value' => 'short body text'))),
+      'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'short body text'))),
     );
 
     $user = $this->drupalCreateUser(array('search content', 'create article content', 'access content'));
@@ -1036,7 +1036,7 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
     $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
 
     // Create initial nodes.
-    $node_params = array('type' => 'article', 'body' => array(LANGUAGE_NONE => array(array('value' => 'SearchCommentToggleTestCase'))));
+    $node_params = array('type' => 'article', 'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'SearchCommentToggleTestCase'))));
 
     $this->searchable_nodes['1 comment'] = $this->drupalCreateNode($node_params);
     $this->searchable_nodes['0 comments'] = $this->drupalCreateNode($node_params);
@@ -1047,9 +1047,9 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
     // Create a comment array
     $edit_comment = array();
     $edit_comment['subject'] = $this->randomName();
-    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = $this->randomName();
+    $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
     $filtered_html_format_id = 'filtered_html';
-    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][format]'] = $filtered_html_format_id;
+    $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][format]'] = $filtered_html_format_id;
 
     // Post comment to the test node with comment
     $this->drupalPost('comment/reply/' . $this->searchable_nodes['1 comment']->nid, $edit_comment, t('Save'));
@@ -1277,9 +1277,9 @@ class SearchNumbersTestCase extends DrupalWebTestCase {
 
     foreach ($this->numbers as $doc => $num) {
       $info = array(
-        'body' => array(LANGUAGE_NONE => array(array('value' => $num))),
+        'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $num))),
         'type' => 'page',
-        'language' => LANGUAGE_NONE,
+        'language' => LANGUAGE_NOT_SPECIFIED,
         'title' => $doc . ' number',
       );
       $this->nodes[$doc] = $this->drupalCreateNode($info);
@@ -1359,9 +1359,9 @@ class SearchNumberMatchingTestCase extends DrupalWebTestCase {
 
     foreach ($this->numbers as $num) {
       $info = array(
-        'body' => array(LANGUAGE_NONE => array(array('value' => $num))),
+        'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $num))),
         'type' => 'page',
-        'language' => LANGUAGE_NONE,
+        'language' => LANGUAGE_NOT_SPECIFIED,
       );
       $this->nodes[] = $this->drupalCreateNode($info);
     }
@@ -1431,7 +1431,7 @@ class SearchConfigSettingsForm extends DrupalWebTestCase {
     $this->search_node = $node;
     // Link the node to itself to test that it's only indexed once. The content
     // also needs the word "pizza" so we can use it as the search keyword.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $body_key = "body[$langcode][0][value]";
     $edit[$body_key] = l($node->title, 'node/' . $node->nid) . ' pizza sandwich';
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
@@ -1995,7 +1995,7 @@ class SearchNodeAccessTest extends DrupalWebTestCase {
    * Tests that search returns results with punctuation in the search phrase.
    */
   function testPhraseSearchPunctuation() {
-    $node = $this->drupalCreateNode(array('body' => array(LANGUAGE_NONE => array(array('value' => "The bunny's ears were fuzzy.")))));
+    $node = $this->drupalCreateNode(array('body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "The bunny's ears were fluffy.")))));
 
     // Update the search index.
     module_invoke_all('update_index');

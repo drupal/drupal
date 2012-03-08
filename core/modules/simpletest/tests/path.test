@@ -330,7 +330,7 @@ class PathLookupTest extends DrupalWebTestCase {
       'alias' => 'bar',
     );
     path_save($path);
-    $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], t('Newer alias record is returned when comparing two LANGUAGE_NONE paths with the same alias.'));
+    $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], t('Newer alias record is returned when comparing two LANGUAGE_NOT_SPECIFIED paths with the same alias.'));
   }
 }
 

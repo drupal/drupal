@@ -923,7 +923,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function drupalCreateNode($settings = array()) {
     // Populate defaults array.
     $settings += array(
-      'body'      => array(LANGUAGE_NONE => array(array())),
+      'body'      => array(LANGUAGE_NOT_SPECIFIED => array(array())),
       'title'     => $this->randomName(8),
       'comment'   => 2,
       'changed'   => REQUEST_TIME,
@@ -935,7 +935,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       'sticky'    => 0,
       'type'      => 'page',
       'revisions' => NULL,
-      'langcode'  => LANGUAGE_NONE,
+      'langcode'  => LANGUAGE_NOT_SPECIFIED,
     );
 
     // Use the original node's created time for existing nodes.

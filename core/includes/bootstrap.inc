@@ -163,18 +163,47 @@ const DRUPAL_AUTHENTICATED_RID = 2;
 const DRUPAL_KILOBYTE = 1024;
 
 /**
- * System language (only applicable to UI).
+ * Special system language code (only applicable to UI language).
  *
- * Refers to the language used in Drupal and module/theme source code.
+ * Refers to the language used in Drupal and module/theme source code. Drupal
+ * uses the built-in text for English by default, but if configured to allow
+ * translation/customization of English, we need to differentiate between the
+ * built-in language and the English translation.
  */
 const LANGUAGE_SYSTEM = 'system';
 
 /**
- * The language code used when no language is explicitly assigned.
+ * The language code used when no language is explicitly assigned (yet).
  *
- * Defined by ISO639-2 for "Undetermined".
+ * Should be used when language information is not available or cannot be
+ * determined. This special language code is useful when we know the data
+ * might have linguistic information, but we don't know the language.
+ *
+ * See http://www.w3.org/International/questions/qa-no-language#undetermined.
  */
-const LANGUAGE_NONE = 'und';
+const LANGUAGE_NOT_SPECIFIED = 'und';
+
+/**
+ * The language code used when the marked object has no linguistic content.
+ *
+ * Should be used when we explicitly know that the data referred has no
+ * linguistic content.
+ *
+ * See http://www.w3.org/International/questions/qa-no-language#nonlinguistic.
+ */
+const LANGUAGE_NOT_APPLICABLE = 'zxx';
+
+/**
+ * The language code used when multiple languages could be applied.
+ *
+ * Should be used when individual parts of the data cannot be marked with
+ * language, but we know there are multiple languages involved. Such as a
+ * PDF file for an electronic appliance, which has usage manuals in 8
+ * languages but is uploaded as one file in Drupal.
+ *
+ * Defined by ISO639-2 for "Multiple languages".
+ */
+const LANGUAGE_MULTIPLE = 'mul';
 
 /**
  * The type of language used to define the content language.
@@ -2733,7 +2762,7 @@ function language_load($langcode) {
  *   The printed name of the language.
  */
 function language_name($langcode) {
-  if ($langcode == LANGUAGE_NONE) {
+  if ($langcode == LANGUAGE_NOT_SPECIFIED) {
     return t('None');
   }
 
