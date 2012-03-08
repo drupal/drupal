@@ -1791,7 +1791,7 @@ function comment_form($form, &$form_state, $comment) {
     '#access' => $is_admin || (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT),
   );
   $form['author']['homepage'] = array(
-    '#type' => 'textfield',
+    '#type' => 'url',
     '#title' => t('Homepage'),
     '#default_value' => $comment->homepage,
     '#maxlength' => 255,
@@ -1981,9 +1981,6 @@ function comment_form_validate($form, &$form_state) {
         form_set_error('name', t('The name you used belongs to a registered user.'));
       }
     }
-  }
-  if ($form_state['values']['homepage'] && !valid_url($form_state['values']['homepage'], TRUE)) {
-    form_set_error('homepage', t('The URL of your homepage is not valid. Remember that it must be fully qualified, i.e. of the form <code>http://example.com/directory</code>.'));
   }
 }
 

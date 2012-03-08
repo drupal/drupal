@@ -77,7 +77,8 @@ function aggregator_form_feed($form, &$form_state, stdClass $feed = NULL) {
     '#description' => t('The name of the feed (or the name of the website providing the feed).'),
     '#required' => TRUE,
   );
-  $form['url'] = array('#type' => 'textfield',
+  $form['url'] = array(
+    '#type' => 'url',
     '#title' => t('URL'),
     '#default_value' => isset($feed->url) ? $feed->url : '',
     '#maxlength' => NULL,
@@ -142,10 +143,6 @@ function aggregator_form_feed($form, &$form_state, stdClass $feed = NULL) {
  */
 function aggregator_form_feed_validate($form, &$form_state) {
   if ($form_state['values']['op'] == t('Save')) {
-    // Ensure URL is valid.
-    if (!valid_url($form_state['values']['url'], TRUE)) {
-      form_set_error('url', t('The URL %url is invalid. Enter a fully-qualified URL, such as http://www.example.com/feed.xml.', array('%url' => $form_state['values']['url'])));
-    }
     // Check for duplicate titles.
     if (isset($form_state['values']['fid'])) {
       $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE (title = :title OR url = :url) AND fid <> :fid", array(':title' => $form_state['values']['title'], ':url' => $form_state['values']['url'], ':fid' => $form_state['values']['fid']));
@@ -260,7 +257,7 @@ function aggregator_form_opml($form, &$form_state) {
     '#description' => t('Upload an OPML file containing a list of feeds to be imported.'),
   );
   $form['remote'] = array(
-    '#type' => 'textfield',
+    '#type' => 'url',
     '#title' => t('OPML Remote URL'),
     '#maxlength' => 1024,
     '#description' => t('Enter the URL of an OPML file. This file will be downloaded and processed only once on submission of the form.'),
@@ -307,11 +304,6 @@ function aggregator_form_opml_validate($form, &$form_state) {
   // If both fields are empty or filled, cancel.
   if (empty($form_state['values']['remote']) == empty($_FILES['files']['name']['upload'])) {
     form_set_error('remote', t('You must <em>either</em> upload a file or enter a URL.'));
-  }
-
-  // Validate the URL, if one was entered.
-  if (!empty($form_state['values']['remote']) && !valid_url($form_state['values']['remote'], TRUE)) {
-    form_set_error('remote', t('This URL is not valid.'));
   }
 }
 

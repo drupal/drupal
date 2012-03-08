@@ -6952,6 +6952,9 @@ function drupal_common_theme() {
     'email' => array(
       'render element' => 'element',
     ),
+    'url' => array(
+      'render element' => 'element',
+    ),
     'form' => array(
       'render element' => 'element',
     ),

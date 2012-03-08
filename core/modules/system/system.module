@@ -384,6 +384,16 @@ function system_element_info() {
     '#theme' => 'email',
     '#theme_wrappers' => array('form_element'),
   );
+  $types['url'] = array(
+    '#input' => TRUE,
+    '#size' => 60,
+    '#maxlength' => 255,
+    '#autocomplete_path' => FALSE,
+    '#process' => array('ajax_process_form'),
+    '#element_validate' => array('form_validate_url'),
+    '#theme' => 'url',
+    '#theme_wrappers' => array('form_element'),
+  );
   $types['machine_name'] = array(
     '#input' => TRUE,
     '#default_value' => NULL,

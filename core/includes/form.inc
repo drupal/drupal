@@ -3837,6 +3837,56 @@ function theme_tel($variables) {
 }
 
 /**
+ * Returns HTML for a url form element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #size, #maxlength,
+ *     #placeholder, #required, #attributes, #autocomplete_path.
+ *
+ * @ingroup themeable
+ */
+function theme_url($variables) {
+  $element = $variables['element'];
+  $element['#attributes']['type'] = 'url';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  _form_set_class($element, array('form-url'));
+
+  $extra = '';
+  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
+    drupal_add_library('system', 'drupal.autocomplete');
+    $element['#attributes']['class'][] = 'form-autocomplete';
+
+    $attributes = array();
+    $attributes['type'] = 'hidden';
+    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
+    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
+    $attributes['disabled'] = 'disabled';
+    $attributes['class'][] = 'autocomplete';
+    $extra = '<input' . drupal_attributes($attributes) . ' />';
+  }
+
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  return $output . $extra;
+}
+
+/**
+ * Form element validation handler for #type 'url'.
+ *
+ * Note that #maxlength and #required is validated by _form_validate() already.
+ */
+function form_validate_url(&$element, &$form_state) {
+  $value = trim($element['#value']);
+  form_set_value($element, $value, $form_state);
+
+  if ($value !== '' && !valid_url($value, TRUE)) {
+    form_error($element, t('The URL %url is not valid.', array('%url' => $value)));
+  }
+}
+
+/**
  * Returns HTML for a form.
  *
  * @param $variables

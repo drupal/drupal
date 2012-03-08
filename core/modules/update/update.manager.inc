@@ -492,7 +492,7 @@ function update_manager_install_form($form, &$form_state, $context) {
   );
 
   $form['project_url'] = array(
-    '#type' => 'textfield',
+    '#type' => 'url',
     '#title' => t('Install from a URL'),
     '#description' => t('For example: %url', array('%url' => 'http://ftp.drupal.org/files/projects/name.tar.gz')),
   );
@@ -591,12 +591,6 @@ function _update_manager_check_backends(&$form, $operation) {
 function update_manager_install_form_validate($form, &$form_state) {
   if (!($form_state['values']['project_url'] XOR !empty($_FILES['files']['name']['project_upload']))) {
     form_set_error('project_url', t('You must either provide a URL or upload an archive file to install.'));
-  }
-
-  if ($form_state['values']['project_url']) {
-    if (!valid_url($form_state['values']['project_url'], TRUE)) {
-      form_set_error('project_url', t('The provided URL is invalid.'));
-    }
   }
 }
 
