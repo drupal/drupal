@@ -6,7 +6,7 @@
  */
 
 /**
- * @ingroup field_ui_field_type
+ * @addtogroup field_types
  * @{
  */
 
@@ -200,5 +200,5 @@ function hook_field_formatter_settings_summary($field, $instance, $view_mode) {
 }
 
 /**
- * @} End of "ingroup field_ui_field_type"
+ * @} End of "addtogroup field_types"
  */
