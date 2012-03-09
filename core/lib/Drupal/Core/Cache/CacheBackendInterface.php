@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of CacheBackendInterface.
+ * Definition of Drupal\Core\Cache\CacheBackendInterface.
  */
 
 namespace Drupal\Core\Cache;
@@ -11,21 +11,22 @@ namespace Drupal\Core\Cache;
  * Defines an interface for cache implementations.
  *
  * All cache implementations have to implement this interface.
- * DrupalDatabaseCache provides the default implementation, which can be
- * consulted as an example.
+ * Drupal\Core\Cache\DatabaseBackend provides the default implementation, which
+ * can be consulted as an example.
  *
  * To make Drupal use your implementation for a certain cache bin, you have to
  * set a variable with the name of the cache bin as its key and the name of
  * your class as its value. For example, if your implementation of
- * DrupalCacheInterface was called MyCustomCache, the following line would make
- * Drupal use it for the 'cache_page' bin:
+ * Drupal\Core\Cache\CacheBackendInterface was called MyCustomCache, the
+ * following line would make Drupal use it for the 'cache_page' bin:
  * @code
  *  variable_set('cache_class_cache_page', 'MyCustomCache');
  * @endcode
  *
  * Additionally, you can register your cache implementation to be used by
  * default for all cache bins by setting the variable 'cache_default_class' to
- * the name of your implementation of the DrupalCacheInterface, e.g.
+ * the name of your implementation of the
+ * Drupal\Core\Cache\CacheBackendInterface, e.g.
  * @code
  *  variable_set('cache_default_class', 'MyCustomCache');
  * @endcode
@@ -42,7 +43,7 @@ namespace Drupal\Core\Cache;
  * @endcode
  *
  * @see cache()
- * @see DrupalDatabaseCache
+ * @see Drupal\Core\Cache\DatabaseBackend
  */
 interface CacheBackendInterface {
 
