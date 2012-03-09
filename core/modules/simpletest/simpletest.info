@@ -37,6 +37,7 @@ files[] = tests/tablesort.test
 files[] = tests/theme.test
 files[] = tests/unicode.test
 files[] = tests/update.test
+files[] = tests/uuid.test
 files[] = tests/xmlrpc.test
 files[] = tests/upgrade/upgrade.test
 files[] = tests/upgrade/upgrade_bare.test
