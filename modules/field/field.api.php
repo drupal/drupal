@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @ingroup hooks
+ * @addtogroup hooks
  * @{
  */
 
@@ -83,35 +83,19 @@ function hook_field_extra_fields_alter(&$info) {
 /**
  * @defgroup field_types Field Types API
  * @{
- * Define field types, widget types, display formatter types, storage types.
+ * Define field types.
  *
- * The bulk of the Field Types API are related to field types. A field type
- * represents a particular type of data (integer, string, date, etc.) that
- * can be attached to a fieldable entity. hook_field_info() defines the basic
- * properties of a field type, and a variety of other field hooks are called by
- * the Field Attach API to perform field-type-specific actions.
- *
- * @see hook_field_info()
- * @see hook_field_info_alter()
- * @see hook_field_schema()
- * @see hook_field_load()
- * @see hook_field_validate()
- * @see hook_field_presave()
- * @see hook_field_insert()
- * @see hook_field_update()
- * @see hook_field_delete()
- * @see hook_field_delete_revision()
- * @see hook_field_prepare_view()
- * @see hook_field_is_empty()
+ * In the Field API, each field has a type, which determines what kind of data
+ * (integer, string, date, etc.) the field can hold, which settings it provides,
+ * and so on. The data type(s) accepted by a field are defined in
+ * hook_field_schema(); other basic properties of a field are defined in
+ * hook_field_info(). The other hooks below are called by the Field Attach API
+ * to perform field-type-specific actions.
  *
  * The Field Types API also defines two kinds of pluggable handlers: widgets
- * and formatters, which specify how the field appears in edit forms and in
- * displayed entities. Widgets and formatters can be implemented by a field-type
- * module for its own field types, or by a third-party module to extend the
- * behavior of existing field types.
- *
- * @see hook_field_widget_info()
- * @see hook_field_formatter_info()
+ * and formatters. @link field_widget Widgets @endlink specify how the field
+ * appears in edit forms, while @link field_formatter formatters @endlink
+ * specify how the field appears in displayed entities.
  *
  * A third kind of pluggable handlers, storage backends, is defined by the
  * @link field_storage Field Storage API @endlink.
@@ -668,11 +652,33 @@ function hook_field_is_empty($item, $field) {
 }
 
 /**
- * Expose Field API widget types.
+ * @} End of "defgroup field_types"
+ */
+
+/**
+ * @defgroup field_widget Field Widget API
+ * @{
+ * Define Field API widget types.
  *
- * Widgets are Form API elements with additional processing capabilities.
- * Widget hooks are typically called by the Field Attach API during the
- * creation of the field form structure with field_attach_form().
+ * Field API widgets specify how fields are displayed in edit forms. Fields of a
+ * given @link field_types field type @endlink may be edited using more than one
+ * widget. In this case, the Field UI module allows the site builder to choose
+ * which widget to use. Widget types are defined by implementing
+ * hook_field_widget_info().
+ *
+ * Widgets are
+ * @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html Form API @endlink
+ * elements with additional processing capabilities. Widget hooks are typically
+ * called by the Field Attach API during the creation of the field form
+ * structure with field_attach_form().
+ *
+ * @see field
+ * @see field_types
+ * @see field_formatter
+ */
+
+/**
+ * Expose Field API widget types.
  *
  * @return
  *   An array describing the widget types implemented by the module.
@@ -928,6 +934,29 @@ function hook_field_widget_error($element, $error, $form, &$form_state) {
   form_error($element['value'], $error['message']);
 }
 
+
+/**
+ * @} End of "defgroup field_widget"
+ */
+
+
+/**
+ * @defgroup field_formatter Field Formatter API
+ * @{
+ * Define Field API formatter types.
+ *
+ * Field API formatters specify how fields are displayed when the entity to
+ * which the field is attached is displayed. Fields of a given
+ * @link field_types field type @endlink may be displayed using more than one
+ * formatter. In this case, the Field UI module allows the site builder to
+ * choose which formatter to use. Field formatters are defined by implementing
+ * hook_field_formatter_info().
+ *
+ * @see field
+ * @see field_types
+ * @see field_widget
+ */
+
 /**
  * Expose Field API formatter types.
  *
@@ -1146,7 +1175,7 @@ function hook_field_formatter_view($entity_type, $entity, $field, $instance, $la
 }
 
 /**
- * @} End of "ingroup field_type"
+ * @} End of "defgroup field_formatter"
  */
 
 /**
@@ -1502,7 +1531,7 @@ function hook_field_attach_delete_bundle($entity_type, $bundle, $instances) {
 }
 
 /**
- * @} End of "ingroup field_attach"
+ * @} End of "defgroup field_attach"
  */
 
 /**
@@ -2623,5 +2652,5 @@ function hook_field_access($op, $field, $entity_type, $entity, $account) {
 }
 
 /**
- * @} End of "ingroup hooks"
+ * @} End of "addtogroup hooks"
  */
