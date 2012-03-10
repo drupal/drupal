@@ -253,6 +253,7 @@ function locale_permission() {
     ),
     'translate interface' => array(
       'title' => t('Translate interface texts'),
+      'restrict access' => TRUE,
     ),
   );
 }
