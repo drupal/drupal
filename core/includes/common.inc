@@ -7797,9 +7797,10 @@ function archiver_get_archiver($file) {
  * file system, for example to update modules that have newer releases, or to
  * install a new theme.
  *
- * @return
+ * @return array
  *   The Drupal Updater class registry.
  *
+ * @see Drupal\Core\Updater\Updater
  * @see hook_updater_info()
  * @see hook_updater_info_alter()
  */

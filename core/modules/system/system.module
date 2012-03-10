@@ -1862,12 +1862,12 @@ function system_authorized_batch_process() {
 function system_updater_info() {
   return array(
     'module' => array(
-      'class' => 'ModuleUpdater',
+      'class' => 'Drupal\Core\Updater\Module',
       'name' => t('Update modules'),
       'weight' => 0,
     ),
     'theme' => array(
-      'class' => 'ThemeUpdater',
+      'class' => 'Drupal\Core\Updater\Theme',
       'name' => t('Update themes'),
       'weight' => 0,
     ),
