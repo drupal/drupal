@@ -1492,7 +1492,7 @@ class FieldFormTestCase extends FieldTestCase {
     $this->instance['field_name'] = $this->field_name;
     field_create_field($this->field);
     field_create_instance($this->instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Add a required radio field.
     field_create_field(array(
