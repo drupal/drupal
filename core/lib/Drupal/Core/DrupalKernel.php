@@ -24,7 +24,7 @@ use Exception;
 /**
  * @file
  *
- * Definition of Drupal\Core\DrupalApp.
+ * Definition of Drupal\Core\DrupalKernel.
  */
 
 /**
