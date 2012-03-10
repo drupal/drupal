@@ -282,7 +282,7 @@ EOF;
    *   (optional) The number of nodes to generate.
    */
   function createSampleNodes($count = 5) {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Post $count article nodes.
     for ($i = 0; $i < $count; $i++) {
       $edit = array();
@@ -704,7 +704,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
 
     $edit = array('remote' => 'invalidUrl://empty');
     $this->drupalPost('admin/config/services/aggregator/add/opml', $edit, t('Import'));
-    $this->assertText(t('This URL is not valid.'), t('Error if the URL is invalid.'));
+    $this->assertText(t('The URL invalidUrl://empty is not valid.'), 'Error if the URL is invalid.');
 
     $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
     $this->assertEqual($before, $after, t('No feeds were added during the three last form submissions.'));

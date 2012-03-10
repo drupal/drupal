@@ -32,7 +32,7 @@ class CommentHelperCase extends DrupalWebTestCase {
    *   array of values to set contact info.
    */
   function postComment($node, $comment, $subject = '', $contact = NULL) {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array();
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
 
@@ -276,7 +276,7 @@ class CommentInterfaceTest extends CommentHelperCase {
    * Tests the comment interface.
    */
   function testCommentInterface() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Set comments to have subject and preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);
@@ -451,8 +451,8 @@ class CommentInterfaceTest extends CommentHelperCase {
       'status' => COMMENT_PUBLISHED,
       'subject' => $this->randomName(),
       'hostname' => ip_address(),
-      'langcode' => LANGUAGE_NONE,
-      'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),
     ));
     comment_save($comment);
     $this->drupalLogout();
@@ -498,8 +498,8 @@ class CommentInterfaceTest extends CommentHelperCase {
         'uid' => $case['comment_uid'],
         'status' => $case['comment_status'],
         'subject' => $this->randomName(),
-        'language' => LANGUAGE_NONE,
-        'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
+        'language' => LANGUAGE_NOT_SPECIFIED,
+        'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),
       ));
       comment_save($comment);
 
@@ -584,7 +584,7 @@ class CommentInterfaceTest extends CommentHelperCase {
    * Tests the node comment statistics.
    */
   function testCommentNodeCommentStatistics() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Set comments to have subject and preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);
@@ -778,8 +778,8 @@ class CommentInterfaceTest extends CommentHelperCase {
           'status' => COMMENT_PUBLISHED,
           'subject' => $this->randomName(),
           'hostname' => ip_address(),
-          'langcode' => LANGUAGE_NONE,
-          'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
+          'langcode' => LANGUAGE_NOT_SPECIFIED,
+          'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),
         ));
         comment_save($comment);
         $this->comment = $comment;
@@ -965,7 +965,7 @@ class CommentPreviewTest extends CommentHelperCase {
    * Tests comment preview.
    */
   function testCommentPreview() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // As admin user, configure comment settings.
     $this->drupalLogin($this->admin_user);
@@ -1012,7 +1012,7 @@ class CommentPreviewTest extends CommentHelperCase {
    * Tests comment edit, preview, and save.
    */
   function testCommentEditPreviewSave() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'skip comment approval'));
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
@@ -1126,7 +1126,7 @@ class CommentAnonymous extends CommentHelperCase {
     $this->assertTrue($this->commentExists($anonymous_comment2), t('Anonymous comment with contact info (optional) found.'));
 
     // Ensure anonymous users cannot post in the name of registered users.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array(
       'name' => $this->admin_user->name,
       'mail' => $this->randomName() . '@example.com',
@@ -1522,7 +1522,7 @@ class CommentNodeAccessTest extends CommentHelperCase {
    * Test that threaded comments can be viewed.
    */
   function testThreadedCommentView() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Set comments to have subject required and preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);
@@ -1899,7 +1899,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:mail]'] = check_plain($this->admin_user->mail);
     $tests['[comment:homepage]'] = check_url($comment->homepage);
     $tests['[comment:title]'] = filter_xss($comment->subject);
-    $tests['[comment:body]'] = _text_sanitize($instance, LANGUAGE_NONE, $comment->comment_body[LANGUAGE_NONE][0], 'value');
+    $tests['[comment:body]'] = _text_sanitize($instance, LANGUAGE_NOT_SPECIFIED, $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0], 'value');
     $tests['[comment:url]'] = url('comment/' . $comment->cid, $url_options + array('fragment' => 'comment-' . $comment->cid));
     $tests['[comment:edit-url]'] = url('comment/' . $comment->cid . '/edit', $url_options);
     $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created, 2, $language_interface->langcode);
@@ -1925,7 +1925,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:mail]'] = $this->admin_user->mail;
     $tests['[comment:homepage]'] = $comment->homepage;
     $tests['[comment:title]'] = $comment->subject;
-    $tests['[comment:body]'] = $comment->comment_body[LANGUAGE_NONE][0]['value'];
+    $tests['[comment:body]'] = $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0]['value'];
     $tests['[comment:parent:title]'] = $parent_comment->subject;
     $tests['[comment:node:title]'] = $node->title;
     $tests['[comment:author:name]'] = $this->admin_user->name;
@@ -2140,7 +2140,7 @@ class CommentThreadingTestCase extends CommentHelperCase {
    * Tests the comment threading.
    */
   function testCommentThreading() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Set comments to have a subject with preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);

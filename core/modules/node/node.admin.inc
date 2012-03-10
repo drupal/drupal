@@ -107,7 +107,7 @@ function node_filters() {
   // Language filter if the site is multilingual.
   if (language_multilingual()) {
     $languages = language_list(TRUE);
-    $language_options = array(LANGUAGE_NONE => t('- None -'));
+    $language_options = array(LANGUAGE_NOT_SPECIFIED => t('- None -'));
     foreach ($languages as $langcode => $language) {
       $language_options[$langcode] = $language->name;
     }
@@ -433,7 +433,7 @@ function node_admin_nodes() {
 
   // Enable language column if translation module is enabled or if we have any
   // node with language.
-  $multilanguage = (module_exists('translation') || db_query_range("SELECT 1 FROM {node} WHERE langcode <> :langcode", 0, 1, array(':langcode' => LANGUAGE_NONE))->fetchField());
+  $multilanguage = (module_exists('translation') || db_query_range("SELECT 1 FROM {node} WHERE langcode <> :langcode", 0, 1, array(':langcode' => LANGUAGE_NOT_SPECIFIED))->fetchField());
 
   // Build the sortable table header.
   $header = array(
@@ -479,7 +479,7 @@ function node_admin_nodes() {
   $destination = drupal_get_destination();
   $options = array();
   foreach ($nodes as $node) {
-    $l_options = $node->langcode != LANGUAGE_NONE && isset($languages[$node->langcode]) ? array('language' => $languages[$node->langcode]) : array();
+    $l_options = $node->langcode != LANGUAGE_NOT_SPECIFIED && isset($languages[$node->langcode]) ? array('language' => $languages[$node->langcode]) : array();
     $options[$node->nid] = array(
       'title' => array(
         'data' => array(

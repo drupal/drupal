@@ -1059,7 +1059,7 @@ class MenuBreadcrumbTestCase extends MenuWebTestCase {
     $admin = $home + array('admin' => t('Administration'));
     $config = $admin + array('admin/config' => t('Configuration'));
     $type = 'article';
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Verify breadcrumbs for default local tasks.
     $expected = array(

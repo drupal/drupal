@@ -122,7 +122,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
    * Uploads a file to a node.
    */
   function uploadNodeFile($file, $field_name, $nid_or_type, $new_revision = TRUE, $extras = array()) {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array(
       "title" => $this->randomName(),
       'revision' => (string) (int) $new_revision,
@@ -168,7 +168,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
    */
   function replaceNodeFile($file, $field_name, $nid, $new_revision = TRUE) {
     $edit = array(
-      'files[' . $field_name . '_' . LANGUAGE_NONE . '_0]' => drupal_realpath($file->uri),
+      'files[' . $field_name . '_' . LANGUAGE_NOT_SPECIFIED . '_0]' => drupal_realpath($file->uri),
       'revision' => (string) (int) $new_revision,
     );
 
@@ -349,7 +349,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
       //   does not yet support file uploads.
       $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
       $node = node_load($nid, NULL, TRUE);
-      $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+      $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
       $this->assertFileExists($node_file, t('New file saved to disk on node creation.'));
 
       // Ensure the file can be downloaded.
@@ -379,7 +379,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
       // Save the node and ensure it does not have the file.
       $this->drupalPost(NULL, array(), t('Save'));
       $node = node_load($nid, NULL, TRUE);
-      $this->assertTrue(empty($node->{$field_name}[LANGUAGE_NONE][0]['fid']), t('File was successfully removed from the node.'));
+      $this->assertTrue(empty($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']), t('File was successfully removed from the node.'));
     }
   }
 
@@ -417,7 +417,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
       $this->drupalGet("node/add/$type_name");
       foreach (array($field_name2, $field_name) as $each_field_name) {
         for ($delta = 0; $delta < 3; $delta++) {
-          $edit = array('files[' . $each_field_name . '_' . LANGUAGE_NONE . '_' . $delta . ']' => drupal_realpath($test_file->uri));
+          $edit = array('files[' . $each_field_name . '_' . LANGUAGE_NOT_SPECIFIED . '_' . $delta . ']' => drupal_realpath($test_file->uri));
           // If the Upload button doesn't exist, drupalPost() will automatically
           // fail with an assertion message.
           $this->drupalPost(NULL, $edit, t('Upload'));
@@ -448,11 +448,11 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
               $check_field_name = $field_name;
             }
 
-            $this->assertIdentical((string) $button['name'], $check_field_name . '_' . LANGUAGE_NONE . '_' . $key. '_remove_button');
+            $this->assertIdentical((string) $button['name'], $check_field_name . '_' . LANGUAGE_NOT_SPECIFIED . '_' . $key. '_remove_button');
           }
 
           // "Click" the remove button (emulating either a nojs or js submission).
-          $button_name = $current_field_name . '_' . LANGUAGE_NONE . '_' . $delta . '_remove_button';
+          $button_name = $current_field_name . '_' . LANGUAGE_NOT_SPECIFIED . '_' . $delta . '_remove_button';
           switch ($type) {
             case 'nojs':
               // drupalPost() takes a $submit parameter that is the value of the
@@ -480,7 +480,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
 
           // Ensure an "Upload" button for the current field is displayed with the
           // correct name.
-          $upload_button_name = $current_field_name . '_' . LANGUAGE_NONE . '_' . $remaining . '_upload_button';
+          $upload_button_name = $current_field_name . '_' . LANGUAGE_NOT_SPECIFIED . '_' . $remaining . '_upload_button';
           $buttons = $this->xpath('//input[@type="submit" and @value="Upload" and @name=:name]', array(':name' => $upload_button_name));
           $this->assertTrue(is_array($buttons) && count($buttons) == 1, t('The upload button is displayed with the correct name (JSMode=%type).', array('%type' => $type)));
 
@@ -500,7 +500,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
       preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
       $nid = $matches[1];
       $node = node_load($nid, NULL, TRUE);
-      $this->assertTrue(empty($node->{$field_name}[LANGUAGE_NONE][0]['fid']), t('Node was successfully saved without any files.'));
+      $this->assertTrue(empty($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']), t('Node was successfully saved without any files.'));
     }
   }
 
@@ -525,7 +525,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
     $this->drupalPost("admin/structure/types/manage/$type_name/fields/$field_name", $edit, t('Save settings'));
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $this->assertFileExists($node_file, t('New file saved to disk on node creation.'));
 
     // Ensure the private file is available to the user who uploaded it.
@@ -578,8 +578,8 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
     // Add a comment with a file.
     $text_file = $this->getTestFile('text');
     $edit = array(
-      'files[field_' . $name . '_' . LANGUAGE_NONE . '_' . 0 . ']' => drupal_realpath($text_file->uri),
-      'comment_body[' . LANGUAGE_NONE . '][0][value]' => $comment_body = $this->randomName(),
+      'files[field_' . $name . '_' . LANGUAGE_NOT_SPECIFIED . '_' . 0 . ']' => drupal_realpath($text_file->uri),
+      'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $comment_body = $this->randomName(),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
 
@@ -591,7 +591,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
     $this->drupalLogin($user);
 
     $comment = comment_load($cid);
-    $comment_file = (object) $comment->{'field_' . $name}[LANGUAGE_NONE][0];
+    $comment_file = (object) $comment->{'field_' . $name}[LANGUAGE_NOT_SPECIFIED][0];
     $this->assertFileExists($comment_file, t('New file saved to disk on node creation.'));
     // Test authenticated file download.
     $url = file_create_url($comment_file->uri);
@@ -659,7 +659,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
 
     // Check that the file exists on disk and in the database.
     $node = node_load($nid, NULL, TRUE);
-    $node_file_r1 = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file_r1 = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $node_vid_r1 = $node->vid;
     $this->assertFileExists($node_file_r1, t('New file saved to disk on node creation.'));
     $this->assertFileEntryExists($node_file_r1, t('File entry exists in database on node creation.'));
@@ -668,7 +668,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     // Upload another file to the same node in a new revision.
     $this->replaceNodeFile($test_file, $field_name, $nid);
     $node = node_load($nid, NULL, TRUE);
-    $node_file_r2 = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file_r2 = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $node_vid_r2 = $node->vid;
     $this->assertFileExists($node_file_r2, t('Replacement file exists on disk after creating new revision.'));
     $this->assertFileEntryExists($node_file_r2, t('Replacement file entry exists in database after creating new revision.'));
@@ -676,7 +676,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
 
     // Check that the original file is still in place on the first revision.
     $node = node_load($nid, $node_vid_r1, TRUE);
-    $this->assertEqual($node_file_r1, (object) $node->{$field_name}[LANGUAGE_NONE][0], t('Original file still in place after replacing file in new revision.'));
+    $this->assertEqual($node_file_r1, (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0], t('Original file still in place after replacing file in new revision.'));
     $this->assertFileExists($node_file_r1, t('Original file still in place after replacing file in new revision.'));
     $this->assertFileEntryExists($node_file_r1, t('Original file entry still in place after replacing file in new revision'));
     $this->assertFileIsPermanent($node_file_r1, t('Original file is still permanent.'));
@@ -685,7 +685,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     // Check that the file is still the same as the previous revision.
     $this->drupalPost('node/' . $nid . '/edit', array('revision' => '1'), t('Save'));
     $node = node_load($nid, NULL, TRUE);
-    $node_file_r3 = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file_r3 = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $node_vid_r3 = $node->vid;
     $this->assertEqual($node_file_r2, $node_file_r3, t('Previous revision file still in place after creating a new revision without a new file.'));
     $this->assertFileIsPermanent($node_file_r3, t('New revision file is permanent.'));
@@ -693,7 +693,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     // Revert to the first revision and check that the original file is active.
     $this->drupalPost('node/' . $nid . '/revisions/' . $node_vid_r1 . '/revert', array(), t('Revert'));
     $node = node_load($nid, NULL, TRUE);
-    $node_file_r4 = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file_r4 = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $node_vid_r4 = $node->vid;
     $this->assertEqual($node_file_r1, $node_file_r4, t('Original revision file still in place after reverting to the original revision.'));
     $this->assertFileIsPermanent($node_file_r4, t('Original revision file still permanent after reverting to the original revision.'));
@@ -708,7 +708,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     // Attach the second file to a user.
     $user = $this->drupalCreateUser();
     $edit = (array) $user;
-    $edit[$field_name][LANGUAGE_NONE][0] = (array) $node_file_r3;
+    $edit[$field_name][LANGUAGE_NOT_SPECIFIED][0] = (array) $node_file_r3;
     user_save($user, $edit);
     $this->drupalGet('user/' . $user->uid . '/edit');
 
@@ -785,12 +785,12 @@ class FileFieldDisplayTestCase extends FileFieldTestCase {
 
     // Check that the default formatter is displaying with the file name.
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $default_output = theme('file_link', array('file' => $node_file));
     $this->assertRaw($default_output, t('Default formatter displaying correctly on full node view.'));
 
     // Turn the "display" option off and check that the file is no longer displayed.
-    $edit = array($field_name . '[' . LANGUAGE_NONE . '][0][display]' => FALSE);
+    $edit = array($field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][display]' => FALSE);
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
 
     $this->assertNoRaw($default_output, t('Field is hidden when "display" option is unchecked.'));
@@ -826,7 +826,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     $test_file = $this->getTestFile('text');
 
     // Try to post a new node without uploading a file.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array("title" => $this->randomName());
     $this->drupalPost('node/add/' . $type_name, $edit, t('Save'));
     $this->assertRaw(t('!title field is required.', array('!title' => $instance['label'])), t('Node save failed when required file field was empty.'));
@@ -837,7 +837,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
 
     $node = node_load($nid, NULL, TRUE);
 
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $this->assertFileExists($node_file, t('File exists after uploading to the required field.'));
     $this->assertFileEntryExists($node_file, t('File entry exists after uploading to the required field.'));
 
@@ -853,7 +853,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     // Create a new node with the uploaded file into the multivalue field.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $this->assertFileExists($node_file, t('File exists after uploading to the required multiple value field.'));
     $this->assertFileEntryExists($node_file, t('File entry exists after uploading to the required multipel value field.'));
 
@@ -889,7 +889,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
       // Create a new node with the small file, which should pass.
       $nid = $this->uploadNodeFile($small_file, $field_name, $type_name);
       $node = node_load($nid, NULL, TRUE);
-      $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+      $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
       $this->assertFileExists($node_file, t('File exists after uploading a file (%filesize) under the max limit (%maxsize).', array('%filesize' => format_size($small_file->filesize), '%maxsize' => $max_filesize)));
       $this->assertFileEntryExists($node_file, t('File entry exists after uploading a file (%filesize) under the max limit (%maxsize).', array('%filesize' => format_size($small_file->filesize), '%maxsize' => $max_filesize)));
 
@@ -905,7 +905,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     // Upload the big file successfully.
     $nid = $this->uploadNodeFile($large_file, $field_name, $type_name);
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $this->assertFileExists($node_file, t('File exists after uploading a file (%filesize) with no max limit.', array('%filesize' => format_size($large_file->filesize))));
     $this->assertFileEntryExists($node_file, t('File entry exists after uploading a file (%filesize) with no max limit.', array('%filesize' => format_size($large_file->filesize))));
 
@@ -932,7 +932,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     // Check that the file can be uploaded with no extension checking.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $this->assertFileExists($node_file, t('File exists after uploading a file with no extension checking.'));
     $this->assertFileEntryExists($node_file, t('File entry exists after uploading a file with no extension checking.'));
 
@@ -950,7 +950,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     // Check that the file can be uploaded with extension checking.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $this->assertFileExists($node_file, t('File exists after uploading a file with extension checking.'));
     $this->assertFileEntryExists($node_file, t('File entry exists after uploading a file with extension checking.'));
 
@@ -985,7 +985,7 @@ class FileFieldPathTestCase extends FileFieldTestCase {
 
     // Check that the file was uploaded to the file root.
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $this->assertPathMatch('public://' . $test_file->filename, $node_file->uri, t('The file %file was uploaded to the correct path.', array('%file' => $node_file->uri)));
 
     // Change the path to contain multiple subdirectories.
@@ -996,7 +996,7 @@ class FileFieldPathTestCase extends FileFieldTestCase {
 
     // Check that the file was uploaded into the subdirectory.
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     $this->assertPathMatch('public://foo/bar/baz/' . $test_file->filename, $node_file->uri, t('The file %file was uploaded to the correct path.', array('%file' => $node_file->uri)));
 
     // Check the path when used with tokens.
@@ -1008,7 +1008,7 @@ class FileFieldPathTestCase extends FileFieldTestCase {
 
     // Check that the file was uploaded into the subdirectory.
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     // Do token replacement using the same user which uploaded the file, not
     // the user running the test case.
     $data = array('user' => $this->admin_user);
@@ -1078,7 +1078,7 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
 
     // Load the node and the file.
     $node = node_load($nid, NULL, TRUE);
-    $file = file_load($node->{$field_name}[LANGUAGE_NONE][0]['fid']);
+    $file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
 
     // Generate and test sanitized tokens.
     $tests = array();
@@ -1147,7 +1147,7 @@ class FilePrivateTestCase extends FileFieldTestCase {
     $test_file = $this->getTestFile('text');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name, TRUE, array('private' => TRUE));
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
     // Ensure the file can be downloaded.
     $this->drupalGet(file_create_url($node_file->uri));
     $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));

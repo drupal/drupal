@@ -1791,7 +1791,7 @@ function comment_form($form, &$form_state, $comment) {
     '#access' => $is_admin || (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT),
   );
   $form['author']['homepage'] = array(
-    '#type' => 'textfield',
+    '#type' => 'url',
     '#title' => t('Homepage'),
     '#default_value' => $comment->homepage,
     '#maxlength' => 255,
@@ -1843,7 +1843,7 @@ function comment_form($form, &$form_state, $comment) {
   // If a content type has multilingual support we set the comment to inherit the
   // content language. Otherwise mark the comment as language neutral.
   $comment_langcode = $comment->langcode;
-  if (($comment_langcode == LANGUAGE_NONE) && variable_get('node_type_language_' . $node->type, 0)) {
+  if (($comment_langcode == LANGUAGE_NOT_SPECIFIED) && variable_get('node_type_language_' . $node->type, 0)) {
     $comment_langcode = $language_content->langcode;
   }
   $form['langcode'] = array(
@@ -1897,7 +1897,7 @@ function comment_preview($comment) {
   $node = node_load($comment->nid);
 
   if (!form_get_errors()) {
-    $comment->format = $comment->comment_body[LANGUAGE_NONE][0]['format'];
+    $comment->format = $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0]['format'];
     // Attach the user and time information.
     if (!empty($comment->name)) {
       $account = user_load_by_name($comment->name);
@@ -1982,9 +1982,6 @@ function comment_form_validate($form, &$form_state) {
       }
     }
   }
-  if ($form_state['values']['homepage'] && !valid_url($form_state['values']['homepage'], TRUE)) {
-    form_set_error('homepage', t('The URL of your homepage is not valid. Remember that it must be fully qualified, i.e. of the form <code>http://example.com/directory</code>.'));
-  }
 }
 
 /**
@@ -2014,7 +2011,7 @@ function comment_submit($comment) {
     // 1) Filter it into HTML
     // 2) Strip out all HTML tags
     // 3) Convert entities back to plain-text.
-    $comment_body = $comment->comment_body[LANGUAGE_NONE][0];
+    $comment_body = $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0];
     if (isset($comment_body['format'])) {
       $comment_text = check_markup($comment_body['value'], $comment_body['format']);
     }

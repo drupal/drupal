@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Utility\SchemaCache;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 
@@ -163,18 +164,47 @@ const DRUPAL_AUTHENTICATED_RID = 2;
 const DRUPAL_KILOBYTE = 1024;
 
 /**
- * System language (only applicable to UI).
+ * Special system language code (only applicable to UI language).
  *
- * Refers to the language used in Drupal and module/theme source code.
+ * Refers to the language used in Drupal and module/theme source code. Drupal
+ * uses the built-in text for English by default, but if configured to allow
+ * translation/customization of English, we need to differentiate between the
+ * built-in language and the English translation.
  */
 const LANGUAGE_SYSTEM = 'system';
 
 /**
- * The language code used when no language is explicitly assigned.
+ * The language code used when no language is explicitly assigned (yet).
  *
- * Defined by ISO639-2 for "Undetermined".
+ * Should be used when language information is not available or cannot be
+ * determined. This special language code is useful when we know the data
+ * might have linguistic information, but we don't know the language.
+ *
+ * See http://www.w3.org/International/questions/qa-no-language#undetermined.
  */
-const LANGUAGE_NONE = 'und';
+const LANGUAGE_NOT_SPECIFIED = 'und';
+
+/**
+ * The language code used when the marked object has no linguistic content.
+ *
+ * Should be used when we explicitly know that the data referred has no
+ * linguistic content.
+ *
+ * See http://www.w3.org/International/questions/qa-no-language#nonlinguistic.
+ */
+const LANGUAGE_NOT_APPLICABLE = 'zxx';
+
+/**
+ * The language code used when multiple languages could be applied.
+ *
+ * Should be used when individual parts of the data cannot be marked with
+ * language, but we know there are multiple languages involved. Such as a
+ * PDF file for an electronic appliance, which has usage manuals in 8
+ * languages but is uploaded as one file in Drupal.
+ *
+ * Defined by ISO639-2 for "Multiple languages".
+ */
+const LANGUAGE_MULTIPLE = 'mul';
 
 /**
  * The type of language used to define the content language.
@@ -241,206 +271,6 @@ const REGISTRY_WRITE_LOOKUP_CACHE = 2;
 const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 
 require_once DRUPAL_ROOT . '/core/includes/config.inc';
-
-/**
- * Provides a caching wrapper to be used in place of large array structures.
- *
- * This class should be extended by systems that need to cache large amounts
- * of data and have it represented as an array to calling functions. These
- * arrays can become very large, so ArrayAccess is used to allow different
- * strategies to be used for caching internally (lazy loading, building caches
- * over time etc.). This can dramatically reduce the amount of data that needs
- * to be loaded from cache backends on each request, and memory usage from
- * static caches of that same data.
- *
- * Note that array_* functions do not work with ArrayAccess. Systems using
- * DrupalCacheArray should use this only internally. If providing API functions
- * that return the full array, this can be cached separately or returned
- * directly. However since DrupalCacheArray holds partial content by design, it
- * should be a normal PHP array or otherwise contain the full structure.
- *
- * Note also that due to limitations in PHP prior to 5.3.4, it is impossible to
- * write directly to the contents of nested arrays contained in this object.
- * Only writes to the top-level array elements are possible. So if you
- * previously had set $object['foo'] = array(1, 2, 'bar' => 'baz'), but later
- * want to change the value of 'bar' from 'baz' to 'foobar', you cannot do so
- * a targeted write like $object['foo']['bar'] = 'foobar'. Instead, you must
- * overwrite the entire top-level 'foo' array with the entire set of new
- * values: $object['foo'] = array(1, 2, 'bar' => 'foobar'). Due to this same
- * limitation, attempts to create references to any contained data, nested or
- * otherwise, will fail silently. So $var = &$object['foo'] will not throw an
- * error, and $var will be populated with the contents of $object['foo'], but
- * that data will be passed by value, not reference. For more information on
- * the PHP limitation, see the note in the official PHP documentation at·
- * http://php.net/manual/en/arrayaccess.offsetget.php on
- * ArrayAccess::offsetGet().
- *
- * By default, the class accounts for caches where calling functions might
- * request keys in the array that won't exist even after a cache rebuild. This
- * prevents situations where a cache rebuild would be triggered over and over
- * due to a 'missing' item. These cases are stored internally as a value of
- * NULL. This means that the offsetGet() and offsetExists() methods
- * must be overridden if caching an array where the top level values can
- * legitimately be NULL, and where $object->offsetExists() needs to correctly
- * return (equivalent to array_key_exists() vs. isset()). This should not
- * be necessary in the majority of cases.
- *
- * Classes extending this class must override at least the
- * resolveCacheMiss() method to have a working implementation.
- *
- * offsetSet() is not overridden by this class by default. In practice this
- * means that assigning an offset via arrayAccess will only apply while the
- * object is in scope and will not be written back to the persistent cache.
- * This follows a similar pattern to static vs. persistent caching in
- * procedural code. Extending classes may wish to alter this behaviour, for
- * example by overriding offsetSet() and adding an automatic call to persist().
- *
- * @see SchemaCache
- */
-abstract class DrupalCacheArray implements ArrayAccess {
-
-  /**
-   * A cid to pass to cache()->set() and cache()->get().
-   */
-  protected $cid;
-
-  /**
-   * A bin to pass to cache()->set() and cache()->get().
-   */
-  protected $bin;
-
-  /**
-   * An array of keys to add to the cache at the end of the request.
-   */
-  protected $keysToPersist = array();
-
-  /**
-   * Storage for the data itself.
-   */
-  protected $storage = array();
-
-  /**
-   * Constructs a DrupalCacheArray object.
-   *
-   * @param $cid
-   *   The cid for the array being cached.
-   * @param $bin
-   *   The bin to cache the array.
-   */
-  public function __construct($cid, $bin) {
-    $this->cid = $cid;
-    $this->bin = $bin;
-
-    if ($cached = cache($bin)->get($this->cid)) {
-     $this->storage = $cached->data;
-    }
-  }
-
-  /**
-   * Implements ArrayAccess::offsetExists().
-   */
-  public function offsetExists($offset) {
-    return $this->offsetGet($offset) !== NULL;
-  }
-
-  /**
-   * Implements ArrayAccess::offsetGet().
-   */
-  public function offsetGet($offset) {
-    if (isset($this->storage[$offset]) || array_key_exists($offset, $this->storage)) {
-      return $this->storage[$offset];
-    }
-    else {
-      return $this->resolveCacheMiss($offset);
-    }
-  }
-
-  /**
-   * Implements ArrayAccess::offsetSet().
-   */
-  public function offsetSet($offset, $value) {
-    $this->storage[$offset] = $value;
-  }
-
-  /**
-   * Implements ArrayAccess::offsetUnset().
-   */
-  public function offsetUnset($offset) {
-    unset($this->storage[$offset]);
-  }
-
-  /**
-   * Flags an offset value to be written to the persistent cache.
-   *
-   * If a value is assigned to a cache object with offsetSet(), by default it
-   * will not be written to the persistent cache unless it is flagged with this
-   * method. This allows items to be cached for the duration of a request,
-   * without necessarily writing back to the persistent cache at the end.
-   *
-   * @param $offset
-   *   The array offset that was request.
-   * @param $persist
-   *   Optional boolean to specify whether the offset should be persisted or
-   *   not, defaults to TRUE. When called with $persist = FALSE the offset will
-   *   be unflagged so that it will not written at the end of the request.
-   */
-  protected function persist($offset, $persist = TRUE) {
-    $this->keysToPersist[$offset] = $persist;
-  }
-
-  /**
-   * Resolves a cache miss.
-   *
-   * When an offset is not found in the object, this is treated as a cache
-   * miss. This method allows classes implementing the interface to look up
-   * the actual value and allow it to be cached.
-   *
-   * @param $offset
-   *   The offset that was requested.
-   *
-   * @return
-   *   The value of the offset, or NULL if no value was found.
-   */
-  abstract protected function resolveCacheMiss($offset);
-
-  /**
-   * Writes a value to the persistent cache immediately.
-   *
-   * @param $data
-   *   The data to write to the persistent cache.
-   * @param $lock
-   *   Whether to acquire a lock before writing to cache.
-   */
-  protected function set($data, $lock = TRUE) {
-    // Lock cache writes to help avoid stampedes.
-    // To implement locking for cache misses, override __construct().
-    $lock_name = $this->cid . ':' . $this->bin;
-    if (!$lock || lock_acquire($lock_name)) {
-      if ($cached = cache($this->bin)->get($this->cid)) {
-        $data = $cached->data + $data;
-      }
-      cache($this->bin)->set($this->cid, $data);
-      if ($lock) {
-        lock_release($lock_name);
-      }
-    }
-  }
-
-  /**
-   * Destructs the DrupalCacheArray object.
-   */
-  public function __destruct() {
-    $data = array();
-    foreach ($this->keysToPersist as $offset => $persist) {
-      if ($persist) {
-        $data[$offset] = $this->storage[$offset];
-      }
-    }
-    if (!empty($data)) {
-      $this->set($data);
-    }
-  }
-}
 
 /**
  * Starts the timer with the specified name.
@@ -2733,7 +2563,7 @@ function language_load($langcode) {
  *   The printed name of the language.
  */
 function language_name($langcode) {
-  if ($langcode == LANGUAGE_NONE) {
+  if ($langcode == LANGUAGE_NOT_SPECIFIED) {
     return t('None');
   }
 
@@ -2950,31 +2780,6 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
   }
   else {
     return FALSE;
-  }
-}
-
-/**
- * Extends DrupalCacheArray to allow for dynamic building of the schema cache.
- */
-class SchemaCache extends DrupalCacheArray {
-
-  /**
-   * Constructs a SchemaCache object.
-   */
-  public function __construct() {
-    // Cache by request method.
-    parent::__construct('schema:runtime:' . ($_SERVER['REQUEST_METHOD'] == 'GET'), 'cache');
-  }
-
-  /**
-   * Overrides DrupalCacheArray::resolveCacheMiss().
-   */
-  protected function resolveCacheMiss($offset) {
-    $complete_schema = drupal_get_complete_schema();
-    $value = isset($complete_schema[$offset]) ? $complete_schema[$offset] :  NULL;
-    $this->storage[$offset] = $value;
-    $this->persist($offset);
-    return $value;
   }
 }
 

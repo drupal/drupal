@@ -129,7 +129,7 @@ function book_admin_edit_submit($form, &$form_state) {
       // Update the title if changed.
       if ($row['title']['#default_value'] != $values['title']) {
         $node = node_load($values['nid']);
-        $langcode = LANGUAGE_NONE;
+        $langcode = LANGUAGE_NOT_SPECIFIED;
         $node->title = $values['title'];
         $node->book['link_title'] = $values['title'];
         $node->revision = 1;

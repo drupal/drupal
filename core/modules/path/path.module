@@ -97,7 +97,7 @@ function path_form_node_form_alter(&$form, $form_state) {
   $path = array();
   if (!empty($form['#node']->nid)) {
     $conditions = array('source' => 'node/' . $form['#node']->nid);
-    if ($form['#node']->langcode != LANGUAGE_NONE) {
+    if ($form['#node']->langcode != LANGUAGE_NOT_SPECIFIED) {
       $conditions['langcode'] = $form['#node']->langcode;
     }
     $path = path_load($conditions);
@@ -109,7 +109,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     'pid' => NULL,
     'source' => isset($form['#node']->nid) ? 'node/' . $form['#node']->nid : NULL,
     'alias' => '',
-    'langcode' => isset($form['#node']->langcode) ? $form['#node']->langcode : LANGUAGE_NONE,
+    'langcode' => isset($form['#node']->langcode) ? $form['#node']->langcode : LANGUAGE_NOT_SPECIFIED,
   );
 
   $form['path'] = array(
@@ -189,7 +189,7 @@ function path_node_insert($node) {
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $path['source'] = 'node/' . $node->nid;
-      $path['langcode'] = isset($node->langcode) ? $node->langcode : LANGUAGE_NONE;
+      $path['langcode'] = isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED;
       path_save($path);
     }
   }
@@ -210,7 +210,7 @@ function path_node_update($node) {
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $path['source'] = 'node/' . $node->nid;
-      $path['langcode'] = isset($node->langcode) ? $node->langcode : LANGUAGE_NONE;
+      $path['langcode'] = isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED;
       path_save($path);
     }
   }
@@ -238,7 +238,7 @@ function path_form_taxonomy_form_term_alter(&$form, $form_state) {
       'pid' => NULL,
       'source' => isset($form['#term']['tid']) ? 'taxonomy/term/' . $form['#term']['tid'] : NULL,
       'alias' => '',
-      'langcode' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
     );
     $form['path'] = array(
       '#access' => user_access('create url aliases') || user_access('administer url aliases'),
@@ -270,7 +270,7 @@ function path_taxonomy_term_insert($term) {
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $path['source'] = 'taxonomy/term/' . $term->tid;
-      $path['langcode'] = LANGUAGE_NONE;
+      $path['langcode'] = LANGUAGE_NOT_SPECIFIED;
       path_save($path);
     }
   }
@@ -291,7 +291,7 @@ function path_taxonomy_term_update($term) {
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
       $path['source'] = 'taxonomy/term/' . $term->tid;
-      $path['langcode'] = LANGUAGE_NONE;
+      $path['langcode'] = LANGUAGE_NOT_SPECIFIED;
       path_save($path);
     }
   }

@@ -258,9 +258,9 @@ function field_default_view($entity_type, $entity, $field, $instance, $langcode,
  */
 function field_default_prepare_translation($entity_type, $entity, $field, $instance, $langcode, &$items, $source_entity, $source_langcode) {
   $field_name = $field['field_name'];
-  // If the field is untranslatable keep using LANGUAGE_NONE.
-  if ($langcode == LANGUAGE_NONE) {
-    $source_langcode = LANGUAGE_NONE;
+  // If the field is untranslatable keep using LANGUAGE_NOT_SPECIFIED.
+  if ($langcode == LANGUAGE_NOT_SPECIFIED) {
+    $source_langcode = LANGUAGE_NOT_SPECIFIED;
   }
   if (isset($source_entity->{$field_name}[$source_langcode])) {
     $items = $source_entity->{$field_name}[$source_langcode];

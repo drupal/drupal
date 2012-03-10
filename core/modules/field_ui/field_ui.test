@@ -163,7 +163,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $vocabulary = (object) array(
       'name' => 'Tags',
       'machine_name' => 'tags',
-      'langcode' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
     );
     taxonomy_vocabulary_save($vocabulary);
 
@@ -329,7 +329,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     );
     field_create_instance($instance);
 
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $admin_path = 'admin/structure/types/manage/' . $this->hyphen_type . '/fields/' . $field_name;
     $element_id = "edit-$field_name-$langcode-0-value";
     $element_name = "{$field_name}[$langcode][0][value]";
@@ -539,7 +539,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
     $value = 12345;
     $settings = array(
       'type' => $this->type,
-      'field_test' => array(LANGUAGE_NONE => array(array('value' => $value))),
+      'field_test' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $value))),
     );
     $node = $this->drupalCreateNode($settings);
 

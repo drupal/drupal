@@ -109,7 +109,7 @@ function template_preprocess_search_result(&$variables) {
   $result = $variables['result'];
   $variables['url'] = check_url($result['link']);
   $variables['title'] = check_plain($result['title']);
-  if (isset($result['language']) && $result['language'] != $language_interface->langcode && $result['language'] != LANGUAGE_NONE) {
+  if (isset($result['language']) && $result['language'] != $language_interface->langcode && $result['language'] != LANGUAGE_NOT_SPECIFIED) {
     $variables['title_attributes_array']['lang'] = $result['language'];
     $variables['content_attributes_array']['lang'] = $result['language'];
   }

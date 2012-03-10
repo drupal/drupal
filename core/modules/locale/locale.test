@@ -1848,7 +1848,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'source'   => 'node/' . $node->nid,
       'alias'    => $custom_path,
-      'langcode' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
     );
     path_save($edit);
     $lookup_path = drupal_lookup_path('alias', 'node/' . $node->nid, 'en');
@@ -1870,11 +1870,11 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     );
     path_save($edit);
 
-    // Assign a custom path alias to second node with LANGUAGE_NONE.
+    // Assign a custom path alias to second node with LANGUAGE_NOT_SPECIFIED.
     $edit = array(
       'source'   => 'node/' . $second_node->nid,
       'alias'    => $custom_path,
-      'langcode' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
     );
     path_save($edit);
 
@@ -2567,7 +2567,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
    */
   function testMultilingualNodeForm() {
     // Create "Basic page" content.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $title_key = "title";
     $title_value = $this->randomName(8);
     $body_key = "body[$langcode][0][value]";
@@ -2584,7 +2584,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
     $this->assertTrue($node, t('Node found in database.'));
 
-    $assert = isset($node->body['en']) && !isset($node->body[LANGUAGE_NONE]) && $node->body['en'][0]['value'] == $body_value;
+    $assert = isset($node->body['en']) && !isset($node->body[LANGUAGE_NOT_SPECIFIED]) && $node->body['en'][0]['value'] == $body_value;
     $this->assertTrue($assert, t('Field language correctly set.'));
 
     // Change node language.
@@ -2616,7 +2616,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
    */
   function testMultilingualDisplaySettings() {
     // Create "Basic page" content.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $title_key = "title";
     $title_value = $this->randomName(8);
     $body_key = "body[$langcode][0][value]";
@@ -2701,13 +2701,13 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     // language and interface language do not influence comment language, as
     // only content language has to.
     foreach (language_list() as $node_langcode => $node_language) {
-      $langcode_none = LANGUAGE_NONE;
+      $langcode_not_specified = LANGUAGE_NOT_SPECIFIED;
 
       // Create "Article" content.
       $title = $this->randomName();
       $edit = array(
         "title" => $title,
-        "body[$langcode_none][0][value]" => $this->randomName(),
+        "body[$langcode_not_specified][0][value]" => $this->randomName(),
         "langcode" => $node_langcode,
       );
       $this->drupalPost("node/add/article", $edit, t('Save'));
@@ -2717,7 +2717,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
       foreach (language_list() as $langcode => $language) {
         // Post a comment with content language $langcode.
         $prefix = empty($prefixes[$langcode]) ? '' : $prefixes[$langcode] . '/';
-        $edit = array("comment_body[$langcode_none][0][value]" => $this->randomName());
+        $edit = array("comment_body[$langcode_not_specified][0][value]" => $this->randomName());
         $this->drupalPost("{$prefix}node/{$node->nid}", $edit, t('Save'));
 
         // Check that comment language matches the current content language.

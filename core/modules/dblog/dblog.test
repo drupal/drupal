@@ -272,7 +272,7 @@ class DBLogTestCase extends DrupalWebTestCase {
 
     // Create node using form to generate add content event (which is not triggered by drupalCreateNode).
     $edit = $this->getContent($type);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $title = $edit["title"];
     $this->drupalPost('node/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
@@ -327,7 +327,7 @@ class DBLogTestCase extends DrupalWebTestCase {
    * @return array Content.
    */
   private function getContent($type) {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     switch ($type) {
       case 'poll':
         $content = array(
@@ -363,7 +363,7 @@ class DBLogTestCase extends DrupalWebTestCase {
       break;
 
       default:
-        $langcode = LANGUAGE_NONE;
+        $langcode = LANGUAGE_NOT_SPECIFIED;
         $content = array(
           "body[$langcode][0][value]" => $this->randomName(32),
         );

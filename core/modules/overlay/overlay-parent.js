@@ -354,9 +354,14 @@ Drupal.overlay.isAdminLink = function (url) {
 
   // Turn the list of administrative paths into a regular expression.
   if (!this.adminPathRegExp) {
-    var regExpPrefix = '' + Drupal.settings.pathPrefix + '(';
-    var adminPaths = regExpPrefix + Drupal.settings.overlay.paths.admin.replace(/\s+/g, ')$|' + regExpPrefix) + ')$';
-    var nonAdminPaths = regExpPrefix + Drupal.settings.overlay.paths.non_admin.replace(/\s+/g, ')$|'+ regExpPrefix) + ')$';
+    var prefix = '';
+    if (Drupal.settings.overlay.pathPrefixes.length) {
+      // Allow path prefixes used for language negatiation followed by slash,
+      // and the empty string.
+      prefix = '(' + Drupal.settings.overlay.pathPrefixes.join('/|') + '/|)';
+    }
+    var adminPaths = '^' + prefix + '(' + Drupal.settings.overlay.paths.admin.replace(/\s+/g, '|') + ')$';
+    var nonAdminPaths = '^' + prefix + '(' + Drupal.settings.overlay.paths.non_admin.replace(/\s+/g, '|') + ')$';
     adminPaths = adminPaths.replace(/\*/g, '.*');
     nonAdminPaths = nonAdminPaths.replace(/\*/g, '.*');
     this.adminPathRegExp = new RegExp(adminPaths);

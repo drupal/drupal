@@ -191,7 +191,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
 
     // Confirm the correct revision text appears on "view revisions" page.
     $this->drupalGet("node/$node->nid/revisions/$node->vid/view");
-    $this->assertText($node->body[LANGUAGE_NONE][0]['value'], t('Correct text displays for version.'));
+    $this->assertText($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], t('Correct text displays for version.'));
 
     // Confirm the correct log message appears on "revisions overview" page.
     $this->drupalGet("node/$node->nid/revisions");
@@ -205,7 +205,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
                         array('@type' => 'Basic page', '%title' => $nodes[1]->title,
                               '%revision-date' => format_date($nodes[1]->revision_timestamp))), t('Revision reverted.'));
     $reverted_node = node_load($node->nid);
-    $this->assertTrue(($nodes[1]->body[LANGUAGE_NONE][0]['value'] == $reverted_node->body[LANGUAGE_NONE][0]['value']), t('Node reverted correctly.'));
+    $this->assertTrue(($nodes[1]->body[LANGUAGE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[LANGUAGE_NOT_SPECIFIED][0]['value']), t('Node reverted correctly.'));
 
     // Confirm revisions delete properly.
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/delete", array(), t('Delete'));
@@ -289,7 +289,7 @@ class PageEditTestCase extends DrupalWebTestCase {
   function testPageEdit() {
     $this->drupalLogin($this->web_user);
 
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $title_key = "title";
     $body_key = "body[$langcode][0][value]";
     // Create node to edit.
@@ -357,7 +357,7 @@ class PageEditTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Create node to edit.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $body_key = "body[$langcode][0][value]";
     $edit = array();
     $edit['title'] = $this->randomName(8);
@@ -416,7 +416,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
    * Check the node preview functionality.
    */
   function testPagePreview() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $title_key = "title";
     $body_key = "body[$langcode][0][value]";
 
@@ -440,7 +440,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
    * Check the node preview functionality, when using revisions.
    */
   function testPagePreviewWithRevisions() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $title_key = "title";
     $body_key = "body[$langcode][0][value]";
     // Force revision on "Basic page" content.
@@ -490,7 +490,7 @@ class NodeCreationTestCase extends DrupalWebTestCase {
   function testNodeCreation() {
     // Create a node.
     $edit = array();
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName(8);
     $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
@@ -512,7 +512,7 @@ class NodeCreationTestCase extends DrupalWebTestCase {
       'uid'      => $this->loggedInUser->uid,
       'name'     => $this->loggedInUser->name,
       'type'     => 'page',
-      'langcode' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
       'title'    => 'testing_transaction_exception',
     );
 
@@ -599,7 +599,7 @@ class SummaryLengthTestCase extends DrupalWebTestCase {
   function testSummaryLength() {
     // Create a node to view.
     $settings = array(
-      'body' => array(LANGUAGE_NONE => array(array('value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae arcu at leo cursus laoreet. Curabitur dui tortor, adipiscing malesuada tempor in, bibendum ac diam. Cras non tellus a libero pellentesque condimentum. What is a Drupalism? Suspendisse ac lacus libero. Ut non est vel nisl faucibus interdum nec sed leo. Pellentesque sem risus, vulputate eu semper eget, auctor in libero. Ut fermentum est vitae metus convallis scelerisque. Phasellus pellentesque rhoncus tellus, eu dignissim purus posuere id. Quisque eu fringilla ligula. Morbi ullamcorper, lorem et mattis egestas, tortor neque pretium velit, eget eleifend odio turpis eu purus. Donec vitae metus quis leo pretium tincidunt a pulvinar sem. Morbi adipiscing laoreet mauris vel placerat. Nullam elementum, nisl sit amet scelerisque malesuada, dolor nunc hendrerit quam, eu ultrices erat est in orci. Curabitur feugiat egestas nisl sed accumsan.'))),
+      'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae arcu at leo cursus laoreet. Curabitur dui tortor, adipiscing malesuada tempor in, bibendum ac diam. Cras non tellus a libero pellentesque condimentum. What is a Drupalism? Suspendisse ac lacus libero. Ut non est vel nisl faucibus interdum nec sed leo. Pellentesque sem risus, vulputate eu semper eget, auctor in libero. Ut fermentum est vitae metus convallis scelerisque. Phasellus pellentesque rhoncus tellus, eu dignissim purus posuere id. Quisque eu fringilla ligula. Morbi ullamcorper, lorem et mattis egestas, tortor neque pretium velit, eget eleifend odio turpis eu purus. Donec vitae metus quis leo pretium tincidunt a pulvinar sem. Morbi adipiscing laoreet mauris vel placerat. Nullam elementum, nisl sit amet scelerisque malesuada, dolor nunc hendrerit quam, eu ultrices erat est in orci. Curabitur feugiat egestas nisl sed accumsan.'))),
       'promote' => 1,
     );
     $node = $this->drupalCreateNode($settings);
@@ -721,7 +721,7 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
 
     // Create a node.
     $edit = array();
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName(8);
     $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
@@ -744,7 +744,7 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
 
     // Create a node.
     $edit = array();
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName(8);
     $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
@@ -1164,7 +1164,7 @@ class NodeSaveTestCase extends DrupalWebTestCase {
     $title = $this->randomName(8);
     $node = array(
       'title' => $title,
-      'body' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(32)))),
+      'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $this->randomName(32)))),
       'uid' => $this->web_user->uid,
       'type' => 'article',
       'nid' => $test_nid,
@@ -2192,13 +2192,13 @@ class NodeEntityFieldQueryAlter extends DrupalWebTestCase {
     // Creating 4 nodes with an entity field so we can test that sort of query
     // alter. All field values starts with 'A' so we can identify and fetch them
     // in the node_access_test module.
-    $settings = array('langcode' => LANGUAGE_NONE);
+    $settings = array('langcode' => LANGUAGE_NOT_SPECIFIED);
     for ($i = 0; $i < 4; $i++) {
       $body = array(
         'value' => 'A' . $this->randomName(32),
         'format' => filter_default_format(),
       );
-      $settings['body'][LANGUAGE_NONE][0] = $body;
+      $settings['body'][LANGUAGE_NOT_SPECIFIED][0] = $body;
       $this->drupalCreateNode($settings);
     }
 
@@ -2254,7 +2254,7 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
       'type' => 'article',
       'uid' => $account->uid,
       'title' => '<blink>Blinking Text</blink>',
-      'body' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(32), 'summary' => $this->randomName(16)))),
+      'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $this->randomName(32), 'summary' => $this->randomName(16)))),
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -2434,7 +2434,7 @@ class NodeAccessPagerTestCase extends DrupalWebTestCase {
         'nid' => $node->nid,
         'subject' => $this->randomName(),
         'comment_body' => array(
-          LANGUAGE_NONE => array(
+          LANGUAGE_NOT_SPECIFIED => array(
             array('value' => $this->randomName()),
           ),
         ),
@@ -2472,7 +2472,7 @@ class NodeAccessPagerTestCase extends DrupalWebTestCase {
         'nid' => NULL,
         'type' => 'forum',
         'taxonomy_forums' => array(
-          LANGUAGE_NONE => array(
+          LANGUAGE_NOT_SPECIFIED => array(
             array('tid' => $tid, 'vid' => $vid, 'vocabulary_machine_name' => 'forums'),
           ),
         ),

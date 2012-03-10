@@ -40,6 +40,9 @@ class FormsTestCase extends DrupalWebTestCase {
     $elements['telephone']['element'] = array('#title' => $this->randomName(), '#type' => 'tel');
     $elements['telephone']['empty_values'] = $empty_strings;
 
+    $elements['url']['element'] = array('#title' => $this->randomName(), '#type' => 'url');
+    $elements['url']['empty_values'] = $empty_strings;
+
     $elements['password']['element'] = array('#title' => $this->randomName(), '#type' => 'password');
     $elements['password']['empty_values'] = $empty_strings;
 
@@ -261,7 +264,7 @@ class FormsTestCase extends DrupalWebTestCase {
 
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
-    $this->assertEqual(count($disabled_elements), 35, 'The correct elements have the disabled property in the HTML code.');
+    $this->assertEqual(count($disabled_elements), 36, 'The correct elements have the disabled property in the HTML code.');
 
     $this->drupalPost(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);
@@ -396,7 +399,7 @@ class FormElementTestCase extends DrupalWebTestCase {
     $this->drupalGet('form-test/placeholder-text');
     $expected = 'placeholder-text';
     // Test to make sure non-textarea elements have the proper placeholder text.
-    foreach (array('textfield', 'tel', 'password', 'email') as $type) {
+    foreach (array('textfield', 'tel', 'url', 'password', 'email') as $type) {
       $element = $this->xpath('//input[@id=:id and @placeholder=:expected]', array(
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
@@ -1669,5 +1672,50 @@ class FormEmailTestCase extends DrupalWebTestCase {
     $values = drupal_json_decode($this->drupalPost('form-test/email', $edit, 'Submit'));
     $this->assertEqual($values['email'], 'foo@example.com');
     $this->assertEqual($values['email_required'], 'example@drupal.org');
+  }
+}
+
+/**
+ * Tests url element.
+ */
+class FormUrlTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Form API url',
+      'description' => 'Tests the form API url element.',
+      'group' => 'Form API',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Tests that #type 'url' fields are properly validated and trimmed.
+   */
+  function testFormUrl() {
+    $edit = array();
+    $edit['url'] = 'http://';
+    $edit['url_required'] = ' ';
+    $this->drupalPost('form-test/url', $edit, 'Submit');
+    $this->assertRaw(t('The URL %url is not valid.', array('%url' => 'http://')));
+    $this->assertRaw(t('!name field is required.', array('!name' => 'Required URL')));
+
+    $edit = array();
+    $edit['url'] = "\n";
+    $edit['url_required'] = 'http://example.com/   ';
+    $values = drupal_json_decode($this->drupalPost('form-test/url', $edit, 'Submit'));
+    $this->assertIdentical($values['url'], '');
+    $this->assertEqual($values['url_required'], 'http://example.com/');
+
+    $edit = array();
+    $edit['url'] = 'http://foo.bar.example.com/';
+    $edit['url_required'] = 'http://drupal.org/node/1174630?page=0&foo=bar#new';
+    $values = drupal_json_decode($this->drupalPost('form-test/url', $edit, 'Submit'));
+    $this->assertEqual($values['url'], $edit['url']);
+    $this->assertEqual($values['url_required'], $edit['url_required']);
   }
 }

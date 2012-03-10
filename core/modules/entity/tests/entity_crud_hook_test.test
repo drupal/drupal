@@ -70,7 +70,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
       'comment' => 2,
       'promote' => 0,
       'sticky' => 0,
-      'language' => LANGUAGE_NONE,
+      'language' => LANGUAGE_NOT_SPECIFIED,
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
     );
@@ -86,7 +86,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
       'status' => 1,
-      'language' => LANGUAGE_NONE,
+      'language' => LANGUAGE_NOT_SPECIFIED,
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
@@ -197,7 +197,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
       'comment' => 2,
       'promote' => 0,
       'sticky' => 0,
-      'language' => LANGUAGE_NONE,
+      'language' => LANGUAGE_NOT_SPECIFIED,
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
     );
@@ -248,7 +248,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $vocabulary = (object) array(
       'name' => 'Test vocabulary',
       'machine_name' => 'test',
-      'langcode' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
     );
@@ -257,7 +257,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $term = (object) array(
       'vid' => $vocabulary->vid,
       'name' => 'Test term',
-      'langcode' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
       'description' => NULL,
       'format' => 1,
     );
@@ -308,7 +308,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $vocabulary = (object) array(
       'name' => 'Test vocabulary',
       'machine_name' => 'test',
-      'langcode' => LANGUAGE_NONE,
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
     );

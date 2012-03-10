@@ -45,7 +45,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
   function testFieldAttachLoad() {
     $entity_type = 'test_entity';
     $eid = 0;
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     $columns = array('entity_type', 'entity_id', 'revision_id', 'delta', 'language', $this->field_name . '_value');
 
@@ -113,7 +113,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
   function testFieldAttachInsertAndUpdate() {
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Test insert.
     $values = array();
@@ -194,7 +194,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
   function testFieldAttachSaveMissingData() {
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Insert: Field is missing
     field_attach_insert($entity_type, $entity);
@@ -293,7 +293,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $instance = array('field_name' => 'decimal52', 'entity_type' => 'test_entity', 'bundle' => 'test_bundle');
     $instance = field_create_instance($instance);
     $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
-    $entity->decimal52[LANGUAGE_NONE][0]['value'] = '1.235';
+    $entity->decimal52[LANGUAGE_NOT_SPECIFIED][0]['value'] = '1.235';
     field_attach_insert('test_entity', $entity);
 
     // Attempt to update the field in a way that would work without data.
@@ -353,7 +353,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
 
     // Add data so the table cannot be dropped.
     $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
-    $entity->{$field_name}[LANGUAGE_NONE][0]['value'] = 'field data';
+    $entity->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['value'] = 'field data';
     field_attach_insert('test_entity', $entity);
 
     // Add an index
@@ -374,7 +374,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     // Verify that the tables were not dropped.
     $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
     field_attach_load('test_entity', array(0 => $entity));
-    $this->assertEqual($entity->{$field_name}[LANGUAGE_NONE][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
+    $this->assertEqual($entity->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
   }
 
   /**

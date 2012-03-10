@@ -260,7 +260,7 @@ class Condition implements ConditionInterface, Countable {
   function __clone() {
     $this->changed = TRUE;
     foreach ($this->conditions as $key => $condition) {
-      if ($condition['field'] instanceOf ConditionInterface) {
+      if ($key !== '#conjunction' && $condition['field'] instanceOf ConditionInterface) {
         $this->conditions[$key]['field'] = clone($condition['field']);
       }
     }

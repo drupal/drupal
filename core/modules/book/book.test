@@ -168,7 +168,7 @@ class BookTestCase extends DrupalWebTestCase {
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->nid);
     $this->assertText($node->title, t('Printer friendly title found.'));
-    $this->assertRaw(check_markup($node->body[LANGUAGE_NONE][0]['value'], $node->body[LANGUAGE_NONE][0]['format']), t('Printer friendly body found.'));
+    $this->assertRaw(check_markup($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], $node->body[LANGUAGE_NOT_SPECIFIED][0]['format']), t('Printer friendly body found.'));
 
     $number++;
   }
@@ -199,7 +199,7 @@ class BookTestCase extends DrupalWebTestCase {
     static $number = 0; // Used to ensure that when sorted nodes stay in same order.
 
     $edit = array();
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $number . ' - SimpleTest test node ' . $this->randomName(10);
     $edit["body[$langcode][0][value]"] = 'SimpleTest test body ' . $this->randomName(32) . ' ' . $this->randomName(32);
     $edit['book[bid]'] = $book_nid;
@@ -237,7 +237,7 @@ class BookTestCase extends DrupalWebTestCase {
     // Make sure each part of the book is there.
     foreach ($nodes as $node) {
       $this->assertText($node->title, t('Node title found in printer friendly version.'));
-      $this->assertRaw(check_markup($node->body[LANGUAGE_NONE][0]['value'], $node->body[LANGUAGE_NONE][0]['format']), t('Node body found in printer friendly version.'));
+      $this->assertRaw(check_markup($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], $node->body[LANGUAGE_NOT_SPECIFIED][0]['format']), t('Node body found in printer friendly version.'));
     }
 
     // Make sure we can't export an unsupported format.

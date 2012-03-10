@@ -96,7 +96,7 @@ function drupal_lookup_path($action, $path = '', $langcode = NULL) {
           $args = array(
             ':system' => $cache['system_paths'],
             ':langcode' => $langcode,
-            ':language_none' => LANGUAGE_NONE,
+            ':langcode_undetermined' => LANGUAGE_NOT_SPECIFIED,
           );
           // Always get the language-specific alias before the language-neutral
           // one. For example 'de' is less than 'und' so the order needs to be
@@ -105,16 +105,16 @@ function drupal_lookup_path($action, $path = '', $langcode = NULL) {
           // the most recently created alias for each source. Subsequent queries
           // using fetchField() must use pid DESC to have the same effect.
           // For performance reasons, the query builder is not used here.
-          if ($langcode == LANGUAGE_NONE) {
+          if ($langcode == LANGUAGE_NOT_SPECIFIED) {
             // Prevent PDO from complaining about a token the query doesn't use.
             unset($args[':langcode']);
-            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode = :language_none ORDER BY pid ASC', $args);
+            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode = :langcode_undetermined ORDER BY pid ASC', $args);
           }
-          elseif ($langcode < LANGUAGE_NONE) {
-            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode IN (:langcode, :language_none) ORDER BY langcode ASC, pid ASC', $args);
+          elseif ($langcode < LANGUAGE_NOT_SPECIFIED) {
+            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode ASC, pid ASC', $args);
           }
           else {
-            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode IN (:langcode, :language_none) ORDER BY langcode DESC, pid ASC', $args);
+            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid ASC', $args);
           }
           $cache['map'][$langcode] = $result->fetchAllKeyed();
           // Keep a record of paths with no alias to avoid querying twice.
@@ -136,18 +136,18 @@ function drupal_lookup_path($action, $path = '', $langcode = NULL) {
         $args = array(
           ':source' => $path,
           ':langcode' => $langcode,
-          ':language_none' => LANGUAGE_NONE,
+          ':langcode_undetermined' => LANGUAGE_NOT_SPECIFIED,
         );
         // See the queries above.
-        if ($langcode == LANGUAGE_NONE) {
+        if ($langcode == LANGUAGE_NOT_SPECIFIED) {
           unset($args[':langcode']);
-          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode = :language_none ORDER BY pid DESC", $args)->fetchField();
+          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode = :langcode_undetermined ORDER BY pid DESC", $args)->fetchField();
         }
-        elseif ($langcode > LANGUAGE_NONE) {
-          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode IN (:langcode, :language_none) ORDER BY langcode DESC, pid DESC", $args)->fetchField();
+        elseif ($langcode > LANGUAGE_NOT_SPECIFIED) {
+          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid DESC", $args)->fetchField();
         }
         else {
-          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode IN (:langcode, :language_none) ORDER BY langcode ASC, pid DESC", $args)->fetchField();
+          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode ASC, pid DESC", $args)->fetchField();
         }
         $cache['map'][$langcode][$path] = $alias;
         return $alias;
@@ -162,18 +162,18 @@ function drupal_lookup_path($action, $path = '', $langcode = NULL) {
         $args = array(
           ':alias' => $path,
           ':langcode' => $langcode,
-          ':language_none' => LANGUAGE_NONE,
+          ':langcode_undetermined' => LANGUAGE_NOT_SPECIFIED,
         );
         // See the queries above.
-        if ($langcode == LANGUAGE_NONE) {
+        if ($langcode == LANGUAGE_NOT_SPECIFIED) {
           unset($args[':langcode']);
-          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode = :language_none ORDER BY pid DESC", $args);
+          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode = :langcode_undetermined ORDER BY pid DESC", $args);
         }
-        elseif ($langcode > LANGUAGE_NONE) {
-          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode IN (:langcode, :language_none) ORDER BY langcode DESC, pid DESC", $args);
+        elseif ($langcode > LANGUAGE_NOT_SPECIFIED) {
+          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid DESC", $args);
         }
         else {
-          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode IN (:langcode, :language_none) ORDER BY langcode ASC, pid DESC", $args);
+          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode ASC, pid DESC", $args);
         }
         if ($source = $result->fetchField()) {
           $cache['map'][$langcode][$source] = $path;
@@ -431,7 +431,7 @@ function path_load($conditions) {
  *   - langcode: (optional) The language code of the alias.
  */
 function path_save(&$path) {
-  $path += array('langcode' => LANGUAGE_NONE);
+  $path += array('langcode' => LANGUAGE_NOT_SPECIFIED);
 
   // Load the stored alias, if any.
   if (!empty($path['pid']) && !isset($path['original'])) {
