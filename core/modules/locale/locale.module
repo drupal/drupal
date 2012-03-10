@@ -207,6 +207,7 @@ function locale_permission() {
   return array(
     'translate interface' => array(
       'title' => t('Translate interface texts'),
+      'restrict access' => TRUE,
     ),
   );
 }
