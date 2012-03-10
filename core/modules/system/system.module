@@ -1679,13 +1679,13 @@ function system_stream_wrappers() {
   $wrappers = array(
     'public' => array(
       'name' => t('Public files'),
-      'class' => 'DrupalPublicStreamWrapper',
+      'class' => 'Drupal\Core\StreamWrapper\PublicStream',
       'description' => t('Public local files served by the webserver.'),
       'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
     ),
     'temporary' => array(
       'name' => t('Temporary files'),
-      'class' => 'DrupalTemporaryStreamWrapper',
+      'class' => 'Drupal\Core\StreamWrapper\TemporaryStream',
       'description' => t('Temporary local files for upload and previews.'),
       'type' => STREAM_WRAPPERS_LOCAL_HIDDEN,
     ),
@@ -1695,7 +1695,7 @@ function system_stream_wrappers() {
   if (variable_get('file_private_path', FALSE)) {
     $wrappers['private'] = array(
       'name' => t('Private files'),
-      'class' => 'DrupalPrivateStreamWrapper',
+      'class' => 'Drupal\Core\StreamWrapper\PrivateStream',
       'description' => t('Private local files served by Drupal.'),
       'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
     );
