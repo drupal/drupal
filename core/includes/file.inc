@@ -5,78 +5,14 @@
  * API for handling file uploads and server file management.
  */
 
-use Drupal\Core\StreamWrapper\LocalStream;
-
 /**
- * Stream wrapper bit flags that are the basis for composite types.
+ * Manually include stream wrapper code.
  *
- * Note that 0x0002 is skipped, because it was the value of a constant that has
- * since been removed.
+ * Stream wrapper code is included here because there are cases where
+ * File API is needed before a bootstrap, or in an alternate order (e.g.
+ * maintenance theme).
  */
-
-/**
- * Stream wrapper bit flag -- a filter that matches all wrappers.
- */
-const STREAM_WRAPPERS_ALL = 0x0000;
-
-/**
- * Stream wrapper bit flag -- refers to a local file system location.
- */
-const STREAM_WRAPPERS_LOCAL = 0x0001;
-
-/**
- * Stream wrapper bit flag -- wrapper is readable (almost always true).
- */
-const STREAM_WRAPPERS_READ = 0x0004;
-
-/**
- * Stream wrapper bit flag -- wrapper is writeable.
- */
-const STREAM_WRAPPERS_WRITE = 0x0008;
-
-/**
- * Stream wrapper bit flag -- exposed in the UI and potentially web accessible.
- */
-const STREAM_WRAPPERS_VISIBLE = 0x0010;
-
-/**
- * Composite stream wrapper bit flags that are usually used as the types.
- */
-
-/**
- * Stream wrapper type flag -- not visible in the UI or accessible via web,
- * but readable and writable. E.g. the temporary directory for uploads.
- */
-define('STREAM_WRAPPERS_HIDDEN', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_WRITE);
-
-/**
- * Stream wrapper type flag -- hidden, readable and writeable using local files.
- */
-define('STREAM_WRAPPERS_LOCAL_HIDDEN', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_HIDDEN);
-
-/**
- * Stream wrapper type flag -- visible, readable and writeable.
- */
-define('STREAM_WRAPPERS_WRITE_VISIBLE', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_WRITE | STREAM_WRAPPERS_VISIBLE);
-
-/**
- * Stream wrapper type flag -- visible and read-only.
- */
-define('STREAM_WRAPPERS_READ_VISIBLE', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_VISIBLE);
-
-/**
- * Stream wrapper type flag -- the default when 'type' is omitted from
- * hook_stream_wrappers(). This does not include STREAM_WRAPPERS_LOCAL,
- * because PHP grants a greater trust level to local files (for example, they
- * can be used in an "include" statement, regardless of the "allow_url_include"
- * setting), so stream wrappers need to explicitly opt-in to this.
- */
-define('STREAM_WRAPPERS_NORMAL', STREAM_WRAPPERS_WRITE_VISIBLE);
-
-/**
- * Stream wrapper type flag -- visible, readable and writeable using local files.
- */
-define('STREAM_WRAPPERS_LOCAL_NORMAL', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_NORMAL);
+require_once DRUPAL_ROOT . '/core/includes/stream_wrappers.inc';
 
 /**
  * @defgroup file File interface
@@ -197,7 +133,7 @@ function file_get_stream_wrappers($filter = STREAM_WRAPPERS_ALL) {
     $existing = stream_get_wrappers();
     foreach ($wrappers as $scheme => $info) {
       // We only register classes that implement our interface.
-      if (in_array('Drupal\Core\StreamWrapper\StreamWrapperInterface', class_implements($info['class']), TRUE)) {
+      if (in_array('DrupalStreamWrapperInterface', class_implements($info['class']), TRUE)) {
         // Record whether we are overriding an existing scheme.
         if (in_array($scheme, $existing, TRUE)) {
           $wrappers[$scheme]['override'] = TRUE;
@@ -366,7 +302,7 @@ function file_stream_wrapper_uri_normalize($uri) {
  *   Returns a new stream wrapper object appropriate for the given URI or FALSE
  *   if no registered handler could be found. For example, a URI of
  *   "private://example.txt" would return a new private stream wrapper object
- *   (Drupal\Core\StreamWrapper\PrivateStream).
+ *   (DrupalPrivateStreamWrapper).
  */
 function file_stream_wrapper_get_instance_by_uri($uri) {
   $scheme = file_uri_scheme($uri);
@@ -398,7 +334,7 @@ function file_stream_wrapper_get_instance_by_uri($uri) {
  * @return
  *   Returns a new stream wrapper object appropriate for the given $scheme.
  *   For example, for the public scheme a stream wrapper object
- *   (Drupal\Core\StreamWrapper\PublicStream).
+ *   (DrupalPublicStreamWrapper).
  *   FALSE is returned if no registered handler could be found.
  */
 function file_stream_wrapper_get_instance_by_scheme($scheme) {
@@ -2186,7 +2122,7 @@ function file_get_mimetype($uri, $mapping = NULL) {
   else {
     // getMimeType() is not implementation specific, so we can directly
     // call it without an instance.
-    return LocalStream::getMimeType($uri, $mapping);
+    return DrupalLocalStreamWrapper::getMimeType($uri, $mapping);
   }
 }
 
@@ -2299,7 +2235,7 @@ function drupal_unlink($uri, $context = NULL) {
  *
  * @todo This function is deprecated, and should be removed wherever possible.
  *
- * @see Drupal\Core\StreamWrapper\StreamWrapperInterface::realpath()
+ * @see DrupalStreamWrapperInterface::realpath()
  * @see http://php.net/manual/function.realpath.php
  * @ingroup php_wrappers
  */

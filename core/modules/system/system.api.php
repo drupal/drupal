@@ -2207,11 +2207,11 @@ function hook_modules_uninstalled($modules) {
  *   then keyed by the following values:
  *   - 'name' A short string to name the wrapper.
  *   - 'class' A string specifying the PHP class that implements the
- *     Drupal\Core\StreamWrapper\StreamWrapperInterface interface.
+ *     DrupalStreamWrapperInterface interface.
  *   - 'description' A string with a short description of what the wrapper does.
  *   - 'type' (Optional) A bitmask of flags indicating what type of streams this
  *     wrapper will access - local or remote, readable and/or writeable, etc.
- *     Many shortcut constants are defined in file.inc. Defaults to
+ *     Many shortcut constants are defined in stream_wrappers.inc. Defaults to
  *     STREAM_WRAPPERS_NORMAL which includes all of these bit flags:
  *     - STREAM_WRAPPERS_READ
  *     - STREAM_WRAPPERS_WRITE
@@ -2225,33 +2225,31 @@ function hook_stream_wrappers() {
   return array(
     'public' => array(
       'name' => t('Public files'),
-      'class' => 'Drupal\Core\StreamWrapper\PublicStream',
+      'class' => 'DrupalPublicStreamWrapper',
       'description' => t('Public local files served by the webserver.'),
       'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
     ),
     'private' => array(
       'name' => t('Private files'),
-      'class' => 'Drupal\Core\StreamWrapper\PrivateStream',
+      'class' => 'DrupalPrivateStreamWrapper',
       'description' => t('Private local files served by Drupal.'),
       'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
     ),
     'temp' => array(
       'name' => t('Temporary files'),
-      'class' => 'Drupal\Core\StreamWrapper\TemporaryStream',
+      'class' => 'DrupalTempStreamWrapper',
       'description' => t('Temporary local files for upload and previews.'),
       'type' => STREAM_WRAPPERS_LOCAL_HIDDEN,
     ),
     'cdn' => array(
       'name' => t('Content delivery network files'),
-      // @todo: Fix the name of this class when we decide on module PSR-0 usage.
-      'class' => 'MyModuleCDNStream',
+      'class' => 'MyModuleCDNStreamWrapper',
       'description' => t('Files served by a content delivery network.'),
       // 'type' can be omitted to use the default of STREAM_WRAPPERS_NORMAL
     ),
     'youtube' => array(
       'name' => t('YouTube video'),
-      // @todo: Fix the name of this class when we decide on module PSR-0 usage.
-      'class' => 'MyModuleYouTubeStream',
+      'class' => 'MyModuleYouTubeStreamWrapper',
       'description' => t('Video streamed from YouTube.'),
       // A module implementing YouTube integration may decide to support using
       // the YouTube API for uploading video, but here, we assume that this
