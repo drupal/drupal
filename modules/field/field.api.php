@@ -567,7 +567,7 @@ function hook_field_delete($entity_type, $entity, $field, $instance, $langcode, 
     // be counted in hook_file_references().
     $item['file_field_type'] = $entity_type;
     $item['file_field_id'] = $id;
-    file_field_delete_file($item, $field);
+    file_field_delete_file($item, $field, $entity_type, $id);
   }
 }
 
@@ -592,10 +592,11 @@ function hook_field_delete($entity_type, $entity, $field, $instance, $langcode, 
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  */
 function hook_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
   foreach ($items as $delta => $item) {
     // For hook_file_references, remember that this file is being deleted.
     $item['file_field_name'] = $field['field_name'];
-    if (file_field_delete_file($item, $field)) {
+    if (file_field_delete_file($item, $field, $entity_type, $id)) {
       $items[$delta] = NULL;
     }
   }
