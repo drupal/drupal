@@ -2,78 +2,29 @@
 
 /**
  * @file
- * Classes used for updating various files in the Drupal webroot. These
- * classes use a FileTransfer object to actually perform the operations.
- * Normally, the FileTransfer is provided when the site owner is redirected to
- * authorize.php as part of a multistep process.
+ * Definition of Drupal\Core\Updater\Updater.
  */
 
-/**
- * Interface for a class which can update a Drupal project.
- *
- * An Updater currently serves the following purposes:
- *   - It can take a given directory, and determine if it can operate on it.
- *   - It can move the contents of that directory into the appropriate place
- *     on the system using FileTransfer classes.
- *   - It can return a list of "next steps" after an update or install.
- *   - In the future, it will most likely perform some of those steps as well.
- */
-interface DrupalUpdaterInterface {
-
-  /**
-   * Checks if the project is installed.
-   *
-   * @return bool
-   */
-  public function isInstalled();
-
-  /**
-   * Returns the system name of the project.
-   *
-   * @param string $directory
-   *  A directory containing a project.
-   */
-  public static function getProjectName($directory);
-
-  /**
-   * @return string
-   *   An absolute path to the default install location.
-   */
-  public function getInstallDirectory();
-
-  /**
-   * Determine if the Updater can handle the project provided in $directory.
-   *
-   * @todo: Provide something more rational here, like a project spec file.
-   *
-   * @param string $directory
-   *
-   * @return bool
-   *   TRUE if the project is installed, FALSE if not.
-   */
-  public static function canUpdateDirectory($directory);
-
-  /**
-   * Actions to run after an install has occurred.
-   */
-  public function postInstall();
-
-  /**
-   * Actions to run after an update has occurred.
-   */
-  public function postUpdate();
-}
+namespace Drupal\Core\Updater;
 
 /**
- * Base class for Updaters used in Drupal.
+ * Defines the base class for Updaters used in Drupal.
  */
 class Updater {
 
   /**
-   * @var string $source Directory to install from.
+   * Directory to install from.
+   *
+   * @var string
    */
   public $source;
 
+  /**
+   * Constructs a new updater.
+   *
+   * @param string $source
+   *   Directory to install from.
+   */
   public function __construct($source) {
     $this->source = $source;
     $this->name = self::getProjectName($source);
@@ -81,7 +32,7 @@ class Updater {
   }
 
   /**
-   * Return an Updater of the appropriate type depending on the source.
+   * Returns an Updater of the appropriate type depending on the source.
    *
    * If a directory is provided which contains a module, will return a
    * ModuleUpdater.
@@ -89,7 +40,10 @@ class Updater {
    * @param string $source
    *   Directory of a Drupal project.
    *
-   * @return Updater
+   * @return Drupal\Core\Updater\Updater
+   *   A new Drupal\Core\Updater\Updater object.
+   *
+   * @throws Drupal\Core\Updater\UpdaterException
    */
   public static function factory($source) {
     if (is_dir($source)) {
@@ -102,13 +56,15 @@ class Updater {
   }
 
   /**
-   * Determine which Updater class can operate on the given directory.
+   * Determines which Updater class can operate on the given directory.
    *
    * @param string $directory
    *   Extracted Drupal project.
    *
    * @return string
    *   The class name which can work with this project type.
+   *
+   * @throws Drupal\Core\Updater\UpdaterException
    */
   public static function getUpdaterFromDirectory($directory) {
     // Gets a list of possible implementing classes.
@@ -123,7 +79,7 @@ class Updater {
   }
 
   /**
-   * Figure out what the most important (or only) info file is in a directory.
+   * Determines what the most important (or only) info file is in a directory.
    *
    * Since there is no enforcement of which info file is the project's "main"
    * info file, this will get one with the same name as the directory, or the
@@ -152,7 +108,7 @@ class Updater {
   }
 
   /**
-   * Get the name of the project directory (basename).
+   * Gets the name of the project directory (basename).
    *
    * @todo: It would be nice, if projects contained an info file which could
    *        provide their canonical name.
@@ -167,13 +123,15 @@ class Updater {
   }
 
   /**
-   * Return the project name from a Drupal info file.
+   * Returns the project name from a Drupal info file.
    *
    * @param string $directory
    *   Directory to search for the info file.
    *
    * @return string
    *   The title of the project.
+   *
+   * @throws Drupal\Core\Updater\UpdaterException
    */
   public static function getProjectTitle($directory) {
     $info_file = self::findInfoFile($directory);
@@ -188,7 +146,7 @@ class Updater {
   }
 
   /**
-   * Store the default parameters for the Updater.
+   * Stores the default parameters for the Updater.
    *
    * @param array $overrides
    *   An array of overrides for the default parameters.
@@ -206,9 +164,9 @@ class Updater {
   }
 
   /**
-   * Updates a Drupal project, returns a list of next actions.
+   * Updates a Drupal project and returns a list of next actions.
    *
-   * @param FileTransfer $filetransfer
+   * @param Drupal\Core\FileTransfer\FileTransferInterface $filetransfer
    *   Object that is a child of FileTransfer. Used for moving files
    *   to the server.
    * @param array $overrides
@@ -216,6 +174,9 @@ class Updater {
    *
    * @return array
    *   An array of links which the user may need to complete the update
+   *
+   * @throws Drupal\Core\Updater\UpdaterException
+   * @throws Drupal\Core\Updater\UpdaterFileTransferException
    */
   public function update(&$filetransfer, $overrides = array()) {
     try {
@@ -264,13 +225,15 @@ class Updater {
   /**
    * Installs a Drupal project, returns a list of next actions.
    *
-   * @param FileTransfer $filetransfer
+   * @param Drupal\Core\FileTransfer\FileTransferInterface $filetransfer
    *   Object that is a child of FileTransfer.
    * @param array $overrides
    *   An array of settings to override defaults; see self::getInstallArgs().
    *
    * @return array
    *   An array of links which the user may need to complete the install.
+   *
+   * @throws Drupal\Core\Updater\UpdaterFileTransferException
    */
   public function install(&$filetransfer, $overrides = array()) {
     try {
@@ -298,12 +261,14 @@ class Updater {
   }
 
   /**
-   * Make sure the installation parent directory exists and is writable.
+   * Makes sure the installation parent directory exists and is writable.
    *
-   * @param FileTransfer $filetransfer
+   * @param Drupal\Core\FileTransfer\FileTransferInterface $filetransfer
    *   Object which is a child of FileTransfer.
    * @param string $directory
    *   The installation directory to prepare.
+   *
+   * @throws Drupal\Core\Updater\UpdaterException
    */
   public function prepareInstallDirectory(&$filetransfer, $directory) {
     // Make the parent dir writable if need be and create the dir.
@@ -341,9 +306,9 @@ class Updater {
   }
 
   /**
-   * Ensure that a given directory is world readable.
+   * Ensures that a given directory is world readable.
    *
-   * @param FileTransfer $filetransfer
+   * @param Drupal\Core\FileTransfer\FileTransferInterface $filetransfer
    *   Object which is a child of FileTransfer.
    * @param string $path
    *   The file path to make world readable.
@@ -359,7 +324,7 @@ class Updater {
   }
 
   /**
-   * Perform a backup.
+   * Performs a backup.
    *
    * @todo Not implemented.
    */
@@ -367,26 +332,26 @@ class Updater {
   }
 
   /**
-   * Return the full path to a directory where backups should be written.
+   * Returns the full path to a directory where backups should be written.
    */
   public function getBackupDir() {
     return file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath();
   }
 
   /**
-   * Perform actions after new code is updated.
+   * Performs actions after new code is updated.
    */
   public function postUpdate() {
   }
 
   /**
-   * Perform actions after installation.
+   * Performs actions after installation.
    */
   public function postInstall() {
   }
 
   /**
-   * Return an array of links to pages that should be visited post operation.
+   * Returns an array of links to pages that should be visited post operation.
    *
    * @return array
    *   Links which provide actions to take after the install is finished.
@@ -396,7 +361,7 @@ class Updater {
   }
 
   /**
-   * Return an array of links to pages that should be visited post operation.
+   * Returns an array of links to pages that should be visited post operation.
    *
    * @return array
    *   Links which provide actions to take after the update is finished.
@@ -404,24 +369,4 @@ class Updater {
   public function postUpdateTasks() {
     return array();
   }
-}
-
-/**
- * Exception class for the Updater class hierarchy.
- *
- * This is identical to the base Exception class, we just give it a more
- * specific name so that call sites that want to tell the difference can
- * specifically catch these exceptions and treat them differently.
- */
-class UpdaterException extends Exception {
-}
-
-/**
- * Child class of UpdaterException that indicates a FileTransfer exception.
- *
- * We have to catch FileTransfer exceptions and wrap those in t(), since
- * FileTransfer is so low-level that it doesn't use any Drupal APIs and none
- * of the strings are translated.
- */
-class UpdaterFileTransferException extends UpdaterException {
 }
