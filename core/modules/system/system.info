@@ -7,6 +7,7 @@ files[] = system.archiver.inc
 files[] = system.mail.inc
 files[] = system.queue.inc
 files[] = system.tar.inc
+files[] = system.updater.inc
 files[] = system.test
 required = TRUE
 configure = admin/config/system

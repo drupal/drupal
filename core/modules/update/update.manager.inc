@@ -35,8 +35,6 @@
  * into the live web root.
  */
 
-use Drupal\Core\Updater\Updater;
-
 /**
  * @defgroup update_manager_update Update manager: update
  * @{
@@ -395,10 +393,9 @@ function update_manager_update_ready_form($form, &$form_state) {
  *
  * If the site administrator requested that the site is put offline during the
  * update, do so now. Otherwise, pull information about all the required
- * updates out of the SESSION, figure out what Drupal\Core\Updater\Updater class
- * is needed for each one, generate an array of update operations to perform,
- * and hand it all off to system_authorized_init(), then redirect to
- * authorize.php.
+ * updates out of the SESSION, figure out what Updater class is needed for
+ * each one, generate an array of update operations to perform, and hand it
+ * all off to system_authorized_init(), then redirect to authorize.php.
  *
  * @see update_authorize_run_update()
  * @see system_authorized_init()
@@ -603,10 +600,10 @@ function update_manager_install_form_validate($form, &$form_state) {
  * Either downloads the file specified in the URL to a temporary cache, or
  * uploads the file attached to the form, then attempts to extract the archive
  * into a temporary location and verify it. Instantiate the appropriate
- * Drupal\Core\Updater\Updater class for this project and make sure it is not
- * already installed in the live webroot. If everything is successful, setup an
- * operation to run via authorize.php which will copy the extracted files from
- * the temporary location into the live site.
+ * Updater class for this project and make sure it is not already installed in
+ * the live webroot. If everything is successful, setup an operation to run
+ * via authorize.php which will copy the extracted files from the temporary
+ * location into the live site.
  *
  * @see update_authorize_run_install()
  * @see system_authorized_init()
