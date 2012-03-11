@@ -525,56 +525,56 @@ class CommentInterfaceTest extends CommentHelperCase {
 
       // Verify classes if the comment is visible for the current user.
       if ($case['comment_status'] == COMMENT_PUBLISHED || $case['user'] == 'admin') {
-        // Verify the comment-by-anonymous class.
-        $comments = $this->xpath('//*[contains(@class, "comment-by-anonymous")]');
+        // Verify the by-anonymous class.
+        $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "by-anonymous")]');
         if ($case['comment_uid'] == 0) {
-          $this->assertTrue(count($comments) == 1, 'comment-by-anonymous class found.');
+          $this->assertTrue(count($comments) == 1, 'by-anonymous class found.');
         }
         else {
-          $this->assertFalse(count($comments), 'comment-by-anonymous class not found.');
+          $this->assertFalse(count($comments), 'by-anonymous class not found.');
         }
 
-        // Verify the comment-by-node-author class.
-        $comments = $this->xpath('//*[contains(@class, "comment-by-node-author")]');
+        // Verify the by-node-author class.
+        $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "by-node-author")]');
         if ($case['comment_uid'] > 0 && $case['comment_uid'] == $case['node_uid']) {
-          $this->assertTrue(count($comments) == 1, 'comment-by-node-author class found.');
+          $this->assertTrue(count($comments) == 1, 'by-node-author class found.');
         }
         else {
-          $this->assertFalse(count($comments), 'comment-by-node-author class not found.');
+          $this->assertFalse(count($comments), 'by-node-author class not found.');
         }
 
-        // Verify the comment-by-viewer class.
-        $comments = $this->xpath('//*[contains(@class, "comment-by-viewer")]');
+        // Verify the by-viewer class.
+        $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "by-viewer")]');
         if ($case['comment_uid'] > 0 && $case['comment_uid'] == $case['user_uid']) {
-          $this->assertTrue(count($comments) == 1, 'comment-by-viewer class found.');
+          $this->assertTrue(count($comments) == 1, 'by-viewer class found.');
         }
         else {
-          $this->assertFalse(count($comments), 'comment-by-viewer class not found.');
+          $this->assertFalse(count($comments), 'by-viewer class not found.');
         }
       }
 
-      // Verify the comment-unpublished class.
-      $comments = $this->xpath('//*[contains(@class, "comment-unpublished")]');
+      // Verify the unpublished class.
+      $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "unpublished")]');
       if ($case['comment_status'] == COMMENT_NOT_PUBLISHED && $case['user'] == 'admin') {
-        $this->assertTrue(count($comments) == 1, 'comment-unpublished class found.');
+        $this->assertTrue(count($comments) == 1, 'unpublished class found.');
       }
       else {
-        $this->assertFalse(count($comments), 'comment-unpublished class not found.');
+        $this->assertFalse(count($comments), 'unpublished class not found.');
       }
 
-      // Verify the comment-new class.
+      // Verify the new class.
       if ($case['comment_status'] == COMMENT_PUBLISHED || $case['user'] == 'admin') {
-        $comments = $this->xpath('//*[contains(@class, "comment-new")]');
+        $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "new")]');
         if ($case['user'] != 'anonymous') {
-          $this->assertTrue(count($comments) == 1, 'comment-new class found.');
+          $this->assertTrue(count($comments) == 1, 'new class found.');
 
-          // Request the node again. The comment-new class should disappear.
+          // Request the node again. The new class should disappear.
           $this->drupalGet('node/' . $node->nid);
-          $comments = $this->xpath('//*[contains(@class, "comment-new")]');
-          $this->assertFalse(count($comments), 'comment-new class not found.');
+          $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "new")]');
+          $this->assertFalse(count($comments), 'new class not found.');
         }
         else {
-          $this->assertFalse(count($comments), 'comment-new class not found.');
+          $this->assertFalse(count($comments), 'new class not found.');
         }
       }
     }
@@ -1005,7 +1005,7 @@ class CommentPreviewTest extends CommentHelperCase {
     $this->assertLink($test_signature);
 
     // Check that the user picture is displayed.
-    $this->assertFieldByXPath("//div[contains(@class, 'comment-preview')]//div[contains(@class, 'user-picture')]//img", NULL, 'User picture displayed.');
+    $this->assertFieldByXPath("//div[contains(@class, 'preview')]//div[contains(@class, 'user-picture')]//img", NULL, 'User picture displayed.');
   }
 
   /**
