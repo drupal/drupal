@@ -9,6 +9,8 @@
  * the rest of the update module code.
  */
 
+use Drupal\Core\Updater\UpdaterException;
+
 /**
  * Callback invoked by authorize.php to update existing projects.
  *
@@ -19,7 +21,8 @@
  *   A nested array of projects to install into the live webroot, keyed by
  *   project name. Each subarray contains the following keys:
  *   - 'project': The canonical project short name.
- *   - 'updater_name': The name of the Updater class to use for this project.
+ *   - 'updater_name': The name of the Drupal\Core\Updater\Updater class to use
+ *     for this project.
  *   - 'local_url': The locally installed location of new code to update with.
  */
 function update_authorize_run_update($filetransfer, $projects) {
@@ -58,7 +61,8 @@ function update_authorize_run_update($filetransfer, $projects) {
  * @param string $project
  *   The canonical project short name (e.g. {system}.name).
  * @param string $updater_name
- *   The name of the Updater class to use for installing this project.
+ *   The name of the Drupal\Core\Updater\Updater class to use for installing
+ *   this project.
  * @param string $local_url
  *   The URL to the locally installed temp directory where the project has
  *   already been downloaded and extracted into.
@@ -95,7 +99,8 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
  * @param string $project
  *   The canonical short name of the project being installed.
  * @param string $updater_name
- *   The name of the Updater class to use for installing this project.
+ *   The name of the Drupal\Core\Updater\Updater class to use for installing
+ *   this project.
  * @param string $local_url
  *   The URL to the locally installed temp directory where the project has
  *   already been downloaded and extracted into.

@@ -163,6 +163,15 @@ const DRUPAL_CACHE_PER_PAGE = 0x0004;
 const DRUPAL_CACHE_GLOBAL = 0x0008;
 
 /**
+ * The delimiter used to split plural strings.
+ *
+ * This is the ETX (End of text) character and is used as a minimal means to
+ * separate singular and plural variants in source and translation text. It
+ * was found to be the most compatible delimiter for the supported databases.
+ */
+const LOCALE_PLURAL_DELIMITER = "\03";
+
+/**
  * Adds content to a specified region.
  *
  * @param $region
@@ -1719,27 +1728,34 @@ function format_xml_elements($array) {
  */
 function format_plural($count, $singular, $plural, array $args = array(), array $options = array()) {
   $args['@count'] = $count;
+  // Join both forms to search a translation.
+  $tranlatable_string = implode(LOCALE_PLURAL_DELIMITER, array($singular, $plural));
+  // Translate as usual.
+  $translated_strings = t($tranlatable_string, $args, $options);
+  // Split joined translation strings into array.
+  $translated_array = explode(LOCALE_PLURAL_DELIMITER, $translated_strings);
+
   if ($count == 1) {
-    return t($singular, $args, $options);
+    return $translated_array[0];
   }
 
   // Get the plural index through the gettext formula.
+  // @todo implement static variable to minimize function_exists() usage.
   $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, isset($options['langcode']) ? $options['langcode'] : NULL) : -1;
-  // If the index cannot be computed, use the plural as a fallback (which
-  // allows for most flexiblity with the replaceable @count value).
-  if ($index < 0) {
-    return t($plural, $args, $options);
+  if ($index == 0) {
+    // Singular form.
+    return $translated_array[0];
   }
   else {
-    switch ($index) {
-      case "0":
-        return t($singular, $args, $options);
-      case "1":
-        return t($plural, $args, $options);
-      default:
-        unset($args['@count']);
-        $args['@count[' . $index . ']'] = $count;
-        return t(strtr($plural, array('@count' => '@count[' . $index . ']')), $args, $options);
+    if (isset($translated_array[$index])) {
+      // N-th plural form.
+      return $translated_array[$index];
+    }
+    else {
+      // If the index cannot be computed or there's no translation, use
+      // the second plural form as a fallback (which allows for most flexiblity
+      // with the replaceable @count value).
+      return $translated_array[1];
     }
   }
 }
@@ -7786,9 +7802,10 @@ function archiver_get_archiver($file) {
  * file system, for example to update modules that have newer releases, or to
  * install a new theme.
  *
- * @return
+ * @return array
  *   The Drupal Updater class registry.
  *
+ * @see Drupal\Core\Updater\Updater
  * @see hook_updater_info()
  * @see hook_updater_info_alter()
  */

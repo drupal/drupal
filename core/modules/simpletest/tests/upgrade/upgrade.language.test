@@ -104,6 +104,23 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
     // renamed.
     $current_weights = variable_get('locale_language_negotiation_methods_weight_language_interface', array());
     $this->assertTrue(serialize($expected_weights) == serialize($current_weights), t('Language negotiation method weights upgraded.'));
+
+    // Look up migrated plural string.
+    $source_string = db_query('SELECT * FROM {locales_source} WHERE lid = 22')->fetchObject();
+    $this->assertEqual($source_string->source, implode(LOCALE_PLURAL_DELIMITER, array('1 byte', '@count bytes')));
+
+    $translation_string = db_query("SELECT * FROM {locales_target} WHERE lid = 22 AND language = 'hr'")->fetchObject();
+    $this->assertEqual($translation_string->translation, implode(LOCALE_PLURAL_DELIMITER, array('@count bajt', '@count bajta', '@count bajtova')));
+    $this->assertTrue(!isset($translation_string->plural), 'Chained plural indicator removed.');
+    $this->assertTrue(!isset($translation_string->plid), 'Chained plural indicator removed.');
+
+    $source_string = db_query('SELECT * FROM {locales_source} WHERE lid IN (23, 24)')->fetchObject();
+    $this->assertTrue(empty($source_string), 'Individual plural variant source removed');
+    $translation_string = db_query("SELECT * FROM {locales_target} WHERE lid IN (23, 24)")->fetchObject();
+    $this->assertTrue(empty($translation_string), 'Individual plural variant translation removed');
+
+    $translation_string = db_query("SELECT * FROM {locales_target} WHERE lid = 22 AND language = 'ca'")->fetchObject();
+    $this->assertEqual($translation_string->translation, implode(LOCALE_PLURAL_DELIMITER, array('1 byte', '@count bytes')));
   }
 
   /**

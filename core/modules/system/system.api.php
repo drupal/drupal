@@ -4042,9 +4042,9 @@ function hook_batch_alter(&$batch) {
 /**
  * Provide information on Updaters (classes that can update Drupal).
  *
- * An Updater is a class that knows how to update various parts of the Drupal
- * file system, for example to update modules that have newer releases, or to
- * install a new theme.
+ * Drupal\Core\Updater\Updater is a class that knows how to update various parts
+ * of the Drupal file system, for example to update modules that have newer
+ * releases, or to install a new theme.
  *
  * @return
  *   An associative array of information about the updater(s) being provided.
@@ -4066,12 +4066,12 @@ function hook_batch_alter(&$batch) {
 function hook_updater_info() {
   return array(
     'module' => array(
-      'class' => 'ModuleUpdater',
+      'class' => 'Drupal\Core\Updater\Module',
       'name' => t('Update modules'),
       'weight' => 0,
     ),
     'theme' => array(
-      'class' => 'ThemeUpdater',
+      'class' => 'Drupal\Core\Updater\Theme',
       'name' => t('Update themes'),
       'weight' => 0,
     ),

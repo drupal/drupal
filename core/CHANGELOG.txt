@@ -31,6 +31,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Made interface translation directly accessible from language list.
       * Centralized interface translation import to one directory.
       * Drupal can now be translated to English and English can be deleted.
+      * Added support for singular/plural discovery and translation.
     * Improved content language support:
       * Freely orderable language selector in forms.
       * Made it possible to assign language to taxonomy terms, vocabularies
