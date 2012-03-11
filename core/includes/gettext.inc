@@ -173,7 +173,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
       }
 
       // Append the plural form to the current entry.
-      $current['msgid'] .= "\0" . $quoted;
+      $current['msgid'] .= LOCALE_PLURAL_DELIMITER . $quoted;
 
       $context = 'MSGID_PLURAL';
     }
@@ -390,8 +390,10 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
 
     // Store the string we got in the database.
     case 'db-store':
-      // We got header information.
+
       if ($value['msgid'] == '') {
+        // If 'msgid' is empty, it means we got values for the header of the
+        // file as per the structure of the Gettext format.
         $locale_plurals = variable_get('locale_translation_plurals', array());
         if (($mode != LOCALE_IMPORT_KEEP) || empty($locale_plurals[$lang]['plurals'])) {
           // Since we only need to parse the header if we ought to update the
@@ -413,32 +415,25 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
       }
 
       else {
-        // Some real string to import.
+        // Found a string to store, clean up and prepare the data.
         $comments = _locale_import_shorten_comments(empty($value['#']) ? array() : $value['#']);
 
-        if (strpos($value['msgid'], "\0")) {
-          // This string has plural versions.
-          $english = explode("\0", $value['msgid'], 2);
-          $entries = array_keys($value['msgstr']);
-          for ($i = 3; $i <= count($entries); $i++) {
-            $english[] = $english[1];
-          }
-          $translation = array_map('_locale_import_append_plural', $value['msgstr'], $entries);
-          $english = array_map('_locale_import_append_plural', $english, $entries);
-          foreach ($translation as $key => $trans) {
-            if ($key == 0) {
-              $plid = 0;
-            }
-            $plid = _locale_import_one_string_db($report, $lang, isset($value['msgctxt']) ? $value['msgctxt'] : '', $english[$key], $trans, $comments, $mode, $plid, $key);
-          }
+        if (is_array($value['msgstr'])) {
+          // Sort plural variants by their form index.
+          ksort($value['msgstr']);
+          // Serialize plural variants in one string by LOCALE_PLURAL_DELIMITER.
+          $value['msgstr'] = implode(LOCALE_PLURAL_DELIMITER, $value['msgstr']);
         }
 
-        else {
-          // A simple string to import.
-          $english = $value['msgid'];
-          $translation = $value['msgstr'];
-          _locale_import_one_string_db($report, $lang, isset($value['msgctxt']) ? $value['msgctxt'] : '', $english, $translation, $comments, $mode);
-        }
+        _locale_import_one_string_db(
+          $report,
+          $lang,
+          isset($value['msgctxt']) ? $value['msgctxt'] : '',
+          $value['msgid'],
+          $value['msgstr'],
+          $comments,
+          $mode
+        );
       }
   } // end of db-store operation
 }
@@ -461,15 +456,11 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
  *   Location value to save with source string.
  * @param $mode
  *   Import mode to use, LOCALE_IMPORT_KEEP or LOCALE_IMPORT_OVERWRITE.
- * @param $plid
- *   Optional plural ID to use.
- * @param $plural
- *   Optional plural value to use.
  *
  * @return
  *   The string ID of the existing string modified or the new string added.
  */
-function _locale_import_one_string_db(&$report, $langcode, $context, $source, $translation, $location, $mode, $plid = 0, $plural = 0) {
+function _locale_import_one_string_db(&$report, $langcode, $context, $source, $translation, $location, $mode) {
   $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = :context", array(':source' => $source, ':context' => $context))->fetchField();
 
   if (!empty($translation)) {
@@ -497,8 +488,6 @@ function _locale_import_one_string_db(&$report, $langcode, $context, $source, $t
             'lid' => $lid,
             'language' => $langcode,
             'translation' => $translation,
-            'plid' => $plid,
-            'plural' => $plural,
           ))
           ->execute();
 
@@ -509,8 +498,6 @@ function _locale_import_one_string_db(&$report, $langcode, $context, $source, $t
         db_update('locales_target')
           ->fields(array(
             'translation' => $translation,
-            'plid' => $plid,
-            'plural' => $plural,
           ))
           ->condition('language', $langcode)
           ->condition('lid', $lid)
@@ -534,8 +521,6 @@ function _locale_import_one_string_db(&$report, $langcode, $context, $source, $t
            'lid' => $lid,
            'language' => $langcode,
            'translation' => $translation,
-           'plid' => $plid,
-           'plural' => $plural
         ))
         ->execute();
 
@@ -547,8 +532,6 @@ function _locale_import_one_string_db(&$report, $langcode, $context, $source, $t
     db_delete('locales_target')
       ->condition('language', $langcode)
       ->condition('lid', $lid)
-      ->condition('plid', $plid)
-      ->condition('plural', $plural)
       ->execute();
 
     $report['deletes']++;
@@ -791,27 +774,6 @@ function _locale_import_tokenize_formula($formula) {
 }
 
 /**
- * Adds count indices to a string.
- *
- * Callback for array_map() within _locale_import_one_string().
- *
- * @param $entry
- *   An array element.
- * @param $key
- *   Index of the array element.
- */
-function _locale_import_append_plural($entry, $key) {
-  // No modifications for 0, 1
-  if ($key == 0 || $key == 1) {
-    return $entry;
-  }
-
-  // First remove any possibly false indices, then add new ones
-  $entry = preg_replace('/(@count)\[[0-9]\]/', '\\1', $entry);
-  return preg_replace('/(@count)/', "\\1[$key]", $entry);
-}
-
-/**
  * Generates a short, one-string version of the passed comment array.
  *
  * @param $comment
@@ -872,28 +834,19 @@ function _locale_import_parse_quoted($string) {
  */
 function _locale_export_get_strings($language = NULL) {
   if (isset($language)) {
-    $result = db_query("SELECT s.lid, s.source, s.context, s.location, t.translation, t.plid, t.plural FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language ORDER BY t.plid, t.plural", array(':language' => $language->langcode));
+    $result = db_query("SELECT s.lid, s.source, s.context, s.location, t.translation FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language", array(':language' => $language->langcode));
   }
   else {
-    $result = db_query("SELECT s.lid, s.source, s.context, s.location, t.plid, t.plural FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid ORDER BY t.plid, t.plural");
+    $result = db_query("SELECT s.lid, s.source, s.context, s.location FROM {locales_source} s");
   }
   $strings = array();
   foreach ($result as $child) {
-    $string = array(
+    $strings[$child->lid] = array(
       'comment'     => $child->location,
       'source'      => $child->source,
       'context'     => $child->context,
       'translation' => isset($child->translation) ? $child->translation : '',
     );
-    if ($child->plid) {
-      // Has a parent lid. Since we process in the order of plids,
-      // we already have the parent in the array, so we can add the
-      // lid to the next plural version to it. This builds a linked
-      // list of plurals.
-      $string['child'] = TRUE;
-      $strings[$child->plid]['plural'] = $child->lid;
-    }
-    $strings[$child->lid] = $string;
   }
   return $strings;
 }
@@ -933,6 +886,12 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
       $header .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
       if (!empty($locale_plurals[$language->langcode]['formula'])) {
         $header .= "\"Plural-Forms: nplurals=" . $locale_plurals[$language->langcode]['plurals'] . "; plural=" . strtr($locale_plurals[$language->langcode]['formula'], array('$' => '')) . ";\\n\"\n";
+        // Remember number of plural variants to optimize the export.
+        $nplurals = $locale_plurals[$language->langcode]['plurals'];
+      }
+      else {
+        // Remember we did not have a plural number for the export.
+        $nplurals = 0;
       }
     }
     else {
@@ -956,41 +915,38 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
   $output = $header . "\n";
 
   foreach ($strings as $lid => $string) {
-    // Only process non-children, children are output below their parent.
-    if (!isset($string['child'])) {
-      if ($string['comment']) {
-        $output .= '#: ' . $string['comment'] . "\n";
-      }
-      if (!empty($string['context'])) {
-        $output .= 'msgctxt ' . _locale_export_string($string['context']);
-      }
-      $output .= 'msgid ' . _locale_export_string($string['source']);
-      if (!empty($string['plural'])) {
-        $plural = $string['plural'];
-        $output .= 'msgid_plural ' . _locale_export_string($strings[$plural]['source']);
-        if (isset($language)) {
-          $translation = $string['translation'];
-          for ($i = 0; $i < $locale_plurals[$language->langcode]['plurals']; $i++) {
-            $output .= 'msgstr[' . $i . '] ' . _locale_export_string($translation);
-            if ($plural) {
-              $translation = _locale_export_remove_plural($strings[$plural]['translation']);
-              $plural = isset($strings[$plural]['plural']) ? $strings[$plural]['plural'] : 0;
-            }
-            else {
-              $translation = '';
-            }
+    if ($string['comment']) {
+      $output .= '#: ' . $string['comment'] . "\n";
+    }
+    if (!empty($string['context'])) {
+      $output .= 'msgctxt ' . _locale_export_string($string['context']);
+    }
+    if (strpos($string['source'], LOCALE_PLURAL_DELIMITER) !== FALSE) {
+      // Export plural string.
+      $export_array = explode(LOCALE_PLURAL_DELIMITER, $string['source']);
+      $output .= 'msgid ' . _locale_export_string($export_array[0]);
+      $output .= 'msgid_plural ' . _locale_export_string($export_array[1]);
+      if (isset($language)) {
+        $export_array = explode(LOCALE_PLURAL_DELIMITER, $string['translation']);
+        for ($i = 0; $i < $nplurals; $i++) {
+          if (isset($export_array[$i])) {
+            $output .= 'msgstr[' . $i . '] ' . _locale_export_string($export_array[$i]);
           }
-        }
-        else {
-          $output .= 'msgstr[0] ""' . "\n";
-          $output .= 'msgstr[1] ""' . "\n";
+          else {
+            $output .= 'msgstr[' . $i . '] ""' . "\n";
+          }
         }
       }
       else {
-        $output .= 'msgstr ' . _locale_export_string($string['translation']);
+        $output .= 'msgstr[0] ""' . "\n";
+        $output .= 'msgstr[1] ""' . "\n";
       }
-      $output .= "\n";
     }
+    else {
+      $output .= 'msgid ' . _locale_export_string($string['source']);
+      $output .= 'msgstr ' . _locale_export_string($string['translation']);
+    }
+    $output .= "\n";
   }
   return $output;
 }
@@ -1084,13 +1040,6 @@ function _locale_export_wrap($str, $len) {
   $return[] = $cur;
 
   return implode("\n", $return);
-}
-
-/**
- * Removes plural index information from a string.
- */
-function _locale_export_remove_plural($entry) {
-  return preg_replace('/(@count)\[[0-9]\]/', '\\1', $entry);
 }
 
 /**

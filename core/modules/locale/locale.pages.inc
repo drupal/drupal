@@ -92,7 +92,7 @@ function _locale_translate_seek() {
   $rows = array();
   foreach ($strings as $lid => $string) {
     $rows[] = array(
-      array('data' => check_plain(truncate_utf8($string['source'], 150, FALSE, TRUE)) . '<br /><small>' . $string['location'] . '</small>'),
+      array('data' => check_plain(truncate_utf8(str_replace(LOCALE_PLURAL_DELIMITER, ', ', $string['source']), 150, FALSE, TRUE)) . '<br /><small>' . $string['location'] . '</small>'),
       $string['context'],
       array('data' => _locale_translate_language_list($string['languages'], $limit_language), 'align' => 'center'),
       array('data' => l(t('edit'), "admin/config/regional/translate/edit/$lid", array('query' => drupal_get_destination())), 'class' => array('nowrap')),
@@ -278,13 +278,37 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
     drupal_set_message(t('String not found.'), 'error');
     drupal_goto('admin/config/regional/translate/translate');
   }
-
-  // Add original text to the top and some values for form altering.
-  $form['original'] = array(
-    '#type'  => 'item',
-    '#title' => t('Original text'),
-    '#markup' => check_plain(wordwrap($source->source, 0)),
-  );
+  // Split source to work with plural values.
+  $source_array = explode(LOCALE_PLURAL_DELIMITER, $source->source);
+  if (count($source_array) == 1) {
+    // Add original text value and mark as non-plural.
+    $form['plural'] = array(
+      '#type' => 'value',
+      '#value' => 0
+    );
+    $form['original'] = array(
+      '#type'  => 'item',
+      '#title' => t('Original text'),
+      '#markup' => check_plain($source_array[0]),
+    );
+  }
+  else {
+    // Add original text value and mark as plural.
+    $form['plural'] = array(
+      '#type' => 'value',
+      '#value' => 1
+    );
+    $form['original_singular'] = array(
+      '#type'  => 'item',
+      '#title' => t('Original singular form'),
+      '#markup' => check_plain($source_array[0]),
+    );
+    $form['original_plural'] = array(
+      '#type'  => 'item',
+      '#title' => t('Original plural form'),
+      '#markup' => check_plain($source_array[1]),
+    );
+  }
   if (!empty($source->context)) {
     $form['context'] = array(
       '#type' => 'item',
@@ -307,22 +331,68 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
   if (!locale_translate_english()) {
     unset($languages['en']);
   }
-  $form['translations'] = array('#tree' => TRUE);
+  // Store languages to iterate for validation and submission of the form.
+  $form_state['langcodes'] = array_keys($languages);
+  $plural_formulas = variable_get('locale_translation_plurals', array());
+
+  $form['translations'] = array(
+    '#type' => 'vertical_tabs',
+    '#tree' => TRUE
+  );
+
   // Approximate the number of rows to use in the default textarea.
-  $rows = min(ceil(str_word_count($source->source) / 12), 10);
+  $rows = min(ceil(str_word_count($source_array[0]) / 12), 10);
   foreach ($languages as $langcode => $language) {
     $form['translations'][$langcode] = array(
-      '#type' => 'textarea',
+      '#type' => 'fieldset',
       '#title' => $language->name,
-      '#rows' => $rows,
-      '#default_value' => '',
     );
+    if (empty($form['plural']['#value'])) {
+      $form['translations'][$langcode][0] = array(
+        '#type' => 'textarea',
+        '#title' => $language->name,
+        '#rows' => $rows,
+        '#default_value' => '',
+      );
+    }
+    else {
+      // Dealing with plural strings.
+      if (isset($plural_formulas[$langcode]['plurals']) && $plural_formulas[$langcode]['plurals'] > 1) {
+        // Add a textarea for each plural variant.
+        for ($i = 0; $i < $plural_formulas[$langcode]['plurals']; $i++) {
+          $form['translations'][$langcode][$i] = array(
+            '#type' => 'textarea',
+            '#title' => ($i == 0 ? t('Singular form') : format_plural($i, 'First plural form', '@count. plural form')),
+            '#rows' => $rows,
+            '#default_value' => '',
+          );
+        }
+      }
+      else {
+        // Fallback for unknown number of plurals.
+        $form['translations'][$langcode][0] = array(
+          '#type' => 'textarea',
+          '#title' => t('Sigular form'),
+          '#rows' => $rows,
+          '#default_value' => '',
+        );
+        $form['translations'][$langcode][1] = array(
+          '#type' => 'textarea',
+          '#title' => t('Plural form'),
+          '#rows' => $rows,
+          '#default_value' => '',
+        );
+      }
+    }
   }
 
   // Fetch translations and fill in default values in the form.
   $result = db_query("SELECT DISTINCT translation, language FROM {locales_target} WHERE lid = :lid", array(':lid' => $lid));
   foreach ($result as $translation) {
-    $form['translations'][$translation->language]['#default_value'] = $translation->translation;
+    $translation_array = explode(LOCALE_PLURAL_DELIMITER, $translation->translation);
+    for ($i = 0; $i < count($translation_array); $i++) {
+      $form['translations'][$translation->language][$i]['#default_value'] = $translation_array[$i];
+    }
   }
 
   $form['actions'] = array('#type' => 'actions');
@@ -334,10 +404,12 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
  * Validate string editing form submissions.
  */
 function locale_translate_edit_form_validate($form, &$form_state) {
-  foreach ($form_state['values']['translations'] as $key => $value) {
-    if (!locale_string_is_safe($value)) {
-      form_set_error('translations', t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
-      watchdog('locale', 'Attempted submission of a translation string with disallowed HTML: %string', array('%string' => $value), WATCHDOG_WARNING);
+  foreach ($form_state['langcodes'] as $langcode) {
+    foreach ($form_state['values']['translations'][$langcode] as $key => $value) {
+      if (!locale_string_is_safe($value)) {
+        form_set_error("translations][$langcode][$key", t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
+        watchdog('locale', 'Attempted submission of a translation string with disallowed HTML: %string', array('%string' => $value), WATCHDOG_WARNING);
+      }
     }
   }
 }
@@ -349,9 +421,19 @@ function locale_translate_edit_form_validate($form, &$form_state) {
  */
 function locale_translate_edit_form_submit($form, &$form_state) {
   $lid = $form_state['values']['lid'];
-  foreach ($form_state['values']['translations'] as $key => $value) {
-    $translation = db_query("SELECT translation FROM {locales_target} WHERE lid = :lid AND language = :language", array(':lid' => $lid, ':language' => $key))->fetchField();
-    if (!empty($value)) {
+  foreach ($form_state['langcodes'] as $langcode) {
+    // Serialize plural variants in one string by LOCALE_PLURAL_DELIMITER.
+    $value = implode(LOCALE_PLURAL_DELIMITER, $form_state['values']['translations'][$langcode]);
+    $translation = db_query("SELECT translation FROM {locales_target} WHERE lid = :lid AND language = :language", array(':lid' => $lid, ':language' => $langcode))->fetchField();
+    // No translation when all strings are empty.
+    $has_translation = FALSE;
+    foreach ($form_state['values']['translations'][$langcode] as $string) {
+      if (!empty($string)) {
+        $has_translation = TRUE;
+        break;
+      }
+    }
+    if ($has_translation) {
       // Only update or insert if we have a value to use.
       if (!empty($translation)) {
         db_update('locales_target')
@@ -359,7 +441,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
             'translation' => $value,
           ))
           ->condition('lid', $lid)
-          ->condition('language', $key)
+          ->condition('language', $langcode)
           ->execute();
       }
       else {
@@ -367,7 +449,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
           ->fields(array(
             'lid' => $lid,
             'translation' => $value,
-            'language' => $key,
+            'language' => $langcode,
           ))
           ->execute();
       }
@@ -376,12 +458,12 @@ function locale_translate_edit_form_submit($form, &$form_state) {
       // Empty translation entered: remove existing entry from database.
       db_delete('locales_target')
         ->condition('lid', $lid)
-        ->condition('language', $key)
+        ->condition('language', $langcode)
         ->execute();
     }
 
     // Force JavaScript translation file recreation for this language.
-    _locale_invalidate_js($key);
+    _locale_invalidate_js($langcode);
   }
 
   drupal_set_message(t('The string has been saved.'));

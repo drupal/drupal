@@ -183,6 +183,19 @@ db_insert('languages')->fields(array(
   'weight' => '0',
   'javascript' => '',
 ))
+->values(array(
+  'language' => 'hr',
+  'name' => 'Croatian',
+  'native' => 'Hrvatski',
+  'direction' => '0',
+  'enabled' => '1',
+  'plurals' => '3',
+  'formula' => '((($n%10)==1)&&(($n%100)!=11))?(0):((((($n%10)>=2)&&(($n%10)<=4))&&((($n%100)<10)||(($n%100)>=20)))?(1):2));',
+  'domain' => '',
+  'prefix' => '',
+  'weight' => '0',
+  'javascript' => '',
+))
 ->execute();
 
 // Add locales_source table from locale.install schema and fill with some
@@ -413,6 +426,30 @@ db_insert('locales_source')->fields(array(
   'context' => '',
   'version' => 'none',
 ))
+->values(array(
+  'lid' => '22',
+  'location' => '',
+  'textgroup' => 'default',
+  'source' => '1 byte',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '23',
+  'location' => '',
+  'textgroup' => 'default',
+  'source' => '@count bytes',
+  'context' => '',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '24',
+  'location' => '',
+  'textgroup' => 'default',
+  'source' => '@count[2] bytes',
+  'context' => '',
+  'version' => 'none',
+))
 ->execute();
 
 // Add locales_target table from locale.install schema.
@@ -472,6 +509,49 @@ db_create_table('locales_target', array(
   'module' => 'locale',
   'name' => 'locales_target',
 ));
+db_insert('locales_target')->fields(array(
+  'lid',
+  'translation',
+  'language',
+  'plid',
+  'plural',
+))
+->values(array(
+  'lid' => 22,
+  'translation' => '1 byte',
+  'language' => 'ca',
+  'plid' => 0,
+  'plural' => 0,
+))
+->values(array(
+  'lid' => 23,
+  'translation' => '@count bytes',
+  'language' => 'ca',
+  'plid' => 22,
+  'plural' => 1,
+))
+->values(array(
+  'lid' => 22,
+  'translation' => '@count bajt',
+  'language' => 'hr',
+  'plid' => 0,
+  'plural' => 0,
+))
+->values(array(
+  'lid' => 23,
+  'translation' => '@count bajta',
+  'language' => 'hr',
+  'plid' => 22,
+  'plural' => 1,
+))
+->values(array(
+  'lid' => 24,
+  'translation' => '@count[2] bajtova',
+  'language' => 'hr',
+  'plid' => 23,
+  'plural' => 2,
+))
+->execute();
 
 // Set up variables needed for language support.
 db_insert('variable')->fields(array(
