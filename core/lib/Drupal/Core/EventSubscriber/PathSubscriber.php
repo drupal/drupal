@@ -31,9 +31,16 @@ class PathSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onKernelRequestPathResolve(GetResponseEvent $event) {
+
     $request = $event->getRequest();
 
     $path = ltrim($request->getPathInfo(), '/');
+
+    // Temporary BC shiv to support automated tests that still rely on old-
+    // style dirty URLs.
+    if (isset($_GET['q'])) {
+      $path = $_GET['q'];
+    }
 
     if (empty($path)) {
       // @todo Temporary hack. Fix when configuration is injectable.
