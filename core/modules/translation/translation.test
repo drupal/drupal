@@ -278,7 +278,7 @@ class TranslationTestCase extends DrupalWebTestCase {
    * Installs the specified language, or enables it if it is already installed.
    *
    * @param $language_code
-   *   The language code the check.
+   *   The language code to check.
    */
   function addLanguage($language_code) {
     // Check to make sure that language has not already been installed.
