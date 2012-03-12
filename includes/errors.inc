@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Functions for error handling
+ * Functions for error handling.
  */
 
 /**
@@ -21,7 +21,8 @@ define('ERROR_REPORTING_DISPLAY_SOME', 1);
 define('ERROR_REPORTING_DISPLAY_ALL', 2);
 
 /**
- * Map PHP error constants to watchdog severity levels.
+ * Maps PHP error constants to watchdog severity levels.
+ *
  * The error constants are documented at
  * http://php.net/manual/en/errorfunc.constants.php
  *
@@ -52,7 +53,7 @@ function drupal_error_levels() {
 }
 
 /**
- * Custom PHP error handler.
+ * Provides custom PHP error handling.
  *
  * @param $error_level
  *   The level of the error raised.
@@ -63,7 +64,8 @@ function drupal_error_levels() {
  * @param $line
  *   The line number the error was raised at.
  * @param $context
- *   An array that points to the active symbol table at the point the error occurred.
+ *   An array that points to the active symbol table at the point the error
+ *   occurred.
  */
 function _drupal_error_handler_real($error_level, $message, $filename, $line, $context) {
   if ($error_level & error_reporting()) {
@@ -90,10 +92,11 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
 }
 
 /**
- * Decode an exception, especially to retrive the correct caller.
+ * Decodes an exception and retrieves the correct caller.
  *
  * @param $exception
  *   The exception object that was thrown.
+ *
  * @return
  *   An error in the format expected by _drupal_log_error().
  */
@@ -136,7 +139,7 @@ function _drupal_decode_exception($exception) {
 }
 
 /**
- * Render an error message for an exception without any possibility of a further exception occurring.
+ * Renders an exception error message without further exceptions.
  *
  * @param $exception
  *   The exception object that was thrown.
@@ -171,12 +174,12 @@ function error_displayable($error = NULL) {
 }
 
 /**
- * Log a PHP error or exception, display an error page in fatal cases.
+ * Logs a PHP error or exception and displays an error page in fatal cases.
  *
  * @param $error
  *   An array with the following keys: %type, !message, %function, %file, %line
- *   and severity_level. All the parameters are plain-text, with the exception of
- *   !message, which needs to be a safe HTML string.
+ *   and severity_level. All the parameters are plain-text, with the exception
+ *   of !message, which needs to be a safe HTML string.
  * @param $fatal
  *   TRUE if the error is fatal.
  */
@@ -263,6 +266,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
  *
  * @param $backtrace
  *   A standard PHP backtrace.
+ *
  * @return
  *   An associative array with keys 'file', 'line' and 'function'.
  */
