@@ -138,7 +138,7 @@ function hook_cron() {
     ':time' => REQUEST_TIME,
     ':never' => AGGREGATOR_CLEAR_NEVER,
   ));
-  $queue = DrupalQueue::get('aggregator_feeds');
+  $queue = queue('aggregator_feeds');
   foreach ($result as $feed) {
     $queue->createItem($feed);
   }
@@ -158,8 +158,8 @@ function hook_cron() {
  *   An associative array where the key is the queue name and the value is
  *   again an associative array. Possible keys are:
  *   - 'worker callback': The name of the function to call. It will be called
- *     with one argument, the item created via DrupalQueue::createItem() in
- *     hook_cron().
+ *     with one argument, the item created via
+ *     Drupal\Core\Queue\QueueInterface::createItem() in hook_cron().
  *   - 'time': (optional) How much time Drupal should spend on calling this
  *     worker in seconds. Defaults to 15.
  *

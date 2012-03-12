@@ -4641,8 +4641,9 @@ function &batch_get() {
 /**
  * Populates a job queue with the operations of a batch set.
  *
- * Depending on whether the batch is progressive or not, the BatchQueue or
- * BatchMemoryQueue handler classes will be used.
+ * Depending on whether the batch is progressive or not, the
+ * Drupal\Core\Queue\Batch or Drupal\Core\Queue\BatchMemory handler classes will
+ * be used.
  *
  * @param $batch
  *   The batch array.
@@ -4659,7 +4660,7 @@ function _batch_populate_queue(&$batch, $set_id) {
     $batch_set += array(
       'queue' => array(
         'name' => 'drupal_batch:' . $batch['id'] . ':' . $set_id,
-        'class' => $batch['progressive'] ? 'BatchQueue' : 'BatchMemoryQueue',
+        'class' => $batch['progressive'] ? 'Drupal\Core\Queue\Batch' : 'Drupal\Core\Queue\BatchMemory',
       ),
     );
 
@@ -4685,12 +4686,8 @@ function _batch_populate_queue(&$batch, $set_id) {
 function _batch_queue($batch_set) {
   static $queues;
 
-  // The class autoloader is not available when running update.php, so make
-  // sure the files are manually included.
   if (!isset($queues)) {
     $queues = array();
-    require_once DRUPAL_ROOT . '/core/modules/system/system.queue.inc';
-    require_once DRUPAL_ROOT . '/core/includes/batch.queue.inc';
   }
 
   if (isset($batch_set['queue'])) {

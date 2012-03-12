@@ -28,7 +28,7 @@ function update_manual_status() {
  * Process a step in the batch for fetching available update data.
  */
 function update_fetch_data_batch(&$context) {
-  $queue = DrupalQueue::get('update_fetch_tasks');
+  $queue = queue('update_fetch_tasks');
   if (empty($context['sandbox']['max'])) {
     $context['finished'] = 0;
     $context['sandbox']['max'] = $queue->numberOfItems();
@@ -99,7 +99,7 @@ function update_fetch_data_finished($success, $results) {
  * Attempt to drain the queue of tasks for release history data to fetch.
  */
 function _update_fetch_data() {
-  $queue = DrupalQueue::get('update_fetch_tasks');
+  $queue = queue('update_fetch_tasks');
   $end = time() + variable_get('update_max_fetch_time', UPDATE_MAX_FETCH_TIME);
   while (time() < $end && ($item = $queue->claimItem())) {
     _update_process_fetch_task($item->data);
@@ -235,7 +235,7 @@ function _update_create_fetch_task($project) {
   }
   $cid = 'fetch_task::' . $project['name'];
   if (empty($fetch_tasks[$cid])) {
-    $queue = DrupalQueue::get('update_fetch_tasks');
+    $queue = queue('update_fetch_tasks');
     $queue->createItem($project);
     db_insert('cache_update')
       ->fields(array(

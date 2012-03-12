@@ -5264,7 +5264,7 @@ function drupal_cron_run() {
     // Make sure every queue exists. There is no harm in trying to recreate an
     // existing queue.
     foreach ($queues as $queue_name => $info) {
-      DrupalQueue::get($queue_name)->createQueue();
+      queue($queue_name)->createQueue();
     }
     // Register shutdown callback.
     drupal_register_shutdown_function('drupal_cron_cleanup');
@@ -5294,7 +5294,7 @@ function drupal_cron_run() {
   foreach ($queues as $queue_name => $info) {
     $function = $info['worker callback'];
     $end = time() + (isset($info['time']) ? $info['time'] : 15);
-    $queue = DrupalQueue::get($queue_name);
+    $queue = queue($queue_name);
     while (time() < $end && ($item = $queue->claimItem())) {
       $function($item->data);
       $queue->deleteItem($item);
@@ -7863,3 +7863,97 @@ function drupal_get_filetransfer_info() {
   }
   return $info;
 }
+
+/**
+ * @defgroup queue Queue operations
+ * @{
+ * Queue items to allow later processing.
+ *
+ * The queue system allows placing items in a queue and processing them later.
+ * The system tries to ensure that only one consumer can process an item.
+ *
+ * Before a queue can be used it needs to be created by
+ * Drupal\Core\Queue\QueueInterface::createQueue().
+ *
+ * Items can be added to the queue by passing an arbitrary data object to
+ * Drupal\Core\Queue\QueueInterface::createItem().
+ *
+ * To process an item, call Drupal\Core\Queue\QueueInterface::claimItem() and
+ * specify how long you want to have a lease for working on that item.
+ * When finished processing, the item needs to be deleted by calling
+ * Drupal\Core\Queue\QueueInterface::deleteItem(). If the consumer dies, the
+ * item will be made available again by the Drupal\Core\Queue\QueueInterface
+ * implementation once the lease expires. Another consumer will then be able to
+ * receive it when calling Drupal\Core\Queue\QueueInterface::claimItem().
+ * Due to this, the processing code should be aware that an item might be handed
+ * over for processing more than once.
+ *
+ * The $item object used by the Drupal\Core\Queue\QueueInterface can contain
+ * arbitrary metadata depending on the implementation. Systems using the
+ * interface should only rely on the data property which will contain the
+ * information passed to Drupal\Core\Queue\QueueInterface::createItem().
+ * The full queue item returned by Drupal\Core\Queue\QueueInterface::claimItem()
+ * needs to be passed to Drupal\Core\Queue\QueueInterface::deleteItem() once
+ * processing is completed.
+ *
+ * There are two kinds of queue backends available: reliable, which preserves
+ * the order of messages and guarantees that every item will be executed at
+ * least once. The non-reliable kind only does a best effort to preserve order
+ * in messages and to execute them at least once but there is a small chance
+ * that some items get lost. For example, some distributed back-ends like
+ * Amazon SQS will be managing jobs for a large set of producers and consumers
+ * where a strict FIFO ordering will likely not be preserved. Another example
+ * would be an in-memory queue backend which might lose items if it crashes.
+ * However, such a backend would be able to deal with significantly more writes
+ * than a reliable queue and for many tasks this is more important. See
+ * aggregator_cron() for an example of how to effectively utilize a
+ * non-reliable queue. Another example is doing Twitter statistics -- the small
+ * possibility of losing a few items is insignificant next to power of the
+ * queue being able to keep up with writes. As described in the processing
+ * section, regardless of the queue being reliable or not, the processing code
+ * should be aware that an item might be handed over for processing more than
+ * once (because the processing code might time out before it finishes).
+ */
+
+/**
+ * Instantiates and statically caches the correct class for a queue.
+ *
+ * The following variables can be set by variable_set or $conf overrides:
+ * - queue_class_$name: the class to be used for the queue $name.
+ * - queue_default_class: the class to use when queue_class_$name is not
+ *   defined. Defaults to Drupal\Core\Queue\System, a reliable backend using
+ *   SQL.
+ * - queue_default_reliable_class: the class to use when queue_class_$name is
+ *   not defined and the queue_default_class is not reliable. Defaults to
+ *   Drupal\Core\Queue\System.
+ *
+ * @param string $name
+ *   The name of the queue to work with.
+ * @param bool $reliable
+ *   TRUE if the ordering of items and guaranteeing every item executes at
+ *   least once is important, FALSE if scalability is the main concern. Defaults
+ *   to FALSE.
+ *
+ * @return Drupal\Core\Queue\QueueInterface
+ *   The queue object for a given name.
+ *
+ * @see Drupal\Core\Queue\QueueInterface
+ */
+function queue($name, $reliable = FALSE) {
+  static $queues;
+  if (!isset($queues[$name])) {
+    $class = variable_get('queue_class_' . $name, NULL);
+    if ($class && $reliable && in_array('Drupal\Core\Queue\ReliableQueueInterface', class_implements($class))) {
+      $class = variable_get('queue_default_reliable_class', 'Drupal\Core\Queue\System');
+    }
+    elseif (!$class) {
+      $class = variable_get('queue_default_class', 'Drupal\Core\Queue\System');
+    }
+    $queues[$name] = new $class($name);
+  }
+  return $queues[$name];
+}
+
+/**
+ * @} End of "defgroup queue".
+ */
