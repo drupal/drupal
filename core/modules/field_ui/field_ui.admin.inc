@@ -324,7 +324,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       t('Label'),
       t('Weight'),
       t('Parent'),
-      t('Name'),
+      t('Machine name'),
       t('Field'),
       t('Widget'),
       array('data' => t('Operations'), 'colspan' => 2),
@@ -506,16 +506,24 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
         ),
       ),
       'field_name' => array(
-        '#type' => 'textfield',
+        '#type' => 'machine_name',
         '#title' => t('New field name'),
         '#title_display' => 'invisible',
         // This field should stay LTR even for RTL languages.
         '#field_prefix' => '<span dir="ltr">field_',
         '#field_suffix' => '</span>&lrm;',
-        '#attributes' => array('dir'=>'ltr'),
-        '#size' => 10,
-        '#description' => t('Field name (a-z, 0-9, _)'),
+        '#size' => 15,
+        '#description' => t('A unique machine-readable name containing letters, numbers, and underscores.'),
+        // 32 characters minus the 'field_' prefix.
+        '#maxlength' => 26,
         '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
+        '#machine_name' => array(
+          'source' => array('fields', $name, 'label'),
+          'exists' => '_field_ui_field_name_exists',
+          'standalone' => TRUE,
+          'label' => '',
+        ),
+        '#required' => FALSE,
       ),
       'type' => array(
         '#type' => 'select',
@@ -686,25 +694,8 @@ function _field_ui_field_overview_form_validate_add_new($form, &$form_state) {
       $field_name = $field['field_name'];
 
       // Add the 'field_' prefix.
-      if (substr($field_name, 0, 6) != 'field_') {
-        $field_name = 'field_' . $field_name;
-        form_set_value($form['fields']['_add_new_field']['field_name'], $field_name, $form_state);
-      }
-
-      // Invalid field name.
-      if (!preg_match('!^field_[a-z0-9_]+$!', $field_name)) {
-        form_set_error('fields][_add_new_field][field_name', t('Add new field: the field name %field_name is invalid. The name must include only lowercase unaccentuated letters, numbers, and underscores.', array('%field_name' => $field_name)));
-      }
-      if (strlen($field_name) > 32) {
-        form_set_error('fields][_add_new_field][field_name', t("Add new field: the field name %field_name is too long. The name is limited to 32 characters, including the 'field_' prefix.", array('%field_name' => $field_name)));
-      }
-
-      // Field name already exists. We need to check inactive fields as well, so
-      // we can't use field_info_fields().
-      $fields = field_read_fields(array('field_name' => $field_name), array('include_inactive' => TRUE));
-      if ($fields) {
-        form_set_error('fields][_add_new_field][field_name', t('Add new field: the field name %field_name already exists.', array('%field_name' => $field_name)));
-      }
+      $field_name = 'field_' . $field_name;
+      form_set_value($form['fields']['_add_new_field']['field_name'], $field_name, $form_state);
     }
 
     // Missing field type.
@@ -724,6 +715,24 @@ function _field_ui_field_overview_form_validate_add_new($form, &$form_state) {
       }
     }
   }
+}
+
+/**
+ * Render API callback: Checks if a field machine name is taken.
+ *
+ * @param $value
+ *   The machine name, not prefixed with 'field_'.
+ *
+ * @return
+ *   Whether or not the field machine name is taken.
+ */
+function _field_ui_field_name_exists($value) {
+  // Prefix with 'field_'.
+  $field_name = 'field_' . $value;
+
+  // We need to check inactive fields as well, so we can't use
+  // field_info_fields().
+  return (bool) field_read_fields(array('field_name' => $field_name), array('include_inactive' => TRUE));
 }
 
 /**
