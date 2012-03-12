@@ -83,23 +83,7 @@ class UrlMatcher extends SymfonyUrlMatcher {
     // become more complicated because we'll need to get back candidates for a
     // path and them resolve them based on things like method and scheme which
     // we currently can't do.
-    $item = menu_get_item($path);
-    $path_elements = explode('/', $item['path']);
-    $i = 0;
-    foreach ($path_elements as $key => $element) {
-      if ($element == '%') {
-        $path_elements[$key] = "{arg$i}";
-        $i++;
-      }
-    }
-
-    // If there was no router item found, we'll get back FALSE. Just return
-    // that so we know not to do anything with it.
-    if ($item) {
-      $item['path'] = implode('/', $path_elements);
-    }
-
-    return $item;
+    return menu_get_item($path);
   }
 
   protected function convertDrupalItem($router_item) {
@@ -110,6 +94,6 @@ class UrlMatcher extends SymfonyUrlMatcher {
     foreach ($router_item['page_arguments'] as $k => $v) {
       $route[$k] = $v;
     }
-    return new Route($router_item['path'], $route);
+    return new Route($router_item['href'], $route);
   }
 }
