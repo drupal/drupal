@@ -1079,11 +1079,14 @@ class FieldInfoTestCase extends FieldTestCase {
     }
 
     // Verify that no unexpected instances exist.
-    $core_fields = field_info_fields();
+    $instances = field_info_instances('test_entity');
+    $expected = array('test_bundle' => array());
+    $this->assertIdentical($instances, $expected, "field_info_instances('test_entity') returns " . var_export($expected, TRUE) . '.');
     $instances = field_info_instances('test_entity', 'test_bundle');
-    $this->assertTrue(empty($instances), t('With no instances, info bundles is empty.'));
+    $this->assertIdentical($instances, array(), "field_info_instances('test_entity', 'test_bundle') returns an empty array.");
 
     // Create a field, verify it shows up.
+    $core_fields = field_info_fields();
     $field = array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'test_field',
@@ -1119,6 +1122,25 @@ class FieldInfoTestCase extends FieldTestCase {
     $instances = field_info_instances('test_entity', $instance['bundle']);
     $this->assertEqual(count($instances), 1, t('One instance shows up in info when attached to a bundle.'));
     $this->assertTrue($instance < $instances[$instance['field_name']], t('Instance appears in info correctly'));
+
+    // Test a valid entity type but an invalid bundle.
+    $instances = field_info_instances('test_entity', 'invalid_bundle');
+    $this->assertIdentical($instances, array(), "field_info_instances('test_entity', 'invalid_bundle') returns an empty array.");
+
+    // Test invalid entity type and bundle.
+    $instances = field_info_instances('invalid_entity', $instance['bundle']);
+    $this->assertIdentical($instances, array(), "field_info_instances('invalid_entity', 'test_bundle') returns an empty array.");
+
+    // Test invalid entity type, no bundle provided.
+    $instances = field_info_instances('invalid_entity');
+    $this->assertIdentical($instances, array(), "field_info_instances('invalid_entity') returns an empty array.");
+
+    // Test with an entity type that has no bundles.
+    $instances = field_info_instances('user');
+    $expected = array('user' => array());
+    $this->assertIdentical($instances, $expected, "field_info_instances('user') returns " . var_export($expected, TRUE) . '.');
+    $instances = field_info_instances('user', 'user');
+    $this->assertIdentical($instances, array(), "field_info_instances('user', 'user') returns an empty array.");
   }
 
   /**

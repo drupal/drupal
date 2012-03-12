@@ -680,16 +680,16 @@ function field_info_field_by_ids() {
  */
 function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
   $info = _field_info_collate_fields();
-  if (!isset($entity_type)) {
+
+  if (isset($entity_type) && isset($bundle_name)) {
+    return isset($info['instances'][$entity_type][$bundle_name]) ? $info['instances'][$entity_type][$bundle_name] : array();
+  }
+  elseif (isset($entity_type)) {
+    return isset($info['instances'][$entity_type]) ? $info['instances'][$entity_type] : array();
+  }
+  else {
     return $info['instances'];
   }
-  if (!isset($bundle_name)) {
-    return $info['instances'][$entity_type];
-  }
-  if (isset($info['instances'][$entity_type][$bundle_name])) {
-    return $info['instances'][$entity_type][$bundle_name];
-  }
-  return array();
 }
 
 /**
