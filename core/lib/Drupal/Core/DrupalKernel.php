@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 
 use Drupal\Core\EventSubscriber\HtmlSubscriber;
+use Drupal\Core\EventSubscriber\JsonSubscriber;
 use Drupal\Core\EventSubscriber\AccessSubscriber;
 use Drupal\Core\EventSubscriber\PathSubscriber;
 use Drupal\Core\EventSubscriber\LegacyControllerSubscriber;
@@ -85,6 +86,7 @@ class DrupalKernel implements HttpKernelInterface {
     // @todo Add a subscriber to handle other things, too, like our Ajax
     // replacement system.
     $dispatcher->addSubscriber(new HtmlSubscriber());
+    $dispatcher->addSubscriber(new JsonSubscriber());
 
     return $dispatcher;
   }
