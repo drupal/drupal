@@ -1378,6 +1378,7 @@ function system_ip_blocking($default_ip = '') {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
+    '#empty' => t('No blocked IP addresses available.'),
   );
 
   return $build;
