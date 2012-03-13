@@ -16,7 +16,17 @@ class FormsTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('form_test');
+    parent::setUp(array('form_test', 'file'));
+
+    $filtered_html_format = array(
+      'format' => 'filtered_html',
+      'name' => 'Filtered HTML',
+    );
+    $filtered_html_format = (object) $filtered_html_format;
+    filter_format_save($filtered_html_format);
+
+    $filtered_html_permission = filter_permission_name($filtered_html_format);
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array($filtered_html_permission));
   }
 
   /**
@@ -39,6 +49,9 @@ class FormsTestCase extends DrupalWebTestCase {
 
     $elements['telephone']['element'] = array('#title' => $this->randomName(), '#type' => 'tel');
     $elements['telephone']['empty_values'] = $empty_strings;
+
+    $elements['url']['element'] = array('#title' => $this->randomName(), '#type' => 'url');
+    $elements['url']['empty_values'] = $empty_strings;
 
     $elements['password']['element'] = array('#title' => $this->randomName(), '#type' => 'password');
     $elements['password']['empty_values'] = $empty_strings;
@@ -122,6 +135,72 @@ class FormsTestCase extends DrupalWebTestCase {
     }
     // Clear the expected form error messages so they don't appear as exceptions.
     drupal_get_messages();
+  }
+
+  /**
+   * Tests validation for required checkbox, select, and radio elements.
+   *
+   * Submits a test form containing several types of form elements. The form
+   * is submitted twice, first without values for required fields and then
+   * with values. Each submission is checked for relevant error messages.
+   *
+   * @see form_test_validate_required_form()
+   */
+  function testRequiredCheckboxesRadio() {
+    $form = $form_state = array();
+    $form = form_test_validate_required_form($form, $form_state);
+
+    // Attempt to submit the form with no required fields set.
+    $edit = array();
+    $this->drupalPost('form-test/validate-required', $edit, 'Submit');
+
+    // The only error messages that should appear are the relevant 'required'
+    // messages for each field.
+    $expected = array();
+    foreach (array('textfield', 'checkboxes', 'select', 'radios') as $key) {
+      $expected[] = t('!name field is required.', array('!name' => $form[$key]['#title']));
+    }
+
+    // Check the page for error messages.
+    $errors = $this->xpath('//div[contains(@class, "error")]//li');
+    foreach ($errors as $error) {
+      $expected_key = array_search($error[0], $expected);
+      // If the error message is not one of the expected messages, fail.
+      if ($expected_key === FALSE) {
+        $this->fail(format_string("Unexpected error message: @error", array('@error' => $error[0])));
+      }
+      // Remove the expected message from the list once it is found.
+      else {
+        unset($expected[$expected_key]);
+      }
+    }
+
+    // Fail if any expected messages were not found.
+    foreach ($expected as $not_found) {
+      $this->fail(format_string("Found error message: @error", array('@error' => $not_found)));
+    }
+
+    // Verify that input elements are still empty.
+    $this->assertFieldByName('textfield', '');
+    $this->assertNoFieldChecked('edit-checkboxes-foo');
+    $this->assertNoFieldChecked('edit-checkboxes-bar');
+    $this->assertOptionSelected('edit-select', '');
+    $this->assertNoFieldChecked('edit-radios-foo');
+    $this->assertNoFieldChecked('edit-radios-bar');
+    $this->assertNoFieldChecked('edit-radios-optional-foo');
+    $this->assertNoFieldChecked('edit-radios-optional-bar');
+
+    // Submit again with required fields set and verify that there are no
+    // error messages.
+    $edit = array(
+      'textfield' => $this->randomString(),
+      'checkboxes[foo]' => TRUE,
+      'select' => 'foo',
+      'radios' => 'bar',
+    );
+    $this->drupalPost(NULL, $edit, 'Submit');
+    $this->assertNoFieldByXpath('//div[contains(@class, "error")]', FALSE, 'No error message is displayed when all required fields are filled.');
+    $this->assertRaw("The form_test_validate_required_form form was submitted successfully.", 'Validation form submitted successfully.');
   }
 
   /**
@@ -261,7 +340,7 @@ class FormsTestCase extends DrupalWebTestCase {
 
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
-    $this->assertEqual(count($disabled_elements), 35, 'The correct elements have the disabled property in the HTML code.');
+    $this->assertEqual(count($disabled_elements), 36, 'The correct elements have the disabled property in the HTML code.');
 
     $this->drupalPost(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);
@@ -375,8 +454,6 @@ class FormsTestCase extends DrupalWebTestCase {
  * Tests building and processing of core form elements.
  */
 class FormElementTestCase extends DrupalWebTestCase {
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'Element processing',
@@ -396,7 +473,7 @@ class FormElementTestCase extends DrupalWebTestCase {
     $this->drupalGet('form-test/placeholder-text');
     $expected = 'placeholder-text';
     // Test to make sure non-textarea elements have the proper placeholder text.
-    foreach (array('textfield', 'tel', 'password', 'email') as $type) {
+    foreach (array('textfield', 'tel', 'url', 'password', 'email') as $type) {
       $element = $this->xpath('//input[@id=:id and @placeholder=:expected]', array(
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
@@ -467,7 +544,7 @@ class FormAlterTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('form_test');
+    parent::setUp(array('block', 'form_test'));
   }
 
   /**
@@ -1139,7 +1216,7 @@ class FormStateValuesCleanAdvancedTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('form_test');
+    parent::setUp(array('file', 'form_test'));
   }
 
   /**
@@ -1182,6 +1259,8 @@ class FormsRebuildTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('form_test');
+
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     $this->web_user = $this->drupalCreateUser(array('access content'));
     $this->drupalLogin($this->web_user);
@@ -1669,5 +1748,50 @@ class FormEmailTestCase extends DrupalWebTestCase {
     $values = drupal_json_decode($this->drupalPost('form-test/email', $edit, 'Submit'));
     $this->assertEqual($values['email'], 'foo@example.com');
     $this->assertEqual($values['email_required'], 'example@drupal.org');
+  }
+}
+
+/**
+ * Tests url element.
+ */
+class FormUrlTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Form API url',
+      'description' => 'Tests the form API url element.',
+      'group' => 'Form API',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Tests that #type 'url' fields are properly validated and trimmed.
+   */
+  function testFormUrl() {
+    $edit = array();
+    $edit['url'] = 'http://';
+    $edit['url_required'] = ' ';
+    $this->drupalPost('form-test/url', $edit, 'Submit');
+    $this->assertRaw(t('The URL %url is not valid.', array('%url' => 'http://')));
+    $this->assertRaw(t('!name field is required.', array('!name' => 'Required URL')));
+
+    $edit = array();
+    $edit['url'] = "\n";
+    $edit['url_required'] = 'http://example.com/   ';
+    $values = drupal_json_decode($this->drupalPost('form-test/url', $edit, 'Submit'));
+    $this->assertIdentical($values['url'], '');
+    $this->assertEqual($values['url_required'], 'http://example.com/');
+
+    $edit = array();
+    $edit['url'] = 'http://foo.bar.example.com/';
+    $edit['url_required'] = 'http://drupal.org/node/1174630?page=0&foo=bar#new';
+    $values = drupal_json_decode($this->drupalPost('form-test/url', $edit, 'Submit'));
+    $this->assertEqual($values['url'], $edit['url']);
+    $this->assertEqual($values['url_required'], $edit['url_required']);
   }
 }

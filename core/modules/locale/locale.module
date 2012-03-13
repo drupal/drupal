@@ -207,6 +207,7 @@ function locale_permission() {
   return array(
     'translate interface' => array(
       'title' => t('Translate interface texts'),
+      'restrict access' => TRUE,
     ),
   );
 }
@@ -1112,7 +1113,7 @@ function locale_form_system_file_system_settings_alter(&$form, $form_state) {
  * Implements MODULE_preprocess_HOOK().
  */
 function locale_preprocess_node(&$variables) {
-  if ($variables['langcode'] != LANGUAGE_NONE) {
+  if ($variables['langcode'] != LANGUAGE_NOT_SPECIFIED) {
     global $language_interface;
 
     $node_language = language_load($variables['langcode']);

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of InstallBackend.
+ * Definition of Drupal\Core\Cache\InstallBackend.
  */
 
 namespace Drupal\Core\Cache;

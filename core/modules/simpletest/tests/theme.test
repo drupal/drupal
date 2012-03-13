@@ -9,8 +9,6 @@
  * Unit tests for the Theme API.
  */
 class ThemeUnitTest extends DrupalWebTestCase {
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'Theme API',
@@ -222,8 +220,6 @@ class ThemeTableUnitTest extends DrupalWebTestCase {
  * Tests for common theme functions.
  */
 class ThemeFunctionsTestCase extends DrupalWebTestCase {
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'Theme functions',
@@ -499,8 +495,11 @@ class ThemeHookInitUnitTest extends DrupalWebTestCase {
    */
   function testThemeInitializationHookInit() {
     $this->drupalGet('theme-test/hook-init');
-    $this->assertRaw('Themed output generated in hook_init()', t('Themed output generated in hook_init() correctly appears on the page.'));
-    $this->assertRaw('bartik/css/style.css', t("The default theme's CSS appears on the page when the theme system is initialized in hook_init()."));
+    // Verify that themed output generated in hook_init() appears.
+    $this->assertRaw('Themed output generated in hook_init()');
+    // Verify that the default theme's CSS still appears when the theme system
+    // is initialized in hook_init().
+    $this->assertRaw('stark/layout.css');
   }
 }
 

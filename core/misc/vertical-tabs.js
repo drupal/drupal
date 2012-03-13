@@ -92,16 +92,6 @@ Drupal.verticalTab = function (settings) {
     }
   });
 
-  // Pressing the Enter key lets you leave the tab again.
-  this.fieldset.keydown(function(event) {
-    // Enter key should not trigger inside <textarea> to allow for multi-line entries.
-    if (event.keyCode == 13 && event.target.nodeName != "TEXTAREA") {
-      // Set focus on the selected tab button again.
-      $(".vertical-tab-button.selected a").focus();
-      return false;
-    }
-  });
-
   this.fieldset
     .bind('summaryUpdated', function () {
       self.updateSummary();

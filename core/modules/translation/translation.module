@@ -2,21 +2,21 @@
 
 /**
  * @file
- *   Manages content translations.
+ * Manages content translations.
  *
- *   Translations are managed in sets of posts, which represent the same
- *   information in different languages. Only content types for which the
- *   administrator explicitly enabled translations could have translations
- *   associated. Translations are managed in sets with exactly one source
- *   post per set. The source post is used to translate to different
- *   languages, so if the source post is significantly updated, the
- *   editor can decide to mark all translations outdated.
+ * Translations are managed in sets of posts, which represent the same
+ * information in different languages. Only content types for which the
+ * administrator has explicitly enabled translations could have translations
+ * associated. Translations are managed in sets with exactly one source post
+ * per set. The source post is used to translate to different languages, so if
+ * the source post is significantly updated, the editor can decide to mark all
+ * translations outdated.
  *
- *   The node table stores the values used by this module:
- *    - 'tnid' is the translation set id, which equals the node id
- *      of the source post.
- *    - 'translate' is a flag, either indicating that the translation
- *      is up to date (0) or needs to be updated (1).
+ * The node table stores the values used by this module:
+ * - tnid: Integer for the translation set ID, which equals the node ID of the
+ *   source post.
+ * - translate: Integer flag, either indicating that the translation is up to
+ *   date (0) or needs to be updated (1).
  */
 
 /**
@@ -70,14 +70,21 @@ function translation_menu() {
 }
 
 /**
- * Menu access callback.
+ * Access callback: Checks that the user has permission to 'translate content'.
  *
- * Only display translation tab for node types, which have translation enabled
- * and where the current node is not language neutral (which should span
- * all languages).
+ * Only displays the translation tab for nodes that are not language-neutral
+ * of types that have translation enabled.
+ *
+ * @param $node
+ *   A node object.
+ *
+ * @return
+ *   TRUE if the translation tab should be displayed, FALSE otherwise.
+ *
+ * @see translation_menu()
  */
 function _translation_tab_access($node) {
-  if ($node->langcode != LANGUAGE_NONE && translation_supported_type($node->type) && node_access('view', $node)) {
+  if ($node->langcode != LANGUAGE_NOT_SPECIFIED && translation_supported_type($node->type) && node_access('view', $node)) {
     return user_access('translate content');
   }
   return FALSE;
@@ -107,7 +114,7 @@ function translation_permission() {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for node_type_form().
  */
 function translation_form_node_type_form_alter(&$form, &$form_state) {
   // Add translation option to content type form.
@@ -118,10 +125,12 @@ function translation_form_node_type_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  *
- * This function alters language fields on node edit forms when a translation is
- * about to be created.
+ * Alters language fields on node edit forms when a translation is about to be
+ * created.
+ *
+ * @see node_form()
  */
 function translation_form_node_form_alter(&$form, &$form_state) {
   if (translation_supported_type($form['#node']->type)) {
@@ -140,7 +149,7 @@ function translation_form_node_form_alter(&$form, &$form_state) {
     // might need to distinguish between enabled and disabled languages, hence
     // we divide them in two option groups.
     if ($translator_widget) {
-      $options = array($groups[1] => array(LANGUAGE_NONE => t('- None -')));
+      $options = array($groups[1] => array(LANGUAGE_NOT_SPECIFIED => t('- None -')));
       foreach (array(1, 0) as $status) {
         $group = $groups[$status];
         foreach ($grouped_languages[$status] as $langcode => $language) {
@@ -158,7 +167,7 @@ function translation_form_node_form_alter(&$form, &$form_state) {
       // Disable languages for existing translations, so it is not possible to switch this
       // node to some language which is already in the translation set. Also remove the
       // language neutral option.
-      unset($form['langcode']['#options'][LANGUAGE_NONE]);
+      unset($form['langcode']['#options'][LANGUAGE_NOT_SPECIFIED]);
       foreach (translation_node_get_translations($node->tnid) as $langcode => $translation) {
         if ($translation->nid != $node->nid) {
           if ($translator_widget) {
@@ -206,9 +215,9 @@ function translation_form_node_form_alter(&$form, &$form_state) {
 /**
  * Implements hook_node_view().
  *
- * Display translation links with language names, if this node is part of
- * a translation set. If no language provider is enabled "fall back" to the
- * simple links built through the result of translation_node_get_translations().
+ * Displays translation links with language names if this node is part of a
+ * translation set. If no language provider is enabled, "fall back" to simple
+ * links built through the result of translation_node_get_translations().
  */
 function translation_node_view($node, $view_mode) {
   // If the site has no translations or is not multilingual we have no content
@@ -378,7 +387,7 @@ function translation_node_update($node) {
 /**
  * Implements hook_node_validate().
  *
- * Ensure that duplicate translations can not be created for the same source.
+ * Ensures that duplicate translations can't be created for the same source.
  */
 function translation_node_validate($node, $form) {
   // Only act on translatable nodes with a tnid or translation_source.
@@ -402,8 +411,10 @@ function translation_node_predelete($node) {
 }
 
 /**
- * Remove a node from its translation set (if any)
- * and update the set accordingly.
+ * Removes a node from its translation set and updates accordingly.
+ *
+ * @param $node
+ *   A node object.
  */
 function translation_remove_from_set($node) {
   if (isset($node->tnid)) {
@@ -437,17 +448,18 @@ function translation_remove_from_set($node) {
 }
 
 /**
- * Get all nodes in a translation set, represented by $tnid.
+ * Gets all nodes in a given translation set.
  *
  * @param $tnid
- *   The translation source nid of the translation set, the identifier
- *   of the node used to derive all translations in the set.
+ *   The translation source nid of the translation set, the identifier of the
+ *   node used to derive all translations in the set.
+ *
  * @return
- *   Array of partial node objects (nid, title, langcode) representing
- *   all nodes in the translation set, in effect all translations
- *   of node $tnid, including node $tnid itself. Because these are
- *   partial nodes, you need to node_load() the full node, if you
- *   need more properties. The array is indexed by language code.
+ *   Array of partial node objects (nid, title, langcode) representing all
+ *   nodes in the translation set, in effect all translations of node $tnid,
+ *   including node $tnid itself. Because these are partial nodes, you need to
+ *   node_load() the full node, if you need more properties. The array is
+ *   indexed by language code.
  */
 function translation_node_get_translations($tnid) {
   if (is_numeric($tnid) && $tnid) {
@@ -473,21 +485,21 @@ function translation_node_get_translations($tnid) {
  * Returns whether the given content type has support for translations.
  *
  * @return
- *   Boolean value.
+ *   TRUE if translation is supported, and FALSE if not.
  */
 function translation_supported_type($type) {
   return variable_get('node_type_language_' . $type, 0) == TRANSLATION_ENABLED;
 }
 
 /**
- * Return paths of all translations of a node, based on
- * its Drupal path.
+ * Returns the paths of all translations of a node, based on its Drupal path.
  *
  * @param $path
  *   A Drupal path, for example node/432.
+ *
  * @return
- *   An array of paths of translations of the node accessible
- *   to the current user keyed with language codes.
+ *   An array of paths of translations of the node accessible to the current
+ *   user, keyed with language codes.
  */
 function translation_path_get_translations($path) {
   $paths = array();
@@ -516,7 +528,7 @@ function translation_language_switch_links_alter(array &$links, $type, $path) {
       // have translations it might be a language neutral node, in which case we
       // must leave the language switch links unaltered. This is true also for
       // nodes not having translation support enabled.
-      if (empty($node) || $node->langcode == LANGUAGE_NONE || !translation_supported_type($node->type)) {
+      if (empty($node) || $node->langcode == LANGUAGE_NOT_SPECIFIED || !translation_supported_type($node->type)) {
         return;
       }
       $translations = array($node->langcode => $node);

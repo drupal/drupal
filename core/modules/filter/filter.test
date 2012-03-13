@@ -161,6 +161,8 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
 }
 
 class FilterAdminTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Filter administration functionality',
@@ -353,7 +355,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $text = $body . '<random>' . $extra_text . '</random>';
 
     $edit = array();
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $text;
     $edit["body[$langcode][0][format]"] = $filtered;
@@ -419,6 +421,8 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
 
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+
     // Create a user who can administer text formats, but does not have
     // specific permission to use any of them.
     $this->filter_admin_user = $this->drupalCreateUser(array(
@@ -481,7 +485,7 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
     // the disallowed format does not.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/add/page');
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $elements = $this->xpath('//select[@name=:name]/option', array(
       ':name' => "body[$langcode][0][format]",
       ':option' => $this->allowed_format->format,
@@ -525,7 +529,7 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
    * forced to choose a new format before saving the page.
    */
   function testFormatWidgetPermissions() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $title_key = "title";
     $body_value_key = "body[$langcode][0][value]";
     $body_format_key = "body[$langcode][0][format]";
@@ -739,7 +743,22 @@ class FilterSecurityTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('php', 'filter_test');
+    parent::setUp(array('node', 'php', 'filter_test'));
+
+    // Create Basic page node type.
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+
+    // Create Filtered HTML format.
+    $filtered_html_format = array(
+      'format' => 'filtered_html',
+      'name' => 'Filtered HTML',
+    );
+    $filtered_html_format = (object) $filtered_html_format;
+    filter_format_save($filtered_html_format);
+
+    $filtered_html_permission = filter_permission_name($filtered_html_format);
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array($filtered_html_permission));
+
     $this->admin_user = $this->drupalCreateUser(array('administer modules', 'administer filters', 'administer site configuration'));
     $this->drupalLogin($this->admin_user);
   }
@@ -750,8 +769,8 @@ class FilterSecurityTestCase extends DrupalWebTestCase {
   function testDisableFilterModule() {
     // Create a new node.
     $node = $this->drupalCreateNode(array('promote' => 1));
-    $body_raw = $node->body[LANGUAGE_NONE][0]['value'];
-    $format_id = $node->body[LANGUAGE_NONE][0]['format'];
+    $body_raw = $node->body[LANGUAGE_NOT_SPECIFIED][0]['value'];
+    $format_id = $node->body[LANGUAGE_NOT_SPECIFIED][0]['format'];
     $this->drupalGet('node/' . $node->nid);
     $this->assertText($body_raw, t('Node body found.'));
 

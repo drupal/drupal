@@ -8,6 +8,8 @@
  * calling file_test_get_calls() or file_test_set_return().
  */
 
+use Drupal\Core\StreamWrapper\LocalStream;
+use Drupal\Core\StreamWrapper\PublicStream;
 
 const FILE_URL_TEST_CDN_1 = 'http://cdn1.example.com';
 const FILE_URL_TEST_CDN_2 = 'http://cdn2.example.com';
@@ -423,7 +425,7 @@ function file_test_file_mimetype_mapping_alter(&$mapping) {
  *
  * Dummy stream wrapper implementation (dummy://).
  */
-class DrupalDummyStreamWrapper extends DrupalLocalStreamWrapper {
+class DrupalDummyStreamWrapper extends LocalStream {
   function getDirectoryPath() {
     return variable_get('stream_public_path', 'sites/default/files');
   }
@@ -454,7 +456,7 @@ class DrupalDummyStreamWrapper extends DrupalLocalStreamWrapper {
  *
  * Basically just the public scheme but not returning a local file for realpath.
  */
-class DrupalDummyRemoteStreamWrapper extends DrupalPublicStreamWrapper {
+class DrupalDummyRemoteStreamWrapper extends PublicStream {
   function realpath() {
     return FALSE;
   }

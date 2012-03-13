@@ -13,21 +13,28 @@ function form_test_menu() {
     'title' => 'Form altering test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_alter_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['form-test/validate'] = array(
     'title' => 'Form validation handlers test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_validate_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['form-test/validate-required'] = array(
+    'title' => 'Form #required validation',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_validate_required_form'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['form-test/limit-validation-errors'] = array(
     'title' => 'Form validation with some error suppression',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_limit_validation_errors_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -35,28 +42,28 @@ function form_test_menu() {
     'title' => 'Tableselect checkboxes test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_tableselect_multiple_true_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['form_test/tableselect/multiple-false'] = array(
     'title' => 'Tableselect radio button test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_tableselect_multiple_false_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['form_test/tableselect/empty-text'] = array(
     'title' => 'Tableselect empty text test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_tableselect_empty_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['form_test/tableselect/advanced-select'] = array(
     'title' => 'Tableselect js_select tests',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_tableselect_js_select_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -64,7 +71,7 @@ function form_test_menu() {
     'title' => 'Vertical tabs tests',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_vertical_tabs_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -72,7 +79,7 @@ function form_test_menu() {
     'title' => 'Form storage test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_storage_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -80,7 +87,7 @@ function form_test_menu() {
     'title' => 'Form wrapper callback test',
     'page callback' => 'form_test_wrapper_callback',
     'page arguments' => array('form_test_wrapper_callback_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -88,7 +95,7 @@ function form_test_menu() {
     'title' => 'Form state values clearance test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_form_state_values_clean_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -96,7 +103,7 @@ function form_test_menu() {
     'title' => 'Form state values clearance advanced test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_form_state_values_clean_advanced_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -131,6 +138,12 @@ function form_test_menu() {
     'page arguments' => array('form_test_email'),
     'access callback' => TRUE,
   );
+  $items['form-test/url'] = array(
+    'title' => t('URL'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_url'),
+    'access callback' => TRUE,
+  );
 
   $items['form-test/disabled-elements'] = array(
     'title' => t('Form test'),
@@ -152,7 +165,7 @@ function form_test_menu() {
     'title' => 'Form values preservation during rebuild test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_form_rebuild_preserve_values_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -160,7 +173,7 @@ function form_test_menu() {
     'title' => 'Form label test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_label_test_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -349,6 +362,52 @@ function form_test_validate_form_validate(&$form, &$form_state) {
     // Trigger a form validation error to see our changes.
     form_set_error('');
   }
+}
+
+/**
+ * Form constructor to test the #required property.
+ */
+function form_test_validate_required_form($form, &$form_state) {
+  $options = drupal_map_assoc(array('foo', 'bar'));
+
+  $form['textfield'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Textfield',
+    '#required' => TRUE,
+  );
+  $form['checkboxes'] = array(
+    '#type' => 'checkboxes',
+    '#title' => 'Checkboxes',
+    '#options' => $options,
+    '#required' => TRUE,
+  );
+  $form['select'] = array(
+    '#type' => 'select',
+    '#title' => 'Select',
+    '#options' => $options,
+    '#required' => TRUE,
+  );
+  $form['radios'] = array(
+    '#type' => 'radios',
+    '#title' => 'Radios',
+    '#options' => $options,
+    '#required' => TRUE,
+  );
+  $form['radios_optional'] = array(
+    '#type' => 'radios',
+    '#title' => 'Radios (optional)',
+    '#options' => $options,
+  );
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => 'Submit');
+  return $form;
+}
+
+/**
+ * Form submission handler for form_test_validate_required_form().
+ */
+function form_test_validate_required_form_submit($form, &$form_state) {
+  drupal_set_message('The form_test_validate_required_form form was submitted successfully.');
 }
 
 /**
@@ -1033,7 +1092,7 @@ function form_test_select_submit($form, &$form_state) {
  * Builds a form to test the placeholder attribute.
  */
 function form_test_placeholder_test($form, &$form_state) {
-  foreach (array('textfield', 'textarea', 'password', 'tel', 'email') as $type) {
+  foreach (array('textfield', 'textarea', 'url', 'password', 'tel', 'email') as $type) {
     $form[$type] = array(
       '#type' => $type,
       '#title' => $type,
@@ -1137,6 +1196,39 @@ function form_test_email_submit($form, &$form_state) {
 }
 
 /**
+ * Form constructor for testing #type 'url' elements.
+ *
+ * @see form_test_url_submit()
+ * @ingroup forms
+ */
+function form_test_url($form, &$form_state) {
+  $form['url'] = array(
+    '#type' => 'url',
+    '#title' => 'Optional URL',
+    '#description' => 'An optional URL field.',
+  );
+  $form['url_required'] = array(
+    '#type' => 'url',
+    '#title' => 'Required URL',
+    '#description' => 'A required URL field.',
+    '#required' => TRUE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  return $form;
+}
+
+/**
+ * Form submission handler for form_test_url().
+ */
+function form_test_url_submit($form, &$form_state) {
+  drupal_json_output($form_state['values']);
+  exit();
+}
+
+/**
  * Build a form to test disabled elements.
  */
 function _form_test_disabled_elements($form, &$form_state) {
@@ -1235,7 +1327,7 @@ function _form_test_disabled_elements($form, &$form_state) {
   $form['disabled_container'] = array(
     '#disabled' => TRUE,
   );
-  foreach (array('textfield', 'textarea', 'hidden', 'tel') as $type) {
+  foreach (array('textfield', 'textarea', 'hidden', 'tel', 'url') as $type) {
     $form['disabled_container']['disabled_container_' . $type] = array(
       '#type' => $type,
       '#title' => $type,
@@ -1250,6 +1342,14 @@ function _form_test_disabled_elements($form, &$form_state) {
     '#title' => 'email',
     '#default_value' => 'foo@example.com',
     '#test_hijack_value' => 'bar@example.com',
+  );
+
+  // Try to hijack the URL field with a valid URL.
+  $form['disabled_container']['disabled_container_url'] = array(
+    '#type' => 'url',
+    '#title' => 'url',
+    '#default_value' => 'http://example.com',
+    '#test_hijack_value' => 'http://example.com/foo',
   );
 
   // Text format.
@@ -1664,7 +1764,7 @@ function form_test_two_instances() {
     'uid' => $user->uid,
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => 'page',
-    'langcode' => LANGUAGE_NONE,
+    'langcode' => LANGUAGE_NOT_SPECIFIED,
   );
   $node2 = clone($node1);
   $return['node_form_1'] = drupal_get_form('page_node_form', $node1);

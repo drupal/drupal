@@ -7,7 +7,13 @@
 
 class AggregatorTestCase extends DrupalWebTestCase {
   function setUp() {
-    parent::setUp('aggregator', 'aggregator_test');
+    parent::setUp(array('node', 'block', 'aggregator', 'aggregator_test'));
+
+    // Create an Article node type.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    }
+
     $web_user = $this->drupalCreateUser(array('administer news feeds', 'access news feeds', 'create article content'));
     $this->drupalLogin($web_user);
   }
@@ -282,7 +288,7 @@ EOF;
    *   (optional) The number of nodes to generate.
    */
   function createSampleNodes($count = 5) {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Post $count article nodes.
     for ($i = 0; $i < $count; $i++) {
       $edit = array();
@@ -704,7 +710,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
 
     $edit = array('remote' => 'invalidUrl://empty');
     $this->drupalPost('admin/config/services/aggregator/add/opml', $edit, t('Import'));
-    $this->assertText(t('This URL is not valid.'), t('Error if the URL is invalid.'));
+    $this->assertText(t('The URL invalidUrl://empty is not valid.'), 'Error if the URL is invalid.');
 
     $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
     $this->assertEqual($before, $after, t('No feeds were added during the three last form submissions.'));

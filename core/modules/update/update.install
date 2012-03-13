@@ -70,7 +70,7 @@ function update_schema() {
  * Implements hook_install().
  */
 function update_install() {
-  $queue = DrupalQueue::get('update_fetch_tasks', TRUE);
+  $queue = queue('update_fetch_tasks', TRUE);
   $queue->createQueue();
 }
 
@@ -91,7 +91,7 @@ function update_uninstall() {
   foreach ($variables as $variable) {
     variable_del($variable);
   }
-  $queue = DrupalQueue::get('update_fetch_tasks');
+  $queue = queue('update_fetch_tasks');
   $queue->deleteQueue();
 }
 

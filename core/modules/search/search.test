@@ -11,20 +11,32 @@ const SEARCH_TYPE = '_test_';
 const SEARCH_TYPE_2 = '_test2_';
 const SEARCH_TYPE_JPN = '_test3_';
 
-class SearchMatchTestCase extends DrupalWebTestCase {
+class SearchWebTestCase extends DrupalWebTestCase {
+  function setUp() {
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules[] = 'node';
+    $modules[] = 'search';
+    $modules[] = 'dblog';
+    parent::setUp($modules);
+
+    // Create Basic page and Article node types.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    }
+  }
+}
+
+class SearchMatchTestCase extends SearchWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Search engine queries',
       'description' => 'Indexes content and queries it.',
       'group' => 'Search',
     );
-  }
-
-  /**
-   * Implementation setUp().
-   */
-  function setUp() {
-    parent::setUp('search');
   }
 
   /**
@@ -243,7 +255,7 @@ class SearchMatchTestCase extends DrupalWebTestCase {
 /**
  * Tests the bike shed text on no results page, and text on the search page.
  */
-class SearchPageText extends DrupalWebTestCase {
+class SearchPageText extends SearchWebTestCase {
   protected $searching_user;
 
   public static function getInfo() {
@@ -255,7 +267,7 @@ class SearchPageText extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('search');
+    parent::setUp();
 
     // Create user.
     $this->searching_user = $this->drupalCreateUser(array('search content', 'access user profiles'));
@@ -307,7 +319,7 @@ class SearchPageText extends DrupalWebTestCase {
   }
 }
 
-class SearchAdvancedSearchForm extends DrupalWebTestCase {
+class SearchAdvancedSearchForm extends SearchWebTestCase {
   protected $node;
 
   public static function getInfo() {
@@ -319,7 +331,7 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('search');
+    parent::setUp();
     // Create and login user.
     $test_user = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search', 'administer nodes'));
     $this->drupalLogin($test_user);
@@ -370,7 +382,7 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
   }
 }
 
-class SearchRankingTestCase extends DrupalWebTestCase {
+class SearchRankingTestCase extends SearchWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Search engine ranking',
@@ -379,16 +391,13 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation setUp().
-   */
   function setUp() {
-    parent::setUp('search', 'statistics', 'comment');
+    parent::setUp(array('statistics', 'comment'));
   }
 
   function testRankings() {
     // Login with sufficient privileges.
-    $this->drupalLogin($this->drupalCreateUser(array('skip comment approval', 'create page content')));
+    $this->drupalLogin($this->drupalCreateUser(array('post comments', 'skip comment approval', 'create page content')));
 
     // Build a list of the rankings to test.
     $node_ranks = array('sticky', 'promote', 'relevance', 'recent', 'comments', 'views');
@@ -398,7 +407,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
       $settings = array(
         'type' => 'page',
         'title' => 'Drupal rocks',
-        'body' => array(LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))),
+        'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "Drupal's search rocks"))),
       );
       foreach (array(0, 1) as $num) {
         if ($num == 1) {
@@ -408,7 +417,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
               $settings[$node_rank] = 1;
               break;
             case 'relevance':
-              $settings['body'][LANGUAGE_NONE][0]['value'] .= " really rocks";
+              $settings['body'][LANGUAGE_NOT_SPECIFIED][0]['value'] .= " really rocks";
               break;
             case 'recent':
               $settings['created'] = REQUEST_TIME + 3600;
@@ -432,7 +441,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     // Add a comment to one of the nodes.
     $edit = array();
     $edit['subject'] = 'my comment title';
-    $edit['comment_body[' . LANGUAGE_NONE . '][0][value]'] = 'some random comment';
+    $edit['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = 'some random comment';
     $this->drupalGet('comment/reply/' . $nodes['comments'][1]->nid);
     $this->drupalPost(NULL, $edit, t('Preview'));
     $this->drupalPost(NULL, $edit, t('Save'));
@@ -462,6 +471,13 @@ class SearchRankingTestCase extends DrupalWebTestCase {
    * Test rankings of HTML tags.
    */
   function testHTMLRankings() {
+    $full_html_format = array(
+      'format' => 'full_html',
+      'name' => 'Full HTML',
+    );
+    $full_html_format = (object) $full_html_format;
+    filter_format_save($full_html_format);
+
     // Login with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(array('create page content')));
 
@@ -478,13 +494,13 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     foreach ($shuffled_tags as $tag) {
       switch ($tag) {
         case 'a':
-          $settings['body'] = array(LANGUAGE_NONE => array(array('value' => l('Drupal Rocks', 'node'), 'format' => 'full_html')));
+          $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => l('Drupal Rocks', 'node'), 'format' => 'full_html')));
           break;
         case 'notag':
-          $settings['body'] = array(LANGUAGE_NONE => array(array('value' => 'Drupal Rocks')));
+          $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'Drupal Rocks')));
           break;
         default:
-          $settings['body'] = array(LANGUAGE_NONE => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
+          $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
           break;
       }
       $nodes[$tag] = $this->drupalCreateNode($settings);
@@ -517,7 +533,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     // Test tags with the same weight against the sorted tags.
     $unsorted_tags = array('u', 'b', 'i', 'strong', 'em');
     foreach ($unsorted_tags as $tag) {
-      $settings['body'] = array(LANGUAGE_NONE => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
+      $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
       $node = $this->drupalCreateNode($settings);
 
       // Update the search index.
@@ -553,7 +569,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     $settings = array(
       'type' => 'page',
       'title' => 'Drupal rocks',
-      'body' => array(LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))),
+      'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "Drupal's search rocks"))),
       'sticky' => 1,
     );
 
@@ -580,7 +596,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
   }
 }
 
-class SearchBlockTestCase extends DrupalWebTestCase {
+class SearchBlockTestCase extends SearchWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Block availability',
@@ -590,7 +606,7 @@ class SearchBlockTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('search');
+    parent::setUp(array('block'));
 
     // Create and login user
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'search content'));
@@ -660,17 +676,13 @@ class SearchBlockTestCase extends DrupalWebTestCase {
 /**
  * Tests that searching for a phrase gets the correct page count.
  */
-class SearchExactTestCase extends DrupalWebTestCase {
+class SearchExactTestCase extends SearchWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Search engine phrase queries',
       'description' => 'Tests that searching for a phrase gets the correct page count.',
       'group' => 'Search',
     );
-  }
-
-  function setUp() {
-    parent::setUp('search');
   }
 
   /**
@@ -686,12 +698,12 @@ class SearchExactTestCase extends DrupalWebTestCase {
     );
     // Create nodes with exact phrase.
     for ($i = 0; $i <= 17; $i++) {
-      $settings['body'] = array(LANGUAGE_NONE => array(array('value' => 'love pizza')));
+      $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'love pizza')));
       $this->drupalCreateNode($settings);
     }
     // Create nodes containing keywords.
     for ($i = 0; $i <= 17; $i++) {
-      $settings['body'] = array(LANGUAGE_NONE => array(array('value' => 'love cheesy pizza')));
+      $settings['body'] = array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'love cheesy pizza')));
       $this->drupalCreateNode($settings);
     }
 
@@ -721,7 +733,9 @@ class SearchExactTestCase extends DrupalWebTestCase {
 /**
  * Test integration searching comments.
  */
-class SearchCommentTestCase extends DrupalWebTestCase {
+class SearchCommentTestCase extends SearchWebTestCase {
+  protected $profile = 'standard';
+
   protected $admin_user;
 
   public static function getInfo() {
@@ -733,7 +747,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('comment', 'search');
+    parent::setUp(array('comment'));
 
     // Create and log in an administrative user having access to the Full HTML
     // text format.
@@ -776,9 +790,9 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
     $edit_comment['subject'] = 'Test comment subject';
-    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
+    $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
     $full_html_format_id = 'full_html';
-    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][format]'] = $full_html_format_id;
+    $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][format]'] = $full_html_format_id;
     $this->drupalPost('comment/reply/' . $node->nid, $edit_comment, t('Save'));
 
     // Invoke search index update.
@@ -803,7 +817,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Verify that comment is rendered using proper format.
     $this->assertText($comment_body, t('Comment body text found in search results.'));
     $this->assertNoRaw(t('n/a'), t('HTML in comment body is not hidden.'));
-    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]']), t('HTML in comment body is not escaped.'));
+    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]']), t('HTML in comment body is not escaped.'));
 
     // Hide comments.
     $this->drupalLogin($this->admin_user);
@@ -836,7 +850,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
     $edit_comment['subject'] = $this->comment_subject;
-    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
+    $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
     $this->drupalPost('comment/reply/' . $this->node->nid, $edit_comment, t('Save'));
 
     $this->drupalLogout();
@@ -916,7 +930,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $settings = array(
       'type' => 'article',
       'title' => 'short title',
-      'body' => array(LANGUAGE_NONE => array(array('value' => 'short body text'))),
+      'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'short body text'))),
     );
 
     $user = $this->drupalCreateUser(array('search content', 'create article content', 'access content'));
@@ -1017,7 +1031,10 @@ class SearchExpressionInsertExtractTestCase extends DrupalUnitTestCase {
  *     only when there are comments
  * - Nodes with comment status set to Hidden should never show comment counts
  */
-class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
+class SearchCommentCountToggleTestCase extends SearchWebTestCase {
+  // Requires node types, comment config, filter formats.
+  protected $profile = 'standard';
+
   protected $searching_user;
   protected $searchable_nodes;
 
@@ -1030,13 +1047,13 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('search');
+    parent::setUp(array('comment'));
 
     // Create searching user.
     $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
 
     // Create initial nodes.
-    $node_params = array('type' => 'article', 'body' => array(LANGUAGE_NONE => array(array('value' => 'SearchCommentToggleTestCase'))));
+    $node_params = array('type' => 'article', 'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => 'SearchCommentToggleTestCase'))));
 
     $this->searchable_nodes['1 comment'] = $this->drupalCreateNode($node_params);
     $this->searchable_nodes['0 comments'] = $this->drupalCreateNode($node_params);
@@ -1047,9 +1064,9 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
     // Create a comment array
     $edit_comment = array();
     $edit_comment['subject'] = $this->randomName();
-    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = $this->randomName();
+    $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
     $filtered_html_format_id = 'filtered_html';
-    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][format]'] = $filtered_html_format_id;
+    $edit_comment['comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][format]'] = $filtered_html_format_id;
 
     // Post comment to the test node with comment
     $this->drupalPost('comment/reply/' . $this->searchable_nodes['1 comment']->nid, $edit_comment, t('Save'));
@@ -1102,7 +1119,7 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
 /**
  * Test search_simplify() on every Unicode character, and some other cases.
  */
-class SearchSimplifyTestCase extends DrupalWebTestCase {
+class SearchSimplifyTestCase extends SearchWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Search simplify',
@@ -1185,8 +1202,7 @@ class SearchSimplifyTestCase extends DrupalWebTestCase {
 /**
  * Tests keywords and conditions.
  */
-class SearchKeywordsConditions extends DrupalWebTestCase {
-
+class SearchKeywordsConditions extends SearchWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Keywords and conditions',
@@ -1196,7 +1212,7 @@ class SearchKeywordsConditions extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('search', 'search_extra_type');
+    parent::setUp(array('comment', 'search_extra_type'));
     // Create searching user.
     $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
     // Login with sufficient privileges.
@@ -1236,7 +1252,7 @@ class SearchKeywordsConditions extends DrupalWebTestCase {
 /**
  * Tests that numbers can be searched.
  */
-class SearchNumbersTestCase extends DrupalWebTestCase {
+class SearchNumbersTestCase extends SearchWebTestCase {
   protected $test_user;
   protected $numbers;
   protected $nodes;
@@ -1250,7 +1266,7 @@ class SearchNumbersTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('search');
+    parent::setUp();
 
     $this->test_user = $this->drupalCreateUser(array('search content', 'access content', 'administer nodes', 'access site reports'));
     $this->drupalLogin($this->test_user);
@@ -1277,9 +1293,9 @@ class SearchNumbersTestCase extends DrupalWebTestCase {
 
     foreach ($this->numbers as $doc => $num) {
       $info = array(
-        'body' => array(LANGUAGE_NONE => array(array('value' => $num))),
+        'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $num))),
         'type' => 'page',
-        'language' => LANGUAGE_NONE,
+        'language' => LANGUAGE_NOT_SPECIFIED,
         'title' => $doc . ' number',
       );
       $this->nodes[$doc] = $this->drupalCreateNode($info);
@@ -1324,7 +1340,7 @@ class SearchNumbersTestCase extends DrupalWebTestCase {
 /**
  * Tests that numbers can be searched, with more complex matching.
  */
-class SearchNumberMatchingTestCase extends DrupalWebTestCase {
+class SearchNumberMatchingTestCase extends SearchWebTestCase {
   protected $test_user;
   protected $numbers;
   protected $nodes;
@@ -1338,7 +1354,7 @@ class SearchNumberMatchingTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('search');
+    parent::setUp();
 
     $this->test_user = $this->drupalCreateUser(array('search content', 'access content', 'administer nodes', 'access site reports'));
     $this->drupalLogin($this->test_user);
@@ -1359,9 +1375,9 @@ class SearchNumberMatchingTestCase extends DrupalWebTestCase {
 
     foreach ($this->numbers as $num) {
       $info = array(
-        'body' => array(LANGUAGE_NONE => array(array('value' => $num))),
+        'body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => $num))),
         'type' => 'page',
-        'language' => LANGUAGE_NONE,
+        'language' => LANGUAGE_NOT_SPECIFIED,
       );
       $this->nodes[] = $this->drupalCreateNode($info);
     }
@@ -1407,7 +1423,7 @@ class SearchNumberMatchingTestCase extends DrupalWebTestCase {
 /**
  * Test config page.
  */
-class SearchConfigSettingsForm extends DrupalWebTestCase {
+class SearchConfigSettingsForm extends SearchWebTestCase {
   public $search_user;
   public $search_node;
 
@@ -1420,7 +1436,7 @@ class SearchConfigSettingsForm extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('search', 'search_extra_type');
+    parent::setUp(array('block', 'search_extra_type'));
 
     // Login as a user that can create and search content.
     $this->search_user = $this->drupalCreateUser(array('search content', 'administer search', 'administer nodes', 'bypass node access', 'access user profiles', 'administer users', 'administer blocks'));
@@ -1431,7 +1447,7 @@ class SearchConfigSettingsForm extends DrupalWebTestCase {
     $this->search_node = $node;
     // Link the node to itself to test that it's only indexed once. The content
     // also needs the word "pizza" so we can use it as the search keyword.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $body_key = "body[$langcode][0][value]";
     $edit[$body_key] = l($node->title, 'node/' . $node->nid) . ' pizza sandwich';
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
@@ -1645,17 +1661,13 @@ class SearchExcerptTestCase extends DrupalUnitTestCase {
 /**
  * Test the CJK tokenizer.
  */
-class SearchTokenizerTestCase extends DrupalWebTestCase {
+class SearchTokenizerTestCase extends SearchWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'CJK tokenizer',
       'description' => 'Check that CJK tokenizer works as intended.',
       'group' => 'Search',
     );
-  }
-
-  function setUp() {
-    parent::setUp('search');
   }
 
   /**
@@ -1796,7 +1808,7 @@ class SearchTokenizerTestCase extends DrupalWebTestCase {
 /**
  * Tests that we can embed a form in search results and submit it.
  */
-class SearchEmbedForm extends DrupalWebTestCase {
+class SearchEmbedForm extends SearchWebTestCase {
   /**
    * Node used for testing.
    */
@@ -1816,7 +1828,7 @@ class SearchEmbedForm extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('search', 'search_embedded_form');
+    parent::setUp(array('search_embedded_form'));
 
     // Create a user and a node, and update the search index.
     $test_user = $this->drupalCreateUser(array('access content', 'search content', 'administer nodes'));
@@ -1872,7 +1884,7 @@ class SearchEmbedForm extends DrupalWebTestCase {
 /**
  * Tests that hook_search_page runs.
  */
-class SearchPageOverride extends DrupalWebTestCase {
+class SearchPageOverride extends SearchWebTestCase {
   public $search_user;
 
   public static function getInfo() {
@@ -1884,7 +1896,7 @@ class SearchPageOverride extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('search', 'search_extra_type');
+    parent::setUp(array('search_extra_type'));
 
     // Login as a user that can create and search content.
     $this->search_user = $this->drupalCreateUser(array('search content', 'administer search'));
@@ -1906,7 +1918,7 @@ class SearchPageOverride extends DrupalWebTestCase {
 /**
  * Test node search with multiple languages.
  */
-class SearchLanguageTestCase extends DrupalWebTestCase {
+class SearchLanguageTestCase extends SearchWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Search language selection',
@@ -1915,11 +1927,8 @@ class SearchLanguageTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation setUp().
-   */
   function setUp() {
-    parent::setUp('search', 'locale');
+    parent::setUp(array('locale'));
 
     // Create and login user.
     $test_user = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search', 'administer nodes', 'administer languages', 'access administration pages'));
@@ -1934,7 +1943,7 @@ class SearchLanguageTestCase extends DrupalWebTestCase {
     // Add predefined language.
     $edit = array('predefined_langcode' => 'fr');
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText('fr', t('Language added successfully.'));
+    $this->assertText('French', t('Language added successfully.'));
 
     // Now we should have languages displayed.
     $this->drupalGet('search/node');
@@ -1971,7 +1980,7 @@ class SearchLanguageTestCase extends DrupalWebTestCase {
 /**
  * Tests node search with node access control.
  */
-class SearchNodeAccessTest extends DrupalWebTestCase {
+class SearchNodeAccessTest extends SearchWebTestCase {
   public $test_user;
 
   public static function getInfo() {
@@ -1983,7 +1992,7 @@ class SearchNodeAccessTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('search', 'node_access_test');
+    parent::setUp(array('node_access_test'));
     node_access_rebuild();
 
     // Create a test user and log in.
@@ -1995,7 +2004,7 @@ class SearchNodeAccessTest extends DrupalWebTestCase {
    * Tests that search returns results with punctuation in the search phrase.
    */
   function testPhraseSearchPunctuation() {
-    $node = $this->drupalCreateNode(array('body' => array(LANGUAGE_NONE => array(array('value' => "The bunny's ears were fuzzy.")))));
+    $node = $this->drupalCreateNode(array('body' => array(LANGUAGE_NOT_SPECIFIED => array(array('value' => "The bunny's ears were fluffy.")))));
 
     // Update the search index.
     module_invoke_all('update_index');

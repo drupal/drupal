@@ -313,7 +313,7 @@ function aggregator_cron() {
     ':time' => REQUEST_TIME,
     ':never' => AGGREGATOR_CLEAR_NEVER
   ));
-  $queue = DrupalQueue::get('aggregator_feeds');
+  $queue = queue('aggregator_feeds');
   foreach ($result as $feed) {
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.

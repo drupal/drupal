@@ -42,6 +42,8 @@ class RdfMappingHookTestCase extends DrupalWebTestCase {
  * Test RDFa markup generation.
  */
 class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'RDFa markup',
@@ -123,7 +125,7 @@ class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
     $admin_user = $this->drupalCreateUser(array('edit own article content', 'revert revisions', 'administer content types'));
     $this->drupalLogin($admin_user);
 
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $bundle_name = "article";
 
     $field_name = 'file_test';
@@ -191,7 +193,7 @@ class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
     $tag1 = $this->randomName(8);
     $tag2 = $this->randomName(8);
     $edit = array();
-    $edit['field_tags[' . LANGUAGE_NONE . ']'] = "$tag1, $tag2";
+    $edit['field_tags[' . LANGUAGE_NOT_SPECIFIED . ']'] = "$tag1, $tag2";
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     // Ensures the RDFa markup for the relationship between the node and its
     // tags is correct.
@@ -277,6 +279,8 @@ class RdfCrudTestCase extends DrupalWebTestCase {
 }
 
 class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'RDF mapping definition functionality',
@@ -573,6 +577,8 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
 }
 
 class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'RDF tracker page mapping',
@@ -663,7 +669,7 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
     // date has been added to the tracker output after a comment is posted.
     $comment = array(
       'subject' => $this->randomName(),
-      'comment_body[' . LANGUAGE_NONE . '][0][value]' => $this->randomName(),
+      'comment_body[' . LANGUAGE_NOT_SPECIFIED . '][0][value]' => $this->randomName(),
     );
     $this->drupalPost('comment/reply/' . $node->nid, $comment, t('Save'));
     $this->drupalGet('tracker');

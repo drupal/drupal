@@ -22,7 +22,7 @@ class NumberFieldTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_test');
+    parent::setUp(array('node', 'field_test', 'number', 'field_ui'));
     $this->web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content', 'administer content types'));
     $this->drupalLogin($this->web_user);
   }
@@ -57,7 +57,7 @@ class NumberFieldTestCase extends DrupalWebTestCase {
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test-bundle');
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', t('Widget is displayed'));
 
     // Submit a signed decimal value within the allowed precision and scale.

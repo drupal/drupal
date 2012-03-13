@@ -104,7 +104,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       $entity->ftid = $i;
       $entity->fttype = ($i < 5) ? 'bundle1' : 'bundle2';
 
-      $entity->{$this->field_names[0]}[LANGUAGE_NONE][0]['value'] = $i;
+      $entity->{$this->field_names[0]}[LANGUAGE_NOT_SPECIFIED][0]['value'] = $i;
       drupal_write_record('test_entity_bundle_key', $entity);
       field_attach_insert('test_entity_bundle_key', $entity);
     }
@@ -112,10 +112,10 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $entity = new stdClass();
     $entity->ftid = 5;
     $entity->fttype = 'test_entity_bundle';
-    $entity->{$this->field_names[1]}[LANGUAGE_NONE][0]['shape'] = 'square';
-    $entity->{$this->field_names[1]}[LANGUAGE_NONE][0]['color'] = 'red';
-    $entity->{$this->field_names[1]}[LANGUAGE_NONE][1]['shape'] = 'circle';
-    $entity->{$this->field_names[1]}[LANGUAGE_NONE][1]['color'] = 'blue';
+    $entity->{$this->field_names[1]}[LANGUAGE_NOT_SPECIFIED][0]['shape'] = 'square';
+    $entity->{$this->field_names[1]}[LANGUAGE_NOT_SPECIFIED][0]['color'] = 'red';
+    $entity->{$this->field_names[1]}[LANGUAGE_NOT_SPECIFIED][1]['shape'] = 'circle';
+    $entity->{$this->field_names[1]}[LANGUAGE_NOT_SPECIFIED][1]['color'] = 'blue';
     drupal_write_record('test_entity_bundle', $entity);
     field_attach_insert('test_entity_bundle', $entity);
 
@@ -131,7 +131,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       $entity->ftid = $i;
       $entity->ftvid = $i;
       $entity->fttype = 'test_bundle';
-      $entity->{$this->field_names[0]}[LANGUAGE_NONE][0]['value'] = $i;
+      $entity->{$this->field_names[0]}[LANGUAGE_NOT_SPECIFIED][0]['value'] = $i;
 
       drupal_write_record('test_entity', $entity);
       field_attach_insert('test_entity', $entity);
@@ -144,7 +144,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       $entity->ftid = 4;
       $entity->ftvid = $i;
       $entity->fttype = 'test_bundle';
-      $entity->{$this->field_names[0]}[LANGUAGE_NONE][0]['value'] = $i;
+      $entity->{$this->field_names[0]}[LANGUAGE_NOT_SPECIFIED][0]['value'] = $i;
 
       drupal_write_record('test_entity', $entity, 'ftid');
       drupal_write_record('test_entity_revision', $entity);
@@ -981,7 +981,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       $entity = new stdClass();
       $entity->ftid = $i;
       $entity->fttype = 'test_entity_bundle';
-      $entity->{$this->field_names[0]}[LANGUAGE_NONE][0]['value'] = $i - 5;
+      $entity->{$this->field_names[0]}[LANGUAGE_NOT_SPECIFIED][0]['value'] = $i - 5;
       drupal_write_record('test_entity_bundle', $entity);
       field_attach_insert('test_entity_bundle', $entity);
     }
@@ -1066,7 +1066,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $entity->fttype = 'test_bundle';
 
     // Set fields in two languages with one field value.
-    foreach (array(LANGUAGE_NONE, 'en') as $langcode) {
+    foreach (array(LANGUAGE_NOT_SPECIFIED, 'en') as $langcode) {
       $entity->{$this->field_names[0]}[$langcode][0]['value'] = 1234;
     }
 
@@ -1103,7 +1103,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $entity->fttype = 'test_bundle';
     $j = 0;
 
-    foreach (array(LANGUAGE_NONE, 'en') as $langcode) {
+    foreach (array(LANGUAGE_NOT_SPECIFIED, 'en') as $langcode) {
       for ($i = 0; $i < 4; $i++) {
         $entity->{$this->field_names[0]}[$langcode][$i]['value'] = $i + $j;
       }
@@ -1125,7 +1125,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query = new EntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'test_entity', '=')
-      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NONE, '<>');
+      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NOT_SPECIFIED, '<>');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity', 1),
     ), t('Test with a language meta condition.'));
@@ -1161,7 +1161,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query
       ->entityCondition('entity_type', 'test_entity', '=')
       ->fieldCondition($this->fields[0], 'value', 0, '=', NULL, 'group')
-      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NONE, '<>', NULL, 'group');
+      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NOT_SPECIFIED, '<>', NULL, 'group');
     $this->assertEntityFieldQuery($query, array(), t('Test with a grouped language meta condition (empty result set).'));
 
     // Test delta and language grouping.
@@ -1188,7 +1188,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       ->entityCondition('entity_type', 'test_entity', '=')
       ->fieldCondition($this->fields[0], 'value', 0, '=', 'delta', 'language')
       ->fieldDeltaCondition($this->fields[0], 1, '<', 'delta', 'language')
-      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NONE, '<>', 'delta', 'language');
+      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NOT_SPECIFIED, '<>', 'delta', 'language');
     $this->assertEntityFieldQuery($query, array(), t('Test with a grouped delta + language meta condition (empty result set, language condition unsatisifed).'));
 
     $query = new EntityFieldQuery();
@@ -1196,7 +1196,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       ->entityCondition('entity_type', 'test_entity', '=')
       ->fieldCondition($this->fields[0], 'value', 0, '=', 'delta', 'language')
       ->fieldDeltaCondition($this->fields[0], 1, '>=', 'delta', 'language')
-      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NONE, '<>', 'delta', 'language');
+      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NOT_SPECIFIED, '<>', 'delta', 'language');
     $this->assertEntityFieldQuery($query, array(), t('Test with a grouped delta + language meta condition (empty result set, both conditions unsatisifed).'));
 
     // Test grouping with another field to ensure that grouping cache is reset
@@ -1207,7 +1207,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       ->fieldCondition($this->fields[1], 'shape', 'circle', '=', 'delta', 'language')
       ->fieldCondition($this->fields[1], 'color', 'blue', '=', 'delta', 'language')
       ->fieldDeltaCondition($this->fields[1], 1, '=', 'delta', 'language')
-      ->fieldLanguageCondition($this->fields[1], LANGUAGE_NONE, '=', 'delta', 'language');
+      ->fieldLanguageCondition($this->fields[1], LANGUAGE_NOT_SPECIFIED, '=', 'delta', 'language');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle', 5),
     ), t('Test grouping cache.'));

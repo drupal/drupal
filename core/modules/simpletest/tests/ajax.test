@@ -58,8 +58,6 @@ class AJAXTestCase extends DrupalWebTestCase {
  * Tests primary Ajax framework functions.
  */
 class AJAXFrameworkTestCase extends AJAXTestCase {
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'AJAX framework',
@@ -426,6 +424,8 @@ class AJAXFormValuesTestCase extends AJAXTestCase {
  * Tests that Ajax-enabled forms work when multiple instances of the same form are on a page.
  */
 class AJAXMultiFormTestCase extends AJAXTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'AJAX multi form',

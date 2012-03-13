@@ -465,8 +465,12 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
 
 /**
  * Tests the file move function for managed files.
+ *
+ * @todo This test belongs to File module.
  */
 class ImageFileMoveTest extends ImageToolkitTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Image moving',

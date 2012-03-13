@@ -58,7 +58,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     field_create_instance($this->instance);
     // Test valid and invalid values with field_attach_validate().
     $entity = field_test_create_stub_entity();
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     for ($i = 0; $i <= $max_length + 2; $i++) {
       $entity->{$this->field['field_name']}[$langcode][0]['value'] = str_repeat('x', $i);
       try {
@@ -106,7 +106,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
       ),
     );
     field_create_instance($this->instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test-bundle');
@@ -165,7 +165,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
       ),
     );
     field_create_instance($this->instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Disable all text formats besides the plain text fallback format.
     $this->drupalLogin($this->admin_user);
@@ -238,6 +238,8 @@ class TextFieldTestCase extends DrupalWebTestCase {
 }
 
 class TextSummaryTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Text summary',
@@ -406,6 +408,8 @@ class TextSummaryTestCase extends DrupalWebTestCase {
 }
 
 class TextTranslationTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Text translation',
@@ -451,7 +455,7 @@ class TextTranslationTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->translator);
 
     // Create content.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $body = $this->randomName();
     $edit = array(
       'title' => $this->randomName(),
@@ -494,7 +498,7 @@ class TextTranslationTestCase extends DrupalWebTestCase {
     // Populate the body field: the first item gets the "Full HTML" input
     // format, the second one "Filtered HTML".
     $formats = array('full_html', 'filtered_html');
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     foreach ($body as $delta => $value) {
       $edit = array(
         "body[$langcode][$delta][value]" => $value,

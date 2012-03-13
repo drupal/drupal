@@ -163,6 +163,15 @@ const DRUPAL_CACHE_PER_PAGE = 0x0004;
 const DRUPAL_CACHE_GLOBAL = 0x0008;
 
 /**
+ * The delimiter used to split plural strings.
+ *
+ * This is the ETX (End of text) character and is used as a minimal means to
+ * separate singular and plural variants in source and translation text. It
+ * was found to be the most compatible delimiter for the supported databases.
+ */
+const LOCALE_PLURAL_DELIMITER = "\03";
+
+/**
  * Adds content to a specified region.
  *
  * @param $region
@@ -1719,27 +1728,34 @@ function format_xml_elements($array) {
  */
 function format_plural($count, $singular, $plural, array $args = array(), array $options = array()) {
   $args['@count'] = $count;
+  // Join both forms to search a translation.
+  $tranlatable_string = implode(LOCALE_PLURAL_DELIMITER, array($singular, $plural));
+  // Translate as usual.
+  $translated_strings = t($tranlatable_string, $args, $options);
+  // Split joined translation strings into array.
+  $translated_array = explode(LOCALE_PLURAL_DELIMITER, $translated_strings);
+
   if ($count == 1) {
-    return t($singular, $args, $options);
+    return $translated_array[0];
   }
 
   // Get the plural index through the gettext formula.
+  // @todo implement static variable to minimize function_exists() usage.
   $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, isset($options['langcode']) ? $options['langcode'] : NULL) : -1;
-  // If the index cannot be computed, use the plural as a fallback (which
-  // allows for most flexiblity with the replaceable @count value).
-  if ($index < 0) {
-    return t($plural, $args, $options);
+  if ($index == 0) {
+    // Singular form.
+    return $translated_array[0];
   }
   else {
-    switch ($index) {
-      case "0":
-        return t($singular, $args, $options);
-      case "1":
-        return t($plural, $args, $options);
-      default:
-        unset($args['@count']);
-        $args['@count[' . $index . ']'] = $count;
-        return t(strtr($plural, array('@count' => '@count[' . $index . ']')), $args, $options);
+    if (isset($translated_array[$index])) {
+      // N-th plural form.
+      return $translated_array[$index];
+    }
+    else {
+      // If the index cannot be computed or there's no translation, use
+      // the second plural form as a fallback (which allows for most flexiblity
+      // with the replaceable @count value).
+      return $translated_array[1];
     }
   }
 }
@@ -5237,7 +5253,7 @@ function drupal_cron_run() {
     // Make sure every queue exists. There is no harm in trying to recreate an
     // existing queue.
     foreach ($queues as $queue_name => $info) {
-      DrupalQueue::get($queue_name)->createQueue();
+      queue($queue_name)->createQueue();
     }
     // Register shutdown callback.
     drupal_register_shutdown_function('drupal_cron_cleanup');
@@ -5267,7 +5283,7 @@ function drupal_cron_run() {
   foreach ($queues as $queue_name => $info) {
     $function = $info['worker callback'];
     $end = time() + (isset($info['time']) ? $info['time'] : 15);
-    $queue = DrupalQueue::get($queue_name);
+    $queue = queue($queue_name);
     while (time() < $end && ($item = $queue->claimItem())) {
       $function($item->data);
       $queue->deleteItem($item);
@@ -6941,6 +6957,9 @@ function drupal_common_theme() {
     'email' => array(
       'render element' => 'element',
     ),
+    'url' => array(
+      'render element' => 'element',
+    ),
     'form' => array(
       'render element' => 'element',
     ),
@@ -7783,9 +7802,10 @@ function archiver_get_archiver($file) {
  * file system, for example to update modules that have newer releases, or to
  * install a new theme.
  *
- * @return
+ * @return array
  *   The Drupal Updater class registry.
  *
+ * @see Drupal\Core\Updater\Updater
  * @see hook_updater_info()
  * @see hook_updater_info_alter()
  */
@@ -7832,3 +7852,97 @@ function drupal_get_filetransfer_info() {
   }
   return $info;
 }
+
+/**
+ * @defgroup queue Queue operations
+ * @{
+ * Queue items to allow later processing.
+ *
+ * The queue system allows placing items in a queue and processing them later.
+ * The system tries to ensure that only one consumer can process an item.
+ *
+ * Before a queue can be used it needs to be created by
+ * Drupal\Core\Queue\QueueInterface::createQueue().
+ *
+ * Items can be added to the queue by passing an arbitrary data object to
+ * Drupal\Core\Queue\QueueInterface::createItem().
+ *
+ * To process an item, call Drupal\Core\Queue\QueueInterface::claimItem() and
+ * specify how long you want to have a lease for working on that item.
+ * When finished processing, the item needs to be deleted by calling
+ * Drupal\Core\Queue\QueueInterface::deleteItem(). If the consumer dies, the
+ * item will be made available again by the Drupal\Core\Queue\QueueInterface
+ * implementation once the lease expires. Another consumer will then be able to
+ * receive it when calling Drupal\Core\Queue\QueueInterface::claimItem().
+ * Due to this, the processing code should be aware that an item might be handed
+ * over for processing more than once.
+ *
+ * The $item object used by the Drupal\Core\Queue\QueueInterface can contain
+ * arbitrary metadata depending on the implementation. Systems using the
+ * interface should only rely on the data property which will contain the
+ * information passed to Drupal\Core\Queue\QueueInterface::createItem().
+ * The full queue item returned by Drupal\Core\Queue\QueueInterface::claimItem()
+ * needs to be passed to Drupal\Core\Queue\QueueInterface::deleteItem() once
+ * processing is completed.
+ *
+ * There are two kinds of queue backends available: reliable, which preserves
+ * the order of messages and guarantees that every item will be executed at
+ * least once. The non-reliable kind only does a best effort to preserve order
+ * in messages and to execute them at least once but there is a small chance
+ * that some items get lost. For example, some distributed back-ends like
+ * Amazon SQS will be managing jobs for a large set of producers and consumers
+ * where a strict FIFO ordering will likely not be preserved. Another example
+ * would be an in-memory queue backend which might lose items if it crashes.
+ * However, such a backend would be able to deal with significantly more writes
+ * than a reliable queue and for many tasks this is more important. See
+ * aggregator_cron() for an example of how to effectively utilize a
+ * non-reliable queue. Another example is doing Twitter statistics -- the small
+ * possibility of losing a few items is insignificant next to power of the
+ * queue being able to keep up with writes. As described in the processing
+ * section, regardless of the queue being reliable or not, the processing code
+ * should be aware that an item might be handed over for processing more than
+ * once (because the processing code might time out before it finishes).
+ */
+
+/**
+ * Instantiates and statically caches the correct class for a queue.
+ *
+ * The following variables can be set by variable_set or $conf overrides:
+ * - queue_class_$name: the class to be used for the queue $name.
+ * - queue_default_class: the class to use when queue_class_$name is not
+ *   defined. Defaults to Drupal\Core\Queue\System, a reliable backend using
+ *   SQL.
+ * - queue_default_reliable_class: the class to use when queue_class_$name is
+ *   not defined and the queue_default_class is not reliable. Defaults to
+ *   Drupal\Core\Queue\System.
+ *
+ * @param string $name
+ *   The name of the queue to work with.
+ * @param bool $reliable
+ *   TRUE if the ordering of items and guaranteeing every item executes at
+ *   least once is important, FALSE if scalability is the main concern. Defaults
+ *   to FALSE.
+ *
+ * @return Drupal\Core\Queue\QueueInterface
+ *   The queue object for a given name.
+ *
+ * @see Drupal\Core\Queue\QueueInterface
+ */
+function queue($name, $reliable = FALSE) {
+  static $queues;
+  if (!isset($queues[$name])) {
+    $class = variable_get('queue_class_' . $name, NULL);
+    if ($class && $reliable && in_array('Drupal\Core\Queue\ReliableQueueInterface', class_implements($class))) {
+      $class = variable_get('queue_default_reliable_class', 'Drupal\Core\Queue\System');
+    }
+    elseif (!$class) {
+      $class = variable_get('queue_default_class', 'Drupal\Core\Queue\System');
+    }
+    $queues[$name] = new $class($name);
+  }
+  return $queues[$name];
+}
+
+/**
+ * @} End of "defgroup queue".
+ */

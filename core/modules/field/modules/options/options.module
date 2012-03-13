@@ -102,10 +102,18 @@ function options_field_widget_form(&$form, &$form_state, $field, $instance, $lan
         reset($options);
         $default_value = array(key($options));
       }
+
+      // If this is a single-value field, take the first default value, or
+      // default to NULL so that the form element is properly recognized as
+      // not having a default value.
+      if (!$multiple) {
+        $default_value = $default_value ? reset($default_value) : NULL;
+      }
+
       $element += array(
         '#type' => $multiple ? 'checkboxes' : 'radios',
         // Radio buttons need a scalar value.
-        '#default_value' => $multiple ? $default_value : reset($default_value),
+        '#default_value' => $default_value,
         '#options' => $options,
       );
       break;

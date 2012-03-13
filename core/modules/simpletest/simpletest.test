@@ -72,7 +72,9 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
         'pass' => $user->pass_raw
       );
       variable_set('simpletest_maximum_redirects', 1);
-      $this->drupalPost('user?destination=user/logout', $edit, t('Log in'));
+      $this->drupalPost('user', $edit, t('Log in'), array(
+        'query' => array('destination' => 'user/logout'),
+      ));
       $headers = $this->drupalGetHeaders(TRUE);
       $this->assertEqual(count($headers), 2, t('Simpletest stopped following redirects after the first one.'));
     }

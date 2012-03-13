@@ -6,6 +6,8 @@
  */
 
 class CommentHelperCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   protected $admin_user;
   protected $web_user;
   protected $node;
@@ -32,7 +34,7 @@ class CommentHelperCase extends DrupalWebTestCase {
    *   array of values to set contact info.
    */
   function postComment($node, $comment, $subject = '', $contact = NULL) {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array();
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
 
@@ -276,7 +278,7 @@ class CommentInterfaceTest extends CommentHelperCase {
    * Tests the comment interface.
    */
   function testCommentInterface() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Set comments to have subject and preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);
@@ -451,8 +453,8 @@ class CommentInterfaceTest extends CommentHelperCase {
       'status' => COMMENT_PUBLISHED,
       'subject' => $this->randomName(),
       'hostname' => ip_address(),
-      'langcode' => LANGUAGE_NONE,
-      'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),
     ));
     comment_save($comment);
     $this->drupalLogout();
@@ -498,8 +500,8 @@ class CommentInterfaceTest extends CommentHelperCase {
         'uid' => $case['comment_uid'],
         'status' => $case['comment_status'],
         'subject' => $this->randomName(),
-        'language' => LANGUAGE_NONE,
-        'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
+        'language' => LANGUAGE_NOT_SPECIFIED,
+        'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),
       ));
       comment_save($comment);
 
@@ -525,56 +527,56 @@ class CommentInterfaceTest extends CommentHelperCase {
 
       // Verify classes if the comment is visible for the current user.
       if ($case['comment_status'] == COMMENT_PUBLISHED || $case['user'] == 'admin') {
-        // Verify the comment-by-anonymous class.
-        $comments = $this->xpath('//*[contains(@class, "comment-by-anonymous")]');
+        // Verify the by-anonymous class.
+        $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "by-anonymous")]');
         if ($case['comment_uid'] == 0) {
-          $this->assertTrue(count($comments) == 1, 'comment-by-anonymous class found.');
+          $this->assertTrue(count($comments) == 1, 'by-anonymous class found.');
         }
         else {
-          $this->assertFalse(count($comments), 'comment-by-anonymous class not found.');
+          $this->assertFalse(count($comments), 'by-anonymous class not found.');
         }
 
-        // Verify the comment-by-node-author class.
-        $comments = $this->xpath('//*[contains(@class, "comment-by-node-author")]');
+        // Verify the by-node-author class.
+        $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "by-node-author")]');
         if ($case['comment_uid'] > 0 && $case['comment_uid'] == $case['node_uid']) {
-          $this->assertTrue(count($comments) == 1, 'comment-by-node-author class found.');
+          $this->assertTrue(count($comments) == 1, 'by-node-author class found.');
         }
         else {
-          $this->assertFalse(count($comments), 'comment-by-node-author class not found.');
+          $this->assertFalse(count($comments), 'by-node-author class not found.');
         }
 
-        // Verify the comment-by-viewer class.
-        $comments = $this->xpath('//*[contains(@class, "comment-by-viewer")]');
+        // Verify the by-viewer class.
+        $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "by-viewer")]');
         if ($case['comment_uid'] > 0 && $case['comment_uid'] == $case['user_uid']) {
-          $this->assertTrue(count($comments) == 1, 'comment-by-viewer class found.');
+          $this->assertTrue(count($comments) == 1, 'by-viewer class found.');
         }
         else {
-          $this->assertFalse(count($comments), 'comment-by-viewer class not found.');
+          $this->assertFalse(count($comments), 'by-viewer class not found.');
         }
       }
 
-      // Verify the comment-unpublished class.
-      $comments = $this->xpath('//*[contains(@class, "comment-unpublished")]');
+      // Verify the unpublished class.
+      $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "unpublished")]');
       if ($case['comment_status'] == COMMENT_NOT_PUBLISHED && $case['user'] == 'admin') {
-        $this->assertTrue(count($comments) == 1, 'comment-unpublished class found.');
+        $this->assertTrue(count($comments) == 1, 'unpublished class found.');
       }
       else {
-        $this->assertFalse(count($comments), 'comment-unpublished class not found.');
+        $this->assertFalse(count($comments), 'unpublished class not found.');
       }
 
-      // Verify the comment-new class.
+      // Verify the new class.
       if ($case['comment_status'] == COMMENT_PUBLISHED || $case['user'] == 'admin') {
-        $comments = $this->xpath('//*[contains(@class, "comment-new")]');
+        $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "new")]');
         if ($case['user'] != 'anonymous') {
-          $this->assertTrue(count($comments) == 1, 'comment-new class found.');
+          $this->assertTrue(count($comments) == 1, 'new class found.');
 
-          // Request the node again. The comment-new class should disappear.
+          // Request the node again. The new class should disappear.
           $this->drupalGet('node/' . $node->nid);
-          $comments = $this->xpath('//*[contains(@class, "comment-new")]');
-          $this->assertFalse(count($comments), 'comment-new class not found.');
+          $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "new")]');
+          $this->assertFalse(count($comments), 'new class not found.');
         }
         else {
-          $this->assertFalse(count($comments), 'comment-new class not found.');
+          $this->assertFalse(count($comments), 'new class not found.');
         }
       }
     }
@@ -584,7 +586,7 @@ class CommentInterfaceTest extends CommentHelperCase {
    * Tests the node comment statistics.
    */
   function testCommentNodeCommentStatistics() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Set comments to have subject and preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);
@@ -778,8 +780,8 @@ class CommentInterfaceTest extends CommentHelperCase {
           'status' => COMMENT_PUBLISHED,
           'subject' => $this->randomName(),
           'hostname' => ip_address(),
-          'langcode' => LANGUAGE_NONE,
-          'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
+          'langcode' => LANGUAGE_NOT_SPECIFIED,
+          'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),
         ));
         comment_save($comment);
         $this->comment = $comment;
@@ -965,7 +967,7 @@ class CommentPreviewTest extends CommentHelperCase {
    * Tests comment preview.
    */
   function testCommentPreview() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // As admin user, configure comment settings.
     $this->drupalLogin($this->admin_user);
@@ -1005,14 +1007,14 @@ class CommentPreviewTest extends CommentHelperCase {
     $this->assertLink($test_signature);
 
     // Check that the user picture is displayed.
-    $this->assertFieldByXPath("//div[contains(@class, 'comment-preview')]//div[contains(@class, 'user-picture')]//img", NULL, 'User picture displayed.');
+    $this->assertFieldByXPath("//div[contains(@class, 'preview')]//div[contains(@class, 'user-picture')]//img", NULL, 'User picture displayed.');
   }
 
   /**
    * Tests comment edit, preview, and save.
    */
   function testCommentEditPreviewSave() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'skip comment approval'));
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
@@ -1126,7 +1128,7 @@ class CommentAnonymous extends CommentHelperCase {
     $this->assertTrue($this->commentExists($anonymous_comment2), t('Anonymous comment with contact info (optional) found.'));
 
     // Ensure anonymous users cannot post in the name of registered users.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array(
       'name' => $this->admin_user->name,
       'mail' => $this->randomName() . '@example.com',
@@ -1522,7 +1524,7 @@ class CommentNodeAccessTest extends CommentHelperCase {
    * Test that threaded comments can be viewed.
    */
   function testThreadedCommentView() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Set comments to have subject required and preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);
@@ -1899,7 +1901,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:mail]'] = check_plain($this->admin_user->mail);
     $tests['[comment:homepage]'] = check_url($comment->homepage);
     $tests['[comment:title]'] = filter_xss($comment->subject);
-    $tests['[comment:body]'] = _text_sanitize($instance, LANGUAGE_NONE, $comment->comment_body[LANGUAGE_NONE][0], 'value');
+    $tests['[comment:body]'] = _text_sanitize($instance, LANGUAGE_NOT_SPECIFIED, $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0], 'value');
     $tests['[comment:url]'] = url('comment/' . $comment->cid, $url_options + array('fragment' => 'comment-' . $comment->cid));
     $tests['[comment:edit-url]'] = url('comment/' . $comment->cid . '/edit', $url_options);
     $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created, 2, $language_interface->langcode);
@@ -1925,7 +1927,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:mail]'] = $this->admin_user->mail;
     $tests['[comment:homepage]'] = $comment->homepage;
     $tests['[comment:title]'] = $comment->subject;
-    $tests['[comment:body]'] = $comment->comment_body[LANGUAGE_NONE][0]['value'];
+    $tests['[comment:body]'] = $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0]['value'];
     $tests['[comment:parent:title]'] = $parent_comment->subject;
     $tests['[comment:node:title]'] = $node->title;
     $tests['[comment:author:name]'] = $this->admin_user->name;
@@ -2140,7 +2142,7 @@ class CommentThreadingTestCase extends CommentHelperCase {
    * Tests the comment threading.
    */
   function testCommentThreading() {
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     // Set comments to have a subject with preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);

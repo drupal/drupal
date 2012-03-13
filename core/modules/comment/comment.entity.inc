@@ -29,7 +29,7 @@ class Comment extends Entity {
    *
    * @var string
    */
-  public $langcode = LANGUAGE_NONE;
+  public $langcode = LANGUAGE_NOT_SPECIFIED;
 
   /**
    * The comment title.

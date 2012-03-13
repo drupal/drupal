@@ -1,4 +1,3 @@
-
 (function ($) {
 
 /**
@@ -354,9 +353,14 @@ Drupal.overlay.isAdminLink = function (url) {
 
   // Turn the list of administrative paths into a regular expression.
   if (!this.adminPathRegExp) {
-    var regExpPrefix = '' + Drupal.settings.pathPrefix + '(';
-    var adminPaths = regExpPrefix + Drupal.settings.overlay.paths.admin.replace(/\s+/g, ')$|' + regExpPrefix) + ')$';
-    var nonAdminPaths = regExpPrefix + Drupal.settings.overlay.paths.non_admin.replace(/\s+/g, ')$|'+ regExpPrefix) + ')$';
+    var prefix = '';
+    if (Drupal.settings.overlay.pathPrefixes.length) {
+      // Allow path prefixes used for language negatiation followed by slash,
+      // and the empty string.
+      prefix = '(' + Drupal.settings.overlay.pathPrefixes.join('/|') + '/|)';
+    }
+    var adminPaths = '^' + prefix + '(' + Drupal.settings.overlay.paths.admin.replace(/\s+/g, '|') + ')$';
+    var nonAdminPaths = '^' + prefix + '(' + Drupal.settings.overlay.paths.non_admin.replace(/\s+/g, '|') + ')$';
     adminPaths = adminPaths.replace(/\*/g, '.*');
     nonAdminPaths = nonAdminPaths.replace(/\*/g, '.*');
     this.adminPathRegExp = new RegExp(adminPaths);
@@ -863,8 +867,13 @@ Drupal.overlay.getDisplacement = function (region) {
   if (lastDisplaced.length) {
     displacement = lastDisplaced.offset().top + lastDisplaced.outerHeight();
 
-    // Remove height added by IE Shadow filter.
-    if (lastDisplaced[0].filters && lastDisplaced[0].filters.length && lastDisplaced[0].filters.item('DXImageTransform.Microsoft.Shadow')) {
+    // In modern browsers (including IE9), when box-shadow is defined, use the
+    // normal height.
+    var cssBoxShadowValue = lastDisplaced.css('box-shadow');
+    var boxShadow = (typeof cssBoxShadowValue !== 'undefined' && cssBoxShadowValue !== 'none');
+    // In IE8 and below, we use the shadow filter to apply box-shadow styles to
+    // the toolbar. It adds some extra height that we need to remove.
+    if (!boxShadow && /DXImageTransform\.Microsoft\.Shadow/.test(lastDisplaced.css('filter'))) {
       displacement -= lastDisplaced[0].filters.item('DXImageTransform.Microsoft.Shadow').strength;
       displacement = Math.max(0, displacement);
     }

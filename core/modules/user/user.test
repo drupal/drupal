@@ -223,7 +223,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     // Check user fields.
     $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
-    $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][0]['value'], $value, t('The field value was correclty saved.'));
+    $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][0]['value'], $value, t('The field value was correclty saved.'));
 
     // Check that the 'add more' button works.
     $field['cardinality'] = FIELD_CARDINALITY_UNLIMITED;
@@ -251,9 +251,9 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
       // Check user fields.
       $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
       $new_user = reset($accounts);
-      $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][0]['value'], $value, t('@js : The field value was correclty saved.', array('@js' => $js)));
-      $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][1]['value'], $value + 1, t('@js : The field value was correclty saved.', array('@js' => $js)));
-      $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][2]['value'], $value + 2, t('@js : The field value was correclty saved.', array('@js' => $js)));
+      $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][0]['value'], $value, t('@js : The field value was correclty saved.', array('@js' => $js)));
+      $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][1]['value'], $value + 1, t('@js : The field value was correclty saved.', array('@js' => $js)));
+      $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][2]['value'], $value + 2, t('@js : The field value was correclty saved.', array('@js' => $js)));
     }
   }
 }
@@ -442,6 +442,8 @@ class UserLoginTestCase extends DrupalWebTestCase {
  * Test cancelling a user.
  */
 class UserCancelTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Cancel account',
@@ -711,7 +713,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
 
     // Create comment.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
@@ -849,9 +851,14 @@ class UserPictureTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp();
+    parent::setUp(array('image'));
     // Enable user pictures.
     variable_set('user_pictures', 1);
+
+    // Configure default user picture settings.
+    variable_set('user_picture_dimensions', '1024x1024');
+    variable_set('user_picture_file_size', '800');
+    variable_set('user_picture_style', 'thumbnail');
 
     $this->user = $this->drupalCreateUser();
 
@@ -1185,6 +1192,10 @@ class UserAdminTestCase extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp(array('taxonomy'));
+  }
+
   /**
    * Registers a user and deletes it.
    */
@@ -1385,14 +1396,14 @@ class UserAccountLinksUnitTests extends DrupalWebTestCase {
     // For a logged-in user, expect the secondary menu to have links for "My
     // account" and "Log out".
     $link = $this->xpath('//ul[@id=:menu_id]/li/a[contains(@href, :href) and text()=:text]', array(
-      ':menu_id' => 'secondary-menu-links',
+      ':menu_id' => 'secondary-menu',
       ':href' => 'user',
       ':text' => 'My account',
     ));
     $this->assertEqual(count($link), 1, 'My account link is in secondary menu.');
 
     $link = $this->xpath('//ul[@id=:menu_id]/li/a[contains(@href, :href) and text()=:text]', array(
-      ':menu_id' => 'secondary-menu-links',
+      ':menu_id' => 'secondary-menu',
       ':href' => 'user/logout',
       ':text' => 'Log out',
     ));
@@ -1403,7 +1414,7 @@ class UserAccountLinksUnitTests extends DrupalWebTestCase {
     $this->drupalGet('<front>');
 
     // For a logged-out user, expect no secondary links.
-    $element = $this->xpath('//ul[@id=:menu_id]', array(':menu_id' => 'secondary-menu-links'));
+    $element = $this->xpath('//ul[@id=:menu_id]', array(':menu_id' => 'secondary-menu'));
     $this->assertEqual(count($element), 0, 'No secondary-menu for logged-out users.');
   }
 }
@@ -1418,6 +1429,26 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
       'description' => 'Test user blocks.',
       'group' => 'User'
     );
+  }
+
+  function setUp() {
+    parent::setUp(array('block'));
+
+    // Enable user login block.
+    db_merge('block')
+      ->key(array(
+        'module' => 'user',
+        'delta' => 'login',
+        'theme' => variable_get('theme_default', 'stark'),
+      ))
+      ->fields(array(
+        'status' => 1,
+        'weight' => 0,
+        'region' => 'sidebar_first',
+        'pages' => '',
+        'cache' => -1,
+      ))
+      ->execute();
   }
 
   /**
@@ -1679,12 +1710,32 @@ class UserSignatureTestCase extends DrupalWebTestCase {
     // Enable user signatures.
     variable_set('user_signatures', 1);
 
-    // Prefetch text formats.
-    $this->full_html_format = filter_format_load('full_html');
+    // Create Basic page node type.
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+
+    // Prefetch and create text formats.
     $this->plain_text_format = filter_format_load('plain_text');
 
+    $filtered_html_format = array(
+      'format' => 'filtered_html',
+      'name' => 'Filtered HTML',
+    );
+    $this->filtered_html_format = (object) $filtered_html_format;
+    filter_format_save($this->filtered_html_format);
+
+    $full_html_format = array(
+      'format' => 'full_html',
+      'name' => 'Full HTML',
+    );
+    $this->full_html_format = (object) $full_html_format;
+    filter_format_save($this->full_html_format);
+
+    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array(filter_permission_name($this->filtered_html_format)));
+    $this->checkPermissions(array(), TRUE);
+
     // Create regular and administrative users.
-    $this->web_user = $this->drupalCreateUser(array());
+    $this->web_user = $this->drupalCreateUser(array('post comments'));
+
     $admin_permissions = array('administer comments');
     foreach (filter_formats() as $format) {
       if ($permission = filter_permission_name($format)) {
@@ -1720,7 +1771,7 @@ class UserSignatureTestCase extends DrupalWebTestCase {
     $this->assertFieldByName('signature[format]', $edit['signature[format]'], 'Submitted signature format found.');
 
     // Create a comment.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
@@ -1941,6 +1992,10 @@ class UserUserSearchTestCase extends DrupalWebTestCase {
       'description' => 'Testing that only user with the right permission can see the email address in the user search.',
       'group' => 'User',
     );
+  }
+
+  function setUp() {
+    parent::setUp(array('search'));
   }
 
   function testUserSearch() {

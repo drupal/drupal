@@ -384,6 +384,16 @@ function system_element_info() {
     '#theme' => 'email',
     '#theme_wrappers' => array('form_element'),
   );
+  $types['url'] = array(
+    '#input' => TRUE,
+    '#size' => 60,
+    '#maxlength' => 255,
+    '#autocomplete_path' => FALSE,
+    '#process' => array('ajax_process_form'),
+    '#element_validate' => array('form_validate_url'),
+    '#theme' => 'url',
+    '#theme_wrappers' => array('form_element'),
+  );
   $types['machine_name'] = array(
     '#input' => TRUE,
     '#default_value' => NULL,
@@ -1669,13 +1679,13 @@ function system_stream_wrappers() {
   $wrappers = array(
     'public' => array(
       'name' => t('Public files'),
-      'class' => 'DrupalPublicStreamWrapper',
+      'class' => 'Drupal\Core\StreamWrapper\PublicStream',
       'description' => t('Public local files served by the webserver.'),
       'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
     ),
     'temporary' => array(
       'name' => t('Temporary files'),
-      'class' => 'DrupalTemporaryStreamWrapper',
+      'class' => 'Drupal\Core\StreamWrapper\TemporaryStream',
       'description' => t('Temporary local files for upload and previews.'),
       'type' => STREAM_WRAPPERS_LOCAL_HIDDEN,
     ),
@@ -1685,7 +1695,7 @@ function system_stream_wrappers() {
   if (variable_get('file_private_path', FALSE)) {
     $wrappers['private'] = array(
       'name' => t('Private files'),
-      'class' => 'DrupalPrivateStreamWrapper',
+      'class' => 'Drupal\Core\StreamWrapper\PrivateStream',
       'description' => t('Private local files served by Drupal.'),
       'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
     );
@@ -1852,12 +1862,12 @@ function system_authorized_batch_process() {
 function system_updater_info() {
   return array(
     'module' => array(
-      'class' => 'ModuleUpdater',
+      'class' => 'Drupal\Core\Updater\Module',
       'name' => t('Update modules'),
       'weight' => 0,
     ),
     'theme' => array(
-      'class' => 'ThemeUpdater',
+      'class' => 'Drupal\Core\Updater\Theme',
       'name' => t('Update themes'),
       'weight' => 0,
     ),
@@ -2382,7 +2392,6 @@ function _system_rebuild_module_data() {
   $modules[$profile] = new stdClass();
   $modules[$profile]->name = $profile;
   $modules[$profile]->uri = 'profiles/' . $profile . '/' . $profile . '.profile';
-  $modules[$profile]->filename = $profile . '.profile';
 
   // Install profile hooks are always executed last.
   $modules[$profile]->weight = 1000;

@@ -15,7 +15,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_test', 'list_test');
+    parent::setUp(array('list', 'field_test', 'list_test', 'taxonomy', 'field_ui'));
 
     // Field with cardinality 1.
     $this->card_1 = array(
@@ -72,7 +72,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -126,7 +126,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -214,7 +214,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -310,7 +310,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -427,7 +427,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       ),
     );
     $instance = field_create_instance($instance);
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
     $entity_init = field_test_create_stub_entity();
@@ -457,6 +457,9 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     // Display form: with 'off' value, option is unchecked.
     $this->drupalGet('test-entity/manage/' . $entity->ftid . '/edit');
     $this->assertNoFieldChecked("edit-bool-$langcode");
+
+    // Create Basic page node type.
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     // Create admin user.
     $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));

@@ -32,7 +32,20 @@ class ImageFieldTestCase extends DrupalWebTestCase {
   protected $admin_user;
 
   function setUp() {
-    parent::setUp('image');
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules[] = 'node';
+    $modules[] = 'image';
+    parent::setUp($modules);
+
+    // Create Basic page and Article node types.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    }
+
     $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer image styles'));
     $this->drupalLogin($this->admin_user);
   }
@@ -92,7 +105,7 @@ class ImageFieldTestCase extends DrupalWebTestCase {
     $edit = array(
       'title' => $this->randomName(),
     );
-    $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_0]'] = drupal_realpath($image->uri);
+    $edit['files[' . $field_name . '_' . LANGUAGE_NOT_SPECIFIED . '_0]'] = drupal_realpath($image->uri);
     $this->drupalPost('node/add/' . $type, $edit, t('Save'));
 
     // Retrieve ID of the newly created node from the current URL.
@@ -119,7 +132,7 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('image_module_test');
+    parent::setUp(array('image', 'image_module_test'));
 
     $this->style_name = 'style_foo';
     image_style_save(array('name' => $this->style_name));
@@ -529,7 +542,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url($style_name, $node->{$field_name}[LANGUAGE_NONE][0]['uri']), t('Image displayed using style @style.', array('@style' => $style_name)));
+    $this->assertRaw(image_style_url($style_name, $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['uri']), t('Image displayed using style @style.', array('@style' => $style_name)));
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = strtolower($this->randomName(10));
@@ -539,7 +552,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     $this->drupalPost('admin/config/media/image-styles/edit/' . $style_name, $edit, t('Update style'));
     $this->assertText(t('Changes to the style have been saved.'), t('Style %name was renamed to %new_name.', array('%name' => $style_name, '%new_name' => $new_style_name)));
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url($new_style_name, $node->{$field_name}[LANGUAGE_NONE][0]['uri']), t('Image displayed using style replacement style.'));
+    $this->assertRaw(image_style_url($new_style_name, $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['uri']), t('Image displayed using style replacement style.'));
 
     // Delete the style and choose a replacement style.
     $edit = array(
@@ -550,7 +563,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     $this->assertRaw($message, $message);
 
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url('thumbnail', $node->{$field_name}[LANGUAGE_NONE][0]['uri']), t('Image displayed using style replacement style.'));
+    $this->assertRaw(image_style_url('thumbnail', $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['uri']), t('Image displayed using style replacement style.'));
   }
 }
 
@@ -564,6 +577,10 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
       'description' => 'Test the display of image fields.',
       'group' => 'Image',
     );
+  }
+
+  function setUp() {
+    parent::setUp(array('field_ui'));
   }
 
   /**
@@ -594,7 +611,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $node = node_load($nid, NULL, TRUE);
 
     // Test that the default formatter is being used.
-    $image_uri = $node->{$field_name}[LANGUAGE_NONE][0]['uri'];
+    $image_uri = $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['uri'];
     $image_info = array(
       'uri' => $image_uri,
       'width' => 40,
@@ -691,13 +708,13 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     // and title fields do not display until the image has been attached.
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
     $this->drupalGet('node/' . $nid . '/edit');
-    $this->assertFieldByName($field_name . '[' . LANGUAGE_NONE . '][0][alt]', '', t('Alt field displayed on article form.'));
-    $this->assertFieldByName($field_name . '[' . LANGUAGE_NONE . '][0][title]', '', t('Title field displayed on article form.'));
+    $this->assertFieldByName($field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][alt]', '', t('Alt field displayed on article form.'));
+    $this->assertFieldByName($field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]', '', t('Title field displayed on article form.'));
     // Verify that the attached image is being previewed using the 'medium'
     // style.
     $node = node_load($nid, NULL, TRUE);
     $image_info = array(
-      'uri' => image_style_url('medium', $node->{$field_name}[LANGUAGE_NONE][0]['uri']),
+      'uri' => image_style_url('medium', $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['uri']),
       'width' => 220,
       'height' => 110,
     );
@@ -706,15 +723,15 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
 
     // Add alt/title fields to the image and verify that they are displayed.
     $image_info = array(
-      'uri' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
+      'uri' => $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['uri'],
       'alt' => $this->randomName(),
       'title' => $this->randomName(),
       'width' => 40,
       'height' => 20,
     );
     $edit = array(
-      $field_name . '[' . LANGUAGE_NONE . '][0][alt]' => $image_info['alt'],
-      $field_name . '[' . LANGUAGE_NONE . '][0][title]' => $image_info['title'],
+      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][alt]' => $image_info['alt'],
+      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]' => $image_info['title'],
     );
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
     $default_output = theme('image', $image_info);
@@ -723,8 +740,8 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     // Verify that alt/title longer than allowed results in a validation error.
     $test_size = 2000;
     $edit = array(
-      $field_name . '[' . LANGUAGE_NONE . '][0][alt]' => $this->randomName($test_size),
-      $field_name . '[' . LANGUAGE_NONE . '][0][title]' => $this->randomName($test_size),
+      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][alt]' => $this->randomName($test_size),
+      $field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]' => $this->randomName($test_size),
     );
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Alternate text cannot be longer than %max characters but is currently %length characters long.', array(
@@ -773,7 +790,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $nid = $this->uploadNodeImage($images[1], $field_name, 'article');
     $node = node_load($nid, NULL, TRUE);
     $image_info = array(
-      'uri' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
+      'uri' => $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['uri'],
       'width' => 40,
       'height' => 20,
     );
@@ -876,7 +893,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('rdf', 'image', 'image_module_test');
+    parent::setUp(array('image', 'image_module_test'));
   }
 
   /**
@@ -917,7 +934,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="120" height="60" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="120" height="60" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -938,7 +955,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="60" height="120" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="60" height="120" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -960,7 +977,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -982,7 +999,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1000,7 +1017,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1021,7 +1038,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1041,7 +1058,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="30" height="30" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="30" height="30" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1062,7 +1079,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     $effect = image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1080,7 +1097,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" alt="" />');
   }
 }
 

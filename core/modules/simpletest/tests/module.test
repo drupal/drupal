@@ -9,6 +9,9 @@
  * Unit tests for the module API.
  */
 class ModuleUnitTest extends DrupalWebTestCase {
+  // Requires Standard profile modules/dependencies.
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Module API',

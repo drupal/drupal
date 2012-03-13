@@ -2299,6 +2299,48 @@ function form_type_checkboxes_value($element, $input = FALSE) {
 }
 
 /**
+ * Form value callback: Determines the value for a #type radios form element.
+ *
+ * @param $element
+ *   The form element whose value is being populated.
+ * @param $input
+ *   (optional) The incoming input to populate the form element. If FALSE, the
+ *   element's default value is returned. Defaults to FALSE.
+ *
+ * @return
+ *   The data that will appear in the $element_state['values'] collection for
+ *   this element.
+ */
+function form_type_radios_value(&$element, $input = FALSE) {
+  if ($input !== FALSE) {
+    // There may not be a submitted value for multiple radio buttons, if none of
+    // the options was checked by default. If there is no submitted input value
+    // for this element (NULL), _form_builder_handle_input_element()
+    // automatically attempts to use the #default_value (if set) or an empty
+    // string (''). However, an empty string would fail validation in
+    // _form_validate(), in case it is not contained in the list of allowed
+    // values in #options.
+    if (!isset($input)) {
+      // Signify a garbage value to disable the #default_value handling and take
+      // over NULL as #value.
+      $element['#has_garbage_value'] = TRUE;
+      // There was a user submission so validation is a must. If this element is
+      // #required, then an appropriate error message will be output. While an
+      // optional #type 'radios' does not necessarily make sense from a user
+      // interaction perspective, there may be use-cases for that and it is not
+      // the job of Form API to artificially limit possibilities.
+      $element['#needs_validation'] = TRUE;
+    }
+    // The value stays the same, but the flags above will ensure it is
+    // processed properly.
+    return $input;
+  }
+  elseif (isset($element['#default_value'])) {
+    return $element['#default_value'];
+  }
+}
+
+/**
  * Determines the value for a tableselect form element.
  *
  * @param $element
@@ -2978,7 +3020,9 @@ function form_process_radios($element) {
         // The key is sanitized in drupal_attributes() during output from the
         // theme function.
         '#return_value' => $key,
-        '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
+        // Use default or FALSE. A value of FALSE means that the radio button is
+        // not 'checked'.
+        '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : FALSE,
         '#attributes' => $element['#attributes'],
         '#parents' => $element['#parents'],
         '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
@@ -3361,6 +3405,9 @@ function form_process_tableselect($element) {
  *       different character, 'replace_pattern' needs to be set accordingly.
  *     - error: (optional) A custom form error message string to show, if the
  *       machine name contains disallowed characters.
+ *     - standalone: (optional) Whether the live preview should stay in its own
+ *       form element rather than in the suffix of the source element. Defaults
+ *       to FALSE.
  *   - #maxlength: (optional) Should be set to the maximum allowed length of the
  *     machine name. Defaults to 64.
  *   - #disabled: (optional) Should be set to TRUE in case an existing machine
@@ -3372,6 +3419,9 @@ function form_process_machine_name($element, &$form_state) {
     '#title' => t('Machine-readable name'),
     '#description' => t('A unique machine-readable name. Can only contain lowercase letters, numbers, and underscores.'),
     '#machine_name' => array(),
+    '#field_prefix' => '',
+    '#field_suffix' => '',
+    '#suffix' => '',
   );
   // A form element that only wants to set one #machine_name property (usually
   // 'source' only) would leave all other properties undefined, if the defaults
@@ -3382,6 +3432,9 @@ function form_process_machine_name($element, &$form_state) {
     'label' => t('Machine name'),
     'replace_pattern' => '[^a-z0-9_]+',
     'replace' => '_',
+    'standalone' => FALSE,
+    'field_prefix' => $element['#field_prefix'],
+    'field_suffix' => $element['#field_suffix'],
   );
 
   // By default, machine names are restricted to Latin alphanumeric characters.
@@ -3397,7 +3450,7 @@ function form_process_machine_name($element, &$form_state) {
   }
 
   // Retrieve the form element containing the human-readable name from the
-  // complete form in $form_state. By reference, because we need to append
+  // complete form in $form_state. By reference, because we may need to append
   // a #field_suffix that will hold the live preview.
   $key_exists = NULL;
   $source = drupal_array_get_nested_value($form_state['complete_form'], $element['#machine_name']['source'], $key_exists);
@@ -3405,16 +3458,21 @@ function form_process_machine_name($element, &$form_state) {
     return $element;
   }
 
-  // Append a field suffix to the source form element, which will contain
-  // the live preview of the machine name.
   $suffix_id = $source['#id'] . '-machine-name-suffix';
-  $source += array('#field_suffix' => '');
-  $source['#field_suffix'] .= ' <small id="' . $suffix_id . '">&nbsp;</small>';
-
-  $parents = array_merge($element['#machine_name']['source'], array('#field_suffix'));
-  drupal_array_set_nested_value($form_state['complete_form'], $parents, $source['#field_suffix']);
-
   $element['#machine_name']['suffix'] = '#' . $suffix_id;
+
+  if ($element['#machine_name']['standalone']) {
+    $element['#suffix'] .= ' <small id="' . $suffix_id . '">&nbsp;</small>';
+  }
+  else {
+    // Append a field suffix to the source form element, which will contain
+    // the live preview of the machine name.
+    $source += array('#field_suffix' => '');
+    $source['#field_suffix'] .= ' <small id="' . $suffix_id . '">&nbsp;</small>';
+
+    $parents = array_merge($element['#machine_name']['source'], array('#field_suffix'));
+    drupal_array_set_nested_value($form_state['complete_form'], $parents, $source['#field_suffix']);
+  }
 
   $js_settings = array(
     'type' => 'setting',
@@ -3834,6 +3892,56 @@ function theme_tel($variables) {
   $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
 
   return $output . $extra;
+}
+
+/**
+ * Returns HTML for a url form element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #size, #maxlength,
+ *     #placeholder, #required, #attributes, #autocomplete_path.
+ *
+ * @ingroup themeable
+ */
+function theme_url($variables) {
+  $element = $variables['element'];
+  $element['#attributes']['type'] = 'url';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  _form_set_class($element, array('form-url'));
+
+  $extra = '';
+  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
+    drupal_add_library('system', 'drupal.autocomplete');
+    $element['#attributes']['class'][] = 'form-autocomplete';
+
+    $attributes = array();
+    $attributes['type'] = 'hidden';
+    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
+    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
+    $attributes['disabled'] = 'disabled';
+    $attributes['class'][] = 'autocomplete';
+    $extra = '<input' . drupal_attributes($attributes) . ' />';
+  }
+
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  return $output . $extra;
+}
+
+/**
+ * Form element validation handler for #type 'url'.
+ *
+ * Note that #maxlength and #required is validated by _form_validate() already.
+ */
+function form_validate_url(&$element, &$form_state) {
+  $value = trim($element['#value']);
+  form_set_value($element, $value, $form_state);
+
+  if ($value !== '' && !valid_url($value, TRUE)) {
+    form_error($element, t('The URL %url is not valid.', array('%url' => $value)));
+  }
 }
 
 /**
@@ -4533,8 +4641,9 @@ function &batch_get() {
 /**
  * Populates a job queue with the operations of a batch set.
  *
- * Depending on whether the batch is progressive or not, the BatchQueue or
- * BatchMemoryQueue handler classes will be used.
+ * Depending on whether the batch is progressive or not, the
+ * Drupal\Core\Queue\Batch or Drupal\Core\Queue\BatchMemory handler classes will
+ * be used.
  *
  * @param $batch
  *   The batch array.
@@ -4551,7 +4660,7 @@ function _batch_populate_queue(&$batch, $set_id) {
     $batch_set += array(
       'queue' => array(
         'name' => 'drupal_batch:' . $batch['id'] . ':' . $set_id,
-        'class' => $batch['progressive'] ? 'BatchQueue' : 'BatchMemoryQueue',
+        'class' => $batch['progressive'] ? 'Drupal\Core\Queue\Batch' : 'Drupal\Core\Queue\BatchMemory',
       ),
     );
 
@@ -4577,12 +4686,8 @@ function _batch_populate_queue(&$batch, $set_id) {
 function _batch_queue($batch_set) {
   static $queues;
 
-  // The class autoloader is not available when running update.php, so make
-  // sure the files are manually included.
   if (!isset($queues)) {
     $queues = array();
-    require_once DRUPAL_ROOT . '/core/modules/system/system.queue.inc';
-    require_once DRUPAL_ROOT . '/core/includes/batch.queue.inc';
   }
 
   if (isset($batch_set['queue'])) {

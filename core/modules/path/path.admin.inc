@@ -16,7 +16,7 @@ function path_admin_overview($keys = NULL) {
   $build['path_admin_filter_form'] = drupal_get_form('path_admin_filter_form', $keys);
   // Enable language column if language.module is enabled or if we have any
   // alias with a language.
-  $alias_exists = (bool) db_query_range('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => LANGUAGE_NONE))->fetchField();
+  $alias_exists = (bool) db_query_range('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => LANGUAGE_NOT_SPECIFIED))->fetchField();
   $multilanguage = (module_exists('language') || $alias_exists);
 
   $header = array();
@@ -109,7 +109,7 @@ function path_admin_edit($path = array()) {
  * @see path_admin_form_validate()
  * @see path_admin_form_submit()
  */
-function path_admin_form($form, &$form_state, $path = array('source' => '', 'alias' => '', 'langcode' => LANGUAGE_NONE, 'pid' => NULL)) {
+function path_admin_form($form, &$form_state, $path = array('source' => '', 'alias' => '', 'langcode' => LANGUAGE_NOT_SPECIFIED, 'pid' => NULL)) {
   $form['source'] = array(
     '#type' => 'textfield',
     '#title' => t('Existing system path'),
@@ -142,7 +142,7 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
       '#type' => 'select',
       '#title' => t('Language'),
       '#options' => $language_options,
-      '#empty_value' => LANGUAGE_NONE,
+      '#empty_value' => LANGUAGE_NOT_SPECIFIED,
       '#empty_option' => t('- None -'),
       '#default_value' => $path['langcode'],
       '#weight' => -10,
@@ -198,7 +198,7 @@ function path_admin_form_validate($form, &$form_state) {
   $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
   // Language is only set if language.module is enabled, otherwise save for all
   // languages.
-  $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : LANGUAGE_NONE;
+  $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : LANGUAGE_NOT_SPECIFIED;
 
   $has_alias = db_query("SELECT COUNT(alias) FROM {url_alias} WHERE pid <> :pid AND alias = :alias AND langcode = :langcode", array(
       ':pid' => $pid,

@@ -132,8 +132,6 @@ class ModuleTestCase extends DrupalWebTestCase {
  * Test module enabling/disabling functionality.
  */
 class EnableDisableTestCase extends ModuleTestCase {
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'Enable/disable modules',
@@ -154,7 +152,26 @@ class EnableDisableTestCase extends ModuleTestCase {
         unset($modules[$name]);
       }
     }
-    $this->assertTrue(count($modules), t('Found @count core modules that we can try to enable in this test.', array('@count' => count($modules))));
+
+    // Throughout this test, some modules may be automatically enabled (due to
+    // dependencies). We'll keep track of them in an array, so we can handle
+    // them separately.
+    $automatically_enabled = array();
+
+    // Remove already enabled modules (via installation profile).
+    // @todo Remove this after removing all dependencies from Testing profile.
+    foreach (module_list() as $dependency) {
+      // Exclude required modules. Only installation profile "suggestions" can
+      // be disabled and uninstalled.
+      if (isset($modules[$dependency])) {
+        $automatically_enabled[$dependency] = TRUE;
+      }
+    }
+
+    $this->assertTrue(count($modules), t('Found @count modules that can be enabled: %modules', array(
+      '@count' => count($modules),
+      '%modules' => implode(', ', array_keys($modules)),
+    )));
 
     // Enable the dblog module first, since we will be asserting the presence
     // of log messages throughout the test.
@@ -165,11 +182,6 @@ class EnableDisableTestCase extends ModuleTestCase {
    // Set a variable so that the hook implementations in system_test.module
    // will display messages via drupal_set_message().
    variable_set('test_verbose_module_hooks', TRUE);
-
-    // Throughout this test, some modules may be automatically enabled (due to
-    // dependencies). We'll keep track of them in an array, so we can handle
-    // them separately.
-    $automatically_enabled = array();
 
     // Go through each module in the list and try to enable it (unless it was
     // already enabled automatically due to a dependency).
@@ -443,6 +455,8 @@ class ModuleDependencyTestCase extends ModuleTestCase {
    * Tests enabling a module that depends on a module which fails hook_requirements().
    */
   function testEnableRequirementsFailureDependency() {
+    module_enable(array('comment'));
+
     $this->assertModules(array('requirements1_test'), FALSE);
     $this->assertModules(array('requirements2_test'), FALSE);
 
@@ -472,9 +486,12 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $this->resetAll();
     $this->assertModules(array('module_test'), TRUE);
     variable_set('dependency_test', 'dependency');
-    // module_test creates a dependency chain: forum depends on poll, which
-    // depends on php. The correct enable order is, php, poll, forum.
-    $expected_order = array('php', 'poll', 'forum');
+    // module_test creates a dependency chain:
+    // - forum depends on taxonomy, comment, and poll (via module_test)
+    // - taxonomy depends on options
+    // - poll depends on php (via module_test)
+    // The correct enable order is:
+    $expected_order = array('comment', 'options', 'taxonomy', 'php', 'poll', 'forum');
 
     // Enable the modules through the UI, verifying that the dependency chain
     // is correct.
@@ -482,14 +499,17 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $edit['modules[Core][forum][enable]'] = 'forum';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), FALSE);
-    $this->assertText(t('You must enable the Poll, PHP Filter modules to install Forum.'), t('Dependency chain created.'));
+    $this->assertText(t('You must enable the Taxonomy, Options, Comment, Poll, PHP Filter modules to install Forum.'));
+    $edit['modules[Core][options][enable]'] = 'options';
+    $edit['modules[Core][taxonomy][enable]'] = 'taxonomy';
+    $edit['modules[Core][comment][enable]'] = 'comment';
     $edit['modules[Core][poll][enable]'] = 'poll';
     $edit['modules[Core][php][enable]'] = 'php';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('forum', 'poll', 'php'), TRUE);
+    $this->assertModules(array('forum', 'poll', 'php', 'comment', 'taxonomy', 'options'), TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
-    $this->assertIdentical(variable_get('test_module_enable_order', FALSE), $expected_order, t('Modules enabled in the correct order.'));
+    $this->assertIdentical(variable_get('test_module_enable_order', array()), $expected_order);
   }
 
   /**
@@ -499,6 +519,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     // Enable the forum module.
     $edit = array('modules[Core][forum][enable]' => 'forum');
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPost(NULL, array(), t('Continue'));
     $this->assertModules(array('forum'), TRUE);
 
     // Disable forum and comment. Both should now be installed but disabled.
@@ -874,10 +895,13 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp();
+    parent::setUp(array('block'));
 
     // Create an administrative user.
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration', 'administer blocks'));
+
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access user profiles'));
+    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access user profiles'));
   }
 
   function testAccessDenied() {
@@ -885,34 +909,34 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
     $this->assertText(t('Access denied'), t('Found the default 403 page'));
     $this->assertResponse(403);
 
+    // Use a custom 403 page.
     $this->drupalLogin($this->admin_user);
     $edit = array(
-      'title' => $this->randomName(10),
-      'body' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(100)))),
+      'site_403' => 'user/' . $this->admin_user->uid,
     );
-    $node = $this->drupalCreateNode($edit);
+    $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
 
-    // Use a custom 403 page.
-    $this->drupalPost('admin/config/system/site-information', array('site_403' => 'node/' . $node->nid), t('Save configuration'));
-
-    $this->drupalLogout();
-    $this->drupalGet('admin');
-    $this->assertText($node->title, t('Found the custom 403 page'));
+    // Enable the user login block.
+    $edit = array(
+      'blocks[user_login][region]' => 'sidebar_first',
+    );
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Logout and check that the user login block is shown on custom 403 pages.
     $this->drupalLogout();
-
     $this->drupalGet('admin');
-    $this->assertText($node->title, t('Found the custom 403 page'));
+    $this->assertText($this->admin_user->name, t('Found the custom 403 page'));
     $this->assertText(t('User login'), t('Blocks are shown on the custom 403 page'));
 
     // Log back in and remove the custom 403 page.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost('admin/config/system/site-information', array('site_403' => ''), t('Save configuration'));
+    $edit = array(
+      'site_403' => '',
+    );
+    $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
 
     // Logout and check that the user login block is shown on default 403 pages.
     $this->drupalLogout();
-
     $this->drupalGet('admin');
     $this->assertText(t('Access denied'), t('Found the default 403 page'));
     $this->assertResponse(403);
@@ -939,9 +963,6 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
 class PageNotFoundTestCase extends DrupalWebTestCase {
   protected $admin_user;
 
-  /**
-   * Implement getInfo().
-   */
   public static function getInfo() {
     return array(
       'name' => '404 functionality',
@@ -950,32 +971,29 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implement setUp().
-   */
   function setUp() {
     parent::setUp();
 
     // Create an administrative user.
     $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));
-    $this->drupalLogin($this->admin_user);
+
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access user profiles'));
+    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access user profiles'));
   }
 
   function testPageNotFound() {
+    $this->drupalLogin($this->admin_user);
     $this->drupalGet($this->randomName(10));
     $this->assertText(t('Page not found'), t('Found the default 404 page'));
 
-    $edit = array(
-      'title' => $this->randomName(10),
-      'body' => array(LANGUAGE_NONE => array(array('value' => $this->randomName(100)))),
-    );
-    $node = $this->drupalCreateNode($edit);
-
     // Use a custom 404 page.
-    $this->drupalPost('admin/config/system/site-information', array('site_404' => 'node/' . $node->nid), t('Save configuration'));
+    $edit = array(
+      'site_404' => 'user/' . $this->admin_user->uid,
+    );
+    $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
 
     $this->drupalGet($this->randomName(10));
-    $this->assertText($node->title, t('Found the custom 404 page'));
+    $this->assertText($this->admin_user->name, t('Found the custom 404 page'));
   }
 }
 
@@ -994,7 +1012,10 @@ class SiteMaintenanceTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp();
+    parent::setUp(array('node'));
+
+    // Configure 'node' as front page.
+    variable_set('site_frontpage', 'node');
 
     // Create a user allowed to access site in maintenance mode.
     $this->user = $this->drupalCreateUser(array('access site in maintenance mode'));
@@ -1295,7 +1316,9 @@ class PageTitleFiltering extends DrupalWebTestCase {
    * Implement setUp().
    */
   function setUp() {
-    parent::setUp();
+    parent::setUp(array('node'));
+
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     $this->content_user = $this->drupalCreateUser(array('create page content', 'access content', 'administer themes', 'administer site configuration'));
     $this->drupalLogin($this->content_user);
@@ -1326,7 +1349,7 @@ class PageTitleFiltering extends DrupalWebTestCase {
     drupal_set_title($title, PASS_THROUGH);
     $this->assertTrue(strpos(drupal_get_title(), '<em>') !== FALSE, t('Tags in title are not converted to entities when $output is PASS_THROUGH.'));
     // Generate node content.
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
     $edit = array(
       "title" => '!SimpleTest! ' . $title . $this->randomName(20),
       "body[$langcode][0][value]" => '!SimpleTest! test body' . $this->randomName(200),
@@ -1394,13 +1417,15 @@ class FrontPageTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('system_test');
+    parent::setUp(array('node', 'system_test'));
 
     // Create admin user, log in admin user, and create one node.
     $this->admin_user = $this->drupalCreateUser(array('access content', 'administer site configuration'));
     $this->drupalLogin($this->admin_user);
     $this->node_path = "node/" . $this->drupalCreateNode(array('promote' => 1))->nid;
 
+    // Configure 'node' as front page.
+    variable_set('site_frontpage', 'node');
     // Enable front page logging in system_test.module.
     variable_set('front_page_output', 1);
   }
@@ -1436,8 +1461,6 @@ class FrontPageTestCase extends DrupalWebTestCase {
 }
 
 class SystemBlockTestCase extends DrupalWebTestCase {
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'Block functionality',
@@ -1517,20 +1540,18 @@ class SystemMainContentFallback extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('system_test');
+    parent::setUp(array('block', 'system_test'));
 
     // Create and login admin user.
     $this->admin_user = $this->drupalCreateUser(array(
       'access administration pages',
       'administer site configuration',
       'administer modules',
-      'administer blocks',
-      'administer nodes',
     ));
     $this->drupalLogin($this->admin_user);
 
     // Create a web user.
-    $this->web_user = $this->drupalCreateUser(array('access user profiles', 'access content'));
+    $this->web_user = $this->drupalCreateUser(array('access user profiles'));
   }
 
   /**
@@ -1538,10 +1559,6 @@ class SystemMainContentFallback extends DrupalWebTestCase {
    */
   function testMainContentFallback() {
     $edit = array();
-    // Disable the dashboard module, which depends on the block module.
-    $edit['modules[Core][dashboard][enable]'] = FALSE;
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
     // Disable the block module.
     $edit['modules[Core][block][enable]'] = FALSE;
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
@@ -1589,8 +1606,6 @@ class SystemMainContentFallback extends DrupalWebTestCase {
  * Tests for the theme interface functionality.
  */
 class SystemThemeFunctionalTest extends DrupalWebTestCase {
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'Theme interface functionality',
@@ -1808,98 +1823,6 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
     $this->clickLink(t('Set default'), 0);
     $this->drupalGet('admin/structure/block');
     $this->assertText('Stark(' . t('active tab') . ')', t('Default local task on blocks admin page has changed.'));
-  }
-}
-
-
-/**
- * Test the basic queue functionality.
- */
-class QueueTestCase extends DrupalWebTestCase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Queue functionality',
-      'description' => 'Queues and dequeues a set of items to check the basic queue functionality.',
-      'group' => 'System',
-    );
-  }
-
-  /**
-   * Queues and dequeues a set of items to check the basic queue functionality.
-   */
-  function testQueue() {
-    // Create two queues.
-    $queue1 = DrupalQueue::get($this->randomName());
-    $queue1->createQueue();
-    $queue2 = DrupalQueue::get($this->randomName());
-    $queue2->createQueue();
-
-    // Create four items.
-    $data = array();
-    for ($i = 0; $i < 4; $i++) {
-      $data[] = array($this->randomName() => $this->randomName());
-    }
-
-    // Queue items 1 and 2 in the queue1.
-    $queue1->createItem($data[0]);
-    $queue1->createItem($data[1]);
-
-    // Retrieve two items from queue1.
-    $items = array();
-    $new_items = array();
-
-    $items[] = $item = $queue1->claimItem();
-    $new_items[] = $item->data;
-
-    $items[] = $item = $queue1->claimItem();
-    $new_items[] = $item->data;
-
-    // First two dequeued items should match the first two items we queued.
-    $this->assertEqual($this->queueScore($data, $new_items), 2, t('Two items matched'));
-
-    // Add two more items.
-    $queue1->createItem($data[2]);
-    $queue1->createItem($data[3]);
-
-    $this->assertTrue($queue1->numberOfItems(), t('Queue 1 is not empty after adding items.'));
-    $this->assertFalse($queue2->numberOfItems(), t('Queue 2 is empty while Queue 1 has items'));
-
-    $items[] = $item = $queue1->claimItem();
-    $new_items[] = $item->data;
-
-    $items[] = $item = $queue1->claimItem();
-    $new_items[] = $item->data;
-
-    // All dequeued items should match the items we queued exactly once,
-    // therefore the score must be exactly 4.
-    $this->assertEqual($this->queueScore($data, $new_items), 4, t('Four items matched'));
-
-    // There should be no duplicate items.
-    $this->assertEqual($this->queueScore($new_items, $new_items), 4, t('Four items matched'));
-
-    // Delete all items from queue1.
-    foreach ($items as $item) {
-      $queue1->deleteItem($item);
-    }
-
-    // Check that both queues are empty.
-    $this->assertFalse($queue1->numberOfItems(), t('Queue 1 is empty'));
-    $this->assertFalse($queue2->numberOfItems(), t('Queue 2 is empty'));
-  }
-
-  /**
-   * This function returns the number of equal items in two arrays.
-   */
-  function queueScore($items, $new_items) {
-    $score = 0;
-    foreach ($items as $item) {
-      foreach ($new_items as $new_item) {
-        if ($item === $new_item) {
-          $score++;
-        }
-      }
-    }
-    return $score;
   }
 }
 
@@ -2684,70 +2607,5 @@ class SystemIndexPhpTest extends DrupalWebTestCase {
 
     $this->drupalGet($index_php .'/user', array('external' => TRUE));
     $this->assertResponse(404, t("Make sure index.php/user returns a 'page not found'."));
-  }
-}
-/**
- * Tests uuid.inc and related functions.
- */
-class UuidUnitTestCase extends DrupalUnitTestCase {
-
-  /**
-   * The UUID object to be used for generating UUIDs.
-   *
-   * @var Uuid
-   */
-  protected $uuid;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'UUID handling',
-      'description' => "Test the handling of Universally Unique IDentifiers (UUIDs).",
-      'group' => 'System',
-    );
-  }
-
-  public function setUp() {
-    // Initiate the generator. This will lazy-load uuid.inc.
-    $this->uuid = new Uuid();
-    parent::setUp();
-  }
-
-  /**
-   * Test generating a UUID.
-   */
-  public function testGenerateUuid() {
-    $uuid = $this->uuid->generate();
-    $this->assertTrue($this->uuid->isValid($uuid), 'UUID generation works.');
-  }
-
-  /**
-   * Test that generated UUIDs are unique.
-   */
-  public function testUuidIsUnique() {
-    $uuid1 = $this->uuid->generate();
-    $uuid2 = $this->uuid->generate();
-    $this->assertNotEqual($uuid1, $uuid2, 'Same UUID was not generated twice.');
-  }
-
-  /**
-   * Test UUID validation.
-   */
-  function testUuidValidation() {
-    // These valid UUIDs.
-    $uuid_fqdn = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
-    $uuid_min = '00000000-0000-0000-0000-000000000000';
-    $uuid_max = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
-
-    $this->assertTrue($this->uuid->isValid($uuid_fqdn), t('FQDN namespace UUID (@uuid) is valid', array('@uuid' => $uuid_fqdn)));
-    $this->assertTrue($this->uuid->isValid($uuid_min), t('Minimum UUID value (@uuid) is valid', array('@uuid' => $uuid_min)));
-    $this->assertTrue($this->uuid->isValid($uuid_max), t('Maximum UUID value (@uuid) is valid', array('@uuid' => $uuid_max)));
-
-    // These are invalid UUIDs.
-    $invalid_format = '0ab26e6b-f074-4e44-9da-601205fa0e976';
-    $invalid_length = '0ab26e6b-f074-4e44-9daf-1205fa0e9761f';
-
-    $this->assertFalse($this->uuid->isValid($invalid_format), t('@uuid is not a valid UUID', array('@uuid' => $invalid_format)));
-    $this->assertFalse($this->uuid->isValid($invalid_length), t('@uuid is not a valid UUID', array('@uuid' => $invalid_length)));
-
   }
 }
