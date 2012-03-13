@@ -978,22 +978,13 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
           // data untouched or if we don't have an existing plural formula.
           $header = _locale_import_parse_header($value['msgstr']);
 
-          // Get the plural formula and update in database.
+          // Get and store the plural formula if available.
           if (isset($header["Plural-Forms"]) && $p = _locale_import_parse_plural_forms($header["Plural-Forms"], $file->uri)) {
             list($nplurals, $plural) = $p;
             db_update('languages')
               ->fields(array(
                 'plurals' => $nplurals,
                 'formula' => $plural,
-              ))
-              ->condition('language', $lang)
-              ->execute();
-          }
-          else {
-            db_update('languages')
-              ->fields(array(
-                'plurals' => 0,
-                'formula' => '',
               ))
               ->condition('language', $lang)
               ->execute();

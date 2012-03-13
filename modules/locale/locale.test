@@ -793,6 +793,25 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     // This import should not have changed number of plural forms.
     $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, t('Plural numbers untouched.'));
 
+    $this->importPoFile($this->getPoFileWithBrokenPlural(), array(
+      'langcode' => 'fr',
+      'mode' => 1, // Existing strings are kept, only new strings are added.
+    ));
+
+    // Attempt to import broken .po file as well to prove that this
+    // will not overwrite the proper plural formula imported above.
+    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, t('Broken plurals: plural numbers untouched.'));
+
+    $this->importPoFile($this->getPoFileWithMissingPlural(), array(
+      'langcode' => 'fr',
+      'mode' => 1, // Existing strings are kept, only new strings are added.
+    ));
+
+    // Attempt to import .po file which has no plurals and prove that this
+    // will not overwrite the proper plural formula imported above.
+    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, t('No plurals: plural numbers untouched.'));
+
+
     // Try importing a .po file with overriding strings, and ensure existing
     // strings are overwritten.
     $this->importPoFile($this->getOverwritePoFile(), array(
@@ -1069,6 +1088,42 @@ msgstr "Műveletek"
 msgid "Will not appear in Drupal core, so we can ensure the test passes"
 msgstr ""
 
+EOF;
+  }
+
+
+  /**
+   * Returns a .po file with a missing plural formula.
+   */
+  function getPoFileWithMissingPlural() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 7\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+
+msgid "Monday"
+msgstr "Ponedjeljak"
+EOF;
+  }
+
+  /**
+   * Returns a .po file with a broken plural formula.
+   */
+  function getPoFileWithBrokenPlural() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 7\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: broken, will not parse\\n"
+
+msgid "Monday"
+msgstr "lundi"
 EOF;
   }
 
