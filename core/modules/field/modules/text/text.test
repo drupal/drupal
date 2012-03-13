@@ -238,6 +238,8 @@ class TextFieldTestCase extends DrupalWebTestCase {
 }
 
 class TextSummaryTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Text summary',
@@ -406,6 +408,8 @@ class TextSummaryTestCase extends DrupalWebTestCase {
 }
 
 class TextTranslationTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Text translation',

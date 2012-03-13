@@ -132,12 +132,30 @@ class MenuRouterTestCase extends DrupalWebTestCase {
 
   function setUp() {
     // Enable dummy module that implements hook_menu.
-    parent::setUp('menu_test');
+    parent::setUp(array('block', 'menu_test'));
+
     // Make the tests below more robust by explicitly setting the default theme
     // and administrative theme that they expect.
     theme_enable(array('bartik'));
     variable_set('theme_default', 'bartik');
     variable_set('admin_theme', 'seven');
+    theme_disable(array('stark'));
+
+    // Enable navigation menu block.
+    db_merge('block')
+      ->key(array(
+        'module' => 'system',
+        'delta' => 'navigation',
+        'theme' => 'bartik',
+      ))
+      ->fields(array(
+        'status' => 1,
+        'weight' => 0,
+        'region' => 'sidebar_first',
+        'pages' => '',
+        'cache' => -1,
+      ))
+      ->execute();
   }
 
   /**
@@ -239,15 +257,15 @@ class MenuRouterTestCase extends DrupalWebTestCase {
    * 'user' and 'user/register' gets redirected to the user edit page.
    */
   function testAuthUserUserLogin() {
-    $loggedInUser = $this->drupalCreateUser(array());
-    $this->drupalLogin($loggedInUser);
+    $this->loggedInUser = $this->drupalCreateUser(array());
+    $this->drupalLogin($this->loggedInUser);
 
-    $this->DrupalGet('user/login');
+    $this->drupalGet('user/login');
     // Check that we got to 'user'.
     $this->assertTrue($this->url == url('user', array('absolute' => TRUE)), t("Logged-in user redirected to q=user on accessing q=user/login"));
 
     // user/register should redirect to user/UID/edit.
-    $this->DrupalGet('user/register');
+    $this->drupalGet('user/register');
     $this->assertTrue($this->url == url('user/' . $this->loggedInUser->uid . '/edit', array('absolute' => TRUE)), t("Logged-in user redirected to q=user/UID/edit on accessing q=user/register"));
   }
 
@@ -321,46 +339,46 @@ class MenuRouterTestCase extends DrupalWebTestCase {
    * Tests for menu_link_maintain().
    */
   function testMenuLinkMaintain() {
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer site configuration'));
     $this->drupalLogin($admin_user);
 
     // Create three menu items.
     menu_link_maintain('menu_test', 'insert', 'menu_test_maintain/1', 'Menu link #1');
-    menu_link_maintain('menu_test', 'insert', 'menu_test_maintain/1', 'Menu link #1-1');
+    menu_link_maintain('menu_test', 'insert', 'menu_test_maintain/1', 'Menu link #1-main');
     menu_link_maintain('menu_test', 'insert', 'menu_test_maintain/2', 'Menu link #2');
 
     // Move second link to the main-menu, to test caching later on.
     db_update('menu_links')
       ->fields(array('menu_name' => 'main-menu'))
-      ->condition('link_title', 'Menu link #1-1')
+      ->condition('link_title', 'Menu link #1-main')
       ->condition('customized', 0)
       ->condition('module', 'menu_test')
       ->execute();
-    menu_cache_clear('main-menu');
+    menu_cache_clear_all();
 
     // Load front page.
-    $this->drupalGet('node');
-    $this->assertLink(t('Menu link #1'), 0, 'Found menu link #1');
-    $this->assertLink(t('Menu link #1-1'), 0, 'Found menu link #1-1');
-    $this->assertLink(t('Menu link #2'), 0, 'Found menu link #2');
+    $this->drupalGet('');
+    $this->assertLink('Menu link #1');
+    $this->assertLink('Menu link #1-main');
+    $this->assertLink('Menu link #2');
 
     // Rename all links for the given path.
     menu_link_maintain('menu_test', 'update', 'menu_test_maintain/1', 'Menu link updated');
     // Load a different page to be sure that we have up to date information.
     $this->drupalGet('menu_test_maintain/1');
-    $this->assertLink(t('Menu link updated'), 0, t('Found updated menu link'));
-    $this->assertNoLink(t('Menu link #1'), 0, t('Not found menu link #1'));
-    $this->assertNoLink(t('Menu link #1'), 0, t('Not found menu link #1-1'));
-    $this->assertLink(t('Menu link #2'), 0, t('Found menu link #2'));
+    $this->assertLink('Menu link updated');
+    $this->assertNoLink('Menu link #1');
+    $this->assertNoLink('Menu link #1-main');
+    $this->assertLink('Menu link #2');
 
     // Delete all links for the given path.
     menu_link_maintain('menu_test', 'delete', 'menu_test_maintain/1', '');
     // Load a different page to be sure that we have up to date information.
     $this->drupalGet('menu_test_maintain/2');
-    $this->assertNoLink(t('Menu link updated'), 0, t('Not found deleted menu link'));
-    $this->assertNoLink(t('Menu link #1'), 0, t('Not found menu link #1'));
-    $this->assertNoLink(t('Menu link #1'), 0, t('Not found menu link #1-1'));
-    $this->assertLink(t('Menu link #2'), 0, t('Found menu link #2'));
+    $this->assertNoLink('Menu link updated');
+    $this->assertNoLink('Menu link #1');
+    $this->assertNoLink('Menu link #1-main');
+    $this->assertLink('Menu link #2');
   }
 
   /**
@@ -647,9 +665,6 @@ class MenuRouterTestCase extends DrupalWebTestCase {
  * Tests for menu links.
  */
 class MenuLinksUnitTestCase extends DrupalWebTestCase {
-  // Use the lightweight testing profile for this test.
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'Menu links',
@@ -1017,6 +1032,8 @@ class MenuTreeOutputTestCase extends DrupalWebTestCase {
  * Menu breadcrumbs related tests.
  */
 class MenuBreadcrumbTestCase extends MenuWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Breadcrumbs',
@@ -1026,12 +1043,8 @@ class MenuBreadcrumbTestCase extends MenuWebTestCase {
   }
 
   function setUp() {
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    $modules[] = 'menu_test';
-    parent::setUp($modules);
+    parent::setUp(array('menu_test'));
+
     $perms = array_keys(module_invoke_all('permission'));
     $this->admin_user = $this->drupalCreateUser($perms);
     $this->drupalLogin($this->admin_user);
@@ -1520,12 +1533,7 @@ class MenuTrailTestCase extends MenuWebTestCase {
   }
 
   function setUp() {
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    $modules[] = 'menu_test';
-    parent::setUp($modules);
+    parent::setUp(array('block', 'menu_test'));
     $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages'));
     $this->drupalLogin($this->admin_user);
 

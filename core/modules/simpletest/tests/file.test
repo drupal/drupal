@@ -47,6 +47,20 @@ function file_test_file_scan_callback_reset() {
  * assertions and helper functions.
  */
 class FileTestCase extends DrupalWebTestCase {
+
+  function setUp() {
+    $modules = func_get_args();
+    $modules = (isset($modules[0]) && is_array($modules[0]) ? $modules[0] : $modules);
+    parent::setUp($modules);
+
+    // Make sure that custom stream wrappers are registered.
+    // @todo This has the potential to be a major bug deeply buried in File API;
+    //   file_unmanaged_*() API functions and test functions are invoking native
+    //   PHP functions directly, whereas Drupal's custom stream wrappers are not
+    //   registered yet.
+    file_get_stream_wrappers();
+  }
+
   /**
    * Check that two files have the same values for all fields other than the
    * timestamp.

@@ -16,7 +16,17 @@ class FormsTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('form_test');
+    parent::setUp(array('form_test', 'file'));
+
+    $filtered_html_format = array(
+      'format' => 'filtered_html',
+      'name' => 'Filtered HTML',
+    );
+    $filtered_html_format = (object) $filtered_html_format;
+    filter_format_save($filtered_html_format);
+
+    $filtered_html_permission = filter_permission_name($filtered_html_format);
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array($filtered_html_permission));
   }
 
   /**
@@ -444,8 +454,6 @@ class FormsTestCase extends DrupalWebTestCase {
  * Tests building and processing of core form elements.
  */
 class FormElementTestCase extends DrupalWebTestCase {
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'Element processing',
@@ -536,7 +544,7 @@ class FormAlterTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('form_test');
+    parent::setUp(array('block', 'form_test'));
   }
 
   /**
@@ -1208,7 +1216,7 @@ class FormStateValuesCleanAdvancedTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('form_test');
+    parent::setUp(array('file', 'form_test'));
   }
 
   /**
@@ -1251,6 +1259,8 @@ class FormsRebuildTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('form_test');
+
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     $this->web_user = $this->drupalCreateUser(array('access content'));
     $this->drupalLogin($this->web_user);

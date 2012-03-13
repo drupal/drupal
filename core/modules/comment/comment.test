@@ -6,6 +6,8 @@
  */
 
 class CommentHelperCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   protected $admin_user;
   protected $web_user;
   protected $node;

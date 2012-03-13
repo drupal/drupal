@@ -30,7 +30,12 @@ function shortcut_install() {
   // set, to make sure the links defined above can be correctly saved. (During
   // installation, the menu might not have been built at all yet, or it might
   // have been built but without the node module's links in it.)
-  if (drupal_installation_attempted()) {
+  // drupal_installation_attempted() cannot be used here, as it relies on the
+  // MAINTENANCE_MODE constant value, which cannot be set when running tests, so
+  // we check the 'install_task' variable instead, which is only "done" when
+  // Drupal is already installed (i.e., we are not in the installer).
+  // @see http://drupal.org/node/1376150
+  if (variable_get('install_task', '') != 'done') {
     menu_rebuild();
   }
   shortcut_set_save($shortcut_set);

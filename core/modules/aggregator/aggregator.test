@@ -7,7 +7,13 @@
 
 class AggregatorTestCase extends DrupalWebTestCase {
   function setUp() {
-    parent::setUp('aggregator', 'aggregator_test');
+    parent::setUp(array('node', 'block', 'aggregator', 'aggregator_test'));
+
+    // Create an Article node type.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    }
+
     $web_user = $this->drupalCreateUser(array('administer news feeds', 'access news feeds', 'create article content'));
     $this->drupalLogin($web_user);
   }

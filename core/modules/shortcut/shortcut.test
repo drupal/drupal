@@ -32,6 +32,13 @@ class ShortcutTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('toolbar', 'shortcut');
+
+    // Create Basic page and Article node types.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    }
+
     // Create users.
     $this->admin_user = $this->drupalCreateUser(array('access toolbar', 'administer shortcuts', 'view the administration theme', 'create article content', 'create page content', 'access content overview'));
     $this->shortcut_user = $this->drupalCreateUser(array('customize shortcut links', 'switch shortcut sets'));
@@ -150,6 +157,9 @@ class ShortcutLinksTestCase extends ShortcutTestCase {
    * Tests that the "add to shortcut" link changes to "remove shortcut".
    */
   function testShortcutQuickLink() {
+    theme_enable(array('seven'));
+    variable_set('admin_theme', 'seven');
+    variable_set('node_admin_theme', TRUE);
     $this->drupalGet($this->set->links[0]['link_path']);
     $this->assertRaw(t('Remove from %title shortcuts', array('%title' => $this->set->title)), '"Add to shortcuts" link properly switched to "Remove from shortcuts".');
   }

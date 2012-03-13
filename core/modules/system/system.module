@@ -2392,7 +2392,6 @@ function _system_rebuild_module_data() {
   $modules[$profile] = new stdClass();
   $modules[$profile]->name = $profile;
   $modules[$profile]->uri = 'profiles/' . $profile . '/' . $profile . '.profile';
-  $modules[$profile]->filename = $profile . '.profile';
 
   // Install profile hooks are always executed last.
   $modules[$profile]->weight = 1000;

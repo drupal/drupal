@@ -14,6 +14,9 @@ class PHPTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('php');
 
+    // Create Basic page node type.
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+
     // Create and login admin user.
     $admin_user = $this->drupalCreateUser(array('administer filters'));
     $this->drupalLogin($admin_user);
@@ -73,7 +76,7 @@ class PHPFilterTestCase extends PHPTestCase {
 
     // Make sure that the PHP code shows up as text.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText('print "SimpleTest PHP was executed!"', t('PHP code is displayed.'));
+    $this->assertText('php print');
 
     // Change filter to PHP filter and see that PHP code is evaluated.
     $edit = array();

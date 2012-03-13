@@ -42,6 +42,8 @@ class RdfMappingHookTestCase extends DrupalWebTestCase {
  * Test RDFa markup generation.
  */
 class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'RDFa markup',
@@ -277,6 +279,8 @@ class RdfCrudTestCase extends DrupalWebTestCase {
 }
 
 class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'RDF mapping definition functionality',
@@ -573,6 +577,8 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
 }
 
 class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'RDF tracker page mapping',

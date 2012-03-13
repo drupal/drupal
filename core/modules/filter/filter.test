@@ -161,6 +161,8 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
 }
 
 class FilterAdminTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Filter administration functionality',
@@ -418,6 +420,8 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp();
+
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     // Create a user who can administer text formats, but does not have
     // specific permission to use any of them.
@@ -739,7 +743,22 @@ class FilterSecurityTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('php', 'filter_test');
+    parent::setUp(array('node', 'php', 'filter_test'));
+
+    // Create Basic page node type.
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+
+    // Create Filtered HTML format.
+    $filtered_html_format = array(
+      'format' => 'filtered_html',
+      'name' => 'Filtered HTML',
+    );
+    $filtered_html_format = (object) $filtered_html_format;
+    filter_format_save($filtered_html_format);
+
+    $filtered_html_permission = filter_permission_name($filtered_html_format);
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array($filtered_html_permission));
+
     $this->admin_user = $this->drupalCreateUser(array('administer modules', 'administer filters', 'administer site configuration'));
     $this->drupalLogin($this->admin_user);
   }

@@ -137,8 +137,6 @@ class FieldUITestCase extends DrupalWebTestCase {
  * Tests the functionality of the 'Manage fields' screen.
  */
 class FieldUIManageFieldsTestCase extends FieldUITestCase {
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'Manage fields',
@@ -710,7 +708,11 @@ class FieldUIAlterTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp(array('field_test'));
+    parent::setUp(array('field_ui', 'field_test', 'text', 'list'));
+
+    // Create Article node type.
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
 
     // Create test user.
     $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer users'));

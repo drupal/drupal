@@ -9,6 +9,8 @@
  * Functional tests for the Translation module.
  */
 class TranslationTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   protected $book;
 
   public static function getInfo() {

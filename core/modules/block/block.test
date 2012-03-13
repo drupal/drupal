@@ -18,11 +18,19 @@ class BlockTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp();
+    parent::setUp(array('block'));
+
+    // Create Full HTML text format.
+    $full_html_format = array(
+      'format' => 'full_html',
+      'name' => 'Full HTML',
+    );
+    $full_html_format = (object) $full_html_format;
+    filter_format_save($full_html_format);
+    $this->checkPermissions(array(), TRUE);
 
     // Create and log in an administrative user having access to the Full HTML
     // text format.
-    $full_html_format = filter_format_load('full_html');
     $this->admin_user = $this->drupalCreateUser(array(
       'administer blocks',
       filter_permission_name($full_html_format),
@@ -43,6 +51,9 @@ class BlockTestCase extends DrupalWebTestCase {
    * Test creating custom block, moving it to a specific region and then deleting it.
    */
   function testCustomBlock() {
+    // Enable a second theme.
+    theme_enable(array('seven'));
+
     // Confirm that the add block link appears on block overview pages.
     $this->drupalGet('admin/structure/block');
     $this->assertRaw(l('Add block', 'admin/structure/block/add'), t('Add block link is present on block overview page for default theme.'));
@@ -51,7 +62,7 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Confirm that hidden regions are not shown as options for block placement
     // when adding a new block.
-    theme_enable(array('stark'));
+    theme_enable(array('bartik'));
     $themes = list_themes();
     $this->drupalGet('admin/structure/block/add');
     foreach ($themes as $key => $theme) {
@@ -150,6 +161,10 @@ class BlockTestCase extends DrupalWebTestCase {
    * Test block visibility.
    */
   function testBlockVisibility() {
+    // Enable Node module and change the front page path to 'node'.
+    module_enable(array('node'));
+    variable_set('site_frontpage', 'node');
+
     $block = array();
 
     // Create a random title for the block
@@ -171,7 +186,7 @@ class BlockTestCase extends DrupalWebTestCase {
     // authenticated users.
     $edit = array();
     $edit['pages'] = 'user*';
-    $edit['roles[2]'] = TRUE;
+    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
     $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', $edit, t('Save block'));
 
     // Move block to the first sidebar.
@@ -392,14 +407,19 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp(array('block'));
+  }
+
   /**
    * Test non-default theme admin.
    */
   function testNonDefaultBlockAdmin() {
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer themes'));
     $this->drupalLogin($admin_user);
-    theme_enable(array('stark'));
-    $this->drupalGet('admin/structure/block/list/stark');
+    $new_theme = 'bartik';
+    theme_enable(array($new_theme));
+    $this->drupalGet('admin/structure/block/list/' . $new_theme);
   }
 }
 
@@ -413,6 +433,10 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
       'description' => 'Checks that the new default theme gets blocks.',
       'group' => 'Block',
     );
+  }
+
+  function setUp() {
+    parent::setUp(array('block'));
   }
 
   /**
@@ -441,11 +465,12 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
       $blocks[$block->module][$block->delta] = $block;
     }
 
-    // Turn on the Stark theme and ensure that it contains all of the blocks
+    // Turn on a new theme and ensure that it contains all of the blocks
     // the default theme had.
-    theme_enable(array('stark'));
-    variable_set('theme_default', 'stark');
-    $result = db_query('SELECT * FROM {block} WHERE theme = :theme', array(':theme' => 'stark'));
+    $new_theme = 'bartik';
+    theme_enable(array($new_theme));
+    variable_set('theme_default', $new_theme);
+    $result = db_query('SELECT * FROM {block} WHERE theme = :theme', array(':theme' => $new_theme));
     foreach ($result as $block) {
       unset($block->theme, $block->bid);
       $this->assertEqual($blocks[$block->module][$block->delta], $block, t('Block %name matched', array('%name' => $block->module . '-' . $block->delta)));
@@ -465,6 +490,10 @@ class BlockAdminThemeTestCase extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp(array('block'));
+  }
+
   /**
    * Check for the accessibility of the admin theme on the  block admin page.
    */
@@ -474,13 +503,13 @@ class BlockAdminThemeTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Ensure that access to block admin page is denied when theme is disabled.
-    $this->drupalGet('admin/structure/block/list/stark');
+    $this->drupalGet('admin/structure/block/list/bartik');
     $this->assertResponse(403, t('The block admin page for a disabled theme can not be accessed'));
 
     // Enable admin theme and confirm that tab is accessible.
-    $edit['admin_theme'] = 'stark';
+    $edit['admin_theme'] = 'bartik';
     $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
-    $this->drupalGet('admin/structure/block/list/stark');
+    $this->drupalGet('admin/structure/block/list/bartik');
     $this->assertResponse(200, t('The block admin page for the admin theme can be accessed'));
   }
 }
@@ -502,7 +531,7 @@ class BlockCacheTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('block_test');
+    parent::setUp(array('block', 'block_test'));
 
     // Create an admin user, log in and enable test blocks.
     $this->admin_user = $this->drupalCreateUser(array('administer blocks', 'access administration pages'));
@@ -686,7 +715,7 @@ class BlockHTMLIdTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('block_test');
+    parent::setUp(array('block', 'block_test'));
 
     // Create an admin user, log in and enable test blocks.
     $this->admin_user = $this->drupalCreateUser(array('administer blocks', 'access administration pages'));
@@ -769,7 +798,23 @@ class BlockHiddenRegionTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp(array('block_test'));
+    parent::setUp(array('block', 'block_test', 'search'));
+
+    // Enable Search block in default theme.
+    db_merge('block')
+      ->key(array(
+        'module' => 'search',
+        'delta' => 'form',
+        'theme' => variable_get('theme_default', 'stark'),
+      ))
+      ->fields(array(
+        'status' => 1,
+        'weight' => -1,
+        'region' => 'sidebar_first',
+        'pages' => '',
+        'cache' => -1,
+      ))
+      ->execute();
   }
 
   /**
@@ -779,6 +824,10 @@ class BlockHiddenRegionTestCase extends DrupalWebTestCase {
     // Create administrative user.
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer themes', 'search content'));
     $this->drupalLogin($admin_user);
+
+    // Ensure that the search form block is displayed.
+    $this->drupalGet('');
+    $this->assertText('Search', t('Block was displayed on the front page.'));
 
     // Enable "block_test_theme" and set it as the default theme.
     $theme = 'block_test_theme';

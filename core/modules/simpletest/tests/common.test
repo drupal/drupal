@@ -18,7 +18,7 @@ class CommonDrupalAlterTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('common_test');
+    parent::setUp(array('block', 'common_test'));
   }
 
   function testDrupalAlter() {
@@ -594,7 +594,7 @@ class CommonCascadingStylesheetsTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('php', 'language', 'common_test');
+    parent::setUp(array('language', 'common_test'));
     // Reset drupal_add_css() before each test.
     drupal_static_reset('drupal_add_css');
   }
@@ -700,10 +700,15 @@ class CommonCascadingStylesheetsTestCase extends DrupalWebTestCase {
    * Tests rendering inline stylesheets through a full page request.
    */
   function testRenderInlineFullPage() {
+    module_enable(array('php'));
+
     $css = 'body { font-size: 254px; }';
     // Inline CSS is minified unless 'preprocess' => FALSE is passed as a
     // drupal_add_css() option.
     $expected = 'body{font-size:254px;}';
+
+    // Create Basic page node type.
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     // Create a node, using the PHP filter that tests drupal_add_css().
     $php_format_id = 'php_code';
@@ -2255,11 +2260,6 @@ class CommonDrupalParseInfoFileTestCase extends DrupalUnitTestCase {
  * Tests scanning system directories in drupal_system_listing().
  */
 class CommonDrupalSystemListingTestCase extends DrupalWebTestCase {
-  /**
-   * Use the testing profile; this is needed for testDirectoryPrecedence().
-   */
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'Drupal system listing',

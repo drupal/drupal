@@ -13,14 +13,14 @@ function form_test_menu() {
     'title' => 'Form altering test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_alter_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['form-test/validate'] = array(
     'title' => 'Form validation handlers test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_validate_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['form-test/validate-required'] = array(
@@ -34,7 +34,7 @@ function form_test_menu() {
     'title' => 'Form validation with some error suppression',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_limit_validation_errors_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -42,28 +42,28 @@ function form_test_menu() {
     'title' => 'Tableselect checkboxes test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_tableselect_multiple_true_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['form_test/tableselect/multiple-false'] = array(
     'title' => 'Tableselect radio button test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_tableselect_multiple_false_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['form_test/tableselect/empty-text'] = array(
     'title' => 'Tableselect empty text test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_tableselect_empty_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['form_test/tableselect/advanced-select'] = array(
     'title' => 'Tableselect js_select tests',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_tableselect_js_select_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -71,7 +71,7 @@ function form_test_menu() {
     'title' => 'Vertical tabs tests',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_vertical_tabs_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -79,7 +79,7 @@ function form_test_menu() {
     'title' => 'Form storage test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_storage_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -87,7 +87,7 @@ function form_test_menu() {
     'title' => 'Form wrapper callback test',
     'page callback' => 'form_test_wrapper_callback',
     'page arguments' => array('form_test_wrapper_callback_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -95,7 +95,7 @@ function form_test_menu() {
     'title' => 'Form state values clearance test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_form_state_values_clean_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -103,7 +103,7 @@ function form_test_menu() {
     'title' => 'Form state values clearance advanced test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_form_state_values_clean_advanced_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -165,7 +165,7 @@ function form_test_menu() {
     'title' => 'Form values preservation during rebuild test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_form_rebuild_preserve_values_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -173,7 +173,7 @@ function form_test_menu() {
     'title' => 'Form label test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_label_test_form'),
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 

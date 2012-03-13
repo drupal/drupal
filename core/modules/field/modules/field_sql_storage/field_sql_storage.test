@@ -23,7 +23,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_sql_storage', 'field', 'field_test', 'text');
+    parent::setUp('field_sql_storage', 'field', 'field_test', 'text', 'number');
     $this->field_name = strtolower($this->randomName());
     $this->field = array('field_name' => $this->field_name, 'type' => 'test_field', 'cardinality' => 4);
     $this->field = field_create_field($this->field);

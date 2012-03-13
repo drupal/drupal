@@ -24,7 +24,7 @@ class BookTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp(array('book', 'node_access_test'));
+    parent::setUp(array('book', 'block', 'node_access_test'));
 
     // node_access_test requires a node_access_rebuild().
     node_access_rebuild();

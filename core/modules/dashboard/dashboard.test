@@ -18,21 +18,11 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp();
+    parent::setUp(array('block', 'dashboard'));
 
     // Create and log in an administrative user having access to the dashboard.
     $admin_user = $this->drupalCreateUser(array('access dashboard', 'administer blocks', 'access administration pages', 'administer modules'));
     $this->drupalLogin($admin_user);
-
-    // Make sure that the dashboard is using the same theme as the rest of the
-    // site (and in particular, the same theme used on 403 pages). This forces
-    // the dashboard blocks to be the same for an administrator as for a
-    // regular user, and therefore lets us test that the dashboard blocks
-    // themselves are specifically removed for a user who does not have access
-    // to the dashboard page.
-    theme_enable(array('stark'));
-    variable_set('theme_default', 'stark');
-    variable_set('admin_theme', 'stark');
   }
 
   /**
@@ -65,6 +55,7 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
    */
   function testDashboardRegions() {
     $dashboard_regions = dashboard_region_descriptions();
+    $this->assertTrue(!empty($dashboard_regions), 'One or more dashboard regions found.');
 
     // Ensure blocks can be placed in dashboard regions.
     $this->drupalGet('admin/dashboard/configure');
@@ -112,6 +103,36 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('admin/dashboard');
     $this->assertRaw($custom_block['title'], t('Block still appears on the dashboard.'));
+  }
+}
+
+class DashboardBlockAvailabilityTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Block availability',
+      'description' => 'Test blocks as used by the dashboard.',
+      'group' => 'Dashboard',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Create and log in an administrative user having access to the dashboard.
+    $admin_user = $this->drupalCreateUser(array('access dashboard', 'administer blocks', 'access administration pages', 'administer modules'));
+    $this->drupalLogin($admin_user);
+
+    // Make sure that the dashboard is using the same theme as the rest of the
+    // site (and in particular, the same theme used on 403 pages). This forces
+    // the dashboard blocks to be the same for an administrator as for a
+    // regular user, and therefore lets us test that the dashboard blocks
+    // themselves are specifically removed for a user who does not have access
+    // to the dashboard page.
+    theme_enable(array('stark'));
+    variable_set('theme_default', 'stark');
+    variable_set('admin_theme', 'stark');
   }
 
   /**

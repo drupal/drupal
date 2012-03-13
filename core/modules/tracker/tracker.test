@@ -35,6 +35,8 @@ class TrackerTest extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('comment', 'tracker');
 
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+
     $permissions = array('access comments', 'create page content', 'post comments', 'skip comment approval');
     $this->user = $this->drupalCreateUser($permissions);
     $this->other_user = $this->drupalCreateUser($permissions);
@@ -108,7 +110,7 @@ class TrackerTest extends DrupalWebTestCase {
     $this->assertText($other_published_my_comment->title, t("Nodes that the user has commented on appear in the user's tracker listing."));
 
     // Verify that unpublished comments are removed from the tracker.
-    $admin_user = $this->drupalCreateUser(array('administer comments', 'access user profiles'));
+    $admin_user = $this->drupalCreateUser(array('post comments', 'administer comments', 'access user profiles'));
     $this->drupalLogin($admin_user);
     $this->drupalPost('comment/1/edit', array('status' => COMMENT_NOT_PUBLISHED), t('Save'));
     $this->drupalGet('user/' . $this->user->uid . '/track');
