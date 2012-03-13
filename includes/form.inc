@@ -2325,6 +2325,48 @@ function form_type_tableselect_value($element, $input = FALSE) {
 }
 
 /**
+ * Form value callback: Determines the value for a #type radios form element.
+ *
+ * @param $element
+ *   The form element whose value is being populated.
+ * @param $input
+ *   (optional) The incoming input to populate the form element. If FALSE, the
+ *   element's default value is returned. Defaults to FALSE.
+ *
+ * @return
+ *   The data that will appear in the $element_state['values'] collection for
+ *   this element.
+ */
+function form_type_radios_value(&$element, $input = FALSE) {
+  if ($input !== FALSE) {
+    // There may not be a submitted value for multiple radio buttons, if none of
+    // the options was checked by default. If there is no submitted input value
+    // for this element (NULL), _form_builder_handle_input_element()
+    // automatically attempts to use the #default_value (if set) or an empty
+    // string (''). However, an empty string would fail validation in
+    // _form_validate(), in case it is not contained in the list of allowed
+    // values in #options.
+    if (!isset($input)) {
+      // Signify a garbage value to disable the #default_value handling and take
+      // over NULL as #value.
+      $element['#has_garbage_value'] = TRUE;
+      // There was a user submission so validation is a must. If this element is
+      // #required, then an appropriate error message will be output. While an
+      // optional #type 'radios' does not necessarily make sense from a user
+      // interaction perspective, there may be use-cases for that and it is not
+      // the job of Form API to artificially limit possibilities.
+      $element['#needs_validation'] = TRUE;
+    }
+    // The value stays the same, but the flags above will ensure it is
+    // processed properly.
+    return $input;
+  }
+  elseif (isset($element['#default_value'])) {
+    return $element['#default_value'];
+  }
+}
+
+/**
  * Determines the value for a password_confirm form element.
  *
  * @param $element
@@ -2968,7 +3010,9 @@ function form_process_radios($element) {
         // The key is sanitized in drupal_attributes() during output from the
         // theme function.
         '#return_value' => $key,
-        '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
+        // Use default or FALSE. A value of FALSE means that the radio button is
+        // not 'checked'.
+        '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : FALSE,
         '#attributes' => $element['#attributes'],
         '#parents' => $element['#parents'],
         '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
