@@ -2,14 +2,19 @@
 
 /**
  * @file
- * User page callbacks for the translation module.
+ * User page callbacks for the Translation module.
  */
 
 /**
- * Overview page for a node's translations.
+ * Page callback: Displays a list of a node's translations.
  *
  * @param $node
- *   Node object.
+ *   A node object.
+ *
+ * @return
+ *   A render array for a page containing a list of content.
+ *
+ * @see translation_menu()
  */
 function translation_node_overview($node) {
   include_once DRUPAL_ROOT . '/includes/language.inc';
