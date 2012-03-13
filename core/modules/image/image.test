@@ -32,7 +32,20 @@ class ImageFieldTestCase extends DrupalWebTestCase {
   protected $admin_user;
 
   function setUp() {
-    parent::setUp('image');
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules[] = 'node';
+    $modules[] = 'image';
+    parent::setUp($modules);
+
+    // Create Basic page and Article node types.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    }
+
     $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer image styles'));
     $this->drupalLogin($this->admin_user);
   }
@@ -119,7 +132,7 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('image_module_test');
+    parent::setUp(array('image', 'image_module_test'));
 
     $this->style_name = 'style_foo';
     image_style_save(array('name' => $this->style_name));
@@ -566,6 +579,10 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp(array('field_ui'));
+  }
+
   /**
    * Test image formatters on node display for public files.
    */
@@ -876,7 +893,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('rdf', 'image', 'image_module_test');
+    parent::setUp(array('image', 'image_module_test'));
   }
 
   /**
@@ -917,7 +934,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="120" height="60" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="120" height="60" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -938,7 +955,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="60" height="120" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="60" height="120" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -960,7 +977,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -982,7 +999,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1000,7 +1017,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1021,7 +1038,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1041,7 +1058,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="30" height="30" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" width="30" height="30" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1062,7 +1079,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     $effect = image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" alt="" />');
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $this->drupalGet($url);
     $this->assertResponse(200, t('Image was generated at the URL.'));
@@ -1080,7 +1097,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     image_effect_save('test', $effect);
     $img_tag = theme_image_style($variables);
-    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />');
+    $this->assertEqual($img_tag, '<img src="' . $url . '" alt="" />');
   }
 }
 

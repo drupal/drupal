@@ -9,4 +9,4 @@ dependencies[] = entity
 files[] = comment.entity.inc
 files[] = comment.test
 configure = admin/content/comment
-stylesheets[all][] = comment.css
+stylesheets[all][] = comment.theme.css

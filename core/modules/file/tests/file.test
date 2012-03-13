@@ -9,6 +9,8 @@
  * Provides methods specifically for testing File module's field handling.
  */
 class FileFieldTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   protected $admin_user;
 
   function setUp() {

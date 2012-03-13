@@ -9,6 +9,9 @@
  * Tests help display and user access for all modules implementing help.
  */
 class HelpTestCase extends DrupalWebTestCase {
+  // Tests help implementations of many arbitrary core modules.
+  protected $profile = 'standard';
+
   /**
    * The admin user that will be created.
    */

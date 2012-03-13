@@ -9,6 +9,37 @@
  * Base class for OpenID tests.
  */
 abstract class OpenIDWebTestCase extends DrupalWebTestCase {
+  function setUp() {
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules[] = 'block';
+    $modules[] = 'openid';
+    parent::setUp($modules);
+
+    // Enable user login block.
+    db_merge('block')
+      ->key(array(
+        'module' => 'user',
+        'delta' => 'login',
+        'theme' => variable_get('theme_default', 'stark'),
+      ))
+      ->fields(array(
+        'status' => 1,
+        'weight' => 0,
+        'region' => 'sidebar_first',
+        'pages' => '',
+        'cache' => -1,
+      ))
+      ->execute();
+
+    // Create Basic page and Article node types.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    }
+  }
 
   /**
    * Initiates the login procedure using the specified User-supplied Identity.

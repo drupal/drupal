@@ -6,6 +6,8 @@
  */
 
 class DBLogTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   protected $big_user;
   protected $any_user;
 

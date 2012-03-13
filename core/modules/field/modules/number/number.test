@@ -22,7 +22,7 @@ class NumberFieldTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_test');
+    parent::setUp(array('node', 'field_test', 'number', 'field_ui'));
     $this->web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content', 'administer content types'));
     $this->drupalLogin($this->web_user);
   }

@@ -109,7 +109,10 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('system_test');
+    parent::setUp(array('node', 'system_test'));
+
+    variable_set('site_name', 'Drupal');
+    variable_set('site_frontpage', 'node');
   }
 
   /**

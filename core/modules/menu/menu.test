@@ -6,6 +6,8 @@
  */
 
 class MenuTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   protected $big_user;
   protected $std_user;
   protected $menu;
@@ -582,6 +584,8 @@ class MenuTestCase extends DrupalWebTestCase {
  * Test menu settings for nodes.
  */
 class MenuNodeTestCase extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Menu settings for nodes',

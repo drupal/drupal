@@ -27,7 +27,7 @@ class ForumTestCase extends DrupalWebTestCase {
    * Enable modules and create users with specific permissions.
    */
   function setUp() {
-    parent::setUp('taxonomy', 'comment', 'forum');
+    parent::setUp(array('taxonomy', 'comment', 'forum', 'node', 'block', 'menu', 'help'));
     // Create users.
     $this->admin_user = $this->drupalCreateUser(array(
       'access administration pages',
@@ -49,7 +49,7 @@ class ForumTestCase extends DrupalWebTestCase {
       'edit own forum content',
       'delete own forum content',
     ));
-    $this->web_user = $this->drupalCreateUser(array());
+    $this->web_user = $this->drupalCreateUser();
   }
 
   /**
@@ -147,7 +147,7 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->assertFieldByXPath($xpath, '6', t('Number of posts found.'));
 
     // Test loading multiple forum nodes on the front page.
-    $this->drupalLogin($this->drupalCreateUser(array('administer content types', 'create forum content')));
+    $this->drupalLogin($this->drupalCreateUser(array('administer content types', 'create forum content', 'post comments')));
     $this->drupalPost('admin/structure/types/manage/forum', array('node_options[promote]' => 'promote'), t('Save content type'));
     $this->createForumTopic($this->forum, FALSE);
     $this->createForumTopic($this->forum, FALSE);

@@ -11,7 +11,12 @@
 class StatisticsTestCase extends DrupalWebTestCase {
 
   function setUp() {
-    parent::setUp('statistics');
+    parent::setUp(array('node', 'block', 'statistics'));
+
+    // Create Basic page node type.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    }
 
     // Create user.
     $this->blocking_user = $this->drupalCreateUser(array(
@@ -61,7 +66,12 @@ class StatisticsLoggingTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('statistics');
+    parent::setUp(array('statistics', 'block'));
+
+    // Create Basic page node type.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    }
 
     $this->auth_user = $this->drupalCreateUser(array('access content', 'create page content', 'edit own page content'));
 
@@ -299,7 +309,12 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('statistics');
+    parent::setUp(array('node', 'statistics'));
+
+    // Create Basic page node type.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    }
     $this->privileged_user = $this->drupalCreateUser(array('access statistics', 'administer statistics', 'view post access counter', 'create page content'));
     $this->drupalLogin($this->privileged_user);
     $this->test_node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->privileged_user->uid));
@@ -382,7 +397,11 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
     $timestamp = time();
     $this->drupalPost(NULL, NULL, t('Cancel account'));
     // Confirm account cancellation request.
-    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $mails = $this->drupalGetMails();
+    $mail = end($mails);
+    preg_match('@http.+?(user/\d+/cancel/confirm/\d+/[^\s]+)@', $mail['body'], $matches);
+    $path = $matches[1];
+    $this->drupalGet($path);
     $this->assertFalse(user_load($account->uid, TRUE), t('User is not found in the database.'));
 
     $this->drupalGet('admin/reports/visitors');

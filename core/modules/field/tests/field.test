@@ -1286,7 +1286,7 @@ class FieldFormTestCase extends FieldTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_test');
+    parent::setUp(array('node', 'field_test', 'list'));
 
     $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
     $this->drupalLogin($web_user);

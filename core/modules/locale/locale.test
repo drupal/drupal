@@ -56,7 +56,7 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
       'predefined_langcode' => 'fr',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText('fr', t('Language added successfully.'));
+    $this->assertText('French');
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
 
     // Check if the Default English language has no path prefix.
@@ -915,7 +915,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
   protected $admin_user = NULL;
 
   function setUp() {
-    parent::setUp('locale', 'locale_test');
+    parent::setUp(array('locale', 'locale_test', 'dblog'));
 
     // Set the translation file directory.
     variable_set('locale_translate_file_directory', drupal_get_path('module', 'locale_test'));
@@ -1391,8 +1391,11 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
   protected $language;
 
   function setUp() {
-    parent::setUp('locale');
+    parent::setUp(array('node', 'locale'));
     $this->langcode = 'en';
+
+    // Create Article node type.
+    $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
   }
 
   /**
@@ -1533,7 +1536,7 @@ class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('locale');
+    parent::setUp(array('locale', 'block'));
 
     // Create and login user.
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer languages', 'translate interface', 'access administration pages'));
@@ -1833,7 +1836,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
       'predefined_langcode' => 'fr',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText($langcode, t('Language added successfully.'));
+    $this->assertText('French', t('Language added successfully.'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
 
     // Set language negotiation.
@@ -1918,7 +1921,10 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('locale', 'path');
+    parent::setUp(array('node', 'locale', 'path'));
+
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    variable_set('site_frontpage', 'node');
   }
 
   /**
@@ -2003,8 +2009,8 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     path_delete($edit);
 
     // Create language nodes to check priority of aliases.
-    $first_node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
-    $second_node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $first_node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1));
+    $second_node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1));
 
     // Assign a custom path alias to the first node with the English language.
     $edit = array(
@@ -2045,6 +2051,8 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
  * Functional tests for multilingual support on nodes.
  */
 class LocaleContentFunctionalTest extends DrupalWebTestCase {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Content language settings',
@@ -2296,7 +2304,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('locale', 'locale_test');
+    parent::setUp(array('locale', 'locale_test', 'block'));
     require_once DRUPAL_ROOT . '/core/includes/language.inc';
     drupal_load('module', 'locale');
     $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages', 'administer blocks'));
@@ -2515,11 +2523,11 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // Check that the language switcher active link matches the given browser
     // language.
     $args = array(':url' => base_path() . (!empty($GLOBALS['conf']['clean_url']) ? $langcode_browser_fallback : "?q=$langcode_browser_fallback"));
-    $fields = $this->xpath('//div[@id="block-locale-language-interface"]//a[@class="language-link active" and @href=:url]', $args);
+    $fields = $this->xpath('//div[@id="block-locale-language-interface"]//a[@class="language-link active" and starts-with(@href, :url)]', $args);
     $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->name, t('The browser language is the URL active language'));
 
     // Check that URLs are rewritten using the given browser language.
-    $fields = $this->xpath('//div[@id="site-name"]//a[@rel="home" and @href=:url]//span', $args);
+    $fields = $this->xpath('//p[@id="site-name"]/strong/a[@rel="home" and @href=:url]', $args);
     $this->assertTrue($fields[0] == 'Drupal', t('URLs are rewritten using the browser language.'));
   }
 
@@ -2676,7 +2684,11 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('locale');
+    parent::setUp(array('node', 'locale'));
+
+    // Create Basic page node type.
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+
     // Setup users.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages', 'create page content', 'edit own page content'));
     $this->drupalLogin($admin_user);
@@ -2779,8 +2791,11 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
 
     // Check if node body is showed.
     $this->drupalGet("node/$node->nid");
-    $body = $this->xpath('//div[@id=:id]//div[@property="content:encoded"]/p', array(':id' => 'node-' . $node->nid));
-    $this->assertEqual(current($body), $node->body['en'][0]['value'], 'Node body is correctly showed.');
+    $body = $this->xpath('//article[@id=:id]//div[@class=:class]/descendant::p', array(
+      ':id' => 'node-' . $node->nid,
+      ':class' => 'content',
+    ));
+    $this->assertEqual(current($body), $node->body['en'][0]['value'], 'Node body found.');
   }
 }
 
@@ -2788,6 +2803,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
  * Functional tests for comment language.
  */
 class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
+  protected $profile = 'standard';
 
   public static function getInfo() {
     return array(
@@ -2892,7 +2908,10 @@ class LocaleDateFormatsFunctionalTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('locale');
+    parent::setUp(array('node', 'locale'));
+
+    // Create Article node type.
+    $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
 
     // Create and login user.
     $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'create article content'));

@@ -7,10 +7,27 @@ use Drupal\Core\Database\Database;
  * Tests for node.module.
  */
 
+class NodeWebTestCase extends DrupalWebTestCase {
+  function setUp() {
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules[] = 'node';
+    parent::setUp($modules);
+
+    // Create Basic page and Article node types.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    }
+  }
+}
+
 /**
  * Tests the node_load_multiple() function.
  */
-class NodeLoadMultipleUnitTest extends DrupalWebTestCase {
+class NodeLoadMultipleUnitTest extends NodeWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -90,7 +107,7 @@ class NodeLoadMultipleUnitTest extends DrupalWebTestCase {
 /**
  * Tests for the hooks invoked during node_load().
  */
-class NodeLoadHooksTestCase extends DrupalWebTestCase {
+class NodeLoadHooksTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node load hooks',
@@ -131,7 +148,7 @@ class NodeLoadHooksTestCase extends DrupalWebTestCase {
   }
 }
 
-class NodeRevisionsTestCase extends DrupalWebTestCase {
+class NodeRevisionsTestCase extends NodeWebTestCase {
   protected $nodes;
   protected $logs;
 
@@ -264,7 +281,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
   }
 }
 
-class PageEditTestCase extends DrupalWebTestCase {
+class PageEditTestCase extends NodeWebTestCase {
   protected $web_user;
   protected $admin_user;
 
@@ -396,7 +413,7 @@ class PageEditTestCase extends DrupalWebTestCase {
   }
 }
 
-class PagePreviewTestCase extends DrupalWebTestCase {
+class PagePreviewTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node preview',
@@ -467,7 +484,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
   }
 }
 
-class NodeCreationTestCase extends DrupalWebTestCase {
+class NodeCreationTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node creation',
@@ -478,7 +495,7 @@ class NodeCreationTestCase extends DrupalWebTestCase {
 
   function setUp() {
     // Enable dummy module that implements hook_node_insert for exceptions.
-    parent::setUp('node_test_exception');
+    parent::setUp(array('node_test_exception', 'dblog'));
 
     $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content'));
     $this->drupalLogin($web_user);
@@ -545,7 +562,7 @@ class NodeCreationTestCase extends DrupalWebTestCase {
   }
 }
 
-class PageViewTestCase extends DrupalWebTestCase {
+class PageViewTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node edit permissions',
@@ -584,7 +601,7 @@ class PageViewTestCase extends DrupalWebTestCase {
   }
 }
 
-class SummaryLengthTestCase extends DrupalWebTestCase {
+class SummaryLengthTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Summary length',
@@ -626,7 +643,7 @@ class SummaryLengthTestCase extends DrupalWebTestCase {
   }
 }
 
-class NodeTitleXSSTestCase extends DrupalWebTestCase {
+class NodeTitleXSSTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node title XSS filtering',
@@ -660,7 +677,7 @@ class NodeTitleXSSTestCase extends DrupalWebTestCase {
   }
 }
 
-class NodeBlockTestCase extends DrupalWebTestCase {
+class NodeBlockTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Block availability',
@@ -670,7 +687,7 @@ class NodeBlockTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp();
+    parent::setUp(array('block'));
 
     // Create and login user
     $admin_user = $this->drupalCreateUser(array('administer blocks'));
@@ -693,7 +710,7 @@ class NodeBlockTestCase extends DrupalWebTestCase {
 /**
  * Check that the post information displays when enabled for a content type.
  */
-class NodePostSettingsTestCase extends DrupalWebTestCase {
+class NodePostSettingsTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node post information display',
@@ -728,7 +745,7 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
 
     // Check that the post information is displayed.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
-    $elements = $this->xpath('//div[contains(@class,:class)]', array(':class' => 'submitted'));
+    $elements = $this->xpath('//*[contains(@class,:class)]', array(':class' => 'submitted'));
     $this->assertEqual(count($elements), 1, t('Post information is displayed.'));
   }
 
@@ -762,7 +779,7 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
  * added to the node->content array, then verify that the data appears on the
  * sitewide RSS feed at rss.xml.
  */
-class NodeRSSContentTestCase extends DrupalWebTestCase {
+class NodeRSSContentTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node RSS Content',
@@ -823,7 +840,7 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
  * @todo Cover hook_node_access in a separate test class.
  * hook_node_access_records is covered in another test class.
  */
-class NodeAccessUnitTest extends DrupalWebTestCase {
+class NodeAccessUnitTest extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node access',
@@ -890,7 +907,7 @@ class NodeAccessUnitTest extends DrupalWebTestCase {
 /**
  * Test case to verify hook_node_access_records functionality.
  */
-class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
+class NodeAccessRecordsUnitTest extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node access records',
@@ -973,7 +990,9 @@ class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
 /**
  * Tests for Node Access with a non-node base table.
  */
-class NodeAccessBaseTableTestCase extends DrupalWebTestCase {
+class NodeAccessBaseTableTestCase extends NodeWebTestCase {
+  // Requires tags taxonomy field.
+  protected $profile = 'standard';
 
   public static function getInfo() {
     return array(
@@ -1132,7 +1151,7 @@ class NodeAccessBaseTableTestCase extends DrupalWebTestCase {
 /**
  * Test case to check node save related functionality, including import-save
  */
-class NodeSaveTestCase extends DrupalWebTestCase {
+class NodeSaveTestCase extends NodeWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -1275,13 +1294,17 @@ class NodeSaveTestCase extends DrupalWebTestCase {
 /**
  * Tests related to node types.
  */
-class NodeTypeTestCase extends DrupalWebTestCase {
+class NodeTypeTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node types',
       'description' => 'Ensures that node type functions work correctly.',
       'group' => 'Node',
     );
+  }
+
+  function setUp() {
+    parent::setUp(array('field_ui'));
   }
 
   /**
@@ -1378,7 +1401,7 @@ class NodeTypeTestCase extends DrupalWebTestCase {
     $this->assertRaw('Body', t('Body field was found.'));
 
     // Remove the body field.
-    $this->drupalPost('admin/structure/types/manage/bar/fields/body/delete', NULL, t('Delete'));
+    $this->drupalPost('admin/structure/types/manage/bar/fields/body/delete', array(), t('Delete'));
     // Resave the settings for this type.
     $this->drupalPost('admin/structure/types/manage/bar', array(), t('Save content type'));
     // Check that the body field doesn't exist.
@@ -1429,7 +1452,7 @@ class NodeTypeTestCase extends DrupalWebTestCase {
 /**
  * Test node type customizations persistence.
  */
-class NodeTypePersistenceTestCase extends DrupalWebTestCase {
+class NodeTypePersistenceTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node type persist',
@@ -1505,7 +1528,7 @@ class NodeTypePersistenceTestCase extends DrupalWebTestCase {
 /**
  * Rebuild the node_access table.
  */
-class NodeAccessRebuildTestCase extends DrupalWebTestCase {
+class NodeAccessRebuildTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node access rebuild',
@@ -1533,7 +1556,7 @@ class NodeAccessRebuildTestCase extends DrupalWebTestCase {
 /**
  * Test node administration page functionality.
  */
-class NodeAdminTestCase extends DrupalWebTestCase {
+class NodeAdminTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node administration',
@@ -1698,7 +1721,7 @@ class NodeAdminTestCase extends DrupalWebTestCase {
 /**
  * Test node title.
  */
-class NodeTitleTestCase extends DrupalWebTestCase {
+class NodeTitleTestCase extends NodeWebTestCase {
   protected $admin_user;
 
   public static function getInfo() {
@@ -1710,8 +1733,8 @@ class NodeTitleTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array('administer nodes', 'create article content', 'create page content'));
+    parent::setUp(array('comment'));
+    $this->admin_user = $this->drupalCreateUser(array('administer nodes', 'create article content', 'create page content', 'post comments'));
     $this->drupalLogin($this->admin_user);
   }
 
@@ -1738,7 +1761,7 @@ class NodeTitleTestCase extends DrupalWebTestCase {
     $this->assertEqual(current($this->xpath($xpath)), $node->title, 'Node breadcrumb is equal to node title.', 'Node');
 
     // Test node title in comment preview.
-    $this->assertEqual(current($this->xpath('//div[@id=:id]/h2/a', array(':id' => 'node-' . $node->nid))), $node->title, 'Node preview title is equal to node title.', 'Node');
+    $this->assertEqual(current($this->xpath('//article[@id=:id]/h2/a', array(':id' => 'node-' . $node->nid))), $node->title, 'Node preview title is equal to node title.', 'Node');
 
     // Test node title is clickable on teaser list (/node).
     $this->drupalGet('node');
@@ -1773,7 +1796,7 @@ class NodeFeedTestCase extends DrupalWebTestCase {
 /**
  * Functional tests for the node module blocks.
  */
-class NodeBlockFunctionalTest extends DrupalWebTestCase {
+class NodeBlockFunctionalTest extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node blocks',
@@ -1783,7 +1806,7 @@ class NodeBlockFunctionalTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('node', 'block');
+    parent::setUp(array('block'));
 
     // Create users and test node.
     $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer nodes', 'administer blocks'));
@@ -1946,7 +1969,7 @@ class MultiStepNodeFormBasicOptionsTest extends DrupalWebTestCase {
 /**
  * Test to ensure that a node's content is always rebuilt.
  */
-class NodeBuildContent extends DrupalWebTestCase {
+class NodeBuildContent extends NodeWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -1974,7 +1997,7 @@ class NodeBuildContent extends DrupalWebTestCase {
 /**
  * Tests node_query_node_access_alter().
  */
-class NodeQueryAlter extends DrupalWebTestCase {
+class NodeQueryAlter extends NodeWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -2165,7 +2188,7 @@ class NodeQueryAlter extends DrupalWebTestCase {
 /**
  * Tests node_query_entity_field_access_alter().
  */
-class NodeEntityFieldQueryAlter extends DrupalWebTestCase {
+class NodeEntityFieldQueryAlter extends NodeWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -2229,7 +2252,7 @@ class NodeEntityFieldQueryAlter extends DrupalWebTestCase {
 /**
  * Test node token replacement in strings.
  */
-class NodeTokenReplaceTestCase extends DrupalWebTestCase {
+class NodeTokenReplaceTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node token replacement',
@@ -2306,7 +2329,7 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
 /**
  * Tests user permissions for node revisions.
  */
-class NodeRevisionPermissionsTestCase extends DrupalWebTestCase {
+class NodeRevisionPermissionsTestCase extends NodeWebTestCase {
   protected $node_revisions = array();
   protected $accounts = array();
 

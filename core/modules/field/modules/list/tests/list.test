@@ -18,7 +18,7 @@ class ListFieldTestCase extends FieldTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_test');
+    parent::setUp(array('list', 'field_test'));
 
     $this->field_name = 'test_list';
     $this->field = array(
@@ -126,7 +126,7 @@ class ListFieldUITestCase extends FieldTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_test', 'field_ui');
+    parent::setUp(array('list', 'field_test', 'taxonomy', 'field_ui'));
 
     // Create test user.
     $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));

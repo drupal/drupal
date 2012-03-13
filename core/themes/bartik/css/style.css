@@ -1,4 +1,3 @@
-
 /* ---------- Overall Specifications ---------- */
 
 body {
@@ -716,11 +715,11 @@ ul.links {
 .comment ul.links li {
   padding: 0 0.5em 0 0; /* LTR */
 }
-.comment-unpublished {
+.comment.unpublished {
   margin-right: 5px; /* LTR */
   padding: 5px 2px 5px 5px; /* LTR */
 }
-.comment-unpublished .comment-text .comment-arrow {
+.comment.unpublished .comment-text .comment-arrow {
   border-left: 1px solid #fff4f4;
   border-right: 1px solid #fff4f4;
 }
