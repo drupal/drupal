@@ -293,10 +293,11 @@ Drupal.ACDB.prototype.search = function (searchString) {
   this.timer = setTimeout(function () {
     db.owner.setStatus('begin');
 
-    // Ajax GET request for autocompletion.
+    // Ajax GET request for autocompletion. We use Drupal.encodePath instead of
+    // encodeURIComponent to allow autocomplete search terms to contain slashes.
     $.ajax({
       type: 'GET',
-      url: db.uri + '/' + encodeURIComponent(searchString),
+      url: db.uri + '/' + Drupal.encodePath(searchString),
       dataType: 'json',
       success: function (matches) {
         if (typeof matches.status === 'undefined' || matches.status !== 0) {
