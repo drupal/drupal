@@ -718,8 +718,8 @@ function hook_node_update($node) {
  * @param $node
  *   The node being indexed.
  *
- * @return
- *   Array of additional information to be indexed.
+ * @return string
+ *   Additional node information to be indexed.
  *
  * @ingroup node_api_hooks
  */
