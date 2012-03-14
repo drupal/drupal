@@ -2513,6 +2513,12 @@ function drupal_deliver_html_page($page_callback_result) {
     drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
   }
 
+  // Send X-UA-Compatible HTTP header to force IE to use the most recent
+  // rendering engine or use Chrome's frame rendering engine if available.
+  if (is_null(drupal_get_http_header('X-UA-Compatible'))) {
+    drupal_add_http_header('X-UA-Compatible', 'IE=edge,chrome=1');
+  }
+
   // Send appropriate HTTP-Header for browsers and search engines.
   global $language_interface;
   drupal_add_http_header('Content-Language', $language_interface->langcode);
