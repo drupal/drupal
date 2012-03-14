@@ -4,7 +4,13 @@
  * @file
  * Test the Drupal mailing system.
  */
-class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
+
+use Drupal\Core\Mail\MailInterface;
+
+/**
+ * Defines a mail class used for testing.
+ */
+class MailTestCase extends DrupalWebTestCase implements MailInterface {
   /**
    * The most recent message that was sent through the test case.
    *
@@ -17,7 +23,7 @@ class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
     return array(
       'name' => 'Mail system',
       'description' => 'Performs tests on the pluggable mailing framework.',
-      'group' => 'System',
+      'group' => 'Mail',
     );
   }
 
@@ -31,7 +37,7 @@ class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
   /**
    * Assert that the pluggable mail system is functional.
    */
-  function testPluggableFramework() {
+  public function testPluggableFramework() {
     global $language_interface;
 
     // Use MailTestCase for sending a message.
@@ -46,7 +52,7 @@ class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
    *
    * @see simpletest_mail_alter()
    */
-  function testCancelMessage() {
+  public function testCancelMessage() {
     global $language;
 
     // Reset the class variable holding a copy of the last sent message.
@@ -62,7 +68,7 @@ class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
   /**
    * Concatenate and wrap the e-mail body for plain-text mails.
    *
-   * @see DefaultMailSystem
+   * @see Drupal\Core\Mail\PhpMail
    */
   public function format(array $message) {
     // Join the body array into one string.
@@ -104,7 +110,7 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
    *   An HTML representation of the text string that, when displayed in a
    *   browser, represents the PHP source code equivalent of $text.
    */
-  function stringToHtml($text) {
+  protected function stringToHtml($text) {
     return '"' .
       str_replace(
         array("\n", ' '),
@@ -126,7 +132,7 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
    *   (optional) An array of allowed tags, or NULL to default to the full
    *   set of tags supported by drupal_html_to_text().
    */
-  function assertHtmlToText($html, $text, $message, $allowed_tags = NULL) {
+  protected function assertHtmlToText($html, $text, $message, $allowed_tags = NULL) {
     preg_match_all('/<([a-z0-6]+)/', drupal_strtolower($html), $matches);
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
@@ -145,7 +151,7 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
   /**
    * Test all supported tags of drupal_html_to_text().
    */
-  function testTags() {
+  public function testTags() {
     global $base_path, $base_url;
     $tests = array(
       // @todo Trailing linefeeds should be trimmed.
@@ -240,7 +246,7 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
   /**
    * Test $allowed_tags argument of drupal_html_to_text().
    */
-  function testDrupalHtmlToTextArgs() {
+  public function testDrupalHtmlToTextArgs() {
     // The second parameter of drupal_html_to_text() overrules the allowed tags.
     $this->assertHtmlToText(
       'Drupal <b>Drupal</b> Drupal',
@@ -273,7 +279,7 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
   /**
    * Test that whitespace is collapsed.
    */
-  function testDrupalHtmltoTextCollapsesWhitespace() {
+  public function testDrupalHtmltoTextCollapsesWhitespace() {
     $input = "<p>Drupal  Drupal\n\nDrupal<pre>Drupal  Drupal\n\nDrupal</pre>Drupal  Drupal\n\nDrupal</p>";
     // @todo The whitespace should be collapsed.
     $collapsed = "Drupal  Drupal\n\nDrupalDrupal  Drupal\n\nDrupalDrupal  Drupal\n\nDrupal\n\n";
@@ -289,7 +295,7 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
    * Test that text separated by block-level tags in HTML get separated by
    * (at least) a newline in the plaintext version.
    */
-  function testDrupalHtmlToTextBlockTagToNewline() {
+  public function testDrupalHtmlToTextBlockTagToNewline() {
     $input = '[text]'
       . '<blockquote>[blockquote]</blockquote>'
       . '<br />[br]'
@@ -339,7 +345,7 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
   /**
    * Test that headers are properly separated from surrounding text.
    */
-  function testHeaderSeparation() {
+  public function testHeaderSeparation() {
     $html = 'Drupal<h1>Drupal</h1>Drupal';
     // @todo There should be more space above the header than below it.
     $text = "Drupal\n======== DRUPAL ==============================================================\n\nDrupal\n";
@@ -364,7 +370,7 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
   /**
    * Test that footnote references are properly generated.
    */
-  function testFootnoteReferences() {
+  public function testFootnoteReferences() {
     global $base_path, $base_url;
     $source = '<a href="http://www.example.com/node/1">Host and path</a>'
       . '<br /><a href="http://www.example.com">Host, no path</a>'
@@ -389,7 +395,7 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
    * Test that combinations of paragraph breaks, line breaks, linefeeds,
    * and spaces are properly handled.
    */
-  function testDrupalHtmlToTextParagraphs() {
+  public function testDrupalHtmlToTextParagraphs() {
     $tests = array();
     $tests[] = array(
         'html' => "<p>line 1<br />\nline 2<br />line 3\n<br />line 4</p><p>paragraph</p>",
@@ -418,7 +424,7 @@ class DrupalHtmlToTextTestCase extends DrupalWebTestCase {
    * RFC 821 says, "The maximum total length of a text line including the
    * <CRLF> is 1000 characters."
    */
-  function testVeryLongLineWrap() {
+  public function testVeryLongLineWrap() {
     $input = 'Drupal<br /><p>' . str_repeat('x', 2100) . '</><br />Drupal';
     $output = drupal_html_to_text($input);
     // This awkward construct comes from includes/mail.inc lines 8-13.

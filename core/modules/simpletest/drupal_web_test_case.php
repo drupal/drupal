@@ -1441,7 +1441,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $language_interface = language_default();
 
     // Use the test mail class instead of the default mail handler class.
-    variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+    variable_set('mail_system', array('default-system' => 'Drupal\Core\Mail\VariableLog'));
 
     drupal_set_time_limit($this->timeLimit);
     $this->setup = TRUE;

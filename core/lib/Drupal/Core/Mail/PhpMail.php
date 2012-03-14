@@ -2,20 +2,23 @@
 
 /**
  * @file
- * Drupal core implementations of MailSystemInterface.
+ * Definition of Drupal\Core\Mail\PhpMail.
  */
+
+namespace Drupal\Core\Mail;
 
 /**
  * The default Drupal mail backend using PHP's mail function.
  */
-class DefaultMailSystem implements MailSystemInterface {
+class PhpMail implements MailInterface {
+
   /**
-   * Concatenate and wrap the e-mail body for plain-text mails.
+   * Concatenates and wrap the e-mail body for plain-text mails.
    *
-   * @param $message
+   * @param array $message
    *   A message array, as described in hook_mail_alter().
    *
-   * @return
+   * @return array
    *   The formatted $message.
    */
   public function format(array $message) {
@@ -25,19 +28,21 @@ class DefaultMailSystem implements MailSystemInterface {
     $message['body'] = drupal_html_to_text($message['body']);
     // Wrap the mail body for sending.
     $message['body'] = drupal_wrap_mail($message['body']);
+
     return $message;
   }
 
   /**
-   * Send an e-mail message, using Drupal variables and default settings.
+   * Sends an e-mail message, using Drupal variables and default settings.
+   *
+   * @param array $message
+   *   A message array, as described in hook_mail_alter().
+   *
+   * @return bool
+   *   TRUE if the mail was successfully accepted, otherwise FALSE.
    *
    * @see http://php.net/manual/en/function.mail.php
    * @see drupal_mail()
-   *
-   * @param $message
-   *   A message array, as described in hook_mail_alter().
-   * @return
-   *   TRUE if the mail was successfully accepted, otherwise FALSE.
    */
   public function mail(array $message) {
     // If 'Return-Path' isn't already set in php.ini, we pass it separately
@@ -107,27 +112,7 @@ class DefaultMailSystem implements MailSystemInterface {
       );
       ini_set('sendmail_from', $old_from);
     }
+
     return $mail_result;
   }
 }
-
-/**
- * A mail sending implementation that captures sent messages to a variable.
- *
- * This class is for running tests or for development.
- */
-class TestingMailSystem extends DefaultMailSystem implements MailSystemInterface {
-  /**
-   * Accept an e-mail message and store it in a variable.
-   *
-   * @param $message
-   *   An e-mail message.
-   */
-  public function mail(array $message) {
-    $captured_emails = variable_get('drupal_test_email_collector', array());
-    $captured_emails[] = $message;
-    variable_set('drupal_test_email_collector', $captured_emails);
-    return TRUE;
-  }
-}
-
