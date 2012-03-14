@@ -140,6 +140,7 @@ function system_list($type) {
     // drupal_get_filename() static cache for bootstrap modules only.
     // The rest is stored separately to keep the bootstrap module cache small.
     foreach ($bootstrap_list as $module) {
+      drupal_classloader_register($module->name, dirname($module->filename));
       drupal_get_filename('module', $module->name, $module->filename);
     }
     // We only return the module names here since module_list() doesn't need
@@ -175,6 +176,7 @@ function system_list($type) {
         }
         // Build a list of filenames so drupal_get_filename can use it.
         if ($record->status) {
+          drupal_classloader_register($record->name, dirname($record->filename));
           $lists['filepaths'][] = array('type' => $record->type, 'name' => $record->name, 'filepath' => $record->filename);
         }
       }

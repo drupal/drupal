@@ -2865,15 +2865,15 @@ function drupal_get_complete_schema($rebuild = FALSE) {
  *   A UniversalClassLoader class instance (or extension thereof).
  */
 function drupal_classloader() {
-  // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
-  require_once DRUPAL_ROOT . '/core/vendor/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-
   // By default, use the UniversalClassLoader which is best for development,
   // as it does not break when code is moved on the file system. However, as it
   // is slow, allow to use the APC class loader in production.
   static $loader;
 
   if (!isset($loader)) {
+    // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
+    require_once DRUPAL_ROOT . '/core/vendor/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+
     // @todo Use a cleaner way than variable_get() to switch autoloaders.
     switch (variable_get('autoloader_mode', 'default')) {
       case 'apc':
@@ -2893,6 +2893,19 @@ function drupal_classloader() {
     $loader->register();
   }
   return $loader;
+}
+
+/**
+ * Registers an additional namespace.
+ *
+ * @param string $name
+ *   The namespace component to register; e.g., 'node'.
+ * @param string $path
+ *   The relative path to the Drupal component in the filesystem.
+ */
+function drupal_classloader_register($name, $path) {
+  $loader = drupal_classloader();
+  $loader->registerNamespace('Drupal\\' . $name, DRUPAL_ROOT . '/' . $path . '/lib');
 }
 
 /**

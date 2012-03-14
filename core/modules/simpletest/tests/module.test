@@ -239,6 +239,38 @@ class ModuleUnitTest extends DrupalWebTestCase {
 }
 
 /**
+ * Tests class loading.
+ */
+class ModuleClassLoaderTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Module class loader',
+      'description' => 'Tests class loading for modules.',
+      'group' => 'Module',
+    );
+  }
+
+  /**
+   * Tests that module-provided classes can be loaded when a module is enabled.
+   */
+  function testClassLoading() {
+    $expected = 'Drupal\\module_autoload_test\\SomeClass::testMethod() was invoked.';
+
+    module_enable(array('module_test', 'module_autoload_test'), FALSE);
+    $this->resetAll();
+    $this->drupalGet('module-test/class-loading');
+    $this->assertText($expected, t('Autoloader loads classes from an enabled module.'));
+
+    module_disable(array('module_autoload_test'), FALSE);
+    $this->resetAll();
+    $this->drupalGet('module-test/class-loading');
+    $this->assertNoText($expected, t('Autoloader does not load classes from a disabled module.'));
+  }
+}
+
+/**
  * Unit tests for module installation.
  */
 class ModuleInstallTestCase extends DrupalWebTestCase {
