@@ -290,6 +290,21 @@ function theme_aggregator_categorize_items($variables) {
 }
 
 /**
+ * Default theme implementation to present a linked feed item for summaries.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - item_link: Link to item.
+ *   - item_age: Age of the item.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_aggregator_summary_item()
+ */
+function theme_aggregator_summary_item($variables) {
+  return $variables['item_url'] . ' ' . $variables['item_age'];
+}
+
+/**
  * Processes variables for aggregator-wrapper.tpl.php.
  *
  * @see aggregator-wrapper.tpl.php
@@ -521,16 +536,19 @@ function template_preprocess_aggregator_summary_items(&$variables) {
 function template_preprocess_aggregator_summary_item(&$variables) {
   $item = $variables['item'];
 
-  $variables['feed_url'] = check_url($item->link);
-  $variables['feed_title'] = check_plain($item->title);
-  $variables['feed_age'] = t('%age old', array('%age' => format_interval(REQUEST_TIME - $item->timestamp)));
-
-  $variables['source_url'] = '';
-  $variables['source_title'] = '';
-  if (!empty($item->feed_link)) {
-    $variables['source_url'] = check_url($item->feed_link);
-    $variables['source_title'] = check_plain($item->feed_title);
-  }
+  $variables['item_url'] = l(check_plain($item->title), check_url(url($item->link, array('absolute' => TRUE))), array(
+    'attributes' => array(
+      'class' => array('feed-item-url',),
+    ),
+  ));
+  $variables['item_age'] = theme('datetime', array(
+    'attributes' => array(
+      'datetime' => format_date($item->timestamp, 'html_datetime', '', 'UTC'),
+      'class' => array('feed-item-age',),
+    ),
+    'text' => t('%age old', array('%age' => format_interval(REQUEST_TIME - $item->timestamp))),
+    'html' => TRUE,
+  ));
 }
 
 /**
