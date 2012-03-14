@@ -374,6 +374,7 @@ require_once DRUPAL_ROOT . '/core/includes/update.inc';
 require_once DRUPAL_ROOT . '/core/includes/common.inc';
 require_once DRUPAL_ROOT . '/core/includes/file.inc';
 require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
+require_once DRUPAL_ROOT . '/core/includes/schema.inc';
 update_prepare_d8_bootstrap();
 
 // Determine if the current user has access to run update.php.
