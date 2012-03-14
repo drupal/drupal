@@ -2821,7 +2821,7 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *   - 'group': A number identifying the group in which to add the stylesheet.
  *     Available constants are:
  *     - CSS_SYSTEM: Any system-layer CSS.
- *     - CSS_DEFAULT: Any module-layer CSS.
+ *     - CSS_DEFAULT: (default) Any module-layer CSS.
  *     - CSS_THEME: Any theme-layer CSS.
  *     The group number serves as a weight: the markup for loading a stylesheet
  *     within a lower weight group is output to the page before the markup for
