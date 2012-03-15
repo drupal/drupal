@@ -121,7 +121,7 @@ function update_test_archiver_info() {
   return array(
     'update_test_archiver' => array(
       // This is bogus, we only care about the extensions for now.
-      'class' => 'ArchiverUpdateTest',
+      'class' => 'Drupal\Component\Archiver\UpdateTest',
       'extensions' => array('update-test-extension'),
     ),
   );

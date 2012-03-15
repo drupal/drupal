@@ -3493,7 +3493,7 @@ function hook_action_info_alter(&$actions) {
 function hook_archiver_info() {
   return array(
     'tar' => array(
-      'class' => 'ArchiverTar',
+      'class' => 'Drupal\Component\Archiver\Tar',
       'extensions' => array('tar', 'tar.gz', 'tar.bz2'),
     ),
   );
