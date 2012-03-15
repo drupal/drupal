@@ -98,11 +98,11 @@ class HtmlSubscriber implements EventSubscriberInterface {
   static function getSubscribedEvents() {
     // Since we want HTML to be our default, catch-all response type, give its
     // listeners a very low priority so that they always check last.
-    $events[KernelEvents::EXCEPTION][] = array('onNotFoundHttpException', 5);
-    $events[KernelEvents::EXCEPTION][] = array('onAccessDeniedException', 5);
-    $events[KernelEvents::EXCEPTION][] = array('onMethodAllowedException', 5);
+    $events[KernelEvents::EXCEPTION][] = array('onNotFoundHttpException', -5);
+    $events[KernelEvents::EXCEPTION][] = array('onAccessDeniedException', -5);
+    $events[KernelEvents::EXCEPTION][] = array('onMethodAllowedException', -5);
 
-    $events[KernelEvents::VIEW][] = array('onView', 5);
+    $events[KernelEvents::VIEW][] = array('onView', -5);
 
     return $events;
   }
