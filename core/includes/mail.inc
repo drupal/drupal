@@ -191,7 +191,8 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 }
 
 /**
- * Returns an object that implements the MailSystemInterface.
+ * Returns an object that implements the Drupal\Core\Mail\MailInterface
+ * interface.
  *
  * Allows for one or more custom mail backends to format and send mail messages
  * composed using drupal_mail().
@@ -199,14 +200,15 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
  * An implementation needs to implement the following methods:
  * - format: Allows to preprocess, format, and postprocess a mail
  *   message before it is passed to the sending system. By default, all messages
- *   may contain HTML and are converted to plain-text by the DefaultMailSystem
- *   implementation. For example, an alternative implementation could override
- *   the default implementation and additionally sanitize the HTML for usage in
- *   a MIME-encoded e-mail, but still invoking the DefaultMailSystem
- *   implementation to generate an alternate plain-text version for sending.
+ *   may contain HTML and are converted to plain-text by the
+ *   Drupal\Core\Mail\PhpMail implementation. For example, an alternative
+ *   implementation could override the default implementation and additionally
+ *   sanitize the HTML for usage in a MIME-encoded e-mail, but still invoking
+ *   the Drupal\Core\Mail\PhpMail implementation to generate an alternate
+ *   plain-text version for sending.
  * - mail: Sends a message through a custom mail sending engine.
  *   By default, all messages are sent via PHP's mail() function by the
- *   DefaultMailSystem implementation.
+ *   Drupal\Core\Mail\PhpMail implementation.
  *
  * The selection of a particular implementation is controlled via the variable
  * 'mail_system', which is a keyed array.  The default implementation
@@ -223,7 +225,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
  *
  * @code
  * array(
- *   'default-system' => 'DefaultMailSystem',
+ *   'default-system' => 'Drupal\Core\Mail\PhpMail',
  *   'user' => 'DevelMailLog',
  * );
  * @endcode
@@ -233,7 +235,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
  *
  * @code
  * array(
- *   'default-system' => 'DefaultMailSystem',
+ *   'default-system' => 'Drupal\Core\Mail\PhpMail',
  *   'user' => 'DevelMailLog',
  *   'contact_page_autoreply' => 'DrupalDevNullMailSend',
  * );
@@ -251,14 +253,14 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
  *   A key to identify the e-mail sent. The final e-mail ID for the e-mail
  *   alter hook in drupal_mail() would have been {$module}_{$key}.
  *
- * @return MailSystemInterface
+ * @return Drupal\Core\Mail\MailInterface
  */
 function drupal_mail_system($module, $key) {
   $instances = &drupal_static(__FUNCTION__, array());
 
   $id = $module . '_' . $key;
 
-  $configuration = variable_get('mail_system', array('default-system' => 'DefaultMailSystem'));
+  $configuration = variable_get('mail_system', array('default-system' => 'Drupal\Core\Mail\PhpMail'));
 
   // Look for overrides for the default class, starting from the most specific
   // id, and falling back to the module name.
@@ -274,57 +276,14 @@ function drupal_mail_system($module, $key) {
 
   if (empty($instances[$class])) {
     $interfaces = class_implements($class);
-    if (isset($interfaces['MailSystemInterface'])) {
+    if (isset($interfaces['Drupal\Core\Mail\MailInterface'])) {
       $instances[$class] = new $class();
     }
     else {
-      throw new Exception(t('Class %class does not implement interface %interface', array('%class' => $class, '%interface' => 'MailSystemInterface')));
+      throw new Exception(t('Class %class does not implement interface %interface', array('%class' => $class, '%interface' => 'Drupal\Core\Mail\MailInterface')));
     }
   }
   return $instances[$class];
-}
-
-/**
- * An interface for pluggable mail back-ends.
- */
-interface MailSystemInterface {
-  /**
-   * Format a message composed by drupal_mail() prior sending.
-   *
-   * @param $message
-   *   A message array, as described in hook_mail_alter().
-   *
-   * @return
-   *   The formatted $message.
-   */
-   public function format(array $message);
-
-  /**
-   * Send a message composed by drupal_mail().
-   *
-   * @param $message
-   *   Message array with at least the following elements:
-   *   - id: A unique identifier of the e-mail type. Examples: 'contact_user_copy',
-   *     'user_password_reset'.
-   *   - to: The mail address or addresses where the message will be sent to.
-   *     The formatting of this string must comply with RFC 2822. Some examples:
-   *     - user@example.com
-   *     - user@example.com, anotheruser@example.com
-   *     - User <user@example.com>
-   *     - User <user@example.com>, Another User <anotheruser@example.com>
-   *    - subject: Subject of the e-mail to be sent. This must not contain any
-   *      newline characters, or the mail may not be sent properly.
-   *    - body: Message to be sent. Accepts both CRLF and LF line-endings.
-   *      E-mail bodies must be wrapped. You can use drupal_wrap_mail() for
-   *      smart plain text wrapping.
-   *    - headers: Associative array containing all additional mail headers not
-   *      defined by one of the other parameters.  PHP's mail() looks for Cc
-   *      and Bcc headers and sends the mail to addresses in these headers too.
-   *
-   * @return
-   *   TRUE if the mail was successfully accepted for delivery, otherwise FALSE.
-   */
-   public function mail(array $message);
 }
 
 /**

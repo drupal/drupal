@@ -74,7 +74,6 @@ function aggregator_theme() {
     'aggregator_summary_item' => array(
       'variables' => array('item' => NULL),
       'file' => 'aggregator.pages.inc',
-      'template' => 'aggregator-summary-item',
     ),
     'aggregator_item' => array(
       'variables' => array('item' => NULL),

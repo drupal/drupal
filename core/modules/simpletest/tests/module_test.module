@@ -78,6 +78,11 @@ function module_test_menu() {
     'page callback' => 'module_test_hook_dynamic_loading_invoke_all',
     'access arguments' => array('access content'),
   );
+  $items['module-test/class-loading'] = array(
+    'title' => 'Test loading a class from another module',
+    'page callback' => 'module_test_class_loading',
+    'access callback' => TRUE,
+  );
   return $items;
 }
 
@@ -101,6 +106,21 @@ function module_test_hook_dynamic_loading_invoke() {
 function module_test_hook_dynamic_loading_invoke_all() {
   $result = module_invoke_all('test_hook');
   return $result['module_test'];
+}
+
+/**
+ * Page callback for 'class loading' test.
+ *
+ * This module does not have a dependency on module_autoload_test.module. If
+ * that module is enabled, this function should return the string
+ * 'Drupal\\module_autoload_test\\SomeClass::testMethod() was invoked.'. If
+ * that module is not enabled, this function should return nothing.
+ */
+function module_test_class_loading() {
+  if (class_exists('Drupal\module_autoload_test\SomeClass')) {
+    $obj = new Drupal\module_autoload_test\SomeClass();
+    return $obj->testMethod();
+  }
 }
 
 /**

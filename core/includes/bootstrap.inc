@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Utility\SchemaCache;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 
@@ -2747,108 +2746,6 @@ function ip_address() {
 }
 
 /**
- * @ingroup schemaapi
- * @{
- */
-
-/**
- * Gets the schema definition of a table, or the whole database schema.
- *
- * The returned schema will include any modifications made by any
- * module that implements hook_schema_alter().
- *
- * @param $table
- *   The name of the table. If not given, the schema of all tables is returned.
- * @param $rebuild
- *   If true, the schema will be rebuilt instead of retrieved from the cache.
- */
-function drupal_get_schema($table = NULL, $rebuild = FALSE) {
-  static $schema;
-
-  if ($rebuild || !isset($table)) {
-    $schema = drupal_get_complete_schema($rebuild);
-  }
-  elseif (!isset($schema)) {
-    $schema = new SchemaCache();
-  }
-
-  if (!isset($table)) {
-    return $schema;
-  }
-  if (isset($schema[$table])) {
-    return $schema[$table];
-  }
-  else {
-    return FALSE;
-  }
-}
-
-/**
- * Gets the whole database schema.
- *
- * The returned schema will include any modifications made by any
- * module that implements hook_schema_alter().
- *
- * @param $rebuild
- *   If true, the schema will be rebuilt instead of retrieved from the cache.
- */
-function drupal_get_complete_schema($rebuild = FALSE) {
-  static $schema = array();
-
-  if (empty($schema) || $rebuild) {
-    // Try to load the schema from cache.
-    if (!$rebuild && $cached = cache()->get('schema')) {
-      $schema = $cached->data;
-    }
-    // Otherwise, rebuild the schema cache.
-    else {
-      $schema = array();
-      // Load the .install files to get hook_schema.
-      // On some databases this function may be called before bootstrap has
-      // been completed, so we force the functions we need to load just in case.
-      if (function_exists('module_load_all_includes')) {
-        // This function can be called very early in the bootstrap process, so
-        // we force the module_list() cache to be refreshed to ensure that it
-        // contains the complete list of modules before we go on to call
-        // module_load_all_includes().
-        module_list(TRUE);
-        module_load_all_includes('install');
-      }
-
-      require_once DRUPAL_ROOT . '/core/includes/common.inc';
-      // Invoke hook_schema for all modules.
-      foreach (module_implements('schema') as $module) {
-        // Cast the result of hook_schema() to an array, as a NULL return value
-        // would cause array_merge() to set the $schema variable to NULL as well.
-        // That would break modules which use $schema further down the line.
-        $current = (array) module_invoke($module, 'schema');
-        // Set 'module' and 'name' keys for each table, and remove descriptions,
-        // as they needlessly slow down cache()->get() for every single request.
-        _drupal_schema_initialize($current, $module);
-        $schema = array_merge($schema, $current);
-      }
-
-      drupal_alter('schema', $schema);
-      // If the schema is empty, avoid saving it: some database engines require
-      // the schema to perform queries, and this could lead to infinite loops.
-      if (!empty($schema) && (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL)) {
-        cache()->set('schema', $schema);
-      }
-      if ($rebuild) {
-        cache()->deletePrefix('schema:');
-      }
-    }
-  }
-
-  return $schema;
-}
-
-/**
- * @} End of "ingroup schemaapi".
- */
-
-
-/**
  * @ingroup registry
  * @{
  */
@@ -2865,15 +2762,15 @@ function drupal_get_complete_schema($rebuild = FALSE) {
  *   A UniversalClassLoader class instance (or extension thereof).
  */
 function drupal_classloader() {
-  // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
-  require_once DRUPAL_ROOT . '/core/vendor/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-
   // By default, use the UniversalClassLoader which is best for development,
   // as it does not break when code is moved on the file system. However, as it
   // is slow, allow to use the APC class loader in production.
   static $loader;
 
   if (!isset($loader)) {
+    // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
+    require_once DRUPAL_ROOT . '/core/vendor/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+
     // @todo Use a cleaner way than variable_get() to switch autoloaders.
     switch (variable_get('autoloader_mode', 'default')) {
       case 'apc':
@@ -2893,6 +2790,19 @@ function drupal_classloader() {
     $loader->register();
   }
   return $loader;
+}
+
+/**
+ * Registers an additional namespace.
+ *
+ * @param string $name
+ *   The namespace component to register; e.g., 'node'.
+ * @param string $path
+ *   The relative path to the Drupal component in the filesystem.
+ */
+function drupal_classloader_register($name, $path) {
+  $loader = drupal_classloader();
+  $loader->registerNamespace('Drupal\\' . $name, DRUPAL_ROOT . '/' . $path . '/lib');
 }
 
 /**
