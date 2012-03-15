@@ -31,7 +31,7 @@ class HtmlSubscriber implements EventSubscriberInterface {
    *   True if it is an event we should process as HTML, False otherwise.
    */
   protected function isHtmlRequestEvent(GetResponseEvent $event) {
-    return in_array('text/html', $event->getRequest()->getAcceptableContentTypes());
+    return (boolean)array_intersect(array('text/html', '*/*'), $event->getRequest()->getAcceptableContentTypes());
   }
 
   /**
@@ -96,11 +96,13 @@ class HtmlSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::EXCEPTION][] = array('onNotFoundHttpException');
-    $events[KernelEvents::EXCEPTION][] = array('onAccessDeniedException');
-    $events[KernelEvents::EXCEPTION][] = array('onMethodAllowedException');
+    // Since we want HTML to be our default, catch-all response type, give its
+    // listeners a very low priority so that they always check last.
+    $events[KernelEvents::EXCEPTION][] = array('onNotFoundHttpException', 5);
+    $events[KernelEvents::EXCEPTION][] = array('onAccessDeniedException', 5);
+    $events[KernelEvents::EXCEPTION][] = array('onMethodAllowedException', 5);
 
-    $events[KernelEvents::VIEW][] = array('onView');
+    $events[KernelEvents::VIEW][] = array('onView', 5);
 
     return $events;
   }
