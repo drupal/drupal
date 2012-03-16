@@ -89,7 +89,7 @@ class HtmlSubscriber implements EventSubscriberInterface {
       $event->setResponse(new Response(drupal_render_page($page_callback_result)));
     }
     else {
-      $event->setResponse(new Response('Requested MIME type not supported', 400));
+      $event->setResponse(new Response('Unsupported Media Type', 415));
     }
   }
 
