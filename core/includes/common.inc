@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Database\Database;
 
 /**
@@ -711,7 +713,10 @@ function drupal_site_offline() {
  * bubble up to menu_execute_active_handler() should call drupal_not_found().
  */
 function drupal_not_found() {
-  drupal_deliver_page(MENU_NOT_FOUND);
+
+  throw new NotFoundHttpException();
+
+  //drupal_deliver_page(MENU_NOT_FOUND);
 }
 
 /**
@@ -724,7 +729,10 @@ function drupal_not_found() {
  * drupal_access_denied().
  */
 function drupal_access_denied() {
-  drupal_deliver_page(MENU_ACCESS_DENIED);
+
+  throw new AccessDeniedException();
+
+  //drupal_deliver_page(MENU_ACCESS_DENIED);
 }
 
 /**

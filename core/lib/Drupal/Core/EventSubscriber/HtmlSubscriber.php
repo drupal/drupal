@@ -54,6 +54,45 @@ class HtmlSubscriber implements EventSubscriberInterface {
    */
   public function onNotFoundHttpException(GetResponseEvent $event) {
     if ($this->isHtmlRequestEvent($event) && $event->getException() instanceof NotFoundHttpException) {
+
+      watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+
+      // Check for and return a fast 404 page if configured.
+      // @todo Inline this rather than using a function.
+      drupal_fast_404();
+
+      $system_path = $event->getRequest()->attributes->get('system_path');
+
+      // Keep old path for reference, and to allow forms to redirect to it.
+      if (!isset($_GET['destination'])) {
+        $_GET['destination'] = $system_path;
+      }
+
+      $path = drupal_get_normal_path(variable_get('site_404', ''));
+      if ($path && $path != $system_path) {
+        // @TODO: Um, how do I specify an override URL again? Totally not clear.
+        // Do that and sub-call the kernel rather than using meah().
+        $request = $event->getRequest()->duplicate();
+
+
+
+
+        // Custom 404 handler. Set the active item in case there are tabs to
+        // display, or other dependencies on the path.
+        menu_set_active_item($path);
+        $return = menu_execute_active_handler($path, FALSE);
+      }
+
+      if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
+        // Standard 404 handler.
+        drupal_set_title(t('Page not found'));
+        $return = t('The requested page "@path" could not be found.', array('@path' => request_uri()));
+      }
+
+      drupal_set_page_content($return);
+      $page = element_info('page');
+      print drupal_render_page($page);
+
       $event->setResponse(new Response('Not Found', 404));
     }
   }
