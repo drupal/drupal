@@ -449,10 +449,10 @@ function image_styles() {
       $styles = array();
 
       // Select the styles we have configured.
-      $configured_styles = config_get_verified_storage_names_with_prefix('image.style');
+      $configured_styles = config_get_verified_storage_names_with_prefix('image.styles');
       foreach ($configured_styles as $config_name) {
         // @todo Allow to retrieve the name without prefix only.
-        $style = image_style_load(str_replace('image.style.', '', $config_name));
+        $style = image_style_load(str_replace('image.styles.', '', $config_name));
         $styles[$style['name']] = $style;
       }
       drupal_alter('image_styles', $styles);
@@ -476,7 +476,7 @@ function image_styles() {
  * @see image_effect_load()
  */
 function image_style_load($name) {
-  $style = config('image.style.' . $name)->get();
+  $style = config('image.styles.' . $name)->get();
 
   // @todo Requires a more reliable + generic method to check for whether the
   //   configuration object exists.
@@ -504,7 +504,7 @@ function image_style_load($name) {
  *   An image style array.
  */
 function image_style_save($style) {
-  $config = config('image.style.' . $style['name']);
+  $config = config('image.styles.' . $style['name']);
   $config->set('name', $style['name']);
   if (isset($style['effects'])) {
     $config->set('effects', $style['effects']);
@@ -540,7 +540,7 @@ function image_style_save($style) {
 function image_style_delete($style, $replacement_style_name = '') {
   image_style_flush($style);
 
-  $config = config('image.style.' . $style['name']);
+  $config = config('image.styles.' . $style['name']);
   $config->delete();
 
   // Let other modules update as necessary on save.
@@ -985,7 +985,7 @@ function image_effect_load($ieid, $style_name) {
  *   An image effect array. In the case of a new effect, 'ieid' will be set.
  */
 function image_effect_save($style_name, $effect) {
-  $config = config('image.style.' . $style_name);
+  $config = config('image.styles.' . $style_name);
 
   if (!isset($effect['ieid']) || empty($effect['ieid'])) {
     // We need to generate the ieid and save the new effect.
@@ -1016,7 +1016,7 @@ function image_effect_save($style_name, $effect) {
  *   An image effect array.
  */
 function image_effect_delete($style_name, $effect) {
-  $config = config('image.style.' . $style_name);
+  $config = config('image.styles.' . $style_name);
   $config->clear('effects.' . $effect['ieid']);
   $config->save();
   $style = image_style_load($style_name);
