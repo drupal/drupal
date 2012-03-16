@@ -3948,12 +3948,12 @@ function system_date_format_delete($dfid) {
  */
 function system_archiver_info() {
   $archivers['tar'] = array(
-    'class' => 'ArchiverTar',
+    'class' => 'Drupal\Component\Archiver\Tar',
     'extensions' => array('tar', 'tgz', 'tar.gz', 'tar.bz2'),
   );
   if (function_exists('zip_open')) {
     $archivers['zip'] = array(
-      'class' => 'ArchiverZip',
+      'class' => 'Drupal\Component\Archiver\Zip',
       'extensions' => array('zip'),
     );
   }

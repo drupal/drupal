@@ -40,6 +40,8 @@
  * @link        http://pear.php.net/package/Archive_Tar
  */
 
+namespace Drupal\Component\Archiver;
+
 //require_once 'PEAR.php';
 //
 //
@@ -54,7 +56,7 @@ define ('ARCHIVE_TAR_END_BLOCK', pack("a512", ''));
 * @license  http://www.opensource.org/licenses/bsd-license.php New BSD License
 * @package  Archive_Tar
 */
-class Archive_Tar // extends PEAR
+class ArchiveTar // extends PEAR
 {
     /**
     * @var string Name of the Tar
