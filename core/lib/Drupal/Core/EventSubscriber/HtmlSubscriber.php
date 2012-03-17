@@ -34,7 +34,8 @@ class HtmlSubscriber implements EventSubscriberInterface {
    *   True if it is an event we should process as HTML, False otherwise.
    */
   protected function isHtmlRequestEvent(GetResponseEvent $event) {
-    return (boolean)array_intersect(array('text/html', '*/*'), $event->getRequest()->getAcceptableContentTypes());
+    $acceptable_content_types = $event->getRequest()->getAcceptableContentTypes();
+    return in_array('text/html', $acceptable_content_types) || in_array('*/*', $acceptable_content_types);
   }
 
   /**
@@ -126,6 +127,9 @@ class HtmlSubscriber implements EventSubscriberInterface {
     if ($this->isHtmlRequestEvent($event)) {
       $page_callback_result = $event->getControllerResult();
       $event->setResponse(new Response(drupal_render_page($page_callback_result)));
+    }
+    else {
+      $event->setResponse(new Response('Unsupported Media Type', 415));
     }
   }
 

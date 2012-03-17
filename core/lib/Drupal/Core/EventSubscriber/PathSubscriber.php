@@ -36,12 +36,6 @@ class PathSubscriber implements EventSubscriberInterface {
 
     $path = ltrim($request->getPathInfo(), '/');
 
-    // Temporary BC shiv to support automated tests that still rely on old-
-    // style dirty URLs.
-    if (isset($_GET['q'])) {
-      $path = $_GET['q'];
-    }
-
     if (empty($path)) {
       // @todo Temporary hack. Fix when configuration is injectable.
       $path = variable_get('site_frontpage', 'user');
