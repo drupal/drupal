@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -74,7 +75,7 @@ class HtmlSubscriber implements EventSubscriberInterface {
       if ($path && $path != $system_path) {
         // @TODO: Um, how do I specify an override URL again? Totally not clear.
         // Do that and sub-call the kernel rather than using meah().
-        $request = $event->getRequest()->duplicate();
+        $request = Request::create($path);
 
         $kernel = new DrupalKernel();
         $response = $kernel->handle($request, DrupalKernel::SUB_REQUEST);
