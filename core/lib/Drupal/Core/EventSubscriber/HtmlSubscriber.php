@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+use Drupal\Core\DrupalKernel;
+
 /**
  * @file
  *
@@ -74,26 +76,24 @@ class HtmlSubscriber implements EventSubscriberInterface {
         // Do that and sub-call the kernel rather than using meah().
         $request = $event->getRequest()->duplicate();
 
-
-
-
-        // Custom 404 handler. Set the active item in case there are tabs to
-        // display, or other dependencies on the path.
-        menu_set_active_item($path);
-        $return = menu_execute_active_handler($path, FALSE);
+        $kernel = new DrupalKernel();
+        $response = $kernel->handle($request, DrupalKernel::SUB_REQUEST);
+        $response->setStatusCode(404, 'Not Found');
       }
+      else {
+        $response = new Response('Not Found', 404);
 
-      if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
-        // Standard 404 handler.
+        // @todo Replace this block with something cleaner.
+        $return = t('The requested page "@path" could not be found.', array('@path' => $event->getRequest()->getPathInfo()));
         drupal_set_title(t('Page not found'));
-        $return = t('The requested page "@path" could not be found.', array('@path' => request_uri()));
+        drupal_set_page_content($return);
+        $page = element_info('page');
+        $content = drupal_render_page($page);
+
+        $response->setContent($content);
       }
 
-      drupal_set_page_content($return);
-      $page = element_info('page');
-      print drupal_render_page($page);
-
-      $event->setResponse(new Response('Not Found', 404));
+      $event->setResponse($response);
     }
   }
 
