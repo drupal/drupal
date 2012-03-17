@@ -38,15 +38,6 @@ class UrlMatcher extends SymfonyUrlMatcher {
     // Symfony uses a prefixing / but we don't yet.
     $dpathinfo = ltrim($pathinfo, '/');
 
-    // Temporary BC shiv to support automated tests that still rely on old-
-    // style dirty URLs.
-    // @todo Remove this once testbot knows how to deal with Symfony-style
-    // dirty URLs.
-    if (isset($_GET['q'])) {
-      $dpathinfo = $_GET['q'];
-      $pathinfo = '/' . $dpathinfo;
-    }
-
     // Do our fancy frontpage logic.
     if (empty($dpathinfo)) {
       $dpathinfo = variable_get('site_frontpage', 'user');
