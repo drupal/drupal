@@ -3041,7 +3041,7 @@ function form_process_radios($element) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #return_value, #description, #required,
- *     #attributes.
+ *     #attributes, #checked.
  *
  * @ingroup themeable
  */
