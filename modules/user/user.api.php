@@ -224,9 +224,10 @@ function hook_user_categories() {
  * @see hook_user_update()
  */
 function hook_user_presave(&$edit, $account, $category) {
-  // Make sure that our form value 'mymodule_foo' is stored as 'mymodule_bar'.
+  // Make sure that our form value 'mymodule_foo' is stored as
+  // 'mymodule_bar' in the 'data' (serialized) column.
   if (isset($edit['mymodule_foo'])) {
-    $edit['data']['my_module_foo'] = $edit['my_module_foo'];
+    $edit['data']['mymodule_bar'] = $edit['mymodule_foo'];
   }
 }
 
