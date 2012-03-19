@@ -5,6 +5,9 @@
  * Tests for syslog.module.
  */
 
+/**
+ * Tests the Syslog module functionality.
+ */
 class SyslogTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -19,7 +22,7 @@ class SyslogTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test the syslog settings page.
+   * Tests the syslog settings page.
    */
   function testSettings() {
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
