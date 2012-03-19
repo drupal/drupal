@@ -71,7 +71,7 @@ function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
 }
 
  /**
- * List all possible syslog facilities for UNIX/Linux.
+ * Lists all possible syslog facilities for UNIX/Linux.
  *
  * @return array
  */
