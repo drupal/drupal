@@ -2569,7 +2569,9 @@ function language_name($langcode) {
   if ($language = language_load($langcode)) {
     return $language->name;
   }
-
+  if (empty($langcode)) {
+    return t('Unknown');
+  }
   return t('Unknown (@langcode)', array('@langcode' => $langcode));
 }
 
