@@ -3,6 +3,9 @@
   float: right;
   margin: 0 0 0 9px;
 }
+#forum div.indent {
+  margin-right: 20px;
+}
 .forum-topic-navigation {
   padding: 1em 3em 0 0;
 }
