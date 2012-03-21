@@ -136,4 +136,18 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
     $domains = locale_language_negotiation_url_domains();
     $this->assertTrue($domains['ca'] == $language_domain, t('Language domain for Catalan properly upgraded.'));
   }
+
+  /**
+   * Tests upgrading translations without plurals.
+   */
+  public function testLanguageNoPluralsUpgrade() {
+    // Remove all plural translations from the database.
+    db_delete('locales_target')->condition('plural', 0, '<>')->execute();
+
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // Check if locale_update_8005() is succesfully completed by checking
+    // whether index 'plural' has been removed.
+    $this->assertFalse(db_index_exists('locales_target', 'plural'), t('Translations without plurals upgraded.'));
+  }
 }
