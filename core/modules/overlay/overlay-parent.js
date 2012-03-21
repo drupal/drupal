@@ -774,19 +774,24 @@ Drupal.overlay.fragmentizeLink = function (link, parentLocation) {
  *   corresponding to this region.
  */
 Drupal.overlay.refreshRegions = function (data) {
-  $.each(data, function () {
-    var region_info = this;
-    $.each(region_info, function (regionClass) {
-      var regionName = region_info[regionClass];
-      var regionSelector = '.' + regionClass;
-      // Allow special behaviors to detach.
-      Drupal.detachBehaviors($(regionSelector));
-      $.get(Drupal.settings.basePath + Drupal.settings.overlay.ajaxCallback + '/' + regionName, function (newElement) {
-        $(regionSelector).replaceWith($(newElement));
-        Drupal.attachBehaviors($(regionSelector), Drupal.settings);
-      });
-    });
-  });
+  var region, region_info, regionClass, regionName, regionSelector;
+  for (region in data) {
+    if (data.hasOwnProperty(region)) {
+      region_info = data[region];
+      for (regionClass in region_info) {
+        if (region_info.hasOwnProperty(regionClass)) {
+          (function (regionName, regionSelector) {
+            var $region = $(regionSelector);
+            Drupal.detachBehaviors($region);
+            $.get(Drupal.settings.basePath + Drupal.settings.overlay.ajaxCallback + '/' + regionName, function (newElement) {
+              $region.replaceWith($(newElement));
+              Drupal.attachBehaviors($region, Drupal.settings);
+            });
+          }(region_info[regionClass], '.' + regionClass));
+        }
+      }
+    }
+  }
 };
 
 /**
