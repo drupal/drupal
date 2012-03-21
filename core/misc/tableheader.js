@@ -5,7 +5,7 @@
  */
 Drupal.behaviors.tableHeader = {
   attach: function (context, settings) {
-    if (!$.support.positionFixed) {
+    if (!$.support.fixedPosition) {
       return;
     }
 

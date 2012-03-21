@@ -373,20 +373,6 @@ $('html').addClass('js');
 // 'js enabled' cookie.
 document.cookie = 'has_js=1; path=/';
 
-/**
- * Additions to jQuery.support.
- */
-$(function () {
-  /**
-   * Boolean indicating whether or not position:fixed is supported.
-   */
-  if (jQuery.support.positionFixed === undefined) {
-    var el = $('<div style="position:fixed; top:10px" />').appendTo(document.body);
-    jQuery.support.positionFixed = el[0].offsetTop === 10;
-    el.remove();
-  }
-});
-
 //Attach all behaviors.
 $(function () {
   Drupal.attachBehaviors(document, Drupal.settings);
