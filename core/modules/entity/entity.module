@@ -13,7 +13,7 @@ function entity_help($path, $arg) {
     case 'admin/help#entity':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Entity module provides an API for managing entities like nodes and users, i.e. an API for loading and identifying entities. For more information, see the online handbook entry for <a href="!url">Entity module</a>', array('!url' => 'http://drupal.org/handbook/modules/entity')) . '</p>';
+      $output .= '<p>' . t('The Entity module provides an API for managing entities like nodes and users, i.e. an API for loading and identifying entities. For more information, see the online handbook entry for <a href="!url">Entity module</a>', array('!url' => 'http://drupal.org/documentation/modules/entity')) . '</p>';
       return $output;
   }
 }

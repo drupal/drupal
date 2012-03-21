@@ -97,7 +97,7 @@ function node_help($path, $arg) {
     case 'admin/help#node':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Node module manages the creation, editing, deletion, settings, and display of the main site content. Content items managed by the Node module are typically displayed as pages on your site, and include a title, some meta-data (author, creation time, content type, etc.), and optional fields containing text or other data (fields are managed by the <a href="@field">Field module</a>). For more information, see the online handbook entry for <a href="@node">Node module</a>.', array('@node' => 'http://drupal.org/handbook/modules/node', '@field' => url('admin/help/field'))) . '</p>';
+      $output .= '<p>' . t('The Node module manages the creation, editing, deletion, settings, and display of the main site content. Content items managed by the Node module are typically displayed as pages on your site, and include a title, some meta-data (author, creation time, content type, etc.), and optional fields containing text or other data (fields are managed by the <a href="@field">Field module</a>). For more information, see the online handbook entry for <a href="@node">Node module</a>.', array('@node' => 'http://drupal.org/documentation/modules/node', '@field' => url('admin/help/field'))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating content') . '</dt>';

@@ -32,7 +32,7 @@ function translation_help($path, $arg) {
     case 'admin/help#translation':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Content Translation module allows content to be translated into different languages. Working with the <a href="@locale">Locale module</a> (which manages enabled languages and provides translation for the site interface), the Content Translation module is key to creating and maintaining translated site content. For more information, see the online handbook entry for <a href="@translation">Content Translation module</a>.', array('@locale' => url('admin/help/locale'), '@translation' => 'http://drupal.org/handbook/modules/translation/')) . '</p>';
+      $output .= '<p>' . t('The Content Translation module allows content to be translated into different languages. Working with the <a href="@locale">Locale module</a> (which manages enabled languages and provides translation for the site interface), the Content Translation module is key to creating and maintaining translated site content. For more information, see the online handbook entry for <a href="@translation">Content Translation module</a>.', array('@locale' => url('admin/help/locale'), '@translation' => 'http://drupal.org/documentation/modules/translation/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Configuring content types for translation') . '</dt>';

@@ -68,7 +68,7 @@ function search_help($path, $arg) {
     case 'admin/help#search':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Search module provides the ability to index and search for content by exact keywords, and for users by username or e-mail. For more information, see the online handbook entry for <a href="@search-module">Search module</a>.', array('@search-module' => 'http://drupal.org/handbook/modules/search/', '@search' => url('search'))) . '</p>';
+      $output .= '<p>' . t('The Search module provides the ability to index and search for content by exact keywords, and for users by username or e-mail. For more information, see the online handbook entry for <a href="@search-module">Search module</a>.', array('@search-module' => 'http://drupal.org/documentation/modules/search', '@search' => url('search'))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Searching content and users') . '</dt>';
