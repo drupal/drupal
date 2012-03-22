@@ -3094,7 +3094,7 @@ function form_pre_render_conditional_form_element($element) {
     $element['#attributes']['title'] = $element['#title'];
     if (!empty($element['#required'])) {
       // Append an indication that this field is required.
-      $element['#attributes']['title'] .= ' (' . $t('Required') . ')';
+      $element['#attributes']['title'] .= ' (' . t('Required') . ')';
     }
   }
 
