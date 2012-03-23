@@ -48,6 +48,10 @@ class DrupalKernel extends HttpKernel {
       $this->dispatcher = $dispatcher;
       $this->resolver = $resolver;
 
+      $context = new RequestContext();
+      $this->matcher = new UrlMatcher($context);
+      $this->dispatcher->addSubscriber(new RouterListener($this->matcher));
+
       // @todo Make this extensible rather than just hard coding some.
       // @todo Add a subscriber to handle other things, too, like our Ajax
       // replacement system.
@@ -66,55 +70,5 @@ class DrupalKernel extends HttpKernel {
       $this->dispatcher->addSubscriber(new ExceptionListener(function(Exception $e) {
         return new Response('A fatal error occurred: ' . $e->getMessage(), 500);
       }));
-
-
     }
-
-  /**
-   *
-   * @param Request $request
-   *   The request to process.
-   * @return Response
-   *   The response object to return to the requesting user agent.
-   */
-  function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true) {
-    if ($type == self::MASTER_REQUEST) {
-      $matcher = $this->getMatcher($request);
-      $this->dispatcher->addSubscriber(new RouterListener($matcher));
-    }
-    return parent::handle($request, $type, $catch);
-  }
-
-  /**
-   * Returns an EventDispatcher for the Kernel to use.
-   *
-   * The EventDispatcher is pre-wired with some event listeners/subscribers.
-   *
-   * @todo Make the listeners that get attached extensible, but without using
-   * hooks.
-   *
-   * @return EventDispatcher
-   */
-  protected function getDispatcher() {
-
-
-    return $dispatcher;
-  }
-
-  /**
-   * Returns a UrlMatcher object for the specified request.
-   *
-   * @param Request $request
-   *   The request object for this matcher to use.
-   * @return UrlMatcher
-   */
-  protected function getMatcher(Request $request) {
-    // Resolve a routing context(path, etc) using the routes object to a
-    // Set a routing context to translate.
-    $context = new RequestContext();
-    $context->fromRequest($request);
-    $matcher = new UrlMatcher($context);
-
-    return $matcher;
-  }
 }
