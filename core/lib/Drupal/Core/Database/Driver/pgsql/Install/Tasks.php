@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Database\Driver\pgsql\Install;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\Tasks as InstallTasks;
 
 /**
