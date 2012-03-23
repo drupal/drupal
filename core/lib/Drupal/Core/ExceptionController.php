@@ -55,7 +55,7 @@ class ExceptionController {
     $system_path = $request->attributes->get('system_path');
     $path = drupal_get_normal_path(variable_get('site_403', ''));
     if ($path && $path != $system_path) {
-      $destination = ltrim($event->getRequest()->getPathInfo(), '/');
+      $destination = ltrim($request->getPathInfo(), '/');
       $request = Request::create('/' . $path, 'GET', array('destination' => $destination));
 
       $kernel = new DrupalKernel();
