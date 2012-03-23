@@ -59,10 +59,14 @@ class ExceptionController {
     $system_path = $request->attributes->get('system_path');
     $path = drupal_get_normal_path(variable_get('site_403', ''));
     if ($path && $path != $system_path) {
-      $destination = ltrim($request->getPathInfo(), '/');
-      $request = Request::create('/' . $path, 'GET', array('destination' => $destination));
+      // Keep old path for reference, and to allow forms to redirect to it.
+      if (!isset($_GET['destination'])) {
+        $_GET['destination'] = $system_path;
+      }
 
-      $response = $this->kernel->handle($request, DrupalKernel::SUB_REQUEST);
+      $subrequest = Request::create('/' . $path, 'get', array('destination' => $system_path), $request->cookies->all(), array(), $request->server->all());
+
+      $response = $this->kernel->handle($subrequest, DrupalKernel::SUB_REQUEST);
       $response->setStatusCode(403, 'Access denied');
     }
     else {
