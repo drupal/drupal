@@ -92,7 +92,7 @@ class UrlMatcher extends SymfonyUrlMatcher {
       '_controller' => $router_item['page_callback']
     );
     // Place argument defaults on the route.
-    foreach ($router_item['page_arguments'] as $k => $v) {
+    foreach (unserialize($router_item['page_arguments']) as $k => $v) {
       $route[$k] = $v;
     }
     return new Route($router_item['href'], $route);
