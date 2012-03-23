@@ -73,7 +73,9 @@ class ExceptionController {
     if ($path && $path != $system_path) {
       // @TODO: Um, how do I specify an override URL again? Totally not clear.
       // Do that and sub-call the kernel rather than using meah().
-      $request = Request::create($path);
+      // @TODO: The create() method expects a slash-prefixed path, but we
+      // store a normal system path in the site_404 variable.
+      $request = Request::create('/' . $path);
 
       $kernel = new DrupalKernel();
       $response = $kernel->handle($request, HttpKernelInterface::SUB_REQUEST);
