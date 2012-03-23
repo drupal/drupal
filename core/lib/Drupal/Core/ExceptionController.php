@@ -52,7 +52,29 @@ class ExceptionController {
    *   The Event to process.
    */
   public function on403Html(FlattenException $exception, Request $request) {
-    return new Response('Access Denied', 403);
+    $system_path = $request->attributes->get('system_path');
+    $path = drupal_get_normal_path(variable_get('site_403', ''));
+    if ($path && $path != $system_path) {
+      $request = Request::create('/' . $path);
+
+      $kernel = new DrupalKernel();
+      $response = $kernel->handle($request, DrupalKernel::SUB_REQUEST);
+      $response->setStatusCode(403, 'Access denied');
+    }
+    else {
+      $response = new Response('Access Denied', 403);
+
+      // @todo Replace this block with something cleaner.
+      $return = t('You are not authorized to access this page.');
+      drupal_set_title(t('Access denied'));
+      drupal_set_page_content($return);
+      $page = element_info('page');
+      $content = drupal_render_page($page);
+
+      $response->setContent($content);
+    }
+
+    return $response;
   }
 
   public function on404Html(FlattenException $exception, Request $request) {
