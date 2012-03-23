@@ -23,7 +23,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class AccessSubscriber implements EventSubscriberInterface {
 
   /**
-   * Verifys that the current user can access the requested path.
+   * Verifies that the current user can access the requested path.
    *
    * @todo This is a total hack to keep our current access system working. It
    * should be replaced with something robust and injected at some point.
