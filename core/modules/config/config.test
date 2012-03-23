@@ -268,3 +268,31 @@ class ConfigFileContentTestCase extends DrupalWebTestCase {
     // Attempt to delete non-existing configuration.
   }
 }
+
+  /**
+   * Tests configuration overriding from settings.php.
+   */
+class ConfOverrideTestCase extends DrupalWebTestCase {
+  protected $testContent = 'Good morning, Denver!';
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Configuration overrides',
+      'description' => 'Tests configuration overrides through settings.php.',
+      'group' => 'Configuration',
+    );
+  }
+
+  /**
+   * Test configuration override.
+   */
+  function testConfigurationOverride() {
+    global $conf;
+    $config = config('system.performance');
+    $this->assertNotEqual($config->get('cache'), $this->testContent);
+
+    $conf['system.performance']['cache'] = $this->testContent;
+    $config = config('system.performance');
+    $this->assertEqual($config->get('cache'), $conf['system.performance']['cache']);
+  }
+}

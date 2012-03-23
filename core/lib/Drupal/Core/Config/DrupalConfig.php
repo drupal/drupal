@@ -81,17 +81,27 @@ class DrupalConfig {
    *   The data that was requested.
    */
   public function get($key = '') {
+    global $conf;
+
+    $name = $this->_verifiedStorage->getName();
+    if (isset($conf[$name])) {
+      $merged_data = drupal_array_merge_deep($this->data, $conf[$name]);
+    }
+    else {
+      $merged_data = $this->data;
+    }
+
     if (empty($key)) {
-      return $this->data;
+      return $merged_data;
     }
     else {
       $parts = explode('.', $key);
       if (count($parts) == 1) {
-        return isset($this->data[$key]) ? $this->data[$key] : NULL;
+        return isset($merged_data[$key]) ? $merged_data[$key] : NULL;
       }
       else {
         $key_exists = NULL;
-        $value = drupal_array_get_nested_value($this->data, $parts, $key_exists);
+        $value = drupal_array_get_nested_value($merged_data, $parts, $key_exists);
         return $key_exists ? $value : NULL;
       }
     }

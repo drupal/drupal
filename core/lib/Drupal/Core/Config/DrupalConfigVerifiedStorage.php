@@ -99,4 +99,11 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
     $this->deleteFromActive();
     $this->deleteFile();
   }
+
+  /**
+   * Implements DrupalConfigVerifiedStorageInterface::getName().
+   */
+  public function getName() {
+    return $this->name;
+  }
 }
