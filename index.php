@@ -2,6 +2,9 @@
 
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+
 
 /**
  * @file
@@ -26,5 +29,9 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 // A request object from the HTTPFoundation to tell us about the request.
 $request = Request::createFromGlobals();
 
-$kernel = new DrupalKernel();
+
+$dispatcher = new EventDispatcher();
+$resolver = new ControllerResolver();
+
+$kernel = new DrupalKernel($dispatcher, $resolver);
 $kernel->handle($request)->send();
