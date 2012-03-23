@@ -1955,7 +1955,7 @@ function hook_watchdog(array $log_entry) {
   $severity_list = array(
     WATCHDOG_EMERGENCY     => t('Emergency'),
     WATCHDOG_ALERT     => t('Alert'),
-    WATCHDOG_CRITICALI     => t('Critical'),
+    WATCHDOG_CRITICAL     => t('Critical'),
     WATCHDOG_ERROR       => t('Error'),
     WATCHDOG_WARNING   => t('Warning'),
     WATCHDOG_NOTICE    => t('Notice'),
