@@ -91,8 +91,12 @@ class UrlMatcher extends SymfonyUrlMatcher {
     $route = array(
       '_controller' => $router_item['page_callback']
     );
+
     // Place argument defaults on the route.
-    foreach (unserialize($router_item['page_arguments']) as $k => $v) {
+    // @TODO: For some reason drush test runs have a serialized page_arguments
+    // but HTTP requests are unserialized. Hack to get around this for now.
+    !is_array($router_item['page_arguments']) ? $page_arguments = unserialize($router_item['page_arguments']) : $page_arguments = $router_item['page_arguments'];
+    foreach ($page_arguments as $k => $v) {
       $route[$k] = $v;
     }
     return new Route($router_item['href'], $route);
