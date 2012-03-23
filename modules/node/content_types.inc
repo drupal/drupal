@@ -78,8 +78,8 @@ function theme_node_admin_overview($variables) {
  * Form constructor for the node type editing form.
  *
  * @param $type
- *   (optional) The machine name of the node type when editing an existing node
- *   type.
+ *   (optional) An object representing the node type, when editing an existing
+ *   node type.
  *
  * @see node_type_form_validate()
  * @see node_type_form_submit()
