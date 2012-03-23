@@ -1,4 +1,3 @@
-
 (function ($) {
 
 /**
@@ -85,9 +84,12 @@ Drupal.overlayChild.prototype = {};
  * Attach child related behaviors to the iframe document.
  */
 Drupal.overlayChild.attachBehaviors = function (context, settings) {
-  $.each(this.behaviors, function () {
-    this(context, settings);
-  });
+  var behavior, behaviors = this.behaviors;
+  for (behavior in behaviors) {
+    if (behaviors.hasOwnProperty(behavior)) {
+      behaviors[behavior](context, settings);
+    }
+  }
 };
 
 /**

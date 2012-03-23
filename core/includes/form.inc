@@ -3041,7 +3041,7 @@ function form_process_radios($element) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #return_value, #description, #required,
- *     #attributes.
+ *     #attributes, #checked.
  *
  * @ingroup themeable
  */
@@ -3094,7 +3094,7 @@ function form_pre_render_conditional_form_element($element) {
     $element['#attributes']['title'] = $element['#title'];
     if (!empty($element['#required'])) {
       // Append an indication that this field is required.
-      $element['#attributes']['title'] .= ' (' . $t('Required') . ')';
+      $element['#attributes']['title'] .= ' (' . t('Required') . ')';
     }
   }
 

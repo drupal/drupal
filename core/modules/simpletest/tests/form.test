@@ -740,6 +740,11 @@ class FormsElementsLabelsTestCase extends DrupalWebTestCase {
 
     $elements = $this->xpath('//div[@id="form-test-textfield-title-suffix"]/preceding-sibling::div[contains(@class, \'form-item-form-textfield-test-title\')]');
     $this->assertTrue(isset($elements[0]), t("Properly places the #suffix element before the form item."));
+
+    // Check that required checkboxes with #title_display attribute have
+    // a description but no title is displayed.
+    $this->assertFieldByXPath('//div[contains(@class, "form-item-form-checkboxes-test-title-display-attribute")]/div[contains(@class, "description")]', NULL, 'Description displayed for #title_display attribute.');
+    $this->assertNoFieldByXPath('//label[@for="edit-form-checkboxes-test-title-display-attribute"]', NULL, 'No title displayed for #title_display attribute.');
   }
 }
 

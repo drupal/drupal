@@ -1824,6 +1824,10 @@ function hook_theme_registry_alter(&$theme_registry) {
  * theme set via a theme callback function in hook_menu(); the themes on those
  * pages can only be overridden using hook_menu_alter().
  *
+ * Note that returning different themes for the same path may not work with page
+ * caching. This is most likely to be a problem if an anonymous user on a given
+ * path could have different themes returned under different conditions.
+ *
  * Since only one theme can be used at a time, the last (i.e., highest
  * weighted) module which returns a valid theme name from this hook will
  * prevail.

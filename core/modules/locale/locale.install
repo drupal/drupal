@@ -386,88 +386,90 @@ function locale_update_8005() {
   }
   $plural_lids = array_unique($plural_lids);
 
-  // Look up all translations for these source strings. Ordering by language
-  // will group the strings by language, the 'plid' order will get the
-  // strings in singular/plural order and 'plural' will get them in precise
-  // sequential order needed.
-  $results = db_query("SELECT s.lid, s.source, t.translation, t.plid, t.plural, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE s.lid IN (:lids) ORDER BY t.language, t.plid, t.plural", array(':lids' => $plural_lids));
+  if (!empty($plural_lids)) {
+    // Look up all translations for these source strings. Ordering by language
+    // will group the strings by language, the 'plid' order will get the
+    // strings in singular/plural order and 'plural' will get them in precise
+    // sequential order needed.
+    $results = db_query("SELECT s.lid, s.source, t.translation, t.plid, t.plural, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE s.lid IN (:lids) ORDER BY t.language, t.plid, t.plural", array(':lids' => $plural_lids));
 
-  // Collect the strings into an array and combine values as we go.
-  $strings = array();
-  $parents_to_sources = array();
-  $remove_lids = array();
-  foreach ($results as $child) {
-    $strings[$child->language][$child->lid] = array(
-      'source' => array($child->source),
-      'translation' => array($child->translation),
-    );
+    // Collect the strings into an array and combine values as we go.
+    $strings = array();
+    $parents_to_sources = array();
+    $remove_lids = array();
+    foreach ($results as $child) {
+      $strings[$child->language][$child->lid] = array(
+        'source' => array($child->source),
+        'translation' => array($child->translation),
+      );
 
-    if (empty($child->plid)) {
-      // Non-children strings point to themselves as parents. This makes it
-      // easy to look up the utmost parents for any plurals.
-      $parents_to_sources[$child->lid] = $child->lid;
-    }
-    else {
-      // Children strings point to their utmost parents. Because we get data
-      // in PLID order, we can ensure that all previous parents have data now,
-      // so we can just copy the parent's data about their parent, etc.
-      $parents_to_sources[$child->lid] = $parents_to_sources[$child->plid];
-
-      // Append translation to the utmost parent's translation string.
-      $utmost_parent = &$strings[$child->language][$parents_to_sources[$child->plid]];
-      // Drop the Drupal-specific numbering scheme from the end of plural
-      // formulas.
-      $utmost_parent['translation'][] = str_replace('@count[' . $child->plural .']', '@count', $child->translation);
-      if (count($utmost_parent['source']) < 2) {
-        // Append source to the utmost parent's source string only if it is the
-        // plural variant. Further Drupal specific plural variants are not to be
-        // retained for source strings.
-        $utmost_parent['source'][] = $child->source;
+      if (empty($child->plid)) {
+        // Non-children strings point to themselves as parents. This makes it
+        // easy to look up the utmost parents for any plurals.
+        $parents_to_sources[$child->lid] = $child->lid;
       }
+      else {
+        // Children strings point to their utmost parents. Because we get data
+        // in PLID order, we can ensure that all previous parents have data now,
+        // so we can just copy the parent's data about their parent, etc.
+        $parents_to_sources[$child->lid] = $parents_to_sources[$child->plid];
 
-      // All plural variant LIDs are to be removed with their translations.
-      // Only the singular LIDs will be kept.
-      $remove_lids[] = $child->lid;
+        // Append translation to the utmost parent's translation string.
+        $utmost_parent = &$strings[$child->language][$parents_to_sources[$child->plid]];
+        // Drop the Drupal-specific numbering scheme from the end of plural
+        // formulas.
+        $utmost_parent['translation'][] = str_replace('@count[' . $child->plural .']', '@count', $child->translation);
+        if (count($utmost_parent['source']) < 2) {
+          // Append source to the utmost parent's source string only if it is the
+          // plural variant. Further Drupal specific plural variants are not to be
+          // retained for source strings.
+          $utmost_parent['source'][] = $child->source;
+        }
+
+        // All plural variant LIDs are to be removed with their translations.
+        // Only the singular LIDs will be kept.
+        $remove_lids[] = $child->lid;
+      }
     }
-  }
 
-  // Do updates for all source strings and all translations.
-  $updated_sources = array();
-  foreach ($strings as $langcode => $translations) {
-    foreach($translations as $lid => $translation) {
-      if (!in_array($lid, $updated_sources)) {
-        // Only update source string if not yet updated. We merged these within
-        // the translation lookups because plural information was only avilable
-        // with the translation, but we don't need to save it again for every
-        // language.
-        db_update('locales_source')
-          ->fields(array(
+    // Do updates for all source strings and all translations.
+    $updated_sources = array();
+    foreach ($strings as $langcode => $translations) {
+      foreach($translations as $lid => $translation) {
+        if (!in_array($lid, $updated_sources)) {
+          // Only update source string if not yet updated. We merged these within
+          // the translation lookups because plural information was only avilable
+          // with the translation, but we don't need to save it again for every
+          // language.
+          db_update('locales_source')
+            ->fields(array(
             'source' => implode(LOCALE_PLURAL_DELIMITER, $translation['source']),
           ))
-          ->condition('lid', $lid)
-          ->execute();
-        $updated_sources[] = $lid;
-      }
-      db_update('locales_target')
-        ->fields(array(
+            ->condition('lid', $lid)
+            ->execute();
+          $updated_sources[] = $lid;
+        }
+        db_update('locales_target')
+          ->fields(array(
           'translation' => implode(LOCALE_PLURAL_DELIMITER, $translation['translation']),
         ))
-        ->condition('lid', $lid)
-        ->condition('language', $langcode)
-        ->execute();
+          ->condition('lid', $lid)
+          ->condition('language', $langcode)
+          ->execute();
+      }
     }
-  }
 
-  // Remove all plural LIDs from source and target. only keep those which were
-  // originally used for the singular strings (now updated to contain the
-  // serialized version of plurals).
-  $remove_lids = array_unique($remove_lids);
-  db_delete('locales_source')
-    ->condition('lid', $remove_lids, 'IN')
-    ->execute();
-  db_delete('locales_target')
-    ->condition('lid', $remove_lids, 'IN')
-    ->execute();
+    // Remove all plural LIDs from source and target. only keep those which were
+    // originally used for the singular strings (now updated to contain the
+    // serialized version of plurals).
+    $remove_lids = array_unique($remove_lids);
+    db_delete('locales_source')
+      ->condition('lid', $remove_lids, 'IN')
+      ->execute();
+    db_delete('locales_target')
+      ->condition('lid', $remove_lids, 'IN')
+      ->execute();
+  }
 
   // Drop the primary key because it contains 'plural'.
   db_drop_primary_key('locales_target');

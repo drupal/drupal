@@ -13,7 +13,7 @@ function statistics_help($path, $arg) {
     case 'admin/help#statistics':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Statistics module shows you how often a given page is viewed, who viewed it, the previous page the user visited (referrer URL), and when it was viewed. These statistics are useful in determining how users are visiting and navigating your site. For more information, see the online handbook entry for the <a href="@statistics">Statistics module</a>.', array('@statistics' => url('http://drupal.org/handbook/modules/statistics/'))) . '</p>';
+      $output .= '<p>' . t('The Statistics module shows you how often a given page is viewed, who viewed it, the previous page the user visited (referrer URL), and when it was viewed. These statistics are useful in determining how users are visiting and navigating your site. For more information, see the online handbook entry for the <a href="@statistics">Statistics module</a>.', array('@statistics' => url('http://drupal.org/documentation/modules/statistics/'))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing logs') . '</dt>';

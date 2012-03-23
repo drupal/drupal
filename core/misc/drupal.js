@@ -1,4 +1,3 @@
-
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
 // Allow other JavaScript libraries to use $.
@@ -49,12 +48,13 @@ jQuery.noConflict();
 Drupal.attachBehaviors = function (context, settings) {
   context = context || document;
   settings = settings || Drupal.settings;
+  var i, behaviors = Drupal.behaviors;
   // Execute all of them.
-  $.each(Drupal.behaviors, function () {
-    if ($.isFunction(this.attach)) {
-      this.attach(context, settings);
+  for (i in behaviors) {
+    if (behaviors.hasOwnProperty(i) && behaviors[i].attach) {
+      behaviors[i].attach(context, settings);
     }
-  });
+  }
 };
 
 /**
@@ -101,12 +101,13 @@ Drupal.detachBehaviors = function (context, settings, trigger) {
   context = context || document;
   settings = settings || Drupal.settings;
   trigger = trigger || 'unload';
+  var i, behaviors = Drupal.behaviors;
   // Execute all of them.
-  $.each(Drupal.behaviors, function () {
-    if ($.isFunction(this.detach)) {
-      this.detach(context, settings, trigger);
+  for (i in behaviors) {
+    if (behaviors.hasOwnProperty(i) && behaviors[i].detach) {
+      behaviors[i].detach(context, settings, trigger);
     }
-  });
+  }
 };
 
 /**
@@ -371,20 +372,6 @@ $('html').addClass('js');
 
 // 'js enabled' cookie.
 document.cookie = 'has_js=1; path=/';
-
-/**
- * Additions to jQuery.support.
- */
-$(function () {
-  /**
-   * Boolean indicating whether or not position:fixed is supported.
-   */
-  if (jQuery.support.positionFixed === undefined) {
-    var el = $('<div style="position:fixed; top:10px" />').appendTo(document.body);
-    jQuery.support.positionFixed = el[0].offsetTop === 10;
-    el.remove();
-  }
-});
 
 //Attach all behaviors.
 $(function () {

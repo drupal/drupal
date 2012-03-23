@@ -104,7 +104,7 @@ function node_filters() {
     ) + node_type_get_names(),
   );
 
-  // Language filter if the site is multilingual.
+  // Language filter if language support is present.
   if (language_multilingual()) {
     $languages = language_list(TRUE);
     $language_options = array(LANGUAGE_NOT_SPECIFIED => t('- None -'));
@@ -431,9 +431,8 @@ function node_admin_nodes() {
     '#submit' => array('node_admin_nodes_submit'),
   );
 
-  // Enable language column if translation module is enabled or if we have any
-  // node with language.
-  $multilanguage = (module_exists('translation') || db_query_range("SELECT 1 FROM {node} WHERE langcode <> :langcode", 0, 1, array(':langcode' => LANGUAGE_NOT_SPECIFIED))->fetchField());
+  // Enable language column and filter if multiple languages are enabled.
+  $multilingual = language_multilingual();
 
   // Build the sortable table header.
   $header = array(
@@ -443,7 +442,7 @@ function node_admin_nodes() {
     'status' => array('data' => t('Status'), 'field' => 'n.status'),
     'changed' => array('data' => t('Updated'), 'field' => 'n.changed', 'sort' => 'desc')
   );
-  if ($multilanguage) {
+  if ($multilingual) {
     $header['language_name'] = array('data' => t('Language'), 'field' => 'n.langcode');
   }
   $header['operations'] = array('data' => t('Operations'));
@@ -495,7 +494,7 @@ function node_admin_nodes() {
       'status' => $node->status ? t('published') : t('not published'),
       'changed' => format_date($node->changed, 'short'),
     );
-    if ($multilanguage) {
+    if ($multilingual) {
       $options[$node->nid]['language_name'] = language_name($node->langcode);
     }
     // Build a list of all the accessible operations for the current node.

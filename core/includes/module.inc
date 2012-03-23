@@ -176,7 +176,6 @@ function system_list($type) {
         }
         // Build a list of filenames so drupal_get_filename can use it.
         if ($record->status) {
-          drupal_classloader_register($record->name, dirname($record->filename));
           $lists['filepaths'][] = array('type' => $record->type, 'name' => $record->name, 'filepath' => $record->filename);
         }
       }
@@ -210,6 +209,7 @@ function system_list($type) {
     // drupal_get_filename() static cache with all enabled modules and themes.
     foreach ($lists['filepaths'] as $item) {
       drupal_get_filename($item['type'], $item['name'], $item['filepath']);
+      drupal_classloader_register($item['name'], dirname($item['filepath']));
     }
   }
 

@@ -120,6 +120,8 @@ function user_schema() {
     ),
   );
 
+  // The table name here is plural, despite Drupal table naming standards,
+  // because "user" is a reserved word in many databases.
   $schema['users'] = array(
     'description' => 'Stores user data.',
     'fields' => array(

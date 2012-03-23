@@ -1956,7 +1956,6 @@ function drupal_anonymous_user() {
   $user->hostname = ip_address();
   $user->roles = array();
   $user->roles[DRUPAL_ANONYMOUS_RID] = 'anonymous user';
-  $user->cache = 0;
   return $user;
 }
 
@@ -2569,7 +2568,9 @@ function language_name($langcode) {
   if ($language = language_load($langcode)) {
     return $language->name;
   }
-
+  if (empty($langcode)) {
+    return t('Unknown');
+  }
   return t('Unknown (@langcode)', array('@langcode' => $langcode));
 }
 

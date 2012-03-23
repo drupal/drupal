@@ -14,7 +14,7 @@ function poll_help($path, $arg) {
     case 'admin/help#poll':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Poll module can be used to create simple surveys or questionnaires that display cumulative results. A poll is a good way to receive feedback from site users and community members. For more information, see the online handbook entry for the <a href="@poll">Poll module</a>.', array('@poll' => 'http://drupal.org/handbook/modules/poll/')) . '</p>';
+      $output .= '<p>' . t('The Poll module can be used to create simple surveys or questionnaires that display cumulative results. A poll is a good way to receive feedback from site users and community members. For more information, see the online handbook entry for the <a href="@poll">Poll module</a>.', array('@poll' => 'http://drupal.org/documentation/modules/poll/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating a poll') . '</dt>';

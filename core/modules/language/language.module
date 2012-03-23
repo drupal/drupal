@@ -13,7 +13,7 @@ function language_help($path, $arg) {
     case 'admin/help#language':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Language module allows you to maintain a list of languages used on your Drupal site for providing language information for content and for interface translation (using the Locale module). For more information, see the online handbook entry for <a href="@language">Language module</a>.', array('@language' => 'http://drupal.org/handbook/modules/language/')) . '</p>';
+      $output .= '<p>' . t('The Language module allows you to maintain a list of languages used on your Drupal site for providing language information for content and for interface translation (using the Locale module). For more information, see the online handbook entry for <a href="@language">Language module</a>.', array('@language' => 'http://drupal.org/documentation/modules/language')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Configuring the list of languages') . '</dt>';
