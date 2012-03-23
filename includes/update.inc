@@ -815,9 +815,6 @@ function update_fix_d7_install_profile() {
       'files' => array(),
     );
 
-    // The install profile is always required.
-    $file->info['required'] = TRUE;
-
     $values = array(
       'filename' => $filename,
       'name' => $profile,
