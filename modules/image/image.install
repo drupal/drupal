@@ -154,6 +154,18 @@ function image_field_schema($field) {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function image_update_dependencies() {
+  $dependencies['image'][7002] = array(
+    // Image update 7002 uses field API functions, so must run after
+    // Field API has been enabled.
+    'system' => 7020,
+  );
+  return $dependencies;
+}
+
+/**
  * Install the schema for users upgrading from the contributed module.
  */
 function image_update_7000() {
