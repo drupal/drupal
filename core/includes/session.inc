@@ -176,7 +176,6 @@ function _drupal_session_write($sid, $value) {
       // Either ssid or sid or both will be added from $key below.
       $fields = array(
         'uid' => $user->uid,
-        'cache' => isset($user->cache) ? $user->cache : 0,
         'hostname' => ip_address(),
         'session' => $value,
         'timestamp' => REQUEST_TIME,

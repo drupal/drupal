@@ -336,6 +336,40 @@ class CacheClearCase extends CacheTestCase {
       $this->assertFalse($this->checkCacheExists($cid, $this->default_value, $bin), t('All cache entries removed from @bin.', array('@bin' => $bin)));
     }
   }
+
+  /**
+   * Test minimum cache lifetime.
+   */
+  function testMinimumCacheLifetime() {
+    // Set a minimum/maximum cache lifetime.
+    $this->setupLifetime(300);
+    // Login as a newly-created user.
+    $account = $this->drupalCreateUser(array());
+    $this->drupalLogin($account);
+
+    // Set two cache objects in different bins.
+    $data = $this->randomName(100);
+    cache()->set($data, $data, CACHE_TEMPORARY);
+    $cached = cache()->get($data);
+    $this->assertTrue(isset($cached->data) && $cached->data === $data, 'Cached item retrieved.');
+    cache('page')->set($data, $data, CACHE_TEMPORARY);
+
+    // Expire temporary items in the 'page' bin.
+    cache('page')->expire();
+
+    // Since the database cache uses REQUEST_TIME, set the $_SESSION variable
+    // manually to force it to the current time.
+    $_SESSION['cache_expiration']['cache_page'] = time();
+
+    // Items in the default cache bin should not be expired.
+    $cached = cache()->get($data);
+    $this->assertTrue(isset($cached->data) && $cached->data == $data, 'Cached item retrieved');
+
+    // Despite the minimum cache lifetime, the item in the 'page' bin should
+    // be invalidated for the current user.
+    $cached = cache('page')->get($data);
+    $this->assertFalse($cached, 'Cached item was invalidated');
+  }
 }
 
 /**
