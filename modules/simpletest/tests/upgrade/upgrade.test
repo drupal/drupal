@@ -549,7 +549,7 @@ class BasicStandardUpdatePath extends UpdatePathTestCase {
     ));
 
     // Test that the site name is correctly displayed.
-    $this->assertText('drupal', t('The site name is correctly displayed.'));
+    $this->assertText('Drupal', t('The site name is correctly displayed.'));
 
     // Verify that the main admin sections are available.
     $this->drupalGet('admin');
@@ -625,7 +625,7 @@ class BasicMinimalUpdatePath extends UpdatePathTestCase {
     ));
 
     // Test that the site name is correctly displayed.
-    $this->assertText('drupal', t('The site name is correctly displayed.'));
+    $this->assertText('Drupal', t('The site name is correctly displayed.'));
 
     // Verify that the main admin sections are available.
     $this->drupalGet('admin');
@@ -702,7 +702,7 @@ class FilledStandardUpdatePath extends UpdatePathTestCase {
     ));
 
     // Test that the site name is correctly displayed.
-    $this->assertText('drupal', t('The site name is correctly displayed.'));
+    $this->assertText('Drupal', t('The site name is correctly displayed.'));
 
     // Verify that the main admin sections are available.
     $this->drupalGet('admin');
@@ -778,7 +778,7 @@ class FilledMinimalUpdatePath extends UpdatePathTestCase {
     ));
 
     // Test that the site name is correctly displayed.
-    $this->assertText('drupal', t('The site name is correctly displayed.'));
+    $this->assertText('Drupal', t('The site name is correctly displayed.'));
 
     // Verify that the main admin sections are available.
     $this->drupalGet('admin');
