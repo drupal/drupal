@@ -13,8 +13,7 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
-use Drupal\Core\EventSubscriber\HtmlSubscriber;
-use Drupal\Core\EventSubscriber\JsonSubscriber;
+use Drupal\Core\EventSubscriber\ViewSubscriber;
 use Drupal\Core\EventSubscriber\AccessSubscriber;
 use Drupal\Core\EventSubscriber\PathSubscriber;
 use Drupal\Core\EventSubscriber\LegacyControllerSubscriber;
@@ -52,11 +51,12 @@ class DrupalKernel extends HttpKernel {
       $this->matcher = new UrlMatcher($context);
       $this->dispatcher->addSubscriber(new RouterListener($this->matcher));
 
+      $negotiation = new ContentNegotiation();
+
       // @todo Make this extensible rather than just hard coding some.
       // @todo Add a subscriber to handle other things, too, like our Ajax
       // replacement system.
-      $this->dispatcher->addSubscriber(new HtmlSubscriber());
-      $this->dispatcher->addSubscriber(new JsonSubscriber());
+      $this->dispatcher->addSubscriber(new ViewSubscriber($negotiation));
       $this->dispatcher->addSubscriber(new AccessSubscriber());
       $this->dispatcher->addSubscriber(new PathSubscriber());
       $this->dispatcher->addSubscriber(new LegacyControllerSubscriber());
@@ -67,6 +67,6 @@ class DrupalKernel extends HttpKernel {
       // Either way, treat it as a server-level error and return an HTTP 500.
       // By default, this will be an HTML-type response because that's a decent
       // best guess if we don't know otherwise.
-      $this->dispatcher->addSubscriber(new ExceptionListener(array(new ExceptionController(), 'execute')));
+      $this->dispatcher->addSubscriber(new ExceptionListener(array(new ExceptionController($negotiation), 'execute')));
     }
 }
