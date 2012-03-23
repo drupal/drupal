@@ -38,6 +38,12 @@ class DrupalConfig {
   public function read() {
     $active = (array) config_decode($this->_verifiedStorage->read());
     foreach ($active as $key => $value) {
+      // If the setting is empty, return an empty string rather than an array.
+      // This is necessary because SimpleXML's default behavior is to return
+      // an empty array instead of a string.
+      if (is_array($value) && empty($value)) {
+        $value = '';
+      }
       $this->set($key, $value);
     }
   }
