@@ -172,7 +172,7 @@ function _drupal_session_write($sid, $value) {
 
     // For performance reasons, do not update the sessions table, unless
     // $_SESSION has changed or more than 180 has passed since the last update.
-    if ($is_changed || REQUEST_TIME - $user->timestamp > variable_get('session_write_interval', 180)) {
+    if ($is_changed || !isset($user->timestamp) || REQUEST_TIME - $user->timestamp > variable_get('session_write_interval', 180)) {
       // Either ssid or sid or both will be added from $key below.
       $fields = array(
         'uid' => $user->uid,
@@ -198,6 +198,9 @@ function _drupal_session_write($sid, $value) {
             $key['sid'] = $_COOKIE[$insecure_session_name];
           }
         }
+      }
+      elseif (variable_get('https', FALSE)) {
+        unset($key['ssid']);
       }
 
       db_merge('sessions')
@@ -255,11 +258,17 @@ function drupal_session_initialize() {
     // we lazily start sessions at the end of this request, and some
     // processes (like drupal_get_token()) needs to know the future
     // session ID in advance.
+    $GLOBALS['lazy_session'] = TRUE;
     $user = drupal_anonymous_user();
     // Less random sessions (which are much faster to generate) are used for
     // anonymous users than are generated in drupal_session_regenerate() when
     // a user becomes authenticated.
     session_id(drupal_hash_base64(uniqid(mt_rand(), TRUE)));
+    if ($is_https && variable_get('https', FALSE)) {
+      $insecure_session_name = substr(session_name(), 1);
+      $session_id = drupal_hash_base64(uniqid(mt_rand(), TRUE));
+      $_COOKIE[$insecure_session_name] = $session_id;
+    }
   }
   date_default_timezone_set(drupal_get_user_timezone());
 }
@@ -291,7 +300,7 @@ function drupal_session_start() {
  * If an anonymous user already have an empty session, destroy it.
  */
 function drupal_session_commit() {
-  global $user;
+  global $user, $is_https;
 
   if (!drupal_save_session()) {
     // We don't have anything to do if we are not allowed to save the session.
@@ -310,6 +319,12 @@ function drupal_session_commit() {
     // started.
     if (!drupal_session_started()) {
       drupal_session_start();
+      if ($is_https && variable_get('https', FALSE)) {
+        $insecure_session_name = substr(session_name(), 1);
+        $params = session_get_cookie_params();
+        $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
+        setcookie($insecure_session_name, $_COOKIE[$insecure_session_name], $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
+      }
     }
     // Write the session data.
     session_write_close();
@@ -336,7 +351,7 @@ function drupal_session_regenerate() {
   global $user, $is_https;
   if ($is_https && variable_get('https', FALSE)) {
     $insecure_session_name = substr(session_name(), 1);
-    if (isset($_COOKIE[$insecure_session_name])) {
+    if (!isset($GLOBALS['lazy_session']) && isset($_COOKIE[$insecure_session_name])) {
       $old_insecure_session_id = $_COOKIE[$insecure_session_name];
     }
     $params = session_get_cookie_params();
@@ -416,7 +431,10 @@ function _drupal_session_destroy($sid) {
   // Unset the session cookies.
   _drupal_session_delete_cookie(session_name());
   if ($is_https) {
-    _drupal_session_delete_cookie(substr(session_name(), 1), TRUE);
+    _drupal_session_delete_cookie(substr(session_name(), 1), FALSE);
+  }
+  elseif (variable_get('https', FALSE)) {
+    _drupal_session_delete_cookie('S' . session_name(), TRUE);
   }
 }
 
@@ -425,13 +443,17 @@ function _drupal_session_destroy($sid) {
  *
  * @param $name
  *   Name of session cookie to delete.
- * @param $force_insecure
- *   Force cookie to be insecure.
+ * @param boolean $secure
+ *   Force the secure value of the cookie.
  */
-function _drupal_session_delete_cookie($name, $force_insecure = FALSE) {
-  if (isset($_COOKIE[$name])) {
+function _drupal_session_delete_cookie($name, $secure = NULL) {
+  global $is_https;
+  if (isset($_COOKIE[$name]) || (!$is_https && $secure === TRUE)) {
     $params = session_get_cookie_params();
-    setcookie($name, '', REQUEST_TIME - 3600, $params['path'], $params['domain'], !$force_insecure && $params['secure'], $params['httponly']);
+    if ($secure !== NULL) {
+      $params['secure'] = $secure;
+    }
+    setcookie($name, '', REQUEST_TIME - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
     unset($_COOKIE[$name]);
   }
 }
