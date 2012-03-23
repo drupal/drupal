@@ -1,0 +1,52 @@
+@media all and (min-width: 480px) and (max-width: 959px) {
+  body.sidebar-first #content,
+  body.two-sidebars #content {
+    float: left;
+  }
+  body.sidebar-second #content {
+    float: right;
+  }
+
+  #sidebar-first {
+    float: right;
+  }
+
+  #sidebar-second {
+    float: left;
+  }
+  body.two-sidebars #sidebar-second {
+    float: right;
+    clear: right;
+  }
+  body.two-sidebars #sidebar-second .block {
+    float: right;
+  }
+}
+
+@media all and (min-width: 960px) {
+  #content {
+    float: right;
+  }
+  body.sidebar-first #content {
+    left: 0;
+    right: 20%;
+  }
+  body.two-sidebars #content {
+    left: 0;
+    right: 20%;
+  }
+
+  #sidebar-first {
+    float: right;
+    left: 0;
+    right: -80%;
+  }
+  body.two-sidebars #sidebar-first {
+    left: 0;
+    right: -60%;
+  }
+
+  #sidebar-second {
+    float: left;
+  }
+}

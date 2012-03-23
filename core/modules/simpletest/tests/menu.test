@@ -282,7 +282,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     theme_enable(array('stark'));
     $this->drupalGet('menu-test/theme-callback/use-stark-theme');
     $this->assertText('Custom theme: stark. Actual theme: stark.', t('The theme callback system uses an optional theme once it has been enabled.'));
-    $this->assertRaw('stark/layout.css', t("The optional theme's CSS appears on the page."));
+    $this->assertRaw('stark/css/layout.css', t("The optional theme's CSS appears on the page."));
   }
 
   /**
@@ -316,7 +316,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     // should be honored.
     $this->drupalGet('menu-test/no-theme-callback');
     $this->assertText('Custom theme: stark. Actual theme: stark.', t('The result of hook_custom_theme() is used as the theme for the current page.'));
-    $this->assertRaw('stark/layout.css', t("The Stark theme's CSS appears on the page."));
+    $this->assertRaw('stark/css/layout.css', t("The Stark theme's CSS appears on the page."));
   }
 
   /**

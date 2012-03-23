@@ -1,0 +1,90 @@
+
+/**
+ * @file
+ * Stark layout method
+ *
+ * To avoid obscuring CSS added to the page by Drupal or a contrib module, the
+ * Stark theme itself has no styling, except just enough CSS to arrange the page
+ * in a traditional "Header, sidebars, content, and footer" layout.
+ *
+ * This layout method works reasonably well, but shouldn't be used on a
+ * production site because it can break. For example, if an over-large image
+ * (one that is wider than 20% of the viewport) is in the left sidebar, the
+ * image will overlap with the #content to the right.
+ */
+
+#content,
+#sidebar-first,
+#sidebar-second {
+  display: inline;
+  position: relative;
+}
+
+@media all and (min-width: 480px) and (max-width: 959px) {
+  #content {
+    width: 100%;
+  }
+  body.sidebar-first #content,
+  body.two-sidebars #content {
+    width: 67%;
+    float: right; /* LTR */
+  }
+  body.sidebar-second #content {
+    width: 67%;
+    float: left; /* LTR */
+  }
+
+  #sidebar-first {
+    width: 33%;
+    float: left; /* LTR */
+  }
+
+  #sidebar-second {
+    width: 33%;
+    float: right; /* LTR */
+  }
+  body.two-sidebars #sidebar-second {
+    clear: both;
+    width: 100%;
+  }
+
+  body.two-sidebars #sidebar-second .block {
+    float: left; /* LTR */
+    width: 33%;
+  }
+  body.two-sidebars #sidebar-second .block:nth-child(3n+1) {
+    clear: both;
+  }
+}
+
+@media all and (min-width: 960px) {
+  #content {
+    width: 100%;
+    float: left; /* LTR */
+  }
+  body.sidebar-first #content {
+    width: 80%;
+    left: 20%; /* LTR */
+  }
+  body.sidebar-second #content {
+    width: 80%;
+  }
+  body.two-sidebars #content {
+    width: 60%;
+    left: 20%; /* LTR */
+  }
+
+  #sidebar-first {
+    width: 20%;
+    float: left; /* LTR */
+    left: -80%; /* LTR */
+  }
+  body.two-sidebars #sidebar-first {
+    left: -60%; /* LTR */
+  }
+
+  #sidebar-second {
+    float: right; /* LTR */
+    width: 20%;
+  }
+}
