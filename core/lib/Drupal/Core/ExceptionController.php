@@ -62,7 +62,7 @@ class ExceptionController {
       $destination = ltrim($request->getPathInfo(), '/');
       $request = Request::create('/' . $path, 'GET', array('destination' => $destination));
 
-      $response = $kernel->handle($request, DrupalKernel::SUB_REQUEST);
+      $response = $this->kernel->handle($request, DrupalKernel::SUB_REQUEST);
       $response->setStatusCode(403, 'Access denied');
     }
     else {
