@@ -42,7 +42,7 @@ class LegacyControllerSubscriber implements EventSubscriberInterface {
     $controller = $event->getController();
 
     // This BC logic applies only to functions.  Otherwise, skip it.
-    if (function_exists($controller)) {
+    if (is_string($controller) && function_exists($controller)) {
       $new_controller = function() use ($router_item) {
         return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
       };

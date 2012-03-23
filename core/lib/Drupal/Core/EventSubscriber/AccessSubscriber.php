@@ -35,8 +35,8 @@ class AccessSubscriber implements EventSubscriberInterface {
 
     $router_item = $event->getRequest()->attributes->get('drupal_menu_item');
 
-    if (!$router_item['access']) {
-      throw new AccessDeniedHttpException($message);
+    if (isset($router_item['access']) && !$router_item['access']) {
+      throw new AccessDeniedHttpException();
     }
   }
 
