@@ -34,54 +34,6 @@ class JsonSubscriber implements EventSubscriberInterface {
     return in_array('application/json', $event->getRequest()->getAcceptableContentTypes());
   }
 
-  protected function createJsonResponse() {
-    $response = new Response();
-    $response->headers->set('Content-Type', 'application/json; charset=utf-8');
-
-    return $response;
-  }
-
-  /**
-   * Processes an AccessDenied exception into an HTTP 403 response.
-   *
-   * @param GetResponseEvent $event
-   *   The Event to process.
-   */
-  public function onAccessDeniedException(GetResponseEvent $event) {
-    if ($this->isJsonRequestEvent($event) && $event->getException() instanceof AccessDeniedHttpException) {
-      $response = $this->createJsonResponse();
-      $response->setStatusCode(403, 'Access Denied');
-      $event->setResponse($response);
-    }
-  }
-
-  /**
-   * Processes a NotFound exception into an HTTP 404 response.
-   *
-   * @param GetResponseEvent $event
-   *   The Event to process.
-   */
-  public function onNotFoundHttpException(GetResponseEvent $event) {
-    if ($this->isJsonRequestEvent($event) && $event->getException() instanceof NotFoundHttpException) {
-      $response = $this->createJsonResponse();
-      $response->setStatusCode(404, 'Not Found');
-      $event->setResponse($response);
-    }
-  }
-
-  /**
-   * Processes a MethodNotAllowed exception into an HTTP 405 response.
-   *
-   * @param GetResponseEvent $event
-   *   The Event to process.
-   */
-  public function onMethodAllowedException(GetResponseEvent $event) {
-    if ($this->isJsonRequestEvent($event) && $event->getException() instanceof MethodNotAllowedException) {
-      $response = $this->createJsonResponse();
-      $response->setStatusCode(405, 'Method Not Allowed');
-      $event->setResponse($response);
-    }
-  }
 
   /**
    * Processes a successful controller into an HTTP 200 response.
@@ -113,9 +65,9 @@ class JsonSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::EXCEPTION][] = array('onNotFoundHttpException');
-    $events[KernelEvents::EXCEPTION][] = array('onAccessDeniedException');
-    $events[KernelEvents::EXCEPTION][] = array('onMethodAllowedException');
+    //$events[KernelEvents::EXCEPTION][] = array('onNotFoundHttpException');
+    //$events[KernelEvents::EXCEPTION][] = array('onAccessDeniedException');
+    //$events[KernelEvents::EXCEPTION][] = array('onMethodAllowedException');
 
     $events[KernelEvents::VIEW][] = array('onView');
 

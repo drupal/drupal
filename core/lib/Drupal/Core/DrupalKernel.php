@@ -67,8 +67,6 @@ class DrupalKernel extends HttpKernel {
       // Either way, treat it as a server-level error and return an HTTP 500.
       // By default, this will be an HTML-type response because that's a decent
       // best guess if we don't know otherwise.
-      $this->dispatcher->addSubscriber(new ExceptionListener(function(Exception $e) {
-        return new Response('A fatal error occurred: ' . $e->getMessage(), 500);
-      }));
+      $this->dispatcher->addSubscriber(new ExceptionListener(array(new ExceptionController(), 'execute')));
     }
 }
