@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
 
 use Exception;
@@ -17,9 +19,11 @@ use Exception;
  */
 class ExceptionController {
 
+  protected $kernel;
   protected $negotiation;
 
-  public function __construct(ContentNegotiation $negotiation) {
+  public function __construct(HttpKernelInterface $kernel, ContentNegotiation $negotiation) {
+    $this->kernel = $kernel;
     $this->negotiation = $negotiation;
   }
 
@@ -98,10 +102,9 @@ class ExceptionController {
       // Do that and sub-call the kernel rather than using meah().
       // @TODO: The create() method expects a slash-prefixed path, but we
       // store a normal system path in the site_404 variable.
-      $request = Request::create('/' . $path);
+      $subrequest = Request::create('/' . $path, 'get', array(), $request->cookies->all(), array(), $request->server->all());
 
-      $kernel = new DrupalKernel();
-      $response = $kernel->handle($request, HttpKernelInterface::SUB_REQUEST);
+      $response = $this->kernel->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
       $response->setStatusCode(404, 'Not Found');
     }
     else {
