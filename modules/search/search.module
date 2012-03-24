@@ -1293,6 +1293,11 @@ function search_simplify_excerpt_match($key, $text, $offset, $boundary) {
   $simplified_key = search_simplify($key);
   $simplified_text = search_simplify($text);
 
+  // Return immediately if simplified key or text are empty.
+  if (!$simplified_key || !$simplified_text) {
+    return FALSE;
+  }
+
   // Check if we have a match after simplification in the text.
   if (!preg_match('/' . $boundary . $simplified_key . $boundary . '/iu', $simplified_text, $match, PREG_OFFSET_CAPTURE, $offset)) {
     return FALSE;

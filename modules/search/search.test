@@ -1639,6 +1639,21 @@ class SearchExcerptTestCase extends DrupalUnitTestCase {
 
     $result = preg_replace('| +|', ' ', search_excerpt('"abc def"', $text));
     $this->assertTrue(strpos($result, '<strong>abc,def</strong>') !== FALSE, 'Phrase with keyword simplified into two separate words is highlighted with simplified match');
+
+    // Test phrases with characters which are being truncated.
+    $result = preg_replace('| +|', ' ', search_excerpt('"ipsum _"', $text));
+    $this->assertTrue(strpos($result, '<strong>ipsum </strong>') !== FALSE, 'Only valid part of the phrase is highlighted and invalid part containing "_" is ignored.');
+
+    $result = preg_replace('| +|', ' ', search_excerpt('"ipsum 0000"', $text));
+    $this->assertTrue(strpos($result, '<strong>ipsum </strong>') !== FALSE, 'Only valid part of the phrase is highlighted and invalid part "0000" is ignored.');
+
+    // Test combination of the valid keyword and keyword containing only
+    // characters which are being truncated during simplification.
+    $result = preg_replace('| +|', ' ', search_excerpt('ipsum _', $text));
+    $this->assertTrue(strpos($result, '<strong>ipsum</strong>') !== FALSE, 'Only valid keyword is highlighted and invalid keyword "_" is ignored.');
+
+    $result = preg_replace('| +|', ' ', search_excerpt('ipsum 0000', $text));
+    $this->assertTrue(strpos($result, '<strong>ipsum</strong>') !== FALSE, 'Only valid keyword is highlighted and invalid keyword "0000" is ignored.');
   }
 }
 
