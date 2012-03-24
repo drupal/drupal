@@ -456,6 +456,10 @@ function user_save($account, $edit = array()) {
           file_delete($account->original->picture);
         }
       }
+      elseif (isset($edit['picture_delete']) && $edit['picture_delete']) {
+        file_usage_delete($account->original->picture, 'user', 'user', $account->uid);
+        file_delete($account->original->picture);
+      }
       $account->picture = empty($account->picture->fid) ? 0 : $account->picture->fid;
 
       // Do not allow 'uid' to be changed.
