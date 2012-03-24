@@ -279,7 +279,7 @@ class Entity implements EntityInterface {
   /**
    * Serializes only what is necessary.
    *
-   * See @link http://www.php.net/manual/en/language.oop5.magic.php#language.oop5.magic.sleep PHP Magic Methods @endlink.
+   * See @link http://www.php.net/manual/language.oop5.magic.php#language.oop5.magic.sleep PHP Magic Methods @endlink.
    */
   public function __sleep() {
     $vars = get_object_vars($this);
@@ -292,7 +292,7 @@ class Entity implements EntityInterface {
   /**
    * Invokes setUp() on unserialization.
    *
-   * See @link http://www.php.net/manual/en/language.oop5.magic.php#language.oop5.magic.sleep PHP Magic Methods @endlink
+   * See @link http://www.php.net/manual/language.oop5.magic.php#language.oop5.magic.sleep PHP Magic Methods @endlink
    */
   public function __wakeup() {
     $this->setUp();

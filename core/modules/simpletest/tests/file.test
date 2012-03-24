@@ -2413,7 +2413,7 @@ class FileDownloadTest extends FileTestCase {
 
     // Tilde (~) is excluded from this test because it is encoded by
     // rawurlencode() in PHP 5.2 but not in PHP 5.3, as per RFC 3986.
-    // @see http://www.php.net/manual/en/function.rawurlencode.php#86506
+    // @see http://www.php.net/manual/function.rawurlencode.php#86506
     $basename = " -._!$'\"()*@[]?&+%#,;=:\n\x00" . // "Special" ASCII characters.
       "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
       "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.

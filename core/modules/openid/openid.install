@@ -95,14 +95,14 @@ function openid_requirements($phase) {
       $requirements['openid_math'] = array(
         'value' => t('Not installed'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('OpenID suggests the use of either the <a href="@gmp">GMP Math</a> (recommended for performance) or <a href="@bc">BC Math</a> libraries to enable OpenID associations.', array('@gmp' => 'http://php.net/manual/en/book.gmp.php', '@bc' => 'http://www.php.net/manual/en/book.bc.php')),
+        'description' => t('OpenID suggests the use of either the <a href="@gmp">GMP Math</a> (recommended for performance) or <a href="@bc">BC Math</a> libraries to enable OpenID associations.', array('@gmp' => 'http://php.net/manual/book.gmp.php', '@bc' => 'http://www.php.net/manual/book.bc.php')),
       );
     }
     elseif (!function_exists('gmp_add')) {
       $requirements['openid_math'] = array(
         'value' => t('Not optimized'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('OpenID suggests the use of the GMP Math library for PHP for optimal performance. Check the <a href="@url">GMP Math Library documentation</a> for installation instructions.', array('@url' => 'http://www.php.net/manual/en/book.gmp.php')),
+        'description' => t('OpenID suggests the use of the GMP Math library for PHP for optimal performance. Check the <a href="@url">GMP Math Library documentation</a> for installation instructions.', array('@url' => 'http://www.php.net/manual/book.gmp.php')),
       );
     }
     else {

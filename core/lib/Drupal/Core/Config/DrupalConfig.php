@@ -81,7 +81,7 @@ class DrupalConfig {
    * cause issues with Booleans, which are casted to "1" (TRUE) or "0" (FALSE).
    * In particular, code relying on === or !== will no longer function properly.
    *
-   * @see http://php.net/manual/en/language.operators.comparison.php.
+   * @see http://php.net/manual/language.operators.comparison.php.
    *
    * @return
    *   The data that was requested.
