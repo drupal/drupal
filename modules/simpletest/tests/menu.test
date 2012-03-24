@@ -1139,6 +1139,7 @@ class MenuBreadcrumbTestCase extends MenuWebTestCase {
     $trail += array(
       'admin/structure/menu/manage/navigation' => t('Navigation'),
     );
+    $this->assertBreadcrumb("admin/structure/menu/item/6/edit", $trail);
     $this->assertBreadcrumb('admin/structure/menu/manage/navigation/edit', $trail);
     $this->assertBreadcrumb('admin/structure/menu/manage/navigation/add', $trail);
 

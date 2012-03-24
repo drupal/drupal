@@ -260,6 +260,16 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
     // This is an add form, initialize the menu link.
     $item = array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu['menu_name'], 'weight' => 0, 'link_path' => '', 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0);
   }
+  else {
+    // Get the human-readable menu title from the given menu name.
+    $titles = menu_get_menus();
+    $current_title = $titles[$item['menu_name']];
+
+    // Get the current breadcrumb and add a link to that menu's overview page.
+    $breadcrumb = menu_get_active_breadcrumb();
+    $breadcrumb[] = l($current_title, 'admin/structure/menu/manage/' . $item['menu_name']);
+    drupal_set_breadcrumb($breadcrumb);
+  }
   $form['actions'] = array('#type' => 'actions');
   $form['link_title'] = array(
     '#type' => 'textfield',
