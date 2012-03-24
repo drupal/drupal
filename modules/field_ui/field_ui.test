@@ -172,7 +172,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     // Check all table columns.
     $table_headers = array(
       t('Label'),
-      t('Name'),
+      t('Machine name'),
       t('Field'),
       t('Widget'),
       t('Operations'),
@@ -338,7 +338,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $bundle_path1 = 'admin/structure/types/manage/' . $this->hyphen_type;
     $edit1 = array(
       'fields[_add_new_field][label]' => $this->field_label,
-      'fields[_add_new_field][field_name]' => $this->field_name,
+      'fields[_add_new_field][field_name]' => $this->field_name_input,
     );
     $this->fieldUIAddNewField($bundle_path1, $edit1);
 
@@ -426,6 +426,25 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
 
     $this->drupalGet('admin/structure/types/manage/' . $hyphen_type2 . '/fields');
   }
+
+  /**
+   * Tests that a duplicate field name is caught by validation.
+   */
+  function testDuplicateFieldName() {
+    // field_tags already exists, so we're expecting an error when trying to
+    // create a new field with the same name.
+    $edit = array(
+      'fields[_add_new_field][field_name]' => 'tags',
+      'fields[_add_new_field][label]' => $this->randomName(),
+      'fields[_add_new_field][type]' => 'taxonomy_term_reference',
+      'fields[_add_new_field][widget_type]' => 'options_select',
+    );
+    $url = 'admin/structure/types/manage/' . $this->hyphen_type . '/fields';
+    $this->drupalPost($url, $edit, t('Save'));
+
+    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
+    $this->assertUrl($url, array(), 'Stayed on the same page.');
+  }
 }
 
 /**
@@ -454,7 +473,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
     // Create a field, and a node with some data for the field.
     $edit = array(
       'fields[_add_new_field][label]' => 'Test field',
-      'fields[_add_new_field][field_name]' => 'field_test',
+      'fields[_add_new_field][field_name]' => 'test',
     );
     $this->fieldUIAddNewField($manage_fields, $edit);
 
@@ -499,7 +518,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
     // Create a field, and a node with some data for the field.
     $edit = array(
       'fields[_add_new_field][label]' => 'Test field',
-      'fields[_add_new_field][field_name]' => 'field_test',
+      'fields[_add_new_field][field_name]' => 'test',
     );
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->hyphen_type, $edit);
     // For this test, use a formatter setting value that is an integer unlikely

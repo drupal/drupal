@@ -12,6 +12,10 @@ table.field-ui-overview tr.add-new .tabledrag-changed {
 }
 table.field-ui-overview tr.add-new .description {
   margin-bottom: 0;
+  max-width: 250px;
+}
+table.field-ui-overview tr.add-new .form-type-machine-name .description {
+  white-space: normal;
 }
 table.field-ui-overview tr.add-new .add-new-placeholder {
   font-weight: bold;
@@ -28,6 +32,10 @@ table.field-ui-overview tr.region-populated {
 }
 table.field-ui-overview tr.region-add-new-title {
   display: none;
+}
+table.field-ui-overview tr.add-new td {
+  vertical-align: top;
+  white-space: nowrap;
 }
 
 /* 'Manage display' overview */
