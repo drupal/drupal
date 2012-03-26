@@ -12,7 +12,7 @@ function tracker_help($path, $arg) {
   switch ($path) {
     case 'admin/help#tracker':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Tracker module displays the most recently added and updated content on your site, and allows you to follow new content created by each user. This module has no configuration options. For more information, see the online handbook entry for <a href="@tracker">Tracker module</a>.', array('@tracker' => 'http://drupal.org/handbook/modules/tracker/')) . '</p>';
+      $output .= '<p>' . t('The Tracker module displays the most recently added and updated content on your site, and allows you to follow new content created by each user. This module has no configuration options. For more information, see the online handbook entry for <a href="@tracker">Tracker module</a>.', array('@tracker' => 'http://drupal.org/documentation/modules/tracker/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Navigation') . '</dt>';

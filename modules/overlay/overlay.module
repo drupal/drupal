@@ -13,7 +13,7 @@ function overlay_help($path, $arg) {
     case 'admin/help#overlay':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Overlay module makes the administration pages on your site display in a JavaScript overlay of the page you were viewing when you clicked the administrative link, instead of replacing the page in your browser window. Use the close link on the overlay to return to the page you were viewing when you clicked the link. For more information, see the online handbook entry for <a href="@overlay">Overlay module</a>.', array('@overlay' => 'http://drupal.org/handbook/modules/overlay')) . '</p>';
+      $output .= '<p>' . t('The Overlay module makes the administration pages on your site display in a JavaScript overlay of the page you were viewing when you clicked the administrative link, instead of replacing the page in your browser window. Use the close link on the overlay to return to the page you were viewing when you clicked the link. For more information, see the online handbook entry for <a href="@overlay">Overlay module</a>.', array('@overlay' => 'http://drupal.org/documentation/modules/overlay')) . '</p>';
       return $output;
   }
 }
@@ -202,7 +202,7 @@ function overlay_library() {
   // Overlay parent.
   $libraries['parent'] = array(
     'title' => 'Overlay: Parent',
-    'website' => 'http://drupal.org/handbook/modules/overlay',
+    'website' => 'http://drupal.org/documentation/modules/overlay',
     'version' => '1.0',
     'js' => array(
       $module_path . '/overlay-parent.js' => array(),
@@ -218,7 +218,7 @@ function overlay_library() {
   // Overlay child.
   $libraries['child'] = array(
     'title' => 'Overlay: Child',
-    'website' => 'http://drupal.org/handbook/modules/overlay',
+    'website' => 'http://drupal.org/documentation/modules/overlay',
     'version' => '1.0',
     'js' => array(
       $module_path . '/overlay-child.js' => array(),

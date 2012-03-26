@@ -55,7 +55,7 @@ class HelpTestCase extends DrupalWebTestCase {
     $this->assertRaw(drupal_get_path('module', 'help') . '/help.css', t('The help.css file is present in the HTML.'));
 
     // Verify that introductory help text exists, goes for 100% module coverage.
-    $this->assertRaw(t('For more information, refer to the specific topics listed in the next section or to the <a href="@drupal">online Drupal handbooks</a>.', array('@drupal' => 'http://drupal.org/handbooks')), 'Help intro text correctly appears.');
+    $this->assertRaw(t('For more information, refer to the specific topics listed in the next section or to the <a href="@drupal">online Drupal handbooks</a>.', array('@drupal' => 'http://drupal.org/documentation')), 'Help intro text correctly appears.');
 
     // Verify that help topics text appears.
     $this->assertRaw('<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>', t('Help topics text correctly appears.'));

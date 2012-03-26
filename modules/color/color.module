@@ -11,7 +11,7 @@ function color_help($path, $arg) {
   switch ($path) {
     case 'admin/help#color':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Color module allows users with the <em>Administer site configuration</em> permission to quickly and easily change the color scheme of themes that have been built to be compatible with it. For more information, see the online handbook entry for <a href="@color">Color module</a>.', array('@color' => 'http://drupal.org/handbook/modules/color')) . '</p>';
+      $output .= '<p>' . t('The Color module allows users with the <em>Administer site configuration</em> permission to quickly and easily change the color scheme of themes that have been built to be compatible with it. For more information, see the online handbook entry for <a href="@color">Color module</a>.', array('@color' => 'http://drupal.org/documentation/modules/color')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Changing colors') . '</dt>';

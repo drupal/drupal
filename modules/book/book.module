@@ -12,7 +12,7 @@ function book_help($path, $arg) {
   switch ($path) {
     case 'admin/help#book':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Book module is used for creating structured, multi-page content, such as site resource guides, manuals, and wikis. It allows you to create content that has chapters, sections, subsections, or any similarly-tiered structure. For more information, see the online handbook entry for <a href="@book">Book module</a>.', array('@book' => 'http://drupal.org/handbook/modules/book/')) . '</p>';
+      $output .= '<p>' . t('The Book module is used for creating structured, multi-page content, such as site resource guides, manuals, and wikis. It allows you to create content that has chapters, sections, subsections, or any similarly-tiered structure. For more information, see the online handbook entry for <a href="@book">Book module</a>.', array('@book' => 'http://drupal.org/documentation/modules/book/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Adding and managing book content') . '</dt>';

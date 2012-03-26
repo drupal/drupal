@@ -12,7 +12,7 @@ function field_ui_help($path, $arg) {
     case 'admin/help#field_ui':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Field UI module provides an administrative user interface (UI) for attaching and managing fields. Fields can be defined at the content-type level for content items and comments, at the vocabulary level for taxonomy terms, and at the site level for user accounts. Other modules may also enable fields to be defined for their data. Field types (text, image, number, etc.) are defined by modules, and collected and managed by the <a href="@field">Field module</a>. For more information, see the online handbook entry for <a href="@field_ui" target="_blank">Field UI module</a>.', array('@field' => url('admin/help/field'), '@field_ui' => 'http://drupal.org/handbook/modules/field-ui')) . '</p>';
+      $output .= '<p>' . t('The Field UI module provides an administrative user interface (UI) for attaching and managing fields. Fields can be defined at the content-type level for content items and comments, at the vocabulary level for taxonomy terms, and at the site level for user accounts. Other modules may also enable fields to be defined for their data. Field types (text, image, number, etc.) are defined by modules, and collected and managed by the <a href="@field">Field module</a>. For more information, see the online handbook entry for <a href="@field_ui" target="_blank">Field UI module</a>.', array('@field' => url('admin/help/field'), '@field_ui' => 'http://drupal.org/documentation/modules/field-ui')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Planning fields') . '</dt>';

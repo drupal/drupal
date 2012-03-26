@@ -26,7 +26,7 @@ function trigger_help($path, $arg) {
   if ($path == 'admin/help#trigger') {
     $output = '';
     $output .= '<h3>' . t('About') . '</h3>';
-    $output .= '<p>' . t('The Trigger module provides the ability to cause <em>actions</em> to run when certain <em>triggers</em> take place on your site. Triggers are events, such as new content being added to your site or a user logging in, and actions are tasks, such as unpublishing content or e-mailing an administrator. For more information, see the online handbook entry for <a href="@trigger">Trigger module</a>.', array('@trigger' => 'http://drupal.org/handbook/modules/trigger/')) . '</p>';
+    $output .= '<p>' . t('The Trigger module provides the ability to cause <em>actions</em> to run when certain <em>triggers</em> take place on your site. Triggers are events, such as new content being added to your site or a user logging in, and actions are tasks, such as unpublishing content or e-mailing an administrator. For more information, see the online handbook entry for <a href="@trigger">Trigger module</a>.', array('@trigger' => 'http://drupal.org/documentation/modules/trigger/')) . '</p>';
     $output .= '<h3>' . t('Uses') . '</h3>';
     $output .= '<dl>';
     $output .= '<dt>' . t('Configuring triggers and actions') . '</dt>';

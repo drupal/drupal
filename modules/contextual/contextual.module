@@ -13,7 +13,7 @@ function contextual_help($path, $arg) {
     case 'admin/help#contextual':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Contextual links module displays links related to regions of pages on your site to users with <em>access contextual links</em> permission. For more information, see the online handbook entry for <a href="@contextual">Contextual links module</a>.', array('@contextual' => 'http://drupal.org/handbook/modules/contextual')) . '</p>';
+      $output .= '<p>' . t('The Contextual links module displays links related to regions of pages on your site to users with <em>access contextual links</em> permission. For more information, see the online handbook entry for <a href="@contextual">Contextual links module</a>.', array('@contextual' => 'http://drupal.org/documentation/modules/contextual')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Displaying contextual links') . '</dt>';

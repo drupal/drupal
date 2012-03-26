@@ -33,7 +33,7 @@ function profile_help($path, $arg) {
     case 'admin/help#profile':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Profile module allows site administrators to define custom fields (such as country, full name, or age) for user profiles, which are then displayed in the <a href="@user">My Account</a> section. This permits users of a site to share more information about themselves, and can help community-based sites organize users around specific information. For more information, see the online handbook entry for <a href="@profile">Profile module</a>.', array('@user' => url('user'), '@profile' => 'http://drupal.org/handbook/modules/profile/')) . '</p>';
+      $output .= '<p>' . t('The Profile module allows site administrators to define custom fields (such as country, full name, or age) for user profiles, which are then displayed in the <a href="@user">My Account</a> section. This permits users of a site to share more information about themselves, and can help community-based sites organize users around specific information. For more information, see the online handbook entry for <a href="@profile">Profile module</a>.', array('@user' => url('user'), '@profile' => 'http://drupal.org/documentation/modules/profile/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Adding fields to the default profile') . '</dt>';
