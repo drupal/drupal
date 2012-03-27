@@ -291,7 +291,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
             $class_name = $this->fetchOptions['class'];
           }
           if (count($this->fetchOptions['constructor_args'])) {
-            $reflector = new ReflectionClass($class_name);
+            $reflector = new \ReflectionClass($class_name);
             $result = $reflector->newInstanceArgs($this->fetchOptions['constructor_args']);
           }
           else {
