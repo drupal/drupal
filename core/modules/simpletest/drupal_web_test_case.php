@@ -2266,6 +2266,7 @@ class DrupalWebTestCase extends DrupalTestCase {
           case 'hidden':
           case 'password':
           case 'email':
+          case 'search':
             $post[$name] = $edit[$name];
             unset($edit[$name]);
             break;

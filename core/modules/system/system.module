@@ -394,6 +394,15 @@ function system_element_info() {
     '#theme' => 'url',
     '#theme_wrappers' => array('form_element'),
   );
+  $types['search'] = array(
+    '#input' => TRUE,
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#autocomplete_path' => FALSE,
+    '#process' => array('ajax_process_form'),
+    '#theme' => 'search',
+    '#theme_wrappers' => array('form_element'),
+  );
   $types['machine_name'] = array(
     '#input' => TRUE,
     '#default_value' => NULL,

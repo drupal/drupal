@@ -196,7 +196,7 @@ function locale_translation_filter_form() {
     // Special case for 'string' filter.
     if ($key == 'string') {
       $form['filters']['status']['string'] = array(
-        '#type' => 'textfield',
+        '#type' => 'search',
         '#title' => $filter['title'],
         '#description' => $filter['description'],
       );

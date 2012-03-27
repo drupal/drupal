@@ -991,7 +991,7 @@ function search_form($form, &$form_state, $action = '', $keys = '', $module = NU
   $form['module'] = array('#type' => 'value', '#value' => $module);
   $form['basic'] = array('#type' => 'container', '#attributes' => array('class' => array('container-inline')));
   $form['basic']['keys'] = array(
-    '#type' => 'textfield',
+    '#type' => 'search',
     '#title' => $prompt,
     '#default_value' => $keys,
     '#size' => $prompt ? 40 : 20,
@@ -1013,7 +1013,7 @@ function search_form($form, &$form_state, $action = '', $keys = '', $module = NU
  */
 function search_box($form, &$form_state, $form_id) {
   $form[$form_id] = array(
-    '#type' => 'textfield',
+    '#type' => 'search',
     '#title' => t('Search'),
     '#title_display' => 'invisible',
     '#size' => 15,

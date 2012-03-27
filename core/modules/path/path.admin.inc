@@ -267,7 +267,7 @@ function path_admin_filter_form($form, &$form_state, $keys = '') {
     '#attributes' => array('class' => array('container-inline')),
   );
   $form['basic']['filter'] = array(
-    '#type' => 'textfield',
+    '#type' => 'search',
     '#title' => 'Path alias',
     '#title_display' => 'invisible',
     '#default_value' => $keys,

@@ -6984,6 +6984,9 @@ function drupal_common_theme() {
     'textarea' => array(
       'render element' => 'element',
     ),
+    'search' => array(
+      'render element' => 'element',
+    ),
     'password' => array(
       'render element' => 'element',
     ),
