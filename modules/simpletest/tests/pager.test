@@ -51,7 +51,7 @@ class PagerFunctionalWebTestCase extends DrupalWebTestCase {
     $elements = $this->xpath('//li[contains(@class, :class)]/a', array(':class' => 'pager-last'));
     preg_match('@page=(\d+)@', $elements[0]['href'], $matches);
     $current_page = (int) $matches[1];
-    $this->drupalGet($GLOBALS['base_url'] . $elements[0]['href'], array('external' => TRUE));
+    $this->drupalGet($GLOBALS['base_root'] . $elements[0]['href'], array('external' => TRUE));
     $this->assertPagerItems($current_page);
   }
 
