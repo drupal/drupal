@@ -3102,10 +3102,10 @@ function menu_link_save(&$item, $existing_item = array(), $parent_candidates = a
   }
   // If every value in $existing_item is the same in the $item, there is no
   // reason to run the update queries or clear the caches. We use
-  // array_intersect_assoc() with the $item as the first parameter because
+  // array_intersect_key() with the $item as the first parameter because
   // $item may have additional keys left over from building a router entry.
   // The intersect removes the extra keys, allowing a meaningful comparison.
-  if (!$existing_item || (array_intersect_assoc($item, $existing_item)) != $existing_item) {
+  if (!$existing_item || (array_intersect_key($item, $existing_item)) != $existing_item) {
     db_update('menu_links')
       ->fields(array(
         'menu_name' => $item['menu_name'],
