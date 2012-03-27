@@ -333,7 +333,7 @@ function system_element_info() {
     '#button_type' => 'submit',
     '#executes_submit_callback' => TRUE,
     '#limit_validation_errors' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('form_process_button', 'ajax_process_form'),
     '#theme_wrappers' => array('button'),
   );
   $types['button'] = array(
@@ -342,7 +342,7 @@ function system_element_info() {
     '#button_type' => 'submit',
     '#executes_submit_callback' => FALSE,
     '#limit_validation_errors' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('form_process_button', 'ajax_process_form'),
     '#theme_wrappers' => array('button'),
   );
   $types['image_button'] = array(
@@ -350,7 +350,7 @@ function system_element_info() {
     '#button_type' => 'submit',
     '#executes_submit_callback' => TRUE,
     '#limit_validation_errors' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('form_process_button', 'ajax_process_form'),
     '#return_value' => TRUE,
     '#has_garbage_value' => TRUE,
     '#src' => NULL,

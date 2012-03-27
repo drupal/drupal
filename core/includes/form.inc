@@ -3105,6 +3105,19 @@ function form_pre_render_conditional_form_element($element) {
 }
 
 /**
+ * Processes a form button element.
+ */
+function form_process_button($element, $form_state) {
+  // If this is a button intentionally allowing incomplete form submission
+  // (e.g., a "Previous" or "Add another item" button), then also skip
+  // client-side validation.
+  if (isset($element['#limit_validation_errors']) && $element['#limit_validation_errors'] !== FALSE) {
+    $element['#attributes']['formnovalidate'] = 'formnovalidate';
+  }
+  return $element;
+}
+
+/**
  * Sets the #checked property of a checkbox element.
  */
 function form_process_checkbox($element, $form_state) {
@@ -4312,6 +4325,10 @@ function _form_set_class(&$element, $class = array()) {
   // form_builder().
   if (!empty($element['#required'])) {
     $element['#attributes']['class'][] = 'required';
+    // @todo Rename the _form_set_class() function to reflect that we're setting
+    //   non-class attributes too.
+    $element['#attributes']['required'] = 'required';
+    $element['#attributes']['aria-required'] = 'true';
   }
   if (isset($element['#parents']) && form_get_error($element)) {
     $element['#attributes']['class'][] = 'error';

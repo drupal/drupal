@@ -451,6 +451,29 @@ class FormsTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, array('checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE), t('Submit'));
     $this->assertText('An illegal choice has been detected.', t('Input forgery was detected.'));
   }
+
+  /**
+   * Tests required attribute.
+   */
+  function testRequiredAttribute() {
+    $this->drupalGet('form-test/required-attribute');
+    $expected = 'required';
+    // Test to make sure the elements have the proper required attribute.
+    foreach (array('textfield', 'password') as $type) {
+      $element = $this->xpath('//input[@id=:id and @required=:expected]', array(
+        ':id' => 'edit-' . $type,
+        ':expected' => $expected,
+      ));
+      $this->assertTrue(!empty($element), t('The @type has the proper required attribute.', array('@type' => $type)));
+    }
+
+    // Test to make sure textarea has the proper required attribute.
+    $element = $this->xpath('//textarea[@id=:id and @required=:expected]', array(
+      ':id' => 'edit-textarea',
+      ':expected' => $expected,
+    ));
+    $this->assertTrue(!empty($element), t('The textarea has the proper required attribute.'));
+  }
 }
 
 /**
@@ -632,6 +655,25 @@ class FormValidationTestCase extends DrupalWebTestCase {
       'test_substring[foo]' => 'invalid',
     );
     $path = 'form-test/limit-validation-errors';
+
+    // Render the form, and verify that the buttons with limited server-side
+    // validation have the proper 'formnovalidate' attribute (to prevent
+    // client-side validation by the browser).
+    $this->drupalGet($path);
+    $expected = 'formnovalidate';
+    foreach (array('partial', 'partial-numeric-index', 'substring') as $type) {
+      $element = $this->xpath('//input[@id=:id and @formnovalidate=:expected]', array(
+        ':id' => 'edit-' . $type,
+        ':expected' => $expected,
+      ));
+      $this->assertTrue(!empty($element), t('The @type button has the proper formnovalidate attribute.', array('@type' => $type)));
+    }
+    // The button with full server-side validation should not have the
+    // 'formnovalidate' attribute.
+    $element = $this->xpath('//input[@id=:id and not(@formnovalidate)]', array(
+      ':id' => 'edit-full',
+    ));
+    $this->assertTrue(!empty($element), t('The button with full server-side validation does not have the formnovalidate attribute.'));
 
     // Submit the form by pressing the 'Partial validate' button (uses
     // #limit_validation_errors) and ensure that the title field is not
