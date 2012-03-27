@@ -5,6 +5,8 @@
  * Displays the Drupal administration interface in an overlay.
  */
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Implements hook_help().
  */
@@ -19,7 +21,7 @@ function overlay_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
+ * Implements hook_menu()
  */
 function overlay_menu() {
   $items['overlay-ajax/%'] = array(
@@ -975,5 +977,5 @@ function overlay_trigger_refresh() {
  * @see Drupal.overlay.refreshRegions()
  */
 function overlay_ajax_render_region($region) {
-  print overlay_render_region($region);
+  return new Response(overlay_render_region($region));
 }
