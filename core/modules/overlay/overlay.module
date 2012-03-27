@@ -975,5 +975,5 @@ function overlay_trigger_refresh() {
  * @see Drupal.overlay.refreshRegions()
  */
 function overlay_ajax_render_region($region) {
-  return overlay_render_region($region);
+  print overlay_render_region($region);
 }
