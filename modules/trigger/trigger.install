@@ -55,9 +55,15 @@ function trigger_install() {
 }
 
 /**
- * Adds operation names to the hook names and drops the "op" field.
+ * Alter the "hook" field and drop the "op field" of {trigger_assignments}.
+ *
+ * Increase the length of the "hook" field to 78 characters and adds operation
+ * names to the hook names, and drops the "op" field.
  */
 function trigger_update_7000() {
+  db_drop_primary_key('trigger_assignments');
+  db_change_field('trigger_assignments', 'hook', 'hook', array('type' => 'varchar', 'length' => 78, 'not null' => TRUE, 'default' => '', 'description' => 'Primary Key: The name of the internal Drupal hook; for example, node_insert.'));
+
   $result = db_query("SELECT hook, op, aid FROM {trigger_assignments} WHERE op <> ''");
 
   foreach ($result as $record) {
@@ -69,10 +75,15 @@ function trigger_update_7000() {
       ->execute();
   }
   db_drop_field('trigger_assignments', 'op');
+
+  db_add_primary_key('trigger_assignments', array('hook', 'aid'));
 }
 
 /**
- * Increase length of hook name field to 78 characters.
+ * Increase the length of the "hook" field to 78 characters.
+ *
+ * This is a separate function for those who ran an older version of
+ * trigger_update_7000() that did not do this.
  */
 function trigger_update_7001() {
   db_drop_primary_key('trigger_assignments');
