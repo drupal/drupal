@@ -93,6 +93,7 @@ function trigger_unassign_submit($form, &$form_state) {
       ->condition('hook', $form_state['values']['hook'])
       ->condition('aid', $aid)
       ->execute();
+    drupal_static_reset('trigger_get_assigned_actions');
     $actions = actions_get_all_actions();
     watchdog('actions', 'Action %action has been unassigned.',  array('%action' => $actions[$aid]['label']));
     drupal_set_message(t('Action %action has been unassigned.', array('%action' => $actions[$aid]['label'])));
@@ -280,6 +281,7 @@ function trigger_assign_form_submit($form, &$form_state) {
       }
     }
   }
+  drupal_static_reset('trigger_get_assigned_actions');
 }
 
 /**

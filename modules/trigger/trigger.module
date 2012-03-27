@@ -164,9 +164,13 @@ function trigger_trigger_info() {
  *   label.
  */
 function trigger_get_assigned_actions($hook) {
-  return db_query("SELECT ta.aid, a.type, a.label FROM {trigger_assignments} ta LEFT JOIN {actions} a ON ta.aid = a.aid WHERE ta.hook = :hook ORDER BY ta.weight", array(
-    ':hook' => $hook,
-  ))->fetchAllAssoc( 'aid', PDO::FETCH_ASSOC);
+  $actions = &drupal_static(__FUNCTION__, array());
+  if (!isset($actions[$hook])) {
+    $actions[$hook] = db_query("SELECT ta.aid, a.type, a.label FROM {trigger_assignments} ta LEFT JOIN {actions} a ON ta.aid = a.aid WHERE ta.hook = :hook ORDER BY ta.weight", array(
+      ':hook' => $hook,
+    ))->fetchAllAssoc('aid', PDO::FETCH_ASSOC);
+  }
+  return $actions[$hook];
 }
 
 /**
@@ -602,6 +606,7 @@ function trigger_actions_delete($aid) {
   db_delete('trigger_assignments')
     ->condition('aid', $aid)
     ->execute();
+  drupal_static_reset('trigger_get_assigned_actions');
 }
 
 /**
