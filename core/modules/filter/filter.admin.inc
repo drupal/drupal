@@ -121,7 +121,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
   $form['#format'] = $format;
   $form['#tree'] = TRUE;
   $form['#attached']['js'][] = drupal_get_path('module', 'filter') . '/filter.admin.js';
-  $form['#attached']['css'][] = drupal_get_path('module', 'filter') . '/filter.css';
+  $form['#attached']['css'][] = drupal_get_path('module', 'filter') . '/filter.admin.css';
 
   $form['name'] = array(
     '#type' => 'textfield',
