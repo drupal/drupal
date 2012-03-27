@@ -1,0 +1,34 @@
+
+/**
+ * @file
+ * Generic base styles for shortcut module.
+ */
+
+/**
+ * Toolbar.
+ */
+#edit-shortcuts {
+  float: right; /* LTR */
+}
+#shortcut-toolbar ul {
+  float: left; /* LTR */
+}
+#shortcut-toolbar .icon {
+  float: left; /* LTR */
+}
+
+/**
+ * Add/remove links.
+ */
+.add-or-remove-shortcuts .icon {
+  display: block;
+  float: left; /* LTR */
+}
+.add-or-remove-shortcuts .text {
+  display: none;
+  float: left; /* LTR */
+}
+.add-or-remove-shortcuts a:focus .text,
+.add-or-remove-shortcuts a:hover .text {
+  display: block;
+}

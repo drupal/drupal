@@ -1,0 +1,28 @@
+
+/**
+ * @file
+ * Generic RTL base styles for shortcut module.
+ */
+
+/**
+ * Toolbar.
+ */
+#edit-shortcuts {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+#shortcut-toolbar ul {
+  float: none;
+}
+#shortcut-toolbar .icon {
+  float: right;
+}
+
+/**
+ * Add/remove links.
+ */
+.add-or-remove-shortcuts .icon,
+.add-or-remove-shortcuts .text {
+  float: right;
+}
