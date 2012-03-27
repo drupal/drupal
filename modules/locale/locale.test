@@ -694,6 +694,136 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
 }
 
 /**
+ * Tests plural index computation functionality.
+ */
+class LocalePluralFormatTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Plural formula evaluation',
+      'description' => 'Tests plural formula evaluation for various languages.',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale', 'locale_test');
+
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
+    $this->drupalLogin($admin_user);
+
+    // Import some .po files with formulas to set up the environment.
+    // These will also add the languages to the system and enable them.
+    $this->importPoFile($this->getPoFileWithSimplePlural(), array(
+      'langcode' => 'fr',
+    ));
+    $this->importPoFile($this->getPoFileWithComplexPlural(), array(
+      'langcode' => 'hr',
+    ));
+  }
+
+  /**
+   * Tests locale_get_plural() functionality.
+   */
+  function testGetPluralFormat() {
+    $this->drupalGet('locale_test_plural_format_page');
+    $tests = _locale_test_plural_format_tests();
+    $result = array();
+    foreach ($tests as $test) {
+      $this->assertPluralFormat($test['count'], $test['language'], $test['expected-result']);
+    }
+  }
+
+  /**
+   * Helper assert to test locale_get_plural page.
+   *
+   * @param $count
+   *  Number for testing.
+   * @param $lang
+   *  Language for testing
+   * @param $expected_result
+   *   Expected result.
+   * @param $message
+   */
+  function assertPluralFormat($count, $lang, $expected_result) {
+    $message_param =  array(
+      '@lang' => $lang,
+      '@count' => $count,
+      '@expected_result' => $expected_result,
+    );
+    $message = t("Computed plural index for '@lang' with count @count is @expected_result.", $message_param);
+
+    $message_param = array(
+      '@lang' => $lang,
+      '@expected_result' => $expected_result,
+    );
+    $this->assertText(format_string('Language: @lang, locale_get_plural: @expected_result.', $message_param, $message));
+  }
+
+  /**
+   * Imports a standalone .po file in a given language.
+   *
+   * @param $contents
+   *   Contents of the .po file to import.
+   * @param $options
+   *   Additional options to pass to the translation import form.
+   */
+  function importPoFile($contents, array $options = array()) {
+    $name = tempnam('temporary://', "po_") . '.po';
+    file_put_contents($name, $contents);
+    $options['files[file]'] = $name;
+    $this->drupalPost('admin/config/regional/translate/import', $options, t('Import'));
+    drupal_unlink($name);
+  }
+
+  /**
+   * Returns a .po file with a simple plural formula.
+   */
+  function getPoFileWithSimplePlural() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 7\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\\n"
+
+msgid "One sheep"
+msgid_plural "@count sheep"
+msgstr[0] "un mouton"
+msgstr[1] "@count moutons"
+
+msgid "Monday"
+msgstr "lundi"
+EOF;
+  }
+
+  /**
+   * Returns a .po file with a complex plural formula.
+   */
+  function getPoFileWithComplexPlural() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 7\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\\n"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "@count sat"
+msgstr[1] "@count sata"
+msgstr[2] "@count sati"
+
+msgid "Monday"
+msgstr "Ponedjeljak"
+EOF;
+  }
+}
+
+/**
  * Functional tests for the import of translation files.
  */
 class LocaleImportFunctionalTest extends DrupalWebTestCase {
@@ -2835,3 +2965,4 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     }
   }
 }
+

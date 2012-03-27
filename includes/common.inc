@@ -1734,7 +1734,8 @@ function format_plural($count, $singular, $plural, array $args = array(), array 
 
   // Get the plural index through the gettext formula.
   $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, isset($options['langcode']) ? $options['langcode'] : NULL) : -1;
-  // Backwards compatibility.
+  // If the index cannot be computed, use the plural as a fallback (which
+  // allows for most flexiblity with the replaceable @count value).
   if ($index < 0) {
     return t($plural, $args, $options);
   }

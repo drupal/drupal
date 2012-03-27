@@ -737,30 +737,51 @@ function locale_reset() {
  * @param $langcode
  *   Optional language code to translate to a language other than
  *   what is used to display the page.
+ *
+ * @return
+ *   The numeric index of the plural variant to use for this $langcode and
+ *   $count combination or -1 if the language was not found or does not have a
+ *   plural formula.
  */
 function locale_get_plural($count, $langcode = NULL) {
   global $language;
-  $locale_formula = &drupal_static(__FUNCTION__, array());
-  $plurals = &drupal_static(__FUNCTION__ . ':plurals', array());
+
+  // Used to locally cache the plural formulas for all languages.
+  $plural_formulas = &drupal_static(__FUNCTION__, array());
+
+  // Used to store precomputed plural indexes corresponding to numbers
+  // individually for each language.
+  $plural_indexes = &drupal_static(__FUNCTION__ . ':plurals', array());
 
   $langcode = $langcode ? $langcode : $language->language;
 
-  if (!isset($plurals[$langcode][$count])) {
-    if (empty($locale_formula)) {
+  if (!isset($plural_indexes[$langcode][$count])) {
+    // Retrieve and statically cache the plural formulas for all languages.
+    if (empty($plural_formulas)) {
       $language_list = language_list();
-      $locale_formula[$langcode] = $language_list[$langcode]->formula;
+      foreach ($language_list as $langcode => $lang) {
+        $plural_formulas[$langcode] = $lang->formula;
+      }
     }
-    if ($locale_formula[$langcode]) {
+    // If there is a plural formula for the language, evaluate it for the given
+    // $count and statically cache the result for the combination of language
+    // and count, since the result will always be identical.
+    if (!empty($plural_formulas[$langcode])) {
+      // $n is used inside the expression in the eval().
       $n = $count;
-      $plurals[$langcode][$count] = @eval('return intval(' . $locale_formula[$langcode] . ');');
-      return $plurals[$langcode][$count];
+      $plural_indexes[$langcode][$count] = @eval('return intval(' . $plural_formulas[$langcode] . ');');
     }
+    // In case there is no plural formula for English (no imported translation
+    // for English), use a default formula.
+    elseif ($langcode == 'en') {
+      $plural_indexes[$langcode][$count] = (int) ($count != 1);
+    }
+    // Otherwise, return -1 (unknown).
     else {
-      $plurals[$langcode][$count] = -1;
-      return -1;
+      $plural_indexes[$langcode][$count] = -1;
     }
   }
-  return $plurals[$langcode][$count];
+  return $plural_indexes[$langcode][$count];
 }
 
 

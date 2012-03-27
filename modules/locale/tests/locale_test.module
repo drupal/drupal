@@ -55,6 +55,22 @@ function locale_test_language_types_info() {
 }
 
 /**
+ * Implements hook_menu().
+ *
+ * @return array
+ */
+function locale_test_menu() {
+  $items = array();
+  $items['locale_test_plural_format_page'] = array(
+    'page callback' => 'locale_test_plural_format_page',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
  * Implements hook_language_types_info_alter().
  */
 function locale_test_language_types_info_alter(array &$language_types) {
@@ -115,4 +131,112 @@ function locale_test_store_language_negotiation() {
  */
 function locale_test_language_provider($languages) {
   return 'it';
+}
+
+/**
+ * Returns markup for locale_get_plural testing.
+ *
+ * @return array
+ */
+function locale_test_plural_format_page() {
+  $tests = _locale_test_plural_format_tests();
+  $result = array();
+  foreach ($tests as $test) {
+    $string_param = array(
+      '@lang' => $test['language'],
+      '@locale_get_plural' => locale_get_plural($test['count'], $test['language'])
+    );
+    $result[] = array(
+      '#prefix' => '<br/>',
+      '#markup' => format_string('Language: @lang, locale_get_plural: @locale_get_plural.', $string_param),
+    );
+  }
+  return $result;
+}
+
+/**
+ * Helper function with list of test cases
+ *
+ * @return array
+ */
+function _locale_test_plural_format_tests() {
+  return array(
+    // Test data for English (no formula present).
+    array(
+      'count' => 1,
+      'language' => 'en',
+      'expected-result' => 0,
+    ),
+    array(
+      'count' => 0,
+      'language' => 'en',
+      'expected-result' => 1,
+    ),
+    array(
+      'count' => 5,
+      'language' => 'en',
+      'expected-result' => 1,
+    ),
+
+    // Test data for French (simpler formula).
+    array(
+      'count' => 1,
+      'language' => 'fr',
+      'expected-result' => 0,
+    ),
+    array(
+      'count' => 0,
+      'language' => 'fr',
+      'expected-result' => 1,
+    ),
+    array(
+      'count' => 5,
+      'language' => 'fr',
+      'expected-result' => 1,
+    ),
+
+    // Test data for Croatian (more complex formula).
+    array(
+      'count' => 1,
+      'language' => 'hr',
+      'expected-result' => 0,
+    ),
+    array(
+      'count' => 21,
+      'language' => 'hr',
+      'expected-result' => 0,
+    ),
+    array(
+      'count' => 0,
+      'language' => 'hr',
+      'expected-result' => 2,
+    ),
+    array(
+      'count' => 2,
+      'language' => 'hr',
+      'expected-result' => 1,
+    ),
+    array(
+      'count' => 8,
+      'language' => 'hr',
+      'expected-result' => 2,
+    ),
+
+    // Test data for Hungarian (nonexistent language).
+    array(
+      'count' => 1,
+      'language' => 'hu',
+      'expected-result' => -1,
+    ),
+    array(
+      'count' => 21,
+      'language' => 'hu',
+      'expected-result' => -1,
+    ),
+    array(
+      'count' => 0,
+      'language' => 'hu',
+      'expected-result' => -1,
+    ),
+  );
 }
