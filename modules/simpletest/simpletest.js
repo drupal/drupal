@@ -14,7 +14,7 @@ Drupal.behaviors.simpleTestMenuCollapse = {
 
     // Adds group toggling functionality to arrow images.
     $('div.simpletest-image').click(function () {
-      var trs = $(this).parents('tbody').children('.' + settings.simpleTest[this.id].testClass);
+      var trs = $(this).closest('tbody').children('.' + settings.simpleTest[this.id].testClass);
       var direction = settings.simpleTest[this.id].imageDirection;
       var row = direction ? trs.length - 1 : 0;
 

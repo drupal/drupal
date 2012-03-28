@@ -28,7 +28,7 @@ Drupal.fieldUIFieldOverview = {
 
     // 'Field type' select updates its 'Widget' select.
     $('.field-type-select', table).each(function () {
-      this.targetSelect = $('.widget-type-select', $(this).parents('tr').eq(0));
+      this.targetSelect = $('.widget-type-select', $(this).closest('tr'));
 
       $(this).bind('change keyup', function () {
         var selectedFieldType = this.options[this.selectedIndex].value;
@@ -43,8 +43,8 @@ Drupal.fieldUIFieldOverview = {
 
     // 'Existing field' select updates its 'Widget' select and 'Label' textfield.
     $('.field-select', table).each(function () {
-      this.targetSelect = $('.widget-type-select', $(this).parents('tr').eq(0));
-      this.targetTextfield = $('.label-textfield', $(this).parents('tr').eq(0));
+      this.targetSelect = $('.widget-type-select', $(this).closest('tr'));
+      this.targetTextfield = $('.label-textfield', $(this).closest('tr'));
       this.targetTextfield
         .data('field_ui_edited', false)
         .bind('keyup', function (e) {
@@ -140,7 +140,7 @@ Drupal.fieldUIOverview = {
    */
   onChange: function () {
     var $trigger = $(this);
-    var row = $trigger.parents('tr:first').get(0);
+    var row = $trigger.closest('tr').get(0);
     var rowHandler = $(row).data('fieldUIRowHandler');
 
     var refreshRows = {};

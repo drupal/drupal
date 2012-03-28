@@ -113,7 +113,7 @@ Drupal.behaviors.blockDrag = {
     $('select.block-region-select', context).once('block-region-select', function () {
       $(this).change(function (event) {
         // Make our new row and select field.
-        var row = $(this).parents('tr:first');
+        var row = $(this).closest('tr');
         var select = $(this);
         tableDrag.rowObject = new tableDrag.row(row);
 
