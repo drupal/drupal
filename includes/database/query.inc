@@ -1898,7 +1898,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
   function __clone() {
     $this->changed = TRUE;
     foreach ($this->conditions as $key => $condition) {
-      if ($condition['field'] instanceOf QueryConditionInterface) {
+      if (is_array($condition) && array_key_exists('feild',$condition) && $condition['field'] instanceOf QueryConditionInterface) {
         $this->conditions[$key]['field'] = clone($condition['field']);
       }
     }
