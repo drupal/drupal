@@ -102,7 +102,7 @@ class MongoDbProfilerStorage implements ProfilerStorageInterface
             'time' => $profile->getTime()
         );
 
-        return $this->getMongo()->insert(array_filter($record, function ($v) { return !empty($v); }));
+        return $this->getMongo()->update(array('_id' => $profile->getToken()), array_filter($record, function ($v) { return !empty($v); }), array('upsert' => true));
     }
 
     /**
@@ -119,7 +119,7 @@ class MongoDbProfilerStorage implements ProfilerStorageInterface
                 $collection = $matches[3];
                 $this->mongo = $mongo->selectCollection($database, $collection);
             } else {
-                throw new \RuntimeException('Please check your configuration. You are trying to use MongoDB with an invalid dsn. "'.$this->dsn.'"');
+                throw new \RuntimeException(sprintf('Please check your configuration. You are trying to use MongoDB with an invalid dsn "%s". The expected format is "mongodb://user:pass@location/database/collection"', $this->dsn));
             }
         }
 

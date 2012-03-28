@@ -21,5 +21,10 @@
     "autoload": {
         "psr-0": { "Symfony\\Component\\ClassLoader": "" }
     },
-    "target-dir": "Symfony/Component/ClassLoader"
+    "target-dir": "Symfony/Component/ClassLoader",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
+    }
 }
