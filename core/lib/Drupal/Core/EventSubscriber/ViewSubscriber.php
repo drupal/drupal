@@ -37,6 +37,27 @@ class ViewSubscriber implements EventSubscriberInterface {
     return $response;
   }
 
+  protected function createAjaxResponse(GetResponseEvent $event) {
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/json; charset=utf-8');
+
+    return $response;
+  }
+
+  protected function createIframeUploadResponse(GetResponseEvent $event) {
+    $response = new Response();
+
+    // Browsers do not allow JavaScript to read the contents of a user's local
+    // files. To work around that, the jQuery Form plugin submits forms containing
+    // a file input element to an IFRAME, instead of using XHR. Browsers do not
+    // normally expect JSON strings as content within an IFRAME, so the response
+    // must be customized accordingly.
+    // @see http://malsup.com/jquery/form/#file-upload
+    // @see Drupal.ajax.prototype.beforeSend()
+    $response->headers->set('Content-Type', 'text/html; charset=utf-8');
+
+    return $response;
+  }
 
   /**
    * Processes a successful controller into an HTTP 200 response.
@@ -71,6 +92,42 @@ class ViewSubscriber implements EventSubscriberInterface {
 
     $response = $this->createJsonResponse();
     $response->setContent($page_callback_result);
+
+    return $response;
+  }
+
+  public function onAjax(GetResponseEvent $event) {
+    $page_callback_result = $event->getControllerResult();
+
+    // Construct the response content from the page callback result.
+    $commands = ajax_prepare_response($page_callback_result);
+    $json = ajax_render($commands);
+
+    // Build the actual response object.
+    $response = $this->createAjaxResponse($event);
+    $response->setContent($json);
+
+    return $response;
+  }
+
+  public function onIframeUpload(GetResponseEvent $event) {
+    $page_callback_result = $event->getControllerResult();
+
+    // Construct the response content from the page callback result.
+    $commands = ajax_prepare_response($page_callback_result);
+    $json = ajax_render($commands);
+
+    // Browser IFRAMEs expect HTML. Browser extensions, such as Linkification
+    // and Skype's Browser Highlighter, convert URLs, phone numbers, etc. into
+    // links. This corrupts the JSON response. Protect the integrity of the
+    // JSON data by making it the value of a textarea.
+    // @see http://malsup.com/jquery/form/#file-upload
+    // @see http://drupal.org/node/1009382
+    $json = '<textarea>' . $json . '</textarea>';
+
+    // Build the actual response object.
+    $response = $this->createIframeUploadResponse($event);
+    $response->setContent($json);
 
     return $response;
   }

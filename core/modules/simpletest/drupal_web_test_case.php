@@ -1834,6 +1834,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * Retrieve a Drupal path or an absolute path and JSON decode the result.
    */
   protected function drupalGetAJAX($path, array $options = array(), array $headers = array()) {
+    $headers[] = 'X-Requested-With: XMLHttpRequest';
     return drupal_json_decode($this->drupalGet($path, $options, $headers));
   }
 
@@ -2041,6 +2042,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     }
     $content = $this->content;
     $drupal_settings = $this->drupalSettings;
+    $headers[] = 'X-Requested-With: XMLHttpRequest';
 
     // Get the Ajax settings bound to the triggering element.
     if (!isset($ajax_settings)) {
