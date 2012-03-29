@@ -20,11 +20,11 @@
  * identifier referred to as "delta" (the array key in the return value). Delta
  * values only need to be unique within your module, and they are used in the
  * following ways:
- * - Passed into the other block hooks in your module as an argument to
- *   identify the block being configured or viewed.
+ * - Passed into the other block hooks in your module as an argument to identify
+ *   the block being configured or viewed.
  * - Used to construct the default HTML ID of "block-MODULE-DELTA" applied to
- *   each block when it is rendered (which can then be used for CSS styling or
- *   JavaScript programming).
+ *   each block when it is rendered. This ID may then be used for CSS styling or
+ *   JavaScript programming.
  * - Used to define a theming template suggestion of block__MODULE__DELTA, for
  *   advanced theming possibilities.
  * - Used by other modules to identify your block in hook_block_info_alter() and
@@ -39,43 +39,43 @@
  *   An associative array whose keys define the delta for each block and whose
  *   values contain the block descriptions. Each block description is itself an
  *   associative array, with the following key-value pairs:
- *   - 'info': (required) The human-readable administrative name of the block.
- *     This is used to identify the block on administration screens, and
- *     is not displayed to non-administrative users.
- *   - 'cache': (optional) A bitmask describing what kind of caching is
+ *   - info: (required) The human-readable administrative name of the block.
+ *     This is used to identify the block on administration screens, and is not
+ *     displayed to non-administrative users.
+ *   - cache: (optional) A bitmask describing what kind of caching is
  *     appropriate for the block. Drupal provides the following bitmask
  *     constants for defining cache granularity:
  *     - DRUPAL_CACHE_PER_ROLE (default): The block can change depending on the
  *       roles the user viewing the page belongs to.
  *     - DRUPAL_CACHE_PER_USER: The block can change depending on the user
- *       viewing the page. This setting can be resource-consuming for sites
- *       with large number of users, and should only be used when
+ *       viewing the page. This setting can be resource-consuming for sites with
+ *       large number of users, and should only be used when
  *       DRUPAL_CACHE_PER_ROLE is not sufficient.
- *     - DRUPAL_CACHE_PER_PAGE: The block can change depending on the page
- *       being viewed.
- *     - DRUPAL_CACHE_GLOBAL: The block is the same for every user on every
- *       page where it is visible.
+ *     - DRUPAL_CACHE_PER_PAGE: The block can change depending on the page being
+ *       viewed.
+ *     - DRUPAL_CACHE_GLOBAL: The block is the same for every user on every page
+ *       where it is visible.
  *     - DRUPAL_NO_CACHE: The block should not get cached.
- *   - 'properties': (optional) Array of additional metadata to add to the
- *     block. Common properties include:
- *     - 'administrative': Boolean which categorizes this block as usable in
- *       an administrative context. This might include blocks which help an
- *       administrator approve/deny comments, or view recently created
- *       user accounts.
- *   - 'weight': (optional) Initial value for the ordering weight of this block.
+ *   - properties: (optional) Array of additional metadata to add to the block.
+ *     Common properties include:
+ *     - administrative: Boolean that categorizes this block as usable in an
+ *       administrative context. This might include blocks that help an
+ *       administrator approve/deny comments, or view recently created user
+ *       accounts.
+ *   - weight: (optional) Initial value for the ordering weight of this block.
  *     Most modules do not provide an initial value, and any value provided can
  *     be modified by a user on the block configuration screen.
- *   - 'status': (optional) Initial value for block enabled status. (1 =
- *     enabled, 0 = disabled). Most modules do not provide an initial value,
- *     and any value provided can be modified by a user on the block
- *     configuration screen.
- *   - 'region': (optional) Initial value for theme region within which this
- *     block is set. Most modules do not provide an initial value, and
- *     any value provided can be modified by a user on the block configuration
- *     screen. Note: If you set a region that isn't available in the currently
- *     enabled theme, the block will be disabled.
- *   - 'visibility': (optional) Initial value for the visibility flag, which
- *     tells how to interpret the 'pages' value. Possible values are:
+ *   - status: (optional) Initial value for block enabled status. (1 = enabled,
+ *     0 = disabled). Most modules do not provide an initial value, and any
+ *     value provided can be modified by a user on the block configuration
+ *     screen.
+ *   - region: (optional) Initial value for theme region within which this
+ *     block is set. Most modules do not provide an initial value, and any value
+ *     provided can be modified by a user on the block configuration screen.
+ *     Note: If you set a region that isn't available in the currently enabled
+ *     theme, the block will be disabled.
+ *   - visibility: (optional) Initial value for the visibility flag, which tells
+ *     how to interpret the 'pages' value. Possible values are:
  *     - BLOCK_VISIBILITY_NOTLISTED: Show on all pages except listed pages.
  *       'pages' lists the paths where the block should not be shown.
  *     - BLOCK_VISIBILITY_LISTED: Show only on listed pages. 'pages' lists the
@@ -85,7 +85,14 @@
  *     Most modules do not provide an initial value for 'visibility' or 'pages',
  *     and any value provided can be modified by a user on the block
  *     configuration screen.
- *   - 'pages': (optional) See 'visibility' above.
+ *   - pages: (optional) See 'visibility' above. A string that contains one or
+ *     more page paths separated by '\n', '\r', or '\r\n' when 'visibility' is
+ *     set to BLOCK_VISIBILITY_NOTLISTED or BLOCK_VISIBILITY_LISTED, or custom
+ *     PHP code when 'visibility' is set to BLOCK_VISIBILITY_PHP. Paths may use
+ *     '*' as a wildcard (matching any number of characters); '<front>'
+ *     designates the site's front page. For BLOCK_VISIBILITY_PHP, the PHP
+ *     code's return value should be TRUE if the block is to be made visible or
+ *     FALSE if the block should not be visible.
  *
  * For a detailed usage example, see block_example.module.
  *
