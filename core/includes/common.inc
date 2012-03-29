@@ -1059,7 +1059,7 @@ function _fix_gpc_magic(&$item) {
  * @param $key
  *   The key for the item within $_FILES.
  *
- * @see http://php.net/manual/en/features.file-upload.php#42280
+ * @see http://php.net/manual/features.file-upload.php#42280
  */
 function _fix_gpc_magic_files(&$item, $key) {
   if ($key != 'tmp_name') {
@@ -1883,7 +1883,7 @@ function format_interval($interval, $granularity = 2, $langcode = NULL) {
  *   get interpreted as date format characters.
  * @param $timezone
  *   (optional) Time zone identifier, as described at
- *   http://php.net/manual/en/timezones.php Defaults to the time zone used to
+ *   http://php.net/manual/timezones.php Defaults to the time zone used to
  *   display the page.
  * @param $langcode
  *   (optional) Language code to translate to. Defaults to the language used to
@@ -3644,7 +3644,7 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
     // Remove certain whitespace.
     // There are different conditions for removing leading and trailing
     // whitespace.
-    // @see http://php.net/manual/en/regexp.reference.subpatterns.php
+    // @see http://php.net/manual/regexp.reference.subpatterns.php
     $contents = preg_replace('<
       # Strip leading and trailing whitespace.
         \s*([@{};,])\s*
@@ -5193,7 +5193,7 @@ function _drupal_bootstrap_full() {
  * client without gzip support.
  *
  * Page compression requires the PHP zlib extension
- * (http://php.net/manual/en/ref.zlib.php).
+ * (http://php.net/manual/ref.zlib.php).
  *
  * @see drupal_page_header()
  */
@@ -6982,6 +6982,9 @@ function drupal_common_theme() {
       'render element' => 'element',
     ),
     'textarea' => array(
+      'render element' => 'element',
+    ),
+    'search' => array(
       'render element' => 'element',
     ),
     'password' => array(

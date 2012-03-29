@@ -333,7 +333,7 @@ function system_element_info() {
     '#button_type' => 'submit',
     '#executes_submit_callback' => TRUE,
     '#limit_validation_errors' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('form_process_button', 'ajax_process_form'),
     '#theme_wrappers' => array('button'),
   );
   $types['button'] = array(
@@ -342,7 +342,7 @@ function system_element_info() {
     '#button_type' => 'submit',
     '#executes_submit_callback' => FALSE,
     '#limit_validation_errors' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('form_process_button', 'ajax_process_form'),
     '#theme_wrappers' => array('button'),
   );
   $types['image_button'] = array(
@@ -350,7 +350,7 @@ function system_element_info() {
     '#button_type' => 'submit',
     '#executes_submit_callback' => TRUE,
     '#limit_validation_errors' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('form_process_button', 'ajax_process_form'),
     '#return_value' => TRUE,
     '#has_garbage_value' => TRUE,
     '#src' => NULL,
@@ -392,6 +392,15 @@ function system_element_info() {
     '#process' => array('ajax_process_form'),
     '#element_validate' => array('form_validate_url'),
     '#theme' => 'url',
+    '#theme_wrappers' => array('form_element'),
+  );
+  $types['search'] = array(
+    '#input' => TRUE,
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#autocomplete_path' => FALSE,
+    '#process' => array('ajax_process_form'),
+    '#theme' => 'search',
     '#theme_wrappers' => array('form_element'),
   );
   $types['machine_name'] = array(
@@ -3287,7 +3296,7 @@ function system_goto_action_form($context) {
   $form['url'] = array(
     '#type' => 'textfield',
     '#title' => t('URL'),
-    '#description' => t('The URL to which the user should be redirected. This can be an internal URL like node/1234 or an external URL like http://drupal.org.'),
+    '#description' => t('The URL to which the user should be redirected. This can be an internal URL like node/1234 or an external URL like @url.', array('@url' => 'http://drupal.org')),
     '#default_value' => isset($context['url']) ? $context['url'] : '',
     '#required' => TRUE,
   );

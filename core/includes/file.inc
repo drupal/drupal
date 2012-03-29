@@ -1494,7 +1494,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
 
   // Check for file upload errors and return FALSE if a lower level system
   // error occurred. For a complete list of errors:
-  // See http://php.net/manual/en/features.file-upload.errors.php.
+  // See http://php.net/manual/features.file-upload.errors.php.
   switch ($_FILES['files']['error'][$source]) {
     case UPLOAD_ERR_INI_SIZE:
     case UPLOAD_ERR_FORM_SIZE:
@@ -2253,7 +2253,7 @@ function drupal_chmod($uri, $mode = NULL) {
  * @param $uri
  *   A URI or pathname.
  * @param $context
- *   Refer to http://php.net/manual/en/ref.stream.php
+ *   Refer to http://php.net/manual/ref.stream.php
  *
  * @return
  *   Boolean TRUE on success, or FALSE on failure.
@@ -2388,7 +2388,7 @@ function drupal_basename($uri, $suffix = NULL) {
  * @param $recursive
  *   Default to FALSE.
  * @param $context
- *   Refer to http://php.net/manual/en/ref.stream.php
+ *   Refer to http://php.net/manual/ref.stream.php
  *
  * @return
  *   Boolean TRUE on success, or FALSE on failure.
@@ -2419,7 +2419,7 @@ function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
  * @param $uri
  *   A URI or pathname.
  * @param $context
- *   Refer to http://php.net/manual/en/ref.stream.php
+ *   Refer to http://php.net/manual/ref.stream.php
  *
  * @return
  *   Boolean TRUE on success, or FALSE on failure.

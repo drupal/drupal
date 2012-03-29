@@ -28,7 +28,7 @@ function simpletest_requirements($phase) {
   );
   if (!$has_curl) {
     $requirements['curl']['severity'] = REQUIREMENT_ERROR;
-    $requirements['curl']['description'] = $t('The testing framework could not be installed because the PHP <a href="@curl_url">cURL</a> library is not available.', array('@curl_url' => 'http://php.net/manual/en/curl.setup.php'));
+    $requirements['curl']['description'] = $t('The testing framework could not be installed because the PHP <a href="@curl_url">cURL</a> library is not available.', array('@curl_url' => 'http://php.net/manual/curl.setup.php'));
   }
   $requirements['hash'] = array(
     'title' => $t('hash'),
@@ -36,7 +36,7 @@ function simpletest_requirements($phase) {
   );
   if (!$has_hash) {
     $requirements['hash']['severity'] = REQUIREMENT_ERROR;
-    $requirements['hash']['description'] = $t('The testing framework could not be installed because the PHP <a href="@hash_url">hash</a> extension is disabled.', array('@hash_url' => 'http://php.net/manual/en/book.hash.php'));
+    $requirements['hash']['description'] = $t('The testing framework could not be installed because the PHP <a href="@hash_url">hash</a> extension is disabled.', array('@hash_url' => 'http://php.net/manual/book.hash.php'));
   }
 
   $requirements['php_domdocument'] = array(
@@ -57,7 +57,7 @@ function simpletest_requirements($phase) {
   );
   if ($open_basedir) {
     $requirements['php_open_basedir']['severity'] = REQUIREMENT_ERROR;
-    $requirements['php_open_basedir']['description'] = $t('The testing framework requires the PHP <a href="@open_basedir-url">open_basedir</a> restriction to be disabled. Check your webserver configuration or contact your web host.', array('@open_basedir-url' => 'http://php.net/manual/en/ini.core.php#ini.open-basedir'));
+    $requirements['php_open_basedir']['description'] = $t('The testing framework requires the PHP <a href="@open_basedir-url">open_basedir</a> restriction to be disabled. Check your webserver configuration or contact your web host.', array('@open_basedir-url' => 'http://php.net/manual/ini.core.php#ini.open-basedir'));
   }
 
   // Check the current memory limit. If it is set too low, SimpleTest will fail

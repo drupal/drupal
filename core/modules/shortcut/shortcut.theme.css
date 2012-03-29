@@ -1,0 +1,82 @@
+
+/**
+ * @file
+ * Styling for the shortcut module.
+ */
+
+/**
+ * Toolbar.
+ */
+.toolbar #edit-shortcuts {
+  line-height: 24px;
+  padding: 5px 10px;
+}
+#edit-shortcuts:focus,
+#edit-shortcuts:hover,
+#edit-shortcuts.active {
+  text-decoration: underline;
+}
+#shortcut-toolbar ul {
+  line-height: 24px;
+  margin-left: 5px; /* LTR */
+  padding: 5px 0;
+}
+#shortcut-toolbar a {
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  margin-right: 5px; /* LTR */
+  padding: 0 5px;
+}
+#shortcut-toolbar a:focus,
+#shortcut-toolbar a:hover,
+#shortcut-toolbar a.active:focus {
+  background: #555;
+}
+#shortcut-toolbar a.active:hover,
+#shortcut-toolbar a.active {
+  background-color: #000;
+}
+#shortcut-toolbar .icon {
+  background-color: #444;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  height: 30px;
+  margin-right: 5px; /* LTR */
+  width: 30px;
+}
+
+/**
+ * Add/remove links.
+ */
+.add-or-remove-shortcuts .icon {
+  background: transparent url(shortcut.png) no-repeat;
+  height: 12px;
+  margin-left: 8px; /* LTR */
+  overflow: hidden;
+  text-indent: 12px;
+  width: 12px;
+}
+.add-shortcut a:focus .icon,
+.add-shortcut a:hover .icon {
+  background-position: 0 -12px; /* LTR */
+}
+.remove-shortcut .icon {
+  background-position: -12px 0;
+}
+.remove-shortcut a:focus .icon,
+.remove-shortcut a:hover .icon {
+  background-position: -12px -12px; /* LTR */
+}
+.add-or-remove-shortcuts .text {
+  padding: 0 6px 0 10px; /* LTR */
+}
+.add-or-remove-shortcuts a:focus .text,
+.add-or-remove-shortcuts a:hover .text {
+  background-color: #5f605b;
+  -moz-border-radius: 0 5px 5px 0; /* LTR */
+  border-radius: 0 5px 5px 0; /* LTR */
+  color: #fff;
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 12px;
+}

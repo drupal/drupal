@@ -1,4 +1,3 @@
-
 /**
  * Generic elements.
  */
@@ -604,6 +603,7 @@ div.teaser-checkbox .form-item,
 .form-disabled input.form-tel,
 .form-disabled input.form-email,
 .form-disabled input.form-url,
+.form-disabled input.form-search,
 .form-disabled input.form-file,
 .form-disabled textarea.form-textarea,
 .form-disabled select.form-select {
@@ -693,6 +693,7 @@ input.form-text,
 input.form-tel,
 input.form-email,
 input.form-url,
+input.form-search,
 input.form-file,
 textarea.form-textarea,
 select.form-select {
@@ -709,6 +710,7 @@ input.form-text:focus,
 input.form-tel:focus,
 input.form-email:focus,
 input.form-url:focus,
+input.form-search:focus,
 input.form-file:focus,
 textarea.form-textarea:focus,
 select.form-select:focus {
@@ -750,10 +752,12 @@ div.filter-options select {
 /**
  * System.
  */
-div.admin .right,
-div.admin .left {
-  width: 49%;
-  margin: 0;
+@media screen and (min-width: 40em) {
+  div.admin .right,
+  div.admin .left {
+    width: 49%;
+    margin: 0;
+  }
 }
 div.admin-panel,
 div.admin-panel .body {

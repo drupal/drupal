@@ -10,7 +10,7 @@ namespace Drupal\Core\StreamWrapper;
 /**
  * Defines a generic PHP stream wrapper interface.
  *
- * @see http://www.php.net/manual/en/class.streamwrapper.php
+ * @see http://www.php.net/manual/class.streamwrapper.php
  */
 interface PhpStreamWrapperInterface {
   public function stream_open($uri, $mode, $options, &$opened_url);

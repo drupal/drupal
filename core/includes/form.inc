@@ -3094,12 +3094,25 @@ function form_pre_render_conditional_form_element($element) {
     $element['#attributes']['title'] = $element['#title'];
     if (!empty($element['#required'])) {
       // Append an indication that this field is required.
-      $element['#attributes']['title'] .= ' (' . t('Required') . ')';
+      $element['#attributes']['title'] .= ' (' . $t('Required') . ')';
     }
   }
 
   if (isset($element['#title']) || isset($element['#description'])) {
     $element['#theme_wrappers'][] = 'form_element';
+  }
+  return $element;
+}
+
+/**
+ * Processes a form button element.
+ */
+function form_process_button($element, $form_state) {
+  // If this is a button intentionally allowing incomplete form submission
+  // (e.g., a "Previous" or "Add another item" button), then also skip
+  // client-side validation.
+  if (isset($element['#limit_validation_errors']) && $element['#limit_validation_errors'] !== FALSE) {
+    $element['#attributes']['formnovalidate'] = 'formnovalidate';
   }
   return $element;
 }
@@ -3931,6 +3944,42 @@ function theme_url($variables) {
 }
 
 /**
+ * Returns HTML for a search form element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #size, #maxlength,
+ *     #placeholder, #required, #attributes, #autocomplete_path.
+ *
+ * @ingroup themeable
+ */
+function theme_search($variables) {
+  $element = $variables['element'];
+  $element['#attributes']['type'] = 'search';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  _form_set_class($element, array('form-search'));
+
+  $extra = '';
+  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
+    drupal_add_library('system', 'drupal.autocomplete');
+    $element['#attributes']['class'][] = 'form-autocomplete';
+
+    $attributes = array();
+    $attributes['type'] = 'hidden';
+    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
+    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
+    $attributes['disabled'] = 'disabled';
+    $attributes['class'][] = 'autocomplete';
+    $extra = '<input' . drupal_attributes($attributes) . ' />';
+  }
+
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  return $output . $extra;
+}
+
+/**
  * Form element validation handler for #type 'url'.
  *
  * Note that #maxlength and #required is validated by _form_validate() already.
@@ -4276,6 +4325,10 @@ function _form_set_class(&$element, $class = array()) {
   // form_builder().
   if (!empty($element['#required'])) {
     $element['#attributes']['class'][] = 'required';
+    // @todo Rename the _form_set_class() function to reflect that we're setting
+    //   non-class attributes too.
+    $element['#attributes']['required'] = 'required';
+    $element['#attributes']['aria-required'] = 'true';
   }
   if (isset($element['#parents']) && form_get_error($element)) {
     $element['#attributes']['class'][] = 'error';
