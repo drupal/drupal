@@ -246,26 +246,6 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->deleteForum($this->delete_forum['tid']);
     // Create forum at the top (root) level.
     $this->root_forum = $this->createForum('forum');
-
-    // Test vocabulary form alterations.
-    $this->drupalGet('admin/structure/taxonomy/forums/edit');
-    $this->assertFieldByName('op', t('Save'), 'Save button found.');
-    $this->assertNoFieldByName('op', t('Delete'), 'Delete button not found.');
-    // Test tags vocabulary form is not affected.
-    $this->drupalGet('admin/structure/taxonomy/tags/edit');
-    $this->assertFieldByName('op', t('Save'), 'Save button found.');
-    $this->assertFieldByName('op', t('Delete'), 'Delete button found.');
-
-    // Test term edit form alterations.
-    $this->drupalGet('taxonomy/term/' . $this->container['tid'] . '/edit');
-    // Test parent field been hidden by forum module.
-    $this->assertNoField('parent[]', 'Parent field not found.');
-    // Test tags vocabulary term form is not affected.
-    $this->drupalGet('admin/structure/taxonomy/tags/add');
-    $this->assertField('parent[]', 'Parent field found.');
-    // Test relations fieldset exists.
-    $relations_fieldset = $this->xpath("//fieldset[@id='edit-relations']");
-    $this->assertTrue(isset($relations_fieldset[0]), 'Relations fieldset element found.');
   }
 
   /**
