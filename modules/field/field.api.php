@@ -426,9 +426,14 @@ function hook_field_presave($entity_type, $entity, $field, $instance, $langcode,
 }
 
 /**
- * Define custom insert behavior for this module's field types.
+ * Define custom insert behavior for this module's field data.
  *
- * Invoked from field_attach_insert().
+ * This hook is invoked from field_attach_insert() on the module that defines a
+ * field, during the process of inserting an entity object (node, taxonomy term,
+ * etc.). It is invoked just before the data for this field on the particular
+ * entity object is inserted into field storage. Only field modules that are
+ * storing or tracking information outside the standard field storage mechanism
+ * need to implement this hook.
  *
  * @param $entity_type
  *   The type of $entity.
@@ -442,6 +447,9 @@ function hook_field_presave($entity_type, $entity, $field, $instance, $langcode,
  *   The language associated with $items.
  * @param $items
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
+ *
+ * @see hook_field_update()
+ * @see hook_field_delete()
  */
 function hook_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
   if (variable_get('taxonomy_maintain_index_table', TRUE) && $field['storage']['type'] == 'field_sql_storage' && $entity_type == 'node' && $entity->status) {
@@ -459,9 +467,14 @@ function hook_field_insert($entity_type, $entity, $field, $instance, $langcode, 
 }
 
 /**
- * Define custom update behavior for this module's field types.
+ * Define custom update behavior for this module's field data.
  *
- * Invoked from field_attach_update().
+ * This hook is invoked from field_attach_update() on the module that defines a
+ * field, during the process of updating an entity object (node, taxonomy term,
+ * etc.). It is invoked just before the data for this field on the particular
+ * entity object is updated into field storage. Only field modules that are
+ * storing or tracking information outside the standard field storage mechanism
+ * need to implement this hook.
  *
  * @param $entity_type
  *   The type of $entity.
@@ -475,6 +488,9 @@ function hook_field_insert($entity_type, $entity, $field, $instance, $langcode, 
  *   The language associated with $items.
  * @param $items
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
+ *
+ * @see hook_field_insert()
+ * @see hook_field_delete()
  */
 function hook_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
   if (variable_get('taxonomy_maintain_index_table', TRUE) && $field['storage']['type'] == 'field_sql_storage' && $entity_type == 'node') {
@@ -540,10 +556,14 @@ function hook_field_storage_update_field($field, $prior_field, $has_data) {
 }
 
 /**
- * Define custom delete behavior for this module's field types.
+ * Define custom delete behavior for this module's field data.
  *
- * This hook is invoked just before the data is deleted from field storage
- * in field_attach_delete().
+ * This hook is invoked from field_attach_delete() on the module that defines a
+ * field, during the process of deleting an entity object (node, taxonomy term,
+ * etc.). It is invoked just before the data for this field on the particular
+ * entity object is deleted from field storage. Only field modules that are
+ * storing or tracking information outside the standard field storage mechanism
+ * need to implement this hook.
  *
  * @param $entity_type
  *   The type of $entity.
@@ -557,6 +577,9 @@ function hook_field_storage_update_field($field, $prior_field, $has_data) {
  *   The language associated with $items.
  * @param $items
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
+ *
+ * @see hook_field_insert()
+ * @see hook_field_update()
  */
 function hook_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
   list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
