@@ -3703,6 +3703,36 @@ function theme_vertical_tabs($variables) {
 }
 
 /**
+ * Adds autocomplete functionality to elements with a valid #autocomplete_path.
+ *
+ * @param $element
+ *   The form element to process. Properties used:
+ *   - #autocomplete_path: A system path to be used as callback URL by the
+ *     autocomplete JavaScript library.
+ */
+function form_process_autocomplete($element, &$form_state) {
+  if (!empty($element['#autocomplete_path']) && drupal_valid_path($element['#autocomplete_path'])) {
+    $element['#attributes']['class'][] = 'form-autocomplete';
+    $element['#attached']['library'][] = array('system', 'drupal.autocomplete');
+    // Provide a hidden element for the JavaScript behavior to bind to. Since
+    // this element is for client-side functionality only, and we don't want to
+    // collect any input from it, use #theme='hidden' instead of #type='hidden'.
+    // @todo Refactor autocomplete.js to accept Drupal.settings instead of
+    //   requiring extraneous markup.
+    $element['autocomplete'] = array(
+      '#theme' => 'hidden',
+      '#attributes' => array(
+        'id' => $element['#id'] . '-autocomplete',
+        'value' => url($element['#autocomplete_path'], array('absolute' => TRUE)),
+        'class' => array('autocomplete'),
+        'disabled' => 'disabled',
+      ),
+    );
+  }
+  return $element;
+}
+
+/**
  * Returns HTML for a submit button form element.
  *
  * @param $variables
@@ -3792,7 +3822,7 @@ function theme_hidden($variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #placeholder, #required, #attributes, #autocomplete_path.
+ *     #placeholder, #required, #attributes.
  *
  * @ingroup themeable
  */
@@ -3802,23 +3832,7 @@ function theme_textfield($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-text'));
 
-  $extra = '';
-  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
-    drupal_add_library('system', 'drupal.autocomplete');
-    $element['#attributes']['class'][] = 'form-autocomplete';
-
-    $attributes = array();
-    $attributes['type'] = 'hidden';
-    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
-    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
-    $attributes['disabled'] = 'disabled';
-    $attributes['class'][] = 'autocomplete';
-    $extra = '<input' . drupal_attributes($attributes) . ' />';
-  }
-
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
-
-  return $output . $extra;
+  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**
@@ -3828,7 +3842,7 @@ function theme_textfield($variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #placeholder, #required, #attributes, #autocomplete_path.
+ *     #placeholder, #required, #attributes.
  *
  * @ingroup themeable
  */
@@ -3838,23 +3852,7 @@ function theme_email($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-email'));
 
-  $extra = '';
-  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
-    drupal_add_library('system', 'drupal.autocomplete');
-    $element['#attributes']['class'][] = 'form-autocomplete';
-
-    $attributes = array();
-    $attributes['type'] = 'hidden';
-    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
-    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
-    $attributes['disabled'] = 'disabled';
-    $attributes['class'][] = 'autocomplete';
-    $extra = '<input' . drupal_attributes($attributes) . ' />';
-  }
-
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
-
-  return $output . $extra;
+  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**
@@ -3878,7 +3876,7 @@ function form_validate_email(&$element, &$form_state) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #placeholder, #required, #attributes, #autocomplete_path.
+ *     #placeholder, #required, #attributes.
  *
  * @ingroup themeable
  */
@@ -3888,23 +3886,7 @@ function theme_tel($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-tel'));
 
-  $extra = '';
-  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
-    drupal_add_library('system', 'drupal.autocomplete');
-    $element['#attributes']['class'][] = 'form-autocomplete';
-
-    $attributes = array();
-    $attributes['type'] = 'hidden';
-    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
-    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
-    $attributes['disabled'] = 'disabled';
-    $attributes['class'][] = 'autocomplete';
-    $extra = '<input' . drupal_attributes($attributes) . ' />';
-  }
-
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
-
-  return $output . $extra;
+  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**
@@ -3914,7 +3896,7 @@ function theme_tel($variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #placeholder, #required, #attributes, #autocomplete_path.
+ *     #placeholder, #required, #attributes.
  *
  * @ingroup themeable
  */
@@ -3924,23 +3906,7 @@ function theme_url($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-url'));
 
-  $extra = '';
-  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
-    drupal_add_library('system', 'drupal.autocomplete');
-    $element['#attributes']['class'][] = 'form-autocomplete';
-
-    $attributes = array();
-    $attributes['type'] = 'hidden';
-    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
-    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
-    $attributes['disabled'] = 'disabled';
-    $attributes['class'][] = 'autocomplete';
-    $extra = '<input' . drupal_attributes($attributes) . ' />';
-  }
-
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
-
-  return $output . $extra;
+  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**
