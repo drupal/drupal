@@ -296,3 +296,40 @@ class ConfOverrideTestCase extends DrupalWebTestCase {
     $this->assertEqual($config->get('cache'), $conf['system.performance']['cache']);
   }
 }
+
+/**
+ * Tests function providing configuration upgrade from Drupal 7 to 8.
+ */
+class ConfUpdate7to8TestCase extends DrupalWebTestCase {
+  protected $testContent = 'Olá, Sao Paulo!';
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Configuration update from Drupal 7 to 8',
+      'description' => 'Tests the ability to update Drupal 7 variables to the 
+        configuration management system.',
+      'group' => 'Configuration',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('config_upgrade');
+    require_once DRUPAL_ROOT . '/core/includes/update.inc';
+  }
+
+  /**
+   * Test configuration update function.
+   */
+  function testConfigurationUpdate() {
+    // Ensure that the variable table has the object. The variable table will
+    // remain in place for Drupal 8 to provide an upgrade path for overridden
+    // variables.
+    db_merge('variable')->key(array('name' => 'config_test_foo'))->fields(array('value' => serialize($this->testContent)))->execute();
+    db_merge('variable')->key(array('name' => 'config_bar'))->fields(array('value' => serialize($this->testContent)))->execute();
+
+    update_variables_to_config('config.test', array('config_test_bar' => 'config_bar'));
+    $config = config('config.test');
+    $this->assertEqual($config->get('config_test_foo'), $this->testContent); 
+    $this->assertEqual($config->get('config_test_bar'), $this->testContent); 
+  }
+}
