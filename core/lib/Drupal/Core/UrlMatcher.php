@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @file
+ *
+ * Definition of Drupal\Core\UrlMatcher.
+ */
+
 namespace Drupal\Core;
 
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -14,6 +20,11 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class UrlMatcher extends SymfonyUrlMatcher {
 
+  /**
+   * The request context for this matcher.
+   *
+   * @var RequestContext
+   */
   protected $context;
 
   /**

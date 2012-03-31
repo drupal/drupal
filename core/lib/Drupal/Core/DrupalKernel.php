@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @file
+ *
+ * Definition of Drupal\Core\DrupalKernel.
+ */
+
 namespace Drupal\Core;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -21,26 +27,32 @@ use Drupal\Core\EventSubscriber\LegacyControllerSubscriber;
 use Exception;
 
 /**
- * @file
- *
- * Definition of Drupal\Core\DrupalKernel.
- */
-
-/**
- * The DrupalApp class is the core of Drupal itself.
+ * The DrupalKernel class is the core of Drupal itself.
  */
 class DrupalKernel extends HttpKernel {
+
+    /**
+     * The event dispatcher used by this kernel.
+     *
+     * @var EventDispatcherInterface
+     */
     protected $dispatcher;
+
+    /**
+     * The controller resolver that will extract the controller from a Request.
+     *
+     * @var ControllerResolverInterface
+     */
     protected $resolver;
 
 
     /**
      * Constructor
      *
-     * @param EventDispatcherInterface    $dispatcher An EventDispatcherInterface instance
-     * @param ControllerResolverInterface $resolver   A ControllerResolverInterface instance
-     *
-     * @api
+     * @param EventDispatcherInterface $dispatcher
+     *   An EventDispatcherInterface instance
+     * @param ControllerResolverInterface $resolver
+     *   A ControllerResolverInterface instance
      */
    public function __construct(EventDispatcherInterface $dispatcher, ControllerResolverInterface $resolver) {
       parent::__construct($dispatcher, $resolver);
