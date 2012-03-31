@@ -10,6 +10,7 @@ namespace Drupal\Core;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -41,7 +42,7 @@ class ExceptionController {
 
   /**
    * Constructor
-   * 
+   *
    * @param HttpKernelInterface $kernel
    *   The kernel that spawned this controller, so that it can be reused
    *   for subrequests.
@@ -169,13 +170,6 @@ class ExceptionController {
     return $response;
   }
 
-  protected function createJsonResponse() {
-    $response = new Response();
-    $response->headers->set('Content-Type', 'application/json; charset=utf-8');
-
-    return $response;
-  }
-
   /**
    * Processes an AccessDenied exception into an HTTP 403 response.
    *
@@ -183,7 +177,7 @@ class ExceptionController {
    *   The Event to process.
    */
   public function on403Json(FlattenException $exception, Request $request) {
-    $response = $this->createJsonResponse();
+    $response = new JsonResponse();
     $response->setStatusCode(403, 'Access Denied');
     return $response;
   }
@@ -195,7 +189,7 @@ class ExceptionController {
    *   The Event to process.
    */
   public function on404Json(FlattenException $exception, Request $request) {
-    $response = $this->createJsonResponse();
+    $response = new JsonResponse();
     $response->setStatusCode(404, 'Not Found');
     return $response;
   }
@@ -207,7 +201,7 @@ class ExceptionController {
    *   The Event to process.
    */
   public function on405Json(FlattenException $exception, Request $request) {
-    $response = $this->createJsonResponse();
+    $response = new JsonResponse();
     $response->setStatusCode(405, 'Method Not Allowed');
     return $response;
   }
