@@ -120,7 +120,7 @@ function file_field_instance_settings_form($field, $instance) {
 }
 
 /**
- * Render API callback: Validates the maximum uplodad size field.
+ * Render API callback: Validates the maximum upload size field.
  *
  * Ensures that a size has been entered and that it can be parsed by
  * parse_size().

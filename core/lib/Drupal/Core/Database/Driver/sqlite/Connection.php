@@ -73,8 +73,6 @@ class Connection extends DatabaseConnection {
       'pdo' => array(),
     );
     $connection_options['pdo'] += array(
-      // Force column names to lower case.
-      PDO::ATTR_CASE => PDO::CASE_LOWER,
       // Convert numeric values to strings when fetching.
       PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     );

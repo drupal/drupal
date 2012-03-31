@@ -19,7 +19,7 @@ use PDOStatement;
  * driver needs to set a custom statement class, it may do so in its
  * constructor.
  *
- * @see http://us.php.net/pdostatement
+ * @see http://php.net/pdostatement
  */
 class Statement extends PDOStatement implements StatementInterface {
 

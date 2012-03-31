@@ -499,7 +499,7 @@ class ThemeHookInitUnitTest extends DrupalWebTestCase {
     $this->assertRaw('Themed output generated in hook_init()');
     // Verify that the default theme's CSS still appears when the theme system
     // is initialized in hook_init().
-    $this->assertRaw('stark/layout.css');
+    $this->assertRaw('stark/css/layout.css');
   }
 }
 

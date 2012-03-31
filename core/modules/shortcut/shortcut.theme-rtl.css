@@ -1,0 +1,45 @@
+
+/**
+ * @file
+ * RTL styling for the shortcut module.
+ */
+
+/**
+ * Toolbar.
+ */
+#shortcut-toolbar ul {
+  margin-left: 0;
+  margin-right: 5px;
+}
+#shortcut-toolbar a {
+  margin-left: 5px;
+  margin-right: 0;
+}
+#shortcut-toolbar .icon {
+  margin-left: 5px;
+  margin-right: 0;
+}
+
+/**
+ * Add/remove links.
+ */
+.add-or-remove-shortcuts .icon {
+  margin-left: 0;
+  margin-right: 8px;
+}
+.add-shortcut a:focus .icon,
+.add-shortcut a:hover .icon {
+  background-position: 0 -24px;
+}
+.remove-shortcut a:focus .icon,
+.remove-shortcut a:hover .icon {
+  background-position: -12px -24px;
+}
+.add-or-remove-shortcuts .text {
+  padding: 0 10px 0 6px;
+}
+.add-or-remove-shortcuts a:focus .text,
+.add-or-remove-shortcuts a:hover .text {
+  -moz-border-radius: 5px 0 0 5px;
+  border-radius: 5px 0 0 5px;
+}

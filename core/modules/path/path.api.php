@@ -10,9 +10,8 @@
  * @{
  */
 
-
 /**
- * Allow modules to respond to a path being inserted.
+ * Respond to a path being inserted.
  *
  * @param $path
  *   An associative array containing the following keys:
@@ -33,7 +32,7 @@ function hook_path_insert($path) {
 }
 
 /**
- * Allow modules to respond to a path being updated.
+ * Respond to a path being updated.
  *
  * @param $path
  *   An associative array containing the following keys:
@@ -52,7 +51,7 @@ function hook_path_update($path) {
 }
 
 /**
- * Allow modules to respond to a path being deleted.
+ * Respond to a path being deleted.
  *
  * @param $path
  *   An associative array containing the following keys:

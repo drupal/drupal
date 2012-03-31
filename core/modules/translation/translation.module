@@ -40,7 +40,7 @@ function translation_help($path, $arg) {
       $output .= '<dt>' . t('Assigning a language to content') . '</dt>';
       $output .= '<dd>' . t('Use the <em>Language</em> drop down to select the appropriate language when creating or editing content.') . '</dd>';
       $output .= '<dt>' . t('Translating content') . '</dt>';
-      $output .= '<dd>' . t('Users with the <em>translate content</em> permission can translate content, if the content type has been configured to allow translations. To translate content, select the <em>Translation</em> tab when viewing the content, select the language for which you wish to provide content, and then enter the content.') . '</dd>';
+      $output .= '<dd>' . t('Users with the <em>translate content</em> permission can translate content, if the content type has been configured to allow translations. To translate content, select the <em>Translations</em> tab when viewing the content, select the language for which you wish to provide content, and then enter the content.') . '</dd>';
       $output .= '<dt>' . t('Maintaining translations') . '</dt>';
       $output .= '<dd>' . t('If editing content in one language requires that translated versions also be updated to reflect the change, use the <em>Flag translations as outdated</em> check box to mark the translations as outdated and in need of revision. Individual translations may also be marked for revision by selecting the <em>This translation needs to be updated</em> check box on the translation editing form.') . '</dd>';
       $output .= '</dl>';
@@ -57,7 +57,7 @@ function translation_help($path, $arg) {
 function translation_menu() {
   $items = array();
   $items['node/%node/translate'] = array(
-    'title' => 'Translate',
+    'title' => 'Translations',
     'page callback' => 'translation_node_overview',
     'page arguments' => array(1),
     'access callback' => '_translation_tab_access',

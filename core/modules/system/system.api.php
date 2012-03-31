@@ -1955,7 +1955,7 @@ function hook_watchdog(array $log_entry) {
   $severity_list = array(
     WATCHDOG_EMERGENCY     => t('Emergency'),
     WATCHDOG_ALERT     => t('Alert'),
-    WATCHDOG_CRITICALI     => t('Critical'),
+    WATCHDOG_CRITICAL     => t('Critical'),
     WATCHDOG_ERROR       => t('Error'),
     WATCHDOG_WARNING   => t('Warning'),
     WATCHDOG_NOTICE    => t('Notice'),
@@ -3613,7 +3613,7 @@ function hook_date_format_types_alter(&$types) {
  *     declared in an implementation of hook_date_format_types().
  *   - 'format': A PHP date format string to use when formatting dates. It
  *     can contain any of the formatting options described at
- *     http://php.net/manual/en/function.date.php
+ *     http://php.net/manual/function.date.php
  *   - 'locales': (optional) An array of 2 and 5 character locale codes,
  *     defining which locales this format applies to (for example, 'en',
  *     'en-us', etc.). If your date format is not language-specific, leave this

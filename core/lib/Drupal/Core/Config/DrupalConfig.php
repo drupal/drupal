@@ -38,6 +38,12 @@ class DrupalConfig {
   public function read() {
     $active = (array) config_decode($this->_verifiedStorage->read());
     foreach ($active as $key => $value) {
+      // If the setting is empty, return an empty string rather than an array.
+      // This is necessary because SimpleXML's default behavior is to return
+      // an empty array instead of a string.
+      if (is_array($value) && empty($value)) {
+        $value = '';
+      }
       $this->set($key, $value);
     }
   }
@@ -75,23 +81,33 @@ class DrupalConfig {
    * cause issues with Booleans, which are casted to "1" (TRUE) or "0" (FALSE).
    * In particular, code relying on === or !== will no longer function properly.
    *
-   * @see http://php.net/manual/en/language.operators.comparison.php.
+   * @see http://php.net/manual/language.operators.comparison.php.
    *
    * @return
    *   The data that was requested.
    */
   public function get($key = '') {
+    global $conf;
+
+    $name = $this->_verifiedStorage->getName();
+    if (isset($conf[$name])) {
+      $merged_data = drupal_array_merge_deep($this->data, $conf[$name]);
+    }
+    else {
+      $merged_data = $this->data;
+    }
+
     if (empty($key)) {
-      return $this->data;
+      return $merged_data;
     }
     else {
       $parts = explode('.', $key);
       if (count($parts) == 1) {
-        return isset($this->data[$key]) ? $this->data[$key] : NULL;
+        return isset($merged_data[$key]) ? $merged_data[$key] : NULL;
       }
       else {
         $key_exists = NULL;
-        $value = drupal_array_get_nested_value($this->data, $parts, $key_exists);
+        $value = drupal_array_get_nested_value($merged_data, $parts, $key_exists);
         return $key_exists ? $value : NULL;
       }
     }

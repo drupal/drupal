@@ -1,0 +1,31 @@
+
+/**
+ * @file
+ * Right-to-left overrides for IE
+ */
+
+#content {
+  float: right;
+}
+body.sidebar-first #content {
+  left: 0;
+  right: 20%;
+}
+body.two-sidebars #content {
+  left: 0;
+  right: 20%;
+}
+
+#sidebar-first {
+  float: right;
+  left: 0;
+  right: -80%;
+}
+body.two-sidebars #sidebar-first {
+  left: 0;
+  right: -60%;
+}
+
+#sidebar-second {
+  float: left;
+}

@@ -1,0 +1,35 @@
+
+/**
+ * @file
+ * Force IE 8 and lower to render in desktop layout.
+ */
+
+#content {
+  width: 100%;
+  float: left; /* LTR */
+}
+body.sidebar-first #content {
+  width: 80%;
+  left: 20%; /* LTR */
+}
+body.sidebar-second #content {
+  width: 80%;
+}
+body.two-sidebars #content {
+  width: 60%;
+  left: 20%; /* LTR */
+}
+
+#sidebar-first {
+  width: 20%;
+  float: left; /* LTR */
+  left: -80%; /* LTR */
+}
+body.two-sidebars #sidebar-first {
+  left: -60%; /* LTR */
+}
+
+#sidebar-second {
+  float: right; /* LTR */
+  width: 20%;
+}

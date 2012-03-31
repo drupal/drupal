@@ -692,10 +692,15 @@ function shortcut_preprocess_page(&$variables) {
 
     if (theme_get_setting('shortcut_module_link')) {
       $variables['title_suffix']['add_or_remove_shortcut'] = array(
-        '#attached' => array('css' => array(drupal_get_path('module', 'shortcut') . '/shortcut.css')),
+        '#attached' => array(
+          'css' => array(
+            drupal_get_path('module', 'shortcut') . '/shortcut.base.css',
+            drupal_get_path('module', 'shortcut') . '/shortcut.theme.css',
+          ),
+        ),
         '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
         '#type' => 'link',
-        '#title' => '<span class="icon"></span><span class="text">' . $link_text . '</span>',
+        '#title' => '<span class="icon">'. t('Add or remove shortcut') .'</span><span class="text">' . $link_text . '</span>',
         '#href' => $link_path,
         '#options' => array('query' => $query, 'html' => TRUE),
         '#suffix' => '</div>',
@@ -720,8 +725,13 @@ function shortcut_page_alter(&$page) {
  */
 function shortcut_toolbar_pre_render($toolbar) {
   $links = shortcut_renderable_links();
-  $links['#attached'] = array('css' => array(drupal_get_path('module', 'shortcut') . '/shortcut.css'));
-  $links['#prefix'] = '<div class="toolbar-shortcuts">';
+  $links['#attached'] = array(
+    'css' => array(
+      drupal_get_path('module', 'shortcut') . '/shortcut.base.css',
+      drupal_get_path('module', 'shortcut') . '/shortcut.theme.css',
+    ),
+  );
+  $links['#prefix'] = '<div id="shortcut-toolbar">';
   $links['#suffix'] = '</div>';
   $shortcut_set = shortcut_current_displayed_set();
   $configure_link = NULL;
