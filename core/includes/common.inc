@@ -716,6 +716,7 @@ function drupal_not_found() {
 
   throw new NotFoundHttpException();
 
+  // @todo Remove this line.
   //drupal_deliver_page(MENU_NOT_FOUND);
 }
 
@@ -732,6 +733,7 @@ function drupal_access_denied() {
 
   throw new AccessDeniedException();
 
+  // @todo Remove this line.
   //drupal_deliver_page(MENU_ACCESS_DENIED);
 }
 

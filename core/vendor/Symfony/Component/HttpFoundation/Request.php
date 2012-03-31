@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpFoundation;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 /**
  * Request represents an HTTP request.
  *
@@ -71,18 +73,74 @@ class Request
      */
     public $headers;
 
+    /**
+     * @var string
+     */
     protected $content;
+
+    /**
+     * @var string
+     */
     protected $languages;
+
+    /**
+     * @var string
+     */
     protected $charsets;
+
+    /**
+     * @var string
+     */
     protected $acceptableContentTypes;
+
+    /**
+     * @var string
+     */
     protected $pathInfo;
+
+    /**
+     * @var string
+     */
     protected $requestUri;
+
+    /**
+     * @var string
+     */
     protected $baseUrl;
+
+    /**
+     * @var string
+     */
     protected $basePath;
+
+    /**
+     * @var string
+     */
     protected $method;
+
+    /**
+     * @var string
+     */
     protected $format;
+
+    /**
+     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     */
     protected $session;
 
+    /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
+     * @var string
+     */
+    protected $defaultLocale = 'en';
+
+    /**
+     * @var string
+     */
     static protected $formats;
 
     /**
@@ -152,7 +210,7 @@ class Request
         $request = new static($_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER);
 
         if (0 === strpos($request->server->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
-            && in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), array('PUT', 'DELETE'))
+            && in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), array('PUT', 'DELETE', 'PATCH'))
         ) {
             parse_str($request->getContent(), $data);
             $request->request = new ParameterBag($data);
@@ -211,38 +269,49 @@ class Request
             $defaults['HTTP_HOST'] = $defaults['HTTP_HOST'].':'.$components['port'];
         }
 
+        if (isset($components['user'])) {
+            $defaults['PHP_AUTH_USER'] = $components['user'];
+        }
+
+        if (isset($components['pass'])) {
+            $defaults['PHP_AUTH_PW'] = $components['pass'];
+        }
+
         if (!isset($components['path'])) {
             $components['path'] = '';
         }
 
-        if (in_array(strtoupper($method), array('POST', 'PUT', 'DELETE'))) {
-            $request = $parameters;
-            $query = array();
-            $defaults['CONTENT_TYPE'] = 'application/x-www-form-urlencoded';
-        } else {
-            $request = array();
-            $query = $parameters;
-            if (false !== $pos = strpos($uri, '?')) {
-                $qs = substr($uri, $pos + 1);
-                parse_str($qs, $params);
+        switch (strtoupper($method)) {
+            case 'POST':
+            case 'PUT':
+            case 'DELETE':
+                $defaults['CONTENT_TYPE'] = 'application/x-www-form-urlencoded';
+            case 'PATCH':
+                $request = $parameters;
+                $query = array();
+                break;
+            default:
+                $request = array();
+                $query = $parameters;
+                break;
+        }
 
-                $query = array_merge($params, $query);
+        if (isset($components['query'])) {
+            $queryString = html_entity_decode($components['query']);
+            parse_str($queryString, $qs);
+            if (is_array($qs)) {
+                $query = array_replace($qs, $query);
             }
         }
-
-        $queryString = isset($components['query']) ? html_entity_decode($components['query']) : '';
-        parse_str($queryString, $qs);
-        if (is_array($qs)) {
-            $query = array_replace($qs, $query);
-        }
+        $queryString = http_build_query($query);
 
         $uri = $components['path'].($queryString ? '?'.$queryString : '');
 
         $server = array_replace($defaults, $server, array(
-            'REQUEST_METHOD'       => strtoupper($method),
-            'PATH_INFO'            => '',
-            'REQUEST_URI'          => $uri,
-            'QUERY_STRING'         => $queryString,
+            'REQUEST_METHOD' => strtoupper($method),
+            'PATH_INFO'      => '',
+            'REQUEST_URI'    => $uri,
+            'QUERY_STRING'   => $queryString,
         ));
 
         return new static($query, $request, array(), $cookies, $files, $server, $content);
@@ -368,14 +437,30 @@ class Request
     }
 
     /**
+     * Returns true if $_SERVER entries coming from proxies are trusted,
+     * false otherwise.
+     *
+     * @return boolean
+     */
+    static public function isProxyTrusted()
+    {
+        return self::$trustProxy;
+    }
+
+    /**
      * Gets a "parameter" value.
      *
      * This method is mainly useful for libraries that want to provide some flexibility.
      *
      * Order of precedence: GET, PATH, POST, COOKIE
+     *
      * Avoid using this method in controllers:
+     *
      *  * slow
      *  * prefer to get from a "named" source
+     *
+     * It is better to explicity get request parameters from the appropriate
+     * public property instead (query, request, attributes, ...).
      *
      * @param string    $key        the key
      * @param mixed     $default    the default value
@@ -391,7 +476,7 @@ class Request
     /**
      * Gets the Session.
      *
-     * @return Session|null The session
+     * @return SessionInterface|null The session
      *
      * @api
      */
@@ -411,7 +496,9 @@ class Request
     public function hasPreviousSession()
     {
         // the check for $this->session avoids malicious users trying to fake a session cookie with proper name
-        return $this->cookies->has(session_name()) && null !== $this->session;
+        $sessionName = $this->hasSession() ? $this->session->getName() : null;
+
+        return $this->cookies->has($sessionName) && $this->hasSession();
     }
 
     /**
@@ -429,11 +516,11 @@ class Request
     /**
      * Sets the Session.
      *
-     * @param Session $session The Session
+     * @param SessionInterface $session The Session
      *
      * @api
      */
-    public function setSession(Session $session)
+    public function setSession(SessionInterface $session)
     {
         $this->session = $session;
     }
@@ -441,18 +528,16 @@ class Request
     /**
      * Returns the client IP address.
      *
-     * @param  Boolean $proxy Whether the current request has been made behind a proxy or not
-     *
      * @return string The client IP address
      *
      * @api
      */
-    public function getClientIp($proxy = false)
+    public function getClientIp()
     {
-        if ($proxy) {
+        if (self::$trustProxy) {
             if ($this->server->has('HTTP_CLIENT_IP')) {
                 return $this->server->get('HTTP_CLIENT_IP');
-            } elseif (self::$trustProxy && $this->server->has('HTTP_X_FORWARDED_FOR')) {
+            } elseif ($this->server->has('HTTP_X_FORWARDED_FOR')) {
                 $clientIp = explode(',', $this->server->get('HTTP_X_FORWARDED_FOR'), 2);
 
                 return isset($clientIp[0]) ? trim($clientIp[0]) : '';
@@ -570,6 +655,26 @@ class Request
     }
 
     /**
+     * Returns the user.
+     *
+     * @return string|null
+     */
+    public function getUser()
+    {
+        return $this->server->get('PHP_AUTH_USER');
+    }
+
+    /**
+     * Returns the password.
+     *
+     * @return string|null
+     */
+    public function getPassword()
+    {
+        return $this->server->get('PHP_AUTH_PW');
+    }
+
+    /**
      * Returns the HTTP host being requested.
      *
      * The port name will be appended to the host if it's non-standard.
@@ -622,7 +727,20 @@ class Request
             $qs = '?'.$qs;
         }
 
-        return $this->getScheme().'://'.$this->getHttpHost().$this->getBaseUrl().$this->getPathInfo().$qs;
+        $auth = '';
+        if ($user = $this->getUser()) {
+            $auth = $user;
+        }
+
+        if ($pass = $this->getPassword()) {
+           $auth .= ":$pass";
+        }
+
+        if ('' !== $auth) {
+           $auth .= '@';
+        }
+
+        return $this->getScheme().'://'.$auth.$this->getHttpHost().$this->getBaseUrl().$this->getPathInfo().$qs;
     }
 
     /**
@@ -715,7 +833,8 @@ class Request
         // Remove port number from host
         $host = preg_replace('/:\d+$/', '', $host);
 
-        return trim($host);
+        // host is lowercase as per RFC2616
+        return trim(strtolower($host));
     }
 
     /**
@@ -851,22 +970,50 @@ class Request
         $this->format = $format;
     }
 
-    public function setLocale($locale)
+    /**
+     * Gets the format associated with the request.
+     *
+     * @return string The format (null if no content type is present)
+     *
+     * @api
+     */
+    public function getContentType()
     {
-        if (!$this->hasSession()) {
-            throw new \LogicException('Forward compatibility for Request::setLocale() requires the session to be set.');
-        }
-
-        $this->session->setLocale($locale);
+        return $this->getFormat($this->server->get('CONTENT_TYPE'));
     }
 
+    /**
+     * Sets the default locale.
+     *
+     * @param string $locale
+     *
+     * @api
+     */
+    public function setDefaultLocale($locale)
+    {
+        $this->setPhpDefaultLocale($this->defaultLocale = $locale);
+    }
+
+    /**
+     * Sets the locale.
+     *
+     * @param string $locale
+     *
+     * @api
+     */
+    public function setLocale($locale)
+    {
+        $this->setPhpDefaultLocale($this->locale = $locale);
+    }
+
+    /**
+     * Get the locale.
+     *
+     * @return string
+     */
     public function getLocale()
     {
-        if (!$this->hasSession()) {
-            throw new \LogicException('Forward compatibility for Request::getLocale() requires the session to be set.');
-        }
-
-        return $this->session->getLocale();
+        return null === $this->locale ? $this->defaultLocale : $this->locale;
     }
 
     /**
@@ -1107,6 +1254,11 @@ class Request
         return $requestUri;
     }
 
+    /**
+     * Prepares the base URL.
+     *
+     * @return string
+     */
     protected function prepareBaseUrl()
     {
         $filename = basename($this->server->get('SCRIPT_FILENAME'));
@@ -1169,7 +1321,7 @@ class Request
     }
 
     /**
-     * Prepares base path.
+     * Prepares the base path.
      *
      * @return string base path
      */
@@ -1195,7 +1347,7 @@ class Request
     }
 
     /**
-     * Prepares path info.
+     * Prepares the path info.
      *
      * @return string path info
      */
@@ -1238,6 +1390,25 @@ class Request
             'xml'  => array('text/xml', 'application/xml', 'application/x-xml'),
             'rdf'  => array('application/rdf+xml'),
             'atom' => array('application/atom+xml'),
+            'rss'  => array('application/rss+xml'),
         );
+    }
+
+    /**
+     * Sets the default PHP locale.
+     *
+     * @param string $locale
+     */
+    private function setPhpDefaultLocale($locale)
+    {
+        // if either the class Locale doesn't exist, or an exception is thrown when
+        // setting the default locale, the intl module is not installed, and
+        // the call can be ignored:
+        try {
+            if (class_exists('Locale', false)) {
+                \Locale::setDefault($locale);
+            }
+        } catch (\Exception $e) {
+        }
     }
 }

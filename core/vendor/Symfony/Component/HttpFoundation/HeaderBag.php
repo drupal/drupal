@@ -18,7 +18,7 @@ namespace Symfony\Component\HttpFoundation;
  *
  * @api
  */
-class HeaderBag
+class HeaderBag implements \IteratorAggregate, \Countable
 {
     protected $headers;
     protected $cacheControl;
@@ -265,6 +265,26 @@ class HeaderBag
         unset($this->cacheControl[$key]);
 
         $this->set('Cache-Control', $this->getCacheControlHeader());
+    }
+
+    /**
+     * Returns an iterator for headers.
+     *
+     * @return \ArrayIterator An \ArrayIterator instance
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->headers);
+    }
+
+    /**
+     * Returns the number of headers.
+     *
+     * @return int The number of headers
+     */
+    public function count()
+    {
+        return count($this->headers);
     }
 
     protected function getCacheControlHeader()
