@@ -3,6 +3,7 @@
 use Drupal\Core\Database\Database;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @file
@@ -1507,6 +1508,27 @@ function request_uri() {
   $uri = '/' . ltrim($uri, '/');
 
   return $uri;
+}
+
+/**
+ * Returns the current global reuqest object.
+ *
+ * @todo Replace this function with a proper dependency injection container.
+ *
+ * @staticvar Request $request
+ * @param Request $new_request
+ *   The new request object to store. If you are not index.php, you probably
+ *   should not be using this parameter.
+ * @return Request
+ *   The current request object.
+ */
+function request(Request $new_request = NULL) {
+  static $request;
+
+  if ($new_request) {
+    $request = $new_request;
+  }
+  return $request;
 }
 
 /**
