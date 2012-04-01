@@ -3,6 +3,8 @@
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\TaskException;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * @file
  * API functions for installing Drupal.
@@ -260,6 +262,14 @@ function install_begin_request(&$install_state) {
   }
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
+  // A request object from the HTTPFoundation to tell us about the request.
+  $request = Request::createFromGlobals();
+
+  // Set the global $request object.  This is a temporary measure to
+  // keep legacy utility functions working.  It should be moved to a dependency
+  // injection container at some point.
+  request($request);
 
   // This must go after drupal_bootstrap(), which unsets globals!
   global $conf;
