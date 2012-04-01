@@ -63,32 +63,34 @@ function image_style_form($form, &$form_state, $style) {
   $form['effects'] = array(
     '#theme' => 'image_style_effects',
   );
-  foreach ($style['effects'] as $key => $effect) {
-    $form['effects'][$key]['#weight'] = isset($form_state['input']['effects']) ? $form_state['input']['effects'][$key]['weight'] : NULL;
-    $form['effects'][$key]['label'] = array(
-      '#markup' => $effect['label'],
-    );
-    $form['effects'][$key]['summary'] = array(
-      '#markup' => isset($effect['summary theme']) ? theme($effect['summary theme'], array('data' => $effect['data'])) : '',
-    );
-    $form['effects'][$key]['weight'] = array(
-      '#type' => 'weight',
-      '#title' => t('Weight for @title', array('@title' => $effect['label'])),
-      '#title_display' => 'invisible',
-      '#default_value' => $effect['weight'],
-    );
+  if (!empty($style['effects'])) {
+    foreach ($style['effects'] as $key => $effect) {
+      $form['effects'][$key]['#weight'] = isset($form_state['input']['effects']) ? $form_state['input']['effects'][$key]['weight'] : NULL;
+      $form['effects'][$key]['label'] = array(
+        '#markup' => $effect['label'],
+      );
+      $form['effects'][$key]['summary'] = array(
+        '#markup' => isset($effect['summary theme']) ? theme($effect['summary theme'], array('data' => $effect['data'])) : '',
+      );
+      $form['effects'][$key]['weight'] = array(
+        '#type' => 'weight',
+        '#title' => t('Weight for @title', array('@title' => $effect['label'])),
+        '#title_display' => 'invisible',
+        '#default_value' => $effect['weight'],
+      );
 
-    $form['effects'][$key]['configure'] = array(
-      '#type' => 'link',
-      '#title' => t('edit'),
-      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $key,
-      '#access' => isset($effect['form callback']),
-    );
-    $form['effects'][$key]['remove'] = array(
-      '#type' => 'link',
-      '#title' => t('delete'),
-      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $key . '/delete',
-    );
+      $form['effects'][$key]['configure'] = array(
+        '#type' => 'link',
+        '#title' => t('edit'),
+        '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $key,
+        '#access' => isset($effect['form callback']),
+      );
+      $form['effects'][$key]['remove'] = array(
+        '#type' => 'link',
+        '#title' => t('delete'),
+        '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $key . '/delete',
+      );
+    }
   }
 
   // Build the new image effect addition form and add it to the effect list.

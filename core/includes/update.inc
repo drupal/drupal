@@ -850,6 +850,72 @@ function update_retrieve_dependencies() {
 }
 
 /**
+ * Updates config with values set on Drupal 7.x
+ * 
+ * Provide a generalised method to migrate variables from Drupal 7 to Drupal 8's
+ * configuration management system.
+ *
+ * @param $config_name
+ *   The name of the configuration object to retrieve. The name corresponds to
+ *   an XML configuration file. For @code config(book.admin) @endcode, the
+ *   config object returned will contain the contents of book.admin.xml.
+ * @param $variable_map
+ *   An array to map new to old configuration naming conventions. Example:
+ *   @code
+ *     array('new_config' => 'old_config')
+ *   @endcode 
+ *   This would update the value for new_config to the value old_config has in 
+ *   the variable table.
+ */
+function update_variables_to_config($config_name, $variable_map = array()) {
+  $config = config($config_name);
+  $config_data = array_keys($config->get());
+
+  if (!empty($config_data)) {
+    // Build a list of variables to select from the database and build a mapping
+    // of variable names to config keys.
+    foreach ($config_data as $config_key) {
+      if (isset($variable_map[$config_key])) {
+        $variables[] = $variable_map[$config_key];
+        $config_keys[$variable_map[$config_key]] = $config_key;
+      }
+      else {
+        $variables[] = $config_key;
+        $config_keys[$config_key] = $config_key;
+      }
+    }
+
+    // Get any variables currently defined that match the new setting names in
+    // the config file.
+    $query = db_select('variable', 'v')
+      ->fields('v')
+      ->condition('name', $variables, 'IN');
+
+    $var_values = $query->execute()->fetchAllKeyed(0);
+    if (!empty($var_values)) {
+      // Update the config system settings to use the values previously stored in
+      // the variable table.
+      try {
+        foreach($var_values as $name => $val) {
+          $config->set($config_keys[$name], unserialize($val));
+        }
+        $config->save();
+        // Delete the old variables. The config system will throw an exception if a
+        // value cannot be saved, so this code will not run if there is a problem
+        // running the update.
+        $del = db_delete('variable')->condition('name', $variables, 'IN');
+        $del->execute();
+      }
+      // @TODO We may want to do different error handling for different
+      // exception types, but for now we'll just log the exception.
+      catch (Exception $e) {
+        watchdog_exception('update', $e);
+      }
+    }
+  }
+}
+
+/**
  * @defgroup update-api-7.x-to-8.x Update versions of API functions
  * @{
  * Functions similar to normal API function but not firing hooks.

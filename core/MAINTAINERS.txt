@@ -58,7 +58,7 @@ Database system
     - Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
 Database update system
-- ?
+- Ashok Modi 'btmash' <http://drupal.org/user/60422>
 
 Entity system
 - Wolfgang Ziegler 'fago' <http://drupal.org/user/16747>

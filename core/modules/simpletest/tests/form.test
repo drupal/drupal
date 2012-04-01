@@ -53,6 +53,9 @@ class FormsTestCase extends DrupalWebTestCase {
     $elements['url']['element'] = array('#title' => $this->randomName(), '#type' => 'url');
     $elements['url']['empty_values'] = $empty_strings;
 
+    $elements['search']['element'] = array('#title' => $this->randomName(), '#type' => 'search');
+    $elements['search']['empty_values'] = $empty_strings;
+
     $elements['password']['element'] = array('#title' => $this->randomName(), '#type' => 'password');
     $elements['password']['empty_values'] = $empty_strings;
 
@@ -340,7 +343,7 @@ class FormsTestCase extends DrupalWebTestCase {
 
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
-    $this->assertEqual(count($disabled_elements), 36, 'The correct elements have the disabled property in the HTML code.');
+    $this->assertEqual(count($disabled_elements), 37, 'The correct elements have the disabled property in the HTML code.');
 
     $this->drupalPost(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);
@@ -447,6 +450,29 @@ class FormsTestCase extends DrupalWebTestCase {
     $checkbox[0]['value'] = 'FORGERY';
     $this->drupalPost(NULL, array('checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE), t('Submit'));
     $this->assertText('An illegal choice has been detected.', t('Input forgery was detected.'));
+  }
+
+  /**
+   * Tests required attribute.
+   */
+  function testRequiredAttribute() {
+    $this->drupalGet('form-test/required-attribute');
+    $expected = 'required';
+    // Test to make sure the elements have the proper required attribute.
+    foreach (array('textfield', 'password') as $type) {
+      $element = $this->xpath('//input[@id=:id and @required=:expected]', array(
+        ':id' => 'edit-' . $type,
+        ':expected' => $expected,
+      ));
+      $this->assertTrue(!empty($element), t('The @type has the proper required attribute.', array('@type' => $type)));
+    }
+
+    // Test to make sure textarea has the proper required attribute.
+    $element = $this->xpath('//textarea[@id=:id and @required=:expected]', array(
+      ':id' => 'edit-textarea',
+      ':expected' => $expected,
+    ));
+    $this->assertTrue(!empty($element), t('The textarea has the proper required attribute.'));
   }
 }
 
@@ -630,6 +656,25 @@ class FormValidationTestCase extends DrupalWebTestCase {
     );
     $path = 'form-test/limit-validation-errors';
 
+    // Render the form, and verify that the buttons with limited server-side
+    // validation have the proper 'formnovalidate' attribute (to prevent
+    // client-side validation by the browser).
+    $this->drupalGet($path);
+    $expected = 'formnovalidate';
+    foreach (array('partial', 'partial-numeric-index', 'substring') as $type) {
+      $element = $this->xpath('//input[@id=:id and @formnovalidate=:expected]', array(
+        ':id' => 'edit-' . $type,
+        ':expected' => $expected,
+      ));
+      $this->assertTrue(!empty($element), t('The @type button has the proper formnovalidate attribute.', array('@type' => $type)));
+    }
+    // The button with full server-side validation should not have the
+    // 'formnovalidate' attribute.
+    $element = $this->xpath('//input[@id=:id and not(@formnovalidate)]', array(
+      ':id' => 'edit-full',
+    ));
+    $this->assertTrue(!empty($element), t('The button with full server-side validation does not have the formnovalidate attribute.'));
+
     // Submit the form by pressing the 'Partial validate' button (uses
     // #limit_validation_errors) and ensure that the title field is not
     // validated, but the #element_validate handler for the 'test' field
@@ -740,11 +785,6 @@ class FormsElementsLabelsTestCase extends DrupalWebTestCase {
 
     $elements = $this->xpath('//div[@id="form-test-textfield-title-suffix"]/preceding-sibling::div[contains(@class, \'form-item-form-textfield-test-title\')]');
     $this->assertTrue(isset($elements[0]), t("Properly places the #suffix element before the form item."));
-
-    // Check that required checkboxes with #title_display attribute have
-    // a description but no title is displayed.
-    $this->assertFieldByXPath('//div[contains(@class, "form-item-form-checkboxes-test-title-display-attribute")]/div[contains(@class, "description")]', NULL, 'Description displayed for #title_display attribute.');
-    $this->assertNoFieldByXPath('//label[@for="edit-form-checkboxes-test-title-display-attribute"]', NULL, 'No title displayed for #title_display attribute.');
   }
 }
 

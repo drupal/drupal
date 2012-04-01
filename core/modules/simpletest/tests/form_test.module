@@ -229,6 +229,13 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form-test/required-attribute'] = array(
+    'title' => 'Required',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_required_attribute'),
+    'access callback' => TRUE,
+  );
+
   return $items;
 }
 
@@ -821,15 +828,6 @@ function form_label_test_form() {
   $form['form_textfield_test_title_no_show'] = array(
     '#type' => 'textfield',
   );
-  // Test required checkboxes with #title_display attribute and a description.
-  $form['form_checkboxes_test_title_display_attribute'] = array(
-    '#type' => 'checkboxes',
-    '#title' => 'Checkboxes, #title_display attribute',
-    '#title_display' => 'attribute',
-    '#required' => TRUE,
-    '#description' => 'Required checkboxes with #title_display attribute and a description.',
-    '#options' => drupal_map_assoc(array('foo', 'bar', 'baz')),
-  );
 
   return $form;
 }
@@ -1101,7 +1099,7 @@ function form_test_select_submit($form, &$form_state) {
  * Builds a form to test the placeholder attribute.
  */
 function form_test_placeholder_test($form, &$form_state) {
-  foreach (array('textfield', 'textarea', 'url', 'password', 'tel', 'email') as $type) {
+  foreach (array('textfield', 'textarea', 'url', 'password', 'search', 'tel', 'email') as $type) {
     $form[$type] = array(
       '#type' => $type,
       '#title' => $type,
@@ -1242,7 +1240,7 @@ function form_test_url_submit($form, &$form_state) {
  */
 function _form_test_disabled_elements($form, &$form_state) {
   // Elements that take a simple default value.
-  foreach (array('textfield', 'textarea', 'tel', 'hidden') as $type) {
+  foreach (array('textfield', 'textarea', 'search', 'tel', 'hidden') as $type) {
     $form[$type] = array(
       '#type' => $type,
       '#title' => $type,
@@ -1838,4 +1836,19 @@ function form_test_checkboxes_zero($form, &$form_state, $json = TRUE) {
 
 function _form_test_checkboxes_zero_no_redirect($form, &$form_state) {
   $form_state['redirect'] = FALSE;
+}
+
+/**
+ * Builds a form to test the required attribute.
+ */
+function form_test_required_attribute($form, &$form_state) {
+  foreach (array('textfield', 'textarea', 'password') as $type) {
+    $form[$type] = array(
+      '#type' => $type,
+      '#required' => TRUE,
+      '#title' => $type,
+    );
+  }
+
+  return $form;
 }

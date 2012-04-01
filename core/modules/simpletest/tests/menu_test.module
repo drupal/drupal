@@ -230,6 +230,16 @@ function menu_test_menu() {
     'page callback' => 'menu_test_menu_trail_callback',
     'access arguments' => array('access administration pages'),
   );
+  $items['menu-test/custom-403-page'] = array(
+    'title' => 'Custom 403 page',
+    'page callback' => 'menu_test_custom_403_404_callback',
+    'access arguments' => array('access content'),
+  );
+  $items['menu-test/custom-404-page'] = array(
+    'title' => 'Custom 404 page',
+    'page callback' => 'menu_test_custom_403_404_callback',
+    'access arguments' => array('access content'),
+  );
 
   // File inheritance tests. This menu item should inherit the page callback
   // system_admin_menu_block_page() and therefore render its children as links
@@ -367,6 +377,32 @@ function menu_test_menu_trail_callback() {
     menu_tree_set_path($menu_path['menu_name'], $menu_path['path']);
   }
   return 'This is menu_test_menu_trail_callback().';
+}
+
+/**
+ * Implements hook_init().
+ */
+function menu_test_init() {
+  // When requested by one of the MenuTrailTestCase tests, record the initial
+  // active trail during Drupal's bootstrap (before the user is redirected to a
+  // custom 403 or 404 page). See menu_test_custom_403_404_callback().
+  if (variable_get('menu_test_record_active_trail', FALSE)) {
+    variable_set('menu_test_active_trail_initial', menu_get_active_trail());
+  }
+}
+
+/**
+ * Callback for our custom 403 and 404 pages.
+ */
+function menu_test_custom_403_404_callback() {
+  // When requested by one of the MenuTrailTestCase tests, record the final
+  // active trail now that the user has been redirected to the custom 403 or
+  // 404 page. See menu_test_init().
+  if (variable_get('menu_test_record_active_trail', FALSE)) {
+    variable_set('menu_test_active_trail_final', menu_get_active_trail());
+  }
+
+  return 'This is menu_test_custom_403_404_callback().';
 }
 
 /**

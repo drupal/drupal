@@ -1,0 +1,6 @@
+name = Config upgrade tests
+description = A support module for update_variables_to_config testing.
+core = 8.x
+package = Testing
+version = VERSION
+hidden = TRUE

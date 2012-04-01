@@ -39,7 +39,7 @@ use ArrayAccess;
  * error, and $var will be populated with the contents of $object['foo'], but
  * that data will be passed by value, not reference. For more information on
  * the PHP limitation, see the note in the official PHP documentation atá
- * http://php.net/manual/en/arrayaccess.offsetget.php on
+ * http://php.net/manual/arrayaccess.offsetget.php on
  * ArrayAccess::offsetGet().
  *
  * By default, the class accounts for caches where calling functions might

@@ -3,6 +3,7 @@
 use Drupal\Core\Database\Database;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @file
@@ -265,7 +266,7 @@ const REGISTRY_WRITE_LOOKUP_CACHE = 2;
 /**
  * Regular expression to match PHP function names.
  *
- * @see http://php.net/manual/en/language.functions.php
+ * @see http://php.net/manual/language.functions.php
  */
 const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 
@@ -549,13 +550,6 @@ function drupal_environment_initialize() {
     // defined for E_ALL compliance.
     $_SERVER['HTTP_HOST'] = '';
   }
-
-  // When clean URLs are enabled, emulate ?q=foo/bar using REQUEST_URI. It is
-  // not possible to append the query string using mod_rewrite without the B
-  // flag (this was added in Apache 2.2.8), because mod_rewrite unescapes the
-  // path before passing it on to PHP. This is a problem when the path contains
-  // e.g. "&" or "%" that have special meanings in URLs and must be encoded.
-  $_GET['q'] = request_path();
 
   // Enforce E_STRICT, but allow users to set levels not part of E_STRICT.
   error_reporting(E_STRICT | E_ALL | error_reporting());
@@ -1507,6 +1501,27 @@ function request_uri() {
   $uri = '/' . ltrim($uri, '/');
 
   return $uri;
+}
+
+/**
+ * Returns the current global reuqest object.
+ *
+ * @todo Replace this function with a proper dependency injection container.
+ *
+ * @staticvar Request $request
+ * @param Request $new_request
+ *   The new request object to store. If you are not index.php, you probably
+ *   should not be using this parameter.
+ * @return Symfony\Component\HttpFoundation\Request
+ *   The current request object.
+ */
+function request(Request $new_request = NULL) {
+  static $request;
+
+  if ($new_request) {
+    $request = $new_request;
+  }
+  return $request;
 }
 
 /**
@@ -2595,6 +2610,9 @@ function language_default() {
 /**
  * Returns the requested URL path of the page being viewed.
  *
+ * @todo Eliminate this function in favor of direct access to the request
+ * object. 
+ *
  * Examples:
  * - http://example.com/node/306 returns "node/306".
  * - http://example.com/drupalfolder/node/306 returns "node/306" while
@@ -2610,45 +2628,7 @@ function language_default() {
  * @see current_path()
  */
 function request_path() {
-  static $path;
-
-  if (isset($path)) {
-    return $path;
-  }
-
-  if (isset($_GET['q'])) {
-    // This is a request with a ?q=foo/bar query string. $_GET['q'] is
-    // overwritten in drupal_path_initialize(), but request_path() is called
-    // very early in the bootstrap process, so the original value is saved in
-    // $path and returned in later calls.
-    $path = $_GET['q'];
-  }
-  elseif (isset($_SERVER['REQUEST_URI'])) {
-    // This request is either a clean URL, or 'index.php', or nonsense.
-    // Extract the path from REQUEST_URI.
-    $request_path = strtok($_SERVER['REQUEST_URI'], '?');
-    $base_path_len = strlen(rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/'));
-    // Unescape and strip $base_path prefix, leaving q without a leading slash.
-    $path = substr(urldecode($request_path), $base_path_len + 1);
-    // If the path equals the script filename, either because 'index.php' was
-    // explicitly provided in the URL, or because the server added it to
-    // $_SERVER['REQUEST_URI'] even when it wasn't provided in the URL (some
-    // versions of Microsoft IIS do this), the front page should be served.
-    if ($path == basename($_SERVER['PHP_SELF'])) {
-      $path = '';
-    }
-  }
-  else {
-    // This is the front page.
-    $path = '';
-  }
-
-  // Under certain conditions Apache's RewriteRule directive prepends the value
-  // assigned to $_GET['q'] with a slash. Moreover we can always have a trailing
-  // slash in place, hence we need to normalize $_GET['q'].
-  $path = trim($path, '/');
-
-  return $path;
+  return request()->getPathInfo();
 }
 
 /**
@@ -3029,8 +3009,8 @@ function registry_update() {
  * However, the above line of code does not work, because PHP only allows static
  * variables to be initializied by literal values, and does not allow static
  * variables to be assigned to references.
- * - http://php.net/manual/en/language.variables.scope.php#language.variables.scope.static
- * - http://php.net/manual/en/language.variables.scope.php#language.variables.scope.references
+ * - http://php.net/manual/language.variables.scope.php#language.variables.scope.static
+ * - http://php.net/manual/language.variables.scope.php#language.variables.scope.references
  * The example below shows the syntax needed to work around both limitations.
  * For benchmarks and more information, see http://drupal.org/node/619666.
  *

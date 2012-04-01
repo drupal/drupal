@@ -470,7 +470,7 @@ function menu_block_info() {
 
   $blocks = array();
   foreach ($menus as $name => $title) {
-    // Default "Navigation" block is handled by user.module.
+    // Default "Navigation" block is handled by system.module.
     $blocks[$name]['info'] = check_plain($title);
     // Menu blocks can't be cached because each menu item can have
     // a custom access callback. menu.inc manages its own caching.

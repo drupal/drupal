@@ -2268,6 +2268,7 @@ class DrupalWebTestCase extends DrupalTestCase {
           case 'hidden':
           case 'password':
           case 'email':
+          case 'search':
             $post[$name] = $edit[$name];
             unset($edit[$name]);
             break;
@@ -2431,7 +2432,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @return
    *   The return value of the xpath search. For details on the xpath string
    *   format and return values see the SimpleXML documentation,
-   *   http://us.php.net/manual/function.simplexml-element-xpath.php.
+   *   http://php.net/manual/function.simplexml-element-xpath.php.
    */
   protected function xpath($xpath, array $arguments = array()) {
     if ($this->parse()) {

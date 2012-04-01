@@ -385,7 +385,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
       case 39: // Right arrow.
       case 63235: // Safari right arrow.
         keyChange = true;
-        self.rowObject.indent(1 * self.rtl);
+        self.rowObject.indent(self.rtl);
         break;
       case 40: // Down arrow.
       case 63233: // Safari down arrow.

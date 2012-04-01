@@ -1,0 +1,6 @@
+<?php
+
+/**
+ * @file
+ * A support module for update_variables_to_config() testing.
+ */

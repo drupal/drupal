@@ -484,13 +484,15 @@ function image_style_load($name) {
     return FALSE;
   }
 
-  foreach ($style['effects'] as $ieid => $effect) {
-    $definition = image_effect_definition_load($effect['name']);
-    $effect = array_merge($definition, $effect);
-    $style['effects'][$ieid] = $effect;
+  if (!empty($style['effects'])) {
+    foreach ($style['effects'] as $ieid => $effect) {
+      $definition = image_effect_definition_load($effect['name']);
+      $effect = array_merge($definition, $effect);
+      $style['effects'][$ieid] = $effect;
+    }
+    // Sort effects by weight.
+    uasort($style['effects'], 'drupal_sort_weight');
   }
-  // Sort effects by weight.
-  uasort($style['effects'], 'drupal_sort_weight');
 
   return $style;
 }
@@ -698,8 +700,10 @@ function image_style_create_derivative($style, $source, $destination) {
     return FALSE;
   }
 
-  foreach ($style['effects'] as $effect) {
-    image_effect_apply($image, $effect);
+  if (!empty($style['effects'])) {
+    foreach ($style['effects'] as $effect) {
+      image_effect_apply($image, $effect);
+    }
   }
 
   if (!image_save($image, $destination)) {
@@ -731,16 +735,18 @@ function image_style_transform_dimensions($style_name, array &$dimensions) {
     return;
   }
 
-  foreach ($style['effects'] as $effect) {
-    if (isset($effect['dimensions passthrough'])) {
-      continue;
-    }
+  if (!empty($style['effects'])) {
+    foreach ($style['effects'] as $effect) {
+      if (isset($effect['dimensions passthrough'])) {
+        continue;
+      }
 
-    if (isset($effect['dimensions callback'])) {
-      $effect['dimensions callback']($dimensions, $effect['data']);
-    }
-    else {
-      $dimensions['width'] = $dimensions['height'] = NULL;
+      if (isset($effect['dimensions callback'])) {
+        $effect['dimensions callback']($dimensions, $effect['data']);
+      }
+      else {
+        $dimensions['width'] = $dimensions['height'] = NULL;
+      }
     }
   }
 }

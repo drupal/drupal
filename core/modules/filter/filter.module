@@ -839,7 +839,7 @@ function filter_process_format($element) {
   // Turn original element into a text format wrapper.
   $path = drupal_get_path('module', 'filter');
   $element['#attached']['js'][] = $path . '/filter.js';
-  $element['#attached']['css'][] = $path . '/filter.css';
+  $element['#attached']['css'][] = $path . '/filter.admin.css';
 
   // Setup child container for the text format widget.
   $element['format'] = array(

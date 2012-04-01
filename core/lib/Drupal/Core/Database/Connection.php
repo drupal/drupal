@@ -21,7 +21,7 @@ use PDOException;
  * concrete implementation of it to support special handling required by that
  * database.
  *
- * @see http://php.net/manual/en/book.pdo.php
+ * @see http://php.net/manual/book.pdo.php
  */
 abstract class Connection extends PDO {
 

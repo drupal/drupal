@@ -81,4 +81,9 @@ interface DrupalConfigVerifiedStorageInterface {
    *   @todo
    */
   static function getNamesWithPrefix($prefix);
+
+  /**
+   * Gets the name of this object.
+   */
+  public function getName();
 }

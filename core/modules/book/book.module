@@ -414,7 +414,7 @@ function book_get_books() {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  *
  * Adds the book fieldset to the node form.
  *
@@ -1036,7 +1036,7 @@ function _book_parent_depth_limit($book_link) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for node_delete_confirm().
  *
  * Alters the confirm form for a single node deletion.
  *

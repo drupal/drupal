@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @file
+ *
+ * Definition of Drupal\Core\UrlMatcher.
+ */
+
 namespace Drupal\Core;
 
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -14,6 +20,11 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class UrlMatcher extends SymfonyUrlMatcher {
 
+  /**
+   * The request context for this matcher.
+   *
+   * @var RequestContext
+   */
   protected $context;
 
   /**
@@ -91,8 +102,12 @@ class UrlMatcher extends SymfonyUrlMatcher {
     $route = array(
       '_controller' => $router_item['page_callback']
     );
+
     // Place argument defaults on the route.
-    foreach ($router_item['page_arguments'] as $k => $v) {
+    // @TODO: For some reason drush test runs have a serialized page_arguments
+    // but HTTP requests are unserialized. Hack to get around this for now.
+    !is_array($router_item['page_arguments']) ? $page_arguments = unserialize($router_item['page_arguments']) : $page_arguments = $router_item['page_arguments'];
+    foreach ($page_arguments as $k => $v) {
       $route[$k] = $v;
     }
     return new Route($router_item['href'], $route);

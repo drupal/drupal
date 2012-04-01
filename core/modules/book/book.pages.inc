@@ -56,7 +56,7 @@ function book_export($type, $nid) {
 }
 
 /**
- * This function is called by book_export() to generate HTML for export.
+ * Generates HTML for export when invoked by book_export().
  *
  * The given node is embedded to its absolute depth in a top level section. For
  * example, a child node with depth 2 in the hierarchy is contained in

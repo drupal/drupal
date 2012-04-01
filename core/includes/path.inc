@@ -334,7 +334,10 @@ function drupal_match_path($path, $patterns) {
 /**
  * Return the current URL path of the page being viewed.
  *
- * Examples:
+ * @todo Eliminate this function in favor of direct access to the request
+ * object.
+ *
+ *  Examples:
  * - http://example.com/node/306 returns "node/306".
  * - http://example.com/drupalfolder/node/306 returns "node/306" while
  *   base_path() returns "/drupalfolder/".
@@ -352,7 +355,7 @@ function drupal_match_path($path, $patterns) {
  * @see request_path()
  */
 function current_path() {
-  return $_GET['q'];
+  return request()->attributes->get('system_path');
 }
 
 /**
