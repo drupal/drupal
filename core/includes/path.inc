@@ -352,7 +352,7 @@ function drupal_match_path($path, $patterns) {
  * @see request_path()
  */
 function current_path() {
-  return request()->attributes->get('system_path');
+  return $_GET['q'];
 }
 
 /**
