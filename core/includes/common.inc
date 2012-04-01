@@ -2735,10 +2735,6 @@ function drupal_get_path($type, $name) {
 /**
  * Returns the base URL path (i.e., directory) of the Drupal installation.
  *
- * @todo Eliminate this function in favor of direct access to the request. Or,
- * better yet, eliminate the need for this function outside of the
- * URL Generator.
- *
  * base_path() adds a "/" to the beginning and end of the returned path if the
  * path is not empty. At the very least, this will return "/".
  *
@@ -2747,7 +2743,7 @@ function drupal_get_path($type, $name) {
  * - http://example.com/drupal/folder returns "/drupal/folder/".
  */
 function base_path() {
-  return request()->getBasePath() . '/';
+  return $GLOBALS['base_path'];
 }
 
 /**
