@@ -3,6 +3,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -29,14 +30,6 @@ class ViewSubscriber implements EventSubscriberInterface {
   public function __construct(ContentNegotiation $negotiation) {
     $this->negotiation = $negotiation;
   }
-
-  protected function createJsonResponse() {
-    $response = new Response();
-    $response->headers->set('Content-Type', 'application/json; charset=utf-8');
-
-    return $response;
-  }
-
 
   /**
    * Processes a successful controller into an HTTP 200 response.
@@ -67,9 +60,9 @@ class ViewSubscriber implements EventSubscriberInterface {
   public function onJson(GetResponseEvent $event) {
     $page_callback_result = $event->getControllerResult();
 
-    print_r($page_callback_result);
+    //print_r($page_callback_result);
 
-    $response = $this->createJsonResponse();
+    $response = new JsonResponse();
     $response->setContent($page_callback_result);
 
     return $response;
