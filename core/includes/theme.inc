@@ -2147,7 +2147,7 @@ function theme_item_list($variables) {
 
   // Only output the list container and title, if there are any list items.
   if ($output !== '') {
-    if ($title !== '') {
+    if (!empty($title)) {
       $title = '<h3>' . $title . '</h3>';
     }
     $output = '<div class="item-list">' . $title . $output . '</div>';

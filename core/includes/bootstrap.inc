@@ -1585,6 +1585,9 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
   if (!$in_error_state && function_exists('module_implements')) {
     $in_error_state = TRUE;
 
+    // The user object may not exist in all conditions, so 0 is substituted if needed.
+    $user_uid = isset($user->uid) ? $user->uid : 0;
+
     // Prepare the fields to be logged
     $log_entry = array(
       'type'        => $type,
@@ -1593,6 +1596,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
       'severity'    => $severity,
       'link'        => $link,
       'user'        => $user,
+      'uid'         => $user_uid,
       'request_uri' => $base_root . request_uri(),
       'referer'     => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
       'ip'          => ip_address(),
