@@ -2423,7 +2423,7 @@ class FileDownloadTest extends FileTestCase {
 
     $this->checkUrl('public', '', $basename, $base_url . '/' . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . '/' . $basename_encoded);
     $this->checkUrl('private', '', $basename, $base_url . '/system/files/' . $basename_encoded);
-    $this->checkUrl('private', '', $basename, $base_url . '/?q=system/files/' . $basename_encoded, '0');
+    $this->checkUrl('private', '', $basename, $base_url . '/index.php/system/files/' . $basename_encoded, '0');
   }
 
   /**

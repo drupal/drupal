@@ -56,29 +56,22 @@ class UrlMatcher extends SymfonyUrlMatcher {
     }
 
     if ($router_item = $this->matchDrupalItem($dpathinfo)) {
+      $ret = $this->convertDrupalItem($router_item);
+      // Stash the router item in the attributes while we're transitioning.
+      $ret['drupal_menu_item'] = $router_item;
 
-      $routes = new RouteCollection();
-      $routes->add(hash('sha256', $router_item['path']), $this->convertDrupalItem($router_item));
-
-      if ($ret = $this->matchCollection($pathinfo, $routes)) {
-        //drupal_set_message('<pre>' . var_export('test', TRUE) . '</pre>');
-        // Stash the router item in the attributes while we're transitioning.
-        $ret['drupal_menu_item'] = $router_item;
-
-        // Most legacy controllers (aka page callbacks) are in a separate file,
-        // so we have to include that.
-        if ($router_item['include_file']) {
-          require_once DRUPAL_ROOT . '/' . $router_item['include_file'];
-        }
-
-
-        return $ret;
+      // Most legacy controllers (aka page callbacks) are in a separate file,
+      // so we have to include that.
+      if ($router_item['include_file']) {
+        require_once DRUPAL_ROOT . '/' . $router_item['include_file'];
       }
+
+      return $ret;
     }
 
-    throw 0 < count($this->allow)
-      ? new MethodNotAllowedException(array_unique(array_map('strtoupper', $this->allow)))
-      : new ResourceNotFoundException();
+    // This matcher doesn't differentiate by method, so don't bother with those
+    // exceptions.
+    throw new ResourceNotFoundException();
   }
 
   /**
@@ -110,6 +103,7 @@ class UrlMatcher extends SymfonyUrlMatcher {
     foreach ($page_arguments as $k => $v) {
       $route[$k] = $v;
     }
+    return $route;
     return new Route($router_item['href'], $route);
   }
 }

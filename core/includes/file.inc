@@ -5,6 +5,9 @@
  * API for handling file uploads and server file management.
  */
 
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Drupal\Core\StreamWrapper\LocalStream;
 
 /**
@@ -2046,18 +2049,27 @@ function file_download() {
       $function = $module . '_file_download';
       $result = $function($uri);
       if ($result == -1) {
-        return drupal_access_denied();
+        throw new AccessDeniedHttpException();
       }
       if (isset($result) && is_array($result)) {
         $headers = array_merge($headers, $result);
       }
     }
     if (count($headers)) {
-      file_transfer($uri, $headers);
+      return new StreamedResponse(function() use ($uri) {
+        $scheme = file_uri_scheme($uri);
+        // Transfer file in 1024 byte chunks to save memory usage.
+        if ($scheme && file_stream_wrapper_valid_scheme($scheme) && $fd = fopen($uri, 'rb')) {
+          while (!feof($fd)) {
+            print fread($fd, 1024);
+          }
+          fclose($fd);
+        }
+      }, 200, $headers);
     }
-    return drupal_access_denied();
+    throw new AccessDeniedHttpException();
   }
-  return drupal_not_found();
+  throw new NotFoundHttpException();
 }
 
 
