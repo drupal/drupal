@@ -1427,7 +1427,7 @@ class UserAccountLinksUnitTests extends DrupalWebTestCase {
   }
 
   /**
-   * Test the user login block.
+   * Tests the secondary menu.
    */
   function testSecondaryMenu() {
     // Create a regular user.
