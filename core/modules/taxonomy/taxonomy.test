@@ -754,9 +754,8 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $path = 'taxonomy/autocomplete/taxonomy_';
     $path .= $this->vocabulary->machine_name . '/' . $input;
     // The result order is not guaranteed, so check each term separately.
-    $url = url($path, array('absolute' => TRUE));
-    $result = drupal_http_request($url);
-    $data = drupal_json_decode($result->data);
+    $result = $this->drupalGet($path);
+    $data = drupal_json_decode($result);
     $this->assertEqual($data[$first_term->name], check_plain($first_term->name), 'Autocomplete returned the first matching term');
     $this->assertEqual($data[$second_term->name], check_plain($second_term->name), 'Autocomplete returned the second matching term');
 
