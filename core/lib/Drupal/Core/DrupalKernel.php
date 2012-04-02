@@ -23,6 +23,7 @@ use Drupal\Core\EventSubscriber\ViewSubscriber;
 use Drupal\Core\EventSubscriber\AccessSubscriber;
 use Drupal\Core\EventSubscriber\PathSubscriber;
 use Drupal\Core\EventSubscriber\LegacyControllerSubscriber;
+use Drupal\Core\EventSubscriber\MaintenanceModeSubscriber;
 
 use Exception;
 
@@ -70,6 +71,7 @@ class DrupalKernel extends HttpKernel {
       // replacement system.
       $this->dispatcher->addSubscriber(new ViewSubscriber($negotiation));
       $this->dispatcher->addSubscriber(new AccessSubscriber());
+      $this->dispatcher->addSubscriber(new MaintenanceModeSubscriber());
       $this->dispatcher->addSubscriber(new PathSubscriber());
       $this->dispatcher->addSubscriber(new LegacyControllerSubscriber());
 
