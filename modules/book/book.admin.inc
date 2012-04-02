@@ -22,7 +22,7 @@ function book_admin_overview() {
 }
 
 /**
- * Builds and returns the book settings form.
+ * Form constructor for the book settings form.
  *
  * @see book_admin_settings_validate()
  *
@@ -52,9 +52,7 @@ function book_admin_settings() {
 }
 
 /**
- * Validate the book settings form.
- *
- * @see book_admin_settings()
+ * Form validation handler for book_admin_settings().
  */
 function book_admin_settings_validate($form, &$form_state) {
   $child_type = $form_state['values']['book_child_type'];
@@ -64,11 +62,16 @@ function book_admin_settings_validate($form, &$form_state) {
 }
 
 /**
- * Build the form to administrate the hierarchy of a single book.
+ * Form constructor for administering a single book's hierarchy.
  *
  * @see book_admin_edit_submit()
  *
- * @ingroup forms.
+ * @param $node
+ *   The node of the top-level page in the book.
+ *
+ * @see book_admin_edit_validate()
+ * @see book_admin_edit_submit()
+ * @ingroup forms
  */
 function book_admin_edit($form, $form_state, $node) {
   drupal_set_title($node->title);
@@ -83,9 +86,11 @@ function book_admin_edit($form, $form_state, $node) {
 }
 
 /**
- * Check that the book has not been changed while using the form.
+ * Form validation handler for book_admin_edit().
  *
- * @see book_admin_edit()
+ * Checks that the book has not been changed while using the form.
+ *
+ * @see book_admin_edit_submit()
  */
 function book_admin_edit_validate($form, &$form_state) {
   if ($form_state['values']['tree_hash'] != $form_state['values']['tree_current_hash']) {
@@ -94,12 +99,12 @@ function book_admin_edit_validate($form, &$form_state) {
 }
 
 /**
- * Handle submission of the book administrative page form.
+ * Form submission handler for book_admin_edit().
  *
  * This function takes care to save parent menu items before their children.
  * Saving menu items in the incorrect order can break the menu tree.
  *
- * @see book_admin_edit()
+ * @see book_admin_edit_validate()
  * @see menu_overview_form_submit()
  */
 function book_admin_edit_submit($form, &$form_state) {
@@ -139,7 +144,12 @@ function book_admin_edit_submit($form, &$form_state) {
 }
 
 /**
- * Build the table portion of the form for the book administration page.
+ * Builds the table portion of the form for the book administration page.
+ *
+ * @param $node
+ *   The node of the top-level page in the book.
+ * @param $form
+ *   The form that is being modified.
  *
  * @see book_admin_edit()
  */
@@ -169,7 +179,15 @@ function _book_admin_table($node, &$form) {
 }
 
 /**
- * Recursive helper to build the main table in the book administration page form.
+ * Helps build the main table in the book administration page form.
+ *
+ * @param $tree
+ *   A subtree of the book menu hierarchy.
+ * @param $form
+ *   The form that is being modified.
+ *
+ * @return
+ *   The form that is being modified.
  *
  * @see book_admin_edit()
  */
