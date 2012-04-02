@@ -20,6 +20,11 @@
   position: relative;
 }
 
+img {
+  height: auto;
+  max-width: 100%;
+}
+
 @media all and (min-width: 480px) and (max-width: 959px) {
   #content {
     width: 100%;
