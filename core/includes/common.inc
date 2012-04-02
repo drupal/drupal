@@ -1,6 +1,6 @@
 <?php
 
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Database\Database;
 
@@ -731,7 +731,7 @@ function drupal_not_found() {
  */
 function drupal_access_denied() {
 
-  throw new AccessDeniedException();
+  throw new AccessDeniedHttpException();
 
   // @todo Remove this line.
   //drupal_deliver_page(MENU_ACCESS_DENIED);
