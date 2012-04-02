@@ -99,6 +99,8 @@ class UrlMatcher extends SymfonyUrlMatcher {
     // Place argument defaults on the route.
     // @TODO: For some reason drush test runs have a serialized page_arguments
     // but HTTP requests are unserialized. Hack to get around this for now.
+    // This might be because page arguments aren't unserialized in
+    // menu_get_item() when the access is denied.
     !is_array($router_item['page_arguments']) ? $page_arguments = unserialize($router_item['page_arguments']) : $page_arguments = $router_item['page_arguments'];
     foreach ($page_arguments as $k => $v) {
       $route[$k] = $v;
