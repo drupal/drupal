@@ -196,7 +196,7 @@ class CommentStorageController extends EntityDatabaseStorageController {
   /**
    * Overrides EntityDatabaseStorageController::postSave().
    */
-  protected function postSave(EntityInterface $comment) {
+  protected function postSave(EntityInterface $comment, $update) {
     // Update the {node_comment_statistics} table prior to executing the hook.
     $this->updateNodeStatistics($comment->nid);
     if ($comment->status == COMMENT_PUBLISHED) {

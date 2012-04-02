@@ -30,7 +30,7 @@ function forum_enable() {
   // Create the forum vocabulary if it does not exist.
   $vocabulary = taxonomy_vocabulary_load(variable_get('forum_nav_vocabulary', 0));
   if (!$vocabulary) {
-    $edit = array(
+    $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => t('Forums'),
       'machine_name' => 'forums',
       'langcode' => language_default()->langcode,
@@ -38,8 +38,7 @@ function forum_enable() {
       'hierarchy' => 1,
       'module' => 'forum',
       'weight' => -10,
-    );
-    $vocabulary = (object) $edit;
+    ));
     taxonomy_vocabulary_save($vocabulary);
     variable_set('forum_nav_vocabulary', $vocabulary->vid);
   }
@@ -61,14 +60,13 @@ function forum_enable() {
     field_create_field($field);
 
     // Create a default forum so forum posts can be created.
-    $edit = array(
+    $term = entity_create('taxonomy_term', array(
       'name' => t('General discussion'),
       'langcode' => language_default()->langcode,
       'description' => '',
       'parent' => array(0),
       'vid' => $vocabulary->vid,
-    );
-    $term = (object) $edit;
+    ));
     taxonomy_term_save($term);
 
     // Create the instance on the bundle.

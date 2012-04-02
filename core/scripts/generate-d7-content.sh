@@ -66,16 +66,17 @@ $required  = array(0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1);
 $voc_id = 0;
 $term_id = 0;
 for ($i = 0; $i < 24; $i++) {
-  $vocabulary = new stdClass;
   ++$voc_id;
-  $vocabulary->name = "vocabulary $voc_id (i=$i)";
-  $vocabulary->machine_name = 'vocabulary_' . $voc_id . '_' . $i;
-  $vocabulary->description = "description of ". $vocabulary->name;
-  $vocabulary->multiple = $multiple[$i % 12];
-  $vocabulary->required = $required[$i % 12];
-  $vocabulary->relations = 1;
-  $vocabulary->hierarchy = $hierarchy[$i % 12];
-  $vocabulary->weight = $i;
+  $vocabulary = entity_create('taxonomy_vocabulary', array(
+    'name' => "vocabulary $voc_id (i=$i)",
+    'machine_name' => 'vocabulary_' . $voc_id . '_' . $i,
+    'description' => "description of " . $vocabulary->name,
+    'multiple' => $multiple[$i % 12],
+    'required' => $required[$i % 12],
+    'relations' => 1,
+    'hierarchy' => $hierarchy[$i % 12],
+    'weight' => $i,
+  ));
   taxonomy_vocabulary_save($vocabulary);
   $field = array(
     'field_name' => 'taxonomy_'. $vocabulary->machine_name,
@@ -139,16 +140,17 @@ for ($i = 0; $i < 24; $i++) {
   // one parent and one child term. Multiple parent vocabularies get three
   // terms: t0, t1, t2 where t0 is a parent of both t1 and t2.
   for ($j = 0; $j < $vocabulary->hierarchy + 1; $j++) {
-    $term = new stdClass;
-    $term->vocabulary_machine_name = $vocabulary->machine_name;
-    // For multiple parent vocabularies, omit the t0-t1 relation, otherwise
-    // every parent in the vocabulary is a parent.
-    $term->parent = $vocabulary->hierarchy == 2 && i == 1 ? array() : $parents;
     ++$term_id;
-    $term->name = "term $term_id of vocabulary $voc_id (j=$j)";
-    $term->description = 'description of ' . $term->name;
-    $term->format = 'filtered_html';
-    $term->weight = $i * 3 + $j;
+    $term = entity_create('taxonomy_term', array(
+      'vocabulary_machine_name' => $vocabulary->machine_name,
+      // For multiple parent vocabularies, omit the t0-t1 relation, otherwise
+      // every parent in the vocabulary is a parent.
+      'parent' => $vocabulary->hierarchy == 2 && i == 1 ? array() : $parents,
+      'name' => "term $term_id of vocabulary $voc_id (j=$j)",
+      'description' => 'description of ' . $term->name,
+      'format' => 'filtered_html',
+      'weight' => $i * 3 + $j,
+    ));
     taxonomy_term_save($term);
     $terms[] = $term->tid;
     $term_vocabs[$term->tid] = 'taxonomy_' . $vocabulary->machine_name;

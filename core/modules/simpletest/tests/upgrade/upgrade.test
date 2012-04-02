@@ -298,6 +298,10 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
       drupal_load('module', $module);
     }
 
+    // Re-register autoload functions.
+    spl_autoload_register('drupal_autoload_class');
+    spl_autoload_register('drupal_autoload_interface');
+
     // Reload hook implementations
     module_implements_reset();
 

@@ -230,11 +230,11 @@ class PathTaxonomyTermTestCase extends PathTestCase {
     parent::setUp(array('taxonomy'));
 
     // Create a Tags vocabulary for the Article node type.
-    $vocabulary = (object) array(
+    $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => t('Tags'),
       'machine_name' => 'tags',
-    );
-    taxonomy_vocabulary_save($vocabulary);
+    ));
+    $vocabulary->save();
 
     // Create and login user.
     $web_user = $this->drupalCreateUser(array('administer url aliases', 'administer taxonomy', 'access administration pages'));

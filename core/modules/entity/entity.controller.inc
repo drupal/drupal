@@ -404,6 +404,18 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
 interface EntityStorageControllerInterface extends DrupalEntityControllerInterface {
 
   /**
+   * Constructs a new entity object, without permanently saving it.
+   *
+   * @param $values
+   *   An array of values to set, keyed by property name. If the entity type has
+   *   bundles the bundle key has to be specified.
+   *
+   * @return EntityInterface
+   *   A new entity object.
+   */
+  public function create(array $values);
+
+  /**
    * Deletes permanently saved entities.
    *
    * @param $ids
@@ -440,6 +452,14 @@ class EntityStorageException extends Exception { }
  * Implements the entity storage controller interface for the database.
  */
 class EntityDatabaseStorageController extends DrupalDefaultEntityController implements EntityStorageControllerInterface {
+
+  /**
+   * Implements EntityStorageControllerInterface::create().
+   */
+  public function create(array $values) {
+    $class = isset($this->entityInfo['entity class']) ? $this->entityInfo['entity class'] : 'Entity';
+    return new $class($values, $this->entityType);
+  }
 
   /**
    * Implements EntityStorageControllerInterface::delete().
@@ -496,18 +516,21 @@ class EntityDatabaseStorageController extends DrupalDefaultEntityController impl
       if (!$entity->isNew()) {
         $return = drupal_write_record($this->entityInfo['base table'], $entity, $this->idKey);
         $this->resetCache(array($entity->{$this->idKey}));
-        $this->postSave($entity);
+        $this->postSave($entity, TRUE);
         $this->invokeHook('update', $entity);
       }
       else {
         $return = drupal_write_record($this->entityInfo['base table'], $entity);
-        $this->postSave($entity);
+        // Reset general caches, but keep caches specific to certain entities.
+        $this->resetCache(array());
+
+        $entity->enforceIsNew(FALSE);
+        $this->postSave($entity, FALSE);
         $this->invokeHook('insert', $entity);
       }
 
       // Ignore slave server temporarily.
       db_ignore_slave();
-      unset($entity->is_new);
       unset($entity->original);
 
       return $return;
@@ -531,8 +554,12 @@ class EntityDatabaseStorageController extends DrupalDefaultEntityController impl
    *
    * Used after the entity is saved, but before invoking the insert or update
    * hook.
+   *
+   * @param $update
+   *   (bool) TRUE if the entity has been updated, or FALSE if it has been
+   *   inserted.
    */
-  protected function postSave(EntityInterface $entity) { }
+  protected function postSave(EntityInterface $entity, $update) { }
 
   /**
    * Acts on entities before they are deleted.

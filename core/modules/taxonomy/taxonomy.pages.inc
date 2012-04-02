@@ -8,12 +8,10 @@
 /**
  * Menu callback; displays all nodes associated with a term.
  *
- * @param $term
- *   The taxonomy term.
- * @return
- *   The page content.
+ * @param TaxonomyTerm $term
+ *   The taxonomy term entity.
  */
-function taxonomy_term_page($term) {
+function taxonomy_term_page(TaxonomyTerm $term) {
   // Assign the term name as the page title.
   drupal_set_title($term->name);
 
@@ -62,10 +60,10 @@ function taxonomy_term_page($term) {
 /**
  * Generate the content feed for a taxonomy term.
  *
- * @param $term
- *   The taxonomy term.
+ * @param TaxonomyTerm $term
+ *   The taxonomy term entity.
  */
-function taxonomy_term_feed($term) {
+function taxonomy_term_feed(TaxonomyTerm $term) {
   $channel['link'] = url('taxonomy/term/' . $term->tid, array('absolute' => TRUE));
   $channel['title'] = variable_get('site_name', 'Drupal') . ' - ' . $term->name;
   // Only display the description if we have a single term, to avoid clutter and confusion.

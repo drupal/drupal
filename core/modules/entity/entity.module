@@ -270,7 +270,7 @@ function entity_delete_multiple($entity_type, $ids) {
 }
 
 /**
- * Constructs a new entity object, without saving it to the database.
+ * Constructs a new entity object, without permanently saving it.
  *
  * @param $entity_type
  *   The type of the entity.
@@ -282,13 +282,13 @@ function entity_delete_multiple($entity_type, $ids) {
  *   A new entity object.
  */
 function entity_create($entity_type, array $values) {
-  $info = entity_get_info($entity_type) + array('entity class' => 'Entity');
-  $class = $info['entity class'];
-  return new $class($values, $entity_type);
+  return entity_get_controller($entity_type)->create($values);
 }
 
 /**
  * Gets the entity controller class for an entity type.
+ *
+ * @return EntityStorageControllerInterface
  */
 function entity_get_controller($entity_type) {
   $controllers = &drupal_static(__FUNCTION__, array());

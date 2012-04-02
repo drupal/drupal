@@ -403,9 +403,18 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
       continue;
     }
 
+    // Skip fields that are not provided, default values are already known
+    // by the database. property_exists() allows to explicitly set a value to
+    // NULL.
     if (!property_exists($object, $field)) {
-      // Skip fields that are not provided, default values are already known
-      // by the database.
+      $default_fields[] = $field;
+      continue;
+    }
+    // However, if $object is an entity class instance, then class properties
+    // always exist, as they cannot be unset. Therefore, if $field is a serial
+    // type and the value is NULL, skip it.
+    // @see http://php.net/manual/en/function.property-exists.php
+    if ($info['type'] == 'serial' && !isset($object->$field)) {
       $default_fields[] = $field;
       continue;
     }
