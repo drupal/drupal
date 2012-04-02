@@ -682,7 +682,11 @@ function taxonomy_vocabulary_static_reset(array $ids = NULL) {
  * Get names for all taxonomy vocabularies.
  *
  * @return
- *   An array of vocabulary ids, names, machine names, keyed by machine name.
+ *   An associative array of objects keyed by vocabulary machine name with
+ *   information about taxonomy vocabularies. Each object has properties:
+ *   - name: The vocabulary name.
+ *   - machine_name: The machine name.
+ *   - vid: The vocabulary ID.
  */
 function taxonomy_vocabulary_get_names() {
   $names = &drupal_static(__FUNCTION__);
