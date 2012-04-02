@@ -31,28 +31,6 @@ class ViewSubscriber implements EventSubscriberInterface {
     $this->negotiation = $negotiation;
   }
 
-  protected function createAjaxResponse(GetResponseEvent $event) {
-    $response = new Response();
-    $response->headers->set('Content-Type', 'application/json; charset=utf-8');
-
-    return $response;
-  }
-
-  protected function createIframeUploadResponse(GetResponseEvent $event) {
-    $response = new Response();
-
-    // Browsers do not allow JavaScript to read the contents of a user's local
-    // files. To work around that, the jQuery Form plugin submits forms containing
-    // a file input element to an IFRAME, instead of using XHR. Browsers do not
-    // normally expect JSON strings as content within an IFRAME, so the response
-    // must be customized accordingly.
-    // @see http://malsup.com/jquery/form/#file-upload
-    // @see Drupal.ajax.prototype.beforeSend()
-    $response->headers->set('Content-Type', 'text/html; charset=utf-8');
-
-    return $response;
-  }
-
   /**
    * Processes a successful controller into an HTTP 200 response.
    *
@@ -98,7 +76,7 @@ class ViewSubscriber implements EventSubscriberInterface {
     $json = ajax_render($commands);
 
     // Build the actual response object.
-    $response = $this->createAjaxResponse($event);
+    $response = new JsonResponse();
     $response->setContent($json);
 
     return $response;
@@ -117,13 +95,9 @@ class ViewSubscriber implements EventSubscriberInterface {
     // JSON data by making it the value of a textarea.
     // @see http://malsup.com/jquery/form/#file-upload
     // @see http://drupal.org/node/1009382
-    $json = '<textarea>' . $json . '</textarea>';
+    $html = '<textarea>' . $json . '</textarea>';
 
-    // Build the actual response object.
-    $response = $this->createIframeUploadResponse($event);
-    $response->setContent($json);
-
-    return $response;
+    return new Response($html);
   }
 
   /**
