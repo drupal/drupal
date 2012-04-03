@@ -1,7 +1,5 @@
 <?php
 
-use Drupal\Core\FileTransfer\FileTransfer;
-use Drupal\Core\FileTransfer\FileTransferException;
 
 class FileTranferTest extends DrupalWebTestCase {
   protected $hostname = 'localhost';

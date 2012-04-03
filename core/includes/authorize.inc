@@ -320,6 +320,10 @@ function authorize_get_filetransfer($backend, $settings = array()) {
   $filetransfer = FALSE;
   if (!empty($_SESSION['authorize_filetransfer_info'][$backend])) {
     $backend_info = $_SESSION['authorize_filetransfer_info'][$backend];
+    if (!empty($backend_info['file'])) {
+      $file = $backend_info['file path'] . '/' . $backend_info['file'];
+      require_once $file;
+    }
     if (class_exists($backend_info['class'])) {
       $filetransfer = $backend_info['class']::factory(DRUPAL_ROOT, $settings);
     }

@@ -36,7 +36,6 @@
  */
 
 use Drupal\Core\Updater\Updater;
-use Drupal\Core\FileTransfer\Local;
 
 /**
  * @defgroup update_manager_update Update manager: update
@@ -436,11 +435,11 @@ function update_manager_update_ready_form_submit($form, &$form_state) {
     // If the owner of the last directory we extracted is the same as the
     // owner of our configuration directory (e.g. sites/default) where we're
     // trying to install the code, there's no need to prompt for FTP/SSH
-    // credentials. Instead, we instantiate a Drupal\Core\FileTransfer\Local and
-    // invoke update_authorize_run_update() directly.
+    // credentials. Instead, we instantiate a FileTransferLocal and invoke
+    // update_authorize_run_update() directly.
     if (fileowner($project_real_location) == fileowner(conf_path())) {
       module_load_include('inc', 'update', 'update.authorize');
-      $filetransfer = new Local(DRUPAL_ROOT);
+      $filetransfer = new FileTransferLocal(DRUPAL_ROOT);
       update_authorize_run_update($filetransfer, $updates);
     }
     // Otherwise, go through the regular workflow to prompt for FTP/SSH
@@ -705,11 +704,11 @@ function update_manager_install_form_submit($form, &$form_state) {
   // If the owner of the directory we extracted is the same as the
   // owner of our configuration directory (e.g. sites/default) where we're
   // trying to install the code, there's no need to prompt for FTP/SSH
-  // credentials. Instead, we instantiate a Drupal\Core\FileTransfer\Local and
-  // invoke update_authorize_run_install() directly.
+  // credentials. Instead, we instantiate a FileTransferLocal and invoke
+  // update_authorize_run_install() directly.
   if (fileowner($project_real_location) == fileowner(conf_path())) {
     module_load_include('inc', 'update', 'update.authorize');
-    $filetransfer = new Local(DRUPAL_ROOT);
+    $filetransfer = new FileTransferLocal(DRUPAL_ROOT);
     call_user_func_array('update_authorize_run_install', array_merge(array($filetransfer), $arguments));
   }
   // Otherwise, go through the regular workflow to prompt for FTP/SSH
