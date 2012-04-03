@@ -1770,7 +1770,7 @@ function _system_themes_access($theme) {
  * as a Batch API processing page, if the operation requires a batch.
  *
  * @see authorize.php
- * @see FileTransfer
+ * @see Drupal\Core\FileTransfer\FileTransfer
  * @see hook_filetransfer_info()
  */
 
@@ -1893,9 +1893,7 @@ function system_filetransfer_info() {
   if (function_exists('ftp_connect')) {
     $backends['ftp'] = array(
       'title' => t('FTP'),
-      'class' => 'FileTransferFTP',
-      'file' => 'ftp.inc',
-      'file path' => 'core/includes/filetransfer',
+      'class' => 'Drupal\Core\FileTransfer\FTP',
       'weight' => 0,
     );
   }
@@ -1905,9 +1903,7 @@ function system_filetransfer_info() {
   if (function_exists('ssh2_connect')) {
     $backends['ssh'] = array(
       'title' => t('SSH'),
-      'class' => 'FileTransferSSH',
-      'file' => 'ssh.inc',
-      'file path' => 'core/includes/filetransfer',
+      'class' => 'Drupal\Core\FileTransfer\SSH',
       'weight' => 20,
     );
   }
