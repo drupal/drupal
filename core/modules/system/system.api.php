@@ -4171,7 +4171,7 @@ function hook_menu_site_status_alter(&$menu_site_status, $path) {
  *   - 'weight': Optional. Integer weight used for sorting connection types on
  *     the authorize.php form.
  *
- * @see FileTransfer
+ * @see Drupal\Core\FileTransfer\FileTransfer
  * @see authorize.php
  * @see hook_filetransfer_info_alter()
  * @see drupal_get_filetransfer_info()
@@ -4179,8 +4179,7 @@ function hook_menu_site_status_alter(&$menu_site_status, $path) {
 function hook_filetransfer_info() {
   $info['sftp'] = array(
     'title' => t('SFTP (Secure FTP)'),
-    'file' => 'sftp.filetransfer.inc',
-    'class' => 'FileTransferSFTP',
+    'class' => 'Drupal\Core\FileTransfer\SFTP',
     'weight' => 10,
   );
   return $info;
