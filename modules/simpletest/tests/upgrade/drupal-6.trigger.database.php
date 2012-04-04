@@ -62,6 +62,12 @@ db_insert('trigger_assignments')->fields(array(
 ))
 ->values(array(
   'hook' => 'nodeapi',
+  'op' => 'presave',
+  'aid' => 'node_make_sticky_action',
+  'weight' => '1',
+))
+->values(array(
+  'hook' => 'nodeapi',
   'op' => 'somehow_nodeapi_got_a_very_long',
   'aid' => 'node_save_action',
   'weight' => '1',
