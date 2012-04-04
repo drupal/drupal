@@ -91,7 +91,9 @@ function path_menu() {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_BASE_FORM_ID_alter() for node_form().
+ *
+ * @see path_form_element_validate()
  */
 function path_form_node_form_alter(&$form, $form_state) {
   $path = array();
@@ -145,6 +147,8 @@ function path_form_node_form_alter(&$form, $form_state) {
 
 /**
  * Form element validation handler for URL alias form element.
+ *
+ * @see path_form_node_form_alter()
  */
 function path_form_element_validate($element, &$form_state, $complete_form) {
   // Trim the submitted value.
@@ -225,7 +229,7 @@ function path_node_delete($node) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for taxonomy_form_term().
  */
 function path_form_taxonomy_form_term_alter(&$form, $form_state) {
   // Make sure this does not show up on the delete confirmation form.

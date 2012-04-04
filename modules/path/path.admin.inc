@@ -6,7 +6,7 @@
  */
 
 /**
- * Return a listing of all defined URL aliases.
+ * Returns a listing of all defined URL aliases.
  *
  * When filter key passed, perform a standard search on the given key,
  * and return the list of matching URL aliases.
@@ -87,7 +87,15 @@ function path_admin_overview($keys = NULL) {
 }
 
 /**
- * Menu callback; handles pages for creating and editing URL aliases.
+ * Page callback: Returns a form creating or editing a path alias.
+ *
+ * @param $path
+ *   An array containing the path ID, source, alias, and language code.
+ *
+ * @return
+ *   A form for adding or editing a URL alias.
+ *
+ * @see path_menu()
  */
 function path_admin_edit($path = array()) {
   if ($path) {
@@ -102,11 +110,15 @@ function path_admin_edit($path = array()) {
 }
 
 /**
- * Return a form for editing or creating an individual URL alias.
+ * Form constructor for the path administration form.
+ *
+ * @param $path
+ *   An array containing the path ID, source, alias, and language code.
  *
  * @ingroup forms
  * @see path_admin_form_validate()
  * @see path_admin_form_submit()
+ * @see path_admin_form_delete_submit()
  */
 function path_admin_form($form, &$form_state, $path = array('source' => '', 'alias' => '', 'language' => LANGUAGE_NONE, 'pid' => NULL)) {
   $form['source'] = array(
@@ -157,7 +169,10 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
 }
 
 /**
- * Submit function for the 'Delete' button on the URL alias editing form.
+ * Form submission handler for the 'Delete' button on path_admin_form().
+ *
+ * @see path_admin_form_validate()
+ * @see path_admin_form_submit()
  */
 function path_admin_form_delete_submit($form, &$form_state) {
   $destination = array();
@@ -169,7 +184,10 @@ function path_admin_form_delete_submit($form, &$form_state) {
 }
 
 /**
- * Verify that a URL alias is valid
+ * Form validation handler for path_admin_form().
+ *
+ * @see path_admin_form_submit()
+ * @see path_admin_form_delete_submit()
  */
 function path_admin_form_validate($form, &$form_state) {
   $source = &$form_state['values']['source'];
@@ -195,7 +213,10 @@ function path_admin_form_validate($form, &$form_state) {
 }
 
 /**
- * Save a URL alias to the database.
+ * Form submission handler for path_admin_form().
+ *
+ * @see path_admin_form_validate()
+ * @see path_admin_form_delete_submit()
  */
 function path_admin_form_submit($form, &$form_state) {
   // Remove unnecessary values.
@@ -208,7 +229,12 @@ function path_admin_form_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback; confirms deleting an URL alias
+ * Form constructor for the path deletion form.
+ *
+ * @param $path
+ *   The path alias that will be deleted.
+ *
+ * @see path_admin_delete_confirm_submit()
  */
 function path_admin_delete_confirm($form, &$form_state, $path) {
   if (user_access('administer url aliases')) {
@@ -224,7 +250,7 @@ function path_admin_delete_confirm($form, &$form_state, $path) {
 }
 
 /**
- * Execute URL alias deletion
+ * Form submission handler for path_admin_delete_confirm().
  */
 function path_admin_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
@@ -234,10 +260,11 @@ function path_admin_delete_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Return a form to filter URL aliases.
+ * Form constructor for the path admin overview filter form.
  *
  * @ingroup forms
- * @see path_admin_filter_form_submit()
+ * @see path_admin_filter_form_submit_filter()
+ * @see path_admin_filter_form_submit_reset()
  */
 function path_admin_filter_form($form, &$form_state, $keys = '') {
   $form['#attributes'] = array('class' => array('search-form'));
@@ -269,14 +296,18 @@ function path_admin_filter_form($form, &$form_state, $keys = '') {
 }
 
 /**
- * Process filter form submission when the Filter button is pressed.
+ * Form submission handler for the path_admin_filter_form() Filter button.
+ *
+ * @see path_admin_filter_form_submit_reset()
  */
 function path_admin_filter_form_submit_filter($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/search/path/list/' . trim($form_state['values']['filter']);
 }
 
 /**
- * Process filter form submission when the Reset button is pressed.
+ * Form submission handler for the path_admin_filter_form() Reset button.
+ *
+ * @see path_admin_filter_form_submit_filter()
  */
 function path_admin_filter_form_submit_reset($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/search/path/list';

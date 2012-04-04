@@ -1,4 +1,9 @@
 
+/**
+ * @file
+ * Attaches behaviors for the Path module.
+ */
+
 (function ($) {
 
 Drupal.behaviors.pathFieldsetSummaries = {
