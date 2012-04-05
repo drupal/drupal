@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Config\SignedFileStorage;
 
 /**
  * Indicates that a module has not been installed yet.
@@ -392,6 +393,22 @@ function drupal_uninstall_modules($module_list = array(), $uninstall_dependents 
     module_load_install($module);
     module_invoke($module, 'uninstall');
     drupal_uninstall_schema($module);
+
+    // Remove any stray configuration settings.
+    // Get the names of default configurations provided by this module
+    // by scanning its config directory.
+    $module_config_dir = drupal_get_path('module', $module) . '/config';
+    if (is_dir($module_config_dir)) {
+      $files = glob($module_config_dir . '/' . '*.xml');
+      foreach ($files as $file) {
+        $parts = explode('/', $file);
+        $file = array_pop($parts);
+        $config_name = str_replace('.xml', '', $file);
+        $signed_storage = new SignedFileStorage($config_name);
+        // Delete the configuration from storage.
+        $signed_storage->delete();
+      }
+    }
 
     watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
     drupal_set_installed_schema_version($module, SCHEMA_UNINSTALLED);

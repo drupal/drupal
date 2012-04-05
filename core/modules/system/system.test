@@ -73,6 +73,66 @@ class ModuleTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Assert that a module's config files have been loaded.
+   *
+   * @param string $module
+   *   The name of the module.
+   *
+   * @return bool
+   *   TRUE if the module's config files exist, FALSE otherwise.
+   */
+  function assertModuleConfigFilesExist($module) {
+    // Define test variable.
+    $files_exist = TRUE;
+    // Get the path to the module's config dir.
+    $module_config_dir = drupal_get_path('module', $module) . '/config';
+    if (is_dir($module_config_dir)) {
+      $files = glob($module_config_dir . '/' . '*.xml');
+      $config_dir = config_get_config_directory();
+      // Get the filename of each config file.
+      foreach ($files as $file) {
+        $parts = explode('/', $file);
+        $filename = array_pop($parts);
+        if (!file_exists($config_dir . '/' . $filename)) {
+          $files_exist = FALSE;
+        }
+      }
+    }
+
+    return $this->assertTrue($files_exist, t('All config files defined by the @module module have been copied to the live config directory.', array('@module' => $module)));
+  }
+
+  /**
+   * Assert that none of a module's default config files are loaded.
+   *
+   * @param string $module
+   *   The name of the module.
+   *
+   * @return bool
+   *   TRUE if the module's config files do not exist, FALSE otherwise.
+   */
+  function assertModuleConfigFilesDoNotExist($module) {
+    // Define test variable.
+    $files_exist = FALSE;
+    // Get the path to the module's config dir.
+    $module_config_dir = drupal_get_path('module', $module) . '/config';
+    if (is_dir($module_config_dir)) {
+      $files = glob($module_config_dir . '/' . '*.xml');
+      $config_dir = config_get_config_directory();
+      // Get the filename of each config file.
+      foreach ($files as $file) {
+        $parts = explode('/', $file);
+        $filename = array_pop($parts);
+        if (file_exists($config_dir . '/' . $filename)) {
+          $files_exist = TRUE;
+        }
+      }
+    }
+
+    return $this->assertFalse($files_exist, t('All config files defined by the @module module have been deleted from the live config directory.', array('@module' => $module)));
+  }
+
+  /**
    * Assert the list of modules are enabled or disabled.
    *
    * @param $modules
@@ -227,6 +287,7 @@ class EnableDisableTestCase extends ModuleTestCase {
           $this->assertText(t('hook_modules_enabled fired for @module', array('@module' => $module_to_enable)));
           $this->assertModules(array($module_to_enable), TRUE);
           $this->assertModuleTablesExist($module_to_enable);
+          $this->assertModuleConfigFilesExist($module_to_enable);
           $this->assertLogMessage('system', "%module module installed.", array('%module' => $module_to_enable), WATCHDOG_INFO);
           $this->assertLogMessage('system', "%module module enabled.", array('%module' => $module_to_enable), WATCHDOG_INFO);
         }
@@ -306,6 +367,8 @@ class EnableDisableTestCase extends ModuleTestCase {
 
     //  Check that the module's database tables still exist.
     $this->assertModuleTablesExist($module);
+    //  Check that the module's config files still exist.
+    $this->assertModuleConfigFilesExist($module);
 
     // Uninstall the module.
     $edit = array();
@@ -326,6 +389,8 @@ class EnableDisableTestCase extends ModuleTestCase {
 
     // Check that the module's database tables no longer exist.
     $this->assertModuleTablesDoNotExist($module);
+    // Check that the module's config files no longer exist.
+    $this->assertModuleConfigFilesDoNotExist($module);
   }
 }
 
