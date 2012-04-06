@@ -35,7 +35,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     drupal_alter('menu_site_status', $status, $read_only_path);
 
     // Only continue if the site is online.
-    if ($page_callback_result != MENU_SITE_ONLINE) {
+    if ($status != MENU_SITE_ONLINE) {
       // Deliver the 503 page.
       drupal_maintenance_theme();
       drupal_set_title(t('Site under maintenance'));
