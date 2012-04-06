@@ -33,10 +33,29 @@ interface EntityInterface {
   /**
    * Returns whether the entity is new.
    *
+   * Usually an entity is new if no ID exists for it yet. However, entities may
+   * be enforced to be new with existing IDs too.
+   *
    * @return
    *   TRUE if the entity is new, or FALSE if the entity has already been saved.
+   *
+   * @see EntityInterface::enforceIsNew()
    */
   public function isNew();
+
+  /**
+   * Enforces an entity to be new.
+   *
+   * Allows migrations to create entities with pre-defined IDs by forcing the
+   * entity to be new before saving.
+   *
+   * @param bool $value
+   *   (optional) Whether the entity should be forced to be new. Defaults to
+   *   TRUE.
+   *
+   * @see EntityInterface::isNew()
+   */
+  public function enforceIsNew($value = TRUE);
 
   /**
    * Returns the type of the entity.
@@ -148,6 +167,13 @@ class Entity implements EntityInterface {
   protected $bundleKey;
 
   /**
+   * Boolean indicating whether the entity should be forced to be new.
+   *
+   * @var bool
+   */
+  protected $enforceIsNew;
+
+  /**
    * Constructs a new entity object.
    */
   public function __construct(array $values = array(), $entity_type) {
@@ -179,9 +205,14 @@ class Entity implements EntityInterface {
    * Implements EntityInterface::isNew().
    */
   public function isNew() {
-    // We support creating entities with pre-defined IDs to ease migrations.
-    // For that the "is_new" property may be set to TRUE.
-    return !empty($this->is_new) || empty($this->{$this->idKey});
+    return !empty($this->enforceIsNew) || empty($this->{$this->idKey});
+  }
+
+  /**
+   * Implements EntityInterface::enforceIsNew().
+   */
+  public function enforceIsNew($value = TRUE) {
+    $this->enforceIsNew = $value;
   }
 
   /**

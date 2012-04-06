@@ -1779,6 +1779,12 @@ function form_builder($form_id, &$element, &$form_state) {
   if (!isset($element['#id'])) {
     $element['#id'] = drupal_html_id('edit-' . implode('-', $element['#parents']));
   }
+
+  // Add the aria-describedby attribute to associate the form control with its
+  // description.
+  if (!empty($element['#description'])) {
+    $element['#attributes']['aria-describedby'] = $element['#id'] . '--description';
+  }
   // Handle input elements.
   if (!empty($element['#input'])) {
     _form_builder_handle_input_element($form_id, $element, $form_state);
@@ -3298,7 +3304,21 @@ function theme_tableselect($variables) {
       // As theme_table only maps header and row columns by order, create the
       // correct order by iterating over the header fields.
       foreach ($element['#header'] as $fieldname => $title) {
-        $row['data'][] = $element['#options'][$key][$fieldname];
+        // A row cell can span over multiple headers, which means less row cells
+        // than headers could be present.
+        if (isset($element['#options'][$key][$fieldname])) {
+          // A header can span over multiple cells and in this case the cells
+          // are passed in an array. The order of this array determines the
+          // order in which they are added.
+          if (!isset($element['#options'][$key][$fieldname]['data']) && is_array($element['#options'][$key][$fieldname])) {
+            foreach ($element['#options'][$key][$fieldname] as $cell) {
+              $row['data'][] = $cell;
+            }
+          }
+          else {
+            $row['data'][] = $element['#options'][$key][$fieldname];
+          }
+        }
       }
       $rows[] = $row;
     }
@@ -4186,7 +4206,11 @@ function theme_form_element($variables) {
   }
 
   if (!empty($element['#description'])) {
-    $output .= '<div class="description">' . $element['#description'] . "</div>\n";
+    $attributes = array('class' => 'description');
+    if (!empty($element['#id'])) {
+      $attributes['id'] = $element['#id'] . '--description';
+    }
+    $output .= '<div' . drupal_attributes($attributes) . '>' . $element['#description'] . "</div>\n";
   }
 
   $output .= "</div>\n";

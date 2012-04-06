@@ -309,7 +309,7 @@ function update_calculate_project_data($available) {
   update_process_project_info($projects);
   foreach ($projects as $project => $project_info) {
     if (isset($available[$project])) {
-      update_calculate_project_update_status($project, $projects[$project], $available[$project]);
+      update_calculate_project_update_status($projects[$project], $available[$project]);
     }
     else {
       $projects[$project]['status'] = UPDATE_UNKNOWN;
@@ -385,7 +385,7 @@ function update_calculate_project_data($available) {
  * snapshots for a given major version are always listed last.
  *
  */
-function update_calculate_project_update_status($project, &$project_data, $available) {
+function update_calculate_project_update_status(&$project_data, $available) {
   foreach (array('title', 'link') as $attribute) {
     if (!isset($project_data[$attribute]) && isset($available[$attribute])) {
       $project_data[$attribute] = $available[$attribute];

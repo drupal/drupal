@@ -48,6 +48,7 @@ Drupal.behaviors.password = {
 
         // Adjust the length of the strength indicator.
         $(innerWrapper).find('.indicator').css('width', result.strength + '%');
+        $(innerWrapper).find('.indicator').css('background-color', result.indicatorColor);
 
         // Update the strength indication text.
         $(innerWrapper).find('.password-strength-text').html(result.indicatorText);
@@ -93,7 +94,7 @@ Drupal.behaviors.password = {
  * Returns the estimated strength and the relevant output message.
  */
 Drupal.evaluatePasswordStrength = function (password, translate) {
-  var weaknesses = 0, strength = 100, msg = [];
+  var indicatorText, indicatorColor, weaknesses = 0, strength = 100, msg = [];
 
   var hasLowercase = password.match(/[a-z]+/);
   var hasUppercase = password.match(/[A-Z]+/);
@@ -158,17 +159,21 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
   // Based on the strength, work out what text should be shown by the password strength meter.
   if (strength < 60) {
     indicatorText = translate.weak;
+    indicatorColor = '#bb5555';
   } else if (strength < 70) {
     indicatorText = translate.fair;
+    indicatorColor = '#bbbb55';
   } else if (strength < 80) {
     indicatorText = translate.good;
+    indicatorColor = '#4863a0';
   } else if (strength <= 100) {
     indicatorText = translate.strong;
+    indicatorColor = '#47c965';
   }
 
   // Assemble the final message.
   msg = translate.hasWeaknesses + '<ul><li>' + msg.join('</li><li>') + '</li></ul>';
-  return { strength: strength, message: msg, indicatorText: indicatorText };
+  return { strength: strength, message: msg, indicatorText: indicatorText, indicatorColor: indicatorColor };
 
 };
 

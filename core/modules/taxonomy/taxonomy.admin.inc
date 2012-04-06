@@ -101,31 +101,27 @@ function theme_taxonomy_overview_vocabularies($variables) {
 /**
  * Form builder for the vocabulary editing form.
  *
+ * @param TaxonomyVocabulary|null $vocabulary
+ *   (optional) The taxonomy vocabulary entity to edit. If NULL or omitted, the
+ *   form creates a new vocabulary.
+ *
  * @ingroup forms
  * @see taxonomy_form_vocabulary_submit()
  * @see taxonomy_form_vocabulary_validate()
  */
-function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
+function taxonomy_form_vocabulary($form, &$form_state, TaxonomyVocabulary $vocabulary = NULL) {
   // During initial form build, add the entity to the form state for use
   // during form building and processing. During a rebuild, use what is in the
   // form state.
   if (!isset($form_state['vocabulary'])) {
-    $vocabulary = is_object($edit) ? $edit : (object) $edit;
-    $defaults = array(
-      'name' => '',
-      'machine_name' => '',
-      'description' => '',
-      'hierarchy' => TAXONOMY_HIERARCHY_DISABLED,
-      'weight' => 0,
-      // Default the new vocabulary to the site's default language. This is
-      // the most likely default value until we have better flexible settings.
-      // @todo See http://drupal.org/node/258785 and followups.
-      'langcode' => language_default()->langcode,
-    );
-    foreach ($defaults as $key => $value) {
-      if (!isset($vocabulary->$key)) {
-        $vocabulary->$key = $value;
-      }
+    // Create a new TaxonomyVocabulary entity for the add form.
+    if (!isset($vocabulary)) {
+      $vocabulary = entity_create('taxonomy_vocabulary', array(
+        // Default the new vocabulary to the site's default language. This is
+        // the most likely default value until we have better flexible settings.
+        // @todo See http://drupal.org/node/258785 and followups.
+        'langcode' => language_default()->langcode,
+      ));
     }
     $form_state['vocabulary'] = $vocabulary;
   }
@@ -155,10 +151,6 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
     '#machine_name' => array(
       'exists' => 'taxonomy_vocabulary_machine_name_load',
     ),
-  );
-  $form['old_machine_name'] = array(
-    '#type' => 'value',
-    '#value' => $vocabulary->machine_name,
   );
   $form['description'] = array(
     '#type' => 'textfield',
@@ -222,6 +214,9 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
   $vocabulary = $form_state['vocabulary'];
   entity_form_submit_build_entity('taxonomy_vocabulary', $vocabulary, $form, $form_state);
 
+  // Prevent leading and trailing spaces in vocabulary names.
+  $vocabulary->name = trim($vocabulary->name);
+
   switch (taxonomy_vocabulary_save($vocabulary)) {
     case SAVED_NEW:
       drupal_set_message(t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
@@ -246,11 +241,14 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
  * Display a tree of all the terms in a vocabulary, with options to edit
  * each one. The form is made drag and drop by the theme function.
  *
+ * @param TaxonomyVocabulary $vocabulary
+ *   The taxonomy vocabulary entity to list terms for.
+ *
  * @ingroup forms
  * @see taxonomy_overview_terms_submit()
  * @see theme_taxonomy_overview_terms()
  */
-function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
+function taxonomy_overview_terms($form, &$form_state, TaxonomyVocabulary $vocabulary) {
   global $pager_page_array, $pager_total, $pager_total_items;
 
   // Check for confirmation forms.
@@ -644,34 +642,35 @@ function theme_taxonomy_overview_terms($variables) {
 /**
  * Form function for the term edit form.
  *
+ * @param TaxonomyTerm|null $term
+ *   (optional) The taxonomy term entity to edit. If NULL or omitted, the form
+ *   creates a new term.
+ * @param TaxonomyVocabulary|null $vocabulary
+ *   (optional) A taxonomy vocabulary entity to create the term in. Required if
+ *   the term is omitted.
+ *
  * @ingroup forms
+ * @see taxonomy_form_term_validate()
  * @see taxonomy_form_term_submit()
  */
-function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = NULL) {
+function taxonomy_form_term($form, &$form_state, TaxonomyTerm $term = NULL, TaxonomyVocabulary $vocabulary = NULL) {
   // During initial form build, add the term entity to the form state for use
   // during form building and processing. During a rebuild, use what is in the
   // form state.
   if (!isset($form_state['term'])) {
-    $term = is_object($edit) ? $edit : (object) $edit;
+    // Create a new TaxonomyTerm entity for the add form.
+    if (!isset($term)) {
+      $term = entity_create('taxonomy_term', array(
+        'vid' => $vocabulary->vid,
+        'vocabulary_machine_name' => $vocabulary->machine_name,
+        // Default the new vocabulary to the site's default language. This is
+        // the most likely default value until we have better flexible settings.
+        // @todo See http://drupal.org/node/258785 and followups.
+        'langcode' => language_default()->langcode,
+      ));
+    }
     if (!isset($vocabulary) && isset($term->vid)) {
       $vocabulary = taxonomy_vocabulary_load($term->vid);
-    }
-    $defaults = array(
-      'name' => '',
-      'description' => '',
-      'format' => NULL,
-      'vocabulary_machine_name' => isset($vocabulary) ? $vocabulary->machine_name : NULL,
-      'tid' => NULL,
-      'weight' => 0,
-      // Default the new term to the site's default language. This is the most
-      // likely default value until we have better flexible settings.
-      // @todo See http://drupal.org/node/258785 and followups.
-      'langcode' => language_default()->langcode,
-    );
-    foreach ($defaults as $key => $value) {
-      if (!isset($term->$key)) {
-        $term->$key = $value;
-      }
     }
     $form_state['term'] = $term;
   }
@@ -857,6 +856,9 @@ function taxonomy_form_term_submit($form, &$form_state) {
 function taxonomy_form_term_submit_build_taxonomy_term($form, &$form_state) {
   $term = $form_state['term'];
   entity_form_submit_build_entity('taxonomy_term', $term, $form, $form_state);
+
+  // Prevent leading and trailing spaces in term names.
+  $term->name = trim($term->name);
 
   // Convert text_format field into values expected by taxonomy_term_save().
   $description = $form_state['values']['description'];

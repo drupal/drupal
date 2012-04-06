@@ -1636,7 +1636,7 @@ function node_permission() {
 }
 
 /**
- * Gathers the rankings from the the hook_ranking implementations.
+ * Gathers the rankings from the the hook_ranking() implementations.
  *
  * @param $query
  *   A query object that has been extended with the Search DB Extender.
@@ -2421,23 +2421,20 @@ function theme_node_recent_content($variables) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for block_add_block_form().
  *
  * Adds node-type specific visibility options to add block form.
- *
- * @see block_add_block_form()
  */
 function node_form_block_add_block_form_alter(&$form, &$form_state) {
   node_form_block_admin_configure_alter($form, $form_state);
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for block_admin_configure().
  *
  * Adds node-type specific visibility options to block configuration form.
  *
  * @see node_form_block_admin_configure_submit()
- * @see block_admin_configure()
  */
 function node_form_block_admin_configure_alter(&$form, &$form_state) {
   $default_type_options = db_query("SELECT type FROM {block_node_type} WHERE module = :module AND delta = :delta", array(
@@ -2482,12 +2479,11 @@ function node_form_block_admin_configure_submit($form, &$form_state) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for block_custom_block_delete().
  *
  * Adds node specific submit handler to delete custom block form.
  *
  * @see node_form_block_custom_block_delete_submit()
- * @see block_custom_block_delete()
  */
 function node_form_block_custom_block_delete_alter(&$form, &$form_state) {
   $form['#submit'][] = 'node_form_block_custom_block_delete_submit';
@@ -3970,7 +3966,7 @@ function node_assign_owner_action($node, $context) {
  *
  * @see node_assign_owner_action_submit()
  * @see node_assign_owner_action_validate()
- * @ingroup form
+ * @ingroup forms
  */
 function node_assign_owner_action_form($context) {
   $description = t('The username of the user to which you would like to assign ownership.');

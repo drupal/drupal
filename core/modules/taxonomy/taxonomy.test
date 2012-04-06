@@ -28,14 +28,15 @@ class TaxonomyWebTestCase extends DrupalWebTestCase {
    */
   function createVocabulary() {
     // Create a vocabulary.
-    $vocabulary = new stdClass();
-    $vocabulary->name = $this->randomName();
-    $vocabulary->description = $this->randomName();
-    $vocabulary->machine_name = drupal_strtolower($this->randomName());
-    $vocabulary->langcode = LANGUAGE_NOT_SPECIFIED;
-    $vocabulary->help = '';
-    $vocabulary->nodes = array('article' => 'article');
-    $vocabulary->weight = mt_rand(0, 10);
+    $vocabulary = entity_create('taxonomy_vocabulary', array(
+      'name' => $this->randomName(),
+      'description' => $this->randomName(),
+      'machine_name' => drupal_strtolower($this->randomName()),
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
+      'help' => '',
+      'nodes' => array('article' => 'article'),
+      'weight' => mt_rand(0, 10),
+    ));
     taxonomy_vocabulary_save($vocabulary);
     return $vocabulary;
   }
@@ -44,13 +45,14 @@ class TaxonomyWebTestCase extends DrupalWebTestCase {
    * Returns a new term with random properties in vocabulary $vid.
    */
   function createTerm($vocabulary) {
-    $term = new stdClass();
-    $term->name = $this->randomName();
-    $term->description = $this->randomName();
-    // Use the first available text format.
-    $term->format = db_query_range('SELECT format FROM {filter_format}', 0, 1)->fetchField();
-    $term->vid = $vocabulary->vid;
-    $term->langcode = LANGUAGE_NOT_SPECIFIED;
+    $term = entity_create('taxonomy_term', array(
+      'name' => $this->randomName(),
+      'description' => $this->randomName(),
+      // Use the first available text format.
+      'format' => db_query_range('SELECT format FROM {filter_format}', 0, 1)->fetchField(),
+      'vid' => $vocabulary->vid,
+      'langcode' => LANGUAGE_NOT_SPECIFIED,
+    ));
     taxonomy_term_save($term);
     return $term;
   }
@@ -974,9 +976,10 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
     // Create a new term in a different vocabulary with the same name.
     $new_vocabulary = $this->createVocabulary();
-    $new_term = new stdClass();
-    $new_term->name = $term->name;
-    $new_term->vid = $new_vocabulary->vid;
+    $new_term = entity_create('taxonomy_term', array(
+      'name' => $term->name,
+      'vid' => $new_vocabulary->vid,
+    ));
     taxonomy_term_save($new_term);
 
     // Load multiple terms with the same name.
@@ -1357,7 +1360,7 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
 
     // Load the terms by tid, with a condition on vid.
     $terms3 = taxonomy_term_load_multiple(array_keys($terms2), array('vid' => $vocabulary->vid));
-    $this->assertEqual($terms2, $terms3);
+    $this->assertEqual($terms2, $terms3, 'Same terms found when limiting load to vocabulary.');
 
     // Remove one term from the array, then delete it.
     $deleted = array_shift($terms3);

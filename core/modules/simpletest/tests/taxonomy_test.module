@@ -8,7 +8,7 @@
 /**
  * Implements hook_taxonomy_term_load().
  */
-function taxonomy_test_taxonomy_term_load($terms) {
+function taxonomy_test_taxonomy_term_load(array $terms) {
   foreach ($terms as $term) {
     $antonym = taxonomy_test_get_antonym($term->tid);
     if ($antonym) {
@@ -20,7 +20,7 @@ function taxonomy_test_taxonomy_term_load($terms) {
 /**
  * Implements hook_taxonomy_term_insert().
  */
-function taxonomy_test_taxonomy_term_insert($term) {
+function taxonomy_test_taxonomy_term_insert(TaxonomyTerm $term) {
   if (!empty($term->antonym)) {
     db_insert('taxonomy_term_antonym')
       ->fields(array(
@@ -34,7 +34,7 @@ function taxonomy_test_taxonomy_term_insert($term) {
 /**
  * Implements hook_taxonomy_term_update().
  */
-function taxonomy_test_taxonomy_term_update($term) {
+function taxonomy_test_taxonomy_term_update(TaxonomyTerm $term) {
   if (!empty($term->antonym)) {
     db_merge('taxonomy_term_antonym')
       ->key(array('tid' => $term->tid))
@@ -48,7 +48,7 @@ function taxonomy_test_taxonomy_term_update($term) {
 /**
  * Implements hook_taxonomy_term_delete().
  */
-function taxonomy_test_taxonomy_term_delete($term) {
+function taxonomy_test_taxonomy_term_delete(TaxonomyTerm $term) {
   db_delete('taxonomy_term_antonym')
     ->condition('tid', $term->tid)
     ->execute();

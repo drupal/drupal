@@ -1,0 +1,19 @@
+
+/**
+ * @file
+ * RTL admin styling for the filter module.
+ */
+
+/**
+ * Filter information under field.
+ */
+.filter-wrapper .form-item {
+  float: right;
+  padding: 0 1.5em 0.5em 0;
+}
+.filter-help {
+  float: left;
+}
+.filter-help a {
+  background-position: left center;
+}

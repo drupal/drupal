@@ -13,8 +13,7 @@
   display: none;
 }
 .contextual-region:hover .contextual,
-.contextual-region:hover .trigger,
-.contextual-active .trigger,
+.contextual-region:hover .contextual-links-trigger-active,
 .contextual-active .contextual-links {
   display: block;
 }

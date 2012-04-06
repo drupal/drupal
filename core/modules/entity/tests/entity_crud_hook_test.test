@@ -245,22 +245,22 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
    * Tests hook invocations for CRUD operations on taxonomy terms.
    */
   public function testTaxonomyTermHooks() {
-    $vocabulary = (object) array(
+    $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Test vocabulary',
       'machine_name' => 'test',
       'langcode' => LANGUAGE_NOT_SPECIFIED,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
-    );
+    ));
     taxonomy_vocabulary_save($vocabulary);
 
-    $term = (object) array(
+    $term = entity_create('taxonomy_term', array(
       'vid' => $vocabulary->vid,
       'name' => 'Test term',
       'langcode' => LANGUAGE_NOT_SPECIFIED,
       'description' => NULL,
       'format' => 1,
-    );
+    ));
     $_SESSION['entity_crud_hook_test'] = array();
     taxonomy_term_save($term);
 
@@ -305,13 +305,13 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
    * Tests hook invocations for CRUD operations on taxonomy vocabularies.
    */
   public function testTaxonomyVocabularyHooks() {
-    $vocabulary = (object) array(
+    $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Test vocabulary',
       'machine_name' => 'test',
       'langcode' => LANGUAGE_NOT_SPECIFIED,
       'description' => NULL,
       'module' => 'entity_crud_hook_test',
-    );
+    ));
     $_SESSION['entity_crud_hook_test'] = array();
     taxonomy_vocabulary_save($vocabulary);
 

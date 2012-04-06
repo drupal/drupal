@@ -2,7 +2,16 @@
 
 /**
  * @file
- * Base FileTransfer class.
+ * Definition of Drupal\Core\FileTransfer\FileTransfer.
+ */
+
+namespace Drupal\Core\FileTransfer;
+
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+
+/**
+ * Defines the base FileTransfer class.
  *
  * Classes extending this class perform file operations on directories not
  * writable by the webserver. To achieve this, the class should connect back
@@ -11,21 +20,52 @@
  * safety, all methods operate only inside a "jail", by default the Drupal root.
  */
 abstract class FileTransfer {
+
+  /**
+   * The username for this file transfer.
+   *
+   * @var string
+   */
   protected $username;
+
+  /**
+   * The password for this file transfer.
+   *
+   * @var string
+   */
   protected $password;
+
+  /**
+   * The hostname for this file transfer.
+   *
+   * @var string
+   */
   protected $hostname = 'localhost';
+
+  /**
+   * The port for this file transfer.
+   *
+   * @var int
+   */
   protected $port;
 
   /**
-   * The constructor for the UpdateConnection class. This method is also called
-   * from the classes that extend this class and override this method.
+   * Constructs a Drupal\Core\FileTransfer\FileTransfer object.
+   *
+   * @param $jail
+   *   The full path where all file operations performed by this object will
+   *   be restricted to. This prevents the FileTransfer classes from being
+   *   able to touch other parts of the filesystem.
    */
   function __construct($jail) {
     $this->jail = $jail;
   }
 
   /**
+   * Defines a factory method for this class.
+   *
    * Classes that extend this class must override the factory() static method.
+   * They should return a new instance of the appropriate FileTransfer subclass.
    *
    * @param string $jail
    *   The full path where all file operations performed by this object will
@@ -35,19 +75,28 @@ abstract class FileTransfer {
    *   An array of connection settings for the FileTransfer subclass. If the
    *   getSettingsForm() method uses any nested settings, the same structure
    *   will be assumed here.
+   *
    * @return object
    *   New instance of the appropriate FileTransfer subclass.
+   *
+   * @throws Drupal\Core\FileTransfer\FileTransferException
    */
   static function factory($jail, $settings) {
     throw new FileTransferException('FileTransfer::factory() static method not overridden by FileTransfer subclass.');
   }
 
   /**
-   * Implementation of the magic __get() method.
+   * Implements the magic __get() method.
    *
-   * If the connection isn't set to anything, this will call the connect() method
-   * and set it to and return the result; afterwards, the connection will be
-   * returned directly without using this method.
+   * If the connection isn't set to anything, this will call the connect()
+   * method and return the result; afterwards, the connection will be returned
+   * directly without using this method.
+   *
+   * @param string $name
+   *   The name of the variable to return.
+   *
+   * @return string|bool
+   *   The variable specified in $name.
    */
   function __get($name) {
     if ($name == 'connection') {
@@ -69,9 +118,9 @@ abstract class FileTransfer {
   /**
    * Copies a directory.
    *
-   * @param $source
+   * @param string $source
    *   The source path.
-   * @param $destination
+   * @param string $destination
    *   The destination path.
    */
   public final function copyDirectory($source, $destination) {
@@ -82,14 +131,21 @@ abstract class FileTransfer {
   }
 
   /**
-   * @see http://php.net/chmod
+   * Changes the permissions of the specified $path (file or directory).
    *
    * @param string $path
-   * @param long $mode
+   *   The file / directory to change the permissions of.
+   * @param int $mode
+   *   See the $mode argument from http://php.net/chmod.
    * @param bool $recursive
+   *   Pass TRUE to recursively chmod the entire directory specified in $path.
+   *
+   * @throws Drupal\Core\FileTransfer\FileTransferException
+   *
+   * @see http://php.net/chmod
    */
   public final function chmod($path, $mode, $recursive = FALSE) {
-    if (!in_array('FileTransferChmodInterface', class_implements(get_class($this)))) {
+    if (!in_array('Drupal\Core\FileTransfer\ChmodInterface', class_implements(get_class($this)))) {
       throw new FileTransferException('Unable to change file permissions');
     }
     $path = $this->sanitizePath($path);
@@ -101,7 +157,7 @@ abstract class FileTransfer {
   /**
    * Creates a directory.
    *
-   * @param $directory
+   * @param string $directory
    *   The directory to be created.
    */
   public final function createDirectory($directory) {
@@ -113,7 +169,7 @@ abstract class FileTransfer {
   /**
    * Removes a directory.
    *
-   * @param $directory
+   * @param string $directory
    *   The directory to be removed.
    */
   public final function removeDirectory($directory) {
@@ -125,9 +181,9 @@ abstract class FileTransfer {
   /**
    * Copies a file.
    *
-   * @param $source
+   * @param string $source
    *   The source file.
-   * @param $destination
+   * @param string $destination
    *   The destination file.
    */
   public final function copyFile($source, $destination) {
@@ -140,7 +196,7 @@ abstract class FileTransfer {
   /**
    * Removes a file.
    *
-   * @param $destination
+   * @param string $destination
    *   The destination file to be removed.
    */
   public final function removeFile($destination) {
@@ -152,8 +208,10 @@ abstract class FileTransfer {
   /**
    * Checks that the path is inside the jail and throws an exception if not.
    *
-   * @param $path
+   * @param string $path
    *   A path to check against the jail.
+   *
+   * @throws Drupal\Core\FileTransfer\FileTransferException
    */
   protected final function checkPath($path) {
     $full_jail = $this->chroot . $this->jail;
@@ -166,14 +224,18 @@ abstract class FileTransfer {
 
   /**
    * Returns a modified path suitable for passing to the server.
-   * If a path is a windows path, makes it POSIX compliant by removing the drive letter.
-   * If $this->chroot has a value, it is stripped from the path to allow for
-   * chroot'd filetransfer systems.
    *
-   * @param $path
-   * @param $strip_chroot
+   * If a path is a windows path, makes it POSIX compliant by removing the drive
+   * letter. If $this->chroot has a value and $strip_chroot is TRUE, it is
+   * stripped from the path to allow for chroot'd filetransfer systems.
+   *
+   * @param string $path
+   *   The path to modify.
+   * @param bool $strip_chroot
+   *   Whether to remove the path in $this->chroot.
    *
    * @return string
+   *   The modified path.
    */
   protected final function fixRemotePath($path, $strip_chroot = TRUE) {
     $path = $this->sanitizePath($path);
@@ -190,7 +252,10 @@ abstract class FileTransfer {
   * Changes backslashes to slashes, also removes a trailing slash.
   *
   * @param string $path
+  *   The path to modify.
+  *
   * @return string
+  *   The modified path.
   */
   function sanitizePath($path) {
     $path = str_replace('\\', '/', $path); // Windows path sanitization.
@@ -203,11 +268,11 @@ abstract class FileTransfer {
   /**
    * Copies a directory.
    *
-   * We need a separate method to make the $destination is in the jail.
+   * We need a separate method to make sure the $destination is in the jail.
    *
-   * @param $source
+   * @param string $source
    *   The source path.
-   * @param $destination
+   * @param string $destination
    *   The destination path.
    */
   protected function copyDirectoryJailed($source, $destination) {
@@ -215,7 +280,7 @@ abstract class FileTransfer {
       $destination = $destination . '/' . drupal_basename($source);
     }
     $this->createDirectory($destination);
-    foreach (new RecursiveIteratorIterator(new SkipDotsRecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
+    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
       $relative_path = substr($filename, strlen($source));
       if ($file->isDir()) {
         $this->createDirectory($destination . $relative_path);
@@ -229,7 +294,7 @@ abstract class FileTransfer {
   /**
    * Creates a directory.
    *
-   * @param $directory
+   * @param string $directory
    *   The directory to be created.
    */
   abstract protected function createDirectoryJailed($directory);
@@ -237,7 +302,7 @@ abstract class FileTransfer {
   /**
    * Removes a directory.
    *
-   * @param $directory
+   * @param string $directory
    *   The directory to be removed.
    */
   abstract protected function removeDirectoryJailed($directory);
@@ -245,9 +310,9 @@ abstract class FileTransfer {
   /**
    * Copies a file.
    *
-   * @param $source
+   * @param string $source
    *   The source file.
-   * @param $destination
+   * @param string $destination
    *   The destination file.
    */
   abstract protected function copyFileJailed($source, $destination);
@@ -255,39 +320,40 @@ abstract class FileTransfer {
   /**
    * Removes a file.
    *
-   * @param $destination
+   * @param string $destination
    *   The destination file to be removed.
    */
   abstract protected function removeFileJailed($destination);
 
   /**
-   * Checks if a particular path is a directory
+   * Checks if a particular path is a directory.
    *
-   * @param $path
+   * @param string $path
    *   The path to check
    *
-   * @return boolean
+   * @return bool
+   *   TRUE if the specified path is a directory, FALSE otherwise.
    */
   abstract public function isDirectory($path);
 
   /**
    * Checks if a particular path is a file (not a directory).
    *
-   * @param $path
-   *   The path to check
+   * @param string $path
+   *   The path to check.
    *
-   * @return boolean
+   * @return bool
+   *   TRUE if the specified path is a file, FALSE otherwise.
    */
   abstract public function isFile($path);
 
   /**
    * Returns the chroot property for this connection.
    *
-   * It does this by moving up the tree until it finds itself. If successful,
-   * it will return the chroot, otherwise FALSE.
+   * It does this by moving up the tree until it finds itself
    *
-   * @return
-   *   The chroot path for this connection or FALSE.
+   * @return string|bool
+   *   If successful, the chroot path for this connection, otherwise FALSE.
    */
   function findChroot() {
     // If the file exists as is, there is no chroot.
@@ -313,8 +379,7 @@ abstract class FileTransfer {
   }
 
   /**
-   * Sets the chroot and changes the jail to match the correct path scheme
-   *
+   * Sets the chroot and changes the jail to match the correct path scheme.
    */
   function setChroot() {
     $this->chroot = $this->findChroot();
@@ -326,6 +391,9 @@ abstract class FileTransfer {
    *
    * Implementing classes can either extend this form with fields collecting the
    * specific information they need, or override it entirely.
+   *
+   * @return array
+   *   An array that contains a Form API definition.
    */
   public function getSettingsForm() {
     $form['username'] = array(
@@ -355,64 +423,5 @@ abstract class FileTransfer {
       '#default_value' => NULL,
     );
     return $form;
-  }
-}
-
-/**
- * FileTransferException class.
- */
-class FileTransferException extends Exception {
-  public $arguments;
-
-  function __construct($message, $code = 0, $arguments = array()) {
-    parent::__construct($message, $code);
-    $this->arguments = $arguments;
-  }
-}
-
-
-/**
- * A FileTransfer Class implementing this interface can be used to chmod files.
- */
-interface FileTransferChmodInterface {
-
-  /**
-   * Changes the permissions of the file / directory specified in $path
-   *
-   * @param string $path
-   *   Path to change permissions of.
-   * @param long $mode
-   *   @see http://php.net/chmod
-   * @param boolean $recursive
-   *   Pass TRUE to recursively chmod the entire directory specified in $path.
-   */
-  function chmodJailed($path, $mode, $recursive);
-}
-
-/**
- * Provides an interface for iterating recursively over filesystem directories.
- *
- * Manually skips '.' and '..' directories, since no existing method is
- * available in PHP 5.2.
- *
- * @todo Depreciate in favor of RecursiveDirectoryIterator::SKIP_DOTS once PHP
- *   5.3 or later is required.
- */
-class SkipDotsRecursiveDirectoryIterator extends RecursiveDirectoryIterator {
-  /**
-   * Constructs a SkipDotsRecursiveDirectoryIterator
-   *
-   * @param $path
-   *   The path of the directory to be iterated over.
-   */
-  function __construct($path) {
-    parent::__construct($path);
-  }
-
-  function next() {
-    parent::next();
-    while ($this->isDot()) {
-      parent::next();
-    }
   }
 }

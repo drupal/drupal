@@ -760,7 +760,7 @@ function hook_field_widget_info() {
     'text_textarea_with_summary' => array(
       'label' => t('Text area with a summary'),
       'field types' => array('text_with_summary'),
-      'settings' => array('rows' => 20, 'summary_rows' => 5),
+      'settings' => array('rows' => 9, 'summary_rows' => 3),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_DEFAULT,
         'default value' => FIELD_BEHAVIOR_DEFAULT,
