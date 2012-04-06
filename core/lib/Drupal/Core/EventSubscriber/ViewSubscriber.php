@@ -68,6 +68,38 @@ class ViewSubscriber implements EventSubscriberInterface {
     return $response;
   }
 
+  public function onAjax(GetResponseEvent $event) {
+    $page_callback_result = $event->getControllerResult();
+
+    // Construct the response content from the page callback result.
+    $commands = ajax_prepare_response($page_callback_result);
+    $json = ajax_render($commands);
+
+    // Build the actual response object.
+    $response = new JsonResponse();
+    $response->setContent($json);
+
+    return $response;
+  }
+
+  public function onIframeUpload(GetResponseEvent $event) {
+    $page_callback_result = $event->getControllerResult();
+
+    // Construct the response content from the page callback result.
+    $commands = ajax_prepare_response($page_callback_result);
+    $json = ajax_render($commands);
+
+    // Browser IFRAMEs expect HTML. Browser extensions, such as Linkification
+    // and Skype's Browser Highlighter, convert URLs, phone numbers, etc. into
+    // links. This corrupts the JSON response. Protect the integrity of the
+    // JSON data by making it the value of a textarea.
+    // @see http://malsup.com/jquery/form/#file-upload
+    // @see http://drupal.org/node/1009382
+    $html = '<textarea>' . $json . '</textarea>';
+
+    return new Response($html);
+  }
+
   /**
    * Processes a successful controller into an HTTP 200 response.
    *
