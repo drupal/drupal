@@ -52,6 +52,13 @@ function form_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['form_test/tableselect/colspan'] = array(
+    'title' => 'Tableselect colspan test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_form_test_tableselect_colspan_form'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   $items['form_test/tableselect/empty-text'] = array(
     'title' => 'Tableselect empty text test',
     'page callback' => 'drupal_get_form',
@@ -589,6 +596,29 @@ function _form_test_tableselect_multiple_true_form_submit($form, &$form_state) {
  */
 function _form_test_tableselect_multiple_false_form($form, $form_state) {
   return _form_test_tableselect_form_builder($form, $form_state, array('#multiple' => FALSE));
+}
+
+/**
+ * Test the tableselect #colspan functionality.
+ */
+function _form_test_tableselect_colspan_form($form, $form_state) {
+  list($header, $options) = _form_test_tableselect_get_data();
+
+  // Change the data so that the third column has colspan=2.
+  $header['three'] = array('data' => 'Three', 'colspan' => 2);
+  unset($header['four']);
+  // Set the each row so that column 3 is an array.
+  foreach ($options as $name => $row) {
+    $options[$name]['three'] = array($row['three'], $row['four']);
+    unset($options[$name]['four']);
+  }
+  // Combine cells in row 3.
+  $options['row3']['one'] = array('data' => $options['row3']['one'], 'colspan' => 2);
+  unset($options['row3']['two']);
+  $options['row3']['three'] = array('data' => $options['row3']['three'][0], 'colspan' => 2);
+  unset($options['row3']['four']);
+
+  return _form_test_tableselect_form_builder($form, $form_state, array('#header' => $header, '#options' => $options));
 }
 
 /**

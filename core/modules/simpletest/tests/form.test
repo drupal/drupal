@@ -842,6 +842,31 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
+   * Tests the display when #colspan is set.
+   */
+  function testTableselectColSpan() {
+    $this->drupalGet('form_test/tableselect/colspan');
+
+    $this->assertText(t('Three'), 'Presence of the third column');
+    $this->assertNoText(t('Four'), 'Absence of a fourth column');
+
+    // There should be three labeled column headers and 1 for the input.
+    $table_head = $this->xpath('//thead');
+    $this->assertEqual(count($table_head[0]->tr->th), 4, 'There are four column headers');
+
+    $table_body = $this->xpath('//tbody');
+    // The first two body rows should each have 5 table cells: One for the
+    // radio, one cell in the first column, one cell in the the second column,
+    // and two cells in the third column which has colspan 2.
+    for ( $i = 0; $i <= 1; $i++) {
+      $this->assertEqual(count($table_body[0]->tr[$i]->td), 5, format_string('There are five cells in row @row.', array('@row' => $i)));
+    }
+    // The third row should have 3 cells, one for the radio, one spanning the
+    // first and second column, and a third in column 3 (which has colspan 3).
+    $this->assertEqual(count($table_body[0]->tr[2]->td), 3, 'There are three cells in row 3.');
+  }
+
+  /**
    * Test the display of the #empty text when #options is an empty array.
    */
   function testEmptyText() {

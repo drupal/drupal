@@ -3304,7 +3304,21 @@ function theme_tableselect($variables) {
       // As theme_table only maps header and row columns by order, create the
       // correct order by iterating over the header fields.
       foreach ($element['#header'] as $fieldname => $title) {
-        $row['data'][] = $element['#options'][$key][$fieldname];
+        // A row cell can span over multiple headers, which means less row cells
+        // than headers could be present.
+        if (isset($element['#options'][$key][$fieldname])) {
+          // A header can span over multiple cells and in this case the cells
+          // are passed in an array. The order of this array determines the
+          // order in which they are added.
+          if (!isset($element['#options'][$key][$fieldname]['data']) && is_array($element['#options'][$key][$fieldname])) {
+            foreach ($element['#options'][$key][$fieldname] as $cell) {
+              $row['data'][] = $cell;
+            }
+          }
+          else {
+            $row['data'][] = $element['#options'][$key][$fieldname];
+          }
+        }
       }
       $rows[] = $row;
     }
