@@ -3800,7 +3800,7 @@ function _menu_site_is_offline($check_only = FALSE) {
       // Ensure that the maintenance mode message is displayed only once
       // (allowing for page redirects) and specifically suppress its display on
       // the maintenance mode settings page.
-      if (!$check_only && $_GET['q'] != 'admin/config/development/maintenance') {
+      if (!$check_only && request()->attributes->get('system_path') != '/admin/config/development/maintenance') {
         if (user_access('administer site configuration')) {
           drupal_set_message(t('Operating in maintenance mode. <a href="@url">Go online.</a>', array('@url' => url('admin/config/development/maintenance'))), 'status', FALSE);
         }
