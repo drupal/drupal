@@ -851,23 +851,23 @@ function update_retrieve_dependencies() {
 
 /**
  * Updates config with values set on Drupal 7.x
- * 
+ *
  * Provide a generalised method to migrate variables from Drupal 7 to Drupal 8's
  * configuration management system.
  *
  * @param $config_name
  *   The name of the configuration object to retrieve. The name corresponds to
- *   an XML configuration file. For @code config(book.admin) @endcode, the
- *   config object returned will contain the contents of book.admin.xml.
+ *   an XML configuration file. For example, passing "book.admin" will return
+ *   the config object containing the contents of book.admin.xml.
  * @param $variable_map
  *   An array to map new to old configuration naming conventions. Example:
  *   @code
  *     array('new_config' => 'old_config')
- *   @endcode 
- *   This would update the value for new_config to the value old_config has in 
+ *   @endcode
+ *   This would update the value for new_config to the value old_config has in
  *   the variable table.
  */
-function update_variables_to_config($config_name, $variable_map = array()) {
+function update_variables_to_config($config_name, array $variable_map = array()) {
   $config = config($config_name);
   $config_data = array_keys($config->get());
 
