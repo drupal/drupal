@@ -403,6 +403,16 @@ function system_element_info() {
     '#theme' => 'search',
     '#theme_wrappers' => array('form_element'),
   );
+  $types['number'] = array(
+    '#input' => TRUE,
+    '#size' => 30,
+    '#step' => 1,
+    '#maxlength' => 128,
+    '#process' => array('ajax_process_form'),
+    '#element_validate' => array('form_validate_number'),
+    '#theme' => 'number',
+    '#theme_wrappers' => array('form_element'),
+  );
   $types['machine_name'] = array(
     '#input' => TRUE,
     '#default_value' => NULL,

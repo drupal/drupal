@@ -133,6 +133,12 @@ function form_test_menu() {
     'page arguments' => array('form_test_placeholder_test'),
     'access callback' => TRUE,
   );
+  $items['form-test/number'] = array(
+    'title' => 'Number',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_number'),
+    'access callback' => TRUE,
+  );
   $items['form-test/checkboxes-radios'] = array(
     'title' => t('Checkboxes, Radios'),
     'page callback' => 'drupal_get_form',
@@ -1126,10 +1132,125 @@ function form_test_select_submit($form, &$form_state) {
 }
 
 /**
+ * Builds a form to test #type 'number' validation.
+ */
+function form_test_number($form, &$form_state) {
+  $base = array(
+    '#type' => 'number',
+  );
+
+  $form['integer_no_number'] = $base + array(
+    '#title' => 'Integer test, #no_error',
+    '#default_value' => '#no_number',
+  );
+  $form['integer_no_step'] = $base + array(
+    '#title' => 'Integer test without step',
+    '#default_value' => 5,
+  );
+  $form['integer_no_step_step_error'] = $base + array(
+    '#title' => 'Integer test without step, #step_error',
+    '#default_value' => 4.5,
+  );
+  $form['integer_step'] = $base + array(
+    '#title' => 'Integer test with step',
+    '#default_value' => 5,
+    '#step' => 1,
+  );
+  $form['integer_step_error'] = $base + array(
+    '#title' => 'Integer test, with step, #step_error',
+    '#default_value' => 5,
+    '#step' => 2,
+  );
+  $form['integer_step_min'] = $base + array(
+    '#title' => 'Integer test with min value',
+    '#default_value' => 5,
+    '#min' => 0,
+    '#step' => 1,
+  );
+  $form['integer_step_min_error'] = $base + array(
+    '#title' => 'Integer test with min value, #min_error',
+    '#default_value' => 5,
+    '#min' => 6,
+    '#step' => 1,
+  );
+  $form['integer_step_max'] = $base + array(
+    '#title' => 'Integer test with max value',
+    '#default_value' => 5,
+    '#max' => 6,
+    '#step' => 1,
+  );
+  $form['integer_step_max_error'] = $base + array(
+    '#title' => 'Integer test with max value, #max_error',
+    '#default_value' => 5,
+    '#max' => 4,
+    '#step' => 1,
+  );
+  $form['integer_step_min_border'] = $base + array(
+    '#title' => 'Integer test with min border check',
+    '#default_value' => -1,
+    '#min' => -1,
+    '#step' => 1,
+  );
+  $form['integer_step_max_border'] = $base + array(
+    '#title' => 'Integer test with max border check',
+    '#default_value' => 5,
+    '#max' => 5,
+    '#step' => 1,
+  );
+  $form['integer_step_based_on_min'] = $base + array(
+    '#title' => 'Integer test with step based on min check',
+    '#default_value' => 3,
+    '#min' => -1,
+    '#step' => 2,
+  );
+  $form['integer_step_based_on_min_error'] = $base + array(
+    '#title' => 'Integer test with step based on min check, #step_error',
+    '#default_value' => 4,
+    '#min' => -1,
+    '#step' => 2,
+  );
+  $form['float_small_step'] = $base + array(
+    '#title' => 'Float test with a small step',
+    '#default_value' => 4,
+    '#step' => 0.0000000000001,
+  );
+  $form['float_step_no_error'] = $base + array(
+    '#title' => 'Float test',
+    '#default_value' => 1.2,
+    '#step' => 0.3,
+  );
+  $form['float_step_error'] = $base + array(
+    '#title' => 'Float test, #step_error',
+    '#default_value' => 1.3,
+    '#step' => 0.3,
+  );
+  $form['float_step_hard_no_error'] = $base + array(
+    '#title' => 'Float test hard',
+    '#default_value' => 0.9411764729088,
+    '#step' => 0.00392156863712,
+  );
+  $form['float_step_hard_error'] = $base + array(
+    '#title' => 'Float test hard, #step_error',
+    '#default_value' => 0.9411764,
+    '#step' => 0.00392156863,
+  );
+  $form['float_step_any_no_error'] = $base + array(
+    '#title' => 'Arbitrary float',
+    '#default_value' => 0.839562930284,
+    '#step' => 'aNy',
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  return $form;
+}
+
+/**
  * Builds a form to test the placeholder attribute.
  */
 function form_test_placeholder_test($form, &$form_state) {
-  foreach (array('textfield', 'textarea', 'url', 'password', 'search', 'tel', 'email') as $type) {
+  foreach (array('textfield', 'textarea', 'url', 'password', 'search', 'tel', 'email', 'number') as $type) {
     $form[$type] = array(
       '#type' => $type,
       '#title' => $type,
@@ -1341,6 +1462,15 @@ function _form_test_disabled_elements($form, &$form_state) {
     '#default_value' => 10,
     '#test_hijack_value' => 5,
     '#disabled' => TRUE,
+  );
+
+  // Number.
+  $form['number'] = array(
+    '#type' => 'number',
+    '#title' => 'number',
+    '#disabled' => TRUE,
+    '#default_value' => 1,
+    '#test_hijack_value' => 2,
   );
 
   // Date.

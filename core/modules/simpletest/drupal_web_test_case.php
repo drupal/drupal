@@ -2263,6 +2263,7 @@ class DrupalWebTestCase extends DrupalTestCase {
           case 'tel':
           case 'textarea':
           case 'url':
+          case 'number':
           case 'hidden':
           case 'password':
           case 'email':
