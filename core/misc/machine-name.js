@@ -26,12 +26,13 @@ Drupal.behaviors.machineName = {
    */
   attach: function (context, settings) {
     var self = this;
+    var $context = $(context);
     for (var i in settings.machineName) {
       if (settings.machineName.hasOwnProperty(i)) {
         (function (source_id, options) {
-          var $source = $(source_id, context).addClass('machine-name-source');
-          var $target = $(options.target, context).addClass('machine-name-target');
-          var $suffix = $(options.suffix, context);
+          var $source = $context.find(source_id).addClass('machine-name-source');
+          var $target = $context.find(options.target).addClass('machine-name-target');
+          var $suffix = $context.find(options.suffix);
           var $wrapper = $target.closest('.form-item');
           // All elements have to exist.
           if (!$source.length || !$target.length || !$suffix.length || !$wrapper.length) {

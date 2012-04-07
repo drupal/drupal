@@ -5,7 +5,7 @@
  */
 Drupal.behaviors.setTimezone = {
   attach: function (context, settings) {
-    $('select.timezone-detect', context).once('timezone', function () {
+    $(context).find('select.timezone-detect').once('timezone', function () {
       var dateString = Date();
       // In some client environments, date strings include a time zone
       // abbreviation, between 3 and 5 letters enclosed in parentheses,

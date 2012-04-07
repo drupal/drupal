@@ -17,7 +17,7 @@ Drupal.behaviors.menuChangeParentItems = {
 Drupal.menu_update_parent_list = function () {
   var values = [];
 
-  $('input:checked', $('fieldset#edit-menu')).each(function () {
+  $('fieldset#edit-menu').find('input:checked').each(function () {
     // Get the names of all checked menus.
     values.push(Drupal.checkPlain($.trim($(this).val())));
   });

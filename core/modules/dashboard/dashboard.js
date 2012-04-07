@@ -10,7 +10,7 @@
  */
 Drupal.behaviors.dashboard = {
     attach: function (context, settings) {
-    $('#dashboard', context).once(function () {
+    $(context).find('#dashboard').once(function () {
       $(this).prepend('<div class="customize clearfix"><ul class="action-links"><li><a href="#">' + Drupal.t('Customize dashboard') + '</a></li></ul><div class="canvas"></div></div>');
       $('.customize .action-links a', this).click(Drupal.behaviors.dashboard.enterCustomizeMode);
     });
@@ -22,9 +22,10 @@ Drupal.behaviors.dashboard = {
 
   addPlaceholders: function() {
     $('#dashboard .dashboard-region .region').each(function () {
+      var $this = $(this);
       var empty_text = "";
       // If the region is empty
-      if ($('.block', this).length == 0) {
+      if ($this.find('.block').length == 0) {
         // Check if we are in customize mode and grab the correct empty text
         if ($('#dashboard').hasClass('customize-mode')) {
           empty_text = Drupal.settings.dashboard.emptyRegionTextActive;
@@ -32,13 +33,13 @@ Drupal.behaviors.dashboard = {
           empty_text = Drupal.settings.dashboard.emptyRegionTextInactive;
         }
         // We need a placeholder.
-        if ($('.placeholder', this).length == 0) {
-          $(this).append('<div class="placeholder"></div>');
+        if ($this.find('.placeholder').length == 0) {
+          $this.append('<div class="placeholder"></div>');
         }
-        $('.placeholder', this).html(empty_text);
+        $this.find('.placeholder').html(empty_text);
       }
       else {
-        $('.placeholder', this).remove();
+        $this.find('.placeholder').remove();
       }
     });
   },

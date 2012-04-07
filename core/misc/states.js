@@ -527,7 +527,7 @@ $(document).bind('state:checked', function(e) {
 $(document).bind('state:collapsed', function(e) {
   if (e.trigger) {
     if ($(e.target).is('.collapsed') !== e.value) {
-      $('> legend a', e.target).click();
+      $(e.target).find$('> legend a').click();
     }
   }
 });

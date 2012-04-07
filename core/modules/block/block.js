@@ -12,8 +12,9 @@ Drupal.behaviors.blockSettingsSummary = {
       return;
     }
 
-    $('fieldset#edit-path', context).drupalSetSummary(function (context) {
-      if (!$('textarea[name="pages"]', context).val()) {
+    var $context = $(context);
+    $context.find('fieldset#edit-path').drupalSetSummary(function (context) {
+      if (!$(context).find('textarea[name="pages"]').val()) {
         return Drupal.t('Not restricted');
       }
       else {
@@ -21,9 +22,9 @@ Drupal.behaviors.blockSettingsSummary = {
       }
     });
 
-    $('fieldset#edit-node-type', context).drupalSetSummary(function (context) {
+    $context.find('fieldset#edit-node-type').drupalSetSummary(function (context) {
       var vals = [];
-      $('input[type="checkbox"]:checked', context).each(function () {
+      $(context).find('input[type="checkbox"]:checked').each(function () {
         vals.push($.trim($(this).next('label').text()));
       });
       if (!vals.length) {
@@ -32,9 +33,9 @@ Drupal.behaviors.blockSettingsSummary = {
       return vals.join(', ');
     });
 
-    $('fieldset#edit-role', context).drupalSetSummary(function (context) {
+    $context.find('fieldset#edit-role').drupalSetSummary(function (context) {
       var vals = [];
-      $('input[type="checkbox"]:checked', context).each(function () {
+      $(context).find('input[type="checkbox"]:checked').each(function () {
         vals.push($.trim($(this).next('label').text()));
       });
       if (!vals.length) {
@@ -43,8 +44,8 @@ Drupal.behaviors.blockSettingsSummary = {
       return vals.join(', ');
     });
 
-    $('fieldset#edit-user', context).drupalSetSummary(function (context) {
-      var $radio = $('input[name="custom"]:checked', context);
+    $context.find('fieldset#edit-user').drupalSetSummary(function (context) {
+      var $radio = $(context).find('input[name="custom"]:checked');
       if ($radio.val() == 0) {
         return Drupal.t('Not customizable');
       }
@@ -83,22 +84,23 @@ Drupal.behaviors.blockDrag = {
 
     // Add a handler so when a row is dropped, update fields dropped into new regions.
     tableDrag.onDrop = function () {
-      dragObject = this;
+      var dragObject = this;
+      var $rowElement = $(dragObject.rowObject.element);
       // Use "region-message" row instead of "region" row because
       // "region-{region_name}-message" is less prone to regexp match errors.
-      var regionRow = $(dragObject.rowObject.element).prevAll('tr.region-message').get(0);
+      var regionRow = $rowElement.prevAll('tr.region-message').get(0);
       var regionName = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
-      var regionField = $('select.block-region-select', dragObject.rowObject.element);
+      var regionField = $rowElement.find('select.block-region-select');
       // Check whether the newly picked region is available for this block.
-      if ($('option[value=' + regionName + ']', regionField).length == 0) {
+      if (regionField.find('option[value=' + regionName + ']').length == 0) {
         // If not, alert the user and keep the block in its old region setting.
         alert(Drupal.t('The block cannot be placed in this region.'));
         // Simulate that there was a selected element change, so the row is put
         // back to from where the user tried to drag it.
         regionField.change();
       }
-      else if ($(dragObject.rowObject.element).prev('tr').is('.region-message')) {
-        var weightField = $('select.block-weight', dragObject.rowObject.element);
+      else if ($rowElement.prev('tr').is('.region-message')) {
+        var weightField = $rowElement.find('select.block-weight');
         var oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
 
         if (!regionField.is('.block-region-' + regionName)) {
@@ -110,7 +112,7 @@ Drupal.behaviors.blockDrag = {
     };
 
     // Add the behavior to each region select list.
-    $('select.block-region-select', context).once('block-region-select', function () {
+    $(context).find('select.block-region-select').once('block-region-select', function () {
       $(this).change(function (event) {
         // Make our new row and select field.
         var row = $(this).closest('tr');
@@ -118,7 +120,7 @@ Drupal.behaviors.blockDrag = {
         tableDrag.rowObject = new tableDrag.row(row);
 
         // Find the correct region and insert the row as the first in the region.
-        $('tr.region-message', table).each(function () {
+        table.find('tr.region-message').each(function () {
           if ($(this).is('.region-' + select[0].value + '-message')) {
             // Add the new row and remove the old one.
             $(this).after(row);
@@ -132,7 +134,7 @@ Drupal.behaviors.blockDrag = {
             tableDrag.restripeTable();
             tableDrag.rowObject.markChanged();
             tableDrag.oldRowElement = row;
-            $(row).addClass('drag-previous');
+            row.addClass('drag-previous');
           }
         });
 
@@ -144,21 +146,22 @@ Drupal.behaviors.blockDrag = {
     });
 
     var checkEmptyRegions = function (table, rowObject) {
-      $('tr.region-message', table).each(function () {
+      table.find('tr.region-message').each(function () {
+        var $this = $(this);
         // If the dragged row is in this region, but above the message row, swap it down one space.
-        if ($(this).prev('tr').get(0) == rowObject.element) {
+        if ($this.prev('tr').get(0) == rowObject.element) {
           // Prevent a recursion problem when using the keyboard to move rows up.
           if ((rowObject.method != 'keyboard' || rowObject.direction == 'down')) {
             rowObject.swap('after', this);
           }
         }
         // This region has become empty.
-        if ($(this).next('tr').is(':not(.draggable)') || $(this).next('tr').length == 0) {
-          $(this).removeClass('region-populated').addClass('region-empty');
+        if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length == 0) {
+          $this.removeClass('region-populated').addClass('region-empty');
         }
         // This region has become populated.
-        else if ($(this).is('.region-empty')) {
-          $(this).removeClass('region-empty').addClass('region-populated');
+        else if ($this.is('.region-empty')) {
+          $this.removeClass('region-empty').addClass('region-populated');
         }
       });
     };

@@ -6,7 +6,7 @@
 Drupal.behaviors.autocomplete = {
   attach: function (context, settings) {
     var acdb = [];
-    $('input.autocomplete', context).once('autocomplete', function () {
+    $(context).find('input.autocomplete').once('autocomplete', function () {
       var uri = this.value;
       if (!acdb[uri]) {
         acdb[uri] = new Drupal.ACDB(uri);
@@ -125,7 +125,7 @@ Drupal.jsAC.prototype.selectDown = function () {
     this.highlight(this.selected.nextSibling);
   }
   else if (this.popup) {
-    var lis = $('li', this.popup);
+    var lis = $(this.popup).find('li');
     if (lis.length > 0) {
       this.highlight(lis.get(0));
     }

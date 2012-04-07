@@ -9,7 +9,7 @@ Drupal.behaviors.tableHeader = {
       return;
     }
 
-    $('table.sticky-enabled', context).once('tableheader', function () {
+    $(context).find('table.sticky-enabled').once('tableheader', function () {
       $(this).data("drupal-tableheader", new Drupal.tableHeader(this));
     });
   }
@@ -23,9 +23,10 @@ Drupal.behaviors.tableHeader = {
  */
 Drupal.tableHeader = function (table) {
   var self = this;
+  var $table = $(table);
 
-  this.originalTable = $(table);
-  this.originalHeader = $(table).children('thead');
+  this.originalTable = $table;
+  this.originalHeader = $table.children('thead');
   this.originalHeaderCells = this.originalHeader.find('> tr > th');
   this.displayWeight = null;
 

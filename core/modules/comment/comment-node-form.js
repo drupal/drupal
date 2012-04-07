@@ -7,25 +7,27 @@
 
 Drupal.behaviors.commentFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset.comment-node-settings-form', context).drupalSetSummary(function (context) {
-      return Drupal.checkPlain($('.form-item-comment input:checked', context).next('label').text());
+    var $context = $(context);
+    $context.find('fieldset.comment-node-settings-form').drupalSetSummary(function (context) {
+      return Drupal.checkPlain($(context).find('.form-item-comment input:checked').next('label').text());
     });
 
     // Provide the summary for the node type form.
-    $('fieldset.comment-node-type-settings-form', context).drupalSetSummary(function(context) {
+    $context.find('fieldset.comment-node-type-settings-form').drupalSetSummary(function(context) {
+      var $context = $(context);
       var vals = [];
 
       // Default comment setting.
-      vals.push($(".form-item-comment select option:selected", context).text());
+      vals.push($context.find(".form-item-comment select option:selected").text());
 
       // Threading.
-      var threading = $(".form-item-comment-default-mode input:checked", context).next('label').text();
+      var threading = $(context).find(".form-item-comment-default-mode input:checked").next('label').text();
       if (threading) {
         vals.push(threading);
       }
 
       // Comments per page.
-      var number = $(".form-item-comment-default-per-page select option:selected", context).val();
+      var number = $context.find(".form-item-comment-default-per-page select option:selected").val();
       vals.push(Drupal.t('@number comments per page', {'@number': number}));
 
       return Drupal.checkPlain(vals.join(', '));

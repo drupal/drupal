@@ -2,12 +2,13 @@
 
 Drupal.behaviors.filterStatus = {
   attach: function (context, settings) {
-    $('#filters-status-wrapper input.form-checkbox', context).once('filter-status', function () {
+    var $context = $(context);
+    $context.find('#filters-status-wrapper input.form-checkbox').once('filter-status', function () {
       var $checkbox = $(this);
       // Retrieve the tabledrag row belonging to this filter.
-      var $row = $('#' + $checkbox.attr('id').replace(/-status$/, '-weight'), context).closest('tr');
+      var $row = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-weight')).closest('tr');
       // Retrieve the vertical tab belonging to this filter.
-      var tab = $('#' + $checkbox.attr('id').replace(/-status$/, '-settings'), context).data('verticalTab');
+      var tab = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-settings')).data('verticalTab');
 
       // Bind click handler to this checkbox to conditionally show and hide the
       // filter's tableDrag row and vertical tab pane.

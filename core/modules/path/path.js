@@ -1,14 +1,12 @@
-
 /**
  * @file
  * Attaches behaviors for the Path module.
  */
-
 (function ($) {
 
 Drupal.behaviors.pathFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset.path-form', context).drupalSetSummary(function (context) {
+    $(context).find('fieldset.path-form').drupalSetSummary(function (context) {
       var path = $('.form-item-path-alias input').val();
 
       return path ?

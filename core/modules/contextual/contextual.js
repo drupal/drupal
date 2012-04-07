@@ -12,7 +12,7 @@ Drupal.contextualLinks = Drupal.contextualLinks || {};
  */
 Drupal.behaviors.contextualLinks = {
   attach: function (context) {
-    $('div.contextual', context).once('contextual-links', function () {
+    $(context).find('div.contextual-links-wrapper').once('contextual-links', function () {
       var $wrapper = $(this);
       var $region = $wrapper.closest('.contextual-region');
       var $links = $wrapper.find('ul');

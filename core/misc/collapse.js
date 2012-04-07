@@ -6,7 +6,7 @@
 Drupal.toggleFieldset = function (fieldset) {
   var $fieldset = $(fieldset);
   if ($fieldset.is('.collapsed')) {
-    var $content = $('> .fieldset-wrapper', fieldset).hide();
+    var $content = $fieldset.find('> .fieldset-wrapper').hide();
     $fieldset
       .removeClass('collapsed')
       .trigger({ type: 'collapsed', value: false })
@@ -26,7 +26,7 @@ Drupal.toggleFieldset = function (fieldset) {
   }
   else {
     $fieldset.trigger({ type: 'collapsed', value: true });
-    $('> .fieldset-wrapper', fieldset).slideUp('fast', function () {
+    $fieldset.find('> .fieldset-wrapper').slideUp('fast', function () {
       $fieldset
         .addClass('collapsed')
         .find('> legend span.fieldset-legend-prefix').html(Drupal.t('Show'));
@@ -55,12 +55,12 @@ Drupal.collapseScrollIntoView = function (node) {
 
 Drupal.behaviors.collapse = {
   attach: function (context, settings) {
-    $('fieldset.collapsible', context).once('collapse', function () {
+    $(context).find('fieldset.collapsible').once('collapse', function () {
       var $fieldset = $(this);
       // Expand fieldset if there are errors inside, or if it contains an
       // element that is targeted by the uri fragment identifier. 
       var anchor = location.hash && location.hash != '#' ? ', ' + location.hash : '';
-      if ($('.error' + anchor, $fieldset).length) {
+      if ($fieldset.find('.error' + anchor).length) {
         $fieldset.removeClass('collapsed');
       }
 
@@ -74,7 +74,7 @@ Drupal.behaviors.collapse = {
 
       // Turn the legend into a clickable link, but retain span.fieldset-legend
       // for CSS positioning.
-      var $legend = $('> legend .fieldset-legend', this);
+      var $legend = $fieldset.find('> legend .fieldset-legend');
 
       $('<span class="fieldset-legend-prefix element-invisible"></span>')
         .append($fieldset.hasClass('collapsed') ? Drupal.t('Show') : Drupal.t('Hide'))

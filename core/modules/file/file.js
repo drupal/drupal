@@ -14,25 +14,27 @@
  */
 Drupal.behaviors.fileValidateAutoAttach = {
   attach: function (context, settings) {
+    var $context = $(context);
     var validateExtension = Drupal.file.validateExtension;
     var selector, elements;
     if (settings.file && settings.file.elements) {
       elements = settings.file.elements;
       for (selector in elements) {
         if (elements.hasOwnProperty(selector)) {
-          $(selector, context).bind('change', {extensions: elements[selector]}, validateExtension);
+          $context.find(selector).bind('change', {extensions: elements[selector]}, validateExtension);
         }
       }
     }
   },
   detach: function (context, settings) {
+    var $context = $(context);
     var validateExtension = Drupal.file.validateExtension;
     var selector, elements;
     if (settings.file && settings.file.elements) {
       elements = settings.file.elements;
       for (selector in elements) {
         if (elements.hasOwnProperty(selector)) {
-          $(selector, context).unbind('change', validateExtension);
+          $context.find(selector).unbind('change', validateExtension);
         }
       }
     }
@@ -44,12 +46,14 @@ Drupal.behaviors.fileValidateAutoAttach = {
  */
 Drupal.behaviors.fileButtons = {
   attach: function (context) {
-    $('input.form-submit', context).bind('mousedown', Drupal.file.disableFields);
-    $('div.form-managed-file input.form-submit', context).bind('mousedown', Drupal.file.progressBar);
+    var $context = $(context);
+    $context.find('input.form-submit').bind('mousedown', Drupal.file.disableFields);
+    $context.find('div.form-managed-file input.form-submit').bind('mousedown', Drupal.file.progressBar);
   },
   detach: function (context) {
-    $('input.form-submit', context).unbind('mousedown', Drupal.file.disableFields);
-    $('div.form-managed-file input.form-submit', context).unbind('mousedown', Drupal.file.progressBar);
+    var $context = $(context);
+    $context.find('input.form-submit').unbind('mousedown', Drupal.file.disableFields);
+    $context.find('div.form-managed-file input.form-submit').unbind('mousedown', Drupal.file.progressBar);
   }
 };
 
@@ -58,10 +62,10 @@ Drupal.behaviors.fileButtons = {
  */
 Drupal.behaviors.filePreviewLinks = {
   attach: function (context) {
-    $('div.form-managed-file .file a, .file-widget .file a', context).bind('click',Drupal.file.openInNewWindow);
+    $(context).find('div.form-managed-file .file a, .file-widget .file a').bind('click',Drupal.file.openInNewWindow);
   },
   detach: function (context){
-    $('div.form-managed-file .file a, .file-widget .file a', context).unbind('click', Drupal.file.openInNewWindow);
+    $(context).find('div.form-managed-file .file a, .file-widget .file a').unbind('click', Drupal.file.openInNewWindow);
   }
 };
 

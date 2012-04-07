@@ -59,14 +59,14 @@ Drupal.behaviors.overlayChild = {
     // There are two links within the message that informs people about the
     // overlay and how to disable it. Make sure both links are visible when
     // either one has focus and add a class to the wrapper for styling purposes.
-    $('#overlay-disable-message', context)
+    $(context).find('#overlay-disable-message')
       .focusin(function () {
-        $(this).addClass('overlay-disable-message-focused');
-        $('a.element-focusable', this).removeClass('element-invisible');
+        $(this).addClass('overlay-disable-message-focused')
+          .find('a.element-focusable').removeClass('element-invisible');
       })
       .focusout(function () {
-        $(this).removeClass('overlay-disable-message-focused');
-        $('a.element-focusable', this).addClass('element-invisible');
+        $(this).removeClass('overlay-disable-message-focused')
+          .find('a.element-focusable').addClass('element-invisible');
       });
   }
 };
@@ -110,7 +110,7 @@ Drupal.overlayChild.behaviors.addClickHandler = function (context, settings) {
  * action attribute get a ?render=overlay suffix.
  */
 Drupal.overlayChild.behaviors.parseForms = function (context, settings) {
-  $('form', context).once('overlay', function () {
+  $(context).find('form').once('overlay', function () {
     // Obtain the action attribute of the form.
     var action = $(this).attr('action');
     // Keep internal forms in the overlay.
