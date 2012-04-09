@@ -5,6 +5,8 @@
  * API for loading and interacting with Drupal modules.
  */
 
+use Drupal\Component\Graph\Graph;
+
 /**
  * Load all the modules that have been enabled in the system table.
  *
@@ -240,7 +242,6 @@ function system_list_reset() {
  *     without this module.
  */
 function _module_build_dependencies($files) {
-  require_once DRUPAL_ROOT . '/core/includes/graph.inc';
   foreach ($files as $filename => $file) {
     $graph[$file->name]['edges'] = array();
     if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
@@ -250,7 +251,8 @@ function _module_build_dependencies($files) {
       }
     }
   }
-  drupal_depth_first_search($graph);
+  $graph_object = new Graph($graph);
+  $graph = $graph_object->searchAndSort();
   foreach ($graph as $module => $data) {
     $files[$module]->required_by = isset($data['reverse_paths']) ? $data['reverse_paths'] : array();
     $files[$module]->requires = isset($data['paths']) ? $data['paths'] : array();
