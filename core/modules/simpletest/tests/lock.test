@@ -18,9 +18,57 @@ class LockFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
-   * Confirm that we can acquire and release locks in two parallel requests.
+   * Tests backend release functionality.
    */
-  function testLockAcquire() {
+  public function testBackendLockRelease() {
+    $backend = lock();
+
+    $success = $backend->acquire('lock_a');
+    $this->assertTrue($success, "Could acquire first lock");
+
+    // This function is not part of the backend, but the default database
+    // backend implement it, we can here use it safely.
+    $is_free = $backend->lockMayBeAvailable('lock_a');
+    $this->assertFalse($is_free, "First lock is unavailable");
+
+    $backend->release('lock_a');
+    $is_free = $backend->lockMayBeAvailable('lock_a');
+    $this->assertTrue($is_free, "First lock has been released");
+
+    $success = $backend->acquire('lock_b');
+    $this->assertTrue($success, "Could acquire second lock");
+
+    $success = $backend->acquire('lock_b');
+    $this->assertTrue($success, "Could acquire second lock a second time within the same request");
+
+    $backend->release('lock_b');
+  }
+
+  /**
+   * Tests backend release functionality.
+   */
+  public function testBackendLockReleaseAll() {
+    $backend = lock();
+
+    $success = $backend->acquire('lock_a');
+    $this->assertTrue($success, "Could acquire first lock");
+
+    $success = $backend->acquire('lock_b');
+    $this->assertTrue($success, "Could acquire second lock");
+
+    $backend->releaseAll();
+
+    $is_free = $backend->lockMayBeAvailable('lock_a');
+    $this->assertTrue($is_free, "First lock has been released");
+
+    $is_free = $backend->lockMayBeAvailable('lock_b');
+    $this->assertTrue($is_free, "Second lock has been released");
+  }
+
+  /**
+   * Confirms that we can acquire and release locks in two parallel requests.
+   */
+  public function testLockAcquire() {
     $lock_acquired = 'TRUE: Lock successfully acquired in system_test_lock_acquire()';
     $lock_not_acquired = 'FALSE: Lock not acquired in system_test_lock_acquire()';
     $this->assertTrue(lock_acquire('system_test_lock_acquire'), t('Lock acquired by this request.'), t('Lock'));
@@ -54,4 +102,3 @@ class LockFunctionalTest extends DrupalWebTestCase {
     $this->assertTrue(lock_acquire('system_test_lock_exit'), t('Lock acquired by this request after the other request exits.'), t('Lock'));
   }
 }
-

@@ -2270,8 +2270,7 @@ function _drupal_bootstrap_variables() {
   global $conf;
 
   // Initialize the lock system.
-  require_once DRUPAL_ROOT . '/' . variable_get('lock_inc', 'core/includes/lock.inc');
-  lock_initialize();
+  require_once DRUPAL_ROOT . '/core/includes/lock.inc';
 
   // Load variables from the database, but do not overwrite variables set in settings.php.
   $conf = variable_initialize(isset($conf) ? $conf : array());
