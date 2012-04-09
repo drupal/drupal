@@ -6,7 +6,7 @@
 
 #locale-translation-filter-form .form-item-language,
 #locale-translation-filter-form .form-item-translation,
-#locale-translation-filter-form .form-item-group {
+#locale-translation-filter-form .form-item-customized {
   float: left; /* LTR */
   padding-right: .8em; /* LTR */
   margin: 0.1em;

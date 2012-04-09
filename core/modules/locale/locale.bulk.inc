@@ -34,62 +34,80 @@ function locale_translate_import_form($form, &$form_state) {
   else {
     $default = key($existing_languages);
     $language_options = array(
-      t('Already added languages') => $existing_languages,
+      t('Existing languages') => $existing_languages,
       t('Languages not yet added') => language_admin_predefined_list()
     );
   }
 
-  $form['import'] = array('#type' => 'fieldset',
-    '#title' => t('Import translation'),
-  );
-  $form['import']['file'] = array('#type' => 'file',
-    '#title' => t('Language file'),
+  $form['file'] = array(
+    '#type' => 'file',
+    '#title' => t('Translation file'),
     '#size' => 50,
     '#description' => t('A Gettext Portable Object (<em>.po</em>) file.'),
   );
-  $form['import']['langcode'] = array('#type' => 'select',
-    '#title' => t('Import into'),
+  $form['langcode'] = array(
+    '#type' => 'select',
+    '#title' => t('Language'),
     '#options' => $language_options,
     '#default_value' => $default,
-    '#description' => t('Choose the language you want to add strings into. If you choose a language which is not yet set up, it will be added.'),
   );
-  $form['import']['mode'] = array('#type' => 'radios',
-    '#title' => t('Mode'),
-    '#default_value' => LOCALE_IMPORT_KEEP,
-    '#options' => array(
-      LOCALE_IMPORT_OVERWRITE => t('Strings in the uploaded file replace existing ones, new ones are added. The plural format is updated.'),
-      LOCALE_IMPORT_KEEP => t('Existing strings and the plural format are kept, only new strings are added.')
+
+  $form['customized'] = array(
+    '#title' => t('Treat imported strings as custom translations'),
+    '#type' => 'checkbox',
+  );
+  $form['overwrite_options'] = array(
+    '#type' => 'container',
+    '#tree' => TRUE,
+  );
+  $form['overwrite_options']['not_customized'] = array(
+    '#title' => t('Overwrite non-customized translations'),
+    '#type' => 'checkbox',
+    '#states' => array(
+      'checked' => array(
+         ':input[name="customized"]' => array('checked' => TRUE),
+      ),
     ),
   );
-  $form['import']['submit'] = array('#type' => 'submit', '#value' => t('Import'));
+  $form['overwrite_options']['customized'] = array(
+    '#title' => t('Overwrite existing customized translations'),
+    '#type' => 'checkbox',
+  );
 
+  $form['actions'] = array(
+    '#type' => 'actions'
+  );
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Import')
+  );
   return $form;
 }
 
 /**
- * Process the locale import form submission.
+ * Processes the locale import form submission.
  */
 function locale_translate_import_form_submit($form, &$form_state) {
   $validators = array('file_validate_extensions' => array('po'));
-  // Ensure we have the file uploaded
+
+  // Ensure we have the file uploaded.
   if ($file = file_save_upload('file', $validators)) {
 
-    // Add language, if not yet supported
-    drupal_static_reset('language_list');
-    $languages = language_list();
-    $langcode = $form_state['values']['langcode'];
-    if (!isset($languages[$langcode])) {
+    // Add language, if not yet supported.
+    $language = language_load($form_state['values']['langcode']);
+    if (empty($language)) {
       include_once DRUPAL_ROOT . '/core/includes/standard.inc';
       $predefined = standard_language_list();
       $language = (object) array(
-        'langcode' => $langcode,
+        'langcode' => $form_state['values']['langcode'],
       );
-      language_save($language);
-      drupal_set_message(t('The language %language has been created.', array('%language' => t($predefined[$langcode][0]))));
+      $language = language_save($language);
+      drupal_set_message(t('The language %language has been created.', array('%language' => t($language->name))));
     }
+    $customized = $form_state['values']['customized'] ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED;
 
     // Now import strings into the language
-    if ($return = _locale_import_po($file, $langcode, $form_state['values']['mode']) == FALSE) {
+    if ($return = _locale_import_po($file, $language->langcode, $form_state['values']['overwrite_options'], $customized) == FALSE) {
       $variables = array('%filename' => $file->filename);
       drupal_set_message(t('The translation import of %filename failed.', $variables), 'error');
       watchdog('locale', 'The translation import of %filename failed.', $variables, WATCHDOG_ERROR);
@@ -106,11 +124,9 @@ function locale_translate_import_form_submit($form, &$form_state) {
 }
 
 /**
- * User interface for the translation export screen.
+ * Builds form to export Gettext translation files.
  */
-function locale_translate_export_screen() {
-  // Get all enabled languages, except English, if we should not translate that.
-  drupal_static_reset('language_list');
+function locale_translate_export_form($form, &$form_state) {
   $languages = language_list(TRUE);
   $language_options = array();
   foreach ($languages as $langcode => $language) {
@@ -118,65 +134,80 @@ function locale_translate_export_screen() {
       $language_options[$langcode] = $language->name;
     }
   }
+  $language_default = language_default();
 
-  $output = '';
-  // Offer translation export if any language is set up.
-  if (!empty($language_options)) {
-    $elements = drupal_get_form('locale_translate_export_po_form', $language_options);
-    $output = drupal_render($elements);
+  if (empty($language_options)) {
+    $form['langcode'] = array(
+      '#type' => 'value',
+      '#value' => LANGUAGE_SYSTEM,
+    );
+    $form['langcode_text'] = array(
+      '#type' => 'item',
+      '#title' => t('Language'),
+      '#markup' => t('No language available. The export will only contain source strings.'),
+    );
   }
-  $elements = drupal_get_form('locale_translate_export_pot_form');
-  $output .= drupal_render($elements);
-  return $output;
-}
+  else {
+    $form['langcode'] = array(
+      '#type' => 'select',
+      '#title' => t('Language'),
+      '#options' => $language_options,
+      '#default_value' => $language_default->langcode,
+      '#empty_option' => t('Source text only, no translations'),
+      '#empty_value' => LANGUAGE_SYSTEM,
+    );
+    $form['content_options'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Export options'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#tree' => TRUE,
+      '#states' => array(
+        'invisible' => array(
+           ':input[name="langcode"]' => array('value' => LANGUAGE_SYSTEM),
+        ),
+      ),
+    );
+    $form['content_options']['not_customized'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Include non-customized translations'),
+      '#default_value' => TRUE,
+    );
+    $form['content_options']['customized'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Include customized translations'),
+      '#default_value' => TRUE,
+    );
+    $form['content_options']['not_translated'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Include untranslated text'),
+      '#default_value' => TRUE,
+    );
+  }
 
-/**
- * Form to export PO files for the languages provided.
- *
- * @param $names
- *   An associate array with localized language names
- */
-function locale_translate_export_po_form($form, &$form_state, $names) {
-  $form['export_title'] = array('#type' => 'item',
-    '#title' => t('Export translation'),
+  $form['actions'] = array(
+    '#type' => 'actions'
   );
-  $form['langcode'] = array('#type' => 'select',
-    '#title' => t('Language name'),
-    '#options' => $names,
-    '#description' => t('Select the language to export in Gettext Portable Object (<em>.po</em>) format.'),
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Export')
   );
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
   return $form;
 }
 
 /**
- * Translation template export form.
+ * Processes a translation (or template) export form submission.
  */
-function locale_translate_export_pot_form() {
-  // Complete template export of the strings
-  $form['export_title'] = array('#type' => 'item',
-    '#title' => t('Export template'),
-    '#description' => t('Generate a Gettext Portable Object Template (<em>.pot</em>) file with all strings from the Drupal locale database.'),
-  );
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
-  // Reuse PO export submission callback.
-  $form['#submit'][] = 'locale_translate_export_po_form_submit';
-  return $form;
-}
-
-/**
- * Process a translation (or template) export form submission.
- */
-function locale_translate_export_po_form_submit($form, &$form_state) {
+function locale_translate_export_form_submit($form, &$form_state) {
   // If template is required, language code is not given.
-  $language = NULL;
-  if (isset($form_state['values']['langcode'])) {
-    $languages = language_list();
-    $language = $languages[$form_state['values']['langcode']];
+  if ($form_state['values']['langcode'] != LANGUAGE_SYSTEM) {
+    $language = language_load($form_state['values']['langcode']);
   }
-  _locale_export_po($language, _locale_export_po_generate($language, _locale_export_get_strings($language)));
+  else {
+    $language = NULL;
+  }
+  $content_options = isset($form_state['values']['content_options']) ? $form_state['values']['content_options'] : array();
+  _locale_export_po($language, _locale_export_po_generate($language, _locale_export_get_strings($language, $content_options)));
 }
 
 /**
@@ -267,7 +298,7 @@ function locale_translate_batch_import($filepath, &$context) {
   // we can extract the language code to use for the import from the end.
   if (preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $langcode)) {
     $file = (object) array('filename' => drupal_basename($filepath), 'uri' => $filepath);
-    _locale_import_read_po('db-store', $file, LOCALE_IMPORT_KEEP, $langcode[2]);
+    _locale_import_read_po('db-store', $file, array(), $langcode[2]);
     $context['results'][] = $filepath;
   }
 }

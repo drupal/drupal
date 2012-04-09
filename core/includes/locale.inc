@@ -73,26 +73,28 @@ define('LOCALE_JS_OBJECT_CONTEXT', '
 ');
 
 /**
- * Translation import mode overwriting all existing translations
- * if new translated version available.
+ * Flag for locally not customized interface translation.
+ *
+ * Such translations are imported from .po files downloaded from
+ * localize.drupal.org for example.
  */
-const LOCALE_IMPORT_OVERWRITE = 0;
+const LOCALE_NOT_CUSTOMIZED = 0;
 
 /**
- * Translation import mode keeping existing translations and only
- * inserting new strings.
+ * Flag for locally customized interface translation.
+ *
+ * Such translations are edited from their imported originals on the user
+ * interface or are imported as customized.
  */
-const LOCALE_IMPORT_KEEP = 1;
+const LOCALE_CUSTOMIZED = 1;
 
 /**
- * URL language negotiation: use the path prefix as URL language
- * indicator.
+ * URL language negotiation: use the path prefix as URL language indicator.
  */
 const LANGUAGE_NEGOTIATION_URL_PREFIX = 0;
 
 /**
- * URL language negotiation: use the domain as URL language
- * indicator.
+ * URL language negotiation: use the domain as URL language indicator.
  */
 const LANGUAGE_NEGOTIATION_URL_DOMAIN = 1;
 

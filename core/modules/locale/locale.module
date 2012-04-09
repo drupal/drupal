@@ -124,7 +124,8 @@ function locale_menu() {
   );
   $items['admin/config/regional/translate/export'] = array(
     'title' => 'Export',
-    'page callback' => 'locale_translate_export_screen',  // possibly multiple forms concatenated
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('locale_translate_export_form'),
     'access arguments' => array('translate interface'),
     'weight' => 30,
     'type' => MENU_LOCAL_TASK,

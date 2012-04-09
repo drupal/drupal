@@ -29,6 +29,7 @@ function _locale_translate_seek() {
     $query = array(
       'translation' => 'all',
       'language' => 'all',
+      'customized' => 'all',
       'string' => '',
     );
   }
@@ -36,13 +37,16 @@ function _locale_translate_seek() {
   $sql_query = db_select('locales_source', 's');
   $sql_query->leftJoin('locales_target', 't', 't.lid = s.lid');
   $sql_query->fields('s', array('source', 'location', 'context', 'lid'));
-  $sql_query->fields('t', array('translation', 'language'));
+  $sql_query->fields('t', array('translation', 'language', 'customized'));
 
   // Compute LIKE section.
   switch ($query['translation']) {
     case 'translated':
       $sql_query->condition('t.translation', '%' . db_like($query['string']) . '%', 'LIKE');
       $sql_query->orderBy('t.translation', 'DESC');
+      if ($query['customized'] != 'all') {
+        $sql_query->condition('t.customized', $query['customized']);
+      }
       break;
     case 'untranslated':
       $sql_query->condition(db_and()
@@ -134,7 +138,7 @@ function _locale_translate_seek_query() {
   $query = &drupal_static(__FUNCTION__);
   if (!isset($query)) {
     $query = array();
-    $fields = array('string', 'language', 'translation');
+    $fields = array('string', 'language', 'translation', 'customized');
     foreach ($fields as $field) {
       if (isset($_SESSION['locale_translation_filter'][$field])) {
         $query[$field] = $_SESSION['locale_translation_filter'][$field];
@@ -172,7 +176,25 @@ function locale_translation_filters() {
 
   $filters['translation'] = array(
     'title' => t('Search in'),
-    'options' => array('all' => t('Both translated and untranslated strings'), 'translated' => t('Only translated strings'), 'untranslated' => t('Only untranslated strings')),
+    'options' => array(
+      'all' => t('Both translated and untranslated strings'),
+      'translated' => t('Only translated strings'),
+      'untranslated' => t('Untranslated strings')
+    ),
+  );
+
+  $filters['customized'] = array(
+    'title' => t('Translation type'),
+    'options' => array(
+      'all' => t('All'),
+      LOCALE_NOT_CUSTOMIZED => t('Non-customized translation'),
+      LOCALE_CUSTOMIZED => t('Customized translation'),
+    ),
+    'states' => array(
+      'visible' => array(
+        ':input[name=translation]' => array('value' => 'translated'),
+      )
+    ),
   );
 
   return $filters;
@@ -210,6 +232,9 @@ function locale_translation_filter_form() {
         '#size' => 0,
         '#options' => $filter['options'],
       );
+      if (isset($filter['states'])) {
+        $form['filters']['status'][$key]['#states'] = $filter['states'];
+      }
     }
     if (!empty($_SESSION['locale_translation_filter'][$key])) {
       $form['filters']['status'][$key]['#default_value'] = $_SESSION['locale_translation_filter'][$key];
@@ -435,21 +460,23 @@ function locale_translate_edit_form_submit($form, &$form_state) {
     }
     if ($has_translation) {
       // Only update or insert if we have a value to use.
-      if (!empty($translation)) {
+      if (!empty($translation) && $translation != $value) {
         db_update('locales_target')
           ->fields(array(
             'translation' => $value,
+            'customized' => LOCALE_CUSTOMIZED,
           ))
           ->condition('lid', $lid)
           ->condition('language', $langcode)
           ->execute();
       }
-      else {
+      if (empty($translation)) {
         db_insert('locales_target')
           ->fields(array(
             'lid' => $lid,
             'translation' => $value,
             'language' => $langcode,
+            'customized' => LOCALE_CUSTOMIZED,
           ))
           ->execute();
       }

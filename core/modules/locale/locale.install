@@ -176,6 +176,12 @@ function locale_schema() {
         'default' => '',
         'description' => 'Language code. References {language}.langcode.',
       ),
+      'customized' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0, // LOCALE_NOT_CUSTOMIZED
+        'description' => 'Boolean indicating whether the translation is custom to this site.',
+      ),
     ),
     'primary key' => array('language', 'lid'),
     'foreign keys' => array(
@@ -482,6 +488,19 @@ function locale_update_8005() {
 
   // Add back a primary key without 'plural'.
   db_add_primary_key('locales_target', array('language', 'lid'));
+}
+
+/**
+ * Add column to track customized string status to locales_target.
+ */
+function locale_update_8006() {
+  $spec = array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0, // LOCALE_NOT_CUSTOMIZED
+    'description' => 'Boolean indicating whether the translation is custom to this site.',
+  );
+  db_add_field('locales_target', 'customized', $spec);
 }
 
 /**
