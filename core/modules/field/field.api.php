@@ -1459,10 +1459,10 @@ function hook_field_attach_prepare_translation_alter(&$entity, $context) {
 /**
  * Perform alterations on field_language() values.
  *
- * This hook is invoked to alter the array of display languages for the given
- * entity.
+ * This hook is invoked to alter the array of display language codes for the
+ * given entity.
  *
- * @param $display_language
+ * @param $display_langcode
  *   A reference to an array of language codes keyed by field name.
  * @param $context
  *   An associative array containing:
@@ -1470,11 +1470,11 @@ function hook_field_attach_prepare_translation_alter(&$entity, $context) {
  *   - entity: The entity with fields to render.
  *   - langcode: The language code $entity has to be displayed in.
  */
-function hook_field_language_alter(&$display_language, $context) {
+function hook_field_language_alter(&$display_langcode, $context) {
   // Do not apply core language fallback rules if they are disabled or if Locale
   // is not registered as a translation handler.
   if (variable_get('locale_field_language_fallback', TRUE) && field_has_translation_handler($context['entity_type'], 'locale')) {
-    locale_field_language_fallback($display_language, $context['entity'], $context['language']);
+    locale_field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
   }
 }
 
@@ -1482,22 +1482,22 @@ function hook_field_language_alter(&$display_language, $context) {
  * Alter field_available_languages() values.
  *
  * This hook is invoked from field_available_languages() to allow modules to
- * alter the array of available languages for the given field.
+ * alter the array of available language codes for the given field.
  *
- * @param $languages
+ * @param $langcodes
  *   A reference to an array of language codes to be made available.
  * @param $context
  *   An associative array containing:
  *   - entity_type: The type of the entity the field is attached to.
  *   - field: A field data structure.
  */
-function hook_field_available_languages_alter(&$languages, $context) {
-  // Add an unavailable language.
-  $languages[] = 'xx';
+function hook_field_available_languages_alter(&$langcodes, $context) {
+  // Add an unavailable language code.
+  $langcodes[] = 'xx';
 
-  // Remove an available language.
-  $index = array_search('yy', $languages);
-  unset($languages[$index]);
+  // Remove an available language code.
+  $index = array_search('yy', $langcodes);
+  unset($langcodes[$index]);
 }
 
 /**
@@ -1712,7 +1712,7 @@ function hook_field_storage_load($entity_type, $entities, $age, $fields, $option
       ->fields('t')
       ->condition('entity_type', $entity_type)
       ->condition($load_current ? 'entity_id' : 'revision_id', $ids, 'IN')
-      ->condition('language', field_available_languages($entity_type, $field), 'IN')
+      ->condition('langcode', field_available_languages($entity_type, $field), 'IN')
       ->orderBy('delta');
 
     if (empty($options['deleted'])) {
@@ -1723,11 +1723,11 @@ function hook_field_storage_load($entity_type, $entities, $age, $fields, $option
 
     $delta_count = array();
     foreach ($results as $row) {
-      if (!isset($delta_count[$row->entity_id][$row->language])) {
-        $delta_count[$row->entity_id][$row->language] = 0;
+      if (!isset($delta_count[$row->entity_id][$row->langcode])) {
+        $delta_count[$row->entity_id][$row->langcode] = 0;
       }
 
-      if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->language] < $field['cardinality']) {
+      if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field['cardinality']) {
         $item = array();
         // For each column declared by the field, populate the item
         // from the prefixed database column.
@@ -1737,8 +1737,8 @@ function hook_field_storage_load($entity_type, $entities, $age, $fields, $option
         }
 
         // Add the item to the field values for the entity.
-        $entities[$row->entity_id]->{$field_name}[$row->language][] = $item;
-        $delta_count[$row->entity_id][$row->language]++;
+        $entities[$row->entity_id]->{$field_name}[$row->langcode][] = $item;
+        $delta_count[$row->entity_id][$row->langcode]++;
       }
     }
   }
@@ -1773,39 +1773,39 @@ function hook_field_storage_write($entity_type, $entity, $op, $fields) {
     $table_name = _field_sql_storage_tablename($field);
     $revision_name = _field_sql_storage_revision_tablename($field);
 
-    $all_languages = field_available_languages($entity_type, $field);
-    $field_languages = array_intersect($all_languages, array_keys((array) $entity->$field_name));
+    $all_langcodes = field_available_languages($entity_type, $field);
+    $field_langcodes = array_intersect($all_langcodes, array_keys((array) $entity->$field_name));
 
     // Delete and insert, rather than update, in case a value was added.
     if ($op == FIELD_STORAGE_UPDATE) {
-      // Delete languages present in the incoming $entity->$field_name.
-      // Delete all languages if $entity->$field_name is empty.
-      $languages = !empty($entity->$field_name) ? $field_languages : $all_languages;
-      if ($languages) {
+      // Delete language codes present in the incoming $entity->$field_name.
+      // Delete all language codes if $entity->$field_name is empty.
+      $langcodes = !empty($entity->$field_name) ? $field_langcodes : $all_langcodes;
+      if ($langcodes) {
         db_delete($table_name)
           ->condition('entity_type', $entity_type)
           ->condition('entity_id', $id)
-          ->condition('language', $languages, 'IN')
+          ->condition('langcode', $langcodes, 'IN')
           ->execute();
         db_delete($revision_name)
           ->condition('entity_type', $entity_type)
           ->condition('entity_id', $id)
           ->condition('revision_id', $vid)
-          ->condition('language', $languages, 'IN')
+          ->condition('langcode', $langcodes, 'IN')
           ->execute();
       }
     }
 
     // Prepare the multi-insert query.
     $do_insert = FALSE;
-    $columns = array('entity_type', 'entity_id', 'revision_id', 'bundle', 'delta', 'language');
+    $columns = array('entity_type', 'entity_id', 'revision_id', 'bundle', 'delta', 'langcode');
     foreach ($field['columns'] as $column => $attributes) {
       $columns[] = _field_sql_storage_columnname($field_name, $column);
     }
     $query = db_insert($table_name)->fields($columns);
     $revision_query = db_insert($revision_name)->fields($columns);
 
-    foreach ($field_languages as $langcode) {
+    foreach ($field_langcodes as $langcode) {
       $items = (array) $entity->{$field_name}[$langcode];
       $delta_count = 0;
       foreach ($items as $delta => $item) {
@@ -1817,7 +1817,7 @@ function hook_field_storage_write($entity_type, $entity, $op, $fields) {
           'revision_id' => $vid,
           'bundle' => $bundle,
           'delta' => $delta,
-          'language' => $langcode,
+          'langcode' => $langcode,
         );
         foreach ($field['columns'] as $column => $attributes) {
           $record[_field_sql_storage_columnname($field_name, $column)] = isset($item[$column]) ? $item[$column] : NULL;
@@ -1955,7 +1955,7 @@ function hook_field_storage_query($query) {
     $sql_field = "$table_alias." . _field_sql_storage_columnname($field['field_name'], $condition['column']);
     $query->addCondition($select_query, $sql_field, $condition);
     // Add delta / language group conditions.
-    foreach (array('delta', 'language') as $column) {
+    foreach (array('delta', 'langcode') as $column) {
       if (isset($condition[$column . '_group'])) {
         $group_name = $condition[$column . '_group'];
         if (!isset($groups[$column][$group_name])) {

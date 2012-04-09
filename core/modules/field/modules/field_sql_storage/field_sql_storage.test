@@ -47,7 +47,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $eid = 0;
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
-    $columns = array('entity_type', 'entity_id', 'revision_id', 'delta', 'language', $this->field_name . '_value');
+    $columns = array('entity_type', 'entity_id', 'revision_id', 'delta', 'langcode', $this->field_name . '_value');
 
     // Insert data for four revisions to the field revisions table
     $query = db_insert($this->revision_table)->fields($columns);
@@ -95,15 +95,16 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
       }
     }
 
-    // Add a translation in an unavailable language and verify it is not loaded.
+    // Add a translation in an unavailable language code and verify it is not
+    // loaded.
     $eid = $evid = 1;
-    $unavailable_language = 'xx';
+    $unavailable_langcode = 'xx';
     $entity = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
-    $values = array($entity_type, $eid, $evid, 0, $unavailable_language, mt_rand(1, 127));
+    $values = array($entity_type, $eid, $evid, 0, $unavailable_langcode, mt_rand(1, 127));
     db_insert($this->table)->fields($columns)->values($values)->execute();
     db_insert($this->revision_table)->fields($columns)->values($values)->execute();
     field_attach_load($entity_type, array($eid => $entity));
-    $this->assertFalse(array_key_exists($unavailable_language, $entity->{$this->field_name}), 'Field translation in an unavailable language ignored');
+    $this->assertFalse(array_key_exists($unavailable_langcode, $entity->{$this->field_name}), 'Field translation in an unavailable language ignored');
   }
 
   /**
@@ -241,10 +242,10 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $this->assertEqual($count, 0, 'NULL field leaves no data in table');
 
     // Add a translation in an unavailable language.
-    $unavailable_language = 'xx';
+    $unavailable_langcode = 'xx';
     db_insert($this->table)
-      ->fields(array('entity_type', 'bundle', 'deleted', 'entity_id', 'revision_id', 'delta', 'language'))
-      ->values(array($entity_type, $this->instance['bundle'], 0, 0, 0, 0, $unavailable_language))
+      ->fields(array('entity_type', 'bundle', 'deleted', 'entity_id', 'revision_id', 'delta', 'langcode'))
+      ->values(array($entity_type, $this->instance['bundle'], 0, 0, 0, 0, $unavailable_langcode))
       ->execute();
     $count = db_select($this->table)
       ->countQuery()
@@ -263,7 +264,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
 
     // Update: Field translation is missing but field is not empty. Translation
     // data should survive.
-    $entity->{$this->field_name}[$unavailable_language] = array(mt_rand(1, 127));
+    $entity->{$this->field_name}[$unavailable_langcode] = array(mt_rand(1, 127));
     unset($entity->{$this->field_name}[$langcode]);
     field_attach_update($entity_type, $entity);
     $count = db_select($this->table)

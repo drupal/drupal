@@ -15,8 +15,8 @@
  * @code
  * $entity->{$field_name}[$langcode][$delta][$column_name]
  * @endcode
- * Every field can hold a single or multiple value for each language belonging
- * to the available languages set:
+ * Every field can hold a single or multiple value for each language code
+ * belonging to the available language codes set:
  * - For untranslatable fields this set only contains LANGUAGE_NOT_SPECIFIED.
  * - For translatable fields this set can contain any language code. By default
  *   it is the list returned by field_content_languages(), which contains all
@@ -24,7 +24,7 @@
  *   default can be altered by modules implementing
  *   hook_field_available_languages_alter().
  *
- * The available languages for a particular field are returned by
+ * The available language codes for a particular field are returned by
  * field_available_languages(). Whether a field is translatable is determined by
  * calling field_is_translatable(), which checks the $field['translatable']
  * property returned by field_info_field(), and whether there is at least one
@@ -33,12 +33,12 @@
  * translations.
  *
  * By default, _field_invoke() and _field_invoke_multiple() are processing a
- * field in all available languages, unless they are given a language
+ * field in all available languages, unless they are given a language code
  * suggestion. Based on that suggestion, _field_language_suggestion() determines
  * the languages to act on.
  *
- * Most field_attach_*() functions act on all available languages, except for
- * the following:
+ * Most field_attach_*() functions act on all available language codes, except
+ * for the following:
  * - field_attach_form() only takes a single language code, specifying which
  *   language the field values will be submitted in.
  * - field_attach_view() requires the language the entity will be displayed in.
@@ -85,11 +85,11 @@ function field_language_delete() {
 }
 
 /**
- * Collects the available languages for the given entity type and field.
+ * Collects the available language codes for the given entity type and field.
  *
  * If the given field has language support enabled, an array of available
- * languages will be returned, otherwise only LANGUAGE_NOT_SPECIFIED will be
- * returned. Since the default value for a 'translatable' entity property is
+ * language codes will be returned, otherwise only LANGUAGE_NOT_SPECIFIED will
+ * be returned. Since the default value for a 'translatable' entity property is
  * FALSE, we ensure that only entities that are able to handle translations
  * actually get translatable fields.
  *
@@ -104,38 +104,39 @@ function field_language_delete() {
 function field_available_languages($entity_type, $field) {
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['field_languages'] = &drupal_static(__FUNCTION__);
+    $drupal_static_fast['field_langcodes'] = &drupal_static(__FUNCTION__);
   }
-  $field_languages = &$drupal_static_fast['field_languages'];
+  $field_langcodes = &$drupal_static_fast['field_langcodes'];
   $field_name = $field['field_name'];
 
-  if (!isset($field_languages[$entity_type][$field_name])) {
+  if (!isset($field_langcodes[$entity_type][$field_name])) {
     // If the field has language support enabled we retrieve an (alterable) list
     // of enabled languages, otherwise we return just LANGUAGE_NOT_SPECIFIED.
     if (field_is_translatable($entity_type, $field)) {
-      $languages = field_content_languages();
+      $langcodes = field_content_languages();
       // Let other modules alter the available languages.
       $context = array('entity_type' => $entity_type, 'field' => $field);
-      drupal_alter('field_available_languages', $languages, $context);
-      $field_languages[$entity_type][$field_name] = $languages;
+      drupal_alter('field_available_languages', $langcodes, $context);
+      $field_langcodes[$entity_type][$field_name] = $langcodes;
     }
     else {
-      $field_languages[$entity_type][$field_name] = array(LANGUAGE_NOT_SPECIFIED);
+      $field_langcodes[$entity_type][$field_name] = array(LANGUAGE_NOT_SPECIFIED);
     }
   }
 
-  return $field_languages[$entity_type][$field_name];
+  return $field_langcodes[$entity_type][$field_name];
 }
 
 /**
- * Process the given language suggestion based on the available languages.
+ * Process the given language code suggestion based on the available language
+ * codes.
  *
- * If a non-empty language suggestion is provided it must appear among the
- * available languages, otherwise it will be ignored.
+ * If a non-empty language code suggestion is provided it must appear among the
+ * available language codes, otherwise it will be ignored.
  *
- * @param $available_languages
+ * @param $available_langcodes
  *   An array of valid language codes.
- * @param $language_suggestion
+ * @param $langcode_suggestion
  *   A language code or an array of language codes keyed by field name.
  * @param $field_name
  *   The name of the field being processed.
@@ -143,28 +144,28 @@ function field_available_languages($entity_type, $field) {
  * @return
  *   An array of valid language codes.
  */
-function _field_language_suggestion($available_languages, $language_suggestion, $field_name) {
+function _field_language_suggestion($available_langcodes, $langcode_suggestion, $field_name) {
   // Handle possible language suggestions.
-  if (!empty($language_suggestion)) {
+  if (!empty($langcode_suggestion)) {
     // We might have an array of language suggestions keyed by field name.
-    if (is_array($language_suggestion) && isset($language_suggestion[$field_name])) {
-      $language_suggestion = $language_suggestion[$field_name];
+    if (is_array($langcode_suggestion) && isset($langcode_suggestion[$field_name])) {
+      $langcode_suggestion = $langcode_suggestion[$field_name];
     }
 
-    // If we have a language suggestion and the suggested language is available,
-    // we return only it.
-    if (in_array($language_suggestion, $available_languages)) {
-      $available_languages = array($language_suggestion);
+    // If we have a single language code suggestion and it is available, we just
+    // return it.
+    if (in_array($langcode_suggestion, $available_langcodes)) {
+      $available_langcodes = array($langcode_suggestion);
     }
   }
 
-  return $available_languages;
+  return $available_langcodes;
 }
 
 /**
- * Returns available content languages.
+ * Returns available content language codes.
  *
- * The languages that may be associated to fields include
+ * The language codes that may be associated to fields include
  * LANGUAGE_NOT_SPECIFIED.
  *
  * @return
@@ -229,9 +230,9 @@ function field_has_translation_handler($entity_type, $handler = NULL) {
 /**
  * Ensures that a given language code is valid.
  *
- * Checks whether the given language is one of the enabled languages. Otherwise,
- * it returns the current, global language; or the site's default language, if
- * the additional parameter $default is TRUE.
+ * Checks whether the given language code is one of the enabled language codes.
+ * Otherwise, it returns the current, global language code; or the site's
+ * default language code, if the additional parameter $default is TRUE.
  *
  * @param $langcode
  *   The language code to validate.
@@ -251,16 +252,18 @@ function field_valid_language($langcode, $default = TRUE) {
 }
 
 /**
- * Returns the display language for the fields attached to the given entity.
+ * Returns the display language code for the fields attached to the given
+ * entity.
  *
- * The actual language for each given field is determined based on the requested
- * language and the actual data available in the fields themselves.
+ * The actual language code for each given field is determined based on the
+ * requested language code and the actual data available in the fields
+ * themselves.
  * If there is no registered translation handler for the given entity type, the
- * display language to be used is just LANGUAGE_NOT_SPECIFIED, as no other
+ * display language code to be used is just LANGUAGE_NOT_SPECIFIED, as no other
  * language code is allowed by field_available_languages().
  *
  * If translation handlers are found, we let modules provide alternative display
- * languages for fields not having the requested language available.
+ * language codes for fields not having the requested language code available.
  * Core language fallback rules are provided by locale_field_language_fallback()
  * which is called by locale_field_language_alter().
  *
@@ -270,8 +273,8 @@ function field_valid_language($langcode, $default = TRUE) {
  *   The entity to be displayed.
  * @param $field_name
  *   (optional) The name of the field to be displayed. Defaults to NULL. If
- *   no value is specified, the display languages for every field attached to
- *   the given entity will be returned.
+ *   no value is specified, the display language codes for every field attached
+ *   to the given entity will be returned.
  * @param $langcode
  *   (optional) The language code $entity has to be displayed in. Defaults to
  *   NULL. If no value is given the current language will be used.
@@ -281,38 +284,38 @@ function field_valid_language($langcode, $default = TRUE) {
  *   keyed by field name otherwise.
  */
 function field_language($entity_type, $entity, $field_name = NULL, $langcode = NULL) {
-  $display_languages = &drupal_static(__FUNCTION__, array());
+  $display_langcodes = &drupal_static(__FUNCTION__, array());
   list($id, , $bundle) = entity_extract_ids($entity_type, $entity);
   $langcode = field_valid_language($langcode, FALSE);
 
-  if (!isset($display_languages[$entity_type][$id][$langcode])) {
-    $display_language = array();
+  if (!isset($display_langcodes[$entity_type][$id][$langcode])) {
+    $display_langcode = array();
 
     // By default display language is set to LANGUAGE_NOT_SPECIFIED if the field
     // translation is not available. It is up to translation handlers to
     // implement language fallback rules.
     foreach (field_info_instances($entity_type, $bundle) as $instance) {
-      $display_language[$instance['field_name']] = isset($entity->{$instance['field_name']}[$langcode]) ? $langcode : LANGUAGE_NOT_SPECIFIED;
+      $display_langcode[$instance['field_name']] = isset($entity->{$instance['field_name']}[$langcode]) ? $langcode : LANGUAGE_NOT_SPECIFIED;
     }
 
     if (field_has_translation_handler($entity_type)) {
       $context = array(
         'entity_type' => $entity_type,
         'entity' => $entity,
-        'language' => $langcode,
+        'langcode' => $langcode,
       );
-      drupal_alter('field_language', $display_language, $context);
+      drupal_alter('field_language', $display_langcode, $context);
     }
 
-    $display_languages[$entity_type][$id][$langcode] = $display_language;
+    $display_langcodes[$entity_type][$id][$langcode] = $display_langcode;
   }
 
-  $display_language = $display_languages[$entity_type][$id][$langcode];
+  $display_langcode = $display_langcodes[$entity_type][$id][$langcode];
 
   // Single-field mode.
   if (isset($field_name)) {
-    return isset($display_language[$field_name]) ? $display_language[$field_name] : FALSE;
+    return isset($display_langcode[$field_name]) ? $display_langcode[$field_name] : FALSE;
   }
 
-  return $display_language;
+  return $display_langcode;
 }

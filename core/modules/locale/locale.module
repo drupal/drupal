@@ -347,11 +347,11 @@ function locale_theme() {
 /**
  * Implements hook_field_language_alter().
  */
-function locale_field_language_alter(&$display_language, $context) {
+function locale_field_language_alter(&$display_langcode, $context) {
   // Do not apply core language fallback rules if they are disabled or if Locale
   // is not registered as a translation handler.
   if (variable_get('locale_field_language_fallback', TRUE) && field_has_translation_handler($context['entity_type'], 'locale')) {
-    locale_field_language_fallback($display_language, $context['entity'], $context['language']);
+    locale_field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
   }
 }
 
@@ -366,32 +366,32 @@ function locale_field_language_alter(&$display_language, $context) {
  * behavior can be disabled by setting the 'locale_field_language_fallback'
  * variable to FALSE.
  *
- * @param $display_language
+ * @param $field_langcodes
  *   A reference to an array of language codes keyed by field name.
  * @param $entity
  *   The entity to be displayed.
  * @param $langcode
  *   The language code $entity has to be displayed in.
  */
-function locale_field_language_fallback(&$display_language, $entity, $langcode) {
+function locale_field_language_fallback(&$field_langcodes, $entity, $langcode) {
   // Lazily init fallback candidates to avoid unnecessary calls.
   $fallback_candidates = NULL;
   $field_languages = array();
 
-  foreach ($display_language as $field_name => $field_language) {
+  foreach ($field_langcodes as $field_name => $field_langcode) {
     // If the requested language is defined for the current field use it,
     // otherwise search for a fallback value among the fallback candidates.
     if (isset($entity->{$field_name}[$langcode])) {
-      $display_language[$field_name] = $langcode;
+      $field_langcodes[$field_name] = $langcode;
     }
     elseif (!empty($entity->{$field_name})) {
       if (!isset($fallback_candidates)) {
         require_once DRUPAL_ROOT . '/core/includes/language.inc';
         $fallback_candidates = language_fallback_get_candidates();
       }
-      foreach ($fallback_candidates as $fallback_language) {
-        if (isset($entity->{$field_name}[$fallback_language])) {
-          $display_language[$field_name] = $fallback_language;
+      foreach ($fallback_candidates as $fallback_langcode) {
+        if (isset($entity->{$field_name}[$fallback_langcode])) {
+          $field_langcodes[$field_name] = $fallback_langcode;
           break;
         }
       }

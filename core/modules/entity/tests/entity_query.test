@@ -1526,7 +1526,9 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
         sort($results);
         sort($intended_results);
       }
-      $this->assertEqual($results, $intended_results, $message);
+      if (!$this->assertEqual($results, $intended_results, $message)) {
+        debug($results, $message);
+      }
     }
     catch (Exception $e) {
       $this->fail('Exception thrown: '. $e->getMessage());

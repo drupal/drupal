@@ -265,9 +265,9 @@ class EntityFieldQuery {
    * @param $delta_group
    *   An arbitrary identifier: conditions in the same group must have the same
    *   $delta_group.
-   * @param $language_group
+   * @param $langcode_group
    *   An arbitrary identifier: conditions in the same group must have the same
-   *   $language_group.
+   *   $langcode_group.
    *
    * @return EntityFieldQuery
    *   The called object.
@@ -275,8 +275,8 @@ class EntityFieldQuery {
    * @see EntityFieldQuery::addFieldCondition
    * @see EntityFieldQuery::deleted
    */
-  public function fieldCondition($field, $column = NULL, $value = NULL, $operator = NULL, $delta_group = NULL, $language_group = NULL) {
-    return $this->addFieldCondition($this->fieldConditions, $field, $column, $value, $operator, $delta_group, $language_group);
+  public function fieldCondition($field, $column = NULL, $value = NULL, $operator = NULL, $delta_group = NULL, $langcode_group = NULL) {
+    return $this->addFieldCondition($this->fieldConditions, $field, $column, $value, $operator, $delta_group, $langcode_group);
   }
 
   /**
@@ -291,9 +291,9 @@ class EntityFieldQuery {
    * @param $delta_group
    *   An arbitrary identifier: conditions in the same group must have the same
    *   $delta_group.
-   * @param $language_group
+   * @param $langcode_group
    *   An arbitrary identifier: conditions in the same group must have the same
-   *   $language_group.
+   *   $langcode_group.
    *
    * @return EntityFieldQuery
    *   The called object.
@@ -301,8 +301,8 @@ class EntityFieldQuery {
    * @see EntityFieldQuery::addFieldCondition
    * @see EntityFieldQuery::deleted
    */
-  public function fieldLanguageCondition($field, $value = NULL, $operator = NULL, $delta_group = NULL, $language_group = NULL) {
-    return $this->addFieldCondition($this->fieldMetaConditions, $field, 'language', $value, $operator, $delta_group, $language_group);
+  public function fieldLanguageCondition($field, $value = NULL, $operator = NULL, $delta_group = NULL, $langcode_group = NULL) {
+    return $this->addFieldCondition($this->fieldMetaConditions, $field, 'langcode', $value, $operator, $delta_group, $langcode_group);
   }
 
   /**
@@ -317,9 +317,9 @@ class EntityFieldQuery {
    * @param $delta_group
    *   An arbitrary identifier: conditions in the same group must have the same
    *   $delta_group.
-   * @param $language_group
+   * @param $langcode_group
    *   An arbitrary identifier: conditions in the same group must have the same
-   *   $language_group.
+   *   $langcode_group.
    *
    * @return EntityFieldQuery
    *   The called object.
@@ -327,8 +327,8 @@ class EntityFieldQuery {
    * @see EntityFieldQuery::addFieldCondition
    * @see EntityFieldQuery::deleted
    */
-  public function fieldDeltaCondition($field, $value = NULL, $operator = NULL, $delta_group = NULL, $language_group = NULL) {
-    return $this->addFieldCondition($this->fieldMetaConditions, $field, 'delta', $value, $operator, $delta_group, $language_group);
+  public function fieldDeltaCondition($field, $value = NULL, $operator = NULL, $delta_group = NULL, $langcode_group = NULL) {
+    return $this->addFieldCondition($this->fieldMetaConditions, $field, 'delta', $value, $operator, $delta_group, $langcode_group);
   }
 
   /**
@@ -367,14 +367,14 @@ class EntityFieldQuery {
    *   against any combination of deltas. By passing the conditions with the
    *   same $delta_group it will ensure that only values attached to the same
    *   delta are matched, and entity 1 would then be excluded from the results.
-   * @param $language_group
+   * @param $langcode_group
    *   An arbitrary identifier: conditions in the same group must have the same
-   *   $language_group.
+   *   $langcode_group.
    *
    * @return EntityFieldQuery
    *   The called object.
    */
-  protected function addFieldCondition(&$conditions, $field, $column = NULL, $value = NULL, $operator = NULL, $delta_group = NULL, $language_group = NULL) {
+  protected function addFieldCondition(&$conditions, $field, $column = NULL, $value = NULL, $operator = NULL, $delta_group = NULL, $langcode_group = NULL) {
     if (is_scalar($field)) {
       $field_definition = field_info_field($field);
       if (empty($field_definition)) {
@@ -392,7 +392,7 @@ class EntityFieldQuery {
         'value' => $value,
         'operator' => $operator,
         'delta_group' => $delta_group,
-        'language_group' => $language_group,
+        'langcode_group' => $langcode_group,
       );
     }
     return $this;

@@ -101,22 +101,22 @@ function field_test_field_test_op_multiple($entity_type, $entities, $field, $ins
 /**
  * Implements hook_field_available_languages_alter().
  */
-function field_test_field_available_languages_alter(&$languages, $context) {
+function field_test_field_available_languages_alter(&$langcodes, $context) {
   if (variable_get('field_test_field_available_languages_alter', FALSE)) {
-    // Add an unavailable language.
-    $languages[] = 'xx';
-    // Remove an available language.
-    $index = array_search('en', $languages);
-    unset($languages[$index]);
+    // Add an unavailable language code.
+    $langcodes[] = 'xx';
+    // Remove an available language code.
+    $index = array_search('en', $langcodes);
+    unset($langcodes[$index]);
   }
 }
 
 /**
  * Implements hook_field_language_alter().
  */
-function field_test_field_language_alter(&$display_language, $context) {
+function field_test_field_language_alter(&$display_langcode, $context) {
   if (variable_get('field_test_language_fallback', TRUE)) {
-    locale_field_language_fallback($display_language, $context['entity'], $context['language']);
+    locale_field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
   }
 }
 

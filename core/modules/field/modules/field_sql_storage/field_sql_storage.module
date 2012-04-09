@@ -146,13 +146,13 @@ function _field_sql_storage_schema($field) {
         'not null' => FALSE,
         'description' => 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
       ),
-      // @todo Consider storing language as integer.
-      'language' => array(
+      // @todo Consider storing langcode as integer.
+      'langcode' => array(
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'The language for this data item.',
+        'description' => 'The language code for this data item.',
       ),
       'delta' => array(
         'type' => 'int',
@@ -161,14 +161,14 @@ function _field_sql_storage_schema($field) {
         'description' => 'The sequence number for this data item, used for multi-value fields',
       ),
     ),
-    'primary key' => array('entity_type', 'entity_id', 'deleted', 'delta', 'language'),
+    'primary key' => array('entity_type', 'entity_id', 'deleted', 'delta', 'langcode'),
     'indexes' => array(
       'entity_type' => array('entity_type'),
       'bundle' => array('bundle'),
       'deleted' => array('deleted'),
       'entity_id' => array('entity_id'),
       'revision_id' => array('revision_id'),
-      'language' => array('language'),
+      'langcode' => array('langcode'),
     ),
   );
 
@@ -200,7 +200,7 @@ function _field_sql_storage_schema($field) {
   // Construct the revision table.
   $revision = $current;
   $revision['description'] = "Revision archive storage for {$deleted}field {$field['id']} ({$field['field_name']})";
-  $revision['primary key'] = array('entity_type', 'entity_id', 'revision_id', 'deleted', 'delta', 'language');
+  $revision['primary key'] = array('entity_type', 'entity_id', 'revision_id', 'deleted', 'delta', 'langcode');
   $revision['fields']['revision_id']['not null'] = TRUE;
   $revision['fields']['revision_id']['description'] = 'The entity revision id this data is attached to';
 
@@ -339,7 +339,7 @@ function field_sql_storage_field_storage_load($entity_type, $entities, $age, $fi
       ->fields('t')
       ->condition('entity_type', $entity_type)
       ->condition($load_current ? 'entity_id' : 'revision_id', $ids, 'IN')
-      ->condition('language', field_available_languages($entity_type, $field), 'IN')
+      ->condition('langcode', field_available_languages($entity_type, $field), 'IN')
       ->orderBy('delta');
 
     if (empty($options['deleted'])) {
@@ -350,11 +350,11 @@ function field_sql_storage_field_storage_load($entity_type, $entities, $age, $fi
 
     $delta_count = array();
     foreach ($results as $row) {
-      if (!isset($delta_count[$row->entity_id][$row->language])) {
-        $delta_count[$row->entity_id][$row->language] = 0;
+      if (!isset($delta_count[$row->entity_id][$row->langcode])) {
+        $delta_count[$row->entity_id][$row->langcode] = 0;
       }
 
-      if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->language] < $field['cardinality']) {
+      if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field['cardinality']) {
         $item = array();
         // For each column declared by the field, populate the item
         // from the prefixed database column.
@@ -364,8 +364,8 @@ function field_sql_storage_field_storage_load($entity_type, $entities, $age, $fi
         }
 
         // Add the item to the field values for the entity.
-        $entities[$row->entity_id]->{$field_name}[$row->language][] = $item;
-        $delta_count[$row->entity_id][$row->language]++;
+        $entities[$row->entity_id]->{$field_name}[$row->langcode][] = $item;
+        $delta_count[$row->entity_id][$row->langcode]++;
       }
     }
   }
@@ -386,39 +386,39 @@ function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fiel
     $table_name = _field_sql_storage_tablename($field);
     $revision_name = _field_sql_storage_revision_tablename($field);
 
-    $all_languages = field_available_languages($entity_type, $field);
-    $field_languages = array_intersect($all_languages, array_keys((array) $entity->$field_name));
+    $all_langcodes = field_available_languages($entity_type, $field);
+    $field_langcodes = array_intersect($all_langcodes, array_keys((array) $entity->$field_name));
 
     // Delete and insert, rather than update, in case a value was added.
     if ($op == FIELD_STORAGE_UPDATE) {
-      // Delete languages present in the incoming $entity->$field_name.
-      // Delete all languages if $entity->$field_name is empty.
-      $languages = !empty($entity->$field_name) ? $field_languages : $all_languages;
-      if ($languages) {
+      // Delete language codes present in the incoming $entity->$field_name.
+      // Delete all language codes if $entity->$field_name is empty.
+      $langcodes = !empty($entity->$field_name) ? $field_langcodes : $all_langcodes;
+      if ($langcodes) {
         db_delete($table_name)
           ->condition('entity_type', $entity_type)
           ->condition('entity_id', $id)
-          ->condition('language', $languages, 'IN')
+          ->condition('langcode', $langcodes, 'IN')
           ->execute();
         db_delete($revision_name)
           ->condition('entity_type', $entity_type)
           ->condition('entity_id', $id)
           ->condition('revision_id', $vid)
-          ->condition('language', $languages, 'IN')
+          ->condition('langcode', $langcodes, 'IN')
           ->execute();
       }
     }
 
     // Prepare the multi-insert query.
     $do_insert = FALSE;
-    $columns = array('entity_type', 'entity_id', 'revision_id', 'bundle', 'delta', 'language');
+    $columns = array('entity_type', 'entity_id', 'revision_id', 'bundle', 'delta', 'langcode');
     foreach ($field['columns'] as $column => $attributes) {
       $columns[] = _field_sql_storage_columnname($field_name, $column);
     }
     $query = db_insert($table_name)->fields($columns);
     $revision_query = db_insert($revision_name)->fields($columns);
 
-    foreach ($field_languages as $langcode) {
+    foreach ($field_langcodes as $langcode) {
       $items = (array) $entity->{$field_name}[$langcode];
       $delta_count = 0;
       foreach ($items as $delta => $item) {
@@ -430,7 +430,7 @@ function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fiel
           'revision_id' => $vid,
           'bundle' => $bundle,
           'delta' => $delta,
-          'language' => $langcode,
+          'langcode' => $langcode,
         );
         foreach ($field['columns'] as $column => $attributes) {
           $record[_field_sql_storage_columnname($field_name, $column)] = isset($item[$column]) ? $item[$column] : NULL;
@@ -626,8 +626,8 @@ function _field_sql_storage_query_field_conditions(EntityFieldQuery $query, Sele
     // Add the specified condition.
     $sql_field = "$table_alias." . $column_callback($field['field_name'], $condition['column']);
     $query->addCondition($select_query, $sql_field, $condition);
-    // Add delta / language group conditions.
-    foreach (array('delta', 'language') as $column) {
+    // Add delta / langcode group conditions.
+    foreach (array('delta', 'langcode') as $column) {
       if (isset($condition[$column . '_group'])) {
         $group_name = $condition[$column . '_group'];
         if (!isset($groups[$column][$group_name])) {
