@@ -562,7 +562,7 @@ class FormElementTestCase extends DrupalWebTestCase {
     $this->drupalGet('form-test/placeholder-text');
     $expected = 'placeholder-text';
     // Test to make sure non-textarea elements have the proper placeholder text.
-    foreach (array('textfield', 'tel', 'url', 'password', 'email') as $type) {
+    foreach (array('textfield', 'tel', 'url', 'password', 'email', 'number') as $type) {
       $element = $this->xpath('//input[@id=:id and @placeholder=:expected]', array(
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
