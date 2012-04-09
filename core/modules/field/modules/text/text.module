@@ -66,12 +66,12 @@ function text_field_settings_form($field, $instance, $has_data) {
 
   if ($field['type'] == 'text') {
     $form['max_length'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Maximum length'),
       '#default_value' => $settings['max_length'],
       '#required' => TRUE,
       '#description' => t('The maximum length of the field in characters.'),
-      '#element_validate' => array('element_validate_integer_positive'),
+      '#min' => 1,
       // @todo: If $has_data, add a validate handler that only allows
       // max_length to increase.
       '#disabled' => $has_data,
@@ -224,10 +224,10 @@ function text_field_formatter_settings_form($field, $instance, $view_mode, $form
   if (strpos($display['type'], '_trimmed') !== FALSE) {
     $element['trim_length'] = array(
       '#title' => t('Trim length'),
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#size' => 10,
       '#default_value' => $settings['trim_length'],
-      '#element_validate' => array('element_validate_integer_positive'),
+      '#min' => 1,
       '#required' => TRUE,
     );
   }
@@ -476,20 +476,20 @@ function text_field_widget_settings_form($field, $instance) {
 
   if ($widget['type'] == 'text_textfield') {
     $form['size'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Size of textfield'),
       '#default_value' => $settings['size'],
       '#required' => TRUE,
-      '#element_validate' => array('element_validate_integer_positive'),
+      '#min' => 1,
     );
   }
   else {
     $form['rows'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Rows'),
       '#default_value' => $settings['rows'],
       '#required' => TRUE,
-      '#element_validate' => array('element_validate_integer_positive'),
+      '#min' => 1,
     );
   }
 

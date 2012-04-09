@@ -4134,11 +4134,10 @@ function form_process_weight($element) {
   }
   // Otherwise, use a text field.
   else {
-    $element['#type'] = 'textfield';
+    $element['#type'] = 'number';
     // Use a field big enough to fit most weights.
     $element['#size'] = 10;
-    $element['#element_validate'] = array('element_validate_integer');
-    $element += element_info('textfield');
+    $element += element_info('number');
   }
 
   return $element;
@@ -4385,26 +4384,6 @@ function _form_set_class(&$element, $class = array()) {
   }
   if (isset($element['#parents']) && form_get_error($element)) {
     $element['#attributes']['class'][] = 'error';
-  }
-}
-
-/**
- * Form element validation handler for integer elements.
- */
-function element_validate_integer($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value)) {
-    form_error($element, t('%name must be an integer.', array('%name' => $element['#title'])));
-  }
-}
-
-/**
- * Form element validation handler for integer elements that must be positive.
- */
-function element_validate_integer_positive($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value || $value <= 0)) {
-    form_error($element, t('%name must be a positive integer.', array('%name' => $element['#title'])));
   }
 }
 
