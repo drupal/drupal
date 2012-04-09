@@ -18,6 +18,7 @@ function config_get_config_directory() {
 
   if ($test_prefix = drupal_valid_test_ua()) {
     $path = conf_path() . '/files/simpletest/config_' . $test_prefix;
+    file_prepare_directory($path, FILE_CREATE_DIRECTORY);
   }
   else {
     $path = conf_path() . '/files/' . $config_directory_name;
