@@ -86,11 +86,7 @@ class NumberFieldTestCase extends DrupalWebTestCase {
         "{$this->field['field_name']}[$langcode][0][value]" => $wrong_entry,
       );
       $this->drupalPost(NULL, $edit, t('Save'));
-      $this->assertText(
-        t('There should only be one decimal separator (@separator)',
-          array('@separator' => $this->field['settings']['decimal_separator'])),
-        t('Correctly failed to save decimal value with more than one decimal point.')
-      );
+      $this->assertRaw(t('%name must be a number.', array('%name' => $this->field['field_name'])), 'Correctly failed to save decimal value with more than one decimal point.');
     }
 
     // Try to create entries with minus sign not in the first position.
@@ -108,11 +104,7 @@ class NumberFieldTestCase extends DrupalWebTestCase {
         "{$this->field['field_name']}[$langcode][0][value]" => $wrong_entry,
       );
       $this->drupalPost(NULL, $edit, t('Save'));
-      $this->assertText(
-        t('Only numbers and the decimal separator (@separator) allowed in ',
-          array('@separator' => $this->field['settings']['decimal_separator'])),
-        'Correctly failed to save decimal value with minus sign in the wrong position.'
-      );
+      $this->assertRaw(t('%name must be a number.', array('%name' => $this->field['field_name'])), 'Correctly failed to save decimal value with minus sign in the wrong position.');
     }
   }
 

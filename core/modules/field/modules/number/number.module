@@ -33,7 +33,7 @@ function number_field_info() {
     'number_decimal' => array(
       'label' => t('Decimal'),
       'description' => t('This field stores a number in the database in a fixed decimal format.'),
-      'settings' => array('precision' => 10, 'scale' => 2, 'decimal_separator' => '.'),
+      'settings' => array('precision' => 10, 'scale' => 2),
       'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
       'default_widget' => 'number',
       'default_formatter' => 'number_decimal',
@@ -41,7 +41,6 @@ function number_field_info() {
     'number_float' => array(
       'label' => t('Float'),
       'description' => t('This field stores a number in the database in a floating point format.'),
-      'settings' => array('decimal_separator' => '.'),
       'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
       'default_widget' => 'number',
       'default_formatter' => 'number_decimal',
@@ -72,15 +71,6 @@ function number_field_settings_form($field, $instance, $has_data) {
       '#default_value' => $settings['scale'],
       '#description' => t('The number of digits to the right of the decimal.'),
       '#disabled' => $has_data,
-    );
-  }
-  if ($field['type'] == 'number_decimal' || $field['type'] == 'number_float') {
-    $form['decimal_separator'] = array(
-      '#type' => 'select',
-      '#title' => t('Decimal marker'),
-      '#options' => array('.' => t('Decimal point'), ',' => t('Comma')),
-      '#default_value' => $settings['decimal_separator'],
-      '#description' => t('The character users will input to mark the decimal point in forms.'),
     );
   }
 
@@ -330,22 +320,35 @@ function number_field_widget_info() {
  */
 function number_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $value = isset($items[$delta]['value']) ? $items[$delta]['value'] : '';
-  // Substitute the decimal separator.
-  if ($field['type'] == 'number_decimal' || $field['type'] == 'number_float') {
-    $value = strtr($value, '.', $field['settings']['decimal_separator']);
-  }
 
   $element += array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#default_value' => $value,
     // Allow a slightly larger size that the field length to allow for some
     // configurations where all characters won't fit in input field.
     '#size' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] + 4 : 12,
     // Allow two extra characters for signed values and decimal separator.
     '#maxlength' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] + 2 : 10,
-    // Extract the number type from the field type name for easier validation.
-    '#number_type' => str_replace('number_', '', $field['type']),
   );
+
+  // Set the step for floating point and decimal numbers.
+  switch ($field['type']) {
+    case 'number_decimal':
+      $element['#step'] = pow(0.1, $field['settings']['scale']);
+      break;
+
+    case 'number_float':
+      $element['#step'] = 'any';
+      break;
+  }
+
+  // Set minimum and maximum.
+  if (is_numeric($instance['settings']['min'])) {
+    $element['#min'] = $instance['settings']['min'];
+  }
+  if (is_numeric($instance['settings']['max'])) {
+    $element['#max'] = $instance['settings']['max'];
+  }
 
   // Add prefix and suffix.
   if (!empty($instance['settings']['prefix'])) {
@@ -357,58 +360,7 @@ function number_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     $element['#field_suffix'] = field_filter_xss(array_pop($suffixes));
   }
 
-  $element['#element_validate'][] = 'number_field_widget_validate';
-
   return array('value' => $element);
-}
-
-/**
- * FAPI validation of an individual number element.
- */
-function number_field_widget_validate($element, &$form_state) {
-  $field = field_widget_field($element, $form_state);
-  $instance = field_widget_instance($element, $form_state);
-
-  $type = $element['#number_type'];
-  $value = $element['#value'];
-
-  // Reject invalid characters.
-  if (!empty($value)) {
-    switch ($type) {
-      case 'float':
-      case 'decimal':
-        $regexp = '@([^-0-9\\' . $field['settings']['decimal_separator'] . '])|(.-)@';
-        $message = t('Only numbers and the decimal separator (@separator) allowed in %field.', array('%field' => $instance['label'], '@separator' => $field['settings']['decimal_separator']));
-        break;
-
-      case 'integer':
-        $regexp = '@([^-0-9])|(.-)@';
-        $message = t('Only numbers are allowed in %field.', array('%field' => $instance['label']));
-        break;
-    }
-    if ($value != preg_replace($regexp, '', $value)) {
-      form_error($element, $message);
-    }
-    else {
-      if ($type == 'decimal' || $type == 'float') {
-        // Verify that only one decimal separator exists in the field.
-        if (substr_count($value, $field['settings']['decimal_separator']) > 1) {
-          $message = t('%field: There should only be one decimal separator (@separator).',
-            array(
-              '%field' => t($instance['label']),
-              '@separator' => $field['settings']['decimal_separator'],
-            )
-          );
-          form_error($element, $message);
-        }
-        else {
-          // Substitute the decimal separator; things should be fine.
-          $value = strtr($value, $field['settings']['decimal_separator'], '.');
-        }
-      }
-      form_set_value($element, $value, $form_state);
-    }
-  }
 }
 
 /**
