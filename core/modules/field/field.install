@@ -316,7 +316,7 @@ function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) 
  *   by the $key parameter.
  * @ingroup update-api-7.x-to-8.x
  */
-function _update_8000_field_read_fields(array $conditions = array(), $key = 'id') {
+function _update_7000_field_read_fields(array $conditions = array(), $key = 'id') {
   $fields = array();
   $query = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC))
     ->fields('fc');

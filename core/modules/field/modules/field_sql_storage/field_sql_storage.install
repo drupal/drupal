@@ -109,7 +109,7 @@ function field_sql_storage_update_8000(&$sandbox) {
   );
 
   // Retrieve field data.
-  $fields = _update_8000_field_read_fields(array('storage_type' => 'field_sql_storage'));
+  $fields = _update_7000_field_read_fields(array('storage_type' => 'field_sql_storage'));
 
   // Update schema.
   foreach ($fields as $field) {
