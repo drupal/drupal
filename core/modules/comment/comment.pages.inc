@@ -108,8 +108,9 @@ function comment_reply($node, $pid = NULL) {
  * @see comment_menu()
  */
 function comment_approve($cid) {
-  if (!isset($_GET['token']) || !drupal_valid_token($_GET['token'], "comment/$cid/approve")) {
-    return MENU_ACCESS_DENIED;
+  $token = request()->query->get('token');
+  if (!isset($token) || !drupal_valid_token($token, "comment/$cid/approve")) {
+    drupal_access_denied();
   }
   if ($comment = comment_load($cid)) {
     $comment->status = COMMENT_PUBLISHED;
@@ -118,5 +119,5 @@ function comment_approve($cid) {
     drupal_set_message(t('Comment approved.'));
     drupal_goto('node/' . $comment->nid);
   }
-  return MENU_NOT_FOUND;
+  drupal_not_found();
 }
