@@ -1324,7 +1324,7 @@ function install_select_language(&$install_state) {
  */
 function install_select_language_form($form, &$form_state, $files) {
   include_once DRUPAL_ROOT . '/core/includes/standard.inc';
-  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
+  include_once DRUPAL_ROOT . '/core/modules/language/language.negotiation.inc';
 
   $standard_languages = standard_language_list();
   $select_options = array();
@@ -1345,7 +1345,7 @@ function install_select_language_form($form, &$form_state, $files) {
     );
   }
 
-  $browser_langcode = locale_language_from_browser($languages);
+  $browser_langcode = language_from_browser($languages);
   $form['langcode'] = array(
     '#type' => 'select',
     '#options' => $select_options,
@@ -1477,7 +1477,6 @@ function install_profile_modules(&$install_state) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_translations(&$install_state) {
-  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
   $langcode = $install_state['parameters']['langcode'];
 
@@ -1773,8 +1772,6 @@ function install_check_requirements($install_state) {
  * Forms API array definition for site configuration.
  */
 function _install_configure_form($form, &$form_state, &$install_state) {
-  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
-
   $form['site_information'] = array(
     '#type' => 'fieldset',
     '#title' => st('Site information'),

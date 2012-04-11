@@ -78,7 +78,7 @@ class LanguageListTest extends DrupalWebTestCase {
     $edit = array(
       'languages[en][enabled]' => FALSE,
     );
-    $this->drupalPost($path, $edit, t('Save configuration'));
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertNoFieldChecked('edit-languages-en-enabled', t('Language disabled.'));
 
     // Set disabled language to be the default and ensure it is re-enabled.

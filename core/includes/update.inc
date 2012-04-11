@@ -144,7 +144,7 @@ function update_prepare_stored_includes() {
     $negotiation = variable_get("language_negotiation_$language_type", array());
     foreach ($negotiation as $method_id => &$method) {
       if (isset($method['file']) && $method['file'] == 'includes/locale.inc') {
-        $method['file'] = 'core/includes/locale.inc';
+        $method['file'] = 'core/modules/language/language.negotiation.inc';
       }
     }
     variable_set("language_negotiation_$language_type", $negotiation);

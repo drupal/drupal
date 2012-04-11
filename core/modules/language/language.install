@@ -7,10 +7,19 @@
 
 /**
  * Implements hook_install().
+ *
+ * Enable URL language negotiation by default in order to have a basic working
+ * system on multilingual sites without needing any preliminary configuration.
  */
 function language_install() {
   // Add the default language to the database too.
   language_save(language_default());
+
+  // Enable URL language detection for each configurable language type.
+  require_once DRUPAL_ROOT . '/core/includes/language.inc';
+  foreach (language_types_get_configurable(FALSE) as $type) {
+    language_negotiation_set($type, array(LANGUAGE_NEGOTIATION_URL => 0));
+  }
 }
 
 /**
@@ -20,6 +29,20 @@ function language_uninstall() {
   // Clear variables.
   variable_del('language_default');
   variable_del('language_count');
+
+  // Clear variables.
+  variable_del('language_types');
+  variable_del('language_negotiation_url_part');
+  variable_del('language_negotiation_url_prefixes');
+  variable_del('language_negotiation_url_domains');
+  variable_del('language_negotiation_session_param');
+  variable_del('language_content_type_default');
+  variable_del('language_content_type_negotiation');
+
+  foreach (language_types_get_all() as $type) {
+    variable_del("language_negotiation_$type");
+    variable_del("language_negotiation_methods_weight_$type");
+  }
 
   // Re-initialize the language system so successive calls to t() and other
   // functions will not expect languages to be present.

@@ -55,7 +55,7 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
     // Ensure that the language switcher has been correctly upgraded. We need to
     // assert the expected HTML id because the block might appear even if the
     // language negotiation settings are not properly upgraded.
-    $this->assertTrue($this->xpath('//div[@id="block-locale-language-interface"]'), t('The language switcher block is being correctly showed.'));
+    $this->assertTrue($this->xpath('//div[@id="block-language-language-interface"]'), t('The language switcher block is being correctly showed.'));
 
     // Test that the 'language' property was properly renamed to 'langcode'.
     $language_none_nid = 38;
@@ -99,10 +99,16 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
 
     // Check if language negotiation weights were renamed properly. This is a
     // reproduction of the previous weights from the dump.
-    $expected_weights = array('locale-url' => '-8', 'locale-session' => '-6', 'locale-user' => '-4', 'locale-browser' => '-2', 'language-default' => '10');
+    $expected_weights = array(
+      'language-url' => '-8',
+      'language-session' => '-6',
+      'language-user' => '-4',
+      'language-browser' => '-2',
+      'language-default' => '10',
+    );
     // Check that locale_language_providers_weight_language is correctly
     // renamed.
-    $current_weights = variable_get('locale_language_negotiation_methods_weight_language_interface', array());
+    $current_weights = variable_get('language_negotiation_methods_weight_language_interface', array());
     $this->assertTrue(serialize($expected_weights) == serialize($current_weights), t('Language negotiation method weights upgraded.'));
 
     // Look up migrated plural string.
@@ -133,7 +139,8 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
 
     $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
 
-    $domains = locale_language_negotiation_url_domains();
+    language_negotiation_include();
+    $domains = language_negotiation_url_domains();
     $this->assertTrue($domains['ca'] == $language_domain, t('Language domain for Catalan properly upgraded.'));
   }
 

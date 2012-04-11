@@ -6,62 +6,6 @@
  */
 
 /**
- * Implements hook_install().
- *
- * Enable URL language negotiation by default in order to have a basic working
- * system on multilingual sites without needing any preliminary configuration.
- */
-function locale_install() {
-  require_once DRUPAL_ROOT . '/core/includes/language.inc';
-
-  // We cannot rely on language negotiation hooks here, because locale module is
-  // not enabled yet. Therefore language_negotiation_set() cannot be used.
-  $info = locale_language_negotiation_info();
-  $method = $info[LANGUAGE_NEGOTIATION_URL];
-  $method_fields = array('callbacks', 'file', 'cache');
-  $negotiation = array();
-
-  // Store only the needed data.
-  foreach ($method_fields as $field) {
-    if (isset($method[$field])) {
-      $negotiation[LANGUAGE_NEGOTIATION_URL][$field] = $method[$field];
-    }
-  }
-
-  // Enable URL language detection for each (core) configurable language type.
-  foreach (language_types_get_configurable() as $type) {
-    variable_set("language_negotiation_$type", $negotiation);
-  }
-}
-
-/**
- * Fill in the path prefixes and domains when enabled.
- *
- * Language module might change the list of languages, so we need to sync our
- * configuration for domains and paths with the current language list. This
- * should run every time the module is enabled.
- */
-function locale_enable() {
-  require_once DRUPAL_ROOT . '/core/includes/locale.inc';
-
-  $languages = language_list();
-  $prefixes_old = locale_language_negotiation_url_prefixes();
-  $domains_old = locale_language_negotiation_url_domains();
-
-  $prefixes = array();
-  $domains = array();
-  foreach ($languages as $langcode => $language) {
-    // Keep the old prefix or fill in based on whether the language is default.
-    $prefixes[$langcode] = empty($prefixes_old[$langcode]) ? (empty($language->default) ? $langcode : '') : $prefixes_old[$langcode];
-    // Keep the old domain or fill in empty value.
-    $domains[$langcode] = empty($domains_old[$langcode]) ? '' : $domains_old[$langcode];
-  }
-
-  locale_language_negotiation_url_prefixes_save($prefixes);
-  locale_language_negotiation_url_domains_save($domains);
-}
-
-/**
  * Implements hook_uninstall().
  */
 function locale_uninstall() {
@@ -82,13 +26,6 @@ function locale_uninstall() {
   }
 
   // Clear variables.
-  variable_del('language_types');
-  variable_del('locale_language_negotiation_url_part');
-  variable_del('locale_language_negotiation_url_prefixes');
-  variable_del('locale_language_negotiation_url_domains');
-  variable_del('locale_language_negotiation_session_param');
-  variable_del('language_content_type_default');
-  variable_del('language_content_type_negotiation');
   variable_del('locale_cache_strings');
   variable_del('locale_js_directory');
   variable_del('javascript_parsed');
@@ -96,11 +33,6 @@ function locale_uninstall() {
   variable_del('locale_cache_length');
   variable_del('locale_translation_plurals');
   variable_del('locale_translation_javascript');
-
-  foreach (language_types_get_all() as $type) {
-    variable_del("language_negotiation_$type");
-    variable_del("locale_language_negotiation_methods_weight_$type");
-  }
 
   // Remove all node type language variables. Node module might have been
   // enabled, but may be disabled, so use a wildcard delete.
@@ -364,7 +296,7 @@ function locale_update_8004() {
       // Rename the language negotiation methods weight variable.
       $weight = variable_get('locale_language_providers_weight_' . $type , NULL);
       if ($weight !== NULL) {
-        variable_set('locale_language_negotiation_methods_weight_' . $type , $weight);
+        variable_set('language_negotiation_methods_weight_' . $type , $weight);
         variable_del('locale_language_providers_weight_' . $type);
       }
     }
@@ -394,9 +326,9 @@ function locale_update_8005() {
 
   if (!empty($plural_lids)) {
     // Look up all translations for these source strings. Ordering by language
-    // will group the strings by language, the 'plid' order will get the
-    // strings in singular/plural order and 'plural' will get them in precise
-    // sequential order needed.
+    // will group the strings by language, the 'plid' order will get the strings
+    // in singular/plural order and 'plural' will get them in precise sequential
+    // order needed.
     $results = db_query("SELECT s.lid, s.source, t.translation, t.plid, t.plural, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE s.lid IN (:lids) ORDER BY t.language, t.plid, t.plural", array(':lids' => $plural_lids));
 
     // Collect the strings into an array and combine values as we go.
@@ -426,9 +358,9 @@ function locale_update_8005() {
         // formulas.
         $utmost_parent['translation'][] = str_replace('@count[' . $child->plural .']', '@count', $child->translation);
         if (count($utmost_parent['source']) < 2) {
-          // Append source to the utmost parent's source string only if it is the
-          // plural variant. Further Drupal specific plural variants are not to be
-          // retained for source strings.
+          // Append source to the utmost parent's source string only if it is
+          // the plural variant. Further Drupal specific plural variants are not
+          // to be retained for source strings.
           $utmost_parent['source'][] = $child->source;
         }
 
@@ -443,10 +375,10 @@ function locale_update_8005() {
     foreach ($strings as $langcode => $translations) {
       foreach($translations as $lid => $translation) {
         if (!in_array($lid, $updated_sources)) {
-          // Only update source string if not yet updated. We merged these within
-          // the translation lookups because plural information was only avilable
-          // with the translation, but we don't need to save it again for every
-          // language.
+          // Only update source string if not yet updated. We merged these
+          // within the translation lookups because plural information was only
+          // available with the translation, but we don't need to save it again
+          // for every language.
           db_update('locales_source')
             ->fields(array(
             'source' => implode(LOCALE_PLURAL_DELIMITER, $translation['source']),
@@ -501,6 +433,112 @@ function locale_update_8006() {
     'description' => 'Boolean indicating whether the translation is custom to this site.',
   );
   db_add_field('locales_target', 'customized', $spec);
+}
+
+/**
+ * Convert language_negotiation_* variables to use the new callbacks.
+ */
+function locale_update_8007() {
+  $variable_names = array(
+    'language_negotiation_language_interface',
+    'language_negotiation_language_content',
+    'language_negotiation_language_url',
+  );
+  // Add all language type weight variables. As the function language_types()
+  // is not available its functionality is rebuild.
+  $language_types = variable_get('language_types', array(
+    LANGUAGE_TYPE_INTERFACE => TRUE,
+    LANGUAGE_TYPE_CONTENT => FALSE,
+    LANGUAGE_TYPE_URL => FALSE,
+  ));
+  foreach ($language_types as $language_type => $configurable) {
+    $variable_names[] = 'language_negotiation_methods_weight_' . $language_type;
+  }
+  $callback_map = array(
+    'locale_language_from_url' => 'language_from_url',
+    'locale_language_switcher_url' =>  'language_switcher_url',
+    'locale_language_url_rewrite_url' =>  'language_url_rewrite_url',
+    'locale_language_from_session' =>  'language_from_session',
+    'locale_language_switcher_session' =>  'language_switcher_session',
+    'locale_language_url_rewrite_session' => 'language_url_rewrite_session',
+    'locale_language_from_user' => 'language_from_user',
+    'locale_language_from_browser' => 'language_from_browser',
+    'locale_language_url_fallback' => 'language_url_fallback',
+    'locale_language_from_interface' => 'language_from_interface',
+  );
+  $type_map = array(
+    'locale-interface' => 'language-interface',
+    'locale-url' => 'language-url',
+    'locale-url-fallback' => 'language-url-fallback',
+    'locale-browser' => 'language-browser',
+    'locale-user' => 'language-user',
+    'locale-session' => 'language-session',
+  );
+  foreach ($variable_names as $variable_name) {
+    $value = variable_get($variable_name);
+    // Skip processing if the variable is not stored in the db.
+    if ($value === NULL) {
+      continue;
+    }
+    $new_value = $value;
+    foreach ($value as $type => $type_settings) {
+      // Convert the file.
+      if (isset($type_settings['file']) && (strpos($type_settings['file'], 'core/includes/locale.inc') !== FALSE)) {
+        $new_value[$type]['file'] = 'core/modules/language/language.negotiation.inc';
+      }
+      // Convert the callbacks.
+      if (is_array($type_settings) && isset($type_settings['callbacks'])) {
+        foreach ($type_settings['callbacks'] as $key => $callback) {
+          if (isset($callback_map[$callback])) {
+            $new_value[$type]['callbacks'][$key] = $callback_map[$callback];
+          }
+        }
+      }
+      // Convert the type.
+      if (isset($type_map[$type])) {
+        $new_value[$type_map[$type]] = $new_value[$type];
+        unset($new_value[$type]);
+      }
+    }
+    // If necessary maintain the order of the values / keys of the variable.
+    if (stristr($variable_name, 'language_negotiation_methods_weight_') !== FALSE) {
+      asort($new_value);
+    }
+    variable_set($variable_name, $new_value);
+  }
+}
+
+/**
+ * Rename the option variables of the locale language negotiation.
+ */
+function locale_update_8008() {
+  $variable_name_map = array(
+    'locale_language_negotiation_url_part' => 'language_negotiation_url_part',
+    'locale_language_negotiation_url_domains' => 'language_negotiation_url_domains',
+    'locale_language_negotiation_url_prefixes' => 'language_negotiation_url_prefixes',
+    'locale_language_negotiation_session_param' => 'language_negotiation_session_param',
+  );
+  foreach ($variable_name_map as $deprecated_variable_name => $new_variable_name) {
+    // Check if this variable is stored in the db and if so rename it.
+    $value = variable_get($deprecated_variable_name);
+    if ($value !== NULL) {
+      variable_set($new_variable_name, $value);
+      variable_del($deprecated_variable_name);
+    }
+  }
+}
+
+/**
+ * Convert locale blocks to language blocks.
+ */
+function locale_update_8009() {
+  $block_tables = array('block', 'block_node_type', 'block_role');
+  foreach ($block_tables as $table) {
+    db_update($table)
+      ->fields(array('module' => 'language'))
+      ->condition('module', 'locale')
+      ->execute();
+  }
 }
 
 /**

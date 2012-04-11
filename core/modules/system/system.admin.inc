@@ -1899,7 +1899,6 @@ function system_rss_feeds_settings() {
  * @see system_regional_settings_submit()
  */
 function system_regional_settings() {
-  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
   $countries = country_get_list();
 
   // Date settings:

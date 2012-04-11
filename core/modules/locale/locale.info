@@ -1,5 +1,5 @@
 name = Locale
-description = Provides language negotiation functionality and user interface translation to languages other than English.
+description = Provides user interface translation to languages other than English.
 package = Core
 version = VERSION
 core = 8.x

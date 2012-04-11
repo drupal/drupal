@@ -1,5 +1,5 @@
 name = Language
-description = Lets you configure a number of languages to be used on your website.
+description = Lets you configure a number of languages to be used on your website and provides language negotiation functionality.
 package = Core
 version = VERSION
 core = 8.x

@@ -4035,3 +4035,17 @@ function system_admin_paths() {
   );
   return $paths;
 }
+
+/**
+ * Get list of all predefined and custom countries.
+ *
+ * @return
+ *   An array of all country code => country name pairs.
+ */
+function country_get_list() {
+  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+  $countries = standard_country_list();
+  // Allow other modules to modify the country list.
+  drupal_alter('countries', $countries);
+  return $countries;
+}

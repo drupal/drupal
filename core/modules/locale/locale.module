@@ -11,6 +11,57 @@
  *   Gettext portable object files are supported.
  */
 
+/**
+ * Regular expression pattern used to localize JavaScript strings.
+ */
+const LOCALE_JS_STRING = '(?:(?:\'(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+';
+
+/**
+ * Regular expression pattern used to match simple JS object literal.
+ *
+ * This pattern matches a basic JS object, but will fail on an object with
+ * nested objects. Used in JS file parsing for string arg processing.
+ */
+const LOCALE_JS_OBJECT = '\{.*?\}';
+
+/**
+ * Regular expression to match an object containing a key 'context'.
+ *
+ * Pattern to match a JS object containing a 'context key' with a string value,
+ * which is captured. Will fail if there are nested objects.
+ */
+define('LOCALE_JS_OBJECT_CONTEXT', '
+  \{              # match object literal start
+  .*?             # match anything, non-greedy
+  (?:             # match a form of "context"
+    \'context\'
+    |
+    "context"
+    |
+    context
+  )
+  \s*:\s*         # match key-value separator ":"
+  (' . LOCALE_JS_STRING . ')  # match context string
+  .*?             # match anything, non-greedy
+  \}              # match end of object literal
+');
+
+/**
+ * Flag for locally not customized interface translation.
+ *
+ * Such translations are imported from .po files downloaded from
+ * localize.drupal.org for example.
+ */
+const LOCALE_NOT_CUSTOMIZED = 0;
+
+/**
+ * Flag for locally customized interface translation.
+ *
+ * Such translations are edited from their imported originals on the user
+ * interface or are imported as customized.
+ */
+const LOCALE_CUSTOMIZED = 1;
+
 // ---------------------------------------------------------------------------------
 // Hook implementations
 
@@ -32,21 +83,11 @@ function locale_help($path, $arg) {
       $output .= '<li>' . t('Importing files from a set of existing translations, known as a translation package. A translation package enables the display of a specific version of Drupal in a specific language, and contains files in the Gettext Portable Object (<em>.po</em>) format. Although not all languages are available for every version of Drupal, translation packages for many languages are available for download from the <a href="@translations">Drupal translations page</a>.', array('@translations' => 'http://localize.drupal.org')) . '</li>';
       $output .= '<li>' . t("If an existing translation package does not meet your needs, the Gettext Portable Object (<em>.po</em>) files within a package may be modified, or new <em>.po</em> files may be created, using a desktop Gettext editor. The Locale module's <a href='@import'>import</a> feature allows the translated strings from a new or modified <em>.po</em> file to be added to your site. The Locale module's <a href='@export'>export</a> feature generates files from your site's translated strings, that can either be shared with others or edited offline by a Gettext translation editor.", array('@import' => url('admin/config/regional/translate/import'), '@export' => url('admin/config/regional/translate/export'))) . '</li>';
       $output .= '</ul></dd>';
-      $output .= '<dt>' . t('Configuring a multilingual site') . '</dt>';
-      $output .= '<dd>' . t("Language negotiation allows your site to automatically change language based on the domain or path used for each request. Users may (optionally) select their preferred language on their <em>My account</em> page, and your site can be configured to honor a web browser's preferred language settings. Site content can be translated using the <a href='@content-help'>Content Translation module</a>.", array('@content-help' => url('admin/help/translation'))) . '</dd>';
       $output .= '</dl>';
       return $output;
 
     case 'admin/config/regional/language':
       return '<p>' . t('Interface text can be translated. <a href="@translations">Download contributed translations</a> from Drupal.org.', array('@translations' => 'http://localize.drupal.org')) . '</p>';
-
-    case 'admin/config/regional/language/detection':
-      $output = '<p>' . t("Define how to decide which language is used to display page elements (primarily text provided by Drupal and modules, such as field labels and help text). This decision is made by evaluating a series of detection methods for languages; the first detection method that gets a result will determine which language is used for that type of text. Define the order of evaluation of language detection methods on this page.") . '</p>';
-      return $output;
-
-    case 'admin/config/regional/language/detection/session':
-      $output = '<p>' . t('Determine the language from a request/session parameter. Example: "http://example.com?language=de" sets language to German based on the use of "de" within the "language" parameter.') . '</p>';
-      return $output;
 
     case 'admin/config/regional/translate':
       $output = '<p>' . t('This page allows a translator to search for specific translated and untranslated strings, and is used when creating or editing translations. (Note: For translation tasks involving many strings, it may be more convenient to <a href="@export">export</a> strings for offline editing in a desktop Gettext translation editor.) Searches may be limited to strings in a specific language.', array('@export' => url('admin/config/regional/translate/export'))) . '</p>';
@@ -59,12 +100,6 @@ function locale_help($path, $arg) {
 
     case 'admin/config/regional/translate/export':
       return '<p>' . t('This page exports the translated strings used by your site. An export file may be in Gettext Portable Object (<em>.po</em>) form, which includes both the original string and the translation (used to share translations with others), or in Gettext Portable Object Template (<em>.pot</em>) form, which includes the original strings only (used to create new translations with a Gettext translation editor).') . '</p>';
-
-    case 'admin/structure/block/manage/%/%':
-      if ($arg[4] == 'locale' && $arg[5] == 'language') {
-        return '<p>' . t('This block is only shown if <a href="@languages">at least two languages are enabled</a> and <a href="@configuration">language negotiation</a> is set to <em>URL</em> or <em>Session</em>.', array('@languages' => url('admin/config/regional/language'), '@configuration' => url('admin/config/regional/language/detection'))) . '</p>';
-      }
-      break;
   }
 }
 
@@ -72,33 +107,6 @@ function locale_help($path, $arg) {
  * Implements hook_menu().
  */
 function locale_menu() {
-  // Language negotiation.
-  $items['admin/config/regional/language/detection'] = array(
-    'title' => 'Detection and selection',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_negotiation_configure_form'),
-    'access arguments' => array('administer languages'),
-    'weight' => 10,
-    'file' => 'locale.admin.inc',
-    'type' => MENU_LOCAL_TASK,
-  );
-  $items['admin/config/regional/language/detection/url'] = array(
-    'title' => 'URL language detection configuration',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_negotiation_configure_url_form'),
-    'access arguments' => array('administer languages'),
-    'file' => 'locale.admin.inc',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-  $items['admin/config/regional/language/detection/session'] = array(
-    'title' => 'Session language detection configuration',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_negotiation_configure_session_form'),
-    'access arguments' => array('administer languages'),
-    'file' => 'locale.admin.inc',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-
   // Translation functionality.
   $items['admin/config/regional/translate'] = array(
     'title' => 'User interface translation',
@@ -183,7 +191,6 @@ function locale_menu() {
  */
 function locale_init() {
   global $conf, $language_interface;
-  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
 
   // For each date type (e.g. long, short), get the localized date format
   // for the user's current language and override the default setting for it
@@ -335,9 +342,6 @@ function locale_field_node_form_submit($form, &$form_state) {
  */
 function locale_theme() {
   return array(
-    'language_negotiation_configure_form' => array(
-      'render element' => 'form',
-    ),
     'locale_date_format_form' => array(
       'render element' => 'form',
     ),
@@ -407,140 +411,9 @@ function locale_entity_info_alter(&$entity_info) {
 }
 
 /**
- * Implements hook_language_types_info().
- *
- * Defines the three core language types:
- * - Interface language is the only configurable language type in core. It is
- *   used by t() as the default language if none is specified.
- * - Content language is by default non-configurable and inherits the interface
- *   language negotiated value. It is used by the Field API to determine the
- *   display language for fields if no explicit value is specified.
- * - URL language is by default non-configurable and is determined through the
- *   URL language negotiation method or the URL fallback language negotiation
- *   method if no language can be detected. It is used by l() as the default
- *   language if none is specified.
- */
-function locale_language_types_info() {
-  require_once DRUPAL_ROOT . '/core/includes/locale.inc';
-  return array(
-    LANGUAGE_TYPE_INTERFACE => array(
-      'name' => t('User interface text'),
-      'description' => t('Order of language detection methods for user interface text. If a translation of user interface text is available in the detected language, it will be displayed.'),
-    ),
-    LANGUAGE_TYPE_CONTENT => array(
-      'name' => t('Content'),
-      'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
-      'fixed' => array(LANGUAGE_NEGOTIATION_INTERFACE),
-    ),
-    LANGUAGE_TYPE_URL => array(
-      'fixed' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_URL_FALLBACK),
-    ),
-  );
-}
-
-/**
- * Implements hook_language_negotiation_info().
- */
-function locale_language_negotiation_info() {
-  require_once DRUPAL_ROOT . '/core/includes/locale.inc';
-  $file = '/core/includes/locale.inc';
-  $negotiation_info = array();
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_URL] = array(
-    'types' => array(LANGUAGE_TYPE_CONTENT, LANGUAGE_TYPE_INTERFACE, LANGUAGE_TYPE_URL),
-    'callbacks' => array(
-      'negotiation' => 'locale_language_from_url',
-      'language_switch' => 'locale_language_switcher_url',
-      'url_rewrite' => 'locale_language_url_rewrite_url',
-    ),
-    'file' => $file,
-    'weight' => -8,
-    'name' => t('URL'),
-    'description' => t('Determine the language from the URL (Path prefix or domain).'),
-    'config' => 'admin/config/regional/language/detection/url',
-  );
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_SESSION] = array(
-    'callbacks' => array(
-      'negotiation' => 'locale_language_from_session',
-      'language_switch' => 'locale_language_switcher_session',
-      'url_rewrite' => 'locale_language_url_rewrite_session',
-    ),
-    'file' => $file,
-    'weight' => -6,
-    'name' => t('Session'),
-    'description' => t('Determine the language from a request/session parameter.'),
-    'config' => 'admin/config/regional/language/detection/session',
-  );
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_USER] = array(
-    'callbacks' => array('negotiation' => 'locale_language_from_user'),
-    'file' => $file,
-    'weight' => -4,
-    'name' => t('User'),
-    'description' => t("Follow the user's language preference."),
-  );
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_BROWSER] = array(
-    'callbacks' => array('negotiation' => 'locale_language_from_browser'),
-    'file' => $file,
-    'weight' => -2,
-    'cache' => 0,
-    'name' => t('Browser'),
-    'description' => t("Determine the language from the browser's language settings."),
-  );
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_INTERFACE] = array(
-    'types' => array(LANGUAGE_TYPE_CONTENT),
-    'callbacks' => array('negotiation' => 'locale_language_from_interface'),
-    'file' => $file,
-    'weight' => 8,
-    'name' => t('Interface'),
-    'description' => t('Use the detected interface language.'),
-  );
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_URL_FALLBACK] = array(
-    'types' => array(LANGUAGE_TYPE_URL),
-    'callbacks' => array('negotiation' => 'locale_language_url_fallback'),
-    'file' => $file,
-    'weight' => 8,
-    'name' => t('URL fallback'),
-    'description' => t('Use an already detected language for URLs if none is found.'),
-  );
-
-  return $negotiation_info;
-}
-
-/**
- * Implements hook_modules_enabled().
- */
-function locale_modules_enabled($modules) {
-  include_once DRUPAL_ROOT . '/core/includes/language.inc';
-  language_types_set();
-  language_negotiation_purge();
-}
-
-/**
- * Implements hook_modules_disabled().
- */
-function locale_modules_disabled($modules) {
-  locale_modules_enabled($modules);
-}
-
-/**
  * Implements hook_language_insert().
  */
 function locale_language_insert($language) {
-  // Add new language to the list of language prefixes.
-  $prefixes = locale_language_negotiation_url_prefixes();
-  $prefixes[$language->langcode] = (empty($language->default) ? $language->langcode : '');
-  locale_language_negotiation_url_prefixes_save($prefixes);
-
-  // Add language to the list of language domains.
-  $domains = locale_language_negotiation_url_domains();
-  $domains[$language->langcode] = '';
-  locale_language_negotiation_url_domains_save($domains);
-
   // @todo move these two cache clears out. See http://drupal.org/node/1293252
   // Changing the language settings impacts the interface.
   cache('page')->flush();
@@ -552,19 +425,6 @@ function locale_language_insert($language) {
  * Implements hook_language_update().
  */
 function locale_language_update($language) {
-
-  // If the language is the default, then ensure that no other languages have
-  // blank prefix codes.
-  if (!empty($language->default)) {
-    $prefixes = locale_language_negotiation_url_prefixes();
-    foreach ($prefixes as $langcode => $prefix) {
-      if ($prefix == '' && $langcode != $language->langcode) {
-        $prefixes[$langcode] = $langcode;
-      }
-    }
-    locale_language_negotiation_url_prefixes_save($prefixes);
-  }
-
   // @todo move these two cache clears out. See http://drupal.org/node/1293252
   // Changing the language settings impacts the interface.
   cache('page')->flush();
@@ -576,16 +436,6 @@ function locale_language_update($language) {
  * Implements hook_language_delete().
  */
 function locale_language_delete($language) {
-  // Remove language from language prefix list.
-  $prefixes = locale_language_negotiation_url_prefixes();
-  unset($prefixes[$language->langcode]);
-  locale_language_negotiation_url_prefixes_save($prefixes);
-
-  // Remove language from language domain list.
-  $domains = locale_language_negotiation_url_domains();
-  unset($domains[$language->langcode]);
-  locale_language_negotiation_url_domains_save($domains);
-
   // Remove translations.
   db_delete('locales_target')
     ->condition('language', $language->langcode)
@@ -824,9 +674,6 @@ function locale_js_alter(&$javascript) {
   $parsed = variable_get('javascript_parsed', array());
   $files = $new_files = FALSE;
 
-  // Require because locale_js_alter() could be called without locale_init().
-  require_once DRUPAL_ROOT . '/core/includes/locale.inc';
-
   foreach ($javascript as $item) {
     if ($item['type'] == 'file') {
       $files = TRUE;
@@ -893,103 +740,6 @@ function locale_library_info_alter(&$libraries, $module) {
       ),
       'type' => 'setting',
     );
-  }
-}
-
-// ---------------------------------------------------------------------------------
-// Language switcher block
-
-/**
- * Implements hook_block_info().
- */
-function locale_block_info() {
-  include_once DRUPAL_ROOT . '/core/includes/language.inc';
-  $block = array();
-  $info = language_types_info();
-  foreach (language_types_get_configurable(FALSE) as $type) {
-    $block[$type] = array(
-      'info' => t('Language switcher (@type)', array('@type' => $info[$type]['name'])),
-      // Not worth caching.
-      'cache' => DRUPAL_NO_CACHE,
-    );
-  }
-  return $block;
-}
-
-/**
- * Implements hook_block_view().
- *
- * Displays a language switcher. Only show if we have at least two languages.
- */
-function locale_block_view($type) {
-  if (language_multilingual()) {
-    $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
-    $links = language_negotiation_get_switch_links($type, $path);
-
-    if (isset($links->links)) {
-      drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css');
-      $class = "language-switcher-{$links->method_id}";
-      $variables = array('links' => $links->links, 'attributes' => array('class' => array($class)));
-      $block['content'] = theme('links__locale_block', $variables);
-      $block['subject'] = t('Languages');
-      return $block;
-    }
-  }
-}
-
-/**
- * Implements hook_preprocess_block().
- */
-function locale_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'locale') {
-    $variables['attributes_array']['role'] = 'navigation';
-  }
-}
-
-/**
- * Implements hook_url_outbound_alter().
- *
- * Rewrite outbound URLs with language based prefixes.
- */
-function locale_url_outbound_alter(&$path, &$options, $original_path) {
-  // Only modify internal URLs.
-  if (!$options['external'] && language_multilingual()) {
-    static $drupal_static_fast;
-    if (!isset($drupal_static_fast)) {
-      $drupal_static_fast['callbacks'] = &drupal_static(__FUNCTION__);
-    }
-    $callbacks = &$drupal_static_fast['callbacks'];
-
-    if (!isset($callbacks)) {
-      $callbacks = array();
-      include_once DRUPAL_ROOT . '/core/includes/language.inc';
-
-      foreach (language_types_get_configurable() as $type) {
-        // Get URL rewriter callbacks only from enabled language methods.
-        $negotiation = variable_get("language_negotiation_$type", array());
-
-        foreach ($negotiation as $method_id => $method) {
-          if (isset($method['callbacks']['url_rewrite'])) {
-            if (isset($method['file'])) {
-              require_once DRUPAL_ROOT . '/' . $method['file'];
-            }
-            // Avoid duplicate callback entries.
-            $callbacks[$method['callbacks']['url_rewrite']] = TRUE;
-          }
-        }
-      }
-
-      $callbacks = array_keys($callbacks);
-    }
-
-    foreach ($callbacks as $callback) {
-      $callback($path, $options);
-    }
-
-    // No language dependent path allowed in this mode.
-    if (empty($callbacks)) {
-      unset($options['language']);
-    }
   }
 }
 
@@ -1131,4 +881,380 @@ function locale_preprocess_node(&$variables) {
       }
     }
   }
+}
+
+/**
+ * Check that a string is safe to be added or imported as a translation.
+ *
+ * This test can be used to detect possibly bad translation strings. It should
+ * not have any false positives. But it is only a test, not a transformation,
+ * as it destroys valid HTML. We cannot reliably filter translation strings
+ * on import because some strings are irreversibly corrupted. For example,
+ * a &amp; in the translation would get encoded to &amp;amp; by filter_xss()
+ * before being put in the database, and thus would be displayed incorrectly.
+ *
+ * The allowed tag list is like filter_xss_admin(), but omitting div and img as
+ * not needed for translation and likely to cause layout issues (div) or a
+ * possible attack vector (img).
+ */
+function locale_string_is_safe($string) {
+  return decode_entities($string) == decode_entities(filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'b', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'ins', 'kbd', 'li', 'ol', 'p', 'pre', 'q', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'tt', 'ul', 'var')));
+}
+
+/**
+ * Parses a JavaScript file, extracts strings wrapped in Drupal.t() and
+ * Drupal.formatPlural() and inserts them into the database.
+ */
+function _locale_parse_js_file($filepath) {
+  // The file path might contain a query string, so make sure we only use the
+  // actual file.
+  $parsed_url = drupal_parse_url($filepath);
+  $filepath = $parsed_url['path'];
+  // Load the JavaScript file.
+  $file = file_get_contents($filepath);
+
+  // Match all calls to Drupal.t() in an array.
+  // Note: \s also matches newlines with the 's' modifier.
+  preg_match_all('~
+    [^\w]Drupal\s*\.\s*t\s*                       # match "Drupal.t" with whitespace
+    \(\s*                                         # match "(" argument list start
+    (' . LOCALE_JS_STRING . ')\s*                 # capture string argument
+    (?:,\s*' . LOCALE_JS_OBJECT . '\s*            # optionally capture str args
+      (?:,\s*' . LOCALE_JS_OBJECT_CONTEXT . '\s*) # optionally capture context
+    ?)?                                           # close optional args
+    [,\)]                                         # match ")" or "," to finish
+    ~sx', $file, $t_matches);
+
+  // Match all Drupal.formatPlural() calls in another array.
+  preg_match_all('~
+    [^\w]Drupal\s*\.\s*formatPlural\s*  # match "Drupal.formatPlural" with whitespace
+    \(                                  # match "(" argument list start
+    \s*.+?\s*,\s*                       # match count argument
+    (' . LOCALE_JS_STRING . ')\s*,\s*   # match singular string argument
+    (                             # capture plural string argument
+      (?:                         # non-capturing group to repeat string pieces
+        (?:
+          \'                      # match start of single-quoted string
+          (?:\\\\\'|[^\'])*       # match any character except unescaped single-quote
+          @count                  # match "@count"
+          (?:\\\\\'|[^\'])*       # match any character except unescaped single-quote
+          \'                      # match end of single-quoted string
+          |
+          "                       # match start of double-quoted string
+          (?:\\\\"|[^"])*         # match any character except unescaped double-quote
+          @count                  # match "@count"
+          (?:\\\\"|[^"])*         # match any character except unescaped double-quote
+          "                       # match end of double-quoted string
+        )
+        (?:\s*\+\s*)?             # match "+" with possible whitespace, for str concat
+      )+                          # match multiple because we supports concatenating strs
+    )\s*                          # end capturing of plural string argument
+    (?:,\s*' . LOCALE_JS_OBJECT . '\s*          # optionally capture string args
+      (?:,\s*' . LOCALE_JS_OBJECT_CONTEXT . '\s*)?  # optionally capture context
+    )?
+    [,\)]
+    ~sx', $file, $plural_matches);
+
+  $matches = array();
+
+  // Add strings from Drupal.t().
+  foreach ($t_matches[1] as $key => $string) {
+    $matches[] = array(
+      'string'  => $string,
+      'context' => $t_matches[2][$key],
+    );
+  }
+
+  // Add string from Drupal.formatPlural().
+  foreach ($plural_matches[1] as $key => $string) {
+    $matches[] = array(
+      'string'  => $string,
+      'context' => $plural_matches[3][$key],
+    );
+
+    // If there is also a plural version of this string, add it to the strings array.
+    if (isset($plural_matches[2][$key])) {
+      $matches[] = array(
+        'string'  => $plural_matches[2][$key],
+        'context' => $plural_matches[3][$key],
+      );
+    }
+  }
+
+  // Loop through all matches and process them.
+  foreach ($matches as $key => $match) {
+
+    // Remove the quotes and string concatenations from the string and context.
+    $string =  implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['string'], 1, -1)));
+    $context = implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['context'], 1, -1)));
+
+    $source = db_query("SELECT lid, location FROM {locales_source} WHERE source = :source AND context = :context", array(':source' => $string, ':context' => $context))->fetchObject();
+    if ($source) {
+      // We already have this source string and now have to add the location
+      // to the location column, if this file is not yet present in there.
+      $locations = preg_split('~\s*;\s*~', $source->location);
+
+      if (!in_array($filepath, $locations)) {
+        $locations[] = $filepath;
+        $locations = implode('; ', $locations);
+
+        // Save the new locations string to the database.
+        db_update('locales_source')
+          ->fields(array(
+            'location' => $locations,
+          ))
+          ->condition('lid', $source->lid)
+          ->execute();
+      }
+    }
+    else {
+      // We don't have the source string yet, thus we insert it into the database.
+      db_insert('locales_source')
+        ->fields(array(
+          'location'  => $filepath,
+          'source'    => $string,
+          'context'   => $context,
+        ))
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Force the JavaScript translation file(s) to be refreshed.
+ *
+ * This function sets a refresh flag for a specified language, or all
+ * languages except English, if none specified. JavaScript translation
+ * files are rebuilt (with locale_update_js_files()) the next time a
+ * request is served in that language.
+ *
+ * @param $langcode
+ *   The language code for which the file needs to be refreshed.
+ *
+ * @return
+ *   New content of the 'javascript_parsed' variable.
+ */
+function _locale_invalidate_js($langcode = NULL) {
+  $parsed = variable_get('javascript_parsed', array());
+
+  if (empty($langcode)) {
+    // Invalidate all languages.
+    $languages = language_list();
+    if (!locale_translate_english()) {
+      unset($languages['en']);
+    }
+    foreach ($languages as $lcode => $data) {
+      $parsed['refresh:' . $lcode] = 'waiting';
+    }
+  }
+  else {
+    // Invalidate single language.
+    $parsed['refresh:' . $langcode] = 'waiting';
+  }
+
+  variable_set('javascript_parsed', $parsed);
+  return $parsed;
+}
+
+/**
+ * (Re-)Creates the JavaScript translation file for a language.
+ *
+ * @param $langcode
+ *   The language, the translation file should be (re)created for.
+ */
+function _locale_rebuild_js($langcode = NULL) {
+  if (!isset($langcode)) {
+    global $language_interface;
+    $language = $language_interface;
+  }
+  else {
+    // Get information about the locale.
+    $languages = language_list();
+    $language = $languages[$langcode];
+  }
+
+  // Construct the array for JavaScript translations.
+  // Only add strings with a translation to the translations array.
+  $result = db_query("SELECT s.lid, s.source, s.context, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.location LIKE '%.js%'", array(':language' => $language->langcode));
+
+  $translations = array();
+  foreach ($result as $data) {
+    $translations[$data->context][$data->source] = $data->translation;
+  }
+
+  // Construct the JavaScript file, if there are translations.
+  $data_hash = NULL;
+  $data = $status = '';
+  if (!empty($translations)) {
+
+    $data = "Drupal.locale = { ";
+
+    $locale_plurals = variable_get('locale_translation_plurals', array());
+    if (!empty($locale_plurals[$language->langcode])) {
+      $data .= "'pluralFormula': function (\$n) { return Number({$locale_plurals[$language->langcode]['formula']}); }, ";
+    }
+
+    $data .= "'strings': " . drupal_json_encode($translations) . " };";
+    $data_hash = drupal_hash_base64($data);
+  }
+
+  // Construct the filepath where JS translation files are stored.
+  // There is (on purpose) no front end to edit that variable.
+  $dir = 'public://' . variable_get('locale_js_directory', 'languages');
+
+  // Delete old file, if we have no translations anymore, or a different file to be saved.
+  $locale_javascripts = variable_get('locale_translation_javascript', array());
+  $changed_hash = !isset($locale_javascripts[$language->langcode]) || ($locale_javascripts[$language->langcode] != $data_hash);
+  if (!empty($locale_javascripts[$language->langcode]) && (!$data || $changed_hash)) {
+    file_unmanaged_delete($dir . '/' . $language->langcode . '_' . $locale_javascripts[$language->langcode] . '.js');
+    $locale_javascripts[$language->langcode] = '';
+    $status = 'deleted';
+  }
+
+  // Only create a new file if the content has changed or the original file got
+  // lost.
+  $dest = $dir . '/' . $language->langcode . '_' . $data_hash . '.js';
+  if ($data && ($changed_hash || !file_exists($dest))) {
+    // Ensure that the directory exists and is writable, if possible.
+    file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
+
+    // Save the file.
+    if (file_unmanaged_save_data($data, $dest)) {
+      $locale_javascripts[$language->langcode] = $data_hash;
+      // If we deleted a previous version of the file and we replace it with a
+      // new one we have an update.
+      if ($status == 'deleted') {
+        $status = 'updated';
+      }
+      // If the file did not exist previously and the data has changed we have
+      // a fresh creation.
+      elseif ($changed_hash) {
+        $status = 'created';
+      }
+      // If the data hash is unchanged the translation was lost and has to be
+      // rebuilt.
+      else {
+        $status = 'rebuilt';
+      }
+    }
+    else {
+      $locale_javascripts[$language->langcode] = '';
+      $status = 'error';
+    }
+  }
+
+  // Save the new JavaScript hash (or an empty value if the file just got
+  // deleted). Act only if some operation was executed that changed the hash
+  // code.
+  if ($status && $changed_hash) {
+    variable_set('locale_translation_javascript', $locale_javascripts);
+  }
+
+  // Log the operation and return success flag.
+  switch ($status) {
+    case 'updated':
+      watchdog('locale', 'Updated JavaScript translation file for the language %language.', array('%language' => $language->name));
+      return TRUE;
+    case 'rebuilt':
+      watchdog('locale', 'JavaScript translation file %file.js was lost.', array('%file' => $locale_javascripts[$language->langcode]), WATCHDOG_WARNING);
+      // Proceed to the 'created' case as the JavaScript translation file has
+      // been created again.
+    case 'created':
+      watchdog('locale', 'Created JavaScript translation file for the language %language.', array('%language' => $language->name));
+      return TRUE;
+    case 'deleted':
+      watchdog('locale', 'Removed JavaScript translation file for the language %language because no translations currently exist for that language.', array('%language' => $language->name));
+      return TRUE;
+    case 'error':
+      watchdog('locale', 'An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => $language->name), WATCHDOG_ERROR);
+      return FALSE;
+    default:
+      // No operation needed.
+      return TRUE;
+  }
+}
+
+/**
+ * Save locale specific date formats to the database.
+ *
+ * @param $langcode
+ *   Language code, can be 2 characters, e.g. 'en' or 5 characters, e.g.
+ *   'en-CA'.
+ * @param $type
+ *   Date format type, e.g. 'short', 'medium'.
+ * @param $format
+ *   The date format string.
+ */
+function locale_date_format_save($langcode, $type, $format) {
+  $locale_format = array();
+  $locale_format['language'] = $langcode;
+  $locale_format['type'] = $type;
+  $locale_format['format'] = $format;
+
+  $is_existing = (bool) db_query_range('SELECT 1 FROM {date_format_locale} WHERE language = :langcode AND type = :type', 0, 1, array(':langcode' => $langcode, ':type' => $type))->fetchField();
+  if ($is_existing) {
+    $keys = array('type', 'language');
+    drupal_write_record('date_format_locale', $locale_format, $keys);
+  }
+  else {
+    drupal_write_record('date_format_locale', $locale_format);
+  }
+}
+
+/**
+ * Select locale date format details from database.
+ *
+ * @param $languages
+ *   An array of language codes.
+ *
+ * @return
+ *   An array of date formats.
+ */
+function locale_get_localized_date_format($languages) {
+  $formats = array();
+
+  // Get list of different format types.
+  $format_types = system_get_date_types();
+  $short_default = variable_get('date_format_short', 'm/d/Y - H:i');
+
+  // Loop through each language until we find one with some date formats
+  // configured.
+  foreach ($languages as $language) {
+    $date_formats = system_date_format_locale($language);
+    if (!empty($date_formats)) {
+      // We have locale-specific date formats, so check for their types. If
+      // we're missing a type, use the default setting instead.
+      foreach ($format_types as $type => $type_info) {
+        // If format exists for this language, use it.
+        if (!empty($date_formats[$type])) {
+          $formats['date_format_' . $type] = $date_formats[$type];
+        }
+        // Otherwise get default variable setting. If this is not set, default
+        // to the short format.
+        else {
+          $formats['date_format_' . $type] = variable_get('date_format_' . $type, $short_default);
+        }
+      }
+
+      // Return on the first match.
+      return $formats;
+    }
+  }
+
+  // No locale specific formats found, so use defaults.
+  $system_types = array('short', 'medium', 'long');
+  // Handle system types separately as they have defaults if no variable exists.
+  $formats['date_format_short'] = $short_default;
+  $formats['date_format_medium'] = variable_get('date_format_medium', 'D, m/d/Y - H:i');
+  $formats['date_format_long'] = variable_get('date_format_long', 'l, F j, Y - H:i');
+
+  // For non-system types, get the default setting, otherwise use the short
+  // format.
+  foreach ($format_types as $type => $type_info) {
+    if (!in_array($type, $system_types)) {
+      $formats['date_format_' . $type] = variable_get('date_format_' . $type, $short_default);
+    }
+  }
+
+  return $formats;
 }
