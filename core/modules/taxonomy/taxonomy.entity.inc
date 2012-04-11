@@ -75,6 +75,20 @@ class TaxonomyTerm extends Entity {
    * @var string
    */
   public $vocabulary_machine_name;
+
+  /**
+   * Implements EntityInterface::id().
+   */
+  public function id() {
+    return $this->tid;
+  }
+
+  /**
+   * Implements EntityInterface::bundle().
+   */
+  public function bundle() {
+    return $this->vocabulary_machine_name;
+  }
 }
 
 /**
@@ -263,6 +277,13 @@ class TaxonomyVocabulary extends Entity {
    * @var integer
    */
   public $weight = 0;
+
+  /**
+   * Implements EntityInterface::id().
+   */
+  public function id() {
+    return $this->vid;
+  }
 }
 
 /**
