@@ -1973,8 +1973,11 @@ function system_add_module_assets() {
  * Implements hook_custom_theme().
  */
 function system_custom_theme() {
-  if (user_access('view the administration theme') && path_is_admin(current_path())) {
-    return variable_get('admin_theme');
+  if ($request = request()) {
+    $path = ltrim($request->getPathInfo(), '/');
+    if (user_access('view the administration theme') && path_is_admin($path)) {
+      return variable_get('admin_theme');
+    }
   }
 }
 
