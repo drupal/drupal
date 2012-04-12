@@ -436,3 +436,27 @@ function field_update_7001() {
 /**
  * @} End of "addtogroup updates-6.x-to-7.x"
  */
+
+/**
+ * @addtogroup updates-7.x-extra
+ * @{
+ */
+
+/**
+ * Split the all-inclusive field_bundle_settings variable per bundle.
+ */
+function field_update_7002() {
+  $settings = variable_get('field_bundle_settings', array());
+  if ($settings) {
+    foreach ($settings as $entity_type => $entity_type_settings) {
+      foreach ($entity_type_settings as $bundle => $bundle_settings) {
+        variable_set('field_bundle_settings_' . $entity_type . '__' . $bundle, $bundle_settings);
+      }
+    }
+    variable_del('field_bundle_settings');
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-extra"
+ */
