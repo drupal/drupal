@@ -381,7 +381,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     // Returns one row for each column in the index. Result is string or FALSE.
     // Details at http://dev.mysql.com/doc/refman/5.0/en/show-index.html
     $row = $this->connection->query('SHOW INDEX FROM {' . $table . "} WHERE key_name = '$name'")->fetchAssoc();
-    return isset($row['key_name']);
+    return isset($row['Key_name']);
   }
 
   public function addPrimaryKey($table, $fields) {

@@ -46,8 +46,6 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE,
       // Because MySQL's prepared statements skip the query cache, because it's dumb.
       PDO::ATTR_EMULATE_PREPARES => TRUE,
-      // Force column names to lower case.
-      PDO::ATTR_CASE => PDO::CASE_LOWER,
     );
 
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
