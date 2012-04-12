@@ -860,9 +860,30 @@ function form_label_test_form() {
     '#title' => t('Textfield test for invisible title'),
     '#title_display' => 'invisible',
   );
-  // Textfield test for title set not to display
+  // Textfield test for title set not to display.
   $form['form_textfield_test_title_no_show'] = array(
     '#type' => 'textfield',
+  );
+  // Checkboxes & radios with title as attribute.
+  $form['form_checkboxes_title_attribute'] = array(
+    '#type' => 'checkboxes',
+    '#title' => 'Checkboxes test',
+    '#options' => array(
+      'first-checkbox' => 'First checkbox',
+      'second-checkbox' => 'Second checkbox',
+    ),
+    '#title_display' => 'attribute',
+    '#required' => TRUE,
+  );
+  $form['form_radios_title_attribute'] = array(
+    '#type' => 'radios',
+    '#title' => 'Radios test',
+    '#options' => array(
+      'first-radio' => 'First radio',
+      'second-radio' => 'Second radio',
+    ),
+    '#title_display' => 'attribute',
+    '#required' => TRUE,
   );
 
   return $form;

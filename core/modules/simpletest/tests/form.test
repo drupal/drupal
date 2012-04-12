@@ -848,6 +848,12 @@ class FormsElementsLabelsTestCase extends DrupalWebTestCase {
 
     $elements = $this->xpath('//div[@id="form-test-textfield-title-suffix"]/preceding-sibling::div[contains(@class, \'form-item-form-textfield-test-title\')]');
     $this->assertTrue(isset($elements[0]), t("Properly places the #suffix element before the form item."));
+
+    // Check title attribute for radios and checkboxes.
+    $elements = $this->xpath('//div[@id="edit-form-checkboxes-title-attribute"]');
+    $this->assertEqual($elements[0]['title'], 'Checkboxes test' . ' (' . t('Required') . ')', 'Title attribute found.');
+    $elements = $this->xpath('//div[@id="edit-form-radios-title-attribute"]');
+    $this->assertEqual($elements[0]['title'], 'Radios test' . ' (' . t('Required') . ')', 'Title attribute found.');
   }
 }
 
