@@ -379,11 +379,31 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
    *   The bin being requested.
    */
   protected function garbageCollection() {
-    global $user;
+    $cache_lifetime = variable_get('cache_lifetime', 0);
 
-    // Garbage collection necessary when enforcing a minimum cache lifetime.
+    // Clean-up the per-user cache expiration session data, so that the session
+    // handler can properly clean-up the session data for anonymous users.
+    if (isset($_SESSION['cache_expiration'])) {
+      $expire = REQUEST_TIME - $cache_lifetime;
+      foreach ($_SESSION['cache_expiration'] as $bin => $timestamp) {
+        if ($timestamp < $expire) {
+          unset($_SESSION['cache_expiration'][$bin]);
+        }
+      }
+      if (!$_SESSION['cache_expiration']) {
+        unset($_SESSION['cache_expiration']);
+      }
+    }
+
+    // Garbage collection of temporary items is only necessary when enforcing
+    // a minimum cache lifetime.
+    if (!$cache_lifetime) {
+      return;
+    }
+    // When cache lifetime is in force, avoid running garbage collection too
+    // often since this will remove temporary cache items indiscriminately.
     $cache_flush = variable_get('cache_flush_' . $this->bin, 0);
-    if ($cache_flush && ($cache_flush + variable_get('cache_lifetime', 0) <= REQUEST_TIME)) {
+    if ($cache_flush && ($cache_flush + $cache_lifetime <= REQUEST_TIME)) {
       // Reset the variable immediately to prevent a meltdown in heavy load situations.
       variable_set('cache_flush_' . $this->bin, 0);
       // Time to flush old cache data
@@ -413,17 +433,16 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     if (!isset($cache->data)) {
       return FALSE;
     }
-    // If enforcing a minimum cache lifetime, validate that the data is
-    // currently valid for this user before we return it by making sure the cache
-    // entry was created before the timestamp in the current session's cache
-    // timer. The cache variable is loaded into the $user object by _drupal_session_read()
-    // in session.inc. If the data is permanent or we're not enforcing a minimum
-    // cache lifetime always return the cached data.
-    if ($cache->expire != CACHE_PERMANENT && variable_get('cache_lifetime', 0) && $user->cache > $cache->created) {
-      // This cache data is too old and thus not valid for us, ignore it.
+    // If the cached data is temporary and subject to a per-user minimum
+    // lifetime, compare the cache entry timestamp with the user session
+    // cache_expiration timestamp. If the cache entry is too old, ignore it.
+    if ($cache->expire != CACHE_PERMANENT && variable_get('cache_lifetime', 0) && isset($_SESSION['cache_expiration'][$this->bin]) && $_SESSION['cache_expiration'][$this->bin] > $cache->created) {
+      // Ignore cache data that is too old and thus not valid for this user.
       return FALSE;
     }
 
+    // If the data is permanent or not subject to a minimum cache lifetime,
+    // unserialize and return the cached data.
     if ($cache->serialized) {
       $cache->data = unserialize($cache->data);
     }
@@ -468,11 +487,10 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
 
     if (empty($cid)) {
       if (variable_get('cache_lifetime', 0)) {
-        // We store the time in the current user's $user->cache variable which
-        // will be saved into the sessions bin by _drupal_session_write(). We then
-        // simulate that the cache was flushed for this user by not returning
-        // cached data that was cached before the timestamp.
-        $user->cache = REQUEST_TIME;
+        // We store the time in the current user's session. We then simulate
+        // that the cache was flushed for this user by not returning cached
+        // data that was cached before the timestamp.
+        $_SESSION['cache_expiration'][$this->bin] = REQUEST_TIME;
 
         $cache_flush = variable_get('cache_flush_' . $this->bin, 0);
         if ($cache_flush == 0) {
