@@ -1668,6 +1668,7 @@ class LocaleBrowserDetectionTest extends DrupalUnitTestCase {
       'EN' => 'en',
       ' en' => 'en',
       'en ' => 'en',
+      'en, fr' => 'en',
 
       // A less specific language from the browser matches a more specific one
       // from the website, and the other way around for compatibility with
@@ -1702,6 +1703,7 @@ class LocaleBrowserDetectionTest extends DrupalUnitTestCase {
       // Unresolvable cases.
       '' => FALSE,
       'de,pl' => FALSE,
+      'iecRswK4eh' => FALSE,
       $this->randomName(10) => FALSE,
     );
 
