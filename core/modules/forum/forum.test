@@ -246,6 +246,38 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->deleteForum($this->delete_forum['tid']);
     // Create forum at the top (root) level.
     $this->root_forum = $this->createForum('forum');
+
+    // Test vocabulary form alterations.
+    $this->drupalGet('admin/structure/taxonomy/forums/edit');
+    $this->assertFieldByName('op', t('Save'), 'Save button found.');
+    $this->assertNoFieldByName('op', t('Delete'), 'Delete button not found.');
+
+    // Test term edit form alterations.
+    $this->drupalGet('taxonomy/term/' . $this->container['tid'] . '/edit');
+    // Test parent field been hidden by forum module.
+    $this->assertNoField('parent[]', 'Parent field not found.');
+
+    // Create a default vocabulary named "Tags".
+    $description = 'Use tags to group articles on similar topics into categories.';
+    $help = 'Enter a comma-separated list of words to describe your content.';
+    $vocabulary = entity_create('taxonomy_vocabulary', array(
+      'name' => 'Tags',
+      'description' => $description,
+      'machine_name' => 'tags',
+      'langcode' => language_default()->langcode,
+      'help' => $help,
+    ));
+    taxonomy_vocabulary_save($vocabulary);
+    // Test tags vocabulary form is not affected.
+    $this->drupalGet('admin/structure/taxonomy/tags/edit');
+    $this->assertFieldByName('op', t('Save'), 'Save button found.');
+    $this->assertFieldByName('op', t('Delete'), 'Delete button found.');
+    // Test tags vocabulary term form is not affected.
+    $this->drupalGet('admin/structure/taxonomy/tags/add');
+    $this->assertField('parent[]', 'Parent field found.');
+    // Test relations fieldset exists.
+    $relations_fieldset = $this->xpath("//fieldset[@id='edit-relations']");
+    $this->assertTrue(isset($relations_fieldset[0]), 'Relations fieldset element found.');
   }
 
   /**

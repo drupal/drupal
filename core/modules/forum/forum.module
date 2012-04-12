@@ -575,29 +575,37 @@ function forum_field_storage_pre_update($entity_type, $entity, &$skip_fields) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_FORM_ID_alter() for taxonomy_form_vocabulary().
  */
-function forum_form_alter(&$form, $form_state, $form_id) {
+function forum_form_taxonomy_form_vocabulary_alter(&$form, &$form_state, $form_id) {
   $vid = variable_get('forum_nav_vocabulary', 0);
   if (isset($form['vid']['#value']) && $form['vid']['#value'] == $vid) {
-    // Hide critical options from forum vocabulary.
-    if ($form_id == 'taxonomy_form_vocabulary') {
-      $form['help_forum_vocab'] = array(
-        '#markup' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
-        '#weight' => -1,
-      );
-      $form['hierarchy'] = array('#type' => 'value', '#value' => 1);
-      $form['delete']['#access'] = FALSE;
-    }
-    // Hide multiple parents select from forum terms.
-    elseif ($form_id == 'taxonomy_form_term') {
-      $form['advanced']['parent']['#access'] = FALSE;
-    }
+    $form['help_forum_vocab'] = array(
+      '#markup' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
+      '#weight' => -1,
+    );
+    // Forum's vocabulary always has single hierarchy. Forums and containers
+    // have only one parent or no parent for root items. By default this value
+    // is 0.
+    $form['hierarchy']['#value'] = TAXONOMY_HIERARCHY_SINGLE;
+    // Do not allow to delete forum's vocabulary.
+    $form['actions']['delete']['#access'] = FALSE;
   }
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for taxonomy_form_term().
+ */
+function forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
+  $vid = variable_get('forum_nav_vocabulary', 0);
+  if (isset($form['vid']['#value']) && $form['vid']['#value'] == $vid) {
+    // Hide multiple parents select from forum terms.
+    $form['relations']['parent']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
 function forum_form_node_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['taxonomy_forums'])) {
