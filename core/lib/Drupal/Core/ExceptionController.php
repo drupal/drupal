@@ -95,6 +95,8 @@ class ExceptionController {
    */
   public function on403Html(FlattenException $exception, Request $request) {
     $system_path = $request->attributes->get('system_path');
+    watchdog('access denied', $system_path, NULL, WATCHDOG_WARNING);
+
     $path = drupal_get_normal_path(variable_get('site_403', ''));
     if ($path && $path != $system_path) {
       // Keep old path for reference, and to allow forms to redirect to it.
