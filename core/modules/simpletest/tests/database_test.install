@@ -28,6 +28,7 @@ function database_test_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'binary' => TRUE,
       ),
       'age' => array(
         'description' => "The person's age",
