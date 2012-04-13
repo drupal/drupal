@@ -370,6 +370,51 @@ class CacheClearCase extends CacheTestCase {
     $cached = cache('page')->get($data);
     $this->assertFalse($cached, 'Cached item was invalidated');
   }
+
+  /**
+   * Test clearing using cache tags.
+   */
+  function testClearTags() {
+    $cache = cache($this->default_bin);
+    $cache->set('test_cid_clear1', $this->default_value, CACHE_PERMANENT, array('test_tag' => array(1)));
+    $cache->set('test_cid_clear2', $this->default_value, CACHE_PERMANENT, array('test_tag' => array(1)));
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                      && $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two cache items were created.'));
+    cache_invalidate(array('test_tag' => array(1)));
+    $this->assertFalse($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                      || $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two caches removed after clearing a cache tag.'));
+
+    $cache->set('test_cid_clear1', $this->default_value, CACHE_PERMANENT, array('test_tag' => array(1)));
+    $cache->set('test_cid_clear2', $this->default_value, CACHE_PERMANENT, array('test_tag' => array(2)));
+    $cache->set('test_cid_clear3', $this->default_value, CACHE_PERMANENT, array('test_tag_foo' => array(3)));
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                      && $this->checkCacheExists('test_cid_clear2', $this->default_value)
+                      && $this->checkCacheExists('test_cid_clear3', $this->default_value),
+                      t('Two cached items were created.'));
+    cache_invalidate(array('test_tag_foo' => array(3)));
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                      && $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Cached items not matching the tag were not cleared.'));
+
+    $this->assertFalse($this->checkCacheExists('test_cid_clear3', $this->default_value),
+                      t('Cached item matching the tag was removed.'));
+
+    // For our next trick, we will attempt to clear data in multiple bins.
+    $tags = array('test_tag' => array(1, 2, 3));
+    $bins = array('cache', 'cache_page', 'cache_bootstrap');
+    foreach ($bins as $bin) {
+      cache($bin)->set('test', $this->default_value, CACHE_PERMANENT, $tags);
+      $this->assertTrue($this->checkCacheExists('test', $this->default_value, $bin), 'Cache item was set in bin.');
+    }
+    cache_invalidate(array('test_tag' => array(2)));
+    foreach ($bins as $bin) {
+      $this->assertFalse($this->checkCacheExists('test', $this->default_value, $bin), 'Tag expire affected item in bin.');
+    }
+    $this->assertFalse($this->checkCacheExists('test_cid_clear2', $this->default_value), 'Cached items matching tag were cleared.');
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value), 'Cached items not matching tag were not cleared.');
+  }
 }
 
 /**

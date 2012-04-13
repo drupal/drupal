@@ -297,7 +297,7 @@ function install_begin_request(&$install_state) {
   // because any data put in the cache during the installer is inherently
   // suspect, due to the fact that Drupal is not fully set up yet.
   require_once DRUPAL_ROOT . '/core/includes/cache.inc';
-  $conf['cache_default_class'] = 'Drupal\Core\Cache\InstallBackend';
+  $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\InstallBackend');
 
   // The install process cannot use the database lock backend since the database
   // is not fully up, so we use a null backend implementation durting the

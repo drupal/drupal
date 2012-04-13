@@ -99,8 +99,14 @@ interface CacheBackendInterface {
    *     general cache wipe.
    *   - A Unix timestamp: Indicates that the item should be kept at least until
    *     the given time, after which it behaves like CACHE_TEMPORARY.
+   * @param array $tags
+   *   An array of tags to be stored with the cache item. These should normally
+   *   identify objects used to build the cache item, which should trigger
+   *   cache invalidation when updated. For example if a cached item represents
+   *   a node, both the node ID and the author's user ID might be passed in as
+   *   tags. For example array('node' => array(123), 'user' => array(92)).*
    */
-  function set($cid, $data, $expire = CACHE_PERMANENT);
+  function set($cid, $data, $expire = CACHE_PERMANENT, array $tags = array());
 
   /**
    * Deletes an item from the cache.
@@ -135,6 +141,17 @@ interface CacheBackendInterface {
    * Expires temporary items from the cache.
    */
   function expire();
+
+  /**
+   * Invalidates each tag in the $tags array.
+   *
+   * @param array $tags
+   *   Associative array of tags, in the same format that is passed to
+   *   CacheBackendInterface::set().
+   *
+   * @see CacheBackendInterface::set()
+   */
+  function invalidateTags(array $tags);
 
   /**
    * Performs garbage collection on a cache bin.

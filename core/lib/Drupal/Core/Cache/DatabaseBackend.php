@@ -23,6 +23,11 @@ class DatabaseBackend implements CacheBackendInterface {
   protected $bin;
 
   /**
+   * A static cache of all tags checked during the request.
+   */
+  protected static $tagCache = array();
+
+  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::__construct().
    */
   function __construct($bin) {
@@ -58,7 +63,7 @@ class DatabaseBackend implements CacheBackendInterface {
       // is used here only due to the performance overhead we would incur
       // otherwise. When serving an uncached page, the overhead of using
       // db_select() is a much smaller proportion of the request.
-      $result = db_query('SELECT cid, data, created, expire, serialized FROM {' . db_escape_table($this->bin) . '} WHERE cid IN (:cids)', array(':cids' => $cids));
+      $result = db_query('SELECT cid, data, created, expire, serialized, tags, checksum FROM {' . db_escape_table($this->bin) . '} WHERE cid IN (:cids)', array(':cids' => $cids));
       $cache = array();
       foreach ($result as $item) {
         $item = $this->prepareItem($item);
@@ -104,6 +109,14 @@ class DatabaseBackend implements CacheBackendInterface {
       return FALSE;
     }
 
+    // The cache data is invalid if any of its tags have been cleared since.
+    if ($cache->tags) {
+      $cache->tags = explode(' ', $cache->tags);
+      if (!$this->validTags($cache->checksum, $cache->tags)) {
+        return FALSE;
+      }
+    }
+
     // If the data is permanent or not subject to a minimum cache lifetime,
     // unserialize and return the cached data.
     if ($cache->serialized) {
@@ -116,11 +129,13 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
-  function set($cid, $data, $expire = CACHE_PERMANENT) {
+  function set($cid, $data, $expire = CACHE_PERMANENT, array $tags = array()) {
     $fields = array(
       'serialized' => 0,
       'created' => REQUEST_TIME,
       'expire' => $expire,
+      'tags' => implode(' ', $this->flattenTags($tags)),
+      'checksum' => $this->checksumTags($tags),
     );
     if (!is_string($data)) {
       $fields['data'] = serialize($data);
@@ -154,7 +169,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
    */
-  function deleteMultiple(Array $cids) {
+  function deleteMultiple(array $cids) {
     // Delete in chunks when a large array is passed.
     do {
       db_delete($this->bin)
@@ -251,6 +266,94 @@ class DatabaseBackend implements CacheBackendInterface {
         ->condition('expire', $cache_flush, '<=')
         ->execute();
     }
+  }
+
+  /**
+   * Compares two checksums of tags. Used to determine whether to serve a cached
+   * item or treat it as invalidated.
+   *
+   * @param integer @checksum
+   *   The initial checksum to compare against.
+   * @param array @tags
+   *   An array of tags to calculate a checksum for.
+   *
+   * @return boolean
+   *   TRUE if the checksums match, FALSE otherwise.
+   */
+  protected function validTags($checksum, array $tags) {
+    return $checksum == $this->checksumTags($tags);
+  }
+
+  /**
+   * Flattens a tags array into a numeric array suitable for string storage.
+   *
+   * @param array $tags
+   *   Associative array of tags to flatten.
+   *
+   * @return
+   *   Numeric array of flattened tag identifiers.
+   */
+  protected function flattenTags(array $tags) {
+    if (isset($tags[0])) {
+      return $tags;
+    }
+
+    $flat_tags = array();
+    foreach ($tags as $namespace => $values) {
+      if (is_array($values)) {
+        foreach ($values as $value) {
+          $flat_tags[] = "$namespace:$value";
+        }
+      }
+      else {
+        $flat_tags[] = "$namespace:$values";
+      }
+    }
+    return $flat_tags;
+  }
+
+  /**
+   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
+   */
+  public function invalidateTags(array $tags) {
+    foreach ($this->flattenTags($tags) as $tag) {
+      unset(self::$tagCache[$tag]);
+      db_merge('cache_tags')
+        ->key(array('tag' => $tag))
+        ->fields(array('invalidations' => 1))
+        ->expression('invalidations', 'invalidations + 1')
+        ->execute();
+    }
+  }
+
+  /**
+   * Returns the sum total of validations for a given set of tags.
+   *
+   * @param array $tags
+   *   Associative array of tags.
+   *
+   * @return integer
+   *   Sum of all invalidations.
+   */
+  protected function checksumTags($tags) {
+    $checksum = 0;
+    $query_tags = array();
+
+    foreach ($this->flattenTags($tags) as $tag) {
+      if (isset(self::$tagCache[$tag])) {
+        $checksum += self::$tagCache[$tag];
+      }
+      else {
+        $query_tags[] = $tag;
+      }
+   }
+    if ($query_tags) {
+      if ($db_tags = db_query('SELECT tag, invalidations FROM {cache_tags} WHERE tag IN (:tags)', array(':tags' => $query_tags))->fetchAllKeyed()) {
+        self::$tagCache = array_merge(self::$tagCache, $db_tags);
+        $checksum += array_sum($db_tags);
+      }
+    }
+    return $checksum;
   }
 
   /**
