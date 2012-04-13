@@ -316,7 +316,14 @@ function menu_get_ancestors($parts) {
   $ancestors = array();
   $length =  $number_parts - 1;
   $end = (1 << $number_parts) - 1;
-  $masks = variable_get('menu_masks', array());
+  $masks = variable_get('menu_masks');
+  // If the optimized menu_masks array is not available use brute force to get
+  // the correct $ancestors and $placeholders returned. Do not use this as the
+  // default value of the menu_masks variable to avoid building such a big
+  // array.
+  if (!$masks) {
+    $masks = range(511, 1);
+  }
   // Only examine patterns that actually exist as router items (the masks).
   foreach ($masks as $i) {
     if ($i > $end) {
