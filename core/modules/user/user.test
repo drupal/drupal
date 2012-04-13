@@ -837,6 +837,34 @@ class UserCancelTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests deletion of a user account without an e-mail address.
+   */
+  function testUserWithoutEmailCancelByAdmin() {
+    variable_set('user_cancel_method', 'user_cancel_reassign');
+
+    // Create a regular user.
+    $account = $this->drupalCreateUser(array());
+    // This user has no e-mail address.
+    $edit = array('mail' => '');
+    $account = user_save($account, $edit);
+
+    // Create administrative user.
+    $admin_user = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($admin_user);
+
+    // Delete regular user without e-mail address.
+    $this->drupalGet('user/' . $account->uid . '/edit');
+    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->assertRaw(t('Are you sure you want to cancel the account %name?', array('%name' => $account->name)), t('Confirmation form to cancel account displayed.'));
+    $this->assertText(t('Select the method to cancel the account above.'), t('Allows to select account cancellation method.'));
+
+    // Confirm deletion.
+    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->name)), t('User deleted.'));
+    $this->assertFalse(user_load($account->uid), t('User is not found in the database.'));
+  }
+
+  /**
    * Create an administrative user and mass-delete other users.
    */
   function testMassUserCancelByAdmin() {
@@ -1785,6 +1813,22 @@ class UserEditTestCase extends DrupalWebTestCase {
     $user1->pass_raw = $new_pass;
     $this->drupalLogin($user1);
     $this->drupalLogout();
+  }
+
+  /**
+   * Tests editing of a user account without an e-mail address.
+   */
+  function testUserWithoutEmailEdit() {
+    // Test that an admin can edit users without an e-mail address.
+    $admin = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($admin);
+    // Create a regular user.
+    $user1 = $this->drupalCreateUser(array());
+    // This user has no e-mail address.
+    $edit = array('mail' => '');
+    $user1 = user_save($user1, $edit);
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t("The changes have been saved."));
   }
 }
 

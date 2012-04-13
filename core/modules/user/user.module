@@ -947,11 +947,14 @@ function user_account_form(&$form, &$form_state) {
     '#weight' => -10,
   );
 
+  // The mail field is NOT required if account originally had no mail set
+  // and the user performing the edit has 'administer users' permission.
+  // This allows users without e-mail address to be edited and deleted.
   $form['account']['mail'] = array(
     '#type' => 'email',
     '#title' => t('E-mail address'),
     '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
-    '#required' => TRUE,
+    '#required' => !(empty($account->mail) && user_access('administer users')),
     '#default_value' => (!$register ? $account->mail : ''),
   );
 
@@ -1133,7 +1136,7 @@ function user_account_form_validate($form, &$form_state) {
 
   $mail = $form_state['values']['mail'];
 
-  if ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('mail', db_like($mail), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+  if (!empty($mail) && (bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('mail', db_like($mail), 'LIKE')->range(0, 1)->execute()->fetchField()) {
     // Format error message dependent on whether the user is logged in or not.
     if ($GLOBALS['user']->uid) {
       form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $mail)));
@@ -3794,14 +3797,19 @@ function user_register_submit($form, &$form_state) {
   }
   // No administrator approval required.
   elseif ($account->status || $notify) {
-    $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
-    _user_mail_notify($op, $account);
-    if ($notify) {
-      drupal_set_message(t('A welcome message with further instructions has been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
+    if (empty($account->mail) && $notify) {
+      drupal_set_message(t('The new user <a href="@url">%name</a> was created without an email address, so no welcome message was sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
     }
     else {
-      drupal_set_message(t('A welcome message with further instructions has been sent to your e-mail address.'));
-      $form_state['redirect'] = '';
+      $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
+      _user_mail_notify($op, $account);
+      if ($notify) {
+        drupal_set_message(t('A welcome message with further instructions has been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
+      }
+      else {
+        drupal_set_message(t('A welcome message with further instructions has been sent to your e-mail address.'));
+        $form_state['redirect'] = '';
+      }
     }
   }
   // Administrator approval required.
