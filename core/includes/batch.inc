@@ -14,6 +14,8 @@
  * @see batch_get()
  */
 
+use \Symfony\Component\HttpFoundation\JsonResponse;
+
 /**
  * Loads a batch from the database.
  *
@@ -77,7 +79,7 @@ function _batch_page() {
 
     case 'do':
       // JavaScript-based progress page callback.
-      _batch_do();
+      $output = _batch_do();
       break;
 
     case 'do_nojs':
@@ -160,7 +162,7 @@ function _batch_do() {
   // Perform actual processing.
   list($percentage, $message) = _batch_process();
 
-  drupal_json_output(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
+  return new JsonResponse(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
 }
 
 /**
