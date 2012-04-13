@@ -29,7 +29,7 @@ function field_sql_storage_schema() {
  *
  * @ingroup update-api-7.x-to-8.x
  */
-function _update_7000_field_sql_storage_write($entity_type, $bundle, $entity_id, $revision_id, $field_name, $data) {
+function _update_8000_field_sql_storage_write($entity_type, $bundle, $entity_id, $revision_id, $field_name, $data) {
   $table_name = "field_data_{$field_name}";
   $revision_name = "field_revision_{$field_name}";
 
@@ -52,7 +52,7 @@ function _update_7000_field_sql_storage_write($entity_type, $bundle, $entity_id,
         'revision_id' => $revision_id,
         'bundle' => $bundle,
         'delta' => $delta,
-        'language' => $langcode,
+        'langcode' => $langcode,
       );
       foreach ($item as $column => $value) {
         $record[_field_sql_storage_columnname($field_name, $column)] = $value;
@@ -75,5 +75,54 @@ function _update_7000_field_sql_storage_write($entity_type, $bundle, $entity_id,
     }
     $query->execute();
     $revision_query->execute();
+  }
+}
+
+/**
+ * Changes field language into langcode.
+ */
+function field_sql_storage_update_8000(&$sandbox) {
+  // Prepare updated schema data structures.
+  $primary_key_data = array (
+    'entity_type',
+    'entity_id',
+    'deleted',
+    'delta',
+    'langcode',
+  );
+  $primary_key_revision = array (
+    'entity_type',
+    'entity_id',
+    'revision_id',
+    'deleted',
+    'delta',
+    'langcode',
+  );
+  $langcode_index = array(
+    'langcode',
+  );
+  $field_langcode = array(
+    'type' => 'varchar',
+    'length' => 32,
+    'not null' => true,
+    'default' => '',
+  );
+
+  // Retrieve field data.
+  $fields = _update_7000_field_read_fields(array('storage_type' => 'field_sql_storage'));
+
+  // Update schema.
+  foreach ($fields as $field) {
+    $data_table = _field_sql_storage_tablename($field);
+    $revision_table = _field_sql_storage_revision_tablename($field);
+    $table_info = array($data_table => $primary_key_data, $revision_table => $primary_key_revision);
+
+    foreach ($table_info as $table => $primary_key) {
+      db_drop_primary_key($table);
+      db_drop_index($table, 'language');
+      db_change_field($table, 'language', 'langcode', $field_langcode);
+      db_add_primary_key($table, $primary_key);
+      db_add_index($table, 'langcode', $langcode_index);
+    }
   }
 }

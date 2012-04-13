@@ -65,9 +65,10 @@ Drupal.behaviors.fillUserInfoFromCookie = {
     var userInfo = ['name', 'mail', 'homepage'];
     $('form.user-info-from-cookie').once('user-info-from-cookie', function () {
       var formContext = this;
+      var $formContext = $(this);
       var i, il, $element, cookie;
       for (i = 0, il = userInfo.length; i < il; i += 1) {
-        $element = $('[name=' + userInfo[i] + ']', formContext);
+        $element = $formContext.find('[name=' + userInfo[i] + ']');
         cookie = $.cookie('Drupal.visitor.' + userInfo[i]);
         if ($element.length && cookie) {
           $element.val(cookie);

@@ -306,7 +306,7 @@ class ConfUpdate7to8TestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Configuration update from Drupal 7 to 8',
-      'description' => 'Tests the ability to update Drupal 7 variables to the 
+      'description' => 'Tests the ability to update Drupal 7 variables to the
         configuration management system.',
       'group' => 'Configuration',
     );
@@ -329,7 +329,7 @@ class ConfUpdate7to8TestCase extends DrupalWebTestCase {
 
     update_variables_to_config('config.test', array('config_test_bar' => 'config_bar'));
     $config = config('config.test');
-    $this->assertEqual($config->get('config_test_foo'), $this->testContent); 
-    $this->assertEqual($config->get('config_test_bar'), $this->testContent); 
+    $this->assertEqual($config->get('config_test_foo'), $this->testContent);
+    $this->assertEqual($config->get('config_test_bar'), $this->testContent);
   }
 }

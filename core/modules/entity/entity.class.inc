@@ -146,27 +146,6 @@ class Entity implements EntityInterface {
   protected $entityType;
 
   /**
-   * Information about the entity's type.
-   *
-   * @var array
-   */
-  protected $entityInfo;
-
-  /**
-   * The entity ID key.
-   *
-   * @var string
-   */
-  protected $idKey;
-
-  /**
-   * The entity bundle key.
-   *
-   * @var string
-   */
-  protected $bundleKey;
-
-  /**
    * Boolean indicating whether the entity should be forced to be new.
    *
    * @var bool
@@ -178,7 +157,6 @@ class Entity implements EntityInterface {
    */
   public function __construct(array $values = array(), $entity_type) {
     $this->entityType = $entity_type;
-    $this->setUp();
     // Set initial values.
     foreach ($values as $key => $value) {
       $this->$key = $value;
@@ -186,26 +164,17 @@ class Entity implements EntityInterface {
   }
 
   /**
-   * Sets up the object instance on construction or unserialization.
-   */
-  protected function setUp() {
-    $this->entityInfo = entity_get_info($this->entityType);
-    $this->idKey = $this->entityInfo['entity keys']['id'];
-    $this->bundleKey = isset($this->entityInfo['entity keys']['bundle']) ? $this->entityInfo['entity keys']['bundle'] : NULL;
-  }
-
-  /**
    * Implements EntityInterface::id().
    */
   public function id() {
-    return isset($this->{$this->idKey}) ? $this->{$this->idKey} : NULL;
+    return isset($this->id) ? $this->id : NULL;
   }
 
   /**
    * Implements EntityInterface::isNew().
    */
   public function isNew() {
-    return !empty($this->enforceIsNew) || empty($this->{$this->idKey});
+    return !empty($this->enforceIsNew) || !$this->id();
   }
 
   /**
@@ -226,7 +195,7 @@ class Entity implements EntityInterface {
    * Implements EntityInterface::bundle().
    */
   public function bundle() {
-    return isset($this->bundleKey) ? $this->{$this->bundleKey} : $this->entityType;
+    return $this->entityType;
   }
 
   /**
@@ -236,11 +205,12 @@ class Entity implements EntityInterface {
    */
   public function label() {
     $label = FALSE;
-    if (isset($this->entityInfo['label callback']) && function_exists($this->entityInfo['label callback'])) {
-      $label = $this->entityInfo['label callback']($this->entityType, $this);
+    $entity_info = $this->entityInfo();
+    if (isset($entity_info['label callback']) && function_exists($entity_info['label callback'])) {
+      $label = $entity_info['label callback']($this->entityType, $this);
     }
-    elseif (!empty($this->entityInfo['entity keys']['label']) && isset($this->{$this->entityInfo['entity keys']['label']})) {
-      $label = $this->{$this->entityInfo['entity keys']['label']};
+    elseif (!empty($entity_info['entity keys']['label']) && isset($this->{$entity_info['entity keys']['label']})) {
+      $label = $this->{$entity_info['entity keys']['label']};
     }
     return $label;
   }
@@ -254,11 +224,12 @@ class Entity implements EntityInterface {
     $bundle = $this->bundle();
     // A bundle-specific callback takes precedence over the generic one for the
     // entity type.
-    if (isset($this->entityInfo['bundles'][$bundle]['uri callback'])) {
-      $uri_callback = $this->entityInfo['bundles'][$bundle]['uri callback'];
+    $entity_info = $this->entityInfo();
+    if (isset($entity_info['bundles'][$bundle]['uri callback'])) {
+      $uri_callback = $entity_info['bundles'][$bundle]['uri callback'];
     }
-    elseif (isset($this->entityInfo['uri callback'])) {
-      $uri_callback = $this->entityInfo['uri callback'];
+    elseif (isset($entity_info['uri callback'])) {
+      $uri_callback = $entity_info['uri callback'];
     }
     else {
       return NULL;
@@ -304,28 +275,6 @@ class Entity implements EntityInterface {
    * Implements EntityInterface::entityInfo().
    */
   public function entityInfo() {
-    return $this->entityInfo;
-  }
-
-  /**
-   * Serializes only what is necessary.
-   *
-   * See @link http://www.php.net/manual/language.oop5.magic.php#language.oop5.magic.sleep PHP Magic Methods @endlink.
-   */
-  public function __sleep() {
-    $vars = get_object_vars($this);
-    unset($vars['entityInfo'], $vars['idKey'], $vars['bundleKey']);
-    // Also key the returned array with the variable names so the method may
-    // be easily overridden and customized.
-    return drupal_map_assoc(array_keys($vars));
-  }
-
-  /**
-   * Invokes setUp() on unserialization.
-   *
-   * See @link http://www.php.net/manual/language.oop5.magic.php#language.oop5.magic.sleep PHP Magic Methods @endlink
-   */
-  public function __wakeup() {
-    $this->setUp();
+    return entity_get_info($this->entityType);
   }
 }

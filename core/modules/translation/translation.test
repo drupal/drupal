@@ -49,7 +49,7 @@ class TranslationTestCase extends DrupalWebTestCase {
 
     // Enable the language switcher block.
     $language_type = LANGUAGE_TYPE_INTERFACE;
-    $edit = array("blocks[locale_$language_type][region]" => 'sidebar_first');
+    $edit = array("blocks[language_$language_type][region]" => 'sidebar_first');
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Reset static caches in our local language environment.
@@ -76,7 +76,7 @@ class TranslationTestCase extends DrupalWebTestCase {
 
     // Check that the "add translation" link uses a localized path.
     $languages = language_list();
-    $prefixes = locale_language_negotiation_url_prefixes();
+    $prefixes = language_negotiation_url_prefixes();
     $this->drupalGet('node/' . $node->nid . '/translate');
     $this->assertLinkByHref($prefixes['es'] . '/node/add/' . str_replace('_', '-', $node->type), 0, t('The "add translation" link for %language points to the localized path of the target language.', array('%language' => $languages['es']->name)));
 
@@ -169,7 +169,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Check that links to the displayed translation appear only in the language
     // switcher block.
     $this->assertLanguageSwitchLinks($node, $node, FALSE, 'node');
-    $this->assertLanguageSwitchLinks($node, $node, TRUE, 'block-locale');
+    $this->assertLanguageSwitchLinks($node, $node, TRUE, 'block-language');
 
     // Unpublish the Spanish translation to check that the related language
     // switch link is not shown.
@@ -182,7 +182,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Check that content translation links are shown even when no language
     // negotiation is configured.
     $this->drupalLogin($this->admin_user);
-    $edit = array('language_interface[enabled][locale-url]' => FALSE);
+    $edit = array('language_interface[enabled][language-url]' => FALSE);
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->resetCaches();
     $edit = array('status' => TRUE);
@@ -203,7 +203,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->translator);
 
     // Create a Basic page in English.
-    $type = 'block-locale';
+    $type = 'block-language';
     $node = $this->createPage($this->randomName(), $this->randomName(), 'en');
     $this->assertLanguageSwitchLinks($node, $node, TRUE, $type);
     $this->assertLanguageSwitchLinks($node, $this->emptyNode('es'), TRUE, $type);
@@ -259,8 +259,8 @@ class TranslationTestCase extends DrupalWebTestCase {
    */
   function resetCaches() {
     drupal_static_reset('language_list');
-    drupal_static_reset('locale_url_outbound_alter');
-    drupal_static_reset('locale_language_url_rewrite_url');
+    drupal_static_reset('language_url_outbound_alter');
+    drupal_static_reset('language_url_rewrite_url');
   }
 
   /**
@@ -422,7 +422,7 @@ class TranslationTestCase extends DrupalWebTestCase {
    */
   function assertLanguageSwitchLinks($node, $translation, $find = TRUE, $types = NULL) {
     if (empty($types)) {
-      $types = array('node', 'block-locale');
+      $types = array('node', 'block-language');
     }
     elseif (is_string($types)) {
       $types = array($types);

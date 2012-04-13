@@ -2,6 +2,7 @@
 
 Drupal.behaviors.openid = {
   attach: function (context) {
+    var $context = $(context);
     var loginElements = $('.form-item-name, .form-item-pass, li.openid-link');
     var openidElements = $('.form-item-openid-identifier, li.user-link');
     var cookie = $.cookie('Drupal.visitor.openid_identifier');
@@ -19,7 +20,7 @@ Drupal.behaviors.openid = {
       }
     }
 
-    $('li.openid-link:not(.openid-processed)', context)
+    $context.find('li.openid-link:not(.openid-processed)')
       .addClass('openid-processed')
       .click(function () {
          loginElements.hide();
@@ -31,7 +32,7 @@ Drupal.behaviors.openid = {
         $('#edit-openid-identifier')[0].focus();
         return false;
       });
-    $('li.user-link:not(.openid-processed)', context)
+    $context.find('li.user-link:not(.openid-processed)')
       .addClass('openid-processed')
       .click(function () {
          openidElements.hide();

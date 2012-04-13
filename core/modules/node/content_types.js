@@ -2,28 +2,30 @@
 
 Drupal.behaviors.contentTypes = {
   attach: function (context) {
+    var $context = $(context);
     // Provide the vertical tab summaries.
-    $('fieldset#edit-submission', context).drupalSetSummary(function(context) {
+    $context.find('fieldset#edit-submission').drupalSetSummary(function(context) {
       var vals = [];
-      vals.push(Drupal.checkPlain($('#edit-title-label', context).val()) || Drupal.t('Requires a title'));
+      vals.push(Drupal.checkPlain($(context).find('#edit-title-label').val()) || Drupal.t('Requires a title'));
       return vals.join(', ');
     });
-    $('fieldset#edit-workflow', context).drupalSetSummary(function(context) {
+    $context.find('fieldset#edit-workflow').drupalSetSummary(function(context) {
       var vals = [];
-      $("input[name^='node_options']:checked", context).parent().each(function() {
+      $(context).find("input[name^='node_options']:checked").parent().each(function() {
         vals.push(Drupal.checkPlain($(this).text()));
       });
-      if (!$('#edit-node-options-status', context).is(':checked')) {
+      if (!$(context).find('#edit-node-options-status').is(':checked')) {
         vals.unshift(Drupal.t('Not published'));
       }
       return vals.join(', ');
     });
-    $('fieldset#edit-display', context).drupalSetSummary(function(context) {
+    $context.find('fieldset#edit-display').drupalSetSummary(function(context) {
       var vals = [];
-      $('input:checked', context).next('label').each(function() {
+      var $context = $(context);
+      $context.find('input:checked').next('label').each(function() {
         vals.push(Drupal.checkPlain($(this).text()));
       });
-      if (!$('#edit-node-submitted', context).is(':checked')) {
+      if (!$context.find('#edit-node-submitted').is(':checked')) {
         vals.unshift(Drupal.t("Don't display post information"));
       }
       return vals.join(', ');

@@ -1531,8 +1531,8 @@ function taxonomy_rdf_mapping() {
 function taxonomy_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => $item) {
     if ($item['tid'] == 'autocreate') {
+      unset($item['tid']);
       $term = entity_create('taxonomy_term', $item);
-      unset($term->tid);
       $term->langcode = $langcode;
       taxonomy_term_save($term);
       $items[$delta]['tid'] = $term->tid;

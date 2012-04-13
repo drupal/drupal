@@ -2087,6 +2087,7 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
   function testHavingCountQuery() {
     $query = db_select('test')
       ->extend('PagerDefault')
+      ->groupBy('age')
       ->having('age + 1 > 0');
     $query->addField('test', 'age');
     $query->addExpression('age + 1');

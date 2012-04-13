@@ -374,7 +374,7 @@ Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
   else if (this.progress.type == 'throbber') {
     this.progress.element = $('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
     if (this.progress.message) {
-      $('.throbber', this.progress.element).after('<div class="message">' + this.progress.message + '</div>');
+      this.progress.element.find('.throbber').after('<div class="message">' + this.progress.message + '</div>');
     }
     $(this.element).after(this.progress.element);
   }
@@ -524,10 +524,10 @@ Drupal.ajax.prototype.commands = {
 
     // Determine which effect to use and what content will receive the
     // effect, then show the new content.
-    if ($('.ajax-new-content', new_content).length > 0) {
-      $('.ajax-new-content', new_content).hide();
+    if (new_content.find('.ajax-new-content').length > 0) {
+      new_content.find('.ajax-new-content').hide();
       new_content.show();
-      $('.ajax-new-content', new_content)[effect.showEffect](effect.showSpeed);
+      new_content.find('.ajax-new-content')[effect.showEffect](effect.showSpeed);
     }
     else if (effect.showEffect != 'show') {
       new_content[effect.showEffect](effect.showSpeed);
@@ -612,7 +612,7 @@ Drupal.ajax.prototype.commands = {
     // :even and :odd are reversed because jQuery counts from 0 and
     // we count from 1, so we're out of sync.
     // Match immediate children of the parent element to allow nesting.
-    $('> tbody > tr:visible, > tr:visible', $(response.selector))
+    $(response.selector).find('> tbody > tr:visible, > tr:visible')
       .removeClass('odd even')
       .filter(':even').addClass('odd').end()
       .filter(':odd').addClass('even');

@@ -2822,6 +2822,9 @@ function theme_radios($variables) {
   if (!empty($element['#attributes']['class'])) {
     $attributes['class'] .= ' ' . implode(' ', $element['#attributes']['class']);
   }
+  if (isset($element['#attributes']['title'])) {
+    $attributes['title'] = $element['#attributes']['title'];
+  }
   return '<div' . drupal_attributes($attributes) . '>' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
 }
 
@@ -3086,6 +3089,9 @@ function theme_checkboxes($variables) {
   if (!empty($element['#attributes']['class'])) {
     $attributes['class'] = array_merge($attributes['class'], $element['#attributes']['class']);
   }
+  if (isset($element['#attributes']['title'])) {
+    $attributes['title'] = $element['#attributes']['title'];
+  }
   return '<div' . drupal_attributes($attributes) . '>' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
 }
 
@@ -3095,6 +3101,7 @@ function theme_checkboxes($variables) {
  * This is used as a pre render function for checkboxes and radios.
  */
 function form_pre_render_conditional_form_element($element) {
+  $t = get_t();
   // Set the element's title attribute to show #title as a tooltip, if needed.
   if (isset($element['#title']) && $element['#title_display'] == 'attribute') {
     $element['#attributes']['title'] = $element['#title'];
@@ -3910,6 +3917,69 @@ function theme_tel($variables) {
 }
 
 /**
+ * Returns HTML for a number form element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #size, #min, #max,
+ *     #placeholder, #required, #attributes, #step.
+ *
+ * @ingroup themeable
+ */
+function theme_number($variables) {
+  $element = $variables['element'];
+
+  $element['#attributes']['type'] = 'number';
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'step', 'min', 'max', 'maxlength', 'placeholder'));
+  _form_set_class($element, array('form-number'));
+
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  return $output;
+}
+
+/**
+ * Form element validation handler for #type 'number'.
+ *
+ * Note that #required is validated by _form_validate() already.
+ */
+function form_validate_number(&$element, &$form_state) {
+  $value = $element['#value'];
+  if ($value === '') {
+    return;
+  }
+
+  $name = empty($element['#title']) ? $element['#parents'][0] : $element['#title'];
+
+  // Ensure the input is numeric.
+  if (!is_numeric($value)) {
+    form_error($element, t('%name must be a number.', array('%name' => $name)));
+    return;
+  }
+
+  // Ensure that the input is greater than the #min property, if set.
+  if (isset($element['#min']) && $value < $element['#min']) {
+    form_error($element, t('%name must be higher or equal to %min.', array('%name' => $name, '%min' => $element['#min'])));
+  }
+
+  // Ensure that the input is less than the #max property, if set.
+  if (isset($element['#max']) && $value > $element['#max']) {
+    form_error($element, t('%name must be below or equal to %max.', array('%name' => $name, '%max' => $element['#max'])));
+  }
+
+  if (isset($element['#step']) && strtolower($element['#step']) != 'any') {
+    // Check that the input is an allowed multiple of #step (offset by #min if
+    // #min is set).
+    $offset = isset($element['#min']) ? $element['#min'] : 0.0;
+
+    if (!valid_number_step($value, $element['#step'], $offset)) {
+      form_error($element, t('%name is not a valid number.', array('%name' => $name)));
+    }
+  }
+}
+
+/**
  * Returns HTML for a url form element.
  *
  * @param $variables
@@ -4071,11 +4141,10 @@ function form_process_weight($element) {
   }
   // Otherwise, use a text field.
   else {
-    $element['#type'] = 'textfield';
+    $element['#type'] = 'number';
     // Use a field big enough to fit most weights.
     $element['#size'] = 10;
-    $element['#element_validate'] = array('element_validate_integer');
-    $element += element_info('textfield');
+    $element += element_info('number');
   }
 
   return $element;
@@ -4326,36 +4395,6 @@ function _form_set_class(&$element, $class = array()) {
 }
 
 /**
- * Form element validation handler for integer elements.
- */
-function element_validate_integer($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value)) {
-    form_error($element, t('%name must be an integer.', array('%name' => $element['#title'])));
-  }
-}
-
-/**
- * Form element validation handler for integer elements that must be positive.
- */
-function element_validate_integer_positive($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value || $value <= 0)) {
-    form_error($element, t('%name must be a positive integer.', array('%name' => $element['#title'])));
-  }
-}
-
-/**
- * Form element validation handler for number elements.
- */
-function element_validate_number($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value != '' && !is_numeric($value)) {
-    form_error($element, t('%name must be a number.', array('%name' => $element['#title'])));
-  }
-}
-
-/**
  * @} End of "defgroup form_api".
  */
 
@@ -4471,13 +4510,24 @@ function element_validate_number($element, &$form_state) {
  */
 
 /**
- * Opens a new batch.
+ * Adds a new batch.
  *
- * @param $batch
- *   An array defining the batch. The following keys can be used -- only
- *   'operations' is required, and batch_init() provides default values for
- *   the messages.
- *   - 'operations': Array of function calls to be performed.
+ * Batch operations are added as new batch sets. Batch sets are used to spread
+ * processing (primarily, but not exclusively, forms processing) over several
+ * page requests. This helps to ensure that the processing is not interrupted
+ * due to PHP timeouts, while users are still able to receive feedback on the
+ * progress of the ongoing operations. Combining related operations into
+ * distinct batch sets provides clean code independence for each batch set,
+ * ensuring that two or more batches, submitted independently, can be processed
+ * without mutual interference. Each batch set may specify its own set of
+ * operations and results, produce its own UI messages, and trigger its own
+ * 'finished' callback. Batch sets are processed sequentially, with the progress
+ * bar starting afresh for each new set.
+ *
+ * @param $batch_definition
+ *   An associative array defining the batch, with the following elements (all
+ *   are optional except as noted):
+ *   - operations: (required) Array of function calls to be performed.
  *     Example:
  *     @code
  *     array(
@@ -4485,35 +4535,26 @@ function element_validate_number($element, &$form_state) {
  *       array('my_function_2', array($arg2_1, $arg2_2)),
  *     )
  *     @endcode
- *   - 'title': Title for the progress page. Only safe strings should be passed.
- *     Defaults to t('Processing').
- *   - 'init_message': Message displayed while the processing is initialized.
+ *   - title: A safe, translated string to use as the title for the progress
+ *     page. Defaults to t('Processing').
+ *   - init_message: Message displayed while the processing is initialized.
  *     Defaults to t('Initializing.').
- *   - 'progress_message': Message displayed while processing the batch.
- *     Available placeholders are @current, @remaining, @total, @percentage,
- *     @estimate and @elapsed. Defaults to t('Completed @current of @total.').
- *   - 'error_message': Message displayed if an error occurred while processing
+ *   - progress_message: Message displayed while processing the batch. Available
+ *     placeholders are @current, @remaining, @total, @percentage, @estimate and
+ *     @elapsed. Defaults to t('Completed @current of @total.').
+ *   - error_message: Message displayed if an error occurred while processing
  *     the batch. Defaults to t('An error has occurred.').
- *   - 'finished': Name of a function to be executed after the batch has
- *     completed. This should be used to perform any result massaging that
- *     may be needed, and possibly save data in $_SESSION for display after
- *     final page redirection.
- *   - 'file': Path to the file containing the definitions of the
- *     'operations' and 'finished' functions, for instance if they don't
- *     reside in the main .module file. The path should be relative to
- *     base_path(), and thus should be built using drupal_get_path().
- *   - 'css': Array of paths to CSS files to be used on the progress page.
- *   - 'url_options': options passed to url() when constructing redirect
- *     URLs for the batch.
- *
- * Operations are added as new batch sets. Batch sets are used to ensure
- * clean code independence, ensuring that several batches submitted by
- * different parts of the code (core / contrib modules) can be processed
- * correctly while not interfering or having to cope with each other. Each
- * batch set gets to specify its own UI messages, operates on its own set
- * of operations and results, and triggers its own 'finished' callback.
- * Batch sets are processed sequentially, with the progress bar starting
- * fresh for every new set.
+ *   - finished: Name of a function to be executed after the batch has
+ *     completed. This should be used to perform any result massaging that may
+ *     be needed, and possibly save data in $_SESSION for display after final
+ *     page redirection.
+ *   - file: Path to the file containing the definitions of the 'operations' and
+ *     'finished' functions, for instance if they don't reside in the main
+ *     .module file. The path should be relative to base_path(), and thus should
+ *     be built using drupal_get_path().
+ *   - css: Array of paths to CSS files to be used on the progress page.
+ *   - url_options: options passed to url() when constructing redirect URLs for
+ *     the batch.
  */
 function batch_set($batch_definition) {
   if ($batch_definition) {

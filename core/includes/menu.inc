@@ -316,7 +316,14 @@ function menu_get_ancestors($parts) {
   $ancestors = array();
   $length =  $number_parts - 1;
   $end = (1 << $number_parts) - 1;
-  $masks = variable_get('menu_masks', array());
+  $masks = variable_get('menu_masks');
+  // If the optimized menu_masks array is not available use brute force to get
+  // the correct $ancestors and $placeholders returned. Do not use this as the
+  // default value of the menu_masks variable to avoid building such a big
+  // array.
+  if (!$masks) {
+    $masks = range(511, 1);
+  }
   // Only examine patterns that actually exist as router items (the masks).
   foreach ($masks as $i) {
     if ($i > $end) {
@@ -3108,7 +3115,7 @@ function menu_link_save(&$item, $existing_item = array(), $parent_candidates = a
   // array_intersect_key() with the $item as the first parameter because
   // $item may have additional keys left over from building a router entry.
   // The intersect removes the extra keys, allowing a meaningful comparison.
-  if (!$existing_item || (array_intersect_key($item, $existing_item)) != $existing_item) {
+  if (!$existing_item || (array_intersect_key($item, $existing_item) != $existing_item)) {
     db_update('menu_links')
       ->fields(array(
         'menu_name' => $item['menu_name'],

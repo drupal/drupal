@@ -5,7 +5,7 @@
  */
 Drupal.behaviors.filterGuidelines = {
   attach: function (context) {
-    $('.filter-guidelines', context).once('filter-guidelines')
+    $(context).find('.filter-guidelines').once('filter-guidelines')
       .find(':header').hide()
       .closest('.filter-wrapper').find('select.filter-list')
       .bind('change', function () {

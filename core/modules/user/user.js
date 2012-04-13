@@ -7,7 +7,7 @@
 Drupal.behaviors.password = {
   attach: function (context, settings) {
     var translate = settings.password;
-    $('input.password-field', context).once('password', function () {
+    $(context).find('input.password-field').once('password', function () {
       var passwordInput = $(this);
       var innerWrapper = $(this).parent();
       var outerWrapper = $(this).parent().parent();
@@ -16,16 +16,16 @@ Drupal.behaviors.password = {
       innerWrapper.addClass('password-parent');
 
       // Add the password confirmation layer.
-      $('input.password-confirm', outerWrapper).parent().prepend('<div class="password-confirm">' + translate['confirmTitle'] + ' <span></span></div>').addClass('confirm-parent');
-      var confirmInput = $('input.password-confirm', outerWrapper);
-      var confirmResult = $('div.password-confirm', outerWrapper);
-      var confirmChild = $('span', confirmResult);
+      outerWrapper.find('input.password-confirm').parent().prepend('<div class="password-confirm">' + translate['confirmTitle'] + ' <span></span></div>').addClass('confirm-parent');
+      var confirmInput = outerWrapper.find('input.password-confirm');
+      var confirmResult = outerWrapper.find('div.password-confirm');
+      var confirmChild = confirmResult.find('span');
 
       // Add the description box.
       var passwordMeter = '<div class="password-strength"><div class="password-strength-text" aria-live="assertive"></div><div class="password-strength-title">' + translate['strengthTitle'] + '</div><div class="password-indicator"><div class="indicator"></div></div></div>';
-      $(confirmInput).parent().after('<div class="password-suggestions description"></div>');
-      $(innerWrapper).prepend(passwordMeter);
-      var passwordDescription = $('div.password-suggestions', outerWrapper).hide();
+      confirmInput.parent().after('<div class="password-suggestions description"></div>');
+      innerWrapper.prepend(passwordMeter);
+      var passwordDescription = outerWrapper.find('div.password-suggestions').hide();
 
       // Check the password strength.
       var passwordCheck = function () {
@@ -47,11 +47,12 @@ Drupal.behaviors.password = {
         }
 
         // Adjust the length of the strength indicator.
-        $(innerWrapper).find('.indicator').css('width', result.strength + '%');
-        $(innerWrapper).find('.indicator').css('background-color', result.indicatorColor);
+        innerWrapper.find('.indicator')
+          .css('width', result.strength + '%')
+          .css('background-color', result.indicatorColor);
 
         // Update the strength indication text.
-        $(innerWrapper).find('.password-strength-text').html(result.indicatorText);
+        innerWrapper.find('.password-strength-text').html(result.indicatorText);
 
         passwordCheckMatch();
       };
@@ -186,7 +187,7 @@ Drupal.behaviors.fieldUserRegistration = {
     var $checkbox = $('form#field-ui-field-edit-form input#edit-instance-settings-user-register-form');
 
     if ($checkbox.length) {
-      $('input#edit-instance-required', context).once('user-register-form-checkbox', function () {
+      $(context).find('input#edit-instance-required').once('user-register-form-checkbox', function () {
         $(this).bind('change', function (e) {
           if ($(this).attr('checked')) {
             $checkbox.attr('checked', true);

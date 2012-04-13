@@ -403,6 +403,16 @@ function system_element_info() {
     '#theme' => 'search',
     '#theme_wrappers' => array('form_element'),
   );
+  $types['number'] = array(
+    '#input' => TRUE,
+    '#size' => 30,
+    '#step' => 1,
+    '#maxlength' => 128,
+    '#process' => array('ajax_process_form'),
+    '#element_validate' => array('form_validate_number'),
+    '#theme' => 'number',
+    '#theme_wrappers' => array('form_element'),
+  );
   $types['machine_name'] = array(
     '#input' => TRUE,
     '#default_value' => NULL,
@@ -4027,4 +4037,18 @@ function system_admin_paths() {
     'admin/reports/status/php' => FALSE,
   );
   return $paths;
+}
+
+/**
+ * Get list of all predefined and custom countries.
+ *
+ * @return
+ *   An array of all country code => country name pairs.
+ */
+function country_get_list() {
+  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+  $countries = standard_country_list();
+  // Allow other modules to modify the country list.
+  drupal_alter('countries', $countries);
+  return $countries;
 }

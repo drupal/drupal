@@ -103,7 +103,7 @@ Drupal.behaviors.dateTime = {
           var suffix = source + '-suffix';
 
           // Attach keyup handler to custom format inputs.
-          $('input' + source, context).once('date-time').keyup(function () {
+          $(context).find('input' + source).once('date-time').keyup(function () {
             var input = $(this);
             var url = fieldSettings.lookup + (fieldSettings.lookup.match(/\?q=/) ? '&format=' : '?format=') + encodeURIComponent(input.val());
             $.getJSON(url, function (data) {
@@ -122,15 +122,16 @@ Drupal.behaviors.dateTime = {
  */
 Drupal.behaviors.pageCache = {
   attach: function (context, settings) {
-    $('#edit-cache-0', context).change(function () {
+    var $context = $(context);
+    $context.find('#edit-cache-0').change(function () {
       $('#page-compression-wrapper').hide();
       $('#cache-error').hide();
     });
-    $('#edit-cache-1', context).change(function () {
+    $context.find('#edit-cache-1').change(function () {
       $('#page-compression-wrapper').show();
       $('#cache-error').hide();
     });
-    $('#edit-cache-2', context).change(function () {
+    $context.find('#edit-cache-2').change(function () {
       $('#page-compression-wrapper').show();
       $('#cache-error').show();
     });

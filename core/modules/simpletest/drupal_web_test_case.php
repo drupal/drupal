@@ -1547,6 +1547,9 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Delete temporary files directory.
     file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10));
 
+    // Delete temporary config files directory.
+    file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/config_simpletest' . substr($this->databasePrefix, 10));
+
     // Remove all prefixed tables (all the tables in the schema).
     $schema = drupal_get_schema(NULL, TRUE);
     foreach ($schema as $name => $table) {
@@ -2265,6 +2268,7 @@ class DrupalWebTestCase extends DrupalTestCase {
           case 'tel':
           case 'textarea':
           case 'url':
+          case 'number':
           case 'hidden':
           case 'password':
           case 'email':

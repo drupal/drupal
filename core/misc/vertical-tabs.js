@@ -1,4 +1,3 @@
-
 (function ($) {
 
 /**
@@ -14,47 +13,50 @@
  */
 Drupal.behaviors.verticalTabs = {
   attach: function (context) {
-    $('.vertical-tabs-panes', context).once('vertical-tabs', function () {
-      var focusID = $(':hidden.vertical-tabs-active-tab', this).val();
+    $(context).find('.vertical-tabs-panes').once('vertical-tabs', function () {
+      var $this = $(this);
+      var focusID = $this.find(':hidden.vertical-tabs-active-tab').val();
       var tab_focus;
 
       // Check if there are some fieldsets that can be converted to vertical-tabs
-      var $fieldsets = $('> fieldset', this);
+      var $fieldsets = $this.find('> fieldset');
       if ($fieldsets.length == 0) {
         return;
       }
 
       // Create the tab column.
       var tab_list = $('<ul class="vertical-tabs-list"></ul>');
-      $(this).wrap('<div class="vertical-tabs clearfix"></div>').before(tab_list);
+      $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tab_list);
 
       // Transform each fieldset into a tab.
       $fieldsets.each(function () {
+        var $this = $(this);
         var vertical_tab = new Drupal.verticalTab({
-          title: $('> legend', this).text(),
-          fieldset: $(this)
+          title: $this.find('> legend').text(),
+          fieldset: $this
         });
         tab_list.append(vertical_tab.item);
-        $(this)
+        $this
           .removeClass('collapsible collapsed')
           .addClass('vertical-tabs-pane')
           .data('verticalTab', vertical_tab);
         if (this.id == focusID) {
-          tab_focus = $(this);
+          tab_focus = $this;
         }
       });
 
-      $('> li:first', tab_list).addClass('first');
-      $('> li:last', tab_list).addClass('last');
+      $(tab_list).find('> li:first').addClass('first');
+      $(tab_list).find('> li:last').addClass('last');
 
       if (!tab_focus) {
         // If the current URL has a fragment and one of the tabs contains an
         // element that matches the URL fragment, activate that tab.
-        if (window.location.hash && $(window.location.hash, this).length) {
-          tab_focus = $(window.location.hash, this).closest('.vertical-tabs-pane');
+        var $locationHash = $this.find(window.location.hash);
+        if (window.location.hash && $locationHash.length) {
+          tab_focus = $locationHash.closest('.vertical-tabs-pane');
         }
         else {
-          tab_focus = $('> .vertical-tabs-pane:first', this);
+          tab_focus = $this.find('> .vertical-tabs-pane:first');
         }
       }
       if (tab_focus.length) {

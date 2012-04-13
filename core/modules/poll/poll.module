@@ -383,15 +383,15 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
   );
 
   $form['chvotes'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => $value !== '' ? t('Vote count for choice @label', array('@label' => $value)) : t('Vote count for new choice'),
     '#title_display' => 'invisible',
     '#default_value' => $votes,
     '#size' => 5,
     '#maxlength' => 7,
+    '#min' => 0,
     '#parents' => array('choice', $key, 'chvotes'),
     '#access' => user_access('administer nodes'),
-    '#element_validate' => array('element_validate_integer'),
   );
 
   $form['weight'] = array(
@@ -440,9 +440,6 @@ function poll_validate($node, $form) {
     foreach ($node->choice as $i => $choice) {
       if ($choice['chtext'] != '') {
         $realchoices++;
-      }
-      if (isset($choice['chvotes']) && $choice['chvotes'] < 0) {
-        form_set_error("choice][$i][chvotes", t('Negative values are not allowed.'));
       }
     }
 

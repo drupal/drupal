@@ -2,7 +2,7 @@
 
 Drupal.behaviors.bookFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset.book-outline-form', context).drupalSetSummary(function (context) {
+    $(context).find('fieldset.book-outline-form').drupalSetSummary(function (context) {
       var $select = $('.form-item-book-bid select');
       var val = $select.val();
 

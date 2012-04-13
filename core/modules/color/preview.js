@@ -7,17 +7,17 @@
   Drupal.color = {
     callback: function(context, settings, form, farb, height, width) {
       // Solid background.
-      $('#preview', form).css('backgroundColor', $('#palette input[name="palette[base]"]', form).val());
+      form.find('#preview').css('backgroundColor', form.find('#palette input[name="palette[base]"]').val());
 
       // Text preview
-      $('#text', form).css('color', $('#palette input[name="palette[text]"]', form).val());
-      $('#text a, #text h2', form).css('color', $('#palette input[name="palette[link]"]', form).val());
+      form.find('#text').css('color', form.find('#palette input[name="palette[text]"]').val());
+      form.find('#text a, #text h2').css('color', form.find('#palette input[name="palette[link]"]').val());
 
       // Set up gradients if there are some.
       var color_start, color_end;
       for (i in settings.gradients) {
-        color_start = farb.unpack($('#palette input[name="palette[' + settings.gradients[i]['colors'][0] + ']"]', form).val());
-        color_end = farb.unpack($('#palette input[name="palette[' + settings.gradients[i]['colors'][1] + ']"]', form).val());
+        color_start = farb.unpack(form.find('#palette input[name="palette[' + settings.gradients[i]['colors'][0] + ']"]').val());
+        color_end = farb.unpack(form.find('#palette input[name="palette[' + settings.gradients[i]['colors'][1] + ']"]').val());
         if (color_start && color_end) {
           var delta = [];
           for (j in color_start) {
@@ -25,7 +25,7 @@
           }
           var accum = color_start;
           // Render gradient lines.
-          $('#gradient-' + i + ' > div', form).each(function () {
+          form.find('#gradient-' + i + ' > div').each(function () {
             for (j in accum) {
               accum[j] += delta[j];
             }

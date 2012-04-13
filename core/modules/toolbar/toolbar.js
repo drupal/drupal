@@ -7,12 +7,12 @@ Drupal.toolbar = Drupal.toolbar || {};
  */
 Drupal.behaviors.toolbar = {
   attach: function(context) {
-
+    var $context = $(context);
     // Set the initial state of the toolbar.
-    $('#toolbar', context).once('toolbar', Drupal.toolbar.init);
+    $context.find('#toolbar').once('toolbar', Drupal.toolbar.init);
 
     // Toggling toolbar drawer.
-    $('#toolbar a.toggle', context).once('toolbar-toggle').click(function(e) {
+    $context.find('#toolbar a.toggle').once('toolbar-toggle').click(function(e) {
       Drupal.toolbar.toggle();
       // Allow resize event handlers to recalculate sizes/positions.
       $(window).triggerHandler('resize');

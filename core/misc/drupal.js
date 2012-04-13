@@ -51,7 +51,7 @@ Drupal.attachBehaviors = function (context, settings) {
   var i, behaviors = Drupal.behaviors;
   // Execute all of them.
   for (i in behaviors) {
-    if (behaviors.hasOwnProperty(i) && behaviors[i].attach) {
+    if (behaviors.hasOwnProperty(i) && typeof behaviors[i].attach === 'function') {
       behaviors[i].attach(context, settings);
     }
   }
@@ -104,7 +104,7 @@ Drupal.detachBehaviors = function (context, settings, trigger) {
   var i, behaviors = Drupal.behaviors;
   // Execute all of them.
   for (i in behaviors) {
-    if (behaviors.hasOwnProperty(i) && behaviors[i].detach) {
+    if (behaviors.hasOwnProperty(i) && typeof behaviors[i].detach === 'function' ) {
       behaviors[i].detach(context, settings, trigger);
     }
   }

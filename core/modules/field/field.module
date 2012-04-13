@@ -867,10 +867,10 @@ function field_view_value($entity_type, $entity, $field_name, $item, $display = 
  *     - weight: (float) The weight to assign to the renderable element.
  *       Defaults to 0.
  * @param $langcode
- *   (Optional) The language the field values are to be shown in. The site's
- *   current language fallback logic will be applied no values are available
- *   for the language. If no language is provided the current language will be
- *   used.
+ *   (Optional) The language code the field values are to be shown in. The
+ *   site's current language fallback logic will be applied when no values are
+ *   available for given language code. If no language code is provided the
+ *   current language will be used.
  * @return
  *   A renderable array for the field value.
  *
@@ -887,10 +887,10 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
 
     // Hook invocations are done through the _field_invoke() functions in
     // 'single field' mode, to reuse the language fallback logic.
-    // Determine the actual language to display for the field, given the
-    // languages available in the field data.
-    $display_language = field_language($entity_type, $entity, $field_name, $langcode);
-    $options = array('field_name' => $field_name, 'language' => $display_language);
+    // Determine the actual language code to display for the field, given the
+    // language codes available in the field data.
+    $display_langcode = field_language($entity_type, $entity, $field_name, $langcode);
+    $options = array('field_name' => $field_name, 'langcode' => $display_langcode);
     $null = NULL;
 
     // Invoke prepare_view steps if needed.

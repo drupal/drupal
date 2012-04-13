@@ -645,6 +645,26 @@ function system_schema() {
     'primary key' => array('iid'),
   );
 
+  $schema['cache_tags'] = array(
+    'description' => 'Cache table for tracking cache tags related to the cache bin.',
+    'fields' => array(
+      'tag' => array(
+        'description' => 'Namespace-prefixed tag string.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'invalidations' => array(
+        'description' => 'Number incremented when the tag is invalidated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('tag'),
+  );
+
   $schema['cache'] = array(
     'description' => 'Generic cache table for caching things not separated out into their own tables. Contributed modules may also use this to store cached items.',
     'fields' => array(
@@ -677,6 +697,18 @@ function system_schema() {
         'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
         'type' => 'int',
         'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'tags' => array(
+        'description' => 'Space-separated list of cache tags for this entry.',
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ),
+      'checksum' => array(
+        'description' => 'The tag invalidation sum when this entry was saved.',
+        'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -1759,6 +1791,59 @@ function system_update_8004() {
  */
 function system_update_8005() {
   db_drop_field('session', 'cache');
+}
+
+ /**
+ * Adds the {cache_tags} table.
+ */
+function system_update_8006() {
+  $table = array(
+    'description' => 'Cache table for tracking cache tags related to the cache bin.',
+    'fields' => array(
+      'tag' => array(
+        'description' => 'Namespace-prefixed tag string.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'invalidations' => array(
+        'description' => 'Number incremented when the tag is invalidated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('tag'),
+  );
+  db_create_table('cache_tags', $table);
+}
+
+/**
+ * Modifies existing cache tables, adding support for cache tags.
+ */
+function system_update_8007() {
+  // Find all potential cache tables.
+  $tables = db_find_tables(Database::getConnection()->prefixTables('{cache}') . '%');
+
+  foreach ($tables as $table) {
+    // Assume we have a valid cache table if there is both 'cid' and 'data'
+    // columns.
+    if (db_field_exists($table, 'cid') && db_field_exists($table, 'data')) {
+      db_add_field($table, 'tags', array(
+        'description' => 'Space-separated list of cache tags for this entry.',
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ));
+      db_add_field($table, 'checksum', array(
+        'description' => 'The tag invalidation sum when this entry was saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ));
+    }
+  }
 }
 
 /**

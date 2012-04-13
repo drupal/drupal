@@ -47,8 +47,8 @@ class PollWebTestCase extends DrupalWebTestCase {
     $edit['choice[new:1][chvotes]'] = -1;
     $edit['choice[new:0][chvotes]'] = $this->randomString(7);
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertText(t('Negative values are not allowed.'));
-    $this->assertText(t('Vote count for new choice must be an integer.'));
+    $this->assertText(t('Vote count for new choice must be higher or equal to 0.'));
+    $this->assertText(t('Vote count for new choice must be a number.'));
 
     // Repeat steps for initializing the state of the internal browser.
     $this->drupalLogin($web_user);

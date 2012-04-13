@@ -573,7 +573,8 @@ function drupal_environment_initialize() {
   ini_set('session.use_only_cookies', '1');
   ini_set('session.use_trans_sid', '0');
   // Don't send HTTP headers using PHP's session handler.
-  ini_set('session.cache_limiter', 'none');
+  // Send an empty string to disable the cache limiter.
+  ini_set('session.cache_limiter', '');
   // Use httponly session cookies.
   ini_set('session.cookie_httponly', '1');
 
@@ -2292,8 +2293,7 @@ function _drupal_bootstrap_variables() {
   global $conf;
 
   // Initialize the lock system.
-  require_once DRUPAL_ROOT . '/' . variable_get('lock_inc', 'core/includes/lock.inc');
-  lock_initialize();
+  require_once DRUPAL_ROOT . '/core/includes/lock.inc';
 
   // Load variables from the database, but do not overwrite variables set in settings.php.
   $conf = variable_initialize(isset($conf) ? $conf : array());

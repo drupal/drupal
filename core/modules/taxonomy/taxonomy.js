@@ -8,15 +8,15 @@
  */
 Drupal.behaviors.termDrag = {
   attach: function (context, settings) {
-    var table = $('#taxonomy', context);
+    var table = $(context).find('#taxonomy');
     var tableDrag = Drupal.tableDrag.taxonomy; // Get the blocks tableDrag object.
-    var rows = $('tr', table).length;
+    var rows = table.find('tr').length;
 
     // When a row is swapped, keep previous and next page classes set.
     tableDrag.row.prototype.onSwap = function (swappedRow) {
-      $('tr.taxonomy-term-preview', table).removeClass('taxonomy-term-preview');
-      $('tr.taxonomy-term-divider-top', table).removeClass('taxonomy-term-divider-top');
-      $('tr.taxonomy-term-divider-bottom', table).removeClass('taxonomy-term-divider-bottom');
+      table.find('tr.taxonomy-term-preview').removeClass('taxonomy-term-preview');
+      table.find('tr.taxonomy-term-divider-top').removeClass('taxonomy-term-divider-top');
+      table.find('tr.taxonomy-term-divider-bottom').removeClass('taxonomy-term-divider-bottom');
 
       if (settings.taxonomy.backStep) {
         for (var n = 0; n < settings.taxonomy.backStep; n++) {

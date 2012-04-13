@@ -38,11 +38,11 @@
 function hook_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
   $form['max_length'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Maximum length'),
     '#default_value' => $settings['max_length'],
     '#required' => FALSE,
-    '#element_validate' => array('element_validate_integer_positive'),
+    '#min' => 1,
     '#description' => t('The maximum length of the field in characters. Leave blank for an unlimited size.'),
   );
   return $form;
@@ -110,19 +110,19 @@ function hook_field_widget_settings_form($field, $instance) {
 
   if ($widget['type'] == 'text_textfield') {
     $form['size'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Size of textfield'),
       '#default_value' => $settings['size'],
-      '#element_validate' => array('element_validate_integer_positive'),
+      '#min' => 1,
       '#required' => TRUE,
     );
   }
   else {
     $form['rows'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Rows'),
       '#default_value' => $settings['rows'],
-      '#element_validate' => array('element_validate_integer_positive'),
+      '#min' => 1,
       '#required' => TRUE,
     );
   }
@@ -157,10 +157,10 @@ function hook_field_formatter_settings_form($field, $instance, $view_mode, $form
   if ($display['type'] == 'text_trimmed' || $display['type'] == 'text_summary_or_trimmed') {
     $element['trim_length'] = array(
       '#title' => t('Length'),
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#size' => 20,
       '#default_value' => $settings['trim_length'],
-      '#element_validate' => array('element_validate_integer_positive'),
+      '#min' => 1,
       '#required' => TRUE,
     );
   }

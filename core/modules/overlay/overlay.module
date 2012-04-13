@@ -641,10 +641,14 @@ function overlay_overlay_parent_initialize() {
   }
   drupal_add_js(array('overlay' => array('paths' => $paths)), 'setting');
   $path_prefixes = array();
-  if (module_exists('locale') && variable_get('locale_language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX) == LANGUAGE_NEGOTIATION_URL_PREFIX) {
-    // Skip the empty string indicating the default language. We always accept
-    // paths without a prefix.
-    $path_prefixes = array_values(array_filter(locale_language_negotiation_url_prefixes()));
+  if (module_exists('language')) {
+    language_negotiation_include();
+    if (variable_get('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX) == LANGUAGE_NEGOTIATION_URL_PREFIX) {
+      // Skip the empty string indicating the default language. We always accept
+      // paths without a prefix.
+      $path_prefixes = language_negotiation_url_prefixes();
+      $path_prefixes = array_values(array_filter($path_prefixes));
+    }
   }
   drupal_add_js(array('overlay' => array('pathPrefixes' => $path_prefixes)), 'setting');
   // Pass along the Ajax callback for rerendering sections of the parent window.

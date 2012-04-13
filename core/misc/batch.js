@@ -5,7 +5,7 @@
  */
 Drupal.behaviors.batch = {
   attach: function (context, settings) {
-    $('#progress', context).once('batch', function () {
+    $(context).find('#progress').once('batch', function () {
       var holder = $(this);
 
       // Success: redirect to the summary.

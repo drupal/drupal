@@ -73,6 +73,19 @@ class Comment extends Entity {
    */
   public $homepage;
 
+  /**
+   * Implements EntityInterface::id().
+   */
+  public function id() {
+    return $this->cid;
+  }
+
+  /**
+   * Implements EntityInterface::bundle().
+   */
+  public function bundle() {
+    return $this->node_type;
+  }
 }
 
 /**

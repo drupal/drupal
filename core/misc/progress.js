@@ -30,8 +30,8 @@ Drupal.progressBar = function (id, updateCallback, method, errorCallback) {
  */
 Drupal.progressBar.prototype.setProgress = function (percentage, message) {
   if (percentage >= 0 && percentage <= 100) {
-    $('div.filled', this.element).css('width', percentage + '%');
-    $('div.percentage', this.element).html(percentage + '%');
+    $(this.element).find('div.filled').css('width', percentage + '%');
+    $(this.element).find('div.percentage').html(percentage + '%');
   }
   $('div.message', this.element).html(message);
   if (this.updateCallback) {

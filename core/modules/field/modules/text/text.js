@@ -1,4 +1,3 @@
-
 (function ($) {
 
 /**
@@ -6,7 +5,7 @@
  */
 Drupal.behaviors.textSummary = {
   attach: function (context, settings) {
-    $('.text-summary', context).once('text-summary', function () {
+    $(context).find('.text-summary').once('text-summary', function () {
       var $widget = $(this).closest('div.field-type-text-with-summary');
       var $summaries = $widget.find('div.text-summary-wrapper');
 

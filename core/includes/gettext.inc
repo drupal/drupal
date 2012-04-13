@@ -23,11 +23,16 @@
  *   Drupal file object corresponding to the PO file to import.
  * @param $langcode
  *   Language code.
- * @param $mode
- *   Should existing translations be replaced LOCALE_IMPORT_KEEP or
- *   LOCALE_IMPORT_OVERWRITE.
+ * @param $overwrite_options
+ *   An associative array indicating what data should be overwritten, if any.
+ *   - not_customized: strings marked not customized should be overwritten.
+ *   - customized: strings marked customized should be overwritten.
+ * @param $customized
+ *   Whether the strings being imported should be saved as customized.
+ *   Use LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. All strings in the file
+ *   will be saved with this customization flag.
  */
-function _locale_import_po($file, $langcode, $mode) {
+function _locale_import_po($file, $langcode, $overwrite_options, $customized = LOCALE_NOT_CUSTOMIZED) {
   // Try to allocate enough time to parse and import the data.
   drupal_set_time_limit(240);
 
@@ -38,7 +43,7 @@ function _locale_import_po($file, $langcode, $mode) {
   }
 
   // Get strings from file (returns on failure after a partial import, or on success)
-  $status = _locale_import_read_po('db-store', $file, $mode, $langcode);
+  $status = _locale_import_read_po('db-store', $file, $overwrite_options, $langcode, $customized);
   if ($status === FALSE) {
     // Error messages are set in _locale_import_read_po().
     return FALSE;
@@ -80,13 +85,17 @@ function _locale_import_po($file, $langcode, $mode) {
  *   Storage operation type: db-store or mem-store.
  * @param $file
  *   Drupal file object corresponding to the PO file to import.
- * @param $mode
- *   Should existing translations be replaced LOCALE_IMPORT_KEEP or
- *   LOCALE_IMPORT_OVERWRITE.
+ * @param $overwrite_options
+ *   An associative array indicating what data should be overwritten, if any.
+ *   - not_customized: not customized strings should be overwritten.
+ *   - customized: customized strings should be overwritten.
  * @param $lang
  *   Language code.
+ * @param $customized
+ *   Whether the strings being imported should be saved as customized.
+ *   Use LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED.
  */
-function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
+function _locale_import_read_po($op, $file, $overwrite_options = NULL, $lang = NULL, $customized = LOCALE_NOT_CUSTOMIZED) {
 
   // The file will get closed by PHP on returning from this function.
   $fd = fopen($file->uri, 'rb');
@@ -138,7 +147,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
       }
       elseif (($context == 'MSGSTR') || ($context == 'MSGSTR_ARR')) {
         // We are currently in string token, close it out.
-        _locale_import_one_string($op, $current, $mode, $lang, $file);
+        _locale_import_one_string($op, $current, $overwrite_options, $lang, $file, $customized);
 
         // Start a new entry for the comment.
         $current         = array();
@@ -182,7 +191,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
 
       if (($context == 'MSGSTR') || ($context == 'MSGSTR_ARR')) {
         // We are currently in a message string, close it out.
-        _locale_import_one_string($op, $current, $mode, $lang, $file);
+        _locale_import_one_string($op, $current, $overwrite_options, $lang, $file, $customized);
 
         // Start a new context for the id.
         $current = array();
@@ -212,7 +221,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
 
       if (($context == 'MSGSTR') || ($context == 'MSGSTR_ARR')) {
         // We are currently in a message, start a new one.
-        _locale_import_one_string($op, $current, $mode, $lang, $file);
+        _locale_import_one_string($op, $current, $overwrite_options, $lang, $file, $customized);
         $current = array();
       }
       elseif (!empty($current['msgctxt'])) {
@@ -326,7 +335,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
 
   // End of PO file, closed out the last entry.
   if (($context == 'MSGSTR') || ($context == 'MSGSTR_ARR')) {
-    _locale_import_one_string($op, $current, $mode, $lang, $file);
+    _locale_import_one_string($op, $current, $overwrite_options, $lang, $file, $customized);
   }
   elseif ($context != 'COMMENT') {
     _locale_import_message('The translation file %filename ended unexpectedly at line %line.', $file, $lineno);
@@ -360,16 +369,20 @@ function _locale_import_message($message, $file, $lineno = NULL) {
  *   Operation to perform: 'db-store', 'db-report', 'mem-store' or 'mem-report'.
  * @param $value
  *   Details of the string stored.
- * @param $mode
- *   Should existing translations be replaced LOCALE_IMPORT_KEEP or
- *   LOCALE_IMPORT_OVERWRITE.
+ * @param $overwrite_options
+ *   An associative array indicating what data should be overwritten, if any.
+ *   - not_customized: not customized strings should be overwritten.
+ *   - customized: customized strings should be overwritten.
  * @param $lang
  *   Language to store the string in.
  * @param $file
  *   Object representation of file being imported, only required when op is
  *   'db-store'.
+ * @param $customized
+ *   Whether the strings being imported should be saved as customized.
+ *   Use LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED.
  */
-function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NULL, $file = NULL) {
+function _locale_import_one_string($op, $value = NULL, $overwrite_options = NULL, $lang = NULL, $file = NULL, $customized = LOCALE_NOT_CUSTOMIZED) {
   $report = &drupal_static(__FUNCTION__, array('additions' => 0, 'updates' => 0, 'deletes' => 0, 'skips' => 0));
   $header_done = &drupal_static(__FUNCTION__ . ':header_done', FALSE);
   $strings = &drupal_static(__FUNCTION__ . ':strings', array());
@@ -395,7 +408,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
         // If 'msgid' is empty, it means we got values for the header of the
         // file as per the structure of the Gettext format.
         $locale_plurals = variable_get('locale_translation_plurals', array());
-        if (($mode != LOCALE_IMPORT_KEEP) || empty($locale_plurals[$lang]['plurals'])) {
+        if (array_sum($overwrite_options) || empty($locale_plurals[$lang]['plurals'])) {
           // Since we only need to parse the header if we ought to update the
           // plural formula, only run this if we don't need to keep existing
           // data untouched or if we don't have an existing plural formula.
@@ -432,7 +445,8 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
           $value['msgid'],
           $value['msgstr'],
           $comments,
-          $mode
+          $overwrite_options,
+          $customized
         );
       }
   } // end of db-store operation
@@ -454,57 +468,76 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
  *   Translation to language specified in $langcode.
  * @param $location
  *   Location value to save with source string.
- * @param $mode
- *   Import mode to use, LOCALE_IMPORT_KEEP or LOCALE_IMPORT_OVERWRITE.
+ * @param $overwrite_options
+ *   An associative array indicating what data should be overwritten, if any.
+ *   - not_customized: not customized strings should be overwritten.
+ *   - customized: customized strings should be overwritten.
+ * @param $customized
+ *   (optional) Whether the strings being imported should be saved as customized.
+ *   Use LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED.
  *
  * @return
  *   The string ID of the existing string modified or the new string added.
  */
-function _locale_import_one_string_db(&$report, $langcode, $context, $source, $translation, $location, $mode) {
-  $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = :context", array(':source' => $source, ':context' => $context))->fetchField();
+function _locale_import_one_string_db(&$report, $langcode, $context, $source, $translation, $location, $overwrite_options, $customized = LOCALE_NOT_CUSTOMIZED) {
+
+  // Initialize overwrite options if not set.
+  $overwrite_options += array(
+    'not_customized' => FALSE,
+    'customized' => FALSE,
+  );
+
+  // Look up the source string and any existing translation.
+  $string = db_query("SELECT s.lid, t.customized FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.source = :source AND s.context = :context", array(
+    ':source' => $source,
+    ':context' => $context,
+    ':language' => $langcode,
+    ))
+    ->fetchObject();
 
   if (!empty($translation)) {
     // Skip this string unless it passes a check for dangerous code.
     if (!locale_string_is_safe($translation)) {
       watchdog('locale', 'Import of string "%string" was skipped because of disallowed or malformed HTML.', array('%string' => $translation), WATCHDOG_ERROR);
       $report['skips']++;
-      $lid = 0;
+      return 0;
     }
-    elseif ($lid) {
+    elseif (isset($string->lid)) {
       // We have this source string saved already.
       db_update('locales_source')
         ->fields(array(
           'location' => $location,
         ))
-        ->condition('lid', $lid)
+        ->condition('lid', $string->lid)
         ->execute();
 
-      $exists = db_query("SELECT COUNT(lid) FROM {locales_target} WHERE lid = :lid AND language = :language", array(':lid' => $lid, ':language' => $langcode))->fetchField();
-
-      if (!$exists) {
+      if (!isset($string->customized)) {
         // No translation in this language.
         db_insert('locales_target')
           ->fields(array(
-            'lid' => $lid,
+            'lid' => $string->lid,
             'language' => $langcode,
             'translation' => $translation,
+            'customized' => $customized,
           ))
           ->execute();
 
         $report['additions']++;
       }
-      elseif ($mode == LOCALE_IMPORT_OVERWRITE) {
+      elseif ($overwrite_options[$string->customized ? 'customized' : 'not_customized']) {
         // Translation exists, only overwrite if instructed.
         db_update('locales_target')
           ->fields(array(
             'translation' => $translation,
+            'customized' => $customized,
           ))
           ->condition('language', $langcode)
-          ->condition('lid', $lid)
+          ->condition('lid', $string->lid)
           ->execute();
 
         $report['updates']++;
       }
+      return $string->lid;
     }
     else {
       // No such source string in the database yet.
@@ -521,23 +554,24 @@ function _locale_import_one_string_db(&$report, $langcode, $context, $source, $t
            'lid' => $lid,
            'language' => $langcode,
            'translation' => $translation,
+           'customized' => $customized,
         ))
         ->execute();
 
       $report['additions']++;
+      return $lid;
     }
   }
-  elseif ($mode == LOCALE_IMPORT_OVERWRITE) {
+  elseif (isset($string->lid) && isset($string->customized) && $overwrite_options[$string->customized ? 'customized' : 'not_customized']) {
     // Empty translation, remove existing if instructed.
     db_delete('locales_target')
       ->condition('language', $langcode)
-      ->condition('lid', $lid)
+      ->condition('lid', $string->lid)
       ->execute();
 
     $report['deletes']++;
+    return $string->lid;
   }
-
-  return $lid;
 }
 
 /**
@@ -828,17 +862,67 @@ function _locale_import_parse_quoted($string) {
  * @param $language
  *   Language object to generate the output for, or NULL if generating
  *   translation template.
+ * @param $options
+ *   (optional) An associative array specifying what to include in the output:
+ *   - customized: include customized strings (if TRUE)
+ *   - uncustomized: include non-customized string (if TRUE)
+ *   - untranslated: include untranslated source strings (if TRUE)
+ *   Ignored if $language is NULL.
  *
  * @return
  *   An array of translated strings that can be used to generate an export.
  */
-function _locale_export_get_strings($language = NULL) {
-  if (isset($language)) {
-    $result = db_query("SELECT s.lid, s.source, s.context, s.location, t.translation FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language", array(':language' => $language->langcode));
+function _locale_export_get_strings($language = NULL, $options = array()) {
+
+  // Assume FALSE for all options if not provided by the API.
+  $options += array(
+    'customized' => FALSE,
+    'not_customized' => FALSE,
+    'not_translated' => FALSE,
+  );
+  if (array_sum($options) == 0) {
+    // If user asked to not include anything in the translation files,
+    // that would not make sense, so just fall back on providing a template.
+    $language = NULL;
+  }
+
+  // Build and execute query to collect source strings and translations.
+  $query = db_select('locales_source', 's');
+  if (!empty($language)) {
+    if ($options['not_translated']) {
+      // Left join to keep untranslated strings in.
+      $query->leftJoin('locales_target', 't', 's.lid = t.lid AND t.language = :language', array(':language' => $language->langcode));
+    }
+    else {
+      // Inner join to filter for only translations.
+      $query->innerJoin('locales_target', 't', 's.lid = t.lid AND t.language = :language', array(':language' => $language->langcode));
+    }
+    if ($options['customized']) {
+      if (!$options['not_customized']) {
+        // Filter for customized strings only.
+        $query->condition('t.customized', LOCALE_CUSTOMIZED);
+      }
+      // Else no filtering needed in this case.
+    }
+    else {
+      if ($options['not_customized']) {
+        // Filter for non-customized strings only.
+        $query->condition('t.customized', LOCALE_NOT_CUSTOMIZED);
+      }
+      else {
+        // Filter for strings without translation.
+        $query->isNull('t.translation');
+      }
+    }
+    $query->fields('t', array('translation'));
   }
   else {
-    $result = db_query("SELECT s.lid, s.source, s.context, s.location FROM {locales_source} s");
+    $query->leftJoin('locales_target', 't', 's.lid = t.lid');
   }
+  $query->fields('s', array('lid', 'source', 'context', 'location'));
+  $result = $query->execute();
+
+  // Structure results in an array with metainformation on the strings.
   $strings = array();
   foreach ($result as $child) {
     $strings[$child->lid] = array(

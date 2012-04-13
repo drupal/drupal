@@ -94,17 +94,17 @@ function field_test_field_storage_load($entity_type, $entities, $age, $fields, $
     foreach ($field_data[$sub_table] as $row) {
       if ($row->type == $entity_type && (!$row->deleted || $options['deleted'])) {
         if (($load_current && in_array($row->entity_id, $ids)) || (!$load_current && in_array($row->revision_id, $ids))) {
-          if (in_array($row->language, field_available_languages($entity_type, $field))) {
-            if (!isset($delta_count[$row->entity_id][$row->language])) {
-              $delta_count[$row->entity_id][$row->language] = 0;
+          if (in_array($row->langcode, field_available_languages($entity_type, $field))) {
+            if (!isset($delta_count[$row->entity_id][$row->langcode])) {
+              $delta_count[$row->entity_id][$row->langcode] = 0;
             }
-            if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->language] < $field['cardinality']) {
+            if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field['cardinality']) {
               $item = array();
               foreach ($field['columns'] as $column => $attributes) {
                 $item[$column] = $row->{$column};
               }
-              $entities[$row->entity_id]->{$field_name}[$row->language][] = $item;
-              $delta_count[$row->entity_id][$row->language]++;
+              $entities[$row->entity_id]->{$field_name}[$row->langcode][] = $item;
+              $delta_count[$row->entity_id][$row->langcode]++;
             }
           }
         }
@@ -126,17 +126,17 @@ function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
     $field_name = $field['field_name'];
     $field_data = &$data[$field_id];
 
-    $all_languages = field_available_languages($entity_type, $field);
-    $field_languages = array_intersect($all_languages, array_keys((array) $entity->$field_name));
+    $all_langcodes = field_available_languages($entity_type, $field);
+    $field_langcodes = array_intersect($all_langcodes, array_keys((array) $entity->$field_name));
 
     // Delete and insert, rather than update, in case a value was added.
     if ($op == FIELD_STORAGE_UPDATE) {
       // Delete languages present in the incoming $entity->$field_name.
       // Delete all languages if $entity->$field_name is empty.
-      $languages = !empty($entity->$field_name) ? $field_languages : $all_languages;
-      if ($languages) {
+      $langcodes = !empty($entity->$field_name) ? $field_langcodes : $all_langcodes;
+      if ($langcodes) {
         foreach ($field_data['current'] as $key => $row) {
-          if ($row->type == $entity_type && $row->entity_id == $id && in_array($row->language, $languages)) {
+          if ($row->type == $entity_type && $row->entity_id == $id && in_array($row->langcode, $langcodes)) {
             unset($field_data['current'][$key]);
           }
         }
@@ -150,7 +150,7 @@ function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
       }
     }
 
-    foreach ($field_languages as $langcode) {
+    foreach ($field_langcodes as $langcode) {
       $items = (array) $entity->{$field_name}[$langcode];
       $delta_count = 0;
       foreach ($items as $delta => $item) {
@@ -162,7 +162,7 @@ function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
           'bundle' => $bundle,
           'delta' => $delta,
           'deleted' => FALSE,
-          'language' => $langcode,
+          'langcode' => $langcode,
         );
         foreach ($field['columns'] as $column => $attributes) {
           $row->{$column} = isset($item[$column]) ? $item[$column] : NULL;

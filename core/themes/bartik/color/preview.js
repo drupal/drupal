@@ -1,4 +1,3 @@
-
 (function ($) {
   Drupal.color = {
     logoChanged: false,
@@ -14,26 +13,26 @@
       }
 
       // Solid background.
-      $('#preview', form).css('backgroundColor', $('#palette input[name="palette[bg]"]', form).val());
+      form.find('#preview').css('backgroundColor', $('#palette input[name="palette[bg]"]').val());
 
       // Text preview.
-      $('#preview #preview-main h2, #preview .preview-content', form).css('color', $('#palette input[name="palette[text]"]', form).val());
-      $('#preview #preview-content a', form).css('color', $('#palette input[name="palette[link]"]', form).val());
+      form.find('#preview #preview-main h2, #preview .preview-content').css('color', form.find('#palette input[name="palette[text]"]').val());
+      form.find('#preview #preview-content a').css('color', form.find('#palette input[name="palette[link]"]').val());
 
       // Sidebar block.
-      $('#preview #preview-sidebar #preview-block', form).css('background-color', $('#palette input[name="palette[sidebar]"]', form).val());
-      $('#preview #preview-sidebar #preview-block', form).css('border-color', $('#palette input[name="palette[sidebarborders]"]', form).val());
+      form.find('#preview #preview-sidebar #preview-block').css('background-color', form.find('#palette input[name="palette[sidebar]"]').val());
+      form.find('#preview #preview-sidebar #preview-block').css('border-color', form.find('#palette input[name="palette[sidebarborders]"]').val());
 
       // Footer wrapper background.
-      $('#preview #preview-footer-wrapper', form).css('background-color', $('#palette input[name="palette[footer]"]', form).val());
+      form.find('#preview #preview-footer-wrapper', form).css('background-color', form.find('#palette input[name="palette[footer]"]').val());
 
       // CSS3 Gradients.
-      var gradient_start = $('#palette input[name="palette[top]"]', form).val();
-      var gradient_end = $('#palette input[name="palette[bottom]"]', form).val();
+      var gradient_start = form.find('#palette input[name="palette[top]"]').val();
+      var gradient_end = form.find('#palette input[name="palette[bottom]"]').val();
 
-      $('#preview #preview-header', form).attr('style', "background-color: " + gradient_start + "; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(" + gradient_start + "), to(" + gradient_end + ")); background-image: -moz-linear-gradient(-90deg, " + gradient_start + ", " + gradient_end + ");");
+      form.find('#preview #preview-header').attr('style', "background-color: " + gradient_start + "; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(" + gradient_start + "), to(" + gradient_end + ")); background-image: -moz-linear-gradient(-90deg, " + gradient_start + ", " + gradient_end + ");");
 
-      $('#preview #preview-site-name', form).css('color', $('#palette input[name="palette[titleslogan]"]', form).val());
+      form.find('#preview #preview-site-name').css('color', form.find('#palette input[name="palette[titleslogan]"]').val());
     }
   };
 })(jQuery);

@@ -7,7 +7,7 @@
 
 Drupal.behaviors.fieldUIFieldOverview = {
   attach: function (context, settings) {
-    $('table#field-overview', context).once('field-overview', function () {
+    $(context).find('table#field-overview').once('field-overview', function () {
       Drupal.fieldUIFieldOverview.attachUpdateSelects(this, settings);
     });
   }
@@ -20,17 +20,19 @@ Drupal.fieldUIFieldOverview = {
   attachUpdateSelects: function(table, settings) {
     var widgetTypes = settings.fieldWidgetTypes;
     var fields = settings.fields;
+    var $table = $(table);
 
     // Store the default text of widget selects.
-    $('.widget-type-select', table).each(function () {
+    $table.find('.widget-type-select').each(function () {
       this.initialValue = this.options[0].text;
     });
 
     // 'Field type' select updates its 'Widget' select.
-    $('.field-type-select', table).each(function () {
-      this.targetSelect = $('.widget-type-select', $(this).closest('tr'));
+    $table.find('.field-type-select').each(function () {
+      var $this = $(this);
+      this.targetSelect = $this.closest('tr').find('.widget-type-select');
 
-      $(this).bind('change keyup', function () {
+      $this.bind('change keyup', function () {
         var selectedFieldType = this.options[this.selectedIndex].value;
         var options = (selectedFieldType in widgetTypes ? widgetTypes[selectedFieldType] : []);
         this.targetSelect.fieldUIPopulateOptions(options);
@@ -38,20 +40,22 @@ Drupal.fieldUIFieldOverview = {
 
       // Trigger change on initial pageload to get the right widget options
       // when field type comes pre-selected (on failed validation).
-      $(this).trigger('change', false);
+      $this.trigger('change', false);
     });
 
     // 'Existing field' select updates its 'Widget' select and 'Label' textfield.
-    $('.field-select', table).each(function () {
-      this.targetSelect = $('.widget-type-select', $(this).closest('tr'));
-      this.targetTextfield = $('.label-textfield', $(this).closest('tr'));
+    $table.find('.field-select').each(function () {
+      var $this = $(this);
+      var $tr = $this.closest('tr');
+      this.targetSelect = $tr.find('.widget-type-select');
+      this.targetTextfield = $tr.find('.label-textfield');
       this.targetTextfield
         .data('field_ui_edited', false)
         .bind('keyup', function (e) {
           $(this).data('field_ui_edited', $(this).val() != '');
         });
 
-      $(this).bind('change keyup', function (e, updateText) {
+      $this.bind('change keyup', function (e, updateText) {
         var updateText = (typeof updateText == 'undefined' ? true : updateText);
         var selectedField = this.options[this.selectedIndex].value;
         var selectedFieldType = (selectedField in fields ? fields[selectedField].type : null);
@@ -68,7 +72,7 @@ Drupal.fieldUIFieldOverview = {
 
       // Trigger change on initial pageload to get the right widget options
       // and label when field type comes pre-selected (on failed validation).
-      $(this).trigger('change', false);
+      $this.trigger('change', false);
     });
   }
 };
@@ -103,7 +107,7 @@ jQuery.fn.fieldUIPopulateOptions = function (options, selected) {
 
 Drupal.behaviors.fieldUIDisplayOverview = {
   attach: function (context, settings) {
-    $('table#field-display-overview', context).once('field-display-overview', function() {
+    $(context).find('table#field-display-overview').once('field-display-overview', function() {
       Drupal.fieldUIOverview.attach(this, settings.fieldUIRowsData, Drupal.fieldUIDisplayOverview);
     });
   }
@@ -121,7 +125,7 @@ Drupal.fieldUIOverview = {
     tableDrag.row.prototype.onSwap = this.onSwap;
 
     // Create row handlers.
-    $('tr.draggable', table).each(function () {
+    $(table).find('tr.draggable').each(function () {
       // Extract server-side data for the row.
       var row = this;
       if (row.id in rowsData) {
@@ -140,8 +144,8 @@ Drupal.fieldUIOverview = {
    */
   onChange: function () {
     var $trigger = $(this);
-    var row = $trigger.closest('tr').get(0);
-    var rowHandler = $(row).data('fieldUIRowHandler');
+    var $row = $trigger.closest('tr');
+    var rowHandler = $row.data('fieldUIRowHandler');
 
     var refreshRows = {};
     refreshRows[rowHandler.name] = $trigger.get(0);
@@ -150,7 +154,7 @@ Drupal.fieldUIOverview = {
     var region = rowHandler.getRegion();
     if (region != rowHandler.region) {
       // Remove parenting.
-      $('select.field-parent', row).val('');
+      $row.find('select.field-parent').val('');
       // Let the row handler deal with the region change.
       $.extend(refreshRows, rowHandler.regionChange(region));
       // Update the row region.
@@ -167,14 +171,15 @@ Drupal.fieldUIOverview = {
   onDrop: function () {
     var dragObject = this;
     var row = dragObject.rowObject.element;
-    var rowHandler = $(row).data('fieldUIRowHandler');
+    var $row = $(row);
+    var rowHandler = $row.data('fieldUIRowHandler');
     if (rowHandler !== undefined) {
-      var regionRow = $(row).prevAll('tr.region-message').get(0);
+      var regionRow = $row.prevAll('tr.region-message').get(0);
       var region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
 
       if (region != rowHandler.region) {
         // Let the row handler deal with the region change.
-        refreshRows = rowHandler.regionChange(region);
+        var refreshRows = rowHandler.regionChange(region);
         // Update the row region.
         rowHandler.region = region;
         // Ajax-update the rows.
@@ -195,22 +200,23 @@ Drupal.fieldUIOverview = {
    */
   onSwap: function (draggedRow) {
     var rowObject = this;
-    $('tr.region-message', rowObject.table).each(function () {
+    $(rowObject.table).find('tr.region-message').each(function () {
+      var $this = $(this);
       // If the dragged row is in this region, but above the message row, swap
       // it down one space.
-      if ($(this).prev('tr').get(0) == rowObject.group[rowObject.group.length - 1]) {
+      if ($this.prev('tr').get(0) == rowObject.group[rowObject.group.length - 1]) {
         // Prevent a recursion problem when using the keyboard to move rows up.
         if ((rowObject.method != 'keyboard' || rowObject.direction == 'down')) {
           rowObject.swap('after', this);
         }
       }
       // This region has become empty.
-      if ($(this).next('tr').is(':not(.draggable)') || $(this).next('tr').length == 0) {
-        $(this).removeClass('region-populated').addClass('region-empty');
+      if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length == 0) {
+        $this.removeClass('region-populated').addClass('region-empty');
       }
       // This region has become populated.
-      else if ($(this).is('.region-empty')) {
-        $(this).removeClass('region-empty').addClass('region-populated');
+      else if ($this.is('.region-empty')) {
+        $this.removeClass('region-empty').addClass('region-populated');
       }
     });
   },
@@ -281,7 +287,7 @@ Drupal.fieldUIDisplayOverview.field = function (row, data) {
   this.tableDrag = data.tableDrag;
 
   // Attach change listener to the 'formatter type' select.
-  this.$formatSelect = $('select.field-formatter-type', row);
+  this.$formatSelect = $(row).find('select.field-formatter-type');
   this.$formatSelect.change(Drupal.fieldUIOverview.onChange);
 
   return this;

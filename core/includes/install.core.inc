@@ -307,7 +307,17 @@ function install_begin_request(&$install_state) {
   // because any data put in the cache during the installer is inherently
   // suspect, due to the fact that Drupal is not fully set up yet.
   require_once DRUPAL_ROOT . '/core/includes/cache.inc';
-  $conf['cache_default_class'] = 'Drupal\Core\Cache\InstallBackend';
+  $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\InstallBackend');
+
+  // The install process cannot use the database lock backend since the database
+  // is not fully up, so we use a null backend implementation during the
+  // installation process. This will also speed up the installation process.
+  // The site being installed will use the real lock backend when doing AJAX
+  // requests but, except for a WSOD, there is no chance for a a lock to stall
+  // (as opposed to the cache backend) so we can afford having a null
+  // implementation here.
+  require_once DRUPAL_ROOT . '/core/includes/lock.inc';
+  $conf['lock_backend'] = 'Drupal\Core\Lock\NullLockBackend';
 
   // Prepare for themed output. We need to run this at the beginning of the
   // page request to avoid a different theme accidentally getting set. (We also
@@ -1324,7 +1334,7 @@ function install_select_language(&$install_state) {
  */
 function install_select_language_form($form, &$form_state, $files) {
   include_once DRUPAL_ROOT . '/core/includes/standard.inc';
-  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
+  include_once DRUPAL_ROOT . '/core/modules/language/language.negotiation.inc';
 
   $standard_languages = standard_language_list();
   $select_options = array();
@@ -1345,7 +1355,7 @@ function install_select_language_form($form, &$form_state, $files) {
     );
   }
 
-  $browser_langcode = locale_language_from_browser($languages);
+  $browser_langcode = language_from_browser($languages);
   $form['langcode'] = array(
     '#type' => 'select',
     '#options' => $select_options,
@@ -1477,7 +1487,6 @@ function install_profile_modules(&$install_state) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_translations(&$install_state) {
-  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
   $langcode = $install_state['parameters']['langcode'];
 
@@ -1773,8 +1782,6 @@ function install_check_requirements($install_state) {
  * Forms API array definition for site configuration.
  */
 function _install_configure_form($form, &$form_state, &$install_state) {
-  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
-
   $form['site_information'] = array(
     '#type' => 'fieldset',
     '#title' => st('Site information'),

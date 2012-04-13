@@ -8,6 +8,8 @@
  * installation. It is included and used extensively by update.php.
  */
 
+use Drupal\Component\Graph\Graph;
+
 /**
  * Minimum schema version of Drupal 7 required for upgrade to Drupal 8.
  *
@@ -142,7 +144,7 @@ function update_prepare_stored_includes() {
     $negotiation = variable_get("language_negotiation_$language_type", array());
     foreach ($negotiation as $method_id => &$method) {
       if (isset($method['file']) && $method['file'] == 'includes/locale.inc') {
-        $method['file'] = 'core/includes/locale.inc';
+        $method['file'] = 'core/modules/language/language.negotiation.inc';
       }
     }
     variable_set("language_negotiation_$language_type", $negotiation);
@@ -562,7 +564,7 @@ function update_get_update_list() {
  *
  * In addition, the returned array also includes detailed information about the
  * dependency chain for each update, as provided by the depth-first search
- * algorithm in drupal_depth_first_search().
+ * algorithm in Drupal\Component\Graph\Graph::searchAndSort().
  *
  * @param $starting_updates
  *   An array whose keys contain the names of modules with updates to be run
@@ -575,10 +577,11 @@ function update_get_update_list() {
  *   request, arranged in the order in which the update functions should be
  *   run. (This includes the provided starting update for each module and all
  *   subsequent updates that are available.) The values are themselves arrays
- *   containing all the keys provided by the drupal_depth_first_search()
- *   algorithm, which encode detailed information about the dependency chain
- *   for this update function (for example: 'paths', 'reverse_paths', 'weight',
- *   and 'component'), as well as the following additional keys:
+ *   containing all the keys provided by the
+ *   Drupal\Component\Graph\Graph::searchAndSort() algorithm, which encode
+ *   detailed information about the dependency chain for this update function
+ *   (for example: 'paths', 'reverse_paths', 'weight', and 'component'), as well
+ *   as the following additional keys:
  *   - 'allowed': A boolean which is TRUE when the update function's
  *     dependencies are met, and FALSE otherwise. Calling functions should
  *     inspect this value before running the update.
@@ -588,16 +591,16 @@ function update_get_update_list() {
  *   - 'module': The name of the module that this update function belongs to.
  *   - 'number': The number of this update function within that module.
  *
- * @see drupal_depth_first_search()
+ * @see Drupal\Component\Graph\Graph::searchAndSort()
  */
 function update_resolve_dependencies($starting_updates) {
   // Obtain a dependency graph for the requested update functions.
   $update_functions = update_get_update_function_list($starting_updates);
   $graph = update_build_dependency_graph($update_functions);
 
-  // Perform the depth-first search and sort the results.
-  require_once DRUPAL_ROOT . '/core/includes/graph.inc';
-  drupal_depth_first_search($graph);
+  // Perform the depth-first search and sort on the results.
+  $graph_object = new Graph($graph);
+  $graph = $graph_object->searchAndSort();
   uasort($graph, 'drupal_sort_weight');
 
   foreach ($graph as $function => &$data) {
@@ -692,18 +695,19 @@ function update_get_update_function_list($starting_updates) {
  *
  * @return
  *   A multidimensional array representing the dependency graph, suitable for
- *   passing in to drupal_depth_first_search(), but with extra information
- *   about each update function also included. Each array key contains the name
- *   of an update function, including all update functions from the provided
- *   list as well as any outside update functions which they directly depend
- *   on. Each value is an associative array containing the following keys:
+ *   passing in to Drupal\Component\Graph\Graph::searchAndSort(), but with extra
+ *   information about each update function also included. Each array key
+ *   contains the name of an update function, including all update functions
+ *   from the provided list as well as any outside update functions which they
+ *   directly depend on. Each value is an associative array containing the
+ *   following keys:
  *   - 'edges': A representation of any other update functions that immediately
- *     depend on this one. See drupal_depth_first_search() for more details on
- *     the format.
+ *     depend on this one. See Drupal\Component\Graph\Graph::searchAndSort() for
+ *     more details on the format.
  *   - 'module': The name of the module that this update function belongs to.
  *   - 'number': The number of this update function within that module.
  *
- * @see drupal_depth_first_search()
+ * @see Drupal\Component\Graph\Graph::searchAndSort()
  * @see update_resolve_dependencies()
  */
 function update_build_dependency_graph($update_functions) {
@@ -851,23 +855,23 @@ function update_retrieve_dependencies() {
 
 /**
  * Updates config with values set on Drupal 7.x
- * 
+ *
  * Provide a generalised method to migrate variables from Drupal 7 to Drupal 8's
  * configuration management system.
  *
  * @param $config_name
  *   The name of the configuration object to retrieve. The name corresponds to
- *   an XML configuration file. For @code config(book.admin) @endcode, the
- *   config object returned will contain the contents of book.admin.xml.
+ *   an XML configuration file. For example, passing "book.admin" will return
+ *   the config object containing the contents of book.admin.xml.
  * @param $variable_map
  *   An array to map new to old configuration naming conventions. Example:
  *   @code
  *     array('new_config' => 'old_config')
- *   @endcode 
- *   This would update the value for new_config to the value old_config has in 
+ *   @endcode
+ *   This would update the value for new_config to the value old_config has in
  *   the variable table.
  */
-function update_variables_to_config($config_name, $variable_map = array()) {
+function update_variables_to_config($config_name, array $variable_map = array()) {
   $config = config($config_name);
   $config_data = array_keys($config->get());
 

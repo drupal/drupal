@@ -9,7 +9,7 @@ Drupal.behaviors.color = {
   attach: function (context, settings) {
     var i, j, colors, field_name;
     // This behavior attaches by ID, so is only valid once on a page.
-    var form = $('#system-theme-settings .color-form', context).once('color');
+    var form = $(context).find('#system-theme-settings .color-form').once('color');
     if (form.length == 0) {
       return;
     }
@@ -19,7 +19,7 @@ Drupal.behaviors.color = {
     var focused = null;
 
     // Add Farbtastic.
-    $(form).prepend('<div id="placeholder"></div>').addClass('color-processed');
+    form.prepend('<div id="placeholder"></div>').addClass('color-processed');
     var farb = $.farbtastic('#placeholder');
 
     // Decode reference colors to HSL.
@@ -49,7 +49,7 @@ Drupal.behaviors.color = {
     }
 
     // Set up colorScheme selector.
-    $('#edit-scheme', form).change(function () {
+    form.find('#edit-scheme').change(function () {
       var schemes = settings.color.schemes, colorScheme = this.options[this.selectedIndex].value;
       if (colorScheme != '' && schemes[colorScheme]) {
         // Get colors of active scheme.
@@ -159,7 +159,7 @@ Drupal.behaviors.color = {
      * Resets the color scheme selector.
      */
     function resetScheme() {
-      $('#edit-scheme', form).each(function () {
+      form.find('#edit-scheme').each(function () {
         this.selectedIndex = this.options.length - 1;
       });
     }
@@ -183,7 +183,7 @@ Drupal.behaviors.color = {
     }
 
     // Initialize color fields.
-    $('#palette input.form-text', form)
+    form.find('#palette input.form-text')
     .each(function () {
       // Extract palette field name
       this.key = this.id.substring(13);
@@ -229,7 +229,7 @@ Drupal.behaviors.color = {
     })
     .focus(focus);
 
-    $('#palette label', form);
+    form.find('#palette label');
 
     // Focus first color.
     focus.call(inputs[0]);

@@ -32,13 +32,40 @@ function cache($bin = 'cache') {
   // storage of a cache bin mid-request.
   static $cache_objects;
   if (!isset($cache_objects[$bin])) {
-    $class = variable_get('cache_class_' . $bin);
-    if (!isset($class)) {
-      $class = variable_get('cache_default_class', 'Drupal\Core\Cache\DatabaseBackend');
-    }
+    $cache_backends = cache_get_backends();
+    $class = isset($cache_backends[$bin]) ? $cache_backends[$bin] : $cache_backends['cache'];
     $cache_objects[$bin] = new $class($bin);
   }
   return $cache_objects[$bin];
+}
+
+/**
+ * Invalidates the items associated with given list of tags.
+ *
+ * Many sites have more than one active cache backend, and each backend my use
+ * a different strategy for storing tags against cache items, and invalidating
+ * cache items associated with a given tag.
+ *
+ * When invalidating a given list of tags, we iterate over each cache backend,
+ * and call invalidate on each.
+ *
+ * @param array $tags
+ *   The list of tags to invalidate cache items for.
+ */
+function cache_invalidate(array $tags) {
+  foreach (cache_get_backends() as $bin => $class) {
+    cache($bin)->invalidateTags($tags);
+  }
+}
+
+/**
+ * Returns a list of cache backends for this site.
+ *
+ * @return
+ *   An associative array with cache bins as keys, and backend classes as value.
+ */
+function cache_get_backends() {
+  return variable_get('cache_classes', array('cache' => 'Drupal\Core\Cache\DatabaseBackend'));
 }
 
 /**

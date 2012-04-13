@@ -13,7 +13,7 @@ Drupal.behaviors.shortcutDrag = {
         visibleLength = 0,
         slots = 0,
         tableDrag = Drupal.tableDrag.shortcuts;
-      $('> tbody > tr, > tr', table)
+      table.find('> tbody > tr, > tr')
         .filter(':visible')
           .filter(':odd').filter('.odd')
             .removeClass('odd').addClass('even')
@@ -31,9 +31,9 @@ Drupal.behaviors.shortcutDrag = {
 
       // Add a handler for when a row is swapped.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
-        var disabledIndex = $(table).find('tr').index($(table).find('tr.shortcut-status-disabled')) - slots - 2,
+        var disabledIndex = table.find('tr').index(table.find('tr.shortcut-status-disabled')) - slots - 2,
           count = 0;
-        $(table).find('tr.shortcut-status-enabled').nextAll(':not(.shortcut-slot-empty)').each(function(index) {
+        table.find('tr.shortcut-status-enabled').nextAll(':not(.shortcut-slot-empty)').each(function(index) {
           if (index < disabledIndex) {
             count++;
           }
@@ -78,9 +78,10 @@ Drupal.behaviors.shortcutDrag = {
       tableDrag.rowStatusChange = function (rowObject) {
         // Use "status-message" row instead of "status" row because
         // "status-{status_name}-message" is less prone to regexp match errors.
-        var statusRow = $(rowObject.element).prevAll('tr.shortcut-status').get(0);
+        var $rowElement = $(rowObject.element);
+        var statusRow = $rowElement.prevAll('tr.shortcut-status').get(0);
         var statusName = statusRow.className.replace(/([^ ]+[ ]+)*shortcut-status-([^ ]+)([ ]+[^ ]+)*/, '$2');
-        var statusField = $('select.shortcut-status-select', rowObject.element);
+        var statusField = $rowElement.find('select.shortcut-status-select');
         statusField.val(statusName);
       };
 
@@ -88,7 +89,7 @@ Drupal.behaviors.shortcutDrag = {
         // :even and :odd are reversed because jQuery counts from 0 and
         // we count from 1, so we're out of sync.
         // Match immediate children of the parent element to allow nesting.
-        $('> tbody > tr:visible, > tr:visible', this.table)
+        $(this.table).find('> tbody > tr:visible, > tr:visible')
           .filter(':odd').filter('.odd')
             .removeClass('odd').addClass('even')
           .end().end()
