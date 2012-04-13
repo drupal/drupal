@@ -11,7 +11,7 @@ $is_https_mock = empty($_SERVER['HTTPS']);
 // Change to https.
 $_SERVER['HTTPS'] = 'on';
 foreach ($_SERVER as $key => $value) {
-  $_SERVER[$key] = str_replace('core/modules/simpletest/tests/https.php', 'index.php', $value);
+  $_SERVER[$key] = str_replace('core/modules/system/tests/https.php', 'index.php', $value);
   $_SERVER[$key] = str_replace('http://', 'https://', $_SERVER[$key]);
 }
 

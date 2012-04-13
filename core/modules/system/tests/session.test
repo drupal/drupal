@@ -513,7 +513,7 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
    */
   protected function httpsUrl($url) {
     global $base_url;
-    return $base_url . '/core/modules/simpletest/tests/https.php?q=' . $url;
+    return $base_url . '/core/modules/system/tests/https.php?q=' . $url;
   }
 
   /**
@@ -527,7 +527,7 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
    */
   protected function httpUrl($url) {
     global $base_url;
-    return $base_url . '/core/modules/simpletest/tests/http.php?q=' . $url;
+    return $base_url . '/core/modules/system/tests/http.php?q=' . $url;
   }
 }
 

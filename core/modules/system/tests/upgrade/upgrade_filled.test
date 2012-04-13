@@ -17,7 +17,7 @@ class FilledUpgradePathTestCase extends UpgradePathTestCase {
   public function setUp() {
     // Path to the database dump.
     $this->databaseDumpFiles = array(
-      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-7.filled.database.php.gz',
+      drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.filled.database.php.gz',
     );
     parent::setUp();
   }

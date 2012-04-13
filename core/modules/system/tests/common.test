@@ -615,14 +615,14 @@ class CommonCascadingStylesheetsTestCase extends DrupalWebTestCase {
     // Verify common_test.css in a STYLE media="all" tag.
     $elements = $this->xpath('//style[@media=:media and contains(text(), :filename)]', array(
       ':media' => 'all',
-      ':filename' => 'tests/common_test.css',
+      ':filename' => 'tests/modules/common_test/common_test.css',
     ));
     $this->assertTrue(count($elements), "Stylesheet with media 'all' in module .info file found.");
 
     // Verify common_test.print.css in a STYLE media="print" tag.
     $elements = $this->xpath('//style[@media=:media and contains(text(), :filename)]', array(
       ':media' => 'print',
-      ':filename' => 'tests/common_test.print.css',
+      ':filename' => 'tests/modules/common_test/common_test.print.css',
     ));
     $this->assertTrue(count($elements), "Stylesheet with media 'print' in module .info file found.");
   }
@@ -767,23 +767,22 @@ class CommonCascadingStylesheetsTestCase extends DrupalWebTestCase {
    */
   function testRenderOverride() {
     $system = drupal_get_path('module', 'system');
-    $simpletest = drupal_get_path('module', 'simpletest');
 
     drupal_add_css($system . '/system.base.css');
-    drupal_add_css($simpletest . '/tests/system.base.css');
+    drupal_add_css($system . '/tests/system.base.css');
 
     // The dummy stylesheet should be the only one included.
     $styles = drupal_get_css();
-    $this->assert(strpos($styles, $simpletest . '/tests/system.base.css') !== FALSE, t('The overriding CSS file is output.'));
+    $this->assert(strpos($styles, $system . '/tests/system.base.css') !== FALSE, t('The overriding CSS file is output.'));
     $this->assert(strpos($styles, $system . '/system.base.css') === FALSE, t('The overridden CSS file is not output.'));
 
-    drupal_add_css($simpletest . '/tests/system.base.css');
+    drupal_add_css($system . '/tests/system.base.css');
     drupal_add_css($system . '/system.base.css');
 
     // The standard stylesheet should be the only one included.
     $styles = drupal_get_css();
     $this->assert(strpos($styles, $system . '/system.base.css') !== FALSE, t('The overriding CSS file is output.'));
-    $this->assert(strpos($styles, $simpletest . '/tests/system.base.css') === FALSE, t('The overridden CSS file is not output.'));
+    $this->assert(strpos($styles, $system . '/tests/system.base.css') === FALSE, t('The overridden CSS file is not output.'));
   }
 
   /**
@@ -2316,7 +2315,7 @@ class CommonDrupalParseInfoFileTestCase extends DrupalUnitTestCase {
    * Parse an example .info file an verify the results.
    */
   function testParseInfoFile() {
-    $info_values = drupal_parse_info_file(drupal_get_path('module', 'simpletest') . '/tests/common_test_info.txt');
+    $info_values = drupal_parse_info_file(drupal_get_path('module', 'system') . '/tests/common_test_info.txt');
     $this->assertEqual($info_values['simple_string'], 'A simple string', t('Simple string value was parsed correctly.'), t('System'));
     $this->assertEqual($info_values['simple_constant'], WATCHDOG_INFO, t('Constant value was parsed correctly.'), t('System'));
     $this->assertEqual($info_values['double_colon'], 'dummyClassName::', t('Value containing double-colon was parsed correctly.'), t('System'));
@@ -2346,14 +2345,14 @@ class CommonDrupalSystemListingTestCase extends DrupalWebTestCase {
       // with Drupal core, the copy in the core modules directory takes
       // precedence.
       'drupal_system_listing_incompatible_test' => array(
-        'core/modules/simpletest/tests',
+        'core/modules/system/tests/modules',
         'profiles/testing/modules',
       ),
       // When both copies of the module are compatible with Drupal core, the
       // copy in the profile directory takes precedence.
       'drupal_system_listing_compatible_test' => array(
         'profiles/testing/modules',
-        'core/modules/simpletest/tests',
+        'core/modules/system/tests/modules',
       ),
     );
 

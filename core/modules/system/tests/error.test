@@ -24,19 +24,19 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
       '%type' => 'Notice',
       '!message' => 'Undefined variable: bananas',
       '%function' => 'error_test_generate_warnings()',
-      '%file' => drupal_realpath('core/modules/simpletest/tests/error_test.module'),
+      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
     $error_warning = array(
       '%type' => 'Warning',
       '!message' => 'Division by zero',
       '%function' => 'error_test_generate_warnings()',
-      '%file' => drupal_realpath('core/modules/simpletest/tests/error_test.module'),
+      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
     $error_user_notice = array(
       '%type' => 'User warning',
       '!message' => 'Drupal is awesome',
       '%function' => 'error_test_generate_warnings()',
-      '%file' => drupal_realpath('core/modules/simpletest/tests/error_test.module'),
+      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
 
     // Set error reporting to collect notices.
@@ -73,14 +73,14 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
       '!message' => 'Drupal is awesome',
       '%function' => 'error_test_trigger_exception()',
       '%line' => 57,
-      '%file' => drupal_realpath('core/modules/simpletest/tests/error_test.module'),
+      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
     $error_pdo_exception = array(
       '%type' => 'PDOException',
       '!message' => 'SELECT * FROM bananas_are_awesome',
       '%function' => 'error_test_trigger_pdo_exception()',
       '%line' => 65,
-      '%file' => drupal_realpath('core/modules/simpletest/tests/error_test.module'),
+      '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
 
     $this->drupalGet('error-test/trigger-exception');

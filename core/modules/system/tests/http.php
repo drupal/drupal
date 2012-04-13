@@ -12,7 +12,7 @@ $is_http_mock = !empty($_SERVER['HTTPS']);
 $_SERVER['HTTPS'] = NULL;
 ini_set('session.cookie_secure', FALSE);
 foreach ($_SERVER as $key => $value) {
-  $_SERVER[$key] = str_replace('core/modules/simpletest/tests/http.php', 'index.php', $value);
+  $_SERVER[$key] = str_replace('core/modules/system/tests/http.php', 'index.php', $value);
   $_SERVER[$key] = str_replace('https://', 'http://', $_SERVER[$key]);
 }
 
