@@ -96,7 +96,7 @@ class CommentHelperCase extends DrupalWebTestCase {
   /**
    * Checks current page for specified comment.
    *
-   * @param object $comment
+   * @param Comment $comment
    *   The comment object.
    * @param boolean $reply
    *   Boolean indicating whether the comment is a reply to another comment.
@@ -104,8 +104,8 @@ class CommentHelperCase extends DrupalWebTestCase {
    * @return boolean
    *   Boolean indicating whether the comment was found.
    */
-  function commentExists($comment, $reply = FALSE) {
-    if ($comment && is_object($comment)) {
+  function commentExists(Comment $comment = NULL, $reply = FALSE) {
+    if ($comment) {
       $regex = '/' . ($reply ? '<div class="indented">(.*?)' : '');
       $regex .= '<a id="comment-' . $comment->id . '"(.*?)'; // Comment anchor.
       $regex .= '<div(.*?)'; // Begin in comment div.
@@ -123,10 +123,10 @@ class CommentHelperCase extends DrupalWebTestCase {
   /**
    * Deletes a comment.
    *
-   * @param object $comment
+   * @param Comment $comment
    *   Comment to delete.
    */
-  function deleteComment($comment) {
+  function deleteComment(Comment $comment) {
     $this->drupalPost('comment/' . $comment->id . '/delete', array(), t('Delete'));
     $this->assertText(t('The comment and all its replies have been deleted.'), t('Comment deleted.'));
   }
