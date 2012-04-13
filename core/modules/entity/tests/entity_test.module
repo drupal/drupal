@@ -9,21 +9,19 @@
  * Implements hook_entity_info().
  */
 function entity_test_entity_info() {
-  $items['entity_test'] = array(
-    'label' => t('Test entity'),
-    'entity class' => 'Entity',
-    'controller class' => 'EntityDatabaseStorageController',
-    'base table' => 'entity_test',
-    'fieldable' => TRUE,
-    'entity keys' => array(
-      'id' => 'id',
+  $return = array(
+    'entity_test' => array(
+      'label' => t('Test entity'),
+      'entity class' => 'Entity',
+      'controller class' => 'EntityDatabaseStorageController',
+      'base table' => 'entity_test',
+      'fieldable' => TRUE,
+      'entity keys' => array(
+        'id' => 'id',
+      ),
     ),
   );
-  // Optionally specify a translation handler for testing translations.
-  if (!empty($GLOBALS['entity_test_translation'])) {
-    $items['entity_test']['translation']['entity_test'] = TRUE;
-  }
-  return $items;
+  return $return;
 }
 
 /**
