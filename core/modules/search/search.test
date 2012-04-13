@@ -159,7 +159,7 @@ class SearchMatchTestCase extends SearchWebTestCase {
     );
     foreach ($queries as $query => $results) {
       $result = db_select('search_index', 'i')
-        ->extend('SearchQuery')
+        ->extend('Drupal\search\SearchQuery')
         ->searchExpression($query, SEARCH_TYPE)
         ->execute();
 
@@ -179,7 +179,7 @@ class SearchMatchTestCase extends SearchWebTestCase {
     );
     foreach ($queries as $query => $results) {
       $result = db_select('search_index', 'i')
-        ->extend('SearchQuery')
+        ->extend('Drupal\search\SearchQuery')
         ->searchExpression($query, SEARCH_TYPE_2)
         ->execute();
 
@@ -202,7 +202,7 @@ class SearchMatchTestCase extends SearchWebTestCase {
     );
     foreach ($queries as $query => $results) {
       $result = db_select('search_index', 'i')
-        ->extend('SearchQuery')
+        ->extend('Drupal\search\SearchQuery')
         ->searchExpression($query, SEARCH_TYPE_JPN)
         ->execute();
 
