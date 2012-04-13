@@ -147,9 +147,9 @@ class ExceptionController {
 
     $path = drupal_get_normal_path(variable_get('site_404', ''));
     if ($path && $path != $system_path) {
-      // @TODO: Um, how do I specify an override URL again? Totally not clear.
+      // @todo: Um, how do I specify an override URL again? Totally not clear.
       // Do that and sub-call the kernel rather than using meah().
-      // @TODO: The create() method expects a slash-prefixed path, but we
+      // @todo: The create() method expects a slash-prefixed path, but we
       // store a normal system path in the site_404 variable.
       $subrequest = Request::create('/' . $path, 'get', array(), $request->cookies->all(), array(), $request->server->all());
 
