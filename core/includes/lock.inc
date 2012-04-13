@@ -71,9 +71,9 @@ function lock() {
 
     // Do not allow a WSOD here, if the class does not exists use the default
     // one.
-    // @todo: We should log failed class loading for debugging, but for that we
-    // need an early watchdog function that logs into a file if the database is
-    // not present.
+    // @todo We should log failed class loading for debugging, but for that we
+    //   need an early watchdog function that logs into a file if the database
+    //   is not present.
     if (class_exists($class_name)) {
       $lock_backend = new $class_name();
     }

@@ -300,7 +300,7 @@ function install_begin_request(&$install_state) {
   $conf['cache_classes'] = array('cache' => 'Drupal\Core\Cache\InstallBackend');
 
   // The install process cannot use the database lock backend since the database
-  // is not fully up, so we use a null backend implementation durting the
+  // is not fully up, so we use a null backend implementation during the
   // installation process. This will also speed up the installation process.
   // The site being installed will use the real lock backend when doing AJAX
   // requests but, except for a WSOD, there is no chance for a a lock to stall
