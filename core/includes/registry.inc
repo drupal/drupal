@@ -47,9 +47,6 @@ function _registry_update() {
       }
     }
   }
-  foreach (file_scan_directory('core/includes', '/\.inc$/') as $filename => $file) {
-    $files["$filename"] = array('module' => '', 'weight' => 0);
-  }
 
   $transaction = db_transaction();
   try {
