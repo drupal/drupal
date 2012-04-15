@@ -5242,7 +5242,7 @@ function _drupal_bootstrap_full() {
  *
  * @see drupal_page_header()
  */
-function drupal_page_set_cache() {
+function drupal_page_set_cache($response_body) {
   global $base_root;
 
   if (drupal_page_is_cacheable()) {
@@ -5250,7 +5250,7 @@ function drupal_page_set_cache() {
       'cid' => $base_root . request_uri(),
       'data' => array(
         'path' => $_GET['q'],
-        'body' => ob_get_clean(),
+        'body' => $response_body,
         'title' => drupal_get_title(),
         'headers' => array(),
       ),
