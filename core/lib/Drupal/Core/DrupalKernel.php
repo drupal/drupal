@@ -24,7 +24,7 @@ use Drupal\Core\EventSubscriber\AccessSubscriber;
 use Drupal\Core\EventSubscriber\PathSubscriber;
 use Drupal\Core\EventSubscriber\LegacyControllerSubscriber;
 use Drupal\Core\EventSubscriber\MaintenanceModeSubscriber;
-use Drupal\Core\EventSubscriber\ResponseSubscriber;
+use Drupal\Core\EventSubscriber\RequestCloseSubscriber;
 
 use Exception;
 
@@ -75,7 +75,7 @@ class DrupalKernel extends HttpKernel {
       $this->dispatcher->addSubscriber(new MaintenanceModeSubscriber());
       $this->dispatcher->addSubscriber(new PathSubscriber());
       $this->dispatcher->addSubscriber(new LegacyControllerSubscriber());
-      $this->dispatcher->addSubscriber(new ResponseSubscriber());
+      $this->dispatcher->addSubscriber(new RequestCloseSubscriber());
 
       // Some other form of error occured that wasn't handled by another kernel
       // listener.  That could mean that it's a method/mime-type/error

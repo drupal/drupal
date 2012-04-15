@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Subscriber for all responses.
  */
-class ResponseSubscriber implements EventSubscriberInterface {
+class RequestCloseSubscriber implements EventSubscriberInterface {
 
   /**
    * Performs end of request tasks.
@@ -30,7 +30,7 @@ class ResponseSubscriber implements EventSubscriberInterface {
    * @param FilterResponseEvent $event
    *   The Event to process.
    */
-  public function onKernelResponse(FilterResponseEvent $event) {
+  public function onTerminate(FilterResponseEvent $event) {
 
     global $user;
     module_invoke_all('exit');
@@ -60,7 +60,7 @@ class ResponseSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::RESPONSE][] = array('onKernelResponse');
+    $events[KernelEvents::TERMINATE][] = array('onTerminate');
 
     return $events;
   }
