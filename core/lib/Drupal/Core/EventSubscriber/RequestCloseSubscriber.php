@@ -4,14 +4,14 @@ namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 
 /**
  * @file
  *
- * Definition of Drupal\Core\EventSubscriber\ResponseSubscriber;
+ * Definition of Drupal\Core\EventSubscriber\RequestCloseSubscriber;
  */
 
 /**
@@ -27,10 +27,10 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    * content to drupal_page_set_cache(). There's probably a lot in here that
    * needs to get removed/changed.
    *
-   * @param FilterResponseEvent $event
+   * @param PostResponseEvent $event
    *   The Event to process.
    */
-  public function onTerminate(FilterResponseEvent $event) {
+  public function onTerminate(PostResponseEvent $event) {
 
     global $user;
     module_invoke_all('exit');

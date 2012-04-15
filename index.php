@@ -32,11 +32,12 @@ $request = Request::createFromGlobals();
 // injection container at some point.
 request($request);
 
-
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 $dispatcher = new EventDispatcher();
 $resolver = new ControllerResolver();
 
 $kernel = new DrupalKernel($dispatcher, $resolver);
-$kernel->handle($request)->send();
+$response = $kernel->handle($request);
+$response->send();
+$kernel->terminate($request, $response);
