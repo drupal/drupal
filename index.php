@@ -39,5 +39,6 @@ $resolver = new ControllerResolver();
 
 $kernel = new DrupalKernel($dispatcher, $resolver);
 $response = $kernel->handle($request);
+$response->prepare($request);
 $response->send();
 $kernel->terminate($request, $response);
