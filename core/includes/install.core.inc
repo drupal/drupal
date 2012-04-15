@@ -4,6 +4,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\TaskException;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @file
@@ -498,10 +499,13 @@ function install_run_task($task, &$install_state) {
     elseif ($current_batch == $function) {
       include_once DRUPAL_ROOT . '/core/includes/batch.inc';
       $output = _batch_page();
+      if ($output instanceof Response) {
+        $output->send();
+      }
       // The task is complete when we try to access the batch page and receive
       // FALSE in return, since this means we are at a URL where we are no
       // longer requesting a batch ID.
-      if ($output === FALSE) {
+      elseif ($output === FALSE) {
         // Return nothing so the next task will run in the same request.
         variable_del('install_current_batch');
         return;
