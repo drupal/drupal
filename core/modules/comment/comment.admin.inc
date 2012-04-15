@@ -264,7 +264,7 @@ function comment_confirm_delete_page($cid) {
 /**
  * Form constructor for the confirmation form for comment deletion.
  *
- * @param $comment
+ * @param Comment $comment
  *   The comment that is about to be deleted.
  *
  * @ingroup forms
@@ -272,7 +272,7 @@ function comment_confirm_delete_page($cid) {
  * @see comment_confirm_delete_submit()
  * @see confirm_form()
  */
-function comment_confirm_delete($form, &$form_state, $comment) {
+function comment_confirm_delete($form, &$form_state, Comment $comment) {
   $form['#comment'] = $comment;
   // Always provide entity id in the same form key as in the entity edit form.
   $form['cid'] = array('#type' => 'value', '#value' => $comment->cid);

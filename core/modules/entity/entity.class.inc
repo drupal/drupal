@@ -93,6 +93,60 @@ interface EntityInterface {
   public function uri();
 
   /**
+   * Returns the default language of a language-specific entity.
+   *
+   * @return
+   *   The language object of the entity's default language, or FALSE if the
+   *   entity is not language-specific.
+   *
+   * @see EntityInterface::translations()
+   */
+  public function language();
+
+  /**
+   * Returns the languages the entity is translated to.
+   *
+   * @return
+   *   An array of language objects, keyed by language codes.
+   *
+   * @see EntityInterface::language()
+   */
+  public function translations();
+
+  /**
+   * Returns the value of an entity property.
+   *
+   * @param $property_name
+   *   The name of the property to return; e.g., 'title'.
+   * @param $langcode
+   *   (optional) If the property is translatable, the language code of the
+   *   language that should be used for getting the property. If set to NULL,
+   *   the entity's default language is being used.
+   *
+   * @return
+   *   The property value, or NULL if it is not defined.
+   *
+   * @see EntityInterface::language()
+   */
+  public function get($property_name, $langcode = NULL);
+
+  /**
+   * Sets the value of an entity property.
+   *
+   * @param $property_name
+   *   The name of the property to set; e.g., 'title'.
+   * @param $value
+   *   The value to set, or NULL to unset the property.
+   * @param $langcode
+   *   (optional) If the property is translatable, the language code of the
+   *   language that should be used for getting the property. If set to
+   *   NULL, the entity's default language is being used.
+   *
+   * @see EntityInterface::language()
+   */
+  public function set($property_name, $value, $langcode = NULL);
+
+  /**
    * Saves an entity permanently.
    *
    * @return
@@ -137,6 +191,13 @@ interface EntityInterface {
  * special handling can extend the class.
  */
 class Entity implements EntityInterface {
+
+  /**
+   * The language code of the entity's default language.
+   *
+   * @var string
+   */
+  public $langcode = LANGUAGE_NOT_SPECIFIED;
 
   /**
    * The entity type.
@@ -243,6 +304,92 @@ class Entity implements EntityInterface {
       $uri['options']['entity_type'] = $this->entityType;
       $uri['options']['entity'] = $this;
       return $uri;
+    }
+  }
+
+  /**
+   * Implements EntityInterface::language().
+   */
+  public function language() {
+    // @todo: Check for language.module instead, once Field API language
+    // handling depends upon it too.
+    return module_exists('locale') ? language_load($this->langcode) : FALSE;
+  }
+
+  /**
+   * Implements EntityInterface::translations().
+   */
+  public function translations() {
+    $languages = array();
+    $entity_info = $this->entityInfo();
+    if ($entity_info['fieldable'] && ($default_language = $this->language())) {
+      // Go through translatable properties and determine all languages for
+      // which translated values are available.
+      foreach (field_info_instances($this->entityType, $this->bundle()) as $field_name => $instance) {
+        $field = field_info_field($field_name);
+        if (field_is_translatable($this->entityType, $field) && isset($this->$field_name)) {
+          foreach ($this->$field_name as $langcode => $value)  {
+            $languages[$langcode] = TRUE;
+          }
+        }
+      }
+      // Remove the default language from the translations.
+      unset($languages[$default_language->langcode]);
+      $languages = array_intersect_key(language_list(), $languages);
+    }
+    return $languages;
+  }
+
+  /**
+   * Implements EntityInterface::get().
+   */
+  public function get($property_name, $langcode = NULL) {
+    // Handle fields.
+    $entity_info = $this->entityInfo();
+    if ($entity_info['fieldable'] && field_info_instance($this->entityType, $property_name, $this->bundle())) {
+      $field = field_info_field($property_name);
+      $langcode = $this->getFieldLangcode($field, $langcode);
+      return isset($this->{$property_name}[$langcode]) ? $this->{$property_name}[$langcode] : NULL;
+    }
+    else {
+      // Handle properties being not fields.
+      // @todo: Add support for translatable properties being not fields.
+      return isset($this->{$property_name}) ? $this->{$property_name} : NULL;
+    }
+  }
+
+  /**
+   * Implements EntityInterface::set().
+   */
+  public function set($property_name, $value, $langcode = NULL) {
+    // Handle fields.
+    $entity_info = $this->entityInfo();
+    if ($entity_info['fieldable'] && field_info_instance($this->entityType, $property_name, $this->bundle())) {
+      $field = field_info_field($property_name);
+      $langcode = $this->getFieldLangcode($field, $langcode);
+      $this->{$property_name}[$langcode] = $value;
+    }
+    else {
+      // Handle properties being not fields.
+      // @todo: Add support for translatable properties being not fields.
+      $this->{$property_name} = $value;
+    }
+  }
+
+  /**
+   * Determines the language code to use for accessing a field value in a certain language.
+   */
+  protected function getFieldLangcode($field, $langcode = NULL) {
+    // Only apply the given langcode if the entity is language-specific.
+    // Otherwise translatable fields are handled as non-translatable fields.
+    if (field_is_translatable($this->entityType, $field) && ($default_language = $this->language())) {
+      // For translatable fields the values in default language are stored using
+      // the language code of the default language.
+      return isset($langcode) ? $langcode : $default_language->langcode;
+    }
+    else {
+      // Non-translatable fields always use LANGUAGE_NOT_SPECIFIED.
+      return LANGUAGE_NOT_SPECIFIED;
     }
   }
 

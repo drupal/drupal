@@ -16,10 +16,10 @@
  * This hook is invoked from comment_save() before the comment is saved to the
  * database.
  *
- * @param $comment
+ * @param Comment $comment
  *   The comment object.
  */
-function hook_comment_presave($comment) {
+function hook_comment_presave(Comment $comment) {
   // Remove leading & trailing spaces from the comment subject.
   $comment->subject = trim($comment->subject);
 }
@@ -27,10 +27,10 @@ function hook_comment_presave($comment) {
 /**
  * Respond to creation of a new comment.
  *
- * @param $comment
+ * @param Comment $comment
  *   The comment object.
  */
-function hook_comment_insert($comment) {
+function hook_comment_insert(Comment $comment) {
   // Reindex the node when comments are added.
   search_touch_node($comment->nid);
 }
@@ -38,10 +38,10 @@ function hook_comment_insert($comment) {
 /**
  * Respond to updates to a comment.
  *
- * @param $comment
+ * @param Comment $comment
  *   The comment object.
  */
-function hook_comment_update($comment) {
+function hook_comment_update(Comment $comment) {
   // Reindex the node when comments are updated.
   search_touch_node($comment->nid);
 }
@@ -49,10 +49,10 @@ function hook_comment_update($comment) {
 /**
  * Act on comments being loaded from the database.
  *
- * @param $comments
+ * @param array $comments
  *  An array of comment objects indexed by cid.
  */
-function hook_comment_load($comments) {
+function hook_comment_load(Comment $comments) {
   $result = db_query('SELECT cid, foo FROM {mytable} WHERE cid IN (:cids)', array(':cids' => array_keys($comments)));
   foreach ($result as $record) {
     $comments[$record->cid]->foo = $record->foo;
@@ -62,7 +62,7 @@ function hook_comment_load($comments) {
 /**
  * Act on a comment that is being assembled before rendering.
  *
- * @param $comment
+ * @param Comment $comment
  *   Passes in the comment the action is being performed on.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
@@ -71,7 +71,7 @@ function hook_comment_load($comments) {
  *
  * @see hook_entity_view()
  */
-function hook_comment_view($comment, $view_mode, $langcode) {
+function hook_comment_view(Comment $comment, $view_mode, $langcode) {
   // how old is the comment
   $comment->time_ago = time() - $comment->changed;
 }
@@ -108,20 +108,20 @@ function hook_comment_view_alter(&$build) {
 /**
  * Respond to a comment being published by a moderator.
  *
- * @param $comment
+ * @param Comment $comment
  *   The comment the action is being performed on.
  */
-function hook_comment_publish($comment) {
+function hook_comment_publish(Comment $comment) {
   drupal_set_message(t('Comment: @subject has been published', array('@subject' => $comment->subject)));
 }
 
 /**
  * Respond to a comment being unpublished by a moderator.
  *
- * @param $comment
+ * @param Comment $comment
  *   The comment the action is being performed on.
  */
-function hook_comment_unpublish($comment) {
+function hook_comment_unpublish(Comment $comment) {
   drupal_set_message(t('Comment: @subject has been unpublished', array('@subject' => $comment->subject)));
 }
 
@@ -132,14 +132,14 @@ function hook_comment_unpublish($comment) {
  * field_attach_delete() is called and before the comment is actually removed
  * from the database.
  *
- * @param $comment
+ * @param Comment $comment
  *   The comment object for the comment that is about to be deleted.
  *
  * @see hook_comment_delete()
  * @see comment_delete_multiple()
  * @see entity_delete_multiple()
  */
-function hook_comment_predelete($comment) {
+function hook_comment_predelete(Comment $comment) {
   // Delete a record associated with the comment in a custom table.
   db_delete('example_comment_table')
     ->condition('cid', $comment->cid)
@@ -153,14 +153,14 @@ function hook_comment_predelete($comment) {
  * field_attach_delete() has called and after the comment has been removed from
  * the database.
  *
- * @param $comment
+ * @param Comment $comment
  *   The comment object for the comment that has been deleted.
  *
  * @see hook_comment_predelete()
  * @see comment_delete_multiple()
  * @see entity_delete_multiple()
  */
-function hook_comment_delete($comment) {
+function hook_comment_delete(Comment $comment) {
   drupal_set_message(t('Comment: @subject has been deleted', array('@subject' => $comment->subject)));
 }
 

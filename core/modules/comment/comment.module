@@ -164,7 +164,7 @@ function comment_node_type_load($name) {
 /**
  * Entity uri callback.
  */
-function comment_uri($comment) {
+function comment_uri(Comment $comment) {
   return array(
     'path' => 'comment/' . $comment->cid,
     'options' => array('fragment' => 'comment-' . $comment->cid),
@@ -935,7 +935,7 @@ function comment_prepare_thread(&$comments) {
 /**
  * Generates an array for rendering a comment.
  *
- * @param $comment
+ * @param Comment $comment
  *   The comment object.
  * @param $node
  *   The node the comment is attached to.
@@ -948,7 +948,7 @@ function comment_prepare_thread(&$comments) {
  * @return
  *   An array as expected by drupal_render().
  */
-function comment_view($comment, $node, $view_mode = 'full', $langcode = NULL) {
+function comment_view(Comment $comment, $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->langcode;
   }
@@ -1005,7 +1005,7 @@ function comment_view($comment, $node, $view_mode = 'full', $langcode = NULL) {
  * The content built for the comment (field values, comments, file attachments
  * or other comment components) will vary depending on the $view_mode parameter.
  *
- * @param $comment
+ * @param Comment $comment
  *   A comment object.
  * @param $node
  *   The node the comment is attached to.
@@ -1015,7 +1015,7 @@ function comment_view($comment, $node, $view_mode = 'full', $langcode = NULL) {
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
  */
-function comment_build_content($comment, $node, $view_mode = 'full', $langcode = NULL) {
+function comment_build_content(Comment $comment, $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->langcode;
   }
@@ -1049,7 +1049,7 @@ function comment_build_content($comment, $node, $view_mode = 'full', $langcode =
 /**
  * Adds reply, edit, delete, etc. links, depending on user permissions.
  *
- * @param $comment
+ * @param Comment $comment
  *   The comment object.
  * @param $node
  *   The node the comment is attached to.
@@ -1057,7 +1057,7 @@ function comment_build_content($comment, $node, $view_mode = 'full', $langcode =
  * @return
  *   A structured array of links.
  */
-function comment_links($comment, $node) {
+function comment_links(Comment $comment, $node) {
   $links = array();
   if ($node->comment == COMMENT_NODE_OPEN) {
     if (user_access('administer comments') && user_access('post comments')) {
@@ -1451,13 +1451,13 @@ function comment_user_predelete($account) {
  * @param $op
  *   The operation that is to be performed on the comment. Only 'edit' is
  *   recognized now.
- * @param $comment
+ * @param Comment $comment
  *   The comment object.
  *
  * @return
  *   TRUE if the current user has acces to the comment, FALSE otherwise.
  */
-function comment_access($op, $comment) {
+function comment_access($op, Comment $comment) {
   global $user;
 
   if ($op == 'edit') {
@@ -1468,10 +1468,10 @@ function comment_access($op, $comment) {
 /**
  * Accepts a submission of new or changed comment content.
  *
- * @param $comment
+ * @param Comment $comment
  *   A comment object.
  */
-function comment_save($comment) {
+function comment_save(Comment $comment) {
   $comment->save();
 }
 
@@ -1644,12 +1644,12 @@ function comment_get_display_page($cid, $node_type) {
 /**
  * Page callback: Displays the comment editing form.
  *
- * @param $comment
+ * @param Comment $comment
  *   The comment object representing the comment to be edited.
  *
  * @see comment_menu()
  */
-function comment_edit_page($comment) {
+function comment_edit_page(Comment $comment) {
   drupal_set_title(t('Edit comment %comment', array('%comment' => $comment->subject)), PASS_THROUGH);
   $node = node_load($comment->nid);
   return drupal_get_form("comment_node_{$node->type}_form", $comment);
@@ -1674,7 +1674,7 @@ function comment_forms() {
  * @see comment_form_build_preview()
  * @ingroup forms
  */
-function comment_form($form, &$form_state, $comment) {
+function comment_form($form, &$form_state, Comment $comment) {
   global $user, $language_content;
 
   // During initial form build, add the comment entity to the form state for
@@ -1888,9 +1888,11 @@ function comment_form_build_preview($form, &$form_state) {
 /**
  * Generates a comment preview.
  *
+ * @param Comment $comment
+ *
  * @see comment_form_build_preview()
  */
-function comment_preview($comment) {
+function comment_preview(Comment $comment) {
   global $user;
 
   drupal_set_title(t('Preview comment'), PASS_THROUGH);
@@ -1987,8 +1989,11 @@ function comment_form_validate($form, &$form_state) {
 
 /**
  * Prepare a comment for submission.
+ *
+ * @param Comment $comment
+ *
  */
-function comment_submit($comment) {
+function comment_submit(Comment $comment) {
   if (empty($comment->date)) {
     $comment->date = 'now';
   }
@@ -2328,15 +2333,15 @@ function comment_action_info() {
 /**
  * Publishes a comment.
  *
- * @param $comment
- *   An optional comment object.
+ * @param Comment $comment
+ *   (optional) A comment object to publish.
  * @param array $context
  *   Array with components:
  *   - 'cid': Comment ID. Required if $comment is not given.
  *
  * @ingroup actions
  */
-function comment_publish_action($comment, $context = array()) {
+function comment_publish_action(Comment $comment = NULL, $context = array()) {
   if (isset($comment->subject)) {
     $subject = $comment->subject;
     $comment->status = COMMENT_PUBLISHED;
@@ -2355,15 +2360,15 @@ function comment_publish_action($comment, $context = array()) {
 /**
  * Unpublishes a comment.
  *
- * @param $comment
- *   An optional comment object.
+ * @param Comment|null $comment
+ *   (optional) A comment object to unpublish.
  * @param array $context
  *   Array with components:
  *   - 'cid': Comment ID. Required if $comment is not given.
  *
  * @ingroup actions
  */
-function comment_unpublish_action($comment, $context = array()) {
+function comment_unpublish_action(Comment $comment = NULL, $context = array()) {
   if (isset($comment->subject)) {
     $subject = $comment->subject;
     $comment->status = COMMENT_NOT_PUBLISHED;
@@ -2382,7 +2387,7 @@ function comment_unpublish_action($comment, $context = array()) {
 /**
  * Unpublishes a comment if it contains certain keywords.
  *
- * @param $comment
+ * @param Comment $comment
  *   Comment object to modify.
  * @param array $context
  *   Array with components:
@@ -2393,7 +2398,7 @@ function comment_unpublish_action($comment, $context = array()) {
  * @see comment_unpublish_by_keyword_action_form()
  * @see comment_unpublish_by_keyword_action_submit()
  */
-function comment_unpublish_by_keyword_action($comment, $context) {
+function comment_unpublish_by_keyword_action(Comment $comment, $context) {
   foreach ($context['keywords'] as $keyword) {
     $text = drupal_render($comment);
     if (strpos($text, $keyword) !== FALSE) {
@@ -2434,9 +2439,11 @@ function comment_unpublish_by_keyword_action_submit($form, $form_state) {
 /**
  * Saves a comment.
  *
+ * @param Comment $comment
+ *
  * @ingroup actions
  */
-function comment_save_action($comment) {
+function comment_save_action(Comment $comment) {
   comment_save($comment);
   cache_clear_all();
   watchdog('action', 'Saved comment %title', array('%title' => $comment->subject));

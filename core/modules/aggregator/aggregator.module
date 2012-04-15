@@ -396,6 +396,7 @@ function aggregator_block_view($delta = '') {
   if (user_access('access news feeds')) {
     $block = array();
     list($type, $id) = explode('-', $delta);
+    $result = FALSE;
     switch ($type) {
       case 'feed':
         if ($feed = db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = :fid', array(':fid' => $id))->fetchObject()) {
@@ -413,9 +414,12 @@ function aggregator_block_view($delta = '') {
         }
         break;
     }
+
     $items = array();
-    foreach ($result as $item) {
-      $items[] = theme('aggregator_block_item', array('item' => $item));
+    if (!empty($result)) {
+      foreach ($result as $item) {
+        $items[] = theme('aggregator_block_item', array('item' => $item));
+      }
     }
 
     // Only display the block if there are items to show.

@@ -47,12 +47,9 @@ function comment_reply($node, $pid = NULL) {
     // $pid indicates that this is a reply to a comment.
     if ($pid) {
       if (user_access('access comments')) {
-        // Load the comment whose cid = $pid
-        $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.signature_format, u.picture, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
-          ':cid' => $pid,
-          ':status' => COMMENT_PUBLISHED,
-        ))->fetchObject();
-        if ($comment) {
+        // Load the parent comment.
+        $comment = comment_load($pid);
+        if ($comment->status = COMMENT_PUBLISHED) {
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.
           if ($comment->nid != $node->nid) {

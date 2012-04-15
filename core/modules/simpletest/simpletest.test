@@ -86,9 +86,9 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
   function testUserAgentValidation() {
     if (!$this->inCURL()) {
       global $base_url;
-      $simpletest_path = $base_url . '/' . drupal_get_path('module', 'simpletest');
-      $HTTP_path = $simpletest_path .'/tests/http.php?q=node';
-      $https_path = $simpletest_path .'/tests/https.php?q=node';
+      $system_path = $base_url . '/' . drupal_get_path('module', 'system');
+      $HTTP_path = $system_path .'/tests/http.php?q=node';
+      $https_path = $system_path .'/tests/https.php?q=node';
       // Generate a valid simpletest User-Agent to pass validation.
       $this->assertTrue(preg_match('/simpletest\d+/', $this->databasePrefix, $matches), t('Database prefix contains simpletest prefix.'));
       $test_ua = drupal_generate_test_ua($matches[0]);

@@ -18,7 +18,7 @@ use Iterator;
  * database.  Calling code can then treat it the same as if it were an actual
  * result set that happens to contain no records.
  *
- * @see SearchQuery
+ * @see Drupal\search\SearchQuery
  */
 class StatementEmpty implements Iterator, StatementInterface {
 
