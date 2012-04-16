@@ -688,7 +688,8 @@ function overlay_overlay_child_initialize() {
   // it to the same content rendered in overlay_exit(), at the end of the page
   // request. This allows us to check if anything actually did change, and, if
   // so, trigger an immediate Ajax refresh of the parent window.
-  if (!empty($_POST) || isset(request()->query->get('token'))) {
+  $token = request()->query->get('token');
+  if (!empty($_POST) || isset($token)) {
     foreach (overlay_supplemental_regions() as $region) {
       overlay_store_rendered_content($region, overlay_render_region($region));
     }
