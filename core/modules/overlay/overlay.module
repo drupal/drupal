@@ -34,7 +34,7 @@ function overlay_menu() {
   $items['overlay/dismiss-message'] = array(
     'title' => '',
     'page callback' => 'overlay_user_dismiss_message',
-    'access arguments' => array('access overlay'),
+    'access callback' => 'overlay_user_dismiss_message_access',
     'type' => MENU_CALLBACK,
   );
   return $items;
@@ -302,22 +302,41 @@ function overlay_page_alter(&$page) {
 
 /**
  * Menu callback; dismisses the overlay accessibility message for this user.
+ *
+ * @see overlay_user_dismiss_message_access()
+ * @see overlay_menu()
  */
 function overlay_user_dismiss_message() {
   global $user;
+  user_save(user_load($user->uid), array('data' => array('overlay_message_dismissed' => 1)));
+  drupal_set_message(t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
+  // Destination is normally given. Go to the user profile as a fallback.
+  drupal_goto('user/' . $user->uid . '/edit');
+}
+
+/**
+ * Access callback; determines access to dismiss the overlay accessibility message.
+ *
+ * @see overlay_user_dismiss_message()
+ * @see overlay_menu()
+ */
+function overlay_user_dismiss_message_access() {
+  global $user;
+  if (!user_access('access overlay')) {
+    return FALSE;
+  }
   // It's unlikely, but possible that "access overlay" permission is granted to
   // the anonymous role. In this case, we do not display the message to disable
-  // the overlay, so there is nothing to dismiss. Also, protect against
-  // cross-site request forgeries by validating a token.
-  if (empty($user->uid) || !isset($_GET['token']) || !drupal_valid_token($_GET['token'], 'overlay')) {
-    return MENU_ACCESS_DENIED;
+  // the overlay, so there is nothing to dismiss.
+  if (empty($user->uid)) {
+    return FALSE;
   }
-  else {
-    user_save(user_load($user->uid), array('data' => array('overlay_message_dismissed' => 1)));
-    drupal_set_message(t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
-    // Destination is normally given. Go to the user profile as a fallback.
-    drupal_goto('user/' . $user->uid . '/edit');
+  // Protect against cross-site request forgeries by validating a token.
+  $token = request()->query->get('token');
+  if (!isset($token) || !drupal_valid_token($token, 'overlay')) {
+    return FALSE;
   }
+  return TRUE;
 }
 
 /**
