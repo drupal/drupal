@@ -298,7 +298,8 @@ function drupal_get_destination() {
  * @param $path
  *   A Drupal path or a full URL.
  * @param $query
- *   A query string component, if any.
+ *   A URL-encoded query string to append to the link, or an array of query
+ *   key/value-pairs without any URL-encoding. Passed to url().
  * @param $fragment
  *   A destination fragment identifier (named anchor).
  * @param $http_response_code
