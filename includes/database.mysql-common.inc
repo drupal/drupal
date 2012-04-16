@@ -26,8 +26,9 @@
  *   and TRUE values to decimal 1.
  *
  * @return
- *   A database query result resource, or FALSE if the query was not
- *   executed correctly.
+ *   Successful SELECT, SHOW, DESCRIBE, EXPLAIN, or other queries which return a
+ *   set of results will return a database query result resource. Other
+ *   successful queries will return TRUE and failing queries will return FALSE.
  */
 function db_query($query) {
   $args = func_get_args();
