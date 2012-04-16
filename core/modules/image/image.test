@@ -210,7 +210,7 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
     $generate_url = image_style_url($this->style_name, $original_uri);
 
     if (!$clean_url) {
-      $this->assertTrue(strpos($generate_url, '?q=') !== FALSE, 'When using non-clean URLS, the system path contains the query string.');
+      $this->assertTrue(strpos($generate_url, 'index.php') !== FALSE, 'When using non-clean URLS, the system path contains the query string.');
     }
 
     // Fetch the URL that generates the file.
@@ -635,7 +635,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
       // sent by Drupal.
       $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png; name="' . $test_image->filename . '"', t('Content-Type header was sent.'));
       $this->assertEqual($this->drupalGetHeader('Content-Disposition'), 'inline; filename="' . $test_image->filename . '"', t('Content-Disposition header was sent.'));
-      $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'private', t('Cache-Control header was sent.'));
+      $this->assertTrue(strstr($this->drupalGetHeader('Cache-Control'),'private') !== FALSE, t('Cache-Control header was sent.'));
 
       // Log out and try to access the file.
       $this->drupalLogout();
