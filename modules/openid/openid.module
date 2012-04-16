@@ -499,6 +499,8 @@ function openid_association_request($public) {
 }
 
 function openid_authentication_request($claimed_id, $identity, $return_to = '', $assoc_handle = '', $version = 2) {
+  global $base_url;
+
   module_load_include('inc', 'openid');
 
   $ns = ($version == 2) ? OPENID_NS_2_0 : OPENID_NS_1_0;
@@ -512,10 +514,10 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
   );
 
   if ($version == 2) {
-    $request['openid.realm'] = url('', array('absolute' => TRUE));
+    $request['openid.realm'] = $base_url . '/';
   }
   else {
-    $request['openid.trust_root'] = url('', array('absolute' => TRUE));
+    $request['openid.trust_root'] = $base_url . '/';
   }
 
   // Simple Registration
