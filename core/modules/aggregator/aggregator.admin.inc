@@ -401,11 +401,9 @@ function _aggregator_parse_opml($opml) {
  *   An object describing the feed to be refreshed.
  *
  * @see aggregator_menu()
+ * @see aggregator_admin_refresh_feed_access()
  */
 function aggregator_admin_refresh_feed($feed) {
-  if (!isset($_GET['token']) || !drupal_valid_token($_GET['token'], 'aggregator/update/' . $feed->fid)) {
-    return MENU_ACCESS_DENIED;
-  }
   aggregator_refresh($feed);
   drupal_goto('admin/config/services/aggregator');
 }
