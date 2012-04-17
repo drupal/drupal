@@ -255,21 +255,24 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
       // preferred langugage is "en-GB", we look for "en-gb" (Drupal's language
       // codes are lower-case) or fall back to "en".
       $parts = preg_split('/[_-]/', strtolower($language));
-      $candidate_languages[] = $parts[0];
+      $candidate_langcodes[] = $parts[0];
       if (count($parts) > 1) {
-        $candidate_languages[] = $parts[0] . '-' . $parts[1];
+        $candidate_langcodes[] = $parts[0] . '-' . $parts[1];
       }
       if (count($parts) > 2) {
-        $candidate_languages[] = $parts[0] . '-' . $parts[2];
-        $candidate_languages[] = $parts[0] . '-' . $parts[1] . '-' . $parts[2];
+        $candidate_langcodes[] = $parts[0] . '-' . $parts[2];
+        $candidate_langcodes[] = $parts[0] . '-' . $parts[1] . '-' . $parts[2];
       }
       $enabled_languages = language_list(TRUE);
       // Iterate over the generated permutations starting with the longest (most
       // specific) strings.
-      foreach (array_reverse($candidate_languages) as $candidate_language) {
-        if (isset($enabled_languages[$candidate_language])) {
+      foreach (array_reverse($candidate_langcodes) as $candidate_langcode) {
+        if (isset($enabled_languages[$candidate_langcode])) {
           $form['locale']['preferred_langcode']['#type'] = 'hidden';
-          $form['locale']['preferred_langcode']['#value'] = $candidate_language;
+          $form['locale']['preferred_langcode']['#value'] = $candidate_langcode;
+          // Skip the rest of the foreach to not overwrite the specific
+          // language we found.
+          break;
         }
       }
     }
