@@ -2941,11 +2941,30 @@ function registry_rebuild() {
  * to be called, because it is already known that the list of files in the
  * {system} table matches those in the file system.
  *
+ * @return
+ *   TRUE if the registry was rebuilt, FALSE if another thread was rebuilding
+ *   in parallel and the current thread just waited for completion.
+ *
  * @see registry_rebuild()
  */
 function registry_update() {
+  // install_system_module() calls module_enable() which calls into this
+  // function during initial system installation, so the lock system is neither
+  // loaded nor does its storage exist yet.
+  $in_installer = drupal_installation_attempted();
+  if (!$in_installer && !lock_acquire(__FUNCTION__)) {
+    // Another request got the lock, wait for it to finish.
+    lock_wait(__FUNCTION__);
+    return FALSE;
+  }
+
   require_once DRUPAL_ROOT . '/core/includes/registry.inc';
   _registry_update();
+
+  if (!$in_installer) {
+    lock_release(__FUNCTION__);
+  }
+  return TRUE;
 }
 
 /**
