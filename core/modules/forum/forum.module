@@ -1089,7 +1089,7 @@ function template_preprocess_forum_list(&$variables) {
     if ($user->uid) {
       $variables['forums'][$id]->new_topics = _forum_topics_unread($forum->tid, $user->uid);
       if ($variables['forums'][$id]->new_topics) {
-        $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new', '@count new');
+        $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new post<span class="element-invisible"> in forum %title</span>', '@count new posts<span class="element-invisible"> in forum %title</span>', array('%title' => $variables['forums'][$id]->name));
         $variables['forums'][$id]->new_url = url("forum/$forum->tid", array('fragment' => 'new'));
         $variables['forums'][$id]->icon_class = 'new';
         $variables['forums'][$id]->icon_title = t('New posts');
@@ -1153,7 +1153,7 @@ function template_preprocess_forum_topic_list(&$variables) {
       $variables['topics'][$id]->new_text = '';
       $variables['topics'][$id]->new_url = '';
       if ($topic->new_replies) {
-        $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new', '@count new');
+        $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new post<span class="element-invisible"> in topic %title</span>', '@count new posts<span class="element-invisible"> in topic %title</span>', array('%title' => $original_title));
         $variables['topics'][$id]->new_url = url("node/$topic->nid", array('query' => comment_new_page_count($topic->comment_count, $topic->new_replies, $topic), 'fragment' => 'new'));
       }
 
