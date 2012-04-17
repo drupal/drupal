@@ -8,23 +8,24 @@ Drupal.behaviors.openid = {
     var cookie = $.cookie('Drupal.visitor.openid_identifier');
 
     // This behavior attaches by ID, so is only valid once on a page.
-    if (!$('#edit-openid-identifier.openid-processed').length) {
+    if (cookie || location.hash == '#openid-login') {
+      $edit_openid_identifier = $('#edit-openid-identifier');
       if (cookie) {
-        $('#edit-openid-identifier').val(cookie);
+        $edit_openid_identifier.val(cookie);
       }
-      if ($('#edit-openid-identifier').val() || location.hash == '#openid-login') {
-        $('#edit-openid-identifier').addClass('openid-processed');
+      $edit_openid_identifier.once('openid', function() {
         loginElements.hide();
         // Use .css('display', 'block') instead of .show() to be Konqueror friendly.
         openidElements.css('display', 'block');
-      }
+      });
     }
 
-    $context.find('li.openid-link:not(.openid-processed)')
-      .addClass('openid-processed')
+
+    $context.find('li.openid-link')
+      .once('openid')
       .click(function () {
-         loginElements.hide();
-         openidElements.css('display', 'block');
+        loginElements.hide();
+        openidElements.css('display', 'block');
         // Remove possible error message.
         $('#edit-name, #edit-pass').removeClass('error');
         $('div.messages.error').hide();
@@ -32,11 +33,11 @@ Drupal.behaviors.openid = {
         $('#edit-openid-identifier')[0].focus();
         return false;
       });
-    $context.find('li.user-link:not(.openid-processed)')
-      .addClass('openid-processed')
+    $context.find('li.user-link')
+      .once('openid')
       .click(function () {
-         openidElements.hide();
-         loginElements.css('display', 'block');
+        openidElements.hide();
+        loginElements.css('display', 'block');
         // Clear OpenID Identifier field and remove possible error message.
         $('#edit-openid-identifier').val('').removeClass('error');
         $('div.messages.error').css('display', 'block');

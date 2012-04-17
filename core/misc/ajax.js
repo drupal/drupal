@@ -21,23 +21,18 @@ Drupal.behaviors.AJAX = {
   attach: function (context, settings) {
     // Load all Ajax behaviors specified in the settings.
     for (var base in settings.ajax) {
-      if (!$('#' + base + '.ajax-processed').length) {
-        var element_settings = settings.ajax[base];
-
-        if (typeof element_settings.selector == 'undefined') {
-          element_settings.selector = '#' + base;
-        }
-        $(element_settings.selector).each(function () {
-          element_settings.element = this;
-          Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
-        });
-
-        $('#' + base).addClass('ajax-processed');
+      var element_settings = settings.ajax[base];
+      if (typeof element_settings.selector == 'undefined') {
+        element_settings.selector = '#' + base;
       }
+      $(element_settings.selector).once('drupal-ajax', function() {
+        element_settings.element = this;
+        Drupal.ajax[element_settings.selector] = new Drupal.ajax(base, this, element_settings);
+      });
     }
 
     // Bind Ajax behaviors to all items showing the class.
-    $('.use-ajax:not(.ajax-processed)').addClass('ajax-processed').each(function () {
+    $('.use-ajax').once('ajax', function () {
       var element_settings = {};
       // Clicked links look better with the throbber than the progress bar.
       element_settings.progress = { 'type': 'throbber' };
@@ -53,7 +48,7 @@ Drupal.behaviors.AJAX = {
     });
 
     // This class means to submit the form to the action using Ajax.
-    $('.use-ajax-submit:not(.ajax-processed)').addClass('ajax-processed').each(function () {
+    $('.use-ajax-submit').once('ajax', function () {
       var element_settings = {};
 
       // Ajax submits specified in this manner automatically submit to the
