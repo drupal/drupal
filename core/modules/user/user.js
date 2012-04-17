@@ -97,10 +97,10 @@ Drupal.behaviors.password = {
 Drupal.evaluatePasswordStrength = function (password, translate) {
   var indicatorText, indicatorColor, weaknesses = 0, strength = 100, msg = [];
 
-  var hasLowercase = password.match(/[a-z]+/);
-  var hasUppercase = password.match(/[A-Z]+/);
-  var hasNumbers = password.match(/[0-9]+/);
-  var hasPunctuation = password.match(/[^a-zA-Z0-9]+/);
+  var hasLowercase = /[a-z]+/.test(password);
+  var hasUppercase = /[A-Z]+/.test(password);
+  var hasNumbers = /[0-9]+/.test(password);
+  var hasPunctuation = /[^a-zA-Z0-9]+/.test(password);
 
   // If there is a username edit box on the page, compare password to that, otherwise
   // use value from the database.
