@@ -331,12 +331,15 @@ function aggregator_cron() {
 }
 
 /**
- * Implements hook_cron_queue_info().
+ * Implements hook_queue_info().
  */
-function aggregator_cron_queue_info() {
+function aggregator_queue_info() {
   $queues['aggregator_feeds'] = array(
+    'title' => t('Aggregator refresh'),
     'worker callback' => 'aggregator_refresh',
-    'time' => 60,
+    'cron' => array(
+      'time' => 60,
+    ),
   );
   return $queues;
 }

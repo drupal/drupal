@@ -120,7 +120,7 @@ function hook_admin_paths_alter(&$paths) {
  * Long-running tasks and tasks that could time out, such as retrieving remote
  * data, sending email, and intensive file tasks, should use the queue API
  * instead of executing the tasks directly. To do this, first define one or
- * more queues via hook_cron_queue_info(). Then, add items that need to be
+ * more queues via hook_queue_info(). Then, add items that need to be
  * processed to the defined queues.
  */
 function hook_cron() {
@@ -154,22 +154,33 @@ function hook_cron() {
  * items in the queue, otherwise it might take several requests, which can be
  * run in parallel.
  *
+ * You can create queues, add items to them, claim them, etc without declaring
+ * the queue in this hook if you want, however, you need to take care of
+ * processing the items in the queue in that case.
+ *
  * @return
  *   An associative array where the key is the queue name and the value is
  *   again an associative array. Possible keys are:
  *   - 'worker callback': The name of the function to call. It will be called
  *     with one argument, the item created via
  *     Drupal\Core\Queue\QueueInterface::createItem() in hook_cron().
- *   - 'time': (optional) How much time Drupal should spend on calling this
- *     worker in seconds. Defaults to 15.
+ *   - 'cron': (optional) An associative array containing the optional key:
+ *     - 'time': (optional) How much time Drupal cron should spend on calling
+ *       this worker in seconds. Defaults to 15.
+ *     If the cron key is not defined, the queue will not be processed by cron,
+ *     and must be processed by other means.
  *
  * @see hook_cron()
- * @see hook_cron_queue_info_alter()
+ * @see hook_queue_info_alter()
  */
-function hook_cron_queue_info() {
+function hook_queue_info() {
   $queues['aggregator_feeds'] = array(
+    'title' => t('Aggregator refresh'),
     'worker callback' => 'aggregator_refresh',
-    'time' => 60,
+    // Only needed if this queue should be processed by cron.
+    'cron' => array(
+      'time' => 60,
+    ),
   );
   return $queues;
 }
@@ -183,13 +194,13 @@ function hook_cron_queue_info() {
  * @param array $queues
  *   An array of cron queue information.
  *
- * @see hook_cron_queue_info()
+ * @see hook_queue_info()
  * @see drupal_cron_run()
  */
-function hook_cron_queue_info_alter(&$queues) {
+function hook_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
   // updating feeds instead of the default 60.
-  $queues['aggregator_feeds']['time'] = 90;
+  $queues['aggregator_feeds']['cron']['time'] = 90;
 }
 
 /**

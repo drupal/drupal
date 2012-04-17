@@ -5305,8 +5305,8 @@ function drupal_cron_run() {
 
   $return = FALSE;
   // Grab the defined cron queues.
-  $queues = module_invoke_all('cron_queue_info');
-  drupal_alter('cron_queue_info', $queues);
+  $queues = module_invoke_all('queue_info');
+  drupal_alter('queue_info', $queues);
 
   // Try to acquire cron lock.
   if (!lock_acquire('cron', 240.0)) {
@@ -5317,7 +5317,9 @@ function drupal_cron_run() {
     // Make sure every queue exists. There is no harm in trying to recreate an
     // existing queue.
     foreach ($queues as $queue_name => $info) {
-      queue($queue_name)->createQueue();
+      if (isset($info['cron'])) {
+        queue($queue_name)->createQueue();
+      }
     }
     // Register shutdown callback.
     drupal_register_shutdown_function('drupal_cron_cleanup');
@@ -5345,12 +5347,14 @@ function drupal_cron_run() {
   }
 
   foreach ($queues as $queue_name => $info) {
-    $function = $info['worker callback'];
-    $end = time() + (isset($info['time']) ? $info['time'] : 15);
-    $queue = queue($queue_name);
-    while (time() < $end && ($item = $queue->claimItem())) {
-      $function($item->data);
-      $queue->deleteItem($item);
+    if (isset($info['cron'])) {
+      $function = $info['worker callback'];
+      $end = time() + (isset($info['cron']['time']) ? $info['cron']['time'] : 15);
+      $queue = queue($queue_name);
+      while (time() < $end && ($item = $queue->claimItem())) {
+        $function($item->data);
+        $queue->deleteItem($item);
+      }
     }
   }
   // Restore the user.
