@@ -126,6 +126,165 @@ class ExceptionController {
   }
 
   /**
+   * Processes a generic exception into an HTTP 500 response.
+   *
+   * @param FlattenException $exception
+   *   Metadata about the exception that was thrown.
+   * @param Request $request
+   *   The request object that triggered this exception.
+   */
+  public function on500Html(FlattenException $exception, Request $request) {
+    $error = $this->decodeException($exception);
+
+    // Because the kernel doesn't run until full bootstrap, we know that
+    // most subsystems are already initialized.
+
+    $headers = array();
+
+    // When running inside the testing framework, we relay the errors
+    // to the tested site by the way of HTTP headers.
+    $test_info = &$GLOBALS['drupal_test_info'];
+    if (!empty($test_info['in_child_site']) && !headers_sent() && (!defined('SIMPLETEST_COLLECT_ERRORS') || SIMPLETEST_COLLECT_ERRORS)) {
+      // $number does not use drupal_static as it should not be reset
+      // as it uniquely identifies each PHP error.
+      static $number = 0;
+      $assertion = array(
+        $error['!message'],
+        $error['%type'],
+        array(
+          'function' => $error['%function'],
+          'file' => $error['%file'],
+          'line' => $error['%line'],
+        ),
+      );
+      $headers['X-Drupal-Assertion-' . $number] = rawurlencode(serialize($assertion));
+      $number++;
+    }
+
+    watchdog('php', '%type: !message in %function (line %line of %file).', $error, $error['severity_level']);
+
+    // Display the message if the current error reporting level allows this type
+    // of message to be displayed, and unconditionnaly in update.php.
+    if (error_displayable($error)) {
+      $class = 'error';
+
+      // If error type is 'User notice' then treat it as debug information
+      // instead of an error message, see dd().
+      if ($error['%type'] == 'User notice') {
+        $error['%type'] = 'Debug';
+        $class = 'status';
+      }
+
+      drupal_set_message(t('%type: !message in %function (line %line of %file).', $error), $class);
+    }
+
+    drupal_set_title(t('Error'));
+    // We fallback to a maintenance page at this point, because the page generation
+    // itself can generate errors.
+    $output = theme('maintenance_page', array('content' => t('The website encountered an unexpected error. Please try again later.')));
+
+    $response = new Response($output, 500);
+    $response->setStatusCode(500, '500 Service unavailable (with message)');
+
+    return $response;
+
+
+    //return _drupal_log_error(_drupal_decode_exception($exception), TRUE);
+  }
+
+  /**
+   * This method is a temporary port of _drupal_decode_exception().
+   *
+   * @todo This should get refactored.  Flatten Exception could use some
+   *       improvement as well.
+   *
+   * @return array
+   */
+  protected function decodeException(FlattenException $exception) {
+    $message = $exception->getMessage();
+
+    $backtrace = $exception->getTrace();
+
+    // This value is missing from the stack for some reason in the
+    // FlattenException version of the backtrace.
+    $backtrace[0]['line'] = $exception->getLine();
+
+    // For PDOException errors, we try to return the initial caller,
+    // skipping internal functions of the database layer.
+    if ($exception instanceof PDOException) {
+      // The first element in the stack is the call, the second element gives us the caller.
+      // We skip calls that occurred in one of the classes of the database layer
+      // or in one of its global functions.
+      $db_functions = array('db_query',  'db_query_range');
+      while (!empty($backtrace[1]) && ($caller = $backtrace[1]) &&
+          ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE || strpos($caller['class'], 'PDO') !== FALSE)) ||
+          in_array($caller['function'], $db_functions))) {
+        // We remove that call.
+        array_shift($backtrace);
+      }
+      if (isset($exception->query_string, $exception->args)) {
+        $message .= ": " . $exception->query_string . "; " . print_r($exception->args, TRUE);
+      }
+    }
+    $caller = _drupal_get_last_caller($backtrace);
+
+    return array(
+      '%type' => $exception->getClass(),
+      // The standard PHP exception handler considers that the exception message
+      // is plain-text. We mimick this behavior here.
+      '!message' => check_plain($message),
+      '%function' => $caller['function'],
+      '%file' => $caller['file'],
+      '%line' => $caller['line'],
+      'severity_level' => WATCHDOG_ERROR,
+    );
+  }
+
+  /**
+   * Gets the last caller from a backtrace.
+   *
+   * The last caller is not necessarily the first item in the backtrace. Rather,
+   * it is the first item in the backtrace that is a PHP userspace function,
+   * and not one of our debug functions.
+   *
+   * @param $backtrace
+   *   A standard PHP backtrace.
+   *
+   * @return
+   *   An associative array with keys 'file', 'line' and 'function'.
+   */
+  protected function getLastCaller($backtrace) {
+
+    // Ignore black listed error handling functions.
+    $blacklist = array('debug', '_drupal_error_handler', '_drupal_exception_handler');
+
+    // Errors that occur inside PHP internal functions do not generate
+    // information about file and line.
+    while (($backtrace && !isset($backtrace[0]['line'])) ||
+          (isset($backtrace[1]['function']) && in_array($backtrace[1]['function'], $blacklist))) {
+      array_shift($backtrace);
+    }
+
+    // The first trace is the call itself.
+    // It gives us the line and the file of the last call.
+    $call = $backtrace[0];
+
+    // The second call give us the function where the call originated.
+    if (isset($backtrace[1])) {
+      if (isset($backtrace[1]['class'])) {
+        $call['function'] = $backtrace[1]['class'] . $backtrace[1]['type'] . $backtrace[1]['function'] . '()';
+      }
+      else {
+        $call['function'] = $backtrace[1]['function'] . '()';
+      }
+    }
+    else {
+      $call['function'] = 'main()';
+    }
+    return $call;
+  }
+
+  /**
    * Processes a NotFound exception into an HTTP 403 response.
    *
    * @param GetResponseEvent $event
