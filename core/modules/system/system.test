@@ -2859,6 +2859,6 @@ class SystemIndexPhpTest extends DrupalWebTestCase {
     $this->assertResponse(200, t('Make sure index.php?q=user returns a valid page.'));
 
     $this->drupalGet($index_php .'/user', array('external' => TRUE));
-    $this->assertResponse(404, t("Make sure index.php/user returns a 'page not found'."));
+    $this->assertResponse(200, t("Make sure index.php/user returns a valid page."));
   }
 }
