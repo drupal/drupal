@@ -1653,8 +1653,7 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
  * Arbitrary elements may be added using the $args associative array.
  */
 function format_rss_channel($title, $link, $description, $items, $langcode = NULL, $args = array()) {
-  global $language_content;
-  $langcode = $langcode ? $langcode : $language_content->langcode;
+  $langcode = $langcode ? $langcode : drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
 
   $output = "<channel>\n";
   $output .= ' <title>' . check_plain($title) . "</title>\n";
@@ -1955,10 +1954,8 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
     $timezones[$timezone] = timezone_open($timezone);
   }
 
-  // Use the default langcode if none is set.
-  global $language_interface;
   if (empty($langcode)) {
-    $langcode = isset($language_interface->langcode) ? $language_interface->langcode : LANGUAGE_SYSTEM;
+    $langcode = drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
 
   switch ($type) {
@@ -2398,7 +2395,6 @@ function drupal_attributes(array $attributes = array()) {
  *   An HTML string containing a link to the given path.
  */
 function l($text, $path, array $options = array()) {
-  global $language_url;
   static $use_theme = NULL;
 
   // Merge in defaults.
@@ -2409,7 +2405,7 @@ function l($text, $path, array $options = array()) {
 
   // Append active class.
   if (($path == $_GET['q'] || ($path == '<front>' && drupal_is_front_page())) &&
-      (empty($options['language']) || $options['language']->langcode == $language_url->langcode)) {
+      (empty($options['language']) || $options['language']->langcode == drupal_container()->get(LANGUAGE_TYPE_URL)->langcode)) {
     $options['attributes']['class'][] = 'active';
   }
 
@@ -2565,9 +2561,7 @@ function drupal_deliver_html_page($page_callback_result) {
     drupal_add_http_header('X-UA-Compatible', 'IE=edge,chrome=1');
   }
 
-  // Send appropriate HTTP-Header for browsers and search engines.
-  global $language_interface;
-  drupal_add_http_header('Content-Language', $language_interface->langcode);
+  drupal_add_http_header('Content-Language', drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode);
 
   // Menu status constants are integers; page content is a string or array.
   if (is_int($page_callback_result)) {

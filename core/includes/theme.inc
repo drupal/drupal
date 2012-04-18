@@ -1684,7 +1684,7 @@ function theme_link($variables) {
  *     http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
  */
 function theme_links($variables) {
-  global $language_url;
+  $language_url = drupal_container()->get(LANGUAGE_TYPE_URL);
 
   $links = $variables['links'];
   $attributes = $variables['attributes'];
@@ -2466,6 +2466,8 @@ function template_process(&$variables, $hook) {
  * @see html.tpl.php
  */
 function template_preprocess_html(&$variables) {
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+
   // Compile a list of classes that are going to be applied to the body element.
   // This allows advanced theming based on context (home page, node of certain type, etc.).
   // Add a class that tells us whether we're on the front page or not.
@@ -2509,8 +2511,8 @@ function template_preprocess_html(&$variables) {
   $variables['body_attributes_array'] = array();
 
   // HTML element attributes.
-  $variables['html_attributes_array']['lang'] = $GLOBALS['language_interface']->langcode;
-  $variables['html_attributes_array']['dir'] = $GLOBALS['language_interface']->direction ? 'rtl' : 'ltr';
+  $variables['html_attributes_array']['lang'] = $language_interface->langcode;
+  $variables['html_attributes_array']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
 
   // Add favicon.
   if (theme_get_setting('toggle_favicon')) {
@@ -2559,6 +2561,8 @@ function template_preprocess_html(&$variables) {
  * @see page.tpl.php
  */
 function template_preprocess_page(&$variables) {
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+
   // Move some variables to the top level for themer convenience and template cleanliness.
   $variables['show_messages'] = $variables['page']['#show_messages'];
 
@@ -2580,8 +2584,8 @@ function template_preprocess_page(&$variables) {
   $variables['base_path']         = base_path();
   $variables['front_page']        = url();
   $variables['feed_icons']        = drupal_get_feeds();
-  $variables['language']          = $GLOBALS['language_interface'];
-  $variables['language']->dir     = $GLOBALS['language_interface']->direction ? 'rtl' : 'ltr';
+  $variables['language']          = $language_interface;
+  $variables['language']->dir     = $language_interface->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo');
   $variables['main_menu']         = theme_get_setting('toggle_main_menu') ? menu_main_menu() : array();
   $variables['secondary_menu']    = theme_get_setting('toggle_secondary_menu') ? menu_secondary_menu() : array();
@@ -2782,8 +2786,7 @@ function template_preprocess_maintenance_page(&$variables) {
     }
   }
 
-  // set the default language if necessary
-  $language = isset($GLOBALS['language_interface']) ? $GLOBALS['language_interface'] : language_default();
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   $variables['head_title_array']  = $head_title;
   $variables['head_title']        = implode(' | ', $head_title);
@@ -2792,8 +2795,8 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['breadcrumb']        = '';
   $variables['feed_icons']        = '';
   $variables['help']              = '';
-  $variables['language']          = $language;
-  $variables['language']->dir     = $language->direction ? 'rtl' : 'ltr';
+  $variables['language']          = $language_interface;
+  $variables['language']->dir     = $language_interface->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo');
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['main_menu']         = array();

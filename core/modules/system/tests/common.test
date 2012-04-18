@@ -2438,7 +2438,9 @@ class CommonFormatDateTestCase extends DrupalWebTestCase {
    * Tests for the format_date() function.
    */
   function testFormatDate() {
-    global $user, $language_interface;
+    global $user;
+
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
     $timestamp = strtotime('2007-03-26T00:00:00+00:00');
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', t('Test all parameters.'));

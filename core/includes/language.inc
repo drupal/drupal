@@ -25,6 +25,10 @@ function language_types_initialize($type) {
   $negotiation = variable_get("language_negotiation_$type", array());
 
   foreach ($negotiation as $method_id => $method) {
+    // Skip negotiation methods not appropriate for this type.
+    if (isset($method['types']) && !in_array($type, $method['types'])) {
+      continue;
+    }
     $language = language_negotiation_method_invoke($method_id, $method);
     if ($language) {
       // Remember the method ID used to detect the language.

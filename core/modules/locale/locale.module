@@ -1064,8 +1064,7 @@ function _locale_invalidate_js($langcode = NULL) {
  */
 function _locale_rebuild_js($langcode = NULL) {
   if (!isset($langcode)) {
-    global $language_interface;
-    $language = $language_interface;
+    $language = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
   }
   else {
     // Get information about the locale.

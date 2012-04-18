@@ -52,8 +52,7 @@ const LANGUAGE_NEGOTIATION_URL_DOMAIN = 1;
  *   The current interface language code.
  */
 function language_from_interface() {
-  global $language_interface;
-  return isset($language_interface->langcode) ? $language_interface->langcode : FALSE;
+  return drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
 }
 
 /**
@@ -284,7 +283,7 @@ function language_url_fallback($language = NULL, $language_type = LANGUAGE_TYPE_
     return $default->langcode;
   }
   else {
-    return $GLOBALS[$language_type]->langcode;
+    return drupal_container()->get($language_type)->langcode;
   }
 }
 
@@ -361,7 +360,7 @@ function language_url_rewrite_url(&$path, &$options) {
 
   // Language can be passed as an option, or we go for current URL language.
   if (!isset($options['language'])) {
-    global $language_url;
+    $language_url = drupal_container()->get(LANGUAGE_TYPE_URL);
     $options['language'] = $language_url;
   }
   // We allow only enabled languages here.

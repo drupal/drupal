@@ -382,7 +382,14 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
 
 // The interface language global has been renamed in D8, we must ensure that it
 // contains a valid value while language settings are upgraded.
+// @todo Remove this globals reference entirely: http://drupal.org/node/1510686
 $GLOBALS[LANGUAGE_TYPE_INTERFACE] = language_default();
+
+// Ensure the default language is properly registered within the Dependency
+// Injection container during the upgrade process.
+$default = language_default();
+drupal_container()->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language')
+  ->addMethodCall('extend', array($default));
 
 // Only allow the requirements check to proceed if the current user has access
 // to run updates (since it may expose sensitive information about the site's
