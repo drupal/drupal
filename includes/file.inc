@@ -541,7 +541,7 @@ function file_load_multiple($fids = array(), $conditions = array()) {
  *   A file ID.
  *
  * @return
- *   A file object.
+ *   An object representing the file, or FALSE if the file was not found.
  *
  * @see hook_file_load()
  * @see file_load_multiple()
