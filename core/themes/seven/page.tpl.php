@@ -1,4 +1,21 @@
+<?php
 
+/**
+ * @file
+ * Seven's theme implementation to display a single Drupal page.
+ *
+ * The doctype, html, head, and body tags are not in this template. Instead
+ * they can be found in the html.tpl.php template normally located in the
+ * core/modules/system directory.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_page()
+ * @see template_process()
+ * @see seven_preprocess_page()
+ *
+ * @ingroup themeable
+ */
+?>
   <div id="branding" class="clearfix">
     <?php print $breadcrumb; ?>
     <?php print render($title_prefix); ?>

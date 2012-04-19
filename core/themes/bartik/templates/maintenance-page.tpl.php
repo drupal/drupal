@@ -2,13 +2,15 @@
 
 /**
  * @file
- * Implementation to display a single Drupal page while offline.
+ * Bartik's theme implementation to display a single Drupal page while offline.
  *
- * All the available variables are mirrored in page.tpl.php.
+ * All of the available variables are mirrored in page.tpl.php.
  *
  * @see template_preprocess()
  * @see template_preprocess_maintenance_page()
  * @see bartik_process_maintenance_page()
+ *
+ * @ingroup themeable
  */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"

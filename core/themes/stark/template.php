@@ -1,7 +1,12 @@
 <?php
 
 /**
- * Override or insert variables into the html template.
+ * @file
+ * Functions to support theming in the Stark theme.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK() for html.tpl.php.
  *
  * @todo Based on outcome of http://drupal.org/node/1471382, revise this
  *   technique to use conditional classes vs. conditional stylesheets.

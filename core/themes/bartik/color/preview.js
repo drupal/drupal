@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Preview for the Bartik theme.
+ */
+
 (function ($) {
   Drupal.color = {
     logoChanged: false,
@@ -7,7 +12,7 @@
         $('#preview #preview-logo img').attr('src', Drupal.settings.color.logo);
         this.logoChanged = true;
       }
-      // Remove the logo if the setting is toggled off. 
+      // Remove the logo if the setting is toggled off.
       if (Drupal.settings.color.logo == null) {
         $('div').remove('#preview-logo');
       }

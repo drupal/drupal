@@ -5,9 +5,9 @@
  * Bartik's theme implementation for comments.
  *
  * Available variables:
- * - $author: Comment author. Can be link or plain text.
- * - $content: An array of comment items. Use render($content) to print them all, or
- *   print a subset such as render($content['field_example']). Use
+ * - $author: Comment author. Can be a link or plain text.
+ * - $content: An array of comment items. Use render($content) to print them
+ *   all, or print a subset such as render($content['field_example']). Use
  *   hide($content['field_example']) to temporarily suppress the printing of a
  *   given element.
  * - $created: Formatted date and time for when the comment was created.
@@ -18,8 +18,8 @@
  *   desired parameters on the $comment->changed variable.
  * - $new: New comment marker.
  * - $permalink: Comment permalink.
- * - $submitted: Submission information created from $author and $created during
- *   template_preprocess_comment().
+ * - $submitted: Submission information created from $author and $created
+ *   during template_preprocess_comment().
  * - $picture: Authors picture.
  * - $signature: Authors signature.
  * - $status: Comment status. Possible values are:
@@ -27,7 +27,8 @@
  * - $title: Linked title.
  * - $classes: String of classes that can be used to style contextually through
  *   CSS. It can be manipulated through the variable $classes_array from
- *   preprocess functions. The default values can be one or more of the following:
+ *   preprocess functions. The default values can be one or more of the
+ *   following:
  *   - comment: The current template type; e.g., 'theming hook'.
  *   - by-anonymous: Comment by an unregistered user.
  *   - by-node-author: Comment by the author of the parent node.
@@ -55,6 +56,8 @@
  * @see template_preprocess_comment()
  * @see template_process()
  * @see theme_comment()
+ *
+ * @ingroup themeable
  */
 ?>
 <div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
