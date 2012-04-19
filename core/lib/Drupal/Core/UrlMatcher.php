@@ -8,8 +8,10 @@
 
 namespace Drupal\Core;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcher as SymfonyUrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
@@ -18,7 +20,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * UrlMatcher matches URL based on a set of routes.
  */
-class UrlMatcher extends SymfonyUrlMatcher {
+class UrlMatcher implements UrlMatcherInterface {
 
   /**
    * The request context for this matcher.
@@ -28,13 +30,54 @@ class UrlMatcher extends SymfonyUrlMatcher {
   protected $context;
 
   /**
-   * Constructor.
+   * The request object for this matcher.
    *
-   * @param RequestContext  $context
-   *   The request context object.
+   * @var Symfony\Component\HttpFoundation\Request
    */
-  public function __construct(RequestContext $context) {
+  protected $request;
+
+  public function __construct() {
+    // We will not actually use this object, but it's needed to conform to
+    // the interface.
+    $this->context = new RequestContext();
+  }
+
+  /**
+   * Sets the request context.
+   *
+   * This method is just to satisfy the interface, and is largely vestigial.
+   * The request context object does not contain the information we need, so
+   * we will use the original request object.
+   *
+   * @param RequestContext $context
+   *   The context
+   *
+   * @api
+   */
+  public function setContext(RequestContext $context) {
     $this->context = $context;
+  }
+
+  /**
+   * Gets the request context.
+   *
+   * This method is just to satisfy the interface, and is largely vestigial.
+   * The request context object does not contain the information we need, so
+   * we will use the original request object.
+   *
+   * @return RequestContext
+   *   The context
+   */
+  public function getContext() {
+    return $this->context;
+  }
+
+  public function setRequest(Request $request) {
+    $this->request = $request;
+  }
+
+  public function getRequest() {
+    return $this->request;
   }
 
   /**
@@ -44,15 +87,16 @@ class UrlMatcher extends SymfonyUrlMatcher {
    */
   public function match($pathinfo) {
 
-    $this->allow = array();
+    $dpathinfo = $this->request->attributes->get('system_path');
 
-    // Symfony uses a prefixing / but we don't yet.
-    $dpathinfo = ltrim($pathinfo, '/');
+    if (!$dpathinfo) {
+      // Symfony uses a prefixing / but we don't yet.
+      $dpathinfo = ltrim($pathinfo, '/');
+    }
 
     // Do our fancy frontpage logic.
     if (empty($dpathinfo)) {
       $dpathinfo = variable_get('site_frontpage', 'user');
-      $pathinfo = '/' . $dpathinfo;
     }
 
     if ($router_item = $this->matchDrupalItem($dpathinfo)) {

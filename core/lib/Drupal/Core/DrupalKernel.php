@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
+//use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 use Drupal\Core\EventSubscriber\ViewSubscriber;
 use Drupal\Core\EventSubscriber\AccessSubscriber;
@@ -25,6 +25,7 @@ use Drupal\Core\EventSubscriber\PathSubscriber;
 use Drupal\Core\EventSubscriber\LegacyControllerSubscriber;
 use Drupal\Core\EventSubscriber\MaintenanceModeSubscriber;
 use Drupal\Core\EventSubscriber\RequestCloseSubscriber;
+use Drupal\Core\EventSubscriber\RouterListener;
 
 use Exception;
 
@@ -61,8 +62,7 @@ class DrupalKernel extends HttpKernel {
       $this->dispatcher = $dispatcher;
       $this->resolver = $resolver;
 
-      $context = new RequestContext();
-      $this->matcher = new UrlMatcher($context);
+      $this->matcher = new UrlMatcher();
       $this->dispatcher->addSubscriber(new RouterListener($this->matcher));
 
       $negotiation = new ContentNegotiation();
