@@ -33,6 +33,18 @@ Drupal.behaviors.blockSettingsSummary = {
       return vals.join(', ');
     });
 
+    $context.find('fieldset#edit-language').drupalSetSummary(function (context) {
+      var vals = [];
+      $(context).find('input[type="checkbox"]:checked').each(function () {
+        vals.push($.trim($(this).next('label').text()));
+      });
+      if (!vals.length) {
+        vals.push(Drupal.t('Not restricted'));
+      }
+      return vals.join(', ');
+    });
+
+
     $context.find('fieldset#edit-role').drupalSetSummary(function (context) {
       var vals = [];
       $(context).find('input[type="checkbox"]:checked').each(function () {
