@@ -8,8 +8,8 @@
 /**
  * Page callback: Displays the "recent hits" page.
  *
- * This displays the pages with recent hits in a given time interval that 
- * haven't been flushed yet. The flush interval is set on the statistics 
+ * This displays the pages with recent hits in a given time interval that
+ * haven't been flushed yet. The flush interval is set on the statistics
  * settings form, but is dependent on cron running.
  *
  * @return array
@@ -108,7 +108,7 @@ function statistics_top_pages() {
  * Page callback: Displays the "top visitors" page.
  *
  * This displays the pages with the top number of visitors in a given time
- * interval that haven't been flushed yet. The flush interval is set on the 
+ * interval that haven't been flushed yet. The flush interval is set on the
  * statistics settings form, but is dependent on cron running.
  *
  * @return array
@@ -167,8 +167,8 @@ function statistics_top_visitors() {
 /**
  * Page callback: Displays the "top referrers" in the access logs.
  *
- * This displays the pages with the top referrers in a given time interval that 
- * haven't been flushed yet. The flush interval is set on the statistics 
+ * This displays the pages with the top referrers in a given time interval that
+ * haven't been flushed yet. The flush interval is set on the statistics
  * settings form, but is dependent on cron running.
  *
  * @return array
