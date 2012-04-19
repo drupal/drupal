@@ -27,8 +27,6 @@ class ContentNegotiation {
    *   The request object from which to extract the content type.
    */
   public function getContentType(Request $request) {
-    $acceptable_content_types = $request->getAcceptableContentTypes();
-
     // AJAX iframe uploads need special handling, because they contain a json
     // response wrapped in <textarea>.
     if ($request->get('ajax_iframe_upload', FALSE)) {
@@ -40,15 +38,15 @@ class ContentNegotiation {
       return 'ajax';
     }
 
-    // JSON requests can be responded to using JsonResponse().
-    elseif (in_array('application/json', $acceptable_content_types)) {
-      return 'json';
+    foreach ($request->getAcceptableContentTypes() as $mime_type) {
+      $format = $request->getFormat($mime_type);
+      if (!is_null($format)) {
+        return $format;
+      }
     }
 
-    // Do HTML last so that it always wins for */* formats.
-    elseif(in_array('text/html', $acceptable_content_types) || in_array('*/*', $acceptable_content_types)) {
-      return 'html';
-    }
+    // Do HTML last so that it always wins.
+    return 'html';
   }
 
 }
