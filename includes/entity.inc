@@ -468,7 +468,7 @@ class EntityFieldQuery {
    * @var array
    *
    * @see EntityFieldQuery::fieldLanguageCondition()
-   * @see EntityFieldQuery::fielDeltaCondition()
+   * @see EntityFieldQuery::fieldDeltaCondition()
    */
   public $fieldMetaConditions = array();
 
