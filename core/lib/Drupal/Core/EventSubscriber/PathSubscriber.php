@@ -39,6 +39,11 @@ class PathSubscriber implements EventSubscriberInterface {
     }
     $system_path = drupal_get_normal_path($path);
 
+    // Do our fancy frontpage logic.
+    if (empty($system_path)) {
+      $system_path = variable_get('site_frontpage', 'user');
+    }
+
     $request->attributes->set('system_path', $system_path);
 
     // @todo Remove this line once code has been refactored to use the request

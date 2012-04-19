@@ -94,11 +94,6 @@ class UrlMatcher implements UrlMatcherInterface {
       $dpathinfo = ltrim($pathinfo, '/');
     }
 
-    // Do our fancy frontpage logic.
-    if (empty($dpathinfo)) {
-      $dpathinfo = variable_get('site_frontpage', 'user');
-    }
-
     if ($router_item = $this->matchDrupalItem($dpathinfo)) {
       $ret = $this->convertDrupalItem($router_item);
       // Stash the router item in the attributes while we're transitioning.
