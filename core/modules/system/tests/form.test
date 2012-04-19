@@ -301,12 +301,11 @@ class FormsTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Tests validation of #type 'number' elements.
+   * Tests validation of #type 'number' and 'range' elements.
    */
   function testNumber() {
     $form = $form_state = array();
     $form = form_test_number($form, $form_state);
-    $this->drupalGet('form-test/number');
 
     // Array with all the error messages to be checked.
     $error_messages = array(
@@ -339,25 +338,28 @@ class FormsTestCase extends DrupalWebTestCase {
       'float_step_any_no_error' => 0,
     );
 
-    // Post form and show errors.
-    $this->drupalPost(NULL, array(), 'Submit');
+    // First test the number element type, then range.
+    foreach (array('form-test/number', 'form-test/number/range') as $path) {
+      // Post form and show errors.
+      $this->drupalPost($path, array(), 'Submit');
 
-    foreach ($expected as $element => $error) {
-      // Create placeholder array.
-      $placeholders = array(
-        '%name' => $form[$element]['#title'],
-        '%min' => isset($form[$element]['#min']) ? $form[$element]['#min'] : '0',
-        '%max' => isset($form[$element]['#max']) ? $form[$element]['#max'] : '0',
-      );
+      foreach ($expected as $element => $error) {
+        // Create placeholder array.
+        $placeholders = array(
+          '%name' => $form[$element]['#title'],
+          '%min' => isset($form[$element]['#min']) ? $form[$element]['#min'] : '0',
+          '%max' => isset($form[$element]['#max']) ? $form[$element]['#max'] : '0',
+        );
 
-      foreach ($error_messages as $id => $message) {
-        // Check if the error exists on the page, if the current message ID is
-        // expected. Otherwise ensure that the error message is not present.
-        if ($id === $error) {
-          $this->assertRaw(format_string($message, $placeholders));
-        }
-        else {
-          $this->assertNoRaw(format_string($message, $placeholders));
+        foreach ($error_messages as $id => $message) {
+          // Check if the error exists on the page, if the current message ID is
+          // expected. Otherwise ensure that the error message is not present.
+          if ($id === $error) {
+            $this->assertRaw(format_string($message, $placeholders));
+          }
+          else {
+            $this->assertNoRaw(format_string($message, $placeholders));
+          }
         }
       }
     }
@@ -406,7 +408,7 @@ class FormsTestCase extends DrupalWebTestCase {
 
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
-    $this->assertEqual(count($disabled_elements), 38, 'The correct elements have the disabled property in the HTML code.');
+    $this->assertEqual(count($disabled_elements), 39, 'The correct elements have the disabled property in the HTML code.');
 
     $this->drupalPost(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);
