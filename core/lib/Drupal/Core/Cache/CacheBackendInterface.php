@@ -20,20 +20,20 @@ namespace Drupal\Core\Cache;
  * Drupal\Core\Cache\CacheBackendInterface was called MyCustomCache, the
  * following line would make Drupal use it for the 'cache_page' bin:
  * @code
- *  variable_set('cache_class_cache_page', 'MyCustomCache');
+ *  $conf['cache_classes']['cache_page'] = 'MyCustomCache';
  * @endcode
  *
  * Additionally, you can register your cache implementation to be used by
- * default for all cache bins by setting the variable 'cache_default_class' to
- * the name of your implementation of the
- * Drupal\Core\Cache\CacheBackendInterface, e.g.
+ * default for all cache bins by setting the $conf['cache_classes'] variable and
+ * changing the value of the 'cache' key to the name of your implementation of
+ * the Drupal\Core\Cache\CacheBackendInterface, e.g.
  * @code
- *  variable_set('cache_default_class', 'MyCustomCache');
+ *  $conf['cache_classes']['cache'] = 'MyCustomCache';
  * @endcode
  *
  * To implement a completely custom cache bin, use the same variable format:
  * @code
- *  variable_set('cache_class_custom_bin', 'MyCustomCache');
+ *  $conf['cache_classes']['custom_bin'] = 'MyCustomCache';
  * @endcode
  * To access your custom cache bin, specify the name of the bin when storing
  * or retrieving cached data:
@@ -104,7 +104,7 @@ interface CacheBackendInterface {
    *   identify objects used to build the cache item, which should trigger
    *   cache invalidation when updated. For example if a cached item represents
    *   a node, both the node ID and the author's user ID might be passed in as
-   *   tags. For example array('node' => array(123), 'user' => array(92)).*
+   *   tags. For example array('node' => array(123), 'user' => array(92)).
    */
   function set($cid, $data, $expire = CACHE_PERMANENT, array $tags = array());
 

@@ -139,6 +139,12 @@ function form_test_menu() {
     'page arguments' => array('form_test_number'),
     'access callback' => TRUE,
   );
+  $items['form-test/number/range'] = array(
+    'title' => 'Range',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_number', 'range'),
+    'access callback' => TRUE,
+  );
   $items['form-test/checkboxes-radios'] = array(
     'title' => t('Checkboxes, Radios'),
     'page callback' => 'drupal_get_form',
@@ -1153,11 +1159,14 @@ function form_test_select_submit($form, &$form_state) {
 }
 
 /**
- * Builds a form to test #type 'number' validation.
+ * Builds a form to test #type 'number' and 'range' validation.
+ *
+ * @param $element
+ *   The element type to test. Can be 'number' or 'range'. Defaults to 'number'.
  */
-function form_test_number($form, &$form_state) {
+function form_test_number($form, &$form_state, $element = 'number') {
   $base = array(
-    '#type' => 'number',
+    '#type' => $element,
   );
 
   $form['integer_no_number'] = $base + array(
@@ -1476,23 +1485,16 @@ function _form_test_disabled_elements($form, &$form_state) {
     );
   }
 
-  // Weight.
-  $form['weight'] = array(
-    '#type' => 'weight',
-    '#title' => 'weight',
-    '#default_value' => 10,
-    '#test_hijack_value' => 5,
-    '#disabled' => TRUE,
-  );
-
-  // Number.
-  $form['number'] = array(
-    '#type' => 'number',
-    '#title' => 'number',
-    '#disabled' => TRUE,
-    '#default_value' => 1,
-    '#test_hijack_value' => 2,
-  );
+  // Weight, number, range.
+  foreach (array('weight', 'number', 'range') as $type) {
+    $form[$type] = array(
+      '#type' => $type,
+      '#title' => $type,
+      '#default_value' => 10,
+      '#test_hijack_value' => 5,
+      '#disabled' => TRUE,
+    );
+  }
 
   // Date.
   $form['date'] = array(

@@ -3969,6 +3969,29 @@ function theme_number($variables) {
 }
 
 /**
+ * Returns HTML for a range form element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #size, #min, #max,
+ *     #required, #attributes, #step.
+ *
+ * @ingroup themeable
+ */
+function theme_range($variables) {
+  $element = $variables['element'];
+
+  $element['#attributes']['type'] = 'range';
+  element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max'));
+  _form_set_class($element, array('form-range'));
+
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  return $output;
+}
+
+/**
  * Form element validation handler for #type 'number'.
  *
  * Note that #required is validated by _form_validate() already.
