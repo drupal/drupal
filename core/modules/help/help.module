@@ -69,7 +69,7 @@ function help_help($path, $arg) {
  * Implements hook_preprocess_block().
  */
 function help_preprocess_block(&$variables) {
-  if ($variables['block']->module == 'help') {
+  if ($variables['block']->module == 'system' && $variables['block']->delta == 'help') {
     $variables['attributes_array']['role'] = 'complementary';
   }
 }
