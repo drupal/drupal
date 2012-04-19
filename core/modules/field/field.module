@@ -959,6 +959,10 @@ function field_has_data($field) {
     ->fieldCondition($field)
     ->range(0, 1)
     ->count()
+    // Neutralize the 'entity_field_access' query tag added by
+    // field_sql_storage_field_storage_query(). The result cannot depend on the
+    // access grants of the current user.
+    ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
     ->execute();
 }
 
