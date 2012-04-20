@@ -453,7 +453,8 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('openid', 'openid_test');
+    // Add language module too to test with some non-built-in languages.
+    parent::setUp('openid', 'openid_test', 'language');
     variable_set('user_register', USER_REGISTER_VISITORS);
   }
 
@@ -469,9 +470,22 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     variable_set('openid_test_response', array(
       'openid.sreg.nickname' => 'john',
       'openid.sreg.email' => 'john@example.com',
-      'openid.sreg.language' => 'en-GB',
+      'openid.sreg.language' => 'pt-BR',
       'openid.sreg.timezone' => 'Europe/London',
     ));
+
+    // Save Portuguese and Portuguese, Portugal as optional languages. The
+    // process should pick 'pt' based on the sreg.language being 'pt-BR'
+    // (and falling back on least specific language given no pt-br available
+    // locally).
+    $language = (object) array(
+      'langcode' => 'pt',
+    );
+    language_save($language);
+    $language = (object) array(
+      'langcode' => 'pt-pt',
+    );
+    language_save($language);
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
@@ -484,7 +498,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     $this->assertTrue($user, t('User was registered with right username.'));
     $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
     $this->assertEqual($user->timezone, 'Europe/London', t('User was registered with right timezone.'));
-    $this->assertEqual($user->preferred_langcode, 'en', t('User was registered with right language.'));
+    $this->assertEqual($user->preferred_langcode, 'pt', t('User was registered with right language.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     $this->submitLoginForm($identity);
@@ -513,9 +527,16 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     variable_set('openid_test_response', array(
       'openid.sreg.nickname' => 'john',
       'openid.sreg.email' => 'john@example.com',
-      'openid.sreg.language' => 'en-GB',
+      'openid.sreg.language' => 'pt-BR',
       'openid.sreg.timezone' => 'Europe/London',
     ));
+
+    // Save Portuguese, Brazil as an optional language. The process should pick
+    // 'pt-br' based on the sreg.language later.
+    $language = (object) array(
+      'langcode' => 'pt-br',
+    );
+    language_save($language);
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
@@ -526,7 +547,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     $this->assertTrue($user, t('User was registered with right username.'));
     $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
     $this->assertEqual($user->timezone, 'Europe/London', t('User was registered with right timezone.'));
-    $this->assertEqual($user->preferred_langcode, 'en', t('User was registered with right language.'));
+    $this->assertEqual($user->preferred_langcode, 'pt-br', t('User was registered with right language.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     $this->drupalLogout();
@@ -644,8 +665,19 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
       'openid.ext123.type.timezone' => 'http://axschema.org/pref/timezone',
       'openid.ext123.value.timezone' => 'Europe/London',
       'openid.ext123.type.language' => 'http://axschema.org/pref/language',
-      'openid.ext123.value.language' => 'en-GB',
+      'openid.ext123.value.language' => 'pt-PT',
     ));
+
+    // Save Portuguese and Portuguese, Portugal as optional languages. The
+    // process should pick 'pt-pt' as the more specific language.
+    $language = (object) array(
+      'langcode' => 'pt',
+    );
+    language_save($language);
+    $language = (object) array(
+      'langcode' => 'pt-pt',
+    );
+    language_save($language);
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
@@ -656,7 +688,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     $this->assertTrue($user, t('User was registered with right username.'));
     $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
     $this->assertEqual($user->timezone, 'Europe/London', t('User was registered with right timezone.'));
-    $this->assertEqual($user->preferred_langcode, 'en', t('User was registered with right language.'));
+    $this->assertEqual($user->preferred_langcode, 'pt-pt', t('User was registered with right language.'));
   }
 }
 

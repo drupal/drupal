@@ -86,21 +86,23 @@ function image_field_instance_settings_form($field, $instance) {
     '#description' => t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Leave blank for no restriction. If a larger image is uploaded, it will be resized to reflect the given width and height. Resizing images on upload will cause the loss of <a href="http://en.wikipedia.org/wiki/Exchangeable_image_file_format">EXIF data</a> in the image.'),
   );
   $form['max_resolution']['x'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Maximum width'),
     '#title_display' => 'invisible',
     '#default_value' => $max_resolution[0],
     '#size' => 5,
     '#maxlength' => 5,
+    '#min' => 1,
     '#field_suffix' => ' x ',
   );
   $form['max_resolution']['y'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Maximum height'),
     '#title_display' => 'invisible',
     '#default_value' => $max_resolution[1],
     '#size' => 5,
     '#maxlength' => 5,
+    '#min' => 1,
     '#field_suffix' => ' ' . t('pixels'),
   );
 
@@ -115,21 +117,23 @@ function image_field_instance_settings_form($field, $instance) {
     '#description' => t('The minimum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Leave blank for no restriction. If a smaller image is uploaded, it will be rejected.'),
   );
   $form['min_resolution']['x'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Minimum width'),
     '#title_display' => 'invisible',
     '#default_value' => $min_resolution[0],
     '#size' => 5,
     '#maxlength' => 5,
+    '#min' => 1,
     '#field_suffix' => ' x ',
   );
   $form['min_resolution']['y'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Minimum height'),
     '#title_display' => 'invisible',
     '#default_value' => $min_resolution[1],
     '#size' => 5,
     '#maxlength' => 5,
+    '#min' => 1,
     '#field_suffix' => ' ' . t('pixels'),
   );
 
@@ -161,17 +165,12 @@ function image_field_instance_settings_form($field, $instance) {
 function _image_field_resolution_validate($element, &$form_state) {
   if (!empty($element['x']['#value']) || !empty($element['y']['#value'])) {
     foreach (array('x', 'y') as $dimension) {
-      $value = $element[$dimension]['#value'];
-      if (!is_numeric($value)) {
-        form_error($element[$dimension], t('Height and width values must be numeric.'));
-        return;
-      }
-      if (intval($value) == 0) {
+      if (!$element[$dimension]['#value']) {
         form_error($element[$dimension], t('Both a height and width value must be specified in the !name field.', array('!name' => $element['#title'])));
         return;
       }
     }
-    form_set_value($element, intval($element['x']['#value']) . 'x' . intval($element['y']['#value']), $form_state);
+    form_set_value($element, $element['x']['#value'] . 'x' . $element['y']['#value'], $form_state);
   }
   else {
     form_set_value($element, '', $form_state);

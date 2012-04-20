@@ -882,17 +882,16 @@ function hook_field_widget_form(&$form, &$form_state, $field, $instance, $langco
  * @param $context
  *   An associative array containing the following key-value pairs, matching the
  *   arguments received by hook_field_widget_form():
- *   - "form": The form structure where widgets are being attached to. This
- *     might be a full form structure, or a sub-element of a larger form.
- *   - "field": The field structure.
- *   - "instance": The field instance structure.
- *   - "langcode": The language associated with $items.
- *   - "items": Array of default values for this field.
- *   - "delta": The order of this item in the array of subelements (0, 1, 2,
- *     etc).
+ *   - form: The form structure to which widgets are being attached. This may be
+ *     a full form structure, or a sub-element of a larger form.
+ *   - field: The field structure.
+ *   - instance: The field instance structure.
+ *   - langcode: The language associated with $items.
+ *   - items: Array of default values for this field.
+ *   - delta: The order of this item in the array of subelements (0, 1, 2, etc).
  *
  * @see hook_field_widget_form()
- * @see hook_field_widget_WIDGET_TYPE_form_alter
+ * @see hook_field_widget_WIDGET_TYPE_form_alter()
  */
 function hook_field_widget_form_alter(&$element, &$form_state, $context) {
   // Add a css class to widget form elements for all fields of type mytype.

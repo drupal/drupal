@@ -12,7 +12,8 @@
  *   given element.
  * - $user_picture: The node author's picture from user-picture.tpl.php.
  * - $date: Formatted creation date. Preprocess functions can reformat it by
- *   calling format_date() with the desired parameters on the $created variable.
+ *   calling format_date() with the desired parameters on the $created
+ *   variable.
  * - $name: Themed username of node author output from theme_username().
  * - $node_url: Direct url of the current node.
  * - $display_submitted: Whether submission information should be displayed.
@@ -66,16 +67,18 @@
  * - $logged_in: Flags true when the current user is a logged-in member.
  * - $is_admin: Flags true when the current user is an administrator.
  *
- * Field variables: for each field instance attached to the node a corresponding
- * variable is defined, e.g. $node->body becomes $body. When needing to access
- * a field's raw values, developers/themers are strongly encouraged to use these
- * variables. Otherwise they will have to explicitly specify the desired field
- * language, e.g. $node->body['en'], thus overriding any language negotiation
- * rule that was previously applied.
+ * Field variables: For each field instance attached to the node a
+ * corresponding variable is defined, e.g. $node->body becomes $body. When
+ * needing to access a field's raw values, developers/themers are strongly
+ * encouraged to use these variables. Otherwise they will have to explicitly
+ * specify the desired field language, e.g. $node->body['en'], thus overriding
+ * any language negotiation rule that was previously applied.
  *
  * @see template_preprocess()
  * @see template_preprocess_node()
  * @see template_process()
+ *
+ * @ingroup themeable
  */
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>

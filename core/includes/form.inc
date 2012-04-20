@@ -3732,6 +3732,35 @@ function theme_vertical_tabs($variables) {
 /**
  * Adds autocomplete functionality to elements with a valid #autocomplete_path.
  *
+ * Note that autocomplete callbacks should include special handling as the
+ * user's input may contain forward slashes. If the user-submitted string has a
+ * '/' in the text that is sent in the autocomplete request, the menu system
+ * will split the text and pass it to the callback as multiple arguments.
+ *
+ * Suppose your autocomplete path in the menu system is 'mymodule_autocomplete.'
+ * In your form you have:
+ * @code
+ * '#autocomplete_path' => 'mymodule_autocomplete/' . $some_key . '/' . $some_id,
+ * @endcode
+ * The user types in "keywords" so the full path called is:
+ * 'mymodule_autocomplete/$some_key/$some_id/keywords'
+ *
+ * You should include code similar to the following to handle slashes in the
+ * input:
+ * @code
+ * function mymodule_autocomplete_callback($arg1, $arg2, $keywords) {
+ *   $args = func_get_args();
+ *   // We need to remove $arg1 and $arg2 from the beginning of the array so we
+ *   // are left with the keywords.
+ *   array_shift($args);
+ *   array_shift($args);
+ *   // We store the user's original input in $keywords, including any slashes.
+ *   $keywords = implode('/', $args);
+ *
+ *   // Your code here.
+ * }
+ * @endcode
+ *
  * @param $element
  *   The form element to process. Properties used:
  *   - #autocomplete_path: A system path to be used as callback URL by the
@@ -3940,6 +3969,29 @@ function theme_number($variables) {
 }
 
 /**
+ * Returns HTML for a range form element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #size, #min, #max,
+ *     #required, #attributes, #step.
+ *
+ * @ingroup themeable
+ */
+function theme_range($variables) {
+  $element = $variables['element'];
+
+  $element['#attributes']['type'] = 'range';
+  element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max'));
+  _form_set_class($element, array('form-range'));
+
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+
+  return $output;
+}
+
+/**
  * Form element validation handler for #type 'number'.
  *
  * Note that #required is validated by _form_validate() already.
@@ -4006,7 +4058,7 @@ function theme_url($variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #placeholder, #required, #attributes, #autocomplete_path.
+ *     #placeholder, #required, #attributes.
  *
  * @ingroup themeable
  */
@@ -4016,23 +4068,7 @@ function theme_search($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-search'));
 
-  $extra = '';
-  if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
-    drupal_add_library('system', 'drupal.autocomplete');
-    $element['#attributes']['class'][] = 'form-autocomplete';
-
-    $attributes = array();
-    $attributes['type'] = 'hidden';
-    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
-    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
-    $attributes['disabled'] = 'disabled';
-    $attributes['class'][] = 'autocomplete';
-    $extra = '<input' . drupal_attributes($attributes) . ' />';
-  }
-
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
-
-  return $output . $extra;
+  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**

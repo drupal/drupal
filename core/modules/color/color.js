@@ -19,7 +19,7 @@ Drupal.behaviors.color = {
     var focused = null;
 
     // Add Farbtastic.
-    form.prepend('<div id="placeholder"></div>').addClass('color-processed');
+    $('<div id="placeholder"></div>').once('color').prependTo(form);
     var farb = $.farbtastic('#placeholder');
 
     // Decode reference colors to HSL.

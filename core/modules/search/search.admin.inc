@@ -90,11 +90,12 @@ function search_admin_settings($form) {
     '#markup' => t('<p><em>Changing the settings below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</em></p><p><em>The default settings should be appropriate for the majority of sites.</em></p>')
   );
   $form['indexing_settings']['minimum_word_size'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Minimum word length to index'),
     '#default_value' => variable_get('minimum_word_size', 3),
     '#size' => 5,
     '#maxlength' => 3,
+    '#min' => 1,
     '#description' => t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).')
   );
   $form['indexing_settings']['overlap_cjk'] = array(

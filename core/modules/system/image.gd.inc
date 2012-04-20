@@ -20,32 +20,22 @@ function image_gd_settings() {
     );
 
     $form['image_jpeg_quality'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('JPEG quality'),
       '#description' => t('Define the image quality for JPEG manipulations. Ranges from 0 to 100. Higher values mean better image quality but bigger files.'),
       '#size' => 10,
       '#maxlength' => 3,
+      '#min' => 0,
+      '#max' => 100,
       '#default_value' => variable_get('image_jpeg_quality', 75),
       '#field_suffix' => t('%'),
     );
-    $form['#element_validate'] = array('image_gd_settings_validate');
 
     return $form;
   }
   else {
     form_set_error('image_toolkit', t('The GD image toolkit requires that the GD module for PHP be installed and configured properly. For more information see <a href="@url">PHP\'s image documentation</a>.', array('@url' => 'http://php.net/image')));
     return FALSE;
-  }
-}
-
-/**
- * Validate the submitted GD settings.
- */
-function image_gd_settings_validate($form, &$form_state) {
-  // Validate image quality range.
-  $value = $form_state['values']['image_jpeg_quality'];
-  if (!is_numeric($value) || $value < 0 || $value > 100) {
-    form_set_error('image_jpeg_quality', t('JPEG quality must be a number between 0 and 100.'));
   }
 }
 

@@ -1663,8 +1663,7 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
  * Arbitrary elements may be added using the $args associative array.
  */
 function format_rss_channel($title, $link, $description, $items, $langcode = NULL, $args = array()) {
-  global $language_content;
-  $langcode = $langcode ? $langcode : $language_content->langcode;
+  $langcode = $langcode ? $langcode : drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
 
   $output = "<channel>\n";
   $output .= ' <title>' . check_plain($title) . "</title>\n";
@@ -1965,10 +1964,8 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
     $timezones[$timezone] = timezone_open($timezone);
   }
 
-  // Use the default langcode if none is set.
-  global $language_interface;
   if (empty($langcode)) {
-    $langcode = isset($language_interface->langcode) ? $language_interface->langcode : LANGUAGE_SYSTEM;
+    $langcode = drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
 
   switch ($type) {
@@ -2397,7 +2394,6 @@ function drupal_attributes(array $attributes = array()) {
  *   An HTML string containing a link to the given path.
  */
 function l($text, $path, array $options = array()) {
-  global $language_url;
   static $use_theme = NULL;
 
   // Merge in defaults.
@@ -2408,7 +2404,7 @@ function l($text, $path, array $options = array()) {
 
   // Append active class.
   if (($path == $_GET['q'] || ($path == '<front>' && drupal_is_front_page())) &&
-      (empty($options['language']) || $options['language']->langcode == $language_url->langcode)) {
+      (empty($options['language']) || $options['language']->langcode == drupal_container()->get(LANGUAGE_TYPE_URL)->langcode)) {
     $options['attributes']['class'][] = 'active';
   }
 
@@ -2564,9 +2560,7 @@ function drupal_deliver_html_page($page_callback_result) {
     drupal_add_http_header('X-UA-Compatible', 'IE=edge,chrome=1');
   }
 
-  // Send appropriate HTTP-Header for browsers and search engines.
-  global $language_interface;
-  drupal_add_http_header('Content-Language', $language_interface->langcode);
+  drupal_add_http_header('Content-Language', drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode);
 
   // Menu status constants are integers; page content is a string or array.
   if (is_int($page_callback_result)) {
@@ -5304,8 +5298,8 @@ function drupal_cron_run() {
 
   $return = FALSE;
   // Grab the defined cron queues.
-  $queues = module_invoke_all('cron_queue_info');
-  drupal_alter('cron_queue_info', $queues);
+  $queues = module_invoke_all('queue_info');
+  drupal_alter('queue_info', $queues);
 
   // Try to acquire cron lock.
   if (!lock_acquire('cron', 240.0)) {
@@ -5316,7 +5310,9 @@ function drupal_cron_run() {
     // Make sure every queue exists. There is no harm in trying to recreate an
     // existing queue.
     foreach ($queues as $queue_name => $info) {
-      queue($queue_name)->createQueue();
+      if (isset($info['cron'])) {
+        queue($queue_name)->createQueue();
+      }
     }
     // Register shutdown callback.
     drupal_register_shutdown_function('drupal_cron_cleanup');
@@ -5344,12 +5340,14 @@ function drupal_cron_run() {
   }
 
   foreach ($queues as $queue_name => $info) {
-    $function = $info['worker callback'];
-    $end = time() + (isset($info['time']) ? $info['time'] : 15);
-    $queue = queue($queue_name);
-    while (time() < $end && ($item = $queue->claimItem())) {
-      $function($item->data);
-      $queue->deleteItem($item);
+    if (isset($info['cron'])) {
+      $function = $info['worker callback'];
+      $end = time() + (isset($info['cron']['time']) ? $info['cron']['time'] : 15);
+      $queue = queue($queue_name);
+      while (time() < $end && ($item = $queue->claimItem())) {
+        $function($item->data);
+        $queue->deleteItem($item);
+      }
     }
   }
   // Restore the user.
@@ -7024,6 +7022,9 @@ function drupal_common_theme() {
       'render element' => 'element',
     ),
     'number' => array(
+      'render element' => 'element',
+    ),
+    'range' => array(
       'render element' => 'element',
     ),
     'form' => array(

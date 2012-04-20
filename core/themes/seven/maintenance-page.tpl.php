@@ -1,3 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Seven's theme implementation to display a single Drupal page while offline.
+ *
+ * All of the available variables are mirrored in page.tpl.php.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_maintenance_page()
+ * @see seven_preprocess_maintenance_page()
+ *
+ * @ingroup themeable
+ */
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->langcode ?>" lang="<?php print $language->langcode ?>" dir="<?php print $language->dir ?>">

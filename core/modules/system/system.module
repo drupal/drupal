@@ -399,7 +399,7 @@ function system_element_info() {
     '#size' => 60,
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('form_process_autocomplete', 'ajax_process_form'),
     '#theme' => 'search',
     '#theme_wrappers' => array('form_element'),
   );
@@ -411,6 +411,18 @@ function system_element_info() {
     '#process' => array('ajax_process_form'),
     '#element_validate' => array('form_validate_number'),
     '#theme' => 'number',
+    '#theme_wrappers' => array('form_element'),
+  );
+  $types['range'] = array(
+    '#input' => TRUE,
+    '#size' => 30,
+    '#step' => 1,
+    '#min' => 0,
+    '#max' => 100,
+    '#maxlength' => 128,
+    '#process' => array('ajax_process_form'),
+    '#element_validate' => array('form_validate_number'),
+    '#theme' => 'range',
     '#theme_wrappers' => array('form_element'),
   );
   $types['machine_name'] = array(

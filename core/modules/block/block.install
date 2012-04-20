@@ -166,6 +166,37 @@ function block_schema() {
     'primary key' => array('bid'),
   );
 
+  $schema['block_language'] = array(
+    'description' => 'Sets up display criteria for blocks based on langcode',
+    'fields' => array(
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => "The block's origin module, from {block}.module.",
+      ),
+      'delta' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The block's unique delta within module, from {block}.delta.",
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "Language type name. Applied to filter the block by that type.",
+      ),
+      'langcode' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The machine-readable name of this language from {language}.langcode.",
+      ),
+    ),
+    'primary key' => array('module', 'delta', 'type', 'langcode'),
+  );
+
   $schema['cache_block'] = drupal_get_schema_unprocessed('system', 'cache');
   $schema['cache_block']['description'] = 'Cache table for the Block module to store already built blocks, identified by module, delta, and various contexts which may change the block, such as theme, locale, and caching mode defined for the block.';
 
@@ -196,6 +227,43 @@ function block_install() {
  */
 function block_update_8000() {
   variable_del('block_cache');
+}
+
+/**
+ * Creates table {block_language} for language visibility settings per block.
+ */
+function block_update_8001() {
+  $schema = array(
+    'description' => 'Sets up display criteria for blocks based on langcode.',
+    'fields' => array(
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => "The block's origin module, from {block}.module.",
+      ),
+      'delta' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The block's unique delta within module, from {block}.delta.",
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "Language type name. Applied to filter the block by that type.",
+      ),
+      'langcode' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The machine-readable name of this language from {language}.langcode.",
+      ),
+    ),
+    'primary key' => array('module', 'delta', 'type', 'langcode'),
+  );
+  db_create_table('block_language', $schema);
 }
 
 /**

@@ -1712,20 +1712,16 @@ function comment_form($form, &$form_state, Comment $comment) {
     $form += $form_state['comment_preview'];
   }
 
+  $form['author'] = array(
+    '#weight' => 10,
+  );
   // Display author information in a fieldset for comment moderators.
   if ($is_admin) {
-    $form['author'] = array(
+    $form['author'] += array(
       '#type' => 'fieldset',
       '#title' => t('Administration'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#weight' => -2,
-    );
-  }
-  else {
-    // Sets the author form elements above the subject.
-    $form['author'] = array(
-      '#weight' => -2,
     );
   }
 
@@ -1826,7 +1822,6 @@ function comment_form($form, &$form_state, Comment $comment) {
     '#maxlength' => 64,
     '#default_value' => $comment->subject,
     '#access' => variable_get('comment_subject_field_' . $node->type, 1) == 1,
-    '#weight' => -1,
   );
 
   // Used for conditional validation of author fields.
@@ -1859,13 +1854,11 @@ function comment_form($form, &$form_state, Comment $comment) {
     '#type' => 'submit',
     '#value' => t('Save'),
     '#access' => ($comment->cid && user_access('administer comments')) || variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || isset($form_state['comment_preview']),
-    '#weight' => 19,
   );
   $form['actions']['preview'] = array(
     '#type' => 'submit',
     '#value' => t('Preview'),
     '#access' => (variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_DISABLED),
-    '#weight' => 20,
     '#submit' => array('comment_form_build_preview'),
   );
 

@@ -401,6 +401,18 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->assertFieldByName('filters[' . $second_filter . '][weight]', $edit['filters[' . $second_filter . '][weight]'], t('Changes reverted.'));
     $this->assertFieldByName('filters[' . $first_filter . '][weight]', $edit['filters[' . $first_filter . '][weight]'], t('Changes reverted.'));
   }
+
+  /**
+   * Tests the URL filter settings form is properly validated.
+   */
+  function testUrlFilterAdmin() {
+    // The form does not save with an invalid filter URL length.
+    $edit = array(
+      'filters[filter_url][settings][filter_url_length]' => $this->randomName(4),
+    );
+    $this->drupalPost('admin/config/content/formats/filtered_html', $edit, t('Save configuration'));
+    $this->assertNoRaw(t('The text format %format has been updated.', array('%format' => 'Filtered HTML')));
+  }
 }
 
 class FilterFormatAccessTestCase extends DrupalWebTestCase {

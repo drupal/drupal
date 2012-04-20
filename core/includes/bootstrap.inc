@@ -3,6 +3,7 @@
 use Drupal\Core\Database\Database;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -1354,12 +1355,11 @@ function drupal_unpack($obj, $field = 'data') {
  * @ingroup sanitization
  */
 function t($string, array $args = array(), array $options = array()) {
-  global $language_interface;
   static $custom_strings;
 
   // Merge in default.
   if (empty($options['langcode'])) {
-    $options['langcode'] = isset($language_interface->langcode) ? $language_interface->langcode : LANGUAGE_SYSTEM;
+    $options['langcode'] = drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
   if (empty($options['context'])) {
     $options['context'] = '';
@@ -2326,6 +2326,40 @@ function drupal_get_bootstrap_phase() {
 }
 
 /**
+ * Retrieves the Drupal Container to standardize object construction.
+ *
+ * Example:
+ * @code
+ * // Register the LANGUAGE_TYPE_INTERFACE definition. Registered definitions
+ * // do not necessarily need to be named by a constant.
+ * // See http://symfony.com/doc/current/components/dependency_injection.html
+ * // for usage examples of adding object initialization code after register().
+ * $container = drupal_container();
+ * $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
+ *
+ * // Retrieve the LANGUAGE_TYPE_INTERFACE object.
+ * $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+ * @endcode
+ *
+ * @param $reset
+ *   TRUE or FALSE depending on whether the Container instance is to be reset.
+ *
+ * @return Symfony\Component\DependencyInjection\ContainerBuilder
+ *   The instance of the Drupal Container used to set up and maintain object
+ *   instances.
+ */
+function drupal_container($reset = FALSE) {
+  // We do not use drupal_static() here because we do not have a mechanism by
+  // which to reinitialize the stored objects, so a drupal_static_reset() call
+  // would leave Drupal in a nonfunctional state.
+  static $container = NULL;
+  if ($reset || !isset($container)) {
+    $container = new ContainerBuilder();
+  }
+  return $container;
+}
+
+/**
  * Returns the test prefix if this is an internal request from SimpleTest.
  *
  * @return
@@ -2467,26 +2501,43 @@ function get_t() {
 
 /**
  * Initializes all the defined language types.
+ *
+ * @see Drupal\Core\Language\Language
  */
 function drupal_language_initialize() {
   $types = language_types_get_all();
+  $container = drupal_container();
 
-  // Ensure the language is correctly returned, even without multilanguage
-  // support. Also make sure we have a $language fallback, in case a language
-  // negotiation callback needs to do a full bootstrap.
-  // Useful for eg. XML/HTML 'lang' attributes.
-  $default = language_default();
-  foreach ($types as $type) {
-    $GLOBALS[$type] = $default;
-  }
+  // Ensure a language object is registered for each language type, whether the
+  // site is multilingual or not.
   if (language_multilingual()) {
     include_once DRUPAL_ROOT . '/core/includes/language.inc';
     foreach ($types as $type) {
-      $GLOBALS[$type] = language_types_initialize($type);
+      $language = language_types_initialize($type);
+      $container->set($type, NULL);
+      $container->register($type, 'Drupal\\Core\\Language\\Language')
+        ->addMethodCall('extend', array($language));
     }
     // Allow modules to react on language system initialization in multilingual
     // environments.
     bootstrap_invoke_all('language_init');
+  }
+  else {
+    $default = language_default();
+    foreach ($types as $type) {
+      $container->set($type, NULL);
+      $container->register($type, 'Drupal\\Core\\Language\\Language')
+        ->addMethodCall('extend', array($default));
+    }
+  }
+
+  // @todo Temporary backwards compatibility for code still using globals.
+  //   Remove after these issues:
+  //   - $language_interface: http://drupal.org/node/1510686
+  //   - $language_url: http://drupal.org/node/1512310
+  //   - $language_content: http://drupal.org/node/1512308
+  foreach ($types as $type) {
+    $GLOBALS[$type] = $container->get($type);
   }
 }
 
@@ -2963,11 +3014,30 @@ function registry_rebuild() {
  * to be called, because it is already known that the list of files in the
  * {system} table matches those in the file system.
  *
+ * @return
+ *   TRUE if the registry was rebuilt, FALSE if another thread was rebuilding
+ *   in parallel and the current thread just waited for completion.
+ *
  * @see registry_rebuild()
  */
 function registry_update() {
+  // install_system_module() calls module_enable() which calls into this
+  // function during initial system installation, so the lock system is neither
+  // loaded nor does its storage exist yet.
+  $in_installer = drupal_installation_attempted();
+  if (!$in_installer && !lock_acquire(__FUNCTION__)) {
+    // Another request got the lock, wait for it to finish.
+    lock_wait(__FUNCTION__);
+    return FALSE;
+  }
+
   require_once DRUPAL_ROOT . '/core/includes/registry.inc';
   _registry_update();
+
+  if (!$in_installer) {
+    lock_release(__FUNCTION__);
+  }
+  return TRUE;
 }
 
 /**

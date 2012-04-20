@@ -4,8 +4,8 @@
  * @file
  * Bartik's theme implementation to display a single Drupal page.
  *
- * The doctype, html, head and body tags are not in this template. Instead they
- * can be found in the html.tpl.php template normally located in the
+ * The doctype, html, head, and body tags are not in this template. Instead
+ * they can be found in the html.tpl.php template normally located in the
  * core/modules/system directory.
  *
  * Available variables:
@@ -54,8 +54,8 @@
  *   prominently.
  * - $tabs (array): Tabs linking to any sub-pages beneath the current page
  *   (e.g., the view and edit tabs when displaying a node).
- * - $action_links (array): Actions local to the page, such as 'Add menu' on the
- *   menu administration interface.
+ * - $action_links (array): Actions local to the page, such as 'Add menu' on
+ *   the menu administration interface.
  * - $feed_icons: A string of all feed icons for the current page.
  * - $node: The node object, if there is an automatically-loaded node
  *   associated with the page, and the node ID is the second argument
@@ -83,6 +83,8 @@
  * @see template_process()
  * @see bartik_process_page()
  * @see html.tpl.php
+ *
+ * @ingroup themeable
  */
 ?>
 <div id="page-wrapper"><div id="page">

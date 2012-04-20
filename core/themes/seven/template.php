@@ -1,7 +1,12 @@
 <?php
 
 /**
- * Override or insert variables into the maintenance page template.
+ * @file
+ * Functions to support theming in the Seven theme.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK() for maintenance-page.tpl.php.
  */
 function seven_preprocess_maintenance_page(&$vars) {
   // While markup for normal pages is split into page.tpl.php and html.tpl.php,
@@ -13,7 +18,7 @@ function seven_preprocess_maintenance_page(&$vars) {
 }
 
 /**
- * Override or insert variables into the html template.
+ * Implements hook_preprocess_HOOK() for html.tpl.php.
  */
 function seven_preprocess_html(&$vars) {
   // Add conditional CSS for IE8 and below.
@@ -21,7 +26,7 @@ function seven_preprocess_html(&$vars) {
 }
 
 /**
- * Override or insert variables into the page template.
+ * Implements hook_preprocess_HOOK() for page.tpl.php.
  */
 function seven_preprocess_page(&$vars) {
   $vars['primary_local_tasks'] = $vars['tabs'];
@@ -33,7 +38,7 @@ function seven_preprocess_page(&$vars) {
 }
 
 /**
- * Display the list of available node types for node creation.
+ * Displays the list of available node types for node creation.
  */
 function seven_node_add_list($variables) {
   $content = $variables['content'];
@@ -57,7 +62,7 @@ function seven_node_add_list($variables) {
 /**
  * Overrides theme_admin_block_content().
  *
- * Use unordered list markup in both compact and extended mode.
+ * Uses an unordered list markup in both compact and extended mode.
  */
 function seven_admin_block_content($variables) {
   $content = $variables['content'];
@@ -78,9 +83,10 @@ function seven_admin_block_content($variables) {
 }
 
 /**
- * Override of theme_tablesort_indicator().
+ * Overrides theme_tablesort_indicator().
  *
- * Use our own image versions, so they show up as black and not gray on gray.
+ * Uses Seven's image versions, so the arrows show up as black and not gray on
+ * gray.
  */
 function seven_tablesort_indicator($variables) {
   $style = $variables['style'];

@@ -412,23 +412,6 @@ function image_effect_delete_form_submit($form, &$form_state) {
 }
 
 /**
- * Element validate handler to ensure an integer pixel value.
- *
- * The property #allow_negative = TRUE may be set to allow negative integers.
- */
-function image_effect_integer_validate($element, &$form_state) {
-  $value = empty($element['#allow_negative']) ? $element['#value'] : preg_replace('/^-/', '', $element['#value']);
-  if ($element['#value'] != '' && (!is_numeric($value) || intval($value) <= 0)) {
-    if (empty($element['#allow_negative'])) {
-      form_error($element, t('!name must be an integer.', array('!name' => $element['#title'])));
-    }
-    else {
-      form_error($element, t('!name must be a positive integer.', array('!name' => $element['#title'])));
-    }
-  }
-}
-
-/**
  * Element validate handler to ensure a hexadecimal color value.
  */
 function image_effect_color_validate($element, &$form_state) {
@@ -462,24 +445,22 @@ function image_effect_scale_validate($element, &$form_state) {
  */
 function image_resize_form($data) {
   $form['width'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Width'),
     '#default_value' => isset($data['width']) ? $data['width'] : '',
     '#field_suffix' => ' ' . t('pixels'),
     '#required' => TRUE,
     '#size' => 10,
-    '#element_validate' => array('image_effect_integer_validate'),
-    '#allow_negative' => FALSE,
+    '#min' => 1,
   );
   $form['height'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Height'),
     '#default_value' => isset($data['height']) ? $data['height'] : '',
     '#field_suffix' => ' ' . t('pixels'),
     '#required' => TRUE,
     '#size' => 10,
-    '#element_validate' => array('image_effect_integer_validate'),
-    '#allow_negative' => FALSE,
+    '#min' => 1,
   );
   return $form;
 }
@@ -560,7 +541,7 @@ function image_crop_form($data) {
  */
 function image_rotate_form($data) {
   $form['degrees'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#default_value' => (isset($data['degrees'])) ? $data['degrees'] : 0,
     '#title' => t('Rotation angle'),
     '#description' => t('The number of degrees the image should be rotated. Positive numbers are clockwise, negative are counter-clockwise.'),
@@ -568,8 +549,6 @@ function image_rotate_form($data) {
     '#required' => TRUE,
     '#size' => 6,
     '#maxlength' => 4,
-    '#element_validate' => array('image_effect_integer_validate'),
-    '#allow_negative' => TRUE,
   );
   $form['bgcolor'] = array(
     '#type' => 'textfield',

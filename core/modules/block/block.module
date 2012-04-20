@@ -785,6 +785,13 @@ function block_block_list_alter(&$blocks) {
     $block_roles[$record->module][$record->delta][] = $record->rid;
   }
 
+  // Build an array of langcodes allowed per block.
+  $result = db_query('SELECT module, delta, type, langcode FROM {block_language}');
+  $block_langcodes = array();
+  foreach ($result as $record) {
+    $block_langcodes[$record->module][$record->delta][$record->type][$record->langcode] = TRUE;
+  }
+
   foreach ($blocks as $key => $block) {
     if (!isset($block->theme) || !isset($block->status) || $block->theme != $theme_key || $block->status != 1) {
       // This block was added by a contrib module, leave it in the list.
@@ -854,7 +861,23 @@ function block_block_list_alter(&$blocks) {
     }
     if (!$page_match) {
       unset($blocks[$key]);
+      continue;
     }
+
+    // Language visibility settings.
+    // No language setting for this block, leave it in the list.
+    if (!isset($block_langcodes[$block->module][$block->delta])) {
+      continue;
+    }
+    foreach ($block_langcodes[$block->module][$block->delta] as $language_type => $langcodes) {
+      if (isset($langcodes[$GLOBALS[$language_type]->langcode])) {
+        // Found a language type - langcode combination in the configuration
+        // that is applicable to the current request.
+        continue 2;
+      }
+    }
+    // Had language configuration but none matched.
+    unset($blocks[$key]);
   }
 }
 
@@ -1021,7 +1044,8 @@ function block_admin_paths() {
 /**
  * Implements hook_modules_uninstalled().
  *
- * Cleans up {block} and {block_role} tables from modules' blocks.
+ * Cleans up {block}, {block_role} and {block_language} tables
+ * from modules' blocks.
  */
 function block_modules_uninstalled($modules) {
   db_delete('block')
@@ -1029,5 +1053,20 @@ function block_modules_uninstalled($modules) {
     ->execute();
   db_delete('block_role')
     ->condition('module', $modules, 'IN')
+    ->execute();
+  db_delete('block_language')
+    ->condition('module', $modules, 'IN')
+    ->execute();
+}
+
+/**
+ * Implements hook_language_delete().
+ *
+ * Delete the potential block visibility settings of the deleted language.
+ */
+function block_language_delete($language) {
+  // Remove the block visibility settings for the deleted language.
+  db_delete('block_language')
+    ->condition('langcode', $language->langcode)
     ->execute();
 }

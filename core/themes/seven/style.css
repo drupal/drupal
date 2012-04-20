@@ -482,6 +482,12 @@ table th.active img {
   top: 3px;
   right: 3px; /* LTR */
 }
+/**
+ * Force browsers to calculate the width of a 'select all' TH element.
+ */
+table th.select-all {
+  width: 1px;
+}
 table td.active {
   background: #e9e9dd;
 }

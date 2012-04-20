@@ -24,9 +24,9 @@
  * did not happen yet and thus they cannot rely on translated variables.
  */
 function hook_language_init() {
-  global $language_interface, $conf;
+  global $conf;
 
-  switch ($language_interface->langcode) {
+  switch (drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode) {
     case 'it':
       $conf['site_name'] = 'Il mio sito Drupal';
       break;

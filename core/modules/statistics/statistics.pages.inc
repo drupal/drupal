@@ -2,9 +2,19 @@
 
 /**
  * @file
- * User page callbacks for the statistics module.
+ * User page callbacks for the Statistics module.
  */
 
+/**
+ * Page callback: Displays statistics for a node.
+ *
+ * @return array
+ *   A render array containing node statistics. If information for the node was
+ *   not found, this will deliver a page not found error via
+ *   drupal_not_found().
+ *
+ * @see statistics_menu()
+ */
 function statistics_node_tracker() {
   if ($node = node_load(arg(1))) {
 
@@ -52,6 +62,16 @@ function statistics_node_tracker() {
   }
 }
 
+/**
+ * Page callback: Displays statistics for a user.
+ *
+ * @return array
+ *   A render array containing user statistics. If information for the user was
+ *   not found, this will deliver a page not found error via
+ *   drupal_not_found().
+ *
+ * @see statistics_menu()
+ */
 function statistics_user_tracker() {
   if ($account = user_load(arg(1))) {
 

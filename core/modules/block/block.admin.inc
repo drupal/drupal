@@ -400,6 +400,63 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     );
   }
 
+  // Configure the block visibility per language.
+  if (module_exists('language') && language_multilingual()) {
+    $configurable_language_types = language_types_get_configurable();
+    $existing_language_settings = db_query("SELECT type, langcode FROM {block_language} WHERE module = :module AND delta = :delta", array(
+      ':module' => $form['module']['#value'],
+      ':delta' => $form['delta']['#value'],
+    ))->fetchAll();
+    $default_langcode_options = array();
+    $default_language_type = $configurable_language_types[0];
+    foreach ($existing_language_settings as $setting) {
+      $default_langcode_options[] = $setting->langcode;
+      // Overwrite default language type if we have it set. Although this
+      // theoretically would allow per language type association, our UI
+      // only allows language type association overall for a block, so we
+      // only need a single value.
+      $default_language_type = $setting->type;
+    }
+
+    // Fetch the enabled languages.
+    $enabled_languages = language_list(TRUE);
+    foreach ($enabled_languages as $language) {
+      // @TODO $language->name is not wrapped with t(), it should be replaced
+      // by CMI translation implementation.
+      $langcodes_options[$language->langcode] = $language->name;
+    }
+    $form['visibility']['language'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Languages'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'visibility',
+      '#weight' => 5,
+    );
+    // If there are multiple configurable language types, let the user pick
+    // which one should be applied to this visibility setting. This way users
+    // can limit blocks by interface language or content language for exmaple.
+    $language_types = language_types_info();
+    $language_type_options = array();
+    foreach ($configurable_language_types as $type_key) {
+      $language_type_options[$type_key] = $language_types[$type_key]['name'];
+    }
+    $form['visibility']['language']['language_type'] = array(
+      '#type' => 'radios',
+      '#title' => t('Language type'),
+      '#options' => $language_type_options,
+      '#default_value' => $default_language_type,
+      '#access' => count($language_type_options) > 1,
+    );
+    $form['visibility']['language']['langcodes'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Show this block only for specific languages'),
+      '#default_value' => $default_langcode_options,
+      '#options' => $langcodes_options,
+      '#description' => t('Show this block only for the selected language(s). If you select no languages, the block will be visibile in all languages.'),
+    );
+  }
+
   // Per-role visibility.
   $default_role_options = db_query("SELECT rid FROM {block_role} WHERE module = :module AND delta = :delta", array(
     ':module' => $block->module,
@@ -505,7 +562,7 @@ function block_admin_configure_submit($form, &$form_state) {
       }
       $query->execute();
 
-      // Store regions per theme for this block
+      // Store regions per theme for this block.
       foreach ($form_state['values']['regions'] as $theme => $region) {
         db_merge('block')
           ->key(array('theme' => $theme, 'delta' => $form_state['values']['delta'], 'module' => $form_state['values']['module']))
@@ -515,6 +572,27 @@ function block_admin_configure_submit($form, &$form_state) {
             'status' => (int) ($region != BLOCK_REGION_NONE),
           ))
           ->execute();
+      }
+
+      // Update the block visibility settings if we have settings to store
+      // for the existing languages.
+      if (module_exists('language') && isset($form_state['values']['langcodes'])) {
+        db_delete('block_language')
+          ->condition('module', $form_state['values']['module'])
+          ->condition('delta', $form_state['values']['delta'])
+          ->execute();
+        $query = db_insert('block_language')->fields(array(
+          'type', 'langcode', 'module', 'delta'
+        ));
+        foreach (array_filter($form_state['values']['langcodes']) as $langcode) {
+          $query->values(array(
+            'type' => $form_state['values']['language_type'],
+            'langcode' => $langcode,
+            'module' => $form_state['values']['module'],
+            'delta' => $form_state['values']['delta'],
+          ));
+        }
+        $query->execute();
       }
 
       module_invoke($form_state['values']['module'], 'block_save', $form_state['values']['delta'], $form_state['values']);
@@ -604,7 +682,7 @@ function block_add_block_form_submit($form, &$form_state) {
   }
   $query->execute();
 
-  // Store regions per theme for this block
+  // Store regions per theme for this block.
   foreach ($form_state['values']['regions'] as $theme => $region) {
     db_merge('block')
       ->key(array('theme' => $theme, 'delta' => $delta, 'module' => $form_state['values']['module']))
@@ -614,6 +692,23 @@ function block_add_block_form_submit($form, &$form_state) {
         'status' => (int) ($region != BLOCK_REGION_NONE),
       ))
       ->execute();
+  }
+
+  // Update the block visibility settings if we have settings to store
+  // for the existing languages.
+  if (module_exists('language') && isset($form_state['values']['langcodes'])) {
+    $query = db_insert('block_language')->fields(array(
+      'type', 'langcode', 'module', 'delta'
+    ));
+    foreach (array_filter($form_state['values']['langcodes']) as $langcode) {
+      $query->values(array(
+        'type' => $form_state['values']['language_type'],
+        'langcode' => $langcode,
+        'module' => $form_state['values']['module'],
+        'delta' => $form_state['values']['delta'],
+      ));
+    }
+    $query->execute();
   }
 
   drupal_set_message(t('The block has been created.'));
@@ -659,6 +754,11 @@ function block_custom_block_delete_submit($form, &$form_state) {
     ->condition('module', 'block')
     ->condition('delta', $form_state['values']['bid'])
     ->execute();
+  db_delete('block_language')
+    ->condition('module', 'block')
+    ->condition('delta', $form_state['values']['bid'])
+    ->execute();
+
   drupal_set_message(t('The block %name has been removed.', array('%name' => $form_state['values']['info'])));
   cache_clear_all();
   $form_state['redirect'] = 'admin/structure/block';

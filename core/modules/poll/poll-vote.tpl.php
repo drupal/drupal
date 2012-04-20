@@ -14,7 +14,7 @@
  * @see template_preprocess_poll_vote()
  */
 ?>
-<article class="poll">
+<div class="poll">
   <div class="vote-form">
 
     <?php if ($block): ?>
@@ -26,4 +26,4 @@
   </div>
   <?php // This is the 'rest' of the form, in case items have been added. ?>
   <?php print $rest ?>
-</article>
+</div>

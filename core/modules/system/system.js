@@ -105,7 +105,7 @@ Drupal.behaviors.dateTime = {
           // Attach keyup handler to custom format inputs.
           $(context).find('input' + source).once('date-time').keyup(function () {
             var input = $(this);
-            var url = fieldSettings.lookup + (fieldSettings.lookup.match(/\?q=/) ? '&format=' : '?format=') + encodeURIComponent(input.val());
+            var url = fieldSettings.lookup + (/\?q=/.test(fieldSettings.lookup) ? '&format=' : '?format=') + encodeURIComponent(input.val());
             $.getJSON(url, function (data) {
               $(suffix).empty().append(' ' + fieldSettings.text + ': <em>' + data + '</em>');
             });

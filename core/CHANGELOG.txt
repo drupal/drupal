@@ -38,6 +38,8 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Freely orderable language selector in forms.
       * Made it possible to assign language to taxonomy terms, vocabularies
         and files.
+    * Better language based configuration
+      * Added language options to block visibility.
     * Much improved language APIs for developers:
       * Added simple APIs and hooks to save/delete/update languages.
       * Unified database schemas and APIs to make it easier to spot where
