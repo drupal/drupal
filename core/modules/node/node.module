@@ -3094,7 +3094,7 @@ function node_access($op, $node, $account = NULL) {
       return $result;
     }
     elseif (is_object($node) && $op == 'view' && $node->status) {
-      // If no modules implement hook_node_grants(), the default behaviour is to
+      // If no modules implement hook_node_grants(), the default behavior is to
       // allow all users to view published nodes, so reflect that here.
       $rights[$account->uid][$cid][$op] = TRUE;
       return TRUE;

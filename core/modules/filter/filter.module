@@ -1111,7 +1111,7 @@ function filter_dom_serialize_escape_cdata_element($dom_document, $dom_element, 
       $embed_suffix = "\n{$comment_start}--><!]]>{$comment_end}\n";
 
       // Prevent invalid cdata escaping as this would throw a DOM error.
-      // This is the same behaviour as found in libxml2.
+      // This is the same behavior as found in libxml2.
       // Related W3C standard: http://www.w3.org/TR/REC-xml/#dt-cdsection
       // Fix explanation: http://en.wikipedia.org/wiki/CDATA#Nesting
       $data = str_replace(']]>', ']]]]><![CDATA[>', $node->data);

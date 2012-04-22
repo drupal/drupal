@@ -1354,7 +1354,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Create and set a new configuration directory and signature key.
     // The child site automatically adjusts the global $config_directory_name to
     // a test-prefix-specific directory within the public files directory.
-    $GLOBALS['config_directory_name'] = 'simpletest/config_' . $this->databasePrefix;
+    // @see config_get_config_directory()
+    $GLOBALS['config_directory_name'] = 'simpletest/' . substr($this->databasePrefix, 10) . '/config';
     $this->configFileDirectory = $this->originalFileDirectory . '/' . $GLOBALS['config_directory_name'];
     file_prepare_directory($this->configFileDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     $GLOBALS['config_signature_key'] = drupal_hash_base64(drupal_random_bytes(55));
@@ -1546,9 +1547,6 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Delete temporary files directory.
     file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10));
-
-    // Delete temporary config files directory.
-    file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/config_simpletest' . substr($this->databasePrefix, 10));
 
     // Remove all prefixed tables (all the tables in the schema).
     $schema = drupal_get_schema(NULL, TRUE);

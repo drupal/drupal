@@ -59,7 +59,7 @@ use ArrayAccess;
  * means that assigning an offset via arrayAccess will only apply while the
  * object is in scope and will not be written back to the persistent cache.
  * This follows a similar pattern to static vs. persistent caching in
- * procedural code. Extending classes may wish to alter this behaviour, for
+ * procedural code. Extending classes may wish to alter this behavior, for
  * example by overriding offsetSet() and adding an automatic call to persist().
  *
  * @see SchemaCache
