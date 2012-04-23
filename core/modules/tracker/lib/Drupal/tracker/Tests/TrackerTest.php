@@ -2,8 +2,12 @@
 
 /**
  * @file
- * Tests for tracker.module.
+ * Definition of Drupal\tracker\Tests\TrackerTest.
  */
+
+namespace Drupal\tracker\Tests;
+
+use DrupalWebTestCase;
 
 /**
  * Defines a base class for testing tracker.module.
