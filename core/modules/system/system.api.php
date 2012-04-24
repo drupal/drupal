@@ -1934,31 +1934,40 @@ function hook_xmlrpc_alter(&$methods) {
 }
 
 /**
- * Log an event message
+ * Log an event message.
  *
  * This hook allows modules to route log events to custom destinations, such as
  * SMS, Email, pager, syslog, ...etc.
  *
- * @param $log_entry
+ * @param array $log_entry
  *   An associative array containing the following keys:
- *   - type: The type of message for this entry. For contributed modules, this is
- *     normally the module name. Do not use 'debug', use severity WATCHDOG_DEBUG instead.
- *   - user: The user object for the user who was logged in when the event happened.
- *   - request_uri: The Request URI for the page the event happened in.
- *   - referer: The page that referred the use to the page where the event occurred.
+ *   - type: The type of message for this entry.
+ *   - user: The user object for the user who was logged in when the event
+ *     happened.
+ *   - request_uri: The request URI for the page the event happened in.
+ *   - referer: The page that referred the user to the page where the event
+ *     occurred.
  *   - ip: The IP address where the request for the page came from.
- *   - timestamp: The UNIX timestamp of the date/time the event occurred
- *   - severity: One of the following values as defined in RFC 3164 http://www.faqs.org/rfcs/rfc3164.html
- *     WATCHDOG_EMERGENCY    Emergency: system is unusable
- *     WATCHDOG_ALERT    Alert: action must be taken immediately
- *     WATCHDOG_CRITICAL     Critical: critical conditions
- *     WATCHDOG_ERROR      Error: error conditions
- *     WATCHDOG_WARNING  Warning: warning conditions
- *     WATCHDOG_NOTICE   Notice: normal but significant condition
- *     WATCHDOG_INFO     Informational: informational messages
- *     WATCHDOG_DEBUG    Debug: debug-level messages
- *   - link: an optional link provided by the module that called the watchdog() function.
- *   - message: The text of the message to be logged.
+ *   - timestamp: The UNIX timestamp of the date/time the event occurred.
+ *   - severity: The severity of the message; one of the following values as
+ *     defined in @link http://www.faqs.org/rfcs/rfc3164.html RFC 3164: @endlink
+ *     - WATCHDOG_EMERGENCY: Emergency, system is unusable.
+ *     - WATCHDOG_ALERT: Alert, action must be taken immediately.
+ *     - WATCHDOG_CRITICAL: Critical conditions.
+ *     - WATCHDOG_ERROR: Error conditions.
+ *     - WATCHDOG_WARNING: Warning conditions.
+ *     - WATCHDOG_NOTICE: Normal but significant conditions.
+ *     - WATCHDOG_INFO: Informational messages.
+ *     - WATCHDOG_DEBUG: Debug-level messages.
+ *   - link: An optional link provided by the module that called the watchdog()
+ *     function.
+ *   - message: The text of the message to be logged. Variables in the message
+ *     are indicated by using placeholder strings alongside the variables
+ *     argument to declare the value of the placeholders. See t() for
+ *     documentation on how the message and variable parameters interact.
+ *   - variables: An array of variables to be inserted into the message on
+ *     display. Will be NULL or missing if a message is already translated or if
+ *     the message is not possible to translate.
  */
 function hook_watchdog(array $log_entry) {
   global $base_url, $language_interface;
