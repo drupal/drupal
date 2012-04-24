@@ -1424,6 +1424,48 @@ class CommonJavaScriptTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests JavaScript aggregation when files are added to a different scope.
+   */
+  function testAggregationOrder() {
+    // Enable JavaScript aggregation.
+    config('system.performance')->set('preprocess_js', 1)->save();
+    drupal_static_reset('drupal_add_js');
+
+    // Add two JavaScript files to the current request and build the cache.
+    drupal_add_js('core/misc/ajax.js');
+    drupal_add_js('core/misc/autocomplete.js');
+
+    $js_items = drupal_add_js();
+    drupal_build_js_cache(array(
+      'core/misc/ajax.js' => $js_items['core/misc/ajax.js'],
+      'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']
+    ));
+
+    // Store the expected key for the first item in the cache.
+    $cache = array_keys(variable_get('drupal_js_cache_files', array()));
+    $expected_key = $cache[0];
+
+    // Reset variables and add a file in a different scope first.
+    variable_del('drupal_js_cache_files');
+    drupal_static_reset('drupal_add_js');
+    drupal_add_js('some/custom/javascript_file.js', array('scope' => 'footer'));
+    drupal_add_js('core/misc/ajax.js');
+    drupal_add_js('core/misc/autocomplete.js');
+
+    // Rebuild the cache.
+    $js_items = drupal_add_js();
+    drupal_build_js_cache(array(
+      'core/misc/ajax.js' => $js_items['core/misc/ajax.js'],
+      'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']
+    ));
+
+    // Compare the expected key for the first file to the current one.
+    $cache = array_keys(variable_get('drupal_js_cache_files', array()));
+    $key = $cache[0];
+    $this->assertEqual($key, $expected_key, 'JavaScript aggregation is not affected by ordering in different scopes.');
+  }
+
+  /**
    * Test JavaScript ordering.
    */
   function testRenderOrder() {

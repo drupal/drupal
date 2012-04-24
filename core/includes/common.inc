@@ -3518,7 +3518,13 @@ function drupal_build_css_cache($css) {
   $data = '';
   $uri = '';
   $map = variable_get('drupal_css_cache_files', array());
-  $key = hash('sha256', serialize($css));
+  // Create a new array so that only the file names are used to create the hash.
+  // This prevents new aggregates from being created unnecessarily.
+  $css_data = array();
+  foreach ($css as $css_file) {
+    $css_data[] = $css_file['data'];
+  }
+  $key = hash('sha256', serialize($css_data));
   if (isset($map[$key])) {
     $uri = $map[$key];
   }
@@ -5020,7 +5026,13 @@ function drupal_build_js_cache($files) {
   $contents = '';
   $uri = '';
   $map = variable_get('drupal_js_cache_files', array());
-  $key = hash('sha256', serialize($files));
+  // Create a new array so that only the file names are used to create the hash.
+  // This prevents new aggregates from being created unnecessarily.
+  $js_data = array();
+  foreach ($files as $file) {
+    $js_data[] = $file['data'];
+  }
+  $key = hash('sha256', serialize($js_data));
   if (isset($map[$key])) {
     $uri = $map[$key];
   }
