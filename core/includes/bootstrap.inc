@@ -842,7 +842,7 @@ function variable_initialize($conf = array()) {
  *   The default value to use if this variable has never been set.
  *
  * @return
- *   The value of the variable.
+ *   The value of the variable. Unserialization is taken care of as necessary.
  *
  * @see variable_del()
  * @see variable_set()
