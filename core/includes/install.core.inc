@@ -227,26 +227,6 @@ function install_begin_request(&$install_state) {
   // Allow command line scripts to override server variables used by Drupal.
   require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 
-  // Ensure that the class loader is available so that we can leverage classes
-  // as part of the install routine.
-  $loader = drupal_classloader();
-
-  // Register explicit vendor namespaces.
-  $loader->registerNamespaces(array(
-    // All Symfony-borrowed code lives in /core/includes/Symfony.
-    'Symfony' => DRUPAL_ROOT . '/core/vendor',
-  ));
-  // Register the Drupal namespace for classes in core as a fallback.
-  // This allows to register additional namespaces within the Drupal namespace
-  // (e.g., for modules) and avoids an additional file_exists() on the Drupal
-  // core namespace, since the class loader can already determine the best
-  // namespace match based on a string comparison. It further allows modules to
-  // register/overload namespaces in Drupal core.
-  $loader->registerNamespaceFallbacks(array(
-    // All Drupal-namespaced code in core lives in /core/includes/Drupal.
-    'Drupal' => DRUPAL_ROOT . '/core/lib',
-  ));
-
   if (!$install_state['interactive']) {
     drupal_override_server_variables($install_state['server']);
   }

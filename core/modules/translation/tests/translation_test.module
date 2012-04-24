@@ -11,3 +11,12 @@
 function translation_test_node_insert($node) {
   drupal_write_record('node', $node, 'nid');
 }
+
+/**
+ * Implements hook_boot().
+ */
+function translation_test_boot() {
+  // We run the t() function during hook_boot() to make sure it doesn't break
+  // the boot process.
+  $translation = t("Calling the t() process during @boot.", array('@boot' => 'hook_boot()'));
+}
