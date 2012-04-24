@@ -452,6 +452,8 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       registry_update();
       // Refresh the schema to include it.
       drupal_get_schema(NULL, TRUE);
+      // Update the theme registry to include it.
+      drupal_theme_rebuild();
 
       // Allow modules to react prior to the installation of a module.
       module_invoke_all('modules_preinstall', array($module));
@@ -574,6 +576,8 @@ function module_disable($module_list, $disable_dependents = TRUE) {
     // Update the registry to remove the newly-disabled module.
     registry_update();
     _system_update_bootstrap_status();
+    // Update the theme registry to remove the newly-disabled module.
+    drupal_theme_rebuild();
   }
 }
 
