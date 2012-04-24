@@ -592,7 +592,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
 
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
-    $this->assertFalse($user->preferred_langcode, t('No user language was saved.'));
+    $this->assertEqual($user->preferred_langcode, language_default()->langcode, t('User language is site default.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     // Follow the one-time login that was sent in the welcome e-mail.
@@ -632,7 +632,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
 
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
-    $this->assertFalse($user->preferred_langcode, t('No user language was saved.'));
+    $this->assertEqual($user->preferred_langcode, language_default()->langcode, t('User language is site default.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     // Follow the one-time login that was sent in the welcome e-mail.

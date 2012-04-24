@@ -920,7 +920,7 @@ function user_user_view($account) {
  * @see user_validate_mail()
  */
 function user_account_form(&$form, &$form_state) {
-  global $user;
+  global $user, $language_interface;
 
   $account = $form['#user'];
   $register = ($form['#user']->uid > 0 ? FALSE : TRUE);
@@ -1091,6 +1091,70 @@ function user_account_form(&$form, &$form_state) {
     '#description' => t('Your virtual face or picture. Pictures larger than @dimensions pixels will be scaled down.', array('@dimensions' => variable_get('user_picture_dimensions', '85x85'))) . ' ' . filter_xss_admin(variable_get('user_picture_guidelines', '')),
   );
   $form['#validate'][] = 'user_validate_picture';
+
+  if (module_exists('language') && language_multilingual()) {
+    // Get list of enabled languages only.
+    $languages = language_list(TRUE);
+
+    // If the user is being created, we set the user language to the page language.
+    $user_preferred_language = $register ? $language_interface : user_preferred_language($account);
+
+    $names = array();
+    foreach ($languages as $langcode => $item) {
+      $names[$langcode] = $item->name;
+    }
+    // Is default the interface language?
+    $interface_language_is_default = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
+    $form['language'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Language settings'),
+      // Display language selector when either creating a user on the admin
+      // interface or editing a user account.
+      '#access' => !$register || user_access('administer users'),
+    );
+    $form['language']['preferred_langcode'] = array(
+      '#type' => (count($names) <= 5 ? 'radios' : 'select'),
+      '#title' => t('Language'),
+      '#default_value' => $user_preferred_language->langcode,
+      '#options' => $names,
+      '#description' => $interface_language_is_default ? t("This account's preferred language for e-mails and site presentation.") : t("This account's preferred language for e-mails."),
+    );
+  }
+  else {
+    $form['language'] = array(
+      '#type' => 'container',
+    );
+    $form['language']['preferred_langcode'] = array(
+      '#type' => 'value',
+      '#value' => language_default()->langcode,
+    );
+  }
+
+  // User entities contain both a langcode property (for identifying the
+  // language of the entity data) and a preferred_langcode property (see above).
+  // Rather than provide a UI forcing the user to choose both separately,
+  // assume that the user profile data is in the user's preferred language. This
+  // element provides that synchronization. For use-cases where this
+  // synchronization is not desired, a module can alter or remove this element.
+  $form['language']['langcode'] = array(
+    '#type' => 'value',
+    '#value_callback' => '_user_language_selector_langcode_value',
+    // For the synchronization to work, this element must have a larger weight
+    // than the preferred_langcode element. Set a large weight here in case
+    // a module alters the weight of the other element.
+    '#weight' => 100,
+  );
+}
+
+/**
+ * Sets the value of the user register and profile forms' langcode element.
+ */
+function _user_language_selector_langcode_value($element, $input, &$form_state) {
+  // Only add to the description if the form element have a description.
+  if (isset($form_state['complete_form']['language']['preferred_langcode']['#description'])) {
+    $form_state['complete_form']['language']['preferred_langcode']['#description'] .= ' ' . t("This is also assumed to be the primary language of this account's profile information.");
+  }
+  return $form_state['values']['preferred_langcode'];
 }
 
 /**

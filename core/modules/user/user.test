@@ -166,8 +166,8 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertTrue(($new_user->created > REQUEST_TIME - 20 ), t('Correct creation time.'));
     $this->assertEqual($new_user->status, variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_VISITORS ? 1 : 0, t('Correct status field.'));
     $this->assertEqual($new_user->timezone, variable_get('date_default_timezone'), t('Correct time zone field.'));
-    $this->assertEqual($new_user->langcode, '', t('Correct language field.'));
-    $this->assertEqual($new_user->preferred_langcode, '', t('Correct preferred language field.'));
+    $this->assertEqual($new_user->langcode, language_default()->langcode, t('Correct language field.'));
+    $this->assertEqual($new_user->preferred_langcode, language_default()->langcode, t('Correct preferred language field.'));
     $this->assertEqual($new_user->picture, '', t('Correct picture field.'));
     $this->assertEqual($new_user->init, $mail, t('Correct init field.'));
   }
