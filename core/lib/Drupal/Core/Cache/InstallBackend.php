@@ -57,7 +57,7 @@ class InstallBackend extends DatabaseBackend {
    */
   function delete($cid) {
     try {
-      if (class_exists('Database')) {
+      if (class_exists('Drupal\Core\Database\Database')) {
         parent::delete($cid);
       }
     }
@@ -69,7 +69,7 @@ class InstallBackend extends DatabaseBackend {
    */
   function deleteMultiple(array $cids) {
     try {
-      if (class_exists('Database')) {
+      if (class_exists('Drupal\Core\Database\Database')) {
         parent::deleteMultiple($cids);
       }
     }
@@ -81,7 +81,7 @@ class InstallBackend extends DatabaseBackend {
    */
   function deletePrefix($prefix) {
     try {
-      if (class_exists('Database')) {
+      if (class_exists('Drupal\Core\Database\Database')) {
         parent::deletePrefix($prefix);
       }
     }
@@ -90,7 +90,7 @@ class InstallBackend extends DatabaseBackend {
 
   function invalidateTags(array $tags) {
     try {
-      if (class_exists('Database')) {
+      if (class_exists('Drupal\Core\Database\Database')) {
         parent::invalidateTags($tags);
       }
     }
@@ -102,7 +102,7 @@ class InstallBackend extends DatabaseBackend {
    */
   function flush() {
     try {
-      if (class_exists('Database')) {
+      if (class_exists('Drupal\Core\Database\Database')) {
         parent::flush();
       }
     }
