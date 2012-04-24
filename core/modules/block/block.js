@@ -131,24 +131,8 @@ Drupal.behaviors.blockDrag = {
         var select = $(this);
         tableDrag.rowObject = new tableDrag.row(row);
 
-        // Find the correct region and insert the row as the first in the region.
-        table.find('tr.region-message').each(function () {
-          if ($(this).is('.region-' + select[0].value + '-message')) {
-            // Add the new row and remove the old one.
-            $(this).after(row);
-            // Manually update weights and restripe.
-            tableDrag.updateFields(row.get(0));
-            tableDrag.rowObject.changed = true;
-            if (tableDrag.oldRowElement) {
-              $(tableDrag.oldRowElement).removeClass('drag-previous');
-            }
-            tableDrag.oldRowElement = row.get(0);
-            tableDrag.restripeTable();
-            tableDrag.rowObject.markChanged();
-            tableDrag.oldRowElement = row;
-            row.addClass('drag-previous');
-          }
-        });
+        // Find the correct region and insert the row as the last in the region.
+        table.find('.region-' + select[0].value + '-message').nextUntil('.region-message').last().before(row);
 
         // Modify empty regions with added or removed fields.
         checkEmptyRegions(table, row);
