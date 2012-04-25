@@ -2549,43 +2549,32 @@ function language_multilingual() {
 /**
  * Returns a list of configured languages.
  *
- * @param $only_enabled
- *   (optional) Whether to return only enabled languages.
- *
  * @return
  *   An associative array of languages, keyed by the language code, ordered by
  *   weight ascending and name ascending.
  */
-function language_list($only_enabled = FALSE) {
+function language_list() {
   $languages = &drupal_static(__FUNCTION__);
   // Initialize master language list.
   if (!isset($languages)) {
-    // Initialize local language list caches.
-    $languages = array('all' => array(), 'enabled' => array());
-
-    // Fill in master language list based on current configuration.
     $default = language_default();
     if (language_multilingual() || module_exists('language')) {
       // Use language module configuration if available.
-      $languages['all'] = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode');
+      $languages = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode');
     }
     else {
       // No language module, so use the default language only.
-      $languages['all'][$default->langcode] = $default;
+      $languages = array($default->langcode => $default);
     }
 
     // Initialize default property so callers have an easy reference and can
-    // save the same object without data loss. Also fill in the filtered list
-    // of enabled languages only.
-    foreach ($languages['all'] as $langcode => $language) {
-      $languages['all'][$langcode]->default = ($langcode == $default->langcode);
-      if ($language->enabled) {
-        $languages['enabled'][$langcode] = $languages['all'][$langcode];
-      }
+    // save the same object without data loss.
+    foreach ($languages as $langcode => $language) {
+      $languages[$langcode]->default = ($langcode == $default->langcode);
     }
   }
 
-  return $only_enabled ? $languages['enabled'] : $languages['all'];
+  return $languages;
 }
 
 /**
@@ -2636,7 +2625,6 @@ function language_default() {
     'langcode' => 'en',
     'name' => 'English',
     'direction' => 0,
-    'enabled' => 1,
     'weight' => 0,
   ));
   $default->default = TRUE;

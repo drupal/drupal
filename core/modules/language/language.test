@@ -74,20 +74,6 @@ class LanguageListTest extends DrupalWebTestCase {
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
     $this->assertText(t('The default language cannot be deleted.'), t('Failed to delete the default language.'));
 
-    // Check if we can disable a language.
-    $edit = array(
-      'languages[en][enabled]' => FALSE,
-    );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-languages-en-enabled', t('Language disabled.'));
-
-    // Set disabled language to be the default and ensure it is re-enabled.
-    $edit = array(
-      'site_default' => 'en',
-    );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
-    $this->assertFieldChecked('edit-languages-en-enabled', t('Default language re-enabled.'));
-
     // Ensure 'edit' link works.
     $this->clickLink(t('edit'));
     $this->assertTitle(t('Edit language | Drupal'), t('Page title is "Edit language".'));
@@ -100,11 +86,16 @@ class LanguageListTest extends DrupalWebTestCase {
     $this->assertRaw($name, t('The language has been updated.'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
 
+    // Change back the default language.
+    $edit = array(
+      'site_default' => 'en',
+    );
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
     // Ensure 'delete' link works.
     $this->drupalGet('admin/config/regional/language');
     $this->clickLink(t('delete'));
     $this->assertText(t('Are you sure you want to delete the language'), t('"delete" link is correct.'));
-    // Delete an enabled language.
+    // Delete a language.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
     // First test the 'cancel' link.
     $this->clickLink(t('Cancel'));
@@ -122,20 +113,13 @@ class LanguageListTest extends DrupalWebTestCase {
     $this->assertResponse(404, t('Language no longer found.'));
     // Make sure the "language_count" variable has been updated correctly.
     drupal_static_reset('language_list');
-    $enabled_languages = language_list(TRUE);
-    $this->assertEqual(variable_get('language_count', 1), count($enabled_languages), t('Language count is correct.'));
-    // Delete a disabled language.
-    // Disable an enabled language.
-    $edit = array(
-      'languages[fr][enabled]' => FALSE,
-    );
-    $this->drupalPost($path, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-languages-fr-enabled', t('French language disabled.'));
-    // Get the count of enabled languages.
-    drupal_static_reset('language_list');
-    $enabled_languages = language_list(TRUE);
-    // Delete the disabled language.
+    $languages = language_list();
+    $this->assertEqual(variable_get('language_count', 1), count($languages), t('Language count is correct.'));
+    // Delete French.
     $this->drupalPost('admin/config/regional/language/delete/fr', array(), t('Delete'));
+    // Get the count of languages.
+    drupal_static_reset('language_list');
+    $languages = language_list();
     // We need raw here because %language and %langcode will add HTML.
     $t_args = array('%language' => 'French', '%langcode' => 'fr');
     $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args), t('Disabled language has been removed.'));
@@ -144,7 +128,7 @@ class LanguageListTest extends DrupalWebTestCase {
     $this->drupalGet('admin/config/regional/language/delete/fr');
     $this->assertResponse(404, t('Language no longer found.'));
     // Make sure the "language_count" variable has not changed.
-    $this->assertEqual(variable_get('language_count', 1), count($enabled_languages), t('Language count is correct.'));
+    $this->assertEqual(variable_get('language_count', 1), count($languages), t('Language count is correct.'));
 
     // Ensure we can delete the English language. Right now English is the only
     // language so we must add a new language and make it the default before
@@ -245,7 +229,6 @@ class LanguageDependencyInjectionTest extends DrupalWebTestCase {
       'langcode' => 'fr',
       'name' => 'French',
       'direction' => 0,
-      'enabled' => 1,
       'weight' => 0,
       'default' => TRUE,
     );

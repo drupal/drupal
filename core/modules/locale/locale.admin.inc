@@ -45,9 +45,7 @@ function locale_date_format_language_overview_page() {
     array('data' => t('Operations'), 'colspan' => '2'),
   );
 
-  // Get the enabled languages only.
-  $languages = language_list(TRUE);
-
+  $languages = language_list();
   foreach ($languages as $langcode => $language) {
     $row = array();
     $row[] = $language->name;

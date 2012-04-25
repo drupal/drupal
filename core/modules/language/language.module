@@ -165,10 +165,6 @@ function language_save($language) {
     $language->direction = isset($predefined[$language->langcode][2]) ? $predefined[$language->langcode][2] : LANGUAGE_LTR;
   }
 
-  // Set to enabled for the default language and unless specified otherwise.
-  if (!empty($language->default) || !isset($language->enabled)) {
-    $language->enabled = TRUE;
-  }
   // Let other modules modify $language before saved.
   module_invoke_all('language_presave', $language);
 
@@ -192,7 +188,7 @@ function language_save($language) {
   }
 
   // Update language count based on enabled language count.
-  variable_set('language_count', db_query('SELECT COUNT(langcode) FROM {language} WHERE enabled = 1')->fetchField());
+  variable_set('language_count', db_query('SELECT COUNT(langcode) FROM {language}')->fetchField());
 
   // Kill the static cache in language_list().
   drupal_static_reset('language_list');
@@ -220,9 +216,7 @@ function language_delete($langcode) {
       ->condition('langcode', $language->langcode)
       ->execute();
 
-    if ($language->enabled) {
-      variable_set('language_count', variable_get('language_count', 1) - 1);
-    }
+    variable_set('language_count', variable_get('language_count', 1) - 1);
 
     drupal_static_reset('language_list');
 

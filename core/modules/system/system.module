@@ -3921,17 +3921,15 @@ function system_date_format_save($date_format, $dfid = 0) {
     drupal_write_record('date_formats', $info, $keys);
   }
 
-  // Retrieve an array of language objects for enabled languages.
-  $languages = language_list(TRUE);
+  $languages = language_list();
 
   $locale_format = array();
   $locale_format['type'] = $date_format['type'];
   $locale_format['format'] = $date_format['format'];
 
-  // Check if the suggested language codes are configured and enabled.
+  // Check if the suggested language codes are configured.
   if (!empty($date_format['locales'])) {
     foreach ($date_format['locales'] as $langcode) {
-      // Only proceed if language is enabled.
       if (isset($languages[$langcode])) {
         $is_existing = (bool) db_query_range('SELECT 1 FROM {date_format_locale} WHERE type = :type AND language = :language', 0, 1, array(':type' => $date_format['type'], ':language' => $langcode))->fetchField();
         if (!$is_existing) {

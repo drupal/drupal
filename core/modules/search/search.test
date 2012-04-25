@@ -1986,16 +1986,14 @@ class SearchLanguageTestCase extends SearchWebTestCase {
     $this->drupalPost('search/node', $edit, t('Advanced search'));
     $this->assertFieldByXPath('//input[@name="keys"]', 'language:fr', t('Language filter added to query.'));
 
-    // Change the default language and disable English.
+    // Change the default language and delete English.
     $path = 'admin/config/regional/language';
     $this->drupalGet($path);
     $this->assertFieldChecked('edit-site-default-en', t('English is the default language.'));
     $edit = array('site_default' => 'fr');
     $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
-    $edit = array('languages[en][enabled]' => FALSE);
-    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-languages-en-enabled', t('Language disabled.'));
+    $this->drupalPost('admin/config/regional/language/delete/en', array(), t('Delete'));
 
     // Check that there are again no languages displayed.
     $this->drupalGet('search/node');

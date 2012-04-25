@@ -19,7 +19,6 @@ function language_admin_overview_form($form, &$form_state) {
     '#tree' => TRUE,
     '#header' => array(
       t('Name'),
-      t('Enabled'),
       t('Default'),
       t('Weight'),
       t('Operations'),
@@ -31,13 +30,6 @@ function language_admin_overview_form($form, &$form_state) {
     $form['languages'][$langcode]['#weight'] = $language->weight;
     $form['languages'][$langcode]['name'] = array(
       '#markup' => check_plain($language->name),
-    );
-    $form['languages'][$langcode]['enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Enable @title', array('@title' => $language->name)),
-      '#title_display' => 'invisible',
-      '#default_value' => (int) $language->enabled,
-      '#disabled' => $langcode == $default->langcode,
     );
     $form['languages'][$langcode]['default'] = array(
       '#type' => 'radio',
@@ -154,21 +146,6 @@ function language_admin_overview_form_submit($form, &$form_state) {
   foreach ($languages as $langcode => $language) {
     $language->default = ($form_state['values']['site_default'] == $langcode);
     $language->weight = $form_state['values']['languages'][$langcode]['weight'];
-
-    if ($language->default || $old_default->langcode == $langcode) {
-      // Automatically enable the default language and the language which was
-      // default previously (because we will not get the value from that
-      // disabled checkbox).
-      $form_state['values']['languages'][$langcode]['enabled'] = 1;
-    }
-    $language->enabled = (int) !empty($form_state['values']['languages'][$langcode]['enabled']);
-
-    // If the interface language has been disabled make sure that the form
-    // redirect includes the new default language as a query parameter.
-    if ($language->enabled == FALSE && $langcode == $GLOBALS['language_interface']->langcode) {
-      $form_state['redirect'] = array('admin/config/regional/language', array('language' => $languages[$form_state['values']['site_default']]));
-    }
-
     language_save($language);
   }
 
@@ -483,7 +460,6 @@ function language_negotiation_configure_form_table(&$form, $type) {
     '#language_negotiation_info' => array(),
     '#show_operations' => FALSE,
     'weight' => array('#tree' => TRUE),
-    'enabled' => array('#tree' => TRUE),
   );
 
   $negotiation_info = $form['#language_negotiation_info'];
@@ -694,8 +670,7 @@ function language_negotiation_configure_url_form($form, &$form_state) {
     ),
   );
 
-  // Get the enabled languages only.
-  $languages = language_list(TRUE);
+  $languages = language_list();
   $prefixes = language_negotiation_url_prefixes();
   $domains = language_negotiation_url_domains();
   foreach ($languages as $langcode => $language) {
@@ -731,8 +706,7 @@ function language_negotiation_configure_url_form($form, &$form_state) {
  * the prefix and domain are only blank for the default.
  */
 function language_negotiation_configure_url_form_validate($form, &$form_state) {
-  // Get the enabled languages only.
-  $languages = language_list(TRUE);
+  $languages = language_list();
 
   // Count repeated values for uniqueness check.
   $count = array_count_values($form_state['values']['prefix']);

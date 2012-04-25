@@ -156,7 +156,7 @@ function locale_translation_filters() {
 
   // Get all languages, except English
   drupal_static_reset('language_list');
-  $languages = language_list(TRUE);
+  $languages = language_list();
   $language_options = array();
   foreach ($languages as $langcode => $language) {
     if ($langcode != 'en' || locale_translate_english()) {

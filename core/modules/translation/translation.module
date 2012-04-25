@@ -136,28 +136,6 @@ function translation_form_node_form_alter(&$form, &$form_state) {
   if (translation_supported_type($form['#node']->type)) {
     $node = $form['#node'];
 
-    // Build two lists with the disabled and enabled languages.
-    $languages = language_list();
-    $grouped_languages = array();
-    foreach ($languages as $langcode => $language) {
-      $grouped_languages[(int) $language->enabled][$langcode] = $language;
-    }
-
-    $translator_widget = !empty($grouped_languages[0]) && user_access('translate content');
-    $groups = array(t('Disabled'), t('Enabled'));
-    // Allow translators to enter content in disabled languages. Translators
-    // might need to distinguish between enabled and disabled languages, hence
-    // we divide them in two option groups.
-    if ($translator_widget) {
-      $options = array($groups[1] => array(LANGUAGE_NOT_SPECIFIED => t('- None -')));
-      foreach (array(1, 0) as $status) {
-        $group = $groups[$status];
-        foreach ($grouped_languages[$status] as $langcode => $language) {
-          $options[$group][$langcode] = $language->name;
-        }
-      }
-      $form['langcode']['#options'] = $options;
-    }
     if (!empty($node->translation_source)) {
       // We are creating a translation. Add values and lock language field.
       $form['translation_source'] = array('#type' => 'value', '#value' => $node->translation_source);
@@ -170,13 +148,7 @@ function translation_form_node_form_alter(&$form, &$form_state) {
       unset($form['langcode']['#options'][LANGUAGE_NOT_SPECIFIED]);
       foreach (translation_node_get_translations($node->tnid) as $langcode => $translation) {
         if ($translation->nid != $node->nid) {
-          if ($translator_widget) {
-            $group = $groups[(int)!isset($disabled_languages[$langcode])];
-            unset($form['langcode']['#options'][$group][$langcode]);
-          }
-          else {
-            unset($form['langcode']['#options'][$langcode]);
-          }
+          unset($form['langcode']['#options'][$langcode]);
         }
       }
       // Add translation values and workflow options.
@@ -223,7 +195,7 @@ function translation_node_view($node, $view_mode) {
   // If the site has no translations or is not multilingual we have no content
   // translation links to display.
   if (isset($node->tnid) && language_multilingual() && $translations = translation_node_get_translations($node->tnid)) {
-    $languages = language_list(TRUE);
+    $languages = language_list();
 
     // There might be a language provider enabled defining custom language
     // switch links which need to be taken into account while generating the
@@ -236,8 +208,7 @@ function translation_node_view($node, $view_mode) {
     $links = array();
 
     foreach ($translations as $langcode => $translation) {
-      // Do not show links to the same node, to unpublished translations or to
-      // translations in disabled languages.
+      // Do not show links to the same node or to unpublished translations.
       if ($translation->status && isset($languages[$langcode]) && $langcode != $node->langcode) {
         $language = $languages[$langcode];
         $key = "translation_$langcode";

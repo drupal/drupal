@@ -176,7 +176,7 @@ function node_form($form, &$form_state, $node) {
   $form['#node'] = $node;
 
   if (variable_get('node_type_language_' . $node->type, 0) && module_exists('language')) {
-    $languages = language_list(TRUE);
+    $languages = language_list();
     $language_options = array();
     foreach ($languages as $langcode => $language) {
       $language_options[$langcode] = $language->name;

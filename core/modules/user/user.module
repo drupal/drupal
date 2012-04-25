@@ -1094,8 +1094,7 @@ function user_account_form(&$form, &$form_state) {
   $form['#validate'][] = 'user_validate_picture';
 
   if (module_exists('language') && language_multilingual()) {
-    // Get list of enabled languages only.
-    $languages = language_list(TRUE);
+    $languages = language_list();
 
     // If the user is being created, we set the user language to the page language.
     $user_preferred_language = $register ? $language_interface : user_preferred_language($account);

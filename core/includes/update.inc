@@ -184,20 +184,42 @@ function update_prepare_d8_language() {
     db_drop_field('languages', 'prefix');
     db_drop_field('languages', 'domain');
     db_drop_field('languages', 'native');
+    db_drop_field('languages', 'enabled');
+
+    // Update language count.
+    variable_set('language_count', db_query('SELECT COUNT(language) FROM {languages}')->fetchField());
 
     // Rename the languages table to language.
     db_rename_table('languages', 'language');
 
-    // Finally install/enable the language module. We need to use the update
-    // specific version of this function to ensure schema conflicts don't happen
-    // due to our updated data.
+    // Install/enable the language module. We need to use the update specific
+    // version of this function to ensure schema conflicts don't happen due to
+    // our updated data.
     $modules = array('language');
     update_module_add_to_system($modules);
     update_module_enable($modules);
 
     // Rename 'language' column to 'langcode'.
-    require_once DRUPAL_ROOT . '/core/modules/language/language.install';
-    language_update_8000();
+    db_drop_primary_key('language');
+    $langcode_spec = array(
+      'type' => 'varchar',
+      'length' => 12,
+      'not null' => TRUE,
+      'default' => '',
+      'description' => "Language code, e.g. 'de' or 'en-US'.",
+    );
+    db_change_field('language', 'language', 'langcode', $langcode_spec, array('primary key' => array('langcode')));
+
+    // Update the 'language_default' system variable with the langcode change.
+    $language_default = variable_get('language_default');
+    if (!empty($language_default)) {
+      if (isset($language_default->language)) {
+        $language_default->langcode = $language_default->language;
+        unset($language_default->language);
+      }
+      unset($language_default->enabled);
+      variable_set('language_default', $language_default);
+    }
   }
 }
 

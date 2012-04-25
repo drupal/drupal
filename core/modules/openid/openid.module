@@ -263,7 +263,7 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
         $candidate_langcodes[] = $parts[0] . '-' . $parts[2];
         $candidate_langcodes[] = $parts[0] . '-' . $parts[1] . '-' . $parts[2];
       }
-      $enabled_languages = language_list(TRUE);
+      $enabled_languages = language_list();
       // Iterate over the generated permutations starting with the longest (most
       // specific) strings.
       foreach (array_reverse($candidate_langcodes) as $candidate_langcode) {

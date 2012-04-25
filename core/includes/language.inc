@@ -342,8 +342,7 @@ function language_negotiation_method_invoke($method_id, $method = NULL) {
   if (!isset($results[$method_id])) {
     global $user;
 
-    // Get the enabled languages only.
-    $languages = language_list(TRUE);
+    $languages = language_list();
 
     if (!isset($method)) {
       $negotiation_info = language_negotiation_info();

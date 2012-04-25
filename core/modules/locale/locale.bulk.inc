@@ -12,7 +12,7 @@ include_once DRUPAL_ROOT . '/core/includes/gettext.inc';
  */
 function locale_translate_import_form($form, &$form_state) {
   drupal_static_reset('language_list');
-  $languages = language_list(TRUE);
+  $languages = language_list();
 
   // Initialize a language list to the ones available, including English if we
   // are to translate Drupal to English as well.
@@ -127,7 +127,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
  * Builds form to export Gettext translation files.
  */
 function locale_translate_export_form($form, &$form_state) {
-  $languages = language_list(TRUE);
+  $languages = language_list();
   $language_options = array();
   foreach ($languages as $langcode => $language) {
     if ($langcode != 'en' || locale_translate_english()) {

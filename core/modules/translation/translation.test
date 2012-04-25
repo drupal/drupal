@@ -33,11 +33,6 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Add languages.
     $this->addLanguage('en');
     $this->addLanguage('es');
-    $this->addLanguage('it');
-
-    // Disable Italian to test the translation behavior with disabled languages.
-    $edit = array('languages[it][enabled]' => FALSE);
-    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Set "Basic page" content type to use multilingual support with
     // translation.
@@ -126,13 +121,6 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/' . $node_translation->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node_translation_title)), t('Translated node updated.'));
 
-    // Confirm that disabled languages are an option for translators when
-    // creating nodes.
-    $this->drupalGet('node/add/page');
-    $this->assertFieldByXPath('//select[@name="langcode"]//option', 'it', t('Italian (disabled) is available in language selection.'));
-    $translation_it = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'it');
-    $this->assertRaw($translation_it->body[LANGUAGE_NOT_SPECIFIED][0]['value'], t('Content created in Italian (disabled).'));
-
     // Confirm that language neutral is an option for translators when there are
     // disabled languages.
     $this->drupalGet('node/add/page');
@@ -140,11 +128,10 @@ class TranslationTestCase extends DrupalWebTestCase {
     $node2 = $this->createPage($this->randomName(), $this->randomName(), LANGUAGE_NOT_SPECIFIED);
     $this->assertRaw($node2->body[LANGUAGE_NOT_SPECIFIED][0]['value'], t('Language neutral content created with disabled languages available.'));
 
-    // Leave just one language enabled and check that the translation overview
+    // Leave just one language installed and check that the translation overview
     // page is still accessible.
     $this->drupalLogin($this->admin_user);
-    $edit = array('languages[es][enabled]' => FALSE);
-    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/regional/language/delete/es', array(), t('Delete'));
     $this->drupalLogin($this->translator);
     $this->drupalGet('node/' . $node->nid . '/translate');
     $this->assertRaw(t('Translations of %title', array('%title' => $node->title)), t('Translation overview page available with only one language enabled.'));
@@ -154,17 +141,14 @@ class TranslationTestCase extends DrupalWebTestCase {
    * Checks that the language switch links behave properly.
    */
   function testLanguageSwitchLinks() {
-    // Create a Basic page in English and its translations in Spanish and
-    // Italian.
+    // Create a Basic page in English and its translation in Spanish.
     $node = $this->createPage($this->randomName(), $this->randomName(), 'en');
     $translation_es = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'es');
-    $translation_it = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'it');
 
-    // Check that language switch links are correctly shown only for enabled
-    // languages.
+    // Check that language switch links are correctly shown for languages
+    // we have translations for.
     $this->assertLanguageSwitchLinks($node, $translation_es);
     $this->assertLanguageSwitchLinks($translation_es, $node);
-    $this->assertLanguageSwitchLinks($node, $translation_it, FALSE);
 
     // Check that links to the displayed translation appear only in the language
     // switcher block.
@@ -195,10 +179,9 @@ class TranslationTestCase extends DrupalWebTestCase {
    * Tests that the language switcher block alterations work as intended.
    */
   function testLanguageSwitcherBlockIntegration() {
-    // Enable Italian to have three items in the language switcher block.
+    // Add Italian to have three items in the language switcher block.
     $this->drupalLogin($this->admin_user);
-    $edit = array('languages[it][enabled]' => TRUE);
-    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->addLanguage('it');
     $this->resetCaches();
     $this->drupalLogin($this->translator);
 
@@ -286,7 +269,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Check to make sure that language has not already been installed.
     $this->drupalGet('admin/config/regional/language');
 
-    if (strpos($this->drupalGetContent(), 'languages[' . $language_code . '][enabled]') === FALSE) {
+    if (strpos($this->drupalGetContent(), 'languages[' . $language_code . ']') === FALSE) {
       // Doesn't have language installed so add it.
       $edit = array();
       $edit['predefined_langcode'] = $language_code;
@@ -301,15 +284,9 @@ class TranslationTestCase extends DrupalWebTestCase {
         $this->assertRaw(t('The language %language has been created and can now be used.', array('%language' => $languages[$language_code]->name)), t('Language has been created.'));
       }
     }
-    elseif ($this->xpath('//input[@type="checkbox" and @name=:name and @checked="checked"]', array(':name' => 'languages[' . $language_code . '][enabled]'))) {
-      // It's installed and enabled. No need to do anything.
-      $this->assertTrue(true, 'Language [' . $language_code . '] already installed and enabled.');
-    }
     else {
-      // It's installed but not enabled. Enable it.
+      // It's installed. No need to do anything.
       $this->assertTrue(true, 'Language [' . $language_code . '] already installed.');
-      $this->drupalPost(NULL, array('languages[' . $language_code . '][enabled]' => TRUE), t('Save configuration'));
-      $this->assertRaw(t('Configuration saved.'), t('Language successfully enabled.'));
     }
   }
 

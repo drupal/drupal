@@ -2857,7 +2857,7 @@ function node_form_search_form_alter(&$form, $form_state) {
 
     // Languages:
     $language_options = array();
-    foreach (language_list(TRUE) as $langcode => $language) {
+    foreach (language_list() as $langcode => $language) {
       $language_options[$langcode] = $language->name;
     }
     if (count($language_options) > 1) {
