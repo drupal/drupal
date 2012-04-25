@@ -65,6 +65,7 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
       $function = $instance['widget']['module'] . '_field_widget_form';
       if (function_exists($function)) {
         $element = array(
+          '#entity' => $entity,
           '#entity_type' => $instance['entity_type'],
           '#bundle' => $instance['bundle'],
           '#field_name' => $field_name,
@@ -178,7 +179,6 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
       $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
       $element = array(
         '#entity_type' => $instance['entity_type'],
-        '#entity' => $entity,
         '#entity' => $form['#entity'],
         '#bundle' => $instance['bundle'],
         '#field_name' => $field_name,
