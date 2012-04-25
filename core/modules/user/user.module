@@ -941,7 +941,7 @@ function user_account_form(&$form, &$form_state) {
     '#maxlength' => USERNAME_MAX_LENGTH,
     '#description' => t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.'),
     '#required' => TRUE,
-    '#attributes' => array('class' => array('username')),
+    '#attributes' => array('class' => array('username'), 'autocomplete' => 'off'),
     '#default_value' => (!$register ? $account->name : ''),
     '#access' => ($register || ($user->uid == $account->uid && user_access('change own username')) || $admin),
     '#weight' => -10,
@@ -956,6 +956,7 @@ function user_account_form(&$form, &$form_state) {
     '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
     '#required' => !(empty($account->mail) && user_access('administer users')),
     '#default_value' => (!$register ? $account->mail : ''),
+    '#attributes' => array('autocomplete' => 'off'),
   );
 
   // Display password field only for existing users or when user is allowed to
