@@ -3,4 +3,4 @@ description = "Support module for error and exception testing."
 package = Testing
 version = VERSION
 core = 8.x
-hidden = TRUE
+hidden = FALSE

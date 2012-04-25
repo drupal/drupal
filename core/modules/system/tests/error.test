@@ -76,7 +76,7 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
     $error_pdo_exception = array(
-      '%type' => 'PDOException',
+      '%type' => 'DatabaseExceptionWrapper',
       '!message' => 'SELECT * FROM bananas_are_awesome',
       '%function' => 'error_test_trigger_pdo_exception()',
       '%line' => 64,

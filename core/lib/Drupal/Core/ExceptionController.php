@@ -209,24 +209,27 @@ class ExceptionController {
     // FlattenException version of the backtrace.
     $backtrace[0]['line'] = $exception->getLine();
 
-    // For PDOException errors, we try to return the initial caller,
+    // For database errors, we try to return the initial caller,
     // skipping internal functions of the database layer.
-    if ($exception instanceof PDOException) {
+    if (strpos($exception->getClass(), 'DatabaseExceptionWrapper') !== FALSE) {
+      // A DatabaseExceptionWrapper exception is actually just a courier for
+      // the original PDOException.  It's the stack trace from that exception
+      // that we care about.
+      $backtrace = $exception->getPrevious()->getTrace();
+      $backtrace[0]['line'] = $exception->getLine();
+
       // The first element in the stack is the call, the second element gives us the caller.
       // We skip calls that occurred in one of the classes of the database layer
       // or in one of its global functions.
       $db_functions = array('db_query',  'db_query_range');
       while (!empty($backtrace[1]) && ($caller = $backtrace[1]) &&
-          ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE || strpos($caller['class'], 'PDO') !== FALSE)) ||
-          in_array($caller['function'], $db_functions))) {
+          ((strpos($caller['namespace'], 'Drupal\Core\Database') !== FALSE || strpos($caller['class'], 'PDO') !== FALSE)) ||
+          in_array($caller['function'], $db_functions)) {
         // We remove that call.
         array_shift($backtrace);
       }
-      if (isset($exception->query_string, $exception->args)) {
-        $message .= ": " . $exception->query_string . "; " . print_r($exception->args, TRUE);
-      }
     }
-    $caller = _drupal_get_last_caller($backtrace);
+    $caller = $this->getLastCaller($backtrace);
 
     return array(
       '%type' => $exception->getClass(),
