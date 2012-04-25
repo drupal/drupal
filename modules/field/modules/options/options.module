@@ -79,8 +79,11 @@ function options_field_widget_form(&$form, &$form_state, $field, $instance, $lan
   $has_value = isset($items[0][$value_key]);
   $properties = _options_properties($type, $multiple, $required, $has_value);
 
+  $entity_type = $element['#entity_type'];
+  $entity = $element['#entity'];
+
   // Prepare the list of options.
-  $options = _options_get_options($field, $instance, $properties);
+  $options = _options_get_options($field, $instance, $properties, $entity_type, $entity);
 
   // Put current field values in shape.
   $default_value = _options_storage_to_form($items, $options, $value_key, $properties);
@@ -237,9 +240,9 @@ function _options_properties($type, $multiple, $required, $has_value) {
 /**
  * Collects the options for a field.
  */
-function _options_get_options($field, $instance, $properties) {
+function _options_get_options($field, $instance, $properties, $entity_type, $entity) {
   // Get the list of options.
-  $options = (array) module_invoke($field['module'], 'options_list', $field, $instance);
+  $options = (array) module_invoke($field['module'], 'options_list', $field, $instance, $entity_type, $entity);
 
   // Sanitize the options.
   _options_prepare_options($options, $properties);

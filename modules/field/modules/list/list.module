@@ -221,24 +221,39 @@ function list_field_update_field($field, $prior_field, $has_data) {
  *
  * @param $field
  *   The field definition.
+ * @param $instance
+ *   (optional) A field instance array. Defaults to NULL.
+ * @param $entity_type
+ *   (optional) The type of entity; e.g. 'node' or 'user'. Defaults to NULL.
+ * @param $entity
+ *   (optional) The entity object. Defaults to NULL.
  *
  * @return
  *   The array of allowed values. Keys of the array are the raw stored values
  *   (number or text), values of the array are the display labels.
  */
-function list_allowed_values($field) {
+function list_allowed_values($field, $instance = NULL, $entity_type = NULL, $entity = NULL) {
   $allowed_values = &drupal_static(__FUNCTION__, array());
 
   if (!isset($allowed_values[$field['id']])) {
     $function = $field['settings']['allowed_values_function'];
+    // If $cacheable is FALSE, then the allowed values are not statically
+    // cached. See list_test_dynamic_values_callback() for an example of
+    // generating dynamic and uncached values.
+    $cacheable = TRUE;
     if (!empty($function) && function_exists($function)) {
-      $values = $function($field);
+      $values = $function($field, $instance, $entity_type, $entity, $cacheable);
     }
     else {
       $values = $field['settings']['allowed_values'];
     }
 
-    $allowed_values[$field['id']] = $values;
+    if ($cacheable) {
+      $allowed_values[$field['id']] = $values;
+    }
+    else {
+      return $values;
+    }
   }
 
   return $allowed_values[$field['id']];
@@ -373,7 +388,7 @@ function _list_values_in_use($field, $values) {
  * - 'list_illegal_value': The value is not part of the list of allowed values.
  */
 function list_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
-  $allowed_values = list_allowed_values($field);
+  $allowed_values = list_allowed_values($field, $instance, $entity_type, $entity);
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!empty($allowed_values) && !isset($allowed_values[$item['value']])) {
@@ -419,8 +434,8 @@ function list_field_widget_info_alter(&$info) {
 /**
  * Implements hook_options_list().
  */
-function list_options_list($field) {
-  return list_allowed_values($field);
+function list_options_list($field, $instance, $entity_type, $entity) {
+  return list_allowed_values($field, $instance, $entity_type, $entity);
 }
 
 /**
@@ -447,7 +462,7 @@ function list_field_formatter_view($entity_type, $entity, $field, $instance, $la
 
   switch ($display['type']) {
     case 'list_default':
-      $allowed_values = list_allowed_values($field);
+      $allowed_values = list_allowed_values($field, $instance, $entity_type, $entity);
       foreach ($items as $delta => $item) {
         if (isset($allowed_values[$item['value']])) {
           $output = field_filter_xss($allowed_values[$item['value']]);
