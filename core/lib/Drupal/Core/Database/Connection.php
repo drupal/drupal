@@ -524,15 +524,15 @@ abstract class Connection extends PDO {
     }
     catch (PDOException $e) {
       if ($options['throw_exception']) {
-        // Add additional debug information.
-        if ($query instanceof DatabaseStatementInterface) {
-          $e->query_string = $stmt->getQueryString();
-        }
-        else {
-          $e->query_string = $query;
-        }
-        $e->args = $args;
-        throw $e;
+        // Wrap the exception in another exception.  Its message is the extra
+        // database debug information.  We have to do it this way because PHP
+        // does not allow us to override Exception::getMessage().
+
+        $query_string = ($query instanceof DatabaseStatementInterface) ? $stmt->getQueryString() : $query;
+        $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
+        $exception = new DatabaseExceptionWrapper($message, 0, $e);
+
+        throw $exception;
       }
       return NULL;
     }
