@@ -233,8 +233,8 @@ function contact_form_user_profile_form_alter(&$form, &$form_state) {
 /**
  * Implements hook_user_presave().
  */
-function contact_user_presave(&$edit, $account) {
-  $edit['data']['contact'] = isset($edit['contact']) ? $edit['contact'] : variable_get('contact_default_status', 1);
+function contact_user_presave($account) {
+  $account->data['contact'] = isset($account->contact) ? $account->contact : variable_get('contact_default_status', 1);
 }
 
 /**

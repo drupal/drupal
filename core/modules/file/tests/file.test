@@ -709,9 +709,8 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
 
     // Attach the second file to a user.
     $user = $this->drupalCreateUser();
-    $edit = (array) $user;
-    $edit[$field_name][LANGUAGE_NOT_SPECIFIED][0] = (array) $node_file_r3;
-    user_save($user, $edit);
+    $user->{$field_name}[LANGUAGE_NOT_SPECIFIED][0] = (array) $node_file_r3;
+    $user->save();
     $this->drupalGet('user/' . $user->uid . '/edit');
 
     // Delete the third revision and check that the file is not deleted yet.

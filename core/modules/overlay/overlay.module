@@ -102,9 +102,9 @@ function overlay_form_user_profile_form_alter(&$form, &$form_state) {
 /**
  * Implements hook_user_presave().
  */
-function overlay_user_presave(&$edit, $account) {
-  if (isset($edit['overlay'])) {
-    $edit['data']['overlay'] = $edit['overlay'];
+function overlay_user_presave($account) {
+  if (isset($account->overlay)) {
+    $account->data['overlay'] = $account->overlay;
   }
 }
 
@@ -311,7 +311,9 @@ function overlay_user_dismiss_message() {
     return MENU_ACCESS_DENIED;
   }
   else {
-    user_save(user_load($user->uid), array('data' => array('overlay_message_dismissed' => 1)));
+    $account = user_load($user->uid);
+    $account->data['overlay_message_dismissed'] = 1;
+    $account->save();
     drupal_set_message(t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
     // Destination is normally given. Go to the user profile as a fallback.
     drupal_goto('user/' . $user->uid . '/edit');

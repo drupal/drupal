@@ -2021,14 +2021,13 @@ function system_form_user_register_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_user_insert().
+ * Implements hook_user_presave().
  */
-function system_user_presave(&$edit, $account) {
+function system_user_presave($account) {
   if (variable_get('configurable_timezones', 1) && empty($account->timezone) && !variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT)) {
     $account->timezone = variable_get('date_default_timezone', '');
   }
 }
-
 
 /**
  * Implements hook_user_login().

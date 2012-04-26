@@ -374,7 +374,8 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
 
     // Re-create our contacted user as a blocked user.
     $this->contact_user = $this->drupalCreateUser();
-    user_save($this->contact_user, array('status' => 0));
+    $this->contact_user->status = 0;
+    $this->contact_user->save();
 
     // Test that blocked users can still be contacted by admin.
     $this->drupalGet('user/' . $this->contact_user->uid . '/contact');

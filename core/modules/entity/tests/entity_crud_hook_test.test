@@ -356,16 +356,15 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
    * Tests hook invocations for CRUD operations on users.
    */
   public function testUserHooks() {
-    $edit = array(
+    $account = entity_create('user', array(
       'name' => 'Test user',
       'mail' => 'test@example.com',
       'created' => REQUEST_TIME,
       'status' => 1,
       'language' => 'en',
-    );
-    $account = (object) $edit;
+    ));
     $_SESSION['entity_crud_hook_test'] = array();
-    $account = user_save($account, $edit);
+    $account->save();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_user_presave called',
@@ -375,7 +374,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    $account = user_load($account->uid);
+    user_load($account->uid);
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_entity_load called for type user',
@@ -383,8 +382,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    $edit['name'] = 'New name';
-    $account = user_save($account, $edit);
+    $account->name = 'New name';
+    $account->save();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_user_presave called',

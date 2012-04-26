@@ -542,8 +542,8 @@ class BlockCacheTestCase extends DrupalWebTestCase {
     $this->normal_user_alt = $this->drupalCreateUser();
     // Sync the roles, since drupalCreateUser() creates separate roles for
     // the same permission sets.
-    user_save($this->normal_user_alt, array('roles' => $this->normal_user->roles));
     $this->normal_user_alt->roles = $this->normal_user->roles;
+    $this->normal_user_alt->save();
 
     // Enable our test block.
     $edit['blocks[block_test_test_cache][region]'] = 'sidebar_first';
