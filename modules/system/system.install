@@ -810,6 +810,7 @@ function system_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'binary' => TRUE,
       ),
       'uri' => array(
         'description' => 'The URI to access the file (either local or remote).',
@@ -817,6 +818,7 @@ function system_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'binary' => TRUE,
       ),
       'filemime' => array(
         'description' => "The file's MIME type.",
@@ -2173,6 +2175,7 @@ function system_update_7034() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'binary' => TRUE,
       ),
       'uri' => array(
         'description' => 'URI of file.',
@@ -2180,6 +2183,7 @@ function system_update_7034() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'binary' => TRUE,
       ),
       'filemime' => array(
         'description' => "The file's MIME type.",
@@ -2987,6 +2991,29 @@ function system_update_7072() {
  * @defgroup updates-7.x-extra Extra system updates for 7.x
  * @{
  */
+
+/**
+ * Add binary to {file_managed}, in case system_update_7034() was run without
+ * it.
+ */
+function system_update_7073() {
+  db_change_field('file_managed', 'filename', 'filename', array(
+    'description' => 'Name of the file with no path components. This may differ from the basename of the URI if the file is renamed to avoid overwriting an existing file.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'binary' => TRUE,
+  ));
+  db_change_field('file_managed', 'uri', 'uri', array(
+    'description' => 'The URI to access the file (either local or remote).',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'binary' => TRUE,
+  ));
+}
 
 /**
  * @} End of "defgroup updates-7.x-extra"
