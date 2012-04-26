@@ -809,14 +809,19 @@ function _update_get_cache_multiple($cid_prefix) {
  *
  * @param $cid
  *   Optional cache ID of the record to clear from the private update module
- *   cache. If empty, all records will be cleared from the table.
+ *   cache. If empty, all records will be cleared from the table except
+ *   fetch tasks.
  * @param $wildcard
  *   If $wildcard is TRUE, cache IDs starting with $cid are deleted in
  *   addition to the exact cache ID specified by $cid.
  */
 function _update_cache_clear($cid = NULL, $wildcard = FALSE) {
   if (empty($cid)) {
-    db_truncate('cache_update')->execute();
+    db_delete('cache_update')
+      // Clear everything except fetch task information because these are used
+      // to ensure that the fetch task queue items are not added multiple times.
+      ->condition('cid', 'fetch_task::%', 'NOT LIKE')
+      ->execute();
   }
   else {
     $query = db_delete('cache_update');
