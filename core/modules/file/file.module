@@ -163,8 +163,7 @@ function file_file_download($uri, $field_type = 'file') {
     foreach ($field_references as $entity_type => $type_references) {
       foreach ($type_references as $id => $reference) {
         // Try to load $entity and $field.
-        $entity = entity_load($entity_type, array($id));
-        $entity = reset($entity);
+        $entity = entity_load($entity_type, $id);
         $field = NULL;
         if ($entity) {
           // Load all fields for that entity.

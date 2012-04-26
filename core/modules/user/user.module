@@ -261,28 +261,28 @@ function user_external_load($authname) {
 }
 
 /**
- * Load multiple users based on certain conditions.
+ * Loads multiple users based on certain conditions.
  *
  * This function should be used whenever you need to load more than one user
  * from the database. Users are loaded into memory and will not require
  * database access if loaded again during the same page request.
  *
- * @param $uids
- *   An array of user IDs.
- * @param $conditions
+ * @param array|bool $uids
+ *   An array of user IDs, or FALSE to load all users.
+ * @param array $conditions
  *   (deprecated) An associative array of conditions on the {users}
  *   table, where the keys are the database fields and the values are the
  *   values those fields must have. Instead, it is preferable to use
  *   EntityFieldQuery to retrieve a list of entity IDs loadable by
  *   this function.
- * @param $reset
+ * @param bool $reset
  *   A boolean indicating that the internal cache should be reset. Use this if
  *   loading a user object which has been altered during the page request.
  *
- * @return
+ * @return array
  *   An array of user objects, indexed by uid.
  *
- * @see entity_load()
+ * @see entity_load_multiple()
  * @see user_load()
  * @see user_load_by_mail()
  * @see user_load_by_name()
@@ -290,8 +290,8 @@ function user_external_load($authname) {
  *
  * @todo Remove $conditions in Drupal 8.
  */
-function user_load_multiple($uids = array(), $conditions = array(), $reset = FALSE) {
-  return entity_load('user', $uids, $conditions, $reset);
+function user_load_multiple($uids = array(), array $conditions = array(), $reset = FALSE) {
+  return entity_load_multiple('user', $uids, $conditions, $reset);
 }
 
 /**
@@ -306,52 +306,51 @@ function user_load_multiple($uids = array(), $conditions = array(), $reset = FAL
  * @link http://drupal.org/node/218104 Safely impersonating another user @endlink
  * for more information.
  *
- * @param $uid
+ * @param int $uid
  *   Integer specifying the user ID to load.
- * @param $reset
+ * @param bool $reset
  *   TRUE to reset the internal cache and load from the database; FALSE
  *   (default) to load from the internal cache, if set.
  *
- * @return
+ * @return object
  *   A fully-loaded user object upon successful user load, or FALSE if the user
  *   cannot be loaded.
  *
  * @see user_load_multiple()
  */
 function user_load($uid, $reset = FALSE) {
-  $users = user_load_multiple(array($uid), array(), $reset);
-  return reset($users);
+  return entity_load('user', $uid, $reset);
 }
 
 /**
- * Fetch a user object by email address.
+ * Fetches a user object by email address.
  *
- * @param $mail
+ * @param string $mail
  *   String with the account's e-mail address.
- * @return
+ * @return object|bool
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
  *
  * @see user_load_multiple()
  */
 function user_load_by_mail($mail) {
-  $users = user_load_multiple(array(), array('mail' => $mail));
+  $users = entity_load_multiple('user', FALSE, array('mail' => $mail));
   return reset($users);
 }
 
 /**
- * Fetch a user object by account name.
+ * Fetches a user object by account name.
  *
- * @param $name
+ * @param string $name
  *   String with the account's user name.
- * @return
+ * @return object|bool
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
  *
  * @see user_load_multiple()
  */
 function user_load_by_name($name) {
-  $users = user_load_multiple(array(), array('name' => $name));
+  $users = entity_load_multiple('user', FALSE, array('name' => $name));
   return reset($users);
 }
 

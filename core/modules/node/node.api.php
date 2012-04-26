@@ -56,8 +56,8 @@
  *   - hook_entity_update() (all)
  *   - hook_node_access_records() (all)
  *   - hook_node_access_records_alter() (all)
- * - Loading a node (calling node_load(), node_load_multiple(), or
- *   entity_load() with $entity_type of 'node'):
+ * - Loading a node (calling node_load(), node_load_multiple(), entity_load()
+ *   or entity_load_multiple() with $entity_type of 'node'):
  *   - Node and revision information is read from database.
  *   - hook_load() (node-type-specific)
  *   - field_attach_load_revision() and field_attach_load()

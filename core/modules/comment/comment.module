@@ -1500,19 +1500,19 @@ function comment_delete_multiple($cids) {
 /**
  * Loads comments from the database.
  *
- * @param $cids
- *   An array of comment IDs.
- * @param $conditions
+ * @param array|bool $cids
+ *   An array of comment IDs, or FALSE to load all comments.
+ * @param array $conditions
  *   (deprecated) An associative array of conditions on the {comments}
  *   table, where the keys are the database fields and the values are the
  *   values those fields must have. Instead, it is preferable to use
  *   EntityFieldQuery to retrieve a list of entity IDs loadable by
  *   this function.
- * @param $reset
+ * @param bool $reset
  *   Whether to reset the internal static entity cache. Note that the static
  *   cache is disabled in comment_entity_info() by default.
  *
- * @return
+ * @return array
  *   An array of comment objects, indexed by comment ID.
  *
  * @todo Remove $conditions in Drupal 8.
@@ -1520,16 +1520,16 @@ function comment_delete_multiple($cids) {
  * @see entity_load()
  * @see EntityFieldQuery
  */
-function comment_load_multiple($cids = array(), $conditions = array(), $reset = FALSE) {
-  return entity_load('comment', $cids, $conditions, $reset);
+function comment_load_multiple($cids = array(), array $conditions = array(), $reset = FALSE) {
+  return entity_load_multiple('comment', $cids, $conditions, $reset);
 }
 
 /**
  * Loads the entire comment by comment ID.
  *
- * @param $cid
+ * @param int $cid
  *   The ID of the comment to be loaded.
- * @param $reset
+ * @param bool $reset
  *   Whether to reset the internal static entity cache. Note that the static
  *   cache is disabled in comment_entity_info() by default.
  *
@@ -1537,8 +1537,7 @@ function comment_load_multiple($cids = array(), $conditions = array(), $reset = 
  *   The comment object.
  */
 function comment_load($cid, $reset = FALSE) {
-  $comment = comment_load_multiple(array($cid), array(), $reset);
-  return $comment ? $comment[$cid] : FALSE;
+  return entity_load('comment', $cid);
 }
 
 /**

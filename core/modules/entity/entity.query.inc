@@ -733,7 +733,7 @@ class EntityFieldQuery {
    *   @code
    *     $result = $query->execute();
    *     if (!empty($result[$my_type])) {
-   *       $entities = entity_load($my_type, array_keys($result[$my_type]));
+   *       $entities = entity_load_multiple($my_type, array_keys($result[$my_type]));
    *     }
    *   @endcode
    */

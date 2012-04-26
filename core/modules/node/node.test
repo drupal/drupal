@@ -60,7 +60,7 @@ class NodeLoadMultipleUnitTest extends NodeWebTestCase {
     $this->assertNoText($node4->title, t('Node title does not appear in the default listing.'));
 
     // Load nodes with only a condition. Nodes 3 and 4 will be loaded.
-    $nodes = node_load_multiple(NULL, array('promote' => 0));
+    $nodes = node_load_multiple(FALSE, array('promote' => 0));
     $this->assertEqual($node3->title, $nodes[$node3->nid]->title, t('Node was loaded.'));
     $this->assertEqual($node4->title, $nodes[$node4->nid]->title, t('Node was loaded.'));
     $count = count($nodes);

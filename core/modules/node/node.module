@@ -913,40 +913,40 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  * from the database. Nodes are loaded into memory and will not require
  * database access if loaded again during the same page request.
  *
- * @param $nids
- *   (optional) An array of node IDs.
- * @param $conditions
+ * @param array|bool $nids
+ *   (optional) An array of node IDs, or FALSE to load all nodes.
+ * @param array $conditions
  *   (deprecated) An associative array of conditions on the {node}
  *   table, where the keys are the database fields and the values are the
  *   values those fields must have. Instead, it is preferable to use
  *   EntityFieldQuery to retrieve a list of entity IDs loadable by
  *   this function.
- * @param $reset
+ * @param bool $reset
  *   (optional) Whether to reset the internal node_load() cache.
  *
- * @return
+ * @return array
  *   An array of node objects indexed by nid.
  *
  * @todo Remove $conditions in Drupal 8.
  *
- * @see entity_load()
+ * @see entity_load_multiple()
  * @see EntityFieldQuery
  */
-function node_load_multiple($nids = array(), $conditions = array(), $reset = FALSE) {
-  return entity_load('node', $nids, $conditions, $reset);
+function node_load_multiple($nids = array(), array $conditions = array(), $reset = FALSE) {
+  return entity_load_multiple('node', $nids, $conditions, $reset);
 }
 
 /**
  * Loads a node object from the database.
  *
- * @param $nid
+ * @param int $nid
  *   (optional) The node ID.
- * @param $vid
+ * @param int $vid
  *   (optional) The revision ID.
- * @param $reset
+ * @param bool $reset
  *   (optional) Whether to reset the node_load_multiple() cache.
  *
- * @return
+ * @return object
  *   A fully-populated node object, or FALSE if the node is not found.
  */
 function node_load($nid = NULL, $vid = NULL, $reset = FALSE) {

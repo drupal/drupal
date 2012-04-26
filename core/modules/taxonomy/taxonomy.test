@@ -1362,7 +1362,7 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
       $this->createTerm($vocabulary);
     }
     // Load the terms from the vocabulary.
-    $terms = taxonomy_term_load_multiple(NULL, array('vid' => $vocabulary->vid));
+    $terms = taxonomy_term_load_multiple(FALSE, array('vid' => $vocabulary->vid));
     $count = count($terms);
     $this->assertTrue($count == 5, format_string('Correct number of terms were loaded. !count terms.', array('!count' => $count)));
 
@@ -1382,7 +1382,7 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
     $this->assertFalse($deleted_term);
 
     // Load terms from the vocabulary by vid.
-    $terms4 = taxonomy_term_load_multiple(NULL, array('vid' => $vocabulary->vid));
+    $terms4 = taxonomy_term_load_multiple(FALSE, array('vid' => $vocabulary->vid));
     $this->assertTrue(count($terms4 == 4), 'Correct number of terms were loaded.');
     $this->assertFalse(isset($terms4[$deleted->tid]));
 

@@ -938,53 +938,53 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
  * from the database. Terms are loaded into memory and will not require
  * database access if loaded again during the same page request.
  *
- * @see entity_load()
+ * @see entity_load_multiple()
  * @see EntityFieldQuery
  *
- * @param $tids
- *   An array of taxonomy term IDs.
- * @param $conditions
+ * @param array|bool $tids
+ *   An array of taxonomy term IDs, or FALSE to load all terms.
+ * @param array $conditions
  *   (deprecated) An associative array of conditions on the {taxonomy_term}
  *   table, where the keys are the database fields and the values are the
  *   values those fields must have. Instead, it is preferable to use
  *   EntityFieldQuery to retrieve a list of entity IDs loadable by
  *   this function.
  *
- * @return
+ * @return array
  *   An array of taxonomy term entities, indexed by tid. When no results are
  *   found, an empty array is returned.
  *
  * @todo Remove $conditions in Drupal 8.
  */
-function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
-  return entity_load('taxonomy_term', $tids, $conditions);
+function taxonomy_term_load_multiple($tids = array(), array $conditions = array()) {
+  return entity_load_multiple('taxonomy_term', $tids, $conditions);
 }
 
 /**
- * Load multiple taxonomy vocabularies based on certain conditions.
+ * Loads multiple taxonomy vocabularies based on certain conditions.
  *
  * This function should be used whenever you need to load more than one
  * vocabulary from the database. Terms are loaded into memory and will not
  * require database access if loaded again during the same page request.
  *
- * @see entity_load()
+ * @see entity_load_multiple()
  *
- * @param $vids
+ * @param array|bool $vids
  *  An array of taxonomy vocabulary IDs, or FALSE to load all vocabularies.
- * @param $conditions
+ * @param array $conditions
  *  An array of conditions to add to the query.
  *
- * @return
+ * @return array
  *  An array of vocabulary objects, indexed by vid.
  */
-function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array()) {
-  return entity_load('taxonomy_vocabulary', $vids, $conditions);
+function taxonomy_vocabulary_load_multiple($vids = array(), array $conditions = array()) {
+  return entity_load_multiple('taxonomy_vocabulary', $vids, $conditions);
 }
 
 /**
  * Return the taxonomy vocabulary entity matching a vocabulary ID.
  *
- * @param $vid
+ * @param int $vid
  *   The vocabulary's ID.
  *
  * @return TaxonomyVocabulary|false
@@ -994,8 +994,7 @@ function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(
  * @see taxonomy_vocabulary_machine_name_load()
  */
 function taxonomy_vocabulary_load($vid) {
-  $vocabularies = taxonomy_vocabulary_load_multiple(array($vid));
-  return reset($vocabularies);
+  return entity_load('taxonomy_vocabulary', $vid);
 }
 
 /**
@@ -1011,8 +1010,8 @@ function taxonomy_vocabulary_load($vid) {
  * @see taxonomy_vocabulary_load()
  */
 function taxonomy_vocabulary_machine_name_load($name) {
-  $vocabularies = taxonomy_vocabulary_load_multiple(NULL, array('machine_name' => $name));
-  return reset($vocabularies);
+  $result = entity_load_multiple('taxonomy_vocabulary', FALSE, array('machine_name' => $name));
+  return reset($result);
 }
 
 /**
@@ -1028,8 +1027,7 @@ function taxonomy_term_load($tid) {
   if (!is_numeric($tid)) {
     return FALSE;
   }
-  $term = taxonomy_term_load_multiple(array($tid), array());
-  return $term ? $term[$tid] : FALSE;
+  return entity_load('taxonomy_term', $tid);
 }
 
 /**

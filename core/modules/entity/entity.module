@@ -191,7 +191,31 @@ function entity_create_stub_entity($entity_type, $ids) {
 }
 
 /**
- * Loads entities from the database.
+ * Loads an entity from the database.
+ *
+ * @param string $entity_type
+ *   The entity type to load, e.g. node or user.
+ * @param int $id
+ *   The id of the entity to load.
+ * @param bool $reset
+ *   Whether to reset the internal cache for the requested entity type.
+ *
+ * @return object
+ *   The entity object, or FALSE if there is no entity with the given id.
+ *
+ * @see hook_entity_info()
+ * @see entity_load_multiple()
+ * @see DrupalEntityControllerInterface
+ * @see DrupalDefaultEntityController
+ * @see EntityFieldQuery
+ */
+function entity_load($entity_type, $id, $reset = FALSE) {
+  $entities = entity_load_multiple($entity_type, array($id), array(), $reset);
+  return isset($entities[$id]) ? $entities[$id] : FALSE;
+}
+
+/**
+ * Loads multiple entities from the database.
  *
  * This function should be used whenever you need to load more than one entity
  * from the database. The entities are loaded into memory and will not require
@@ -206,19 +230,19 @@ function entity_create_stub_entity($entity_type, $ids) {
  * DrupalDefaultEntityController class. See node_entity_info() and the
  * NodeController in node.module as an example.
  *
- * @param $entity_type
+ * @param string $entity_type
  *   The entity type to load, e.g. node or user.
- * @param $ids
+ * @param array|bool $ids
  *   An array of entity IDs, or FALSE to load all entities.
- * @param $conditions
+ * @param array $conditions
  *   (deprecated) An associative array of conditions on the base table, where
  *   the keys are the database fields and the values are the values those
  *   fields must have. Instead, it is preferable to use EntityFieldQuery to
  *   retrieve a list of entity IDs loadable by this function.
- * @param $reset
+ * @param bool $reset
  *   Whether to reset the internal cache for the requested entity type.
  *
- * @return
+ * @return array
  *   An array of entity objects indexed by their ids.
  *
  * @todo Remove $conditions in Drupal 8.
@@ -228,7 +252,7 @@ function entity_create_stub_entity($entity_type, $ids) {
  * @see DrupalDefaultEntityController
  * @see EntityFieldQuery
  */
-function entity_load($entity_type, $ids = FALSE, $conditions = array(), $reset = FALSE) {
+function entity_load_multiple($entity_type, $ids = FALSE, $conditions = array(), $reset = FALSE) {
   if ($reset) {
     entity_get_controller($entity_type)->resetCache();
   }
