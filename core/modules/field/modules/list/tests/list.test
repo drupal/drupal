@@ -143,7 +143,9 @@ class ListDynamicValuesTestCase extends FieldTestCase {
     $this->instance = field_create_instance($this->instance);
     $this->test = array(
       'id' => mt_rand(1, 10),
-      'vid' => mt_rand(1, 10),
+      // Make sure this does not equal the ID so that
+      // list_test_dynamic_values_callback() always returns 4 values.
+      'vid' => mt_rand(20, 30),
       'bundle' => 'test_bundle',
       'label' => $this->randomName(),
     );
