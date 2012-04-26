@@ -41,7 +41,6 @@ function statistics_help($path, $arg) {
   }
 }
 
-
 /**
  * Implements hook_exit().
  *
@@ -57,22 +56,6 @@ function statistics_exit() {
   // in which case we need to bootstrap to the session phase anyway.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
 
-  if (variable_get('statistics_count_content_views', 0)) {
-    // We are counting content views.
-    if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == NULL) {
-      // A node has been viewed, so update the node's counters.
-      db_merge('node_counter')
-        ->key(array('nid' => arg(1)))
-        ->fields(array(
-          'daycount' => 1,
-          'totalcount' => 1,
-          'timestamp' => REQUEST_TIME,
-        ))
-        ->expression('daycount', 'daycount + 1')
-        ->expression('totalcount', 'totalcount + 1')
-        ->execute();
-    }
-  }
   if (variable_get('statistics_enable_access_log', 0)) {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
 
@@ -115,6 +98,19 @@ function statistics_permission() {
  * Implements hook_node_view().
  */
 function statistics_node_view($node, $view_mode) {
+  if (!empty($node->nid) && $view_mode == 'full') {
+    $node->content['#attached']['js'] = array(
+      drupal_get_path('module', 'statistics') . '/statistics.js' => array(
+        'scope' => 'footer'
+      ),
+    );
+    $settings = array('nid' => $node->nid);
+    $node->content['#attached']['js'][] = array(
+      'data' => array('statistics' => $settings),
+      'type' => 'setting',
+    );
+  }
+
   if ($view_mode != 'rss') {
     if (user_access('view post access counter')) {
       $statistics = statistics_get($node->nid);

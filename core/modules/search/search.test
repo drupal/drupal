@@ -450,8 +450,14 @@ class SearchRankingTestCase extends SearchWebTestCase {
     variable_set('statistics_count_content_views', 1);
 
     // Then View one of the nodes a bunch of times.
+    // Manually calling statistics.php, simulating ajax behavior.
+    $nid = $nodes['views'][1]->nid;
+    $post = http_build_query(array('nid' => $nid));
+    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+    global $base_url;
+    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
     for ($i = 0; $i < 5; $i ++) {
-      $this->drupalGet('node/' . $nodes['views'][1]->nid);
+      drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     }
 
     // Test each of the possible rankings.

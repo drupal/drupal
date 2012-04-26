@@ -104,6 +104,13 @@ class StatisticsLoggingTestCase extends DrupalWebTestCase {
 
     // Verify logging of an uncached page.
     $this->drupalGet($path);
+    // Manually calling statistics.php, simulating ajax behavior.
+    $nid = $this->node->nid;
+    $post = http_build_query(array('nid' => $nid));
+    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+    global $base_url;
+    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', t('Testing an uncached page.'));
     $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
     $this->assertTrue(is_array($log) && count($log) == 1, t('Page request was logged.'));
@@ -113,6 +120,8 @@ class StatisticsLoggingTestCase extends DrupalWebTestCase {
 
     // Verify logging of a cached page.
     $this->drupalGet($path);
+    // Manually calling statistics.php, simulating ajax behavior.
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Testing a cached page.'));
     $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
     $this->assertTrue(is_array($log) && count($log) == 2, t('Page request was logged.'));
@@ -123,6 +132,8 @@ class StatisticsLoggingTestCase extends DrupalWebTestCase {
     // Test logging from authenticated users
     $this->drupalLogin($this->auth_user);
     $this->drupalGet($path);
+    // Manually calling statistics.php, simulating ajax behavior.
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
     // Check the 6th item since login and account pages are also logged
     $this->assertTrue(is_array($log) && count($log) == 6, t('Page request was logged.'));
@@ -219,6 +230,13 @@ class StatisticsReportsTestCase extends StatisticsTestCase {
     // Visit a node to have something show up in the block.
     $node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->blocking_user->uid));
     $this->drupalGet('node/' . $node->nid);
+    // Manually calling statistics.php, simulating ajax behavior.
+    $nid = $node->nid;
+    $post = http_build_query(array('nid' => $nid));
+    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+    global $base_url;
+    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
 
     // Configure and save the block.
     $block = block_load('statistics', 'popular');
@@ -353,6 +371,13 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
 
     // Hit the node.
     $this->drupalGet('node/' . $this->test_node->nid);
+    // Manually calling statistics.php, simulating ajax behavior.
+    $nid = $this->test_node->nid;
+    $post = http_build_query(array('nid' => $nid));
+    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+    global $base_url;
+    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
 
     $this->drupalGet('admin/reports/pages');
     $this->assertText('node/1', t('Test node found.'));
@@ -360,9 +385,11 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
     // Hit the node again (the counter is incremented after the hit, so
     // "1 view" will actually be shown when the node is hit the second time).
     $this->drupalGet('node/' . $this->test_node->nid);
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $this->assertText('1 view', t('Node is viewed once.'));
 
     $this->drupalGet('node/' . $this->test_node->nid);
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $this->assertText('2 views', t('Node is viewed 2 times.'));
   }
 
@@ -373,6 +400,13 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
     variable_set('statistics_count_content_views', 1);
 
     $this->drupalGet('node/' . $this->test_node->nid);
+    // Manually calling statistics.php, simulating ajax behavior.
+    $nid = $this->test_node->nid;
+    $post = http_build_query(array('nid' => $nid));
+    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+    global $base_url;
+    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
 
     $result = db_select('node_counter', 'n')
       ->fields('n', array('nid'))
@@ -432,7 +466,15 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
     variable_set('statistics_flush_accesslog_timer', 1);
 
     $this->drupalGet('node/' . $this->test_node->nid);
+    // Manually calling statistics.php, simulating ajax behavior.
+    $nid = $this->test_node->nid;
+    $post = http_build_query(array('nid' => $nid));
+    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+    global $base_url;
+    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $this->drupalGet('node/' . $this->test_node->nid);
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $this->assertText('1 view', t('Node is viewed once.'));
 
     $this->drupalGet('admin/reports/pages');
@@ -481,6 +523,13 @@ class StatisticsTokenReplaceTestCase extends StatisticsTestCase {
 
     // Hit the node.
     $this->drupalGet('node/' . $node->nid);
+    // Manually calling statistics.php, simulating ajax behavior.
+    $nid = $node->nid;
+    $post = http_build_query(array('nid' => $nid));
+    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+    global $base_url;
+    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     $statistics = statistics_get($node->nid);
 
     // Generate and test tokens.
