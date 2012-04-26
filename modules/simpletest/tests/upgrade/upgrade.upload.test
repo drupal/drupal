@@ -64,6 +64,12 @@ class UploadUpgradePathTestCase extends UpgradePathTestCase {
       }
       $this->assertIdentical($filenames, $recorded_filenames, 'The uploaded files are present in the same order after the upgrade.');
     }
+    // Test for the file with repeating basename to only have the streaming
+    // path replaced.
+    $node = node_load(40, 53);
+    $repeated_basename_file = $node->upload[LANGUAGE_NONE][4];
+    $this->assertEqual($repeated_basename_file['uri'], 'private://drupal-6/file/directory/path/crazy-basename.png', "The file with the repeated basename path only had the stream portion replaced");
+
     // Make sure the file settings were properly migrated.
     $d6_file_directory_temp = '/drupal-6/file/directory/temp';
     $d6_file_directory_path = '/drupal-6/file/directory/path';

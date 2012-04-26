@@ -114,6 +114,19 @@ db_insert('files')->fields(array(
   'status' => '1',
   'timestamp' => '1285708957',
 ))
+/*
+ * This is a case where the path is repeated twice.
+ */
+->values(array(
+  'fid' => '11',
+  'uid' => '1',
+  'filename' => 'crazy-basename.png',
+  'filepath' => '/drupal-6/file/directory/path/drupal-6/file/directory/path/crazy-basename.png',
+  'filemime' => 'image/png',
+  'filesize' => '329',
+  'status' => '1',
+  'timestamp' => '1285708958',
+))
 ->execute();
 
 db_insert('node')->fields(array(
@@ -235,8 +248,8 @@ db_insert('node_revisions')->fields(array(
   'vid' => '53',
   'uid' => '1',
   'title' => 'node title 40 revision 53',
-  'body' => "Attachments:\r\nforum-hot-new.png\r\nforum-hot.png\r\nforum-sticky.png\r\nforum-new.png",
-  'teaser' => "Attachments:\r\nforum-hot-new.png\r\nforum-hot.png\r\nforum-sticky.png\r\nforum-new.png",
+  'body' => "Attachments:\r\nforum-hot-new.png\r\nforum-hot.png\r\nforum-sticky.png\r\nforum-new.png\r\ncrazy-basename.png",
+  'teaser' => "Attachments:\r\nforum-hot-new.png\r\nforum-hot.png\r\nforum-sticky.png\r\nforum-new.png\r\ncrazy-basename.png",
   'log' => '',
   'timestamp' => '1285709012',
   'format' => '1',
@@ -393,5 +406,13 @@ db_insert('upload')->fields(array(
   'description' => 'forum-new.png',
   'list' => '1',
   'weight' => '-1',
+))
+->values(array(
+  'fid' => '11',
+  'nid' => '40',
+  'vid' => '53',
+  'description' => 'crazy-basename.png',
+  'list' => '1',
+  'weight' => '0',
 ))
 ->execute();

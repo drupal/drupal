@@ -2791,7 +2791,7 @@ function system_update_7061(&$sandbox) {
       foreach ($revision['file'][LANGUAGE_NONE] as $delta => $file) {
         // We will convert filepaths to uri using the default scheme
         // and stripping off the existing file directory path.
-        $file['uri'] = $scheme . str_replace($basename, '', $file['filepath']);
+        $file['uri'] = $scheme . preg_replace('!^' . $basename . '!', '', $file['filepath']);
         $file['uri'] = file_stream_wrapper_uri_normalize($file['uri']);
         unset($file['filepath']);
         // Insert into the file_managed table.
