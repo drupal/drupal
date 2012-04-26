@@ -225,6 +225,33 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     $this->assertUniqueText(t('Failed to get available update data for one project.'));
   }
 
+  /**
+   * Tests that exactly one fetch task per project is created and not more.
+   */
+  function testFetchTasks() {
+    $projecta = array(
+      'name' => 'aaa_update_test',
+    );
+    $projectb = array(
+      'name' => 'bbb_update_test',
+    );
+    $queue = DrupalQueue::get('update_fetch_tasks');
+    $this->assertEqual($queue->numberOfItems(), 0, 'Queue is empty');
+    update_create_fetch_task($projecta);
+    $this->assertEqual($queue->numberOfItems(), 1, 'Queue contains one item');
+    update_create_fetch_task($projectb);
+    $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
+    // Try to add project a again.
+    update_create_fetch_task($projecta);
+    $this->assertEqual($queue->numberOfItems(), 2, 'Queue still contains two items');
+
+    // Clear cache and try again.
+    _update_cache_clear();
+    drupal_static_reset('_update_create_fetch_task');
+    update_create_fetch_task($projecta);
+    $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
+  }
+
   protected function setSystemInfo7_0() {
     $setting = array(
       '#all' => array(
