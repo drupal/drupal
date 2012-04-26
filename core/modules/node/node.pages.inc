@@ -662,12 +662,17 @@ function node_revision_revert_confirm($form, $form_state, $node_revision) {
 function node_revision_revert_confirm_submit($form, &$form_state) {
   $node_revision = $form['#node_revision'];
   $node_revision->revision = 1;
-  $node_revision->log = t('Copy of the revision from %date.', array('%date' => format_date($node_revision->revision_timestamp)));
+
+  // The revision timestamp will be updated when the revision is saved. Keep the
+  // original one for the confirmation message.
+  $original_revision_timestamp = $node_revision->revision_timestamp;
+
+  $node_revision->log = t('Copy of the revision from %date.', array('%date' => format_date($original_revision_timestamp)));
 
   $node_revision->save();
 
   watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
-  drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_type_get_name($node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($node_revision->revision_timestamp))));
+  drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_type_get_name($node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($original_revision_timestamp))));
   $form_state['redirect'] = 'node/' . $node_revision->nid . '/revisions';
 }
 
