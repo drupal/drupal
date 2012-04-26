@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * @file
+ * Provides System module hook implementations for testing purposes.
+ */
+
+function system_module_test_preprocess_html(&$variables) {
+  $variables['default_mobile_metatags'] = FALSE;
+}

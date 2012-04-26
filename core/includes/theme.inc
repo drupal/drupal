@@ -2546,6 +2546,9 @@ function template_preprocess_html(&$variables) {
   $variables['head_title_array'] = $head_title;
   $variables['head_title'] = implode(' | ', $head_title);
 
+  // Display the html.tpl.php’s default mobile metatags for responsive design.
+  $variables['default_mobile_metatags'] = TRUE;
+
   // Populate the page template suggestions.
   if ($suggestions = theme_get_suggestions(arg(), 'html')) {
     $variables['theme_hook_suggestions'] = $suggestions;
