@@ -14,6 +14,9 @@
  * back to its original state!
  */
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 // Change the directory to the Drupal root.
 chdir('..');
 
@@ -391,11 +394,24 @@ $default = language_default();
 drupal_container()->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language')
   ->addMethodCall('extend', array($default));
 
+// A request object from the HTTPFoundation to tell us about the request.
+// @todo These two lines were copied from index.php which has its own todo about
+// a change required here. Revisit this when that change has been made.
+$request = Request::createFromGlobals();
+request($request);
+
+// There can be conflicting 'op' parameters because both update and batch use
+// this parameter name. We need the 'op' coming from a POST request to trump
+// that coming from a GET request.
+$op = $request->request->get('op');
+if (is_null($op)) {
+  $op = $request->query->get('op');
+}
+
 // Only allow the requirements check to proceed if the current user has access
 // to run updates (since it may expose sensitive information about the site's
 // configuration).
-$op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
-if (empty($op) && update_access_allowed()) {
+if (is_null($op) && update_access_allowed()) {
   require_once DRUPAL_ROOT . '/core/includes/install.inc';
   require_once DRUPAL_ROOT . '/core/modules/system/system.install';
 
@@ -440,6 +456,7 @@ drupal_maintenance_theme();
 // not passed through the error handler) will cause a message to be printed.
 ini_set('display_errors', TRUE);
 
+
 // Only proceed with updates if the user is allowed to run them.
 if (update_access_allowed()) {
 
@@ -453,29 +470,29 @@ if (update_access_allowed()) {
   // no errors, skip reporting them if the user has provided a URL parameter
   // acknowledging the warnings and indicating a desire to continue anyway. See
   // drupal_requirements_url().
-  $skip_warnings = !empty($_GET['continue']);
+  $continue = $request->query->get('continue');
+  $skip_warnings = !empty($continue);
   update_check_requirements($skip_warnings);
 
-  $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
     // update.php ops.
 
     case 'selection':
-      $token = request()->query->get('token');
+      $token = $request->query->get('token');
       if (isset($token) && drupal_valid_token($token, 'update')) {
         $output = update_selection_page();
         break;
       }
 
     case 'Apply pending updates':
-      $token = request()->query->get('token');
+      $token = $request->query->get('token');
       if (isset($token) && drupal_valid_token($token, 'update')) {
         // Generate absolute URLs for the batch processing (using $base_root),
         // since the batch API will pass them to url() which does not handle
         // update.php correctly by default.
         $batch_url = $base_root . drupal_current_script_url();
         $redirect_url = $base_root . drupal_current_script_url(array('op' => 'results'));
-        update_batch($_POST['start'], $redirect_url, $batch_url);
+        update_batch($request->request->get('start'), $redirect_url, $batch_url);
         break;
       }
 
@@ -502,5 +519,11 @@ if (isset($output) && $output) {
   drupal_session_start();
   // We defer the display of messages until all updates are done.
   $progress_page = ($batch = batch_get()) && isset($batch['running']);
-  print theme('update_page', array('content' => $output, 'show_messages' => !$progress_page));
+  if ($output instanceof Response) {
+    $output->send();
+  }
+  else {
+    print theme('update_page', array('content' => $output, 'show_messages' => !$progress_page));
+  }
+
 }
