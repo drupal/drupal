@@ -42,7 +42,7 @@
  *   the template.
  *
  * Other variables:
- * - $node: Full node object. Contains data that may not be safe.
+ * - $node: Full node entity. Contains data that may not be safe.
  * - $type: Node type, i.e. page, article, etc.
  * - $comment_count: Number of comments attached to the node.
  * - $uid: User ID of the node author.

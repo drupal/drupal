@@ -5,6 +5,8 @@
  * Tests for forum.module.
  */
 
+use Drupal\node\Node;
+
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
   protected $edit_own_topics_user;
@@ -457,14 +459,14 @@ class ForumTestCase extends DrupalWebTestCase {
    *
    * @param $node_user
    *   The user who creates the node.
-   * @param $node
+   * @param Node $node
    *   The node being checked.
    * @param $admin
    *   Boolean to indicate whether the user can 'access administration pages'.
    * @param $response
    *   The exptected HTTP response code.
    */
-  private function verifyForums($node_user, $node, $admin, $response = 200) {
+  private function verifyForums($node_user, Node $node, $admin, $response = 200) {
     $response2 = ($admin) ? 200 : 403;
 
     // View forum help node.

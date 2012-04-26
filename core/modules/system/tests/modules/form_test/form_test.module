@@ -1932,7 +1932,9 @@ function form_test_form_user_register_form_alter(&$form, &$form_state) {
   );
   // If requested, add the test field by attaching the node page form.
   if (!empty($_REQUEST['field'])) {
-    $node = (object)array('type' => 'page');
+    $node = entity_create('node', array(
+      'type' => 'page',
+    ));
     field_attach_form('node', $node, $form, $form_state);
   }
 }
@@ -1950,12 +1952,12 @@ function form_test_user_register_form_rebuild($form, &$form_state) {
  */
 function form_test_two_instances() {
   global $user;
-  $node1 = (object) array(
+  $node1 = entity_create('node', array(
     'uid' => $user->uid,
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => 'page',
     'langcode' => LANGUAGE_NOT_SPECIFIED,
-  );
+  ));
   $node2 = clone($node1);
   $return['node_form_1'] = drupal_get_form('page_node_form', $node1);
   $return['node_form_2'] = drupal_get_form('page_node_form', $node2);

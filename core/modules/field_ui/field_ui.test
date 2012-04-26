@@ -5,6 +5,8 @@
  * Tests for field_ui.module.
  */
 
+use Drupal\node\Node;
+
 /**
  * Provides common functionality for the Field UI test classes.
  */
@@ -615,7 +617,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
   /**
    * Asserts that a string is found in the rendered node in a view mode.
    *
-   * @param $node
+   * @param Node $node
    *   The node.
    * @param $view_mode
    *   The view mode in which the node should be displayed.
@@ -627,14 +629,14 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  function assertNodeViewText($node, $view_mode, $text, $message) {
+  function assertNodeViewText(Node $node, $view_mode, $text, $message) {
     return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, FALSE);
   }
 
   /**
    * Asserts that a string is not found in the rendered node in a view mode.
    *
-   * @param $node
+   * @param Node $node
    *   The node.
    * @param $view_mode
    *   The view mode in which the node should be displayed.
@@ -645,7 +647,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  function assertNodeViewNoText($node, $view_mode, $text, $message) {
+  function assertNodeViewNoText(Node $node, $view_mode, $text, $message) {
     return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, TRUE);
   }
 
@@ -655,7 +657,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
    * This helper function is used by assertNodeViewText() and
    * assertNodeViewNoText().
    *
-   * @param $node
+   * @param Node $node
    *   The node.
    * @param $view_mode
    *   The view mode in which the node should be displayed.
@@ -669,7 +671,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  function assertNodeViewTextHelper($node, $view_mode, $text, $message, $not_exists) {
+  function assertNodeViewTextHelper(Node $node, $view_mode, $text, $message, $not_exists) {
     // Make sure caches on the tester side are refreshed after changes
     // submitted on the tested side.
     field_info_cache_clear();

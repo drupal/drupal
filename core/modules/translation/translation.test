@@ -5,6 +5,8 @@
  * Tests for the Translation module.
  */
 
+use Drupal\node\Node;
+
 /**
  * Functional tests for the Translation module.
  */
@@ -324,7 +326,7 @@ class TranslationTestCase extends DrupalWebTestCase {
   /**
    * Creates a translation for a basic page in the specified language.
    *
-   * @param $node
+   * @param Node $node
    *   The basic page to create the translation for.
    * @param $title
    *   The title of a basic page in the specified language.
@@ -336,7 +338,7 @@ class TranslationTestCase extends DrupalWebTestCase {
    * @return
    *   Translation object.
    */
-  function createTranslation($node, $title, $body, $langcode) {
+  function createTranslation(Node $node, $title, $body, $langcode) {
     $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'target' => $langcode)));
 
     $field_langcode = LANGUAGE_NOT_SPECIFIED;

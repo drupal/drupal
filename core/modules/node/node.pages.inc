@@ -9,6 +9,7 @@
  * @see node_menu()
  */
 
+use Drupal\node\Node;
 
 /**
  * Page callback: Presents the node editing form.
@@ -81,7 +82,12 @@ function node_add($type) {
   global $user;
 
   $types = node_type_get_types();
-  $node = (object) array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'langcode' => LANGUAGE_NOT_SPECIFIED);
+  $node = entity_create('node', array(
+    'uid' => $user->uid,
+    'name' => (isset($user->name) ? $user->name : ''),
+    'type' => $type,
+    'langcode' => LANGUAGE_NOT_SPECIFIED,
+  ));
   drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)), PASS_THROUGH);
   $output = drupal_get_form($type . '_node_form', $node);
 
@@ -100,7 +106,10 @@ function node_form_validate($form, &$form_state) {
   // $form_state['node'] contains the actual entity being edited, but we must
   // not update it with form values that have not yet been validated, so we
   // create a pseudo-entity to use during validation.
-  $node = (object) $form_state['values'];
+  $node = clone $form_state['node'];
+  foreach ($form_state['values'] as $key => $value) {
+    $node->{$key} = $value;
+  }
   node_validate($node, $form, $form_state);
   entity_form_field_validate('node', $form, $form_state);
 }
@@ -115,16 +124,13 @@ function node_form_validate($form, &$form_state) {
  * @see node_form_submit_build_node()
  * @ingroup forms
  */
-function node_form($form, &$form_state, $node) {
+function node_form($form, &$form_state, Node $node) {
   global $user;
 
   // During initial form build, add the node entity to the form state for use
   // during form building and processing. During a rebuild, use what is in the
   // form state.
   if (!isset($form_state['node'])) {
-    if (!isset($node->title)) {
-      $node->title = NULL;
-    }
     node_object_prepare($node);
     $form_state['node'] = $node;
   }
@@ -391,7 +397,7 @@ function node_form_build_preview($form, &$form_state) {
 /**
  * Generates a node preview.
  *
- * @param $node
+ * @param Drupal\node\Node $node
  *   The node to preview.
  *
  * @return
@@ -399,7 +405,7 @@ function node_form_build_preview($form, &$form_state) {
  *
  * @see node_form_build_preview()
  */
-function node_preview($node) {
+function node_preview(Node $node) {
   if (node_access('create', $node) || node_access('update', $node)) {
     _field_invoke_multiple('load', 'node', array($node->nid => $node));
     // Load the user's name when needed.
@@ -441,7 +447,7 @@ function node_preview($node) {
  *
  * @param $variables
  *   An associative array containing:
- *   - node: The node object which is being previewed.
+ *   - node: The node entity which is being previewed.
  *
  * @see node_preview()
  * @ingroup themeable
@@ -484,7 +490,7 @@ function theme_node_preview($variables) {
 function node_form_submit($form, &$form_state) {
   $node = node_form_submit_build_node($form, $form_state);
   $insert = empty($node->nid);
-  node_save($node);
+  $node->save();
   $node_link = l(t('view'), 'node/' . $node->nid);
   $watchdog_args = array('@type' => $node->type, '%title' => $node->title);
   $t_args = array('@type' => node_type_get_name($node), '%title' => $node->title);
@@ -658,7 +664,7 @@ function node_revision_revert_confirm_submit($form, &$form_state) {
   $node_revision->revision = 1;
   $node_revision->log = t('Copy of the revision from %date.', array('%date' => format_date($node_revision->revision_timestamp)));
 
-  node_save($node_revision);
+  $node_revision->save();
 
   watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
   drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_type_get_name($node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($node_revision->revision_timestamp))));

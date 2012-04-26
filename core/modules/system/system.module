@@ -3212,7 +3212,7 @@ function system_send_email_action_submit($form, $form_state) {
  * Sends an e-mail message.
  *
  * @param object $entity
- *   An optional node object, which will be added as $context['node'] if
+ *   An optional node entity, which will be added as $context['node'] if
  *   provided.
  * @param array $context
  *   Array with the following elements:
@@ -3286,7 +3286,7 @@ function system_message_action_submit($form, $form_state) {
  * Sends a message to the current user's screen.
  *
  * @param object $entity
- *   An optional node object, which will be added as $context['node'] if
+ *   An optional node entity, which will be added as $context['node'] if
  *   provided.
  * @param array $context
  *   Array with the following elements:

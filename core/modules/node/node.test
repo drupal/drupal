@@ -245,15 +245,13 @@ class NodeRevisionsTestCase extends NodeWebTestCase {
     // the "log message" field), and check that the original log message is
     // preserved.
     $new_title = $this->randomName(10) . 'testNodeRevisionWithoutLogMessage1';
-    $updated_node = (object) array(
-      'nid' => $node->nid,
-      'vid' => $node->vid,
-      'uid' => $node->uid,
-      'type' => $node->type,
-      'title' => $new_title,
-      'log' => '',
-    );
-    node_save($updated_node);
+
+    $node = clone $node;
+    $node->title = $new_title;
+    $node->log = '';
+    $node->revision = FALSE;
+
+    $node->save();
     $this->drupalGet('node/' . $node->nid);
     $this->assertText($new_title, t('New node title appears on the page.'));
     $node_revision = node_load($node->nid, NULL, TRUE);
@@ -265,15 +263,13 @@ class NodeRevisionsTestCase extends NodeWebTestCase {
     // Save a new node revision without providing a log message, and check that
     // this revision has an empty log message.
     $new_title = $this->randomName(10) . 'testNodeRevisionWithoutLogMessage2';
-    $updated_node = (object) array(
-      'nid' => $node->nid,
-      'vid' => $node->vid,
-      'uid' => $node->uid,
-      'type' => $node->type,
-      'title' => $new_title,
-      'revision' => 1,
-    );
-    node_save($updated_node);
+
+    $node = clone $node;
+    $node->title = $new_title;
+    $node->revision = TRUE;
+    $node->log = NULL;
+
+    $node->save();
     $this->drupalGet('node/' . $node->nid);
     $this->assertText($new_title, 'New node title appears on the page.');
     $node_revision = node_load($node->nid, NULL, TRUE);
@@ -534,7 +530,7 @@ class NodeCreationTestCase extends NodeWebTestCase {
     );
 
     try {
-      node_save((object) $edit);
+      entity_create('node', $edit)->save();
       $this->fail(t('Expected exception has not been thrown.'));
     }
     catch (Exception $e) {
@@ -1156,7 +1152,7 @@ class NodeSaveTestCase extends NodeWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Node save',
-      'description' => 'Test node_save() for saving content.',
+      'description' => 'Test $node->save() for saving content.',
       'group' => 'Node',
     );
   }
@@ -1187,14 +1183,14 @@ class NodeSaveTestCase extends NodeWebTestCase {
       'uid' => $this->web_user->uid,
       'type' => 'article',
       'nid' => $test_nid,
-      'is_new' => TRUE,
+      'enforceIsNew' => TRUE,
     );
-    $node = node_submit((object) $node);
+    $node = node_submit(entity_create('node', $node));
 
     // Verify that node_submit did not overwrite the user ID.
     $this->assertEqual($node->uid, $this->web_user->uid, t('Function node_submit() preserves user ID'));
 
-    node_save($node);
+    $node->save();
     // Test the import.
     $node_by_nid = node_load($test_nid);
     $this->assertTrue($node_by_nid, t('Node load by node ID.'));
@@ -1215,7 +1211,7 @@ class NodeSaveTestCase extends NodeWebTestCase {
       'title' => $this->randomName(8),
     );
 
-    node_save((object) $edit);
+    entity_create('node', $edit)->save();
     $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertEqual($node->created, REQUEST_TIME, t('Creating a node sets default "created" timestamp.'));
     $this->assertEqual($node->changed, REQUEST_TIME, t('Creating a node sets default "changed" timestamp.'));
@@ -1224,14 +1220,14 @@ class NodeSaveTestCase extends NodeWebTestCase {
     $created = $node->created;
     $changed = $node->changed;
 
-    node_save($node);
+    $node->save();
     $node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
     $this->assertEqual($node->created, $created, t('Updating a node preserves "created" timestamp.'));
 
     // Programmatically set the timestamps using hook_node_presave.
     $node->title = 'testing_node_presave';
 
-    node_save($node);
+    $node->save();
     $node = $this->drupalGetNodeByTitle('testing_node_presave', TRUE);
     $this->assertEqual($node->created, 280299600, t('Saving a node uses "created" timestamp set in presave hook.'));
     $this->assertEqual($node->changed, 979534800, t('Saving a node uses "changed" timestamp set in presave hook.'));
@@ -1245,7 +1241,7 @@ class NodeSaveTestCase extends NodeWebTestCase {
       'changed' => 979534800, // Drupal 1.0 release.
     );
 
-    node_save((object) $edit);
+    entity_create('node', $edit)->save();
     $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertEqual($node->created, 280299600, t('Creating a node uses user-set "created" timestamp.'));
     $this->assertNotEqual($node->changed, 979534800, t('Creating a node doesn\'t use user-set "changed" timestamp.'));
@@ -1254,7 +1250,7 @@ class NodeSaveTestCase extends NodeWebTestCase {
     $node->created = 979534800;
     $node->changed = 280299600;
 
-    node_save($node);
+    $node->save();
     $node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
     $this->assertEqual($node->created, 979534800, t('Updating a node uses user-set "created" timestamp.'));
     $this->assertNotEqual($node->changed, 280299600, t('Updating a node doesn\'t use user-set "changed" timestamp.'));
@@ -1266,20 +1262,20 @@ class NodeSaveTestCase extends NodeWebTestCase {
    */
   function testDeterminingChanges() {
     // Initial creation.
-    $node = (object) array(
+    $node = entity_create('node', array(
       'uid' => $this->web_user->uid,
       'type' => 'article',
       'title' => 'test_changes',
-    );
-    node_save($node);
+    ));
+    $node->save();
 
     // Update the node without applying changes.
-    node_save($node);
+    $node->save();
     $this->assertEqual($node->title, 'test_changes', 'No changes have been determined.');
 
     // Apply changes.
     $node->title = 'updated';
-    node_save($node);
+    $node->save();
 
     // The hook implementations node_test_node_presave() and
     // node_test_node_update() determine changes and change the title.
@@ -2414,7 +2410,6 @@ class NodeRevisionPermissionsTestCase extends NodeWebTestCase {
     // Test that access is FALSE for a node administrator with an invalid $node
     // or $op parameters.
     $admin_account = $this->accounts['admin'];
-    $this->assertFalse(_node_revision_access(FALSE, 'view', $admin_account), '_node_revision_access() returns FALSE with an invalid node.');
     $this->assertFalse(_node_revision_access($revision, 'invalid-op', $admin_account), '_node_revision_access() returns FALSE with an invalid op.');
 
     // Test that the $account parameter defaults to the "logged in" user.

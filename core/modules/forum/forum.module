@@ -5,6 +5,8 @@
  * Provides discussion forums.
  */
 
+use Drupal\node\Node;
+
 /**
  * Implements hook_help().
  */
@@ -244,13 +246,13 @@ function forum_uri($forum) {
 /**
  * Check whether a content type can be used in a forum.
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  *
  * @return
  *   Boolean indicating if the node can be assigned to a forum.
  */
-function _forum_node_check_node_type($node) {
+function _forum_node_check_node_type(Node $node) {
   // Fetch information about the forum field.
   $field = field_info_instance('node', 'taxonomy_forums', $node->type);
 
@@ -260,7 +262,7 @@ function _forum_node_check_node_type($node) {
 /**
  * Implements hook_node_view().
  */
-function forum_node_view($node, $view_mode) {
+function forum_node_view(Node $node, $view_mode) {
   $vid = variable_get('forum_nav_vocabulary', 0);
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_node_check_node_type($node)) {
@@ -285,7 +287,7 @@ function forum_node_view($node, $view_mode) {
  *
  * Check in particular that only a "leaf" term in the associated taxonomy.
  */
-function forum_node_validate($node, $form) {
+function forum_node_validate(Node $node, $form) {
   if (_forum_node_check_node_type($node)) {
     $langcode = $form['taxonomy_forums']['#language'];
     // vocabulary is selected, not a "container" term.
@@ -321,7 +323,7 @@ function forum_node_validate($node, $form) {
  *
  * Assign forum taxonomy when adding a topic from within a forum.
  */
-function forum_node_presave($node) {
+function forum_node_presave(Node $node) {
   if (_forum_node_check_node_type($node)) {
     // Make sure all fields are set properly:
     $node->icon = !empty($node->icon) ? $node->icon : '';
@@ -341,7 +343,7 @@ function forum_node_presave($node) {
 /**
  * Implements hook_node_update().
  */
-function forum_node_update($node) {
+function forum_node_update(Node $node) {
   if (_forum_node_check_node_type($node)) {
     if (empty($node->revision) && db_query('SELECT tid FROM {forum} WHERE nid=:nid', array(':nid' => $node->nid))->fetchField()) {
       if (!empty($node->forum_tid)) {
@@ -389,7 +391,7 @@ function forum_node_update($node) {
 /**
  * Implements hook_node_insert().
  */
-function forum_node_insert($node) {
+function forum_node_insert(Node $node) {
   if (_forum_node_check_node_type($node)) {
     if (!empty($node->forum_tid)) {
       $nid = db_insert('forum')
@@ -406,7 +408,7 @@ function forum_node_insert($node) {
 /**
  * Implements hook_node_predelete().
  */
-function forum_node_predelete($node) {
+function forum_node_predelete(Node $node) {
   if (_forum_node_check_node_type($node)) {
     db_delete('forum')
       ->condition('nid', $node->nid)
@@ -901,9 +903,10 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     $nids[] = $record->nid;
   }
   if ($nids) {
+    $nodes = node_load_multiple($nids);
+
     $query = db_select('node', 'n')->extend('TableSort');
-    $query->fields('n', array('title', 'nid', 'type', 'sticky', 'created', 'uid'));
-    $query->addField('n', 'comment', 'comment_mode');
+    $query->fields('n', array('nid'));
 
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
     $query->fields('ncs', array('cid', 'last_comment_uid', 'last_comment_timestamp', 'comment_count'));
@@ -923,7 +926,16 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
       ->orderByHeader($forum_topic_list_header)
       ->condition('n.nid', $nids);
 
-    $result = $query->execute();
+    $result = array();
+    foreach ($query->execute() as $row) {
+      $topic = $nodes[$row->nid];
+      $topic->comment_mode = $topic->comment;
+
+      foreach ($row as $key => $value) {
+        $topic->{$key} = $value;
+      }
+      $result[] = $topic;
+    }
   }
   else {
     $result = array();

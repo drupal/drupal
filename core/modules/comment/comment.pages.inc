@@ -5,6 +5,8 @@
  * User page callbacks for the Comment module.
  */
 
+use Drupal\node\Node;
+
 /**
  * Form constructor for the comment reply form.
  *
@@ -17,7 +19,7 @@
  * The node or comment that is being replied to must appear above the comment
  * form to provide the user context while authoring the comment.
  *
- * @param $node
+ * @param Drupal\node\Node $node
  *   Every comment belongs to a node. This is that node.
  * @param $pid
  *   (optional) Some comments are replies to other comments. In those cases,
@@ -26,7 +28,7 @@
  * @return
  *   The rendered parent node or comment plus the new comment form.
  */
-function comment_reply($node, $pid = NULL) {
+function comment_reply(Node $node, $pid = NULL) {
   // Set the breadcrumb trail.
   drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->title, 'node/' . $node->nid)));
   $op = isset($_POST['op']) ? $_POST['op'] : '';

@@ -5,6 +5,8 @@
  * Tests for rdf.module.
  */
 
+use Drupal\node\Node;
+
 class RdfMappingHookTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -620,10 +622,10 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
    *
    * Tests the tracker page for RDFa markup.
    *
-   * @param $node
+   * @param Node $node
    * The node just created.
    */
-  function _testBasicTrackerRdfaMarkup($node) {
+  function _testBasicTrackerRdfaMarkup(Node $node) {
     $url = url('node/' . $node->nid);
 
     $user = ($node->uid == 0) ? 'Anonymous user' : 'Registered user';

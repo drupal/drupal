@@ -1153,7 +1153,7 @@ function hook_menu_contextual_links_alter(&$links, $router_item, $root_path) {
  *   $page['content']['system_main']['nodes'][$nid]['body']
  *   // Array of links attached to the node (add comments, read more).
  *   $page['content']['system_main']['nodes'][$nid]['links']
- *   // The node object itself.
+ *   // The node entity itself.
  *   $page['content']['system_main']['nodes'][$nid]['#node']
  *   // The results pager.
  *   $page['content']['system_main']['pager']
@@ -1183,7 +1183,7 @@ function hook_page_alter(&$page) {
  * Perform alterations before a form is rendered.
  *
  * One popular use of this hook is to add form elements to the node form. When
- * altering a node form, the node object can be accessed at $form['#node'].
+ * altering a node form, the node entity can be accessed at $form['#node'].
  *
  * In addition to hook_form_alter(), which is called for all forms, there are
  * two more specific form hooks available. The first,
