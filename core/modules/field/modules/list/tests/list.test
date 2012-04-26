@@ -145,7 +145,7 @@ class ListDynamicValuesTestCase extends FieldTestCase {
       'id' => mt_rand(1, 10),
       'vid' => mt_rand(1, 10),
       'bundle' => 'test_bundle',
-      'label' => $this->randomString(),
+      'label' => $this->randomName(),
     );
     $this->entity = call_user_func_array('field_test_create_stub_entity', $this->test);
   }
