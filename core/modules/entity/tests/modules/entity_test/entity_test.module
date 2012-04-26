@@ -20,7 +20,7 @@ function entity_test_entity_info() {
     ),
   );
   // Optionally specify a translation handler for testing translations.
-  if (!empty($GLOBALS['entity_test_translation'])) {
+  if (variable_get('entity_test_translation')) {
     $items['entity_test']['translation']['entity_test'] = TRUE;
   }
   return $items;
