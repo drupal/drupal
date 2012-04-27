@@ -243,6 +243,7 @@ function user_schema() {
       'access' => array('access'),
       'created' => array('created'),
       'mail' => array('mail'),
+      'picture' => array('picture'),
     ),
     'unique keys' => array(
       'name' => array('name'),
