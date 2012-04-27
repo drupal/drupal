@@ -580,8 +580,10 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   }
   fclose($fp);
 
-  // Parse response.
-  list($split, $result->data) = explode("\r\n\r\n", $response, 2);
+  // Parse response headers from the response body.
+  // Be tolerant of malformed HTTP responses that separate header and body with
+  // \n\n or \r\r instead of \r\n\r\n.  See http://drupal.org/node/183435
+  list($split, $result->data) = preg_split("/\r\n\r\n|\n\n|\r\r/", $response, 2);
   $split = preg_split("/\r\n|\n|\r/", $split);
 
   list($protocol, $code, $status_message) = explode(' ', trim(array_shift($split)), 3);
