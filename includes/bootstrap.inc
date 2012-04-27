@@ -68,32 +68,32 @@ define('WATCHDOG_EMERGENCY', 0);
 define('WATCHDOG_ALERT', 1);
 
 /**
- * Log message severity -- Critical: critical conditions.
+ * Log message severity -- Critical conditions.
  */
 define('WATCHDOG_CRITICAL', 2);
 
 /**
- * Log message severity -- Error: error conditions.
+ * Log message severity -- Error conditions.
  */
 define('WATCHDOG_ERROR', 3);
 
 /**
- * Log message severity -- Warning: warning conditions.
+ * Log message severity -- Warning conditions.
  */
 define('WATCHDOG_WARNING', 4);
 
 /**
- * Log message severity -- Notice: normal but significant condition.
+ * Log message severity -- Normal but significant conditions.
  */
 define('WATCHDOG_NOTICE', 5);
 
 /**
- * Log message severity -- Informational: informational messages.
+ * Log message severity -- Informational messages.
  */
 define('WATCHDOG_INFO', 6);
 
 /**
- * Log message severity -- Debug: debug-level messages.
+ * Log message severity -- Debug-level messages.
  */
 define('WATCHDOG_DEBUG', 7);
 
@@ -1691,8 +1691,16 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  *   NULL if message is already translated or not possible to
  *   translate.
  * @param $severity
- *   The severity of the message, as per RFC 3164. Possible values are
- *   WATCHDOG_ERROR, WATCHDOG_WARNING, etc.
+ *   The severity of the message; one of the following values as defined in
+ *   @link http://www.faqs.org/rfcs/rfc3164.html RFC 3164: @endlink
+ *   - WATCHDOG_EMERGENCY: Emergency, system is unusable.
+ *   - WATCHDOG_ALERT: Alert, action must be taken immediately.
+ *   - WATCHDOG_CRITICAL: Critical conditions.
+ *   - WATCHDOG_ERROR: Error conditions.
+ *   - WATCHDOG_WARNING: Warning conditions.
+ *   - WATCHDOG_NOTICE: (default) Normal but significant conditions.
+ *   - WATCHDOG_INFO: Informational messages.
+ *   - WATCHDOG_DEBUG: Debug-level messages.
  * @param $link
  *   A link to associate with the message.
  *
