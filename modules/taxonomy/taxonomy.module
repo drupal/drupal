@@ -1576,7 +1576,7 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
           $items[$id][$delta]['taxonomy_term'] = $terms[$item['tid']];
         }
         // Terms to be created are not in $terms, but are still legitimate.
-        else if ($item['tid'] == 'autocreate') {
+        elseif ($item['tid'] == 'autocreate') {
           // Leave the item in place.
         }
         // Otherwise, unset the instance value, since the term does not exist.

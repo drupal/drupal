@@ -211,7 +211,7 @@ function _options_properties($type, $multiple, $required, $has_value) {
         if (!$required) {
           $properties['empty_option'] = 'option_none';
         }
-        else if (!$has_value) {
+        elseif (!$has_value) {
           $properties['empty_option'] = 'option_select';
         }
       }
