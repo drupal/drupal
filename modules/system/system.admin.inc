@@ -128,7 +128,7 @@ function system_admin_by_module() {
 }
 
 /**
- * Menu callback; displays a module's settings page.
+ * Menu callback: Displays the configuration overview page.
  */
 function system_settings_overview() {
   // Check database setup if necessary
