@@ -20,6 +20,8 @@
  * key is used for verifying the signed messages from the provider.
  */
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Implements hook_menu().
  */
@@ -108,8 +110,7 @@ function openid_test_yadis_xrds() {
         }
       }
     }
-    drupal_add_http_header('Content-Type', 'application/xrds+xml');
-    print '<?xml version="1.0" encoding="UTF-8"?>
+    $output = '<?xml version="1.0" encoding="UTF-8"?>
       <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)" xmlns:openid="http://openid.net/xmlns/1.0">
         <XRD>
           <Status cid="' . check_plain(variable_get('openid_test_canonical_id_status', 'verified')) . '"/>
@@ -138,7 +139,7 @@ function openid_test_yadis_xrds() {
           </Service>
           ';
     if (arg(3) == 'server') {
-      print '
+      $output .= '
           <Service>
             <Type>http://specs.openid.net/auth/2.0/server</Type>
             <URI>http://example.com/this-has-too-low-priority</URI>
@@ -149,7 +150,7 @@ function openid_test_yadis_xrds() {
           </Service>';
     }
     elseif (arg(3) == 'delegate') {
-      print '
+      $output .= '
           <Service priority="0">
             <Type>http://specs.openid.net/auth/2.0/signon</Type>
             <Type>http://openid.net/srv/ax/1.0</Type>
@@ -157,9 +158,10 @@ function openid_test_yadis_xrds() {
             <openid:Delegate>http://example.com/xrds-delegate</openid:Delegate>
           </Service>';
     }
-    print '
+    $output .= '
         </XRD>
       </xrds:XRDS>';
+    return new Response($output, 200, array('Content-type' => 'application/xrds+xml; charset=utf-8'));
   }
   else {
     return t('This is a regular HTML page. If the client sends an Accept: application/xrds+xml header when requesting this URL, an XRDS document is returned.');
