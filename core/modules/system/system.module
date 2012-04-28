@@ -5,6 +5,8 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Maximum age of temporary files in seconds.
  */
@@ -580,6 +582,12 @@ function system_element_info() {
  * Implements hook_menu().
  */
 function system_menu() {
+  $items['cron'] = array(
+    'title' => 'Run cron',
+    'page callback' => 'system_cron_callback',
+    'access callback' => 'system_cron_access',
+    'type' => MENU_CALLBACK,
+  );
   $items['system/files'] = array(
     'title' => 'File download',
     'page callback' => 'file_download',
@@ -1126,6 +1134,36 @@ function system_menu() {
     'file' => 'system.admin.inc',
   );
   return $items;
+}
+
+/**
+ * Page callback; Execute cron tasks.
+ *
+ * @see system_cron_access().
+ */
+function system_cron_callback() {
+  drupal_cron_run();
+
+  // HTTP 204 is "No content", meaning "I did what you asked and we're done."
+  return new Response('a', 204);
+}
+
+/**
+ *Access callback for system_cron().
+ *
+ * @see system_cron_callback().
+ */
+function system_cron_access() {
+  if (request()->get('cron_key') != variable_get('cron_key', 'drupal')) {
+    watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
+    return FALSE;
+  }
+  elseif (variable_get('maintenance_mode', 0)) {
+    watchdog('cron', 'Cron could not run because the site is in maintenance mode.', array(), WATCHDOG_NOTICE);
+    return FALSE;
+  }
+
+  return TRUE;
 }
 
 /**

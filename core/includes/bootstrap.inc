@@ -631,7 +631,7 @@ function drupal_settings_initialize() {
     // be modified by a visitor.
     if ($dir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/')) {
       // Remove "core" directory if present, allowing install.php, update.php,
-      // cron.php and others to auto-detect a base path.
+      // and others to auto-detect a base path.
       $core_position = strrpos($dir, '/core');
       if ($core_position !== FALSE && strlen($dir) - 5 == $core_position) {
         $base_path = substr($dir, 0, $core_position);

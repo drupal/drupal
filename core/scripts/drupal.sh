@@ -43,8 +43,8 @@ All arguments are long options.
               If the given path and file exists it will be executed directly,
               i.e. if URI is set to http://default/bar/foo.php
               and bar/foo.php exists, this script will be executed without
-              bootstrapping Drupal. To execute Drupal's cron.php, specify
-              http://default/core/cron.php as the URI.
+              bootstrapping Drupal. To execute Drupal's update.php, specify
+              http://default/core/update.php as the URI.
 
 
 To run this script without --root argument invoke it from the root directory

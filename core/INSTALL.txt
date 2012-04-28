@@ -273,10 +273,10 @@ INSTALLATION
 
    It is also possible to run the cron tasks independent of site visits; this is
    recommended for most sites. To do this, you will need to set up an automated
-   process to visit the page cron.php on your site, which executes the cron
+   process to visit the page /cron on your site, which executes the cron
    tasks.
 
-   The URL of the cron.php page requires a "cron key" to protect against
+   The URL of the cron page requires a "cron key" to protect against
    unauthorized access. Your site's cron key is automatically generated during
    installation and is specific to your site. The full URL of the page, with the
    cron key, is available in the "Cron maintenance tasks" section of the Status
@@ -284,11 +284,11 @@ INSTALLATION
 
    As an example for how to set up this automated process, you can use the
    crontab utility on Unix/Linux systems. The following crontab line uses the
-   wget command to visit the cron.php page, and runs each hour, on the hour:
+   wget command to visit the cron page, and runs each hour, on the hour:
 
-   0 * * * * wget -O - -q -t 1 http://example.com/core/cron.php?cron_key=YOURKEY
+   0 * * * * wget -O - -q -t 1 http://example.com/cron?cron_key=YOURKEY
 
-   Replace the text "http://example.com/core/cron.php?cron_key=YOURKEY" in the
+   Replace the text "http://example.com/cron?cron_key=YOURKEY" in the
    example with the full URL displayed under "Cron maintenance tasks" on the
    "Status report" page.
 
