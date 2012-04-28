@@ -281,7 +281,7 @@ function _update_build_fetch_url($project, $site_key = '') {
   // in the first place, and if this is not a disabled module or theme. We do
   // not want to record usage statistics for disabled code.
   if (!empty($site_key) && (strpos($project['project_type'], 'disabled') === FALSE)) {
-    $url .= (strpos($url, '?') === TRUE) ? '&' : '?';
+    $url .= (strpos($url, '?') !== FALSE) ? '&' : '?';
     $url .= 'site_key=';
     $url .= rawurlencode($site_key);
     if (!empty($project['info']['version'])) {
