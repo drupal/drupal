@@ -873,12 +873,11 @@ class EntityFieldQuery {
   /**
    * Gets the total number of results and initialize a pager for the query.
    *
-   * This query can be detected by checking for ($this->pager && $this->count),
-   * which allows a driver to return 0 from the count query and disable
-   * the pager.
+   * The pager can be disabled by either setting the pager limit to 0, or by
+   * setting this query to be a count query.
    */
   function initializePager() {
-    if ($this->pager && !$this->count) {
+    if ($this->pager && !empty($this->pager['limit']) && !$this->count) {
       $page = pager_find_page($this->pager['element']);
       $count_query = clone $this;
       $this->pager['total'] = $count_query->count()->execute();
