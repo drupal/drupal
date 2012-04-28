@@ -237,12 +237,22 @@ function _update_create_fetch_task($project) {
   if (empty($fetch_tasks[$cid])) {
     $queue = DrupalQueue::get('update_fetch_tasks');
     $queue->createItem($project);
-    db_insert('cache_update')
-      ->fields(array(
-        'cid' => $cid,
-        'created' => REQUEST_TIME,
-      ))
-      ->execute();
+    // Due to race conditions, it is possible that another process already
+    // inserted a row into the {cache_update} table and the following query will
+    // throw an exception.
+    // @todo: Remove the need for the manual check by relying on a queue that
+    // enforces unique items.
+    try {
+      db_insert('cache_update')
+        ->fields(array(
+          'cid' => $cid,
+          'created' => REQUEST_TIME,
+        ))
+        ->execute();
+    }
+    catch (Exception $e) {
+      // The exception can be ignored safely.
+    }
     $fetch_tasks[$cid] = REQUEST_TIME;
   }
 }
