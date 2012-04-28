@@ -20,6 +20,7 @@
  * key is used for verifying the signed messages from the provider.
  */
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -220,11 +221,9 @@ function openid_test_html_openid2() {
 function openid_test_endpoint() {
   switch ($_REQUEST['openid_mode']) {
     case 'associate':
-      _openid_test_endpoint_associate();
-      break;
+      return _openid_test_endpoint_associate();
     case 'checkid_setup':
-      _openid_test_endpoint_authenticate();
-      break;
+      return _openid_test_endpoint_authenticate();
   }
 }
 
@@ -239,8 +238,7 @@ function openid_test_redirect($count = 0) {
     $url = url('openid-test/redirect/' . --$count, array('absolute' => TRUE));
   }
   $http_response_code = variable_get('openid_test_redirect_http_reponse_code', 301);
-  header('Location: ' . $url, TRUE, $http_response_code);
-  exit();
+  return new RedirectResponse($url, $http_response_code);
 }
 
 /**
@@ -296,8 +294,7 @@ function _openid_test_endpoint_associate() {
 
   // Respond to Relying Party in the special Key-Value Form Encoding (see OpenID
   // Authentication 1.0, section 4.1.1).
-  drupal_add_http_header('Content-Type', 'text/plain');
-  print _openid_create_message($response);
+  return new Response(_openid_create_message($response), 200, array('Content-Type' => 'text/plain'));
 }
 
 /**
@@ -319,9 +316,7 @@ function _openid_test_endpoint_authenticate() {
       'openid.mode' => 'error',
       'openid.error' => 'Unexpted identity',
     );
-    drupal_add_http_header('Content-Type', 'text/plain');
-    header('Location: ' . url($_REQUEST['openid_return_to'], array('query' => $response, 'external' => TRUE)));
-    return;
+    return new RedirectResponse(url($_REQUEST['openid_return_to'], array('query' => $response, 'external' => TRUE)));
   }
 
   // Generate unique identifier for this authentication.
@@ -361,8 +356,7 @@ function _openid_test_endpoint_authenticate() {
 
   // Put the signed message into the query string of a URL supplied by the
   // Relying Party, and redirect the user.
-  drupal_add_http_header('Content-Type', 'text/plain');
-  header('Location: ' . url($_REQUEST['openid_return_to'], array('query' => $response, 'external' => TRUE)));
+  return new RedirectResponse(url($_REQUEST['openid_return_to'], array('query' => $response, 'external', TRUE)));
 }
 
 /**
