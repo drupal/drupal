@@ -1781,11 +1781,8 @@ class NodeFeedTestCase extends DrupalWebTestCase {
    * Ensure that node_feed accepts and prints extra channel elements.
    */
   function testNodeFeedExtraChannelElements() {
-    ob_start();
-    node_feed(array(), array('copyright' => 'Drupal is a registered trademark of Dries Buytaert.'));
-    $output = ob_get_clean();
-
-    $this->assertTrue(strpos($output, '<copyright>Drupal is a registered trademark of Dries Buytaert.</copyright>') !== FALSE);
+    $response = node_feed(array(), array('copyright' => 'Drupal is a registered trademark of Dries Buytaert.'));
+    $this->assertTrue(strpos($response->getContent(), '<copyright>Drupal is a registered trademark of Dries Buytaert.</copyright>') !== FALSE);
   }
 }
 
