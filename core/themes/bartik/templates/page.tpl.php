@@ -57,7 +57,7 @@
  * - $action_links (array): Actions local to the page, such as 'Add menu' on
  *   the menu administration interface.
  * - $feed_icons: A string of all feed icons for the current page.
- * - $node: The node object, if there is an automatically-loaded node
+ * - $node: The node entity, if there is an automatically-loaded node
  *   associated with the page, and the node ID is the second argument
  *   in the page's path (e.g. node/12345 and node/12345/revisions, but not
  *   comment/reply/12345).

@@ -14,6 +14,9 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test_template_test_2'] = array(
     'template' => 'theme_test.template_test',
   );
+  $items['theme_test_foo'] = array(
+    'variables' => array('foo' => NULL),
+  );
   return $items;
 }
 
@@ -141,4 +144,11 @@ function _theme_test_suggestion() {
 function theme_test_preprocess_html(&$variables) {
   $variables['html_attributes_array']['theme_test_html_attribute'] = 'theme test html attribute value';
   $variables['body_attributes_array']['theme_test_body_attribute'] = 'theme test body attribute value';
+}
+
+/**
+ * Theme function for testing theme('theme_test_foo').
+ */
+function theme_theme_test_foo($variables) {
+  return $variables['foo'];
 }

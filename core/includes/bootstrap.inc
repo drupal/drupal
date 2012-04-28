@@ -74,32 +74,32 @@ const WATCHDOG_EMERGENCY = 0;
 const WATCHDOG_ALERT = 1;
 
 /**
- * Log message severity -- Critical: critical conditions.
+ * Log message severity -- Critical conditions.
  */
 const WATCHDOG_CRITICAL = 2;
 
 /**
- * Log message severity -- Error: error conditions.
+ * Log message severity -- Error conditions.
  */
 const WATCHDOG_ERROR = 3;
 
 /**
- * Log message severity -- Warning: warning conditions.
+ * Log message severity -- Warning conditions.
  */
 const WATCHDOG_WARNING = 4;
 
 /**
- * Log message severity -- Notice: normal but significant condition.
+ * Log message severity -- Normal but significant conditions.
  */
 const WATCHDOG_NOTICE = 5;
 
 /**
- * Log message severity -- Informational: informational messages.
+ * Log message severity -- Informational messages.
  */
 const WATCHDOG_INFO = 6;
 
 /**
- * Log message severity -- Debug: debug-level messages.
+ * Log message severity -- Debug-level messages.
  */
 const WATCHDOG_DEBUG = 7;
 
@@ -843,7 +843,7 @@ function variable_initialize($conf = array()) {
  *   The default value to use if this variable has never been set.
  *
  * @return
- *   The value of the variable.
+ *   The value of the variable. Unserialization is taken care of as necessary.
  *
  * @see variable_del()
  * @see variable_set()
@@ -1590,8 +1590,16 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  *   NULL if message is already translated or not possible to
  *   translate.
  * @param $severity
- *   The severity of the message, as per RFC 3164. Possible values are
- *   WATCHDOG_ERROR, WATCHDOG_WARNING, etc.
+ *   The severity of the message; one of the following values as defined in
+ *   @link http://www.faqs.org/rfcs/rfc3164.html RFC 3164: @endlink
+ *   - WATCHDOG_EMERGENCY: Emergency, system is unusable.
+ *   - WATCHDOG_ALERT: Alert, action must be taken immediately.
+ *   - WATCHDOG_CRITICAL: Critical conditions.
+ *   - WATCHDOG_ERROR: Error conditions.
+ *   - WATCHDOG_WARNING: Warning conditions.
+ *   - WATCHDOG_NOTICE: (default) Normal but significant conditions.
+ *   - WATCHDOG_INFO: Informational messages.
+ *   - WATCHDOG_DEBUG: Debug-level messages.
  * @param $link
  *   A link to associate with the message.
  *
@@ -1782,7 +1790,7 @@ function drupal_is_denied($ip) {
   // won't be denied. However the user asked explicitly not to use the
   // database and also in this case it's quite likely that the user relies
   // on higher performance solutions like a firewall.
-  elseif (class_exists('Database', FALSE)) {
+  elseif (class_exists('Drupal\Core\Database\Database', FALSE)) {
     $denied = (bool)db_query("SELECT 1 FROM {blocked_ips} WHERE ip = :ip", array(':ip' => $ip))->fetchField();
   }
   return $denied;
@@ -2157,24 +2165,8 @@ function _drupal_bootstrap_configuration() {
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
 
-  // Include and activate the class loader.
-  $loader = drupal_classloader();
-
-  // Register explicit vendor namespaces.
-  $loader->registerNamespaces(array(
-    // All Symfony-borrowed code lives in /core/vendor/Symfony.
-    'Symfony' => DRUPAL_ROOT . '/core/vendor',
-  ));
-  // Register the Drupal namespace for classes in core as a fallback.
-  // This allows to register additional namespaces within the Drupal namespace
-  // (e.g., for modules) and avoids an additional file_exists() on the Drupal
-  // core namespace, since the class loader can already determine the best
-  // namespace match based on a string comparison. It further allows modules to
-  // register/overload namespaces in Drupal core.
-  $loader->registerNamespaceFallbacks(array(
-    // All Drupal-namespaced code in core lives in /core/lib/Drupal.
-    'Drupal' => DRUPAL_ROOT . '/core/lib',
-  ));
+  // Activate the class loader.
+  drupal_classloader();
 }
 
 /**
@@ -2355,6 +2347,10 @@ function drupal_container($reset = FALSE) {
   static $container = NULL;
   if ($reset || !isset($container)) {
     $container = new ContainerBuilder();
+    // An interface language always needs to be available for t() and other
+    // functions. This default is overridden by drupal_language_initialize()
+    // during language negotiation.
+    $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
   }
   return $container;
 }
@@ -2575,43 +2571,32 @@ function language_multilingual() {
 /**
  * Returns a list of configured languages.
  *
- * @param $only_enabled
- *   (optional) Whether to return only enabled languages.
- *
  * @return
  *   An associative array of languages, keyed by the language code, ordered by
  *   weight ascending and name ascending.
  */
-function language_list($only_enabled = FALSE) {
+function language_list() {
   $languages = &drupal_static(__FUNCTION__);
   // Initialize master language list.
   if (!isset($languages)) {
-    // Initialize local language list caches.
-    $languages = array('all' => array(), 'enabled' => array());
-
-    // Fill in master language list based on current configuration.
     $default = language_default();
     if (language_multilingual() || module_exists('language')) {
       // Use language module configuration if available.
-      $languages['all'] = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode');
+      $languages = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode');
     }
     else {
       // No language module, so use the default language only.
-      $languages['all'][$default->langcode] = $default;
+      $languages = array($default->langcode => $default);
     }
 
     // Initialize default property so callers have an easy reference and can
-    // save the same object without data loss. Also fill in the filtered list
-    // of enabled languages only.
-    foreach ($languages['all'] as $langcode => $language) {
-      $languages['all'][$langcode]->default = ($langcode == $default->langcode);
-      if ($language->enabled) {
-        $languages['enabled'][$langcode] = $languages['all'][$langcode];
-      }
+    // save the same object without data loss.
+    foreach ($languages as $langcode => $language) {
+      $languages[$langcode]->default = ($langcode == $default->langcode);
     }
   }
 
-  return $only_enabled ? $languages['enabled'] : $languages['all'];
+  return $languages;
 }
 
 /**
@@ -2662,7 +2647,6 @@ function language_default() {
     'langcode' => 'en',
     'name' => 'English',
     'direction' => 0,
-    'enabled' => 1,
     'weight' => 0,
   ));
   $default->default = TRUE;
@@ -2865,6 +2849,24 @@ function drupal_classloader() {
         $loader = new UniversalClassLoader();
         break;
     }
+
+    // Register explicit vendor namespaces.
+    $loader->registerNamespaces(array(
+      // All Symfony-borrowed code lives in /core/vendor/Symfony.
+      'Symfony' => DRUPAL_ROOT . '/core/vendor',
+    ));
+    // Register the Drupal namespace for classes in core as a fallback.
+    // This allows to register additional namespaces within the Drupal namespace
+    // (e.g., for modules) and avoids an additional file_exists() on the Drupal
+    // core namespace, since the class loader can already determine the best
+    // namespace match based on a string comparison. It further allows modules
+    // to register/overload namespaces in Drupal core.
+    $loader->registerNamespaceFallbacks(array(
+      // All Drupal-namespaced code in core lives in /core/lib/Drupal.
+      'Drupal' => DRUPAL_ROOT . '/core/lib',
+    ));
+
+    // Register the loader with PHP.
     $loader->register();
   }
   return $loader;

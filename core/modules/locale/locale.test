@@ -1930,24 +1930,6 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
-
-    // Add custom language and disable it.
-    // Code for the language.
-    $langcode_disabled = 'xx-yy';
-    // The English name for the language. This will be translated.
-    $name_disabled = $this->randomName(16);
-    $edit = array(
-      'predefined_langcode' => 'custom',
-      'langcode' => $langcode_disabled,
-      'name' => $name_disabled,
-      'direction' => '0',
-    );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
-    // Disable the language.
-    $edit = array(
-      'languages[' . $langcode_disabled . '][enabled]' => FALSE,
-    );
-    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
     $this->drupalLogout();
 
     // Login as normal user and edit account settings.
@@ -1958,8 +1940,6 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
     $this->assertText(t('Language'), t('Language selector available.'));
     // Ensure custom language is present.
     $this->assertText($name, t('Language present on form.'));
-    // Ensure disabled language isn't present.
-    $this->assertNoText($name_disabled, t('Disabled language not present on form.'));
     // Switch to our custom language.
     $edit = array(
       'preferred_langcode' => $langcode,
@@ -2289,25 +2269,6 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
 
-    // Add disabled custom language.
-    // Code for the language.
-    $langcode_disabled = 'xx-yy';
-    // The English name for the language.
-    $name_disabled = $this->randomName(16);
-    $edit = array(
-      'predefined_langcode' => 'custom',
-      'langcode' => $langcode_disabled,
-      'name' => $name_disabled,
-      'direction' => '0',
-    );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
-    // Disable second custom language.
-    $path = 'admin/config/regional/language';
-    $edit = array(
-      'languages[' . $langcode_disabled . '][enabled]' => FALSE,
-    );
-    $this->drupalPost($path, $edit, t('Save configuration'));
-
     // Set "Basic page" content type to use multilingual support.
     $this->drupalGet('admin/structure/types/manage/page');
     $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
@@ -2328,10 +2289,8 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $this->drupalGet('node/add/page');
     // Verify language select list is present.
     $this->assertFieldByName('langcode', NULL, t('Language select present on add Basic page form.'));
-    // Ensure enabled language appears.
-    $this->assertText($name, t('Enabled language present.'));
-    // Ensure disabled language doesn't appear.
-    $this->assertNoText($name_disabled, t('Disabled language not present.'));
+    // Ensure language appears.
+    $this->assertText($name, t('Language present.'));
 
     // Create "Basic page" content.
     $node_title = $this->randomName();
@@ -2520,7 +2479,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // is for some reason not found when doing translate search. This might
     // be some bug.
     drupal_static_reset('language_list');
-    $languages = language_list(TRUE);
+    $languages = language_list();
     variable_set('language_default', $languages['vi']);
     // First visit this page to make sure our target string is searchable.
     $this->drupalGet('admin/config');
@@ -2780,15 +2739,6 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
     $edit['predefined_langcode'] = 'fr';
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
-    // Install Italian language.
-    $edit = array();
-    $edit['predefined_langcode'] = 'it';
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-
-    // Disable Italian language.
-    $edit = array('languages[it][enabled]' => FALSE);
-    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
-
     // Enable URL language detection and selection.
     $edit = array('language_interface[enabled][language-url]' => 1);
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
@@ -2800,13 +2750,9 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
   }
 
   /**
-   * Check that disabled or non-installed languages are not considered.
+   * Check that non-installed languages are not considered.
    */
   function testUrlRewritingEdgeCases() {
-    // Check URL rewriting with a disabled language.
-    $languages = language_list();
-    $this->checkUrl($languages['it'], t('Path language is ignored if language is disabled.'), t('URL language negotiation does not work with disabled languages'));
-
     // Check URL rewriting with a non-installed language.
     $non_existing = language_default();
     $non_existing->langcode = $this->randomName();

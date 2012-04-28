@@ -542,8 +542,8 @@ class BlockCacheTestCase extends DrupalWebTestCase {
     $this->normal_user_alt = $this->drupalCreateUser();
     // Sync the roles, since drupalCreateUser() creates separate roles for
     // the same permission sets.
-    user_save($this->normal_user_alt, array('roles' => $this->normal_user->roles));
     $this->normal_user_alt->roles = $this->normal_user->roles;
+    $this->normal_user_alt->save();
 
     // Enable our test block.
     $edit['blocks[block_test_test_cache][region]'] = 'sidebar_first';
@@ -842,5 +842,257 @@ class BlockHiddenRegionTestCase extends DrupalWebTestCase {
     // Ensure that the search form block is displayed.
     $this->drupalGet('');
     $this->assertText('Search', t('Block was displayed on the front page.'));
+  }
+}
+
+/**
+ * Functional tests for the language list configuration forms.
+ */
+class BlockLanguageTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Language block visibility',
+      'description' => 'Tests if a block can be configure to be only visibile on a particular language.',
+      'group' => 'Block',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('language', 'block');
+  }
+
+  /**
+   * Tests the visibility settings for the blocks based on language.
+   */
+  public function testLanguageBlockVisibility() {
+    // Create a new user, allow him to manage the blocks and the languages.
+    $admin_user = $this->drupalCreateUser(array(
+      'administer languages', 'administer blocks',
+    ));
+    $this->drupalLogin($admin_user);
+
+    // Add predefined language.
+    $edit = array(
+      'predefined_langcode' => 'fr',
+    );
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->assertText('French', t('Language added successfully.'));
+
+    // Check if the visibility setting is available.
+    $this->drupalGet('admin/structure/block/add');
+    $this->assertField('langcodes[en]', t('Language visibility field is visible.'));
+
+    // Create a new block.
+    $info_name = $this->randomString(10);
+    $body = '';
+    for ($i = 0; $i <= 100; $i++) {
+      $body .= chr(rand(97, 122));
+    }
+    $edit = array(
+      'regions[stark]' => 'sidebar_first',
+      'info' => $info_name,
+      'title' => 'test',
+      'body[value]' => $body,
+    );
+    $this->drupalPost('admin/structure/block/add', $edit, t('Save block'));
+
+    // Set visibility setting for one language.
+    $edit = array(
+      'langcodes[en]' => TRUE,
+    );
+    $this->drupalPost('admin/structure/block/manage/block/1/configure', $edit, t('Save block'));
+
+    // Change the default language.
+    $edit = array(
+      'site_default' => 'fr',
+    );
+    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+
+    // Reset the static cache of the language list.
+    drupal_static_reset('language_list');
+
+    // Check that a page has a block
+    $this->drupalGet('', array('language' => language_load('en')));
+    $this->assertText($body, t('The body of the custom block appears on the page.'));
+
+    // Check that a page doesn't has a block for the current language anymore
+    $this->drupalGet('', array('language' => language_load('fr')));
+    $this->assertNoText($body, t('The body of the custom block does not appear on the page.'));
+  }
+
+  /**
+   * Tests if the visibility settings are removed if the language is deleted.
+   */
+  public function testLanguageBlockVisibilityLanguageDelete() {
+    // Create a new user, allow him to manage the blocks and the languages.
+    $admin_user = $this->drupalCreateUser(array(
+      'administer languages', 'administer blocks',
+    ));
+    $this->drupalLogin($admin_user);
+
+    // Add predefined language.
+    $edit = array(
+      'predefined_langcode' => 'fr',
+    );
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->assertText('French', t('Language added successfully.'));
+
+    // Create a new block.
+    $info_name = $this->randomString(10);
+    $body = '';
+    for ($i = 0; $i <= 100; $i++) {
+      $body .= chr(rand(97, 122));
+    }
+    $edit = array(
+      'regions[stark]' => 'sidebar_first',
+      'info' => $info_name,
+      'title' => 'test',
+      'body[value]' => $body,
+    );
+    $this->drupalPost('admin/structure/block/add', $edit, t('Save block'));
+
+    // Set visibility setting for one language.
+    $edit = array(
+      'langcodes[fr]' => TRUE,
+    );
+    $this->drupalPost('admin/structure/block/manage/block/1/configure', $edit, t('Save block'));
+
+    // Check that we have an entry in the database after saving the setting.
+    $count = db_query('SELECT COUNT(langcode) FROM {block_language} WHERE module = :module AND delta = :delta', array(
+      ':module' => 'block',
+      ':delta' => '1'
+    ))->fetchField();
+    $this->assertTrue($count == 1, t('The block language visibility has an entry in the database.'));
+
+    // Delete the language.
+    $this->drupalPost('admin/config/regional/language/delete/fr', array(), t('Delete'));
+
+    // Check that the setting related to this language has been deleted.
+    $count = db_query('SELECT COUNT(langcode) FROM {block_language} WHERE module = :module AND delta = :delta', array(
+      ':module' => 'block',
+      ':delta' => '1'
+    ))->fetchField();
+    $this->assertTrue($count == 0, t('The block language visibility do not have an entry in the database.'));
+  }
+
+  /**
+   * Tests if the visibility settings are removed if the block is deleted.
+   */
+  public function testLanguageBlockVisibilityBlockDelete() {
+    // Create a new user, allow him to manage the blocks and the languages.
+    $admin_user = $this->drupalCreateUser(array(
+      'administer languages', 'administer blocks',
+    ));
+    $this->drupalLogin($admin_user);
+
+    // Add predefined language.
+    $edit = array(
+      'predefined_langcode' => 'fr',
+    );
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->assertText('French', t('Language added successfully.'));
+
+    // Create a new block.
+    $info_name = $this->randomString(10);
+    $body = '';
+    for ($i = 0; $i <= 100; $i++) {
+      $body .= chr(rand(97, 122));
+    }
+    $edit = array(
+      'regions[stark]' => 'sidebar_first',
+      'info' => $info_name,
+      'title' => 'test',
+      'body[value]' => $body,
+    );
+    $this->drupalPost('admin/structure/block/add', $edit, t('Save block'));
+
+    // Set visibility setting for one language.
+    $edit = array(
+      'langcodes[fr]' => TRUE,
+    );
+    $this->drupalPost('admin/structure/block/manage/block/1/configure', $edit, t('Save block'));
+
+    // Check that we have an entry in the database after saving the setting.
+    $count = db_query('SELECT COUNT(langcode) FROM {block_language} WHERE module = :module AND delta = :delta', array(
+      ':module' => 'block',
+      ':delta' => '1'
+    ))->fetchField();
+    $this->assertTrue($count == 1, t('The block language visibility has an entry in the database.'));
+
+    // Delete the custom block.
+    $this->drupalPost('admin/structure/block/manage/block/1/delete', array(), t('Delete'));
+
+    // Check that the setting related to this block has been deleted.
+    $count = db_query('SELECT COUNT(langcode) FROM {block_language} WHERE module = :module AND delta = :delta', array(
+      ':module' => 'block',
+      ':delta' => '1'
+    ))->fetchField();
+    $this->assertTrue($count == 0, t('The block language visibility do not have an entry in the database.'));
+  }
+}
+
+/**
+ * Tests that a block assigned to an invalid region triggers the warning.
+ */
+class BlockInvalidRegionTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Blocks in invalid regions',
+      'description' => 'Checks that an active block assigned to a non-existing region triggers the warning message and is disabled.',
+      'group' => 'Block',
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('block', 'block_test'));
+    // Create an admin user.
+    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages'));
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Tests that blocks assigned to invalid regions work correctly.
+   */
+  function testBlockInInvalidRegion() {
+    // Enable a test block in the default theme and place it in an invalid region.
+    db_merge('block')
+      ->key(array(
+        'module' => 'block_test',
+        'delta' => 'test_html_id',
+        'theme' => variable_get('theme_default', 'stark'),
+      ))
+      ->fields(array(
+        'status' => 1,
+        'region' => 'invalid_region',
+        'cache' => DRUPAL_NO_CACHE,
+      ))
+      ->execute();
+
+    $warning_message = t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => t('Test block html id'), '%region' => 'invalid_region'));
+
+    // Clearing the cache should disable the test block placed in the invalid region.
+    $this->drupalPost('admin/config/development/performance', array(), 'Clear all caches');
+    $this->assertRaw($warning_message, 'Enabled block was in the invalid region and has been disabled.');
+
+    // Clear the cache to check if the warning message is not triggered.
+    $this->drupalPost('admin/config/development/performance', array(), 'Clear all caches');
+    $this->assertNoRaw($warning_message, 'Disabled block in the invalid region will not trigger the warning.');
+
+    // Place disabled test block in the invalid region of the default theme.
+    db_merge('block')
+      ->key(array(
+        'module' => 'block_test',
+        'delta' => 'test_html_id',
+        'theme' => variable_get('theme_default', 'stark'),
+      ))
+      ->fields(array(
+        'region' => 'invalid_region',
+        'cache' => DRUPAL_NO_CACHE,
+      ))
+      ->execute();
+
+    // Clear the cache to check if the warning message is not triggered.
+    $this->drupalPost('admin/config/development/performance', array(), 'Clear all caches');
+    $this->assertNoRaw($warning_message, 'Disabled block in the invalid region will not trigger the warning.');
   }
 }

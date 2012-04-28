@@ -1,10 +1,5 @@
 <?php
 
-use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Database\Query\SelectExtender;
-use Drupal\Core\Database\Query\SelectInterface;
-use Symfony\Component\HttpFoundation\Response;
-
 /**
  * @file
  * The core module that allows content to be submitted to the site.
@@ -12,6 +7,13 @@ use Symfony\Component\HttpFoundation\Response;
  * Modules and scripts may programmatically submit nodes using the usual form
  * API pattern.
  */
+
+use Symfony\Component\HttpFoundation\Response;
+
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectExtender;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\node\Node;
 
 /**
  * Denotes that the node is not published.
@@ -184,7 +186,8 @@ function node_entity_info() {
   $return = array(
     'node' => array(
       'label' => t('Node'),
-      'controller class' => 'NodeController',
+      'controller class' => 'Drupal\node\NodeStorageController',
+      'entity class' => 'Drupal\node\Node',
       'base table' => 'node',
       'revision table' => 'node_revision',
       'uri callback' => 'node_uri',
@@ -261,8 +264,11 @@ function node_field_display_node_alter(&$display, $context) {
 
 /**
  * Entity uri callback.
+ *
+ * @param Drupal\node\Node $node
+ *   A node entity.
  */
-function node_uri($node) {
+function node_uri(Node $node) {
   return array(
     'path' => 'node/' . $node->nid,
   );
@@ -315,10 +321,10 @@ function node_title_list($result, $title = NULL) {
 /**
  * Updates the 'last viewed' timestamp of the specified node for current user.
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  */
-function node_tag_new($node) {
+function node_tag_new(Node $node) {
   global $user;
   if ($user->uid) {
     db_merge('history')
@@ -378,7 +384,7 @@ function node_mark($nid, $timestamp) {
 /**
  * Extracts the type name.
  *
- * @param $node
+ * @param Drupal\node\Node|string $node
  *   Either a string or object, containing the node type information.
  *
  * @return
@@ -406,8 +412,8 @@ function node_type_get_types() {
 /**
  * Returns the node type of the passed node or node type string.
  *
- * @param $node
- *   A node object or string that indicates the node type to return.
+ * @param Drupal\node\Node|string $node
+ *   A node entity or string that indicates the node type to return.
  *
  * @return
  *   A single node type, as an object, or FALSE if the node type is not found.
@@ -429,8 +435,8 @@ function node_type_get_type($node) {
  * execute node-type-specific hooks. For types defined in the user interface
  * and managed by node.module, the base is 'node_content'.
  *
- * @param $node
- *   A node object or string that indicates the node type to return.
+ * @param Drupal\node\Node|string $node
+ *   A node entity or string that indicates the node type to return.
  *
  * @return
  *   The node type base or FALSE if the node type is not found.
@@ -459,8 +465,8 @@ function node_type_get_names() {
 /**
  * Returns the node type name of the passed node or node type string.
  *
- * @param $node
- *   A node object or string that indicates the node type to return.
+ * @param Drupal\node\Node|string $node
+ *   A node entity or string that indicates the node type to return.
  *
  * @return
  *   The node type name or FALSE if the node type is not found.
@@ -873,8 +879,8 @@ function node_rdf_mapping() {
 /**
  * Determines whether a node hook exists.
  *
- * @param $node
- *   A node object or a string containing the node type.
+ * @param Drupal\node\Node|string $node
+ *   A node entity or a string containing the node type.
  * @param $hook
  *   A string containing the name of the hook.
  *
@@ -889,8 +895,8 @@ function node_hook($node, $hook) {
 /**
  * Invokes a node hook.
  *
- * @param $node
- *   A node object or a string containing the node type.
+ * @param Drupal\node\Node|string $node
+ *   A node entity or a string containing the node type.
  * @param $hook
  *   A string containing the name of the hook.
  * @param $a2, $a3, $a4
@@ -914,41 +920,41 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  * from the database. Nodes are loaded into memory and will not require
  * database access if loaded again during the same page request.
  *
- * @param $nids
- *   (optional) An array of node IDs.
- * @param $conditions
+ * @param array|bool $nids
+ *   (optional) An array of node IDs, or FALSE to load all nodes.
+ * @param array $conditions
  *   (deprecated) An associative array of conditions on the {node}
  *   table, where the keys are the database fields and the values are the
  *   values those fields must have. Instead, it is preferable to use
  *   EntityFieldQuery to retrieve a list of entity IDs loadable by
  *   this function.
- * @param $reset
+ * @param bool $reset
  *   (optional) Whether to reset the internal node_load() cache.
  *
- * @return
- *   An array of node objects indexed by nid.
+ * @return array
+ *   An array of node entities indexed by nid.
  *
  * @todo Remove $conditions in Drupal 8.
  *
- * @see entity_load()
+ * @see entity_load_multiple()
  * @see EntityFieldQuery
  */
-function node_load_multiple($nids = array(), $conditions = array(), $reset = FALSE) {
-  return entity_load('node', $nids, $conditions, $reset);
+function node_load_multiple($nids = array(), array $conditions = array(), $reset = FALSE) {
+  return entity_load_multiple('node', $nids, $conditions, $reset);
 }
 
 /**
- * Loads a node object from the database.
+ * Loads a node entity from the database.
  *
- * @param $nid
+ * @param int $nid
  *   (optional) The node ID.
- * @param $vid
+ * @param int $vid
  *   (optional) The revision ID.
- * @param $reset
+ * @param bool $reset
  *   (optional) Whether to reset the node_load_multiple() cache.
  *
- * @return
- *   A fully-populated node object, or FALSE if the node is not found.
+ * @return Drupal\node\Node|false
+ *   A fully-populated node entity, or FALSE if the node is not found.
  */
 function node_load($nid = NULL, $vid = NULL, $reset = FALSE) {
   $nids = (isset($nid) ? array($nid) : array());
@@ -958,15 +964,15 @@ function node_load($nid = NULL, $vid = NULL, $reset = FALSE) {
 }
 
 /**
- * Prepares a node object for editing.
+ * Prepares a node entity for editing.
  *
  * Fills in a few default values, and then invokes hook_prepare() on the node
  * type module, and hook_node_prepare() on all modules.
  *
- * @param $node
- *   The node object.
+ * @param Drupal\node\Node $node
+ *   The node entity.
  */
-function node_object_prepare($node) {
+function node_object_prepare(Node $node) {
   // Set up default values, if required.
   $node_options = variable_get('node_options_' . $node->type, array('status', 'promote'));
   // If this is a new node, fill in the default values.
@@ -983,7 +989,7 @@ function node_object_prepare($node) {
   }
   else {
     $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
-    // Remove the log message from the original node object.
+    // Remove the log message from the original node entity.
     $node->log = NULL;
   }
   // Always use the default revision setting.
@@ -1049,6 +1055,11 @@ function node_submit($node) {
     }
   }
 
+  // If a new revision is created, save the current user as revision author.
+  if (!empty($node->revision)) {
+    $node->revision_uid = $user->uid;
+  }
+
   $node->created = !empty($node->date) ? strtotime($node->date) : REQUEST_TIME;
   $node->validated = TRUE;
 
@@ -1058,166 +1069,12 @@ function node_submit($node) {
 /**
  * Saves changes to a node or adds a new node.
  *
- * @param $node
- *   The $node object to be saved. If $node->nid is
+ * @param Drupal\node\Node $node
+ *   The $node entity to be saved. If $node->nid is
  *   omitted (or $node->is_new is TRUE), a new node will be added.
  */
-function node_save($node) {
-  $transaction = db_transaction();
-
-  try {
-    // Load the stored entity, if any.
-    if (!empty($node->nid) && !isset($node->original)) {
-      $node->original = entity_load_unchanged('node', $node->nid);
-    }
-
-    field_attach_presave('node', $node);
-    global $user;
-
-    // Determine if we will be inserting a new node.
-    if (!isset($node->is_new)) {
-      $node->is_new = empty($node->nid);
-    }
-
-    // Set the timestamp fields.
-    if (empty($node->created)) {
-      $node->created = REQUEST_TIME;
-    }
-    // The changed timestamp is always updated for bookkeeping purposes,
-    // for example: revisions, searching, etc.
-    $node->changed = REQUEST_TIME;
-
-    $node->timestamp = REQUEST_TIME;
-    $update_node = TRUE;
-
-    // Let modules modify the node before it is saved to the database.
-    module_invoke_all('node_presave', $node);
-    module_invoke_all('entity_presave', $node, 'node');
-
-    if ($node->is_new || !empty($node->revision)) {
-      // When inserting either a new node or a new node revision, $node->log
-      // must be set because {node_revision}.log is a text column and therefore
-      // cannot have a default value. However, it might not be set at this
-      // point (for example, if the user submitting a node form does not have
-      // permission to create revisions), so we ensure that it is at least an
-      // empty string in that case.
-      // @todo: Make the {node_revision}.log column nullable so that we can
-      // remove this check.
-      if (!isset($node->log)) {
-        $node->log = '';
-      }
-    }
-    elseif (!isset($node->log) || $node->log === '') {
-      // If we are updating an existing node without adding a new revision, we
-      // need to make sure $node->log is unset whenever it is empty. As long as
-      // $node->log is unset, drupal_write_record() will not attempt to update
-      // the existing database column when re-saving the revision; therefore,
-      // this code allows us to avoid clobbering an existing log entry with an
-      // empty one.
-      unset($node->log);
-    }
-
-    // When saving a new node revision, unset any existing $node->vid so as to
-    // ensure that a new revision will actually be created, then store the old
-    // revision ID in a separate property for use by node hook implementations.
-    if (!$node->is_new && !empty($node->revision) && $node->vid) {
-      $node->old_vid = $node->vid;
-      unset($node->vid);
-    }
-
-    // Save the node and node revision.
-    if ($node->is_new) {
-      // For new nodes, save new records for both the node itself and the node
-      // revision.
-      drupal_write_record('node', $node);
-      _node_save_revision($node, $user->uid);
-      $op = 'insert';
-    }
-    else {
-      // For existing nodes, update the node record which matches the value of
-      // $node->nid.
-      drupal_write_record('node', $node, 'nid');
-      // Then, if a new node revision was requested, save a new record for
-      // that; otherwise, update the node revision record which matches the
-      // value of $node->vid.
-      if (!empty($node->revision)) {
-        _node_save_revision($node, $user->uid);
-      }
-      else {
-        _node_save_revision($node, $user->uid, 'vid');
-        $update_node = FALSE;
-      }
-      $op = 'update';
-    }
-    if ($update_node) {
-      db_update('node')
-        ->fields(array('vid' => $node->vid))
-        ->condition('nid', $node->nid)
-        ->execute();
-    }
-
-    // Call the node specific callback (if any). This can be
-    // node_invoke($node, 'insert') or
-    // node_invoke($node, 'update').
-    node_invoke($node, $op);
-
-    // Save fields.
-    $function = "field_attach_$op";
-    $function('node', $node);
-
-    module_invoke_all('node_' . $op, $node);
-    module_invoke_all('entity_' . $op, $node, 'node');
-
-    // Update the node access table for this node. There's no need to delete
-    // existing records if the node is new.
-    $delete = $op == 'update';
-    node_access_acquire_grants($node, $delete);
-
-    // Clear internal properties.
-    unset($node->is_new);
-    unset($node->original);
-    // Clear the static loading cache.
-    entity_get_controller('node')->resetCache(array($node->nid));
-
-    // Ignore slave server temporarily to give time for the
-    // saved node to be propagated to the slave.
-    db_ignore_slave();
-  }
-  catch (Exception $e) {
-    $transaction->rollback();
-    watchdog_exception('node', $e);
-    throw $e;
-  }
-}
-
-/**
- * Saves a revision with the ID of the current user.
- *
- * The resulting revision ID is available afterward in $node->vid.
- *
- * @param $node
- *   The node object to be processed.
- * @param $uid
- *   User ID of the current user.
- * @param $update
- *   (optional) To indicate that this is a new record to be inserted, omit this
- *   argument. If this is an update, this argument specifies the primary keys'
- *   field names. If there is only 1 field in the key, you may pass in a string;
- *   if there are multiple fields in the key, pass in an array.
- *
- * @see node_save()
- */
-function _node_save_revision($node, $uid, $update = NULL) {
-  $temp_uid = $node->uid;
-  $node->uid = $uid;
-  if (isset($update)) {
-    drupal_write_record('node_revision', $node, $update);
-  }
-  else {
-    drupal_write_record('node_revision', $node);
-  }
-  // Have node object still show node owner's uid, not revision author's.
-  $node->uid = $temp_uid;
+function node_save(Node $node) {
+  $node->save();
 }
 
 /**
@@ -1240,59 +1097,7 @@ function node_delete($nid) {
  * @see hook_node_delete()
  */
 function node_delete_multiple($nids) {
-  $transaction = db_transaction();
-  if (!empty($nids)) {
-    $nodes = node_load_multiple($nids, array());
-
-    try {
-      foreach ($nodes as $nid => $node) {
-        // Call the node-specific callback (if any):
-        node_invoke($node, 'delete');
-
-        // Allow modules to act prior to node deletion.
-        module_invoke_all('node_predelete', $node);
-        module_invoke_all('entity_predelete', $node, 'node');
-
-        field_attach_delete('node', $node);
-
-        // Remove this node from the search index if needed.
-        // This code is implemented in node module rather than in search module,
-        // because node module is implementing search module's API, not the other
-        // way around.
-        if (module_exists('search')) {
-          search_reindex($nid, 'node');
-        }
-      }
-
-      // Delete after calling hooks so that they can query node tables as needed.
-      db_delete('node')
-        ->condition('nid', $nids, 'IN')
-        ->execute();
-      db_delete('node_revision')
-        ->condition('nid', $nids, 'IN')
-        ->execute();
-      db_delete('history')
-        ->condition('nid', $nids, 'IN')
-        ->execute();
-      db_delete('node_access')
-       ->condition('nid', $nids, 'IN')
-       ->execute();
-
-      foreach ($nodes as $nid => $node) {
-        // Allow modules to respond to node deletion.
-        module_invoke_all('node_delete', $node);
-        module_invoke_all('entity_delete', $node, 'node');
-      }
-    }
-    catch (Exception $e) {
-      $transaction->rollback();
-      watchdog_exception('node', $e);
-      throw $e;
-    }
-
-    // Clear the page and block and node_load_multiple caches.
-    entity_get_controller('node')->resetCache();
-  }
+  entity_delete_multiple('node', $nids);
 }
 
 /**
@@ -1326,8 +1131,8 @@ function node_revision_delete($revision_id) {
 /**
  * Generates an array for rendering the given node.
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  * @param $view_mode
  *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'full.'
  * @param $langcode
@@ -1337,7 +1142,7 @@ function node_revision_delete($revision_id) {
  * @return
  *   An array as expected by drupal_render().
  */
-function node_view($node, $view_mode = 'full', $langcode = NULL) {
+function node_view(Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->langcode;
   }
@@ -1391,15 +1196,15 @@ function node_view($node, $view_mode = 'full', $langcode = NULL) {
  * Contributed modules might define additional view modes, or use existing
  * view modes in additional contexts.
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  * @param $view_mode
  *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'full.'
  * @param $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
  */
-function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
+function node_build_content(Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->langcode;
   }
@@ -1452,8 +1257,8 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
 /**
  * Page callback: Generates an array which displays a node detail page.
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  * @param $message
  *   (optional) A flag which sets a page title relevant to the revision being
  *   viewed.
@@ -1463,7 +1268,7 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
  *
  * @see node_menu()
  */
-function node_show($node, $message = FALSE) {
+function node_show(Node $node, $message = FALSE) {
   if ($message) {
     drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title, '%date' => format_date($node->revision_timestamp))), PASS_THROUGH);
   }
@@ -1480,13 +1285,13 @@ function node_show($node, $message = FALSE) {
 /**
  * Checks whether the current page is the full page view of the passed-in node.
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  *
  * @return
  *   The ID of the node if this is a full page view, otherwise FALSE.
  */
-function node_is_page($node) {
+function node_is_page(Node $node) {
   $page_node = menu_get_object();
   return (!empty($page_node) ? $page_node->nid == $node->nid : FALSE);
 }
@@ -1540,7 +1345,7 @@ function template_preprocess_node(&$variables) {
   $variables['title']     = check_plain($node->title);
   $variables['page']      = $variables['view_mode'] == 'full' && node_is_page($node);
 
-  // Flatten the node object's member fields.
+  // Flatten the node entity's member fields.
   $variables = array_merge((array) $node, $variables);
 
   // Helpful $content variable for templates.
@@ -1909,7 +1714,7 @@ function theme_node_search_admin($variables) {
 /**
  * Access callback: Checks node revision access.
  *
- * @param $node
+ * @param Drupal\node\Node $node
  *   The node to check.
  * @param $op
  *   (optional) The specific operation being checked. Defaults to 'view.'
@@ -1922,7 +1727,7 @@ function theme_node_search_admin($variables) {
  *
  * @see node_menu()
  */
-function _node_revision_access($node, $op = 'view', $account = NULL) {
+function _node_revision_access(Node $node, $op = 'view', $account = NULL) {
   $access = &drupal_static(__FUNCTION__, array());
 
   $map = array(
@@ -2210,12 +2015,12 @@ function node_type_page_title($type) {
 /**
  * Title callback: Displays the node's title.
  *
- * @param $node
- *   The node object.
+ * @param Drupal\node\Node $node
+ *   The node entity.
  *
  * @see node_menu()
  */
-function node_page_title($node) {
+function node_page_title(Node $node) {
   return $node->title;
 }
 
@@ -2234,8 +2039,11 @@ function node_last_changed($nid) {
 
 /**
  * Returns a list of all the existing revision numbers for the node passed in.
+ *
+ * @param Drupal\node\Node $node
+ *   The node entity.
  */
-function node_revision_list($node) {
+function node_revision_list(Node $node) {
   $revisions = array();
   $result = db_query('SELECT r.vid, r.title, r.log, r.uid, n.vid AS current_vid, r.timestamp, u.name FROM {node_revision} r LEFT JOIN {node} n ON n.vid = r.vid INNER JOIN {users} u ON u.uid = r.uid WHERE r.nid = :nid ORDER BY r.vid DESC', array(':nid' => $node->nid));
   foreach ($result as $revision) {
@@ -2324,7 +2132,7 @@ function node_block_save($delta = '', $edit = array()) {
  *   (optional) The maximum number of nodes to find. Defaults to 10.
  *
  * @return
- *   An array of partial node objects or an empty array if there are no recent
+ *   An array of node entities or an empty array if there are no recent
  *   nodes visible to the current user.
  */
 function node_get_recent($number = 10) {
@@ -2363,7 +2171,7 @@ function node_get_recent($number = 10) {
  *
  * @param $variables
  *   An associative array containing:
- *   - nodes: An array of recent node objects.
+ *   - nodes: An array of recent node entities.
  *
  * @ingroup themeable
  */
@@ -2404,7 +2212,7 @@ function theme_node_recent_block($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - node: A node object.
+ *   - node: A node entity.
  *
  * @ingroup themeable
  */
@@ -2739,12 +2547,12 @@ function node_page_default() {
 /**
  * Page callback: Displays a single node.
  *
- * @param $node
- *   The node object.
+ * @param Drupal\node\Node $node
+ *   The node entity.
  *
  * @see node_menu()
  */
-function node_page_view($node) {
+function node_page_view(Node $node) {
   // If there is a menu link to this node, the link becomes the last part
   // of the active trail, and the link name becomes the page title.
   // Thus, we must explicitly set the page title to be the node title.
@@ -2764,8 +2572,12 @@ function node_update_index() {
   $limit = (int)variable_get('search_cron_limit', 100);
 
   $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit, array(), array('target' => 'slave'));
+  $nids = $result->fetchCol();
+  if (!$nids) {
+    return;
+  }
 
-  foreach ($result as $node) {
+  foreach (node_load_multiple($nids) as $node) {
     _node_index_node($node);
   }
 }
@@ -2773,11 +2585,10 @@ function node_update_index() {
 /**
  * Indexes a single node.
  *
- * @param $node
+ * @param Drupal\node\Node $node
  *   The node to index.
  */
-function _node_index_node($node) {
-  $node = node_load($node->nid);
+function _node_index_node(Node $node) {
 
   // Save the changed time of the most recent indexed node, for the search
   // results half-life calculation.
@@ -2857,7 +2668,7 @@ function node_form_search_form_alter(&$form, $form_state) {
 
     // Languages:
     $language_options = array();
-    foreach (language_list(TRUE) as $langcode => $language) {
+    foreach (language_list() as $langcode => $language) {
       $language_options[$langcode] = $language->name;
     }
     if (count($language_options) > 1) {
@@ -2995,8 +2806,8 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  *   - "update"
  *   - "delete"
  *   - "create"
- * @param $node
- *   The node object on which the operation is to be performed, or the node type
+ * @param Drupal\node\Node|string $node
+ *   The node entity on which the operation is to be performed, or the node type
  *   (e.g., 'forum') for the 'create' operation.
  * @param $account
  *   (optional) A user object representing the user for whom the operation is to
@@ -3485,13 +3296,13 @@ function _node_query_node_access_alter($query, $type) {
  * via hook_node_access_records_alter() implementations, and saves the collected
  * and altered grants to the database.
  *
- * @param $node
+ * @param Drupal\node\Node $node
  *   The $node to acquire grants for.
  * @param $delete
  *   (optional) Whether to delete existing node access records before inserting
  *   new ones. Defaults to TRUE.
  */
-function node_access_acquire_grants($node, $delete = TRUE) {
+function node_access_acquire_grants(Node $node, $delete = TRUE) {
   $grants = module_invoke_all('node_access_records', $node);
   // Let modules alter the grants.
   drupal_alter('node_access_records', $grants, $node);
@@ -3513,7 +3324,7 @@ function node_access_acquire_grants($node, $delete = TRUE) {
  * Note: Don't call this function directly from a contributed module. Call
  * node_access_acquire_grants() instead.
  *
- * @param $node
+ * @param Drupal\node\Node $node
  *   The $node being written to. All that is necessary is that it contains a
  *   nid.
  * @param $grants
@@ -3529,7 +3340,7 @@ function node_access_acquire_grants($node, $delete = TRUE) {
  *   purposes, and assumes the caller has already performed a mass delete of
  *   some form.
  */
-function _node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE) {
+function _node_access_write_grants(Node $node, $grants, $realm = NULL, $delete = TRUE) {
   if ($delete) {
     $query = db_delete('node_access')->condition('nid', $node->nid);
     if ($realm) {
@@ -3718,7 +3529,7 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
 /**
  * Implements hook_form().
  */
-function node_content_form($node, $form_state) {
+function node_content_form(Node $node, $form_state) {
   // It is impossible to define a content type without implementing hook_form()
   // @todo: remove this requirement.
   $form = array();
@@ -3829,15 +3640,15 @@ function node_action_info() {
 /**
  * Sets the status of a node to 1 (published).
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  * @param $context
  *   (optional) Array of additional information about what triggered the action.
  *   Not used for this action.
  *
  * @ingroup actions
  */
-function node_publish_action($node, $context = array()) {
+function node_publish_action(Node $node, $context = array()) {
   $node->status = NODE_PUBLISHED;
   watchdog('action', 'Set @type %title to published.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
@@ -3845,15 +3656,15 @@ function node_publish_action($node, $context = array()) {
 /**
  * Sets the status of a node to 0 (unpublished).
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  * @param $context
  *   (optional) Array of additional information about what triggered the action.
  *   Not used for this action.
  *
  * @ingroup actions
  */
-function node_unpublish_action($node, $context = array()) {
+function node_unpublish_action(Node $node, $context = array()) {
   $node->status = NODE_NOT_PUBLISHED;
   watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
@@ -3861,15 +3672,15 @@ function node_unpublish_action($node, $context = array()) {
 /**
  * Sets the sticky-at-top-of-list property of a node to 1.
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  * @param $context
  *   (optional) Array of additional information about what triggered the action.
  *   Not used for this action.
  *
  * @ingroup actions
  */
-function node_make_sticky_action($node, $context = array()) {
+function node_make_sticky_action(Node $node, $context = array()) {
   $node->sticky = NODE_STICKY;
   watchdog('action', 'Set @type %title to sticky.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
@@ -3877,15 +3688,15 @@ function node_make_sticky_action($node, $context = array()) {
 /**
  * Sets the sticky-at-top-of-list property of a node to 0.
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  * @param $context
  *   (optional) Array of additional information about what triggered the action.
  *   Not used for this action.
  *
  * @ingroup actions
  */
-function node_make_unsticky_action($node, $context = array()) {
+function node_make_unsticky_action(Node $node, $context = array()) {
   $node->sticky = NODE_NOT_STICKY;
   watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
@@ -3893,15 +3704,15 @@ function node_make_unsticky_action($node, $context = array()) {
 /**
  * Sets the promote property of a node to 1.
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  * @param $context
  *   (optional) Array of additional information about what triggered the action.
  *   Not used for this action.
  *
  * @ingroup actions
  */
-function node_promote_action($node, $context = array()) {
+function node_promote_action(Node $node, $context = array()) {
   $node->promote = NODE_PROMOTED;
   watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
@@ -3909,15 +3720,15 @@ function node_promote_action($node, $context = array()) {
 /**
  * Sets the promote property of a node to 0.
  *
- * @param $node
- *   A node object.
+ * @param Drupal\node\Node $node
+ *   A node entity.
  * @param $context
  *   (optional) Array of additional information about what triggered the action.
  *   Not used for this action.
  *
  * @ingroup actions
  */
-function node_unpromote_action($node, $context = array()) {
+function node_unpromote_action(Node $node, $context = array()) {
   $node->promote = NODE_NOT_PROMOTED;
   watchdog('action', 'Removed @type %title from front page.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
@@ -3925,21 +3736,21 @@ function node_unpromote_action($node, $context = array()) {
 /**
  * Saves a node.
  *
- * @param $node
+ * @param Drupal\node\Node $node
  *   The node to be saved.
  *
  * @ingroup actions
  */
-function node_save_action($node) {
-  node_save($node);
+function node_save_action(Node $node) {
+  $node->save();
   watchdog('action', 'Saved @type %title', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
 /**
  * Assigns ownership of a node to a user.
  *
- * @param $node
- *   A node object to modify.
+ * @param Drupal\node\Node $node
+ *   A node entity to modify.
  * @param $context
  *   Array of additional information about what triggered the action. Includes
  *   the following elements:
@@ -3950,7 +3761,7 @@ function node_save_action($node) {
  * @see node_assign_owner_action_submit()
  * @ingroup actions
  */
-function node_assign_owner_action($node, $context) {
+function node_assign_owner_action(Node $node, $context) {
   $node->uid = $context['owner_uid'];
   $owner_name = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $context['owner_uid']))->fetchField();
   watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' =>  node_type_get_name($node), '%title' => $node->title, '%name' => $owner_name));
@@ -4051,8 +3862,8 @@ function node_unpublish_by_keyword_action_submit($form, $form_state) {
 /**
  * Unpublishes a node containing certain keywords.
  *
- * @param $node
- *   A node object to modify.
+ * @param Drupal\node\Node $node
+ *   A node entity to modify.
  * @param $context
  *   Array of additional information about what triggered the action. Includes
  *   the following elements:
@@ -4064,7 +3875,7 @@ function node_unpublish_by_keyword_action_submit($form, $form_state) {
  *
  * @ingroup actions
  */
-function node_unpublish_by_keyword_action($node, $context) {
+function node_unpublish_by_keyword_action(Node $node, $context) {
   foreach ($context['keywords'] as $keyword) {
     $elements = node_view(clone $node);
     if (strpos(drupal_render($elements), $keyword) !== FALSE || strpos($node->title, $keyword) !== FALSE) {
@@ -4131,55 +3942,6 @@ function node_modules_disabled($modules) {
   // straightforward, we can do it right now.
   if (node_access_needs_rebuild() && count(module_implements('node_grants')) == 0) {
     node_access_rebuild();
-  }
-}
-
-/**
- * Controller class for nodes.
- *
- * This extends the DrupalDefaultEntityController class, adding required
- * special handling for node objects.
- */
-class NodeController extends DrupalDefaultEntityController {
-
-  /**
-   * Overrides DrupalDefaultEntityController::attachLoad().
-   */
-  protected function attachLoad(&$nodes, $revision_id = FALSE) {
-    // Create an array of nodes for each content type and pass this to the
-    // object type specific callback.
-    $typed_nodes = array();
-    foreach ($nodes as $id => $entity) {
-      $typed_nodes[$entity->type][$id] = $entity;
-    }
-
-    // Call object type specific callbacks on each typed array of nodes.
-    foreach ($typed_nodes as $node_type => $nodes_of_type) {
-      if (node_hook($node_type, 'load')) {
-        $function = node_type_get_base($node_type) . '_load';
-        $function($nodes_of_type);
-      }
-    }
-    // Besides the list of nodes, pass one additional argument to
-    // hook_node_load(), containing a list of node types that were loaded.
-    $argument = array_keys($typed_nodes);
-    $this->hookLoadArguments = array($argument);
-    parent::attachLoad($nodes, $revision_id);
-  }
-
-  /**
-   * Overrides DrupalDefaultEntityController::buildQuery().
-   */
-  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
-    // Ensure that uid is taken from the {node} table,
-    // alias timestamp to revision_timestamp and add revision_uid.
-    $query = parent::buildQuery($ids, $conditions, $revision_id);
-    $fields =& $query->getFields();
-    unset($fields['timestamp']);
-    $query->addField('revision', 'timestamp', 'revision_timestamp');
-    $fields['uid']['table'] = 'base';
-    $query->addField('revision', 'uid', 'revision_uid');
-    return $query;
   }
 }
 

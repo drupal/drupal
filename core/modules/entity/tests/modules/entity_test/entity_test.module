@@ -20,7 +20,7 @@ function entity_test_entity_info() {
     ),
   );
   // Optionally specify a translation handler for testing translations.
-  if (!empty($GLOBALS['entity_test_translation'])) {
+  if (variable_get('entity_test_translation')) {
     $items['entity_test']['translation']['entity_test'] = TRUE;
   }
   return $items;
@@ -29,34 +29,33 @@ function entity_test_entity_info() {
 /**
  * Loads a test entity.
  *
- * @param $id
+ * @param int $id
  *   A test entity ID.
- * @param $reset
+ * @param bool $reset
  *   A boolean indicating that the internal cache should be reset.
  *
  * @return Entity
  *   The loaded entity object, or FALSE if the entity cannot be loaded.
  */
 function entity_test_load($id, $reset = FALSE) {
-  $result = entity_load('entity_test', array($id), array(), $reset);
-  return reset($result);
+  return entity_load('entity_test', $id, $reset);
 }
 
 /**
  * Loads multiple test entities based on certain conditions.
  *
- * @param $ids
- *   An array of entity IDs.
- * @param $conditions
+ * @param array|bool $ids
+ *   An array of entity IDs, or FALSE to load all entities.
+ * @param array $conditions
  *   An array of conditions to match against the {entity} table.
- * @param $reset
+ * @param bool $reset
  *   A boolean indicating that the internal cache should be reset.
  *
- * @return
+ * @return array
  *   An array of test entity objects, indexed by ID.
  */
 function entity_test_load_multiple($ids = array(), $conditions = array(), $reset = FALSE) {
-  return entity_load('entity_test', $ids, $conditions, $reset);
+  return entity_load_multiple('entity_test', $ids, $conditions, $reset);
 }
 
 /**

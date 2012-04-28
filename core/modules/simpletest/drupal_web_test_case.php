@@ -902,7 +902,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   (optional) Whether to reset the internal node_load() cache.
    *
    * @return
-   *   A node object matching $title.
+   *   A node entity matching $title.
    */
   function drupalGetNodeByTitle($title, $reset = FALSE) {
     $nodes = node_load_multiple(array(), array('title' => $title), $reset);
@@ -918,7 +918,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   An associative array of settings to change from the defaults, keys are
    *   node properties, for example 'title' => 'Hello, world!'.
    * @return
-   *   Created node object.
+   *   Created node entity.
    */
   protected function drupalCreateNode($settings = array()) {
     // Populate defaults array.
@@ -962,8 +962,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     );
     $settings['body'][$settings['langcode']][0] += $body;
 
-    $node = (object) $settings;
-    node_save($node);
+    $node = entity_create('node', $settings);
+    $node->save();
 
     // Small hack to link revisions to our test user.
     db_update('node_revision')
@@ -1126,7 +1126,8 @@ class DrupalWebTestCase extends DrupalTestCase {
       $edit['roles'] = array($rid => $rid);
     }
 
-    $account = user_save(drupal_anonymous_user(), $edit);
+    $account = entity_create('user', $edit);
+    $account->save();
 
     $this->assertTrue(!empty($account->uid), t('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), t('User login'));
     if (empty($account->uid)) {
@@ -1230,7 +1231,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *
    * @see drupalCreateUser()
    */
-  protected function drupalLogin(stdClass $user) {
+  protected function drupalLogin($user) {
     if ($this->loggedInUser) {
       $this->drupalLogout();
     }

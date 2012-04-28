@@ -103,10 +103,9 @@ class EntityTranslationTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    // Enable translations for the test entity type. We cannot use
-    // variable_set() here as variables are cleared by parent::setUp();
-    $GLOBALS['entity_test_translation'] = TRUE;
     parent::setUp('entity_test', 'language', 'locale');
+    // Enable translations for the test entity type.
+    variable_set('entity_test_translation', TRUE);
 
     // Create a translatable test field.
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');

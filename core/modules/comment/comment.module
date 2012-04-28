@@ -9,6 +9,8 @@
  * book page, etc.
  */
 
+use Drupal\node\Node;
+
 /**
  * Comment is awaiting approval.
  */
@@ -546,13 +548,13 @@ function comment_get_recent($number = 10) {
  *   Number of comments.
  * @param $new_replies
  *   Number of new replies.
- * @param $node
+ * @param Drupal\node\Node $node
  *   The first new comment node.
  *
  * @return
  *   "page=X" if the page number is greater than zero; empty string otherwise.
  */
-function comment_new_page_count($num_comments, $new_replies, $node) {
+function comment_new_page_count($num_comments, $new_replies, Node $node) {
   $mode = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
   $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
   $pagenum = NULL;
@@ -630,7 +632,7 @@ function theme_comment_block() {
 /**
  * Implements hook_node_view().
  */
-function comment_node_view($node, $view_mode) {
+function comment_node_view(Node $node, $view_mode) {
   $links = array();
 
   if ($node->comment != COMMENT_NODE_HIDDEN) {
@@ -738,14 +740,14 @@ function comment_node_view($node, $view_mode) {
 /**
  * Builds the comment-related elements for node detail pages.
  *
- * @param $node
- *   The node object for which to build the comment-related elements.
+ * @param Drupal\node\Node $node
+ *   The node entity for which to build the comment-related elements.
  *
  * @return
  *   A renderable array representing the comment-related page elements for the
  *   node.
  */
-function comment_node_page_additions($node) {
+function comment_node_page_additions(Node $node) {
   $additions = array();
 
   // Only attempt to render comments if the node has visible comments.
@@ -784,7 +786,7 @@ function comment_node_page_additions($node) {
 /**
  * Retrieves comments for a thread.
  *
- * @param $node
+ * @param Drupal\node\Node $node
  *   The node whose comment(s) needs rendering.
  * @param $mode
  *   The comment display mode; COMMENT_MODE_FLAT or COMMENT_MODE_THREADED.
@@ -848,7 +850,7 @@ function comment_node_page_additions($node) {
  * spoil the reverse ordering, "ORDER BY thread ASC" -- here, we do not need
  * to consider the trailing "/" so we use a substring only.
  */
-function comment_get_thread($node, $mode, $comments_per_page) {
+function comment_get_thread(Node $node, $mode, $comments_per_page) {
   $query = db_select('comment', 'c')->extend('PagerDefault');
   $query->addField('c', 'cid');
   $query
@@ -937,7 +939,7 @@ function comment_prepare_thread(&$comments) {
  *
  * @param Comment $comment
  *   The comment object.
- * @param $node
+ * @param Drupal\node\Node $node
  *   The node the comment is attached to.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
@@ -948,7 +950,7 @@ function comment_prepare_thread(&$comments) {
  * @return
  *   An array as expected by drupal_render().
  */
-function comment_view(Comment $comment, $node, $view_mode = 'full', $langcode = NULL) {
+function comment_view(Comment $comment, Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->langcode;
   }
@@ -1007,7 +1009,7 @@ function comment_view(Comment $comment, $node, $view_mode = 'full', $langcode = 
  *
  * @param Comment $comment
  *   A comment object.
- * @param $node
+ * @param Drupal\node\Node $node
  *   The node the comment is attached to.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
@@ -1015,7 +1017,7 @@ function comment_view(Comment $comment, $node, $view_mode = 'full', $langcode = 
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
  */
-function comment_build_content(Comment $comment, $node, $view_mode = 'full', $langcode = NULL) {
+function comment_build_content(Comment $comment, Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->langcode;
   }
@@ -1051,13 +1053,13 @@ function comment_build_content(Comment $comment, $node, $view_mode = 'full', $la
  *
  * @param Comment $comment
  *   The comment object.
- * @param $node
+ * @param Drupal\node\Node $node
  *   The node the comment is attached to.
  *
  * @return
  *   A structured array of links.
  */
-function comment_links(Comment $comment, $node) {
+function comment_links(Comment $comment, Node $node) {
   $links = array();
   if ($node->comment == COMMENT_NODE_OPEN) {
     if (user_access('administer comments') && user_access('post comments')) {
@@ -1112,7 +1114,7 @@ function comment_links(Comment $comment, $node) {
  *
  * @param $comments
  *   An array of comments as returned by comment_load_multiple().
- * @param $node
+ * @param Drupal\node\Node $node
  *   The node the comments are attached to.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
@@ -1127,7 +1129,7 @@ function comment_links(Comment $comment, $node) {
  *
  * @see drupal_render()
  */
-function comment_view_multiple($comments, $node, $view_mode = 'full', $weight = 0, $langcode = NULL) {
+function comment_view_multiple($comments, Node $node, $view_mode = 'full', $weight = 0, $langcode = NULL) {
   field_attach_prepare_view('comment', $comments, $view_mode, $langcode);
   entity_prepare_view('comment', $comments, $langcode);
 
@@ -1309,7 +1311,7 @@ function comment_node_load($nodes, $types) {
 /**
  * Implements hook_node_prepare().
  */
-function comment_node_prepare($node) {
+function comment_node_prepare(Node $node) {
   if (!isset($node->comment)) {
     $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
   }
@@ -1318,7 +1320,7 @@ function comment_node_prepare($node) {
 /**
  * Implements hook_node_insert().
  */
-function comment_node_insert($node) {
+function comment_node_insert(Node $node) {
   // Allow bulk updates and inserts to temporarily disable the
   // maintenance of the {node_comment_statistics} table.
   if (variable_get('comment_maintain_node_statistics', TRUE)) {
@@ -1338,7 +1340,7 @@ function comment_node_insert($node) {
 /**
  * Implements hook_node_predelete().
  */
-function comment_node_predelete($node) {
+function comment_node_predelete(Node $node) {
   $cids = db_query('SELECT cid FROM {comment} WHERE nid = :nid', array(':nid' => $node->nid))->fetchCol();
   comment_delete_multiple($cids);
   db_delete('node_comment_statistics')
@@ -1349,7 +1351,7 @@ function comment_node_predelete($node) {
 /**
  * Implements hook_node_update_index().
  */
-function comment_node_update_index($node) {
+function comment_node_update_index(Node $node) {
   $index_comments = &drupal_static(__FUNCTION__);
 
   if ($index_comments === NULL) {
@@ -1398,7 +1400,7 @@ function comment_update_index() {
  * Formats a comment count string and returns it, for display with search
  * results.
  */
-function comment_node_search_result($node) {
+function comment_node_search_result(Node $node) {
   // Do not make a string if comments are hidden.
   if (user_access('access comments') && $node->comment != COMMENT_NODE_HIDDEN) {
     $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
@@ -1501,19 +1503,19 @@ function comment_delete_multiple($cids) {
 /**
  * Loads comments from the database.
  *
- * @param $cids
- *   An array of comment IDs.
- * @param $conditions
+ * @param array|bool $cids
+ *   An array of comment IDs, or FALSE to load all comments.
+ * @param array $conditions
  *   (deprecated) An associative array of conditions on the {comments}
  *   table, where the keys are the database fields and the values are the
  *   values those fields must have. Instead, it is preferable to use
  *   EntityFieldQuery to retrieve a list of entity IDs loadable by
  *   this function.
- * @param $reset
+ * @param bool $reset
  *   Whether to reset the internal static entity cache. Note that the static
  *   cache is disabled in comment_entity_info() by default.
  *
- * @return
+ * @return array
  *   An array of comment objects, indexed by comment ID.
  *
  * @todo Remove $conditions in Drupal 8.
@@ -1521,16 +1523,16 @@ function comment_delete_multiple($cids) {
  * @see entity_load()
  * @see EntityFieldQuery
  */
-function comment_load_multiple($cids = array(), $conditions = array(), $reset = FALSE) {
-  return entity_load('comment', $cids, $conditions, $reset);
+function comment_load_multiple($cids = array(), array $conditions = array(), $reset = FALSE) {
+  return entity_load_multiple('comment', $cids, $conditions, $reset);
 }
 
 /**
  * Loads the entire comment by comment ID.
  *
- * @param $cid
+ * @param int $cid
  *   The ID of the comment to be loaded.
- * @param $reset
+ * @param bool $reset
  *   Whether to reset the internal static entity cache. Note that the static
  *   cache is disabled in comment_entity_info() by default.
  *
@@ -1538,8 +1540,7 @@ function comment_load_multiple($cids = array(), $conditions = array(), $reset = 
  *   The comment object.
  */
 function comment_load($cid, $reset = FALSE) {
-  $comment = comment_load_multiple(array($cid), array(), $reset);
-  return $comment ? $comment[$cid] : FALSE;
+  return entity_load('comment', $cid);
 }
 
 /**

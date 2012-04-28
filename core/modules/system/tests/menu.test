@@ -1321,7 +1321,7 @@ class MenuBreadcrumbTestCase extends MenuWebTestCase {
     // the breadcrumb based on taxonomy term hierarchy.
     $parent_tid = 0;
     foreach ($tags as $name => $null) {
-      $terms = taxonomy_term_load_multiple(NULL, array('name' => $name));
+      $terms = taxonomy_term_load_multiple(FALSE, array('name' => $name));
       $term = reset($terms);
       $tags[$name]['term'] = $term;
       if ($parent_tid) {

@@ -83,12 +83,8 @@ function user_help($path, $arg) {
  * be passed by reference.
  *
  * @param $type
- *   A text string that controls which user hook to invoke.  Valid choices are:
- *   - cancel: Invokes hook_user_cancel().
- *   - insert: Invokes hook_user_insert().
+ *   A text string that controls which user hook to invoke. Valid choices are:
  *   - login: Invokes hook_user_login().
- *   - presave: Invokes hook_user_presave().
- *   - update: Invokes hook_user_update().
  * @param $edit
  *   An associative array variable containing form values to be passed
  *   as the first parameter of the hook function.
@@ -145,14 +141,15 @@ function user_theme() {
  * Implements hook_entity_info().
  */
 function user_entity_info() {
-  $return = array(
+  return array(
     'user' => array(
       'label' => t('User'),
-      'controller class' => 'UserController',
+      'controller class' => 'Drupal\user\UserStorageController',
       'base table' => 'users',
       'uri callback' => 'user_uri',
       'label callback' => 'user_label',
       'fieldable' => TRUE,
+      'entity class' => 'Drupal\user\User',
       'entity keys' => array(
         'id' => 'uid',
       ),
@@ -173,7 +170,6 @@ function user_entity_info() {
       ),
     ),
   );
-  return $return;
 }
 
 /**
@@ -265,28 +261,28 @@ function user_external_load($authname) {
 }
 
 /**
- * Load multiple users based on certain conditions.
+ * Loads multiple users based on certain conditions.
  *
  * This function should be used whenever you need to load more than one user
  * from the database. Users are loaded into memory and will not require
  * database access if loaded again during the same page request.
  *
- * @param $uids
- *   An array of user IDs.
- * @param $conditions
+ * @param array|bool $uids
+ *   An array of user IDs, or FALSE to load all users.
+ * @param array $conditions
  *   (deprecated) An associative array of conditions on the {users}
  *   table, where the keys are the database fields and the values are the
  *   values those fields must have. Instead, it is preferable to use
  *   EntityFieldQuery to retrieve a list of entity IDs loadable by
  *   this function.
- * @param $reset
+ * @param bool $reset
  *   A boolean indicating that the internal cache should be reset. Use this if
  *   loading a user object which has been altered during the page request.
  *
- * @return
+ * @return array
  *   An array of user objects, indexed by uid.
  *
- * @see entity_load()
+ * @see entity_load_multiple()
  * @see user_load()
  * @see user_load_by_mail()
  * @see user_load_by_name()
@@ -294,8 +290,8 @@ function user_external_load($authname) {
  *
  * @todo Remove $conditions in Drupal 8.
  */
-function user_load_multiple($uids = array(), $conditions = array(), $reset = FALSE) {
-  return entity_load('user', $uids, $conditions, $reset);
+function user_load_multiple($uids = array(), array $conditions = array(), $reset = FALSE) {
+  return entity_load_multiple('user', $uids, $conditions, $reset);
 }
 
 /**
@@ -310,271 +306,52 @@ function user_load_multiple($uids = array(), $conditions = array(), $reset = FAL
  * @link http://drupal.org/node/218104 Safely impersonating another user @endlink
  * for more information.
  *
- * @param $uid
+ * @param int $uid
  *   Integer specifying the user ID to load.
- * @param $reset
+ * @param bool $reset
  *   TRUE to reset the internal cache and load from the database; FALSE
  *   (default) to load from the internal cache, if set.
  *
- * @return
+ * @return object
  *   A fully-loaded user object upon successful user load, or FALSE if the user
  *   cannot be loaded.
  *
  * @see user_load_multiple()
  */
 function user_load($uid, $reset = FALSE) {
-  $users = user_load_multiple(array($uid), array(), $reset);
-  return reset($users);
+  return entity_load('user', $uid, $reset);
 }
 
 /**
- * Fetch a user object by email address.
+ * Fetches a user object by email address.
  *
- * @param $mail
+ * @param string $mail
  *   String with the account's e-mail address.
- * @return
+ * @return object|bool
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
  *
  * @see user_load_multiple()
  */
 function user_load_by_mail($mail) {
-  $users = user_load_multiple(array(), array('mail' => $mail));
+  $users = entity_load_multiple('user', FALSE, array('mail' => $mail));
   return reset($users);
 }
 
 /**
- * Fetch a user object by account name.
+ * Fetches a user object by account name.
  *
- * @param $name
+ * @param string $name
  *   String with the account's user name.
- * @return
+ * @return object|bool
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
  *
  * @see user_load_multiple()
  */
 function user_load_by_name($name) {
-  $users = user_load_multiple(array(), array('name' => $name));
+  $users = entity_load_multiple('user', FALSE, array('name' => $name));
   return reset($users);
-}
-
-/**
- * Save changes to a user account or add a new user.
- *
- * @param $account
- *   (optional) The user object to modify or add. If you want to modify
- *   an existing user account, you will need to ensure that (a) $account
- *   is an object, and (b) you have set $account->uid to the numeric
- *   user ID of the user account you wish to modify. If you
- *   want to create a new user account, you can set $account->is_new to
- *   TRUE or omit the $account->uid field.
- * @param $edit
- *   An array of fields and values to save. For example array('name'
- *   => 'My name'). Key / value pairs added to the $edit['data'] will be
- *   serialized and saved in the {users.data} column.
- *
- * @return
- *   A fully-loaded $user object upon successful save or FALSE if the save failed.
- *
- * @todo D8: Drop $edit and fix user_save() to be consistent with others.
- */
-function user_save($account, $edit = array()) {
-  $transaction = db_transaction();
-  try {
-    if (!empty($edit['pass'])) {
-      // Allow alternate password hashing schemes.
-      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
-      $edit['pass'] = user_hash_password(trim($edit['pass']));
-      // Abort if the hashing failed and returned FALSE.
-      if (!$edit['pass']) {
-        return FALSE;
-      }
-    }
-    else {
-      // Avoid overwriting an existing password with a blank password.
-      unset($edit['pass']);
-    }
-
-    // Load the stored entity, if any.
-    if (!empty($account->uid) && !isset($account->original)) {
-      $account->original = entity_load_unchanged('user', $account->uid);
-    }
-
-    if (empty($account)) {
-      $account = new stdClass();
-    }
-    if (!isset($account->is_new)) {
-      $account->is_new = empty($account->uid);
-    }
-    // Prepopulate $edit['data'] with the current value of $account->data.
-    // Modules can add to or remove from this array in hook_user_presave().
-    if (!empty($account->data)) {
-      $edit['data'] = !empty($edit['data']) ? array_merge($account->data, $edit['data']) : $account->data;
-    }
-
-    // Invoke hook_user_presave() for all modules.
-    user_module_invoke('presave', $edit, $account);
-
-    // Invoke presave operations of Field Attach API and Entity API. Those APIs
-    // require a fully-fledged and updated entity object. Therefore, we need to
-    // copy any new property values of $edit into it.
-    foreach ($edit as $key => $value) {
-      $account->$key = $value;
-    }
-    // Default the user entity language to the user's preferred language.
-    if (!isset($account->langcode) && isset($account->preferred_langcode)) {
-      $account->langcode = $account->preferred_langcode;
-    }
-    field_attach_presave('user', $account);
-    module_invoke_all('entity_presave', $account, 'user');
-
-    if (is_object($account) && !$account->is_new) {
-      // Process picture uploads.
-      if (!empty($account->picture->fid) && (!isset($account->original->picture->fid) || $account->picture->fid != $account->original->picture->fid)) {
-        $picture = $account->picture;
-        // If the picture is a temporary file move it to its final location and
-        // make it permanent.
-        if (!$picture->status) {
-          $info = image_get_info($picture->uri);
-          $picture_directory =  file_default_scheme() . '://' . variable_get('user_picture_path', 'pictures');
-
-          // Prepare the pictures directory.
-          file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);
-          $destination = file_stream_wrapper_uri_normalize($picture_directory . '/picture-' . $account->uid . '-' . REQUEST_TIME . '.' . $info['extension']);
-
-          // Move the temporary file into the final location.
-          if ($picture = file_move($picture, $destination, FILE_EXISTS_RENAME)) {
-            $picture->status = FILE_STATUS_PERMANENT;
-            $account->picture = file_save($picture);
-            file_usage_add($picture, 'user', 'user', $account->uid);
-          }
-        }
-        // Delete the previous picture if it was deleted or replaced.
-        if (!empty($account->original->picture->fid)) {
-          file_usage_delete($account->original->picture, 'user', 'user', $account->uid);
-          file_delete($account->original->picture);
-        }
-      }
-      elseif (isset($edit['picture_delete']) && $edit['picture_delete']) {
-        file_usage_delete($account->original->picture, 'user', 'user', $account->uid);
-        file_delete($account->original->picture);
-      }
-      $account->picture = empty($account->picture->fid) ? 0 : $account->picture->fid;
-
-      // Do not allow 'uid' to be changed.
-      $account->uid = $account->original->uid;
-      // Save changes to the user table.
-      $success = drupal_write_record('users', $account, 'uid');
-      if ($success === FALSE) {
-        // The query failed - better to abort the save than risk further
-        // data loss.
-        return FALSE;
-      }
-
-      // Reload user roles if provided.
-      if ($account->roles != $account->original->roles) {
-        db_delete('users_roles')
-          ->condition('uid', $account->uid)
-          ->execute();
-
-        $query = db_insert('users_roles')->fields(array('uid', 'rid'));
-        foreach (array_keys($account->roles) as $rid) {
-          if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-            $query->values(array(
-              'uid' => $account->uid,
-              'rid' => $rid,
-            ));
-          }
-        }
-        $query->execute();
-      }
-
-      // Delete a blocked user's sessions to kick them if they are online.
-      if ($account->original->status != $account->status && $account->status == 0) {
-        drupal_session_destroy_uid($account->uid);
-      }
-
-      // If the password changed, delete all open sessions and recreate
-      // the current one.
-      if ($account->pass != $account->original->pass) {
-        drupal_session_destroy_uid($account->uid);
-        if ($account->uid == $GLOBALS['user']->uid) {
-          drupal_session_regenerate();
-        }
-      }
-
-      // Save Field data.
-      field_attach_update('user', $account);
-
-      // Send emails after we have the new user object.
-      if ($account->status != $account->original->status) {
-        // The user's status is changing; conditionally send notification email.
-        $op = $account->status == 1 ? 'status_activated' : 'status_blocked';
-        _user_mail_notify($op, $account);
-      }
-
-      // Update $edit with any interim changes to $account.
-      foreach ($account as $key => $value) {
-        if (!property_exists($account->original, $key) || $value !== $account->original->$key) {
-          $edit[$key] = $value;
-        }
-      }
-      user_module_invoke('update', $edit, $account);
-      module_invoke_all('entity_update', $account, 'user');
-    }
-    else {
-      // Allow 'uid' to be set by the caller. There is no danger of writing an
-      // existing user as drupal_write_record will do an INSERT.
-      if (empty($account->uid)) {
-        $account->uid = db_next_id(db_query('SELECT MAX(uid) FROM {users}')->fetchField());
-      }
-      // Allow 'created' to be set by the caller.
-      if (!isset($account->created)) {
-        $account->created = REQUEST_TIME;
-      }
-      $success = drupal_write_record('users', $account);
-      if ($success === FALSE) {
-        // On a failed INSERT some other existing user's uid may be returned.
-        // We must abort to avoid overwriting their account.
-        return FALSE;
-      }
-
-      // Make sure $account is properly initialized.
-      $account->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
-
-      field_attach_insert('user', $account);
-      $edit = (array) $account;
-      user_module_invoke('insert', $edit, $account);
-      module_invoke_all('entity_insert', $account, 'user');
-
-      // Save user roles.
-      if (count($account->roles) > 1) {
-        $query = db_insert('users_roles')->fields(array('uid', 'rid'));
-        foreach (array_keys($account->roles) as $rid) {
-          if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-            $query->values(array(
-              'uid' => $account->uid,
-              'rid' => $rid,
-            ));
-          }
-        }
-        $query->execute();
-      }
-    }
-    // Clear internal properties.
-    unset($account->is_new);
-    unset($account->original);
-    // Clear the static loading cache.
-    entity_get_controller('user')->resetCache(array($account->uid));
-
-    return $account;
-  }
-  catch (Exception $e) {
-    $transaction->rollback();
-    watchdog_exception('user', $e);
-    throw $e;
-  }
 }
 
 /**
@@ -920,7 +697,7 @@ function user_user_view($account) {
  * @see user_validate_mail()
  */
 function user_account_form(&$form, &$form_state) {
-  global $user;
+  global $user, $language_interface;
 
   $account = $form['#user'];
   $register = ($form['#user']->uid > 0 ? FALSE : TRUE);
@@ -941,7 +718,7 @@ function user_account_form(&$form, &$form_state) {
     '#maxlength' => USERNAME_MAX_LENGTH,
     '#description' => t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.'),
     '#required' => TRUE,
-    '#attributes' => array('class' => array('username')),
+    '#attributes' => array('class' => array('username'), 'autocomplete' => 'off'),
     '#default_value' => (!$register ? $account->name : ''),
     '#access' => ($register || ($user->uid == $account->uid && user_access('change own username')) || $admin),
     '#weight' => -10,
@@ -956,6 +733,7 @@ function user_account_form(&$form, &$form_state) {
     '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
     '#required' => !(empty($account->mail) && user_access('administer users')),
     '#default_value' => (!$register ? $account->mail : ''),
+    '#attributes' => array('autocomplete' => 'off'),
   );
 
   // Display password field only for existing users or when user is allowed to
@@ -1091,6 +869,69 @@ function user_account_form(&$form, &$form_state) {
     '#description' => t('Your virtual face or picture. Pictures larger than @dimensions pixels will be scaled down.', array('@dimensions' => variable_get('user_picture_dimensions', '85x85'))) . ' ' . filter_xss_admin(variable_get('user_picture_guidelines', '')),
   );
   $form['#validate'][] = 'user_validate_picture';
+
+  if (module_exists('language') && language_multilingual()) {
+    $languages = language_list();
+
+    // If the user is being created, we set the user language to the page language.
+    $user_preferred_language = $register ? $language_interface : user_preferred_language($account);
+
+    $names = array();
+    foreach ($languages as $langcode => $item) {
+      $names[$langcode] = $item->name;
+    }
+    // Is default the interface language?
+    $interface_language_is_default = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
+    $form['language'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Language settings'),
+      // Display language selector when either creating a user on the admin
+      // interface or editing a user account.
+      '#access' => !$register || user_access('administer users'),
+    );
+    $form['language']['preferred_langcode'] = array(
+      '#type' => (count($names) <= 5 ? 'radios' : 'select'),
+      '#title' => t('Language'),
+      '#default_value' => $user_preferred_language->langcode,
+      '#options' => $names,
+      '#description' => $interface_language_is_default ? t("This account's preferred language for e-mails and site presentation.") : t("This account's preferred language for e-mails."),
+    );
+  }
+  else {
+    $form['language'] = array(
+      '#type' => 'container',
+    );
+    $form['language']['preferred_langcode'] = array(
+      '#type' => 'value',
+      '#value' => language_default()->langcode,
+    );
+  }
+
+  // User entities contain both a langcode property (for identifying the
+  // language of the entity data) and a preferred_langcode property (see above).
+  // Rather than provide a UI forcing the user to choose both separately,
+  // assume that the user profile data is in the user's preferred language. This
+  // element provides that synchronization. For use-cases where this
+  // synchronization is not desired, a module can alter or remove this element.
+  $form['language']['langcode'] = array(
+    '#type' => 'value',
+    '#value_callback' => '_user_language_selector_langcode_value',
+    // For the synchronization to work, this element must have a larger weight
+    // than the preferred_langcode element. Set a large weight here in case
+    // a module alters the weight of the other element.
+    '#weight' => 100,
+  );
+}
+
+/**
+ * Sets the value of the user register and profile forms' langcode element.
+ */
+function _user_language_selector_langcode_value($element, $input, &$form_state) {
+  // Only add to the description if the form element have a description.
+  if (isset($form_state['complete_form']['language']['preferred_langcode']['#description'])) {
+    $form_state['complete_form']['language']['preferred_langcode']['#description'] .= ' ' . t("This is also assumed to be the primary language of this account's profile information.");
+  }
+  return $form_state['values']['preferred_langcode'];
 }
 
 /**
@@ -1129,20 +970,42 @@ function user_account_form_validate($form, &$form_state) {
     if ($error = user_validate_name($form_state['values']['name'])) {
       form_set_error('name', $error);
     }
-    elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('name', db_like($form_state['values']['name']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
-      form_set_error('name', t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
+    // Cast the user ID as an integer. It might have been set to NULL, which
+    // could lead to unexpected results.
+    else {
+      $name_taken = (bool) db_select('users')
+        ->fields('users', array('uid'))
+        ->condition('uid', (int) $account->uid, '<>')
+        ->condition('name', db_like($form_state['values']['name']), 'LIKE')
+        ->range(0, 1)
+        ->execute()
+        ->fetchField();
+
+      if ($name_taken) {
+        form_set_error('name', t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
+      }
     }
   }
 
   $mail = $form_state['values']['mail'];
 
-  if (!empty($mail) && (bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('mail', db_like($mail), 'LIKE')->range(0, 1)->execute()->fetchField()) {
-    // Format error message dependent on whether the user is logged in or not.
-    if ($GLOBALS['user']->uid) {
-      form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $mail)));
-    }
-    else {
-      form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $mail, '@password' => url('user/password'))));
+  if (!empty($mail)) {
+    $mail_taken = (bool) db_select('users')
+      ->fields('users', array('uid'))
+      ->condition('uid', (int) $account->uid, '<>')
+      ->condition('mail', db_like($mail), 'LIKE')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+
+    if ($mail_taken) {
+      // Format error message dependent on whether the user is logged in or not.
+      if ($GLOBALS['user']->uid) {
+        form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $mail)));
+      }
+      else {
+        form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $mail, '@password' => url('user/password'))));
+      }
     }
   }
 
@@ -1157,30 +1020,6 @@ function user_account_form_validate($form, &$form_state) {
     $user_schema = drupal_get_schema('users');
     if (drupal_strlen($form_state['values']['signature']) > $user_schema['fields']['signature']['length']) {
       form_set_error('signature', t('The signature is too long: it must be %max characters or less.', array('%max' => $user_schema['fields']['signature']['length'])));
-    }
-  }
-}
-
-/**
- * Implements hook_user_presave().
- */
-function user_user_presave(&$edit, $account) {
-  if (!empty($edit['picture_upload'])) {
-    $edit['picture'] = $edit['picture_upload'];
-  }
-  // Delete picture if requested, and if no replacement picture was given.
-  elseif (!empty($edit['picture_delete'])) {
-    $edit['picture'] = NULL;
-  }
-  // Prepare user roles.
-  if (isset($edit['roles'])) {
-    $edit['roles'] = array_filter($edit['roles']);
-  }
-
-  // Move account cancellation information into $user->data.
-  foreach (array('user_cancel_method', 'user_cancel_notify') as $key) {
-    if (isset($edit[$key])) {
-      $edit['data'][$key] = $edit[$key];
     }
   }
 }
@@ -2184,7 +2023,8 @@ function user_authenticate($name, $password) {
 
         // Update user to new password scheme if needed.
         if (user_needs_new_hash($account)) {
-          user_save($account, array('pass' => $password));
+          $account->pass = $password;
+          $account->save();
         }
       }
     }
@@ -2239,16 +2079,16 @@ function user_external_login_register($name, $module) {
   $account = user_external_load($name);
   if (!$account) {
     // Register this new user.
-    $userinfo = array(
+    $account = entity_create('user', array(
       'name' => $name,
       'pass' => user_password(),
       'init' => $name,
       'status' => 1,
       'access' => REQUEST_TIME
-    );
-    $account = user_save(drupal_anonymous_user(), $userinfo);
-    // Terminate if an error occurred during user_save().
-    if (!$account) {
+    ));
+    $status = $account->save();
+    // Terminate if an error occurred while saving the account.
+    if ($status != SAVED_NEW) {
       drupal_set_message(t("Error saving user account."), 'error');
       return;
     }
@@ -2396,7 +2236,8 @@ function _user_cancel($edit, $account, $method) {
       if (!empty($edit['user_cancel_notify'])) {
         _user_mail_notify('status_blocked', $account);
       }
-      user_save($account, array('status' => 0));
+      $account->status = 0;
+      $account->save();
       drupal_set_message(t('%name has been disabled.', array('%name' => $account->name)));
       watchdog('user', 'Blocked user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
       break;
@@ -3153,7 +2994,8 @@ function user_user_operations_unblock($accounts) {
   foreach ($accounts as $account) {
     // Skip unblocking user if they are already unblocked.
     if ($account !== FALSE && $account->status == 0) {
-      user_save($account, array('status' => 1));
+      $account->status = 1;
+      $account->save();
     }
   }
 }
@@ -3169,7 +3011,8 @@ function user_user_operations_block($accounts) {
       // For efficiency manually save the original account before applying any
       // changes.
       $account->original = clone $account;
-      user_save($account, array('status' => 0));
+      $account->status = 0;
+      $account->save();
     }
   }
 }
@@ -3178,8 +3021,6 @@ function user_user_operations_block($accounts) {
  * Callback function for admin mass adding/deleting a user role.
  */
 function user_multiple_role_edit($accounts, $operation, $rid) {
-  // The role name is not necessary as user_save() will reload the user
-  // object, but some modules' hook_user() may look at this first.
   $role_name = db_query('SELECT name FROM {role} WHERE rid = :rid', array(':rid' => $rid))->fetchField();
 
   switch ($operation) {
@@ -3192,7 +3033,8 @@ function user_multiple_role_edit($accounts, $operation, $rid) {
           // For efficiency manually save the original account before applying
           // any changes.
           $account->original = clone $account;
-          user_save($account, array('roles' => $roles));
+          $account->roles = $roles;
+          $account->save();
         }
       }
       break;
@@ -3205,7 +3047,8 @@ function user_multiple_role_edit($accounts, $operation, $rid) {
           // For efficiency manually save the original account before applying
           // any changes.
           $account->original = clone $account;
-          user_save($account, array('roles' => $roles));
+          $account->roles = $roles;
+          $account->save();
         }
       }
       break;
@@ -3295,7 +3138,9 @@ function user_multiple_cancel_confirm_submit($form, &$form_state) {
       if ($uid == $user->uid) {
         $admin_form_state = $form_state;
         unset($admin_form_state['values']['user_cancel_confirm']);
-        $admin_form_state['values']['_account'] = $user;
+        // The $user global is not a complete user entity, so load the full
+        // entity.
+        $admin_form_state['values']['_account'] = user_load($user->uid);
         user_cancel_confirm_form_submit(array(), $admin_form_state);
       }
       else {
@@ -3369,7 +3214,7 @@ function user_build_filter_query(SelectInterface $query) {
     // the authenticated role. If so, then all users would be listed, and we can
     // skip adding it to the filter query.
     if ($key == 'permission') {
-      $account = new stdClass();
+      $account = entity_create('user', array());
       $account->uid = 'user_filter';
       $account->roles = array(DRUPAL_AUTHENTICATED_RID => 1);
       if (user_access($value, $account)) {
@@ -3615,7 +3460,8 @@ function user_block_user_action(&$entity, $context = array()) {
     $uid = $GLOBALS['user']->uid;
   }
   $account = user_load($uid);
-  $account = user_save($account, array('status' => 0));
+  $account->status = 0;
+  $account->save();
   watchdog('action', 'Blocked user %name.', array('%name' => $account->name));
 }
 
@@ -3694,7 +3540,7 @@ function user_register_form($form, &$form_state) {
     drupal_goto('user/' . $user->uid);
   }
 
-  $form['#user'] = drupal_anonymous_user();
+  $form['#user'] = entity_create('user', array());
 
   $form['#attached']['library'][] = array('system', 'jquery.cookie');
   $form['#attributes']['class'][] = 'user-info-from-cookie';
@@ -3765,14 +3611,10 @@ function user_register_submit($form, &$form_state) {
   $account = $form['#user'];
 
   entity_form_submit_build_entity('user', $account, $form, $form_state);
+  $status = $account->save();
 
-  // Populate $edit with the properties of $account, which have been edited on
-  // this form by taking over all values, which appear in the form values too.
-  $edit = array_intersect_key((array) $account, $form_state['values']);
-  $account = user_save($account, $edit);
-
-  // Terminate if an error occurred during user_save().
-  if (!$account) {
+  // Terminate if an error occurred while saving the account.
+  if ($status =! SAVED_NEW) {
     drupal_set_message(t("Error saving user account."), 'error');
     $form_state['redirect'] = '';
     return;

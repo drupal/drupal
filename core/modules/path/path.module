@@ -5,6 +5,8 @@
  * Enables users to rename URLs.
  */
 
+use Drupal\node\Node;
+
 /**
  * Implements hook_help().
  */
@@ -185,7 +187,7 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
 /**
  * Implements hook_node_insert().
  */
-function path_node_insert($node) {
+function path_node_insert(Node $node) {
   if (isset($node->path)) {
     $path = $node->path;
     $path['alias'] = trim($path['alias']);
@@ -202,7 +204,7 @@ function path_node_insert($node) {
 /**
  * Implements hook_node_update().
  */
-function path_node_update($node) {
+function path_node_update(Node $node) {
   if (isset($node->path)) {
     $path = $node->path;
     $path['alias'] = trim($path['alias']);
@@ -223,7 +225,7 @@ function path_node_update($node) {
 /**
  * Implements hook_node_predelete().
  */
-function path_node_predelete($node) {
+function path_node_predelete(Node $node) {
   // Delete all aliases associated with this node.
   path_delete(array('source' => 'node/' . $node->nid));
 }

@@ -862,6 +862,7 @@ function system_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'binary' => TRUE,
       ),
       'uri' => array(
         'description' => 'The URI to access the file (either local or remote).',
@@ -869,6 +870,7 @@ function system_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+        'binary' => TRUE,
       ),
       'langcode' => array(
         'description' => 'The {language}.langcode of this file.',

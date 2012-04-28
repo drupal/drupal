@@ -450,8 +450,14 @@ class SearchRankingTestCase extends SearchWebTestCase {
     variable_set('statistics_count_content_views', 1);
 
     // Then View one of the nodes a bunch of times.
+    // Manually calling statistics.php, simulating ajax behavior.
+    $nid = $nodes['views'][1]->nid;
+    $post = http_build_query(array('nid' => $nid));
+    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+    global $base_url;
+    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
     for ($i = 0; $i < 5; $i ++) {
-      $this->drupalGet('node/' . $nodes['views'][1]->nid);
+      drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
     }
 
     // Test each of the possible rankings.
@@ -822,7 +828,7 @@ class SearchCommentTestCase extends SearchWebTestCase {
     // Hide comments.
     $this->drupalLogin($this->admin_user);
     $node->comment = 0;
-    node_save($node);
+    $node->save();
 
     // Invoke search index update.
     $this->drupalLogout();
@@ -1986,16 +1992,14 @@ class SearchLanguageTestCase extends SearchWebTestCase {
     $this->drupalPost('search/node', $edit, t('Advanced search'));
     $this->assertFieldByXPath('//input[@name="keys"]', 'language:fr', t('Language filter added to query.'));
 
-    // Change the default language and disable English.
+    // Change the default language and delete English.
     $path = 'admin/config/regional/language';
     $this->drupalGet($path);
     $this->assertFieldChecked('edit-site-default-en', t('English is the default language.'));
     $edit = array('site_default' => 'fr');
     $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
-    $edit = array('languages[en][enabled]' => FALSE);
-    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-languages-en-enabled', t('Language disabled.'));
+    $this->drupalPost('admin/config/regional/language/delete/en', array(), t('Delete'));
 
     // Check that there are again no languages displayed.
     $this->drupalGet('search/node');

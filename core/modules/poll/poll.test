@@ -227,7 +227,7 @@ class PollCreateTestCase extends PollWebTestCase {
       'weight' => 1000,
     );
 
-    node_save($node);
+    $node->save();
 
     $this->drupalGet('poll');
     $this->clickLink($title);

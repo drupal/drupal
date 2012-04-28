@@ -230,26 +230,6 @@ function install_begin_request(&$install_state) {
   // Allow command line scripts to override server variables used by Drupal.
   require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 
-  // Ensure that the class loader is available so that we can leverage classes
-  // as part of the install routine.
-  $loader = drupal_classloader();
-
-  // Register explicit vendor namespaces.
-  $loader->registerNamespaces(array(
-    // All Symfony-borrowed code lives in /core/includes/Symfony.
-    'Symfony' => DRUPAL_ROOT . '/core/vendor',
-  ));
-  // Register the Drupal namespace for classes in core as a fallback.
-  // This allows to register additional namespaces within the Drupal namespace
-  // (e.g., for modules) and avoids an additional file_exists() on the Drupal
-  // core namespace, since the class loader can already determine the best
-  // namespace match based on a string comparison. It further allows modules to
-  // register/overload namespaces in Drupal core.
-  $loader->registerNamespaceFallbacks(array(
-    // All Drupal-namespaced code in core lives in /core/includes/Drupal.
-    'Drupal' => DRUPAL_ROOT . '/core/lib',
-  ));
-
   if (!$install_state['interactive']) {
     drupal_override_server_variables($install_state['server']);
   }
@@ -1932,8 +1912,13 @@ function install_configure_form_submit($form, &$form_state) {
 
   // We precreated user 1 with placeholder values. Let's save the real values.
   $account = user_load(1);
-  $merge_data = array('init' => $form_state['values']['account']['mail'], 'roles' => !empty($account->roles) ? $account->roles : array(), 'status' => 1, 'timezone' => $form_state['values']['date_default_timezone']);
-  user_save($account, array_merge($form_state['values']['account'], $merge_data));
+  $account->init = $account->mail = $form_state['values']['account']['mail'];
+  $account->roles = !empty($account->roles) ? $account->roles : array();
+  $account->status = 1;
+  $account->timezone = $form_state['values']['date_default_timezone'];
+  $account->pass = $form_state['values']['account']['pass'];
+  $account->name = $form_state['values']['account']['name'];
+  $account->save();
   // Load global $user and perform final login tasks.
   $user = user_load(1);
   user_login_finalize();

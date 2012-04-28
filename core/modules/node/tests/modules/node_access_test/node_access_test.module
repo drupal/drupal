@@ -7,6 +7,8 @@
  * a special 'node test view' permission.
  */
 
+use Drupal\node\Node;
+
 /**
  * Implements hook_node_grants().
  */
@@ -26,7 +28,7 @@ function node_access_test_node_grants($account, $op) {
 /**
  * Implements hook_node_access_records().
  */
-function node_access_test_node_access_records($node) {
+function node_access_test_node_access_records(Node $node) {
   $grants = array();
   // For NodeAccessBaseTableTestCase, only set records for private nodes.
   if (!variable_get('node_access_test_private') || $node->private) {
@@ -199,28 +201,28 @@ function node_access_test_node_load($nodes, $types) {
  * Implements hook_node_predelete().
  */
 
-function node_access_test_node_predelete($node) {
+function node_access_test_node_predelete(Node $node) {
   db_delete('node_access_test')->condition('nid', $node->nid)->execute();
 }
 
 /**
  * Implements hook_node_insert().
  */
-function node_access_test_node_insert($node) {
+function node_access_test_node_insert(Node $node) {
   _node_access_test_node_write($node);
 }
 
 /**
  * Implements hook_nodeapi_update().
  */
-function node_access_test_node_update($node) {
+function node_access_test_node_update(Node $node) {
   _node_access_test_node_write($node);
 }
 
 /**
  * Helper for node insert/update.
  */
-function _node_access_test_node_write($node) {
+function _node_access_test_node_write(Node $node) {
   if (isset($node->private)) {
     db_merge('node_access_test')
       ->key(array('nid' => $node->nid))

@@ -10,6 +10,7 @@
  */
 class EntityFieldQueryTestCase extends DrupalWebTestCase {
 
+
   public static function getInfo() {
     return array(
       'name' => 'Entity query',
@@ -1320,6 +1321,27 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     ), t('Test pager integration in field storage: page 2.'), TRUE);
 
     unset($_GET['page']);
+  }
+
+  /**
+   * Tests the disabling the pager in EntityFieldQuery.
+   */
+  function testEntityFieldQueryDisablePager() {
+    // Test enabling a pager and then disabling it.
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->propertyOrderBy('ftid', 'ASC')
+      ->pager(1)
+      ->pager(0);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+    ), t('Test disabling pager in propertyQuery.'), TRUE);
   }
 
   /**

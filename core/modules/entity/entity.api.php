@@ -123,6 +123,7 @@
  *       display settings specific to the view mode.
  *
  * @see entity_load()
+ * @see entity_load_multiple()
  * @see hook_entity_info_alter()
  */
 function hook_entity_info() {
@@ -427,7 +428,7 @@ function hook_entity_view_alter(&$build, $type) {
  * Act on entities as they are being prepared for view.
  *
  * Allows you to operate on multiple entities as they are being prepared for
- * view. Only use this if attaching the data during the entity_load() phase
+ * view. Only use this if attaching the data during the entity loading phase
  * is not appropriate, for example when attaching other 'entity' style objects.
  *
  * @param $entities

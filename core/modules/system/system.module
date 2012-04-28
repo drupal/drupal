@@ -2024,14 +2024,13 @@ function system_form_user_register_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_user_insert().
+ * Implements hook_user_presave().
  */
-function system_user_presave(&$edit, $account) {
+function system_user_presave($account) {
   if (variable_get('configurable_timezones', 1) && empty($account->timezone) && !variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT)) {
     $account->timezone = variable_get('date_default_timezone', '');
   }
 }
-
 
 /**
  * Implements hook_user_login().
@@ -3216,7 +3215,7 @@ function system_send_email_action_submit($form, $form_state) {
  * Sends an e-mail message.
  *
  * @param object $entity
- *   An optional node object, which will be added as $context['node'] if
+ *   An optional node entity, which will be added as $context['node'] if
  *   provided.
  * @param array $context
  *   Array with the following elements:
@@ -3290,7 +3289,7 @@ function system_message_action_submit($form, $form_state) {
  * Sends a message to the current user's screen.
  *
  * @param object $entity
- *   An optional node object, which will be added as $context['node'] if
+ *   An optional node entity, which will be added as $context['node'] if
  *   provided.
  * @param array $context
  *   Array with the following elements:
@@ -3924,17 +3923,15 @@ function system_date_format_save($date_format, $dfid = 0) {
     drupal_write_record('date_formats', $info, $keys);
   }
 
-  // Retrieve an array of language objects for enabled languages.
-  $languages = language_list(TRUE);
+  $languages = language_list();
 
   $locale_format = array();
   $locale_format['type'] = $date_format['type'];
   $locale_format['format'] = $date_format['format'];
 
-  // Check if the suggested language codes are configured and enabled.
+  // Check if the suggested language codes are configured.
   if (!empty($date_format['locales'])) {
     foreach ($date_format['locales'] as $langcode) {
-      // Only proceed if language is enabled.
       if (isset($languages[$langcode])) {
         $is_existing = (bool) db_query_range('SELECT 1 FROM {date_format_locale} WHERE type = :type AND language = :language', 0, 1, array(':type' => $date_format['type'], ':language' => $langcode))->fetchField();
         if (!$is_existing) {

@@ -83,15 +83,15 @@ function openid_help($path, $arg) {
 /**
  * Implements hook_user_insert().
  */
-function openid_user_insert(&$edit, $account) {
-  if (!empty($edit['openid_claimed_id'])) {
+function openid_user_insert($account) {
+  if (!empty($account->openid_claimed_id)) {
     // The user has registered after trying to log in via OpenID.
     if (variable_get('user_email_verification', TRUE)) {
       drupal_set_message(t('Once you have verified your e-mail address, you may log in via OpenID.'));
     }
-    user_set_authmaps($account, array('authname_openid' => $edit['openid_claimed_id']));
+    user_set_authmaps($account, array('authname_openid' => $account->openid_claimed_id));
     unset($_SESSION['openid']);
-    unset($edit['openid_claimed_id']);
+    unset($account->openid_claimed_id);
   }
 }
 
@@ -263,13 +263,13 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
         $candidate_langcodes[] = $parts[0] . '-' . $parts[2];
         $candidate_langcodes[] = $parts[0] . '-' . $parts[1] . '-' . $parts[2];
       }
-      $enabled_languages = language_list(TRUE);
+      $enabled_languages = language_list();
       // Iterate over the generated permutations starting with the longest (most
       // specific) strings.
       foreach (array_reverse($candidate_langcodes) as $candidate_langcode) {
         if (isset($enabled_languages[$candidate_langcode])) {
-          $form['locale']['preferred_langcode']['#type'] = 'hidden';
-          $form['locale']['preferred_langcode']['#value'] = $candidate_langcode;
+          $form['language']['preferred_langcode']['#type'] = 'hidden';
+          $form['language']['preferred_langcode']['#value'] = $candidate_langcode;
           // Skip the rest of the foreach to not overwrite the specific
           // language we found.
           break;

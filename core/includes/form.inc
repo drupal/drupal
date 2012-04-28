@@ -3597,6 +3597,20 @@ function form_process_fieldset(&$element, &$form_state) {
   // Contains form element summary functionalities.
   $element['#attached']['library'][] = array('system', 'drupal.form');
 
+  return $element;
+}
+
+/**
+ * Adds members of this group as actual elements for rendering.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   fieldset.
+ *
+ * @return
+ *   The modified element with all group members.
+ */
+function form_pre_render_fieldset($element) {
   // The .form-wrapper class is required for #states to treat fieldsets like
   // containers.
   if (!isset($element['#attributes']['class'])) {
@@ -3612,20 +3626,6 @@ function form_process_fieldset(&$element, &$form_state) {
     }
   }
 
-  return $element;
-}
-
-/**
- * Adds members of this group as actual elements for rendering.
- *
- * @param $element
- *   An associative array containing the properties and children of the
- *   fieldset.
- *
- * @return
- *   The modified element with all group members.
- */
-function form_pre_render_fieldset($element) {
   // Fieldsets may be rendered outside of a Form API context.
   if (!isset($element['#parents']) || !isset($element['#groups'])) {
     return $element;

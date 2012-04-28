@@ -221,85 +221,6 @@ function locale_permission() {
 }
 
 /**
- * Form builder callback to display language selection widget.
- *
- * @ingroup forms
- * @see locale_form_alter()
- */
-function locale_language_selector_form($user) {
-  global $language_interface;
-  // Get list of enabled languages only.
-  $languages = language_list(TRUE);
-
-  // If the user is being created, we set the user language to the page language.
-  $user_preferred_language = $user->uid ? user_preferred_language($user) : $language_interface;
-
-  $names = array();
-  foreach ($languages as $langcode => $item) {
-    $names[$langcode] = $item->name;
-  }
-  // Get language negotiation settings.
-  $mode = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
-  $form['locale'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Language settings'),
-    '#weight' => 1,
-  );
-  $form['locale']['preferred_langcode'] = array(
-    '#type' => (count($names) <= 5 ? 'radios' : 'select'),
-    '#title' => t('Language'),
-    '#default_value' => $user_preferred_language->langcode,
-    '#options' => $names,
-    '#description' => $mode ? t("This account's preferred language for e-mails and site presentation.") : t("This account's preferred language for e-mails."),
-  );
-  // User entities contain both a langcode property (for identifying the
-  // language of the entity data) and a preferred_langcode property (see above).
-  // Rather than provide a UI forcing the user to choose both separately,
-  // assume that the user profile data is in the user's preferred language. This
-  // element provides that synchronization. For use-cases where this
-  // synchronization is not desired, a module can alter or remove this element.
-  $form['locale']['langcode'] = array(
-    '#type' => 'value',
-    '#value_callback' => '_locale_language_selector_langcode_value',
-    // For the synchronization to work, this element must have a larger weight
-    // than the preferred_langcode element. Set a large weight here in case
-    // a module alters the weight of the other element.
-    '#weight' => 100,
-  );
-  return $form;
-}
-
-/**
- * Sets the value of the user register and profile forms' langcode element.
- *
- * @see locale_language_selector_form()
- */
-function _locale_language_selector_langcode_value($element, $input, &$form_state) {
-  $form_state['complete_form']['locale']['preferred_langcode']['#description'] .= ' ' . t("This is also assumed to be the primary language of this account's profile information.");
-  return $form_state['values']['preferred_langcode'];
-}
-
-/**
- * Implements hook_form_alter().
- *
- * Adds language fields to user forms.
- */
-function locale_form_alter(&$form, &$form_state, $form_id) {
-  // Only alter user forms if there is more than one language.
-  if (language_multilingual()) {
-    // Display language selector when either creating a user on the admin
-    // interface or editing a user account.
-    if ($form_id == 'user_register_form' || $form_id == 'user_profile_form') {
-      $selector = locale_language_selector_form($form['#user']);
-      if ($form_id == 'user_register_form') {
-        $selector['locale']['#access'] = user_access('administer users');
-      }
-      $form += $selector;
-    }
-  }
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function locale_form_node_form_alter(&$form, &$form_state) {
@@ -318,9 +239,8 @@ function locale_form_node_form_alter(&$form, &$form_state) {
  */
 function locale_field_node_form_submit($form, &$form_state) {
   if (field_has_translation_handler('node', 'locale')) {
-    $node = (object) $form_state['values'];
-    $available_languages = field_content_languages();
-    list(, , $bundle) = entity_extract_ids('node', $node);
+    $bundle = $form_state['values']['type'];
+    $node_language = $form_state['values']['langcode'];
 
     foreach (field_info_instances('node', $bundle) as $instance) {
       $field_name = $instance['field_name'];
@@ -329,8 +249,8 @@ function locale_field_node_form_submit($form, &$form_state) {
 
       // Handle a possible language change: new language values are inserted,
       // previous ones are deleted.
-      if ($field['translatable'] && $previous_langcode != $node->langcode) {
-        $form_state['values'][$field_name][$node->langcode] = $node->{$field_name}[$previous_langcode];
+      if ($field['translatable'] && $previous_langcode != $node_language) {
+        $form_state['values'][$field_name][$node_language] = $form_state['values'][$field_name][$previous_langcode];
         $form_state['values'][$field_name][$previous_langcode] = array();
       }
     }

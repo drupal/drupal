@@ -37,11 +37,11 @@ function update_get_projects() {
       // Still empty, so we have to rebuild the cache.
       $module_data = system_rebuild_module_data();
       $theme_data = system_rebuild_theme_data();
-      _update_process_info_list($projects, $module_data, 'module', TRUE);
-      _update_process_info_list($projects, $theme_data, 'theme', TRUE);
+      update_process_info_list($projects, $module_data, 'module', TRUE);
+      update_process_info_list($projects, $theme_data, 'theme', TRUE);
       if (variable_get('update_check_disabled', FALSE)) {
-        _update_process_info_list($projects, $module_data, 'module', FALSE);
-        _update_process_info_list($projects, $theme_data, 'theme', FALSE);
+        update_process_info_list($projects, $module_data, 'module', FALSE);
+        update_process_info_list($projects, $theme_data, 'theme', FALSE);
       }
       // Allow other modules to alter projects before fetching and comparing.
       drupal_alter('update_projects', $projects);
@@ -75,10 +75,12 @@ function update_get_projects() {
  * @param $status
  *   Boolean that controls what status (enabled or disabled) to process out of
  *   the $list and add to the $projects array.
+ * @param $additional_whitelist
+ *   Array of additional elements to be collected from the .info file.
  *
  * @see update_get_projects()
  */
-function _update_process_info_list(&$projects, $list, $project_type, $status) {
+function update_process_info_list(&$projects, $list, $project_type, $status, $additional_whitelist = array()) {
   foreach ($list as $file) {
     // A disabled base theme of an enabled sub-theme still has all of its code
     // run by the sub-theme, so we include it in our "enabled" projects list.
@@ -175,7 +177,7 @@ function _update_process_info_list(&$projects, $list, $project_type, $status) {
         'name' => $project_name,
         // Only save attributes from the .info file we care about so we do not
         // bloat our RAM usage needlessly.
-        'info' => update_filter_project_info($file->info),
+        'info' => update_filter_project_info($file->info, $additional_whitelist),
         'datestamp' => $file->info['datestamp'],
         'includes' => array($file->name => $file->info['name']),
         'project_type' => $project_display_type,
@@ -768,13 +770,15 @@ function update_project_cache($cid) {
  *
  * @param array $info
  *   Array of .info file data as returned by drupal_parse_info_file().
+ * @param $additional_whitelist
+ *   Array of additional elements to be collected from the .info file.
  *
  * @return
  *   Array of .info file data we need for the Update manager.
  *
- * @see _update_process_info_list()
+ * @see update_process_info_list()
  */
-function update_filter_project_info($info) {
+function update_filter_project_info($info, $additional_whitelist = array()) {
   $whitelist = array(
     '_info_file_ctime',
     'datestamp',
@@ -785,5 +789,6 @@ function update_filter_project_info($info) {
     'project status url',
     'version',
   );
+  $whitelist = array_merge($whitelist, $additional_whitelist);
   return array_intersect_key($info, drupal_map_assoc($whitelist));
 }

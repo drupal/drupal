@@ -38,7 +38,7 @@ function _drupal_maintenance_theme() {
     // The bootstrap was not complete. So we are operating in a crippled
     // environment, we need to bootstrap just enough to allow hook invocations
     // to work. See _drupal_log_error().
-    if (!class_exists('Database', FALSE)) {
+    if (!class_exists('Drupal\Core\Database\Database', FALSE)) {
       require_once DRUPAL_ROOT . '/core/includes/database.inc';
     }
 

@@ -5,6 +5,8 @@
  * Admin page callbacks for the book module.
  */
 
+use Drupal\node\Node;
+
 /**
  * Page callback: Returns an administrative overview of all books.
  *
@@ -66,7 +68,7 @@ function book_admin_settings_validate($form, &$form_state) {
 /**
  * Form constructor for administering a single book's hierarchy.
  *
- * @param $node
+ * @param Drupal\node\Node $node
  *   The node of the top-level page in the book.
  *
  * @see book_menu()
@@ -74,7 +76,7 @@ function book_admin_settings_validate($form, &$form_state) {
  * @see book_admin_edit_submit()
  * @ingroup forms
  */
-function book_admin_edit($form, $form_state, $node) {
+function book_admin_edit($form, $form_state, Node $node) {
   drupal_set_title($node->title);
   $form['#node'] = $node;
   _book_admin_table($node, $form);
@@ -135,7 +137,7 @@ function book_admin_edit_submit($form, &$form_state) {
         $node->revision = 1;
         $node->log = t('Title changed from %original to %current.', array('%original' => $node->title, '%current' => $values['title']));
 
-        node_save($node);
+        $node->save();
         watchdog('content', 'book: updated %title.', array('%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/' . $node->nid));
       }
     }
@@ -147,14 +149,14 @@ function book_admin_edit_submit($form, &$form_state) {
 /**
  * Builds the table portion of the form for the book administration page.
  *
- * @param $node
+ * @param Drupal\node\Node $node
  *   The node of the top-level page in the book.
  * @param $form
  *   The form that is being modified.
  *
  * @see book_admin_edit()
  */
-function _book_admin_table($node, &$form) {
+function _book_admin_table(Node $node, &$form) {
   $form['table'] = array(
     '#theme' => 'book_admin_table',
     '#tree' => TRUE,

@@ -11,6 +11,8 @@
  * URLs to be added to the main site navigation menu.
  */
 
+use Drupal\node\Node;
+
 /**
  * Maximum length of menu name as entered by the user. Database length is 32
  * and we add a menu- prefix.
@@ -508,21 +510,21 @@ function menu_block_view_alter(&$data, $block) {
 /**
  * Implements hook_node_insert().
  */
-function menu_node_insert($node) {
+function menu_node_insert(Node $node) {
   menu_node_save($node);
 }
 
 /**
  * Implements hook_node_update().
  */
-function menu_node_update($node) {
+function menu_node_update(Node $node) {
   menu_node_save($node);
 }
 
 /**
  * Helper for hook_node_insert() and hook_node_update().
  */
-function menu_node_save($node) {
+function menu_node_save(Node $node) {
   if (isset($node->menu)) {
     $link = &$node->menu;
     if (empty($link['enabled'])) {
@@ -551,7 +553,7 @@ function menu_node_save($node) {
 /**
  * Implements hook_node_predelete().
  */
-function menu_node_predelete($node) {
+function menu_node_predelete(Node $node) {
   // Delete all menu module links that point to this node.
   $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/' . $node->nid), array('fetch' => PDO::FETCH_ASSOC));
   foreach ($result as $m) {
@@ -562,7 +564,7 @@ function menu_node_predelete($node) {
 /**
  * Implements hook_node_prepare().
  */
-function menu_node_prepare($node) {
+function menu_node_prepare(Node $node) {
   if (empty($node->menu)) {
     // Prepare the node for the edit form so that $node->menu always exists.
     $menu_name = strtok(variable_get('menu_parent_' . $node->type, 'main-menu:0'), ':');
@@ -715,7 +717,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
  *
  * @see menu_form_node_form_alter()
  */
-function menu_node_submit($node, $form, $form_state) {
+function menu_node_submit(Node $node, $form, $form_state) {
   // Decompose the selected menu parent option into 'menu_name' and 'plid', if
   // the form used the default parent selection widget.
   if (!empty($form_state['values']['menu']['parent'])) {

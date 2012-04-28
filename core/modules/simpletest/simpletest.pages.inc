@@ -183,6 +183,7 @@ function theme_simpletest_test_table($variables) {
 function simpletest_test_form_submit($form, &$form_state) {
   // Get list of tests.
   $tests_list = array();
+  simpletest_classloader_register();
   foreach ($form_state['values'] as $class_name => $value) {
     // Since class_exists() will likely trigger an autoload lookup,
     // we do the fast check first.
@@ -232,6 +233,8 @@ function simpletest_result_form($form, &$form_state, $test_id) {
     '#exception' => 0,
     '#debug' => 0,
   );
+
+  simpletest_classloader_register();
 
   // Cycle through each test group.
   $header = array(t('Message'), t('Group'), t('Filename'), t('Line'), t('Function'), array('colspan' => 2, 'data' => t('Status')));

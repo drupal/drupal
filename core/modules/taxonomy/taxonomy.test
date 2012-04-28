@@ -1251,17 +1251,12 @@ class TaxonomyTermIndexTestCase extends TaxonomyWebTestCase {
     $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
 
     // Redo the above tests without interface.
-    $update_node = array(
-      'nid' => $node->nid,
-      'vid' => $node->vid,
-      'uid' => $node->uid,
-      'type' => $node->type,
-      'title' => $this->randomName(),
-    );
+    $node->title = $this->randomName();
+    unset($node->{$this->field_name_1});
+    unset($node->{$this->field_name_2});
 
     // Update the article with no term changed.
-    $updated_node = (object) $update_node;
-    node_save($updated_node);
+    $node->save();
 
     // Check that the index was not changed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
@@ -1276,9 +1271,8 @@ class TaxonomyTermIndexTestCase extends TaxonomyWebTestCase {
     $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
 
     // Update the article to change one term.
-    $update_node[$this->field_name_1][$langcode] = array(array('tid' => $term_1->tid));
-    $updated_node = (object) $update_node;
-    node_save($updated_node);
+    $node->{$this->field_name_1}[$langcode] = array(array('tid' => $term_1->tid));
+    $node->save();
 
     // Check that both terms are indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
@@ -1293,9 +1287,8 @@ class TaxonomyTermIndexTestCase extends TaxonomyWebTestCase {
     $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
-    $update_node[$this->field_name_2][$langcode] = array(array('tid' => $term_1->tid));
-    $updated_node = (object) $update_node;
-    node_save($updated_node);
+    $node->{$this->field_name_2}[$langcode] = array(array('tid' => $term_1->tid));
+    $node->save();
 
     // Check that only one term is indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
@@ -1361,7 +1354,7 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
       $this->createTerm($vocabulary);
     }
     // Load the terms from the vocabulary.
-    $terms = taxonomy_term_load_multiple(NULL, array('vid' => $vocabulary->vid));
+    $terms = taxonomy_term_load_multiple(FALSE, array('vid' => $vocabulary->vid));
     $count = count($terms);
     $this->assertTrue($count == 5, format_string('Correct number of terms were loaded. !count terms.', array('!count' => $count)));
 
@@ -1381,7 +1374,7 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
     $this->assertFalse($deleted_term);
 
     // Load terms from the vocabulary by vid.
-    $terms4 = taxonomy_term_load_multiple(NULL, array('vid' => $vocabulary->vid));
+    $terms4 = taxonomy_term_load_multiple(FALSE, array('vid' => $vocabulary->vid));
     $this->assertTrue(count($terms4 == 4), 'Correct number of terms were loaded.');
     $this->assertFalse(isset($terms4[$deleted->tid]));
 

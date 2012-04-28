@@ -53,6 +53,8 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
   // If field module handles multiple values for this form element, and we are
   // displaying an individual element, process the multiple value form.
   if (!isset($get_delta) && field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
+    // Store the entity in the form.
+    $form['#entity'] = $entity;
     $elements = field_multiple_value_form($field, $instance, $langcode, $items, $form, $form_state);
   }
   // If the widget is handling multiple values (e.g Options), or if we are
@@ -64,6 +66,7 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
     if (function_exists($function)) {
       $element = array(
         '#entity_type' => $instance['entity_type'],
+        '#entity' => $entity,
         '#bundle' => $instance['bundle'],
         '#field_name' => $field_name,
         '#language' => $langcode,
@@ -173,6 +176,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
       $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
       $element = array(
         '#entity_type' => $instance['entity_type'],
+        '#entity' => $form['#entity'],
         '#bundle' => $instance['bundle'],
         '#field_name' => $field_name,
         '#language' => $langcode,

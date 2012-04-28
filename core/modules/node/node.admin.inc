@@ -106,7 +106,7 @@ function node_filters() {
 
   // Language filter if language support is present.
   if (language_multilingual()) {
-    $languages = language_list(TRUE);
+    $languages = language_list();
     $language_options = array(LANGUAGE_NOT_SPECIFIED => t('- None -'));
     foreach ($languages as $langcode => $language) {
       $language_options[$langcode] = $language->name;
@@ -319,7 +319,7 @@ function _node_mass_update_helper($nid, $updates) {
   foreach ($updates as $name => $value) {
     $node->$name = $value;
   }
-  node_save($node);
+  $node->save();
   return $node;
 }
 

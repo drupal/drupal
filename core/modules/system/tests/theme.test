@@ -154,6 +154,19 @@ class ThemeUnitTest extends DrupalWebTestCase {
     $this->assertNotEqual(theme_get_setting('subtheme_override', 'test_basetheme'), theme_get_setting('subtheme_override', 'test_subtheme'), t('Base theme\'s default settings values can be overridden by subtheme.'));
     $this->assertIdentical(theme_get_setting('basetheme_only', 'test_subtheme'), 'base theme value', t('Base theme\'s default settings values are inherited by subtheme.'));
   }
+
+  /**
+   * Ensures the theme registry is rebuilt when modules are disabled/enabled.
+   */
+  function testRegistryRebuild() {
+    $this->assertIdentical(theme('theme_test_foo', array('foo' => 'a')), 'a', 'The theme registry contains theme_test_foo.');
+
+    module_disable(array('theme_test'), FALSE);
+    $this->assertIdentical(theme('theme_test_foo', array('foo' => 'b')), '', 'The theme registry does not contain theme_test_foo, because the module is disabled.');
+
+    module_enable(array('theme_test'), FALSE);
+    $this->assertIdentical(theme('theme_test_foo', array('foo' => 'c')), 'c', 'The theme registry contains theme_test_foo again after re-enabling the module.');
+  }
 }
 
 /**

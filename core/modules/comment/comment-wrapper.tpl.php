@@ -20,7 +20,7 @@
  *   the template.
  *
  * The following variables are provided for contextual information.
- * - $node: Node object the comments are attached to.
+ * - $node: Node entity the comments are attached to.
  * The constants below the variables show the possible values and should be
  * used for comparison.
  * - $display_mode

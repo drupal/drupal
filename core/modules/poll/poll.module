@@ -6,6 +6,8 @@
  * choice questions.
  */
 
+use Drupal\node\Node;
+
 /**
  * Implements hook_help().
  */
@@ -606,10 +608,10 @@ function poll_delete($node) {
 /**
  * Return content for 'latest poll' block.
  *
- * @param $node
- *   The node object to load.
+ * @param Drupal\node\Node $node
+ *   The node entity to load.
  */
-function poll_block_latest_poll_view($node) {
+function poll_block_latest_poll_view(Node $node) {
   global $user;
   $output = '';
 

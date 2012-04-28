@@ -532,9 +532,8 @@ class PathMonolingualTestCase extends PathTestCase {
     $edit = array('site_default' => 'fr');
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
 
-    // Disable English.
-    $edit = array('languages[en][enabled]' => FALSE);
-    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+    // Delete English.
+    $this->drupalPost('admin/config/regional/language/delete/en', array(), t('Delete'));
 
     // Verify that French is the only language.
     $this->assertFalse(language_multilingual(), t('Site is mono-lingual'));

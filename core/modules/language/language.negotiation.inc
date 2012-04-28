@@ -293,8 +293,7 @@ function language_url_fallback($language = NULL, $language_type = LANGUAGE_TYPE_
  * Translation links may be provided by other modules.
  */
 function language_switcher_url($type, $path) {
-  // Get the enabled languages only.
-  $languages = language_list(TRUE);
+  $languages = language_list();
   $links = array();
 
   foreach ($languages as $language) {
@@ -316,8 +315,7 @@ function language_switcher_session($type, $path) {
   $param = variable_get('language_negotiation_session_param', 'language');
   $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : $GLOBALS[$type]->langcode;
 
-  // Get the enabled languages only.
-  $languages = language_list(TRUE);
+  $languages = language_list();
   $links = array();
 
   $query = $_GET;
@@ -353,8 +351,7 @@ function language_url_rewrite_url(&$path, &$options) {
   $languages = &$drupal_static_fast['languages'];
 
   if (!isset($languages)) {
-    // Get the enabled languages only.
-    $languages = language_list(TRUE);
+    $languages = language_list();
     $languages = array_flip(array_keys($languages));
   }
 
@@ -439,8 +436,7 @@ function language_url_rewrite_session(&$path, &$options) {
   if (!isset($query_rewrite)) {
     global $user;
     if (!$user->uid) {
-      // Get the enabled languages only.
-      $languages = language_list(TRUE);
+      $languages = language_list();
       $query_param = check_plain(variable_get('language_negotiation_session_param', 'language'));
       $query_value = isset($_GET[$query_param]) ? check_plain($_GET[$query_param]) : NULL;
       $query_rewrite = isset($languages[$query_value]) && language_negotiation_method_enabled(LANGUAGE_NEGOTIATION_SESSION);
