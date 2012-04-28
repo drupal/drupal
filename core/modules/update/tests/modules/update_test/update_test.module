@@ -1,5 +1,8 @@
 <?php
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 /**
  * Implements hook_system_theme_info().
  */
@@ -105,13 +108,26 @@ function update_test_mock_page($project_name) {
     // The test didn't specify (for example, the webroot has other modules and
     // themes installed but they're disabled by the version of the site
     // running the test. So, we default to a file we know won't exist, so at
-    // least we'll get an empty page from readfile instead of a bunch of
-    // Drupal page output.
+    // least we'll get an empty xml response instead of a bunch of Drupal page
+    // output.
     $availability_scenario = '#broken#';
   }
 
   $path = drupal_get_path('module', 'update_test');
-  readfile("$path/$project_name.$availability_scenario.xml");
+  $file = "$path/$project_name.$availability_scenario.xml";
+  if (!is_file($file)) {
+    // Return an empty response.
+    return new Response('', 200, array('Content-Type' =>  'text/xml; charset=utf-8'));
+  }
+  return new StreamedResponse(function() use ($file) {
+    // Transfer file in 1024 byte chunks to save memory usage.
+    if ($fd = fopen($file, 'rb')) {
+      while (!feof($fd)) {
+        print fread($fd, 1024);
+      }
+      fclose($fd);
+    }
+  }, 200, array('Content-Type' =>  'text/xml; charset=utf-8'));
 }
 
 /**
