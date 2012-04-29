@@ -413,6 +413,7 @@ function user_admin_settings() {
     '#maxlength' => 10,
     '#field_suffix' => ' ' . t('KB'),
     '#description' => t('Maximum allowed file size for uploaded pictures. Upload size is normally limited only by the PHP maximum post and file upload settings, and images are automatically scaled down to the dimensions specified above.'),
+    '#element_validate' => array('element_validate_integer_positive'),
   );
   $form['personalization']['pictures']['user_picture_guidelines'] = array(
     '#type' => 'textarea',

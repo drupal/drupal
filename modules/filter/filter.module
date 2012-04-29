@@ -1358,6 +1358,7 @@ function _filter_url_settings($form, &$form_state, $filter, $format, $defaults) 
     '#maxlength' => 4,
     '#field_suffix' => t('characters'),
     '#description' => t('URLs longer than this number of characters will be truncated to prevent long strings that break formatting. The link itself will be retained; just the text portion of the link will be truncated.'),
+    '#element_validate' => array('element_validate_integer_positive'),
   );
   return $settings;
 }

@@ -95,7 +95,8 @@ function search_admin_settings($form) {
     '#default_value' => variable_get('minimum_word_size', 3),
     '#size' => 5,
     '#maxlength' => 3,
-    '#description' => t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).')
+    '#description' => t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).'),
+    '#element_validate' => array('element_validate_integer_positive'),
   );
   $form['indexing_settings']['overlap_cjk'] = array(
     '#type' => 'checkbox',
