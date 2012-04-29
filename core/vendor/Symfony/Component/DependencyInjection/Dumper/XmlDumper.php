@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
  * XmlDumper dumps a service container as an XML string.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- * @author Martin Haso? <martin.hason@gmail.com>
+ * @author Martin Hasoň <martin.hason@gmail.com>
  *
  * @api
  */

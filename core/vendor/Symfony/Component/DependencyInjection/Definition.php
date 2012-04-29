@@ -162,7 +162,7 @@ class Definition
     }
 
     /**
-     * Sets the service class.
+     * Gets the service class.
      *
      * @return string The service class
      *
@@ -449,6 +449,22 @@ class Definition
     public function hasTag($name)
     {
         return isset($this->tags[$name]);
+    }
+
+    /**
+     * Clears all tags for a given name.
+     *
+     * @param string $name The tag name
+     *
+     * @return Definition
+     */
+    public function clearTag($name)
+    {
+        if (isset($this->tags[$name])) {
+            unset($this->tags[$name]);
+        }
+
+        return $this;
     }
 
     /**
