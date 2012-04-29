@@ -27,6 +27,14 @@ Drupal.tableHeader = function (table) {
   this.originalTable = $(table);
   this.originalHeader = $(table).children('thead');
   this.originalHeaderCells = this.originalHeader.find('> tr > th');
+  this.displayWeight = null;
+
+  // React to columns change to avoid making checks in the scroll callback.
+  this.originalTable.bind('columnschange', function (e, display) {
+    // This will force header size to be calculated on scroll.
+    self.widthCalculated = (self.displayWeight !== null && self.displayWeight === display);
+    self.displayWeight = display;
+  });
 
   // Clone the table header so it inherits original jQuery properties. Hide
   // the table to avoid a flash of the header clone upon page load.
@@ -95,15 +103,29 @@ Drupal.tableHeader.prototype.eventhandlerRecalculateStickyHeader = function (eve
   // visible or when forced.
   if (this.stickyVisible && (calculateWidth || !this.widthCalculated)) {
     this.widthCalculated = true;
+    var $that = null;
+    var $stickyCell = null;
+    var display = null;
+    var cellWidth = null;
     // Resize header and its cell widths.
-    this.stickyHeaderCells.each(function (index) {
-      var cellWidth = self.originalHeaderCells.eq(index).css('width');
-      // Exception for IE7.
-      if (cellWidth == 'auto') {
-        cellWidth = self.originalHeaderCells.get(index).clientWidth + 'px';
+    // Only apply width to visible table cells. This prevents the header from
+    // displaying incorrectly when the sticky header is no longer visible.
+    for (var i = 0, il = this.originalHeaderCells.length; i < il; i += 1) {
+      $that = $(this.originalHeaderCells[i]);
+      $stickyCell = this.stickyHeaderCells.eq($that.index());
+      display = $that.css('display');
+      if (display !== 'none') {
+        cellWidth = $that.css('width');
+        // Exception for IE7.
+        if (cellWidth === 'auto') {
+          cellWidth = $that[0].clientWidth + 'px';
+        }
+        $stickyCell.css({'width': cellWidth, 'display': display});
       }
-      $(this).css('width', cellWidth);
-    });
+      else {
+        $stickyCell.css('display', 'none');
+      }
+    }
     this.stickyTable.css('width', this.originalTable.css('width'));
   }
 };

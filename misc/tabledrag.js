@@ -201,6 +201,8 @@ Drupal.tableDrag.prototype.hideColumns = function () {
     // The cookie expires in one year.
     expires: 365
   });
+  // Trigger an event to allow other scripts to react to this display change.
+  $('table.tabledrag-processed').trigger('columnschange', 'hide');
 };
 
 /**
@@ -224,6 +226,8 @@ Drupal.tableDrag.prototype.showColumns = function () {
     // The cookie expires in one year.
     expires: 365
   });
+  // Trigger an event to allow other scripts to react to this display change.
+  $('table.tabledrag-processed').trigger('columnschange', 'show');
 };
 
 /**
