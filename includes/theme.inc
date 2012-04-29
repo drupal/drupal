@@ -1967,8 +1967,11 @@ function theme_item_list($variables) {
   $type = $variables['type'];
   $attributes = $variables['attributes'];
 
+  // Only output the list container and title, if there are any list items.
+  // Check to see whether the block title exists before adding a header.
+  // Empty headers are not semantic and present accessibility challenges.
   $output = '<div class="item-list">';
-  if (isset($title)) {
+  if (isset($title) && $title !== '') {
     $output .= '<h3>' . $title . '</h3>';
   }
 
