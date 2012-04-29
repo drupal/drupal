@@ -848,6 +848,16 @@ class AggregatorRenderingTestCase extends AggregatorTestCase {
     $this->drupalGet($href);
     $correct_titles = $this->xpath('//h1[normalize-space(text())=:title]', array(':title' => $feed->title));
     $this->assertFalse(empty($correct_titles), t('Aggregator feed page is available and has the correct title.'));
+
+    // Set the number of news items to 0 to test that the block does not show
+    // up.
+    $feed->block = 0;
+    aggregator_save_feed((array) $feed);
+    // It is nescessary to flush the cache after saving the number of items.
+    drupal_flush_all_caches();
+    // Check that the block is no longer displayed.
+    $this->drupalGet('node');
+    $this->assertNoText(t($block['title']), 'Feed block is not displayed on the page when number of items is set to 0.');
   }
 
   /**
