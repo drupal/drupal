@@ -1266,8 +1266,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Make a request to the logout page, and redirect to the user page, the
     // idea being if you were properly logged out you should be seeing a login
     // screen.
-    $this->drupalGet('user/logout');
-    $this->drupalGet('user');
+    $this->drupalGet('user/logout', array('query' => array('destination' => 'user')));
+    $this->assertResponse(200, t('User was logged out.'));
     $pass = $this->assertField('name', t('Username field found.'), t('Logout'));
     $pass = $pass && $this->assertField('pass', t('Password field found.'), t('Logout'));
 

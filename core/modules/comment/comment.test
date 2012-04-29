@@ -508,7 +508,9 @@ class CommentInterfaceTest extends CommentHelperCase {
       // Adjust the current/viewing user.
       switch ($case['user']) {
         case 'anonymous':
-          $this->drupalLogout();
+          if ($this->loggedInUser) {
+            $this->drupalLogout();
+          }
           $case['user_uid'] = 0;
           break;
 

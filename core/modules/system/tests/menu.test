@@ -245,11 +245,10 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     variable_set('maintenance_mode', TRUE);
 
     $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')));
-    $this->drupalLogout();
     $this->drupalGet('node');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');
-    $this->assertText('This is menu_login_callback().', t('Maintenance mode can be bypassed through hook_login_paths().'));
+    $this->assertText('This is menu_login_callback().', t('Maintenance mode can be bypassed through hook_menu_site_status_alter().'));
   }
 
   /**
@@ -257,8 +256,8 @@ class MenuRouterTestCase extends DrupalWebTestCase {
    * 'user' and 'user/register' gets redirected to the user edit page.
    */
   function testAuthUserUserLogin() {
-    $this->loggedInUser = $this->drupalCreateUser(array());
-    $this->drupalLogin($this->loggedInUser);
+    $web_user = $this->drupalCreateUser(array());
+    $this->drupalLogin($web_user);
 
     $this->drupalGet('user/login');
     // Check that we got to 'user'.
