@@ -81,6 +81,7 @@ function watchdog_skip_semaphore($type, $message, $variables = array(), $severit
     'severity'    => $severity,
     'link'        => $link,
     'user'        => $user,
+    'uid'         => isset($user->uid) ? $user->uid : 0,
     'request_uri' => $base_root . request_uri(),
     'referer'     => $_SERVER['HTTP_REFERER'],
     'ip'          => ip_address(),
