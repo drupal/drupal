@@ -1409,6 +1409,27 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests disabling the pager in EntityFieldQuery.
+   */
+  function testEntityFieldQueryDisablePager() {
+    // Test enabling a pager and then disabling it.
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->propertyOrderBy('ftid', 'ASC')
+      ->pager(1)
+      ->pager(0);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+    ), 'All test entities are listed when the pager is enabled and then disabled.', TRUE);
+  }
+
+  /**
    * Tests the TableSort integration of EntityFieldQuery.
    */
   function testEntityFieldQueryTableSort() {
