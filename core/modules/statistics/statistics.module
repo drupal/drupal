@@ -67,7 +67,9 @@ function statistics_exit() {
     db_insert('accesslog')
       ->fields(array(
         'title' => truncate_utf8(strip_tags(drupal_get_title()), 255),
-        'path' => truncate_utf8($_GET['q'], 255),
+        // @todo The public function current_path() is not available on a cache
+        //   hit.
+        'path' => truncate_utf8(_current_path(), 255),
         'url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
         'hostname' => ip_address(),
         'uid' => $user->uid,

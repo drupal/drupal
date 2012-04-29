@@ -422,7 +422,7 @@ function taxonomy_overview_terms($form, &$form_state, TaxonomyVocabulary $vocabu
       '#type' => 'submit',
       '#value' => t('Reset to alphabetical')
     );
-    $form_state['redirect'] = array($_GET['q'], (isset($_GET['page']) ? array('query' => array('page' => $_GET['page'])) : array()));
+    $form_state['redirect'] = array(current_path(), (isset($_GET['page']) ? array('query' => array('page' => $_GET['page'])) : array()));
   }
 
   return $form;
@@ -784,7 +784,7 @@ function taxonomy_form_term($form, &$form_state, TaxonomyTerm $term = NULL, Taxo
     );
   }
   else {
-    $form_state['redirect'] = $_GET['q'];
+    $form_state['redirect'] = current_path();
   }
 
   return $form;

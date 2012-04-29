@@ -155,7 +155,7 @@ All arguments are long options.
 
               One or more tests to be run. By default, these are interpreted
               as the names of test groups as shown at
-              ?q=admin/config/development/testing.
+              admin/config/development/testing.
               These group names typically correspond to module names like "User"
               or "Profile" or "System", but there is also a group "XML-RPC".
               If --class is specified then these are interpreted as the names of

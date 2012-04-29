@@ -35,12 +35,12 @@ Disallow: /user/password/
 Disallow: /user/login/
 Disallow: /user/logout/
 # Paths (no clean URLs)
-Disallow: /?q=admin/
-Disallow: /?q=comment/reply/
-Disallow: /?q=filter/tips/
-Disallow: /?q=node/add/
-Disallow: /?q=search/
-Disallow: /?q=user/password/
-Disallow: /?q=user/register/
-Disallow: /?q=user/login/
-Disallow: /?q=user/logout/
+Disallow: /index.php/admin/
+Disallow: /index.php/comment/reply/
+Disallow: /index.php/filter/tips/
+Disallow: /index.php/node/add/
+Disallow: /index.php/search/
+Disallow: /index.php/user/password/
+Disallow: /index.php/user/register/
+Disallow: /index.php/user/login/
+Disallow: /index.php/user/logout/

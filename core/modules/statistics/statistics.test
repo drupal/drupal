@@ -152,8 +152,13 @@ class StatisticsLoggingTestCase extends DrupalWebTestCase {
     $this->assertTrue(is_array($log) && count($log) == 7, t('Page request was logged.'));
     $this->assertEqual(array_intersect_key($log[6], $expected), $expected);
 
-    // Create a path longer than 255 characters.
-    $long_path = $this->randomName(256);
+    // Create a path longer than 255 characters. Drupal's .htaccess file
+    // instructs Apache to test paths against the file system before routing to
+    // index.php. Many file systems restrict file names to 255 characters
+    // (http://en.wikipedia.org/wiki/Comparison_of_file_systems#Limits), and
+    // Apache returns a 403 when testing longer file names, but the total path
+    // length is not restricted.
+    $long_path = $this->randomName(127) . '/' . $this->randomName(128);
 
     // Test that the long path is properly truncated when logged.
     $this->drupalGet($long_path);

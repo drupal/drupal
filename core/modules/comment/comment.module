@@ -500,12 +500,10 @@ function comment_permalink($cid) {
     // Find the current display page for this comment.
     $page = comment_get_display_page($comment->cid, $node->type);
 
-    // Set $_GET['q'] and $_GET['page'] ourselves so that the node callback
-    // behaves as it would when visiting the page directly.
-    $_GET['q'] = 'node/' . $node->nid;
-    $_GET['page'] = $page;
-
     // Return the node view, this will show the correct comment in context.
+    // @todo Refactor to use Symfony's Request object.
+    _current_path('node/' . $node->nid);
+    $_GET['page'] = $page;
     return menu_execute_active_handler('node/' . $node->nid, FALSE);
   }
   drupal_not_found();

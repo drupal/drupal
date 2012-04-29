@@ -202,6 +202,13 @@ Drupal.t = function (str, args, options) {
 };
 
 /**
+ * Returns the URL to a Drupal page.
+ */
+Drupal.url = function (path) {
+  return Drupal.settings.basePath + Drupal.settings.scriptPath + path;
+}
+
+/**
  * Format a string containing a count of items.
  *
  * This function ensures that the string is pluralized correctly. Since Drupal.t() is

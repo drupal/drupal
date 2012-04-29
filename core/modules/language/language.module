@@ -463,7 +463,7 @@ function language_block_info() {
  */
 function language_block_view($type) {
   if (language_multilingual()) {
-    $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
+    $path = drupal_is_front_page() ? '<front>' : current_path();
     $links = language_negotiation_get_switch_links($type, $path);
 
     if (isset($links->links)) {

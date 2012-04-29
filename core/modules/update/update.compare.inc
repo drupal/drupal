@@ -741,7 +741,6 @@ function update_project_cache($cid) {
 
   // On certain paths, we should clear the cache and recompute the projects for
   // update status of the site to avoid presenting stale information.
-  $q = $_GET['q'];
   $paths = array(
     'admin/modules',
     'admin/modules/update',
@@ -753,7 +752,7 @@ function update_project_cache($cid) {
     'admin/reports/status',
     'admin/reports/updates/check',
   );
-  if (in_array($q, $paths)) {
+  if (in_array(current_path(), $paths)) {
     _update_cache_clear($cid);
   }
   else {

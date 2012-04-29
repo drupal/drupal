@@ -150,7 +150,7 @@ function tablesort_header($cell, $header, $ts) {
       $ts['sort'] = 'asc';
       $image = '';
     }
-    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('attributes' => array('title' => $title), 'query' => array_merge($ts['query'], array('sort' => $ts['sort'], 'order' => $cell['data'])), 'html' => TRUE));
+    $cell['data'] = l($cell['data'] . $image, current_path(), array('attributes' => array('title' => $title), 'query' => array_merge($ts['query'], array('sort' => $ts['sort'], 'order' => $cell['data'])), 'html' => TRUE));
 
     unset($cell['field'], $cell['sort']);
   }
@@ -193,7 +193,7 @@ function tablesort_cell($cell, $header, $ts, $i) {
  *   page request except for those pertaining to table sorting.
  */
 function tablesort_get_query_parameters() {
-  return drupal_get_query_parameters($_GET, array('q', 'sort', 'order'));
+  return drupal_get_query_parameters($_GET, array('sort', 'order'));
 }
 
 /**

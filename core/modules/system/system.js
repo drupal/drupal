@@ -20,55 +20,6 @@ Drupal.hideEmailAdministratorCheckbox = function () {
 };
 
 /**
- * Internal function to check using Ajax if clean URLs can be enabled on the
- * settings page.
- *
- * This function is not used to verify whether or not clean URLs
- * are currently enabled.
- */
-Drupal.behaviors.cleanURLsSettingsCheck = {
-  attach: function (context, settings) {
-    // This behavior attaches by ID, so is only valid once on a page.
-    // Also skip if we are on an install page, as Drupal.cleanURLsInstallCheck will handle
-    // the processing.
-    if (!($('#edit-clean-url').length) || $('#edit-clean-url.install').once('clean-url').length) {
-      return;
-    }
-    var url = settings.basePath + 'admin/config/search/clean-urls/check';
-    $.ajax({
-      url: location.protocol + '//' + location.host + url,
-      dataType: 'json',
-      success: function () {
-        // Check was successful. Redirect using a "clean URL". This will force the form that allows enabling clean URLs.
-        location = settings.basePath +"admin/config/search/clean-urls";
-      }
-    });
-  }
-};
-
-/**
- * Internal function to check using Ajax if clean URLs can be enabled on the
- * install page.
- *
- * This function is not used to verify whether or not clean URLs
- * are currently enabled.
- */
-Drupal.cleanURLsInstallCheck = function () {
-  var url = location.protocol + '//' + location.host + Drupal.settings.basePath + 'admin/config/search/clean-urls/check';
-  // Submit a synchronous request to avoid database errors associated with
-  // concurrent requests during install.
-  $.ajax({
-    async: false,
-    url: url,
-    dataType: 'json',
-    success: function () {
-      // Check was successful.
-      $('#edit-clean-url').attr('value', 1);
-    }
-  });
-};
-
-/**
  * When a field is filled out, apply its value to other fields that will likely
  * use the same value. In the installer this is used to populate the
  * administrator e-mail address with the same value as the site e-mail address.

@@ -569,7 +569,7 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
       // If the link contains the overlay-restore class and the overlay-context
       // state is set, also update the parent window's location.
       var parentLocation = ($target.hasClass('overlay-restore') && typeof $.bbq.getState('overlay-context') == 'string')
-        ? Drupal.settings.basePath + $.bbq.getState('overlay-context')
+        ? Drupal.url($.bbq.getState('overlay-context'))
         : null;
       href = this.fragmentizeLink($target.get(0), parentLocation);
       // Only override default behavior when left-clicking and user is not
@@ -653,10 +653,10 @@ Drupal.overlay.eventhandlerOperateByURLFragment = function (event) {
   if (state) {
     // Append render variable, so the server side can choose the right
     // rendering and add child frame code to the page if needed.
-    var url = $.param.querystring(Drupal.settings.basePath + state, { render: 'overlay' });
+    var url = $.param.querystring(Drupal.url(state), { render: 'overlay' });
 
     this.open(url);
-    this.resetActiveClass(this.getPath(Drupal.settings.basePath + state));
+    this.resetActiveClass(this.getPath(url));
   }
   // If there is no overlay URL in the fragment and the overlay is (still)
   // open, close the overlay.
@@ -688,7 +688,7 @@ Drupal.overlay.eventhandlerSyncURLFragment = function (event) {
   if (this.isOpen) {
     var expected = $.bbq.getState('overlay');
     // This is just a sanity check, so we're comparing paths, not query strings.
-    if (this.getPath(Drupal.settings.basePath + expected) != this.getPath(this.iframeWindow.document.location)) {
+    if (this.getPath(Drupal.url(expected)) != this.getPath(this.iframeWindow.document.location)) {
       // There may have been a redirect inside the child overlay window that the
       // parent wasn't aware of. Update the parent URL fragment appropriately.
       var newLocation = Drupal.overlay.fragmentizeLink(this.iframeWindow.document.location);
@@ -752,10 +752,8 @@ Drupal.overlay.fragmentizeLink = function (link, parentLocation) {
     return link.href;
   }
 
-  // Determine the link's original destination. Set ignorePathFromQueryString to
-  // true to prevent transforming this link into a clean URL while clean URLs
-  // may be disabled.
-  var path = this.getPath(link, true);
+  // Determine the link's original destination.
+  var path = this.getPath(link);
   // Preserve existing query and fragment parameters in the URL, except for
   // "render=overlay" which is re-added in Drupal.overlay.eventhandlerOperateByURLFragment.
   var destination = path + link.search.replace(/&?render=overlay/, '').replace(/\?$/, '') + link.hash;
@@ -783,7 +781,7 @@ Drupal.overlay.refreshRegions = function (data) {
           (function (regionName, regionSelector) {
             var $region = $(regionSelector);
             Drupal.detachBehaviors($region);
-            $.get(Drupal.settings.basePath + Drupal.settings.overlay.ajaxCallback + '/' + regionName, function (newElement) {
+            $.get(Drupal.url(Drupal.settings.overlay.ajaxCallback + '/' + regionName), function (newElement) {
               $region.replaceWith($(newElement));
               Drupal.attachBehaviors($region, Drupal.settings);
             });
@@ -827,13 +825,11 @@ Drupal.overlay.resetActiveClass = function(activePath) {
  *
  * @param link
  *   Link object or string to get the Drupal path from.
- * @param ignorePathFromQueryString
- *   Boolean whether to ignore path from query string if path appears empty.
  *
  * @return
  *   The Drupal path.
  */
-Drupal.overlay.getPath = function (link, ignorePathFromQueryString) {
+Drupal.overlay.getPath = function (link) {
   if (typeof link == 'string') {
     // Create a native Link object, so we can use its object methods.
     link = $(link.link(link)).get(0);
@@ -844,15 +840,7 @@ Drupal.overlay.getPath = function (link, ignorePathFromQueryString) {
   if (path.charAt(0) != '/') {
     path = '/' + path;
   }
-  path = path.replace(new RegExp(Drupal.settings.basePath + '(?:index.php)?'), '');
-  if (path == '' && !ignorePathFromQueryString) {
-    // If the path appears empty, it might mean the path is represented in the
-    // query string (clean URLs are not used).
-    var match = new RegExp('([?&])q=(.+)([&#]|$)').exec(link.search);
-    if (match && match.length == 4) {
-      path = match[2];
-    }
-  }
+  path = path.replace(new RegExp(Drupal.settings.basePath + Drupal.settings.scriptPath), '');
 
   return path;
 };

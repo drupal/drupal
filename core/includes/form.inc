@@ -1248,7 +1248,7 @@ function drupal_redirect_form($form_state) {
         $function($form_state['redirect']);
       }
     }
-    drupal_goto($_GET['q']);
+    drupal_goto(current_path());
   }
 }
 
@@ -4682,7 +4682,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
       'progressive' => TRUE,
       'url' => $url,
       'url_options' => array(),
-      'source_url' => $_GET['q'],
+      'source_url' => current_path(),
       'redirect' => $redirect,
       'theme' => $GLOBALS['theme_key'],
       'redirect_callback' => $redirect_callback,

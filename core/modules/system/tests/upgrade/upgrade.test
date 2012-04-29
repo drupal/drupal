@@ -78,7 +78,6 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     $this->originalLanguageDefault = variable_get('language_default');
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
-    $clean_url_original = variable_get('clean_url', 0);
 
     // Unregister the registry.
     // This is required to make sure that the database layer works properly.
@@ -138,7 +137,6 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     drupal_save_session(FALSE);
 
     // Restore necessary variables.
-    $this->variable_set('clean_url', $clean_url_original);
     $this->variable_set('site_mail', 'simpletest@example.com');
 
     drupal_set_time_limit($this->timeLimit);

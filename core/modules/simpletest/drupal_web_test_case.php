@@ -1318,7 +1318,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->originalConfigSignatureKey = $GLOBALS['config_signature_key'];
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
-    $clean_url_original = variable_get('clean_url', 0);
 
     // Set to English to prevent exceptions from utf8_truncate() from t()
     // during install if the current language is not 'en'.
@@ -1435,7 +1434,6 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Restore necessary variables.
     variable_set('install_task', 'done');
-    variable_set('clean_url', $clean_url_original);
     variable_set('site_mail', 'simpletest@example.com');
     variable_set('date_default_timezone', date_default_timezone_get());
     // Set up English language.

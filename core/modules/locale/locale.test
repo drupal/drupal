@@ -2181,7 +2181,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
 
     // Test that both node titles link to our path alias.
     $this->drupalGet('<front>');
-    $custom_path_url = base_path() . (variable_get('clean_url', 0) ? $custom_path : '?q=' . $custom_path);
+    $custom_path_url = base_path() . $GLOBALS['script_path'] . $custom_path;
     $elements = $this->xpath('//a[@href=:href and .=:title]', array(':href' => $custom_path_url, ':title' => $first_node->title));
     $this->assertTrue(!empty($elements), t('First node links to the path alias.'));
     $elements = $this->xpath('//a[@href=:href and .=:title]', array(':href' => $custom_path_url, ':title' => $second_node->title));
@@ -2651,7 +2651,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
 
     // Check that the language switcher active link matches the given browser
     // language.
-    $args = array(':url' => base_path() . (!empty($GLOBALS['conf']['clean_url']) ? $langcode_browser_fallback : "?q=$langcode_browser_fallback"));
+    $args = array(':url' => base_path() . $GLOBALS['script_path'] . $langcode_browser_fallback);
     $fields = $this->xpath('//div[@id="block-language-language-interface"]//a[@class="language-link active" and starts-with(@href, :url)]', $args);
     $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->name, t('The browser language is the URL active language'));
 
@@ -2686,21 +2686,21 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
-    // Build the link we're going to test based on the clean url setting.
-    $link = (!empty($GLOBALS['conf']['clean_url'])) ? 'it.example.com/admin' : 'it.example.com/?q=admin';
+    // Build the link we're going to test.
+    $link = 'it.example.com/admin';
 
     global $is_https;
-    // Test URL in another language: http://it.example.com/?q=admin.
+    // Test URL in another language: http://it.example.com/admin.
     // Base path gives problems on the testbot, so $correct_link is hard-coded.
     // @see UrlAlterFunctionalTest::assertUrlOutboundAlter (path.test).
-    $italian_url = url('admin', array('language' => $languages['it']));
+    $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
     $url_scheme = ($is_https) ? 'https://' : 'http://';
     $correct_link = $url_scheme . $link;
     $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right url (@url) in accordance with the chosen language', array('@url' => $italian_url)));
 
     // Test https via options.
     variable_set('https', TRUE);
-    $italian_url = url('admin', array('https' => TRUE, 'language' => $languages['it']));
+    $italian_url = url('admin', array('https' => TRUE, 'language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
     $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right https url (via options) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
     variable_set('https', FALSE);
@@ -2708,7 +2708,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     // Test https via current url scheme.
     $temp_https = $is_https;
     $is_https = TRUE;
-    $italian_url = url('admin', array('language' => $languages['it']));
+    $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
     $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right url (via current url scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
     $is_https = $temp_https;
@@ -2767,9 +2767,9 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
    * is actually not working.
    */
   private function checkUrl($language, $message1, $message2) {
-    $options = array('language' => $language);
+    $options = array('language' => $language, 'script' => '');
     $base_path = trim(base_path(), '/');
-    $rewritten_path = trim(str_replace(array('?q=', $base_path), '', url('node', $options)), '/');
+    $rewritten_path = trim(str_replace($base_path, '', url('node', $options)), '/');
     $segments = explode('/', $rewritten_path, 2);
     $prefix = $segments[0];
     $path = isset($segments[1]) ? $segments[1] : $prefix;
