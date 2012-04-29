@@ -432,10 +432,10 @@ function _block_rehash($theme = NULL) {
       if (!isset($block['weight'])) {
         $block['weight'] = 0;
       }
-      if (!empty($block['region']) && $block['region'] != BLOCK_REGION_NONE && !isset($regions[$block['region']])) {
+      if (!empty($block['region']) && $block['region'] != BLOCK_REGION_NONE && !isset($regions[$block['region']]) && $block['status'] == 1) {
         drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $block['info'], '%region' => $block['region'])), 'warning');
         // Disabled modules are moved into the BLOCK_REGION_NONE later so no
-        // need to move the bock to another region.
+        // need to move the block to another region.
         $block['status'] = 0;
       }
       // Set region to none if not enabled and make sure status is set.
