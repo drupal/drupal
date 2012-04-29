@@ -131,10 +131,6 @@ function _registry_parse_files($files) {
     if (file_exists($filename)) {
       $hash = hash_file('sha256', $filename);
       if (empty($file['hash']) || $file['hash'] != $hash) {
-        // Delete registry entries for this file, so we can insert the new resources.
-        db_delete('registry')
-          ->condition('filename', $filename)
-          ->execute();
         $file['hash'] = $hash;
         $parsed_files[$filename] = $file;
       }
@@ -156,9 +152,9 @@ function _registry_parse_files($files) {
  * Parse a file and save its function and class listings.
  *
  * @param $filename
- *  Name of the file we are going to parse.
+ *   Name of the file we are going to parse.
  * @param $contents
- *  Contents of the file we are going to parse as a string.
+ *   Contents of the file we are going to parse as a string.
  * @param $module
  *   (optional) Name of the module this file belongs to.
  * @param $weight
@@ -166,17 +162,25 @@ function _registry_parse_files($files) {
  */
 function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
   if (preg_match_all('/^\s*(?:abstract|final)?\s*(class|interface)\s+([a-zA-Z0-9_]+)/m', $contents, $matches)) {
-    $query = db_insert('registry')->fields(array('name', 'type', 'filename', 'module', 'weight'));
     foreach ($matches[2] as $key => $name) {
-      $query->values(array(
-        'name' => $name,
-        'type' => $matches[1][$key],
-        'filename' => $filename,
-        'module' => $module,
-        'weight' => $weight,
-      ));
+      db_merge('registry')
+        ->key(array(
+          'name' => $name,
+          'type' => $matches[1][$key],
+        ))
+        ->fields(array(
+          'filename' => $filename,
+          'module' => $module,
+          'weight' => $weight,
+        ))
+        ->execute();
     }
-    $query->execute();
+    // Delete any resources for this file where the name is not in the list
+    // we just merged in.
+    db_delete('registry')
+      ->condition('filename', $filename)
+      ->condition('name', $matches[2], 'NOT IN')
+      ->execute();
   }
 }
 
