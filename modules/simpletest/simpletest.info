@@ -51,4 +51,5 @@ files[] = tests/upgrade/upgrade.trigger.test
 files[] = tests/upgrade/upgrade.translatable.test
 files[] = tests/upgrade/update.trigger.test
 files[] = tests/upgrade/upgrade.upload.test
+files[] = tests/upgrade/update.user.test
 files[] = tests/upgrade/upgrade.user.test
