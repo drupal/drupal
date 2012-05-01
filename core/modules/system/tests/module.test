@@ -236,6 +236,34 @@ class ModuleUnitTest extends DrupalWebTestCase {
     $poll_before_forum = $poll_position !== FALSE && $forum_position !== FALSE && $poll_position < $forum_position;
     $this->assertTrue($php_before_poll && $poll_before_forum, t('Modules were enabled in the correct order by module_enable().'));
   }
+
+  /**
+   * Tests whether the correct module metadata is returned.
+   */
+  function testModuleMetaData() {
+    // Generate the list of available modules.
+    $modules = system_rebuild_module_data();
+    // Check that the mtime field exists for the system module.
+    $this->assertTrue(!empty($modules['system']->info['mtime']), 'The system.info file modification time field is present.');
+    // Use 0 if mtime isn't present, to avoid an array index notice.
+    $test_mtime = !empty($modules['system']->info['mtime']) ? $modules['system']->info['mtime'] : 0;
+    // Ensure the mtime field contains a number that is greater than zero.
+    $this->assertTrue(is_numeric($test_mtime) && ($test_mtime > 0), 'The system.info file modification time field contains a timestamp.');
+  }
+
+  /**
+   * Tests whether the correct theme metadata is returned.
+   */
+  function testThemeMetaData() {
+    // Generate the list of available themes.
+    $themes = system_rebuild_theme_data();
+    // Check that the mtime field exists for the bartik theme.
+    $this->assertTrue(!empty($themes['bartik']->info['mtime']), 'The bartik.info file modification time field is present.');
+    // Use 0 if mtime isn't present, to avoid an array index notice.
+    $test_mtime = !empty($themes['bartik']->info['mtime']) ? $themes['bartik']->info['mtime'] : 0;
+    // Ensure the mtime field contains a number that is greater than zero.
+    $this->assertTrue(is_numeric($test_mtime) && ($test_mtime > 0), 'The bartik.info file modification time field contains a timestamp.');
+  }
 }
 
 /**
