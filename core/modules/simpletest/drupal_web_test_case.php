@@ -1266,8 +1266,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Make a request to the logout page, and redirect to the user page, the
     // idea being if you were properly logged out you should be seeing a login
     // screen.
-    $this->drupalGet('user/logout');
-    $this->drupalGet('user');
+    $this->drupalGet('user/logout', array('query' => array('destination' => 'user')));
+    $this->assertResponse(200, t('User was logged out.'));
     $pass = $this->assertField('name', t('Username field found.'), t('Logout'));
     $pass = $pass && $this->assertField('pass', t('Password field found.'), t('Logout'));
 
@@ -1318,7 +1318,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->originalConfigSignatureKey = $GLOBALS['config_signature_key'];
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
-    $clean_url_original = variable_get('clean_url', 0);
 
     // Set to English to prevent exceptions from utf8_truncate() from t()
     // during install if the current language is not 'en'.
@@ -1435,7 +1434,6 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Restore necessary variables.
     variable_set('install_task', 'done');
-    variable_set('clean_url', $clean_url_original);
     variable_set('site_mail', 'simpletest@example.com');
     variable_set('date_default_timezone', date_default_timezone_get());
     // Set up English language.

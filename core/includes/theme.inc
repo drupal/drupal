@@ -1743,7 +1743,7 @@ function theme_links($variables) {
 
       // Handle links.
       if (isset($link['href'])) {
-        $is_current_path = ($link['href'] == $_GET['q'] || ($link['href'] == '<front>' && drupal_is_front_page()));
+        $is_current_path = ($link['href'] == current_path() || ($link['href'] == '<front>' && drupal_is_front_page()));
         $is_current_language = (empty($link['language']) || $link['language']->langcode == $language_url->langcode);
         if ($is_current_path && $is_current_language) {
           $class[] = 'active';

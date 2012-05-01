@@ -69,14 +69,14 @@ class ThemeUnitTest extends DrupalWebTestCase {
    * Ensure page-front template suggestion is added when on front page.
    */
   function testFrontPageThemeSuggestion() {
-    $q = $_GET['q'];
-    // Set $_GET['q'] to node because theme_get_suggestions() will query it to
-    // see if we are on the front page.
+    $original_path = _current_path();
+    // Set the current path to node because theme_get_suggestions() will query
+    // it to see if we are on the front page.
     variable_set('site_frontpage', 'node');
-    $_GET['q'] = 'node';
-    $suggestions = theme_get_suggestions(explode('/', $_GET['q']), 'page');
+    _current_path('node');
+    $suggestions = theme_get_suggestions(array('node'), 'page');
     // Set it back to not annoy the batch runner.
-    $_GET['q'] = $q;
+    _current_path($original_path);
     $this->assertTrue(in_array('page__front', $suggestions), t('Front page template was suggested.'));
   }
 
@@ -317,7 +317,7 @@ class ThemeFunctionsTestCase extends DrupalWebTestCase {
     // Required to verify the "active" class in expected links below, and
     // because the current path is different when running tests manually via
     // simpletest.module ('batch') and via the testing framework ('').
-    $_GET['q'] = variable_get('site_frontpage', 'user');
+    _current_path(variable_get('site_frontpage', 'user'));
 
     // Verify that a list of links is properly rendered.
     $variables = array();

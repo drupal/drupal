@@ -2034,7 +2034,7 @@ function file_transfer($uri, $headers) {
  * @see system_menu()
  */
 function file_download() {
-  // Merge remainder of arguments from GET['q'], into relative file path.
+  // Merge remaining path arguments into relative file path.
   $args = func_get_args();
   $scheme = array_shift($args);
   $target = implode('/', $args);

@@ -341,8 +341,6 @@ class SimpleTestBrowserTestCase extends DrupalWebTestCase {
    * Test DrupalWebTestCase::getAbsoluteUrl().
    */
   function testGetAbsoluteUrl() {
-    // Testbed runs with Clean URLs disabled, so disable it here.
-    variable_set('clean_url', 0);
     $url = 'user/login';
 
     $this->drupalGet($url);

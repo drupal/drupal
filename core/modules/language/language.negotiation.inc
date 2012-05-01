@@ -209,9 +209,11 @@ function language_from_url($languages) {
 
   switch (variable_get('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX)) {
     case LANGUAGE_NEGOTIATION_URL_PREFIX:
-      // $_GET['q'] might not be available at this time, because path
-      // initialization runs after the language bootstrap phase.
-      list($language, $_GET['q']) = language_url_split_prefix(isset($_GET['q']) ? $_GET['q'] : NULL, $languages);
+      // Language negotiation happens before the public function current_path()
+      // is available.
+      // @todo Refactor with Symfony's Request object.
+      list($language, $path) = language_url_split_prefix(_current_path(), $languages);
+      _current_path($path);
       if ($language !== FALSE) {
         $language_url = $language->langcode;
       }
@@ -319,7 +321,6 @@ function language_switcher_session($type, $path) {
   $links = array();
 
   $query = $_GET;
-  unset($query['q']);
 
   foreach ($languages as $language) {
     $langcode = $language->langcode;

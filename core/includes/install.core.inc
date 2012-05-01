@@ -1542,11 +1542,8 @@ function install_configure_form($form, &$form_state, &$install_state) {
   // We add these strings as settings because JavaScript translation does not
   // work on install time.
   drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
-  drupal_add_js('jQuery(function () { Drupal.cleanURLsInstallCheck(); });', 'inline');
   // Add JS to show / hide the 'Email administrator about site updates' elements
   drupal_add_js('jQuery(function () { Drupal.hideEmailAdministratorCheckbox() });', 'inline');
-  // Build menu to allow clean URL check.
-  menu_rebuild();
 
   // Cache a fully-built schema. This is necessary for any invocation of
   // index.php because: (1) setting cache table entries requires schema
@@ -1554,8 +1551,7 @@ function install_configure_form($form, &$form_state, &$install_state) {
   // loaded, so (3) if there is no cached schema, drupal_get_schema() will
   // try to generate one but with no loaded modules will return nothing.
   //
-  // This logically could be done during the 'install_finished' task, but the
-  // clean URL check requires it now.
+  // @todo Move this to the 'install_finished' task?
   drupal_get_schema(NULL, TRUE);
 
   // Return the form.
@@ -1847,12 +1843,6 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#attributes' => array('class' => array('timezone-detect')),
   );
 
-  $form['server_settings']['clean_url'] = array(
-    '#type' => 'hidden',
-    '#default_value' => 0,
-    '#attributes' => array('id' => 'edit-clean-url', 'class' => array('install')),
-  );
-
   $form['update_notifications'] = array(
     '#type' => 'fieldset',
     '#title' => st('Update notifications'),
@@ -1922,10 +1912,6 @@ function install_configure_form_submit($form, &$form_state) {
   // Load global $user and perform final login tasks.
   $user = user_load(1);
   user_login_finalize();
-
-  if (isset($form_state['values']['clean_url'])) {
-    variable_set('clean_url', $form_state['values']['clean_url']);
-  }
 
   // Record when this install ran.
   variable_set('install_time', $_SERVER['REQUEST_TIME']);

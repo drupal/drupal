@@ -22,9 +22,8 @@ Drupal.menu_update_parent_list = function () {
     values.push(Drupal.checkPlain($.trim($(this).val())));
   });
 
-  var url = Drupal.settings.basePath + 'admin/structure/menu/parents';
   $.ajax({
-    url: location.protocol + '//' + location.host + url,
+    url: location.protocol + '//' + location.host + Drupal.url('admin/structure/menu/parents'),
     type: 'POST',
     data: {'menus[]' : values},
     dataType: 'json',

@@ -119,16 +119,15 @@ while ($param = array_shift($_SERVER['argv'])) {
           $cmd = substr($path['path'], 1);
         }
         elseif (isset($path['path'])) {
-          if (!isset($_GET['q'])) {
-            $_REQUEST['q'] = $_GET['q'] = $path['path'];
-          }
+          $_SERVER['SCRIPT_NAME'] = '/' . $cmd;
+          $_SERVER['REQUEST_URI'] = $path['path'];
         }
 
         // display setup in verbose mode
         if ($_verbose_mode) {
           echo "Hostname set to: {$_SERVER['HTTP_HOST']}\n";
           echo "Script name set to: {$cmd}\n";
-          echo "Path set to: {$_GET['q']}\n";
+          echo "Path set to: {$path['path']}\n";
         }
       }
       break;

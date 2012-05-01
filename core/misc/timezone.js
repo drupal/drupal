@@ -50,8 +50,8 @@ Drupal.behaviors.setTimezone = {
       var element = this;
       $.ajax({
         async: false,
-        url: settings.basePath,
-        data: { q: path, date: dateString },
+        url: Drupal.url(path),
+        data: { date: dateString },
         dataType: 'json',
         success: function (data) {
           if (data) {

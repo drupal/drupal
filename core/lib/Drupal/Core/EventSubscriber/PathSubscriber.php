@@ -44,14 +44,9 @@ class PathSubscriber implements EventSubscriberInterface {
 
     $request->attributes->set('system_path', $system_path);
 
-    // @todo Remove this line.
-    // Drupal uses $_GET['q'] directly in over 100 places at present,
-    // including writing back to it at times. Those are all critical bugs,
-    // even by Drupal 7 standards, but as many of the places that it does so
-    // are slated to be rewritten anyway we will save time and include this
-    // temporary hack. Removal of this line is a critical, Drupal-release
-    // blocking bug.
-    $_GET['q'] = $system_path;
+    // @todo Remove this line once code has been refactored to use the request
+    // object directly.
+    _current_path($system_path);
   }
 
   /**

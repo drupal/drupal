@@ -537,7 +537,7 @@ function menu_test_static_variable($value = NULL) {
  * Implements hook_menu_site_status_alter().
  */
 function menu_test_menu_site_status_alter(&$menu_site_status, $path) {
-  // Allow access to ?q=menu_login_callback even if in maintenance mode.
+  // Allow access to menu_login_callback even if in maintenance mode.
   if ($menu_site_status == MENU_SITE_OFFLINE && $path == 'menu_login_callback') {
     $menu_site_status = MENU_SITE_ONLINE;
   }

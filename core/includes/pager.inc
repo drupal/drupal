@@ -297,7 +297,7 @@ function pager_default_initialize($total, $limit, $element = 0) {
 function pager_get_query_parameters() {
   $query = &drupal_static(__FUNCTION__);
   if (!isset($query)) {
-    $query = drupal_get_query_parameters($_GET, array('q', 'page'));
+    $query = drupal_get_query_parameters($_GET, array('page'));
   }
   return $query;
 }
@@ -638,7 +638,7 @@ function theme_pager_link($variables) {
   //   none of the pager links is active at any time - but it should still be
   //   possible to use l() here.
   // @see http://drupal.org/node/1410574
-  $attributes['href'] = url($_GET['q'], array('query' => $query));
+  $attributes['href'] = url(current_path(), array('query' => $query));
   return '<a' . drupal_attributes($attributes) . '>' . check_plain($text) . '</a>';
 }
 

@@ -107,7 +107,7 @@ function update_help($path, $arg) {
  */
 function update_init() {
   if (arg(0) == 'admin' && user_access('administer site configuration')) {
-    switch ($_GET['q']) {
+    switch (current_path()) {
       // These pages don't need additional nagging.
       case 'admin/appearance/update':
       case 'admin/appearance/install':

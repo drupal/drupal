@@ -552,12 +552,8 @@ function drupal_environment_initialize() {
     $_SERVER['HTTP_HOST'] = '';
   }
 
-  // When clean URLs are enabled, emulate ?q=foo/bar using REQUEST_URI. It is
-  // not possible to append the query string using mod_rewrite without the B
-  // flag (this was added in Apache 2.2.8), because mod_rewrite unescapes the
-  // path before passing it on to PHP. This is a problem when the path contains
-  // e.g. "&" or "%" that have special meanings in URLs and must be encoded.
-  $_GET['q'] = request_path();
+  // @todo Refactor with the Symfony Request object.
+  _current_path(request_path());
 
   // Enforce E_STRICT, but allow users to set levels not part of E_STRICT.
   error_reporting(E_STRICT | E_ALL | error_reporting());
@@ -598,7 +594,7 @@ function drupal_valid_http_host($host) {
  * Sets the base URL, cookie domain, and session name from configuration.
  */
 function drupal_settings_initialize() {
-  global $base_url, $base_path, $base_root;
+  global $base_url, $base_path, $base_root, $script_path;
 
   // Export the following settings.php variables to the global namespace
   global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directory_name, $config_signature_key;
@@ -627,8 +623,8 @@ function drupal_settings_initialize() {
 
     $base_url = $base_root;
 
-    // $_SERVER['SCRIPT_NAME'] can, in contrast to $_SERVER['PHP_SELF'], not
-    // be modified by a visitor.
+    // For a request URI of '/index.php/foo', $_SERVER['SCRIPT_NAME'] is
+    // '/index.php', whereas $_SERVER['PHP_SELF'] is '/index.php/foo'.
     if ($dir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/')) {
       // Remove "core" directory if present, allowing install.php, update.php,
       // and others to auto-detect a base path.
@@ -648,6 +644,32 @@ function drupal_settings_initialize() {
   }
   $base_secure_url = str_replace('http://', 'https://', $base_url);
   $base_insecure_url = str_replace('https://', 'http://', $base_url);
+
+  // Determine the path of the script relative to the base path, and add a
+  // trailing slash. This is needed for creating URLs to Drupal pages.
+  if (!isset($script_path)) {
+    $script_path = '';
+    // We don't expect scripts outside of the base path, but sanity check
+    // anyway.
+    if (strpos($_SERVER['SCRIPT_NAME'], $base_path) === 0) {
+      $script_path = substr($_SERVER['SCRIPT_NAME'], strlen($base_path)) . '/';
+      // If the request URI does not contain the script name, then clean URLs
+      // are in effect and the script path can be similarly dropped from URL
+      // generation. For servers that don't provide $_SERVER['REQUEST_URI'], we
+      // do not know the actual URI requested by the client, and request_uri()
+      // returns a URI with the script name, resulting in non-clean URLs unless
+      // there's other code that intervenes.
+      if (strpos(request_uri(TRUE) . '/', $base_path . $script_path) !== 0) {
+        $script_path = '';
+      }
+      // @todo Temporary BC for install.php, update.php, and other scripts.
+      //   - http://drupal.org/node/1547184
+      //   - http://drupal.org/node/1546082
+      if ($script_path !== 'index.php/') {
+        $script_path = '';
+      }
+    }
+  }
 
   if ($cookie_domain) {
     // If the user specifies the cookie domain, also use it for session name.
@@ -1489,13 +1511,15 @@ function drupal_validate_utf8($text) {
  *
  * Because $_SERVER['REQUEST_URI'] is only available on Apache, we generate an
  * equivalent using other environment variables.
+ *
+ * @todo The above comment is incorrect: http://drupal.org/node/1547294.
  */
-function request_uri() {
+function request_uri($omit_query_string = FALSE) {
   if (isset($_SERVER['REQUEST_URI'])) {
     $uri = $_SERVER['REQUEST_URI'];
   }
   else {
-    if (isset($_SERVER['argv'])) {
+    if (isset($_SERVER['argv'][0])) {
       $uri = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['argv'][0];
     }
     elseif (isset($_SERVER['QUERY_STRING'])) {
@@ -1508,7 +1532,7 @@ function request_uri() {
   // Prevent multiple slashes to avoid cross site requests via the Form API.
   $uri = '/' . ltrim($uri, '/');
 
-  return $uri;
+  return $omit_query_string ? strtok($uri, '?') : $uri;
 }
 
 /**
@@ -2203,7 +2227,7 @@ function _drupal_bootstrap_page_cache() {
     if (is_object($cache)) {
       header('X-Drupal-Cache: HIT');
       // Restore the metadata cached with the page.
-      $_GET['q'] = $cache->data['path'];
+      _current_path($cache->data['path']);
       drupal_set_title($cache->data['title'], PASS_THROUGH);
       date_default_timezone_set(drupal_get_user_timezone());
       // If the skipping of the bootstrap hooks is not enforced, call
@@ -2440,9 +2464,9 @@ function drupal_maintenance_theme() {
  */
 function drupal_fast_404() {
   $exclude_paths = variable_get('404_fast_paths_exclude', FALSE);
-  if ($exclude_paths && !preg_match($exclude_paths, $_GET['q'])) {
+  if ($exclude_paths && !preg_match($exclude_paths, request_path())) {
     $fast_paths = variable_get('404_fast_paths', FALSE);
-    if ($fast_paths && preg_match($fast_paths, $_GET['q'])) {
+    if ($fast_paths && preg_match($fast_paths, request_path())) {
       drupal_add_http_header('Status', '404 Not Found');
       $fast_404_html = variable_get('404_fast_html', '<html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>');
       // Replace @path in the variable with the page path.
@@ -2677,39 +2701,42 @@ function request_path() {
     return $path;
   }
 
-  if (isset($_GET['q'])) {
-    // This is a request with a ?q=foo/bar query string. $_GET['q'] is
-    // overwritten in drupal_path_initialize(), but request_path() is called
-    // very early in the bootstrap process, so the original value is saved in
-    // $path and returned in later calls.
-    $path = $_GET['q'];
-  }
-  elseif (isset($_SERVER['REQUEST_URI'])) {
-    // This request is either a clean URL, or 'index.php', or nonsense.
-    // Extract the path from REQUEST_URI.
-    $request_path = strtok($_SERVER['REQUEST_URI'], '?');
-    $base_path_len = strlen(rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/'));
-    // Unescape and strip $base_path prefix, leaving q without a leading slash.
-    $path = substr(urldecode($request_path), $base_path_len + 1);
-    // If the path equals the script filename, either because 'index.php' was
-    // explicitly provided in the URL, or because the server added it to
-    // $_SERVER['REQUEST_URI'] even when it wasn't provided in the URL (some
-    // versions of Microsoft IIS do this), the front page should be served.
-    if ($path == basename($_SERVER['PHP_SELF'])) {
-      $path = '';
-    }
-  }
-  else {
-    // This is the front page.
+  // Get the part of the URI between the base path of the Drupal installation
+  // and the query string, and unescape it.
+  $request_path = request_uri(TRUE);
+  $base_path_len = strlen(rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/'));
+  $path = substr(urldecode($request_path), $base_path_len + 1);
+
+  // Depending on server configuration, the URI might or might not include the
+  // script name. For example, the front page might be accessed as
+  // http://example.com or as http://example.com/index.php, and the "user"
+  // page might be accessed as http://example.com/user or as
+  // http://example.com/index.php/user. Strip the script name from $path.
+  $script = basename($_SERVER['SCRIPT_NAME']);
+  if ($path == $script) {
     $path = '';
   }
+  elseif (strpos($path, $script . '/') === 0) {
+    $path = substr($path, strlen($script) + 1);
+  }
 
-  // Under certain conditions Apache's RewriteRule directive prepends the value
-  // assigned to $_GET['q'] with a slash. Moreover we can always have a trailing
-  // slash in place, hence we need to normalize $_GET['q'].
+  // Extra slashes can appear in URLs or under some conditions, added by Apache,
+  // so normalize.
   $path = trim($path, '/');
 
   return $path;
+}
+
+/**
+ * @todo This is a temporary function pending refactoring Drupal to use
+ *   Symfony's Request object exclusively.
+ */
+function _current_path($path = NULL) {
+  static $current_path = '';
+  if (isset($path)) {
+    $current_path = $path;
+  }
+  return $current_path;
 }
 
 /**
@@ -2748,7 +2775,9 @@ function arg($index = NULL, $path = NULL) {
   $arguments = &$drupal_static_fast['arguments'];
 
   if (!isset($path)) {
-    $path = $_GET['q'];
+    // @todo The public function current_path() is not available during early
+    //   bootstrap.
+    $path = _current_path();
   }
   if (!isset($arguments[$path])) {
     $arguments[$path] = explode('/', $path);

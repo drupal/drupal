@@ -121,8 +121,7 @@ function drupal_detect_baseurl($file = 'core/install.php') {
   $proto = $_SERVER['HTTPS'] ? 'https://' : 'http://';
   $host = $_SERVER['SERVER_NAME'];
   $port = ($_SERVER['SERVER_PORT'] == 80 ? '' : ':' . $_SERVER['SERVER_PORT']);
-  $uri = preg_replace("/\?.*/", '', $_SERVER['REQUEST_URI']);
-  $dir = str_replace("/$file", '', $uri);
+  $dir = str_replace("/$file", '', $_SERVER['SCRIPT_NAME']);
 
   return "$proto$host$port$dir";
 }

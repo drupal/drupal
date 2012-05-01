@@ -184,10 +184,12 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
    * Test image_style_url().
    */
   function _testImageStyleUrlAndPath($scheme, $clean_url = TRUE) {
+    $script_path_original = $GLOBALS['script_path'];
+    $GLOBALS['script_path'] = $clean_url ? '' : 'index.php/';
+
     // Make the default scheme neither "public" nor "private" to verify the
     // functions work for other than the default scheme.
     variable_set('file_default_scheme', 'temporary');
-    variable_set('clean_url', $clean_url);
 
     // Create the directories for the styles.
     $directory = $scheme . '://styles/' . $this->style_name;
@@ -209,8 +211,8 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $generate_url = image_style_url($this->style_name, $original_uri);
 
-    if (!$clean_url) {
-      $this->assertTrue(strpos($generate_url, 'index.php') !== FALSE, 'When using non-clean URLS, the system path contains the query string.');
+    if ($GLOBALS['script_path']) {
+      $this->assertTrue(strpos($generate_url, $GLOBALS['script_path']) !== FALSE, 'When using non-clean URLS, the system path contains the script name.');
     }
 
     // Fetch the URL that generates the file.
@@ -224,6 +226,8 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
     if ($scheme == 'private') {
       $this->assertEqual($this->drupalGetHeader('X-Image-Owned-By'), 'image_module_test', t('Expected custom header has been added.'));
     }
+
+    $GLOBALS['script_path'] = $script_path_original;
   }
 }
 

@@ -489,7 +489,7 @@ function _shortcut_link_form_elements($shortcut_link = NULL) {
     '#title' => t('Path'),
     '#size' => 40,
     '#maxlength' => 255,
-    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)),
     '#default_value' => $shortcut_link['link_path'],
   );
 

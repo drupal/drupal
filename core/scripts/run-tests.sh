@@ -155,7 +155,7 @@ All arguments are long options.
 
               One or more tests to be run. By default, these are interpreted
               as the names of test groups as shown at
-              ?q=admin/config/development/testing.
+              admin/config/development/testing.
               These group names typically correspond to module names like "User"
               or "Profile" or "System", but there is also a group "XML-RPC".
               If --class is specified then these are interpreted as the names of
@@ -254,14 +254,14 @@ function simpletest_script_init($server_software) {
   if (!empty($args['php'])) {
     $php = $args['php'];
   }
-  elseif (!empty($_ENV['_'])) {
+  elseif ($php_env = getenv('_')) {
     // '_' is an environment variable set by the shell. It contains the command that was executed.
-    $php = $_ENV['_'];
+    $php = $php_env;
   }
-  elseif (!empty($_ENV['SUDO_COMMAND'])) {
+  elseif ($sudo = getenv('SUDO_COMMAND')) {
     // 'SUDO_COMMAND' is an environment variable set by the sudo program.
     // Extract only the PHP interpreter, not the rest of the command.
-    list($php, ) = explode(' ', $_ENV['SUDO_COMMAND'], 2);
+    list($php, ) = explode(' ', $sudo, 2);
   }
   else {
     simpletest_script_print_error('Unable to automatically determine the path to the PHP interpreter. Supply the --php command line argument.');

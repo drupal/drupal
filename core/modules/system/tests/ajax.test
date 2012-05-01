@@ -80,7 +80,7 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
     // drupal_add_js().
     $expected = array(
       'command' => 'settings',
-      'settings' => array('basePath' => base_path(), 'ajax' => 'test'),
+      'settings' => array('ajax' => 'test'),
     );
     $this->assertCommand($commands, $expected, t('ajax_render() loads settings added with drupal_add_js().'));
 

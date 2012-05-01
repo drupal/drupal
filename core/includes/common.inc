@@ -399,14 +399,14 @@ function drupal_get_feeds($delimiter = "\n") {
  *   (optional) An array to be processed. Defaults to $_GET.
  * @param $exclude
  *   (optional) A list of $query array keys to remove. Use "parent[child]" to
- *   exclude nested items. Defaults to array('q').
+ *   exclude nested items.
  * @param $parent
  *   Internal use only. Used to build the $query array key for nested items.
  *
  * @return
  *   An array containing query parameters, which can be used for url().
  */
-function drupal_get_query_parameters(array $query = NULL, array $exclude = array('q'), $parent = '') {
+function drupal_get_query_parameters(array $query = NULL, array $exclude = array(), $parent = '') {
   // Set defaults, if none given.
   if (!isset($query)) {
     $query = $_GET;
@@ -519,7 +519,7 @@ function drupal_get_destination() {
     $destination = array('destination' => $_GET['destination']);
   }
   else {
-    $path = $_GET['q'];
+    $path = current_path();
     $query = drupal_http_build_query(drupal_get_query_parameters());
     if ($query != '') {
       $path .= '?' . $query;
@@ -599,13 +599,6 @@ function drupal_parse_url($url) {
     if (isset($parts['fragment'])) {
       $options['fragment'] = $parts['fragment'];
     }
-  }
-  // The 'q' parameter contains the path of the current page if clean URLs are
-  // disabled. It overrides the 'path' of the URL when present, even if clean
-  // URLs are enabled, due to how Apache rewriting rules work.
-  if (isset($options['query']['q'])) {
-    $options['path'] = $options['query']['q'];
-    unset($options['query']['q']);
   }
 
   return $options;
@@ -2148,14 +2141,9 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  *     dependent URL requires so.
  *   - 'prefix': Only used internally, to modify the path when a language
  *     dependent URL requires so.
- *   - 'script': The script filename in Drupal's root directory to use when
- *     clean URLs are disabled, such as 'index.php'. Defaults to an empty
- *     string, as most modern web servers automatically find 'index.php'. If
- *     clean URLs are disabled, the value of $path is appended as query
- *     parameter 'q' to $options['script'] in the returned URL. When deploying
- *     Drupal on a web server that cannot be configured to automatically find
- *     index.php, then hook_url_outbound_alter() can be implemented to force
- *     this value to 'index.php'.
+ *   - 'script': Added to the URL between the base path and the path prefix.
+ *     Defaults to empty string when clean URLs are in effect, and to
+ *     'index.php/' when they are not.
  *   - 'entity_type': The entity type of the object that called url(). Only
  *     set if url() is invoked by entity_uri().
  *   - 'entity': The entity object (such as a node) for which the URL is being
@@ -2171,7 +2159,8 @@ function url($path = NULL, array $options = array()) {
     'query' => array(),
     'absolute' => FALSE,
     'alias' => FALSE,
-    'prefix' => ''
+    'prefix' => '',
+    'script' => $GLOBALS['script_path'],
   );
 
   if (!isset($options['external'])) {
@@ -2253,21 +2242,9 @@ function url($path = NULL, array $options = array()) {
   $base = $options['absolute'] ? $options['base_url'] . '/' : base_path();
   $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
 
-  // If Clean URLs are not enabled, we need to prefix the script name onto
-  // the link.
-  // @todo: Make this dynamic based on the request object without using a global
-  // request object.
-  if (empty($GLOBALS['conf']['clean_url'])) {
-    $base .= 'index.php/';
-  }
-
   $path = drupal_encode_path($prefix . $path);
-  if ($options['query']) {
-    return $base . $path . '?' . drupal_http_build_query($options['query']) . $options['fragment'];
-  }
-  else {
-    return $base . $path . $options['fragment'];
-  }
+  $query = $options['query'] ? ('?' . drupal_http_build_query($options['query'])) : '';
+  return $base . $options['script'] . $path . $query . $options['fragment'];
 }
 
 /**
@@ -2403,7 +2380,7 @@ function l($text, $path, array $options = array()) {
   );
 
   // Append active class.
-  if (($path == $_GET['q'] || ($path == '<front>' && drupal_is_front_page())) &&
+  if (($path == current_path() || ($path == '<front>' && drupal_is_front_page())) &&
       (empty($options['language']) || $options['language']->langcode == drupal_container()->get(LANGUAGE_TYPE_URL)->langcode)) {
     $options['attributes']['class'][] = 'active';
   }
@@ -2529,7 +2506,7 @@ function drupal_deliver_page($page_callback_result, $default_delivery_callback =
     // If a delivery callback is specified, but doesn't exist as a function,
     // something is wrong, but don't print anything, since it's not known
     // what format the response needs to be in.
-    watchdog('delivery callback not found', 'callback %callback not found: %q.', array('%callback' => $delivery_callback, '%q' => $_GET['q']), WATCHDOG_ERROR);
+    watchdog('delivery callback not found', 'callback %callback not found: %path.', array('%callback' => $delivery_callback, '%path' => current_path()), WATCHDOG_ERROR);
   }
 }
 
@@ -2570,18 +2547,18 @@ function drupal_deliver_html_page($page_callback_result) {
         // Print a 404 page.
         drupal_add_http_header('Status', '404 Not Found');
 
-        watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+        watchdog('page not found', check_plain(current_path()), NULL, WATCHDOG_WARNING);
 
         // Check for and return a fast 404 page if configured.
         drupal_fast_404();
 
         // Keep old path for reference, and to allow forms to redirect to it.
         if (!isset($_GET['destination'])) {
-          $_GET['destination'] = $_GET['q'];
+          $_GET['destination'] = current_path();
         }
 
         $path = drupal_get_normal_path(variable_get('site_404', ''));
-        if ($path && $path != $_GET['q']) {
+        if ($path && $path != current_path()) {
           // Custom 404 handler. Set the active item in case there are tabs to
           // display, or other dependencies on the path.
           menu_set_active_item($path);
@@ -2602,15 +2579,15 @@ function drupal_deliver_html_page($page_callback_result) {
       case MENU_ACCESS_DENIED:
         // Print a 403 page.
         drupal_add_http_header('Status', '403 Forbidden');
-        watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+        watchdog('access denied', check_plain(current_path()), NULL, WATCHDOG_WARNING);
 
         // Keep old path for reference, and to allow forms to redirect to it.
         if (!isset($_GET['destination'])) {
-          $_GET['destination'] = $_GET['q'];
+          $_GET['destination'] = current_path();
         }
 
         $path = drupal_get_normal_path(variable_get('site_403', ''));
-        if ($path && $path != $_GET['q']) {
+        if ($path && $path != current_path()) {
           // Custom 403 handler. Set the active item in case there are tabs to
           // display or other dependencies on the path.
           menu_set_active_item($path);
@@ -3569,11 +3546,15 @@ function drupal_build_css_cache($css) {
     if (!file_exists($uri) && !file_unmanaged_save_data($data, $uri, FILE_EXISTS_REPLACE)) {
       return FALSE;
     }
-    // If CSS gzip compression is enabled, clean URLs are enabled (which means
-    // that rewrite rules are working) and the zlib extension is available then
-    // create a gzipped version of this file. This file is served conditionally
-    // to browsers that accept gzip using .htaccess rules.
-    if (variable_get('css_gzip_compression', TRUE) && variable_get('clean_url', 0) && extension_loaded('zlib')) {
+    // If CSS gzip compression is enabled and the zlib extension is available
+    // then create a gzipped version of this file. This file is served
+    // conditionally to browsers that accept gzip using .htaccess rules.
+    // It's possible that the rewrite rules in .htaccess aren't working on this
+    // server, but there's no harm (other than the time spent generating the
+    // file) in generating the file anyway. Sites on servers where rewrite rules
+    // aren't working can set css_gzip_compression to FALSE in order to skip
+    // generating a file that won't be used.
+    if (variable_get('css_gzip_compression', TRUE) && extension_loaded('zlib')) {
       if (!file_exists($uri . '.gz') && !file_unmanaged_save_data(gzencode($data, 9, FORCE_GZIP), $uri . '.gz', FILE_EXISTS_REPLACE)) {
         return FALSE;
       }
@@ -4104,15 +4085,19 @@ function drupal_add_js($data = NULL, $options = NULL) {
     // Add jquery.js and drupal.js, as well as the basePath setting, the
     // first time a JavaScript file is added.
     if (empty($javascript)) {
-      // url() generates the prefix using hook_url_outbound_alter(). Instead of
-      // running the hook_url_outbound_alter() again here, extract the prefix
-      // from url().
-      url('', array('prefix' => &$prefix));
+      // url() generates the script and prefix using hook_url_outbound_alter().
+      // Instead of running the hook_url_outbound_alter() again here, extract
+      // them from url().
+      // @todo Make this less hacky: http://drupal.org/node/1547376.
+      $scriptPath = $GLOBALS['script_path'];
+      $pathPrefix = '';
+      url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
       $javascript = array(
         'settings' => array(
           'data' => array(
             array('basePath' => base_path()),
-            array('pathPrefix' => empty($prefix) ? '' : $prefix),
+            array('scriptPath' => $scriptPath),
+            array('pathPrefix' => $pathPrefix),
           ),
           'type' => 'setting',
           'scope' => 'header',
@@ -5055,11 +5040,15 @@ function drupal_build_js_cache($files) {
     if (!file_exists($uri) && !file_unmanaged_save_data($contents, $uri, FILE_EXISTS_REPLACE)) {
       return FALSE;
     }
-    // If JS gzip compression is enabled, clean URLs are enabled (which means
-    // that rewrite rules are working) and the zlib extension is available then
-    // create a gzipped version of this file. This file is served conditionally
-    // to browsers that accept gzip using .htaccess rules.
-    if (variable_get('js_gzip_compression', TRUE) && variable_get('clean_url', 0) && extension_loaded('zlib')) {
+    // If JS gzip compression is enabled and the zlib extension is available
+    // then create a gzipped version of this file. This file is served
+    // conditionally to browsers that accept gzip using .htaccess rules.
+    // It's possible that the rewrite rules in .htaccess aren't working on this
+    // server, but there's no harm (other than the time spent generating the
+    // file) in generating the file anyway. Sites on servers where rewrite rules
+    // aren't working can set js_gzip_compression to FALSE in order to skip
+    // generating a file that won't be used.
+    if (variable_get('js_gzip_compression', TRUE) && extension_loaded('zlib')) {
       if (!file_exists($uri . '.gz') && !file_unmanaged_save_data(gzencode($contents, 9, FORCE_GZIP), $uri . '.gz', FILE_EXISTS_REPLACE)) {
         return FALSE;
       }
@@ -5216,7 +5205,7 @@ function _drupal_bootstrap_full() {
     ini_set('error_log', 'public://error.log');
   }
 
-  // Initialize $_GET['q'] prior to invoking hook_init().
+  // Initialize current_path() prior to invoking hook_init().
   drupal_path_initialize();
 
   // Let all modules take action before the menu system handles the request.
@@ -5255,8 +5244,8 @@ function drupal_page_set_cache($response_body) {
     $cache = (object) array(
       'cid' => $base_root . request_uri(),
       'data' => array(
-        'path' => $_GET['q'],
-        'body' => $response_body,
+        'path' => current_path(),
+        'body' => ob_get_clean(),
         'title' => drupal_get_title(),
         'headers' => array(),
       ),

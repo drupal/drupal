@@ -239,7 +239,7 @@ function search_menu() {
 }
 
 /**
- * Determines access for the ?q=search path.
+ * Determines access for the 'search' path.
  */
 function search_is_active() {
   // This path cannot be accessed if there are no active modules.

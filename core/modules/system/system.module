@@ -90,7 +90,7 @@ function system_help($path, $arg) {
       $output .= '<dt>' . t('Performing system maintenance') . '</dt>';
       $output .= '<dd>' . t('In order for the site and its modules to continue to operate well, a set of routine administrative operations must run on a regular basis. The System module manages this task by making use of a system cron job. You can verify the status of cron tasks by visiting the <a href="@status">Status report page</a>. For more information, see the online handbook entry for <a href="@handbook">configuring cron jobs</a>. You can set up cron job by visiting <a href="@cron">Cron configuration</a> page', array('@status' => url('admin/reports/status'), '@handbook' => 'http://drupal.org/cron', '@cron' => url('admin/config/system/cron'))) . '</dd>';
       $output .= '<dt>' . t('Configuring basic site settings') . '</dt>';
-      $output .= '<dd>' . t('The System module also handles basic configuration options for your site, including <a href="@date-time-settings">Date and time settings</a>, <a href="@file-system">File system settings</a>, <a href="@clean-url">Clean URL support</a>, <a href="@site-info">Site name and other information</a>, and a <a href="@maintenance-mode">Maintenance mode</a> for taking your site temporarily offline.', array('@date-time-settings' => url('admin/config/regional/date-time'), '@file-system' => url('admin/config/media/file-system'), '@clean-url' => url('admin/config/search/clean-urls'), '@site-info' => url('admin/config/system/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</dd>';
+      $output .= '<dd>' . t('The System module also handles basic configuration options for your site, including <a href="@date-time-settings">Date and time settings</a>, <a href="@file-system">File system settings</a>, <a href="@site-info">Site name and other information</a>, and a <a href="@maintenance-mode">Maintenance mode</a> for taking your site temporarily offline.', array('@date-time-settings' => url('admin/config/regional/date-time'), '@file-system' => url('admin/config/media/file-system'), '@site-info' => url('admin/config/system/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</dd>';
       $output .= '<dt>' . t('Configuring actions') . '</dt>';
       $output .= '<dd>' . t('Actions are individual tasks that the system can do, such as unpublishing a piece of content or banning a user. Other modules can fire these actions when certain system events happen; for example, when a new post is added or when a user logs in. Modules may also provide additional actions. Visit the <a href="@actions">Actions page</a> to configure actions.', array('@actions' => url('admin/config/system/actions'))) . '</dd>';
       $output .= '</dl>';
@@ -977,23 +977,6 @@ function system_menu() {
     'weight' => -10,
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/config/search/clean-urls'] = array(
-    'title' => 'Clean URLs',
-    'description' => 'Enable or disable clean URLs for your site.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_clean_url_settings'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
-    'weight' => 5,
-  );
-  $items['admin/config/search/clean-urls/check'] = array(
-    'title' => 'Clean URL check',
-    'page callback' => 'drupal_json_output',
-    'page arguments' => array(array('status' => TRUE)),
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
 
@@ -1888,8 +1871,7 @@ function system_authorized_get_url(array $options = array()) {
   global $base_url;
   // Force https if available, regardless of what the caller specifies.
   $options['https'] = TRUE;
-  // We prefix with $base_url so we get a full path even if clean URLs are
-  // disabled.
+  // Prefix with $base_url so url() treats it as an external link.
   return url($base_url . '/core/authorize.php', $options);
 }
 

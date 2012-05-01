@@ -234,7 +234,7 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
     // This should return a vocabulary object since it now matches a real vid.
     $vocabulary = taxonomy_vocabulary_load($vid);
     $this->assertTrue(!empty($vocabulary) && is_object($vocabulary), 'Vocabulary is an object.');
-    $this->assertTrue($vocabulary->vid == $vid, 'Valid vocabulary vid is the same as our previously invalid one.');
+    $this->assertEqual($vocabulary->vid, $vid, 'Valid vocabulary vid is the same as our previously invalid one.');
   }
 
   /**
@@ -338,10 +338,10 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
 
     // Fetch vocabulary 1 by name.
     $vocabulary = current(taxonomy_vocabulary_load_multiple(array(), array('name' => $vocabulary1->name)));
-    $this->assertTrue($vocabulary->vid == $vocabulary1->vid, 'Vocabulary loaded successfully by name.');
+    $this->assertEqual($vocabulary->vid, $vocabulary1->vid, 'Vocabulary loaded successfully by name.');
 
     // Fetch vocabulary 1 by name and ID.
-    $this->assertTrue(current(taxonomy_vocabulary_load_multiple(array($vocabulary1->vid), array('name' => $vocabulary1->name)))->vid == $vocabulary1->vid, 'Vocabulary loaded successfully by name and ID.');
+    $this->assertEqual(current(taxonomy_vocabulary_load_multiple(array($vocabulary1->vid), array('name' => $vocabulary1->name)))->vid, $vocabulary1->vid, 'Vocabulary loaded successfully by name and ID.');
   }
 
   /**
@@ -1356,11 +1356,11 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
     // Load the terms from the vocabulary.
     $terms = taxonomy_term_load_multiple(FALSE, array('vid' => $vocabulary->vid));
     $count = count($terms);
-    $this->assertTrue($count == 5, format_string('Correct number of terms were loaded. !count terms.', array('!count' => $count)));
+    $this->assertEqual($count, 5, format_string('Correct number of terms were loaded. !count terms.', array('!count' => $count)));
 
     // Load the same terms again by tid.
     $terms2 = taxonomy_term_load_multiple(array_keys($terms));
-    $this->assertTrue($count == count($terms2), 'Five terms were loaded by tid.');
+    $this->assertEqual($count, count($terms2), 'Five terms were loaded by tid.');
     $this->assertEqual($terms, $terms2, 'Both arrays contain the same terms.');
 
     // Load the terms by tid, with a condition on vid.
@@ -1375,7 +1375,7 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
 
     // Load terms from the vocabulary by vid.
     $terms4 = taxonomy_term_load_multiple(FALSE, array('vid' => $vocabulary->vid));
-    $this->assertTrue(count($terms4 == 4), 'Correct number of terms were loaded.');
+    $this->assertEqual(count($terms4), 4, 'Correct number of terms were loaded.');
     $this->assertFalse(isset($terms4[$deleted->tid]));
 
     // Create a single term and load it by name.
@@ -1702,7 +1702,7 @@ class TaxonomyTermFieldMultipleVocabularyTestCase extends TaxonomyWebTestCase {
 
     // Verify that field and instance settings are correct.
     $field_info = field_info_field($this->field_name);
-    $this->assertTrue(sizeof($field_info['settings']['allowed_values']) == 1, 'Only one vocabulary is allowed for the field.');
+    $this->assertEqual(sizeof($field_info['settings']['allowed_values']), 1, 'Only one vocabulary is allowed for the field.');
 
     // The widget should still be displayed.
     $this->drupalGet('test-entity/add/test-bundle');

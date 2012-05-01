@@ -46,10 +46,3 @@
 ol.task-list li.active {
   font-weight: bold;
 }
-
-/**
- * Installation clean URLs
- */
-#clean-url.install {
-  display: none;
-}

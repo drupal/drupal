@@ -497,7 +497,7 @@ function hook_page_build(&$page) {
  */
 function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
   // When retrieving the router item for the current path...
-  if ($path == $_GET['q']) {
+  if ($path == current_path()) {
     // ...call a function that prepares something for this request.
     mymodule_prepare_something();
   }

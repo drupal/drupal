@@ -10,15 +10,24 @@
  */
 
 /**
- * Initialize the $_GET['q'] variable to the proper normal path.
+ * Initializes the current path to the proper normal path.
  */
 function drupal_path_initialize() {
-  // Ensure $_GET['q'] is set before calling drupal_normal_path(), to support
-  // path caching with hook_url_inbound_alter().
-  if (empty($_GET['q'])) {
-    $_GET['q'] = variable_get('site_frontpage', 'user');
+  // At this point, the current path is either the request path (due to
+  // drupal_environment_initialize()) or some modified version of it due to
+  // other bootstrap code (e.g., language negotiation), but it has not yet been
+  // normalized by drupal_get_normal_path().
+  $path = _current_path();
+
+  // If on the front page, resolve to the front page path, including for calls
+  // to current_path() while drupal_get_normal_path() is in progress.
+  if (empty($path)) {
+    $path = variable_get('site_frontpage', 'user');
+    _current_path($path);
   }
-  $_GET['q'] = drupal_get_normal_path($_GET['q']);
+
+  // Normalize the path.
+  _current_path(drupal_get_normal_path($path));
 }
 
 /**
@@ -234,7 +243,7 @@ function drupal_cache_system_paths() {
 function drupal_get_path_alias($path = NULL, $langcode = NULL) {
   // If no path is specified, use the current page's path.
   if ($path == NULL) {
-    $path = $_GET['q'];
+    $path = current_path();
   }
   $result = $path;
   if ($alias = drupal_lookup_path('alias', $path, $langcode)) {
@@ -289,9 +298,7 @@ function drupal_is_front_page() {
   $is_front_page = &$drupal_static_fast['is_front_page'];
 
   if (!isset($is_front_page)) {
-    // As drupal_path_initialize updates $_GET['q'] with the 'site_frontpage' path,
-    // we can check it against the 'site_frontpage' variable.
-    $is_front_page = ($_GET['q'] == variable_get('site_frontpage', 'user'));
+    $is_front_page = (current_path() == variable_get('site_frontpage', 'user'));
   }
 
   return $is_front_page;
@@ -340,9 +347,9 @@ function drupal_match_path($path, $patterns) {
  * - http://example.com/path/alias (which is a path alias for node/306) returns
  *   "node/306" as opposed to the path alias.
  *
- * This function is not available in hook_boot() so use $_GET['q'] instead.
+ * This function is not available in hook_boot() so use request_path() instead.
  * However, be careful when doing that because in the case of Example #3
- * $_GET['q'] will contain "path/alias". If "node/306" is needed, calling
+ * request_path() will contain "path/alias". If "node/306" is needed, calling
  * drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL) makes this function available.
  *
  * @return
@@ -351,7 +358,7 @@ function drupal_match_path($path, $patterns) {
  * @see request_path()
  */
 function current_path() {
-  return $_GET['q'];
+  return _current_path();
 }
 
 /**

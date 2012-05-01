@@ -197,7 +197,7 @@ function locale_init() {
   // in $conf. This should happen on all pages except the date and time formats
   // settings page, where we want to display the site default and not the
   // localized version.
-  if (strpos($_GET['q'], 'admin/config/regional/date-time/formats') !== 0) {
+  if (strpos(current_path(), 'admin/config/regional/date-time/formats') !== 0) {
     $languages = array($language_interface->langcode);
 
     // Setup appropriate date formats for this locale.
