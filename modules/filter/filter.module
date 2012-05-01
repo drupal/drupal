@@ -215,9 +215,11 @@ function filter_format_save($format) {
   }
   $filter_info = filter_get_filters();
   foreach ($filter_info as $name => $filter) {
-    // Add new filters without weight to the bottom.
+    // If the format does not specify an explicit weight for a filter, assign
+    // a default weight, either defined in hook_filter_info(), or the default of
+    // 0 by filter_get_filters()
     if (!isset($format->filters[$name]['weight'])) {
-      $format->filters[$name]['weight'] = 10;
+      $format->filters[$name]['weight'] = $filter['weight'];
     }
     $format->filters[$name]['status'] = isset($format->filters[$name]['status']) ? $format->filters[$name]['status'] : 0;
     $format->filters[$name]['module'] = $filter['module'];
