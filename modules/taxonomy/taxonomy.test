@@ -560,6 +560,10 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $term1 = $this->createTerm($this->vocabulary);
     $term2 = $this->createTerm($this->vocabulary);
 
+    // Check that hierarchy is flat.
+    $vocabulary = taxonomy_vocabulary_load($this->vocabulary->vid);
+    $this->assertEqual(0, $vocabulary->hierarchy, 'Vocabulary is flat.');
+
     // Edit $term2, setting $term1 as parent.
     $edit = array();
     $edit['parent[]'] = array($term1->tid);

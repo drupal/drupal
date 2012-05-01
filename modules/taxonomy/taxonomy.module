@@ -568,7 +568,7 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
       $hierarchy = 2;
       break;
     }
-    elseif (count($term->parents) == 1 && 0 !== array_shift($term->parents)) {
+    elseif (count($term->parents) == 1 && !isset($term->parents[0])) {
       $hierarchy = 1;
     }
   }
