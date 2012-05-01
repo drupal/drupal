@@ -435,7 +435,7 @@ function profile_form_alter(&$form, &$form_state, $form_id) {
         break;
 
       case 'selection':
-        $options = $field->required ? array() : array('--');
+        $options = array();
         $lines = preg_split("/[\n\r]/", $field->options);
         foreach ($lines as $line) {
           if ($line = trim($line)) {
@@ -449,6 +449,7 @@ function profile_form_alter(&$form, &$form_state, $form_id) {
           '#options' => $options,
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
+          '#empty_value' => 0,
         );
         break;
 
