@@ -2097,7 +2097,7 @@ function theme_mark($variables) {
  */
 function theme_item_list($variables) {
   $items = $variables['items'];
-  $title = $variables['title'];
+  $title = (string) $variables['title'];
   $type = $variables['type'];
   $list_attributes = $variables['attributes'];
 
@@ -2158,7 +2158,7 @@ function theme_item_list($variables) {
   // Check to see whether the block title exists before adding a header.
   // Empty headers are not semantic and present accessibility challenges.
   if ($output !== '') {
-    if (isset($title) && $title !== '') {
+    if ($title !== '') {
       $title = '<h3>' . $title . '</h3>';
     }
     $output = '<div class="item-list">' . $title . $output . '</div>';
