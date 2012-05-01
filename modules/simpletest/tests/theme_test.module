@@ -14,6 +14,9 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test_template_test_2'] = array(
     'template' => 'theme_test.template_test',
   );
+  $items['theme_test_foo'] = array(
+    'variables' => array('foo' => NULL),
+  );
   return $items;
 }
 
@@ -119,4 +122,11 @@ function _theme_test_alter() {
  */
 function _theme_test_suggestion() {
   return theme(array('theme_test__suggestion', 'theme_test'), array());
+}
+
+/**
+ * Theme function for testing theme('theme_test_foo').
+ */
+function theme_theme_test_foo($variables) {
+  return $variables['foo'];
 }

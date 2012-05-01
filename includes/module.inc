@@ -425,6 +425,8 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       registry_update();
       // Refresh the schema to include it.
       drupal_get_schema(NULL, TRUE);
+      // Update the theme registry to include it.
+      drupal_theme_rebuild();
       // Clear entity cache.
       entity_info_cache_clear();
 
@@ -546,6 +548,8 @@ function module_disable($module_list, $disable_dependents = TRUE) {
     // Update the registry to remove the newly-disabled module.
     registry_update();
     _system_update_bootstrap_status();
+    // Update the theme registry to remove the newly-disabled module.
+    drupal_theme_rebuild();
   }
 
   // If there remains no more node_access module, rebuilding will be

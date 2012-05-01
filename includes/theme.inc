@@ -252,7 +252,20 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
  *   class.
  */
 function theme_get_registry($complete = TRUE) {
-  static $theme_registry = array();
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['registry'] = &drupal_static('theme_get_registry');
+  }
+  $theme_registry = &$drupal_static_fast['registry'];
+
+  // Initialize the theme, if this is called early in the bootstrap, or after
+  // static variables have been reset.
+  if (!is_array($theme_registry)) {
+    drupal_theme_initialize();
+    $theme_registry = array();
+  }
+
   $key = (int) $complete;
 
   if (!isset($theme_registry[$key])) {
@@ -335,6 +348,7 @@ function _theme_save_registry($theme, $registry) {
  * to add more theme hooks.
  */
 function drupal_theme_rebuild() {
+  drupal_static_reset('theme_get_registry');
   cache_clear_all('theme_registry', 'cache', TRUE);
 }
 
@@ -899,8 +913,6 @@ function list_themes($refresh = FALSE) {
  * @see themeable
  */
 function theme($hook, $variables = array()) {
-  static $hooks = NULL;
-
   // If called before all modules are loaded, we do not necessarily have a full
   // theme registry to work with, and therefore cannot process the theme
   // request properly. See also _theme_load_registry().
@@ -908,10 +920,7 @@ function theme($hook, $variables = array()) {
     throw new Exception(t('theme() may not be called until all modules are loaded.'));
   }
 
-  if (!isset($hooks)) {
-    drupal_theme_initialize();
-    $hooks = theme_get_registry(FALSE);
-  }
+  $hooks = theme_get_registry(FALSE);
 
   // If an array of hook candidates were passed, use the first one that has an
   // implementation.
