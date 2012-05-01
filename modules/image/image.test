@@ -355,6 +355,21 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
   }
 
   /**
+   * Test creating an image style with a numeric name and ensuring it can be
+   * applied to an image.
+   */
+  function testNumericStyleName() {
+    $style_name = rand();
+    $edit = array(
+      'name' => $style_name,
+    );
+    $this->drupalPost('admin/config/media/image-styles/add', $edit, t('Create new style'));
+    $this->assertRaw(t('Style %name was created.', array('%name' => $style_name)), t('Image style successfully created.'));
+    $options = image_style_options();
+    $this->assertTrue(array_key_exists($style_name, $options), t('Array key %key exists.', array('%key' => $style_name)));
+  }
+
+  /**
    * General test to add a style, add/remove/edit effects to it, then delete it.
    */
   function testStyle() {

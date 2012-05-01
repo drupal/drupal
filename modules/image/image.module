@@ -749,7 +749,10 @@ function image_style_options($include_empty = TRUE) {
   if ($include_empty && !empty($styles)) {
     $options[''] = t('<none>');
   }
-  $options = array_merge($options, drupal_map_assoc(array_keys($styles)));
+  // Use the array concatenation operator '+' here instead of array_merge(),
+  // because the latter loses the datatype of the array keys, turning
+  // associative string keys into numeric ones without warning.
+  $options = $options + drupal_map_assoc(array_keys($styles));
   if (empty($options)) {
     $options[''] = t('No defined styles');
   }
