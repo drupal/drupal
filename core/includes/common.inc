@@ -6271,7 +6271,7 @@ function drupal_render_cid_parts($granularity = NULL) {
   // part.
   if (language_multilingual()) {
     foreach (language_types_get_configurable() as $language_type) {
-      $cid_parts[] = $GLOBALS[$language_type]->langcode;
+      $cid_parts[] = drupal_container()->get($language_type)->langcode;
     }
   }
 
