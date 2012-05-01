@@ -9,10 +9,10 @@ namespace Drupal\Core\Database\Driver\mysql;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\TransactionCommitFailedException;
+use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 
 use PDO;
-use PDOException;
 
 /**
  * @ingroup database
@@ -153,7 +153,7 @@ class Connection extends DatabaseConnection {
     // errors. There is no problem with completely ignoring errors here: if
     // these queries fail, the sequence will work just fine, just use a bit
     // more database storage and memory.
-    catch (PDOException $e) {
+    catch (DatabaseException $e) {
     }
   }
 
