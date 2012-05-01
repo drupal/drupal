@@ -478,17 +478,11 @@ function system_theme_settings($form, &$form_state, $key = '') {
         ),
       ),
     );
-    $logo_path = theme_get_setting('logo_path', $key);
-    // If $logo_path is a public:// URI, display the path relative to the files
-    // directory; stream wrappers are not end-user friendly.
-    if (file_uri_scheme($logo_path) == 'public') {
-      $logo_path = file_uri_target($logo_path);
-    }
     $form['logo']['settings']['logo_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path to custom logo'),
-      '#default_value' => $logo_path,
       '#description' => t('The path to the file you would like to use as your logo file instead of the default logo.'),
+      '#default_value' => theme_get_setting('logo_path', $key),
     );
     $form['logo']['settings']['logo_upload'] = array(
       '#type' => 'file',
@@ -519,23 +513,33 @@ function system_theme_settings($form, &$form_state, $key = '') {
         ),
       ),
     );
-    $favicon_path = theme_get_setting('favicon_path', $key);
-    // If $favicon_path is a public:// URI, display the path relative to the
-    // files directory; stream wrappers are not end-user friendly.
-    if (file_uri_scheme($favicon_path) == 'public') {
-      $favicon_path = file_uri_target($favicon_path);
-    }
     $form['favicon']['settings']['favicon_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path to custom icon'),
-      '#default_value' => $favicon_path,
-      '#description' => t('The path to the image file you would like to use as your custom shortcut icon.')
+      '#description' => t('The path to the image file you would like to use as your custom shortcut icon.'),
+      '#default_value' => theme_get_setting('favicon_path', $key),
     );
     $form['favicon']['settings']['favicon_upload'] = array(
       '#type' => 'file',
       '#title' => t('Upload icon image'),
       '#description' => t("If you don't have direct file access to the server, use this field to upload your shortcut icon.")
     );
+  }
+
+  // Inject human-friendly values for logo and favicon.
+  foreach (array('logo' => 'logo.png', 'favicon' => 'favicon.ico') as $type => $default) {
+    if (isset($form[$type]['settings'][$type . '_path'])) {
+      $element = &$form[$type]['settings'][$type . '_path'];
+
+      // If path is a public:// URI, display the path relative to the files
+      // directory; stream wrappers are not end-user friendly.
+      $original_path = $element['#default_value'];
+      $friendly_path = NULL;
+      if (file_uri_scheme($original_path) == 'public') {
+        $friendly_path = file_uri_target($original_path);
+        $element['#default_value'] = $friendly_path;
+      }
+    }
   }
 
   if ($key) {
@@ -665,13 +669,20 @@ function system_theme_settings_validate($form, &$form_state) {
  *   the path could not be validated.
  */
 function _system_theme_settings_validate_path($path) {
-  if (drupal_realpath($path)) {
-    // The path is relative to the Drupal root, or is a valid URI.
+  // Absolute local file paths are invalid.
+  if (drupal_realpath($path) == $path) {
+    return FALSE;
+  }
+  // A path relative to the Drupal root or a fully qualified URI is valid.
+  if (is_file($path)) {
     return $path;
   }
-  $uri = 'public://' . $path;
-  if (file_exists($uri)) {
-    return $uri;
+  // Prepend 'public://' for relative file paths within public filesystem.
+  if (file_uri_scheme($path) === FALSE) {
+    $path = 'public://' . $path;
+  }
+  if (is_file($path)) {
+    return $path;
   }
   return FALSE;
 }
