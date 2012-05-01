@@ -24,9 +24,6 @@ class PathSubscriber implements EventSubscriberInterface {
    * @todo The path system should be objectified to remove the function calls
    * in this method.
    *
-   * @todo We're writing back to $_GET['q'] for temporary BC. All instances of
-   * $_GET['q'] should be removed and then this code eliminated.
-   *
    * @param GetResponseEvent $event
    *   The Event to process.
    */

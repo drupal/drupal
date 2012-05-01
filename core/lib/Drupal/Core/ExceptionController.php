@@ -294,7 +294,7 @@ class ExceptionController {
    *   The Event to process.
    */
   public function on404Html(FlattenException $exception, Request $request) {
-    watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+    watchdog('page not found', check_plain($request->attributes->get('system_path')), NULL, WATCHDOG_WARNING);
 
     // Check for and return a fast 404 page if configured.
     // @todo Inline this rather than using a function.
