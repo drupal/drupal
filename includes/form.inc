@@ -3318,7 +3318,7 @@ function form_process_tableselect($element) {
     $value = is_array($element['#value']) ? $element['#value'] : array();
   }
   else {
-    // Advanced selection behaviour make no sense for radios.
+    // Advanced selection behavior makes no sense for radios.
     $element['#js_select'] = FALSE;
   }
 

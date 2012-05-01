@@ -1572,7 +1572,7 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
 }
 
 /**
- * Test case to test user_save() behaviour.
+ * Tests saving a user account.
  */
 class UserSaveTestCase extends DrupalWebTestCase {
 
@@ -1661,7 +1661,7 @@ class UserCreateTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Test case to test user_save() behaviour.
+ * Tests editing a user account.
  */
 class UserEditTestCase extends DrupalWebTestCase {
 
