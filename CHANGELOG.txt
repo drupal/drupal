@@ -1,6 +1,8 @@
 
-Drupal 6.26-dev, xxxx-xx-xx (development release)
+Drupal 6.26, 2012-05-02
 ----------------------
+- Fixed a small number of bugs.
+- Made code documentation improvements.
 
 Drupal 6.25, 2012-02-29
 ----------------------
