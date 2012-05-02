@@ -1,6 +1,7 @@
 
-Drupal 7.13 xxxx-xx-xx (development version)
+Drupal 7.13 2012-05-02
 ----------------------
+- Fixed security issues (Multiple vulnerabilities), see SA-CORE-2012-002.
 
 Drupal 7.12, 2012-02-01
 ----------------------

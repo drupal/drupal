@@ -1455,6 +1455,13 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
     $this->drupalPost('filter/tips', $edit, t('Log in'));
     $this->assertNoText(t('User login'), t('Logged in.'));
     $this->assertPattern('!<title.*?' . t('Compose tips') . '.*?</title>!', t('Still on the same page after login for allowed page'));
+
+    // Check that the user login block is not vulnerable to information
+    // disclosure to third party sites.
+    $this->drupalLogout();
+    $this->drupalPost('http://example.com/', $edit, t('Log in'), array('external' => FALSE));
+    // Check that we remain on the site after login.
+    $this->assertEqual(url('user/' . $user->uid, array('absolute' => TRUE)), $this->getUrl(), t('Redirected to user profile page after login from the frontpage'));
   }
 
   /**
