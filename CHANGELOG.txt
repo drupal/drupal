@@ -1,4 +1,54 @@
 
+Drupal 7.14 2012-05-02
+----------------------
+- Fixed "integrity constraint" fatal errors when rebuilding registry.
+- Fixed custom logo and favicon functionality referencing incorrect paths.
+- Fixed DB Case Sensitivity: Allow BINARY attribute in MySQL.
+- Split field_bundle_settings out per bundle.
+- Improve UX for machine names for fields (UI change).
+- Fixed User pictures are not removed properly.
+- Fixed HTTPS sessions not working in all cases.
+- Fixed Regression: Required radios throw illegal choice error when none
+  selected.
+- Fixed allow autocompletion requests to include slashes.
+- Eliminate $user->cache and {session}.cache in favor of
+  $_SESSION['cache_expiration'][$bin] (Performance).
+- Fixed focus jumps to tab when pressing enter on a form element within tab.
+- Fixed race condition in locale() - duplicates in {locales_source}.
+- Fixed Missing "Default image" per field instance.
+- Quit clobbering people's work when they click the filter tips link
+- Form API #states: Fix conditionals to allow OR and XOR constructions.
+- Fixed Focus jumps to tab when pressing enter on a form element within tab.
+  (Accessibility)
+- Improved performance of node_access queries.
+- Fixed Fieldsets inside vertical tabs have no title and can't be collapsed.
+- Reduce size of cache_menu table (Performance).
+- Fixed unnecessary aggregation of CSS/JS (Performance).
+- Fixed taxonomy_autocomplete() produces SQL error for nonexistent field.
+- Fixed HTML filter is not run first by default, despite default weight.
+- Fixed Overlay does not work with prefixed URL paths.
+- Better debug info for field errors (string change).
+- Fixed Data corruption in comment IDs (results in broken threading on
+  PostgreSQL).
+- Fixed machine name not editable if every character is replaced.
+- Fixed user picture not appearing in comment preview (Markup change).
+- Added optional vid argument for taxonomy_get_term_by_name().
+- Fixed Invalid Unicode code range in PREG_CLASS_UNICODE_WORD_BOUNDARY fails
+  with PCRE 8.30.
+- Fixed {trigger_assignments()}.hook has only 32 characters, is too short.
+- Numerous fixes to run-tests.sh.
+- Fixed Tests in profiles/[name]/modules cannot be run and cannot use a
+  different profile for running tests.
+- Numerous JavaScript performance fixes.
+- Numerous documentation fixes.
+- Fixed All pager links have an 'active' CSS class.
+- Numerous upgrade path fixes; notably:
+  - system_update_7061() fails on inserting files with same name but different
+    case.
+  - system_update_7061() converts filepaths too aggressively.
+  - Trigger upgrade path: Node triggers removed when upgrading to 7-x from 6.25.
+
+
 Drupal 7.13 2012-05-02
 ----------------------
 - Fixed security issues (Multiple vulnerabilities), see SA-CORE-2012-002.
