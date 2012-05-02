@@ -297,12 +297,9 @@ function image_file_download($uri) {
           // Send headers describing the image's size, and MIME-type...
           'Content-Type' => $info['mime_type'],
           'Content-Length' => $info['file_size'],
-          // ...and allow the file to be cached for two weeks (matching the
-          // value we/ use for the mod_expires settings in .htaccess) and
-          // ensure that caching proxies do not share the image with other
-          // users.
-          'Expires' => gmdate(DATE_RFC1123, REQUEST_TIME + 1209600),
-          'Cache-Control' => 'max-age=1209600, private, must-revalidate',
+          // By not explicitly setting them here, this uses normal Drupal
+          // Expires, Cache-Control and ETag headers to prevent proxy or
+          // browser caching of private images.
         );
       }
     }

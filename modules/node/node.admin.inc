@@ -422,6 +422,7 @@ function node_admin_nodes() {
     ->fields('n',array('nid'))
     ->limit(50)
     ->orderByHeader($header)
+    ->addTag('node_access')
     ->execute()
     ->fetchCol();
   $nodes = node_load_multiple($nids);

@@ -442,3 +442,16 @@ function forum_update_7003() {
 /**
  * @} End of "addtogroup updates-7.x-extra"
  */
+
+/**
+ * Update {form_index} so that only published nodes are indexed.
+ */
+function forum_update_7011() {
+  $select = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('status', 0 );
+
+  db_delete('forum_index')
+    ->condition('nid', $select, 'IN')
+    ->execute();
+}
