@@ -444,7 +444,7 @@ function forum_update_7003() {
  */
 
 /**
- * Update {form_index} so that only published nodes are indexed.
+ * Update {forum_index} so that only published nodes are indexed.
  */
 function forum_update_7011() {
   $select = db_select('node', 'n')
