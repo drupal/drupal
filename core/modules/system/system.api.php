@@ -2087,19 +2087,60 @@ function hook_mail($key, &$message, $params) {
 }
 
 /**
- * Add a list of cache tables to be cleared.
+ * Flush all persistent and static caches.
  *
- * This hook allows your module to add cache bins to the list of cache bins
- * that will be cleared by the Clear button on the Performance page or
- * whenever drupal_flush_all_caches is invoked.
+ * This hook asks your module to clear all of its persistent (database) and
+ * static caches, in order to ensure a clean environment for subsequently
+ * invoked data rebuilds.
  *
- * @return
- *   An array of cache bins.
+ * Do NOT use this hook for rebuilding information. Only use it to flush custom
+ * caches and return the names of additional cache bins to flush.
+ *
+ * Static caches using drupal_static() do not need to be reset manually.
+ * However, all other static variables that do not use drupal_static() must be
+ * manually reset.
+ *
+ * This hook is invoked by drupal_flush_all_caches(). It runs before module data
+ * is updated and before hook_rebuild().
+ *
+ * @return array
+ *   An array of cache bins to be flushed.
  *
  * @see drupal_flush_all_caches()
+ * @see hook_rebuild()
  */
-function hook_flush_caches() {
+function hook_cache_flush() {
   return array('example');
+}
+
+/**
+ * Rebuild data based upon refreshed caches.
+ *
+ * This hook allows your module to rebuild its data based on the latest/current
+ * module data. It runs after hook_cache_flush() and after all module data has
+ * been updated.
+ *
+ * This hook is only invoked after the system has been completely cleared;
+ * i.e., all previously cached data is known to be gone and every API in the
+ * system is known to return current information, so your module can safely rely
+ * on all available data to rebuild its own.
+ *
+ * The menu router is the only exception regarding rebuilt data; it is only
+ * rebuilt after all hook_rebuild() implementations have been invoked. That
+ * ensures that hook_menu() implementations and the final router rebuild can
+ * rely on all data being returned by all modules.
+ *
+ * @see hook_cache_flush()
+ * @see drupal_flush_all_caches()
+ */
+function hook_rebuild() {
+  // Rehash blocks for active themes. We don't use list_themes() here,
+  // because if MAINTENANCE_MODE is defined it skips reading the database,
+  // and we can't tell which themes are active.
+  $themes = db_query("SELECT name FROM {system} WHERE type = 'theme' AND status = 1");
+  foreach ($themes as $theme) {
+    _block_rehash($theme->name);
+  }
 }
 
 /**

@@ -2090,7 +2090,6 @@ class CommentFieldsTest extends CommentHelperCase {
     $edit['modules[Core][book][enable]'] = 'book';
     $edit['modules[Core][poll][enable]'] = 'poll';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->resetAll();
 
     // Now enable the comment module.
     $edit = array();

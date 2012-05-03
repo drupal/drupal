@@ -3054,8 +3054,7 @@ function system_cron() {
     }
   }
 
-  $core = array('cache', 'path', 'filter', 'page', 'form', 'menu');
-  $cache_bins = array_merge(module_invoke_all('flush_caches'), $core);
+  $cache_bins = array_merge(module_invoke_all('cache_flush'), array('form', 'menu'));
   foreach ($cache_bins as $bin) {
     cache($bin)->expire();
   }
@@ -3081,13 +3080,21 @@ function system_cron() {
 }
 
 /**
- * Implements hook_flush_caches().
+ * Implements hook_cache_flush().
  */
-function system_flush_caches() {
+function system_cache_flush() {
+  // Do NOT flush the 'form' cache bin to retain in-progress form submissions.
+  return array('bootstrap', 'cache', 'page', 'path');
+}
+
+/**
+ * Implements hook_rebuild().
+ */
+function system_rebuild() {
   // Rebuild list of date formats.
   system_date_formats_rebuild();
-  // Reset the menu static caches.
-  menu_reset_static_cache();
+  // Synchronize any actions that were added or removed.
+  actions_synchronize();
 }
 
 /**

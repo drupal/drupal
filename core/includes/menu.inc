@@ -301,7 +301,7 @@ const MENU_PREFERRED_LINK = '1cf698d64d1aa4b83907cf6ed55db3a7f8e92c91';
  * then the 1011 bitstring represents node/%/edit/foo where % means that
  * any argument matches that part. We limit ourselves to using binary
  * numbers that correspond the patterns of wildcards of router items that
- * actually exists. This list of 'masks' is built in menu_rebuild().
+ * actually exists. This list of 'masks' is built in menu_router_rebuild().
  *
  * @param $parts
  *   An array of path parts, for the above example
@@ -450,7 +450,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     // Rebuild if we know it's needed, or if the menu masks are missing which
     // occurs rarely, likely due to a race condition of multiple rebuilds.
     if (variable_get('menu_rebuild_needed', FALSE) || !variable_get('menu_masks', array())) {
-      menu_rebuild();
+      menu_router_rebuild();
     }
     $original_map = arg(NULL, $path);
 
@@ -2658,12 +2658,12 @@ function menu_reset_static_cache() {
  *   TRUE if the menu was rebuilt, FALSE if another thread was rebuilding
  *   in parallel and the current thread just waited for completion.
  */
-function menu_rebuild() {
-  if (!lock_acquire('menu_rebuild')) {
+function menu_router_rebuild() {
+  if (!lock_acquire(__FUNCTION__)) {
     // Wait for another request that is already doing this work.
     // We choose to block here since otherwise the router item may not
     // be available in menu_execute_active_handler() resulting in a 404.
-    lock_wait('menu_rebuild');
+    lock_wait(__FUNCTION__);
     return FALSE;
   }
 
@@ -2684,7 +2684,7 @@ function menu_rebuild() {
     watchdog_exception('menu', $e);
   }
 
-  lock_release('menu_rebuild');
+  lock_release(__FUNCTION__);
   return TRUE;
 }
 

@@ -19,7 +19,15 @@ use Drupal\Component\Graph\Graph;
  *   have been loaded.
  */
 function module_load_all($bootstrap = FALSE) {
-  static $has_run = FALSE;
+  // Already loaded code cannot be unloaded, but new modules may be added within
+  // a request, which should be loaded as well.
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  // @see theme()
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['has_run'] = &drupal_static(__FUNCTION__, FALSE);
+  }
+  $has_run = &$drupal_static_fast['has_run'];
 
   if (isset($bootstrap)) {
     foreach (module_list(TRUE, $bootstrap) as $module) {
@@ -66,7 +74,16 @@ function module_load_all($bootstrap = FALSE) {
  *   the list.
  */
 function module_list($refresh = FALSE, $bootstrap_refresh = FALSE, $sort = FALSE, $fixed_list = NULL) {
-  static $list = array(), $sorted_list;
+  // system_list() may be reset within a request, so the module list needs to be
+  // reset, too.
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['list'] = &drupal_static(__FUNCTION__ . ':list', array());
+    $drupal_static_fast['sorted_list'] = &drupal_static(__FUNCTION__ . ':sorted_list');
+  }
+  $list = &$drupal_static_fast['list'];
+  $sorted_list = &$drupal_static_fast['sorted_list'];
 
   if (empty($list) || $refresh || $fixed_list) {
     $list = array();

@@ -222,7 +222,7 @@ class EntityAPIInfoTestCase extends DrupalWebTestCase  {
     // Change the label of the test entity type and make sure changes appear
     // after flushing caches.
     variable_set('entity_cache_test_label', 'New label.');
-    drupal_flush_all_caches();
+    $this->resetAll();
     $info = entity_get_info('entity_cache_test');
     $this->assertEqual($info['label'], 'New label.', 'New label appears in entity info.');
 

@@ -1225,7 +1225,7 @@ class SearchKeywordsConditions extends SearchWebTestCase {
     $this->drupalLogin($this->searching_user);
     // Test with all search modules enabled.
     variable_set('search_active_modules', array('node' => 'node', 'user' => 'user', 'search_extra_type' => 'search_extra_type'));
-    menu_rebuild();
+    menu_router_rebuild();
   }
 
   /**
@@ -1936,7 +1936,7 @@ class SearchPageOverride extends SearchWebTestCase {
 
     // Enable the extra type module for searching.
     variable_set('search_active_modules', array('node' => 'node', 'user' => 'user', 'search_extra_type' => 'search_extra_type'));
-    menu_rebuild();
+    menu_router_rebuild();
   }
 
   function testSearchPageHook() {

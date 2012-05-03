@@ -7267,50 +7267,116 @@ function drupal_implode_tags($tags) {
 }
 
 /**
- * Flushes all cached data on the site.
+ * Flushes all persistent caches, resets all variables, and rebuilds all data structures.
  *
- * Empties cache tables, rebuilds the menu cache and theme registries, and
- * invokes a hook so that other modules' cache data can be cleared as well.
+ * At times, it is necessary to re-initialize the entire system to account for
+ * changed or new code. This function:
+ * - Clears all persistent caches (invoking hook_cache_flush()), which always
+ *   includes:
+ *   - The bootstrap cache bin containing base system, module system, and theme
+ *     system information.
+ *   - The common 'cache' cache bin containing arbitrary caches.
+ *   - The page cache.
+ *   - The URL alias path cache.
+ * - Resets all static variables that have been defined via drupal_static().
+ * - Clears asset (JS/CSS) file caches.
+ * - Updates the system with latest information about extensions (modules and
+ *   themes).
+ * - Updates the bootstrap flag for modules implementing bootstrap_hooks().
+ * - Rebuilds the full database schema information (invoking hook_schema()).
+ * - Rebuilds data structures of all modules (invoking hook_rebuild()). In
+ *   core this means
+ *   - blocks, node types, date formats and actions are synchronized with the
+ *     database
+ *   - The 'active' status of fields is refreshed.
+ * - Rebuilds the menu router.
+ *
+ * This means the entire system is reset so all caches and static variables are
+ * effectively empty. After that is guaranteed, information about the currently
+ * active code is updated, and rebuild operations are successively called in
+ * order to synchronize the active system according to the current information
+ * defined in code.
+ *
+ * All modules need to ensure that all of their caches are flushed when
+ * hook_cache_flush() is invoked; any previously known information must no
+ * longer exist. All following hook_rebuild() operations must be based on fresh
+ * and current system data. All modules must be able to rely on this contract.
+ *
+ * @see hook_cache_flush()
+ * @see hook_rebuild()
+ *
+ * This function also resets the theme, which means it is not initialized
+ * anymore and all previously added JavaScript and CSS is gone. Normally, this
+ * function is called as an end-of-POST-request operation that is followed by a
+ * redirect, so this effect is not visible. Since the full reset is the whole
+ * point of this function, callers need to take care for backing up all needed
+ * variables and properly restoring or re-initializing them on their own. For
+ * convenience, this function automatically re-initializes the maintenance theme
+ * if it was initialized before.
+ *
+ * @todo Try to clear page/JS/CSS caches last, so cached pages can still be
+ *   served during this possibly long-running operation. (Conflict on bootstrap
+ *   cache though.)
+ * @todo Add a global lock to ensure that caches are not primed in concurrent
+ *   requests.
  */
 function drupal_flush_all_caches() {
-  // Change query-strings on css/js files to enforce reload for all users.
-  _drupal_flush_css_js();
-
-  registry_rebuild();
-  drupal_clear_css_cache();
-  drupal_clear_js_cache();
-
-  // Rebuild the theme data. Note that the module data is rebuilt above, as
-  // part of registry_rebuild().
-  system_rebuild_theme_data();
-  drupal_theme_rebuild();
-
-  entity_info_cache_clear();
-
-  // @todo D8: Split cache flushing from rebuilding.
-  // @see http://drupal.org/node/996236
-  if (module_exists('node')) {
-    node_types_rebuild();
-  }
-  // node_menu() defines menu items based on node types so it needs to come
-  // after node types are rebuilt.
-  menu_rebuild();
-
-  // Synchronize to catch any actions that were added or removed.
-  actions_synchronize();
-
-  // Don't clear cache_form - in-progress form submissions may break.
-  // Ordered so clearing the page cache will always be the last action.
-  $core = array('cache', 'path', 'filter', 'bootstrap', 'page');
-  $cache_bins = array_merge(module_invoke_all('flush_caches'), $core);
-  foreach ($cache_bins as $bin) {
+  // Flush all persistent caches.
+  // This is executed based on old/previously known information, which is
+  // sufficient, since new extensions cannot have any primed caches yet.
+  foreach (module_invoke_all('cache_flush') as $bin) {
     cache($bin)->flush();
   }
 
-  // Rebuild the bootstrap module list. We do this here so that developers
-  // can get new hook_boot() implementations registered without having to
-  // write a hook_update_N() function.
+  // Flush asset file caches.
+  drupal_clear_css_cache();
+  drupal_clear_js_cache();
+  _drupal_flush_css_js();
+
+  // Reset all static caches.
+  drupal_static_reset();
+
+  // Clear all non-drupal_static() static caches.
+  // None currently; kept if any static caches need to be reset in the future.
+
+  // Update and synchronize the class registry and extension information based
+  // on current/actual code.
+  // Module data is rebuilt as part of registry_rebuild().
+  registry_rebuild();
+  system_rebuild_theme_data();
+
+  // Ensure that all modules that are currently supposed to be enabled are
+  // actually loaded.
+  module_load_all();
+
+  // Update the list of bootstrap modules.
+  // Allows developers to get new hook_boot() implementations registered without
+  // having to write a hook_update_N() function.
   _system_update_bootstrap_status();
+
+  // Rebuild the schema and cache a fully-built schema based on new module data.
+  // This is necessary for any invocation of index.php, because setting cache
+  // table entries requires schema information and that occurs during bootstrap
+  // before any modules are loaded, so if there is no cached schema,
+  // drupal_get_schema() will try to generate one, but with no loaded modules,
+  // it will return nothing.
+  drupal_get_schema(NULL, TRUE);
+
+  // Rebuild all information based on new module data.
+  module_invoke_all('rebuild');
+
+  // Rebuild the menu router based on all rebuilt data.
+  // Important: This rebuild must happen last, so the menu router is guaranteed
+  // to be based on up to date information.
+  menu_router_rebuild();
+
+  // Re-initialize the maintenance theme, if the current request attempted to
+  // use it. Unlike regular usages of this function, the installer and update
+  // scripts need to flush all caches during GET requests/page building.
+  if (function_exists('_drupal_maintenance_theme')) {
+    unset($GLOBALS['theme']);
+    drupal_maintenance_theme();
+  }
 }
 
 /**

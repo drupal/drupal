@@ -1014,7 +1014,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     $saved_type = node_type_save($type);
     node_types_rebuild();
-    menu_rebuild();
+    menu_router_rebuild();
     node_add_body_field($type);
 
     $this->assertEqual($saved_type, SAVED_NEW, t('Created content type %type.', array('%type' => $type->type)));
@@ -1415,6 +1415,9 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Create the database prefix for this test.
     $this->prepareDatabasePrefix();
 
+    // Prepare the environment for running tests.
+    $this->prepareEnvironment();
+
     // Reset all statics and variables to perform tests in a clean environment.
     $conf = array();
     drupal_static_reset();
@@ -1424,9 +1427,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     // changed, since Drupal\Core\Utility\CacheArray implementations attempt to
     // write back to persistent caches when they are destructed.
     $this->changeDatabasePrefix();
-
-    // Prepare the environment for running tests.
-    $this->prepareEnvironment();
 
     // Preset the 'install_profile' system variable, so the first call into
     // system_rebuild_module_data() (in drupal_install_system()) will register
@@ -1553,17 +1553,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * are enabled later.
    */
   protected function resetAll() {
-    // Reset all static variables.
-    drupal_static_reset();
-    // Reset the list of enabled modules.
-    module_list(TRUE);
-
-    // Reset cached schema for new database prefix. This must be done before
-    // drupal_flush_all_caches() so rebuilds can make use of the schema of
-    // modules enabled on the cURL side.
-    drupal_get_schema(NULL, TRUE);
-
-    // Perform rebuilds and flush remaining caches.
+    // Clear all database and static caches and rebuild data structures.
     drupal_flush_all_caches();
 
     // Reload global $conf array and permissions.

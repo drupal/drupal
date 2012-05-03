@@ -1489,7 +1489,7 @@ function theme_enable($theme_list) {
   }
 
   list_themes(TRUE);
-  menu_rebuild();
+  menu_router_rebuild();
   drupal_theme_rebuild();
 
   // Invoke hook_themes_enabled() after the themes have been enabled.
@@ -1522,7 +1522,7 @@ function theme_disable($theme_list) {
   }
 
   list_themes(TRUE);
-  menu_rebuild();
+  menu_router_rebuild();
   drupal_theme_rebuild();
 
   // Invoke hook_themes_disabled after the themes have been disabled.

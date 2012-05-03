@@ -77,6 +77,13 @@ const NODE_ACCESS_DENY = 'deny';
 const NODE_ACCESS_IGNORE = NULL;
 
 /**
+ * Implements hook_rebuild().
+ */
+function node_rebuild() {
+  node_types_rebuild();
+}
+
+/**
  * Implements hook_help().
  */
 function node_help($path, $arg) {
@@ -1890,9 +1897,6 @@ function node_menu() {
     'type' => MENU_CALLBACK,
   );
   // @todo Remove this loop when we have a 'description callback' property.
-  // Resets the internal static cache of _node_types_build() and forces a
-  // rebuild of the node type information.
-  node_type_cache_reset();
   foreach (node_type_get_types() as $type) {
     $type_url_str = str_replace('_', '-', $type->type);
     $items['node/add/' . $type_url_str] = array(
