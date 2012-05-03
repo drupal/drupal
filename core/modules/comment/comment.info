@@ -6,7 +6,6 @@ core = 8.x
 dependencies[] = node
 dependencies[] = text
 dependencies[] = entity
-files[] = comment.entity.inc
 files[] = comment.test
 configure = admin/content/comment
 stylesheets[all][] = comment.theme.css

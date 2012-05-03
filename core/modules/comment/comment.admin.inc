@@ -5,6 +5,8 @@
  * Admin page callbacks for the Comment module.
  */
 
+use Drupal\comment\Comment;
+
 /**
  * Page callback: Presents an administrative comment listing.
  *
@@ -264,7 +266,7 @@ function comment_confirm_delete_page($cid) {
 /**
  * Form constructor for the confirmation form for comment deletion.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment that is about to be deleted.
  *
  * @ingroup forms

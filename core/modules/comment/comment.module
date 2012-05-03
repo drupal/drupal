@@ -71,6 +71,8 @@ const COMMENT_NODE_CLOSED = 1;
  */
 const COMMENT_NODE_OPEN = 2;
 
+use Drupal\comment\Comment;
+
 /**
  * Implements hook_help().
  */
@@ -100,8 +102,8 @@ function comment_entity_info() {
       'base table' => 'comment',
       'uri callback' => 'comment_uri',
       'fieldable' => TRUE,
-      'controller class' => 'CommentStorageController',
-      'entity class' => 'Comment',
+      'controller class' => 'Drupal\comment\CommentStorageController',
+      'entity class' => 'Drupal\comment\Comment',
       'entity keys' => array(
         'id' => 'cid',
         'bundle' => 'node_type',
@@ -934,7 +936,7 @@ function comment_prepare_thread(&$comments) {
 /**
  * Generates an array for rendering a comment.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment object.
  * @param Drupal\node\Node $node
  *   The node the comment is attached to.
@@ -1004,7 +1006,7 @@ function comment_view(Comment $comment, Node $node, $view_mode = 'full', $langco
  * The content built for the comment (field values, comments, file attachments
  * or other comment components) will vary depending on the $view_mode parameter.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   A comment object.
  * @param Drupal\node\Node $node
  *   The node the comment is attached to.
@@ -1048,7 +1050,7 @@ function comment_build_content(Comment $comment, Node $node, $view_mode = 'full'
 /**
  * Adds reply, edit, delete, etc. links, depending on user permissions.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment object.
  * @param Drupal\node\Node $node
  *   The node the comment is attached to.
@@ -1450,7 +1452,7 @@ function comment_user_predelete($account) {
  * @param $op
  *   The operation that is to be performed on the comment. Only 'edit' is
  *   recognized now.
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment object.
  *
  * @return
@@ -1467,7 +1469,7 @@ function comment_access($op, Comment $comment) {
 /**
  * Accepts a submission of new or changed comment content.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   A comment object.
  */
 function comment_save(Comment $comment) {
@@ -1642,7 +1644,7 @@ function comment_get_display_page($cid, $node_type) {
 /**
  * Page callback: Displays the comment editing form.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment object representing the comment to be edited.
  *
  * @see comment_menu()
@@ -1879,7 +1881,7 @@ function comment_form_build_preview($form, &$form_state) {
 /**
  * Generates a comment preview.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *
  * @see comment_form_build_preview()
  */
@@ -1981,7 +1983,7 @@ function comment_form_validate($form, &$form_state) {
 /**
  * Prepare a comment for submission.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *
  */
 function comment_submit(Comment $comment) {
@@ -2324,7 +2326,7 @@ function comment_action_info() {
 /**
  * Publishes a comment.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   (optional) A comment object to publish.
  * @param array $context
  *   Array with components:
@@ -2351,7 +2353,7 @@ function comment_publish_action(Comment $comment = NULL, $context = array()) {
 /**
  * Unpublishes a comment.
  *
- * @param Comment|null $comment
+ * @param Drupal\comment\Comment|null $comment
  *   (optional) A comment object to unpublish.
  * @param array $context
  *   Array with components:
@@ -2378,7 +2380,7 @@ function comment_unpublish_action(Comment $comment = NULL, $context = array()) {
 /**
  * Unpublishes a comment if it contains certain keywords.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   Comment object to modify.
  * @param array $context
  *   Array with components:
@@ -2430,7 +2432,7 @@ function comment_unpublish_by_keyword_action_submit($form, $form_state) {
 /**
  * Saves a comment.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *
  * @ingroup actions
  */
