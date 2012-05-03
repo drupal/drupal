@@ -1340,6 +1340,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     global $user, $language_interface, $conf;
 
     // Store necessary current values before switching to prefixed database.
+    $this->originalContainer = clone drupal_container();
     $this->originalLanguage = $language_interface;
     $this->originalLanguageDefault = variable_get('language_default');
     $this->originalConfigDirectory = $GLOBALS['config_directory_name'];
@@ -1608,6 +1609,9 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Get back to the original connection.
     Database::removeConnection('default');
     Database::renameConnection('simpletest_original_default', 'default');
+
+    // Restore the original dependency injection container.
+    drupal_container($this->originalContainer);
 
     // Restore original shutdown callbacks array to prevent original
     // environment of calling handlers from test run.

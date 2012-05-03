@@ -3,7 +3,7 @@
 use Drupal\Core\Database\Database;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * @file
@@ -2336,23 +2336,22 @@ function drupal_get_bootstrap_phase() {
  * @endcode
  *
  * @param $reset
- *   TRUE or FALSE depending on whether the Container instance is to be reset.
+ *   A new container instance to reset the Drupal container to.
  *
- * @return Symfony\Component\DependencyInjection\ContainerBuilder
+ * @return Drupal\Component\DependencyInjection\ContainerBuilder
  *   The instance of the Drupal Container used to set up and maintain object
  *   instances.
  */
-function drupal_container($reset = FALSE) {
+function drupal_container(ContainerBuilder $reset = NULL) {
   // We do not use drupal_static() here because we do not have a mechanism by
   // which to reinitialize the stored objects, so a drupal_static_reset() call
   // would leave Drupal in a nonfunctional state.
   static $container = NULL;
-  if ($reset || !isset($container)) {
+  if (isset($reset)) {
+    $container = $reset;
+  }
+  elseif (!isset($container)) {
     $container = new ContainerBuilder();
-    // An interface language always needs to be available for t() and other
-    // functions. This default is overridden by drupal_language_initialize()
-    // during language negotiation.
-    $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
   }
   return $container;
 }
