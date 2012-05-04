@@ -1002,8 +1002,6 @@ function node_validate($node, $form, &$form_state) {
  * Prepare node for saving by populating author and creation date.
  */
 function node_submit($node) {
-  global $user;
-
   // A user might assign the node author by entering a user name in the node
   // form, which we then need to translate to a user ID.
   if (isset($node->name)) {
