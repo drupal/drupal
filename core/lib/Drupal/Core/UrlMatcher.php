@@ -86,15 +86,7 @@ class UrlMatcher implements UrlMatcherInterface {
    * @api
    */
   public function match($pathinfo) {
-
-    $dpathinfo = $this->request->attributes->get('system_path');
-
-    if (!$dpathinfo) {
-      // Symfony uses a prefixing / but we don't yet.
-      $dpathinfo = ltrim($pathinfo, '/');
-    }
-
-    if ($router_item = $this->matchDrupalItem($dpathinfo)) {
+    if ($router_item = $this->matchDrupalItem($pathinfo)) {
       $ret = $this->convertDrupalItem($router_item);
       // Stash the router item in the attributes while we're transitioning.
       $ret['drupal_menu_item'] = $router_item;
@@ -145,6 +137,5 @@ class UrlMatcher implements UrlMatcherInterface {
       $route[$k] = $v;
     }
     return $route;
-    return new Route($router_item['href'], $route);
   }
 }
