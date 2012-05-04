@@ -461,7 +461,7 @@ function rdf_process(&$variables, $hook) {
 }
 
 /**
- * Implements MODULE_preprocess_HOOK()
+ * Implements hook_preprocess_HOOK() for html.tpl.php.
  */
 function rdf_preprocess_html(&$variables) {
   // Adds RDF namespace prefix bindings in the form of an RDFa 1.1 prefix
@@ -473,7 +473,7 @@ function rdf_preprocess_html(&$variables) {
 }
 
 /**
- * Implements MODULE_preprocess_HOOK().
+ * Implements hook_preprocess_HOOK() for node.tpl.php.
  */
 function rdf_preprocess_node(&$variables) {
   // Adds RDFa markup to the node container. The about attribute specifies the
@@ -556,7 +556,7 @@ function rdf_preprocess_node(&$variables) {
 }
 
 /**
- * Implements MODULE_preprocess_HOOK().
+ * Implements hook_preprocess_HOOK() for field.tpl.php.
  */
 function rdf_preprocess_field(&$variables) {
   $element = $variables['element'];
@@ -584,7 +584,7 @@ function rdf_preprocess_field(&$variables) {
 }
 
 /**
- * Implements MODULE_preprocess_HOOK().
+ * Implements hook_preprocess_HOOK() for user-profile.tpl.php.
  */
 function rdf_preprocess_user_profile(&$variables) {
   $account = $variables['elements']['#account'];
@@ -621,7 +621,7 @@ function rdf_preprocess_user_profile(&$variables) {
 }
 
 /**
- * Implements MODULE_preprocess_HOOK().
+ * Implements hook_preprocess_HOOK() for theme_username().
  */
 function rdf_preprocess_username(&$variables) {
   // Because lang is set on the HTML element that wraps the page, the
@@ -676,7 +676,7 @@ function rdf_preprocess_username(&$variables) {
 }
 
 /**
- * Implements MODULE_preprocess_HOOK().
+ * Implements hook_preprocess_HOOK() for comment.tpl.php.
  */
 function rdf_preprocess_comment(&$variables) {
   $comment = $variables['comment'];
@@ -734,7 +734,7 @@ function rdf_preprocess_comment(&$variables) {
 }
 
 /**
- * Implements MODULE_preprocess_HOOK().
+ * Implements hook_preprocess_HOOK() for taxonomy-term.tpl.php.
  */
 function rdf_preprocess_taxonomy_term(&$variables) {
   // Adds the RDF type of the term and the term name in a <meta> tag.
@@ -778,7 +778,7 @@ function rdf_field_attach_view_alter(&$output, $context) {
 }
 
 /**
- * Implements MODULE_preprocess_HOOK().
+ * Implements hook_preprocess_HOOK() for theme_image().
  */
 function rdf_preprocess_image(&$variables) {
   // Adds the RDF type for image.  We cannot use the usual entity-based mapping
@@ -830,11 +830,11 @@ function rdf_preprocess_image(&$variables) {
  *     wrapped by a <span> tag. Modules implementing preprocess functions that
  *     set 'rdf_template_variable_attributes_array' for a particular template
  *     variable that might contain block level HTML must also implement
- *     hook_preprocess_rdf_template_variable_wrapper() and set 'inline' to FALSE
- *     for that context. Themes that render normally inline content with block
- *     level HTML must similarly implement
- *     hook_preprocess_rdf_template_variable_wrapper() and set 'inline'
- *     accordingly.
+ *     hook_preprocess_HOOK() for theme_rdf_template_variable_wrapper() and set
+ *     'inline' to FALSE for that context. Themes that render normally inline
+ *     content with block level HTML must similarly implement
+ *     hook_preprocess_HOOK() for theme_rdf_template_variable_wrapper() and set
+ *     'inline' accordingly.
  *
  * @see rdf_process()
  * @ingroup themeable

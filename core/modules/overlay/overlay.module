@@ -445,7 +445,7 @@ function overlay_system_info_alter(&$info, $file, $type) {
 }
 
 /**
- * Implements hook_preprocess_html().
+ * Implements hook_preprocess_HOOK() for html.tpl.php.
  *
  * If the current page request is inside the overlay, add appropriate classes
  * to the <body> element, and simplify the page title.
@@ -460,12 +460,10 @@ function overlay_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_maintenance_page().
+ * Implements hook_preprocess_HOOK() for maintenance-page.tpl.php.
  *
  * If the current page request is inside the overlay, add appropriate classes
  * to the <body> element, and simplify the page title.
- *
- * @see overlay_preprocess_maintenance_page()
  */
 function overlay_preprocess_maintenance_page(&$variables) {
   overlay_preprocess_html($variables);
@@ -495,7 +493,7 @@ function template_process_overlay(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_page().
+ * Implements hook_preprocess_HOOK() for page.tpl.php.
  *
  * Hide tabs inside the overlay.
  *

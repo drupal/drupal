@@ -232,8 +232,8 @@ function hook_taxonomy_term_delete(TaxonomyTerm $term) {
  * If the module wishes to act on the rendered HTML of the term rather than the
  * structured content array, it may use this hook to add a #post_render
  * callback. Alternatively, it could also implement
- * hook_preprocess_taxonomy_term(). See drupal_render() and theme()
- * documentation respectively for details.
+ * hook_preprocess_HOOK() for taxonomy-term.tpl.php. See drupal_render() and
+ * theme() documentation respectively for details.
  *
  * @param $build
  *   A renderable array representing the taxonomy term content.

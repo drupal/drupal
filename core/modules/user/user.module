@@ -1172,7 +1172,7 @@ function user_block_view($delta = '') {
 }
 
 /**
- * Implements hook_preprocess_block().
+ * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function user_preprocess_block(&$variables) {
   if ($variables['block']->module == 'user') {

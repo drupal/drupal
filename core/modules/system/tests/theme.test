@@ -591,9 +591,9 @@ class ThemeHtmlTplPhpAttributesTestCase extends DrupalWebTestCase {
   function testThemeHtmlTplPhpAttributes() {
     $this->drupalGet('');
     $attributes = $this->xpath('/html[@theme_test_html_attribute="theme test html attribute value"]');
-    $this->assertTrue(count($attributes) == 1, t('Attribute set in the html element via hook_preprocess_html() found.'));
+    $this->assertTrue(count($attributes) == 1, 'Attribute set in the html element via hook_preprocess_HOOK() for html.tpl.php found.');
     $attributes = $this->xpath('/html/body[@theme_test_body_attribute="theme test body attribute value"]');
-    $this->assertTrue(count($attributes) == 1, t('Attribute set in the body element via hook_preprocess_html() found.'));
+    $this->assertTrue(count($attributes) == 1, 'Attribute set in the body element via hook_preprocess_HOOK() for html.tpl.php found.');
   }
 }
 

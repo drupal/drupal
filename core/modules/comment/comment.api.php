@@ -85,8 +85,9 @@ function hook_comment_view(Drupal\comment\Comment $comment, $view_mode, $langcod
  *
  * If the module wishes to act on the rendered HTML of the comment rather than
  * the structured content array, it may use this hook to add a #post_render
- * callback. Alternatively, it could also implement hook_preprocess_comment().
- * See drupal_render() and theme() documentation respectively for details.
+ * callback. Alternatively, it could also implement hook_preprocess_HOOK() for
+ * comment.tpl.php. See drupal_render() and theme() documentation respectively
+ * for details.
  *
  * @param $build
  *   A renderable array representing the comment.

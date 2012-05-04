@@ -834,8 +834,9 @@ function hook_node_view(Drupal\node\Node $node, $view_mode, $langcode) {
  *
  * If the module wishes to act on the rendered HTML of the node rather than the
  * structured content array, it may use this hook to add a #post_render
- * callback.  Alternatively, it could also implement hook_preprocess_node(). See
- * drupal_render() and theme() documentation respectively for details.
+ * callback.  Alternatively, it could also implement hook_preprocess_HOOK() for
+ * node.tpl.php. See drupal_render() and theme() documentation respectively
+ * for details.
  *
  * @param $build
  *   A renderable array representing the node content.

@@ -796,7 +796,7 @@ function menu_get_menus($all = TRUE) {
 }
 
 /**
- * Implements hook_preprocess_block().
+ * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function menu_preprocess_block(&$variables) {
   if ($variables['block']->module == 'menu') {
