@@ -30,6 +30,26 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
   var $loadedModules = array();
 
   /**
+   * Flag to indicate whether there are pending updates or not.
+   */
+  var $pendingUpdates = TRUE;
+
+  /**
+   * Prepares the appropriate session for the release of Drupal being upgraded.
+   */
+  protected function prepareD8Session() {
+    // Generate and set a D7-compatible session cookie.
+    $this->curlInitialize();
+    $sid = drupal_hash_base64(uniqid(mt_rand(), TRUE) . drupal_random_bytes(55));
+    curl_setopt($this->curlHandle, CURLOPT_COOKIE, rawurlencode(session_name()) . '=' . rawurlencode($sid));
+
+    // Force our way into the session of the child site.
+    drupal_save_session(TRUE);
+    _drupal_session_write($sid, '');
+    drupal_save_session(FALSE);
+  }
+
+  /**
    * Checks that zlib is enabled in order to run the upgrade tests.
    */
   protected function checkRequirements() {
@@ -42,7 +62,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Override of DrupalWebTestCase::setUp() specialized for upgrade testing.
+   * Overrides DrupalWebTestCase::setUp() specialized for upgrade testing.
    */
   protected function setUp() {
     global $user, $language_interface, $conf;
@@ -105,7 +125,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     $conf = array();
 
     // Load the database from the portable PHP dump.
-    // The files can be gzipped.
+    // The files may be gzipped.
     foreach ($this->databaseDumpFiles as $file) {
       if (substr($file, -3) == '.gz') {
         $file = "compress.zlib://$file";
@@ -125,16 +145,8 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     drupal_save_session(FALSE);
     $user = db_query('SELECT * FROM {users} WHERE uid = :uid', array(':uid' => 1))->fetchObject();
 
-    // Generate and set a D6-compatible session cookie.
-    $this->curlInitialize();
-    $sid = drupal_hash_base64(uniqid(mt_rand(), TRUE) . drupal_random_bytes(55));
-    curl_setopt($this->curlHandle, CURLOPT_COOKIE, rawurlencode(session_name()) . '=' . rawurlencode($sid));
-
-    // Force our way into the session of the child site.
-    drupal_save_session(TRUE);
-    _drupal_session_write($sid, '');
-    // Remove the temporarily added ssid column.
-    drupal_save_session(FALSE);
+    // Generate and set a D8-compatible session cookie.
+    $this->prepareD8Session();
 
     // Restore necessary variables.
     $this->variable_set('site_mail', 'simpletest@example.com');
@@ -257,9 +269,17 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
       return FALSE;
     }
 
+    // The test should pass if there are no pending updates.
+    $content = $this->drupalGetContent();
+    if (strpos($content, t('No pending updates.')) !== FALSE) {
+      $this->pass(t('No pending updates and therefore no upgrade process to test.'));
+      $this->pendingUpdates = FALSE;
+      return TRUE;
+    }
+
     // Go!
     $this->drupalPost(NULL, array(), t('Apply pending updates'));
-    if (!$this->assertText('Updates were attempted')) {
+    if (!$this->assertResponse(200)) {
       return FALSE;
     }
 
@@ -311,9 +331,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     $this->refreshVariables();
     $this->checkPermissions(array(), TRUE);
 
-    // Check we can load the front page of the new site.
-    $this->drupalGet('');
-    return $this->assertText('Powered by Drupal', t('The front page of the upgraded site loads successfully.'));
+    return TRUE;
   }
 
   /**
@@ -334,4 +352,322 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
       ->execute();
   }
 
+}
+
+/**
+ * Performs major version release upgrade tests on a bare database.
+ *
+ * Loads an installation of Drupal 7.x and runs the upgrade process on it.
+ *
+ * The install contains the minimal profile modules (without any generated
+ * content) so that an upgrade from of a site under this profile may be tested.
+ */
+class BareMinimalUpgradePath extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Basic minimal profile upgrade path, bare database',
+      'description'  => 'Basic upgrade path tests for a minimal profile install with a bare database.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.bare.minimal.database.php.gz',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Tests a successful major version release upgrade.
+   */
+  public function testBasicMinimalUpgrade() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // Ensure that the new Entity module is enabled after upgrade.
+    $this->assertTrue(module_exists('entity'), 'Entity module enabled after upgrade.');
+
+    // Hit the frontpage.
+    $this->drupalGet('');
+    $this->assertResponse(200);
+
+    // Verify that we are still logged in.
+    $this->drupalGet('user');
+    $this->clickLink(t('Edit'));
+    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), t('We are still logged in as admin at the end of the upgrade.'));
+
+    // Logout and verify that we can login back in with our initial password.
+    $this->drupalLogout();
+    $this->drupalLogin((object) array(
+      'uid' => 1,
+      'name' => 'admin',
+      'pass_raw' => 'drupal',
+    ));
+
+    // The previous login should've triggered a password rehash, so login one
+    // more time to make sure the new hash is readable.
+    $this->drupalLogout();
+    $this->drupalLogin((object) array(
+      'uid' => 1,
+      'name' => 'admin',
+      'pass_raw' => 'drupal',
+    ));
+
+    // Test that the site name is correctly displayed.
+    $this->assertText('drupal', t('The site name is correctly displayed.'));
+
+    // Verify that the main admin sections are available.
+    $this->drupalGet('admin');
+    $this->assertText(t('Content'));
+    $this->assertText(t('Appearance'));
+    $this->assertText(t('People'));
+    $this->assertText(t('Configuration'));
+    $this->assertText(t('Reports'));
+    $this->assertText(t('Structure'));
+    $this->assertText(t('Modules'));
+
+    // Confirm that no {menu_links} entry exists for user/autocomplete.
+    $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
+    $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+  }
+}
+
+/**
+ * Performs major version release upgrade tests on a populated database.
+ *
+ * Loads an installation of Drupal 7.x and runs the upgrade process on it.
+ *
+ * The install contains the minimal profile modules (along with generated
+ * content) so that an update from of a site under this profile may be tested.
+ */
+class FilledMinimalUpgradePath extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Basic minimal profile upgrade path, populated database',
+      'description'  => 'Basic upgrade path tests for a minimal profile install with a populated database.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.filled.minimal.database.php.gz',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Tests a successful point release update.
+   */
+  public function testFilledMinimalUpgrade() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // Ensure that the new Entity module is enabled after upgrade.
+    $this->assertTrue(module_exists('entity'), 'Entity module enabled after upgrade.');
+
+    // Hit the frontpage.
+    $this->drupalGet('');
+    $this->assertResponse(200);
+
+    // Verify that we are still logged in.
+    $this->drupalGet('user');
+    $this->clickLink(t('Edit'));
+    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), t('We are still logged in as admin at the end of the upgrade.'));
+
+    // Logout and verify that we can login back in with our initial password.
+    $this->drupalLogout();
+    $this->drupalLogin((object) array(
+      'uid' => 1,
+      'name' => 'admin',
+      'pass_raw' => 'drupal',
+    ));
+
+    // The previous login should've triggered a password rehash, so login one
+    // more time to make sure the new hash is readable.
+    $this->drupalLogout();
+    $this->drupalLogin((object) array(
+      'uid' => 1,
+      'name' => 'admin',
+      'pass_raw' => 'drupal',
+    ));
+
+    // Test that the site name is correctly displayed.
+    $this->assertText('drupal', t('The site name is correctly displayed.'));
+
+    // Verify that the main admin sections are available.
+    $this->drupalGet('admin');
+    $this->assertText(t('Content'));
+    $this->assertText(t('Appearance'));
+    $this->assertText(t('People'));
+    $this->assertText(t('Configuration'));
+    $this->assertText(t('Reports'));
+    $this->assertText(t('Structure'));
+    $this->assertText(t('Modules'));
+
+    // Confirm that no {menu_links} entry exists for user/autocomplete.
+    $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
+    $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+  }
+}
+
+/**
+ * Performs major version release upgrade tests on a bare database.
+ *
+ * Loads an installation of Drupal 7.x and runs the upgrade process on it.
+ *
+ * The install contains the standard profile (plus all optional) modules
+ * without any content so that an update from any of the modules under this
+ * profile installation can be wholly tested.
+ */
+class BareStandardUpgradePath extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Basic standard + all profile upgrade path, bare database',
+      'description'  => 'Basic upgrade path tests for a standard profile install with all enabled modules and a bare database.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.bare.standard_all.database.php.gz',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Tests a successful major version release upgrade.
+   */
+  public function testBasicStandardUpgrade() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // Ensure that the new Entity module is enabled after upgrade.
+    $this->assertTrue(module_exists('entity'), 'Entity module enabled after upgrade.');
+
+    // Hit the frontpage.
+    $this->drupalGet('');
+    $this->assertResponse(200);
+
+    // Verify that we are still logged in.
+    $this->drupalGet('user');
+    $this->clickLink(t('Edit'));
+    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), t('We are still logged in as admin at the end of the upgrade.'));
+
+    // Logout and verify that we can login back in with our initial password.
+    $this->drupalLogout();
+    $this->drupalLogin((object) array(
+      'uid' => 1,
+      'name' => 'admin',
+      'pass_raw' => 'drupal',
+    ));
+
+    // The previous login should've triggered a password rehash, so login one
+    // more time to make sure the new hash is readable.
+    $this->drupalLogout();
+    $this->drupalLogin((object) array(
+      'uid' => 1,
+      'name' => 'admin',
+      'pass_raw' => 'drupal',
+    ));
+
+    // Test that the site name is correctly displayed.
+    $this->assertText('drupal', t('The site name is correctly displayed.'));
+
+    // Verify that the main admin sections are available.
+    $this->drupalGet('admin');
+    $this->assertText(t('Content'));
+    $this->assertText(t('Appearance'));
+    $this->assertText(t('People'));
+    $this->assertText(t('Configuration'));
+    $this->assertText(t('Reports'));
+    $this->assertText(t('Structure'));
+    $this->assertText(t('Modules'));
+
+    // Confirm that no {menu_links} entry exists for user/autocomplete.
+    $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
+    $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+  }
+}
+
+/**
+ * Performs major version release upgrade tests on a populated database.
+ *
+ * Loads an installation of Drupal 7.x and runs the upgrade process on it.
+ *
+ * The install contains the standard profile (plus all optional) modules
+ * with generated content so that an update from any of the modules under this
+ * profile installation can be wholly tested.
+ */
+class FilledStandardUpgradePath extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Basic standard + all profile upgrade path, populated database',
+      'description'  => 'Basic upgrade path tests for a standard profile install with all enabled modules and a populated database.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.filled.standard_all.database.php.gz',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Tests a successful point release update.
+   */
+  public function testFilledStandardUpgrade() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // Ensure that the new Entity module is enabled after upgrade.
+    $this->assertTrue(module_exists('entity'), 'Entity module enabled after upgrade.');
+
+    // Hit the frontpage.
+    $this->drupalGet('');
+    $this->assertResponse(200);
+
+    // Verify that we are still logged in.
+    $this->drupalGet('user');
+    $this->clickLink(t('Edit'));
+    $this->assertEqual($this->getUrl(), url('user/1/edit', array('absolute' => TRUE)), t('We are still logged in as admin at the end of the upgrade.'));
+
+    // Logout and verify that we can login back in with our initial password.
+    $this->drupalLogout();
+    $this->drupalLogin((object) array(
+      'uid' => 1,
+      'name' => 'admin',
+      'pass_raw' => 'drupal',
+    ));
+
+    // The previous login should've triggered a password rehash, so login one
+    // more time to make sure the new hash is readable.
+    $this->drupalLogout();
+    $this->drupalLogin((object) array(
+      'uid' => 1,
+      'name' => 'admin',
+      'pass_raw' => 'drupal',
+    ));
+
+    // Test that the site name is correctly displayed.
+    $this->assertText('drupal', t('The site name is correctly displayed.'));
+
+    // Verify that the main admin sections are available.
+    $this->drupalGet('admin');
+    $this->assertText(t('Content'));
+    $this->assertText(t('Appearance'));
+    $this->assertText(t('People'));
+    $this->assertText(t('Configuration'));
+    $this->assertText(t('Reports'));
+    $this->assertText(t('Structure'));
+    $this->assertText(t('Modules'));
+
+    // Confirm that no {menu_links} entry exists for user/autocomplete.
+    $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
+    $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+  }
 }
