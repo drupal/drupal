@@ -644,16 +644,17 @@ function drupal_encode_path($path) {
  * @param $options
  *   An associative array of additional URL options to pass to url().
  * @param $http_response_code
- *   Valid values for an actual "goto" as per RFC 2616 section 10.3 are:
- *   - 301 Moved Permanently (the recommended value for most redirects)
- *   - 302 Found (default in Drupal and PHP, sometimes used for spamming search
- *         engines)
- *   - 303 See Other
- *   - 304 Not Modified
- *   - 305 Use Proxy
- *   - 307 Temporary Redirect (alternative to "503 Site Down for Maintenance")
- *   Note: Other values are defined by RFC 2616, but are rarely used and poorly
- *   supported.
+ *   The valid values for 3xx redirection status codes are defined in
+ *   @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3 RFC 2616 @endlink
+ *   and the
+ *   @link http://tools.ietf.org/html/draft-reschke-http-status-308-07 draft for the new HTTP status codes: @endlink
+ *   - 301: Moved Permanently (the recommended value for most redirects).
+ *   - 302: Found (default in Drupal and PHP, sometimes used for spamming search
+ *     engines).
+ *   - 303: See Other.
+ *   - 304: Not Modified.
+ *   - 305: Use Proxy.
+ *   - 307: Temporary Redirect.
  *
  * @see drupal_get_destination()
  * @see url()
