@@ -5,7 +5,12 @@ namespace Drupal\Core\EventSubscriber;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\EventListener\RouterListener as SymfonyRouterListener;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Exception\MethodNotFoundException;
+
 
 /**
  * Description of RouterListener
