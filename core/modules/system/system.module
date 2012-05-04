@@ -1134,7 +1134,7 @@ function system_library_info() {
   // Drupal's Ajax framework.
   $libraries['drupal.ajax'] = array(
     'title' => 'Drupal AJAX',
-    'website' => 'http://api.drupal.org/api/drupal/includes--ajax.inc/group/ajax/7',
+    'website' => 'http://api.drupal.org/api/group/ajax/8',
     'version' => VERSION,
     'js' => array(
       'core/misc/ajax.js' => array('group' => JS_LIBRARY, 'weight' => 2),

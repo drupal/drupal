@@ -336,7 +336,7 @@ function standard_install() {
 
   // Create an image field named "Image", enabled for the 'article' content type.
   // Many of the following values will be defaulted, they're included here as an illustrative examples.
-  // See http://api.drupal.org/api/function/field_create_field/7
+  // See http://api.drupal.org/api/function/field_create_field/8
 
   $field = array(
     'field_name' => 'field_image',
@@ -357,7 +357,7 @@ function standard_install() {
 
 
   // Many of the following values will be defaulted, they're included here as an illustrative examples.
-  // See http://api.drupal.org/api/function/field_create_instance/7
+  // See http://api.drupal.org/api/function/field_create_instance/8
   $instance = array(
     'field_name' => 'field_image',
     'entity_type' => 'node',

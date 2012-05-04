@@ -690,8 +690,7 @@ function hook_field_is_empty($item, $field) {
  * which widget to use. Widget types are defined by implementing
  * hook_field_widget_info().
  *
- * Widgets are
- * @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html Form API @endlink
+ * Widgets are @link forms_api_reference.html Form API @endlink
  * elements with additional processing capabilities. Widget hooks are typically
  * called by the Field Attach API during the creation of the field form
  * structure with field_attach_form().

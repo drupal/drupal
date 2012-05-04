@@ -102,7 +102,7 @@ function _php_filter_tips($filter, $format, $long = FALSE) {
     $output .= '<ul><li>' . t('Remember to double-check each line for syntax and logic errors <strong>before</strong> saving.') . '</li>';
     $output .= '<li>' . t('Statements must be correctly terminated with semicolons.') . '</li>';
     $output .= '<li>' . t('Global variables used within your PHP code retain their values after your script executes.') . '</li>';
-    $output .= '<li>' . t('<code>register_globals</code> is <strong>turned off</strong>. If you need to use forms, understand and use the functions in <a href="@formapi">the Drupal Form API</a>.', array('@formapi' => url('http://api.drupal.org/api/group/form_api/7'))) . '</li>';
+    $output .= '<li>' . t('<code>register_globals</code> is <strong>turned off</strong>. If you need to use forms, understand and use the functions in <a href="@formapi">the Drupal Form API</a>.', array('@formapi' => url('http://api.drupal.org/api/group/form_api/8'))) . '</li>';
     $output .= '<li>' . t('Use a <code>print</code> or <code>return</code> statement in your code to output content.') . '</li>';
     $output .= '<li>' . t('Develop and test your PHP code using a separate test script and sample database before deploying on a production site.') . '</li>';
     $output .= '<li>' . t('Consider including your custom PHP code within a site-specific module or <code>template.php</code> file rather than embedding it directly into a post or block.') . '</li>';
