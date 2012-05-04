@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @file
+ *
+ * Definition of Drupal\Core\EventSubscriber\RouterListener;
+ */
+
 namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -13,9 +19,9 @@ use Symfony\Component\Routing\Exception\MethodNotFoundException;
 
 
 /**
- * Description of RouterListener
+ * Drupal-specific Router listener.
  *
- * @author crell
+ * This is the bridge from the kernel to the UrlMatcher.
  */
 class RouterListener extends SymfonyRouterListener {
 
@@ -28,6 +34,15 @@ class RouterListener extends SymfonyRouterListener {
     $this->logger = $logger;
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * This method is nearly identical to the parent, except it passes the
+   * $request->attributes->get('system_path') variable to the matcher.
+   * That is where Drupal stores its processed, de-aliased, and sanitized
+   * internal path.  We also pass the full request object to the URL Matcher,
+   * since we want attributes to be available to the matcher and to controllers.
+   */
   public function onKernelRequest(GetResponseEvent $event) {
     $request = $event->getRequest();
 
@@ -43,7 +58,6 @@ class RouterListener extends SymfonyRouterListener {
 
     // add attributes based on the path info (routing)
     try {
-      //$parameters = $this->urlMatcher->match($request->getPathInfo());
       $parameters = $this->urlMatcher->match($request->attributes->get('system_path'));
 
       if (null !== $this->logger) {
