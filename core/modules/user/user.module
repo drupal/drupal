@@ -1025,7 +1025,7 @@ function user_account_form_validate($form, &$form_state) {
 }
 
 function user_login_block($form) {
-  $form['#action'] = url(current_path(), array('query' => drupal_get_destination()));
+  $form['#action'] = url(current_path(), array('query' => drupal_get_destination(), 'external' => FALSE));
   $form['#id'] = 'user-login-form';
   $form['#validate'] = user_login_default_validators();
   $form['#submit'][] = 'user_login_submit';
