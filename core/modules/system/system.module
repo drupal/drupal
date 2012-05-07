@@ -582,10 +582,11 @@ function system_element_info() {
  * Implements hook_menu().
  */
 function system_menu() {
-  $items['cron'] = array(
+  $items['cron/%'] = array(
     'title' => 'Run cron',
-    'page callback' => 'system_cron_callback',
+    'page callback' => 'system_cron_page',
     'access callback' => 'system_cron_access',
+    'access arguments' => array(1),
     'type' => MENU_CALLBACK,
   );
   $items['system/files'] = array(
@@ -1124,7 +1125,8 @@ function system_menu() {
  *
  * @see system_cron_access().
  */
-function system_cron_callback() {
+
+function system_cron_page() {
   drupal_cron_run();
 
   // HTTP 204 is "No content", meaning "I did what you asked and we're done."
@@ -1132,12 +1134,15 @@ function system_cron_callback() {
 }
 
 /**
- *Access callback for system_cron().
+ * Access callback for system_cron().
  *
- * @see system_cron_callback().
+ * @param string $key
+ *   A hash to validate the page request origin.
+ *
+ * @see system_cron_page().
  */
-function system_cron_access() {
-  if (request()->get('cron_key') != variable_get('cron_key', 'drupal')) {
+function system_cron_access($key) {
+  if ($key != variable_get('cron_key', 'drupal')) {
     watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
     return FALSE;
   }
@@ -1172,7 +1177,7 @@ function system_library_info() {
   // Drupal's Ajax framework.
   $libraries['drupal.ajax'] = array(
     'title' => 'Drupal AJAX',
-    'website' => 'http://api.drupal.org/api/drupal/includes--ajax.inc/group/ajax/7',
+    'website' => 'http://api.drupal.org/api/group/ajax/8',
     'version' => VERSION,
     'js' => array(
       'core/misc/ajax.js' => array('group' => JS_LIBRARY, 'weight' => 2),
@@ -2159,7 +2164,7 @@ function system_block_view($delta = '') {
 }
 
 /**
- * Implements hook_preprocess_block().
+ * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function system_preprocess_block(&$variables) {
   if ($variables['block']->module == 'system') {
@@ -2465,6 +2470,10 @@ function _system_rebuild_module_data() {
     // Look for the info file.
     $module->info = drupal_parse_info_file(dirname($module->uri) . '/' . $module->name . '.info');
 
+    // Add the info file modification time, so the modules page can be sorted
+    // by the date modules were added or updated.
+    $module->info['mtime'] = filemtime(dirname($module->uri) . '/' . $module->name . '.info');
+
     // Skip modules that don't provide info.
     if (empty($module->info)) {
       unset($modules[$key]);
@@ -2608,6 +2617,10 @@ function _system_rebuild_theme_data() {
   foreach ($themes as $key => $theme) {
     $themes[$key]->filename = $theme->uri;
     $themes[$key]->info = drupal_parse_info_file($theme->uri) + $defaults;
+
+    // Add the info file modification time, so the themes page can be sorted
+    // by the date themes were added or updated.
+    $themes[$key]->info['mtime'] = filemtime($theme->uri);
 
     // Invoke hook_system_info_alter() to give installed modules a chance to
     // modify the data in the .info files if necessary.
@@ -3087,8 +3100,7 @@ function system_cron() {
     }
   }
 
-  $core = array('cache', 'path', 'filter', 'page', 'form', 'menu');
-  $cache_bins = array_merge(module_invoke_all('flush_caches'), $core);
+  $cache_bins = array_merge(module_invoke_all('cache_flush'), array('form', 'menu'));
   foreach ($cache_bins as $bin) {
     cache($bin)->expire();
   }
@@ -3114,13 +3126,21 @@ function system_cron() {
 }
 
 /**
- * Implements hook_flush_caches().
+ * Implements hook_cache_flush().
  */
-function system_flush_caches() {
+function system_cache_flush() {
+  // Do NOT flush the 'form' cache bin to retain in-progress form submissions.
+  return array('bootstrap', 'cache', 'page', 'path');
+}
+
+/**
+ * Implements hook_rebuild().
+ */
+function system_rebuild() {
   // Rebuild list of date formats.
   system_date_formats_rebuild();
-  // Reset the menu static caches.
-  menu_reset_static_cache();
+  // Synchronize any actions that were added or removed.
+  actions_synchronize();
 }
 
 /**

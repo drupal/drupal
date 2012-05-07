@@ -321,8 +321,9 @@ class CacheClearCase extends CacheTestCase {
    */
   function testFlushAllCaches() {
     // Create cache entries for each flushed cache bin.
-    $bins = array('cache', 'filter', 'page', 'bootstrap', 'path');
-    $bins = array_merge(module_invoke_all('flush_caches'), $bins);
+    $bins = module_invoke_all('cache_flush');
+    $this->assertTrue($bins, 'hook_cache_flush() returned bins to flush.');
+    $bins = array_merge($bins, array('menu'));
     foreach ($bins as $id => $bin) {
       $cid = 'test_cid_clear' . $id;
       cache($bin)->set($cid, $this->default_value);

@@ -2,7 +2,8 @@
 <?php
 
 /**
- * Dump a Drupal 7 database into a Drupal 7 PHP script to test the upgrade
+ * @file
+ * Dumps a Drupal 7 database into a Drupal 7 PHP script to test the upgrade
  * process.
  *
  * Run this script at the root of an existing Drupal 7 installation.

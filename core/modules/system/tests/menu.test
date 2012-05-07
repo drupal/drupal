@@ -394,7 +394,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     // Change the menu_name parameter in menu_test.module, then force a menu
     // rebuild.
     menu_test_menu_name('changed');
-    menu_rebuild();
+    menu_router_rebuild();
 
     $sql = "SELECT menu_name FROM {menu_links} WHERE router_path = 'menu_name_test'";
     $name = db_query($sql)->fetchField();

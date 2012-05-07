@@ -36,7 +36,7 @@ function shortcut_install() {
   // Drupal is already installed (i.e., we are not in the installer).
   // @see http://drupal.org/node/1376150
   if (variable_get('install_task', '') != 'done') {
-    menu_rebuild();
+    menu_router_rebuild();
   }
   shortcut_set_save($shortcut_set);
 }

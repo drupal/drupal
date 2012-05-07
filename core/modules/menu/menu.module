@@ -180,7 +180,7 @@ function menu_theme() {
  * Add a link for each custom menu.
  */
 function menu_enable() {
-  menu_rebuild();
+  menu_router_rebuild();
   $base_link = db_query("SELECT mlid AS plid, menu_name FROM {menu_links} WHERE link_path = 'admin/structure/menu' AND module = 'system'")->fetchAssoc();
   $base_link['router_path'] = 'admin/structure/menu/manage/%';
   $base_link['module'] = 'menu';
@@ -796,7 +796,7 @@ function menu_get_menus($all = TRUE) {
 }
 
 /**
- * Implements hook_preprocess_block().
+ * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function menu_preprocess_block(&$variables) {
   if ($variables['block']->module == 'menu') {

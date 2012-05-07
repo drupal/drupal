@@ -22,7 +22,7 @@ class LanguageUpgradePathTestCase extends UpgradePathTestCase {
   public function setUp() {
     // Path to the database dump files.
     $this->databaseDumpFiles = array(
-      drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.filled.database.php.gz',
+      drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.filled.standard_all.database.php.gz',
       drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.language.database.php',
     );
     parent::setUp();

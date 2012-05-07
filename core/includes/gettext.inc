@@ -61,7 +61,7 @@ function _locale_import_po($file, $langcode, $overwrite_options, $customized = L
   cache()->deletePrefix('locale:');
 
   // Rebuild the menu, strings may have changed.
-  menu_rebuild();
+  menu_router_rebuild();
 
   drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)));
   watchdog('locale', 'Imported %file into %locale: %number new strings added, %update updated and %delete removed.', array('%file' => $file->filename, '%locale' => $langcode, '%number' => $additions, '%update' => $updates, '%delete' => $deletes));

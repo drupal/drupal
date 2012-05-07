@@ -5,6 +5,8 @@
  * Field CRUD API, handling field and field instance creation and deletion.
  */
 
+use Drupal\field\FieldException;
+
 /**
  * @defgroup field_crud Field CRUD API
  * @{
@@ -49,7 +51,7 @@
  * @return
  *   The $field array with the id property filled in.
  *
- * @throws FieldException
+ * @throws Drupal\field\FieldException
  *
  * See: @link field Field API data structures @endlink.
  */
@@ -213,8 +215,9 @@ function field_create_field($field) {
  *   structure. Any other properties of the field that are not
  *   specified in $field will be left unchanged, so it is not
  *   necessary to pass in a fully populated $field structure.
- * @return
- *   Throws a FieldException if the update cannot be performed.
+ *
+ * @throws Drupal\field\FieldException
+ *
  * @see field_create_field()
  */
 function field_update_field($field) {
@@ -447,7 +450,7 @@ function field_delete_field($field_name) {
  * @return
  *   The $instance array with the id property filled in.
  *
- * @throws FieldException
+ * @throws Drupal\field\FieldException
  *
  * See: @link field Field API data structures @endlink.
  */
@@ -514,7 +517,7 @@ function field_create_instance($instance) {
  *   properties specified in $instance overwrite the existing values for
  *   the instance.
  *
- * @throws FieldException
+ * @throws Drupal\field\FieldException
  *
  * @see field_create_instance()
  */

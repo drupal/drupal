@@ -391,7 +391,7 @@ class BlockTestCase extends DrupalWebTestCase {
     // Disable caching for this block.
     variable_set('block_test_caching', DRUPAL_NO_CACHE);
     // Flushing all caches should call _block_rehash().
-    drupal_flush_all_caches();
+    $this->resetAll();
     // Verify that the database is updated with the new caching mode.
     $current_caching = db_query("SELECT cache FROM {block} WHERE module = 'block_test' AND delta = 'test_cache'")->fetchField();
     $this->assertEqual($current_caching, DRUPAL_NO_CACHE, t("Test block's database entry updated to DRUPAL_NO_CACHE."));
@@ -833,7 +833,7 @@ class BlockHiddenRegionTestCase extends DrupalWebTestCase {
     $theme = 'block_test_theme';
     theme_enable(array($theme));
     variable_set('theme_default', $theme);
-    menu_rebuild();
+    menu_router_rebuild();
 
     // Ensure that "block_test_theme" is set as the default theme.
     $this->drupalGet('admin/structure/block');

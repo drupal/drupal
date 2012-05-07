@@ -1,3 +1,3 @@
 #!/bin/sh
 
-curl --silent --compressed http://example.com/cron
+curl --silent --compressed http://example.com/cron/YOURKEY

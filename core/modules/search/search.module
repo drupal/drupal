@@ -156,7 +156,7 @@ function search_block_view($delta = '') {
 }
 
 /**
- * Implements hook_preprocess_block().
+ * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function search_preprocess_block(&$variables) {
   if ($variables['block']->module == 'search' && $variables['block']->delta == 'form') {

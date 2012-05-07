@@ -1,4 +1,5 @@
 <?php
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * @file
@@ -181,7 +182,7 @@ class LanguageDependencyInjectionTest extends DrupalWebTestCase {
 
     // Set up a new container to ensure we are building a new Language object
     // for each test.
-    drupal_container(TRUE);
+    drupal_container(new ContainerBuilder());
   }
 
   /**

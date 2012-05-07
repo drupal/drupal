@@ -5,6 +5,8 @@
  * Defines a field type and its formatters and widgets.
  */
 
+use Drupal\field\FieldException;
+
 /**
  * Implements hook_field_info().
  */

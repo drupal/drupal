@@ -66,6 +66,6 @@ function menu_install() {
  * Implements hook_uninstall().
  */
 function menu_uninstall() {
-  menu_rebuild();
+  menu_router_rebuild();
 }
 

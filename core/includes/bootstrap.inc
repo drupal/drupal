@@ -3,7 +3,7 @@
 use Drupal\Core\Database\Database;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -2358,23 +2358,22 @@ function drupal_get_bootstrap_phase() {
  * @endcode
  *
  * @param $reset
- *   TRUE or FALSE depending on whether the Container instance is to be reset.
+ *   A new container instance to reset the Drupal container to.
  *
- * @return Symfony\Component\DependencyInjection\ContainerBuilder
+ * @return Drupal\Component\DependencyInjection\ContainerBuilder
  *   The instance of the Drupal Container used to set up and maintain object
  *   instances.
  */
-function drupal_container($reset = FALSE) {
+function drupal_container(ContainerBuilder $reset = NULL) {
   // We do not use drupal_static() here because we do not have a mechanism by
   // which to reinitialize the stored objects, so a drupal_static_reset() call
   // would leave Drupal in a nonfunctional state.
   static $container = NULL;
-  if ($reset || !isset($container)) {
+  if (isset($reset)) {
+    $container = $reset;
+  }
+  elseif (!isset($container)) {
     $container = new ContainerBuilder();
-    // An interface language always needs to be available for t() and other
-    // functions. This default is overridden by drupal_language_initialize()
-    // during language negotiation.
-    $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
   }
   return $container;
 }
@@ -3316,4 +3315,33 @@ function _drupal_shutdown_function() {
       print '<p>' . _drupal_render_exception_safe($exception) . '</p><hr />';
     }
   }
+}
+
+/**
+ * Compares the memory required for an operation to the available memory.
+ *
+ * @param $required
+ *   The memory required for the operation, expressed as a number of bytes with
+ *   optional SI or IEC binary unit prefix (e.g. 2, 3K, 5MB, 10G, 6GiB, 8bytes,
+ *   9mbytes).
+ * @param $memory_limit
+ *   (optional) The memory limit for the operation, expressed as a number of
+ *   bytes with optional SI or IEC binary unit prefix (e.g. 2, 3K, 5MB, 10G,
+ *   6GiB, 8bytes, 9mbytes). If no value is passed, the current PHP
+ *   memory_limit will be used. Defaults to NULL.
+ *
+ * @return
+ *   TRUE if there is sufficient memory to allow the operation, or FALSE
+ *   otherwise.
+ */
+function drupal_check_memory_limit($required, $memory_limit = NULL) {
+  if (!isset($memory_limit)) {
+    $memory_limit = ini_get('memory_limit');
+  }
+
+  // There is sufficient memory if:
+  // - No memory limit is set.
+  // - The memory limit is set to unlimited (-1).
+  // - The memory limit is greater than the memory required for the operation.
+  return ((!$memory_limit) || ($memory_limit == -1) || (parse_size($memory_limit) > parse_size($required)));
 }

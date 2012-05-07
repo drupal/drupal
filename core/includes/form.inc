@@ -79,7 +79,7 @@
  * the elements and properties of the form. For information on the array
  * components and format, and more detailed explanations of the Form API
  * workflow, see the
- * @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html Form API reference @endlink
+ * @link forms_api_reference.html Form API reference @endlink
  * and the
  * @link http://drupal.org/node/37775 Form API documentation section. @endlink
  * In addition, there is a set of Form API tutorials in
@@ -214,10 +214,10 @@ function drupal_get_form($form_id) {
  *     set.
  *   - values: An associative array of values submitted to the form. The
  *     validation functions and submit functions use this array for nearly all
- *     their decision making. (Note that
- *     @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html/7#tree #tree @endlink
- *     determines whether the values are a flat array or an array whose
- *     structure parallels the $form array.)
+ *     their decision making. (Note that #tree determines whether the values
+ *     are a flat array or an array whose structure parallels the $form array.
+ *     See the @link forms_api_reference.html Form API reference @endlink for
+ *     more information.)
  *   - input: The array of values as they were submitted by the user. These are
  *     raw and unvalidated, so should not be used without a thorough
  *     understanding of security implications. In almost all cases, code should

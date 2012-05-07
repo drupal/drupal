@@ -139,7 +139,7 @@ function _theme_test_suggestion() {
 }
 
 /**
- * Implements hook_preprocess_html().
+ * Implements hook_preprocess_HOOK() for html.tpl.php.
  */
 function theme_test_preprocess_html(&$variables) {
   $variables['html_attributes_array']['theme_test_html_attribute'] = 'theme test html attribute value';

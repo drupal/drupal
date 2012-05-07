@@ -286,11 +286,11 @@ INSTALLATION
    crontab utility on Unix/Linux systems. The following crontab line uses the
    wget command to visit the cron page, and runs each hour, on the hour:
 
-   0 * * * * wget -O - -q -t 1 http://example.com/cron?cron_key=YOURKEY
+   0 * * * * wget -O - -q -t 1 http://example.com/cron/YOURKEY
 
-   Replace the text "http://example.com/cron?cron_key=YOURKEY" in the
-   example with the full URL displayed under "Cron maintenance tasks" on the
-   "Status report" page.
+   Replace the text "http://example.com/cron/YOURKEY" in the example with the
+   full URL displayed under "Cron maintenance tasks" on the "Status report"
+   page.
 
    More information about cron maintenance tasks is available at
    http://drupal.org/cron, and sample cron shell scripts can be found in the

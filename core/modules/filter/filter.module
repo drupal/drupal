@@ -6,6 +6,13 @@
  */
 
 /**
+ * Implements hook_cache_flush().
+ */
+function filter_cache_flush() {
+  return array('filter');
+}
+
+/**
  * Implements hook_help().
  */
 function filter_help($path, $arg) {

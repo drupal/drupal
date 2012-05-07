@@ -63,7 +63,7 @@ function simpletest_requirements($phase) {
   // Check the current memory limit. If it is set too low, SimpleTest will fail
   // to load all tests and throw a fatal error.
   $memory_limit = ini_get('memory_limit');
-  if ($memory_limit && $memory_limit != -1 && parse_size($memory_limit) < parse_size(SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT)) {
+  if (!drupal_check_memory_limit(SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, $memory_limit)) {
     $requirements['php_memory_limit']['severity'] = REQUIREMENT_ERROR;
     $requirements['php_memory_limit']['description'] = $t('The testing framework requires the PHP memory limit to be at least %memory_minimum_limit. The current value is %memory_limit. <a href="@url">Follow these steps to continue</a>.', array('%memory_limit' => $memory_limit, '%memory_minimum_limit' => SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, '@url' => 'http://drupal.org/node/207036'));
   }

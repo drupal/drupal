@@ -52,7 +52,7 @@ function field_ui_help($path, $arg) {
 function field_ui_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
   // The Field UI relies on entity_get_info() to build menu items for entity
   // field administration pages. Ensure that the menu is rebuilt.
-  menu_rebuild();
+  menu_router_rebuild();
 }
 
 /**

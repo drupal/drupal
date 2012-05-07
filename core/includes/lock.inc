@@ -13,9 +13,10 @@
  * In most environments, multiple Drupal page requests (a.k.a. threads or
  * processes) will execute in parallel. This leads to potential conflicts or
  * race conditions when two requests execute the same code at the same time. A
- * common example of this is a rebuild like menu_rebuild() where we invoke many
- * hook implementations to get and process data from all active modules, and
- * then delete the current data in the database to insert the new afterwards.
+ * common example of this is a rebuild like menu_router_rebuild() where we
+ * invoke many hook implementations to get and process data from all active
+ * modules, and then delete the current data in the database to insert the new
+ * afterwards.
  *
  * This is a cooperative, advisory lock system. Any long-running operation
  * that could potentially be attempted in parallel by multiple requests should

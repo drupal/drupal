@@ -140,7 +140,7 @@ function toolbar_pre_render($toolbar) {
 }
 
 /**
- * Implements hook_preprocess_html().
+ * Implements hook_preprocess_HOOK() for html.tpl.php.
  *
  * Add some page classes, so global page theming can adjust to the toolbar.
  */
@@ -154,7 +154,7 @@ function toolbar_preprocess_html(&$vars) {
 }
 
 /**
- * Implements hook_preprocess_toolbar().
+ * Implements hook_preprocess_HOOK() for toolbar.tpl.php.
  *
  * Adding the 'overlay-displace-top' class to the toolbar pushes the overlay
  * down, so it appears below the toolbar.

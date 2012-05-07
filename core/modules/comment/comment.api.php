@@ -16,10 +16,10 @@
  * This hook is invoked from comment_save() before the comment is saved to the
  * database.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment object.
  */
-function hook_comment_presave(Comment $comment) {
+function hook_comment_presave(Drupal\comment\Comment $comment) {
   // Remove leading & trailing spaces from the comment subject.
   $comment->subject = trim($comment->subject);
 }
@@ -27,10 +27,10 @@ function hook_comment_presave(Comment $comment) {
 /**
  * Respond to creation of a new comment.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment object.
  */
-function hook_comment_insert(Comment $comment) {
+function hook_comment_insert(Drupal\comment\Comment $comment) {
   // Reindex the node when comments are added.
   search_touch_node($comment->nid);
 }
@@ -38,10 +38,10 @@ function hook_comment_insert(Comment $comment) {
 /**
  * Respond to updates to a comment.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment object.
  */
-function hook_comment_update(Comment $comment) {
+function hook_comment_update(Drupal\comment\Comment $comment) {
   // Reindex the node when comments are updated.
   search_touch_node($comment->nid);
 }
@@ -52,7 +52,7 @@ function hook_comment_update(Comment $comment) {
  * @param array $comments
  *  An array of comment objects indexed by cid.
  */
-function hook_comment_load(Comment $comments) {
+function hook_comment_load(Drupal\comment\Comment $comments) {
   $result = db_query('SELECT cid, foo FROM {mytable} WHERE cid IN (:cids)', array(':cids' => array_keys($comments)));
   foreach ($result as $record) {
     $comments[$record->cid]->foo = $record->foo;
@@ -62,7 +62,7 @@ function hook_comment_load(Comment $comments) {
 /**
  * Act on a comment that is being assembled before rendering.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   Passes in the comment the action is being performed on.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
@@ -71,7 +71,7 @@ function hook_comment_load(Comment $comments) {
  *
  * @see hook_entity_view()
  */
-function hook_comment_view(Comment $comment, $view_mode, $langcode) {
+function hook_comment_view(Drupal\comment\Comment $comment, $view_mode, $langcode) {
   // how old is the comment
   $comment->time_ago = time() - $comment->changed;
 }
@@ -85,8 +85,9 @@ function hook_comment_view(Comment $comment, $view_mode, $langcode) {
  *
  * If the module wishes to act on the rendered HTML of the comment rather than
  * the structured content array, it may use this hook to add a #post_render
- * callback. Alternatively, it could also implement hook_preprocess_comment().
- * See drupal_render() and theme() documentation respectively for details.
+ * callback. Alternatively, it could also implement hook_preprocess_HOOK() for
+ * comment.tpl.php. See drupal_render() and theme() documentation respectively
+ * for details.
  *
  * @param $build
  *   A renderable array representing the comment.
@@ -108,20 +109,20 @@ function hook_comment_view_alter(&$build) {
 /**
  * Respond to a comment being published by a moderator.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment the action is being performed on.
  */
-function hook_comment_publish(Comment $comment) {
+function hook_comment_publish(Drupal\comment\Comment $comment) {
   drupal_set_message(t('Comment: @subject has been published', array('@subject' => $comment->subject)));
 }
 
 /**
  * Respond to a comment being unpublished by a moderator.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment the action is being performed on.
  */
-function hook_comment_unpublish(Comment $comment) {
+function hook_comment_unpublish(Drupal\comment\Comment $comment) {
   drupal_set_message(t('Comment: @subject has been unpublished', array('@subject' => $comment->subject)));
 }
 
@@ -132,14 +133,14 @@ function hook_comment_unpublish(Comment $comment) {
  * field_attach_delete() is called and before the comment is actually removed
  * from the database.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment object for the comment that is about to be deleted.
  *
  * @see hook_comment_delete()
  * @see comment_delete_multiple()
  * @see entity_delete_multiple()
  */
-function hook_comment_predelete(Comment $comment) {
+function hook_comment_predelete(Drupal\comment\Comment $comment) {
   // Delete a record associated with the comment in a custom table.
   db_delete('example_comment_table')
     ->condition('cid', $comment->cid)
@@ -153,14 +154,14 @@ function hook_comment_predelete(Comment $comment) {
  * field_attach_delete() has called and after the comment has been removed from
  * the database.
  *
- * @param Comment $comment
+ * @param Drupal\comment\Comment $comment
  *   The comment object for the comment that has been deleted.
  *
  * @see hook_comment_predelete()
  * @see comment_delete_multiple()
  * @see entity_delete_multiple()
  */
-function hook_comment_delete(Comment $comment) {
+function hook_comment_delete(Drupal\comment\Comment $comment) {
   drupal_set_message(t('Comment: @subject has been deleted', array('@subject' => $comment->subject)));
 }
 

@@ -4,14 +4,6 @@
  * Attach custom data fields to Drupal entities.
  */
 
-/**
- * Base class for all exceptions thrown by Field API functions.
- *
- * This class has no functionality of its own other than allowing all
- * Field API exceptions to be caught by a single catch block.
- */
-class FieldException extends Exception {}
-
 /*
  * Load all public Field API functions. Drupal currently has no
  * mechanism for auto-loading core APIs, so we have to load them on
@@ -274,11 +266,6 @@ const FIELD_LOAD_CURRENT = 'FIELD_LOAD_CURRENT';
 const FIELD_LOAD_REVISION = 'FIELD_LOAD_REVISION';
 
 /**
- * Exception class thrown by hook_field_update_forbid().
- */
-class FieldUpdateForbiddenException extends FieldException {}
-
-/**
  * Implements hook_help().
  */
 function field_help($path, $arg) {
@@ -310,7 +297,7 @@ function field_help($path, $arg) {
       }
       $output .= theme('item_list', $items) . '</dd>';
       $output .= '<dt>' . t('Managing field data storage') . '</dt>';
-      $output .= '<dd>' . t('Developers of field modules can either use the default <a href="@sql-store">Field SQL Storage module</a> to store data for their fields, or a contributed or custom module developed using the <a href="@storage-api">field storage API</a>.', array('@storage-api' => 'http://api.drupal.org/api/group/field_storage/7', '@sql-store' => url('admin/help/field_sql_storage'))) . '</dd>';
+      $output .= '<dd>' . t('Developers of field modules can either use the default <a href="@sql-store">Field SQL Storage module</a> to store data for their fields, or a contributed or custom module developed using the <a href="@storage-api">field storage API</a>.', array('@storage-api' => 'http://api.drupal.org/api/group/field_storage/8', '@sql-store' => url('admin/help/field_sql_storage'))) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -380,14 +367,19 @@ function field_system_info_alter(&$info, $file, $type) {
 }
 
 /**
- * Implements hook_flush_caches().
+ * Implements hook_cache_flush().
  */
-function field_flush_caches() {
+function field_cache_flush() {
+  // Request a flush of our cache table.
+  return array('field');
+}
+
+/**
+ * Implements hook_rebuild().
+ */
+function field_rebuild() {
   // Refresh the 'active' status of fields.
   field_sync_field_status();
-
- // Request a flush of our cache table.
-  return array('field');
 }
 
 /**

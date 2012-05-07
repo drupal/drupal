@@ -781,7 +781,7 @@ function locale_form_system_file_system_settings_alter(&$form, $form_state) {
 }
 
 /**
- * Implements MODULE_preprocess_HOOK().
+ * Implements hook_preprocess_HOOK() for node.tpl.php.
  */
 function locale_preprocess_node(&$variables) {
   if ($variables['langcode'] != LANGUAGE_NOT_SPECIFIED) {

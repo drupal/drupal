@@ -5,6 +5,9 @@
  * Tests for field.module.
  */
 
+use Drupal\field\FieldException;
+use Drupal\field\FieldValidationException;
+
 /**
  * Parent class for Field API tests.
  */

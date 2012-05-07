@@ -836,7 +836,7 @@ function _update_cache_clear($cid = NULL, $wildcard = FALSE) {
 }
 
 /**
- * Implements hook_flush_caches().
+ * Implements hook_cache_flush().
  *
  * Called from update.php (among others) to flush the caches.
  * Since we're running update.php, we are likely to install a new version of
@@ -851,7 +851,7 @@ function _update_cache_clear($cid = NULL, $wildcard = FALSE) {
  * check if the site is in MAINTENANCE_MODE == 'update' (which indicates
  * update.php is running, not update module... alas for overloaded names).
  */
-function update_flush_caches() {
+function update_cache_flush() {
   if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
     _update_cache_clear();
   }

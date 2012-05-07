@@ -5,6 +5,8 @@
  * Tests for the Comment module.
  */
 
+use Drupal\comment\Comment;
+
 class CommentHelperCase extends DrupalWebTestCase {
   protected $profile = 'standard';
 
@@ -96,7 +98,7 @@ class CommentHelperCase extends DrupalWebTestCase {
   /**
    * Checks current page for specified comment.
    *
-   * @param Comment $comment
+   * @param Drupal\comment\Comment $comment
    *   The comment object.
    * @param boolean $reply
    *   Boolean indicating whether the comment is a reply to another comment.
@@ -123,7 +125,7 @@ class CommentHelperCase extends DrupalWebTestCase {
   /**
    * Deletes a comment.
    *
-   * @param Comment $comment
+   * @param Drupal\comment\Comment $comment
    *   Comment to delete.
    */
   function deleteComment(Comment $comment) {
@@ -2088,7 +2090,6 @@ class CommentFieldsTest extends CommentHelperCase {
     $edit['modules[Core][book][enable]'] = 'book';
     $edit['modules[Core][poll][enable]'] = 'poll';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->resetAll();
 
     // Now enable the comment module.
     $edit = array();

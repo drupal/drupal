@@ -11,6 +11,10 @@
  */
 
 // Add blocks respective for language functionality.
+db_delete('block')
+  ->condition('module', 'locale')
+  ->execute();
+
 db_insert('block')->fields(array(
   'module',
   'delta',
@@ -52,85 +56,8 @@ db_insert('block')->fields(array(
 ))
 ->execute();
 
-// Add language table from locale.install schema and prefill with some default
-// languages for testing.
-db_create_table('languages', array(
-  'fields' => array(
-    'language' => array(
-      'type' => 'varchar',
-      'length' => 12,
-      'not null' => TRUE,
-      'default' => '',
-    ),
-    'name' => array(
-      'type' => 'varchar',
-      'length' => 64,
-      'not null' => TRUE,
-      'default' => '',
-    ),
-    'native' => array(
-      'type' => 'varchar',
-      'length' => 64,
-      'not null' => TRUE,
-      'default' => '',
-    ),
-    'direction' => array(
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-    'enabled' => array(
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-    'plurals' => array(
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-    'formula' => array(
-      'type' => 'varchar',
-      'length' => 128,
-      'not null' => TRUE,
-      'default' => '',
-    ),
-    'domain' => array(
-      'type' => 'varchar',
-      'length' => 128,
-      'not null' => TRUE,
-      'default' => '',
-    ),
-    'prefix' => array(
-      'type' => 'varchar',
-      'length' => 128,
-      'not null' => TRUE,
-      'default' => '',
-    ),
-    'weight' => array(
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-    'javascript' => array(
-      'type' => 'varchar',
-      'length' => 64,
-      'not null' => TRUE,
-      'default' => '',
-    ),
-  ),
-  'primary key' => array(
-    'language',
-  ),
-  'indexes' => array(
-    'list' => array(
-      'weight',
-      'name',
-    ),
-  ),
-  'module' => 'locale',
-  'name' => 'languages',
-));
+// Prefill languages table from locale.install with some default languages
+// for testing.
 db_insert('languages')->fields(array(
   'language',
   'name',
@@ -171,19 +98,6 @@ db_insert('languages')->fields(array(
   'javascript' => '',
 ))
 ->values(array(
-  'language' => 'en',
-  'name' => 'English',
-  'native' => 'English',
-  'direction' => '0',
-  'enabled' => '1',
-  'plurals' => '0',
-  'formula' => '',
-  'domain' => '',
-  'prefix' => '',
-  'weight' => '0',
-  'javascript' => '',
-))
-->values(array(
   'language' => 'hr',
   'name' => 'Croatian',
   'native' => 'Hrvatski',
@@ -198,58 +112,8 @@ db_insert('languages')->fields(array(
 ))
 ->execute();
 
-// Add locales_source table from locale.install schema and fill with some
-// sample data for testing.
-db_create_table('locales_source', array(
-  'fields' => array(
-    'lid' => array(
-      'type' => 'serial',
-      'not null' => TRUE,
-    ),
-    'location' => array(
-      'type' => 'text',
-      'not null' => FALSE,
-      'size' => 'big',
-    ),
-    'textgroup' => array(
-      'type' => 'varchar',
-      'length' => 255,
-      'not null' => TRUE,
-      'default' => 'default',
-    ),
-    'source' => array(
-      'type' => 'text',
-      'mysql_type' => 'blob',
-      'not null' => TRUE,
-    ),
-    'context' => array(
-      'type' => 'varchar',
-      'length' => 255,
-      'not null' => TRUE,
-      'default' => '',
-    ),
-    'version' => array(
-      'type' => 'varchar',
-      'length' => 20,
-      'not null' => TRUE,
-      'default' => 'none',
-    ),
-  ),
-  'primary key' => array(
-    'lid',
-  ),
-  'indexes' => array(
-    'source_context' => array(
-      array(
-        'source',
-        30,
-      ),
-      'context',
-    ),
-  ),
-  'module' => 'locale',
-  'name' => 'locales_source',
-));
+// Fill locales_source table from locale.install schema with some sample data
+// for testing.
 db_insert('locales_source')->fields(array(
   'lid',
   'location',
@@ -452,63 +316,8 @@ db_insert('locales_source')->fields(array(
 ))
 ->execute();
 
-// Add locales_target table from locale.install schema.
-db_create_table('locales_target', array(
-  'fields' => array(
-    'lid' => array(
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-    'translation' => array(
-      'type' => 'text',
-      'mysql_type' => 'blob',
-      'not null' => TRUE,
-    ),
-    'language' => array(
-      'type' => 'varchar',
-      'length' => 12,
-      'not null' => TRUE,
-      'default' => '',
-    ),
-    'plid' => array(
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-    'plural' => array(
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ),
-  ),
-  'primary key' => array(
-    'language',
-    'lid',
-    'plural',
-  ),
-  'foreign keys' => array(
-    'locales_source' => array(
-      'table' => 'locales_source',
-      'columns' => array(
-        'lid' => 'lid',
-      ),
-    ),
-  ),
-  'indexes' => array(
-    'lid' => array(
-      'lid',
-    ),
-    'plid' => array(
-      'plid',
-    ),
-    'plural' => array(
-      'plural',
-    ),
-  ),
-  'module' => 'locale',
-  'name' => 'locales_target',
-));
+// Fill locales_target table from locale.install schema with some sample data
+// for testing.
 db_insert('locales_target')->fields(array(
   'lid',
   'translation',
@@ -554,6 +363,21 @@ db_insert('locales_target')->fields(array(
 ->execute();
 
 // Set up variables needed for language support.
+$deleted_variables = array(
+  'javascript_parsed',
+  'language_count',
+  'language_default',
+  'language_negotiation_language',
+  'language_negotiation_language_content',
+  'language_negotiation_language_url',
+  'language_types',
+  'locale_language_providers_weight_language',
+  'language_content_type_article',
+);
+db_delete('variable')
+  ->condition('name', $deleted_variables, 'IN')
+  ->execute();
+
 db_insert('variable')->fields(array(
   'name',
   'value',
@@ -594,22 +418,6 @@ db_insert('variable')->fields(array(
   'name' => 'language_content_type_article',
   'value' => 's:1:"2";',
 ))
-->execute();
-
-// Enable Locale and Translation module.
-db_update('system')->fields(array(
-  'status' => 1,
-  'schema_version' => '7001',
-))
-->condition('type', 'module')
-->condition('name', 'locale')
-->execute();
-db_update('system')->fields(array(
-  'status' => 1,
-  'schema_version' => '7001',
-))
-->condition('type', 'module')
-->condition('name', 'translation')
 ->execute();
 
 // Add sample nodes to test language assignment and translation functionality.

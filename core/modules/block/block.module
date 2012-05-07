@@ -935,9 +935,16 @@ function _block_get_renderable_block($element) {
 }
 
 /**
- * Implements hook_flush_caches().
+ * Implements hook_cache_flush().
  */
-function block_flush_caches() {
+function block_cache_flush() {
+  return array('block');
+}
+
+/**
+ * Implements hook_rebuild().
+ */
+function block_rebuild() {
   // Rehash blocks for active themes. We don't use list_themes() here,
   // because if MAINTENANCE_MODE is defined it skips reading the database,
   // and we can't tell which themes are active.
@@ -945,8 +952,6 @@ function block_flush_caches() {
   foreach ($themes as $theme) {
     _block_rehash($theme->name);
   }
-
-  return array('block');
 }
 
 /**
