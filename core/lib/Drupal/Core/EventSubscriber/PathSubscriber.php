@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Access subscriber for controller requests.
  */
-class PathSubscriber implements EventSubscriberInterface {
+class PathSubscriber extends PathListenerAbstract implements EventSubscriberInterface {
 
   /**
    * Resolve the system path.
@@ -31,7 +31,7 @@ class PathSubscriber implements EventSubscriberInterface {
 
     $request = $event->getRequest();
 
-    $path = ltrim($request->getPathInfo(), '/');
+    $path = $this->extractPath($request);
 
     if (empty($path)) {
       // @todo Temporary hack. Fix when configuration is injectable.
@@ -44,11 +44,28 @@ class PathSubscriber implements EventSubscriberInterface {
       $system_path = variable_get('site_frontpage', 'user');
     }
 
-    $request->attributes->set('system_path', $system_path);
+    $this->setPath($request, $system_path);
+  }
 
-    // @todo Remove this line once code has been refactored to use the request
-    // object directly.
-    _current_path($system_path);
+  /**
+   * Resolve the front-page default path.
+   *
+   * @todo The path system should be objectified to remove the function calls
+   * in this method.
+   *
+   * @param GetResponseEvent $event
+   *   The Event to process.
+   */
+  public function onKernelRequestFrontPageResolve(GetResponseEvent $event) {
+    $request = $event->getRequest();
+    $path = $this->extractPath($request);
+
+    if (empty($path)) {
+      // @todo Temporary hack. Fix when configuration is injectable.
+      $path = variable_get('site_frontpage', 'user');
+    }
+
+    $this->setPath($request, $path);
   }
 
   /**
@@ -59,6 +76,7 @@ class PathSubscriber implements EventSubscriberInterface {
    */
   static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = array('onKernelRequestPathResolve', 100);
+    $events[KernelEvents::REQUEST][] = array('onKernelRequestFrontPageResolve', 101);
 
     return $events;
   }
