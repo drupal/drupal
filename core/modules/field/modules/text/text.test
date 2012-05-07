@@ -5,6 +5,8 @@
  * Tests for text.module.
  */
 
+use Drupal\field\FieldValidationException;
+
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
   protected $admin_user;

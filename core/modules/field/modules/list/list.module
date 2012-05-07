@@ -5,6 +5,8 @@
  * Defines list field types that can be used with the Options module.
  */
 
+use Drupal\field\FieldUpdateForbiddenException;
+
 /**
  * Implements hook_help().
  */

@@ -5,6 +5,8 @@
  * Tests for taxonomy.module.
  */
 
+use Drupal\field\FieldValidationException;
+
 /**
  * Provides common helper methods for Taxonomy module tests.
  */

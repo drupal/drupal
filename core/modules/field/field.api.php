@@ -5,6 +5,8 @@
  * @{
  */
 
+use Drupal\field\FieldUpdateForbiddenException;
+
 /**
  * Exposes "pseudo-field" components on fieldable entities.
  *
@@ -2434,7 +2436,8 @@ function hook_field_create_instance($instance) {
  * semantics, or if there are external dependencies on field settings
  * that cannot be updated.
  *
- * To forbid the update from occurring, throw a FieldUpdateForbiddenException.
+ * To forbid the update from occurring, throw a
+ * Drupal\field\FieldUpdateForbiddenException.
  *
  * @param $field
  *   The field as it will be post-update.

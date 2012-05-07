@@ -2,6 +2,7 @@
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Select;
+use Drupal\field\FieldUpdateForbiddenException;
 
 /**
  * @file

@@ -4,14 +4,6 @@
  * Attach custom data fields to Drupal entities.
  */
 
-/**
- * Base class for all exceptions thrown by Field API functions.
- *
- * This class has no functionality of its own other than allowing all
- * Field API exceptions to be caught by a single catch block.
- */
-class FieldException extends Exception {}
-
 /*
  * Load all public Field API functions. Drupal currently has no
  * mechanism for auto-loading core APIs, so we have to load them on
@@ -272,11 +264,6 @@ const FIELD_LOAD_CURRENT = 'FIELD_LOAD_CURRENT';
  * specified in the entity with field_attach_load().
  */
 const FIELD_LOAD_REVISION = 'FIELD_LOAD_REVISION';
-
-/**
- * Exception class thrown by hook_field_update_forbid().
- */
-class FieldUpdateForbiddenException extends FieldException {}
 
 /**
  * Implements hook_help().
