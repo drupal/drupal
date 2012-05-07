@@ -580,6 +580,13 @@ function system_element_info() {
  * Implements hook_menu().
  */
 function system_menu() {
+  $items['cron/%'] = array(
+    'title' => 'Run cron',
+    'page callback' => 'system_cron_page',
+    'access callback' => 'system_cron_access',
+    'access arguments' => array(1),
+    'type' => MENU_CALLBACK,
+  );
   $items['system/files'] = array(
     'title' => 'File download',
     'page callback' => 'file_download',
@@ -1109,6 +1116,38 @@ function system_menu() {
     'file' => 'system.admin.inc',
   );
   return $items;
+}
+
+/**
+ * Page callback; Execute cron tasks.
+ *
+ * @see system_cron_access().
+ */
+function system_cron_page() {
+  drupal_cron_run();
+
+  // Returning nothing causes no output to be generated.
+}
+
+/**
+ * Access callback for system_cron().
+ *
+ * @param string $key
+ *   A hash to validate the page request origin.
+ *
+ * @see system_cron_page().
+ */
+function system_cron_access($key) {
+  if ($key != variable_get('cron_key', 'drupal')) {
+    watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
+    return FALSE;
+  }
+  elseif (variable_get('maintenance_mode', 0)) {
+    watchdog('cron', 'Cron could not run because the site is in maintenance mode.', array(), WATCHDOG_NOTICE);
+    return FALSE;
+  }
+
+  return TRUE;
 }
 
 /**

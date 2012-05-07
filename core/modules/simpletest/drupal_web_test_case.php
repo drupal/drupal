@@ -2240,7 +2240,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * Runs cron in the Drupal installed by Simpletest.
    */
   protected function cronRun() {
-    $this->drupalGet($GLOBALS['base_url'] . '/core/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))));
+    $this->drupalGet('cron/' . variable_get('cron_key', 'drupal'));
   }
 
   /**
