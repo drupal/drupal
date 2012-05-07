@@ -69,14 +69,40 @@ class PathSubscriber extends PathListenerAbstract implements EventSubscriberInte
   }
 
   /**
+   * Decodes the path of the request.
+   *
+   * Parameters in the URL sometimes represent code-meaningful strings. It is
+   * therefore useful to always urldecode() those values so that individual
+   * controllers need not concern themselves with it.  This is Drupal-specific
+   * logic, and may not be familiar for developers used to other Symfony-family
+   * projects.
+   *
+   * @todo Revisit whether or not this logic is appropriate for here or if
+   *       controllers should be required to implement this logic themselves. If
+   *       we decide to keep this code, remove this TODO.
+   *
+   * @param GetResponseEvent $event
+   *   The Event to process.
+   */
+  public function onKernelRequestDecodePath(GetResponseEvent $event) {
+    $request = $event->getRequest();
+    $path = $this->extractPath($request);
+
+    $path = urldecode($path);
+
+    $this->setPath($request, $path);
+  }
+
+  /**
    * Registers the methods in this class that should be listeners.
    *
    * @return array
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::REQUEST][] = array('onKernelRequestPathResolve', 100);
+    $events[KernelEvents::REQUEST][] = array('onKernelRequestDecodePath', 102);
     $events[KernelEvents::REQUEST][] = array('onKernelRequestFrontPageResolve', 101);
+    $events[KernelEvents::REQUEST][] = array('onKernelRequestPathResolve', 100);
 
     return $events;
   }
