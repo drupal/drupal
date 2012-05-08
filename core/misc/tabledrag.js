@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Drag and drop table rows with field manipulation.
  *

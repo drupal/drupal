@@ -4,6 +4,8 @@
  */
 (function ($) {
 
+"use strict";
+
 Drupal.behaviors.pathFieldsetSummaries = {
   attach: function (context) {
     $(context).find('fieldset.path-form').drupalSetSummary(function (context) {

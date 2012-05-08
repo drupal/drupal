@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Shows checked and disabled checkboxes for inherited permissions.
  */

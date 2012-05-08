@@ -1,4 +1,7 @@
 (function ($) {
+
+  "use strict";
+
   $(document).ready(function() {
     var nid = Drupal.settings.statistics.nid;
     var basePath = Drupal.settings.basePath

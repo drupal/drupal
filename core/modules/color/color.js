@@ -5,6 +5,8 @@
 
 (function ($) {
 
+"use strict";
+
 Drupal.behaviors.color = {
   attach: function (context, settings) {
     var i, j, colors, field_name;

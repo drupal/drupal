@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Attaches sticky table headers.
  */

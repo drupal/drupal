@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Attach handlers to evaluate the strength of any password fields and to check
  * that its confirmation is correct.
@@ -157,6 +159,7 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
     strength = 5;
   }
 
+  var indicatorText;
   // Based on the strength, work out what text should be shown by the password strength meter.
   if (strength < 60) {
     indicatorText = translate.weak;

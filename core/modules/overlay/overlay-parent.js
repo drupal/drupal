@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Open the overlay, or load content into it, when an admin link is clicked.
  */

@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * The base States namespace.
  *

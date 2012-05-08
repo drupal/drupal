@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Show/hide the 'Email site administrator when updates are available' checkbox
  * on the install page.

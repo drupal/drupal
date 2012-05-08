@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Attaches the batch behavior to progress bars.
  */

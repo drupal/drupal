@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 Drupal.behaviors.menuChangeParentItems = {
   attach: function (context, settings) {
     $('fieldset#edit-menu input').each(function () {

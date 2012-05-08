@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 $.datepicker.regional['drupal-locale'] = {
   closeText: Drupal.t('Done'),
   prevText: Drupal.t('Prev'),

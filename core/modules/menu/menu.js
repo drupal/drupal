@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 Drupal.behaviors.menuFieldsetSummaries = {
   attach: function (context) {
     $(context).find('fieldset.menu-link-form').drupalSetSummary(function (context) {

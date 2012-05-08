@@ -4,6 +4,9 @@
  */
 
 (function ($) {
+
+  "use strict";
+
   Drupal.color = {
     callback: function(context, settings, form, farb, height, width) {
       // Solid background.

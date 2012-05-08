@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Retrieves the summary for the first element.
  */

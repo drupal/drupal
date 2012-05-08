@@ -9,6 +9,8 @@
 
 (function ($) {
 
+"use strict";
+
 /**
  * Attach behaviors to managed file element upload fields.
  */
