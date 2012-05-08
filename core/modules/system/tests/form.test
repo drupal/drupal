@@ -784,6 +784,65 @@ class FormValidationTestCase extends DrupalWebTestCase {
     $this->assertText(t('!name field is required.', array('!name' => 'Title')));
     $this->assertText('Test element is invalid');
   }
+
+  /**
+   * Tests #pattern validation.
+   */
+  function testPatternValidation() {
+    $textfield_error = t('%name field is not in the right format.', array('%name' => 'One digit followed by lowercase letters'));
+    $tel_error = t('%name field is not in the right format.', array('%name' => 'Everything except numbers'));
+    $password_error = t('%name field is not in the right format.', array('%name' => 'Password'));
+
+    // Invalid textfield, valid tel.
+    $edit = array(
+      'textfield' => 'invalid',
+      'tel' => 'valid',
+    );
+    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->assertRaw($textfield_error);
+    $this->assertNoRaw($tel_error);
+    $this->assertNoRaw($password_error);
+
+    // Valid textfield, invalid tel, valid password.
+    $edit = array(
+      'textfield' => '7seven',
+      'tel' => '818937',
+      'password' => '0100110',
+    );
+    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->assertNoRaw($textfield_error);
+    $this->assertRaw($tel_error);
+    $this->assertNoRaw($password_error);
+
+    // Non required fields are not validated if empty.
+    $edit = array(
+      'textfield' => '',
+      'tel' => '',
+    );
+    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->assertNoRaw($textfield_error);
+    $this->assertNoRaw($tel_error);
+    $this->assertNoRaw($password_error);
+
+    // Invalid password.
+    $edit = array(
+      'password' => $this->randomName(),
+    );
+    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->assertNoRaw($textfield_error);
+    $this->assertNoRaw($tel_error);
+    $this->assertRaw($password_error);
+
+    // The pattern attribute overrides #pattern and is not validated on the
+    // server side.
+    $edit = array(
+      'textfield' => '',
+      'tel' => '',
+      'url' => 'http://www.example.com/',
+    );
+    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->assertNoRaw(t('%name field is not in the right format.', array('%name' => 'Client side validation')));
+  }
 }
 
 /**
