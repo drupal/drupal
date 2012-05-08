@@ -6,7 +6,7 @@ namespace Drupal\Core\Config;
  * Defines an interface for verified storage manipulation.
  *
  * This class allows reading and writing configuration data from/to the
- * verified storage and copying to/from the signed file storing the same data.
+ * verified storage and copying to/from the file storing the same data.
  */
 interface DrupalConfigVerifiedStorageInterface {
 

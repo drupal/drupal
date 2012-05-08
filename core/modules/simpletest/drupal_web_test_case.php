@@ -1344,7 +1344,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->originalLanguage = $language_interface;
     $this->originalLanguageDefault = variable_get('language_default');
     $this->originalConfigDirectory = $GLOBALS['config_directory_name'];
-    $this->originalConfigSignatureKey = $GLOBALS['config_signature_key'];
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
     $this->originalUser = $user;
@@ -1377,7 +1376,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     $GLOBALS['config_directory_name'] = 'simpletest/' . substr($this->databasePrefix, 10) . '/config';
     $this->configFileDirectory = $this->originalFileDirectory . '/' . $GLOBALS['config_directory_name'];
     file_prepare_directory($this->configFileDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-    $GLOBALS['config_signature_key'] = drupal_hash_base64(drupal_random_bytes(55));
 
     // Log fatal errors.
     ini_set('log_errors', 1);
@@ -1647,7 +1645,6 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Reset configuration globals.
     $GLOBALS['config_directory_name'] = $this->originalConfigDirectory;
-    $GLOBALS['config_signature_key'] = $this->originalConfigSignatureKey;
 
     // Reset language.
     $language_interface = $this->originalLanguage;

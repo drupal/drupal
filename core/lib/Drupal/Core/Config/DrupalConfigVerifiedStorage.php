@@ -3,7 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Config\DrupalConfigVerifiedStorageInterface;
-use Drupal\Core\Config\SignedFileStorage;
+use Drupal\Core\Config\FileStorage;
 
 /**
  * @todo
@@ -13,11 +13,11 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
   protected $name;
 
   /**
-   * The local signed file object to read from and write to.
+   * The local file object to read from and write to.
    *
-   * @var SignedFileStorage
+   * @var Drupal\Core\Config\FileStorage
    */
-  protected $signedFile;
+  protected $fileStorage;
 
   /**
    * Implements DrupalConfigVerifiedStorageInterface::__construct().
@@ -27,16 +27,16 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
   }
 
   /**
-   * Instantiates a new signed file object or returns the existing one.
+   * Instantiates a new file storage object or returns the existing one.
    *
-   * @return SignedFileStorage
-   *   The signed file object for this configuration object.
+   * @return Drupal\Core\Config\FileStorage
+   *   The file object for this configuration object.
    */
-  protected function signedFileStorage() {
-    if (!isset($this->signedFile)) {
-      $this->signedFile = new SignedFileStorage($this->name);
+  protected function fileStorage() {
+    if (!isset($this->fileStorage)) {
+      $this->fileStorage = new FileStorage($this->name);
     }
-    return $this->signedFile;
+    return $this->fileStorage;
   }
 
   /**
@@ -50,7 +50,7 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
    * Implements DrupalConfigVerifiedStorageInterface::deleteFile().
    */
   public function deleteFile() {
-    return $this->signedFileStorage()->delete();
+    return $this->fileStorage()->delete();
   }
 
   /**
@@ -67,7 +67,7 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
    *   @todo
    */
   public function readFromFile() {
-    return $this->signedFileStorage()->read($this->name);
+    return $this->fileStorage()->read($this->name);
   }
 
   /**
@@ -89,7 +89,7 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
    * Implements DrupalConfigVerifiedStorageInterface::writeToFile().
    */
   public function writeToFile($data) {
-    return $this->signedFileStorage()->write($data);
+    return $this->fileStorage()->write($data);
   }
 
   /**

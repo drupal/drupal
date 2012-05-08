@@ -71,29 +71,12 @@ function config_install_default_config($module) {
  * @return
  *   An array of file names under a branch.
  */
-function config_get_signed_file_storage_names_with_prefix($prefix = '') {
+function config_get_files_with_prefix($prefix = '') {
   $files = glob(config_get_config_directory() . '/' . $prefix . '*.xml');
   $clean_name = function ($value) {
     return basename($value, '.xml');
   };
   return array_map($clean_name, $files);
-}
-
-/**
- * Generates a hash of a config file's contents using our encryption key.
- *
- * @param $data
- *   The contents of a configuration file.
- *
- * @return
- *   A hash of the data.
- */
-function config_sign_data($data) {
-  // The configuration key is loaded from settings.php and imported into the global namespace
-  global $config_signature_key;
-
-  // SHA-512 is both secure and very fast on 64 bit CPUs.
-  return hash_hmac('sha512', $data, $config_signature_key);
 }
 
 /**

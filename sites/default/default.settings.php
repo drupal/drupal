@@ -252,13 +252,6 @@ $drupal_hash_salt = '';
 $config_directory_name = '';
 
 /**
- * Configuration signature key.
- *
- * Drupal configuration files are signed using this key.
- */
-$config_signature_key = '';
-
-/**
  * Base URL (optional).
  *
  * If Drupal is generating incorrect URLs on your site, which could
