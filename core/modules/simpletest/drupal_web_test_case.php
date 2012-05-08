@@ -1600,10 +1600,15 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Delete temporary files directory.
     file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10));
 
-    // Remove all prefixed tables (all the tables in the schema).
-    $schema = drupal_get_schema(NULL, TRUE);
-    foreach ($schema as $name => $table) {
-      db_drop_table($name);
+    // Remove all prefixed tables.
+    $tables = db_find_tables($this->databasePrefix . '%');
+    foreach ($tables as $table) {
+      if (db_drop_table(substr($table, strlen($this->databasePrefix)))) {
+        unset($tables[$table]);
+      }
+    }
+    if (!empty($tables)) {
+      $this->fail('Failed to drop all prefixed tables.');
     }
 
     // Get back to the original connection.
@@ -1636,6 +1641,9 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Rebuild caches.
     $this->refreshVariables();
+
+    // Reset public files directory.
+    $GLOBALS['conf']['file_public_path'] = $this->originalFileDirectory;
 
     // Reset configuration globals.
     $GLOBALS['config_directory_name'] = $this->originalConfigDirectory;
