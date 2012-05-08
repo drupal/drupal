@@ -1797,8 +1797,8 @@ function hook_forms($form_id, $args) {
  * used to set up global parameters that are needed later in the request.
  *
  * Only use this hook if your code must run even for cached page views. This
- * hook is called before modules or most include files are loaded into memory.
- * It happens while Drupal is still in bootstrap mode.
+ * hook is called before the theme, modules, or most include files are loaded
+ * into memory. It happens while Drupal is still in bootstrap mode.
  *
  * @see hook_init()
  */
@@ -1813,7 +1813,8 @@ function hook_boot() {
  *
  * This hook is run at the beginning of the page request. It is typically
  * used to set up global parameters that are needed later in the request.
- * When this hook is called, all modules are already loaded in memory.
+ * When this hook is called, the theme and all modules are already loaded in
+ * memory.
  *
  * This hook is not run on cached pages.
  *
