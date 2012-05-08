@@ -1363,8 +1363,6 @@ function _filter_url_settings($form, &$form_state, $filter, $format, $defaults) 
     '#type' => 'number',
     '#title' => t('Maximum link text length'),
     '#default_value' => $filter->settings['filter_url_length'],
-    '#size' => 5,
-    '#maxlength' => 4,
     '#min' => 1,
     '#field_suffix' => t('characters'),
     '#description' => t('URLs longer than this number of characters will be truncated to prevent long strings that break formatting. The link itself will be retained; just the text portion of the link will be truncated.'),

@@ -366,6 +366,20 @@ class FormsTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests default value handling of #type 'range' elements.
+   */
+  function testRange() {
+    $values = json_decode($this->drupalPost('form-test/range', array(), 'Submit'));
+    $this->assertEqual($values->with_default_value, 18);
+    $this->assertEqual($values->float, 10.5);
+    $this->assertEqual($values->integer, 6);
+    $this->assertEqual($values->offset, 6.9);
+
+    $this->drupalPost('form-test/range/invalid', array(), 'Submit');
+    $this->assertFieldByXPath('//input[@type="range" and contains(@class, "error")]', NULL, 'Range element has the error class.');
+  }
+
+  /**
    * Test handling of disabled elements.
    *
    * @see _form_test_disabled_elements()

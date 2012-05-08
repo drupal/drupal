@@ -225,7 +225,6 @@ function text_field_formatter_settings_form($field, $instance, $view_mode, $form
     $element['trim_length'] = array(
       '#title' => t('Trim length'),
       '#type' => 'number',
-      '#size' => 10,
       '#default_value' => $settings['trim_length'],
       '#min' => 1,
       '#required' => TRUE,

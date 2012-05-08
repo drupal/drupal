@@ -405,9 +405,7 @@ function system_element_info() {
   );
   $types['number'] = array(
     '#input' => TRUE,
-    '#size' => 30,
     '#step' => 1,
-    '#maxlength' => 128,
     '#process' => array('ajax_process_form'),
     '#element_validate' => array('form_validate_number'),
     '#theme' => 'number',
@@ -415,11 +413,9 @@ function system_element_info() {
   );
   $types['range'] = array(
     '#input' => TRUE,
-    '#size' => 30,
     '#step' => 1,
     '#min' => 0,
     '#max' => 100,
-    '#maxlength' => 128,
     '#process' => array('ajax_process_form'),
     '#element_validate' => array('form_validate_number'),
     '#theme' => 'range',

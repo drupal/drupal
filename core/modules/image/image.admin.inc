@@ -450,7 +450,6 @@ function image_resize_form($data) {
     '#default_value' => isset($data['width']) ? $data['width'] : '',
     '#field_suffix' => ' ' . t('pixels'),
     '#required' => TRUE,
-    '#size' => 10,
     '#min' => 1,
   );
   $form['height'] = array(
@@ -459,7 +458,6 @@ function image_resize_form($data) {
     '#default_value' => isset($data['height']) ? $data['height'] : '',
     '#field_suffix' => ' ' . t('pixels'),
     '#required' => TRUE,
-    '#size' => 10,
     '#min' => 1,
   );
   return $form;
@@ -547,8 +545,6 @@ function image_rotate_form($data) {
     '#description' => t('The number of degrees the image should be rotated. Positive numbers are clockwise, negative are counter-clockwise.'),
     '#field_suffix' => '&deg;',
     '#required' => TRUE,
-    '#size' => 6,
-    '#maxlength' => 4,
   );
   $form['bgcolor'] = array(
     '#type' => 'textfield',

@@ -3951,8 +3951,8 @@ function theme_tel($variables) {
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #size, #min, #max,
- *     #placeholder, #required, #attributes, #step.
+ *     Properties used: #title, #value, #description, #min, #max, #placeholder,
+ *     #required, #attributes, #step.
  *
  * @ingroup themeable
  */
@@ -3960,7 +3960,7 @@ function theme_number($variables) {
   $element = $variables['element'];
 
   $element['#attributes']['type'] = 'number';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'step', 'min', 'max', 'maxlength', 'placeholder'));
+  element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max', 'placeholder'));
   _form_set_class($element, array('form-number'));
 
   $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
@@ -3974,8 +3974,8 @@ function theme_number($variables) {
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #size, #min, #max,
- *     #required, #attributes, #step.
+ *     Properties used: #title, #value, #description, #min, #max, #attributes,
+ *     #step.
  *
  * @ingroup themeable
  */
@@ -4028,6 +4028,36 @@ function form_validate_number(&$element, &$form_state) {
     if (!valid_number_step($value, $element['#step'], $offset)) {
       form_error($element, t('%name is not a valid number.', array('%name' => $name)));
     }
+  }
+}
+
+/**
+ * Determines the value for a range element.
+ *
+ * Make sure range elements always have a value. The 'required' attribute is not
+ * allowed for range elements.
+ *
+ * @param $element
+ *   The form element whose value is being populated.
+ * @param $input
+ *   The incoming input to populate the form element. If this is FALSE, the
+ *   element's default value should be returned.
+ *
+ * @return
+ *   The data that will appear in the $form_state['values'] collection for
+ *   this element. Return nothing to use the default.
+ */
+function form_type_range_value($element, $input = FALSE) {
+  if ($input === '') {
+    $offset = ($element['#max'] - $element['#min']) / 2;
+
+    // Round to the step.
+    if (strtolower($element['#step']) != 'any') {
+      $steps = round($offset / $element['#step']);
+      $offset = $element['#step'] * $steps;
+    }
+
+    return $element['#min'] + $offset;
   }
 }
 

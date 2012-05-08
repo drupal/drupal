@@ -158,7 +158,6 @@ function hook_field_formatter_settings_form($field, $instance, $view_mode, $form
     $element['trim_length'] = array(
       '#title' => t('Length'),
       '#type' => 'number',
-      '#size' => 20,
       '#default_value' => $settings['trim_length'],
       '#min' => 1,
       '#required' => TRUE,

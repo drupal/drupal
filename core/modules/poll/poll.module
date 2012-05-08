@@ -389,8 +389,6 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
     '#title' => $value !== '' ? t('Vote count for choice @label', array('@label' => $value)) : t('Vote count for new choice'),
     '#title_display' => 'invisible',
     '#default_value' => $votes,
-    '#size' => 5,
-    '#maxlength' => 7,
     '#min' => 0,
     '#parents' => array('choice', $key, 'chvotes'),
     '#access' => user_access('administer nodes'),
