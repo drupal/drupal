@@ -128,6 +128,18 @@ class PathAliasTestCase extends PathTestCase {
     $this->drupalGet($edit['alias']);
     $this->assertNoText($node1->title, 'Alias was successfully deleted.');
     $this->assertResponse(404);
+
+    // Create a really long alias.
+    $edit = array();
+    $edit['source'] = 'node/' . $node1->nid;
+    $alias = $this->randomName(128);
+    $edit['alias'] = $alias;
+    // The alias is shortened to 50 characters counting the elipsis.
+    $truncated_alias = substr($alias, 0, 47);
+    $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
+    $this->assertNoText($alias, 'The untruncated alias was not found.');
+    // The 'truncated' alias will always be found.
+    $this->assertText($truncated_alias, 'The truncated alias was found.');
   }
 
   /**

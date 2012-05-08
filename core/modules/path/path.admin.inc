@@ -42,8 +42,13 @@ function path_admin_overview($keys = NULL) {
   $destination = drupal_get_destination();
   foreach ($result as $data) {
     $row = array();
-    $row['data']['alias'] = l($data->alias, $data->source);
-    $row['data']['source'] = l($data->source, $data->source, array('alias' => TRUE));
+    $row['data']['alias'] = l(truncate_utf8($data->alias, 50, FALSE, TRUE), $data->source, array(
+      'attributes' => array('title' => $data->alias),
+    ));
+    $row['data']['source'] = l(truncate_utf8($data->source, 50, FALSE, TRUE), $data->source, array(
+      'alias' => TRUE,
+      'attributes' => array('title' => $data->source),
+    ));
     if ($multilanguage) {
       $row['data']['language_name'] = language_name($data->langcode);
     }
