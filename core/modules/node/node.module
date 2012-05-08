@@ -133,12 +133,12 @@ function node_help($path, $arg) {
 
     case 'node/%/edit':
       $node = node_load($arg[1]);
-      $type = node_type_get_type($node);
+      $type = node_type_load($node->type);
       return (!empty($type->help) ? '<p>' . filter_xss_admin($type->help) . '</p>' : '');
   }
 
   if ($arg[0] == 'node' && $arg[1] == 'add' && $arg[2]) {
-    $type = node_type_get_type(str_replace('-', '_', $arg[2]));
+    $type = node_type_load($arg[2]);
     return (!empty($type->help) ? '<p>' . filter_xss_admin($type->help) . '</p>' : '');
   }
 }
@@ -247,7 +247,7 @@ function node_entity_info() {
       'label' => $name,
       'admin' => array(
         'path' => 'admin/structure/types/manage/%node_type',
-        'real path' => 'admin/structure/types/manage/' . str_replace('_', '-', $type),
+        'real path' => 'admin/structure/types/manage/' . $type,
         'bundle argument' => 4,
         'access arguments' => array('administer content types'),
       ),
@@ -408,29 +408,10 @@ function _node_extract_type($node) {
  * @return
  *   An array of node types, as objects, keyed by the type.
  *
- * @see node_type_get_type()
+ * @see node_type_load()
  */
 function node_type_get_types() {
   return _node_types_build()->types;
-}
-
-/**
- * Returns the node type of the passed node or node type string.
- *
- * @param Drupal\node\Node|string $node
- *   A node entity or string that indicates the node type to return.
- *
- * @return
- *   A single node type, as an object, or FALSE if the node type is not found.
- *   The node type is an object containing fields from hook_node_info() return
- *   values, as well as the field 'type' (the machine-readable type) and other
- *   fields used internally and defined in _node_types_build(),
- *   hook_node_info(), and node_type_set_defaults().
- */
-function node_type_get_type($node) {
-  $type = _node_extract_type($node);
-  $types = _node_types_build()->types;
-  return isset($types[$type]) ? $types[$type] : FALSE;
 }
 
 /**
@@ -498,14 +479,14 @@ function node_types_rebuild() {
  * Menu argument loader: Loads a node type by string.
  *
  * @param $name
- *   The machine-readable name of a node type to load, where '_' is replaced
- *   with '-'.
+ *   The machine name of a node type to load.
  *
  * @return
  *   A node type object or FALSE if $name does not exist.
  */
 function node_type_load($name) {
-  return node_type_get_type(strtr($name, array('-' => '_')));
+  $types = _node_types_build()->types;
+  return isset($types[$name]) ? $types[$name] : FALSE;
 }
 
 /**
@@ -648,16 +629,16 @@ function node_field_extra_fields() {
 /**
  * Deletes a node type from the database.
  *
- * @param $type
- *   The machine-readable name of the node type to be deleted.
+ * @param $name
+ *   The machine name of the node type to delete.
  */
-function node_type_delete($type) {
-  $info = node_type_get_type($type);
+function node_type_delete($name) {
+  $type = node_type_load($name);
   db_delete('node_type')
-    ->condition('type', $type)
+    ->condition('type', $name)
     ->execute();
-  field_attach_delete_bundle('node', $type);
-  module_invoke_all('node_type_delete', $info);
+  field_attach_delete_bundle('node', $name);
+  module_invoke_all('node_type_delete', $type);
 
   // Clear the node type cache.
   node_type_cache_reset();
@@ -1009,8 +990,8 @@ function node_object_prepare(Node $node) {
  *
  * @see node_form_validate()
  */
-function node_validate($node, $form, &$form_state) {
-  $type = node_type_get_type($node);
+function node_validate(Node $node, $form, &$form_state) {
+  $type = node_type_load($node->type);
 
   if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
     form_set_error('changed', t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
@@ -1439,7 +1420,7 @@ function node_permission() {
   );
 
   // Generate standard node permissions for all applicable node types.
-  foreach (node_permissions_get_configured_types() as $type) {
+  foreach (node_permissions_get_configured_types() as $name => $type) {
     $perms += node_list_permissions($type);
   }
 
@@ -1898,8 +1879,7 @@ function node_menu() {
   );
   // @todo Remove this loop when we have a 'description callback' property.
   foreach (node_type_get_types() as $type) {
-    $type_url_str = str_replace('_', '-', $type->type);
-    $items['node/add/' . $type_url_str] = array(
+    $items['node/add/' . $type->type] = array(
       'title' => $type->name,
       'title callback' => 'check_plain',
       'page callback' => 'node_add',
@@ -2924,7 +2904,8 @@ function node_access($op, $node, $account = NULL) {
 function node_node_access($node, $op, $account) {
   $type = is_string($node) ? $node : $node->type;
 
-  if (in_array($type, node_permissions_get_configured_types())) {
+  $configured_types = node_permissions_get_configured_types();
+  if (isset($configured_types[$type])) {
     if ($op == 'create' && user_access('create ' . $type . ' content', $account)) {
       return NODE_ACCESS_ALLOW;
     }
@@ -2948,34 +2929,31 @@ function node_node_access($node, $op, $account) {
 /**
  * Helper function to generate standard node permission list for a given type.
  *
- * @param $type
- *   The machine-readable name of the node type.
+ * @param $name
+ *   The machine name of the node type.
  *
  * @return array
  *   An array of permission names and descriptions.
  */
 function node_list_permissions($type) {
-  $info = node_type_get_type($type);
-
   // Build standard list of node permissions for this type.
   $perms = array(
-    "create $type content" => array(
-      'title' => t('%type_name: Create new content', array('%type_name' => $info->name)),
+    "create $type->type content" => array(
+      'title' => t('%type_name: Create new content', array('%type_name' => $type->name)),
     ),
-    "edit own $type content" => array(
-      'title' => t('%type_name: Edit own content', array('%type_name' => $info->name)),
+    "edit own $type->type content" => array(
+      'title' => t('%type_name: Edit own content', array('%type_name' => $type->name)),
     ),
-    "edit any $type content" => array(
-      'title' => t('%type_name: Edit any content', array('%type_name' => $info->name)),
+    "edit any $type->type content" => array(
+      'title' => t('%type_name: Edit any content', array('%type_name' => $type->name)),
     ),
-    "delete own $type content" => array(
-      'title' => t('%type_name: Delete own content', array('%type_name' => $info->name)),
+    "delete own $type->type content" => array(
+      'title' => t('%type_name: Delete own content', array('%type_name' => $type->name)),
     ),
-    "delete any $type content" => array(
-      'title' => t('%type_name: Delete any content', array('%type_name' => $info->name)),
+    "delete any $type->type content" => array(
+      'title' => t('%type_name: Delete any content', array('%type_name' => $type->name)),
     ),
   );
-
   return $perms;
 }
 
@@ -2994,15 +2972,12 @@ function node_list_permissions($type) {
  *   An array of node types managed by this module.
  */
 function node_permissions_get_configured_types() {
-
   $configured_types = array();
-
-  foreach (node_type_get_types() as $type => $info) {
-    if (variable_get('node_permissions_' . $type, 1)) {
-      $configured_types[] = $type;
+  foreach (node_type_get_types() as $name => $type) {
+    if (variable_get('node_permissions_' . $name, 1)) {
+      $configured_types[$name] = $type;
     }
   }
-
   return $configured_types;
 }
 
@@ -3533,10 +3508,10 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
  * Implements hook_form().
  */
 function node_content_form(Node $node, $form_state) {
-  // It is impossible to define a content type without implementing hook_form()
-  // @todo: remove this requirement.
+  // @todo It is impossible to define a content type without implementing
+  //   hook_form(). Remove this requirement.
   $form = array();
-  $type = node_type_get_type($node);
+  $type = node_type_load($node->type);
 
   if ($type->has_title) {
     $form['title'] = array(

@@ -180,7 +180,7 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
             '#theme' => 'menu_local_action',
             '#link' => array(
               'title' => t('Add new @node_type', array('@node_type' => node_type_get_name($type))),
-              'href' => 'node/add/' . str_replace('_', '-', $type) . '/' . $forum_term->tid,
+              'href' => 'node/add/' . $type . '/' . $forum_term->tid,
             ),
           );
         }
@@ -710,8 +710,8 @@ function forum_block_view_pre_render($elements) {
 /**
  * Implements hook_form().
  */
-function forum_form($node, $form_state) {
-  $type = node_type_get_type($node);
+function forum_form(Node $node, &$form_state) {
+  $type = node_type_load($node->type);
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),

@@ -135,7 +135,7 @@ function comment_entity_info() {
         // See comment_node_type_load() and comment_menu_alter().
         'path' => 'admin/structure/types/manage/%comment_node_type/comment',
         'bundle argument' => 4,
-        'real path' => 'admin/structure/types/manage/' . str_replace('_', '-', $type) . '/comment',
+        'real path' => 'admin/structure/types/manage/' . $type . '/comment',
         'access arguments' => array('administer content types'),
       ),
     );
@@ -150,9 +150,7 @@ function comment_entity_info() {
  * This function is used as a menu loader callback in comment_menu().
  *
  * @param $name
- *   The URL-formatted machine name of the node type whose comment fields are
- *   to be edited. 'URL-formatted' means that underscores are replaced by
- *   hyphens.
+ *   The machine name of the node type whose comment fields are to be edited.
  *
  * @return
  *   The comment bundle name corresponding to the node type.
@@ -160,7 +158,7 @@ function comment_entity_info() {
  * @see comment_menu_alter()
  */
 function comment_node_type_load($name) {
-  if ($type = node_type_get_type(strtr($name, array('-' => '_')))) {
+  if ($type = node_type_load($name)) {
     return 'comment_node_' . $type->type;
   }
 }

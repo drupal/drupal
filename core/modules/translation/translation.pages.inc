@@ -62,7 +62,7 @@ function translation_node_overview(Node $node) {
       $title = t('n/a');
       if (node_access('create', $node)) {
         $text = t('add translation');
-        $path = 'node/add/' . str_replace('_', '-', $node->type);
+        $path = 'node/add/' . $node->type;
         $links = language_negotiation_get_switch_links($type, $path);
         $query = array('query' => array('translation' => $node->nid, 'target' => $langcode));
         $options[] = empty($links->links[$langcode]['href']) ? l($text, $path, $query) : l($text, $links->links[$langcode]['href'], array_merge_recursive($links->links[$langcode], $query));

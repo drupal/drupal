@@ -986,7 +986,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Find a non-existent random type name.
     do {
       $name = strtolower($this->randomName(8));
-    } while (node_type_get_type($name));
+    } while (node_type_load($name));
 
     // Populate defaults array.
     $defaults = array(

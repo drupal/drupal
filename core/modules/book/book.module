@@ -102,7 +102,7 @@ function book_node_view_link(Node $node, $view_mode) {
       if ((user_access('add content to books') || user_access('administer book outlines')) && node_access('create', $child_type) && $node->status == 1 && $node->book['depth'] < MENU_MAX_DEPTH) {
         $links['book_add_child'] = array(
           'title' => t('Add child page'),
-          'href' => 'node/add/' . str_replace('_', '-', $child_type),
+          'href' => 'node/add/' . $child_type,
           'query' => array('parent' => $node->book['mlid']),
         );
       }

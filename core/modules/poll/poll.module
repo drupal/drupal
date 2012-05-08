@@ -218,12 +218,12 @@ function poll_field_extra_fields() {
 /**
  * Implements hook_form().
  */
-function poll_form($node, &$form_state) {
+function poll_form(Node $node, &$form_state) {
   global $user;
 
   $admin = user_access('bypass node access') || user_access('edit any poll content') || (user_access('edit own poll content') && $user->uid == $node->uid);
 
-  $type = node_type_get_type($node);
+  $type = node_type_load($node->type);
 
   // The submit handlers to add more poll choices require that this form is
   // cached, regardless of whether Ajax is used.

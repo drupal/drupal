@@ -222,8 +222,6 @@ class ListFieldUITestCase extends FieldTestCase {
     $type_name = 'test_' . strtolower($this->randomName());
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
     $this->type = $type->type;
-    // Store a valid URL name, with hyphens instead of underscores.
-    $this->hyphen_type = str_replace('_', '-', $this->type);
   }
 
   /**
@@ -429,7 +427,7 @@ class ListFieldUITestCase extends FieldTestCase {
     );
     field_create_instance($instance);
 
-    $this->admin_path = 'admin/structure/types/manage/' . $this->hyphen_type . '/fields/' . $this->field_name;
+    $this->admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $this->field_name;
   }
 
   /**

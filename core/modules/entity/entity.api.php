@@ -186,7 +186,7 @@ function hook_entity_info() {
       'label' => $name,
       'admin' => array(
         'path' => 'admin/structure/types/manage/%node_type',
-        'real path' => 'admin/structure/types/manage/' . str_replace('_', '-', $type),
+        'real path' => 'admin/structure/types/manage/' . $type,
         'bundle argument' => 4,
         'access arguments' => array('administer content types'),
       ),

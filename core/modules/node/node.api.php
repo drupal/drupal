@@ -605,7 +605,8 @@ function hook_node_load($nodes, $types) {
 function hook_node_access($node, $op, $account) {
   $type = is_string($node) ? $node : $node->type;
 
-  if (in_array($type, node_permissions_get_configured_types())) {
+  $configured_types = node_permissions_get_configured_types();
+  if (isset($configured_types[$type])) {
     if ($op == 'create' && user_access('create ' . $type . ' content', $account)) {
       return NODE_ACCESS_ALLOW;
     }
@@ -1096,7 +1097,7 @@ function hook_prepare(Drupal\node\Node $node) {
  * @ingroup node_api_hooks
  */
 function hook_form(Drupal\node\Node $node, &$form_state) {
-  $type = node_type_get_type($node);
+  $type = node_type_load($node->type);
 
   $form['title'] = array(
     '#type' => 'textfield',

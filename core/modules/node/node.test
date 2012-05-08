@@ -1317,7 +1317,7 @@ class NodeTypeTestCase extends NodeWebTestCase {
 
     $this->assertEqual($node_types['article']->name, $node_names['article'], t('Correct node type base has been returned.'));
 
-    $this->assertEqual($node_types['article'], node_type_get_type('article'), t('Correct node type has been returned.'));
+    $this->assertEqual($node_types['article'], node_type_load('article'), t('Correct node type has been returned.'));
     $this->assertEqual($node_types['article']->name, node_type_get_name('article'), t('Correct node type name has been returned.'));
     $this->assertEqual($node_types['page']->base, node_type_get_base('page'), t('Correct node type base has been returned.'));
   }
@@ -1336,7 +1336,7 @@ class NodeTypeTestCase extends NodeWebTestCase {
     $web_user = $this->drupalCreateUser(array('create ' . $type->name . ' content'));
     $this->drupalLogin($web_user);
 
-    $this->drupalGet('node/add/' . str_replace('_', '-', $type->name));
+    $this->drupalGet('node/add/' . $type->type);
     $this->assertResponse(200, 'The new content type can be accessed at node/add.');
 
     // Create a content type via the user interface.
