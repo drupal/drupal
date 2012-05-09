@@ -32,7 +32,7 @@ $request = Request::createFromGlobals();
 // injection container at some point.
 request($request);
 
-drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
 $dispatcher = new EventDispatcher();
 $resolver = new ControllerResolver();

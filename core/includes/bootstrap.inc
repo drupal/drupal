@@ -138,12 +138,13 @@ const DRUPAL_BOOTSTRAP_SESSION = 4;
 const DRUPAL_BOOTSTRAP_PAGE_HEADER = 5;
 
 /**
- * Seventh bootstrap phase: find out language of the page.
+ * Seventh bootstrap phase: load code for subsystems and modules; validate and
+ * fix input data.
  */
-const DRUPAL_BOOTSTRAP_LANGUAGE = 6;
+const DRUPAL_BOOTSTRAP_CODE = 6;
 
 /**
- * Final bootstrap phase: Drupal is fully loaded; validate and fix input data.
+ * Final bootstrap phase: initialize language, path, theme, and modules.
  */
 const DRUPAL_BOOTSTRAP_FULL = 7;
 
@@ -2045,7 +2046,7 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
     DRUPAL_BOOTSTRAP_VARIABLES,
     DRUPAL_BOOTSTRAP_SESSION,
     DRUPAL_BOOTSTRAP_PAGE_HEADER,
-    DRUPAL_BOOTSTRAP_LANGUAGE,
+    DRUPAL_BOOTSTRAP_CODE,
     DRUPAL_BOOTSTRAP_FULL,
   );
   // Not drupal_static(), because the only legitimate API to control this is to
@@ -2098,12 +2099,12 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
           _drupal_bootstrap_page_header();
           break;
 
-        case DRUPAL_BOOTSTRAP_LANGUAGE:
-          drupal_language_initialize();
+        case DRUPAL_BOOTSTRAP_CODE:
+          require_once DRUPAL_ROOT . '/core/includes/common.inc';
+          _drupal_bootstrap_code();
           break;
 
         case DRUPAL_BOOTSTRAP_FULL:
-          require_once DRUPAL_ROOT . '/core/includes/common.inc';
           _drupal_bootstrap_full();
           break;
       }

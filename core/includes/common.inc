@@ -5166,7 +5166,7 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
   return (($skip_anonymous && $user->uid == 0) || ($token == drupal_get_token($value)));
 }
 
-function _drupal_bootstrap_full() {
+function _drupal_bootstrap_code() {
   static $called = FALSE;
 
   if ($called) {
@@ -5205,6 +5205,24 @@ function _drupal_bootstrap_full() {
     ini_set('log_errors', 1);
     ini_set('error_log', 'public://error.log');
   }
+}
+
+/**
+ * Temporary BC function for scripts not using DrupalKernel.
+ *
+ * DrupalKernel skips this and replicates it via event listeners.
+ */
+function _drupal_bootstrap_full($skip = FALSE) {
+  static $called = FALSE;
+
+  if ($called || $skip) {
+    $called = TRUE;
+    return;
+  }
+
+  // Initialize language (which can strip path prefix) prior to initializing
+  // current_path().
+  drupal_language_initialize();
 
   // Initialize current_path() prior to invoking hook_init().
   drupal_path_initialize();

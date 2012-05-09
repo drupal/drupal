@@ -439,17 +439,9 @@ if (is_null($op) && update_access_allowed()) {
   install_goto('core/update.php?op=info');
 }
 
-// update_fix_d8_requirements() needs to run before bootstrapping beyond path.
-// So bootstrap to DRUPAL_BOOTSTRAP_LANGUAGE then include unicode.inc.
-
-drupal_bootstrap(DRUPAL_BOOTSTRAP_LANGUAGE);
-include_once DRUPAL_ROOT . '/core/includes/unicode.inc';
-
-update_fix_d8_requirements();
-
-// Now proceed with a full bootstrap.
-
+// Bootstrap, fix requirements, and set the maintenance theme.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+update_fix_d8_requirements();
 drupal_maintenance_theme();
 
 // Turn error reporting back on. From now on, only fatal errors (which are

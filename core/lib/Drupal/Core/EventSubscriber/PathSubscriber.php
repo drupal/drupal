@@ -69,6 +69,31 @@ class PathSubscriber extends PathListenerAbstract implements EventSubscriberInte
   }
 
   /**
+   * @todo Document.
+   *
+   * @param GetResponseEvent $event
+   *   The Event to process.
+   */
+  public function onKernelRequestLanguageResolve(GetResponseEvent $event) {
+    $request = $event->getRequest();
+    $path = $this->extractPath($request);
+
+    // drupal_language_initialize() combines:
+    // - Determination of language from $request information (e.g., path).
+    // - Determination of language from other information (e.g., site default).
+    // - Population of determined language into drupal_container().
+    // - Removal of language code from _current_path().
+    // @todo Decouple the above, but for now, invoke it and update the path
+    //   prior to front page and alias resolution. When above is decoupled, also
+    //   add 'langcode' (determined from $request only) to $request->attributes.
+    _current_path($path);
+    drupal_language_initialize();
+    $path = _current_path();
+
+    $this->setPath($request, $path);
+  }
+
+  /**
    * Decodes the path of the request.
    *
    * Parameters in the URL sometimes represent code-meaningful strings. It is
@@ -100,7 +125,8 @@ class PathSubscriber extends PathListenerAbstract implements EventSubscriberInte
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::REQUEST][] = array('onKernelRequestDecodePath', 102);
+    $events[KernelEvents::REQUEST][] = array('onKernelRequestDecodePath', 200);
+    $events[KernelEvents::REQUEST][] = array('onKernelRequestLanguageResolve', 150);
     $events[KernelEvents::REQUEST][] = array('onKernelRequestFrontPageResolve', 101);
     $events[KernelEvents::REQUEST][] = array('onKernelRequestPathResolve', 100);
 
