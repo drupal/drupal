@@ -1120,6 +1120,7 @@ function system_menu() {
  * @see system_cron_access().
  */
 function system_cron_page() {
+  drupal_page_is_cacheable(FALSE);
   drupal_cron_run();
 
   // Returning nothing causes no output to be generated.
