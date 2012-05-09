@@ -3,7 +3,7 @@
 /**
  * @file
  *
- * Definition of Drupal\Core\EventSubscriber\PathListenerAbstract
+ * Definition of Drupal\Core\EventSubscriber\PathListenerBase
  */
 
 namespace Drupal\Core\EventSubscriber;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Base class for listeners that are manipulating the path.
  */
-abstract class PathListenerAbstract {
+abstract class PathListenerBase {
 
   public function extractPath(Request $request) {
     return $request->attributes->get('system_path') ?: ltrim($request->getPathInfo(), '/');

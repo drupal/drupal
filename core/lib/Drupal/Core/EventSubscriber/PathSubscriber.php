@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Access subscriber for controller requests.
  */
-class PathSubscriber extends PathListenerAbstract implements EventSubscriberInterface {
+class PathSubscriber extends PathListenerBase implements EventSubscriberInterface {
 
   /**
    * Resolve the system path.
