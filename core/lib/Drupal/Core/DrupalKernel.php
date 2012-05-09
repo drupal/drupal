@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 use Drupal\Core\EventSubscriber\ViewSubscriber;
 use Drupal\Core\EventSubscriber\AccessSubscriber;
+use Drupal\Core\EventSubscriber\FinishResponseSubscriber;
 use Drupal\Core\EventSubscriber\PathSubscriber;
 use Drupal\Core\EventSubscriber\LegacyRequestSubscriber;
 use Drupal\Core\EventSubscriber\LegacyControllerSubscriber;
@@ -77,6 +78,7 @@ class DrupalKernel extends HttpKernel {
       $this->dispatcher->addSubscriber(new PathSubscriber());
       $this->dispatcher->addSubscriber(new LegacyRequestSubscriber());
       $this->dispatcher->addSubscriber(new LegacyControllerSubscriber());
+      $this->dispatcher->addSubscriber(new FinishResponseSubscriber());
       $this->dispatcher->addSubscriber(new RequestCloseSubscriber());
 
       // Some other form of error occured that wasn't handled by another kernel
