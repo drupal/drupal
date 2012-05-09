@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Database\Driver\mysql;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\TransactionCommitFailedException;
 use Drupal\Core\Database\DatabaseException;
@@ -180,7 +182,7 @@ class Connection extends DatabaseConnection {
         try {
           $this->query('RELEASE SAVEPOINT ' . $name);
         }
-        catch (PDOException $e) {
+        catch (DatabaseExceptionWrapper $e) {
           // However, in MySQL (InnoDB), savepoints are automatically committed
           // when tables are altered or created (DDL transactions are not
           // supported). This can cause exceptions due to trying to release
@@ -188,7 +190,7 @@ class Connection extends DatabaseConnection {
           //
           // To avoid exceptions when no actual error has occurred, we silently
           // succeed for MySQL error code 1305 ("SAVEPOINT does not exist").
-          if ($e->errorInfo[1] == '1305') {
+          if ($e->getPrevious()->errorInfo[1] == '1305') {
             // If one SAVEPOINT was released automatically, then all were.
             // Therefore, clean the transaction stack.
             $this->transactionLayers = array();
