@@ -33,18 +33,9 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
 
     $path = $this->extractPath($request);
 
-    if (empty($path)) {
-      // @todo Temporary hack. Fix when configuration is injectable.
-      $path = variable_get('site_frontpage', 'user');
-    }
-    $system_path = drupal_get_normal_path($path);
+    $path = drupal_get_normal_path($path);
 
-    // Do our fancy frontpage logic.
-    if (empty($system_path)) {
-      $system_path = variable_get('site_frontpage', 'user');
-    }
-
-    $this->setPath($request, $system_path);
+    $this->setPath($request, $path);
   }
 
   /**
