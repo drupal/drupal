@@ -1,11 +1,17 @@
 <?php
 
+/**
+ * @file
+ *
+ * Definition of Drupal\Core\EventSubscriber\PathListenerAbstract
+ */
+
 namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Description of PathListenerAbstract
+ * Base class for listeners that are manipulating the path.
  */
 abstract class PathListenerAbstract {
 

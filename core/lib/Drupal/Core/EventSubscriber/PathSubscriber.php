@@ -1,17 +1,17 @@
 <?php
 
+/**
+ * @file
+ *
+ * Definition of Drupal\Core\EventSubscriber\PathSubscriber
+ */
+
 namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-/**
- * @file
- *
- * Definition of Drupal\Core\EventSubscriber\AccessSubscriber
- */
 
 /**
  * Access subscriber for controller requests.
@@ -69,7 +69,11 @@ class PathSubscriber extends PathListenerAbstract implements EventSubscriberInte
   }
 
   /**
-   * @todo Document.
+   * Decode language information embedded in the request path.
+   *
+   * @todo Refactor this entire method to inline the relevant portions of
+   *       drupal_language_initialize().  See the inline comment for more
+   *       details.
    *
    * @param GetResponseEvent $event
    *   The Event to process.

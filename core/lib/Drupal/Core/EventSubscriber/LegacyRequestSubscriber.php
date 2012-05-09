@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @file
+ *
+ * Definition of Drupal\Core\EventSubscriber\LegacyRequestSubscriber
+ */
+
 namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -8,18 +14,17 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * @file
- *
- * Definition of Drupal\Core\EventSubscriber\LegacyRequestSubscriber
- */
-
-/**
  * KernelEvents::REQUEST event subscriber to initialize theme and modules.
+ *
+ * @todo Remove this subscriber when all of the code in it has been refactored.
  */
 class LegacyRequestSubscriber implements EventSubscriberInterface {
 
   /**
-   * @todo Document.
+   * Initializes the rest of the legacy Drupal subsystems.
+   *
+   * @param GetResponseEvent $event
+   *   The Event to process.
    */
   public function onKernelRequestLegacy(GetResponseEvent $event) {
     menu_set_custom_theme();
