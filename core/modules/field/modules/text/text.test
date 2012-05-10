@@ -111,7 +111,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form.
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
     $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '1', t('Format selector is not displayed'));
 
@@ -180,7 +180,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
 
     // Display the creation form. Since the user only has access to one format,
     // no format selector will be displayed.
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
     $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '', t('Format selector is not displayed'));
 

@@ -5,6 +5,8 @@ jQuery.noConflict();
 
 (function ($) {
 
+"use strict";
+
 /**
  * Attach all registered behaviors to a page element.
  *

@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 Drupal.behaviors.openid = {
   attach: function (context) {
     var $context = $(context);

@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 Drupal.behaviors.contentTypes = {
   attach: function (context) {
     var $context = $(context);

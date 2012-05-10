@@ -5,6 +5,8 @@
 
 (function ($) {
 
+"use strict";
+
 Drupal.contextualLinks = Drupal.contextualLinks || {};
 
 /**

@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Checks to see if the cron should be automatically run.
  */

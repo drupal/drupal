@@ -5,6 +5,8 @@
  
 (function($) {
 
+"use strict";
+
 Drupal.behaviors.fieldUIFieldOverview = {
   attach: function (context, settings) {
     $(context).find('table#field-overview').once('field-overview', function () {

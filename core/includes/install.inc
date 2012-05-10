@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Config\SignedFileStorage;
+use Drupal\Core\Config\FileStorage;
 
 /**
  * Indicates that a module has not been installed yet.
@@ -403,9 +403,9 @@ function drupal_uninstall_modules($module_list = array(), $uninstall_dependents 
         $parts = explode('/', $file);
         $file = array_pop($parts);
         $config_name = str_replace('.xml', '', $file);
-        $signed_storage = new SignedFileStorage($config_name);
+        $file_storage = new FileStorage($config_name);
         // Delete the configuration from storage.
-        $signed_storage->delete();
+        $file_storage->delete();
       }
     }
 

@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 Drupal.behaviors.tableSelect = {
   attach: function (context, settings) {
     // Select the inner-most table in case of nested tables.

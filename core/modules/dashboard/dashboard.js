@@ -5,6 +5,8 @@
 
 (function ($) {
 
+"use strict";
+
 /**
  * Implements Drupal.behaviors for the Dashboard module.
  */

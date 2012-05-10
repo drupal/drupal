@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Attaches the autocomplete behavior to all required fields.
  */

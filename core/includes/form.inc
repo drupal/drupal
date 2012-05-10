@@ -3214,6 +3214,56 @@ function form_process_actions($element, &$form_state) {
 }
 
 /**
+ * #process callback for #pattern form element property.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   generic input element.
+ * @param $form_state
+ *   The $form_state array for the form this element belongs to.
+ *
+ * @return
+ *   The processed element.
+ *
+ * @see form_validate_pattern()
+ */
+function form_process_pattern($element, &$form_state) {
+  if (isset($element['#pattern']) && !isset($element['#attributes']['pattern'])) {
+    $element['#attributes']['pattern'] = $element['#pattern'];
+    $element['#element_validate'][] = 'form_validate_pattern';
+  }
+
+  return $element;
+}
+
+/**
+ * #element_validate callback for #pattern form element property.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   generic form element.
+ * @param $form_state
+ *   The $form_state array for the form this element belongs to.
+ *
+ * @see form_process_pattern()
+ */
+function form_validate_pattern($element, &$form_state) {
+  if ($element['#value'] !== '') {
+    // The pattern must match the entire string and should have the same
+    // behavior as the RegExp object in ECMA 262.
+    // - Use bracket-style delimiters to avoid introducing a special delimiter
+    //   character like '/' that would have to be escaped.
+    // - Put in brackets so that the pattern can't interfere with what's
+    //   prepended and appended.
+    $pattern = '{^(?:' . $element['#pattern'] . ')$}';
+
+    if (!preg_match($pattern, $element['#value'])) {
+      form_error($element, t('%name field is not in the right format.', array('%name' => $element['#title'])));
+    }
+  }
+}
+
+/**
  * Processes a container element.
  *
  * @param $element
@@ -3951,8 +4001,8 @@ function theme_tel($variables) {
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #size, #min, #max,
- *     #placeholder, #required, #attributes, #step.
+ *     Properties used: #title, #value, #description, #min, #max, #placeholder,
+ *     #required, #attributes, #step.
  *
  * @ingroup themeable
  */
@@ -3960,7 +4010,7 @@ function theme_number($variables) {
   $element = $variables['element'];
 
   $element['#attributes']['type'] = 'number';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'step', 'min', 'max', 'maxlength', 'placeholder'));
+  element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max', 'placeholder'));
   _form_set_class($element, array('form-number'));
 
   $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
@@ -3974,8 +4024,8 @@ function theme_number($variables) {
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #size, #min, #max,
- *     #required, #attributes, #step.
+ *     Properties used: #title, #value, #description, #min, #max, #attributes,
+ *     #step.
  *
  * @ingroup themeable
  */
@@ -4028,6 +4078,36 @@ function form_validate_number(&$element, &$form_state) {
     if (!valid_number_step($value, $element['#step'], $offset)) {
       form_error($element, t('%name is not a valid number.', array('%name' => $name)));
     }
+  }
+}
+
+/**
+ * Determines the value for a range element.
+ *
+ * Make sure range elements always have a value. The 'required' attribute is not
+ * allowed for range elements.
+ *
+ * @param $element
+ *   The form element whose value is being populated.
+ * @param $input
+ *   The incoming input to populate the form element. If this is FALSE, the
+ *   element's default value should be returned.
+ *
+ * @return
+ *   The data that will appear in the $form_state['values'] collection for
+ *   this element. Return nothing to use the default.
+ */
+function form_type_range_value($element, $input = FALSE) {
+  if ($input === '') {
+    $offset = ($element['#max'] - $element['#min']) / 2;
+
+    // Round to the step.
+    if (strtolower($element['#step']) != 'any') {
+      $steps = round($offset / $element['#step']);
+      $offset = $element['#step'] * $steps;
+    }
+
+    return $element['#min'] + $offset;
   }
 }
 

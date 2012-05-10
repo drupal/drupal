@@ -363,7 +363,7 @@ function system_element_info() {
     '#size' => 60,
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
-    '#process' => array('form_process_autocomplete', 'ajax_process_form'),
+    '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
     '#theme' => 'textfield',
     '#theme_wrappers' => array('form_element'),
   );
@@ -372,7 +372,7 @@ function system_element_info() {
     '#size' => 30,
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
-    '#process' => array('form_process_autocomplete', 'ajax_process_form'),
+    '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
     '#theme' => 'tel',
     '#theme_wrappers' => array('form_element'),
   );
@@ -381,7 +381,7 @@ function system_element_info() {
     '#size' => 60,
     '#maxlength' => EMAIL_MAX_LENGTH,
     '#autocomplete_path' => FALSE,
-    '#process' => array('form_process_autocomplete', 'ajax_process_form'),
+    '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
     '#element_validate' => array('form_validate_email'),
     '#theme' => 'email',
     '#theme_wrappers' => array('form_element'),
@@ -391,7 +391,7 @@ function system_element_info() {
     '#size' => 60,
     '#maxlength' => 255,
     '#autocomplete_path' => FALSE,
-    '#process' => array('form_process_autocomplete', 'ajax_process_form'),
+    '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
     '#element_validate' => array('form_validate_url'),
     '#theme' => 'url',
     '#theme_wrappers' => array('form_element'),
@@ -407,9 +407,7 @@ function system_element_info() {
   );
   $types['number'] = array(
     '#input' => TRUE,
-    '#size' => 30,
     '#step' => 1,
-    '#maxlength' => 128,
     '#process' => array('ajax_process_form'),
     '#element_validate' => array('form_validate_number'),
     '#theme' => 'number',
@@ -417,11 +415,9 @@ function system_element_info() {
   );
   $types['range'] = array(
     '#input' => TRUE,
-    '#size' => 30,
     '#step' => 1,
     '#min' => 0,
     '#max' => 100,
-    '#maxlength' => 128,
     '#process' => array('ajax_process_form'),
     '#element_validate' => array('form_validate_number'),
     '#theme' => 'range',
@@ -443,7 +439,7 @@ function system_element_info() {
     '#input' => TRUE,
     '#size' => 60,
     '#maxlength' => 128,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('ajax_process_form', 'form_process_pattern'),
     '#theme' => 'password',
     '#theme_wrappers' => array('form_element'),
   );
@@ -1127,6 +1123,7 @@ function system_menu() {
  */
 
 function system_cron_page() {
+  drupal_page_is_cacheable(FALSE);
   drupal_cron_run();
 
   // HTTP 204 is "No content", meaning "I did what you asked and we're done."

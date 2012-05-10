@@ -1535,7 +1535,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
 
     // Display creation form.
     $langcode = LANGUAGE_NOT_SPECIFIED;
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode]", '', 'Widget is displayed.');
 
     // Submit with some value.
@@ -1557,7 +1557,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
 
     // Delete the vocabulary and verify that the widget is gone.
     taxonomy_vocabulary_delete($this->vocabulary->vid);
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
     $this->assertNoFieldByName("{$this->field_name}[$langcode]", '', 'Widget is not displayed');
   }
 
@@ -1668,7 +1668,7 @@ class TaxonomyTermFieldMultipleVocabularyTestCase extends TaxonomyWebTestCase {
 
     // Submit an entity with both terms.
     $langcode = LANGUAGE_NOT_SPECIFIED;
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][]", '', 'Widget is displayed');
     $edit = array(
       "{$this->field_name}[$langcode][]" => array($term1->tid, $term2->tid),
@@ -1707,7 +1707,7 @@ class TaxonomyTermFieldMultipleVocabularyTestCase extends TaxonomyWebTestCase {
     $this->assertEqual(sizeof($field_info['settings']['allowed_values']), 1, 'Only one vocabulary is allowed for the field.');
 
     // The widget should still be displayed.
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][]", '', 'Widget is still displayed');
 
     // Term 1 should still pass validation.

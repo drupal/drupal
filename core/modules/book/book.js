@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 Drupal.behaviors.bookFieldsetSummaries = {
   attach: function (context) {
     $(context).find('fieldset.book-outline-form').drupalSetSummary(function (context) {

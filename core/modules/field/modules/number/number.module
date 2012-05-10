@@ -324,11 +324,6 @@ function number_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   $element += array(
     '#type' => 'number',
     '#default_value' => $value,
-    // Allow a slightly larger size that the field length to allow for some
-    // configurations where all characters won't fit in input field.
-    '#size' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] + 4 : 12,
-    // Allow two extra characters for signed values and decimal separator.
-    '#maxlength' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] + 2 : 10,
   );
 
   // Set the step for floating point and decimal numbers.

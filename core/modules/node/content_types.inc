@@ -20,22 +20,21 @@ function node_overview_types() {
   foreach ($names as $key => $name) {
     $type = $types[$key];
     if (node_hook($type->type, 'form')) {
-      $type_url_str = str_replace('_', '-', $type->type);
       $row = array(theme('node_admin_overview', array('name' => $name, 'type' => $type)));
       // Set the edit column.
-      $row[] = array('data' => l(t('edit'), 'admin/structure/types/manage/' . $type_url_str));
+      $row[] = array('data' => l(t('edit'), 'admin/structure/types/manage/' . $type->type));
 
       if ($field_ui) {
         // Manage fields.
-        $row[] = array('data' => l(t('manage fields'), 'admin/structure/types/manage/' . $type_url_str . '/fields'));
+        $row[] = array('data' => l(t('manage fields'), 'admin/structure/types/manage/' . $type->type . '/fields'));
 
         // Display fields.
-        $row[] = array('data' => l(t('manage display'), 'admin/structure/types/manage/' . $type_url_str . '/display'));
+        $row[] = array('data' => l(t('manage display'), 'admin/structure/types/manage/' . $type->type . '/display'));
       }
 
       // Set the delete column.
       if ($type->custom) {
-        $row[] = array('data' => l(t('delete'), 'admin/structure/types/manage/' . $type_url_str . '/delete'));
+        $row[] = array('data' => l(t('delete'), 'admin/structure/types/manage/' . $type->type . '/delete'));
       }
       else {
         $row[] = array('data' => '');
@@ -319,7 +318,7 @@ function node_type_form_submit($form, &$form_state) {
   }
 
   if ($op == t('Delete content type')) {
-    $form_state['redirect'] = 'admin/structure/types/manage/' . str_replace('_', '-', $type->old_type) . '/delete';
+    $form_state['redirect'] = 'admin/structure/types/manage/' . $type->old_type . '/delete';
     return;
   }
 

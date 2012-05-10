@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 Drupal.behaviors.filterStatus = {
   attach: function (context, settings) {
     var $context = $(context);

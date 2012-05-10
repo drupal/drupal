@@ -1,4 +1,3 @@
-
 /**
  * @file
  * Conditionally hide or show the appropriate settings and saved defaults
@@ -6,6 +5,8 @@
  */
 
 (function ($) {
+
+"use strict";
 
 Drupal.behaviors.authorizeFileTransferForm = {
   attach: function(context) {

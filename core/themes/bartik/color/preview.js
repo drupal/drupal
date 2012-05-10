@@ -2,8 +2,10 @@
  * @file
  * Preview for the Bartik theme.
  */
-
 (function ($) {
+
+  "use strict";
+
   Drupal.color = {
     logoChanged: false,
     callback: function(context, settings, form, farb, height, width) {

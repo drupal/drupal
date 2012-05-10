@@ -366,6 +366,20 @@ class FormsTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests default value handling of #type 'range' elements.
+   */
+  function testRange() {
+    $values = json_decode($this->drupalPost('form-test/range', array(), 'Submit'));
+    $this->assertEqual($values->with_default_value, 18);
+    $this->assertEqual($values->float, 10.5);
+    $this->assertEqual($values->integer, 6);
+    $this->assertEqual($values->offset, 6.9);
+
+    $this->drupalPost('form-test/range/invalid', array(), 'Submit');
+    $this->assertFieldByXPath('//input[@type="range" and contains(@class, "error")]', NULL, 'Range element has the error class.');
+  }
+
+  /**
    * Test handling of disabled elements.
    *
    * @see _form_test_disabled_elements()
@@ -769,6 +783,65 @@ class FormValidationTestCase extends DrupalWebTestCase {
     $this->drupalPost($path, $edit, t('Full validate'));
     $this->assertText(t('!name field is required.', array('!name' => 'Title')));
     $this->assertText('Test element is invalid');
+  }
+
+  /**
+   * Tests #pattern validation.
+   */
+  function testPatternValidation() {
+    $textfield_error = t('%name field is not in the right format.', array('%name' => 'One digit followed by lowercase letters'));
+    $tel_error = t('%name field is not in the right format.', array('%name' => 'Everything except numbers'));
+    $password_error = t('%name field is not in the right format.', array('%name' => 'Password'));
+
+    // Invalid textfield, valid tel.
+    $edit = array(
+      'textfield' => 'invalid',
+      'tel' => 'valid',
+    );
+    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->assertRaw($textfield_error);
+    $this->assertNoRaw($tel_error);
+    $this->assertNoRaw($password_error);
+
+    // Valid textfield, invalid tel, valid password.
+    $edit = array(
+      'textfield' => '7seven',
+      'tel' => '818937',
+      'password' => '0100110',
+    );
+    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->assertNoRaw($textfield_error);
+    $this->assertRaw($tel_error);
+    $this->assertNoRaw($password_error);
+
+    // Non required fields are not validated if empty.
+    $edit = array(
+      'textfield' => '',
+      'tel' => '',
+    );
+    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->assertNoRaw($textfield_error);
+    $this->assertNoRaw($tel_error);
+    $this->assertNoRaw($password_error);
+
+    // Invalid password.
+    $edit = array(
+      'password' => $this->randomName(),
+    );
+    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->assertNoRaw($textfield_error);
+    $this->assertNoRaw($tel_error);
+    $this->assertRaw($password_error);
+
+    // The pattern attribute overrides #pattern and is not validated on the
+    // server side.
+    $edit = array(
+      'textfield' => '',
+      'tel' => '',
+      'url' => 'http://www.example.com/',
+    );
+    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->assertNoRaw(t('%name field is not in the right format.', array('%name' => 'Client side validation')));
   }
 }
 

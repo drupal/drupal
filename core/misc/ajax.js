@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Provides Ajax page updating via jQuery $.ajax (Asynchronous JavaScript and XML).
  *

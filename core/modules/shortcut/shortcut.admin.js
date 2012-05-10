@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Handle the concept of a fixed number of slots.
  *

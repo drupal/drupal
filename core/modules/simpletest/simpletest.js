@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Add the cool table collapsing on the testing overview page.
  */

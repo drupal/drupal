@@ -1326,7 +1326,7 @@ class FieldFormTestCase extends FieldTestCase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form.
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
     $this->assertNoField("{$this->field_name}[$langcode][1][value]", 'No extraneous widget is displayed');
     // TODO : check that the widget is populated with default value ?
@@ -1381,7 +1381,7 @@ class FieldFormTestCase extends FieldTestCase {
 
     // Submit with missing required value.
     $edit = array();
-    $this->drupalPost('test-entity/add/test-bundle', $edit, t('Save'));
+    $this->drupalPost('test-entity/add/test_bundle', $edit, t('Save'));
     $this->assertRaw(t('!name field is required.', array('!name' => $this->instance['label'])), 'Required field with no value fails validation');
 
     // Create an entity
@@ -1418,7 +1418,7 @@ class FieldFormTestCase extends FieldTestCase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form -> 1 widget.
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget 1 is displayed');
     $this->assertNoField("{$this->field_name}[$langcode][1][value]", 'No extraneous widget is displayed');
 
@@ -1516,7 +1516,7 @@ class FieldFormTestCase extends FieldTestCase {
     ));
 
     // Display creation form.
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
 
     // Press the 'Add more' button.
     $this->drupalPost(NULL, array(), t('Add another item'));
@@ -1539,7 +1539,7 @@ class FieldFormTestCase extends FieldTestCase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form -> 1 widget.
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
 
     // Press 'add more' button a couple times -> 3 widgets.
     // drupalPostAJAX() will not work iteratively, so we add those through
@@ -1599,7 +1599,7 @@ class FieldFormTestCase extends FieldTestCase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Display creation form.
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
     $this->assertFieldByName("{$this->field_name}[$langcode]", '', t('Widget is displayed.'));
 
     // Create entity with three values.
@@ -1666,7 +1666,7 @@ class FieldFormTestCase extends FieldTestCase {
     $this->assertFalse($form[$field_name_no_access]['#access'], 'Field #access is FALSE for the field without edit access.');
 
     // Display creation form.
-    $this->drupalGet('test-entity/add/test-bundle');
+    $this->drupalGet('test-entity/add/test_bundle');
     $this->assertNoFieldByName("{$field_name_no_access}[$langcode][0][value]", '', t('Widget is not displayed if field access is denied.'));
 
     // Create entity.

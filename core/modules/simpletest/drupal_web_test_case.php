@@ -986,7 +986,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Find a non-existent random type name.
     do {
       $name = strtolower($this->randomName(8));
-    } while (node_type_get_type($name));
+    } while (node_type_load($name));
 
     // Populate defaults array.
     $defaults = array(
@@ -1344,7 +1344,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->originalLanguage = $language_interface;
     $this->originalLanguageDefault = variable_get('language_default');
     $this->originalConfigDirectory = $GLOBALS['config_directory_name'];
-    $this->originalConfigSignatureKey = $GLOBALS['config_signature_key'];
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
     $this->originalUser = $user;
@@ -1377,7 +1376,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     $GLOBALS['config_directory_name'] = 'simpletest/' . substr($this->databasePrefix, 10) . '/config';
     $this->configFileDirectory = $this->originalFileDirectory . '/' . $GLOBALS['config_directory_name'];
     file_prepare_directory($this->configFileDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-    $GLOBALS['config_signature_key'] = drupal_hash_base64(drupal_random_bytes(55));
 
     // Log fatal errors.
     ini_set('log_errors', 1);
@@ -1600,10 +1598,15 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Delete temporary files directory.
     file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10));
 
-    // Remove all prefixed tables (all the tables in the schema).
-    $schema = drupal_get_schema(NULL, TRUE);
-    foreach ($schema as $name => $table) {
-      db_drop_table($name);
+    // Remove all prefixed tables.
+    $tables = db_find_tables($this->databasePrefix . '%');
+    foreach ($tables as $table) {
+      if (db_drop_table(substr($table, strlen($this->databasePrefix)))) {
+        unset($tables[$table]);
+      }
+    }
+    if (!empty($tables)) {
+      $this->fail('Failed to drop all prefixed tables.');
     }
 
     // Get back to the original connection.
@@ -1637,9 +1640,11 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Rebuild caches.
     $this->refreshVariables();
 
+    // Reset public files directory.
+    $GLOBALS['conf']['file_public_path'] = $this->originalFileDirectory;
+
     // Reset configuration globals.
     $GLOBALS['config_directory_name'] = $this->originalConfigDirectory;
-    $GLOBALS['config_signature_key'] = $this->originalConfigSignatureKey;
 
     // Reset language.
     $language_interface = $this->originalLanguage;

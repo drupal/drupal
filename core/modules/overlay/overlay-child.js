@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Attach the child dialog behavior to new content.
  */

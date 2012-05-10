@@ -23,8 +23,6 @@ function image_gd_settings() {
       '#type' => 'number',
       '#title' => t('JPEG quality'),
       '#description' => t('Define the image quality for JPEG manipulations. Ranges from 0 to 100. Higher values mean better image quality but bigger files.'),
-      '#size' => 10,
-      '#maxlength' => 3,
       '#min' => 0,
       '#max' => 100,
       '#default_value' => variable_get('image_jpeg_quality', 75),

@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * This script transforms a set of fieldsets into a stack of vertical
  * tabs. Another tab pane can be selected by clicking on the respective

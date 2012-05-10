@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Attach the machine-readable name form element behavior.
  */

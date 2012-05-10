@@ -1,5 +1,7 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Automatically display the guidelines of the selected text format.
  */
