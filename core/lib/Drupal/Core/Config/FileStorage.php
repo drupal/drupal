@@ -32,7 +32,7 @@ class FileStorage {
   protected function readData() {
     $data = file_get_contents($this->getFilePath());
     if ($data === FALSE) {
-      throw new \Exception('Read file is invalid.');
+      throw new FileStorageReadException('Read file is invalid.');
     }
     return $data;
   }
@@ -68,7 +68,7 @@ class FileStorage {
    */
   public function write($data) {
     if (!file_put_contents($this->getFilePath(), $data)) {
-      throw new \Exception('Failed to write configuration file: ' . $this->getFilePath());
+      throw new FileStorageException('Failed to write configuration file: ' . $this->getFilePath());
     }
   }
 

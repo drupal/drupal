@@ -2,16 +2,16 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Config\DrupalConfigVerifiedStorage;
+use Drupal\Core\Config\StorageBase;
 use Exception;
 
 /**
  * Represents an SQL-based configuration storage object.
  */
-class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
+class DatabaseStorage extends StorageBase {
 
   /**
-   * Overrides DrupalConfigVerifiedStorage::read().
+   * Overrides StorageBase::read().
    */
   public function read() {
     // There are situations, like in the installer, where we may attempt a
@@ -26,7 +26,7 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
   }
 
   /**
-   * Implements DrupalConfigVerifiedStorageInterface::writeToActive().
+   * Implements StorageInterface::writeToActive().
    */
   public function writeToActive($data) {
     return db_merge('config')
@@ -45,7 +45,7 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
   }
 
   /**
-   * Implements DrupalConfigVerifiedStorageInterface::getNamesWithPrefix().
+   * Implements StorageInterface::getNamesWithPrefix().
    */
   static public function getNamesWithPrefix($prefix = '') {
     return db_query('SELECT name FROM {config} WHERE name LIKE :name', array(':name' => db_like($prefix) . '%'))->fetchCol();

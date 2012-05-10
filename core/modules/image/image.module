@@ -516,7 +516,7 @@ function image_styles() {
       $styles = array();
 
       // Select the styles we have configured.
-      $configured_styles = config_get_verified_storage_names_with_prefix('image.style');
+      $configured_styles = config_get_storage_names_with_prefix('image.style');
       foreach ($configured_styles as $config_name) {
         // @todo Allow to retrieve the name without prefix only.
         $style = image_style_load(str_replace('image.style.', '', $config_name));

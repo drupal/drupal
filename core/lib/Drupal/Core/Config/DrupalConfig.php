@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Config\DrupalConfigVerifiedStorageInterface;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\ConfigException;
 
 /**
@@ -13,22 +13,22 @@ class DrupalConfig {
   /**
    * The storage engine to save this config object to.
    *
-   * @var DrupalConfigVerifiedStorageInterface
+   * @var StorageInterface
    */
-  protected $_verifiedStorage;
+  protected $storage;
 
   protected $data = array();
 
   /**
    * Constructs a DrupalConfig object.
    *
-   * @param DrupalConfigVerifiedStorageInterface $verified_storage
+   * @param StorageInterface $storage
    *   The storage engine where this config object should be saved.
    *
    * @todo $this should really know about $name and make it publicly accessible.
    */
-  public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage) {
-    $this->_verifiedStorage = $verified_storage;
+  public function __construct(StorageInterface $storage) {
+    $this->storage = $storage;
     $this->read();
   }
 
@@ -36,7 +36,7 @@ class DrupalConfig {
    * Reads config data from the active store into our object.
    */
   public function read() {
-    $active = (array) config_decode($this->_verifiedStorage->read());
+    $active = (array) config_decode($this->storage->read());
     foreach ($active as $key => $value) {
       // If the setting is empty, return an empty string rather than an array.
       // This is necessary because SimpleXML's default behavior is to return
@@ -89,7 +89,7 @@ class DrupalConfig {
   public function get($key = '') {
     global $conf;
 
-    $name = $this->_verifiedStorage->getName();
+    $name = $this->storage->getName();
     if (isset($conf[$name])) {
       $merged_data = drupal_array_merge_deep($this->data, $conf[$name]);
     }
@@ -201,7 +201,7 @@ class DrupalConfig {
    * Saves the configuration object to disk as XML.
    */
   public function save() {
-    $this->_verifiedStorage->write(config_encode($this->data));
+    $this->storage->write(config_encode($this->data));
   }
 
   /**
@@ -209,6 +209,6 @@ class DrupalConfig {
    */
   public function delete() {
     $this->data = array();
-    $this->_verifiedStorage->delete();
+    $this->storage->delete();
   }
 }

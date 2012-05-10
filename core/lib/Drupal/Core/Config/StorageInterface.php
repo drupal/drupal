@@ -3,15 +3,15 @@
 namespace Drupal\Core\Config;
 
 /**
- * Defines an interface for verified storage manipulation.
+ * Defines an interface for configuration storage manipulation.
  *
  * This class allows reading and writing configuration data from/to the
- * verified storage and copying to/from the file storing the same data.
+ * storage and copying to/from the file storing the same data.
  */
-interface DrupalConfigVerifiedStorageInterface {
+interface StorageInterface {
 
   /**
-   * Constructs a verified storage manipulation class.
+   * Constructs a storage manipulation class.
    *
    * @param $name
    *   Lowercase string, the name for the configuration data.
@@ -19,17 +19,17 @@ interface DrupalConfigVerifiedStorageInterface {
   function __construct($name);
 
   /**
-   * Reads the configuration data from the verified storage.
+   * Reads the configuration data from the storage.
    */
   function read();
 
   /**
-   * Copies the configuration data from the verified storage into a file.
+   * Copies the configuration data from the storage into a file.
    */
   function copyToFile();
 
   /**
-   * Copies the configuration data from the file into the verified storage.
+   * Copies the configuration data from the file into the storage.
    */
   function copyFromFile();
 
@@ -39,10 +39,10 @@ interface DrupalConfigVerifiedStorageInterface {
   function deleteFile();
 
   /**
-   * Checks whether the file and the verified storage is in sync.
+   * Checks whether the file and the storage is in sync.
    *
    * @return
-   *   TRUE if the file and the verified storage contains the same data, FALSE
+   *   TRUE if the file and the storage contains the same data, FALSE
    *   if not.
    */
   function isOutOfSync();
