@@ -5,10 +5,13 @@
  * Tests for the theme API.
  */
 
+use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
+
 /**
  * Unit tests for the Theme API.
  */
-class ThemeUnitTest extends DrupalWebTestCase {
+class ThemeUnitTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Theme API',
@@ -172,7 +175,7 @@ class ThemeUnitTest extends DrupalWebTestCase {
 /**
  * Unit tests for theme_table().
  */
-class ThemeTableUnitTest extends DrupalWebTestCase {
+class ThemeTableUnitTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Theme Table',
@@ -232,7 +235,7 @@ class ThemeTableUnitTest extends DrupalWebTestCase {
 /**
  * Tests for common theme functions.
  */
-class ThemeFunctionsTestCase extends DrupalWebTestCase {
+class ThemeFunctionsTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Theme functions',
@@ -490,7 +493,7 @@ class ThemeFunctionsTestCase extends DrupalWebTestCase {
 /**
  * Functional test for initialization of the theme system in hook_init().
  */
-class ThemeHookInitUnitTest extends DrupalWebTestCase {
+class ThemeHookInitUnitTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Theme initialization in hook_init()',
@@ -519,7 +522,7 @@ class ThemeHookInitUnitTest extends DrupalWebTestCase {
 /**
  * Tests autocompletion not loading registry.
  */
-class ThemeFastTestCase extends DrupalWebTestCase {
+class ThemeFastTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Theme fast initialization',
@@ -546,7 +549,7 @@ class ThemeFastTestCase extends DrupalWebTestCase {
 /**
  * Unit tests for theme_html_tag().
  */
-class ThemeHtmlTag extends DrupalUnitTestCase {
+class ThemeHtmlTag extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Theme HTML Tag',
@@ -572,7 +575,7 @@ class ThemeHtmlTag extends DrupalUnitTestCase {
 /**
  * Functional test for attributes of html.tpl.php.
  */
-class ThemeHtmlTplPhpAttributesTestCase extends DrupalWebTestCase {
+class ThemeHtmlTplPhpAttributesTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'html.tpl.php html and body attributes',
@@ -600,7 +603,7 @@ class ThemeHtmlTplPhpAttributesTestCase extends DrupalWebTestCase {
 /**
  * Tests for the ThemeRegistry class.
  */
-class ThemeRegistryTestCase extends DrupalWebTestCase {
+class ThemeRegistryTestCase extends WebTestBase {
   protected $profile = 'testing';
   public static function getInfo() {
     return array(
@@ -651,7 +654,7 @@ class ThemeRegistryTestCase extends DrupalWebTestCase {
 /**
  * Tests for theme_datetime().
  */
-class ThemeDatetime extends DrupalWebTestCase {
+class ThemeDatetime extends WebTestBase {
   protected $profile = 'testing';
 
   public static function getInfo() {

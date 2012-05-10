@@ -5,12 +5,14 @@
  * Tests for path.inc.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Unit tests for the drupal_match_path() function in path.inc.
  *
  * @see drupal_match_path().
  */
-class DrupalMatchPathTestCase extends DrupalWebTestCase {
+class DrupalMatchPathTestCase extends WebTestBase {
   protected $front;
 
   public static function getInfo() {
@@ -129,7 +131,7 @@ class DrupalMatchPathTestCase extends DrupalWebTestCase {
 /**
  * Tests hook_url_alter functions.
  */
-class UrlAlterFunctionalTest extends DrupalWebTestCase {
+class UrlAlterFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => t('URL altering'),
@@ -247,7 +249,7 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
 /**
  * Unit test for drupal_lookup_path().
  */
-class PathLookupTest extends DrupalWebTestCase {
+class PathLookupTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => t('Path lookup'),
@@ -337,7 +339,7 @@ class PathLookupTest extends DrupalWebTestCase {
 /**
  * Tests the path_save() function.
  */
-class PathSaveTest extends DrupalWebTestCase {
+class PathSaveTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => t('Path save'),

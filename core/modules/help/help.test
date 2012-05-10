@@ -5,10 +5,12 @@
  * Tests for help.module.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Tests help display and user access for all modules implementing help.
  */
-class HelpTestCase extends DrupalWebTestCase {
+class HelpTestCase extends WebTestBase {
   // Tests help implementations of many arbitrary core modules.
   protected $profile = 'standard';
 
@@ -108,7 +110,7 @@ class HelpTestCase extends DrupalWebTestCase {
 /**
  * Tests a module without help to verify it is not listed in the help page.
  */
-class NoHelpTestCase extends DrupalWebTestCase {
+class NoHelpTestCase extends WebTestBase {
   /**
    * The user who will be created.
    */

@@ -4,10 +4,12 @@
  * Tests for the Contact module.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Tests the site-wide contact form.
  */
-class ContactSitewideTestCase extends DrupalWebTestCase {
+class ContactSitewideTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Site-wide contact form',
@@ -298,7 +300,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 /**
  * Tests the personal contact form.
  */
-class ContactPersonalTestCase extends DrupalWebTestCase {
+class ContactPersonalTestCase extends WebTestBase {
   private $admin_user;
   private $web_user;
   private $contact_user;

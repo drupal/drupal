@@ -19,10 +19,13 @@
  * initial state and availability scenario.
  */
 
+use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
+
 /**
  * Base class to define some shared functions used by all update tests.
  */
-class UpdateTestHelper extends DrupalWebTestCase {
+class UpdateTestHelper extends WebTestBase {
   /**
    * Refresh the update status based on the desired available update scenario.
    *
@@ -725,7 +728,7 @@ class UpdateTestUploadCase extends UpdateTestHelper {
 
 }
 
-class UpdateCoreUnitTestCase extends DrupalUnitTestCase {
+class UpdateCoreUnitTestCase extends UnitTestBase {
 
   public static function getInfo() {
     return array(

@@ -2,11 +2,12 @@
 
 use Drupal\Core\Queue\Memory;
 use Drupal\Core\Queue\System;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the basic queue functionality.
  */
-class QueueTestCase extends DrupalWebTestCase {
+class QueueTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Queue functionality',

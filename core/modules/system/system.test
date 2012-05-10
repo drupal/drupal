@@ -2,6 +2,8 @@
 
 use Drupal\Core\Database\Database;
 use Drupal\Component\Graph\Graph;
+use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
 
 /**
  * @file
@@ -11,7 +13,7 @@ use Drupal\Component\Graph\Graph;
 /**
  * Helper class for module test cases.
  */
-class ModuleTestCase extends DrupalWebTestCase {
+class ModuleTestCase extends WebTestBase {
   protected $admin_user;
 
   function setUp() {
@@ -709,7 +711,7 @@ class ModuleRequiredTestCase extends ModuleTestCase {
   }
 }
 
-class IPAddressBlockingTestCase extends DrupalWebTestCase {
+class IPAddressBlockingTestCase extends WebTestBase {
   protected $blocking_user;
 
   /**
@@ -788,7 +790,7 @@ class IPAddressBlockingTestCase extends DrupalWebTestCase {
   }
 }
 
-class CronRunTestCase extends DrupalWebTestCase {
+class CronRunTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Cron run',
@@ -920,7 +922,7 @@ class CronRunTestCase extends DrupalWebTestCase {
   }
 }
 
-class AdminMetaTagTestCase extends DrupalWebTestCase {
+class AdminMetaTagTestCase extends WebTestBase {
   /**
    * Implement getInfo().
    */
@@ -943,7 +945,7 @@ class AdminMetaTagTestCase extends DrupalWebTestCase {
   }
 }
 
-class DefaultMobileMetaTagsTestCase extends DrupalWebTestCase {
+class DefaultMobileMetaTagsTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Default mobile meta tags',
@@ -987,7 +989,7 @@ class DefaultMobileMetaTagsTestCase extends DrupalWebTestCase {
 /**
  * Tests custom access denied functionality.
  */
-class AccessDeniedTestCase extends DrupalWebTestCase {
+class AccessDeniedTestCase extends WebTestBase {
   protected $admin_user;
 
   public static function getInfo() {
@@ -1064,7 +1066,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
   }
 }
 
-class PageNotFoundTestCase extends DrupalWebTestCase {
+class PageNotFoundTestCase extends WebTestBase {
   protected $admin_user;
 
   public static function getInfo() {
@@ -1104,7 +1106,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
 /**
  * Tests site maintenance functionality.
  */
-class SiteMaintenanceTestCase extends DrupalWebTestCase {
+class SiteMaintenanceTestCase extends WebTestBase {
   protected $admin_user;
 
   public static function getInfo() {
@@ -1208,7 +1210,7 @@ class SiteMaintenanceTestCase extends DrupalWebTestCase {
 /**
  * Tests generic date and time handling capabilities of Drupal.
  */
-class DateTimeFunctionalTest extends DrupalWebTestCase {
+class DateTimeFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Date and time',
@@ -1401,7 +1403,7 @@ class DateTimeFunctionalTest extends DrupalWebTestCase {
   }
 }
 
-class PageTitleFiltering extends DrupalWebTestCase {
+class PageTitleFiltering extends WebTestBase {
   protected $content_user;
   protected $saved_title;
 
@@ -1510,7 +1512,7 @@ class PageTitleFiltering extends DrupalWebTestCase {
 /**
  * Test front page functionality and administration.
  */
-class FrontPageTestCase extends DrupalWebTestCase {
+class FrontPageTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1564,7 +1566,7 @@ class FrontPageTestCase extends DrupalWebTestCase {
   }
 }
 
-class SystemBlockTestCase extends DrupalWebTestCase {
+class SystemBlockTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Block functionality',
@@ -1631,7 +1633,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
 /**
  * Test main content rendering fallback provided by system module.
  */
-class SystemMainContentFallback extends DrupalWebTestCase {
+class SystemMainContentFallback extends WebTestBase {
   protected $admin_user;
   protected $web_user;
 
@@ -1709,7 +1711,7 @@ class SystemMainContentFallback extends DrupalWebTestCase {
 /**
  * Tests for the theme interface functionality.
  */
-class SystemThemeFunctionalTest extends DrupalWebTestCase {
+class SystemThemeFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Theme interface functionality',
@@ -1933,7 +1935,7 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
 /**
  * Test token replacement in strings.
  */
-class TokenReplaceTestCase extends DrupalWebTestCase {
+class TokenReplaceTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Token replacement',
@@ -2089,7 +2091,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
   }
 }
 
-class InfoFileParserTestCase extends DrupalUnitTestCase {
+class InfoFileParserTestCase extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Info file format parser',
@@ -2163,7 +2165,7 @@ array_space[a b] = Value';
 /**
  * Tests the effectiveness of hook_system_info_alter().
  */
-class SystemInfoAlterTestCase extends DrupalWebTestCase {
+class SystemInfoAlterTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'System info alter',
@@ -2230,7 +2232,7 @@ class SystemInfoAlterTestCase extends DrupalWebTestCase {
 /**
  * Tests for the update system functionality.
  */
-class UpdateScriptFunctionalTest extends DrupalWebTestCase {
+class UpdateScriptFunctionalTest extends WebTestBase {
   private $update_url;
   private $update_user;
 
@@ -2399,7 +2401,7 @@ class UpdateScriptFunctionalTest extends DrupalWebTestCase {
 /**
  * Functional tests for the flood control mechanism.
  */
-class FloodFunctionalTest extends DrupalWebTestCase {
+class FloodFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Flood control mechanism',
@@ -2437,7 +2439,7 @@ class FloodFunctionalTest extends DrupalWebTestCase {
 /**
  * Test HTTP file downloading capability.
  */
-class RetrieveFileTestCase extends DrupalWebTestCase {
+class RetrieveFileTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'HTTP file retrieval',
@@ -2486,7 +2488,7 @@ class RetrieveFileTestCase extends DrupalWebTestCase {
 /**
  * Functional tests shutdown functions.
  */
-class ShutdownFunctionsTest extends DrupalWebTestCase {
+class ShutdownFunctionsTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Shutdown functions',
@@ -2518,7 +2520,7 @@ class ShutdownFunctionsTest extends DrupalWebTestCase {
 /**
  * Tests administrative overview pages.
  */
-class SystemAdminTestCase extends DrupalWebTestCase {
+class SystemAdminTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Administrative pages',
@@ -2633,7 +2635,7 @@ class SystemAdminTestCase extends DrupalWebTestCase {
  *
  * @see Drupal\Component\Graph\Graph
  */
-class GraphUnitTest extends DrupalUnitTestCase {
+class GraphUnitTest extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Directed acyclic graph manipulation',
@@ -2818,7 +2820,7 @@ class GraphUnitTest extends DrupalUnitTestCase {
 /**
  * Tests authorize.php and related hooks.
  */
-class SystemAuthorizeCase extends DrupalWebTestCase {
+class SystemAuthorizeCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Authorize API',
@@ -2871,7 +2873,7 @@ class SystemAuthorizeCase extends DrupalWebTestCase {
 /**
  * Test the handling of requests containing 'index.php'.
  */
-class SystemIndexPhpTest extends DrupalWebTestCase {
+class SystemIndexPhpTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Index.php handling',

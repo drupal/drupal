@@ -10,10 +10,12 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
  *  - comparison of $GLOBALS default language against dependency injection;
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Functional tests for the language list configuration forms.
  */
-class LanguageListTest extends DrupalWebTestCase {
+class LanguageListTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Language list configuration',
@@ -168,7 +170,7 @@ class LanguageListTest extends DrupalWebTestCase {
 /**
  * Test for dependency injected language object.
  */
-class LanguageDependencyInjectionTest extends DrupalWebTestCase {
+class LanguageDependencyInjectionTest extends WebTestBase {
   public static function getInfo() {
     return array(
         'name' => 'Language dependency injection',

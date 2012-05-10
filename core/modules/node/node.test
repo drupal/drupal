@@ -1,13 +1,14 @@
 <?php
 
 use Drupal\Core\Database\Database;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * @file
  * Tests for node.module.
  */
 
-class NodeWebTestCase extends DrupalWebTestCase {
+class NodeWebTestCase extends WebTestBase {
   function setUp() {
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {
@@ -1768,7 +1769,7 @@ class NodeTitleTestCase extends NodeWebTestCase {
 /**
  * Test the node_feed() functionality.
  */
-class NodeFeedTestCase extends DrupalWebTestCase {
+class NodeFeedTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Node feed',
@@ -1928,7 +1929,7 @@ class NodeBlockFunctionalTest extends NodeWebTestCase {
 /**
  * Test multistep node forms basic options.
  */
-class MultiStepNodeFormBasicOptionsTest extends DrupalWebTestCase {
+class MultiStepNodeFormBasicOptionsTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Multistep node form basic options',
@@ -2423,7 +2424,7 @@ class NodeRevisionPermissionsTestCase extends NodeWebTestCase {
 /**
  * Tests pagination with a node access module enabled.
  */
-class NodeAccessPagerTestCase extends DrupalWebTestCase {
+class NodeAccessPagerTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(

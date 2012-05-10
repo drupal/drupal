@@ -6,8 +6,9 @@
  */
 
 use Drupal\field\FieldValidationException;
+use Drupal\simpletest\WebTestBase;
 
-class TextFieldTestCase extends DrupalWebTestCase {
+class TextFieldTestCase extends WebTestBase {
   protected $instance;
   protected $admin_user;
   protected $web_user;
@@ -239,7 +240,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
   }
 }
 
-class TextSummaryTestCase extends DrupalWebTestCase {
+class TextSummaryTestCase extends WebTestBase {
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -409,7 +410,7 @@ class TextSummaryTestCase extends DrupalWebTestCase {
   }
 }
 
-class TextTranslationTestCase extends DrupalWebTestCase {
+class TextTranslationTestCase extends WebTestBase {
   protected $profile = 'standard';
 
   public static function getInfo() {

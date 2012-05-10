@@ -3,7 +3,10 @@
 /**
  * Tests Drupal error and exception handlers.
  */
-class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
+
+use Drupal\simpletest\WebTestBase;
+
+class DrupalErrorHandlerUnitTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Drupal error handlers',

@@ -1,6 +1,9 @@
 <?php
 
-class BootstrapIPAddressTestCase extends DrupalWebTestCase {
+use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
+
+class BootstrapIPAddressTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -98,7 +101,7 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
   }
 }
 
-class BootstrapPageCacheTestCase extends DrupalWebTestCase {
+class BootstrapPageCacheTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -231,7 +234,7 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
   }
 }
 
-class BootstrapVariableTestCase extends DrupalWebTestCase {
+class BootstrapVariableTestCase extends WebTestBase {
 
   function setUp() {
     parent::setUp('system_test');
@@ -281,7 +284,7 @@ class BootstrapVariableTestCase extends DrupalWebTestCase {
 /**
  * Test hook_boot() and hook_exit().
  */
-class HookBootExitTestCase extends DrupalWebTestCase {
+class HookBootExitTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -336,7 +339,7 @@ class HookBootExitTestCase extends DrupalWebTestCase {
 /**
  * Test drupal_get_filename()'s availability.
  */
-class BootstrapGetFilenameTestCase extends DrupalUnitTestCase {
+class BootstrapGetFilenameTestCase extends UnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -378,7 +381,7 @@ class BootstrapGetFilenameTestCase extends DrupalUnitTestCase {
   }
 }
 
-class BootstrapTimerTestCase extends DrupalUnitTestCase {
+class BootstrapTimerTestCase extends UnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -413,7 +416,7 @@ class BootstrapTimerTestCase extends DrupalUnitTestCase {
 /**
  * Test that resetting static variables works.
  */
-class BootstrapResettableStaticTestCase extends DrupalUnitTestCase {
+class BootstrapResettableStaticTestCase extends UnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -452,7 +455,7 @@ class BootstrapResettableStaticTestCase extends DrupalUnitTestCase {
 /**
  * Test miscellaneous functions in bootstrap.inc.
  */
-class BootstrapMiscTestCase extends DrupalUnitTestCase {
+class BootstrapMiscTestCase extends UnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -498,7 +501,7 @@ class BootstrapMiscTestCase extends DrupalUnitTestCase {
 /**
  * Tests for overriding server variables via the API.
  */
-class BootstrapOverrideServerVariablesTestCase extends DrupalUnitTestCase {
+class BootstrapOverrideServerVariablesTestCase extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Overriding server variables',

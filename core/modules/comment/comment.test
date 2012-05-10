@@ -6,8 +6,9 @@
  */
 
 use Drupal\comment\Comment;
+use Drupal\simpletest\WebTestBase;
 
-class CommentHelperCase extends DrupalWebTestCase {
+class CommentHelperCase extends WebTestBase {
   protected $profile = 'standard';
 
   protected $admin_user;
@@ -818,7 +819,7 @@ class CommentInterfaceTest extends CommentHelperCase {
     user_role_change_permissions($rid, $perms);
 
     // Output verbose debugging information.
-    // @see DrupalTestCase::error()
+    // @see Drupal\simpletest\TestBase::error()
     $t_form = array(
       COMMENT_FORM_BELOW => 'below',
       COMMENT_FORM_SEPARATE_PAGE => 'separate page',
@@ -1515,7 +1516,7 @@ class CommentNodeAccessTest extends CommentHelperCase {
   }
 
   function setUp() {
-    DrupalWebTestCase::setUp('comment', 'search', 'node_access_test');
+    WebTestBase::setUp('comment', 'search', 'node_access_test');
     node_access_rebuild();
 
     // Create users and test node.

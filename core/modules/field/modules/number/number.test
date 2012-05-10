@@ -5,10 +5,12 @@
  * Tests for number.module.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Tests for number field types.
  */
-class NumberFieldTestCase extends DrupalWebTestCase {
+class NumberFieldTestCase extends WebTestBase {
   protected $field;
   protected $instance;
   protected $web_user;

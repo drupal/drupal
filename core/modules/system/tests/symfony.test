@@ -5,10 +5,12 @@
  * Tests for Symfony2-related functionality.
  */
 
+use Drupal\simpletest\UnitTestBase;
+
 /**
  * Tests related to Symfony class loading.
  */
-class SymfonyClassLoaderTestCase extends DrupalUnitTestCase {
+class SymfonyClassLoaderTestCase extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Class loader',

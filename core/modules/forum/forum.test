@@ -6,8 +6,9 @@
  */
 
 use Drupal\node\Node;
+use Drupal\simpletest\WebTestBase;
 
-class ForumTestCase extends DrupalWebTestCase {
+class ForumTestCase extends WebTestBase {
   protected $admin_user;
   protected $edit_own_topics_user;
   protected $edit_any_topics_user;
@@ -594,7 +595,7 @@ class ForumTestCase extends DrupalWebTestCase {
 /**
  * Tests the forum index listing.
  */
-class ForumIndexTestCase extends DrupalWebTestCase {
+class ForumIndexTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(

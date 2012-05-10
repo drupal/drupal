@@ -5,7 +5,10 @@
  * Tests for block.module.
  */
 
-class BlockTestCase extends DrupalWebTestCase {
+use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
+
+class BlockTestCase extends WebTestBase {
   protected $regions;
   protected $admin_user;
 
@@ -398,7 +401,7 @@ class BlockTestCase extends DrupalWebTestCase {
   }
 }
 
-class NonDefaultBlockAdmin extends DrupalWebTestCase {
+class NonDefaultBlockAdmin extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Non default theme admin',
@@ -426,7 +429,7 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
 /**
  * Test blocks correctly initialized when picking a new default theme.
  */
-class NewDefaultThemeBlocks extends DrupalWebTestCase {
+class NewDefaultThemeBlocks extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'New default theme blocks',
@@ -481,7 +484,7 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
 /**
  * Test the block system with admin themes.
  */
-class BlockAdminThemeTestCase extends DrupalWebTestCase {
+class BlockAdminThemeTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Admin theme block admin accessibility',
@@ -517,7 +520,7 @@ class BlockAdminThemeTestCase extends DrupalWebTestCase {
 /**
  * Test block caching.
  */
-class BlockCacheTestCase extends DrupalWebTestCase {
+class BlockCacheTestCase extends WebTestBase {
   protected $admin_user;
   protected $normal_user;
   protected $normal_user_alt;
@@ -704,7 +707,7 @@ class BlockCacheTestCase extends DrupalWebTestCase {
 /**
  * Test block HTML id validity.
  */
-class BlockHTMLIdTestCase extends DrupalWebTestCase {
+class BlockHTMLIdTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -743,7 +746,7 @@ class BlockHTMLIdTestCase extends DrupalWebTestCase {
 /**
  * Unit tests for template_preprocess_block().
  */
-class BlockTemplateSuggestionsUnitTest extends DrupalUnitTestCase {
+class BlockTemplateSuggestionsUnitTest extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Block template suggestions',
@@ -788,7 +791,7 @@ class BlockTemplateSuggestionsUnitTest extends DrupalUnitTestCase {
 /**
  * Tests that hidden regions do not inherit blocks when a theme is enabled.
  */
-class BlockHiddenRegionTestCase extends DrupalWebTestCase {
+class BlockHiddenRegionTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Blocks not in hidden region',
@@ -848,7 +851,7 @@ class BlockHiddenRegionTestCase extends DrupalWebTestCase {
 /**
  * Functional tests for the language list configuration forms.
  */
-class BlockLanguageTestCase extends DrupalWebTestCase {
+class BlockLanguageTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Language block visibility',
@@ -1034,7 +1037,7 @@ class BlockLanguageTestCase extends DrupalWebTestCase {
 /**
  * Tests that a block assigned to an invalid region triggers the warning.
  */
-class BlockInvalidRegionTestCase extends DrupalWebTestCase {
+class BlockInvalidRegionTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Blocks in invalid regions',

@@ -6,8 +6,9 @@
  */
 
 use Drupal\node\Node;
+use Drupal\simpletest\WebTestBase;
 
-class RdfMappingHookTestCase extends DrupalWebTestCase {
+class RdfMappingHookTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'RDF mapping hook',
@@ -43,7 +44,7 @@ class RdfMappingHookTestCase extends DrupalWebTestCase {
 /**
  * Test RDFa markup generation.
  */
-class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
+class RdfRdfaMarkupTestCase extends WebTestBase {
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -212,7 +213,7 @@ class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
   }
 }
 
-class RdfCrudTestCase extends DrupalWebTestCase {
+class RdfCrudTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'RDF mapping CRUD functions',
@@ -578,7 +579,7 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
   }
 }
 
-class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
+class RdfTrackerAttributesTestCase extends WebTestBase {
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -695,7 +696,7 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
 /**
  * Tests for RDF namespaces declaration with hook_rdf_namespaces().
  */
-class RdfGetRdfNamespacesTestCase extends DrupalWebTestCase {
+class RdfGetRdfNamespacesTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'RDF namespaces',
@@ -725,7 +726,7 @@ class RdfGetRdfNamespacesTestCase extends DrupalWebTestCase {
 /**
  * Tests for RDF namespaces XML serialization.
  */
-class DrupalGetRdfNamespacesTestCase extends DrupalWebTestCase {
+class DrupalGetRdfNamespacesTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'RDF namespaces serialization test',

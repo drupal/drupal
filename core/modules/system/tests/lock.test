@@ -3,7 +3,10 @@
 /**
  * Tests for the lock system.
  */
-class LockFunctionalTest extends DrupalWebTestCase {
+
+use Drupal\simpletest\WebTestBase;
+
+class LockFunctionalTest extends WebTestBase {
 
   public static function getInfo() {
     return array(

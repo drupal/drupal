@@ -5,7 +5,9 @@
  * Tests for aggregator.module.
  */
 
-class AggregatorTestCase extends DrupalWebTestCase {
+use Drupal\simpletest\WebTestBase;
+
+class AggregatorTestCase extends WebTestBase {
   function setUp() {
     parent::setUp(array('node', 'block', 'aggregator', 'aggregator_test'));
 

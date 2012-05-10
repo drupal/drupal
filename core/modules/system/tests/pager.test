@@ -5,10 +5,12 @@
  * Tests for pager functionality.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Tests pager functionality.
  */
-class PagerFunctionalWebTestCase extends DrupalWebTestCase {
+class PagerFunctionalWebTestCase extends WebTestBase {
   protected $profile = 'testing';
 
   public static function getInfo() {

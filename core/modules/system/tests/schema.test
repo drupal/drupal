@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Database\Database;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * @file
@@ -10,7 +11,7 @@ use Drupal\Core\Database\Database;
 /**
  * Unit tests for the Schema API.
  */
-class SchemaTestCase extends DrupalWebTestCase {
+class SchemaTestCase extends WebTestBase {
   /**
    * A global counter for table and field creation.
    */

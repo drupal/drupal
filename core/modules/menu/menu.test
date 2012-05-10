@@ -5,7 +5,9 @@
  * Tests for menu.module.
  */
 
-class MenuTestCase extends DrupalWebTestCase {
+use Drupal\simpletest\WebTestBase;
+
+class MenuTestCase extends WebTestBase {
   protected $profile = 'standard';
 
   protected $big_user;
@@ -583,7 +585,7 @@ class MenuTestCase extends DrupalWebTestCase {
 /**
  * Test menu settings for nodes.
  */
-class MenuNodeTestCase extends DrupalWebTestCase {
+class MenuNodeTestCase extends WebTestBase {
   protected $profile = 'standard';
 
   public static function getInfo() {

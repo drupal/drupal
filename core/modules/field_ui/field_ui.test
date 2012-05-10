@@ -6,16 +6,18 @@
  */
 
 use Drupal\node\Node;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Provides common functionality for the Field UI test classes.
  */
-class FieldUITestCase extends DrupalWebTestCase {
+class FieldUITestCase extends WebTestBase {
 
   function setUp() {
     // Since this is a base class for many test cases, support the same
-    // flexibility that DrupalWebTestCase::setUp() has for the modules to be
-    // passed in as either an array or a variable number of string arguments.
+    // flexibility that Drupal\simpletest\WebTestBase::setUp() has for the
+    // modules to be passed in as either an array or a variable number of string
+    // arguments.
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {
       $modules = $modules[0];
@@ -681,7 +683,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
     $output = drupal_render($element);
     $this->verbose(t('Rendered node - view mode: @view_mode', array('@view_mode' => $view_mode)) . '<hr />'. $output);
 
-    // Assign content so that DrupalWebTestCase functions can be used.
+    // Assign content so that WebTestBase functions can be used.
     $this->drupalSetContent($output);
     $method = ($not_exists ? 'assertNoText' : 'assertText');
     $return = $this->{$method}((string) $text, $message);
@@ -696,7 +698,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
 /**
  * Tests custom widget hooks and callbacks on the field administration pages.
  */
-class FieldUIAlterTestCase extends DrupalWebTestCase {
+class FieldUIAlterTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Widget customization',

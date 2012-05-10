@@ -5,7 +5,9 @@
  * Unit tests for the Drupal Form API.
  */
 
-class FormsTestCase extends DrupalWebTestCase {
+use Drupal\simpletest\WebTestBase;
+
+class FormsTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -558,7 +560,7 @@ class FormsTestCase extends DrupalWebTestCase {
 /**
  * Tests building and processing of core form elements.
  */
-class FormElementTestCase extends DrupalWebTestCase {
+class FormElementTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Element processing',
@@ -639,7 +641,7 @@ class FormElementTestCase extends DrupalWebTestCase {
 /**
  * Test form alter hooks.
  */
-class FormAlterTestCase extends DrupalWebTestCase {
+class FormAlterTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Form alter hooks',
@@ -673,7 +675,7 @@ class FormAlterTestCase extends DrupalWebTestCase {
 /**
  * Test form validation handlers.
  */
-class FormValidationTestCase extends DrupalWebTestCase {
+class FormValidationTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Form validation handlers',
@@ -848,7 +850,7 @@ class FormValidationTestCase extends DrupalWebTestCase {
 /**
  * Test form element labels, required markers and associated output.
  */
-class FormsElementsLabelsTestCase extends DrupalWebTestCase {
+class FormsElementsLabelsTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -935,7 +937,7 @@ class FormsElementsLabelsTestCase extends DrupalWebTestCase {
 /**
  * Test the tableselect form element for expected behavior.
  */
-class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
+class FormsElementsTableSelectFunctionalTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1161,7 +1163,7 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
 /**
  * Test the vertical_tabs form element for expected behavior.
  */
-class FormsElementsVerticalTabsFunctionalTest extends DrupalWebTestCase {
+class FormsElementsVerticalTabsFunctionalTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1197,7 +1199,7 @@ class FormsElementsVerticalTabsFunctionalTest extends DrupalWebTestCase {
  * when a validation error occurs, it makes sure that changed form element
  * values aren't lost due to a wrong form rebuild.
  */
-class FormsFormStorageTestCase extends DrupalWebTestCase {
+class FormsFormStorageTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1341,7 +1343,7 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
 /**
  * Test wrapper form callbacks.
  */
-class FormsFormWrapperTestCase extends DrupalWebTestCase {
+class FormsFormWrapperTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Form wrapper callback',
@@ -1367,7 +1369,7 @@ class FormsFormWrapperTestCase extends DrupalWebTestCase {
 /**
  * Test $form_state clearance.
  */
-class FormStateValuesCleanTestCase extends DrupalWebTestCase {
+class FormStateValuesCleanTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Form state values clearance',
@@ -1415,7 +1417,7 @@ class FormStateValuesCleanTestCase extends DrupalWebTestCase {
 /**
  * Tests $form_state clearance with form elements having buttons.
  */
-class FormStateValuesCleanAdvancedTestCase extends DrupalWebTestCase {
+class FormStateValuesCleanAdvancedTestCase extends WebTestBase {
   /**
    * An image file path for uploading.
    */
@@ -1462,7 +1464,7 @@ class FormStateValuesCleanAdvancedTestCase extends DrupalWebTestCase {
  *
  * @todo Add tests for other aspects of form rebuilding.
  */
-class FormsRebuildTestCase extends DrupalWebTestCase {
+class FormsRebuildTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Form rebuilding',
@@ -1556,7 +1558,7 @@ class FormsRebuildTestCase extends DrupalWebTestCase {
 /**
  * Test the programmatic form submission behavior.
  */
-class FormsProgrammaticTestCase extends DrupalWebTestCase {
+class FormsProgrammaticTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1645,7 +1647,7 @@ class FormsProgrammaticTestCase extends DrupalWebTestCase {
 /**
  * Test that FAPI correctly determines $form_state['triggering_element'].
  */
-class FormsTriggeringElementTestCase extends DrupalWebTestCase {
+class FormsTriggeringElementTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1743,7 +1745,7 @@ class FormsTriggeringElementTestCase extends DrupalWebTestCase {
 /**
  * Tests rebuilding of arbitrary forms by altering them.
  */
-class FormsArbitraryRebuildTestCase extends DrupalWebTestCase {
+class FormsArbitraryRebuildTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Rebuild arbitrary forms',
@@ -1809,7 +1811,7 @@ class FormsArbitraryRebuildTestCase extends DrupalWebTestCase {
 /**
  * Tests form API file inclusion.
  */
-class FormsFileInclusionTestCase extends DrupalWebTestCase {
+class FormsFileInclusionTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1843,7 +1845,7 @@ class FormsFileInclusionTestCase extends DrupalWebTestCase {
 /**
  * Tests checkbox element.
  */
-class FormCheckboxTestCase extends DrupalWebTestCase {
+class FormCheckboxTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1924,7 +1926,7 @@ class FormCheckboxTestCase extends DrupalWebTestCase {
 /**
  * Tests email element.
  */
-class FormEmailTestCase extends DrupalWebTestCase {
+class FormEmailTestCase extends WebTestBase {
   protected $profile = 'testing';
 
   public static function getInfo() {
@@ -1968,7 +1970,7 @@ class FormEmailTestCase extends DrupalWebTestCase {
 /**
  * Tests url element.
  */
-class FormUrlTestCase extends DrupalWebTestCase {
+class FormUrlTestCase extends WebTestBase {
   protected $profile = 'testing';
 
   public static function getInfo() {
