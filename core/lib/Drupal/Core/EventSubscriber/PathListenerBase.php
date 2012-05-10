@@ -16,7 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class PathListenerBase {
 
   public function extractPath(Request $request) {
-    return $request->attributes->get('system_path') ?: trim($request->getPathInfo(), '/');
+    $path = $request->attributes->get('system_path');
+    return isset($path) ? $path : trim($request->getPathInfo(), '/');
   }
 
   public function setPath(Request $request, $path) {

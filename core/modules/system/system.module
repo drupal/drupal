@@ -2021,7 +2021,7 @@ function system_add_module_assets() {
  */
 function system_custom_theme() {
   if ($request = request()) {
-    $path = ltrim($request->getPathInfo(), '/');
+    $path = $request->attributes->get('system_path');
     if (user_access('view the administration theme') && path_is_admin($path)) {
       return variable_get('admin_theme');
     }
