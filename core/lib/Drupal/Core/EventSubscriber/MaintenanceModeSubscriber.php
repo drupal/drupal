@@ -1,16 +1,16 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\EventSubscriber\MaintenanceModeSubscriber.
+ */
+
 namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-/**
- * @file
- * Definition of Drupal\Core\EventSubscriber\MaintenanceModeSubscriber.
- */
 
 /**
  * Maintenance mode subscriber for controller requests.
@@ -20,7 +20,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   /**
    * Response with the maintenance page when the site is offline.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function onKernelRequestMaintenanceModeCheck(GetResponseEvent $event) {

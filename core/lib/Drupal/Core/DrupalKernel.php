@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Definition of Drupal\Core\DrupalKernel.
  */
 
@@ -17,7 +16,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-//use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 use Drupal\Core\EventSubscriber\ViewSubscriber;
 use Drupal\Core\EventSubscriber\AccessSubscriber;
@@ -39,25 +37,25 @@ class DrupalKernel extends HttpKernel {
     /**
      * The event dispatcher used by this kernel.
      *
-     * @var EventDispatcherInterface
+     * @var Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
     protected $dispatcher;
 
     /**
      * The controller resolver that will extract the controller from a Request.
      *
-     * @var ControllerResolverInterface
+     * @var Symfony\Component\HttpKernel\Controller\ControllerResolverInterface
      */
     protected $resolver;
 
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param EventDispatcherInterface $dispatcher
-     *   An EventDispatcherInterface instance
-     * @param ControllerResolverInterface $resolver
-     *   A ControllerResolverInterface instance
+     * @param Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+     *   An EventDispatcherInterface instance.
+     * @param Symfony\Component\HttpKernel\Controller\ControllerResolverInterface $resolver
+     *   A ControllerResolverInterface instance.
      */
    public function __construct(EventDispatcherInterface $dispatcher, ControllerResolverInterface $resolver) {
       parent::__construct($dispatcher, $resolver);
@@ -71,7 +69,7 @@ class DrupalKernel extends HttpKernel {
 
       // @todo Make this extensible rather than just hard coding some.
       // @todo Add a subscriber to handle other things, too, like our Ajax
-      // replacement system.
+      //   replacement system.
       $this->dispatcher->addSubscriber(new ViewSubscriber($negotiation));
       $this->dispatcher->addSubscriber(new AccessSubscriber());
       $this->dispatcher->addSubscriber(new MaintenanceModeSubscriber());
@@ -82,7 +80,7 @@ class DrupalKernel extends HttpKernel {
       $this->dispatcher->addSubscriber(new RequestCloseSubscriber());
 
       // Some other form of error occured that wasn't handled by another kernel
-      // listener.  That could mean that it's a method/mime-type/error
+      // listener. That could mean that it's a method/mime-type/error
       // combination that is not accounted for, or some other type of error.
       // Either way, treat it as a server-level error and return an HTTP 500.
       // By default, this will be an HTML-type response because that's a decent

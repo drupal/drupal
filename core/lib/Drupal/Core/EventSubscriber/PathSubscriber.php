@@ -2,8 +2,7 @@
 
 /**
  * @file
- *
- * Definition of Drupal\Core\EventSubscriber\PathSubscriber
+ * Definition of Drupal\Core\EventSubscriber\PathSubscriber.
  */
 
 namespace Drupal\Core\EventSubscriber;
@@ -21,14 +20,13 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
   /**
    * Resolve the system path.
    *
-   * @todo The path system should be objectified to remove the function calls
-   * in this method.
+   * @todo The path system should be objectified to remove the function calls in
+   *   this method.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function onKernelRequestPathResolve(GetResponseEvent $event) {
-
     $request = $event->getRequest();
 
     $path = $this->extractPath($request);
@@ -41,10 +39,10 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
   /**
    * Resolve the front-page default path.
    *
-   * @todo The path system should be objectified to remove the function calls
-   * in this method.
+   * @todo The path system should be objectified to remove the function calls in
+   *   this method.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function onKernelRequestFrontPageResolve(GetResponseEvent $event) {
@@ -63,10 +61,9 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
    * Decode language information embedded in the request path.
    *
    * @todo Refactor this entire method to inline the relevant portions of
-   *       drupal_language_initialize().  See the inline comment for more
-   *       details.
+   *   drupal_language_initialize(). See the inline comment for more details.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function onKernelRequestLanguageResolve(GetResponseEvent $event) {
@@ -93,15 +90,15 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
    *
    * Parameters in the URL sometimes represent code-meaningful strings. It is
    * therefore useful to always urldecode() those values so that individual
-   * controllers need not concern themselves with it.  This is Drupal-specific
-   * logic, and may not be familiar for developers used to other Symfony-family
+   * controllers need not concern themselves with it. This is Drupal-specific
+   * logic and may not be familiar for developers used to other Symfony-family
    * projects.
    *
    * @todo Revisit whether or not this logic is appropriate for here or if
-   *       controllers should be required to implement this logic themselves. If
-   *       we decide to keep this code, remove this TODO.
+   *   controllers should be required to implement this logic themselves. If we
+   *   decide to keep this code, remove this TODO.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function onKernelRequestDecodePath(GetResponseEvent $event) {

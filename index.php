@@ -24,12 +24,12 @@ define('DRUPAL_ROOT', getcwd());
 require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
-// A request object from the HTTPFoundation to tell us about the request.
+// Create a request object from the HTTPFoundation.
 $request = Request::createFromGlobals();
 
-// Set the global $request object.  This is a temporary measure to
-// keep legacy utility functions working.  It should be moved to a dependency
-// injection container at some point.
+// Set the global $request object. This is a temporary measure to keep legacy
+// utility functions working. It should be moved to a dependency injection
+// container at some point.
 request($request);
 
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);

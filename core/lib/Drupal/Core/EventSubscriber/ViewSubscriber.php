@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\EventSubscriber\ViewSubscriber.
+ */
+
 namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -13,12 +18,6 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Drupal\Core\ContentNegotiation;
-
-/**
- * @file
- *
- * Definition of Drupal\Core\EventSubscriber\ViewSubscriber;
- */
 
 /**
  * Main subscriber for VIEW HTTP responses.
@@ -40,7 +39,7 @@ class ViewSubscriber implements EventSubscriberInterface {
    * from an JSON-type response is a JSON string, so just wrap it into a
    * Response object.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function onView(GetResponseEvent $event) {
@@ -59,8 +58,6 @@ class ViewSubscriber implements EventSubscriberInterface {
 
   public function onJson(GetResponseEvent $event) {
     $page_callback_result = $event->getControllerResult();
-
-    //print_r($page_callback_result);
 
     $response = new JsonResponse();
     $response->setContent($page_callback_result);
@@ -104,12 +101,12 @@ class ViewSubscriber implements EventSubscriberInterface {
    * Processes a successful controller into an HTTP 200 response.
    *
    * Some controllers may not return a response object but simply the body of
-   * one.  The VIEW event is called in that case, to allow us to mutate that
-   * body into a Response object.  In particular we assume that the return
-   * from an HTML-type response is a render array from a legacy page callback
-   * and render it.
+   * one. The VIEW event is called in that case, to allow us to mutate that
+   * body into a Response object. In particular we assume that the return from
+   * an HTML-type response is a render array from a legacy page callback and
+   * render it.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function onHtml(GetResponseEvent $event) {

@@ -480,10 +480,10 @@ function install_run_task($task, &$install_state) {
       include_once DRUPAL_ROOT . '/core/includes/batch.inc';
       $output = _batch_page();
       // Because Batch API now returns a JSON response for intermediary steps,
-      // but the installer doesn't handle Response objects yet, we will just
-      // send the output here and emulate the old model.
-      // @todo: Replace this when we refactor the installer to use a
-      // Request/Response workflow.
+      // but the installer doesn't handle Response objects yet, just send the
+      // output here and emulate the old model.
+      // @todo Replace this when we refactor the installer to use a request-
+      //   response workflow.
       if ($output instanceof Response) {
         $output->send();
         $output = NULL;

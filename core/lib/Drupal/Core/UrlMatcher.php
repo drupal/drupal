@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Definition of Drupal\Core\UrlMatcher.
  */
 
@@ -25,7 +24,7 @@ class UrlMatcher implements UrlMatcherInterface {
   /**
    * The request context for this matcher.
    *
-   * @var RequestContext
+   * @var Symfony\Component\Routing\RequestContext
    */
   protected $context;
 
@@ -49,8 +48,8 @@ class UrlMatcher implements UrlMatcherInterface {
    * The request context object does not contain the information we need, so
    * we will use the original request object.
    *
-   * @param RequestContext $context
-   *   The context
+   * @param Symfony\Component\Routing\RequestContext $context
+   *   The context.
    *
    * @api
    */
@@ -65,8 +64,8 @@ class UrlMatcher implements UrlMatcherInterface {
    * The request context object does not contain the information we need, so
    * we will use the original request object.
    *
-   * @return RequestContext
-   *   The context
+   * @return Symfony\Component\Routing\RequestContext
+   *   The context.
    */
   public function getContext() {
     return $this->context;
@@ -109,7 +108,7 @@ class UrlMatcher implements UrlMatcherInterface {
    * Get a drupal menu item.
    *
    * @todo Make this return multiple possible candidates for the resolver to
-   * consider.
+   *   consider.
    *
    * @param string $path
    *   The path being looked up by
@@ -128,10 +127,10 @@ class UrlMatcher implements UrlMatcherInterface {
     );
 
     // Place argument defaults on the route.
-    // @todo: For some reason drush test runs have a serialized page_arguments
-    // but HTTP requests are unserialized. Hack to get around this for now.
-    // This might be because page arguments aren't unserialized in
-    // menu_get_item() when the access is denied.
+    // @todo For some reason drush test runs have a serialized page_arguments
+    //   but HTTP requests are unserialized. Hack to get around this for now.
+    //   This might be because page arguments aren't unserialized in
+    //   menu_get_item() when the access is denied.
     !is_array($router_item['page_arguments']) ? $page_arguments = unserialize($router_item['page_arguments']) : $page_arguments = $router_item['page_arguments'];
     foreach ($page_arguments as $k => $v) {
       $route[$k] = $v;

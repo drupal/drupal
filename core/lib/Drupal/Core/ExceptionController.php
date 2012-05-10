@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Definition of Drupal\Core\ExceptionController.
  */
 
@@ -29,24 +28,24 @@ class ExceptionController {
    *
    * We will use this to fire subrequests as needed.
    *
-   * @var HttpKernelInterface
+   * @var Symfony\Component\HttpKernel\HttpKernelInterface
    */
   protected $kernel;
 
   /**
-   * The
+   * The content negotiation library.
    *
-   * @var ContentNegotiation
+   * @var Drupal\Core\ContentNegotiation
    */
   protected $negotiation;
 
   /**
-   * Constructor
+   * Constructor.
    *
-   * @param HttpKernelInterface $kernel
+   * @param Symfony\Component\HttpKernel\HttpKernelInterface $kernel
    *   The kernel that spawned this controller, so that it can be reused
    *   for subrequests.
-   * @param ContentNegotiation $negotiation
+   * @param Drupal\Core\ContentNegotiation $negotiation
    *   The content negotiation library to use to determine the correct response
    *   format.
    */
@@ -58,15 +57,15 @@ class ExceptionController {
   /**
    * Handles an exception on a request.
    *
-   * @param FlattenException $exception
+   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
    *   The flattened exception.
-   * @param Request $request
+   * @param Symfony\Component\HttpFoundation\Request $request
    *   The request that generated the exception.
-   * @return \Symfony\Component\HttpFoundation\Response
+   *
+   * @return Symfony\Component\HttpFoundation\Response
    *   A response object to be sent to the server.
    */
   public function execute(FlattenException $exception, Request $request) {
-
     $method = 'on' . $exception->getStatusCode() . $this->negotiation->getContentType($request);
 
     if (method_exists($this, $method)) {
@@ -74,13 +73,12 @@ class ExceptionController {
     }
 
     return new Response('A fatal error occurred: ' . $exception->getMessage(), $exception->getStatusCode());
-
   }
 
   /**
    * Processes a MethodNotAllowed exception into an HTTP 405 response.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function on405Html(FlattenException $exception, Request $request) {
@@ -90,7 +88,7 @@ class ExceptionController {
   /**
    * Processes an AccessDenied exception into an HTTP 403 response.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function on403Html(FlattenException $exception, Request $request) {
@@ -130,7 +128,7 @@ class ExceptionController {
    *
    * @param FlattenException $exception
    *   Metadata about the exception that was thrown.
-   * @param Request $request
+   * @param Symfony\Component\HttpFoundation\Request $request
    *   The request object that triggered this exception.
    */
   public function on500Html(FlattenException $exception, Request $request) {
@@ -179,24 +177,21 @@ class ExceptionController {
     }
 
     drupal_set_title(t('Error'));
-    // We fallback to a maintenance page at this point, because the page generation
-    // itself can generate errors.
+    // We fallback to a maintenance page at this point, because the page
+    // generation itself can generate errors.
     $output = theme('maintenance_page', array('content' => t('The website encountered an unexpected error. Please try again later.')));
 
     $response = new Response($output, 500);
     $response->setStatusCode(500, '500 Service unavailable (with message)');
 
     return $response;
-
-
-    //return _drupal_log_error(_drupal_decode_exception($exception), TRUE);
   }
 
   /**
    * This method is a temporary port of _drupal_decode_exception().
    *
-   * @todo This should get refactored.  Flatten Exception could use some
-   *       improvement as well.
+   * @todo This should get refactored. FlattenException could use some
+   *   improvement as well.
    *
    * @return array
    */
@@ -257,7 +252,6 @@ class ExceptionController {
    *   An associative array with keys 'file', 'line' and 'function'.
    */
   protected function getLastCaller($backtrace) {
-
     // Ignore black listed error handling functions.
     $blacklist = array('debug', '_drupal_error_handler', '_drupal_exception_handler');
 
@@ -290,7 +284,7 @@ class ExceptionController {
   /**
    * Processes a NotFound exception into an HTTP 403 response.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function on404Html(FlattenException $exception, Request $request) {
@@ -309,10 +303,10 @@ class ExceptionController {
 
     $path = drupal_get_normal_path(variable_get('site_404', ''));
     if ($path && $path != $system_path) {
-      // @todo: Um, how do I specify an override URL again? Totally not clear.
-      // Do that and sub-call the kernel rather than using meah().
-      // @todo: The create() method expects a slash-prefixed path, but we
-      // store a normal system path in the site_404 variable.
+      // @todo Um, how do I specify an override URL again? Totally not clear. Do
+      //   that and sub-call the kernel rather than using meah().
+      // @todo The create() method expects a slash-prefixed path, but we store a
+      //   normal system path in the site_404 variable.
       $subrequest = Request::create('/' . $path, 'get', array(), $request->cookies->all(), array(), $request->server->all());
 
       $response = $this->kernel->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
@@ -337,7 +331,7 @@ class ExceptionController {
   /**
    * Processes an AccessDenied exception into an HTTP 403 response.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function on403Json(FlattenException $exception, Request $request) {
@@ -349,7 +343,7 @@ class ExceptionController {
   /**
    * Processes a NotFound exception into an HTTP 404 response.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function on404Json(FlattenException $exception, Request $request) {
@@ -361,7 +355,7 @@ class ExceptionController {
   /**
    * Processes a MethodNotAllowed exception into an HTTP 405 response.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function on405Json(FlattenException $exception, Request $request) {
@@ -369,5 +363,4 @@ class ExceptionController {
     $response->setStatusCode(405, 'Method Not Allowed');
     return $response;
   }
-
 }

@@ -13,8 +13,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * @file
- *
- * Definition of Drupal\Core\EventSubscriber\AccessSubscriber
+ * Definition of Drupal\Core\EventSubscriber\AccessSubscriber.
  */
 
 /**
@@ -26,9 +25,9 @@ class AccessSubscriber implements EventSubscriberInterface {
    * Verifies that the current user can access the requested path.
    *
    * @todo This is a total hack to keep our current access system working. It
-   * should be replaced with something robust and injected at some point.
+   *   should be replaced with something robust and injected at some point.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function onKernelRequestAccessCheck(GetResponseEvent $event) {

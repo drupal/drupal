@@ -2,7 +2,6 @@
 
 /**
  * @file
- *
  * Definition of Drupal\Core\EventSubscriber\RouterListener;
  */
 
@@ -16,7 +15,6 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\MethodNotFoundException;
-
 
 /**
  * Drupal-specific Router listener.
@@ -40,7 +38,7 @@ class RouterListener extends SymfonyRouterListener {
    * This method is nearly identical to the parent, except it passes the
    * $request->attributes->get('system_path') variable to the matcher.
    * That is where Drupal stores its processed, de-aliased, and sanitized
-   * internal path.  We also pass the full request object to the URL Matcher,
+   * internal path. We also pass the full request object to the URL Matcher,
    * since we want attributes to be available to the matcher and to controllers.
    */
   public function onKernelRequest(GetResponseEvent $event) {
@@ -80,5 +78,4 @@ class RouterListener extends SymfonyRouterListener {
       throw new MethodNotAllowedHttpException($e->getAllowedMethods(), $message, $e);
     }
   }
-
 }

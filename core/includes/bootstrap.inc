@@ -1537,15 +1537,17 @@ function request_uri($omit_query_string = FALSE) {
 }
 
 /**
- * Returns the current global reuqest object.
+ * Returns the current global request object.
  *
  * @todo Replace this function with a proper dependency injection container.
  *
- * @staticvar Request $request
- * @param Request $new_request
- *   The new request object to store. If you are not index.php, you probably
- *   should not be using this parameter.
- * @return Request
+ * @staticvar Symfony\Component\HttpFoundation\Request $request
+ *
+ * @param Symfony\Component\HttpFoundation\Request $new_request
+ *   Optional. The new request object to store. This parameter should only be
+ *   used by index.php.
+ *
+ * @return Symfony\Component\HttpFoundation\Request
  *   The current request object.
  */
 function request(Request $new_request = NULL) {

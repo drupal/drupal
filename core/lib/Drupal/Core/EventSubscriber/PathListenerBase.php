@@ -27,5 +27,4 @@ abstract class PathListenerBase {
     // object directly.
     _current_path($path);
   }
-
 }
