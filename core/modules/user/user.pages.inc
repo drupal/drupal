@@ -67,7 +67,7 @@ function user_pass_validate($form, &$form_state) {
     form_set_value(array('#parents' => array('account')), $account, $form_state);
   }
   else {
-    form_set_error('name', t('Sorry, %name is not recognized as a user name or an e-mail address.', array('%name' => $name)));
+    form_set_error('name', t('Sorry, %name is not recognized as a username or an e-mail address.', array('%name' => $name)));
   }
 }
 
