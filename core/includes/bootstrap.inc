@@ -2326,11 +2326,6 @@ function _drupal_bootstrap_variables() {
  */
 function _drupal_bootstrap_page_header() {
   bootstrap_invoke_all('boot');
-
-  if (!drupal_is_cli()) {
-    ob_start();
-    drupal_page_header();
-  }
 }
 
 /**
