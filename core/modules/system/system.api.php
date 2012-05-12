@@ -5,6 +5,8 @@
  * Hooks provided by Drupal core and the System module.
  */
 
+use Drupal\Core\Utility\UpdateException;
+
 /**
  * @addtogroup hooks
  * @{
@@ -2968,10 +2970,11 @@ function hook_install() {
  * @param $sandbox
  *   Stores information for multipass updates. See above for more information.
  *
- * @throws DrupalUpdateException, PDOException
- *   In case of error, update hooks should throw an instance of DrupalUpdateException
- *   with a meaningful message for the user. If a database query fails for whatever
- *   reason, it will throw a PDOException.
+ * @throws Drupal\Core\Utility\UpdateException, PDOException
+ *   In case of error, update hooks should throw an instance of
+ *   Drupal\Core\Utility\UpdateException with a meaningful message for the user.
+ *   If a database query fails for whatever reason, it will throw a
+ *   PDOException.
  *
  * @return
  *   Optionally update hooks may return a translated string that will be displayed
@@ -3022,7 +3025,7 @@ function hook_update_N(&$sandbox) {
   return t('The update did what it was supposed to do.');
 
   // In case of an error, simply throw an exception with an error message.
-  throw new DrupalUpdateException('Something went wrong; here is what you should do.');
+  throw new UpdateException('Something went wrong; here is what you should do.');
 }
 
 /**
