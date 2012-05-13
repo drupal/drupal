@@ -512,7 +512,12 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
     }
     else {
       $select_query = db_select($tablename, $table_alias);
-      $select_query->addTag('entity_field_access');
+      // Allow queries internal to the Field API to opt out of the access
+      // check, for situations where the query's results should not depend on
+      // the access grants for the current user.
+      if (!isset($query->tags['DANGEROUS_ACCESS_CHECK_OPT_OUT'])) {
+        $select_query->addTag('entity_field_access');
+      }
       $select_query->addMetaData('base_table', $tablename);
       $select_query->fields($table_alias, array('entity_type', 'entity_id', 'revision_id', 'bundle'));
       $field_base_table = $table_alias;
