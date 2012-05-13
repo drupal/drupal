@@ -140,6 +140,69 @@ class ExceptionController {
   }
 
   /**
+   * Processes a NotFound exception into an HTTP 403 response.
+   *
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The Event to process.
+   */
+  public function on404Html(FlattenException $exception, Request $request) {
+    watchdog('page not found', check_plain($request->attributes->get('system_path')), NULL, WATCHDOG_WARNING);
+
+    // Check for and return a fast 404 page if configured.
+    // @todo Inline this rather than using a function.
+    drupal_fast_404();
+
+    $system_path = $request->attributes->get('system_path');
+
+    // Keep old path for reference, and to allow forms to redirect to it.
+    if (!isset($_GET['destination'])) {
+      $_GET['destination'] = $system_path;
+    }
+
+    $path = drupal_get_normal_path(variable_get('site_404', ''));
+    if ($path && $path != $system_path) {
+      // @todo Um, how do I specify an override URL again? Totally not clear. Do
+      //   that and sub-call the kernel rather than using meah().
+      // @todo The create() method expects a slash-prefixed path, but we store a
+      //   normal system path in the site_404 variable.
+      $subrequest = Request::create('/' . $path, 'get', array(), $request->cookies->all(), array(), $request->server->all());
+
+      // The active trail is being statically cached from the parent request to
+      // the subrequest, like any other static.  Unfortunately that means the
+      // data in it is incorrect and does not get regenerated correctly for
+      // the subrequest.  In this instance, that even causes a fatal error in
+      // some circumstances because menu_get_active_trail() ends up having
+      // a missing localized_options value.  To work around that, reset the
+      // menu static variables and let them be regenerated as needed.
+      // @todo It is likely that there are other such statics that need to be
+      //   reset that are not triggering test failures right now.  If found,
+      //   add them here.
+      // @todo Refactor the breadcrumb system so that it does not rely on static
+      // variables in the first place, which will eliminate the need for this
+      // hack.
+      drupal_static_reset('menu_set_active_trail');
+      menu_reset_static_cache();
+
+      $response = $this->kernel->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
+      $response->setStatusCode(404, 'Not Found');
+    }
+    else {
+      $response = new Response('Not Found', 404);
+
+      // @todo Replace this block with something cleaner.
+      $return = t('The requested page "@path" could not be found.', array('@path' => $request->getPathInfo()));
+      drupal_set_title(t('Page not found'));
+      drupal_set_page_content($return);
+      $page = element_info('page');
+      $content = drupal_render_page($page);
+
+      $response->setContent($content);
+    }
+
+    return $response;
+  }
+
+  /**
    * Processes a generic exception into an HTTP 500 response.
    *
    * @param FlattenException $exception
@@ -202,6 +265,43 @@ class ExceptionController {
 
     return $response;
   }
+
+  /**
+   * Processes an AccessDenied exception into an HTTP 403 response.
+   *
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The Event to process.
+   */
+  public function on403Json(FlattenException $exception, Request $request) {
+    $response = new JsonResponse();
+    $response->setStatusCode(403, 'Access Denied');
+    return $response;
+  }
+
+  /**
+   * Processes a NotFound exception into an HTTP 404 response.
+   *
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The Event to process.
+   */
+  public function on404Json(FlattenException $exception, Request $request) {
+    $response = new JsonResponse();
+    $response->setStatusCode(404, 'Not Found');
+    return $response;
+  }
+
+  /**
+   * Processes a MethodNotAllowed exception into an HTTP 405 response.
+   *
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The Event to process.
+   */
+  public function on405Json(FlattenException $exception, Request $request) {
+    $response = new JsonResponse();
+    $response->setStatusCode(405, 'Method Not Allowed');
+    return $response;
+  }
+
 
   /**
    * This method is a temporary port of _drupal_decode_exception().
@@ -295,104 +395,5 @@ class ExceptionController {
       $call['function'] = 'main()';
     }
     return $call;
-  }
-
-  /**
-   * Processes a NotFound exception into an HTTP 403 response.
-   *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Event to process.
-   */
-  public function on404Html(FlattenException $exception, Request $request) {
-    watchdog('page not found', check_plain($request->attributes->get('system_path')), NULL, WATCHDOG_WARNING);
-
-    // Check for and return a fast 404 page if configured.
-    // @todo Inline this rather than using a function.
-    drupal_fast_404();
-
-    $system_path = $request->attributes->get('system_path');
-
-    // Keep old path for reference, and to allow forms to redirect to it.
-    if (!isset($_GET['destination'])) {
-      $_GET['destination'] = $system_path;
-    }
-
-    $path = drupal_get_normal_path(variable_get('site_404', ''));
-    if ($path && $path != $system_path) {
-      // @todo Um, how do I specify an override URL again? Totally not clear. Do
-      //   that and sub-call the kernel rather than using meah().
-      // @todo The create() method expects a slash-prefixed path, but we store a
-      //   normal system path in the site_404 variable.
-      $subrequest = Request::create('/' . $path, 'get', array(), $request->cookies->all(), array(), $request->server->all());
-
-      // The active trail is being statically cached from the parent request to
-      // the subrequest, like any other static.  Unfortunately that means the
-      // data in it is incorrect and does not get regenerated correctly for
-      // the subrequest.  In this instance, that even causes a fatal error in
-      // some circumstances because menu_get_active_trail() ends up having
-      // a missing localized_options value.  To work around that, reset the
-      // menu static variables and let them be regenerated as needed.
-      // @todo It is likely that there are other such statics that need to be
-      //   reset that are not triggering test failures right now.  If found,
-      //   add them here.
-      // @todo Refactor the breadcrumb system so that it does not rely on static
-      // variables in the first place, which will eliminate the need for this
-      // hack.
-      drupal_static_reset('menu_set_active_trail');
-      menu_reset_static_cache();
-
-      $response = $this->kernel->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
-      $response->setStatusCode(404, 'Not Found');
-    }
-    else {
-      $response = new Response('Not Found', 404);
-
-      // @todo Replace this block with something cleaner.
-      $return = t('The requested page "@path" could not be found.', array('@path' => $request->getPathInfo()));
-      drupal_set_title(t('Page not found'));
-      drupal_set_page_content($return);
-      $page = element_info('page');
-      $content = drupal_render_page($page);
-
-      $response->setContent($content);
-    }
-
-    return $response;
-  }
-
-  /**
-   * Processes an AccessDenied exception into an HTTP 403 response.
-   *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Event to process.
-   */
-  public function on403Json(FlattenException $exception, Request $request) {
-    $response = new JsonResponse();
-    $response->setStatusCode(403, 'Access Denied');
-    return $response;
-  }
-
-  /**
-   * Processes a NotFound exception into an HTTP 404 response.
-   *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Event to process.
-   */
-  public function on404Json(FlattenException $exception, Request $request) {
-    $response = new JsonResponse();
-    $response->setStatusCode(404, 'Not Found');
-    return $response;
-  }
-
-  /**
-   * Processes a MethodNotAllowed exception into an HTTP 405 response.
-   *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Event to process.
-   */
-  public function on405Json(FlattenException $exception, Request $request) {
-    $response = new JsonResponse();
-    $response->setStatusCode(405, 'Method Not Allowed');
-    return $response;
   }
 }
