@@ -38,7 +38,5 @@ $dispatcher = new EventDispatcher();
 $resolver = new ControllerResolver();
 
 $kernel = new DrupalKernel($dispatcher, $resolver);
-$response = $kernel->handle($request);
-$response->prepare($request);
-$response->send();
+$response = $kernel->handle($request)->prepare($request)->send();
 $kernel->terminate($request, $response);
