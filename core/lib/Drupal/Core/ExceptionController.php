@@ -325,6 +325,22 @@ class ExceptionController {
       //   normal system path in the site_404 variable.
       $subrequest = Request::create('/' . $path, 'get', array(), $request->cookies->all(), array(), $request->server->all());
 
+      // The active trail is being statically cached from the parent request to
+      // the subrequest, like any other static.  Unfortunately that means the
+      // data in it is incorrect and does not get regenerated correctly for
+      // the subrequest.  In this instance, that even causes a fatal error in
+      // some circumstances because menu_get_active_trail() ends up having
+      // a missing localized_options value.  To work around that, reset the
+      // menu static variables and let them be regenerated as needed.
+      // @todo It is likely that there are other such statics that need to be
+      //   reset that are not triggering test failures right now.  If found,
+      //   add them here.
+      // @todo Refactor the breadcrumb system so that it does not rely on static
+      // variables in the first place, which will eliminate the need for this
+      // hack.
+      drupal_static_reset('menu_set_active_trail');
+      menu_reset_static_cache();
+
       $response = $this->kernel->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
       $response->setStatusCode(404, 'Not Found');
     }
