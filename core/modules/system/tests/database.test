@@ -8,6 +8,7 @@ use Drupal\Core\Database\TransactionNoActiveException;
 use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Query\InvalidMergeQueryException;
 use Drupal\Core\Database\Query\NoFieldsException;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Dummy class for fetching into a class.
@@ -24,7 +25,7 @@ class FakeRecord { }
  * Because all database tests share the same test data, we can centralize that
  * here.
  */
-class DatabaseTestCase extends DrupalWebTestCase {
+class DatabaseTestCase extends WebTestBase {
   function setUp() {
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {
@@ -2958,7 +2959,7 @@ class DatabaseSerializeQueryTestCase extends DatabaseTestCase {
 /**
  * Range query tests.
  */
-class DatabaseRangeQueryTestCase extends DrupalWebTestCase {
+class DatabaseRangeQueryTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Range query test',
@@ -2989,7 +2990,7 @@ class DatabaseRangeQueryTestCase extends DrupalWebTestCase {
 /**
  * Temporary query tests.
  */
-class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
+class DatabaseTemporaryQueryTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Temporary query test',
@@ -3747,7 +3748,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
 /**
  * Check the sequences API.
  */
-class DatabaseNextIdCase extends DrupalWebTestCase {
+class DatabaseNextIdCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => t('Sequences API'),
@@ -3774,7 +3775,7 @@ class DatabaseNextIdCase extends DrupalWebTestCase {
 /**
  * Tests the empty pseudo-statement class.
  */
-class DatabaseEmptyStatementTestCase extends DrupalWebTestCase {
+class DatabaseEmptyStatementTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => t('Empty statement'),

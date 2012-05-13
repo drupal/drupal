@@ -6,11 +6,12 @@
  */
 
 use Drupal\field\FieldValidationException;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Provides common helper methods for Taxonomy module tests.
  */
-class TaxonomyWebTestCase extends DrupalWebTestCase {
+class TaxonomyWebTestCase extends WebTestBase {
 
   function setUp() {
     $modules = func_get_args();

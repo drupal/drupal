@@ -20,11 +20,13 @@
  *  - a functional test fot language types/negotiation info.
  */
 
+use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
 
 /**
  * Functional tests for language configuration's effect on negotiation setup.
  */
-class LocaleConfigurationTest extends DrupalWebTestCase {
+class LocaleConfigurationTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Language negotiation autoconfiguration',
@@ -90,7 +92,7 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
 /**
  * Functional tests for JavaScript parsing for translatable strings.
  */
-class LocaleJavascriptTranslationTest extends DrupalWebTestCase {
+class LocaleJavascriptTranslationTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Javascript translation',
@@ -179,7 +181,7 @@ class LocaleJavascriptTranslationTest extends DrupalWebTestCase {
 /**
  * Functional test for string translation and validation.
  */
-class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
+class LocaleTranslationFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'String translate, search and validate',
@@ -587,7 +589,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
 /**
  * Tests plural format handling functionality.
  */
-class LocalePluralFormatTest extends DrupalWebTestCase {
+class LocalePluralFormatTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Plural handling',
@@ -900,7 +902,7 @@ EOF;
 /**
  * Functional tests for the import of translation files.
  */
-class LocaleImportFunctionalTest extends DrupalWebTestCase {
+class LocaleImportFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Translation import',
@@ -1377,7 +1379,7 @@ EOF;
 /**
  * Functional tests for the export of translation files.
  */
-class LocaleExportFunctionalTest extends DrupalWebTestCase {
+class LocaleExportFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Translation export',
@@ -1519,7 +1521,7 @@ EOF;
 /**
  * Tests for the st() function.
  */
-class LocaleInstallTest extends DrupalWebTestCase {
+class LocaleInstallTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'String translation using st()',
@@ -1548,7 +1550,7 @@ class LocaleInstallTest extends DrupalWebTestCase {
 /**
  * Locale uninstall with English UI functional test.
  */
-class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
+class LocaleUninstallFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Locale uninstall (EN)',
@@ -1694,7 +1696,7 @@ class LocaleUninstallFrenchFunctionalTest extends LocaleUninstallFunctionalTest 
 /**
  * Functional tests for the language switching feature.
  */
-class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
+class LocaleLanguageSwitchingFunctionalTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1772,7 +1774,7 @@ class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
 /**
  * Test browser language detection.
  */
-class LocaleBrowserDetectionTest extends DrupalUnitTestCase {
+class LocaleBrowserDetectionTest extends UnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -1893,7 +1895,7 @@ class LocaleBrowserDetectionTest extends DrupalUnitTestCase {
 /**
  * Functional tests for configuring a different path alias per language.
  */
-class LocalePathFunctionalTest extends DrupalWebTestCase {
+class LocalePathFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Path language settings',
@@ -2032,7 +2034,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
 /**
  * Functional tests for multilingual support on nodes.
  */
-class LocaleContentFunctionalTest extends DrupalWebTestCase {
+class LocaleContentFunctionalTest extends WebTestBase {
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -2255,7 +2257,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
  *        http://example.cn/admin/config
  *          UI language in Chinese
  */
-class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
+class LocaleUILanguageNegotiationTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'UI language negotiation',
@@ -2549,7 +2551,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
 /**
  * Test that URL rewriting works as expected.
  */
-class LocaleUrlRewritingTest extends DrupalWebTestCase {
+class LocaleUrlRewritingTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'URL rewriting',
@@ -2621,7 +2623,7 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
 /**
  * Functional test for multilingual fields.
  */
-class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
+class LocaleMultilingualFieldsFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Multilingual fields',
@@ -2748,7 +2750,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
 /**
  * Functional tests for comment language.
  */
-class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
+class LocaleCommentLanguageFunctionalTest extends WebTestBase {
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -2843,7 +2845,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
 /**
  * Functional tests for localizing date formats.
  */
-class LocaleDateFormatsFunctionalTest extends DrupalWebTestCase {
+class LocaleDateFormatsFunctionalTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -2915,7 +2917,7 @@ class LocaleDateFormatsFunctionalTest extends DrupalWebTestCase {
 /**
  * Functional test for language types/negotiation info.
  */
-class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
+class LocaleLanguageNegotiationInfoFunctionalTest extends WebTestBase {
 
   public static function getInfo() {
     return array(

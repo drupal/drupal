@@ -1,6 +1,10 @@
 
 Drupal 8.0, xxxx-xx-xx (development version)
 ----------------------
+- Configuration:
+    * Added a centralized file-based configuration system.
+    * Allows module authors to provide configuration in a standard format.
+    * Implements functionality to get, set, add and remove configuration.
 - Included the HTML5 Shiv library to support HTML5 elements in IE 8 and below.
 - Included the following Symfony2 components:
     * ClassLoader - PSR-0-compatible autoload routines.

@@ -157,18 +157,12 @@ class Connection extends DatabaseConnection {
   }
 
   public function mapConditionOperator($operator) {
-    static $specials;
-
-    // Function calls not allowed in static declarations, thus this method.
-    if (!isset($specials)) {
-      $specials = array(
-        // In PostgreSQL, 'LIKE' is case-sensitive. For case-insensitive LIKE
-        // statements, we need to use ILIKE instead.
-        'LIKE' => array('operator' => 'ILIKE'),
-        'NOT LIKE' => array('operator' => 'NOT ILIKE'),
-      );
-    }
-
+    static $specials = array(
+      // In PostgreSQL, 'LIKE' is case-sensitive. For case-insensitive LIKE
+      // statements, we need to use ILIKE instead.
+      'LIKE' => array('operator' => 'ILIKE'),
+      'NOT LIKE' => array('operator' => 'NOT ILIKE'),
+    );
     return isset($specials[$operator]) ? $specials[$operator] : NULL;
   }
 

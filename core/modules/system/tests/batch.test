@@ -5,10 +5,14 @@
  * Tests for the Batch API.
  */
 
+
+use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
+
 /**
  * Tests for the Batch API.
  */
-class BatchProcessingTestCase extends DrupalWebTestCase {
+class BatchProcessingTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Batch processing',
@@ -277,7 +281,7 @@ class BatchProcessingTestCase extends DrupalWebTestCase {
 /**
  * Tests for the Batch API Progress page.
  */
-class BatchPageTestCase extends DrupalWebTestCase {
+class BatchPageTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Batch progress page',
@@ -316,7 +320,7 @@ class BatchPageTestCase extends DrupalWebTestCase {
  * Tests the function _batch_api_percentage() to make sure that the rounding
  * works properly in all cases.
  */
-class BatchPercentagesUnitTestCase extends DrupalUnitTestCase {
+class BatchPercentagesUnitTestCase extends UnitTestBase {
   protected $testCases = array();
 
   public static function getInfo() {

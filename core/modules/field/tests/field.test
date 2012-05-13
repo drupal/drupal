@@ -7,11 +7,12 @@
 
 use Drupal\field\FieldException;
 use Drupal\field\FieldValidationException;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Parent class for Field API tests.
  */
-class FieldTestCase extends DrupalWebTestCase {
+class FieldTestCase extends WebTestBase {
   var $default_storage = 'field_sql_storage';
 
   /**
@@ -19,8 +20,9 @@ class FieldTestCase extends DrupalWebTestCase {
    */
   function setUp() {
     // Since this is a base class for many test cases, support the same
-    // flexibility that DrupalWebTestCase::setUp() has for the modules to be
-    // passed in as either an array or a variable number of string arguments.
+    // flexibility that Drupal\simpletest\WebTestBase::setUp() has for the
+    // modules to be passed in as either an array or a variable number of string
+    // arguments.
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {
       $modules = $modules[0];
@@ -77,8 +79,9 @@ class FieldTestCase extends DrupalWebTestCase {
 class FieldAttachTestCase extends FieldTestCase {
   function setUp() {
     // Since this is a base class for many test cases, support the same
-    // flexibility that DrupalWebTestCase::setUp() has for the modules to be
-    // passed in as either an array or a variable number of string arguments.
+    // flexibility that Drupal\simpletest\WebTestBase::setUp() has for the
+    // modules to be passed in as either an array or a variable number of string
+    // arguments.
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {
       $modules = $modules[0];

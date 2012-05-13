@@ -5,10 +5,12 @@
  * Tests for the module API.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Unit tests for the module API.
  */
-class ModuleUnitTest extends DrupalWebTestCase {
+class ModuleUnitTest extends WebTestBase {
   // Requires Standard profile modules/dependencies.
   protected $profile = 'standard';
 
@@ -269,7 +271,7 @@ class ModuleUnitTest extends DrupalWebTestCase {
 /**
  * Tests class loading.
  */
-class ModuleClassLoaderTestCase extends DrupalWebTestCase {
+class ModuleClassLoaderTestCase extends WebTestBase {
   protected $profile = 'testing';
 
   public static function getInfo() {
@@ -307,7 +309,7 @@ class ModuleClassLoaderTestCase extends DrupalWebTestCase {
 /**
  * Unit tests for module installation.
  */
-class ModuleInstallTestCase extends DrupalWebTestCase {
+class ModuleInstallTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Module installation',
@@ -344,7 +346,7 @@ class ModuleInstallTestCase extends DrupalWebTestCase {
 /**
  * Unit tests for module uninstallation and related hooks.
  */
-class ModuleUninstallTestCase extends DrupalWebTestCase {
+class ModuleUninstallTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Module uninstallation',

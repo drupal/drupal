@@ -1,9 +1,11 @@
 <?php
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Perform basic XML-RPC tests that do not require addition callbacks.
  */
-class XMLRPCBasicTestCase extends DrupalWebTestCase {
+class XMLRPCBasicTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -84,7 +86,7 @@ class XMLRPCBasicTestCase extends DrupalWebTestCase {
   }
 }
 
-class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
+class XMLRPCValidator1IncTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'XML-RPC validator',
@@ -199,7 +201,7 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
   }
 }
 
-class XMLRPCMessagesTestCase extends DrupalWebTestCase {
+class XMLRPCMessagesTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name'  => 'XML-RPC message and alteration',

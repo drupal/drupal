@@ -321,9 +321,11 @@ function update_module_enable(array $modules) {
  * will be displayed at all.
  *
  * If it fails for whatever reason, it should throw an instance of
- * DrupalUpdateException with an appropriate error message, for example:
+ * Drupal\Core\Utility\UpdateException with an appropriate error message, for
+ * example:
  * @code
- * throw new DrupalUpdateException(t('Description of what went wrong'));
+ * use Drupal\Core\Utility\UpdateException;
+ * throw new UpdateException(t('Description of what went wrong'));
  * @endcode
  *
  * If an exception is thrown, the current update and all updates that depend on
@@ -402,11 +404,6 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 
   $context['message'] = 'Updating ' . check_plain($module) . ' module';
 }
-
-/**
- * @class Exception class used to throw error if a module update fails.
- */
-class DrupalUpdateException extends Exception { }
 
 /**
  * Start the database update batch process.

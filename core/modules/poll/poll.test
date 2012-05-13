@@ -5,7 +5,9 @@
  * Tests for poll.module.
  */
 
-class PollWebTestCase extends DrupalWebTestCase {
+use Drupal\simpletest\WebTestBase;
+
+class PollWebTestCase extends WebTestBase {
   function setUp() {
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {
@@ -93,7 +95,7 @@ class PollWebTestCase extends DrupalWebTestCase {
    * @return
    *   An indexed array containing:
    *   - The generated POST values, suitable for
-   *     DrupalWebTestCase::drupalPost().
+   *     Drupal\simpletest\WebTestBase::drupalPost().
    *   - The number of poll choices contained in 'edit', for potential re-usage
    *     in subsequent invocations of this function.
    */
@@ -434,7 +436,7 @@ class PollBlockTestCase extends PollWebTestCase {
 /**
  * Test adding new choices.
  */
-class PollJSAddChoice extends DrupalWebTestCase {
+class PollJSAddChoice extends WebTestBase {
 
   public static function getInfo() {
     return array(

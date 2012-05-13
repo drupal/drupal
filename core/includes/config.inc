@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\Core\Config\DrupalVerifiedStorageSQL;
+use Drupal\Core\Config\DatabaseStorage;
 
 /**
  * @file
@@ -17,7 +17,7 @@ function config_get_config_directory() {
   global $config_directory_name;
 
   if ($test_prefix = drupal_valid_test_ua()) {
-    // @see DrupalWebTestCase::setUp()
+    // @see Drupal\simpletest\WebTestBase::setUp()
     $path = conf_path() . '/files/simpletest/' . substr($test_prefix, 10) . '/config';
   }
   else {
@@ -48,8 +48,8 @@ function config_install_default_config($module) {
       $file = array_pop($parts);
       $config_name = str_replace('.xml', '', $file);
 
-      $verified_storage = new DrupalVerifiedStorageSQL($config_name);
-      $verified_storage->write(file_get_contents($module_config_dir . '/' . $file));
+      $storage = new DatabaseStorage($config_name);
+      $storage->write(file_get_contents($module_config_dir . '/' . $file));
     }
   }
 }
@@ -88,8 +88,8 @@ function config_get_files_with_prefix($prefix = '') {
  * @return
  *   @todo
  */
-function config_get_verified_storage_names_with_prefix($prefix = '') {
-  return DrupalVerifiedStorageSQL::getNamesWithPrefix($prefix);
+function config_get_storage_names_with_prefix($prefix = '') {
+  return DatabaseStorage::getNamesWithPrefix($prefix);
 }
 
 /**
@@ -114,7 +114,7 @@ function config_get_verified_storage_names_with_prefix($prefix = '') {
  *   alternate storage engines..
  */
 function config($name, $class = 'Drupal\Core\Config\DrupalConfig') {
-  return new $class(new DrupalVerifiedStorageSQL($name));
+  return new $class(new DatabaseStorage($name));
 }
 
 /**

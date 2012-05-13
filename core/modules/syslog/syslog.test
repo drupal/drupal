@@ -5,10 +5,12 @@
  * Tests for syslog.module.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Tests the Syslog module functionality.
  */
-class SyslogTestCase extends DrupalWebTestCase {
+class SyslogTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Syslog functionality',

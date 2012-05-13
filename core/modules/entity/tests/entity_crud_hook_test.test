@@ -5,6 +5,8 @@
  * CRUD hook tests for the Entity CRUD API.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Tests invocation of hooks when performing an action.
  *
@@ -17,7 +19,7 @@
  * As well as all type-specific hooks, like hook_node_insert(),
  * hook_comment_update(), etc.
  */
-class EntityCrudHookTestCase extends DrupalWebTestCase {
+class EntityCrudHookTestCase extends WebTestBase {
 
   protected $ids = array();
 

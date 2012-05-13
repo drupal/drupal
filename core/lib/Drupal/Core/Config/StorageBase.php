@@ -2,13 +2,13 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Config\DrupalConfigVerifiedStorageInterface;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\FileStorage;
 
 /**
  * @todo
  */
-abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorageInterface {
+abstract class StorageBase implements StorageInterface {
 
   protected $name;
 
@@ -20,7 +20,7 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
   protected $fileStorage;
 
   /**
-   * Implements DrupalConfigVerifiedStorageInterface::__construct().
+   * Implements StorageInterface::__construct().
    */
   function __construct($name) {
     $this->name = $name;
@@ -40,21 +40,21 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
   }
 
   /**
-   * Implements DrupalConfigVerifiedStorageInterface::copyToFile().
+   * Implements StorageInterface::copyToFile().
    */
   public function copyToFile() {
     return $this->writeToFile($this->read());
   }
 
   /**
-   * Implements DrupalConfigVerifiedStorageInterface::deleteFile().
+   * Implements StorageInterface::deleteFile().
    */
   public function deleteFile() {
     return $this->fileStorage()->delete();
   }
 
   /**
-   * Implements DrupalConfigVerifiedStorageInterface::copyFromFile().
+   * Implements StorageInterface::copyFromFile().
    */
   public function copyFromFile() {
     return $this->writeToActive($this->readFromFile());
@@ -71,14 +71,14 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
   }
 
   /**
-   * Implements DrupalConfigVerifiedStorageInterface::isOutOfSync().
+   * Implements StorageInterface::isOutOfSync().
    */
   public function isOutOfSync() {
     return $this->read() !== $this->readFromFile();
   }
 
   /**
-   * Implements DrupalConfigVerifiedStorageInterface::write().
+   * Implements StorageInterface::write().
    */
   public function write($data) {
     $this->writeToActive($data);
@@ -86,14 +86,14 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
   }
 
   /**
-   * Implements DrupalConfigVerifiedStorageInterface::writeToFile().
+   * Implements StorageInterface::writeToFile().
    */
   public function writeToFile($data) {
     return $this->fileStorage()->write($data);
   }
 
   /**
-   * Implements DrupalConfigVerifiedStorageInterface::delete().
+   * Implements StorageInterface::delete().
    */
   public function delete() {
     $this->deleteFromActive();
@@ -101,7 +101,7 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
   }
 
   /**
-   * Implements DrupalConfigVerifiedStorageInterface::getName().
+   * Implements StorageInterface::getName().
    */
   public function getName() {
     return $this->name;

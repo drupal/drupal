@@ -6,8 +6,9 @@
  */
 
 use Drupal\node\Node;
+use Drupal\simpletest\WebTestBase;
 
-class BookTestCase extends DrupalWebTestCase {
+class BookTestCase extends WebTestBase {
   protected $book;
   // $book_author is a user with permission to create and edit books.
   protected $book_author;

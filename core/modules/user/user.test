@@ -5,7 +5,9 @@
  * Tests for user.module.
  */
 
-class UserRegistrationTestCase extends DrupalWebTestCase {
+use Drupal\simpletest\WebTestBase;
+
+class UserRegistrationTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User registration',
@@ -258,7 +260,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
   }
 }
 
-class UserValidationTestCase extends DrupalWebTestCase {
+class UserValidationTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Username/e-mail validation',
@@ -298,7 +300,7 @@ class UserValidationTestCase extends DrupalWebTestCase {
 /**
  * Functional tests for user logins, including rate limiting of login attempts.
  */
-class UserLoginTestCase extends DrupalWebTestCase {
+class UserLoginTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User login',
@@ -441,7 +443,7 @@ class UserLoginTestCase extends DrupalWebTestCase {
 /**
  * Tests resetting a user password.
  */
-class UserPasswordResetTestCase extends DrupalWebTestCase {
+class UserPasswordResetTestCase extends WebTestBase {
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -493,7 +495,7 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
 /**
  * Test cancelling a user.
  */
-class UserCancelTestCase extends DrupalWebTestCase {
+class UserCancelTestCase extends WebTestBase {
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -919,7 +921,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
   }
 }
 
-class UserPictureTestCase extends DrupalWebTestCase {
+class UserPictureTestCase extends WebTestBase {
   protected $user;
   protected $_directory_test;
 
@@ -1228,7 +1230,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
 }
 
 
-class UserPermissionsTestCase extends DrupalWebTestCase {
+class UserPermissionsTestCase extends WebTestBase {
   protected $admin_user;
   protected $rid;
 
@@ -1326,7 +1328,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
   }
 }
 
-class UserAdminTestCase extends DrupalWebTestCase {
+class UserAdminTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User administration',
@@ -1415,7 +1417,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
 /**
  * Tests for user-configurable time zones.
  */
-class UserTimeZoneFunctionalTest extends DrupalWebTestCase {
+class UserTimeZoneFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User time zones',
@@ -1475,7 +1477,7 @@ class UserTimeZoneFunctionalTest extends DrupalWebTestCase {
 /**
  * Test user autocompletion.
  */
-class UserAutocompleteTestCase extends DrupalWebTestCase {
+class UserAutocompleteTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User autocompletion',
@@ -1516,7 +1518,7 @@ class UserAutocompleteTestCase extends DrupalWebTestCase {
 /**
  * Test user-links in secondary menu.
  */
-class UserAccountLinksUnitTests extends DrupalWebTestCase {
+class UserAccountLinksUnitTests extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User account links',
@@ -1565,7 +1567,7 @@ class UserAccountLinksUnitTests extends DrupalWebTestCase {
 /**
  * Test user blocks.
  */
-class UserBlocksUnitTests extends DrupalWebTestCase {
+class UserBlocksUnitTests extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User blocks',
@@ -1680,7 +1682,7 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
 /**
  * Tests user_save() behavior.
  */
-class UserSaveTestCase extends DrupalWebTestCase {
+class UserSaveTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1722,7 +1724,7 @@ class UserSaveTestCase extends DrupalWebTestCase {
 /**
  * Test the create user administration page.
  */
-class UserCreateTestCase extends DrupalWebTestCase {
+class UserCreateTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1768,7 +1770,7 @@ class UserCreateTestCase extends DrupalWebTestCase {
 /**
  * Tests the user edit form.
  */
-class UserEditTestCase extends DrupalWebTestCase {
+class UserEditTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -1860,7 +1862,7 @@ class UserEditTestCase extends DrupalWebTestCase {
 /**
  * Test case for user signatures.
  */
-class UserSignatureTestCase extends DrupalWebTestCase {
+class UserSignatureTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User signatures',
@@ -1964,7 +1966,7 @@ class UserSignatureTestCase extends DrupalWebTestCase {
 /*
  * Test that a user, having editing their own account, can still log in.
  */
-class UserEditedOwnAccountTestCase extends DrupalWebTestCase {
+class UserEditedOwnAccountTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -2000,7 +2002,7 @@ class UserEditedOwnAccountTestCase extends DrupalWebTestCase {
 /**
  * Test case to test adding, editing and deleting roles.
  */
-class UserRoleAdminTestCase extends DrupalWebTestCase {
+class UserRoleAdminTestCase extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -2085,7 +2087,7 @@ class UserRoleAdminTestCase extends DrupalWebTestCase {
 /**
  * Test user token replacement in strings.
  */
-class UserTokenReplaceTestCase extends DrupalWebTestCase {
+class UserTokenReplaceTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User token replacement',
@@ -2150,7 +2152,7 @@ class UserTokenReplaceTestCase extends DrupalWebTestCase {
 /**
  * Test user search.
  */
-class UserUserSearchTestCase extends DrupalWebTestCase {
+class UserUserSearchTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User search',
@@ -2186,7 +2188,7 @@ class UserUserSearchTestCase extends DrupalWebTestCase {
 /**
  * Test role assignment.
  */
-class UserRolesAssignmentTestCase extends DrupalWebTestCase {
+class UserRolesAssignmentTestCase extends WebTestBase {
   protected $admin_user;
 
   public static function getInfo() {
@@ -2276,7 +2278,7 @@ class UserRolesAssignmentTestCase extends DrupalWebTestCase {
 /**
  * Unit test for authmap assignment.
  */
-class UserAuthmapAssignmentTestCase extends DrupalWebTestCase {
+class UserAuthmapAssignmentTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => t('Authmap assignment'),
@@ -2335,7 +2337,7 @@ class UserAuthmapAssignmentTestCase extends DrupalWebTestCase {
 /**
  * Tests user_validate_current_pass on a custom form.
  */
-class UserValidateCurrentPassCustomForm extends DrupalWebTestCase {
+class UserValidateCurrentPassCustomForm extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -2380,7 +2382,7 @@ class UserValidateCurrentPassCustomForm extends DrupalWebTestCase {
 /**
  * Test user entity callbacks.
  */
-class UserEntityCallbacksTestCase extends DrupalWebTestCase {
+class UserEntityCallbacksTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User entity callback tests',
@@ -2420,7 +2422,7 @@ class UserEntityCallbacksTestCase extends DrupalWebTestCase {
 /**
  * Functional tests for a user's ability to change their default language.
  */
-class UserLanguageFunctionalTest extends DrupalWebTestCase {
+class UserLanguageFunctionalTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'User language settings',
@@ -2485,7 +2487,7 @@ class UserLanguageFunctionalTest extends DrupalWebTestCase {
 /**
  * Functional test for language handling during user creation.
  */
-class UserLanguageCreationTest extends DrupalWebTestCase {
+class UserLanguageCreationTest extends WebTestBase {
 
   public static function getInfo() {
     return array(

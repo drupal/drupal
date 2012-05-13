@@ -11,7 +11,10 @@ const SEARCH_TYPE = '_test_';
 const SEARCH_TYPE_2 = '_test2_';
 const SEARCH_TYPE_JPN = '_test3_';
 
-class SearchWebTestCase extends DrupalWebTestCase {
+use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
+
+class SearchWebTestCase extends WebTestBase {
   function setUp() {
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {
@@ -971,7 +974,7 @@ class SearchCommentTestCase extends SearchWebTestCase {
  *
  * @see http://drupal.org/node/419388 (issue)
  */
-class SearchExpressionInsertExtractTestCase extends DrupalUnitTestCase {
+class SearchExpressionInsertExtractTestCase extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Search expression insert/extract',
@@ -1589,7 +1592,7 @@ class SearchConfigSettingsForm extends SearchWebTestCase {
 /**
  * Tests the search_excerpt() function.
  */
-class SearchExcerptTestCase extends DrupalUnitTestCase {
+class SearchExcerptTestCase extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Search excerpt extraction',

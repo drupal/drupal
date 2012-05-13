@@ -5,10 +5,12 @@
  * Tests for php.module.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Defines a base PHP test case class.
  */
-class PHPTestCase extends DrupalWebTestCase {
+class PHPTestCase extends WebTestBase {
   protected $php_code_format;
 
   function setUp() {

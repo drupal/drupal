@@ -1,11 +1,12 @@
 <?php
 
 use Drupal\Core\Database\Database;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Perform end-to-end tests of the upgrade path.
  */
-abstract class UpgradePathTestCase extends DrupalWebTestCase {
+abstract class UpgradePathTestCase extends WebTestBase {
 
   /**
    * The file path(s) to the dumped database(s) to load into the child site.
@@ -62,11 +63,11 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Overrides DrupalWebTestCase::setUp() for upgrade testing.
+   * Overrides Drupal\simpletest\WebTestBase::setUp() for upgrade testing.
    *
-   * @see DrupalWebTestCase::prepareDatabasePrefix()
-   * @see DrupalWebTestCase::changeDatabasePrefix()
-   * @see DrupalWebTestCase::prepareEnvironment()
+   * @see Drupal\simpletest\WebTestBase::prepareDatabasePrefix()
+   * @see Drupal\simpletest\WebTestBase::changeDatabasePrefix()
+   * @see Drupal\simpletest\WebTestBase::prepareEnvironment()
    */
   protected function setUp() {
     global $user, $language_interface, $conf;

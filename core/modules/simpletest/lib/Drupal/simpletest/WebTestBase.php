@@ -1,768 +1,25 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\simpletest\WebTestBase.
+ */
+
+namespace Drupal\simpletest;
+
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
-
-/**
- * Global variable that holds information about the tests being run.
- *
- * An array, with the following keys:
- *  - 'test_run_id': the ID of the test being run, in the form 'simpletest_%"
- *  - 'in_child_site': TRUE if the current request is a cURL request from
- *     the parent site.
- *
- * @var array
- */
-global $drupal_test_info;
-
-/**
- * Base class for Drupal tests.
- *
- * Do not extend this class, use one of the subclasses in this file.
- */
-abstract class DrupalTestCase {
-  /**
-   * The test run ID.
-   *
-   * @var string
-   */
-  protected $testId;
-
-  /**
-   * The database prefix of this test run.
-   *
-   * @var string
-   */
-  protected $databasePrefix = NULL;
-
-  /**
-   * The original file directory, before it was changed for testing purposes.
-   *
-   * @var string
-   */
-  protected $originalFileDirectory = NULL;
-
-  /**
-   * Time limit for the test.
-   */
-  protected $timeLimit = 500;
-
-  /**
-   * Current results of this test case.
-   *
-   * @var Array
-   */
-  public $results = array(
-    '#pass' => 0,
-    '#fail' => 0,
-    '#exception' => 0,
-    '#debug' => 0,
-  );
-
-  /**
-   * Assertions thrown in that test case.
-   *
-   * @var Array
-   */
-  protected $assertions = array();
-
-  /**
-   * This class is skipped when looking for the source of an assertion.
-   *
-   * When displaying which function an assert comes from, it's not too useful
-   * to see "drupalWebTestCase->drupalLogin()', we would like to see the test
-   * that called it. So we need to skip the classes defining these helper
-   * methods.
-   */
-  protected $skipClasses = array(__CLASS__ => TRUE);
-
-  /**
-   * Flag to indicate whether the test has been set up.
-   *
-   * The setUp() method isolates the test from the parent Drupal site by
-   * creating a random prefix for the database and setting up a clean file
-   * storage directory. The tearDown() method then cleans up this test
-   * environment. We must ensure that setUp() has been run. Otherwise,
-   * tearDown() will act on the parent Drupal site rather than the test
-   * environment, destroying live data.
-   */
-  protected $setup = FALSE;
-
-  /**
-   * Constructor for DrupalTestCase.
-   *
-   * @param $test_id
-   *   Tests with the same id are reported together.
-   */
-  public function __construct($test_id = NULL) {
-    $this->testId = $test_id;
-  }
-
-  /**
-   * Checks the matching requirements for DrupalTestCase.
-   *
-   * @return
-   *   Array of errors containing a list of unmet requirements.
-   */
-  protected function checkRequirements() {
-    return array();
-  }
-
-  /**
-   * Internal helper: stores the assert.
-   *
-   * @param $status
-   *   Can be 'pass', 'fail', 'exception'.
-   *   TRUE is a synonym for 'pass', FALSE for 'fail'.
-   * @param $message
-   *   The message string.
-   * @param $group
-   *   Which group this assert belongs to.
-   * @param $caller
-   *   By default, the assert comes from a function whose name starts with
-   *   'test'. Instead, you can specify where this assert originates from
-   *   by passing in an associative array as $caller. Key 'file' is
-   *   the name of the source file, 'line' is the line number and 'function'
-   *   is the caller function itself.
-   */
-  protected function assert($status, $message = '', $group = 'Other', array $caller = NULL) {
-    // Convert boolean status to string status.
-    if (is_bool($status)) {
-      $status = $status ? 'pass' : 'fail';
-    }
-
-    // Increment summary result counter.
-    $this->results['#' . $status]++;
-
-    // Get the function information about the call to the assertion method.
-    if (!$caller) {
-      $caller = $this->getAssertionCall();
-    }
-
-    // Creation assertion array that can be displayed while tests are running.
-    $this->assertions[] = $assertion = array(
-      'test_id' => $this->testId,
-      'test_class' => get_class($this),
-      'status' => $status,
-      'message' => $message,
-      'message_group' => $group,
-      'function' => $caller['function'],
-      'line' => $caller['line'],
-      'file' => $caller['file'],
-    );
-
-    // Store assertion for display after the test has completed.
-    try {
-      $connection = Database::getConnection('default', 'simpletest_original_default');
-    }
-    catch (ConnectionNotDefinedException $e) {
-      // If the test was not set up, the simpletest_original_default
-      // connection does not exist.
-      $connection = Database::getConnection('default', 'default');
-    }
-    $connection
-      ->insert('simpletest')
-      ->fields($assertion)
-      ->execute();
-
-    // We do not use a ternary operator here to allow a breakpoint on
-    // test failure.
-    if ($status == 'pass') {
-      return TRUE;
-    }
-    else {
-      return FALSE;
-    }
-  }
-
-  /**
-   * Store an assertion from outside the testing context.
-   *
-   * This is useful for inserting assertions that can only be recorded after
-   * the test case has been destroyed, such as PHP fatal errors. The caller
-   * information is not automatically gathered since the caller is most likely
-   * inserting the assertion on behalf of other code. In all other respects
-   * the method behaves just like DrupalTestCase::assert() in terms of storing
-   * the assertion.
-   *
-   * @return
-   *   Message ID of the stored assertion.
-   *
-   * @see DrupalTestCase::assert()
-   * @see DrupalTestCase::deleteAssert()
-   */
-  public static function insertAssert($test_id, $test_class, $status, $message = '', $group = 'Other', array $caller = array()) {
-    // Convert boolean status to string status.
-    if (is_bool($status)) {
-      $status = $status ? 'pass' : 'fail';
-    }
-
-    $caller += array(
-      'function' => t('Unknown'),
-      'line' => 0,
-      'file' => t('Unknown'),
-    );
-
-    $assertion = array(
-      'test_id' => $test_id,
-      'test_class' => $test_class,
-      'status' => $status,
-      'message' => $message,
-      'message_group' => $group,
-      'function' => $caller['function'],
-      'line' => $caller['line'],
-      'file' => $caller['file'],
-    );
-
-    return db_insert('simpletest')
-      ->fields($assertion)
-      ->execute();
-  }
-
-  /**
-   * Delete an assertion record by message ID.
-   *
-   * @param $message_id
-   *   Message ID of the assertion to delete.
-   * @return
-   *   TRUE if the assertion was deleted, FALSE otherwise.
-   *
-   * @see DrupalTestCase::insertAssert()
-   */
-  public static function deleteAssert($message_id) {
-    return (bool) db_delete('simpletest')
-      ->condition('message_id', $message_id)
-      ->execute();
-  }
-
-  /**
-   * Cycles through backtrace until the first non-assertion method is found.
-   *
-   * @return
-   *   Array representing the true caller.
-   */
-  protected function getAssertionCall() {
-    $backtrace = debug_backtrace();
-
-    // The first element is the call. The second element is the caller.
-    // We skip calls that occurred in one of the methods of our base classes
-    // or in an assertion function.
-   while (($caller = $backtrace[1]) &&
-         ((isset($caller['class']) && isset($this->skipClasses[$caller['class']])) ||
-           substr($caller['function'], 0, 6) == 'assert')) {
-      // We remove that call.
-      array_shift($backtrace);
-    }
-
-    return _drupal_get_last_caller($backtrace);
-  }
-
-  /**
-   * Check to see if a value is not false (not an empty string, 0, NULL, or FALSE).
-   *
-   * @param $value
-   *   The value on which the assertion is to be done.
-   * @param $message
-   *   The message to display along with the assertion.
-   * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   * @return
-   *   TRUE if the assertion succeeded, FALSE otherwise.
-   */
-  protected function assertTrue($value, $message = '', $group = 'Other') {
-    return $this->assert((bool) $value, $message ? $message : t('Value @value is TRUE.', array('@value' => var_export($value, TRUE))), $group);
-  }
-
-  /**
-   * Check to see if a value is false (an empty string, 0, NULL, or FALSE).
-   *
-   * @param $value
-   *   The value on which the assertion is to be done.
-   * @param $message
-   *   The message to display along with the assertion.
-   * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   * @return
-   *   TRUE if the assertion succeeded, FALSE otherwise.
-   */
-  protected function assertFalse($value, $message = '', $group = 'Other') {
-    return $this->assert(!$value, $message ? $message : t('Value @value is FALSE.', array('@value' => var_export($value, TRUE))), $group);
-  }
-
-  /**
-   * Check to see if a value is NULL.
-   *
-   * @param $value
-   *   The value on which the assertion is to be done.
-   * @param $message
-   *   The message to display along with the assertion.
-   * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   * @return
-   *   TRUE if the assertion succeeded, FALSE otherwise.
-   */
-  protected function assertNull($value, $message = '', $group = 'Other') {
-    return $this->assert(!isset($value), $message ? $message : t('Value @value is NULL.', array('@value' => var_export($value, TRUE))), $group);
-  }
-
-  /**
-   * Check to see if a value is not NULL.
-   *
-   * @param $value
-   *   The value on which the assertion is to be done.
-   * @param $message
-   *   The message to display along with the assertion.
-   * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   * @return
-   *   TRUE if the assertion succeeded, FALSE otherwise.
-   */
-  protected function assertNotNull($value, $message = '', $group = 'Other') {
-    return $this->assert(isset($value), $message ? $message : t('Value @value is not NULL.', array('@value' => var_export($value, TRUE))), $group);
-  }
-
-  /**
-   * Check to see if two values are equal.
-   *
-   * @param $first
-   *   The first value to check.
-   * @param $second
-   *   The second value to check.
-   * @param $message
-   *   The message to display along with the assertion.
-   * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   * @return
-   *   TRUE if the assertion succeeded, FALSE otherwise.
-   */
-  protected function assertEqual($first, $second, $message = '', $group = 'Other') {
-    return $this->assert($first == $second, $message ? $message : t('Value @first is equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
-  }
-
-  /**
-   * Check to see if two values are not equal.
-   *
-   * @param $first
-   *   The first value to check.
-   * @param $second
-   *   The second value to check.
-   * @param $message
-   *   The message to display along with the assertion.
-   * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   * @return
-   *   TRUE if the assertion succeeded, FALSE otherwise.
-   */
-  protected function assertNotEqual($first, $second, $message = '', $group = 'Other') {
-    return $this->assert($first != $second, $message ? $message : t('Value @first is not equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
-  }
-
-  /**
-   * Check to see if two values are identical.
-   *
-   * @param $first
-   *   The first value to check.
-   * @param $second
-   *   The second value to check.
-   * @param $message
-   *   The message to display along with the assertion.
-   * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   * @return
-   *   TRUE if the assertion succeeded, FALSE otherwise.
-   */
-  protected function assertIdentical($first, $second, $message = '', $group = 'Other') {
-    return $this->assert($first === $second, $message ? $message : t('Value @first is identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
-  }
-
-  /**
-   * Check to see if two values are not identical.
-   *
-   * @param $first
-   *   The first value to check.
-   * @param $second
-   *   The second value to check.
-   * @param $message
-   *   The message to display along with the assertion.
-   * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   * @return
-   *   TRUE if the assertion succeeded, FALSE otherwise.
-   */
-  protected function assertNotIdentical($first, $second, $message = '', $group = 'Other') {
-    return $this->assert($first !== $second, $message ? $message : t('Value @first is not identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
-  }
-
-  /**
-   * Fire an assertion that is always positive.
-   *
-   * @param $message
-   *   The message to display along with the assertion.
-   * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   * @return
-   *   TRUE.
-   */
-  protected function pass($message = NULL, $group = 'Other') {
-    return $this->assert(TRUE, $message, $group);
-  }
-
-  /**
-   * Fire an assertion that is always negative.
-   *
-   * @param $message
-   *   The message to display along with the assertion.
-   * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   * @return
-   *   FALSE.
-   */
-  protected function fail($message = NULL, $group = 'Other') {
-    return $this->assert(FALSE, $message, $group);
-  }
-
-  /**
-   * Fire an error assertion.
-   *
-   * @param $message
-   *   The message to display along with the assertion.
-   * @param $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   * @param $caller
-   *   The caller of the error.
-   * @return
-   *   FALSE.
-   */
-  protected function error($message = '', $group = 'Other', array $caller = NULL) {
-    if ($group == 'User notice') {
-      // Since 'User notice' is set by trigger_error() which is used for debug
-      // set the message to a status of 'debug'.
-      return $this->assert('debug', $message, 'Debug', $caller);
-    }
-
-    return $this->assert('exception', $message, $group, $caller);
-  }
-
-  /**
-   * Logs verbose message in a text file.
-   *
-   * The a link to the vebose message will be placed in the test results via
-   * as a passing assertion with the text '[verbose message]'.
-   *
-   * @param $message
-   *   The verbose message to be stored.
-   *
-   * @see simpletest_verbose()
-   */
-  protected function verbose($message) {
-    if ($id = simpletest_verbose($message)) {
-      $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . get_class($this) . '-' . $id . '.html');
-      $this->error(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'User notice');
-    }
-  }
-
-  /**
-   * Run all tests in this class.
-   *
-   * Regardless of whether $methods are passed or not, only method names
-   * starting with "test" are executed.
-   *
-   * @param $methods
-   *   (optional) A list of method names in the test case class to run; e.g.,
-   *   array('testFoo', 'testBar'). By default, all methods of the class are
-   *   taken into account, but it can be useful to only run a few selected test
-   *   methods during debugging.
-   */
-  public function run(array $methods = array()) {
-    // Initialize verbose debugging.
-    simpletest_verbose(NULL, variable_get('file_public_path', conf_path() . '/files'), get_class($this));
-
-    // HTTP auth settings (<username>:<password>) for the simpletest browser
-    // when sending requests to the test site.
-    $this->httpauth_method = variable_get('simpletest_httpauth_method', CURLAUTH_BASIC);
-    $username = variable_get('simpletest_httpauth_username', NULL);
-    $password = variable_get('simpletest_httpauth_password', NULL);
-    if ($username && $password) {
-      $this->httpauth_credentials = $username . ':' . $password;
-    }
-
-    set_error_handler(array($this, 'errorHandler'));
-    $class = get_class($this);
-    // Iterate through all the methods in this class, unless a specific list of
-    // methods to run was passed.
-    $class_methods = get_class_methods($class);
-    if ($methods) {
-      $class_methods = array_intersect($class_methods, $methods);
-    }
-    $missing_requirements = $this->checkRequirements();
-    if (!empty($missing_requirements)) {
-      $missing_requirements_object = new ReflectionObject($this);
-      $caller = array(
-        'file' => $missing_requirements_object->getFileName(),
-      );
-      foreach ($missing_requirements as $missing_requirement) {
-        DrupalTestCase::insertAssert($this->testId, $class, FALSE, $missing_requirement, 'Requirements check.', $caller);
-      }
-    }
-    else {
-      foreach ($class_methods as $method) {
-        // If the current method starts with "test", run it - it's a test.
-        if (strtolower(substr($method, 0, 4)) == 'test') {
-          // Insert a fail record. This will be deleted on completion to ensure
-          // that testing completed.
-          $method_info = new ReflectionMethod($class, $method);
-          $caller = array(
-            'file' => $method_info->getFileName(),
-            'line' => $method_info->getStartLine(),
-            'function' => $class . '->' . $method . '()',
-          );
-          $completion_check_id = DrupalTestCase::insertAssert($this->testId, $class, FALSE, t('The test did not complete due to a fatal error.'), 'Completion check', $caller);
-          $this->setUp();
-          if ($this->setup) {
-            try {
-              $this->$method();
-              // Finish up.
-            }
-            catch (Exception $e) {
-              $this->exceptionHandler($e);
-            }
-            $this->tearDown();
-          }
-          else {
-            $this->fail(t("The test cannot be executed because it has not been set up properly."));
-          }
-          // Remove the completion check record.
-          DrupalTestCase::deleteAssert($completion_check_id);
-        }
-      }
-    }
-    // Clear out the error messages and restore error handler.
-    drupal_get_messages();
-    restore_error_handler();
-  }
-
-  /**
-   * Handle errors during test runs.
-   *
-   * Because this is registered in set_error_handler(), it has to be public.
-   * @see set_error_handler
-   */
-  public function errorHandler($severity, $message, $file = NULL, $line = NULL) {
-    if ($severity & error_reporting()) {
-      $error_map = array(
-        E_STRICT => 'Run-time notice',
-        E_WARNING => 'Warning',
-        E_NOTICE => 'Notice',
-        E_CORE_ERROR => 'Core error',
-        E_CORE_WARNING => 'Core warning',
-        E_USER_ERROR => 'User error',
-        E_USER_WARNING => 'User warning',
-        E_USER_NOTICE => 'User notice',
-        E_RECOVERABLE_ERROR => 'Recoverable error',
-      );
-
-      $backtrace = debug_backtrace();
-      $this->error($message, $error_map[$severity], _drupal_get_last_caller($backtrace));
-    }
-    return TRUE;
-  }
-
-  /**
-   * Handle exceptions.
-   *
-   * @see set_exception_handler
-   */
-  protected function exceptionHandler($exception) {
-    $backtrace = $exception->getTrace();
-    // Push on top of the backtrace the call that generated the exception.
-    array_unshift($backtrace, array(
-      'line' => $exception->getLine(),
-      'file' => $exception->getFile(),
-    ));
-    require_once DRUPAL_ROOT . '/core/includes/errors.inc';
-    // The exception message is run through check_plain() by _drupal_decode_exception().
-    $this->error(t('%type: !message in %function (line %line of %file).', _drupal_decode_exception($exception)), 'Uncaught exception', _drupal_get_last_caller($backtrace));
-  }
-
-  /**
-   * Generates a random string of ASCII characters of codes 32 to 126.
-   *
-   * The generated string includes alpha-numeric characters and common misc
-   * characters. Use this method when testing general input where the content
-   * is not restricted.
-   *
-   * @param $length
-   *   Length of random string to generate.
-   * @return
-   *   Randomly generated string.
-   */
-  public static function randomString($length = 8) {
-    $str = '';
-    for ($i = 0; $i < $length; $i++) {
-      $str .= chr(mt_rand(32, 126));
-    }
-    return $str;
-  }
-
-  /**
-   * Generates a random string containing letters and numbers.
-   *
-   * The string will always start with a letter. The letters may be upper or
-   * lower case. This method is better for restricted inputs that do not
-   * accept certain characters. For example, when testing input fields that
-   * require machine readable values (i.e. without spaces and non-standard
-   * characters) this method is best.
-   *
-   * @param $length
-   *   Length of random string to generate.
-   * @return
-   *   Randomly generated string.
-   */
-  public static function randomName($length = 8) {
-    $values = array_merge(range(65, 90), range(97, 122), range(48, 57));
-    $max = count($values) - 1;
-    $str = chr(mt_rand(97, 122));
-    for ($i = 1; $i < $length; $i++) {
-      $str .= chr($values[mt_rand(0, $max)]);
-    }
-    return $str;
-  }
-
-  /**
-   * Converts a list of possible parameters into a stack of permutations.
-   *
-   * Takes a list of parameters containing possible values, and converts all of
-   * them into a list of items containing every possible permutation.
-   *
-   * Example:
-   * @code
-   * $parameters = array(
-   *   'one' => array(0, 1),
-   *   'two' => array(2, 3),
-   * );
-   * $permutations = $this->permute($parameters);
-   * // Result:
-   * $permutations == array(
-   *   array('one' => 0, 'two' => 2),
-   *   array('one' => 1, 'two' => 2),
-   *   array('one' => 0, 'two' => 3),
-   *   array('one' => 1, 'two' => 3),
-   * )
-   * @endcode
-   *
-   * @param $parameters
-   *   An associative array of parameters, keyed by parameter name, and whose
-   *   values are arrays of parameter values.
-   *
-   * @return
-   *   A list of permutations, which is an array of arrays. Each inner array
-   *   contains the full list of parameters that have been passed, but with a
-   *   single value only.
-   */
-  public static function generatePermutations($parameters) {
-    $all_permutations = array(array());
-    foreach ($parameters as $parameter => $values) {
-      $new_permutations = array();
-      // Iterate over all values of the parameter.
-      foreach ($values as $value) {
-        // Iterate over all existing permutations.
-        foreach ($all_permutations as $permutation) {
-          // Add the new parameter value to existing permutations.
-          $new_permutations[] = $permutation + array($parameter => $value);
-        }
-      }
-      // Replace the old permutations with the new permutations.
-      $all_permutations = $new_permutations;
-    }
-    return $all_permutations;
-  }
-}
-
-/**
- * Test case for Drupal unit tests.
- *
- * These tests can not access the database nor files. Calling any Drupal
- * function that needs the database will throw exceptions. These include
- * watchdog(), module_implements(), module_invoke_all() etc.
- */
-class DrupalUnitTestCase extends DrupalTestCase {
-
-  /**
-   * Constructor for DrupalUnitTestCase.
-   */
-  function __construct($test_id = NULL) {
-    parent::__construct($test_id);
-    $this->skipClasses[__CLASS__] = TRUE;
-  }
-
-  /**
-   * Sets up unit test environment.
-   *
-   * Unlike DrupalWebTestCase::setUp(), DrupalUnitTestCase::setUp() does not
-   * install modules because tests are performed without accessing the database.
-   * Any required files must be explicitly included by the child class setUp()
-   * method.
-   */
-  protected function setUp() {
-    global $conf;
-
-    // Store necessary current values before switching to the test environment.
-    $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
-
-    // Reset all statics so that test is performed with a clean environment.
-    drupal_static_reset();
-
-    // Generate temporary prefixed database to ensure that tests have a clean starting point.
-    $this->databasePrefix = Database::getConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
-
-    // Create test directory.
-    $public_files_directory = $this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10);
-    file_prepare_directory($public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-    $conf['file_public_path'] = $public_files_directory;
-
-    // Clone the current connection and replace the current prefix.
-    $connection_info = Database::getConnectionInfo('default');
-    Database::renameConnection('default', 'simpletest_original_default');
-    foreach ($connection_info as $target => $value) {
-      $connection_info[$target]['prefix'] = array(
-        'default' => $value['prefix']['default'] . $this->databasePrefix,
-      );
-    }
-    Database::addConnectionInfo('default', 'default', $connection_info['default']);
-
-    // Set user agent to be consistent with web test case.
-    $_SERVER['HTTP_USER_AGENT'] = $this->databasePrefix;
-
-    // If locale is enabled then t() will try to access the database and
-    // subsequently will fail as the database is not accessible.
-    $module_list = module_list();
-    if (isset($module_list['locale'])) {
-      $this->originalModuleList = $module_list;
-      unset($module_list['locale']);
-      module_list(TRUE, FALSE, FALSE, $module_list);
-    }
-    $this->setup = TRUE;
-  }
-
-  protected function tearDown() {
-    global $conf;
-
-    // Get back to the original connection.
-    Database::removeConnection('default');
-    Database::renameConnection('simpletest_original_default', 'default');
-
-    $conf['file_public_path'] = $this->originalFileDirectory;
-    // Restore modules if necessary.
-    if (isset($this->originalModuleList)) {
-      module_list(TRUE, FALSE, FALSE, $this->originalModuleList);
-    }
-  }
-}
+use PDO;
+use stdClass;
+use DOMDocument;
+use DOMXPath;
+use SimpleXMLElement;
 
 /**
  * Test case for typical Drupal tests.
  */
-class DrupalWebTestCase extends DrupalTestCase {
+abstract class WebTestBase extends TestBase {
+
   /**
    * The profile to install as a basis for testing.
    *
@@ -837,7 +94,8 @@ class DrupalWebTestCase extends DrupalTestCase {
   /**
    * Additional cURL options.
    *
-   * DrupalWebTestCase itself never sets this but always obeys what is set.
+   * Drupal\simpletest\WebTestBase itself never sets this but always obeys what is
+   * set.
    */
   protected $additionalCurlOptions = array();
 
@@ -886,7 +144,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected $redirect_count;
 
   /**
-   * Constructor for DrupalWebTestCase.
+   * Constructor for Drupal\simpletest\WebTestBase.
    */
   function __construct($test_id = NULL) {
     parent::__construct($test_id);
@@ -1281,14 +539,14 @@ class DrupalWebTestCase extends DrupalTestCase {
    *
    * The generated database table prefix is used for the Drupal installation
    * being performed for the test. It is also used as user agent HTTP header
-   * value by the cURL-based browser of DrupalWebTestCase, which is sent to the
-   * Drupal installation of the test. During early Drupal bootstrap, the user
-   * agent HTTP header is parsed, and if it matches, all database queries use
-   * the database table prefix that has been generated here.
+   * value by the cURL-based browser of Drupal\simpletest\WebTestBase, which is sent
+   * to the Drupal installation of the test. During early Drupal bootstrap, the
+   * user agent HTTP header is parsed, and if it matches, all database queries
+   * use the database table prefix that has been generated here.
    *
-   * @see DrupalWebTestCase::curlInitialize()
+   * @see Drupal\simpletest\WebTestBase::curlInitialize()
    * @see drupal_valid_test_ua()
-   * @see DrupalWebTestCase::setUp()
+   * @see Drupal\simpletest\WebTestBase::setUp()
    */
   protected function prepareDatabasePrefix() {
     $this->databasePrefix = 'simpletest' . mt_rand(1000, 1000000);
@@ -1305,7 +563,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   /**
    * Changes the database connection to the prefixed one.
    *
-   * @see DrupalWebTestCase::setUp()
+   * @see Drupal\simpletest\WebTestBase::setUp()
    */
   protected function changeDatabasePrefix() {
     if (empty($this->databasePrefix)) {
@@ -1333,8 +591,8 @@ class DrupalWebTestCase extends DrupalTestCase {
    * Also sets up new resources for the testing environment, such as the public
    * filesystem and configuration directories.
    *
-   * @see DrupalWebTestCase::setUp()
-   * @see DrupalWebTestCase::tearDown()
+   * @see Drupal\simpletest\WebTestBase::setUp()
+   * @see Drupal\simpletest\WebTestBase::tearDown()
    */
   protected function prepareEnvironment() {
     global $user, $language_interface, $conf;
@@ -1391,9 +649,9 @@ class DrupalWebTestCase extends DrupalTestCase {
    * Sets up a Drupal site for running functional and integration tests.
    *
    * Generates a random database prefix and installs Drupal with the specified
-   * installation profile in DrupalWebTestCase::$profile into the prefixed
-   * database. Afterwards, installs any additional modules specified by the
-   * test.
+   * installation profile in Drupal\simpletest\WebTestBase::$profile into the
+   * prefixed database. Afterwards, installs any additional modules specified by
+   * the test.
    *
    * After installation all caches are flushed and several configuration values
    * are reset to the values of the parent site executing the test, since the
@@ -1404,9 +662,9 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   List of modules to enable for the duration of the test. This can be
    *   either a single array or a variable number of string arguments.
    *
-   * @see DrupalWebTestCase::prepareDatabasePrefix()
-   * @see DrupalWebTestCase::changeDatabasePrefix()
-   * @see DrupalWebTestCase::prepareEnvironment()
+   * @see Drupal\simpletest\WebTestBase::prepareDatabasePrefix()
+   * @see Drupal\simpletest\WebTestBase::changeDatabasePrefix()
+   * @see Drupal\simpletest\WebTestBase::prepareEnvironment()
    */
   protected function setUp() {
     global $user, $language_interface, $conf;
@@ -1511,8 +769,8 @@ class DrupalWebTestCase extends DrupalTestCase {
   /**
    * Preload the registry from the testing site.
    *
-   * This method is called by DrupalWebTestCase::setUp(), and preloads the
-   * registry from the testing site to cut down on the time it takes to
+   * This method is called by Drupal\simpletest\WebTestBase::setUp(), and preloads
+   * the registry from the testing site to cut down on the time it takes to
    * set up a clean environment for the current test run.
    */
   protected function preloadRegistry() {
@@ -1547,7 +805,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   /**
    * Reset all data structures after having enabled new modules.
    *
-   * This method is called by DrupalWebTestCase::setUp() after enabling
+   * This method is called by Drupal\simpletest\WebTestBase::setUp() after enabling
    * the requested modules. It must be called again when additional modules
    * are enabled later.
    */
@@ -1797,9 +1055,9 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Errors are being sent via X-Drupal-Assertion-* headers,
     // generated by _drupal_log_error() in the exact form required
-    // by DrupalWebTestCase::error().
+    // by Drupal\simpletest\WebTestBase::error().
     if (preg_match('/^X-Drupal-Assertion-[0-9]+: (.*)$/', $header, $matches)) {
-      // Call DrupalWebTestCase::error() with the parameters from the header.
+      // Call Drupal\simpletest\WebTestBase::error() with the parameters from the header.
       call_user_func_array(array(&$this, 'error'), unserialize(urldecode($matches[1])));
     }
 
@@ -3607,52 +2865,4 @@ class DrupalWebTestCase extends DrupalTestCase {
       $this->verbose(t('Email:') . '<pre>' . print_r($mail, TRUE) . '</pre>');
     }
   }
-}
-
-/**
- * Logs verbose message in a text file.
- *
- * If verbose mode is enabled then page requests will be dumped to a file and
- * presented on the test result screen. The messages will be placed in a file
- * located in the simpletest directory in the original file system.
- *
- * @param $message
- *   The verbose message to be stored.
- * @param $original_file_directory
- *   The original file directory, before it was changed for testing purposes.
- * @param $test_class
- *   The active test case class.
- *
- * @return
- *   The ID of the message to be placed in related assertion messages.
- *
- * @see DrupalTestCase->originalFileDirectory
- * @see DrupalWebTestCase->verbose()
- */
-function simpletest_verbose($message, $original_file_directory = NULL, $test_class = NULL) {
-  static $file_directory = NULL, $class = NULL, $id = 1, $verbose = NULL;
-
-  // Will pass first time during setup phase, and when verbose is TRUE.
-  if (!isset($original_file_directory) && !$verbose) {
-    return FALSE;
-  }
-
-  if ($message && $file_directory) {
-    $message = '<hr />ID #' . $id . ' (<a href="' . $class . '-' . ($id - 1) . '.html">Previous</a> | <a href="' . $class . '-' . ($id + 1) . '.html">Next</a>)<hr />' . $message;
-    file_put_contents($file_directory . "/simpletest/verbose/$class-$id.html", $message, FILE_APPEND);
-    return $id++;
-  }
-
-  if ($original_file_directory) {
-    $file_directory = $original_file_directory;
-    $class = $test_class;
-    $verbose = variable_get('simpletest_verbose', TRUE);
-    $directory = $file_directory . '/simpletest/verbose';
-    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-    if ($writable && !file_exists($directory . '/.htaccess')) {
-      file_put_contents($directory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
-    }
-    return $writable;
-  }
-  return FALSE;
 }

@@ -12,9 +12,6 @@
 form .field-multiple-table {
   margin: 0;
 }
-form .field-multiple-table th.field-label {
-  padding-left: 0; /*LTR*/
-}
 form .field-multiple-table td.field-multiple-drag {
   width: 30px;
   padding-right: 0; /*LTR*/

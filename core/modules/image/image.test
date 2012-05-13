@@ -5,6 +5,9 @@
  * Tests for image.module.
  */
 
+use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
+
 /**
  * TODO: Test the following functions.
  *
@@ -28,7 +31,7 @@
 /**
  * This class provides methods specifically for testing Image's field handling.
  */
-class ImageFieldTestCase extends DrupalWebTestCase {
+class ImageFieldTestCase extends WebTestBase {
   protected $admin_user;
 
   function setUp() {
@@ -118,7 +121,7 @@ class ImageFieldTestCase extends DrupalWebTestCase {
 /**
  * Tests the functions for generating paths and URLs for image styles.
  */
-class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
+class ImageStylesPathAndUrlUnitTest extends WebTestBase {
   protected $style_name;
   protected $image_info;
   protected $image_filepath;
@@ -901,7 +904,7 @@ class ImageFieldValidateTestCase extends ImageFieldTestCase {
 /**
  * Tests that images have correct dimensions when styled.
  */
-class ImageDimensionsUnitTest extends DrupalWebTestCase {
+class ImageDimensionsUnitTest extends WebTestBase {
   protected $profile = 'testing';
 
   public static function getInfo() {
@@ -1124,7 +1127,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 /**
  * Tests image_dimensions_scale().
  */
-class ImageDimensionsScaleTestCase extends DrupalUnitTestCase {
+class ImageDimensionsScaleTestCase extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'image_dimensions_scale()',

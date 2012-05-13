@@ -5,7 +5,10 @@
  * Tests for simpletest.module.
  */
 
-class SimpleTestFunctionalTest extends DrupalWebTestCase {
+use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
+
+class SimpleTestFunctionalTest extends WebTestBase {
   /**
    * The results array that has been parsed by getTestResults().
    */
@@ -323,7 +326,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
 /**
  * Test internal testing framework browser.
  */
-class SimpleTestBrowserTestCase extends DrupalWebTestCase {
+class SimpleTestBrowserTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'SimpleTest browser',
@@ -338,7 +341,7 @@ class SimpleTestBrowserTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test DrupalWebTestCase::getAbsoluteUrl().
+   * Test Drupal\simpletest\WebTestBase::getAbsoluteUrl().
    */
   function testGetAbsoluteUrl() {
     $url = 'user/login';
@@ -382,7 +385,7 @@ EOF;
   }
 }
 
-class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
+class SimpleTestMailCaptureTestCase extends WebTestBase {
   /**
    * Implement getInfo().
    */
@@ -461,7 +464,7 @@ class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
 /**
  * Test Folder creation
  */
-class SimpleTestFolderTestCase extends DrupalWebTestCase {
+class SimpleTestFolderTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Testing SimpleTest setUp',
@@ -483,7 +486,7 @@ class SimpleTestFolderTestCase extends DrupalWebTestCase {
 /**
  * Test required modules for tests.
  */
-class SimpleTestMissingDependentModuleUnitTest extends DrupalUnitTestCase {
+class SimpleTestMissingDependentModuleUnitTest extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Testing dependent module test',
@@ -505,12 +508,13 @@ class SimpleTestMissingDependentModuleUnitTest extends DrupalUnitTestCase {
  * Tests a test case that does not run parent::setUp() in its setUp() method.
  *
  * If a test case does not call parent::setUp(), running
- * DrupalTestCase::tearDown() would destroy the main site's database tables.
- * Therefore, we ensure that tests which are not set up properly are skipped.
+ * Drupal\simpletest\WebTestBase::tearDown() would destroy the main site's
+ * database tables. Therefore, we ensure that tests which are not set up
+ * properly are skipped.
  *
- * @see DrupalTestCase
+ * @see Drupal\simpletest\WebTestBase
  */
-class SimpleTestBrokenSetUp extends DrupalWebTestCase {
+class SimpleTestBrokenSetUp extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Broken SimpleTest method',
@@ -571,7 +575,7 @@ class SimpleTestBrokenSetUp extends DrupalWebTestCase {
 /**
  * Tests missing requirements to run test.
  */
-class SimpleTestMissingCheckedRequirements extends DrupalWebTestCase {
+class SimpleTestMissingCheckedRequirements extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Broken requirements test',
@@ -620,7 +624,7 @@ class SimpleTestMissingCheckedRequirements extends DrupalWebTestCase {
 /**
  * Verifies that tests bundled with installation profile modules are found.
  */
-class SimpleTestInstallationProfileModuleTestsTestCase extends DrupalWebTestCase {
+class SimpleTestInstallationProfileModuleTestsTestCase extends WebTestBase {
   /**
    * Use the Testing profile.
    *
@@ -669,7 +673,7 @@ class SimpleTestInstallationProfileModuleTestsTestCase extends DrupalWebTestCase
  *
  * @see SimpleTestInstallationProfileModuleTestsTestCase
  */
-class SimpleTestOtherInstallationProfileModuleTestsTestCase extends DrupalWebTestCase {
+class SimpleTestOtherInstallationProfileModuleTestsTestCase extends WebTestBase {
   /**
    * Use the Minimal profile.
    *

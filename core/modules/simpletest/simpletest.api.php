@@ -6,6 +6,18 @@
  */
 
 /**
+ * Global variable that holds information about the tests being run.
+ *
+ * An array, with the following keys:
+ *  - 'test_run_id': the ID of the test being run, in the form 'simpletest_%"
+ *  - 'in_child_site': TRUE if the current request is a cURL request from
+ *     the parent site.
+ *
+ * @var array
+ */
+global $drupal_test_info;
+
+/**
  * @addtogroup hooks
  * @{
  */
@@ -47,9 +59,9 @@ function hook_test_group_finished() {
  * This hook is called when an individual test has finished.
  *
  * @param
- *   $results The results of the test as gathered by DrupalWebTestCase.
+ *   $results The results of the test as gathered by Drupal\simpletest\WebTestBase.
  *
- * @see DrupalWebTestCase->results
+ * @see Drupal\simpletest\WebTestBase->results()
  */
 function hook_test_finished($results) {
 }
