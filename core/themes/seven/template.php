@@ -45,10 +45,10 @@ function seven_node_add_list($variables) {
   $output = '';
   if ($content) {
     $output = '<ul class="admin-list">';
-    foreach ($content as $item) {
+    foreach ($content as $type) {
       $output .= '<li class="clearfix">';
-      $output .= '<span class="label">' . l($item['title'], $item['href'], $item['localized_options']) . '</span>';
-      $output .= '<div class="description">' . filter_xss_admin($item['description']) . '</div>';
+      $output .= '<span class="label">' . l($type->name, 'node/add/' . $type->type) . '</span>';
+      $output .= '<div class="description">' . filter_xss_admin($type->description) . '</div>';
       $output .= '</li>';
     }
     $output .= '</ul>';

@@ -28,14 +28,19 @@ function node_page_edit($node) {
  * @see node_menu()
  */
 function node_add_page() {
-  $item = menu_get_item();
-  $content = system_admin_menu_block($item);
+  $content = array();
+  // Only use node types the user has access to.
+  foreach (node_type_get_types() as $type) {
+    if (node_hook($type->type, 'form') && node_access('create', $type->type)) {
+      $content[$type->type] = $type;
+    }
+  }
   // Bypass the node/add listing if only one content type is available.
   if (count($content) == 1) {
-    $item = array_shift($content);
-    drupal_goto($item['href']);
+    $type = array_shift($content);
+    drupal_goto('node/add/' . $type->type);
   }
-  return theme('node_add_list', array('content' => $content));
+  return array('#theme' => 'node_add_list', '#content' => $content);
 }
 
 /**
@@ -54,9 +59,9 @@ function theme_node_add_list($variables) {
 
   if ($content) {
     $output = '<dl class="node-type-list">';
-    foreach ($content as $item) {
-      $output .= '<dt>' . l($item['title'], $item['href'], $item['localized_options']) . '</dt>';
-      $output .= '<dd>' . filter_xss_admin($item['description']) . '</dd>';
+    foreach ($content as $type) {
+      $output .= '<dt>' . l($type->name, 'node/add/' . $type->type) . '</dt>';
+      $output .= '<dd>' . filter_xss_admin($type->description) . '</dd>';
     }
     $output .= '</dl>';
   }
