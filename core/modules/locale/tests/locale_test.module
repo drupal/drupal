@@ -22,8 +22,8 @@ function locale_test_boot() {
  */
 function locale_test_init() {
   locale_test_store_language_negotiation();
-  if (isset($GLOBALS['language_interface']) && isset($GLOBALS['language_interface']->method_id)) {
-    drupal_set_message(t('Language negotiation method: @name', array('@name' => $GLOBALS['language_interface']->method_id)));
+  if (isset(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode) && isset(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->method_id)) {
+    drupal_set_message(t('Language negotiation method: @name', array('@name' => drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->method_id)));
   }
 }
 
