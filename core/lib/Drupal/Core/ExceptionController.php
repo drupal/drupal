@@ -78,8 +78,10 @@ class ExceptionController {
   /**
    * Processes a MethodNotAllowed exception into an HTTP 405 response.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Event to process.
+   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   *   The flattened exception.
+   * @param Symfony\Component\HttpFoundation\Request $request
+   *   The request object that triggered this exception.
    */
   public function on405Html(FlattenException $exception, Request $request) {
     $event->setResponse(new Response('Method Not Allowed', 405));
@@ -88,8 +90,10 @@ class ExceptionController {
   /**
    * Processes an AccessDenied exception into an HTTP 403 response.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Event to process.
+   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   *   The flattened exception.
+   * @param Symfony\Component\HttpFoundation\Request $request
+   *   The request object that triggered this exception.
    */
   public function on403Html(FlattenException $exception, Request $request) {
     $system_path = $request->attributes->get('system_path');
@@ -115,8 +119,8 @@ class ExceptionController {
       //   reset that are not triggering test failures right now.  If found,
       //   add them here.
       // @todo Refactor the breadcrumb system so that it does not rely on static
-      // variables in the first place, which will eliminate the need for this
-      // hack.
+      //   variables in the first place, which will eliminate the need for this
+      //   hack.
       drupal_static_reset('menu_set_active_trail');
       menu_reset_static_cache();
 
@@ -140,10 +144,12 @@ class ExceptionController {
   }
 
   /**
-   * Processes a NotFound exception into an HTTP 403 response.
+   * Processes a NotFound exception into an HTTP 404 response.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Event to process.
+   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   *   The flattened exception.
+   * @param Sonfony\Component\HttpFoundation\Request $request
+   *   The request object that triggered this exception.
    */
   public function on404Html(FlattenException $exception, Request $request) {
     watchdog('page not found', check_plain($request->attributes->get('system_path')), NULL, WATCHDOG_WARNING);
@@ -178,8 +184,8 @@ class ExceptionController {
       //   reset that are not triggering test failures right now.  If found,
       //   add them here.
       // @todo Refactor the breadcrumb system so that it does not rely on static
-      // variables in the first place, which will eliminate the need for this
-      // hack.
+      //   variables in the first place, which will eliminate the need for this
+      //   hack.
       drupal_static_reset('menu_set_active_trail');
       menu_reset_static_cache();
 
@@ -205,7 +211,7 @@ class ExceptionController {
   /**
    * Processes a generic exception into an HTTP 500 response.
    *
-   * @param FlattenException $exception
+   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
    *   Metadata about the exception that was thrown.
    * @param Symfony\Component\HttpFoundation\Request $request
    *   The request object that triggered this exception.
@@ -267,10 +273,12 @@ class ExceptionController {
   }
 
   /**
-   * Processes an AccessDenied exception into an HTTP 403 response.
+   * Processes an AccessDenied exception that occured on a JSON request.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Event to process.
+   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   *   The flattened exception.
+   * @param Symfony\Component\HttpFoundation\Request $request
+   *   The request object that triggered this exception.
    */
   public function on403Json(FlattenException $exception, Request $request) {
     $response = new JsonResponse();
@@ -279,10 +287,12 @@ class ExceptionController {
   }
 
   /**
-   * Processes a NotFound exception into an HTTP 404 response.
+   * Processes a NotFound exception that occured on a JSON request.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Event to process.
+   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   *   The flattened exception.
+   * @param Symfony\Component\HttpFoundation\Request $request
+   *   The request object that triggered this exception.
    */
   public function on404Json(FlattenException $exception, Request $request) {
     $response = new JsonResponse();
@@ -291,10 +301,12 @@ class ExceptionController {
   }
 
   /**
-   * Processes a MethodNotAllowed exception into an HTTP 405 response.
+   * Processes a MethodNotAllowed exception that occured on a JSON request.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Event to process.
+   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   *   The flattened exception.
+   * @param Symfony\Component\HttpFoundation\Request $request
+   *   The request object that triggered this exception.
    */
   public function on405Json(FlattenException $exception, Request $request) {
     $response = new JsonResponse();

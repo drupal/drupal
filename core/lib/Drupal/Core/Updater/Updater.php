@@ -213,7 +213,7 @@ class Updater {
       $this->makeWorldReadable($filetransfer, $args['install_dir'] . '/' . $this->name);
 
       // Run the updates.
-      // @todo: decide if we want to implement this.
+      // @todo Decide if we want to implement this.
       $this->postUpdate();
 
       // For now, just return a list of links of things to do.

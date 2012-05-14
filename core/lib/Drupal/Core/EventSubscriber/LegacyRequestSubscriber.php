@@ -2,8 +2,7 @@
 
 /**
  * @file
- *
- * Definition of Drupal\Core\EventSubscriber\LegacyRequestSubscriber
+ * Definition of Drupal\Core\EventSubscriber\LegacyRequestSubscriber.
  */
 
 namespace Drupal\Core\EventSubscriber;
@@ -24,7 +23,7 @@ class LegacyRequestSubscriber implements EventSubscriberInterface {
   /**
    * Initializes the rest of the legacy Drupal subsystems.
    *
-   * @param GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
    */
   public function onKernelRequestLegacy(GetResponseEvent $event) {

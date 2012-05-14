@@ -2,8 +2,7 @@
 
 /**
  * @file
- *
- * Definition of Drupal\Core\EventSubscriber\PathListenerBase
+ * Definition of Drupal\Core\EventSubscriber\PathListenerBase.
  */
 
 namespace Drupal\Core\EventSubscriber;
@@ -24,7 +23,7 @@ abstract class PathListenerBase {
     $request->attributes->set('system_path', $path);
 
     // @todo Remove this line once code has been refactored to use the request
-    // object directly.
+    //   object directly.
     _current_path($path);
   }
 }

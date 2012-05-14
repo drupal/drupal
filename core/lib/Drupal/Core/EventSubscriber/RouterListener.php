@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\EventSubscriber\RouterListener;
+ * Definition of Drupal\Core\EventSubscriber\RouterListener.
  */
 
 namespace Drupal\Core\EventSubscriber;
@@ -50,11 +50,11 @@ class RouterListener extends SymfonyRouterListener {
     }
 
     if ($request->attributes->has('_controller')) {
-      // routing is already done
+      // Routing is already done.
       return;
     }
 
-    // add attributes based on the path info (routing)
+    // Add attributes based on the path info (routing).
     try {
       $parameters = $this->urlMatcher->match($request->attributes->get('system_path'));
 

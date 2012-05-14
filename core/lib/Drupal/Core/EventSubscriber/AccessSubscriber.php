@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\EventSubscriber\AccessSubscriber.
+ */
+
 namespace Drupal\Core\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -10,11 +15,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-/**
- * @file
- * Definition of Drupal\Core\EventSubscriber\AccessSubscriber.
- */
 
 /**
  * Access subscriber for controller requests.
