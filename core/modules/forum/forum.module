@@ -825,11 +825,10 @@ function forum_forum_load($tid = NULL) {
 
     // Query "Last Post" information for this forum.
     $query = db_select('node', 'n');
-    $query->join('users', 'u1', 'n.uid = u1.uid');
     $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $forum->tid));
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
-    $query->join('users', 'u2', 'ncs.last_comment_uid = u2.uid');
-    $query->addExpression('CASE ncs.last_comment_uid WHEN 0 THEN ncs.last_comment_name ELSE u2.name END', 'last_comment_name');
+    $query->join('users', 'u', 'ncs.last_comment_uid = u.uid');
+    $query->addExpression('CASE ncs.last_comment_uid WHEN 0 THEN ncs.last_comment_name ELSE u.name END', 'last_comment_name');
 
     $topic = $query
       ->fields('ncs', array('last_comment_timestamp', 'last_comment_uid'))
