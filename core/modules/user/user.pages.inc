@@ -128,12 +128,12 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
       elseif ($account->uid && $timestamp >= $account->login && $timestamp <= $current && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
         // First stage is a confirmation form, then login
         if ($action == 'login') {
-          watchdog('user', 'User %name used one-time login link at time %timestamp.', array('%name' => $account->name, '%timestamp' => $timestamp));
           // Set the new user.
           $user = $account;
           // user_login_finalize() also updates the login timestamp of the
           // user, which invalidates further use of the one-time login link.
           user_login_finalize();
+          watchdog('user', 'User %name used one-time login link at time %timestamp.', array('%name' => $account->name, '%timestamp' => $timestamp));
           drupal_set_message(t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please change your password.'));
           // Let the user's password be changed without the current password check.
           $token = drupal_hash_base64(drupal_random_bytes(55));
