@@ -1871,6 +1871,9 @@ function user_login($form, &$form_state) {
     '#size' => 60,
     '#maxlength' => USERNAME_MAX_LENGTH,
     '#required' => TRUE,
+    '#attributes' => array(
+      'autofocus' => 'autofocus',
+    ),
   );
 
   $form['name']['#description'] = t('Enter your @s username.', array('@s' => variable_get('site_name', 'Drupal')));
