@@ -4321,9 +4321,6 @@ function drupal_pre_render_scripts($elements) {
       foreach ($group['items'] as $item) {
         // Element properties that do not depend on item type.
         $element = $element_defaults;
-        if (!empty($item['defer'])) {
-          $element['#attributes']['defer'] = 'defer';
-        }
         $element['#browsers'] = $item['browsers'];
 
         // Element properties that depend on item type.
@@ -4349,6 +4346,11 @@ function drupal_pre_render_scripts($elements) {
           case 'external':
             $element['#attributes']['src'] = $item['data'];
             break;
+        }
+
+        // The defer attribute must not be specified if src is not defined.
+        if (!empty($item['defer']) && isset($element['#attributes']['src'])) {
+          $element['#attributes']['defer'] = 'defer';
         }
 
         $elements[] = $element;
