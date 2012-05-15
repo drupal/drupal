@@ -1,6 +1,6 @@
 name = Views Test
 description = Test module for Views.
 package = Views
-core = 7.x
+core = 8.x
 dependencies[] = views
 hidden = TRUE

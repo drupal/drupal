@@ -1,7 +1,7 @@
 name = Views
 description = Create customized lists and queries from your database.
 package = Views
-core = 7.x
+core = 8.x
 php = 5.2
 
 ; Always available CSS
