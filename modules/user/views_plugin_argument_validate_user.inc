@@ -122,7 +122,7 @@ class views_plugin_argument_validate_user extends views_plugin_argument_validate
     }
 
     $this->argument->argument = $account->uid;
-    $this->argument->validated_title = check_plain(format_username($account));
+    $this->argument->validated_title = check_plain(user_format_name($account));
     return TRUE;
   }
 
