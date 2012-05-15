@@ -365,7 +365,7 @@ class views_ui extends ctools_export_ui {
 
   function set_item_state($state, $js, $input, $item) {
     ctools_export_set_object_status($item, $state);
-    menu_rebuild();
+    menu_router_rebuild();
 
     if (!$js) {
       drupal_goto(ctools_export_ui_plugin_base_path($this->plugin));

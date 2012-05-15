@@ -25,7 +25,7 @@ class ViewsHandlersTest extends ViewsSqlTest {
   function testFilterInOperatorUi() {
     $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
     $this->drupalLogin($admin_user);
-    menu_rebuild();
+    menu_router_rebuild();
 
     $path = 'admin/structure/views/nojs/config-item/test_filter_in_operator_ui/default/filter/type';
     $this->drupalGet($path);

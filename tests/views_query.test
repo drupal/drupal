@@ -158,7 +158,7 @@ abstract class ViewsSqlTest extends ViewsTestCase {
     // @TODO Figure out why it's required to clear the cache here.
     views_module_include('views_default', TRUE);
     views_get_all_views(TRUE);
-    menu_rebuild();
+    menu_router_rebuild();
   }
 
   /**

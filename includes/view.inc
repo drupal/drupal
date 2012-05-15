@@ -1795,7 +1795,7 @@ class view extends views_db_object {
 
     if ($clear) {
       cache_clear_all(); // this clears the block and page caches only.
-      menu_rebuild(); // force a menu rebuild when a view is deleted.
+      menu_router_rebuild(); // force a menu rebuild when a view is deleted.
     }
   }
 

@@ -593,7 +593,7 @@ function views_update_7001() {
       ->condition('link_path', 'admin/structure/views/%', 'LIKE')
       ->execute();
     cache('cache_menu')->expire();
-    menu_rebuild();
+    menu_router_rebuild();
   }
 }
 
