@@ -5,10 +5,12 @@
  * Tests for Views query features.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Abstract class for views testing.
  */
-abstract class ViewsTestCase extends DrupalWebTestCase {
+abstract class ViewsTestCase extends WebTestBase {
   /**
    * Helper function: verify a result set returned by view.
    *

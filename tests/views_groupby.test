@@ -5,6 +5,8 @@
  * Tests aggregate functionality of Views.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Tests aggregate functionality of views, for example count.
  */
@@ -287,7 +289,7 @@ class ViewsQueryGroupByTest extends ViewsSqlTest {
 /**
  * Tests UI of aggregate functionality..
  */
-class viewsUiGroupbyTestCase extends DrupalWebTestCase {
+class viewsUiGroupbyTestCase extends WebTestBase {
   function setUp() {
     // Enable views_ui.
     parent::setUp('views_ui', 'views_test');

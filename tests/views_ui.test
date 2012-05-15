@@ -5,10 +5,12 @@
  * Tests Views UI Wizard.
  */
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * Views UI wizard tests.
  */
-class ViewsUIWizardHelper extends DrupalWebTestCase {
+class ViewsUIWizardHelper extends WebTestBase {
   function setUp() {
     // Enable views_ui.
     parent::setUp('views_ui');
