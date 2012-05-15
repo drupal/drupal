@@ -613,7 +613,7 @@ function views_ui_add_limited_validation($element, &$form_state) {
   $array_parents = $element['#array_parents'];
   array_pop($array_parents);
   $array_parents[] = $element['#views_ui_ajax_data']['trigger_key'];
-  $ajax_triggering_element = drupal_array_get_nested_value($form_state['complete form'], $array_parents);
+  $ajax_triggering_element = drupal_array_get_nested_value($form_state['complete_form'], $array_parents);
 
   // Limit this button's validation to the AJAX triggering element, so it can
   // update the form for that change without requiring that the rest of the
@@ -649,7 +649,7 @@ function views_ui_add_ajax_wrapper($element, &$form_state) {
   if (empty($element['#views_ui_ajax_data']['duplicate_wrapper'])) {
     // Find the region of the complete form that needs to be refreshed by AJAX.
     // This was earlier stored in a property on the element.
-    $complete_form = &$form_state['complete form'];
+    $complete_form = &$form_state['complete_form'];
     $refresh_parents = $element['#views_ui_ajax_data']['refresh_parents'];
     $refresh_element = drupal_array_get_nested_value($complete_form, $refresh_parents);
 
