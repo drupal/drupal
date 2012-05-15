@@ -109,8 +109,8 @@ function views_ui_preview($view, $display_id, $args = array()) {
     $args = array_slice(func_get_args(), 2);
   }
 
-  // Save $_GET['q'] so it can be restored before returning from this function.
-  $q = $_GET['q'];
+  // Save the current path so it can be restored before returning from this function.
+  $old_q = current_path();
 
   // Determine where the query and performance statistics should be output.
   $show_query = variable_get('views_ui_show_sql_query', FALSE);
@@ -161,11 +161,12 @@ function views_ui_preview($view, $display_id, $args = array()) {
     // Make view links come back to preview.
     $view->override_path = 'admin/structure/views/nojs/preview/' . $view->name . '/' . $display_id;
 
-    // Also override $_GET['q'] so we get the pager.
+    // Also override the current path so we get the pager.
     $original_path = current_path();
-    $_GET['q'] = $view->override_path;
+    $q = _current_path($view->override_path);
     if ($args) {
-      $_GET['q'] .= '/' . implode('/', $args);
+      $q .= '/' . implode('/', $args);
+      _current_path($q);
     }
 
     // Suppress contextual links of entities within the result set during a
@@ -178,7 +179,7 @@ function views_ui_preview($view, $display_id, $args = array()) {
 
     // Reset variables.
     unset($view->override_path);
-    $_GET['q'] = $original_path;
+    _current_path($original_path);
 
     // Prepare the query information and statistics to show either above or
     // below the view preview.
@@ -281,7 +282,7 @@ function views_ui_preview($view, $display_id, $args = array()) {
     $output .= '<div class="views-query-info">' . theme('table', array('rows' => $rows['statistics'])) . '</div>';
   }
 
-  $_GET['q'] = $q;
+  _current_path($old_q);
   return $output;
 }
 
@@ -1440,7 +1441,7 @@ function views_ui_edit_form_submit_preview($form, &$form_state) {
 function views_ui_edit_form_submit_delay_destination($form, &$form_state) {
   if (isset($_GET['destination']) && $form_state['redirect'] !== FALSE) {
     if (!isset($form_state['redirect'])) {
-      $form_state['redirect'] = $_GET['q'];
+      $form_state['redirect'] = current_path();
     }
     if (is_string($form_state['redirect'])) {
       $form_state['redirect'] = array($form_state['redirect']);

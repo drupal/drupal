@@ -125,7 +125,7 @@ function template_preprocess_views_view(&$vars) {
             'view_name' => $view->name,
             'view_display_id' => $view->current_display,
             'view_args' => check_plain(implode('/', $view->args)),
-            'view_path' => check_plain($_GET['q']),
+            'view_path' => check_plain(current_path()),
             // Pass through URL to ensure we get e.g. language prefixes.
 //            'view_base_path' => isset($view->display['page']) ? substr(url($view->display['page']->display_options['path']), strlen($base_path)) : '',
             'view_base_path' => $view->get_path(),
@@ -367,8 +367,8 @@ function template_preprocess_views_view_summary(&$vars) {
   }
 
   $active_urls = drupal_map_assoc(array(
-    url($_GET['q'], array('alias' => TRUE)), // force system path
-    url($_GET['q']), // could be an alias
+    url(current_path(), array('alias' => TRUE)), // force system path
+    url(current_path()), // could be an alias
   ));
 
   // Collect all arguments foreach row, to be able to alter them for example by the validator.
@@ -416,8 +416,8 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
 
   $count = 0;
   $active_urls = drupal_map_assoc(array(
-    url($_GET['q'], array('alias' => TRUE)), // force system path
-    url($_GET['q']), // could be an alias
+    url(current_path(), array('alias' => TRUE)), // force system path
+    url(current_path()), // could be an alias
   ));
 
   // Collect all arguments foreach row, to be able to alter them for example by the validator.
@@ -519,7 +519,7 @@ function template_preprocess_views_view_table(&$vars) {
           'attributes' => array('title' => $title),
           'query' => $query,
         );
-        $vars['header'][$field] = l($label, $_GET['q'], $link_options);
+        $vars['header'][$field] = l($label, current_path(), $link_options);
       }
 
       $vars['header_classes'][$field] = '';

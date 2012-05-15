@@ -298,7 +298,7 @@ class views_ui extends ctools_export_ui {
       'attributes' => array('title' => $title),
       'query' => $query,
     );
-    $link = l($label, $_GET['q'], $link_options);
+    $link = l($label, current_path(), $link_options);
     if ($this->active == $field) {
       $class .= ' active';
     }

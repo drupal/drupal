@@ -127,8 +127,8 @@ class views_plugin_style_jump_menu extends views_plugin_style {
     unset($this->view->row_index);
 
     $default_value = '';
-    if ($this->options['default_value'] && !empty($paths[url($_GET['q'])])) {
-      $default_value = $paths[url($_GET['q'])];
+    if ($this->options['default_value'] && !empty($paths[url(current_path())])) {
+      $default_value = $paths[url(current_path())];
     }
 
     ctools_include('jump-menu');

@@ -41,9 +41,9 @@ function views_ajax() {
     // Load the view.
     $view = views_get_view($name);
     if ($view && $view->access($display_id)) {
-      // Fix 'q' for paging.
+      // Fix the current path for paging.
       if (!empty($path)) {
-        $_GET['q'] = $path;
+        _current_path($path);
       }
 
       // Add all $_POST data, because AJAX is always a post and many things,
@@ -261,7 +261,7 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
       }
     }
 
-    $url = empty($form_state['url']) ? url($_GET['q'], array('absolute' => TRUE)) : $form_state['url'];
+    $url = empty($form_state['url']) ? url(current_path(), array('absolute' => TRUE)) : $form_state['url'];
 
     $commands[] = views_ajax_command_set_form($display, $title, $url);
 

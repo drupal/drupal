@@ -1697,7 +1697,7 @@ function views_form($form, &$form_state, $view, $output) {
   $form_state['cache'] = TRUE;
 
   $form = array();
-  $query = drupal_get_query_parameters($_GET, array('q'));
+  $query = drupal_get_query_parameters();
   $form['#action'] = url($view->get_url(), array('query' => $query));
   // Tell the preprocessor whether it should hide the header, footer, pager...
   $form['show_view_elements'] = array(

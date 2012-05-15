@@ -110,7 +110,7 @@ class views_plugin_style_summary_jump_menu extends views_plugin_style {
       if (!empty($this->options['count'])) {
         $options[$key] .= ' (' . intval($row->{$argument->count_alias}) . ')';
       }
-      if ($this->options['default_value'] && $_GET['q'] == $this->view->get_url($args)) {
+      if ($this->options['default_value'] && current_path() == $this->view->get_url($args)) {
         $default_value = $key;
       }
     }
