@@ -10,6 +10,7 @@ namespace Drupal\Core\Database\Install;
 use Drupal\Core\Database\Database;
 
 use PDO;
+use Exception;
 
 /**
  * Database installer structure.
