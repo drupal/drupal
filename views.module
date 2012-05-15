@@ -2019,11 +2019,10 @@ function views_theme_functions($hook, $view, $display = NULL) {
  * Substitute current time; this works with cached queries.
  */
 function views_views_query_substitutions($view) {
-  global $language_content;
   return array(
     '***CURRENT_VERSION***' => VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
-    '***CURRENT_LANGUAGE***' => $language_content->language,
+    '***CURRENT_LANGUAGE***' => drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode,
     '***DEFAULT_LANGUAGE***' => language_default('language'),
   );
 }

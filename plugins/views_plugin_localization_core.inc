@@ -39,25 +39,25 @@ class views_plugin_localization_core extends views_plugin_localization {
    *   The input format of the string. This is optional.
    */
   function save_string($string, $keys = array(), $format = '') {
-    global $language;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
     // If the current language is 'en', we need to reset the language
     // in order to trigger an update.
     // TODO: add test for number of languages.
-    if ($language->language == 'en') {
+    if ($language_interface->langcode == 'en') {
       $changed = TRUE;
       $languages = language_list();
-      $cached_language = $language;
+      $cached_language = $language_interface;
       unset($languages['en']);
       if (!empty($languages)) {
-        $language = current($languages);
+        drupal_container()->set(LANGUAGE_TYPE_INTERFACE, current($languages));
       }
     }
 
     t($string);
 
     if (isset($cached_language)) {
-      $language = $cached_language;
+      drupal_container()->set(LANGUAGE_TYPE_INTERFACE, $cached_language);
     }
     return TRUE;
   }

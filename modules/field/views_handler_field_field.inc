@@ -232,10 +232,9 @@ class views_handler_field_field extends views_handler_field {
         $column = $this->table_alias . '.language';
         // By the same reason as field_language the field might be LANGUAGE_NONE in reality so allow it as well.
         // @see this::field_language()
-        global $language_content;
         $default_language = language_default('language');
         $language = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-                                array($language_content->language, $default_language),
+                                array(drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode, $default_language),
                                 $this->view->display_handler->options['field_language']);
         $placeholder = $this->placeholder();
         $language_fallback_candidates = array($language);
@@ -889,12 +888,10 @@ class views_handler_field_field extends views_handler_field {
    * according to the settings.
    */
   function field_language($entity_type, $entity) {
-    global $language_content;
-
     if (field_is_translatable($entity_type, $this->field_info)) {
       $default_language = language_default('language');
       $language = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-                              array($language_content->language, $default_language),
+                              array(drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode, $default_language),
                               $this->view->display_handler->options['field_language']);
 
       // Give the Field Language API a chance to fallback to a different language

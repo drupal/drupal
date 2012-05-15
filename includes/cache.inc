@@ -128,13 +128,11 @@ function _views_fetch_plugin_data($type = NULL, $plugin = NULL, $reset = FALSE) 
  *   If TRUE, the data will be cached specific to the currently active language.
  */
 function views_cache_set($cid, $data, $use_language = FALSE) {
-  global $language;
-
   if (variable_get('views_skip_cache', FALSE)) {
     return;
   }
   if ($use_language) {
-    $cid .= ':' . $language->language;
+    $cid .= ':' . drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
 
   cache('cache_views')->set($cid, $data);
@@ -151,13 +149,11 @@ function views_cache_set($cid, $data, $use_language = FALSE) {
  *   If TRUE, the data will be requested specific to the currently active language.
  */
 function views_cache_get($cid, $use_language = FALSE) {
-  global $language;
-
   if (variable_get('views_skip_cache', FALSE)) {
     return 0;
   }
   if ($use_language) {
-    $cid .= ':' . $language->language;
+    $cid .= ':' . drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
 
   return cache('cache_views')->get($cid);

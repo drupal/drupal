@@ -769,11 +769,10 @@ function hook_views_default_views_alter(&$views) {
  */
 function hook_views_query_substitutions($view) {
   // Example from views_views_query_substitutions().
-  global $language_content;
   return array(
     '***CURRENT_VERSION***' => VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
-    '***CURRENT_LANGUAGE***' => $language_content->language,
+    '***CURRENT_LANGUAGE***' => drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode,
     '***DEFAULT_LANGUAGE***' => language_default('language'),
   );
 }

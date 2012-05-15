@@ -839,7 +839,6 @@ function template_preprocess_views_view_list(&$vars) {
  */
 function template_preprocess_views_view_rss(&$vars) {
   global $base_url;
-  global $language;
 
   $view     = &$vars['view'];
   $options  = &$vars['options'];
@@ -885,7 +884,7 @@ function template_preprocess_views_view_rss(&$vars) {
     $vars['link'] = check_url(url($path, $url_options));
   }
 
-  $vars['langcode'] = check_plain($language->language);
+  $vars['langcode'] = check_plain(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode);
   $vars['namespaces'] = drupal_attributes($style->namespaces);
   $vars['items'] = $items;
   $vars['channel_elements'] = format_xml_elements($style->channel_elements);

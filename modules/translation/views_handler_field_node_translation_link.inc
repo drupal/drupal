@@ -30,15 +30,15 @@ class views_handler_field_node_translation_link extends views_handler_field {
   }
 
   function render_link($data, $values) {
-    global $language;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
     $tnid = $this->get_value($values, 'tnid');
     // Only load translations if the node isn't in the current language.
-    if ($this->get_value($values, 'language') != $language->language) {
+    if ($this->get_value($values, 'language') != $language_interface->langcode) {
       $translations = translation_node_get_translations($tnid);
-      if (isset($translations[$language->language])) {
-        $values->{$this->aliases['nid']} = $translations[$language->language]->nid;
-        $values->{$this->aliases['title']} = $translations[$language->language]->title;
+      if (isset($translations[$language_interface->langcode])) {
+        $values->{$this->aliases['nid']} = $translations[$language_interface->langcode]->nid;
+        $values->{$this->aliases['title']} = $translations[$language_interface->langcode]->title;
       }
     }
 
