@@ -2278,7 +2278,7 @@ class NodeTokenReplaceTestCase extends NodeWebTestCase {
    * Creates a node, then tests the tokens generated from it.
    */
   function testNodeTokenReplacement() {
-    global $language_interface;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
       'language' => $language_interface,
