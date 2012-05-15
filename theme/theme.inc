@@ -877,7 +877,7 @@ function template_preprocess_views_view_rss(&$vars) {
     }
 
     // Compare the link to the default home page; if it's the default home page, just use $base_url.
-    if ($path == variable_get('site_frontpage', 'node')) {
+    if ($path == variable_get('site_frontpage', 'user')) {
       $path = '';
     }
 

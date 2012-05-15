@@ -1585,7 +1585,7 @@ class view extends views_db_object {
       foreach ($this->build_info['breadcrumb'] as $path => $title) {
         // Check to see if the frontpage is in the breadcrumb trail; if it
         // is, we'll remove that from the actual breadcrumb later.
-        if ($path == variable_get('site_frontpage', 'node')) {
+        if ($path == variable_get('site_frontpage', 'user')) {
           $base = FALSE;
           $title = t('Home');
         }
