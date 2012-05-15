@@ -9,6 +9,8 @@
  * incoming page and block requests.
  */
 
+use Drupal\Core\Database\Query\AlterableInterface;
+
 /**
  * Advertise the current views api version
  */
@@ -2033,7 +2035,7 @@ function views_views_query_substitutions($view) {
  * This is the hook_query_alter() for queries tagged by Views and is used to
  * add in substitutions from hook_views_query_substitutions().
  */
-function views_query_views_alter(QueryAlterableInterface $query) {
+function views_query_views_alter(AlterableInterface $query) {
   $substitutions = $query->getMetaData('views_substitutions');
   $tables =& $query->getTables();
   $where =& $query->conditions();
@@ -2054,7 +2056,7 @@ function views_query_views_alter(QueryAlterableInterface $query) {
 /**
  * Replaces the substitutions recursive foreach condition.
  */
-function _views_query_tag_alter_condition(QueryAlterableInterface $query, &$conditions, $substitutions) {
+function _views_query_tag_alter_condition(AlterableInterface $query, &$conditions, $substitutions) {
   foreach ($conditions as $condition_id => &$condition) {
     if (is_numeric($condition_id)) {
       if (is_string($condition['field'])) {

@@ -5,6 +5,8 @@
  * Relationship for groupwise maximum handler.
  */
 
+use Drupal\Core\Database\Query\AlterableInterface;
+
 /**
  * Relationship handler that allows a groupwise maximum of the linked in table.
  * For a definition, see:
@@ -308,7 +310,7 @@ class views_handler_relationship_groupwise_max extends views_handler_relationshi
    *
    * (Though why is the condition we get in a simple query 3 levels deep???)
    */
-  function alter_subquery_condition(QueryAlterableInterface $query, &$conditions) {
+  function alter_subquery_condition(AlterableInterface $query, &$conditions) {
     foreach ($conditions as $condition_id => &$condition) {
       // Skip the #conjunction element.
       if (is_numeric($condition_id)) {
