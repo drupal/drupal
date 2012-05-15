@@ -773,7 +773,7 @@ function hook_views_query_substitutions($view) {
     '***CURRENT_VERSION***' => VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
     '***CURRENT_LANGUAGE***' => drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode,
-    '***DEFAULT_LANGUAGE***' => language_default('language'),
+    '***DEFAULT_LANGUAGE***' => language_default()->langcode,
   );
 }
 

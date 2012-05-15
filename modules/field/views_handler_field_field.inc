@@ -232,7 +232,7 @@ class views_handler_field_field extends views_handler_field {
         $column = $this->table_alias . '.language';
         // By the same reason as field_language the field might be LANGUAGE_NOT_SPECIFIED in reality so allow it as well.
         // @see this::field_language()
-        $default_language = language_default('language');
+        $default_language = language_default()->langcode;
         $language = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
                                 array(drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode, $default_language),
                                 $this->view->display_handler->options['field_language']);
@@ -889,7 +889,7 @@ class views_handler_field_field extends views_handler_field {
    */
   function field_language($entity_type, $entity) {
     if (field_is_translatable($entity_type, $this->field_info)) {
-      $default_language = language_default('language');
+      $default_language = language_default()->langcode;
       $language = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
                               array(drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode, $default_language),
                               $this->view->display_handler->options['field_language']);
