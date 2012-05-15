@@ -94,12 +94,12 @@ class views_plugin_cache extends views_plugin {
           'total_rows' => isset($this->view->total_rows) ? $this->view->total_rows : 0,
           'current_page' => $this->view->get_current_page(),
         );
-        cache_set($this->get_results_key(), $data, $this->table, $this->cache_set_expire($type));
+        cache($this->table)->set($this->get_results_key(), $data, $this->cache_set_expire($type));
         break;
       case 'output':
         $this->gather_headers();
         $this->storage['output'] = $this->view->display_handler->output;
-        cache_set($this->get_output_key(), $this->storage, $this->table, $this->cache_set_expire($type));
+        cache($this->table)->set($this->get_results_key(), $this->storage, $this->cache_set_expire($type));
         break;
     }
   }
@@ -119,7 +119,7 @@ class views_plugin_cache extends views_plugin {
       case 'results':
         // Values to set: $view->result, $view->total_rows, $view->execute_time,
         // $view->current_page.
-        if ($cache = cache_get($this->get_results_key(), $this->table)) {
+        if ($cache = cache($this->table)->get($this->get_results_key())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->view->result = $cache->data['result'];
             $this->view->total_rows = $cache->data['total_rows'];
@@ -130,7 +130,7 @@ class views_plugin_cache extends views_plugin {
         }
         return FALSE;
       case 'output':
-        if ($cache = cache_get($this->get_output_key(), $this->table)) {
+        if ($cache = cache($this->table)->get($this->get_results_key())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->storage = $cache->data;
             $this->view->display_handler->output = $cache->data['output'];
