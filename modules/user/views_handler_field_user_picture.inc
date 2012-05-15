@@ -97,7 +97,7 @@ class views_handler_field_user_picture extends views_handler_field {
     }
     else {
       // Fake an account object.
-      $account = new stdClass();
+      $account = entity_create('user', array());
       if ($this->options['link_photo_to_profile']) {
         // Prevent template_preprocess_user_picture from adding a link
         // by not setting the uid.

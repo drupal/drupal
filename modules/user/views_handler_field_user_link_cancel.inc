@@ -16,7 +16,7 @@ class views_handler_field_user_link_cancel extends views_handler_field_user_link
     $uid = $values->{$this->aliases['uid']};
 
     // Build a pseudo account object to be able to check the access.
-    $account = new stdClass();
+    $account = entity_create('user', array());
     $account->uid = $uid;
 
     if ($uid && user_cancel_access($account)) {

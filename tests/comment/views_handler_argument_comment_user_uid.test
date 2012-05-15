@@ -32,7 +32,7 @@ class viewsHandlerArgumentCommentUserUidTest extends ViewsSqlTest {
       'cid' => '',
       'pid' => '',
     );
-    return comment_save((object) $comment);
+    return entity_create('comment', $comment)->save();
   }
 
   function setUp() {

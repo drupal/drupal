@@ -97,7 +97,7 @@ class views_plugin_row_comment_rss extends views_plugin_row {
 
     $item_text = '';
 
-    $uri = entity_uri('comment', $comment);
+    $uri = $comment->uri();
     $comment->link = url($uri['path'], $uri['options'] + array('absolute' => TRUE));
     $comment->rss_namespaces = array();
     $comment->rss_elements = array(

@@ -107,7 +107,7 @@ class views_plugin_row_node_rss extends views_plugin_row {
 
     $item_text = '';
 
-    $uri = entity_uri('node', $node);
+    $uri = $node->uri();
     $node->link = url($uri['path'], $uri['options'] + array('absolute' => TRUE));
     $node->rss_namespaces = array();
     $node->rss_elements = array(

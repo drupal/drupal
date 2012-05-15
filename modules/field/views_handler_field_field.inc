@@ -629,7 +629,7 @@ class views_handler_field_field extends views_handler_field {
       foreach ($entities_by_type as $entity_type => $entity_ids) {
         $entity_info = entity_get_info($entity_type);
         if (empty($this->definition['is revision'])) {
-          $entities = entity_load($entity_type, $entity_ids);
+          $entities = entity_load_multiple($entity_type, $entity_ids);
           $keys = $entity_ids;
         }
         else {
@@ -639,7 +639,7 @@ class views_handler_field_field extends views_handler_field {
           $keys = array();
           foreach ($entity_ids as $key => $combined) {
             list($entity_id, $revision_id) = $combined;
-            $entity = entity_load($entity_type, array($entity_id), array($entity_info['entity keys']['revision'] => $revision_id));
+            $entity = entity_load_multiple($entity_type, array($entity_id), array($entity_info['entity keys']['revision'] => $revision_id));
             if ($entity) {
               $entities[$revision_id] = array_shift($entity);
               $keys[$key] = $revision_id;

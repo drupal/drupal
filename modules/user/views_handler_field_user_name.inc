@@ -60,7 +60,7 @@ class views_handler_field_user_name extends views_handler_field_user {
   }
 
   function render_link($data, $values) {
-    $account = new stdClass();
+    $account = entity_create('user', array());
     $account->uid = $this->get_value($values, 'uid');
     $account->name = $this->get_value($values);
     if (!empty($this->options['link_to_user']) || !empty($this->options['overwrite_anonymous'])) {

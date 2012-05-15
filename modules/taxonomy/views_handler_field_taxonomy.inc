@@ -62,12 +62,13 @@ class views_handler_field_taxonomy extends views_handler_field {
   function render_link($data, $values) {
     $tid = $this->get_value($values, 'tid');
     if (!empty($this->options['link_to_taxonomy']) && !empty($tid) && $data !== NULL && $data !== '') {
-      $term = new stdClass();
-      $term->tid = $tid;
-      $term->vid = $this->get_value($values, 'vid');
-      $term->vocabulary_machine_name = $values->{$this->aliases['vocabulary_machine_name']};
+      $term = entity_create('taxonomy_term', array(
+        'tid' => $tid,
+        'vid' => $this->get_value($values, 'vid'),
+        'vocabulary_machine_name' => $values->{$this->aliases['vocabulary_machine_name']},
+      ));
       $this->options['alter']['make_link'] = TRUE;
-      $uri = entity_uri('taxonomy_term', $term);
+      $uri = $term->uri();
       $this->options['alter']['path'] = $uri['path'];
     }
 

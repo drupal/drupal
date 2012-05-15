@@ -44,13 +44,14 @@ class views_handler_field_term_link_edit extends views_handler_field {
   }
 
   function render($values) {
-    // Mock a term object for taxonomy_term_edit_access(). Use machine name and
+    // Mock a term object for taxonomy_term_access(). Use machine name and
     // vid to ensure compatibility with vid based and machine name based
     // access checks. See http://drupal.org/node/995156
-    $term = new stdClass();
-    $term->vid = $values->{$this->aliases['vid']};
-    $term->vocabulary_machine_name = $values->{$this->aliases['vocabulary_machine_name']};
-    if (taxonomy_term_edit_access($term)) {
+    $term = entity_create('taxonomy_term', array(
+      'vid' => $values->{$this->aliases['vid']},
+      'vocabulary_machine_name' => $values->{$this->aliases['vocabulary_machine_name']},
+    ));
+    if (taxonomy_term_access('edit', $term)) {
       $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
       $tid = $this->get_value($values, 'tid');
       return l($text, 'taxonomy/term/'. $tid . '/edit', array('query' => drupal_get_destination()));

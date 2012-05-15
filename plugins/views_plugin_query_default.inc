@@ -1605,7 +1605,7 @@ class views_plugin_query_default extends views_plugin_query {
       }
     }
 
-    $entities = entity_load($entity_type, $ids);
+    $entities = entity_load_multiple($entity_type, $ids);
     // Re-key the array by row-index.
     $result = array();
     foreach ($ids as $key => $id) {

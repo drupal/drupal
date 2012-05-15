@@ -283,10 +283,11 @@ class ViewsUIWizardTaggedWithTestCase extends ViewsUIWizardHelper {
     $this->node_type_without_tags = $this->drupalCreateContentType();
 
     // Create the vocabulary for the tag field.
-    $this->tag_vocabulary = new stdClass();
-    $this->tag_vocabulary->name = 'Views testing tags';
-    $this->tag_vocabulary->machine_name = 'views_testing_tags';
-    taxonomy_vocabulary_save($this->tag_vocabulary);
+    $this->tag_vocabulary = entity_create('taxonomy_vocabulary',  array(
+      'name' => 'Views testing tags',
+      'machine_name' => 'views_testing_tags',
+    ));
+    $this->tag_vocabulary->save();
 
     // Create the tag field itself.
     $this->tag_field = array(
@@ -710,7 +711,7 @@ class ViewsUIWizardJumpMenuTestCase extends ViewsUIWizardHelper {
    */
   function createNodeAndGetPath() {
     $node = $this->drupalCreateNode();
-    return entity_uri('node', $node);
+    return $node->uri();
   }
 
   /**
@@ -718,7 +719,7 @@ class ViewsUIWizardJumpMenuTestCase extends ViewsUIWizardHelper {
    */
   function createUserAndGetPath() {
     $account = $this->drupalCreateUser();
-    return entity_uri('user', $account);
+    return $account->uri();
   }
 
   /**
@@ -726,7 +727,7 @@ class ViewsUIWizardJumpMenuTestCase extends ViewsUIWizardHelper {
    */
   function createCommentAndGetPath() {
     $node = $this->drupalCreateNode();
-    $comment = (object) array(
+    $comment = entity_create('comment', array(
       'cid' => NULL,
       'nid' => $node->nid,
       'pid' => 0,
@@ -735,26 +736,28 @@ class ViewsUIWizardJumpMenuTestCase extends ViewsUIWizardHelper {
       'subject' => $this->randomName(),
       'language' => LANGUAGE_NOT_SPECIFIED,
       'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),
-    );
-    comment_save($comment);
-    return entity_uri('comment', $comment);
+    ));
+    $comment->save();
+    return $comment->uri();
   }
 
   /**
    * Helper function to create a taxonomy term and return its expected path.
    */
   function createTaxonomyTermAndGetPath() {
-    $vocabulary = new stdClass();
-    $vocabulary->name = $this->randomName();
-    $vocabulary->machine_name = drupal_strtolower($this->randomName());
-    taxonomy_vocabulary_save($vocabulary);
+    $vocabulary = entity_create('taxonomy_vocabulary',  array(
+      'name' => $this->randomName(),
+      'machine_name' => drupal_strtolower($this->randomName()),
+    ));
+    $vocabulary->save();
 
-    $term = new stdClass();
-    $term->name = $this->randomName();
-    $term->vid = $vocabulary->vid;
-    taxonomy_term_save($term);
-
-    return entity_uri('taxonomy_term', $term);
+    $term = entity_create('taxonomy_term', array(
+      'name' => $this->randomName(),
+      'vid' => $vocabulary->vid,
+      'vocabulary_machine_name' => $vocabulary->machine_name,
+    ));
+    $term->save();
+    return $term->uri();
   }
 
   /**
@@ -783,7 +786,7 @@ class ViewsUIWizardJumpMenuTestCase extends ViewsUIWizardHelper {
     $settings = array('revision' => TRUE);
     $node = $this->drupalCreateNode($settings);
     $node->vid = NULL;
-    node_save($node);
+    $node->save();
     return 'node/' . $node->nid . '/revisions/' . $node->vid . '/view';
   }
 }
