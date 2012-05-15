@@ -230,7 +230,7 @@ class views_handler_field_field extends views_handler_field {
       $field = $this->field_info;
       if (field_is_translatable($entity_type, $field) && !empty($this->view->display_handler->options['field_language_add_to_query'])) {
         $column = $this->table_alias . '.language';
-        // By the same reason as field_language the field might be LANGUAGE_NONE in reality so allow it as well.
+        // By the same reason as field_language the field might be LANGUAGE_NOT_SPECIFIED in reality so allow it as well.
         // @see this::field_language()
         $default_language = language_default('language');
         $language = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
@@ -243,7 +243,7 @@ class views_handler_field_field extends views_handler_field {
           $language_fallback_candidates = array_merge($language_fallback_candidates, language_fallback_get_candidates());
         }
         else {
-          $language_fallback_candidates[] = LANGUAGE_NONE;
+          $language_fallback_candidates[] = LANGUAGE_NOT_SPECIFIED;
         }
         $this->query->add_where_expression(0, "$column IN($placeholder) OR $column IS NULL", array($placeholder => $language_fallback_candidates));
       }
@@ -895,7 +895,7 @@ class views_handler_field_field extends views_handler_field {
                               $this->view->display_handler->options['field_language']);
 
       // Give the Field Language API a chance to fallback to a different language
-      // (or LANGUAGE_NONE), in case the field has no data for the selected language.
+      // (or LANGUAGE_NOT_SPECIFIED), in case the field has no data for the selected language.
       // field_view_field() does this as well, but since the returned language code
       // is used before calling it, the fallback needs to happen explicitly.
       $language = field_language($entity_type, $entity, $this->field_info['field_name'], $language);
@@ -903,7 +903,7 @@ class views_handler_field_field extends views_handler_field {
       return $language;
     }
     else {
-      return LANGUAGE_NONE;
+      return LANGUAGE_NOT_SPECIFIED;
     }
   }
 }

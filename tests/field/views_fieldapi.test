@@ -115,7 +115,7 @@ class viewsFieldApiDataTest extends ViewsFieldApiTestHelper {
   function setUp() {
     parent::setUp();
 
-    $langcode = LANGUAGE_NONE;
+    $langcode = LANGUAGE_NOT_SPECIFIED;
 
 
     $field_names = $this->setUpFields();
@@ -310,10 +310,10 @@ class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
 
       for ($key = 0; $key < 3; $key++) {
         $field = $this->fields[$key];
-        $edit[$field['field_name']][LANGUAGE_NONE][0]['value'] = $this->randomName(8);
+        $edit[$field['field_name']][LANGUAGE_NOT_SPECIFIED][0]['value'] = $this->randomName(8);
       }
       for ($j = 0; $j < 5; $j++) {
-        $edit[$this->fields[3]['field_name']][LANGUAGE_NONE][$j]['value'] = $this->randomName(8);
+        $edit[$this->fields[3]['field_name']][LANGUAGE_NOT_SPECIFIED][$j]['value'] = $this->randomName(8);
       }
 
       $this->nodes[$i] = $this->drupalCreateNode($edit);
@@ -335,7 +335,7 @@ class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
       for ($key = 0; $key < 2; $key++) {
         $field = $this->fields[$key];
         $rendered_field = $view->style_plugin->get_field($i, $field['field_name']);
-        $expected_field = $this->nodes[$i]->{$field['field_name']}[LANGUAGE_NONE][0]['value'];
+        $expected_field = $this->nodes[$i]->{$field['field_name']}[LANGUAGE_NOT_SPECIFIED][0]['value'];
         $this->assertEqual($rendered_field, $expected_field);
       }
     }
@@ -371,7 +371,7 @@ class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NONE];
+      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 0, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
@@ -389,7 +389,7 @@ class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NONE];
+      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 1, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
@@ -408,7 +408,7 @@ class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NONE];
+      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NOT_SPECIFIED];
       array_splice($pure_items, 0, -3);
       $pure_items = array_reverse($pure_items);
       foreach ($pure_items as $j => $item) {
@@ -428,7 +428,7 @@ class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NONE];
+      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NOT_SPECIFIED];
       $items[] = $pure_items[0]['value'];
       $items[] = $pure_items[4]['value'];
       $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
@@ -445,7 +445,7 @@ class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
       $items = array();
-      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NONE];
+      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NOT_SPECIFIED];
       $pure_items = array_splice($pure_items, 0, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];

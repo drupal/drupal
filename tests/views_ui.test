@@ -336,7 +336,7 @@ class ViewsUIWizardTaggedWithTestCase extends ViewsUIWizardHelper {
     $node_add_path = 'node/add/' . $this->node_type_with_tags->type;
 
     // Create three nodes, with different tags.
-    $tag_field = $this->tag_field['field_name'] . '[' . LANGUAGE_NONE . ']';
+    $tag_field = $this->tag_field['field_name'] . '[' . LANGUAGE_NOT_SPECIFIED . ']';
     $edit = array();
     $edit['title'] = $node_tag1_title = $this->randomName();
     $edit[$tag_field] = 'tag1';
@@ -733,8 +733,8 @@ class ViewsUIWizardJumpMenuTestCase extends ViewsUIWizardHelper {
       'uid' => 0,
       'status' => COMMENT_PUBLISHED,
       'subject' => $this->randomName(),
-      'language' => LANGUAGE_NONE,
-      'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
+      'language' => LANGUAGE_NOT_SPECIFIED,
+      'comment_body' => array(LANGUAGE_NOT_SPECIFIED => array($this->randomName())),
     );
     comment_save($comment);
     return entity_uri('comment', $comment);

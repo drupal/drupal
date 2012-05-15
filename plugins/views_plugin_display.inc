@@ -1252,7 +1252,7 @@ class views_plugin_display extends views_plugin {
     $languages = array(
         '***CURRENT_LANGUAGE***' => t("Current user's language"),
         '***DEFAULT_LANGUAGE***' => t("Default site language"),
-        LANGUAGE_NONE => t('Language neutral'),
+        LANGUAGE_NOT_SPECIFIED => t('Language neutral'),
     );
     if (module_exists('locale')) {
       $languages = array_merge($languages, locale_language_list());
@@ -1635,7 +1635,7 @@ class views_plugin_display extends views_plugin {
           $languages = array(
             '***CURRENT_LANGUAGE***' => t("Current user's language"),
             '***DEFAULT_LANGUAGE***' => t("Default site language"),
-            LANGUAGE_NONE => t('Language neutral'),
+            LANGUAGE_NOT_SPECIFIED => t('Language neutral'),
           );
           $languages = array_merge($languages, views_language_list());
 
