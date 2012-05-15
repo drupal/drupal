@@ -5,6 +5,8 @@
  * Contains install and update functions for Views.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Implements hook_install().
  */

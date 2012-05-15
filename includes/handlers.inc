@@ -5,6 +5,8 @@
  * Defines the various handler objects to help build and display views.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Instantiate and construct a new handler
  */

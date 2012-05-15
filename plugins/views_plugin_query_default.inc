@@ -5,6 +5,8 @@
  * Defines the default query object.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Object used to create a SELECT query.
  *

@@ -5,6 +5,8 @@
  * Definition of views_handler_filter_numeric.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Simple filter to handle greater than/less than filters
  *

@@ -5,6 +5,8 @@
  * Provides the Views' administrative interface.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Create an array of Views admin CSS for adding or attaching.
  *
