@@ -592,7 +592,7 @@ function views_update_7001() {
     db_delete('menu_links')
       ->condition('link_path', 'admin/structure/views/%', 'LIKE')
       ->execute();
-    cache_clear_all(NULL, 'cache_menu');
+    cache('cache_menu')->expire();
     menu_rebuild();
   }
 }

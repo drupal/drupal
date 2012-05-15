@@ -718,7 +718,7 @@ function views_ui_add_form_save_submit($form, &$form_state) {
   }
   $view->save();
   menu_rebuild();
-  cache_clear_all('*', 'cache_views', TRUE);
+  cache('cache_views')->flush();
   cache_clear_all();
   $form_state['redirect'] = 'admin/structure/views';
   if (!empty($view->display['page'])) {
@@ -2152,7 +2152,7 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
   menu_rebuild();
 
   // Clear the views cache.
-  cache_clear_all('*', 'cache_views');
+  cache('cache_views')->flush();
 
   // Clear the page cache.
   cache_clear_all();

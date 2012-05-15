@@ -149,7 +149,7 @@ class views_plugin_cache extends views_plugin {
    * to be sure that we catch everything. Maybe that's a bad idea.
    */
   function cache_flush() {
-    cache_clear_all($this->view->name . ':', $this->table, TRUE);
+    cache($this->table)->deletePrefix($this->view->name . ':');
   }
 
   /**

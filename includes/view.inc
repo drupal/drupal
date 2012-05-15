@@ -1756,7 +1756,7 @@ class view extends views_db_object {
 
     $this->save_locale_strings();
 
-    cache_clear_all('views_urls', 'cache_views');
+    cache('cache_views')->delete('views_urls');
     cache_clear_all(); // clear the page cache as well.
   }
 
@@ -1791,7 +1791,7 @@ class view extends views_db_object {
         ->execute();
     }
 
-    cache_clear_all('views_query:' . $this->name, 'cache_views');
+    cache('cache_views')->delete('views_query:' . $this->name);
 
     if ($clear) {
       cache_clear_all(); // this clears the block and page caches only.

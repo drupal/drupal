@@ -844,31 +844,31 @@ function views_flush_caches() {
  * Implements hook_field_create_instance.
  */
 function views_field_create_instance($instance) {
-  cache_clear_all('*', 'cache_views', TRUE);
-  cache_clear_all('*', 'cache_views_data', TRUE);
+  cache('cache_views')->flush();
+  cache('cache_views_data')->flush();
 }
 
 /**
  * Implements hook_field_update_instance.
  */
 function views_field_update_instance($instance, $prior_instance) {
-  cache_clear_all('*', 'cache_views', TRUE);
-  cache_clear_all('*', 'cache_views_data', TRUE);
+  cache('cache_views')->flush();
+  cache('cache_views_data')->flush();
 }
 
 /**
  * Implements hook_field_delete_instance.
  */
 function views_field_delete_instance($instance) {
-  cache_clear_all('*', 'cache_views', TRUE);
-  cache_clear_all('*', 'cache_views_data', TRUE);
+  cache('cache_views')->flush();
+  cache('cache_views_data')->flush();
 }
 
 /**
  * Invalidate the views cache, forcing a rebuild on the next grab of table data.
  */
 function views_invalidate_cache() {
-  cache_clear_all('*', 'cache_views', TRUE);
+  cache('cache_views')->flush();
 }
 
 /**
