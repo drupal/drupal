@@ -290,6 +290,8 @@ class ViewsQueryGroupByTest extends ViewsSqlTest {
  * Tests UI of aggregate functionality..
  */
 class viewsUiGroupbyTestCase extends WebTestBase {
+  protected $profile = 'standard';
+
   function setUp() {
     // Enable views_ui.
     parent::setUp('views_ui', 'views_test');

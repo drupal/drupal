@@ -9,6 +9,8 @@
  * Tests the argument_comment_user_uid handler.
  */
 class viewsHandlerArgumentCommentUserUidTest extends ViewsSqlTest {
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Tests handler argument_comment_user_uid',

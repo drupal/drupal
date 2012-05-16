@@ -20,6 +20,8 @@
  * Provides some helper methods for testing fieldapi integration into views.
  */
 class ViewsFieldApiTestHelper extends ViewsSqlTest {
+  protected $profile = 'standard';
+
   /**
    * Stores the field definitions used by the test.
    * @var array

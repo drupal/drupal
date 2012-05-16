@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
  * Views UI wizard tests.
  */
 class ViewsUIWizardHelper extends WebTestBase {
+  protected $profile = 'standard';
+
   function setUp() {
     // Enable views_ui.
     parent::setUp('views_ui');
