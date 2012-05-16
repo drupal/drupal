@@ -46,7 +46,7 @@ class RouterListener extends SymfonyRouterListener {
 
     if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
       $this->urlMatcher->getContext()->fromRequest($request);
-      $this->urlMatcher->setRequest($event->getRequest());
+      $this->urlMatcher->setRequest($request);
     }
 
     if ($request->attributes->has('_controller')) {

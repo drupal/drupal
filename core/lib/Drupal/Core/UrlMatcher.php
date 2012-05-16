@@ -35,6 +35,9 @@ class UrlMatcher implements UrlMatcherInterface {
    */
   protected $request;
 
+  /**
+   * Constructor.
+   */
   public function __construct() {
     // We will not actually use this object, but it's needed to conform to
     // the interface.
@@ -71,10 +74,25 @@ class UrlMatcher implements UrlMatcherInterface {
     return $this->context;
   }
 
+  /**
+   * Sets the request object to use.
+   *
+   * This is used by the RouterListener to make additional request attributes
+   * available.
+   *
+   * @param Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   */
   public function setRequest(Request $request) {
     $this->request = $request;
   }
 
+  /**
+   * Gets the request object.
+   *
+   * @return Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   */
   public function getRequest() {
     return $this->request;
   }
@@ -105,7 +123,7 @@ class UrlMatcher implements UrlMatcherInterface {
   }
 
   /**
-   * Get a drupal menu item.
+   * Get a Drupal menu item.
    *
    * @todo Make this return multiple possible candidates for the resolver to
    *   consider.
@@ -121,18 +139,28 @@ class UrlMatcher implements UrlMatcherInterface {
     return menu_get_item($path);
   }
 
+  /**
+   * Converts a Drupal menu item to a route array.
+   *
+   * @param array $router_item
+   *   The Drupal menu item.
+   *
+   * @return
+   *   An array of parameters.
+   */
   protected function convertDrupalItem($router_item) {
     $route = array(
       '_controller' => $router_item['page_callback']
     );
 
+    // @todo menu_get_item() does not unserialize page arguments when the access
+    //   is denied. Remove this temporary hack that always does that.
+    if (!is_array($router_item['page_arguments'])) {
+      $router_item['page_arguments'] = unserialize($router_item['page_arguments']);
+    }
+
     // Place argument defaults on the route.
-    // @todo For some reason drush test runs have a serialized page_arguments
-    //   but HTTP requests are unserialized. Hack to get around this for now.
-    //   This might be because page arguments aren't unserialized in
-    //   menu_get_item() when the access is denied.
-    !is_array($router_item['page_arguments']) ? $page_arguments = unserialize($router_item['page_arguments']) : $page_arguments = $router_item['page_arguments'];
-    foreach ($page_arguments as $k => $v) {
+    foreach ($router_item['page_arguments'] as $k => $v) {
       $route[$k] = $v;
     }
     return $route;
