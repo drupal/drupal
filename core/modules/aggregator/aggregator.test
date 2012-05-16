@@ -800,7 +800,7 @@ class AggregatorCronTestCase extends AggregatorTestCase {
   public function testCron() {
     // Create feed and test basic updating on cron.
     global $base_url;
-    $key = variable_get('cron_key', 'drupal');
+    $key = config('system.cron')->get('cron_key');
     $this->createSampleNodes();
     $feed = $this->createFeed();
     $this->cronRun();

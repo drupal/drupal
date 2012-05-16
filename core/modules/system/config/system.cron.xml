@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config>
+  <cron_max_threshold>10800</cron_max_threshold>
+  <cron_safe_threshold>10800</cron_safe_threshold>
+  <cron_threshold_warning>172800</cron_threshold_warning>
+  <cron_threshold_error>1209600</cron_threshold_error>
+  <cron_key>drupal</cron_key>
+</config>
