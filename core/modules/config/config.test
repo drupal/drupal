@@ -14,7 +14,7 @@ use Drupal\simpletest\WebTestBase;
 class ConfigFileSecurityTestCase extends WebTestBase {
   protected $filename = 'foo.bar';
 
-  protected $testContent = 'Good morning, Denver!';
+  protected $testContent = array('greeting' => 'Good morning, Denver!');
 
   public static function getInfo() {
     return array(
@@ -40,7 +40,7 @@ class ConfigFileSecurityTestCase extends WebTestBase {
       $file = new FileStorage($this->filename);
       $saved_content = $file->read();
 
-      $this->assertEqual($saved_content, $this->testContent, 'A file can be read back successfully.');
+      $this->assertEqual($saved_content, $this->testContent);
     }
     catch (Exception $e) {
       $this->fail('File failed verification when being read.');

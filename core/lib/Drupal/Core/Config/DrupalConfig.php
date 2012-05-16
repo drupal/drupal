@@ -36,7 +36,7 @@ class DrupalConfig {
    * Reads config data from the active store into our object.
    */
   public function read() {
-    $active = (array) config_decode($this->storage->read());
+    $active = (array) $this->storage->read();
     foreach ($active as $key => $value) {
       // If the setting is empty, return an empty string rather than an array.
       // This is necessary because SimpleXML's default behavior is to return
@@ -201,7 +201,7 @@ class DrupalConfig {
    * Saves the configuration object to disk as XML.
    */
   public function save() {
-    $this->storage->write(config_encode($this->data));
+    $this->storage->write($this->data);
   }
 
   /**

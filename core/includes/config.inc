@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Config\DatabaseStorage;
+use Drupal\Core\Config\FileStorage;
 
 /**
  * @file
@@ -49,7 +50,8 @@ function config_install_default_config($module) {
       $config_name = str_replace('.xml', '', $file);
 
       $storage = new DatabaseStorage($config_name);
-      $storage->write(file_get_contents($module_config_dir . '/' . $file));
+      $data = FileStorage::decode(file_get_contents($module_config_dir . '/' . $file));
+      $storage->write($data);
     }
   }
 }
@@ -115,112 +117,4 @@ function config_get_storage_names_with_prefix($prefix = '') {
  */
 function config($name, $class = 'Drupal\Core\Config\DrupalConfig') {
   return new $class(new DatabaseStorage($name));
-}
-
-/**
- * Decodes configuration data from its native format to an associative array.
- *
- * @param $data
- *   Configuration data.
- *
- * @return
- *   An associative array representation of the data.
- */
-function config_decode($data) {
-  if (empty($data)) {
-    return array();
-  }
-
-  // This is the fastest and easiest way to get from a string of XML to a PHP
-  // array since SimpleXML and json_decode()/encode() are native to PHP. Our
-  // only other choice would be a custom userspace implementation which would
-  // be a lot less performant and more complex.
-  $xml = new SimpleXMLElement($data);
-  $json = json_encode($xml);
-  return json_decode($json, TRUE);
-}
-
-/**
- * Standardizes SimpleXML object output into simple arrays for easier use.
- *
- * @param $xmlObject
- *   A valid XML string.
- *
- * @return
- *   An array representation of A SimpleXML object.
- */
-function config_xml_to_array($data) {
-  $out = array();
-  $xmlObject = simplexml_load_string($data);
-
-  if (is_object($xmlObject)) {
-    $attributes = (array) $xmlObject->attributes();
-    if (isset($attributes['@attributes'])) {
-      $out['#attributes'] = $attributes['@attributes'];
-    }
-  }
-  if (trim((string) $xmlObject)) {
-    return trim((string) $xmlObject);
-  }
-  foreach ($xmlObject as $index => $content) {
-    if (is_object($content)) {
-      $out[$index] = config_xml_to_array($content);
-    }
-  }
-
-  return $out;
-}
-
-/**
- * Encodes an array into the native configuration format.
- *
- * @param $data
- *   An associative array or an object
- *
- * @return
- *   A representation of this array or object in the native configuration
- *   format.
- *
- * @todo The loaded XML can be invalid; throwing plenty of PHP warnings but no
- *   catchable error.
- */
-function config_encode($data) {
-  // Convert the supplied array into a SimpleXMLElement.
-  $xml_object = new SimpleXMLElement("<?xml version=\"1.0\"?><config></config>");
-  config_array_to_xml($data, $xml_object);
-
-  // Pretty print the result.
-  $dom = new DOMDocument('1.0');
-  $dom->preserveWhiteSpace = false;
-  $dom->formatOutput = true;
-  $dom->loadXML($xml_object->asXML());
-
-  return $dom->saveXML();
-}
-
-/**
- * Encodes an array into XML
- *
- * @param $data
- *   An associative array or an object
- *
- * @return
- *   A representation of this array or object in the native configuration
- *   format.
- */
-function config_array_to_xml($array, &$xml_object) {
-  foreach ($array as $key => $value) {
-    if (is_array($value)) {
-      if (!is_numeric($key)){
-        $subnode = $xml_object->addChild("$key");
-        config_array_to_xml($value, $subnode);
-      }
-      else {
-        config_array_to_xml($value, $xml_object);
-      }
-    }
-    else {
-      $xml_object->addChild($key, $value);
-    }
-  }
 }
