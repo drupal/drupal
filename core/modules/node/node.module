@@ -912,8 +912,8 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  *   (deprecated) An associative array of conditions on the {node}
  *   table, where the keys are the database fields and the values are the
  *   values those fields must have. Instead, it is preferable to use
- *   EntityFieldQuery to retrieve a list of entity IDs loadable by
- *   this function.
+ *   Drupal\entity\EntityFieldQuery to retrieve a list of entity IDs
+ *   loadable by this function.
  * @param bool $reset
  *   (optional) Whether to reset the internal node_load() cache.
  *
@@ -923,7 +923,7 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  * @todo Remove $conditions in Drupal 8.
  *
  * @see entity_load_multiple()
- * @see EntityFieldQuery
+ * @see Drupal\entity\EntityFieldQuery
  */
 function node_load_multiple($nids = array(), array $conditions = array(), $reset = FALSE) {
   return entity_load_multiple('node', $nids, $conditions, $reset);

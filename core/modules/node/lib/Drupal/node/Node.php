@@ -7,7 +7,7 @@
 
 namespace Drupal\node;
 
-use Entity;
+use Drupal\entity\Entity;
 
 /**
  * Defines the node entity class.

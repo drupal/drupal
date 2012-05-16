@@ -7,11 +7,9 @@
 
 namespace Drupal\user;
 
-/**
- * @todo Switch to PSR-0 for the Entity classes: http://drupal.org/node/1495024
- */
-use EntityDatabaseStorageController;
-use EntityInterface;
+use Drupal\entity\EntityInterface;
+use Drupal\entity\EntityMalformedException;
+use Drupal\entity\EntityDatabaseStorageController;
 
 /**
  * Controller class for users.

@@ -5,6 +5,10 @@
  * Entity classes and controllers for Taxonomy module.
  */
 
+use Drupal\entity\Entity;
+use Drupal\entity\EntityInterface;
+use Drupal\entity\EntityDatabaseStorageController;
+
 /**
  * Defines the taxonomy term entity.
  */
@@ -212,7 +216,7 @@ class TaxonomyTermController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Implements DrupalEntityControllerInterface::resetCache().
+   * Implements Drupal\entity\EntityControllerInterface::resetCache().
    */
   public function resetCache(array $ids = NULL) {
     drupal_static_reset('taxonomy_term_count_nodes');
@@ -355,7 +359,7 @@ class TaxonomyVocabularyController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Implements DrupalEntityControllerInterface::resetCache().
+   * Implements Drupal\entity\EntityControllerInterface::resetCache().
    */
   public function resetCache(array $ids = NULL) {
     drupal_static_reset('taxonomy_vocabulary_get_names');

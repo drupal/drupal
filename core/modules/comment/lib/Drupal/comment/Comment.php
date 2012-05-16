@@ -7,7 +7,7 @@
 
 namespace Drupal\comment;
 
-use Entity;
+use Drupal\entity\Entity;
 
 /**
  * Defines the comment entity class.

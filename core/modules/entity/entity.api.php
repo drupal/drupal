@@ -22,18 +22,19 @@
  *   properties of those types that the system needs to know about:
  *   - label: The human-readable name of the type.
  *   - controller class: The name of the class that is used to load the objects.
- *     The class has to implement the DrupalEntityControllerInterface interface.
- *     Leave blank to use the DrupalDefaultEntityController implementation.
- *   - base table: (used by DrupalDefaultEntityController) The name of the
+ *     The class has to implement the Drupal\entity\EntityControllerInterface
+ *     interface. Leave blank to use the Drupal\entity\EntityController
+ *     implementation.
+ *   - base table: (used by Drupal\entity\EntityController) The name of the
  *     entity type's base table.
- *   - static cache: (used by DrupalDefaultEntityController) FALSE to disable
+ *   - static cache: (used by Drupal\entity\EntityController) FALSE to disable
  *     static caching of entities during a page request. Defaults to TRUE.
  *   - field cache: (used by Field API loading and saving of field data) FALSE
  *     to disable Field API's persistent cache of field data. Only recommended
  *     if a higher level persistent cache is available for the entity type.
  *     Defaults to TRUE.
  *   - load hook: The name of the hook which should be invoked by
- *     DrupalDefaultEntityController:attachLoad(), for example 'node_load'.
+ *     Drupal\entity\EntityController::attachLoad(), for example 'node_load'.
  *   - uri callback: A function taking an entity as argument and returning the
  *     uri elements of the entity, e.g. 'path' and 'options'. The actual entity
  *     uri can be constructed by passing these elements to url().
@@ -210,8 +211,8 @@ function hook_entity_info() {
  */
 function hook_entity_info_alter(&$entity_info) {
   // Set the controller class for nodes to an alternate implementation of the
-  // DrupalEntityController interface.
-  $entity_info['node']['controller class'] = 'MyCustomNodeController';
+  // Drupal\entity\EntityController interface.
+  $entity_info['node']['controller class'] = 'Drupal\mymodule\MyCustomNodeController';
 }
 
 /**
@@ -337,9 +338,9 @@ function hook_entity_delete($entity, $type) {
 }
 
 /**
- * Alter or execute an EntityFieldQuery.
+ * Alter or execute an Drupal\entity\EntityFieldQuery.
  *
- * @param EntityFieldQuery $query
+ * @param Drupal\entity\EntityFieldQuery $query
  *   An EntityFieldQuery. One of the most important properties to be changed is
  *   EntityFieldQuery::executeCallback. If this is set to an existing function,
  *   this function will get the query as its single argument and its result

@@ -7,8 +7,8 @@
 
 namespace Drupal\comment;
 
-use EntityDatabaseStorageController;
-use EntityInterface;
+use Drupal\entity\EntityInterface;
+use Drupal\entity\EntityDatabaseStorageController;
 
 /**
  * Defines the controller class for comments.

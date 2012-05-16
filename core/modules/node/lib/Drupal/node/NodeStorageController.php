@@ -7,9 +7,9 @@
 
 namespace Drupal\node;
 
-use EntityDatabaseStorageController;
-use EntityInterface;
-use EntityStorageException;
+use Drupal\entity\EntityDatabaseStorageController;
+use Drupal\entity\EntityInterface;
+use Drupal\entity\EntityStorageException;
 use Exception;
 
 /**
@@ -129,7 +129,7 @@ class NodeStorageController extends EntityDatabaseStorageController {
   /**
    * Saves a node revision.
    *
-   * @param EntityInterface $node
+   * @param Drupal\entity\EntityInterface $node
    *   The node entity.
    */
   protected function saveRevision(EntityInterface $entity) {
@@ -152,7 +152,7 @@ class NodeStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides DrupalDefaultEntityController::attachLoad().
+   * Overrides Drupal\entity\EntityController::attachLoad().
    */
   protected function attachLoad(&$nodes, $revision_id = FALSE) {
     // Create an array of nodes for each content type and pass this to the
@@ -177,7 +177,7 @@ class NodeStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides DrupalDefaultEntityController::buildQuery().
+   * Overrides Drupal\entity\EntityController::buildQuery().
    */
   protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
     // Ensure that uid is taken from the {node} table,

@@ -529,12 +529,12 @@ function hook_node_insert(Drupal\node\Node $node) {
  * Act on nodes being loaded from the database.
  *
  * This hook is invoked during node loading, which is handled by entity_load(),
- * via classes NodeController and DrupalDefaultEntityController. After the node
- * information is read from the database or the entity cache, hook_load() is
- * invoked on the node's content type module, then field_attach_node_revision()
- * or field_attach_load() is called, then hook_entity_load() is invoked on all
- * implementing modules, and finally hook_node_load() is invoked on all
- * implementing modules.
+ * via classes NodeController and Drupal\entity\EntityController.
+ * After the node information is read from the database or the entity cache,
+ * hook_load() is invoked on the node's content type module, then
+ * field_attach_node_revision() or field_attach_load() is called, then
+ * hook_entity_load() is invoked on all implementing modules, and finally
+ * hook_node_load() is invoked on all implementing modules.
  *
  * This hook should only be used to add information that is not in the node or
  * node revisions table, not to replace information that is in these tables
@@ -1158,12 +1158,12 @@ function hook_insert(Drupal\node\Node $node) {
  * (use hook_node_load() to respond to all node loads).
  *
  * This hook is invoked during node loading, which is handled by entity_load(),
- * via classes NodeController and DrupalDefaultEntityController. After the node
- * information is read from the database or the entity cache, hook_load() is
- * invoked on the node's content type module, then field_attach_node_revision()
- * or field_attach_load() is called, then hook_entity_load() is invoked on all
- * implementing modules, and finally hook_node_load() is invoked on all
- * implementing modules.
+ * via classes NodeController and Drupal\entity\EntityController.
+ * After the node information is read from the database or the entity cache,
+ * hook_load() is invoked on the node's content type module, then
+ * field_attach_node_revision() or field_attach_load() is called, then
+ * hook_entity_load() is invoked on all implementing modules, and finally
+ * hook_node_load() is invoked on all implementing modules.
  *
  * This hook should only be used to add information that is not in the node or
  * node revisions table, not to replace information that is in these tables

@@ -1902,18 +1902,18 @@ function hook_field_storage_delete_revision($entity_type, $entity, $fields) {
 }
 
 /**
- * Execute an EntityFieldQuery.
+ * Execute a Drupal\entity\EntityFieldQuery.
  *
  * This hook is called to find the entities having certain entity and field
  * conditions and sort them in the given field order. If the field storage
  * engine also handles property sorts and orders, it should unset those
  * properties in the called object to signal that those have been handled.
  *
- * @param EntityFieldQuery $query
+ * @param Drupal\entity\EntityFieldQuery $query
  *   An EntityFieldQuery.
  *
  * @return
- *   See EntityFieldQuery::execute() for the return values.
+ *   See Drupal\entity\EntityFieldQuery::execute() for the return values.
  */
 function hook_field_storage_query($query) {
   $groups = array();

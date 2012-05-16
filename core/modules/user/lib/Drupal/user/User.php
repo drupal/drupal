@@ -7,10 +7,7 @@
 
 namespace Drupal\user;
 
-/**
- * @todo Switch to PSR-0 for the Entity classes: http://drupal.org/node/1495024
- */
-use Entity;
+use Drupal\entity\Entity;
 
 /**
  * Defines the user entity class.

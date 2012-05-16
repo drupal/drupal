@@ -273,8 +273,8 @@ function user_external_load($authname) {
  *   (deprecated) An associative array of conditions on the {users}
  *   table, where the keys are the database fields and the values are the
  *   values those fields must have. Instead, it is preferable to use
- *   EntityFieldQuery to retrieve a list of entity IDs loadable by
- *   this function.
+ *   Drupal\entity\EntityFieldQuery to retrieve a list of entity IDs
+ *   loadable by this function.
  * @param bool $reset
  *   A boolean indicating that the internal cache should be reset. Use this if
  *   loading a user object which has been altered during the page request.
@@ -286,7 +286,7 @@ function user_external_load($authname) {
  * @see user_load()
  * @see user_load_by_mail()
  * @see user_load_by_name()
- * @see EntityFieldQuery
+ * @see Drupal\entity\EntityFieldQuery
  *
  * @todo Remove $conditions in Drupal 8.
  */

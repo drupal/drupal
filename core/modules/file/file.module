@@ -5,6 +5,8 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
+use Drupal\entity\EntityFieldQuery;
+
 // Load all Field module hooks for File.
 require_once DRUPAL_ROOT . '/core/modules/file/file.field.inc';
 

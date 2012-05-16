@@ -8,6 +8,7 @@
 use Drupal\field\FieldException;
 use Drupal\field\FieldValidationException;
 use Drupal\simpletest\WebTestBase;
+use Drupal\entity\EntityFieldQuery;
 
 /**
  * Parent class for Field API tests.

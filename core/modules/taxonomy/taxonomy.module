@@ -941,7 +941,7 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
  * database access if loaded again during the same page request.
  *
  * @see entity_load_multiple()
- * @see EntityFieldQuery
+ * @see Drupal\entity\EntityFieldQuery
  *
  * @param array|bool $tids
  *   An array of taxonomy term IDs, or FALSE to load all terms.
@@ -949,8 +949,8 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
  *   (deprecated) An associative array of conditions on the {taxonomy_term}
  *   table, where the keys are the database fields and the values are the
  *   values those fields must have. Instead, it is preferable to use
- *   EntityFieldQuery to retrieve a list of entity IDs loadable by
- *   this function.
+ *   Drupal\entity\EntityFieldQuery to retrieve a list of entity IDs
+ *   loadable by this function.
  *
  * @return array
  *   An array of taxonomy term entities, indexed by tid. When no results are
