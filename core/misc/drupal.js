@@ -3,7 +3,9 @@ var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 // Allow other JavaScript libraries to use $.
 jQuery.noConflict();
 
-(function ($) {
+// JavaScript should be made compatible with libraries other than jQuery by
+// wrapping it in an anonymous closure.
+(function ($, Drupal, window, document, undefined) {
 
 "use strict";
 
@@ -24,17 +26,15 @@ jQuery.noConflict();
  *    };
  * @endcode
  *
- * Drupal.attachBehaviors is added below to the jQuery ready event and so
- * runs on initial page load. Developers implementing AHAH/Ajax in their
- * solutions should also call this function after new page content has been
- * loaded, feeding in an element to be processed, in order to attach all
- * behaviors to the new content.
+ * Drupal.attachBehaviors is added below to the jQuery.ready event and therefore
+ * runs on initial page load. Developers implementing Ajax in their solutions
+ * should also call this function after new page content has been loaded,
+ * feeding in an element to be processed, in order to attach all behaviors to
+ * the new content.
  *
  * Behaviors should use
  * @code
- *   $(selector).once('behavior-name', function () {
- *     ...
- *   });
+ *   var elements = $(context).find(selector).once('behavior-name');
  * @endcode
  * to ensure the behavior is attached only once to a given element. (Doing so
  * enables the reprocessing of given elements, which may be needed on occasion
@@ -44,8 +44,8 @@ jQuery.noConflict();
  *   An element to attach behaviors to. If none is given, the document element
  *   is used.
  * @param settings
- *   An object containing settings for the current context. If none given, the
- *   global Drupal.settings object is used.
+ *   An object containing settings for the current context. If none is given,
+ *   the global Drupal.settings object is used.
  */
 Drupal.attachBehaviors = function (context, settings) {
   context = context || document;
@@ -115,18 +115,18 @@ Drupal.detachBehaviors = function (context, settings, trigger) {
 /**
  * Encode special characters in a plain-text string for display as HTML.
  *
+ * @param str
+ *   The string to be encoded.
+ * @return
+ *   The encoded string.
  * @ingroup sanitization
  */
 Drupal.checkPlain = function (str) {
-  var character, regex,
-      replace = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
-  str = String(str);
-  for (character in replace) {
-    if (replace.hasOwnProperty(character)) {
-      regex = new RegExp(character, 'g');
-      str = str.replace(regex, replace[character]);
-    }
-  }
+  str = str.toString()
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
   return str;
 };
 
@@ -150,21 +150,23 @@ Drupal.checkPlain = function (str) {
 Drupal.formatString = function(str, args) {
   // Transform arguments before inserting them.
   for (var key in args) {
-    switch (key.charAt(0)) {
-      // Escaped only.
-      case '@':
-        args[key] = Drupal.checkPlain(args[key]);
-      break;
-      // Pass-through.
-      case '!':
+    if (args.hasOwnProperty(key)) {
+      switch (key.charAt(0)) {
+        // Escaped only.
+        case '@':
+          args[key] = Drupal.checkPlain(args[key]);
         break;
-      // Escaped and placeholder.
-      case '%':
-      default:
-        args[key] = Drupal.theme('placeholder', args[key]);
-        break;
+        // Pass-through.
+        case '!':
+          break;
+        // Escaped and placeholder.
+        case '%':
+        default:
+          args[key] = Drupal.theme('placeholder', args[key]);
+          break;
+      }
+      str = str.replace(key, args[key]);
     }
-    str = str.replace(key, args[key]);
   }
   return str;
 };
@@ -208,7 +210,7 @@ Drupal.t = function (str, args, options) {
  */
 Drupal.url = function (path) {
   return Drupal.settings.basePath + Drupal.settings.scriptPath + path;
-}
+};
 
 /**
  * Format a string containing a count of items.
@@ -240,7 +242,7 @@ Drupal.url = function (path) {
  *   A translated string.
  */
 Drupal.formatPlural = function (count, singular, plural, args, options) {
-  var args = args || {};
+  args = args || {};
   args['@count'] = count;
   // Determine the index of the plural form.
   var index = Drupal.locale.pluralFormula ? Drupal.locale.pluralFormula(args['@count']) : ((args['@count'] == 1) ? 0 : 1);
@@ -311,26 +313,26 @@ Drupal.unfreezeHeight = function () {
  *
  * For aesthetic reasons slashes are not escaped.
  */
-Drupal.encodePath = function (item, uri) {
-  uri = uri || location.href;
-  return encodeURIComponent(item).replace(/%2F/g, '/');
+Drupal.encodePath = function (item) {
+  return window.encodeURIComponent(item).replace(/%2F/g, '/');
 };
 
 /**
  * Get the text selection in a textarea.
  */
 Drupal.getSelection = function (element) {
+  var range1, range2, start, end;
   if (typeof element.selectionStart != 'number' && document.selection) {
     // The current selection.
-    var range1 = document.selection.createRange();
-    var range2 = range1.duplicate();
+    range1 = document.selection.createRange();
+    range2 = range1.duplicate();
     // Select all text.
     range2.moveToElementText(element);
     // Now move 'dummy' end point to end point of original range.
     range2.setEndPoint('EndToEnd', range1);
     // Now we can calculate start and end points.
-    var start = range2.text.length - range1.text.length;
-    var end = start + range1.text.length;
+    start = range2.text.length - range1.text.length;
+    end = start + range1.text.length;
     return { 'start': start, 'end': end };
   }
   return { 'start': element.selectionStart, 'end': element.selectionEnd };
@@ -405,4 +407,4 @@ Drupal.theme.prototype = {
   }
 };
 
-})(jQuery);
+})(jQuery, Drupal, this, this.document);
