@@ -34,34 +34,6 @@ class ViewsFieldApiTestHelper extends ViewsSqlTest {
    */
   public $instances;
 
-  protected function CreateUser($extra_edit = array()) {
-    $permissions = array('access comments', 'access content', 'post comments', 'skip comment approval');
-    // Create a role with the given permission set.
-    if (!($rid = $this->drupalCreateRole($permissions))) {
-      return FALSE;
-    }
-
-    // Create a user assigned to that role.
-    $edit = array();
-    $edit['name']   = $this->randomName();
-    $edit['mail']   = $edit['name'] . '@example.com';
-    $edit['roles']  = array($rid => $rid);
-    $edit['pass']   = user_password();
-    $edit['status'] = 1;
-    $edit += $extra_edit;
-
-    $account = user_save(drupal_anonymous_user(), $edit);
-
-    $this->assertTrue(!empty($account->uid), t('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), t('User login'));
-    if (empty($account->uid)) {
-      return FALSE;
-    }
-
-    // Add the raw password so that we can log in as this user.
-    $account->pass_raw = $edit['pass'];
-    return $account;
-  }
-
   function setUpFields($amount = 3) {
     // Create three fields.
     $field_names = array();
@@ -162,12 +134,13 @@ class viewsFieldApiDataTest extends ViewsFieldApiTestHelper {
       $this->nodes[] = $this->drupalCreateNode($edit);
     }
 
+    $permissions = array('access comments', 'access content', 'post comments', 'skip comment approval');
     for ($i = 0; $i < 5; $i++) {
-      $edit = array(
-        'field_name_1' => array($langcode => array((array('value' => $this->randomName())))),
-        'field_name_2' => array($langcode => array((array('value' => $this->randomName())))),
-      );
-      $this->users[] = $this->CreateUser($edit);
+      $account = $this->drupalCreateUser($permissions);
+      $account->field_name_1 = array($langcode => array((array('value' => $this->randomName()))));
+      $account->field_name_2 = array($langcode => array((array('value' => $this->randomName()))));
+      $account->save();
+      $this->users[] = $account;
     }
 
     // Reset views data cache.
