@@ -29,7 +29,7 @@ class ViewsCacheTest extends ViewsSqlTest {
 
     // Create the basic view.
     $view = new view();
-    $view->vid = 'test_view';
+    $view->name = 'test_view';
     $view->add_display('default');
     $view->base_table = 'views_test';
 
