@@ -1321,12 +1321,12 @@ class CommonJavaScriptTestCase extends WebTestBase {
     // same regardless of whether aggregation is enabled, so ensure this
     // expected order, first with aggregation off.
     drupal_add_js('core/misc/ajax.js');
-    drupal_add_js('core/misc/authorize.js', array('every_page' => TRUE));
+    drupal_add_js('core/misc/collapse.js', array('every_page' => TRUE));
     drupal_add_js('core/misc/autocomplete.js');
     drupal_add_js('core/misc/batch.js', array('every_page' => TRUE));
     $javascript = drupal_get_js();
     $expected = implode("\n", array(
-      '<script type="text/javascript" src="' . file_create_url('core/misc/authorize.js') . '?' . $default_query_string . '"></script>',
+      '<script type="text/javascript" src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '"></script>',
       '<script type="text/javascript" src="' . file_create_url('core/misc/batch.js') . '?' . $default_query_string . '"></script>',
       '<script type="text/javascript" src="' . file_create_url('core/misc/ajax.js') . '?' . $default_query_string . '"></script>',
       '<script type="text/javascript" src="' . file_create_url('core/misc/autocomplete.js') . '?' . $default_query_string . '"></script>',
@@ -1340,13 +1340,13 @@ class CommonJavaScriptTestCase extends WebTestBase {
     $config->set('preprocess_js', 1);
     $config->save();
     drupal_add_js('core/misc/ajax.js');
-    drupal_add_js('core/misc/authorize.js', array('every_page' => TRUE));
+    drupal_add_js('core/misc/collapse.js', array('every_page' => TRUE));
     drupal_add_js('core/misc/autocomplete.js');
     drupal_add_js('core/misc/batch.js', array('every_page' => TRUE));
     $js_items = drupal_add_js();
     $javascript = drupal_get_js();
     $expected = implode("\n", array(
-      '<script type="text/javascript" src="' . file_create_url(drupal_build_js_cache(array('core/misc/authorize.js' => $js_items['core/misc/authorize.js'], 'core/misc/batch.js' => $js_items['core/misc/batch.js']))) . '"></script>',
+      '<script type="text/javascript" src="' . file_create_url(drupal_build_js_cache(array('core/misc/collapse.js' => $js_items['core/misc/collapse.js'], 'core/misc/batch.js' => $js_items['core/misc/batch.js']))) . '"></script>',
       '<script type="text/javascript" src="' . file_create_url(drupal_build_js_cache(array('core/misc/ajax.js' => $js_items['core/misc/ajax.js'], 'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']))) . '"></script>',
     ));
     $this->assertTrue(strpos($javascript, $expected) > 0, t('JavaScript is aggregated in the expected groups and order.'));

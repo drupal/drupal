@@ -21,10 +21,6 @@ function authorize_filetransfer_form($form, &$form_state) {
   // If possible, we want to post this form securely via https.
   $form['#https'] = TRUE;
 
-  // CSS we depend on lives in modules/system/maintenance.css, which is loaded
-  // via the default maintenance theme.
-  $form['#attached']['js'][] = $base_url . '/misc/authorize.js';
-
   // Get all the available ways to transfer files.
   if (empty($_SESSION['authorize_filetransfer_info'])) {
     drupal_set_message(t('Unable to continue, no available methods of file transfer'), 'error');
@@ -83,7 +79,6 @@ function authorize_filetransfer_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Continue'),
     '#weight' => 100,
-    '#attributes' => array('style' => 'display:none'),
   );
 
   // Build a container for each connection type.
@@ -92,6 +87,11 @@ function authorize_filetransfer_form($form, &$form_state) {
     $form['connection_settings'][$name] = array(
       '#type' => 'container',
       '#attributes' => array('class' => array("filetransfer-$name", 'filetransfer')),
+      '#states' => array(
+        'visible' => array(
+          'select[name="connection_settings[authorize_filetransfer_default]"]' => array('value' => $name),
+        ),
+      ),
     );
     // We can't use #prefix on the container itself since then the header won't
     // be hidden and shown when the containers are being manipulated via JS.

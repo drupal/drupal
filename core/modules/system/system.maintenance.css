@@ -1,4 +1,3 @@
-
 /**
  * Update styles
  */
@@ -26,16 +25,21 @@
 /**
  * Authorize.php styles
  */
-.connection-settings-update-filetransfer-default-wrapper {
-  float: left;
-}
 #edit-submit-connection {
   clear: both;
 }
+#edit-submit-process,
 .filetransfer {
   display: none;
   clear: both;
 }
+.js #edit-submit-connection {
+  display: none;
+}
+.js #edit-submit-process {
+  display: block;
+}
+
 #edit-connection-settings-change-connection-type {
   margin: 2.6em 0.5em 0em 1em;
 }
