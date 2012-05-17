@@ -707,11 +707,7 @@ function drupal_site_offline() {
  * bubble up to menu_execute_active_handler() should call drupal_not_found().
  */
 function drupal_not_found() {
-
   throw new NotFoundHttpException();
-
-  // @todo Remove this line.
-  //drupal_deliver_page(MENU_NOT_FOUND);
 }
 
 /**
@@ -724,11 +720,7 @@ function drupal_not_found() {
  * drupal_access_denied().
  */
 function drupal_access_denied() {
-
   throw new AccessDeniedHttpException();
-
-  // @todo Remove this line.
-  //drupal_deliver_page(MENU_ACCESS_DENIED);
 }
 
 /**
