@@ -70,7 +70,7 @@ function menu_uninstall() {
 }
 
 /**
- * @addtogroup updates-7.x-extra Extra updates for 7.x
+ * @addtogroup updates-7.x-extra
  * @{
  */
 
@@ -205,6 +205,6 @@ function menu_update_7003(&$sandbox) {
 }
 
 /**
- * @} End of "addtogroup updates-7.x-extra"
+ * @} End of "addtogroup updates-7.x-extra".
  * The next series of updates should start at 8000.
  */
