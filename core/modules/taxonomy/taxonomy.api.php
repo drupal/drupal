@@ -32,10 +32,10 @@ function hook_taxonomy_vocabulary_load(array $vocabularies) {
  * Modules implementing this hook can act on the vocabulary object before it is
  * inserted or updated.
  *
- * @param TaxonomyVocabulary $vocabulary
+ * @param Drupal\taxonomy\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
-function hook_taxonomy_vocabulary_presave(TaxonomyVocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_presave(Drupal\taxonomy\Vocabulary $vocabulary) {
   $vocabulary->foo = 'bar';
 }
 
@@ -45,10 +45,10 @@ function hook_taxonomy_vocabulary_presave(TaxonomyVocabulary $vocabulary) {
  * Modules implementing this hook can act on the vocabulary object when saved
  * to the database.
  *
- * @param TaxonomyVocabulary $vocabulary
+ * @param Drupal\taxonomy\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
-function hook_taxonomy_vocabulary_insert(TaxonomyVocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Vocabulary $vocabulary) {
   if ($vocabulary->synonyms) {
     variable_set('taxonomy_' . $vocabulary->vid . '_synonyms', TRUE);
   }
@@ -59,10 +59,10 @@ function hook_taxonomy_vocabulary_insert(TaxonomyVocabulary $vocabulary) {
  *
  * Modules implementing this hook can act on the vocabulary object when updated.
  *
- * @param TaxonomyVocabulary $vocabulary
+ * @param Drupal\taxonomy\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
-function hook_taxonomy_vocabulary_update(TaxonomyVocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Vocabulary $vocabulary) {
   $status = $vocabulary->synonyms ? TRUE : FALSE;
   if ($vocabulary->synonyms) {
     variable_set('taxonomy_' . $vocabulary->vid . '_synonyms', $status);
@@ -76,13 +76,13 @@ function hook_taxonomy_vocabulary_update(TaxonomyVocabulary $vocabulary) {
  * field_attach_delete_bundle() is called and before the vocabulary is actually
  * removed from the database.
  *
- * @param TaxonomyVocabulary $vocabulary
+ * @param Drupal\taxonomy\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity that is about to be deleted.
  *
  * @see hook_taxonomy_vocabulary_delete()
  * @see taxonomy_vocabulary_delete()
  */
-function hook_taxonomy_vocabulary_predelete(TaxonomyVocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Vocabulary $vocabulary) {
   if (variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE)) {
     variable_del('taxonomy_' . $vocabulary->vid . '_synonyms');
   }
@@ -95,13 +95,13 @@ function hook_taxonomy_vocabulary_predelete(TaxonomyVocabulary $vocabulary) {
  * field_attach_delete_bundle() has been called and after the vocabulary has
  * been removed from the database.
  *
- * @param TaxonomyVocabulary $vocabulary
+ * @param Drupal\taxonomy\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity that has been deleted.
  *
  * @see hook_taxonomy_vocabulary_predelete()
  * @see taxonomy_vocabulary_delete()
  */
-function hook_taxonomy_vocabulary_delete(TaxonomyVocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_delete(Drupal\taxonomy\Vocabulary $vocabulary) {
   if (variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE)) {
     variable_del('taxonomy_' . $vocabulary->vid . '_synonyms');
   }
@@ -136,10 +136,10 @@ function hook_taxonomy_term_load(array $terms) {
  * Modules implementing this hook can act on the term object before it is
  * inserted or updated.
  *
- * @param TaxonomyTerm $term
+ * @param Drupal\taxonomy\Term $term
  *   A taxonomy term entity.
  */
-function hook_taxonomy_term_presave(TaxonomyTerm $term) {
+function hook_taxonomy_term_presave(Drupal\taxonomy\Term $term) {
   $term->foo = 'bar';
 }
 
@@ -149,10 +149,10 @@ function hook_taxonomy_term_presave(TaxonomyTerm $term) {
  * Modules implementing this hook can act on the term object when saved to
  * the database.
  *
- * @param TaxonomyTerm $term
+ * @param Drupal\taxonomy\Term $term
  *   A taxonomy term entity.
  */
-function hook_taxonomy_term_insert(TaxonomyTerm $term) {
+function hook_taxonomy_term_insert(Drupal\taxonomy\Term $term) {
   if (!empty($term->synonyms)) {
     foreach (explode ("\n", str_replace("\r", '', $term->synonyms)) as $synonym) {
       if ($synonym) {
@@ -172,10 +172,10 @@ function hook_taxonomy_term_insert(TaxonomyTerm $term) {
  *
  * Modules implementing this hook can act on the term object when updated.
  *
- * @param TaxonomyTerm $term
+ * @param Drupal\taxonomy\Term $term
  *   A taxonomy term entity.
  */
-function hook_taxonomy_term_update(TaxonomyTerm $term) {
+function hook_taxonomy_term_update(Drupal\taxonomy\Term $term) {
   hook_taxonomy_term_delete($term);
   if (!empty($term->synonyms)) {
     foreach (explode ("\n", str_replace("\r", '', $term->synonyms)) as $synonym) {
@@ -198,12 +198,12 @@ function hook_taxonomy_term_update(TaxonomyTerm $term) {
  * field_attach_delete() is called and before the term is actually removed from
  * the database.
  *
- * @param TaxonomyTerm $term
+ * @param Drupal\taxonomy\Term $term
  *   The taxonomy term entity that is about to be deleted.
  *
  * @see taxonomy_term_delete()
  */
-function hook_taxonomy_term_predelete(TaxonomyTerm $term) {
+function hook_taxonomy_term_predelete(Drupal\taxonomy\Term $term) {
   db_delete('term_synoynm')->condition('tid', $term->tid)->execute();
 }
 
@@ -213,12 +213,12 @@ function hook_taxonomy_term_predelete(TaxonomyTerm $term) {
  * This hook is invoked from taxonomy_term_delete() after field_attach_delete()
  * has been called and after the term has been removed from the database.
  *
- * @param TaxonomyTerm $term
+ * @param Drupal\taxonomy\Term $term
  *   The taxonomy term entity that has been deleted.
  *
  * @see taxonomy_term_delete()
  */
-function hook_taxonomy_term_delete(TaxonomyTerm $term) {
+function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
   db_delete('term_synoynm')->condition('tid', $term->tid)->execute();
 }
 

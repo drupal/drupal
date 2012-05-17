@@ -5,6 +5,8 @@
  * Test module for Taxonomy hooks and functions not used in core.
  */
 
+use Drupal\taxonomy\Term;
+
 /**
  * Implements hook_taxonomy_term_load().
  */
@@ -20,7 +22,7 @@ function taxonomy_test_taxonomy_term_load(array $terms) {
 /**
  * Implements hook_taxonomy_term_insert().
  */
-function taxonomy_test_taxonomy_term_insert(TaxonomyTerm $term) {
+function taxonomy_test_taxonomy_term_insert(Term $term) {
   if (!empty($term->antonym)) {
     db_insert('taxonomy_term_antonym')
       ->fields(array(
@@ -34,7 +36,7 @@ function taxonomy_test_taxonomy_term_insert(TaxonomyTerm $term) {
 /**
  * Implements hook_taxonomy_term_update().
  */
-function taxonomy_test_taxonomy_term_update(TaxonomyTerm $term) {
+function taxonomy_test_taxonomy_term_update(Term $term) {
   if (!empty($term->antonym)) {
     db_merge('taxonomy_term_antonym')
       ->key(array('tid' => $term->tid))
@@ -48,7 +50,7 @@ function taxonomy_test_taxonomy_term_update(TaxonomyTerm $term) {
 /**
  * Implements hook_taxonomy_term_delete().
  */
-function taxonomy_test_taxonomy_term_delete(TaxonomyTerm $term) {
+function taxonomy_test_taxonomy_term_delete(Term $term) {
   db_delete('taxonomy_term_antonym')
     ->condition('tid', $term->tid)
     ->execute();

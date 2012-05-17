@@ -6,6 +6,8 @@
  */
 
 use Drupal\node\Node;
+use Drupal\taxonomy\Term;
+use Drupal\taxonomy\Vocabulary;
 
 /**
  * Denotes that no term in the vocabulary has a parent.
@@ -109,8 +111,8 @@ function taxonomy_entity_info() {
   $return = array(
     'taxonomy_term' => array(
       'label' => t('Taxonomy term'),
-      'entity class' => 'TaxonomyTerm',
-      'controller class' => 'TaxonomyTermController',
+      'entity class' => 'Drupal\taxonomy\Term',
+      'controller class' => 'Drupal\taxonomy\TermStorageController',
       'base table' => 'taxonomy_term_data',
       'uri callback' => 'taxonomy_term_uri',
       'fieldable' => TRUE,
@@ -145,8 +147,8 @@ function taxonomy_entity_info() {
   }
   $return['taxonomy_vocabulary'] = array(
     'label' => t('Taxonomy vocabulary'),
-    'entity class' => 'TaxonomyVocabulary',
-    'controller class' => 'TaxonomyVocabularyController',
+    'entity class' => 'Drupal\taxonomy\Vocabulary',
+    'controller class' => 'Drupal\taxonomy\VocabularyStorageController',
     'base table' => 'taxonomy_vocabulary',
     'entity keys' => array(
       'id' => 'vid',
@@ -426,17 +428,17 @@ function taxonomy_term_access($op, $term) {
 /**
  * Return the vocabulary name given the vocabulary object.
  */
-function taxonomy_admin_vocabulary_title_callback(TaxonomyVocabulary $vocabulary) {
+function taxonomy_admin_vocabulary_title_callback(Vocabulary $vocabulary) {
   return check_plain($vocabulary->name);
 }
 
 /**
  * Saves a vocabulary.
  *
- * @param TaxonomyVocabulary $vocabulary
+ * @param Drupal\taxonomy\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity to be saved.
  */
-function taxonomy_vocabulary_save(TaxonomyVocabulary $vocabulary) {
+function taxonomy_vocabulary_save(Vocabulary $vocabulary) {
   return $vocabulary->save();
 }
 
@@ -464,7 +466,7 @@ function taxonomy_vocabulary_delete_multiple(array $vids) {
 /**
  * Implements hook_taxonomy_vocabulary_update().
  */
-function taxonomy_taxonomy_vocabulary_update(TaxonomyVocabulary $vocabulary) {
+function taxonomy_taxonomy_vocabulary_update(Vocabulary $vocabulary) {
   // Reflect machine name changes in the definitions of existing 'taxonomy'
   // fields.
   if (!empty($vocabulary->original->machine_name) && $vocabulary->original->machine_name != $vocabulary->machine_name) {
@@ -497,7 +499,7 @@ function taxonomy_taxonomy_vocabulary_update(TaxonomyVocabulary $vocabulary) {
  * term has multiple parents then the vocabulary will be given a hierarchy of
  * TAXONOMY_HIERARCHY_MULTIPLE.
  *
- * @param TaxonomyVocabulary $vocabulary
+ * @param Drupal\taxonomy\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  * @param $changed_term
  *   An array of the term structure that was updated.
@@ -505,7 +507,7 @@ function taxonomy_taxonomy_vocabulary_update(TaxonomyVocabulary $vocabulary) {
  * @return
  *   An integer that represents the level of the vocabulary's hierarchy.
  */
-function taxonomy_check_vocabulary_hierarchy(TaxonomyVocabulary $vocabulary, $changed_term) {
+function taxonomy_check_vocabulary_hierarchy(Vocabulary $vocabulary, $changed_term) {
   $tree = taxonomy_get_tree($vocabulary->vid);
   $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
   foreach ($tree as $term) {
@@ -534,7 +536,7 @@ function taxonomy_check_vocabulary_hierarchy(TaxonomyVocabulary $vocabulary, $ch
 /**
  * Saves a term object to the database.
  *
- * @param TaxonomyTerm $term
+ * @param Drupal\taxonomy\Term $term
  *   The taxonomy term entity to be saved.
  *
  * @return
@@ -542,7 +544,7 @@ function taxonomy_check_vocabulary_hierarchy(TaxonomyVocabulary $vocabulary, $ch
  *   (SAVED_UPDATED). When inserting a new term, $term->tid will contain the
  *   term ID of the newly created term.
  */
-function taxonomy_term_save(TaxonomyTerm $term) {
+function taxonomy_term_save(Term $term) {
   return $term->save();
 }
 
@@ -569,7 +571,7 @@ function taxonomy_term_delete_multiple(array $tids) {
 /**
  * Generate an array for rendering the given term.
  *
- * @param TaxonomyTerm $term
+ * @param Drupal\taxonomy\Term $term
  *   A taxonomy term entity.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
@@ -580,7 +582,7 @@ function taxonomy_term_delete_multiple(array $tids) {
  * @return
  *   An array as expected by drupal_render().
  */
-function taxonomy_term_view(TaxonomyTerm $term, $view_mode = 'full', $langcode = NULL) {
+function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
     $langcode = $GLOBALS['language_content']->langcode;
   }
@@ -655,10 +657,10 @@ function template_preprocess_taxonomy_term(&$variables) {
 /**
  * Returns whether the current page is the page of the passed-in term.
  *
- * @param TaxonomyTerm $term
+ * @param Drupal\taxonomy\Term $term
  *   A taxonomy term entity.
  */
-function taxonomy_term_is_page(TaxonomyTerm $term) {
+function taxonomy_term_is_page(Term $term) {
   $page_term = menu_get_object('taxonomy_term', 2);
   return (!empty($page_term) ? $page_term->tid == $term->tid : FALSE);
 }
@@ -989,7 +991,7 @@ function taxonomy_vocabulary_load_multiple($vids = array(), array $conditions = 
  * @param int $vid
  *   The vocabulary's ID.
  *
- * @return TaxonomyVocabulary|false
+ * @return Drupal\taxonomy\Vocabulary|false
  *   The taxonomy vocabulary entity, if exists, FALSE otherwise. Results are
  *   statically cached.
  *
@@ -1005,7 +1007,7 @@ function taxonomy_vocabulary_load($vid) {
  * @param $name
  *   The vocabulary's machine name.
  *
- * @return TaxonomyVocabulary|false
+ * @return Drupal\taxonomy\Vocabulary|false
  *   The taxonomy vocabulary entity, if exists, FALSE otherwise. Results are
  *   statically cached.
  *
@@ -1022,7 +1024,7 @@ function taxonomy_vocabulary_machine_name_load($name) {
  * @param $tid
  *   A term's ID
  *
- * @return TaxonomyTerm|false
+ * @return Drupal\taxonomy\Term|false
  *   A taxonomy term entity. Results are statically cached.
  */
 function taxonomy_term_load($tid) {
@@ -1035,7 +1037,7 @@ function taxonomy_term_load($tid) {
 /**
  * Helper function for array_map purposes.
  */
-function _taxonomy_get_tid_from_term(TaxonomyTerm $term) {
+function _taxonomy_get_tid_from_term(Term $term) {
   return $term->tid;
 }
 
@@ -1349,13 +1351,13 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
 /**
  * Title callback for term pages.
  *
- * @param TaxonomyTerm $term
+ * @param Drupal\taxonomy\Term $term
  *   A taxonomy term entity.
  *
  * @return
  *   The term name to be used as the page title.
  */
-function taxonomy_term_title(TaxonomyTerm $term) {
+function taxonomy_term_title(Term $term) {
   return $term->name;
 }
 
@@ -1649,7 +1651,7 @@ function taxonomy_delete_node_index(Node $node) {
 /**
  * Implements hook_taxonomy_term_delete().
  */
-function taxonomy_taxonomy_term_delete(TaxonomyTerm $term) {
+function taxonomy_taxonomy_term_delete(Term $term) {
   if (variable_get('taxonomy_maintain_index_table', TRUE)) {
     // Clean up the {taxonomy_index} table when terms are deleted.
     db_delete('taxonomy_index')->condition('tid', $term->tid)->execute();

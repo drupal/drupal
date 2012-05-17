@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Node;
+use Drupal\taxonomy\Term;
 
 /**
  * Implements hook_help().
@@ -470,7 +471,7 @@ function forum_permission() {
 /**
  * Implements hook_taxonomy_term_delete().
  */
-function forum_taxonomy_term_delete(TaxonomyTerm $term) {
+function forum_taxonomy_term_delete(Term $term) {
   // For containers, remove the tid from the forum_containers variable.
   $containers = variable_get('forum_containers', array());
   $key = array_search($term->tid, $containers);

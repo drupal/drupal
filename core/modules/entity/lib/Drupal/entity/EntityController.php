@@ -208,8 +208,8 @@ class EntityController implements EntityControllerInterface {
    * being loaded needs to be augmented with additional data from another
    * table, such as loading node type into comments or vocabulary machine name
    * into terms, however it can also support $conditions on different tables.
-   * See CommentController::buildQuery() or TaxonomyTermController::buildQuery()
-   * for examples.
+   * See Drupal\comment\CommentStorageController::buildQuery() or
+   * Drupal\taxonomy\TermStorageController::buildQuery() for examples.
    *
    * @param $ids
    *   An array of entity IDs, or FALSE to load all entities.
