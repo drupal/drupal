@@ -985,7 +985,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
       $last_reply->uid = $topic->last_comment_uid;
       $topic->last_reply = $last_reply;
     }
-    $topics[] = $topic;
+    $topics[$topic->nid] = $topic;
   }
 
   return $topics;
