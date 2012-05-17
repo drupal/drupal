@@ -1968,6 +1968,12 @@ function views_ui_import_page($form, &$form_state) {
     '#title' => t('Replace an existing view if one exists with the same name'),
   );
 
+  $form['bypass_validation'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Bypass view validation'),
+    '#description' => t('Bypass the validation of plugins and handlers when importing this view.'),
+  );
+
   $form['view'] = array(
     '#type' => 'textarea',
     '#title' => t('Paste view code here'),
@@ -2038,38 +2044,42 @@ function views_ui_import_validate($form, &$form_state) {
   $view->init_display();
 
   $broken = FALSE;
-  // Make sure that all plugins and handlers needed by this view actually exist.
-  foreach ($view->display as $id => $display) {
-    if (empty($display->handler) || !empty($display->handler->broken)) {
-      drupal_set_message(t('Display plugin @plugin is not available.', array('@plugin' => $display->display_plugin)), 'error');
-      $broken = TRUE;
-      continue;
-    }
 
-    $plugin = views_get_plugin('style', $display->handler->get_option('style_plugin'));
-    if (!$plugin) {
-      drupal_set_message(t('Style plugin @plugin is not available.', array('@plugin' => $display->handler->get_option('style_plugin'))), 'error');
-      $broken = TRUE;
-    }
-    elseif ($plugin->uses_row_plugin()) {
-      $plugin = views_get_plugin('row', $display->handler->get_option('row_plugin'));
+  // Bypass the validation of view pluigns/handlers if option is checked.
+  if (!$form_state['values']['bypass_validation']) {
+    // Make sure that all plugins and handlers needed by this view actually exist.
+    foreach ($view->display as $id => $display) {
+      if (empty($display->handler) || !empty($display->handler->broken)) {
+        drupal_set_message(t('Display plugin @plugin is not available.', array('@plugin' => $display->display_plugin)), 'error');
+        $broken = TRUE;
+        continue;
+      }
+
+      $plugin = views_get_plugin('style', $display->handler->get_option('style_plugin'));
       if (!$plugin) {
-        drupal_set_message(t('Row plugin @plugin is not available.', array('@plugin' => $display->handler->get_option('row_plugin'))), 'error');
+        drupal_set_message(t('Style plugin @plugin is not available.', array('@plugin' => $display->handler->get_option('style_plugin'))), 'error');
         $broken = TRUE;
       }
-    }
+      elseif ($plugin->uses_row_plugin()) {
+        $plugin = views_get_plugin('row', $display->handler->get_option('row_plugin'));
+        if (!$plugin) {
+          drupal_set_message(t('Row plugin @plugin is not available.', array('@plugin' => $display->handler->get_option('row_plugin'))), 'error');
+          $broken = TRUE;
+        }
+      }
 
-    foreach (views_object_types() as $type => $info) {
-      $handlers = $display->handler->get_handlers($type);
-      if ($handlers) {
-        foreach ($handlers as $id => $handler) {
-          if ($handler->broken()) {
-            drupal_set_message(t('@type handler @table.@field is not available.', array(
-              '@type' => $info['stitle'],
-              '@table' => $handler->table,
-              '@field' => $handler->field,
-            )), 'error');
-            $broken = TRUE;
+      foreach (views_object_types() as $type => $info) {
+        $handlers = $display->handler->get_handlers($type);
+        if ($handlers) {
+          foreach ($handlers as $id => $handler) {
+            if ($handler->broken()) {
+              drupal_set_message(t('@type handler @table.@field is not available.', array(
+                '@type' => $info['stitle'],
+                '@table' => $handler->table,
+                '@field' => $handler->field,
+              )), 'error');
+              $broken = TRUE;
+            }
           }
         }
       }
