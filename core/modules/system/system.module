@@ -1127,7 +1127,7 @@ function system_cron_page() {
   drupal_cron_run();
 
   // HTTP 204 is "No content", meaning "I did what you asked and we're done."
-  return new Response('a', 204);
+  return new Response('', 204);
 }
 
 /**
