@@ -15,7 +15,7 @@ use PDO;
 use PDOException;
 
 /**
- * @ingroup database
+ * @addtogroup database
  * @{
  */
 
@@ -207,5 +207,5 @@ class Connection extends DatabaseConnection {
 
 
 /**
- * @} End of "ingroup database".
+ * @} End of "addtogroup database".
  */

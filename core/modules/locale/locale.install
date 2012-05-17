@@ -542,6 +542,6 @@ function locale_update_8009() {
 }
 
 /**
- * @} End of "addtogroup updates-7.x-to-8.x"
+ * @} End of "addtogroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

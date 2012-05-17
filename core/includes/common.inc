@@ -1020,7 +1020,7 @@ function drupal_http_request($url, array $options = array()) {
   return $result;
 }
 /**
- * @} End of "HTTP handling".
+ * @} End of "defgroup http_handling".
  */
 
 /**

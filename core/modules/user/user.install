@@ -399,5 +399,5 @@ function user_update_8001() {
 }
 
 /**
- * @} End of "addtogroup updates-7.x-to-8.x"
+ * @} End of "addtogroup updates-7.x-to-8.x".
  */

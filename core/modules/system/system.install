@@ -1866,6 +1866,6 @@ function system_update_8009() {
 }
 
 /**
- * @} End of "defgroup updates-7.x-to-8.x"
+ * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

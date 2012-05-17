@@ -949,5 +949,5 @@ function update_variables_to_config($config_name, array $variable_map = array())
  */
 
 /**
- * @} End of "defgroup update-api-7.x-to-8.x"
+ * @} End of "defgroup update-api-7.x-to-8.x".
  */

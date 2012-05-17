@@ -199,5 +199,5 @@ function hook_field_formatter_settings_summary($field, $instance, $view_mode) {
 }
 
 /**
- * @} End of "addtogroup field_types"
+ * @} End of "addtogroup field_types".
  */

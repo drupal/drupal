@@ -1659,5 +1659,5 @@ function taxonomy_taxonomy_term_delete(Term $term) {
 }
 
 /**
- * @} End of "defgroup taxonomy_index"
+ * @} End of "defgroup taxonomy_index".
  */

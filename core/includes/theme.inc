@@ -31,7 +31,7 @@ const MARK_NEW = 1;
 const MARK_UPDATED = 2;
 
 /**
- * @} End of "Content markers".
+ * @} End of "defgroup content_flags".
  */
 
 /**
@@ -1530,7 +1530,7 @@ function theme_disable($theme_list) {
 }
 
 /**
- * @ingroup themeable
+ * @addtogroup themeable
  * @{
  */
 
@@ -2323,7 +2323,7 @@ function theme_indentation($variables) {
 }
 
 /**
- * @} End of "ingroup themeable".
+ * @} End of "addtogroup themeable".
  */
 
 /**

@@ -9,7 +9,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Utility\SchemaCache;
 
 /**
- * @ingroup schemaapi
+ * @addtogroup schemaapi
  * @{
  */
 
@@ -518,5 +518,5 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
 }
 
 /**
- * @} End of "ingroup schemaapi".
+ * @} End of "addtogroup schemaapi".
  */

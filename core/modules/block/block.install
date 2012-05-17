@@ -267,6 +267,6 @@ function block_update_8001() {
 }
 
 /**
- * @} End of "addtogroup updates-7.x-to-8.x"
+ * @} End of "addtogroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

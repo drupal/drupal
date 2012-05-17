@@ -10,7 +10,7 @@ namespace Drupal\Core\Database\Driver\pgsql;
 use Drupal\Core\Database\Query\Select as QuerySelect;
 
 /**
- * @ingroup database
+ * @addtogroup database
  * @{
  */
 
@@ -107,5 +107,5 @@ class Select extends QuerySelect {
 }
 
 /**
- * @} End of "ingroup database".
+ * @} End of "addtogroup database".
  */
