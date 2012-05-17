@@ -20,9 +20,8 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    * Performs end of request tasks.
    *
    * @todo The body of this function has just been copied almost verbatim from
-   *   drupal_page_footer(), with the exception of now passing the response
-   *   content to drupal_page_set_cache(). There's probably a lot in here that
-   *   needs to get removed/changed.
+   *   drupal_page_footer(). There's probably a lot in here that needs to get
+   *   removed/changed.
    *
    * @param Symfony\Component\HttpKernel\Event\PostResponseEvent $event
    *   The Event to process.
@@ -37,7 +36,7 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
     $response = $event->getResponse();
     $config = config('system.performance');
 
-    if ($config->get('cache') && ($cache = drupal_page_set_cache($response->getContent()))) {
+    if ($config->get('cache') && ($cache = drupal_page_set_cache())) {
       drupal_serve_page_from_cache($cache);
     }
     else {

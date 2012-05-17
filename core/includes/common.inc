@@ -5248,7 +5248,7 @@ function _drupal_bootstrap_full($skip = FALSE) {
  *
  * @see drupal_page_header()
  */
-function drupal_page_set_cache($response_body) {
+function drupal_page_set_cache() {
   global $base_root;
 
   if (drupal_page_is_cacheable()) {
