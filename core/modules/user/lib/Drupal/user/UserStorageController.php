@@ -14,13 +14,13 @@ use Drupal\entity\EntityDatabaseStorageController;
 /**
  * Controller class for users.
  *
- * This extends the EntityDatabaseStorageController class, adding required
- * special handling for user objects.
+ * This extends the Drupal\entity\EntityDatabaseStorageController class, adding
+ * required special handling for user objects.
  */
 class UserStorageController extends EntityDatabaseStorageController {
 
   /**
-   * Overrides EntityDatabaseStorageController::attachLoad().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::attachLoad().
    */
   function attachLoad(&$queried_users, $revision_id = FALSE) {
     // Build an array of user picture IDs so that these can be fetched later.
@@ -60,7 +60,7 @@ class UserStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides EntityDatabaseStorageController::create().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::create().
    */
   public function create(array $values) {
     if (!isset($values['created'])) {
@@ -73,7 +73,7 @@ class UserStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides EntityDatabaseStorageController::save().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::save().
    */
   public function save(EntityInterface $entity) {
     if (empty($entity->uid)) {
@@ -84,7 +84,7 @@ class UserStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides EntityDatabaseStorageController::preSave().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::preSave().
    */
   protected function preSave(EntityInterface $entity) {
     // Update the user password if it has changed.
@@ -159,7 +159,7 @@ class UserStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides EntityDatabaseStorageController::postSave().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::postSave().
    */
   protected function postSave(EntityInterface $entity, $update) {
 

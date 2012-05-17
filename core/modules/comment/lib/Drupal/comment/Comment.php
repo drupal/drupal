@@ -78,14 +78,14 @@ class Comment extends Entity {
   public $homepage;
 
   /**
-   * Implements EntityInterface::id().
+   * Implements Drupal\entity\EntityInterface::id().
    */
   public function id() {
     return $this->cid;
   }
 
   /**
-   * Implements EntityInterface::bundle().
+   * Implements Drupal\entity\EntityInterface::bundle().
    */
   public function bundle() {
     return $this->node_type;

@@ -136,7 +136,7 @@ class User extends Entity {
   public $roles = array();
 
   /**
-   * Implements EntityInterface::id().
+   * Implements Drupal\entity\EntityInterface::id().
    */
   public function id() {
     return $this->uid;

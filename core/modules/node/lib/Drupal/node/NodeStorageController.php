@@ -15,13 +15,13 @@ use Exception;
 /**
  * Controller class for nodes.
  *
- * This extends the EntityDatabaseStorageController class, adding required
- * special handling for node entities.
+ * This extends the Drupal\entity\EntityDatabaseStorageController class, adding
+ * required special handling for node entities.
  */
 class NodeStorageController extends EntityDatabaseStorageController {
 
   /**
-   * Overrides EntityDatabaseStorageController::create().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::create().
    */
   public function create(array $values) {
     $node = parent::create($values);
@@ -35,7 +35,7 @@ class NodeStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides EntityDatabaseStorageController::delete().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::delete().
    */
   public function delete($ids) {
     $entities = $ids ? $this->load($ids) : FALSE;
@@ -80,7 +80,7 @@ class NodeStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides EntityDatabaseStorageController::save().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::save().
    */
   public function save(EntityInterface $entity) {
     $transaction = db_transaction();
@@ -192,7 +192,7 @@ class NodeStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides EntityDatabaseStorageController::invokeHook().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::invokeHook().
    */
   protected function invokeHook($hook, EntityInterface $node) {
     if ($hook == 'insert' || $hook == 'update') {
@@ -241,7 +241,7 @@ class NodeStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides EntityDatabaseStorageController::preSave().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::preSave().
    */
   protected function preSave(EntityInterface $node) {
     // Before saving the node, set changed and revision times.
@@ -257,14 +257,14 @@ class NodeStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides EntityDatabaseStorageController::postSave().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::postSave().
    */
   function postSave(EntityInterface $node, $update) {
     node_access_acquire_grants($node, $update);
   }
 
   /**
-   * Overrides EntityDatabaseStorageController::preDelete().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::preDelete().
    */
   function preDelete($entities) {
     if (module_exists('search')) {
@@ -275,7 +275,7 @@ class NodeStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides EntityDatabaseStorageController::postDelete().
+   * Overrides Drupal\entity\EntityDatabaseStorageController::postDelete().
    */
   protected function postDelete($nodes) {
     // Delete values from other tables also referencing this node.

@@ -145,21 +145,21 @@ class Node extends Entity {
   public $revision_uid;
 
   /**
-   * Implements EntityInterface::id().
+   * Implements Drupal\entity\EntityInterface::id().
    */
   public function id() {
     return $this->nid;
   }
 
   /**
-   * Implements EntityInterface::bundle().
+   * Implements Drupal\entity\EntityInterface::bundle().
    */
   public function bundle() {
     return $this->type;
   }
 
   /**
-   * Overrides Entity::createDuplicate().
+   * Overrides Drupal\entity\Entity::createDuplicate().
    */
   public function createDuplicate() {
     $duplicate = clone $this;
