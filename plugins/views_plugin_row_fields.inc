@@ -62,6 +62,9 @@ class views_plugin_row_fields extends views_plugin_row {
       '#size' => 10,
       '#default_value' => isset($this->options['separator']) ? $this->options['separator'] : '',
       '#description' => t('The separator may be placed between inline fields to keep them from squishing up next to each other. You can use HTML in this field.'),
+      '#dependency' => array(
+        'edit-row-options-default-field-elements' => array(1),
+      ),
     );
 
     $form['hide_empty'] = array(
