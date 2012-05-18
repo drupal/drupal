@@ -125,7 +125,6 @@ class views_plugin_display_block extends views_plugin_display {
    * Provide the default form for setting options.
    */
   function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
     // It is very important to call the parent function here:
     parent::options_form($form, $form_state);
 
@@ -148,6 +147,14 @@ class views_plugin_display_block extends views_plugin_display {
           '#default_value' => $this->get_cache_type(),
         );
         break;
+      case 'exposed_form_options':
+        $this->view->init_handlers();
+        if (!$this->uses_exposed() && parent::uses_exposed()) {
+          $form['exposed_form_options']['warning'] = array(
+            '#weight' => -10,
+            '#markup' => '<div class="messages warning">' . t('Exposed filters in block displays require "Use AJAX" to be set to work correctly.') . '</div>',
+          );
+        }
     }
   }
 
@@ -178,10 +185,6 @@ class views_plugin_display_block extends views_plugin_display {
     function uses_exposed() {
       if ($this->use_ajax()) {
         return parent::uses_exposed();
-      }
-      //Warn user that for blocks, exposed filters only work with AJAX.
-      if (parent::uses_exposed()) {
-        drupal_set_message(t('Exposed filters in block displays require "Use AJAX" to be set to work correctly.'),'error',FALSE);
       }
       return FALSE;
     }
