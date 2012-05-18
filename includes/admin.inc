@@ -2332,7 +2332,7 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
       $field_name = '(' . $relationships[$field['relationship']] . ') ' . $field_name;
     }
 
-    $description = check_plain($handler->admin_summary());
+    $description = filter_xss_admin($handler->admin_summary());
     $link_text = $field_name . (empty($description) ? '' : " ($description)");
     $link_attributes = array('class' => array('views-ajax-link'));
     if (!empty($field['exclude'])) {
