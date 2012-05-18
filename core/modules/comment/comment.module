@@ -949,7 +949,7 @@ function comment_prepare_thread(&$comments) {
  */
 function comment_view(Comment $comment, Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->langcode;
+    $langcode = drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Populate $comment->content with a render() array.
@@ -1016,7 +1016,7 @@ function comment_view(Comment $comment, Node $node, $view_mode = 'full', $langco
  */
 function comment_build_content(Comment $comment, Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->langcode;
+    $langcode = drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Remove previously built content, if exists.
