@@ -148,4 +148,67 @@ class ViewsCacheTest extends ViewsSqlTest {
     // Verify the result.
     $this->assertEqual(6, count($view->result), t('The number of returned rows match.'));
   }
+
+  /**
+   * Tests css/js storage and restoring mechanism.
+   */
+  function testHeaderStorage() {
+    // Create a view with output caching enabled.
+    // Some hook_views_pre_render in views_test.module adds the test css/js file.
+    // so they should be added to the css/js storage.
+    $view = $this->getBasicView();
+    $view->init_display();
+    $view->name = 'test_cache_header_storage';
+    $view->display_handler->override_option('cache', array(
+      'type' => 'time',
+      'output_lifespan' => '3600',
+    ));
+    // @todo The cache plugin expects settings['data'] to be set.
+    // Maybe the cache plugin should be changed.
+    drupal_add_js('setting', array('example' => ''));
+
+    $view->preview();
+    $view->destroy();
+    unset($view->pre_render_called);
+    drupal_static_reset('drupal_add_css');
+    drupal_static_reset('drupal_add_js');
+
+    $view->init_display();
+    $view->preview();
+    $css = drupal_add_css();
+    $css_path = drupal_get_path('module', 'views_test') . '/views_cache.test.css';
+    $js_path = drupal_get_path('module', 'views_test') . '/views_cache.test.js';
+    $js = drupal_add_js();
+
+    $this->assertTrue(isset($css[$css_path]), 'Make sure the css is added for cached views.');
+    $this->assertTrue(isset($js[$js_path]), 'Make sure the js is added for cached views.');
+    $this->assertFalse(!empty($view->pre_render_called), 'Make sure hook_views_pre_render is not called for the cached view.');
+    $view->destroy();
+
+    // Now add some css/jss before running the view.
+    // Make sure that this css is not added when running the cached view.
+    $view->name = 'test_cache_header_storage_2';
+
+    $system_css_path = drupal_get_path('module', 'system') . '/system.maintenance.css';
+    drupal_add_css($system_css_path);
+    $system_js_path = drupal_get_path('module', 'system') . '/system.cron.js';
+    drupal_add_js($system_js_path);
+
+    $view->init_display();
+    $view->preview();
+    $view->destroy();
+    drupal_static_reset('drupal_add_css');
+    drupal_static_reset('drupal_add_js');
+
+    $view->init_display();
+    $view->preview();
+
+    $css = drupal_add_css();
+    $js = drupal_add_js();
+
+    $this->assertFalse(isset($css[$system_css_path]), 'Make sure that unrelated css is not added.');
+    $this->assertFalse(isset($js[$system_js_path]), 'Make sure that unrelated js is not added.');
+
+  }
+
 }

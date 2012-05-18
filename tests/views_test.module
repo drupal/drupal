@@ -48,3 +48,14 @@ function views_test_test_static_access_callback($access) {
 function views_test_test_dynamic_access_callback($access, $argument1, $argument2) {
   return $access && $argument1 == variable_get('test_dynamic_access_argument1', NULL) && $argument2 == variable_get('test_dynamic_access_argument2', NULL);
 }
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function views_test_views_pre_render(&$view) {
+  if ($view->name == 'test_cache_header_storage') {
+    drupal_add_js(drupal_get_path('module', 'views_test') . '/views_cache.test.js');
+    drupal_add_css(drupal_get_path('module', 'views_test') . '/views_cache.test.css');
+    $view->pre_render_called = TRUE;
+  }
+}
