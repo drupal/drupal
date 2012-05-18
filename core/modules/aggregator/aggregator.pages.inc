@@ -404,12 +404,12 @@ function aggregator_page_rss() {
   // arg(2) is the passed cid, only select for that category.
   if (arg(2)) {
     $category = db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = :cid', array(':cid' => arg(2)))->fetchObject();
-    $result = db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = :cid ORDER BY timestamp DESC, i.iid DESC', 0, variable_get('feed_default_items', 10), array(':cid' => $category->cid));
+    $result = db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = :cid ORDER BY timestamp DESC, i.iid DESC', 0, config('system.rss-publishing')->get('feed_default_items'), array(':cid' => $category->cid));
   }
   // Or, get the default aggregator items.
   else {
     $category = NULL;
-    $result = db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', 0, variable_get('feed_default_items', 10));
+    $result = db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', 0, config('system.rss-publishing')->get('feed_default_items'));
   }
 
   $feeds = $result->fetchAll();
@@ -435,7 +435,7 @@ function theme_aggregator_page_rss($variables) {
   drupal_add_http_header('Content-Type', 'application/rss+xml; charset=utf-8');
 
   $items = '';
-  $feed_length = variable_get('feed_item_length', 'fulltext');
+  $feed_length = config('system.rss-publishing')->get('feed_item_length');
   foreach ($feeds as $feed) {
     switch ($feed_length) {
       case 'teaser':

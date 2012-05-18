@@ -1866,6 +1866,13 @@ function system_update_8009() {
 }
 
 /**
+ * Moves system settings from variable to config.
+ */
+function system_update_8010() {
+  update_variables_to_config('system.rss-publishing');
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

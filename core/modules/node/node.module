@@ -2385,13 +2385,13 @@ function node_feed($nids = FALSE, $channel = array()) {
       ->condition('n.promote', 1)
       ->condition('n.status', 1)
       ->orderBy('n.created', 'DESC')
-      ->range(0, variable_get('feed_default_items', 10))
+      ->range(0, config('system.rss-publishing')->get('feed_default_items'))
       ->addTag('node_access')
       ->execute()
       ->fetchCol();
   }
 
-  $item_length = variable_get('feed_item_length', 'fulltext');
+  $item_length = config('system.rss-publishing')->get('feed_item_length');
   $namespaces = array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/');
   $teaser = ($item_length == 'teaser');
 
@@ -2431,7 +2431,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     'version'     => '2.0',
     'title'       => variable_get('site_name', 'Drupal'),
     'link'        => $base_url,
-    'description' => variable_get('feed_description', ''),
+    'description' => config('system.rss-publishing')->get('feed_description'),
     'language'    => $language_content->langcode
   );
   $channel_extras = array_diff_key($channel, $channel_defaults);
