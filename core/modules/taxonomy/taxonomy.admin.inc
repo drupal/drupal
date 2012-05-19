@@ -5,6 +5,9 @@
  * Administrative page callbacks for the taxonomy module.
  */
 
+use Drupal\taxonomy\Term;
+use Drupal\taxonomy\Vocabulary;
+
 /**
  * Form builder to list and manage vocabularies.
  *
@@ -101,7 +104,7 @@ function theme_taxonomy_overview_vocabularies($variables) {
 /**
  * Form builder for the vocabulary editing form.
  *
- * @param TaxonomyVocabulary|null $vocabulary
+ * @param Drupal\taxonomy\Vocabulary|null $vocabulary
  *   (optional) The taxonomy vocabulary entity to edit. If NULL or omitted, the
  *   form creates a new vocabulary.
  *
@@ -109,12 +112,12 @@ function theme_taxonomy_overview_vocabularies($variables) {
  * @see taxonomy_form_vocabulary_submit()
  * @see taxonomy_form_vocabulary_validate()
  */
-function taxonomy_form_vocabulary($form, &$form_state, TaxonomyVocabulary $vocabulary = NULL) {
+function taxonomy_form_vocabulary($form, &$form_state, Vocabulary $vocabulary = NULL) {
   // During initial form build, add the entity to the form state for use
   // during form building and processing. During a rebuild, use what is in the
   // form state.
   if (!isset($form_state['vocabulary'])) {
-    // Create a new TaxonomyVocabulary entity for the add form.
+    // Create a new Vocabulary entity for the add form.
     if (!isset($vocabulary)) {
       $vocabulary = entity_create('taxonomy_vocabulary', array(
         // Default the new vocabulary to the site's default language. This is
@@ -241,14 +244,14 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
  * Display a tree of all the terms in a vocabulary, with options to edit
  * each one. The form is made drag and drop by the theme function.
  *
- * @param TaxonomyVocabulary $vocabulary
+ * @param Drupal\taxonomy\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity to list terms for.
  *
  * @ingroup forms
  * @see taxonomy_overview_terms_submit()
  * @see theme_taxonomy_overview_terms()
  */
-function taxonomy_overview_terms($form, &$form_state, TaxonomyVocabulary $vocabulary) {
+function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
   global $pager_page_array, $pager_total, $pager_total_items;
 
   // Check for confirmation forms.
@@ -642,10 +645,10 @@ function theme_taxonomy_overview_terms($variables) {
 /**
  * Form function for the term edit form.
  *
- * @param TaxonomyTerm|null $term
+ * @param Drupal\taxonomy\Term|null $term
  *   (optional) The taxonomy term entity to edit. If NULL or omitted, the form
  *   creates a new term.
- * @param TaxonomyVocabulary|null $vocabulary
+ * @param Drupal\taxonomy\Vocabulary|null $vocabulary
  *   (optional) A taxonomy vocabulary entity to create the term in. Required if
  *   the term is omitted.
  *
@@ -653,12 +656,12 @@ function theme_taxonomy_overview_terms($variables) {
  * @see taxonomy_form_term_validate()
  * @see taxonomy_form_term_submit()
  */
-function taxonomy_form_term($form, &$form_state, TaxonomyTerm $term = NULL, TaxonomyVocabulary $vocabulary = NULL) {
+function taxonomy_form_term($form, &$form_state, Term $term = NULL, Vocabulary $vocabulary = NULL) {
   // During initial form build, add the term entity to the form state for use
   // during form building and processing. During a rebuild, use what is in the
   // form state.
   if (!isset($form_state['term'])) {
-    // Create a new TaxonomyTerm entity for the add form.
+    // Create a new Term entity for the add form.
     if (!isset($term)) {
       $term = entity_create('taxonomy_term', array(
         'vid' => $vocabulary->vid,

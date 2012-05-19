@@ -9,6 +9,8 @@ namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;
 
+use Exception;
+
 /**
  * General class for an abstracted INSERT query.
  */

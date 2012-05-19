@@ -50,6 +50,11 @@ function file_field_settings_form($field, $instance, $has_data) {
     '#title' => t('Files displayed by default'),
     '#default_value' => $settings['display_default'],
     '#description' => t('This setting only has an effect if the display option is enabled.'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="field[settings][display_field]"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $scheme_options = array();

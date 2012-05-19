@@ -7,6 +7,7 @@
 
 use Drupal\field\FieldValidationException;
 use Drupal\simpletest\WebTestBase;
+use Drupal\entity\EntityFieldQuery;
 
 /**
  * Provides common helper methods for Taxonomy module tests.

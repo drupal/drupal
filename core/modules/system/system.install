@@ -253,10 +253,11 @@ function system_requirements($phase) {
 
   // Report cron status.
   if ($phase == 'runtime') {
+    $config = config('system.cron');
     // Cron warning threshold defaults to two days.
-    $threshold_warning = variable_get('cron_threshold_warning', 172800);
+    $threshold_warning = $config->get('cron_threshold_warning');
     // Cron error threshold defaults to two weeks.
-    $threshold_error = variable_get('cron_threshold_error', 1209600);
+    $threshold_error = $config->get('cron_threshold_error');
     // Cron configuration help text.
     $help = $t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', array('@cron-handbook' => 'http://drupal.org/cron'));
 
@@ -283,7 +284,7 @@ function system_requirements($phase) {
     }
 
     $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . variable_get('cron_key', 'drupal'))));
+    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . $config->get('cron_key'))));
 
     $requirements['cron'] = array(
       'title' => $t('Cron maintenance tasks'),
@@ -515,7 +516,9 @@ function system_install() {
 
   // Populate the cron key variable.
   $cron_key = drupal_hash_base64(drupal_random_bytes(55));
-  variable_set('cron_key', $cron_key);
+  config('system.cron')
+    ->set('cron_key', $cron_key)
+    ->save();
 }
 
 /**
@@ -1856,6 +1859,20 @@ function system_update_8008() {
 }
 
 /**
- * @} End of "defgroup updates-7.x-to-8.x"
+ * Moves cron system settings from variable to config.
+ */
+function system_update_8009() {
+  update_variables_to_config('system.cron');
+}
+
+/**
+ * Moves system settings from variable to config.
+ */
+function system_update_8010() {
+  update_variables_to_config('system.rss-publishing');
+}
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

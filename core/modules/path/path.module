@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Node;
+use Drupal\taxonomy\Term;
 
 /**
  * Implements hook_help().
@@ -268,7 +269,7 @@ function path_form_taxonomy_form_term_alter(&$form, $form_state) {
 /**
  * Implements hook_taxonomy_term_insert().
  */
-function path_taxonomy_term_insert(TaxonomyTerm $term) {
+function path_taxonomy_term_insert(Term $term) {
   if (isset($term->path)) {
     $path = $term->path;
     $path['alias'] = trim($path['alias']);
@@ -285,7 +286,7 @@ function path_taxonomy_term_insert(TaxonomyTerm $term) {
 /**
  * Implements hook_taxonomy_term_update().
  */
-function path_taxonomy_term_update(TaxonomyTerm $term) {
+function path_taxonomy_term_update(Term $term) {
   if (isset($term->path)) {
     $path = $term->path;
     $path['alias'] = trim($path['alias']);
@@ -306,7 +307,7 @@ function path_taxonomy_term_update(TaxonomyTerm $term) {
 /**
  * Implements hook_taxonomy_term_delete().
  */
-function path_taxonomy_term_delete(TaxonomyTerm $term) {
+function path_taxonomy_term_delete(Term $term) {
   // Delete all aliases associated with this term.
   path_delete(array('source' => 'taxonomy/term/' . $term->tid));
 }

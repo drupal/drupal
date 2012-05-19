@@ -21,73 +21,6 @@
  */
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\simpletest\UnitTestBase;
-
-/**
- * Functional tests for language configuration's effect on negotiation setup.
- */
-class LocaleConfigurationTest extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Language negotiation autoconfiguration',
-      'description' => 'Adds and configures languages to check negotiation changes.',
-      'group' => 'Locale',
-    );
-  }
-
-  function setUp() {
-    parent::setUp('locale');
-  }
-
-  /**
-   * Functional tests for adding, editing and deleting languages.
-   */
-  function testLanguageConfiguration() {
-    global $base_url;
-
-    // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
-    $this->drupalLogin($admin_user);
-
-    // Check if the Default English language has no path prefix.
-    $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->assertFieldByXPath('//input[@name="prefix[en]"]', '', t('Default English has no path prefix.'));
-
-    // Add predefined language.
-    $edit = array(
-      'predefined_langcode' => 'fr',
-    );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText('French');
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-
-    // Check if the Default English language has no path prefix.
-    $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->assertFieldByXPath('//input[@name="prefix[en]"]', '', t('Default English has no path prefix.'));
-    // Check if French has a path prefix.
-    $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'fr', t('French has a path prefix.'));
-
-    // Check if we can change the default language.
-    $this->drupalGet('admin/config/regional/language');
-    $this->assertFieldChecked('edit-site-default-en', t('English is the default language.'));
-    // Change the default language.
-    $edit = array(
-      'site_default' => 'fr',
-    );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-
-    // Check if a valid language prefix is added afrer changing the default
-    // language.
-    $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->assertFieldByXPath('//input[@name="prefix[en]"]', 'en', t('A valid path prefix has been added to the previous default language.'));
-    // Check if French still has a path prefix.
-    $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'fr', t('French still has a path prefix.'));
-  }
-}
 
 /**
  * Functional tests for JavaScript parsing for translatable strings.
@@ -102,12 +35,12 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('locale', 'locale_test');
+    parent::setUp('locale');
   }
 
   function testFileParsing() {
 
-    $filename = drupal_get_path('module', 'locale_test') . '/locale_test.js';
+    $filename = drupal_get_path('module', 'locale') . '/tests/locale_test.js';
 
     // Parse the file to look for source strings.
     _locale_parse_js_file($filename);
@@ -178,6 +111,7 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
     $this->assertEqual(count($source_strings), count($test_strings), t("Found correct number of source strings."));
   }
 }
+
 /**
  * Functional test for string translation and validation.
  */
@@ -917,10 +851,10 @@ class LocaleImportFunctionalTest extends WebTestBase {
   protected $admin_user = NULL;
 
   function setUp() {
-    parent::setUp(array('locale', 'locale_test', 'dblog'));
+    parent::setUp(array('locale', 'dblog'));
 
     // Set the translation file directory.
-    variable_set('locale_translate_file_directory', drupal_get_path('module', 'locale_test'));
+    variable_set('locale_translate_file_directory', drupal_get_path('module', 'locale') . '/tests');
 
     $this->admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
     $this->drupalLogin($this->admin_user);
@@ -1394,7 +1328,7 @@ class LocaleExportFunctionalTest extends WebTestBase {
   protected $admin_user = NULL;
 
   function setUp() {
-    parent::setUp('locale', 'locale_test');
+    parent::setUp('locale');
 
     $this->admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
     $this->drupalLogin($this->admin_user);
@@ -1587,7 +1521,7 @@ class LocaleUninstallFunctionalTest extends WebTestBase {
 
     // Check the UI language.
     drupal_language_initialize();
-    $this->assertEqual($GLOBALS['language_interface']->langcode, $this->langcode, t('Current language: %lang', array('%lang' => $GLOBALS['language_interface']->langcode)));
+    $this->assertEqual(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode, $this->langcode, t('Current language: %lang', array('%lang' => drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode)));
 
     // Enable multilingual workflow option for articles.
     variable_set('node_type_language_article', 1);
@@ -1632,7 +1566,7 @@ class LocaleUninstallFunctionalTest extends WebTestBase {
 
     // Check the init language logic.
     drupal_language_initialize();
-    $this->assertEqual($GLOBALS['language_interface']->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => $GLOBALS['language_interface']->langcode)));
+    $this->assertEqual(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode)));
 
     // Check JavaScript files deletion.
     $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
@@ -1689,206 +1623,6 @@ class LocaleUninstallFrenchFunctionalTest extends LocaleUninstallFunctionalTest 
   function setUp() {
     parent::setUp();
     $this->langcode = 'fr';
-  }
-}
-
-
-/**
- * Functional tests for the language switching feature.
- */
-class LocaleLanguageSwitchingFunctionalTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language switching',
-      'description' => 'Tests for the language switching feature.',
-      'group' => 'Locale',
-    );
-  }
-
-  function setUp() {
-    parent::setUp(array('locale', 'block'));
-
-    // Create and login user.
-    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer languages', 'translate interface', 'access administration pages'));
-    $this->drupalLogin($admin_user);
-  }
-
-  /**
-   * Functional tests for the language switcher block.
-   */
-  function testLanguageBlock() {
-    // Enable the language switching block.
-    $language_type = LANGUAGE_TYPE_INTERFACE;
-    $edit = array(
-      "blocks[language_{$language_type}][region]" => 'sidebar_first',
-    );
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-
-    // Add language.
-    $edit = array(
-      'predefined_langcode' => 'fr',
-    );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-
-    // Enable URL language detection and selection.
-    $edit = array('language_interface[enabled][language-url]' => '1');
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
-
-    // Assert that the language switching block is displayed on the frontpage.
-    $this->drupalGet('');
-    $this->assertText(t('Languages'), t('Language switcher block found.'));
-
-    // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath('//div[@id=:id]/div[@class="content"]', array(':id' => 'block-language-' . str_replace('_', '-', $language_type)));
-    $links = array(
-      'active' => array(),
-      'inactive' => array(),
-    );
-    $anchors = array(
-      'active' => array(),
-      'inactive' => array(),
-    );
-    foreach ($language_switcher->ul->li as $link) {
-      $classes = explode(" ", (string) $link['class']);
-      list($langcode) = array_intersect($classes, array('en', 'fr'));
-      if (in_array('active', $classes)) {
-        $links['active'][] = $langcode;
-      }
-      else {
-        $links['inactive'][] = $langcode;
-      }
-      $anchor_classes = explode(" ", (string) $link->a['class']);
-      if (in_array('active', $anchor_classes)) {
-        $anchors['active'][] = $langcode;
-      }
-      else {
-        $anchors['inactive'][] = $langcode;
-      }
-    }
-    $this->assertIdentical($links, array('active' => array('en'), 'inactive' => array('fr')), t('Only the current language list item is marked as active on the language switcher block.'));
-    $this->assertIdentical($anchors, array('active' => array('en'), 'inactive' => array('fr')), t('Only the current language anchor is marked as active on the language switcher block.'));
-  }
-}
-
-/**
- * Test browser language detection.
- */
-class LocaleBrowserDetectionTest extends UnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Browser language detection',
-      'description' => 'Tests for the browser language detection.',
-      'group' => 'Locale',
-    );
-  }
-
-  /**
-   * Unit tests for the language_from_browser() function.
-   */
-  function testLanguageFromBrowser() {
-    // Load the required functions.
-    require_once DRUPAL_ROOT . '/core/modules/language/language.negotiation.inc';
-
-    $languages = array(
-      // In our test case, 'en' has priority over 'en-US'.
-      'en' => (object) array(
-        'langcode' => 'en',
-      ),
-      'en-US' => (object) array(
-        'langcode' => 'en-US',
-      ),
-      // But 'fr-CA' has priority over 'fr'.
-      'fr-CA' => (object) array(
-        'langcode' => 'fr-CA',
-      ),
-      'fr' => (object) array(
-        'langcode' => 'fr',
-      ),
-      // 'es-MX' is alone.
-      'es-MX' => (object) array(
-        'langcode' => 'es-MX',
-      ),
-      // 'pt' is alone.
-      'pt' => (object) array(
-        'langcode' => 'pt',
-      ),
-      // Language codes with more then one dash are actually valid.
-      // eh-oh-laa-laa is the official language code of the Teletubbies.
-      'eh-oh-laa-laa' => (object) array(
-        'langcode' => 'eh-oh-laa-laa',
-      ),
-    );
-
-    $test_cases = array(
-      // Equal qvalue for each language, choose the site prefered one.
-      'en,en-US,fr-CA,fr,es-MX' => 'en',
-      'en-US,en,fr-CA,fr,es-MX' => 'en',
-      'fr,en' => 'en',
-      'en,fr' => 'en',
-      'en-US,fr' => 'en',
-      'fr,en-US' => 'en',
-      'fr,fr-CA' => 'fr-CA',
-      'fr-CA,fr' => 'fr-CA',
-      'fr' => 'fr-CA',
-      'fr;q=1' => 'fr-CA',
-      'fr,es-MX' => 'fr-CA',
-      'fr,es' => 'fr-CA',
-      'es,fr' => 'fr-CA',
-      'es-MX,de' => 'es-MX',
-      'de,es-MX' => 'es-MX',
-
-      // Different cases and whitespace.
-      'en' => 'en',
-      'En' => 'en',
-      'EN' => 'en',
-      ' en' => 'en',
-      'en ' => 'en',
-      'en, fr' => 'en',
-
-      // A less specific language from the browser matches a more specific one
-      // from the website, and the other way around for compatibility with
-      // some versions of Internet Explorer.
-      'es' => 'es-MX',
-      'es-MX' => 'es-MX',
-      'pt' => 'pt',
-      'pt-PT' => 'pt',
-      'pt-PT;q=0.5,pt-BR;q=1,en;q=0.7' => 'en',
-      'pt-PT;q=1,pt-BR;q=0.5,en;q=0.7' => 'en',
-      'pt-PT;q=0.4,pt-BR;q=0.1,en;q=0.7' => 'en',
-      'pt-PT;q=0.1,pt-BR;q=0.4,en;q=0.7' => 'en',
-
-      // Language code with several dashes are valid. The less specific language
-      // from the browser matches the more specific one from the website.
-      'eh-oh-laa-laa' => 'eh-oh-laa-laa',
-      'eh-oh-laa' => 'eh-oh-laa-laa',
-      'eh-oh' => 'eh-oh-laa-laa',
-      'eh' => 'eh-oh-laa-laa',
-
-      // Different qvalues.
-      'en-US,en;q=0.5,fr;q=0.25' => 'en-US',
-      'fr,en;q=0.5' => 'fr-CA',
-      'fr,en;q=0.5,fr-CA;q=0.25' => 'fr',
-
-      // Silly wildcards are also valid.
-      '*,fr-CA;q=0.5' => 'en',
-      '*,en;q=0.25' => 'fr-CA',
-      'en,en-US;q=0.5,fr;q=0.25' => 'en',
-      'en-US,en;q=0.5,fr;q=0.25' => 'en-US',
-
-      // Unresolvable cases.
-      '' => FALSE,
-      'de,pl' => FALSE,
-      'iecRswK4eh' => FALSE,
-      $this->randomName(10) => FALSE,
-    );
-
-    foreach ($test_cases as $accept_language => $expected_result) {
-      $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept_language;
-      $result = language_from_browser($languages);
-      $this->assertIdentical($result, $expected_result, t("Language selection '@accept-language' selects '@result', result = '@actual'", array('@accept-language' => $accept_language, '@result' => $expected_result, '@actual' => isset($result) ? $result : 'none')));
-    }
   }
 }
 
@@ -2232,395 +1966,6 @@ class LocaleContentFunctionalTest extends WebTestBase {
 }
 
 /**
- * Test UI language negotiation
- *
- * 1. URL (PATH) > DEFAULT
- *    UI Language base on URL prefix, browser language preference has no
- *    influence:
- *      admin/config
- *        UI in site default language
- *      zh-hans/admin/config
- *        UI in Chinese
- *      blah-blah/admin/config
- *        404
- * 2. URL (PATH) > BROWSER > DEFAULT
- *        admin/config
- *          UI in user's browser language preference if the site has that
- *          language enabled, if not, the default language
- *        zh-hans/admin/config
- *          UI in Chinese
- *        blah-blah/admin/config
- *          404
- * 3. URL (DOMAIN) > DEFAULT
- *        http://example.com/admin/config
- *          UI language in site default
- *        http://example.cn/admin/config
- *          UI language in Chinese
- */
-class LocaleUILanguageNegotiationTest extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'UI language negotiation',
-      'description' => 'Test UI language switching by url path prefix and domain.',
-      'group' => 'Locale',
-    );
-  }
-
-  function setUp() {
-    parent::setUp(array('locale', 'locale_test', 'block'));
-    require_once DRUPAL_ROOT . '/core/includes/language.inc';
-    drupal_load('module', 'locale');
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages', 'administer blocks'));
-    $this->drupalLogin($admin_user);
-  }
-
-  /**
-   * Tests for language switching by URL path.
-   */
-  function testUILanguageNegotiation() {
-    // A few languages to switch to.
-    // This one is unknown, should get the default lang version.
-    $langcode_unknown = 'blah-blah';
-    // For testing browser lang preference.
-    $langcode_browser_fallback = 'vi';
-    // For testing path prefix.
-    $langcode = 'zh-hans';
-    // For setting browser language preference to 'vi'.
-    $http_header_browser_fallback = array("Accept-Language: $langcode_browser_fallback;q=1");
-    // For setting browser language preference to some unknown.
-    $http_header_blah = array("Accept-Language: blah;q=1");
-
-    // This domain should switch the UI to Chinese.
-    $language_domain = 'example.cn';
-
-    // Setup the site languages by installing two languages.
-    $language = (object) array(
-      'langcode' => $langcode_browser_fallback,
-    );
-    language_save($language);
-    $language = (object) array(
-      'langcode' => $langcode,
-    );
-    language_save($language);
-
-    // We will look for this string in the admin/config screen to see if the
-    // corresponding translated string is shown.
-    $default_string = 'Configure languages for content and the user interface';
-
-    // Set the default language in order for the translated string to be registered
-    // into database when seen by t(). Without doing this, our target string
-    // is for some reason not found when doing translate search. This might
-    // be some bug.
-    drupal_static_reset('language_list');
-    $languages = language_list();
-    variable_set('language_default', $languages['vi']);
-    // First visit this page to make sure our target string is searchable.
-    $this->drupalGet('admin/config');
-    // Now the t()'ed string is in db so switch the language back to default.
-    variable_del('language_default');
-
-    // Translate the string.
-    $language_browser_fallback_string = "In $langcode_browser_fallback In $langcode_browser_fallback In $langcode_browser_fallback";
-    $language_string = "In $langcode In $langcode In $langcode";
-    // Do a translate search of our target string.
-    $edit = array( 'string' => $default_string);
-    $this->drupalPost('admin/config/regional/translate/translate', $edit, t('Filter'));
-    // Should find the string and now click edit to post translated string.
-    $this->clickLink('edit');
-    $edit = array(
-      "translations[$langcode_browser_fallback][0]" => $language_browser_fallback_string,
-      "translations[$langcode][0]" => $language_string,
-    );
-    $this->drupalPost(NULL, $edit, t('Save translations'));
-
-    // Configure URL language rewrite.
-    variable_set('language_negotiation_url_type', LANGUAGE_TYPE_INTERFACE);
-
-    $tests = array(
-      // Default, browser preference should have no influence.
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
-        'path' => 'admin/config',
-        'expect' => $default_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_DEFAULT,
-        'http_header' => $http_header_browser_fallback,
-        'message' => 'URL (PATH) > DEFAULT: no language prefix, UI language is default and the browser language preference setting is not used.',
-      ),
-      // Language prefix.
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
-        'path' => "$langcode/admin/config",
-        'expect' => $language_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_URL,
-        'http_header' => $http_header_browser_fallback,
-        'message' => 'URL (PATH) > DEFAULT: with language prefix, UI language is switched based on path prefix',
-      ),
-      // Default, go by browser preference.
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER),
-        'path' => 'admin/config',
-        'expect' => $language_browser_fallback_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_BROWSER,
-        'http_header' => $http_header_browser_fallback,
-        'message' => 'URL (PATH) > BROWSER: no language prefix, UI language is determined by browser language preference',
-      ),
-      // Prefix, switch to the language.
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER),
-        'path' => "$langcode/admin/config",
-        'expect' => $language_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_URL,
-        'http_header' => $http_header_browser_fallback,
-        'message' => 'URL (PATH) > BROWSER: with langage prefix, UI language is based on path prefix',
-      ),
-      // Default, browser language preference is not one of site's lang.
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_BROWSER, LANGUAGE_NEGOTIATION_DEFAULT),
-        'path' => 'admin/config',
-        'expect' => $default_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_DEFAULT,
-        'http_header' => $http_header_blah,
-        'message' => 'URL (PATH) > BROWSER > DEFAULT: no language prefix and browser language preference set to unknown language should use default language',
-      ),
-    );
-
-    foreach ($tests as $test) {
-      $this->runTest($test);
-    }
-
-    // Unknown language prefix should return 404.
-    variable_set('language_negotiation_' . LANGUAGE_TYPE_INTERFACE, language_language_negotiation_info());
-    $this->drupalGet("$langcode_unknown/admin/config", array(), $http_header_browser_fallback);
-    $this->assertResponse(404, "Unknown language path prefix should return 404");
-
-    // Setup for domain negotiation, first configure the language to have domain
-    // URL.
-    $edit = array("domain[$langcode]" => $language_domain);
-    $this->drupalPost("admin/config/regional/language/detection/url", $edit, t('Save configuration'));
-    // Set the site to use domain language negotiation.
-
-    $tests = array(
-      // Default domain, browser preference should have no influence.
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
-        'language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,
-        'path' => 'admin/config',
-        'expect' => $default_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_DEFAULT,
-        'http_header' => $http_header_browser_fallback,
-        'message' => 'URL (DOMAIN) > DEFAULT: default domain should get default language',
-      ),
-      // Language domain specific URL, we set the $_SERVER['HTTP_HOST'] in
-      // locale_test.module hook_boot() to simulate this.
-      array(
-        'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
-        'language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,
-        'locale_test_domain' => $language_domain,
-        'path' => 'admin/config',
-        'expect' => $language_string,
-        'expected_method_id' => LANGUAGE_NEGOTIATION_URL,
-        'http_header' => $http_header_browser_fallback,
-        'message' => 'URL (DOMAIN) > DEFAULT: domain example.cn should switch to Chinese',
-      ),
-    );
-
-    foreach ($tests as $test) {
-      $this->runTest($test);
-    }
-  }
-
-  protected function runTest($test) {
-    if (!empty($test['language_negotiation'])) {
-      $method_weights = array_flip($test['language_negotiation']);
-      language_negotiation_set(LANGUAGE_TYPE_INTERFACE, $method_weights);
-    }
-    if (!empty($test['language_negotiation_url_part'])) {
-      variable_set('language_negotiation_url_part', $test['language_negotiation_url_part']);
-    }
-    if (!empty($test['locale_test_domain'])) {
-      variable_set('locale_test_domain', $test['locale_test_domain']);
-    }
-    $this->drupalGet($test['path'], array(), $test['http_header']);
-    $this->assertText($test['expect'], $test['message']);
-    $this->assertText(t('Language negotiation method: @name', array('@name' => $test['expected_method_id'])));
-  }
-
-  /**
-   * Test URL language detection when the requested URL has no language.
-   */
-  function testUrlLanguageFallback() {
-    // Add the Italian language.
-    $langcode_browser_fallback = 'it';
-    $language = (object) array(
-      'langcode' => $langcode_browser_fallback,
-    );
-    language_save($language);
-    $languages = language_list();
-
-    // Enable the path prefix for the default language: this way any unprefixed
-    // URL must have a valid fallback value.
-    $edit = array('prefix[en]' => 'en');
-    $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
-
-    // Enable browser and URL language detection.
-    $edit = array(
-      'language_interface[enabled][language-browser]' => TRUE,
-      'language_interface[enabled][language-url]' => TRUE,
-      'language_interface[weight][language-browser]' => -8,
-      'language_interface[weight][language-url]' => -10,
-    );
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
-    $this->drupalGet('admin/config/regional/language/detection');
-
-    // Enable the language switcher block.
-    $edit = array('blocks[language_language_interface][region]' => 'sidebar_first');
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-
-    // Access the front page without specifying any valid URL language prefix
-    // and having as browser language preference a non-default language.
-    $http_header = array("Accept-Language: $langcode_browser_fallback;q=1");
-    $language = (object) array('langcode' => '');
-    $this->drupalGet('', array('language' => $language), $http_header);
-
-    // Check that the language switcher active link matches the given browser
-    // language.
-    $args = array(':url' => base_path() . $GLOBALS['script_path'] . $langcode_browser_fallback);
-    $fields = $this->xpath('//div[@id="block-language-language-interface"]//a[@class="language-link active" and starts-with(@href, :url)]', $args);
-    $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->name, t('The browser language is the URL active language'));
-
-    // Check that URLs are rewritten using the given browser language.
-    $fields = $this->xpath('//p[@id="site-name"]/strong/a[@rel="home" and @href=:url]', $args);
-    $this->assertTrue($fields[0] == 'Drupal', t('URLs are rewritten using the browser language.'));
-  }
-
-  /**
-   * Tests url() when separate domains are used for multiple languages.
-   */
-  function testLanguageDomain() {
-    // Add the Italian language.
-    $langcode = 'it';
-    $language = (object) array(
-      'langcode' => $langcode,
-    );
-    language_save($language);
-    $languages = language_list();
-
-    // Enable browser and URL language detection.
-    $edit = array(
-      'language_interface[enabled][language-url]' => TRUE,
-      'language_interface[weight][language-url]' => -10,
-    );
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
-
-    // Change the domain for the Italian language.
-    $edit = array(
-      'language_negotiation_url_part' => 1,
-      'domain[it]' => 'it.example.com',
-    );
-    $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
-
-    // Build the link we're going to test.
-    $link = 'it.example.com/admin';
-
-    global $is_https;
-    // Test URL in another language: http://it.example.com/admin.
-    // Base path gives problems on the testbot, so $correct_link is hard-coded.
-    // @see UrlAlterFunctionalTest::assertUrlOutboundAlter (path.test).
-    $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
-    $url_scheme = ($is_https) ? 'https://' : 'http://';
-    $correct_link = $url_scheme . $link;
-    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right url (@url) in accordance with the chosen language', array('@url' => $italian_url)));
-
-    // Test https via options.
-    variable_set('https', TRUE);
-    $italian_url = url('admin', array('https' => TRUE, 'language' => $languages['it'], 'script' => ''));
-    $correct_link = 'https://' . $link;
-    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right https url (via options) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
-    variable_set('https', FALSE);
-
-    // Test https via current url scheme.
-    $temp_https = $is_https;
-    $is_https = TRUE;
-    $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
-    $correct_link = 'https://' . $link;
-    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right url (via current url scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
-    $is_https = $temp_https;
-  }
-}
-
-/**
- * Test that URL rewriting works as expected.
- */
-class LocaleUrlRewritingTest extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'URL rewriting',
-      'description' => 'Test that URL rewriting works as expected.',
-      'group' => 'Locale',
-    );
-  }
-
-  function setUp() {
-    parent::setUp('locale');
-
-    // Create and login user.
-    $this->web_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
-    $this->drupalLogin($this->web_user);
-
-    // Install French language.
-    $edit = array();
-    $edit['predefined_langcode'] = 'fr';
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-
-    // Enable URL language detection and selection.
-    $edit = array('language_interface[enabled][language-url]' => 1);
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
-
-    // Reset static caching.
-    drupal_static_reset('language_list');
-    drupal_static_reset('language_url_outbound_alter');
-    drupal_static_reset('language_url_rewrite_url');
-  }
-
-  /**
-   * Check that non-installed languages are not considered.
-   */
-  function testUrlRewritingEdgeCases() {
-    // Check URL rewriting with a non-installed language.
-    $non_existing = language_default();
-    $non_existing->langcode = $this->randomName();
-    $this->checkUrl($non_existing, t('Path language is ignored if language is not installed.'), t('URL language negotiation does not work with non-installed languages'));
-  }
-
-  /**
-   * Check URL rewriting for the given language.
-   *
-   * The test is performed with a fixed URL (the default front page) to simply
-   * check that language prefixes are not added to it and that the prefixed URL
-   * is actually not working.
-   */
-  private function checkUrl($language, $message1, $message2) {
-    $options = array('language' => $language, 'script' => '');
-    $base_path = trim(base_path(), '/');
-    $rewritten_path = trim(str_replace($base_path, '', url('node', $options)), '/');
-    $segments = explode('/', $rewritten_path, 2);
-    $prefix = $segments[0];
-    $path = isset($segments[1]) ? $segments[1] : $prefix;
-
-    // If the rewritten URL has not a language prefix we pick a random prefix so
-    // we can always check the prefixed URL.
-    $prefixes = language_negotiation_url_prefixes();
-    $stored_prefix = isset($prefixes[$language->langcode]) ? $prefixes[$language->langcode] : $this->randomName();
-    if ($this->assertNotEqual($stored_prefix, $prefix, $message1)) {
-      $prefix = $stored_prefix;
-    }
-
-    $this->drupalGet("$prefix/$path");
-    $this->assertResponse(404, $message2);
-  }
-}
-
-/**
  * Functional test for multilingual fields.
  */
 class LocaleMultilingualFieldsFunctionalTest extends WebTestBase {
@@ -2762,7 +2107,10 @@ class LocaleCommentLanguageFunctionalTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('locale', 'locale_test');
+    // We also use language_test module here to be able to turn on content
+    // language negotiation. Drupal core does not provide a way in itself
+    // to do that.
+    parent::setUp('locale', 'language_test');
 
     // Create and login user.
     $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'create article content'));
@@ -2777,7 +2125,7 @@ class LocaleCommentLanguageFunctionalTest extends WebTestBase {
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
 
     // Enable content language negotiation UI.
-    variable_set('locale_test_content_language_type', TRUE);
+    variable_set('language_test_content_language_type', TRUE);
 
     // Set interface language detection to user and content language detection
     // to URL. Disable inheritance from interface language to ensure content
@@ -2911,160 +2259,5 @@ class LocaleDateFormatsFunctionalTest extends WebTestBase {
     $this->drupalGet('fr/node/' . $node->nid);
     $french_date = format_date($node->created, 'custom', 'd.m.Y');
     $this->assertText($french_date, t('French date format appears'));
-  }
-}
-
-/**
- * Functional test for language types/negotiation info.
- */
-class LocaleLanguageNegotiationInfoFunctionalTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language negotiation info',
-      'description' => 'Tests alterations to language types/negotiation info.',
-      'group' => 'Locale',
-    );
-  }
-
-  function setUp() {
-    parent::setUp('locale');
-    require_once DRUPAL_ROOT .'/core/includes/language.inc';
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'view the administration theme'));
-    $this->drupalLogin($admin_user);
-    $this->drupalPost('admin/config/regional/language/add', array('predefined_langcode' => 'it'), t('Add language'));
-  }
-
-  /**
-   * Tests alterations to language types/negotiation info.
-   */
-  function testInfoAlterations() {
-    // Enable language type/negotiation info alterations.
-    variable_set('locale_test_language_types', TRUE);
-    variable_set('locale_test_language_negotiation_info', TRUE);
-    $this->languageNegotiationUpdate();
-
-    // Check that fixed language types are properly configured without the need
-    // of saving the language negotiation settings.
-    $this->checkFixedLanguageTypes();
-
-    // Make the content language type configurable by updating the language
-    // negotiation settings with the proper flag enabled.
-    variable_set('locale_test_content_language_type', TRUE);
-    $this->languageNegotiationUpdate();
-    $type = LANGUAGE_TYPE_CONTENT;
-    $language_types = variable_get('language_types', language_types_get_default());
-    $this->assertTrue($language_types[$type], t('Content language type is configurable.'));
-
-    // Enable some core and custom language negotiation methods. The test
-    // language type is supposed to be configurable.
-    $test_type = 'test_language_type';
-    $interface_method_id = LANGUAGE_NEGOTIATION_INTERFACE;
-    $test_method_id = 'test_language_negotiation_method';
-    $form_field = $type . '[enabled]['. $interface_method_id .']';
-    $edit = array(
-      $form_field => TRUE,
-      $type . '[enabled][' . $test_method_id . ']' => TRUE,
-      $test_type . '[enabled][' . $test_method_id . ']' => TRUE,
-    );
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
-
-    // Remove the interface language negotiation method by updating the language
-    // negotiation settings with the proper flag enabled.
-    variable_set('locale_test_language_negotiation_info_alter', TRUE);
-    $this->languageNegotiationUpdate();
-    $negotiation = variable_get("language_negotiation_$type", array());
-    $this->assertFalse(isset($negotiation[$interface_method_id]), t('Interface language negotiation method removed from the stored settings.'));
-    $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Interface language negotiation method unavailable.'));
-
-    // Check that type-specific language negotiation methods can be assigned
-    // only to the corresponding language types.
-    foreach (language_types_get_configurable() as $type) {
-      $form_field = $type . '[enabled][test_language_negotiation_method_ts]';
-      if ($type == $test_type) {
-        $this->assertFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language negotiation method available for %type.', array('%type' => $type)));
-      }
-      else {
-        $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language negotiation method unavailable for %type.', array('%type' => $type)));
-      }
-    }
-
-    // Check language negotiation results.
-    $this->drupalGet('');
-    $last = variable_get('locale_test_language_negotiation_last', array());
-    foreach (language_types_get_all() as $type) {
-      $langcode = $last[$type];
-      $value = $type == LANGUAGE_TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
-      $this->assertEqual($langcode, $value, t('The negotiated language for %type is %language', array('%type' => $type, '%language' => $langcode)));
-    }
-
-    // Disable locale_test and check that everything is set back to the original
-    // status.
-    $this->languageNegotiationUpdate('disable');
-
-    // Check that only the core language types are available.
-    foreach (language_types_get_all() as $type) {
-      $this->assertTrue(strpos($type, 'test') === FALSE, t('The %type language is still available', array('%type' => $type)));
-    }
-
-    // Check that fixed language types are properly configured, even those
-    // previously set to configurable.
-    $this->checkFixedLanguageTypes();
-
-    // Check that unavailable language negotiation methods are not present in
-    // the negotiation settings.
-    $negotiation = variable_get("language_negotiation_$type", array());
-    $this->assertFalse(isset($negotiation[$test_method_id]), t('The disabled test language negotiation method is not part of the content language negotiation settings.'));
-
-    // Check that configuration page presents the correct options and settings.
-    $this->assertNoRaw(t('Test language detection'), t('No test language type configuration available.'));
-    $this->assertNoRaw(t('This is a test language negotiation method'), t('No test language negotiation method available.'));
-  }
-
-  /**
-   * Update language types/negotiation information.
-   *
-   * Manually invoke locale_modules_enabled()/locale_modules_disabled() since
-   * they would not be invoked after enabling/disabling locale_test the first
-   * time.
-   */
-  protected function languageNegotiationUpdate($op = 'enable') {
-    static $last_op = NULL;
-    $modules = array('locale_test');
-
-    // Enable/disable locale_test only if we did not already before.
-    if ($last_op != $op) {
-      $function = "module_{$op}";
-      $function($modules);
-      // Reset hook implementation cache.
-      module_implements_reset();
-    }
-
-    drupal_static_reset('language_types_info');
-    drupal_static_reset('language_negotiation_info');
-    $function = "language_modules_{$op}d";
-    if (function_exists($function)) {
-      $function($modules);
-    }
-
-    $this->drupalGet('admin/config/regional/language/detection');
-  }
-
-  /**
-   * Check that language negotiation for fixed types matches the stored one.
-   */
-  protected function checkFixedLanguageTypes() {
-    drupal_static_reset('language_types_info');
-    foreach (language_types_info() as $type => $info) {
-      if (isset($info['fixed'])) {
-        $negotiation = variable_get("language_negotiation_$type", array());
-        $equal = count($info['fixed']) == count($negotiation);
-        while ($equal && list($id) = each($negotiation)) {
-          list(, $info_id) = each($info['fixed']);
-          $equal = $info_id == $id;
-        }
-        $this->assertTrue($equal, t('language negotiation for %type is properly set up', array('%type' => $type)));
-      }
-    }
   }
 }

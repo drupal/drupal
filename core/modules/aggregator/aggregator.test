@@ -83,7 +83,7 @@ class AggregatorTestCase extends WebTestBase {
    */
   function getDefaultFeedItemCount() {
     // Our tests are based off of rss.xml, so let's find out how many elements should be related.
-    $feed_count = db_query_range('SELECT COUNT(*) FROM {node} n WHERE n.promote = 1 AND n.status = 1', 0, variable_get('feed_default_items', 10))->fetchField();
+    $feed_count = db_query_range('SELECT COUNT(*) FROM {node} n WHERE n.promote = 1 AND n.status = 1', 0, config('system.rss-publishing')->get('feed_default_items'))->fetchField();
     return $feed_count > 10 ? 10 : $feed_count;
   }
 
@@ -800,7 +800,7 @@ class AggregatorCronTestCase extends AggregatorTestCase {
   public function testCron() {
     // Create feed and test basic updating on cron.
     global $base_url;
-    $key = variable_get('cron_key', 'drupal');
+    $key = config('system.cron')->get('cron_key');
     $this->createSampleNodes();
     $feed = $this->createFeed();
     $this->cronRun();
@@ -907,7 +907,9 @@ class AggregatorRenderingTestCase extends AggregatorTestCase {
   public function testFeedPage() {
     // Increase the number of items published in the rss.xml feed so we have
     // enough articles to test paging.
-    variable_set('feed_default_items', 30);
+    $config = config('system.rss-publishing');
+    $config->set('feed_default_items', 30);
+    $config->save();
 
     // Create a feed with 30 items.
     $this->createSampleNodes(30);
@@ -920,7 +922,8 @@ class AggregatorRenderingTestCase extends AggregatorTestCase {
     $this->assertTrue(!empty($elements), t('Individual source page contains a pager.'));
 
     // Reset the number of items in rss.xml to the default value.
-    variable_set('feed_default_items', 10);
+    $config->set('feed_default_items', 10);
+    $config->save();
   }
 }
 

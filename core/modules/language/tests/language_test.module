@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Mock module for locale layer tests.
+ * Mock module for language layer tests.
  */
 
 /**
@@ -11,27 +11,27 @@
  * For testing domain language negotiation, we fake it by setting
  * the HTTP_HOST here
  */
-function locale_test_boot() {
-  if (variable_get('locale_test_domain')) {
-    $_SERVER['HTTP_HOST'] = variable_get('locale_test_domain');
+function language_test_boot() {
+  if (variable_get('language_test_domain')) {
+    $_SERVER['HTTP_HOST'] = variable_get('language_test_domain');
   }
 }
 
 /**
  * Implements hook_init().
  */
-function locale_test_init() {
-  locale_test_store_language_negotiation();
-  if (isset($GLOBALS['language_interface']) && isset($GLOBALS['language_interface']->method_id)) {
-    drupal_set_message(t('Language negotiation method: @name', array('@name' => $GLOBALS['language_interface']->method_id)));
+function language_test_init() {
+  language_test_store_language_negotiation();
+  if (isset(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode) && isset(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->method_id)) {
+    drupal_set_message(t('Language negotiation method: @name', array('@name' => drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->method_id)));
   }
 }
 
 /**
  * Implements hook_language_types_info().
  */
-function locale_test_language_types_info() {
-  if (variable_get('locale_test_language_types', FALSE)) {
+function language_test_language_types_info() {
+  if (variable_get('language_test_language_types', FALSE)) {
     return array(
       'test_language_type' => array(
         'name' => t('Test'),
@@ -47,8 +47,8 @@ function locale_test_language_types_info() {
 /**
  * Implements hook_language_types_info_alter().
  */
-function locale_test_language_types_info_alter(array &$language_types) {
-  if (variable_get('locale_test_content_language_type', FALSE)) {
+function language_test_language_types_info_alter(array &$language_types) {
+  if (variable_get('language_test_content_language_type', FALSE)) {
     unset($language_types[LANGUAGE_TYPE_CONTENT]['fixed']);
   }
 }
@@ -56,13 +56,13 @@ function locale_test_language_types_info_alter(array &$language_types) {
 /**
  * Implements hook_language_negotiation_info().
  */
-function locale_test_language_negotiation_info() {
-  if (variable_get('locale_test_language_negotiation_info', FALSE)) {
+function language_test_language_negotiation_info() {
+  if (variable_get('language_test_language_negotiation_info', FALSE)) {
     $info = array(
       'callbacks' => array(
-        'negotiation' => 'locale_test_language_negotiation_method',
+        'negotiation' => 'language_test_language_negotiation_method',
       ),
-      'file' => drupal_get_path('module', 'locale_test') .'/locale_test.module',
+      'file' => drupal_get_path('module', 'language_test') .'/language_test.module',
       'weight' => -10,
       'description' => t('This is a test language negotiation method.'),
     );
@@ -83,8 +83,8 @@ function locale_test_language_negotiation_info() {
 /**
  * Implements hook_language_negotiation_info_alter().
  */
-function locale_test_language_negotiation_info_alter(array &$negotiation_info) {
-  if (variable_get('locale_test_language_negotiation_info_alter', FALSE)) {
+function language_test_language_negotiation_info_alter(array &$negotiation_info) {
+  if (variable_get('language_test_language_negotiation_info_alter', FALSE)) {
     unset($negotiation_info[LANGUAGE_NEGOTIATION_INTERFACE]);
   }
 }
@@ -92,17 +92,17 @@ function locale_test_language_negotiation_info_alter(array &$negotiation_info) {
 /**
  * Store the last negotiated languages.
  */
-function locale_test_store_language_negotiation() {
+function language_test_store_language_negotiation() {
   $last = array();
   foreach (language_types_get_all() as $type) {
     $last[$type] = $GLOBALS[$type]->langcode;
   }
-  variable_set('locale_test_language_negotiation_last', $last);
+  variable_set('language_test_language_negotiation_last', $last);
 }
 
 /**
  * Provides a test language negotiation method.
  */
-function locale_test_language_negotiation_method($languages) {
+function language_test_language_negotiation_method($languages) {
   return 'it';
 }

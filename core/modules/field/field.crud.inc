@@ -6,6 +6,7 @@
  */
 
 use Drupal\field\FieldException;
+use Drupal\entity\EntityFieldQuery;
 
 /**
  * @defgroup field_crud Field CRUD API

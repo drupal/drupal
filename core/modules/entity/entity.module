@@ -5,6 +5,8 @@
  * Entity API for handling entities like nodes or users.
  */
 
+use Drupal\entity\EntityMalformedException;
+
 /**
  * Implements hook_help().
  */
@@ -66,7 +68,7 @@ function entity_get_info($entity_type = NULL) {
       foreach ($entity_info as $name => $data) {
         $entity_info[$name] += array(
           'fieldable' => FALSE,
-          'controller class' => 'DrupalDefaultEntityController',
+          'controller class' => 'Drupal\entity\EntityController',
           'static cache' => TRUE,
           'field cache' => TRUE,
           'load hook' => $name . '_load',
@@ -90,7 +92,7 @@ function entity_get_info($entity_type = NULL) {
           $entity_info[$name]['bundles'] = array($name => array('label' => $entity_info[$name]['label']));
         }
         // Prepare entity schema fields SQL info for
-        // DrupalEntityControllerInterface::buildQuery().
+        // Drupal\entity\EntityControllerInterface::buildQuery().
         if (isset($entity_info[$name]['base table'])) {
           $entity_info[$name]['schema_fields_sql']['base table'] = drupal_schema_fields_sql($entity_info[$name]['base table']);
           if (isset($entity_info[$name]['revision table'])) {
@@ -204,9 +206,9 @@ function entity_create_stub_entity($entity_type, $ids) {
  *
  * @see hook_entity_info()
  * @see entity_load_multiple()
- * @see DrupalEntityControllerInterface
- * @see DrupalDefaultEntityController
- * @see EntityFieldQuery
+ * @see Drupal\entity\EntityControllerInterface
+ * @see Drupal\entity\EntityController
+ * @see Drupal\entity\EntityFieldQuery
  */
 function entity_load($entity_type, $id, $reset = FALSE) {
   $entities = entity_load_multiple($entity_type, array($id), array(), $reset);
@@ -221,13 +223,13 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  * database access if loaded again during the same page request.
  *
  * The actual loading is done through a class that has to implement the
- * DrupalEntityControllerInterface interface. By default,
- * DrupalDefaultEntityController is used. Entity types can specify that a
- * different class should be used by setting the 'controller class' key in
- * hook_entity_info(). These classes can either implement the
- * DrupalEntityControllerInterface interface, or, most commonly, extend the
- * DrupalDefaultEntityController class. See node_entity_info() and the
- * NodeController in node.module as an example.
+ * Drupal\entity\EntityControllerInterface interface. By default,
+ * Drupal\entity\EntityController is used. Entity types can specify
+ * that a different class should be used by setting the 'controller class' key
+ * in hook_entity_info(). These classes can either implement the
+ * Drupal\entity\EntityControllerInterface interface, or, most
+ * commonly, extend the Drupal\entity\EntityController class. See
+ * node_entity_info() and the NodeController in node.module as an example.
  *
  * @param string $entity_type
  *   The entity type to load, e.g. node or user.
@@ -247,9 +249,9 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  * @todo Remove $conditions in Drupal 8.
  *
  * @see hook_entity_info()
- * @see DrupalEntityControllerInterface
- * @see DrupalDefaultEntityController
- * @see EntityFieldQuery
+ * @see Drupal\entity\EntityControllerInterface
+ * @see Drupal\entity\EntityController
+ * @see Drupal\entity\EntityFieldQuery
  */
 function entity_load_multiple($entity_type, $ids = FALSE, $conditions = array(), $reset = FALSE) {
   if ($reset) {
@@ -301,7 +303,7 @@ function entity_delete_multiple($entity_type, $ids) {
  *   An array of values to set, keyed by property name. If the entity type has
  *   bundles the bundle key has to be specified.
  *
- * @return EntityInterface
+ * @return Drupal\entity\EntityInterface
  *   A new entity object.
  */
 function entity_create($entity_type, array $values) {
@@ -311,7 +313,7 @@ function entity_create($entity_type, array $values) {
 /**
  * Gets the entity controller class for an entity type.
  *
- * @return EntityStorageControllerInterface
+ * @return Drupal\entity\EntityStorageControllerInterface
  */
 function entity_get_controller($entity_type) {
   $controllers = &drupal_static(__FUNCTION__, array());
@@ -495,8 +497,3 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
     field_attach_submit($entity_type, $entity, $form, $form_state);
   }
 }
-
-/**
- * Defines an exception thrown when a malformed entity is passed.
- */
-class EntityMalformedException extends Exception { }

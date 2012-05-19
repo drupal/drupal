@@ -16,7 +16,7 @@ use Drupal\Core\Database\Schema as DatabaseSchema;
 use Exception;
 
 /**
- * @ingroup schemaapi
+ * @addtogroup schemaapi
  * @{
  */
 
@@ -541,5 +541,5 @@ class Schema extends DatabaseSchema {
 }
 
 /**
- * @} End of "ingroup schemaapi".
+ * @} End of "addtogroup schemaapi".
  */

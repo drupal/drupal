@@ -6,6 +6,7 @@
  */
 
 use Drupal\field\FieldUpdateForbiddenException;
+use Drupal\entity\EntityFieldQuery;
 
 /**
  * Implements hook_help().

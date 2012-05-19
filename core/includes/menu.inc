@@ -121,7 +121,7 @@ const MENU_IS_LOCAL_TASK = 0x0080;
 const MENU_IS_LOCAL_ACTION = 0x0100;
 
 /**
- * @} End of "Menu flags".
+ * @} End of "defgroup menu_flags".
  */
 
 /**
@@ -186,7 +186,7 @@ define('MENU_DEFAULT_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_LINKS_TO_PARENT | ME
 define('MENU_LOCAL_ACTION', MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
- * @} End of "Menu item types".
+ * @} End of "defgroup menu_item_types".
  */
 
 /**
@@ -214,7 +214,7 @@ const MENU_CONTEXT_PAGE = 0x0001;
 const MENU_CONTEXT_INLINE = 0x0002;
 
 /**
- * @} End of "Menu context types".
+ * @} End of "defgroup menu_context_types".
  */
 
 /**
@@ -244,7 +244,7 @@ const MENU_SITE_OFFLINE = 4;
 const MENU_SITE_ONLINE = 5;
 
 /**
- * @} End of "Menu status codes".
+ * @} End of "defgroup menu_status_codes".
  */
 
 /**
@@ -266,7 +266,7 @@ const MENU_MAX_DEPTH = 9;
 
 
 /**
- * @} End of "Menu tree parameters".
+ * @} End of "defgroup menu_tree_parameters".
  */
 
 /**

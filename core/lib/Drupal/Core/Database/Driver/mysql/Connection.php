@@ -17,7 +17,7 @@ use Drupal\Core\Database\Connection as DatabaseConnection;
 use PDO;
 
 /**
- * @ingroup database
+ * @addtogroup database
  * @{
  */
 
@@ -209,5 +209,5 @@ class Connection extends DatabaseConnection {
 
 
 /**
- * @} End of "ingroup database".
+ * @} End of "addtogroup database".
  */

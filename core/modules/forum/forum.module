@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Node;
+use Drupal\taxonomy\Term;
 
 /**
  * Implements hook_help().
@@ -470,7 +471,7 @@ function forum_permission() {
 /**
  * Implements hook_taxonomy_term_delete().
  */
-function forum_taxonomy_term_delete(TaxonomyTerm $term) {
+function forum_taxonomy_term_delete(Term $term) {
   // For containers, remove the tid from the forum_containers variable.
   $containers = variable_get('forum_containers', array());
   $key = array_search($term->tid, $containers);
@@ -825,11 +826,10 @@ function forum_forum_load($tid = NULL) {
 
     // Query "Last Post" information for this forum.
     $query = db_select('node', 'n');
-    $query->join('users', 'u1', 'n.uid = u1.uid');
     $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $forum->tid));
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
-    $query->join('users', 'u2', 'ncs.last_comment_uid = u2.uid');
-    $query->addExpression('CASE ncs.last_comment_uid WHEN 0 THEN ncs.last_comment_name ELSE u2.name END', 'last_comment_name');
+    $query->join('users', 'u', 'ncs.last_comment_uid = u.uid');
+    $query->addExpression('CASE ncs.last_comment_uid WHEN 0 THEN ncs.last_comment_name ELSE u.name END', 'last_comment_name');
 
     $topic = $query
       ->fields('ncs', array('last_comment_timestamp', 'last_comment_uid'))
@@ -986,7 +986,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
       $last_reply->uid = $topic->last_comment_uid;
       $topic->last_reply = $last_reply;
     }
-    $topics[] = $topic;
+    $topics[$topic->nid] = $topic;
   }
 
   return $topics;

@@ -2,62 +2,22 @@
 
 /**
  * @file
- * Entity API controller classes and interface.
+ * Definition of Drupal\entity\EntityController.
  */
 
-/**
- * Defines a common interface for entity controller classes.
- *
- * All entity controller classes specified via the 'controller class' key
- * returned by hook_entity_info() or hook_entity_info_alter() have to implement
- * this interface.
- *
- * Most simple, SQL-based entity controllers will do better by extending
- * DrupalDefaultEntityController instead of implementing this interface
- * directly.
- */
-interface DrupalEntityControllerInterface {
+namespace Drupal\entity;
 
-  /**
-   * Constructs a new DrupalEntityControllerInterface object.
-   *
-   * @param $entityType
-   *   The entity type for which the instance is created.
-   */
-  public function __construct($entityType);
-
-  /**
-   * Resets the internal, static entity cache.
-   *
-   * @param $ids
-   *   (optional) If specified, the cache is reset for the entities with the
-   *   given ids only.
-   */
-  public function resetCache(array $ids = NULL);
-
-  /**
-   * Loads one or more entities.
-   *
-   * @param $ids
-   *   An array of entity IDs, or FALSE to load all entities.
-   * @param $conditions
-   *   An array of conditions in the form 'field' => $value.
-   *
-   * @return
-   *   An array of entity objects indexed by their ids.
-   */
-  public function load($ids = array(), $conditions = array());
-}
+use PDO;
 
 /**
  * Defines a base entity controller class.
  *
- * Default implementation of DrupalEntityControllerInterface.
+ * Default implementation of Drupal\entity\EntityControllerInterface.
  *
  * This class can be used as-is by most simple entity types. Entity types
  * requiring special handling can extend the class.
  */
-class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
+class EntityController implements EntityControllerInterface {
 
   /**
    * Static cache of entities.
@@ -85,7 +45,7 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
   /**
    * Additional arguments to pass to hook_TYPE_load().
    *
-   * Set before calling DrupalDefaultEntityController::attachLoad().
+   * Set before calling Drupal\entity\EntityController::attachLoad().
    *
    * @var array
    */
@@ -124,7 +84,7 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
   protected $cache;
 
   /**
-   * Implements DrupalEntityControllerInterface::__construct().
+   * Implements Drupal\entity\EntityController::__construct().
    *
    * Sets basic variables.
    */
@@ -149,7 +109,7 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
   }
 
   /**
-   * Implements DrupalEntityControllerInterface::resetCache().
+   * Implements Drupal\entity\EntityControllerInterface::resetCache().
    */
   public function resetCache(array $ids = NULL) {
     if (isset($ids)) {
@@ -163,7 +123,7 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
   }
 
   /**
-   * Implements DrupalEntityControllerInterface::load().
+   * Implements Drupal\entity\EntityControllerInterface::load().
    */
   public function load($ids = array(), $conditions = array()) {
     $entities = array();
@@ -204,7 +164,7 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
       if (!empty($this->entityInfo['entity class'])) {
         // We provide the necessary arguments for PDO to create objects of the
         // specified entity class.
-        // @see EntityInterface::__construct()
+        // @see Drupal\entity\EntityInterface::__construct()
         $query_result->setFetchMode(PDO::FETCH_CLASS, $this->entityInfo['entity class'], array(array(), $this->entityType));
       }
       $queried_entities = $query_result->fetchAllAssoc($this->idKey);
@@ -248,8 +208,8 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
    * being loaded needs to be augmented with additional data from another
    * table, such as loading node type into comments or vocabulary machine name
    * into terms, however it can also support $conditions on different tables.
-   * See CommentController::buildQuery() or TaxonomyTermController::buildQuery()
-   * for examples.
+   * See Drupal\comment\CommentStorageController::buildQuery() or
+   * Drupal\taxonomy\TermStorageController::buildQuery() for examples.
    *
    * @param $ids
    *   An array of entity IDs, or FALSE to load all entities.
@@ -395,201 +355,5 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
    */
   protected function cacheSet($entities) {
     $this->entityCache += $entities;
-  }
-}
-
-/**
- * Defines a common interface for entity storage controllers.
- */
-interface EntityStorageControllerInterface extends DrupalEntityControllerInterface {
-
-  /**
-   * Constructs a new entity object, without permanently saving it.
-   *
-   * @param $values
-   *   An array of values to set, keyed by property name. If the entity type has
-   *   bundles the bundle key has to be specified.
-   *
-   * @return EntityInterface
-   *   A new entity object.
-   */
-  public function create(array $values);
-
-  /**
-   * Deletes permanently saved entities.
-   *
-   * @param $ids
-   *   An array of entity IDs.
-   *
-   * @throws EntityStorageException
-   *   In case of failures, an exception is thrown.
-   */
-  public function delete($ids);
-
-  /**
-   * Saves the entity permanently.
-   *
-   * @param EntityInterface $entity
-   *   The entity to save.
-   *
-   * @return
-   *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation
-   *   performed.
-   *
-   * @throws EntityStorageException
-   *   In case of failures, an exception is thrown.
-   */
-  public function save(EntityInterface $entity);
-
-}
-
-/**
- * Defines an exception thrown when storage operations fail.
- */
-class EntityStorageException extends Exception { }
-
-/**
- * Implements the entity storage controller interface for the database.
- */
-class EntityDatabaseStorageController extends DrupalDefaultEntityController implements EntityStorageControllerInterface {
-
-  /**
-   * Implements EntityStorageControllerInterface::create().
-   */
-  public function create(array $values) {
-    $class = isset($this->entityInfo['entity class']) ? $this->entityInfo['entity class'] : 'Entity';
-    return new $class($values, $this->entityType);
-  }
-
-  /**
-   * Implements EntityStorageControllerInterface::delete().
-   */
-  public function delete($ids) {
-    $entities = $ids ? $this->load($ids) : FALSE;
-    if (!$entities) {
-      // If no IDs or invalid IDs were passed, do nothing.
-      return;
-    }
-    $transaction = db_transaction();
-
-    try {
-      $this->preDelete($entities);
-      foreach ($entities as $id => $entity) {
-        $this->invokeHook('predelete', $entity);
-      }
-      $ids = array_keys($entities);
-
-      db_delete($this->entityInfo['base table'])
-        ->condition($this->idKey, $ids, 'IN')
-        ->execute();
-      // Reset the cache as soon as the changes have been applied.
-      $this->resetCache($ids);
-
-      $this->postDelete($entities);
-      foreach ($entities as $id => $entity) {
-        $this->invokeHook('delete', $entity);
-      }
-      // Ignore slave server temporarily.
-      db_ignore_slave();
-    }
-    catch (Exception $e) {
-      $transaction->rollback();
-      watchdog_exception($this->entityType, $e);
-      throw new EntityStorageException($e->getMessage, $e->getCode, $e);
-    }
-  }
-
-  /**
-   * Implements EntityStorageControllerInterface::save().
-   */
-  public function save(EntityInterface $entity) {
-    $transaction = db_transaction();
-    try {
-      // Load the stored entity, if any.
-      if (!$entity->isNew() && !isset($entity->original)) {
-        $entity->original = entity_load_unchanged($this->entityType, $entity->id());
-      }
-
-      $this->preSave($entity);
-      $this->invokeHook('presave', $entity);
-
-      if (!$entity->isNew()) {
-        $return = drupal_write_record($this->entityInfo['base table'], $entity, $this->idKey);
-        $this->resetCache(array($entity->{$this->idKey}));
-        $this->postSave($entity, TRUE);
-        $this->invokeHook('update', $entity);
-      }
-      else {
-        $return = drupal_write_record($this->entityInfo['base table'], $entity);
-        // Reset general caches, but keep caches specific to certain entities.
-        $this->resetCache(array());
-
-        $entity->enforceIsNew(FALSE);
-        $this->postSave($entity, FALSE);
-        $this->invokeHook('insert', $entity);
-      }
-
-      // Ignore slave server temporarily.
-      db_ignore_slave();
-      unset($entity->original);
-
-      return $return;
-    }
-    catch (Exception $e) {
-      $transaction->rollback();
-      watchdog_exception($this->entityType, $e);
-      throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
-    }
-  }
-
-  /**
-   * Acts on an entity before the presave hook is invoked.
-   *
-   * Used before the entity is saved and before invoking the presave hook.
-   */
-  protected function preSave(EntityInterface $entity) { }
-
-  /**
-   * Acts on a saved entity before the insert or update hook is invoked.
-   *
-   * Used after the entity is saved, but before invoking the insert or update
-   * hook.
-   *
-   * @param $update
-   *   (bool) TRUE if the entity has been updated, or FALSE if it has been
-   *   inserted.
-   */
-  protected function postSave(EntityInterface $entity, $update) { }
-
-  /**
-   * Acts on entities before they are deleted.
-   *
-   * Used before the entities are deleted and before invoking the delete hook.
-   */
-  protected function preDelete($entities) { }
-
-  /**
-   * Acts on deleted entities before the delete hook is invoked.
-   *
-   * Used after the entities are deleted but before invoking the delete hook.
-   */
-  protected function postDelete($entities) { }
-
-  /**
-   * Invokes a hook on behalf of the entity.
-   *
-   * @param $hook
-   *   One of 'presave', 'insert', 'update', 'predelete', or 'delete'.
-   * @param $entity
-   *   The entity object.
-   */
-  protected function invokeHook($hook, EntityInterface $entity) {
-    if (!empty($this->entityInfo['fieldable']) && function_exists($function = 'field_attach_' . $hook)) {
-      $function($this->entityType, $entity);
-    }
-    // Invoke the hook.
-    module_invoke_all($this->entityType . '_' . $hook, $entity);
-    // Invoke the respective entity-level hook.
-    module_invoke_all('entity_' . $hook, $entity, $this->entityType);
   }
 }

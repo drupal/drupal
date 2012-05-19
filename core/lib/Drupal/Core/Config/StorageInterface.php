@@ -75,6 +75,16 @@ interface StorageInterface {
   function writeToFile($data);
 
   /**
+   * Encodes configuration data into the storage-specific format.
+   */
+  public static function encode($data);
+
+  /**
+   * Decodes configuration data from the storage-specific format.
+   */
+  public static function decode($raw);
+
+  /**
    * Gets names starting with this prefix.
    *
    * @param $prefix

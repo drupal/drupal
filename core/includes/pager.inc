@@ -643,7 +643,7 @@ function theme_pager_link($variables) {
 }
 
 /**
- * @} End of "Pager pieces".
+ * @} End of "defgroup pagerpieces".
  */
 
 /**

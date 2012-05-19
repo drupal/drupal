@@ -950,7 +950,7 @@ function comment_prepare_thread(&$comments) {
  */
 function comment_view(Comment $comment, Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->langcode;
+    $langcode = drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Populate $comment->content with a render() array.
@@ -1017,7 +1017,7 @@ function comment_view(Comment $comment, Node $node, $view_mode = 'full', $langco
  */
 function comment_build_content(Comment $comment, Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->langcode;
+    $langcode = drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Remove previously built content, if exists.
@@ -1507,8 +1507,8 @@ function comment_delete_multiple($cids) {
  *   (deprecated) An associative array of conditions on the {comments}
  *   table, where the keys are the database fields and the values are the
  *   values those fields must have. Instead, it is preferable to use
- *   EntityFieldQuery to retrieve a list of entity IDs loadable by
- *   this function.
+ *   Drupal\entity\EntityFieldQuery to retrieve a list of entity IDs
+ *   loadable by this function.
  * @param bool $reset
  *   Whether to reset the internal static entity cache. Note that the static
  *   cache is disabled in comment_entity_info() by default.
@@ -1519,7 +1519,7 @@ function comment_delete_multiple($cids) {
  * @todo Remove $conditions in Drupal 8.
  *
  * @see entity_load()
- * @see EntityFieldQuery
+ * @see Drupal\entity\EntityFieldQuery
  */
 function comment_load_multiple($cids = array(), array $conditions = array(), $reset = FALSE) {
   return entity_load_multiple('comment', $cids, $conditions, $reset);

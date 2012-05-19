@@ -2838,7 +2838,7 @@ function ip_address() {
 }
 
 /**
- * @ingroup registry
+ * @addtogroup registry
  * @{
  */
 
@@ -3073,7 +3073,7 @@ function registry_update() {
 }
 
 /**
- * @} End of "ingroup registry".
+ * @} End of "addtogroup registry".
  */
 
 /**

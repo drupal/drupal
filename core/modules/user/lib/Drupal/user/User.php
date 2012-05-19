@@ -7,10 +7,7 @@
 
 namespace Drupal\user;
 
-/**
- * @todo Switch to PSR-0 for the Entity classes: http://drupal.org/node/1495024
- */
-use Entity;
+use Drupal\entity\Entity;
 
 /**
  * Defines the user entity class.
@@ -139,7 +136,7 @@ class User extends Entity {
   public $roles = array();
 
   /**
-   * Implements EntityInterface::id().
+   * Implements Drupal\entity\EntityInterface::id().
    */
   public function id() {
     return $this->uid;

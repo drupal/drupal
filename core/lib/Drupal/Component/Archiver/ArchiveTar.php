@@ -42,6 +42,8 @@
 
 namespace Drupal\Component\Archiver;
 
+use Exception;
+
 //require_once 'PEAR.php';
 //
 //

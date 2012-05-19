@@ -1127,5 +1127,5 @@ function _locale_export_wrap($str, $len) {
 }
 
 /**
- * @} End of "locale-api-import-export"
+ * @} End of "defgroup locale-api-import-export".
  */

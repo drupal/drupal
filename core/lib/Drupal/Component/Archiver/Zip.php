@@ -32,8 +32,7 @@ class Zip implements ArchiverInterface {
   public function __construct($file_path) {
     $this->zip = new ZipArchive();
     if ($this->zip->open($file_path) !== TRUE) {
-      // @todo: This should be an interface-specific exception some day.
-      throw new Exception(t('Cannot open %file_path', array('%file_path' => $file_path)));
+      throw new ArchiverException(t('Cannot open %file_path', array('%file_path' => $file_path)));
     }
   }
 

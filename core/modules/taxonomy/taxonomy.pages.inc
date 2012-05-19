@@ -5,13 +5,16 @@
  * Page callbacks for the taxonomy module.
  */
 
+use Drupal\taxonomy\Term;
+use Drupal\taxonomy\Vocabulary;
+
 /**
  * Menu callback; displays all nodes associated with a term.
  *
- * @param TaxonomyTerm $term
+ * @param Drupal\taxonomy\Term $term
  *   The taxonomy term entity.
  */
-function taxonomy_term_page(TaxonomyTerm $term) {
+function taxonomy_term_page(Term $term) {
   // Assign the term name as the page title.
   drupal_set_title($term->name);
 
@@ -60,16 +63,16 @@ function taxonomy_term_page(TaxonomyTerm $term) {
 /**
  * Generate the content feed for a taxonomy term.
  *
- * @param TaxonomyTerm $term
+ * @param Drupal\taxonomy\Term $term
  *   The taxonomy term entity.
  */
-function taxonomy_term_feed(TaxonomyTerm $term) {
+function taxonomy_term_feed(Term $term) {
   $channel['link'] = url('taxonomy/term/' . $term->tid, array('absolute' => TRUE));
   $channel['title'] = variable_get('site_name', 'Drupal') . ' - ' . $term->name;
   // Only display the description if we have a single term, to avoid clutter and confusion.
   // HTML will be removed from feed description.
   $channel['description'] = check_markup($term->description, $term->format, '', TRUE);
-  $nids = taxonomy_select_nodes($term->tid, FALSE, variable_get('feed_default_items', 10));
+  $nids = taxonomy_select_nodes($term->tid, FALSE, config('system.rss-publishing')->get('feed_default_items'));
 
   node_feed($nids, $channel);
 }

@@ -1693,5 +1693,5 @@ function _filter_html_escape_tips($filter, $format, $long = FALSE) {
 }
 
 /**
- * @} End of "Standard filters".
+ * @} End of "defgroup standard_filters".
  */

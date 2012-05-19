@@ -5,6 +5,8 @@
  * Defines an entity type.
  */
 
+use Drupal\entity\EntityController;
+
 /**
  * Implements hook_entity_info().
  */
@@ -478,10 +480,11 @@ function field_test_entity_nested_form_submit($form, &$form_state) {
 /**
  * Controller class for the test_entity_bundle entity type.
  *
- * This extends the DrupalDefaultEntityController class, adding required
- * special handling for bundles (since they are not stored in the database).
+ * This extends the Drupal\entity\EntityController class, adding
+ * required special handling for bundles (since they are not stored in the
+ * database).
  */
-class TestEntityBundleController extends DrupalDefaultEntityController {
+class TestEntityBundleController extends EntityController {
 
   protected function attachLoad(&$entities, $revision_id = FALSE) {
     // Add bundle information.

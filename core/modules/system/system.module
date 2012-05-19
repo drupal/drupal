@@ -13,11 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 const DRUPAL_MAXIMUM_TEMP_FILE_AGE = 21600;
 
 /**
- * Default interval for automatic cron executions in seconds.
- */
-const DRUPAL_CRON_DEFAULT_THRESHOLD = 10800;
-
-/**
  * New users will be set to the default time zone at registration.
  */
 const DRUPAL_USER_TIMEZONE_DEFAULT = 0;
@@ -1139,7 +1134,7 @@ function system_cron_page() {
  * @see system_cron_page().
  */
 function system_cron_access($key) {
-  if ($key != variable_get('cron_key', 'drupal')) {
+  if ($key != config('system.cron')->get('cron_key')) {
     watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
     return FALSE;
   }
@@ -3566,7 +3561,7 @@ function system_run_automated_cron() {
   // If the site is not fully installed, suppress the automated cron run.
   // Otherwise it could be triggered prematurely by Ajax requests during
   // installation.
-  if (($threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD)) > 0 && variable_get('install_task') == 'done') {
+  if (($threshold = config('system.cron')->get('cron_safe_threshold')) > 0 && variable_get('install_task') == 'done') {
     $cron_last = variable_get('cron_last', NULL);
     if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
       drupal_cron_run();

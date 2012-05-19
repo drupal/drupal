@@ -19,6 +19,8 @@ interface ArchiverInterface {
    *   The full system path of the archive to manipulate. Only local files
    *   are supported. If the file does not yet exist, it will be created if
    *   appropriate.
+   *
+   * @throws Drupal\Component\Archiver\ArchiverException
    */
   public function __construct($file_path);
 

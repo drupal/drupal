@@ -1572,7 +1572,7 @@ function system_site_information_settings_validate($form, &$form_state) {
  * @see system_settings_form()
  * @ingroup forms
  */
-function system_cron_settings() {
+function system_cron_settings($form, &$form_state) {
   $form['description'] = array(
     '#markup' => '<p>' . t('Cron takes care of running periodic tasks like checking for updates and indexing content for search.') . '</p>',
   );
@@ -1591,11 +1591,30 @@ function system_cron_settings() {
   $form['cron']['cron_safe_threshold'] = array(
     '#type' => 'select',
     '#title' => t('Run cron every'),
-    '#default_value' => variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD),
+    '#default_value' => config('system.cron')->get('cron_safe_threshold'),
     '#options' => array(0 => t('Never')) + drupal_map_assoc(array(3600, 10800, 21600, 43200, 86400, 604800), 'format_interval'),
   );
+  // @todo This needs to be reviewed when #1324618 gets in.
+  $form_state['config']['cron_safe_threshold'] = array(
+    'name' => 'system.cron',
+    'path' => 'cron_safe_threshold',
+  );
 
-  return system_settings_form($form);
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
+  return $form;
+}
+
+/**
+ * Form builder submit handler; Handle submission for cron settings.
+ *
+ * @ingroup forms
+ * @see system_settings_form()
+ */
+function system_cron_settings_submit($form, &$form_state) {
+  config('system.cron')
+    ->set('cron_safe_threshold', $form_state['values']['cron_safe_threshold'])
+    ->save();
+  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**
@@ -1869,29 +1888,45 @@ function system_image_toolkit_settings() {
  * @ingroup forms
  * @see system_settings_form()
  */
-function system_rss_feeds_settings() {
+function system_rss_feeds_settings($form, &$form_state) {
   $form['feed_description'] = array(
     '#type' => 'textarea',
     '#title' => t('Feed description'),
-    '#default_value' => variable_get('feed_description', ''),
+    '#default_value' => config('system.rss-publishing')->get('feed_description'),
     '#description' => t('Description of your site, included in each feed.')
   );
   $form['feed_default_items'] = array(
     '#type' => 'select',
     '#title' => t('Number of items in each feed'),
-    '#default_value' => variable_get('feed_default_items', 10),
+    '#default_value' => config('system.rss-publishing')->get('feed_default_items'),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('Default number of items to include in each feed.')
   );
   $form['feed_item_length'] = array(
     '#type' => 'select',
     '#title' => t('Feed content'),
-    '#default_value' => variable_get('feed_item_length', 'fulltext'),
+    '#default_value' => config('system.rss-publishing')->get('feed_item_length'),
     '#options' => array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')),
     '#description' => t('Global setting for the default display of content items in each feed.')
   );
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
 
-  return system_settings_form($form);
+  return $form;
+}
+
+/**
+ * Form builder submit handler; Handle submission for RSS feeds settings.
+ *
+ * @ingroup forms
+ * @see system_settings_form()
+ */
+function system_rss_feeds_settings_submit($form, &$form_state) {
+  // Set the RSS publishing parameters.
+  $config = config('system.rss-publishing');
+  $config->set('feed_description', $form_state['values']['feed_description']);
+  $config->set('feed_default_items', $form_state['values']['feed_default_items']);
+  $config->set('feed_item_length', $form_state['values']['feed_item_length']);
+  $config->save();
 }
 
 /**

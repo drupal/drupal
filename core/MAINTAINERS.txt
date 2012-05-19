@@ -220,7 +220,7 @@ OpenID module
 - Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
 
 Overlay module
-- Katherine Senzee 'ksenzee' <http://drupal.org/user/139855>
+- ?
 
 Path module
 - Dave Reid 'davereid' <http://drupal.org/user/53892>
