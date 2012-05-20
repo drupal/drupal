@@ -51,7 +51,7 @@ class views_handler_area_text extends views_handler_area {
     }
 
     if (!empty($options)) {
-      $output = '<p>' . t('The following tokens are available. If you would like to have the characters %5B and %5D please use the html entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.)' . '</p>');
+      $output = '<p>' . t('The following tokens are available. If you would like to have the characters \'[\' and \']\' please use the html entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.' . '</p>');
       foreach (array_keys($options) as $type) {
         if (!empty($options[$type])) {
           $items = array();
