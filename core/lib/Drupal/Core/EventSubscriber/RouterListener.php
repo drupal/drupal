@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\EventListener\RouterListener as SymfonyRouterLi
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\MethodNotFoundException;
@@ -23,7 +24,22 @@ use Symfony\Component\Routing\Exception\MethodNotFoundException;
  */
 class RouterListener extends SymfonyRouterListener {
 
+  /**
+   * The Matcher object for this listener.
+   *
+   * This property is private in the base class, so we have to hack around it.
+   *
+   * @var Symfony\Component\Router\Matcher\UrlMatcherInterface
+   */
   protected $urlMatcher;
+
+  /**
+   * The Logging object for this listener.
+   *
+   * This property is private in the base class, so we have to hack around it.
+   *
+   * @var Symfony\Component\HttpKernel\Log\LoggerInterface
+   */
   protected $logger;
 
   public function __construct(UrlMatcherInterface $urlMatcher, LoggerInterface $logger = null) {

@@ -35,21 +35,6 @@ use Exception;
 class DrupalKernel extends HttpKernel {
 
     /**
-     * The event dispatcher used by this kernel.
-     *
-     * @var Symfony\Component\EventDispatcher\EventDispatcherInterface
-     */
-    protected $dispatcher;
-
-    /**
-     * The controller resolver that will extract the controller from a Request.
-     *
-     * @var Symfony\Component\HttpKernel\Controller\ControllerResolverInterface
-     */
-    protected $resolver;
-
-
-    /**
      * Constructor.
      *
      * @param Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
@@ -59,8 +44,6 @@ class DrupalKernel extends HttpKernel {
      */
    public function __construct(EventDispatcherInterface $dispatcher, ControllerResolverInterface $resolver) {
       parent::__construct($dispatcher, $resolver);
-      $this->dispatcher = $dispatcher;
-      $this->resolver = $resolver;
 
       $this->matcher = new UrlMatcher();
       $this->dispatcher->addSubscriber(new RouterListener($this->matcher));
