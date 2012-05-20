@@ -317,6 +317,21 @@ function system_requirements($phase) {
     $directories[] = variable_get('file_temporary_path', file_directory_temp());
   }
 
+  // Check the config directory if it is defined in settings.php. If it isn't
+  // defined, the installer will create a valid config directory later, but
+  // during runtime we must always display an error.
+  if (!empty($GLOBALS['config_directory_name'])) {
+    $directories[] = config_get_config_directory();
+  }
+  elseif ($phase != 'install') {
+    $requirements['config directory'] = array(
+      'title' => $t('Configuration directory'),
+      'value' => $t('Not present'),
+      'description' => $t('Your %file file must define the $config_directory_name variable as the name of a directory in which configuration files can be written.', array('%file' => conf_path() . '/settings.php')),
+      'severity' => REQUIREMENT_ERROR,
+    );
+  }
+
   $requirements['file system'] = array(
     'title' => $t('File system'),
   );
@@ -328,7 +343,7 @@ function system_requirements($phase) {
       continue;
     }
     if ($phase == 'install') {
-      file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+      file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     }
     $is_writable = is_writable($directory);
     $is_directory = is_dir($directory);

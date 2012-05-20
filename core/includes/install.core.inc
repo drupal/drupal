@@ -133,8 +133,14 @@ function install_state_defaults() {
     // The last task that was completed during the previous installation
     // request.
     'completed_task' => NULL,
+    // This becomes TRUE only when a valid config directory is created or
+    // detected.
+    'config_verified' => FALSE,
     // This becomes TRUE only when Drupal's system module is installed.
     'database_tables_exist' => FALSE,
+    // This becomes TRUE only when a valid database connection can be
+    // established.
+    'database_verified' => FALSE,
     // An array of forms to be programmatically submitted during the
     // installation. The keys of each element indicate the name of the
     // installation task that the form submission is for, and the values are
@@ -173,8 +179,9 @@ function install_state_defaults() {
     // $_SERVER array via drupal_override_server_variables(). Used by
     // non-interactive installations only.
     'server' => array(),
-    // This becomes TRUE only when a valid database connection can be
-    // established.
+    // This becomes TRUE only when a valid settings.php file is written
+    // (containing both valid database connection information and a valid
+    // config directory).
     'settings_verified' => FALSE,
     // Installation tasks can set this to TRUE to force the page request to
     // end (even if there is no themable output), in the case of an interactive
@@ -297,9 +304,11 @@ function install_begin_request(&$install_state) {
   drupal_maintenance_theme();
 
   // Check existing settings.php.
-  $install_state['settings_verified'] = install_verify_settings();
+  $install_state['database_verified'] = install_verify_database_settings();
+  $install_state['config_verified'] = install_ensure_config_directory();
+  $install_state['settings_verified'] = $install_state['config_verified'] && $install_state['database_verified'];
 
-  if ($install_state['settings_verified']) {
+  if ($install_state['database_verified']) {
     // Initialize the database system. Note that the connection
     // won't be initialized until it is actually requested.
     require_once DRUPAL_ROOT . '/core/includes/database.inc';
@@ -563,9 +572,12 @@ function install_tasks($install_state) {
     'install_settings_form' => array(
       'display_name' => st('Set up database'),
       'type' => 'form',
+      // Even though the form only allows the user to enter database settings,
+      // we still need to display it if settings.php is invalid in any way,
+      // since the form submit handler is where settings.php is rewritten.
       'run' => $install_state['settings_verified'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
     ),
-    'install_system_module' => array(
+    'install_base_system' => array(
     ),
     'install_bootstrap_full' => array(
       'run' => INSTALL_TASK_RUN_IF_REACHED,
@@ -778,14 +790,23 @@ function install_verify_requirements(&$install_state) {
 }
 
 /**
- * Installation task; install the Drupal system module.
+ * Installation task; install the base functionality Drupal needs to bootstrap.
  *
  * @param $install_state
  *   An array of information about the current installation state.
  */
-function install_system_module(&$install_state) {
+function install_base_system(&$install_state) {
   // Install system.module.
   drupal_install_system();
+
+  // Call file_ensure_htaccess() to ensure that all of Drupal's standard
+  // directories (e.g., the public files directory and config directory) have
+  // appropriate .htaccess files. These directories will have already been
+  // created by this point in the installer, since Drupal creates them during
+  // the install_verify_requirements() task. Note that we cannot call
+  // file_ensure_access() any earlier than this, since it relies on
+  // system.module in order to work.
+  file_ensure_htaccess();
 
   // Enable the user module so that sessions can be recorded during the
   // upcoming bootstrap step.
@@ -829,12 +850,10 @@ function install_verify_completed_task() {
 }
 
 /**
- * Verifies the existing settings in settings.php.
+ * Verifies that settings.php specifies a valid database connection.
  */
-function install_verify_settings() {
+function install_verify_database_settings() {
   global $databases;
-
-  // Verify existing settings (if any).
   if (!empty($databases) && install_verify_pdo()) {
     $database = $databases['default']['default'];
     drupal_static_reset('conf_path');
@@ -857,6 +876,23 @@ function install_verify_pdo() {
   // PDO::ATTR_DEFAULT_FETCH_MODE constant, which is not available in the
   // PECL extension.
   return extension_loaded('pdo') && defined('PDO::ATTR_DEFAULT_FETCH_MODE');
+}
+
+/**
+ * Ensure that the config directory exists and is writable, or can be made so.
+ */
+function install_ensure_config_directory() {
+  // The config directory must be defined in settings.php.
+  global $config_directory_name;
+  if (empty($config_directory_name)) {
+    return FALSE;
+  }
+  // The logic here is similar to that used by system_requirements() for other
+  // directories that the installer creates.
+  else {
+    $config_directory = config_get_config_directory();
+    return file_prepare_directory($config_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  }
 }
 
 /**
@@ -970,7 +1006,11 @@ function install_database_errors($database, $settings_file) {
     // calling function.
     $databases['default']['default'] = $database;
     // Just changing the global doesn't get the new information processed.
-    // We tell tell the Database class to re-parse $databases.
+    // We need to close any active connections and tell the Database class to
+    // re-parse $databases.
+    if (Database::isActiveConnection()) {
+      Database::closeConnection();
+    }
     Database::parseConnectionInfo();
 
     try {
@@ -990,7 +1030,7 @@ function install_database_errors($database, $settings_file) {
  * Form API submit for install_settings form.
  */
 function install_settings_form_submit($form, &$form_state) {
-  global $install_state;
+  global $install_state, $config_directory_name;
 
   // Update global settings array and save.
   $settings['databases'] = array(
@@ -1002,35 +1042,34 @@ function install_settings_form_submit($form, &$form_state) {
     'required' => TRUE,
   );
 
-  // This duplicates drupal_get_token() because that function can't work yet.
-  // Wondering if it makes sense to move this later in the process, but its
-  // nice having all the settings stuff here.
-  //
-  // @todo This is actually causing a bug right now, because you can install
-  // without hitting install_settings_form_submit() if your settings.php
-  // already has the db stuff in it, and right now in that case your
-  // config directory never gets created. So this needs to be moved elsewhere.
+  // Add the config directory to settings.php. If someone already defined one
+  // in the existing settings.php, use that; otherwise, use a randomized
+  // directory name.
   $settings['config_directory_name'] = array(
-    'value'     => 'config_' . drupal_hmac_base64('', session_id() . $settings['drupal_hash_salt']['value']),
+    'value'     => $config_directory_name ? $config_directory_name : 'config_' . drupal_hash_base64(drupal_random_bytes(55)),
     'required'  => TRUE,
   );
 
   drupal_rewrite_settings($settings);
-  // Actually create the config directory named above.
-  $config_path = conf_path() . '/files/' . $settings['config_directory_name']['value'];
-  if (!file_prepare_directory($config_path, FILE_CREATE_DIRECTORY)) {
-    // How best to handle errors here?
-  };
 
-  // Write out a .htaccess file that will protect the config directory from
-  // prying eyes.
-  file_save_htaccess($config_path, TRUE);
+  // Ensure that the new config directory can be created and made writable.
+  if (!install_ensure_config_directory()) {
+    // This should never fail, since if the config directory was specified in
+    // settings.php it will have already been created and verified earlier, and
+    // if it wasn't specified in settings.php, it is created here inside the
+    // public files directory, which has already been verified to be writable
+    // itself. But if it somehow fails anyway, the installation cannot proceed.
+    // Bail out using a similar error message as in system_requirements().
+    throw new Exception(st('The directory %directory could not be created or could not be made writable. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see the <a href="@handbook_url">online handbook</a>.', array('%directory' => config_get_config_directory(), '@handbook_url' => 'http://drupal.org/server-permissions')));
+  }
 
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This
   // last step is important since we want to trigger an error if the new
   // database already has Drupal installed.
   $install_state['settings_verified'] = TRUE;
+  $install_state['config_verified'] = TRUE;
+  $install_state['database_verified'] = TRUE;
   $install_state['completed_task'] = install_verify_completed_task();
 }
 
