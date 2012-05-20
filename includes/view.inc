@@ -681,7 +681,7 @@ class view extends views_db_object {
     if (empty($this->query->pager)) {
       $this->query->pager = $this->display_handler->get_plugin('pager');
 
-      if ($this->query->pager->use_pager() && isset($this->current_page)) {
+      if ($this->query->pager->use_pager()) {
         $this->query->pager->set_current_page($this->current_page);
       }
 
