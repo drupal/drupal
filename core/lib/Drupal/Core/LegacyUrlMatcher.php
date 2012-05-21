@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\UrlMatcher.
+ * Definition of Drupal\Core\LegacyUrlMatcher.
  */
 
 namespace Drupal\Core;
@@ -19,7 +19,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * UrlMatcher matches URL based on a set of routes.
  */
-class UrlMatcher implements UrlMatcherInterface {
+class LegacyUrlMatcher implements UrlMatcherInterface {
 
   /**
    * The request context for this matcher.

@@ -45,7 +45,7 @@ class DrupalKernel extends HttpKernel {
    public function __construct(EventDispatcherInterface $dispatcher, ControllerResolverInterface $resolver) {
       parent::__construct($dispatcher, $resolver);
 
-      $this->matcher = new UrlMatcher();
+      $this->matcher = new LegacyUrlMatcher();
       $this->dispatcher->addSubscriber(new RouterListener($this->matcher));
 
       $negotiation = new ContentNegotiation();
