@@ -11,6 +11,7 @@ The branch maintainers for Drupal 7 are:
 
 - Dries Buytaert 'dries' <http://drupal.org/user/1>
 - Angela Byron 'webchick' <http://drupal.org/user/24967>
+- David Rothstein 'David_Rothstein' <http://drupal.org/user/124982>
 
 
 Component maintainers
