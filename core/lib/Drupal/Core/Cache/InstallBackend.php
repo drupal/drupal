@@ -34,26 +34,26 @@ use Exception;
 class InstallBackend extends DatabaseBackend {
 
   /**
-   * Overrides Drupal\Core\Cache\CacheBackendInterface::get().
+   * Overrides Drupal\Core\Cache\DatabaseBackend::get().
    */
   function get($cid) {
     return FALSE;
   }
 
   /**
-   * Overrides Drupal\Core\Cache\CacheBackendInterface::getMultiple().
+   * Overrides Drupal\Core\Cache\DatabaseBackend::getMultiple().
    */
   function getMultiple(&$cids) {
     return array();
   }
 
   /**
-   * Overrides Drupal\Core\Cache\CacheBackendInterface::set().
+   * Overrides Drupal\Core\Cache\DatabaseBackend::set().
    */
   function set($cid, $data, $expire = CACHE_PERMANENT, array $tags = array()) {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
+   * Overrides Drupal\Core\Cache\DatabaseBackend::delete().
    */
   function delete($cid) {
     try {
@@ -65,7 +65,7 @@ class InstallBackend extends DatabaseBackend {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
+   * Overrides Drupal\Core\Cache\DatabaseBackend::deleteMultiple().
    */
   function deleteMultiple(array $cids) {
     try {
@@ -77,7 +77,7 @@ class InstallBackend extends DatabaseBackend {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deletePrefix().
+   * Overrides Drupal\Core\Cache\DatabaseBackend::deletePrefix().
    */
   function deletePrefix($prefix) {
     try {
@@ -88,6 +88,9 @@ class InstallBackend extends DatabaseBackend {
     catch (Exception $e) {}
   }
 
+  /**
+   * Overrides Drupal\Core\Cache\DatabaseBackend::invalidateTags().
+   */
   function invalidateTags(array $tags) {
     try {
       if (class_exists('Drupal\Core\Database\Database')) {
@@ -98,7 +101,7 @@ class InstallBackend extends DatabaseBackend {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::flush().
+   * Overrides Drupal\Core\Cache\DatabaseBackend::flush().
    */
   function flush() {
     try {
@@ -110,9 +113,39 @@ class InstallBackend extends DatabaseBackend {
   }
 
   /**
-   * Overrides Drupal\Core\Cache\CacheBackendInterface::isEmpty().
+   * Overrides Drupal\Core\Cache\DatabaseBackend::expire().
+   */
+  function expire() {
+    try {
+      if (class_exists('Drupal\Core\Database\Database')) {
+        parent::expire();
+      }
+    }
+    catch (Exception $e) {}
+  }
+
+  /**
+   * Overrides Drupal\Core\Cache\DatabaseBackend::garbageCollection().
+   */
+  function garbageCollection() {
+    try {
+      if (class_exists('Drupal\Core\Database\Database')) {
+        parent::garbageCollection();
+      }
+    }
+    catch (Exception $e) {}
+  }
+
+  /**
+   * Overrides Drupal\Core\Cache\DatabaseBackend::isEmpty().
    */
   function isEmpty() {
+    try {
+      if (class_exists('Drupal\Core\Database\Database')) {
+        return parent::isEmpty();
+      }
+    }
+    catch (Exception $e) {}
     return TRUE;
   }
 }

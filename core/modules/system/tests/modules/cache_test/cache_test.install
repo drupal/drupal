@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the cache_test module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function cache_test_schema() {
+  $schema['cache_test'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_test']['description'] = 'Cache table for testing the cache system.';
+  return $schema;
+}
