@@ -14,7 +14,7 @@ class views_plugin_argument_default_taxonomy_tid extends views_plugin_argument_d
 
     // Convert legacy vids option to machine name vocabularies.
     if (!empty($this->options['vids'])) {
-      $vocabularies = taxonomy_get_vocabularies();
+      $vocabularies = taxonomy_vocabulary_get_names();
       foreach ($this->options['vids'] as $vid) {
         if (isset($vocabularies[$vid], $vocabularies[$vid]->machine_name)) {
           $this->options['vocabularies'][$vocabularies[$vid]->machine_name] = $vocabularies[$vid]->machine_name;
@@ -58,7 +58,7 @@ class views_plugin_argument_default_taxonomy_tid extends views_plugin_argument_d
     );
 
     $options = array();
-    $vocabularies = taxonomy_get_vocabularies();
+    $vocabularies = taxonomy_vocabulary_get_names();
     foreach ($vocabularies as $voc) {
       $options[$voc->machine_name] = check_plain($voc->name);
     }

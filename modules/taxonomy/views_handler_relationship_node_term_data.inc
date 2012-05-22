@@ -16,7 +16,7 @@ class views_handler_relationship_node_term_data extends views_handler_relationsh
 
     // Convert legacy vids option to machine name vocabularies.
     if (!empty($this->options['vids'])) {
-      $vocabularies = taxonomy_get_vocabularies();
+      $vocabularies = taxonomy_vocabulary_get_names();
       foreach ($this->options['vids'] as $vid) {
         if (isset($vocabularies[$vid], $vocabularies[$vid]->machine_name)) {
           $this->options['vocabularies'][$vocabularies[$vid]->machine_name] = $vocabularies[$vid]->machine_name;
@@ -32,7 +32,7 @@ class views_handler_relationship_node_term_data extends views_handler_relationsh
   }
 
   function options_form(&$form, &$form_state) {
-    $vocabularies = taxonomy_get_vocabularies();
+    $vocabularies = taxonomy_vocabulary_get_names();
     $options = array();
     foreach ($vocabularies as $voc) {
       $options[$voc->machine_name] = check_plain($voc->name);

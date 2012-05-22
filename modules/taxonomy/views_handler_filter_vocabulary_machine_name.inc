@@ -17,7 +17,7 @@ class views_handler_filter_vocabulary_machine_name extends views_handler_filter_
     }
 
     $this->value_options = array();
-    $vocabularies = taxonomy_get_vocabularies();
+    $vocabularies = taxonomy_vocabulary_get_names();
     foreach ($vocabularies as $voc) {
       $this->value_options[$voc->machine_name] = $voc->name;
     }
