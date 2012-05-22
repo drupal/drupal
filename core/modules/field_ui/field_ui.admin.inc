@@ -169,7 +169,8 @@ function field_ui_table_pre_render($elements) {
 
         // Add tabledrag indentation to the first row cell.
         if ($depth = count($parents[$name])) {
-          $cell = current(element_children($row));
+          $children = element_children($row);
+          $cell = current($children);
           $row[$cell]['#prefix'] = theme('indentation', array('size' => $depth)) . (isset($row[$cell]['#prefix']) ? $row[$cell]['#prefix'] : '');
         }
 
