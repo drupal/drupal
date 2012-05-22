@@ -11,7 +11,7 @@ Drupal.behaviors.openid = {
 
     // This behavior attaches by ID, so is only valid once on a page.
     if (cookie || location.hash == '#openid-login') {
-      $edit_openid_identifier = $('#edit-openid-identifier');
+      var $edit_openid_identifier = $('#edit-openid-identifier');
       if (cookie) {
         $edit_openid_identifier.val(cookie);
       }
