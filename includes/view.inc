@@ -1984,12 +1984,22 @@ class view extends views_db_object {
       unset($this->query);
     }
 
-    $keys = array('current_display', 'display_handler', 'build_info', 'built', 'executed', 'attachment_before', 'attachment_after', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'result', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'many_to_one_tables', 'items_per_page', 'offset', 'current_page');
+    $keys = array('current_display', 'display_handler', 'build_info', 'built', 'executed', 'attachment_before', 'attachment_after', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'result', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'many_to_one_tables');
     foreach ($keys as $key) {
       if (isset($this->$key)) {
         unset($this->$key);
       }
     }
+
+    // These keys are checked by the next init, so instead of unsetting them,
+    // just set the default values.
+    $keys = array('items_per_page', 'offset', 'current_page');
+    foreach ($keys as $key) {
+      if (isset($this->$key)) {
+        $this->$key = NULL;
+      }
+    }
+
     $this->built = $this->executed = FALSE;
     $this->build_info = array();
     $this->attachment_before = '';
