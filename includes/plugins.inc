@@ -24,7 +24,9 @@ function views_views_plugins() {
         'theme' => 'views_view',
         'no ui' => TRUE,
         'no remove' => TRUE,
-        'js' => array('misc/form.js', 'misc/collapse.js', 'misc/textarea.js', 'misc/tabledrag.js', 'misc/autocomplete.js', "$js_path/dependent.js"),
+        // @todo: replace this with proper libraries.
+        // @TODO: figure out whether this is still needed, or at least remove depedent.js.
+        'js' => array('core/misc/form.js', 'core/misc/collapse.js', 'core/misc/textarea.js', 'core/misc/tabledrag.js', 'core/misc/autocomplete.js', "$js_path/dependent.js"),
         'use ajax' => TRUE,
         'use pager' => TRUE,
         'use more' => TRUE,
