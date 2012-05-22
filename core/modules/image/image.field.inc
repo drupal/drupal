@@ -219,7 +219,6 @@ function image_field_prepare_view($entity_type, $entities, $field, $instances, $
  * Implements hook_field_presave().
  */
 function image_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  file_field_presave($entity_type, $entity, $field, $instance, $langcode, $items);
 
   // Determine the dimensions if necessary.
   foreach ($items as &$item) {

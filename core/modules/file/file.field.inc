@@ -225,22 +225,6 @@ function file_field_prepare_view($entity_type, $entities, $field, $instances, $l
 }
 
 /**
- * Implements hook_field_presave().
- */
-function file_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  // Make sure that each file which will be saved with this object has a
-  // permanent status, so that it will not be removed when temporary files are
-  // cleaned up.
-  foreach ($items as $item) {
-    $file = file_load($item['fid']);
-    if (!$file->status) {
-      $file->status = FILE_STATUS_PERMANENT;
-      file_save($file);
-    }
-  }
-}
-
-/**
  * Implements hook_field_insert().
  */
 function file_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
@@ -248,8 +232,7 @@ function file_field_insert($entity_type, $entity, $field, $instance, $langcode, 
 
   // Add a new usage of each uploaded file.
   foreach ($items as $item) {
-    $file = (object) $item;
-    file_usage_add($file, 'file', $entity_type, $id);
+    file_usage_add(file_load($item['fid']), 'file', $entity_type, $id);
   }
 }
 
@@ -265,8 +248,7 @@ function file_field_update($entity_type, $entity, $field, $instance, $langcode, 
   // deletion of previous file usages are necessary.
   if (!empty($entity->revision)) {
     foreach ($items as $item) {
-      $file = (object) $item;
-      file_usage_add($file, 'file', $entity_type, $id);
+      file_usage_add(file_load($item['fid']), 'file', $entity_type, $id);
     }
     return;
   }
@@ -287,8 +269,8 @@ function file_field_update($entity_type, $entity, $field, $instance, $langcode, 
     foreach ($original->{$field['field_name']}[$langcode] as $original_item) {
       $original_fids[] = $original_item['fid'];
       if (isset($original_item['fid']) && !in_array($original_item['fid'], $current_fids)) {
-        // Decrement the file usage count by 1 and delete the file if possible.
-        file_field_delete_file($original_item, $field, $entity_type, $id);
+        // Decrement the file usage count by 1.
+        file_usage_delete(file_load($original_item['fid']), 'file', $entity_type, $id);
       }
     }
   }
@@ -296,8 +278,7 @@ function file_field_update($entity_type, $entity, $field, $instance, $langcode, 
   // Add new usage entries for newly added files.
   foreach ($items as $item) {
     if (!in_array($item['fid'], $original_fids)) {
-      $file = (object) $item;
-      file_usage_add($file, 'file', $entity_type, $id);
+      file_usage_add(file_load($item['fid']), 'file', $entity_type, $id);
     }
   }
 }
@@ -310,7 +291,7 @@ function file_field_delete($entity_type, $entity, $field, $instance, $langcode, 
 
   // Delete all file usages within this entity.
   foreach ($items as $delta => $item) {
-    file_field_delete_file($item, $field, $entity_type, $id, 0);
+    file_usage_delete(file_load($item['fid']), 'file', $entity_type, $id, 0);
   }
 }
 
@@ -320,50 +301,9 @@ function file_field_delete($entity_type, $entity, $field, $instance, $langcode, 
 function file_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
   list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
   foreach ($items as $delta => $item) {
-    // Decrement the file usage count by 1 and delete the file if possible.
-    if (file_field_delete_file($item, $field, $entity_type, $id)) {
-      $items[$delta] = NULL;
-    }
+    // Decrement the file usage count by 1.
+    file_usage_delete(file_load($item['fid']), 'file', $entity_type, $id);
   }
-}
-
-/**
- * Decrements the usage count for a file and attempts to delete it.
- *
- * This function only has an effect if the file being deleted is used only by
- * File module.
- *
- * @param $item
- *   The field item that contains a file array.
- * @param $field
- *   The field structure for the operation.
- * @param $entity_type
- *   The type of $entity.
- * @param $id
- *   The entity ID which contains the file being deleted.
- * @param $count
- *   (optional) The number of references to decrement from the object
- *   containing the file. Defaults to 1.
- *
- * @return
- *   Boolean TRUE if the file was deleted, or an array of remaining references
- *   if the file is still in use by other modules. Boolean FALSE if an error
- *   was encountered.
- */
-function file_field_delete_file($item, $field, $entity_type, $id, $count = 1) {
-  // To prevent the file field from deleting files it doesn't know about, check
-  // the file reference count. Temporary files can be deleted because they
-  // are not yet associated with any content at all.
-  $file = (object) $item;
-  $file_usage = file_usage_list($file);
-  if ($file->status == 0 || !empty($file_usage['file'])) {
-    file_usage_delete($file, 'file', $entity_type, $id, $count);
-    return file_delete($file);
-  }
-
-  // Even if the file is not deleted, return TRUE to indicate the file field
-  // record can be removed from the field database tables.
-  return TRUE;
 }
 
 /**

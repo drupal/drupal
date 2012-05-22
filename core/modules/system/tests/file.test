@@ -1564,7 +1564,7 @@ class FileDeleteTest extends FileHookTestCase {
 
     // Check that deletion removes the file and database record.
     $this->assertTrue(is_file($file->uri), t('File exists.'));
-    $this->assertIdentical(file_delete($file), TRUE, t('Delete worked.'));
+    file_delete($file);
     $this->assertFileHooksCalled(array('delete'));
     $this->assertFalse(file_exists($file->uri), t('Test file has actually been deleted.'));
     $this->assertFalse(file_load($file->fid), t('File was removed from the database.'));
@@ -1579,7 +1579,6 @@ class FileDeleteTest extends FileHookTestCase {
     file_usage_add($file, 'testing', 'test', 1);
 
     file_usage_delete($file, 'testing', 'test', 1);
-    file_delete($file);
     $usage = file_usage_list($file);
     $this->assertEqual($usage['testing']['test'], array(1 => 1), t('Test file is still in use.'));
     $this->assertTrue(file_exists($file->uri), t('File still exists on the disk.'));
@@ -1589,10 +1588,27 @@ class FileDeleteTest extends FileHookTestCase {
     file_test_reset();
 
     file_usage_delete($file, 'testing', 'test', 1);
-    file_delete($file);
     $usage = file_usage_list($file);
-    $this->assertFileHooksCalled(array('delete'));
+    $this->assertFileHooksCalled(array('load', 'update'));
     $this->assertTrue(empty($usage), t('File usage data was removed.'));
+    $this->assertTrue(file_exists($file->uri), 'File still exists on the disk.');
+    $file = file_load($file->fid);
+    $this->assertTrue($file, 'File still exists in the database.');
+    $this->assertEqual($file->status, 0, 'File is temporary.');
+    file_test_reset();
+
+    // Call system_cron() to clean up the file. Make sure the timestamp
+    // of the file is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
+    db_update('file_managed')
+      ->fields(array(
+        'timestamp' => REQUEST_TIME - (DRUPAL_MAXIMUM_TEMP_FILE_AGE + 1),
+      ))
+      ->condition('fid', $file->fid)
+      ->execute();
+    drupal_cron_run();
+
+    // system_cron() loads
+    $this->assertFileHooksCalled(array('load', 'delete'));
     $this->assertFalse(file_exists($file->uri), t('File has been deleted after its last usage was removed.'));
     $this->assertFalse(file_load($file->fid), t('File was removed from the database.'));
   }

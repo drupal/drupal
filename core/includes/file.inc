@@ -696,9 +696,6 @@ function file_usage_list(stdClass $file) {
 /**
  * Records that a module is using a file.
  *
- * This usage information will be queried during file_delete() to ensure that
- * a file is not in use before it is physically removed from disk.
- *
  * Examples:
  * - A module that associates files with nodes, so $type would be
  *   'node' and $id would be the node's nid. Files for all revisions are stored
@@ -731,13 +728,16 @@ function file_usage_add(stdClass $file, $module, $type, $id, $count = 1) {
     ->fields(array('count' => $count))
     ->expression('count', 'count + :count', array(':count' => $count))
     ->execute();
+
+  // Make sure that a used file is not permament.
+  if ($file->status != FILE_STATUS_PERMANENT) {
+    $file->status = FILE_STATUS_PERMANENT;
+    file_save($file);
+  }
 }
 
 /**
  * Removes a record to indicate that a module is no longer using a file.
- *
- * The file_delete() function is typically called after removing a file usage
- * to remove the record from the file_managed table and delete the file itself.
  *
  * @param $file
  *   A file object.
@@ -785,6 +785,14 @@ function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $c
     }
     $query->expression('count', 'count - :count', array(':count' => $count));
     $query->execute();
+  }
+
+  // If there are no more remaining usages of this file, mark it as temporary,
+  // which result in a delete through system_cron().
+  $usage = file_usage_list($file);
+  if (empty($usage)) {
+    $file->status = 0;
+    file_save($file);
   }
 }
 
@@ -1109,8 +1117,8 @@ function file_move(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
     // Inform modules that the file has been moved.
     module_invoke_all('file_move', $file, $source);
 
-    if ($delete_source) {
-      // Try a soft delete to remove original if it's not in use elsewhere.
+    // Delete the original if it's not in use elsewhere.
+    if ($delete_source && !file_usage_list($source)) {
       file_delete($source);
     }
 
@@ -1283,19 +1291,12 @@ function file_create_filename($basename, $directory) {
 /**
  * Deletes a file and its database record.
  *
- * If the $force parameter is not TRUE, file_usage_list() will be called to
- * determine if the file is being used by any modules. If the file is being
- * used the delete will be canceled.
+ * Instead of directly deleting a file, it is strongly recommended to delete
+ * file usages instead. That will automatically mark the file as temporary and
+ * remove it during cleanup.
  *
  * @param $file
  *   A file object.
- * @param $force
- *   Boolean indicating that the file should be deleted even if the file is
- *   reported as in use by the file_usage table.
- *
- * @return mixed
- *   TRUE for success, FALSE in the event of an error, or an array if the file
- *   is being used by any modules.
  *
  * @see file_unmanaged_delete()
  * @see file_usage_list()
@@ -1303,42 +1304,21 @@ function file_create_filename($basename, $directory) {
  * @see hook_file_predelete()
  * @see hook_file_delete()
  */
-function file_delete(stdClass $file, $force = FALSE) {
-  if (!file_valid_uri($file->uri)) {
-    if (($realpath = drupal_realpath($file->uri)) !== FALSE) {
-      watchdog('file', 'File %file (%realpath) could not be deleted because it is not a valid URI. This may be caused by improper use of file_delete() or a missing stream wrapper.', array('%file' => $file->uri, '%realpath' => $realpath));
-    }
-    else {
-      watchdog('file', 'File %file could not be deleted because it is not a valid URI. This may be caused by improper use of file_delete() or a missing stream wrapper.', array('%file' => $file->uri));
-    }
-    drupal_set_message(t('The specified file %file could not be deleted because it is not a valid URI. More information is available in the system log.', array('%file' => $file->uri)), 'error');
-    return FALSE;
-  }
-
-  // If any module still has a usage entry in the file_usage table, the file
-  // will not be deleted, but file_delete() will return a populated array
-  // that tests as TRUE.
-  if (!$force && ($references = file_usage_list($file))) {
-    return $references;
-  }
-
+function file_delete(stdClass $file) {
   // Let other modules clean up any references to the file prior to deletion.
   module_invoke_all('file_predelete', $file);
   module_invoke_all('entity_predelete', $file, 'file');
 
-  // Make sure the file is deleted before removing its row from the
-  // database, so UIs can still find the file in the database.
-  if (file_unmanaged_delete($file->uri)) {
-    db_delete('file_managed')->condition('fid', $file->fid)->execute();
-    db_delete('file_usage')->condition('fid', $file->fid)->execute();
+  // Attempt to delete the file on the filesystem. Failures will be logged in
+  // watchdog.
+  file_unmanaged_delete($file->uri);
 
-    // Let other modules respond to file deletion.
-    module_invoke_all('file_delete', $file);
-    module_invoke_all('entity_delete', $file, 'file');
+  db_delete('file_managed')->condition('fid', $file->fid)->execute();
+  db_delete('file_usage')->condition('fid', $file->fid)->execute();
 
-    return TRUE;
-  }
-  return FALSE;
+  // Let other modules respond to file deletion.
+  module_invoke_all('file_delete', $file);
+  module_invoke_all('entity_delete', $file, 'file');
 }
 
 /**
@@ -1442,8 +1422,8 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  * Saves a file upload to a new location.
  *
  * The file will be added to the {file_managed} table as a temporary file.
- * Temporary files are periodically cleaned. To make the file a permanent file,
- * assign the status and use file_save() to save the changes.
+ * Temporary files are periodically cleaned. Use file_usage_add() to register
+ * the usage of the file which will automatically mark it as permanent.
  *
  * @param $source
  *   A string specifying the filepath or URI of the uploaded file to save.
