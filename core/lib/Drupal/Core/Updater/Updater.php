@@ -213,7 +213,7 @@ class Updater {
       $this->makeWorldReadable($filetransfer, $args['install_dir'] . '/' . $this->name);
 
       // Run the updates.
-      // @todo Decide if we want to implement this.
+      // @TODO: decide if we want to implement this.
       $this->postUpdate();
 
       // For now, just return a list of links of things to do.
@@ -252,7 +252,7 @@ class Updater {
       $this->makeWorldReadable($filetransfer, $args['install_dir'] . '/' . $this->name);
 
       // Potentially enable something?
-      // @todo: decide if we want to implement this.
+      // @TODO: decide if we want to implement this.
       $this->postInstall();
       // For now, just return a list of links of things to do.
       return $this->postInstallTasks();
