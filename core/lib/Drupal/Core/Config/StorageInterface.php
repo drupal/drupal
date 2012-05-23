@@ -5,18 +5,20 @@ namespace Drupal\Core\Config;
 /**
  * Defines an interface for configuration storage manipulation.
  *
- * This class allows reading and writing configuration data from/to the
- * storage and copying to/from the file storing the same data.
+ * Classes implementing this interface allow reading and writing configuration
+ * data from and to the storage.
+ *
+ * @todo Remove all active/file methods. They belong onto DrupalConfig only.
  */
 interface StorageInterface {
 
   /**
    * Constructs a storage manipulation class.
    *
-   * @param $name
-   *   Lowercase string, the name for the configuration data.
+   * @param string $name
+   *   (optional) The name of a configuration object to load.
    */
-  function __construct($name);
+  function __construct($name = NULL);
 
   /**
    * Reads the configuration data from the storage.
@@ -76,24 +78,58 @@ interface StorageInterface {
 
   /**
    * Encodes configuration data into the storage-specific format.
+   *
+   * @param array $data
+   *   The configuration data to encode.
+   *
+   * @return string
+   *   The encoded configuration data.
+   *
+   * This is a publicly accessible static method to allow for alternative
+   * usages in data conversion scripts and also tests.
    */
   public static function encode($data);
 
   /**
    * Decodes configuration data from the storage-specific format.
+   *
+   * @param string $raw
+   *   The raw configuration data string to decode.
+   *
+   * @return array
+   *   The decoded configuration data as an associative array.
+   *
+   * This is a publicly accessible static method to allow for alternative
+   * usages in data conversion scripts and also tests.
    */
   public static function decode($raw);
-
-  /**
-   * Gets names starting with this prefix.
-   *
-   * @param $prefix
-   *   @todo
-   */
-  static function getNamesWithPrefix($prefix);
 
   /**
    * Gets the name of this object.
    */
   public function getName();
+
+  /**
+   * Sets the name of this object.
+   */
+  public function setName($name);
+
+  /**
+   * Gets configuration object names starting with a given prefix.
+   *
+   * Given the following configuration objects:
+   * - node.type.article
+   * - node.type.page
+   *
+   * Passing the prefix 'node.type' will return an array containing the above
+   * names.
+   *
+   * @param string $prefix
+   *   (optional) The prefix to search for. If omitted, all configuration object
+   *   names that exist are returned.
+   *
+   * @return array
+   *   An array containing matching configuration object names.
+   */
+  static function getNamesWithPrefix($prefix = '');
 }

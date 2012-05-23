@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<config>
-  <config_test_foo>bar</config_test_foo>
-  <config_test_bar>foo</config_test_bar>
-</config>

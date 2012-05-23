@@ -1,0 +1,5 @@
+cron_max_threshold: '10800'
+cron_safe_threshold: '10800'
+cron_threshold_warning: '172800'
+cron_threshold_error: '1209600'
+cron_key: drupal

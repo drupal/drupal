@@ -1,0 +1,10 @@
+name: large
+effects:
+    image_scale_480_480_1:
+        name: image_scale
+        data:
+            width: '480'
+            height: '480'
+            upscale: '1'
+        weight: '0'
+        ieid: image_scale_480_480_1
