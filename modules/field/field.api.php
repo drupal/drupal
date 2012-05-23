@@ -676,7 +676,7 @@ function hook_field_is_empty($item, $field) {
 }
 
 /**
- * @} End of "defgroup field_types"
+ * @} End of "defgroup field_types".
  */
 
 /**
@@ -959,7 +959,7 @@ function hook_field_widget_error($element, $error, $form, &$form_state) {
 
 
 /**
- * @} End of "defgroup field_widget"
+ * @} End of "defgroup field_widget".
  */
 
 
@@ -1198,7 +1198,7 @@ function hook_field_formatter_view($entity_type, $entity, $field, $instance, $la
 }
 
 /**
- * @} End of "defgroup field_formatter"
+ * @} End of "defgroup field_formatter".
  */
 
 /**
@@ -1554,11 +1554,11 @@ function hook_field_attach_delete_bundle($entity_type, $bundle, $instances) {
 }
 
 /**
- * @} End of "defgroup field_attach"
+ * @} End of "defgroup field_attach".
  */
 
 /**
- * @ingroup field_storage
+ * @addtogroup field_storage
  * @{
  */
 
@@ -2391,11 +2391,11 @@ function hook_field_widget_properties_ENTITY_TYPE_alter(&$widget, $context) {
 }
 
 /**
- * @} End of "ingroup field_storage"
+ * @} End of "addtogroup field_storage".
  */
 
 /**
- * @ingroup field_crud
+ * @addtogroup field_crud
  * @{
  */
 
@@ -2644,7 +2644,7 @@ function hook_field_storage_purge($entity_type, $entity, $field, $instance) {
 }
 
 /**
- * @} End of "ingroup field_crud"
+ * @} End of "addtogroup field_crud".
  */
 
 /**
@@ -2675,5 +2675,5 @@ function hook_field_access($op, $field, $entity_type, $entity, $account) {
 }
 
 /**
- * @} End of "addtogroup hooks"
+ * @} End of "addtogroup hooks".
  */

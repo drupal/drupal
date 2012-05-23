@@ -890,5 +890,5 @@ function field_info_storage_settings($type) {
 }
 
 /**
- * @} End of "defgroup field_info"
+ * @} End of "defgroup field_info".
  */

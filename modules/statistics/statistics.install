@@ -154,5 +154,5 @@ function statistics_update_7000() {
 }
 
 /**
- * @} End of "addtogroup updates-6.x-to-7.x"
+ * @} End of "addtogroup updates-6.x-to-7.x".
  */

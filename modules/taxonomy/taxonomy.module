@@ -1904,5 +1904,5 @@ function taxonomy_taxonomy_term_delete($term) {
 }
 
 /**
- * @} End of "defgroup taxonomy_index"
+ * @} End of "defgroup taxonomy_index".
  */

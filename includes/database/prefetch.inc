@@ -9,7 +9,7 @@
  */
 
 /**
- * @ingroup database
+ * @addtogroup database
  * @{
  */
 
@@ -502,6 +502,6 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
 }
 
 /**
- * @} End of "ingroup database".
+ * @} End of "addtogroup database".
  */
 

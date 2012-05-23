@@ -1486,5 +1486,5 @@ function update_retrieve_dependencies() {
  */
 
 /**
- * @} End of "defgroup update-api-6.x-to-7.x"
+ * @} End of "defgroup update-api-6.x-to-7.x".
  */

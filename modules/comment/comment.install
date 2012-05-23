@@ -372,7 +372,7 @@ function comment_update_7008() {
 }
 
 /**
- * @} End of "addtogroup updates-6.x-to-7.x"
+ * @} End of "addtogroup updates-6.x-to-7.x".
  */
 
 /**
@@ -393,7 +393,7 @@ function comment_update_7009() {
 }
 
 /**
- * @} End of "addtogroup updates-7.x-extra"
+ * @} End of "addtogroup updates-7.x-extra".
  */
 
 /**

@@ -6,7 +6,7 @@
  */
 
 /**
- * @ingroup database
+ * @addtogroup database
  * @{
  */
 
@@ -208,5 +208,5 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
 }
 
 /**
- * @} End of "ingroup database".
+ * @} End of "addtogroup database".
  */

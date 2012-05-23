@@ -6,7 +6,7 @@
  */
 
 /**
- * @ingroup image
+ * @addtogroup image
  * @{
  */
 
@@ -363,5 +363,5 @@ function image_gd_get_info(stdClass $image) {
 }
 
 /**
- * @} End of "ingroup image".
+ * @} End of "addtogroup image".
  */

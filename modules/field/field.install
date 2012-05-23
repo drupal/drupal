@@ -434,7 +434,7 @@ function field_update_7001() {
 }
 
 /**
- * @} End of "addtogroup updates-6.x-to-7.x"
+ * @} End of "addtogroup updates-6.x-to-7.x".
  */
 
 /**
@@ -458,5 +458,5 @@ function field_update_7002() {
 }
 
 /**
- * @} End of "addtogroup updates-7.x-extra"
+ * @} End of "addtogroup updates-7.x-extra".
  */

@@ -134,7 +134,7 @@ function locale_update_7003() {
 }
 
 /**
- * @} End of "addtogroup updates-6.x-to-7.x"
+ * @} End of "addtogroup updates-6.x-to-7.x".
  */
 
 /**
@@ -202,7 +202,7 @@ function locale_update_7004() {
 }
 
 /**
- * @} End of "addtogroup updates-7.x-extra"
+ * @} End of "addtogroup updates-7.x-extra".
  */
 
 /**
