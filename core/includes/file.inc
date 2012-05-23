@@ -729,7 +729,7 @@ function file_usage_add(stdClass $file, $module, $type, $id, $count = 1) {
     ->expression('count', 'count + :count', array(':count' => $count))
     ->execute();
 
-  // Make sure that a used file is not permament.
+  // Make sure that a used file is permament.
   if ($file->status != FILE_STATUS_PERMANENT) {
     $file->status = FILE_STATUS_PERMANENT;
     file_save($file);
