@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Tests for statistics.module.
+ * Tests for the Statistics module.
  */
 
 /**
- * Sets up a base class for the Statistics module.
+ * Defines a base class for testing the Statistics module.
  */
 class StatisticsTestCase extends DrupalWebTestCase {
 
@@ -46,10 +46,10 @@ class StatisticsTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Tests that logging via statistics_exit() works for cached and uncached pages.
+ * Tests that logging via statistics_exit() works for all pages.
  *
- * Subclass DrupalWebTestCase rather than StatisticsTestCase, because we want
- * to test requests from an anonymous user.
+ * We subclass DrupalWebTestCase rather than StatisticsTestCase, because we
+ * want to test requests from an anonymous user.
  */
 class StatisticsLoggingTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -282,10 +282,24 @@ class StatisticsBlockVisitorsTestCase extends StatisticsTestCase {
 }
 
 /**
- * Test statistics administration screen.
+ * Tests the statistics administration screen.
  */
 class StatisticsAdminTestCase extends DrupalWebTestCase {
+
+  /**
+   * A user that has permission to administer and access statistics.
+   *
+   * @var object|FALSE
+   *
+   * A fully loaded user object, or FALSE if user creation failed.
+   */
   protected $privileged_user;
+
+  /**
+   * A page node for which to check access statistics.
+   *
+   * @var object
+   */
   protected $test_node;
 
   public static function getInfo() {
@@ -422,7 +436,7 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Test statistics token replacement in strings.
+ * Tests statistics token replacement in strings.
  */
 class StatisticsTokenReplaceTestCase extends StatisticsTestCase {
   public static function getInfo() {
