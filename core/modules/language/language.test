@@ -706,7 +706,7 @@ class LanguageUILanguageNegotiationTestCase extends WebTestBase {
       array(
         'language_negotiation' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,
-        'language_test_domain' => $language_domain,
+        'language_test_domain' => $language_domain . ':88',
         'path' => 'admin/config',
         'expect' => $language_string,
         'expected_method_id' => LANGUAGE_NEGOTIATION_URL,
