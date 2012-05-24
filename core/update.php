@@ -439,9 +439,11 @@ if (is_null($op) && update_access_allowed()) {
   install_goto('core/update.php?op=info');
 }
 
-// Bootstrap, fix requirements, and set the maintenance theme.
-drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+// Allow update_fix_d8_requirements() to run before code that can break on a
+// Drupal 7 database.
+drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 update_fix_d8_requirements();
+drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
 
 // Turn error reporting back on. From now on, only fatal errors (which are

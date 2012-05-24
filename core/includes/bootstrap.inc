@@ -138,8 +138,7 @@ const DRUPAL_BOOTSTRAP_SESSION = 4;
 const DRUPAL_BOOTSTRAP_PAGE_HEADER = 5;
 
 /**
- * Seventh bootstrap phase: load code for subsystems and modules; validate and
- * fix input data.
+ * Seventh bootstrap phase: load code for subsystems and modules.
  */
 const DRUPAL_BOOTSTRAP_CODE = 6;
 

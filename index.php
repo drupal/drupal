@@ -32,6 +32,11 @@ $request = Request::createFromGlobals();
 // container at some point.
 request($request);
 
+// Bootstrap all of Drupal's subsystems, but do not initialize anything that
+// depends on the fully resolved Drupal path, because path resolution happens
+// during the REQUEST event of the kernel.
+// @see Drupal\Core\EventSubscriber\PathSubscriber;
+// @see Drupal\Core\EventSubscriber\LegacyRequestSubscriber;
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
 $dispatcher = new EventDispatcher();

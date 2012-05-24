@@ -28,6 +28,13 @@ class LegacyRequestSubscriber implements EventSubscriberInterface {
    */
   public function onKernelRequestLegacy(GetResponseEvent $event) {
     if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
+      // Prior to invoking hook_init(), initialize the theme (potentially a
+      // custom one for this page), so that:
+      // - Modules with hook_init() implementations that call theme() or
+      //   theme_get_registry() don't initialize the incorrect theme.
+      // - The theme can have hook_*_alter() implementations affect page
+      //   building (e.g., hook_form_alter(), hook_node_view_alter(),
+      //   hook_page_alter()), ahead of when rendering starts.
       menu_set_custom_theme();
       drupal_theme_initialize();
       module_invoke_all('init');

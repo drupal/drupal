@@ -5160,13 +5160,10 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
   return (($skip_anonymous && $user->uid == 0) || ($token == drupal_get_token($value)));
 }
 
+/**
+ * Loads code for subsystems and modules, and registers stream wrappers.
+ */
 function _drupal_bootstrap_code() {
-  static $called = FALSE;
-
-  if ($called) {
-    return;
-  }
-  $called = TRUE;
   require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'core/includes/path.inc');
   require_once DRUPAL_ROOT . '/core/includes/theme.inc';
   require_once DRUPAL_ROOT . '/core/includes/pager.inc';
@@ -5183,19 +5180,22 @@ function _drupal_bootstrap_code() {
   require_once DRUPAL_ROOT . '/core/includes/errors.inc';
   require_once DRUPAL_ROOT . '/core/includes/schema.inc';
 
-  // Detect string handling method
+  // @todo Move this to earlier in bootstrap: http://drupal.org/node/1569456.
   unicode_check();
-  // Undo magic quotes
+
+  // @todo Remove this: http://drupal.org/node/1569456.
   fix_gpc_magic();
-  // Load all enabled modules
+
+  // Load all enabled modules.
   module_load_all();
+
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();
 
+  // Now that stream wrappers are registered, log fatal errors from a simpletest
+  // child site to a test specific file directory.
   $test_info = &$GLOBALS['drupal_test_info'];
   if (!empty($test_info['in_child_site'])) {
-    // Running inside the simpletest child site, log fatal errors to test
-    // specific file directory.
     ini_set('log_errors', 1);
     ini_set('error_log', 'public://error.log');
   }
@@ -5205,6 +5205,9 @@ function _drupal_bootstrap_code() {
  * Temporary BC function for scripts not using DrupalKernel.
  *
  * DrupalKernel skips this and replicates it via event listeners.
+ *
+ * @see Drupal\Core\EventSubscriber\PathSubscriber;
+ * @see Drupal\Core\EventSubscriber\LegacyRequestSubscriber;
  */
 function _drupal_bootstrap_full($skip = FALSE) {
   static $called = FALSE;
