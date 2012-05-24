@@ -2,69 +2,94 @@
 
 namespace Drupal\Core\Config;
 
+use Symfony\Component\Yaml\Yaml;
+
 /**
- * Represents the file storage interface.
+ * Represents the file storage controller.
  *
- * Classes implementing this interface allow reading and writing configuration
- * data to and from disk.
+ * @todo Implement StorageInterface after removing DrupalConfig methods.
+ * @todo Consider to extend StorageBase.
  */
 class FileStorage {
 
   /**
-   * Constructs a FileStorage object.
+   * The name of the configuration object.
    *
-   * @param string $name
-   *   The name for the configuration data. Should be lowercase.
+   * @var string
    */
-  public function __construct($name) {
+  protected $name;
+
+  /**
+   * The filesystem path containing the configuration object.
+   *
+   * @var string
+   */
+  protected $path;
+
+  /**
+   * Implements StorageInterface::__construct().
+   */
+  public function __construct($name = NULL) {
     $this->name = $name;
   }
 
   /**
-   * Reads and returns a file.
+   * Returns the path containing the configuration file.
    *
-   * @return
-   *   The data of the file.
-   *
-   * @throws
-   *   Exception
+   * @return string
+   *   The relative path to the configuration object.
    */
-  protected function readData() {
-    $data = file_get_contents($this->getFilePath());
-    if ($data === FALSE) {
-      throw new FileStorageReadException('Read file is invalid.');
+  public function getPath() {
+    // If the path has not been set yet, retrieve and assign the default path
+    // for configuration files.
+    if (!isset($this->path)) {
+      $this->setPath(config_get_config_directory());
     }
-    return $data;
+    return $this->path;
   }
 
   /**
-   * Checks whether the XML configuration file already exists on disk.
+   * Sets the path containing the configuration file.
+   */
+  public function setPath($directory) {
+    $this->path = $directory;
+    return $this;
+  }
+
+  /**
+   * Returns the path to the configuration file.
    *
-   * @return
-   *   @todo
+   * @return string
+   *   The path to the configuration file.
+   */
+  public function getFilePath() {
+    return $this->getPath() . '/' . $this->getName() . '.' . self::getFileExtension();
+  }
+
+  /**
+   * Returns the file extension used by the file storage for all configuration files.
+   *
+   * @return string
+   *   The file extension.
+   */
+  public static function getFileExtension() {
+    return 'yml';
+  }
+
+  /**
+   * Returns whether the configuration file exists.
+   *
+   * @return bool
+   *   TRUE if the configuration file exists, FALSE otherwise.
    */
   protected function exists() {
     return file_exists($this->getFilePath());
   }
 
   /**
-   * Returns the path to the XML configuration file.
+   * Implements StorageInterface::write().
    *
-   * @return
-   *   @todo
-   */
-  public function getFilePath() {
-    return config_get_config_directory() . '/' . $this->name  . '.xml';
-  }
-
-  /**
-   * Writes the contents of the configuration file to disk.
-   *
-   * @param $data
-   *   The data to be written to the file.
-   *
-   * @throws
-   *   Exception
+   * @throws FileStorageException
    */
   public function write($data) {
     $data = $this->encode($data);
@@ -74,17 +99,21 @@ class FileStorage {
   }
 
   /**
-   * Returns the contents of the configuration file.
+   * Implements StorageInterface::read().
    *
-   * @return
-   *   @todo
+   * @throws FileStorageReadException
    */
   public function read() {
-    if ($this->exists()) {
-      $data = $this->readData();
-      return $this->decode($data);
+    if (!$this->exists()) {
+      throw new FileStorageReadException('Configuration file does not exist.');
     }
-    return FALSE;
+
+    $data = file_get_contents($this->getFilePath());
+    $data = $this->decode($data);
+    if ($data === FALSE) {
+      throw new FileStorageReadException('Unable to decode configuration file.');
+    }
+    return $data;
   }
 
   /**
@@ -99,43 +128,9 @@ class FileStorage {
    * Implements StorageInterface::encode().
    */
   public static function encode($data) {
-    // Convert the supplied array into a SimpleXMLElement.
-    $xml_object = new \SimpleXMLElement("<?xml version=\"1.0\"?><config></config>");
-    self::encodeArrayToXml($data, $xml_object);
-
-    // Pretty print the result.
-    $dom = new \DOMDocument('1.0');
-    $dom->preserveWhiteSpace = false;
-    $dom->formatOutput = true;
-    $dom->loadXML($xml_object->asXML());
-
-    return $dom->saveXML();
-  }
-
-  /**
-   * Encodes an array into XML
-   *
-   * @param $array
-   *   An associative array to encode.
-   *
-   * @return
-   *   A representation of $array in XML.
-   */
-  protected static function encodeArrayToXml($array, &$xml_object) {
-    foreach ($array as $key => $value) {
-      if (is_array($value)) {
-        if (!is_numeric($key)){
-          $subnode = $xml_object->addChild("$key");
-          self::encodeArrayToXml($value, $subnode);
-        }
-        else {
-          self::encodeArrayToXml($value, $xml_object);
-        }
-      }
-      else {
-        $xml_object->addChild($key, $value);
-      }
-    }
+    // The level where you switch to inline YAML is set to PHP_INT_MAX to ensure
+    // this does not occur.
+    return Yaml::dump($data, PHP_INT_MAX);
   }
 
   /**
@@ -145,13 +140,33 @@ class FileStorage {
     if (empty($raw)) {
       return array();
     }
+    return Yaml::parse($raw);
+  }
 
-    // This is the fastest and easiest way to get from a string of XML to a PHP
-    // array since SimpleXML and json_decode()/encode() are native to PHP. Our
-    // only other choice would be a custom userspace implementation which would
-    // be a lot less performant and more complex.
-    $xml = new \SimpleXMLElement($raw);
-    $json = json_encode($xml);
-    return json_decode($json, TRUE);
+  /**
+   * Implements StorageInterface::getName().
+   */
+  public function getName() {
+    return $this->name;
+  }
+
+  /**
+   * Implements StorageInterface::setName().
+   */
+  public function setName($name) {
+    $this->name = $name;
+  }
+
+  /**
+   * Implements StorageInterface::getNamesWithPrefix().
+   */
+  public static function getNamesWithPrefix($prefix = '') {
+    // @todo Use $this->getPath() to allow for contextual search of files in
+    //   custom paths.
+    $files = glob(config_get_config_directory() . '/' . $prefix . '*.' . FileStorage::getFileExtension());
+    $clean_name = function ($value) {
+      return basename($value, '.' . FileStorage::getFileExtension());
+    };
+    return array_map($clean_name, $files);
   }
 }

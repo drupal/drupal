@@ -112,8 +112,8 @@ class Updater {
   /**
    * Gets the name of the project directory (basename).
    *
-   * @todo: It would be nice, if projects contained an info file which could
-   *        provide their canonical name.
+   * @todo It would be nice, if projects contained an info file which could
+   *   provide their canonical name.
    *
    * @param string $directory
    *
@@ -213,7 +213,7 @@ class Updater {
       $this->makeWorldReadable($filetransfer, $args['install_dir'] . '/' . $this->name);
 
       // Run the updates.
-      // @TODO: decide if we want to implement this.
+      // @todo Decide if we want to implement this.
       $this->postUpdate();
 
       // For now, just return a list of links of things to do.
@@ -252,7 +252,7 @@ class Updater {
       $this->makeWorldReadable($filetransfer, $args['install_dir'] . '/' . $this->name);
 
       // Potentially enable something?
-      // @TODO: decide if we want to implement this.
+      // @todo Decide if we want to implement this.
       $this->postInstall();
       // For now, just return a list of links of things to do.
       return $this->postInstallTasks();
@@ -286,7 +286,7 @@ class Updater {
         }
         catch (FileTransferException $e) {
           // Probably still not writable. Try to chmod and do it again.
-          // @todo: Make a new exception class so we can catch it differently.
+          // @todo Make a new exception class so we can catch it differently.
           try {
             $old_perms = substr(sprintf('%o', fileperms($parent_dir)), -4);
             $filetransfer->chmod($parent_dir, 0755);

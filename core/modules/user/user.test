@@ -1946,7 +1946,7 @@ class UserSignatureTestCase extends WebTestBase {
     $this->drupalPost(NULL, array(), t('Save'));
 
     // Get the comment ID. (This technique is the same one used in the Comment
-    // module's CommentHelperCase test case.)
+    // module's CommentTestBase test case.)
     preg_match('/#comment-([0-9]+)/', $this->getURL(), $match);
     $comment_id = $match[1];
 

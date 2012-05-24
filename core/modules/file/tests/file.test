@@ -728,11 +728,31 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     // not be necessary here. The file really is deleted, but stream wrappers
     // doesn't seem to think so unless we clear the PHP file stat() cache.
     clearstatcache();
+
+    // Call system_cron() to clean up the file. Make sure the timestamp
+    // of the file is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
+    db_update('file_managed')
+      ->fields(array(
+        'timestamp' => REQUEST_TIME - (DRUPAL_MAXIMUM_TEMP_FILE_AGE + 1),
+      ))
+      ->condition('fid', $node_file_r3->fid)
+      ->execute();
+    drupal_cron_run();
+
     $this->assertFileNotExists($node_file_r3, t('Second file is now deleted after deleting third revision, since it is no longer being used by any other nodes.'));
     $this->assertFileEntryNotExists($node_file_r3, t('Second file entry is now deleted after deleting third revision, since it is no longer being used by any other nodes.'));
 
     // Delete the entire node and check that the original file is deleted.
     $this->drupalPost('node/' . $nid . '/delete', array(), t('Delete'));
+    // Call system_cron() to clean up the file. Make sure the timestamp
+    // of the file is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
+    db_update('file_managed')
+      ->fields(array(
+        'timestamp' => REQUEST_TIME - (DRUPAL_MAXIMUM_TEMP_FILE_AGE + 1),
+      ))
+      ->condition('fid', $node_file_r1->fid)
+      ->execute();
+    drupal_cron_run();
     $this->assertFileNotExists($node_file_r1, t('Original file is deleted after deleting the entire node with two revisions remaining.'));
     $this->assertFileEntryNotExists($node_file_r1, t('Original file entry is deleted after deleting the entire node with two revisions remaining.'));
   }

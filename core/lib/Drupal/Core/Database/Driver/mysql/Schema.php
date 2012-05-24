@@ -510,8 +510,8 @@ class Schema extends DatabaseSchema {
     // the most likely reason is that it does not exist. That is dramatically
     // faster than using information_schema.
     // @link http://bugs.mysql.com/bug.php?id=19588
-    // @todo: This override should be removed once we require a version of MySQL
-    // that has that bug fixed.
+    // @todo This override should be removed once we require a version of MySQL
+    //   that has that bug fixed.
     try {
       $this->connection->queryRange("SELECT 1 FROM {" . $table . "}", 0, 1);
       return TRUE;
@@ -527,8 +527,8 @@ class Schema extends DatabaseSchema {
     // fails, the most likely reason is that it does not exist. That is
     // dramatically faster than using information_schema.
     // @link http://bugs.mysql.com/bug.php?id=19588
-    // @todo: This override should be removed once we require a version of MySQL
-    // that has that bug fixed.
+    // @todo This override should be removed once we require a version of MySQL
+    //   that has that bug fixed.
     try {
       $this->connection->queryRange("SELECT $column FROM {" . $table . "}", 0, 1);
       return TRUE;

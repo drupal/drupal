@@ -18,12 +18,12 @@
 
       // Set up gradients if there are some.
       var color_start, color_end;
-      for (i in settings.gradients) {
+      for (var i in settings.gradients) {
         color_start = farb.unpack(form.find('#palette input[name="palette[' + settings.gradients[i]['colors'][0] + ']"]').val());
         color_end = farb.unpack(form.find('#palette input[name="palette[' + settings.gradients[i]['colors'][1] + ']"]').val());
         if (color_start && color_end) {
           var delta = [];
-          for (j in color_start) {
+          for (var j in color_start) {
             delta[j] = (color_end[j] - color_start[j]) / (settings.gradients[i]['vertical'] ? height[i] : width[i]);
           }
           var accum = color_start;

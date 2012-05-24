@@ -1,0 +1,10 @@
+name: thumbnail
+effects:
+    image_scale_100_100_1:
+        name: image_scale
+        data:
+            width: '100'
+            height: '100'
+            upscale: '1'
+        weight: '0'
+        ieid: image_scale_100_100_1

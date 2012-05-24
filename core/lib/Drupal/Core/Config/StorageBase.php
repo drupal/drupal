@@ -6,10 +6,15 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\FileStorage;
 
 /**
- * @todo
+ * Base class for configuration storage controllers.
  */
 abstract class StorageBase implements StorageInterface {
 
+  /**
+   * The name of the configuration object.
+   *
+   * @var string
+   */
   protected $name;
 
   /**
@@ -22,7 +27,7 @@ abstract class StorageBase implements StorageInterface {
   /**
    * Implements StorageInterface::__construct().
    */
-  function __construct($name) {
+  function __construct($name = NULL) {
     $this->name = $name;
   }
 
@@ -105,5 +110,12 @@ abstract class StorageBase implements StorageInterface {
    */
   public function getName() {
     return $this->name;
+  }
+
+  /**
+   * Implements StorageInterface::setName().
+   */
+  public function setName($name) {
+    $this->name = $name;
   }
 }

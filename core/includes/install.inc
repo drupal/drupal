@@ -398,11 +398,9 @@ function drupal_uninstall_modules($module_list = array(), $uninstall_dependents 
     // by scanning its config directory.
     $module_config_dir = drupal_get_path('module', $module) . '/config';
     if (is_dir($module_config_dir)) {
-      $files = glob($module_config_dir . '/' . '*.xml');
+      $files = glob($module_config_dir . '/*.' . FileStorage::getFileExtension());
       foreach ($files as $file) {
-        $parts = explode('/', $file);
-        $file = array_pop($parts);
-        $config_name = str_replace('.xml', '', $file);
+        $config_name = basename($file, '.' . FileStorage::getFileExtension());
         $file_storage = new FileStorage($config_name);
         // Delete the configuration from storage.
         $file_storage->delete();

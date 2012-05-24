@@ -598,7 +598,8 @@ function file_managed_file_submit($form, &$form_state) {
   // only remove a file in response to its remove button being clicked.
   if ($button_key == 'remove_button') {
     // If it's a temporary file we can safely remove it immediately, otherwise
-    // it's up to the implementing module to clean up files that are in use.
+    // it's up to the implementing module to remove usages of files to have them
+    // removed.
     if ($element['#file'] && $element['#file']->status == 0) {
       file_delete($element['#file']);
     }

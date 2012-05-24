@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<config>
-  <feed_description></feed_description>
-  <feed_default_items>10</feed_default_items>
-  <feed_item_length>fulltext</feed_item_length>
-</config>

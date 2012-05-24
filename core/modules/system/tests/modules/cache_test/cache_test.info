@@ -1,0 +1,6 @@
+name = "Cache test"
+description = "Support module for cache system testing."
+package = Testing
+version = VERSION
+core = 8.x
+hidden = TRUE

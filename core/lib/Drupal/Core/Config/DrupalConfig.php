@@ -17,6 +17,11 @@ class DrupalConfig {
    */
   protected $storage;
 
+  /**
+   * The data of the configuration object.
+   *
+   * @var array
+   */
   protected $data = array();
 
   /**
@@ -36,16 +41,9 @@ class DrupalConfig {
    * Reads config data from the active store into our object.
    */
   public function read() {
-    $active = (array) $this->storage->read();
-    foreach ($active as $key => $value) {
-      // If the setting is empty, return an empty string rather than an array.
-      // This is necessary because SimpleXML's default behavior is to return
-      // an empty array instead of a string.
-      if (is_array($value) && empty($value)) {
-        $value = '';
-      }
-      $this->set($key, $value);
-    }
+    $data = $this->storage->read();
+    $this->setData($data !== FALSE ? $data : array());
+    return $this;
   }
 
   /**
@@ -66,11 +64,13 @@ class DrupalConfig {
    *
    * @param $key
    *   A string that maps to a key within the configuration data.
-   *   For instance in the following XML:
+   *   For instance in the following configuation array:
    *   @code
-   *   <foo>
-   *     <bar>baz</bar>
-   *   </foo>
+   *   array(
+   *     'foo' => array(
+   *       'bar' => 'baz',
+   *     ),
+   *   );
    *   @endcode
    *   A key of 'foo.bar' would return the string 'baz'. However, a key of 'foo'
    *   would return array('bar' => 'baz').
@@ -114,6 +114,17 @@ class DrupalConfig {
   }
 
   /**
+   * Replaces the data of this configuration object.
+   *
+   * @param array $data
+   *   The new configuration data.
+   */
+  public function setData(array $data) {
+    $this->data = $data;
+    return $this;
+  }
+
+  /**
    * Sets value in this config object.
    *
    * @param $key
@@ -122,16 +133,11 @@ class DrupalConfig {
    *   @todo
    */
   public function set($key, $value) {
-    // Remove all non-alphanumeric characters from the key.
-    // @todo Reverse this and throw an exception when encountering a key with
-    //   invalid name. The identical validation also needs to happen in get().
-    //   Furthermore, the dot/period is a reserved character; it may appear
-    //   between keys, but not within keys.
-    $key = preg_replace('@[^a-zA-Z0-9_.-]@', '', $key);
-
     // Type-cast value into a string.
     $value = $this->castValue($value);
 
+    // The dot/period is a reserved character; it may appear between keys, but
+    // not within keys.
     $parts = explode('.', $key);
     if (count($parts) == 1) {
       $this->data[$key] = $value;
@@ -198,14 +204,14 @@ class DrupalConfig {
   }
 
   /**
-   * Saves the configuration object to disk as XML.
+   * Saves the configuration object.
    */
   public function save() {
     $this->storage->write($this->data);
   }
 
   /**
-   * Deletes the configuration object on disk.
+   * Deletes the configuration object.
    */
   public function delete() {
     $this->data = array();

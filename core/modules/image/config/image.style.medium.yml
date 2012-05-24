@@ -1,0 +1,10 @@
+name: medium
+effects:
+    image_scale_220_220_1:
+        name: image_scale
+        data:
+            width: '220'
+            height: '220'
+            upscale: '1'
+        weight: '0'
+        ieid: image_scale_220_220_1

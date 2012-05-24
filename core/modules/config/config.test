@@ -52,7 +52,7 @@ class ConfigFileSecurityTestCase extends WebTestBase {
  * Tests reading and writing file contents.
  */
 class ConfigFileContentTestCase extends WebTestBase {
-  protected $fileExtension = 'xml';
+  protected $fileExtension;
 
   public static function getInfo() {
     return array(
@@ -60,6 +60,12 @@ class ConfigFileContentTestCase extends WebTestBase {
       'description' => 'Tests reading and writing of configuration files.',
       'group' => 'Configuration',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    $this->fileExtension = FileStorage::getFileExtension();
   }
 
   /**
@@ -198,22 +204,22 @@ class ConfigFileContentTestCase extends WebTestBase {
 
     // Get file listing for all files starting with 'foo'. Should return
     // two elements.
-    $files = config_get_files_with_prefix('foo');
+    $files = FileStorage::getNamesWithPrefix('foo');
     $this->assertEqual(count($files), 2, 'Two files listed with the prefix \'foo\'.');
 
     // Get file listing for all files starting with 'biff'. Should return
     // one element.
-    $files = config_get_files_with_prefix('biff');
+    $files = FileStorage::getNamesWithPrefix('biff');
     $this->assertEqual(count($files), 1, 'One file listed with the prefix \'biff\'.');
 
     // Get file listing for all files starting with 'foo.bar'. Should return
     // one element.
-    $files = config_get_files_with_prefix('foo.bar');
+    $files = FileStorage::getNamesWithPrefix('foo.bar');
     $this->assertEqual(count($files), 1, 'One file listed with the prefix \'foo.bar\'.');
 
     // Get file listing for all files starting with 'bar'. Should return
     // an empty array.
-    $files = config_get_files_with_prefix('bar');
+    $files = FileStorage::getNamesWithPrefix('bar');
     $this->assertEqual($files, array(), 'No files listed with the prefix \'bar\'.');
 
     // Delete the configuration.
@@ -223,9 +229,60 @@ class ConfigFileContentTestCase extends WebTestBase {
     // Verify the database entry no longer exists.
     $db_config = db_query('SELECT * FROM {config} WHERE name = :name', array(':name' => $name))->fetch();
     $this->assertIdentical($db_config, FALSE);
-    $this->assertFalse(file_exists($config_dir . '/' . $name . '.' . $this->fileExtension));
+    $this->assertFalse(file_exists($config_dir . '/' . $name . $this->fileExtension));
 
     // Attempt to delete non-existing configuration.
+  }
+
+  /**
+   * Tests serialization of configuration to file.
+   */
+  function testConfigSerialization() {
+    $name = $this->randomName(10) . '.' . $this->randomName(10);
+    $config_data = array(
+      // Indexed arrays; the order of elements is essential.
+      'numeric keys' => array('i', 'n', 'd', 'e', 'x', 'e', 'd'),
+      // Infinitely nested keys using arbitrary element names.
+      'nested keys' => array(
+        // HTML/XML in values.
+        'HTML' => '<strong> <bold> <em> <blockquote>',
+        // UTF-8 in values.
+        'UTF-8' => 'FrançAIS is ÜBER-åwesome',
+        // Unicode in keys and values.
+        'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ' => 'αβγδεζηθικλμνξοσὠ',
+      ),
+      'invalid xml' => '</title><script type="text/javascript">alert("Title XSS!");</script> & < > " \' ',
+    );
+
+    // Attempt to read non-existing configuration.
+    $config = config($name);
+
+    foreach ($config_data as $key => $value) {
+      $config->set($key, $value);
+    }
+
+    $config->save();
+
+    $config_filestorage = new FileStorage($name);
+    $config_parsed = $config_filestorage->read();
+
+    $key = 'numeric keys';
+    $this->assertIdentical($config_data[$key], $config_parsed[$key]);
+
+    $key = 'nested keys';
+    $this->assertIdentical($config_data[$key], $config_parsed[$key]);
+
+    $key = 'HTML';
+    $this->assertIdentical($config_data['nested keys'][$key], $config_parsed['nested keys'][$key]);
+
+    $key = 'UTF-8';
+    $this->assertIdentical($config_data['nested keys'][$key], $config_parsed['nested keys'][$key]);
+
+    $key = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ';
+    $this->assertIdentical($config_data['nested keys'][$key], $config_parsed['nested keys'][$key]);
+
+    $key = 'invalid xml';
+    $this->assertIdentical($config_data[$key], $config_parsed[$key]);
   }
 }
 

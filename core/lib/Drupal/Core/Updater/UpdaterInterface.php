@@ -45,7 +45,7 @@ interface UpdaterInterface {
   /**
    * Determines if the Updater can handle the project provided in $directory.
    *
-   * @todo: Provide something more rational here, like a project spec file.
+   * @todo Provide something more rational here, like a project spec file.
    *
    * @param string $directory
    *
