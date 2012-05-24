@@ -21,6 +21,10 @@ use Drupal\Core\ContentNegotiation;
 
 /**
  * Main subscriber for VIEW HTTP responses.
+ *
+ * @todo This needs to get refactored to be extensible so that we can handle
+ *   more than just Html and Drupal-specific JSON requests. See
+ *   http://drupal.org/node/1594870
  */
 class ViewSubscriber implements EventSubscriberInterface {
 
