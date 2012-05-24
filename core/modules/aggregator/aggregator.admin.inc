@@ -401,9 +401,16 @@ function _aggregator_parse_opml($opml) {
  *   An object describing the feed to be refreshed.
  *
  * @see aggregator_menu()
- * @see aggregator_admin_refresh_feed_access()
  */
 function aggregator_admin_refresh_feed($feed) {
+  // @todo CSRF tokens are validated in page callbacks rather than access
+  //   callbacks, because access callbacks are also invoked during menu link
+  //   generation. Add token support to routing: http://drupal.org/node/755584.
+  $token = request()->query->get('token');
+  if (!isset($token) || !drupal_valid_token($token, 'aggregator/update/' . $feed->fid)) {
+    drupal_access_denied();
+  }
+
   aggregator_refresh($feed);
   drupal_goto('admin/config/services/aggregator');
 }

@@ -138,8 +138,7 @@ function aggregator_menu() {
     'title' => 'Update items',
     'page callback' => 'aggregator_admin_refresh_feed',
     'page arguments' => array(5),
-    'access callback' => 'aggregator_admin_refresh_feed_access',
-    'access arguments' => array(5),
+    'access arguments' => array('administer news feeds'),
     'file' => 'aggregator.admin.inc',
   );
   $items['admin/config/services/aggregator/list'] = array(
@@ -796,24 +795,4 @@ function aggregator_preprocess_block(&$variables) {
   if ($variables['block']->module == 'aggregator') {
     $variables['attributes_array']['role'] = 'complementary';
   }
-}
-
-/**
- * Access callback: Determines if feed refresh is accessible.
- *
- * @param $feed
- *   An object describing the feed to be refreshed.
- *
- * @see aggregator_admin_refresh_feed()
- * @see aggregator_menu()
- */
-function aggregator_admin_refresh_feed_access($feed) {
-  if (!user_access('administer news feeds')) {
-    return FALSE;
-  }
-  $token = request()->query->get('token');
-  if (!isset($token) || !drupal_valid_token($token, 'aggregator/update/' . $feed->fid)) {
-    return FALSE;
-  }
-  return TRUE;
 }

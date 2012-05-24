@@ -105,9 +105,16 @@ function comment_reply(Node $node, $pid = NULL) {
  *   A comment identifier.
  *
  * @see comment_menu()
- * @see comment_approve_access()
  */
 function comment_approve($cid) {
+  // @todo CSRF tokens are validated in page callbacks rather than access
+  //   callbacks, because access callbacks are also invoked during menu link
+  //   generation. Add token support to routing: http://drupal.org/node/755584.
+  $token = request()->query->get('token');
+  if (!isset($token) || !drupal_valid_token($token, "comment/$cid/approve")) {
+    drupal_access_denied();
+  }
+
   if ($comment = comment_load($cid)) {
     $comment->status = COMMENT_PUBLISHED;
     comment_save($comment);

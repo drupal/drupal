@@ -317,11 +317,6 @@ function overlay_user_dismiss_message_access() {
   if (empty($user->uid)) {
     return FALSE;
   }
-  // Protect against cross-site request forgeries by validating a token.
-  $token = request()->query->get('token');
-  if (!isset($token) || !drupal_valid_token($token, 'overlay')) {
-    return FALSE;
-  }
   return TRUE;
 }
 
@@ -333,6 +328,15 @@ function overlay_user_dismiss_message_access() {
  */
 function overlay_user_dismiss_message() {
   global $user;
+
+  // @todo CSRF tokens are validated in page callbacks rather than access
+  //   callbacks, because access callbacks are also invoked during menu link
+  //   generation. Add token support to routing: http://drupal.org/node/755584.
+  $token = request()->query->get('token');
+  if (!isset($token) || !drupal_valid_token($token, 'overlay')) {
+    drupal_access_denied();
+  }
+
   $account = user_load($user->uid);
   $account->data['overlay_message_dismissed'] = 1;
   $account->save();

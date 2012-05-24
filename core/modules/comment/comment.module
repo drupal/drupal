@@ -277,8 +277,7 @@ function comment_menu() {
     'title' => 'Approve',
     'page callback' => 'comment_approve',
     'page arguments' => array(1),
-    'access callback' => 'comment_approve_access',
-    'access arguments' => array(1),
+    'access arguments' => array('administer comments'),
     'file' => 'comment.pages.inc',
     'weight' => 1,
   );
@@ -2514,24 +2513,4 @@ function comment_file_download_access($field, $entity_type, $entity) {
     }
     return FALSE;
   }
-}
-
-/**
- * Access callback: Determines if comment approval is accessible.
- *
- * @param $cid
- *   A comment identifier.
- *
- * @see comment_approve()
- * @see comment_menu()
- */
-function comment_approve_access($cid) {
-  if (!user_access('administer comments')) {
-    return FALSE;
-  }
-  $token = request()->query->get('token');
-  if (!isset($token) || !drupal_valid_token($token, "comment/$cid/approve")) {
-    return FALSE;
-  }
-  return TRUE;
 }
