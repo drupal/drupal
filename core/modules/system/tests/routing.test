@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file
+ * Tests for Symfony2-related functionality.
+ */
+
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
+
+use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Routing\UrlMatcherDumper;
+
+/**
+ * Basic tests for the UrlMatcherDumper.
+ *
+ * Note: This should be a UnitTestBase, but those are broken right now in
+ * Drupal HEAD.  Convert it to a UnitTest when that gets fixed.
+ */
+class UrlMatcherDumperTestCase extends WebTestBase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Routing',
+      'description' => 'Confirm that the matcher dumper is functioning properly.',
+      'group' => 'Routng',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  /**
+   * Confirms that the dumper can be instantiated successfuly.
+   */
+  function testCreate() {
+    $connection = Database::getConnection();
+    $dumper= new UrlMatcherDumper($connection);
+
+    $class_name = 'Drupal\Core\Routing\UrlMatcherDumper';
+    $this->assertTrue($dumper instanceof $class_name, t('Dumper created successfully'));
+  }
+
+  /**
+   * Confirms that we can add routes to the dumper.
+   */
+  function testAddRoutes() {
+    $connection = Database::getConnection();
+    $dumper= new UrlMatcherDumper($connection);
+
+    $route = new Route('test');
+    $collection = new RouteCollection();
+    $collection->add('test_route', $route);
+
+    $dumper->addRoutes($collection);
+
+    $dumper_routes = $dumper->getRoutes()->all();
+    $collection_routes = $collection->all();
+
+    foreach ($dumper_routes as $name => $route) {
+      $this->assertEqual($route->getPattern(), $collection_routes[$name]->getPattern(), t('Routes match'));
+    }
+  }
+
+  /**
+   * Confirms that we can add routes to the dumper when it already has some.
+   */
+  function testAddAdditionalRoutes() {
+    $connection = Database::getConnection();
+    $dumper= new UrlMatcherDumper($connection);
+
+    $route = new Route('test');
+    $collection = new RouteCollection();
+    $collection->add('test_route', $route);
+    $dumper->addRoutes($collection);
+
+    $route = new Route('test2');
+    $collection2 = new RouteCollection();
+    $collection2->add('test_route2', $route);
+    $dumper->addRoutes($collection2);
+
+    // Merge the two collections together so we can test them.
+    $collection->addCollection(clone $collection2);
+
+    $dumper_routes = $dumper->getRoutes()->all();
+    $collection_routes = $collection->all();
+
+    $success = TRUE;
+    foreach ($collection_routes as $name => $route) {
+      if (empty($dumper_routes[$name])) {
+        $success = FALSE;
+        $this->fail(t('Not all routes found in the dumper.'));
+      }
+    }
+
+    if ($success) {
+      $this->pass('All routes found in the dumper.');
+    }
+  }
+
+
+}
