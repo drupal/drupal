@@ -2344,6 +2344,7 @@ function hook_xmlrpc_alter(&$methods) {
  *   - type: The type of message for this entry.
  *   - user: The user object for the user who was logged in when the event
  *     happened.
+ *   - uid: The user ID for the user who was logged in when the event happened.
  *   - request_uri: The request URI for the page the event happened in.
  *   - referer: The page that referred the user to the page where the event
  *     occurred.
@@ -2410,7 +2411,7 @@ function hook_watchdog(array $log_entry) {
     '@ip'            => $log_entry['ip'],
     '@request_uri'   => $log_entry['request_uri'],
     '@referer_uri'   => $log_entry['referer'],
-    '@uid'           => $log_entry['user']->uid,
+    '@uid'           => $log_entry['uid'],
     '@name'          => $log_entry['user']->name,
     '@link'          => strip_tags($log_entry['link']),
     '@message'       => strip_tags($log_entry['message']),
