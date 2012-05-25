@@ -123,6 +123,12 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertTrue($this->commentExists($reply, TRUE), t('Page two exists. %s'));
     $this->setCommentsPerPage(50);
 
+    // Attempt to reply to an unpublished comment.
+    $reply_loaded->status = COMMENT_NOT_PUBLISHED;
+    $reply_loaded->save();
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $reply_loaded->cid);
+    $this->assertText(t('The comment you are replying to does not exist.'), 'Replying to an unpublished comment');
+
     // Attempt to post to node with comments disabled.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_HIDDEN));
     $this->assertTrue($this->node, t('Article node created.'));
