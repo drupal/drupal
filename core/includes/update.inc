@@ -84,7 +84,6 @@ function update_prepare_d8_bootstrap() {
   // Allow the database system to work even if the registry has not been
   // created yet.
   include_once DRUPAL_ROOT . '/core/includes/install.inc';
-  include_once DRUPAL_ROOT . '/core/modules/entity/entity.controller.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
   // If the site has not updated to Drupal 8 yet, check to make sure that it is
