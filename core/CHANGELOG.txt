@@ -16,6 +16,8 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Profile
       * Trigger
 - Removed the Garland theme from core.
+- Removed backwards-compatibility with 'magic_quotes_gpc'/'magic_quotes_runtime'
+  PHP configuration settings. Both are required to be disabled.
 - Universally Unique IDentifier (UUID):
     * Support for generating and validating UUIDs.
 - JavaScript changes:

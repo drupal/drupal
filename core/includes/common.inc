@@ -1024,67 +1024,6 @@ function drupal_http_request($url, array $options = array()) {
  */
 
 /**
- * Strips slashes from a string or array of strings.
- *
- * Callback for array_walk() within fix_gpx_magic().
- *
- * @param $item
- *   An individual string or array of strings from superglobals.
- */
-function _fix_gpc_magic(&$item) {
-  if (is_array($item)) {
-    array_walk($item, '_fix_gpc_magic');
-  }
-  else {
-    $item = stripslashes($item);
-  }
-}
-
-/**
- * Strips slashes from $_FILES items.
- *
- * Callback for array_walk() within fix_gpc_magic().
- *
- * The tmp_name key is skipped keys since PHP generates single backslashes for
- * file paths on Windows systems.
- *
- * @param $item
- *   An item from $_FILES.
- * @param $key
- *   The key for the item within $_FILES.
- *
- * @see http://php.net/manual/features.file-upload.php#42280
- */
-function _fix_gpc_magic_files(&$item, $key) {
-  if ($key != 'tmp_name') {
-    if (is_array($item)) {
-      array_walk($item, '_fix_gpc_magic_files');
-    }
-    else {
-      $item = stripslashes($item);
-    }
-  }
-}
-
-/**
- * Fixes double-escaping caused by "magic quotes" in some PHP installations.
- *
- * @see _fix_gpc_magic()
- * @see _fix_gpc_magic_files()
- */
-function fix_gpc_magic() {
-  static $fixed = FALSE;
-  if (!$fixed && ini_get('magic_quotes_gpc')) {
-    array_walk($_GET, '_fix_gpc_magic');
-    array_walk($_POST, '_fix_gpc_magic');
-    array_walk($_COOKIE, '_fix_gpc_magic');
-    array_walk($_REQUEST, '_fix_gpc_magic');
-    array_walk($_FILES, '_fix_gpc_magic_files');
-  }
-  $fixed = TRUE;
-}
-
-/**
  * @defgroup validation Input validation
  * @{
  * Functions to validate user input.
@@ -5181,10 +5120,6 @@ function _drupal_bootstrap_full() {
   require_once DRUPAL_ROOT . '/core/includes/errors.inc';
   require_once DRUPAL_ROOT . '/core/includes/schema.inc';
 
-  // Detect string handling method
-  unicode_check();
-  // Undo magic quotes
-  fix_gpc_magic();
   // Load all enabled modules
   module_load_all();
   // Make sure all stream wrappers are registered.

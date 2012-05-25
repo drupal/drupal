@@ -232,6 +232,22 @@ const LANGUAGE_LTR = 0;
 const LANGUAGE_RTL = 1;
 
 /**
+ * Indicates an error during check for PHP unicode support.
+ */
+const UNICODE_ERROR = -1;
+
+/**
+ * Indicates that standard PHP (emulated) unicode support is being used.
+ */
+const UNICODE_SINGLEBYTE = 0;
+
+/**
+ * Indicates that full unicode support with the PHP mbstring extension is being
+ * used.
+ */
+const UNICODE_MULTIBYTE = 1;
+
+/**
  * Time of the current request in seconds elapsed since the Unix Epoch.
  *
  * This differs from $_SERVER['REQUEST_TIME'], which is stored as a float
@@ -561,8 +577,13 @@ function drupal_environment_initialize() {
   // sites/default/default.settings.php contains more runtime settings.
   // The .htaccess file contains settings that cannot be changed at runtime.
 
-  // Don't escape quotes when reading files from the database, disk, etc.
-  ini_set('magic_quotes_runtime', '0');
+  // Deny execution with enabled "magic quotes" (both GPC and runtime).
+  if (get_magic_quotes_gpc() || get_magic_quotes_runtime()) {
+    header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error');
+    print "PHP's 'magic_quotes_gpc' and 'magic_quotes_runtime' settings are not supported and must be disabled.";
+    exit;
+  }
+
   // Use session cookies, not transparent sessions that puts the session id in
   // the query string.
   ini_set('session.use_cookies', '1');
@@ -577,6 +598,9 @@ function drupal_environment_initialize() {
   // Set sane locale settings, to ensure consistent string, dates, times and
   // numbers handling.
   setlocale(LC_ALL, 'C');
+
+  // Detect string handling method.
+  unicode_check();
 }
 
 /**
@@ -587,6 +611,51 @@ function drupal_environment_initialize() {
  */
 function drupal_valid_http_host($host) {
   return preg_match('/^\[?(?:[a-zA-Z0-9-:\]_]+\.?)+$/', $host);
+}
+
+/**
+ * Checks for Unicode support in PHP and sets the proper settings if possible.
+ *
+ * Because Drupal needs to be able to handle text in various encodings, we do
+ * not support mbstring function overloading. HTTP input/output conversion must
+ * be disabled for similar reasons.
+ *
+ * @return string
+ *   A string identifier of a failed multibyte extension check, if any.
+ *   Otherwise, an empty string.
+ */
+function unicode_check() {
+  global $multibyte;
+
+  // Check for mbstring extension.
+  if (!function_exists('mb_strlen')) {
+    $multibyte = UNICODE_SINGLEBYTE;
+    return 'mb_strlen';
+  }
+
+  // Check mbstring configuration.
+  if (ini_get('mbstring.func_overload') != 0) {
+    $multibyte = UNICODE_ERROR;
+    return 'mbstring.func_overload';
+  }
+  if (ini_get('mbstring.encoding_translation') != 0) {
+    $multibyte = UNICODE_ERROR;
+    return 'mbstring.encoding_translation';
+  }
+  if (ini_get('mbstring.http_input') != 'pass') {
+    $multibyte = UNICODE_ERROR;
+    return 'mbstring.http_input';
+  }
+  if (ini_get('mbstring.http_output') != 'pass') {
+    $multibyte = UNICODE_ERROR;
+    return 'mbstring.http_output';
+  }
+
+  // Set appropriate configuration.
+  mb_internal_encoding('utf-8');
+  mb_language('uni');
+  $multibyte = UNICODE_MULTIBYTE;
+  return '';
 }
 
 /**
