@@ -2508,25 +2508,39 @@ function theme_status_report($variables) {
       'class' => 'error',
     ),
   );
-  $output = '<table class="system-status-report">';
+  $output = '<table class="system-status-report"><tbody>';
 
   foreach ($requirements as $requirement) {
     if (empty($requirement['#type'])) {
-      $severity = $severities[isset($requirement['severity']) ? (int) $requirement['severity'] : 0];
-      $severity['icon'] = '<div title="' . $severity['title'] . '"><span class="element-invisible">' . $severity['title'] . '</span></div>';
-
-      // Output table row(s)
-      if (!empty($requirement['description'])) {
-        $output .= '<tr class="' . $severity['class'] . ' merge-down"><td class="status-icon">' . $severity['icon'] . '</td><td class="status-title">' . $requirement['title'] . '</td><td class="status-value">' . $requirement['value'] . '</td></tr>';
-        $output .= '<tr class="' . $severity['class'] . ' merge-up"><td colspan="3" class="status-description">' . $requirement['description'] . '</td></tr>';
+      // Always use the explicit requirement severity, if defined. Otherwise,
+      // default to REQUIREMENT_OK in the installer to visually confirm that
+      // installation requirements are met. And default to REQUIREMENT_INFO to
+      // denote neutral information without special visualization.
+      if (isset($requirement['severity'])) {
+        $severity = $severities[(int) $requirement['severity']];
+      }
+      elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
+        $severity = $severities[REQUIREMENT_OK];
       }
       else {
-        $output .= '<tr class="' . $severity['class'] . '"><td class="status-icon">' . $severity['icon'] . '</td><td class="status-title">' . $requirement['title'] . '</td><td class="status-value">' . $requirement['value'] . '</td></tr>';
+        $severity = $severities[REQUIREMENT_INFO];
       }
+
+      $severity['icon'] = '<div title="' . $severity['title'] . '"><span class="element-invisible">' . $severity['title'] . '</span></div>';
+
+      // Output table rows.
+      $output .= '<tr class="' . $severity['class'] . '">';
+      $output .= '<td class="status-icon">' . $severity['icon'] . '</td>';
+      $output .= '<td class="status-title">' . $requirement['title'] . '</td>';
+      $output .= '<td class="status-value">' . $requirement['value'];
+      if (!empty($requirement['description'])) {
+        $output .= '<div class="description">' . $requirement['description'] . '</div>';
+      }
+      $output .= '</td></tr>';
     }
   }
 
-  $output .= '</table>';
+  $output .= '</tbody></table>';
   return $output;
 }
 

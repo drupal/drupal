@@ -138,7 +138,7 @@ function unicode_requirements() {
   );
   $severities = array(
     UNICODE_SINGLEBYTE => REQUIREMENT_WARNING,
-    UNICODE_MULTIBYTE => REQUIREMENT_OK,
+    UNICODE_MULTIBYTE => NULL,
     UNICODE_ERROR => REQUIREMENT_ERROR,
   );
   list($library, $description) = _unicode_check();

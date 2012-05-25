@@ -99,10 +99,10 @@ a.module-link-configure {
  */
 table.system-status-report td {
   padding: 6px;
-  vertical-align: middle;
+  vertical-align: top;
 }
-table.system-status-report tr.merge-up td {
-  padding: 0 6px 8px 28px; /* LTR */
+table.system-status-report td:nth-child(-n+2) {
+  background-color: rgba(0, 0, 0, 0.04);
 }
 table.system-status-report td.status-icon {
   width: 16px;
@@ -119,13 +119,8 @@ table.system-status-report tr.error td.status-icon div {
 table.system-status-report tr.warning td.status-icon div {
   background-image: url(../../misc/message-16-warning.png);
 }
-tr.merge-down,
-tr.merge-down td {
-  border-bottom-width: 0 !important;
-}
-tr.merge-up,
-tr.merge-up td {
-  border-top-width: 0 !important;
+table.system-status-report .status-title {
+  width: 25%;
 }
 
 /**

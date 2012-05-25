@@ -268,7 +268,7 @@ function system_requirements($phase) {
     }
 
     // Determine severity based on time since cron last ran.
-    $severity = REQUIREMENT_OK;
+    $severity = REQUIREMENT_INFO;
     if (REQUEST_TIME - $cron_last > $threshold_error) {
       $severity = REQUIREMENT_ERROR;
     }
@@ -279,7 +279,7 @@ function system_requirements($phase) {
     // Set summary and description based on values determined above.
     $summary = $t('Last run !time ago', array('!time' => format_interval(REQUEST_TIME - $cron_last)));
     $description = '';
-    if ($severity != REQUIREMENT_OK) {
+    if ($severity != REQUIREMENT_INFO) {
       $description = $t('Cron has not run recently.') . ' ' . $help;
     }
 
@@ -385,7 +385,6 @@ function system_requirements($phase) {
   if ($phase == 'runtime') {
     $requirements['update'] = array(
       'title' => $t('Database updates'),
-      'severity' => REQUIREMENT_OK,
       'value' => $t('Up to date'),
     );
 

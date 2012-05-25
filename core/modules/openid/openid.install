@@ -108,7 +108,6 @@ function openid_requirements($phase) {
     else {
       $requirements['openid_math'] = array(
         'value' => t('Installed'),
-        'severity' => REQUIREMENT_OK,
       );
     }
     $requirements['openid_math']['title'] = t('OpenID Math library');
