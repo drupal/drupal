@@ -19,8 +19,6 @@ class XMLRPCBasicTestCase extends WebTestBase {
    * Ensure that a basic XML-RPC call with no parameters works.
    */
   protected function testListMethods() {
-    global $base_url;
-
     // Minimum list of methods that should be included.
     $minimum = array(
       'system.multicall',
@@ -31,7 +29,7 @@ class XMLRPCBasicTestCase extends WebTestBase {
     );
 
     // Invoke XML-RPC call to get list of methods.
-    $url = $base_url . '/core/xmlrpc.php';
+    $url = url(NULL, array('absolute' => TRUE)) . 'core/xmlrpc.php';
     $methods = xmlrpc($url, array('system.listMethods' => array()));
 
     // Ensure that the minimum methods were found.
@@ -49,9 +47,7 @@ class XMLRPCBasicTestCase extends WebTestBase {
    * Ensure that system.methodSignature returns an array of signatures.
    */
   protected function testMethodSignature() {
-    global $base_url;
-
-    $url = $base_url . '/core/xmlrpc.php';
+    $url = url(NULL, array('absolute' => TRUE)) . 'core/xmlrpc.php';
     $signature = xmlrpc($url, array('system.methodSignature' => array('system.listMethods')));
     $this->assert(is_array($signature) && !empty($signature) && is_array($signature[0]),
       t('system.methodSignature returns an array of signature arrays.'));
@@ -103,8 +99,7 @@ class XMLRPCValidator1IncTestCase extends WebTestBase {
    * Run validator1 tests.
    */
   function testValidator1() {
-    global $base_url;
-    $xml_url = $base_url . '/core/xmlrpc.php';
+    $xml_url = url(NULL, array('absolute' => TRUE)) . 'core/xmlrpc.php';
     srand();
     mt_srand();
 
@@ -218,9 +213,7 @@ class XMLRPCMessagesTestCase extends WebTestBase {
    * Make sure that XML-RPC can transfer large messages.
    */
   function testSizedMessages() {
-    global $base_url;
-
-    $xml_url = $base_url . '/core/xmlrpc.php';
+    $xml_url = url(NULL, array('absolute' => TRUE)) . 'core/xmlrpc.php';
     $sizes = array(8, 80, 160);
     foreach ($sizes as $size) {
       $xml_message_l = xmlrpc_test_message_sized_in_kb($size);
@@ -234,11 +227,10 @@ class XMLRPCMessagesTestCase extends WebTestBase {
    * Ensure that hook_xmlrpc_alter() can hide even builtin methods.
    */
   protected function testAlterListMethods() {
-    global $base_url;
 
     // Ensure xmlrpc_test_xmlrpc_alter() is disabled and retrieve regular list of methods.
     variable_set('xmlrpc_test_xmlrpc_alter', FALSE);
-    $url = $base_url . '/core/xmlrpc.php';
+    $url = url(NULL, array('absolute' => TRUE)) . 'core/xmlrpc.php';
     $methods1 = xmlrpc($url, array('system.listMethods' => array()));
 
     // Enable the alter hook and retrieve the list of methods again.
