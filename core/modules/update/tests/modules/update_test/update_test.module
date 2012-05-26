@@ -115,19 +115,12 @@ function update_test_mock_page($project_name) {
 
   $path = drupal_get_path('module', 'update_test');
   $file = "$path/$project_name.$availability_scenario.xml";
+  $headers = array('Content-Type' => 'text/xml; charset=utf-8');
   if (!is_file($file)) {
     // Return an empty response.
-    return new Response('', 200, array('Content-Type' =>  'text/xml; charset=utf-8'));
+    return new Response('', 200, $headers);
   }
-  return new StreamedResponse(function() use ($file) {
-    // Transfer file in 1024 byte chunks to save memory usage.
-    if ($fd = fopen($file, 'rb')) {
-      while (!feof($fd)) {
-        print fread($fd, 1024);
-      }
-      fclose($fd);
-    }
-  }, 200, array('Content-Type' =>  'text/xml; charset=utf-8'));
+  return file_transfer($file, $headers);
 }
 
 /**

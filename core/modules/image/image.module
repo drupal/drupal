@@ -734,16 +734,7 @@ function image_style_deliver($style, $scheme) {
       'Content-Type' => $image->info['mime_type'],
       'Content-Length' => $image->info['file_size'],
     );
-    return new StreamedResponse(function() use ($uri) {
-      $scheme = file_uri_scheme($uri);
-      // Transfer file in 1024 byte chunks to save memory usage.
-      if ($scheme && file_stream_wrapper_valid_scheme($scheme) && $fd = fopen($uri, 'rb')) {
-        while (!feof($fd)) {
-          print fread($fd, 1024);
-        }
-        fclose($fd);
-      }
-    }, 200, $headers);
+    return file_transfer($uri, $headers);
   }
   else {
     watchdog('image', 'Unable to generate the derived image located at %path.', array('%path' => $derivative_uri));
