@@ -112,14 +112,9 @@ function contact_category_edit_form($form, &$form_state, array $category = array
     '#description' => t('When listing categories, those with lighter (smaller) weights get listed before categories with heavier (larger) weights. Categories with equal weights are sorted alphabetically.'),
   );
   $form['selected'] = array(
-    '#type' => 'select',
-    '#title' => t('Selected'),
-    '#options' => array(
-      0 => t('No'),
-      1 => t('Yes'),
-    ),
+    '#type' => 'checkbox',
+    '#title' => t('Make this the default category.'),
     '#default_value' => $category['selected'],
-    '#description' => t('Set this to <em>Yes</em> if you would like this category to be selected by default.'),
   );
   $form['cid'] = array(
     '#type' => 'value',

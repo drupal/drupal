@@ -220,6 +220,11 @@ function language_from_url($languages) {
       break;
 
     case LANGUAGE_NEGOTIATION_URL_DOMAIN:
+      // Get only the host, not the port.
+      $http_host= $_SERVER['HTTP_HOST'];
+      if (strpos($http_host, ':') !== FALSE) {
+        $http_host = current(explode(':', $http_host));
+      }
       $domains = language_negotiation_url_domains();
       foreach ($languages as $language) {
         // Skip the check if the language doesn't have a domain.
@@ -228,7 +233,7 @@ function language_from_url($languages) {
           // the hostname.
           $host = 'http://' . str_replace(array('http://', 'https://'), '', $domains[$language->langcode]);
           $host = parse_url($host, PHP_URL_HOST);
-          if ($_SERVER['HTTP_HOST'] == $host) {
+          if ($http_host == $host) {
             $language_url = $language->langcode;
             break;
           }

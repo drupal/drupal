@@ -499,16 +499,13 @@ table tr.selected td {
   background: #ffc;
   border-color: #eeb;
 }
+
 table.system-status-report tr {
   border-bottom: 1px solid #ccc;
 }
 table.system-status-report tr.ok {
   color: #255b1e;
   background-color: #e5ffe2;
-}
-table.system-status-report tr.info {
-  color: #040f37;
-  background-color: #bdf;
 }
 table.system-status-report tr.warning {
   color: #840;
@@ -518,6 +515,7 @@ table.system-status-report tr.error {
   color: #8c2e0b;
   background-color: #fef5f1;
 }
+
 /**
  * Exception for webkit bug with the right border of the last cell
  * in some tables, since it's webkit only, we can use :last-child

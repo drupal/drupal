@@ -36,9 +36,6 @@ table.system-status-report td.status-icon {
   padding-left: 0;
   padding-right: 6px;
 }
-table.system-status-report tr.merge-up td {
-  padding: 0 28px 8px 6px;
-}
 
 /**
  * Appearance page.

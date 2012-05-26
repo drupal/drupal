@@ -1178,9 +1178,9 @@ abstract class WebTestBase extends TestBase {
    * @param  $edit
    *   Field data in an associative array. Changes the current input fields
    *   (where possible) to the values indicated. A checkbox can be set to
-   *   TRUE to be checked and FALSE to be unchecked. Note that when a form
-   *   contains file upload fields, other fields cannot start with the '@'
-   *   character.
+   *   TRUE to be checked and should be set to FALSE to be unchecked. Note that
+   *   when a form contains file upload fields, other fields cannot start with
+   *   the '@' character.
    *
    *   Multiple select fields can be set using name[] and setting each of the
    *   possible values. Example:

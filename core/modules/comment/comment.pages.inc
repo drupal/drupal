@@ -51,7 +51,7 @@ function comment_reply(Node $node, $pid = NULL) {
       if (user_access('access comments')) {
         // Load the parent comment.
         $comment = comment_load($pid);
-        if ($comment->status = COMMENT_PUBLISHED) {
+        if ($comment->status == COMMENT_PUBLISHED) {
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.
           if ($comment->nid != $node->nid) {

@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Tests for the Translation module.
+ * Definition of Drupal\translation\Tests\TranslationTest.
  */
+
+namespace Drupal\translation\Tests;
 
 use Drupal\node\Node;
 use Drupal\simpletest\WebTestBase;
@@ -11,7 +13,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Functional tests for the Translation module.
  */
-class TranslationTestCase extends WebTestBase {
+class TranslationTest extends WebTestBase {
   protected $profile = 'standard';
 
   protected $book;

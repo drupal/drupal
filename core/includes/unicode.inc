@@ -1,22 +1,6 @@
 <?php
 
 /**
- * Indicates an error during check for PHP unicode support.
- */
-const UNICODE_ERROR = -1;
-
-/**
- * Indicates that standard PHP (emulated) unicode support is being used.
- */
-const UNICODE_SINGLEBYTE = 0;
-
-/**
- * Indicates that full unicode support with the PHP mbstring extension is being
- * used.
- */
-const UNICODE_MULTIBYTE = 1;
-
-/**
  * Matches Unicode characters that are word boundaries.
  *
  * @see http://unicode.org/glossary
@@ -78,53 +62,6 @@ define('PREG_CLASS_UNICODE_WORD_BOUNDARY',
   '\x{FF3B}-\x{FF40}\x{FF5B}-\x{FF65}\x{FFE0}-\x{FFFD}');
 
 /**
- * Wrapper around _unicode_check().
- */
-function unicode_check() {
-  list($GLOBALS['multibyte']) = _unicode_check();
-}
-
-/**
- * Perform checks about Unicode support in PHP, and set the right settings if
- * needed.
- *
- * Because Drupal needs to be able to handle text in various encodings, we do
- * not support mbstring function overloading. HTTP input/output conversion must
- * be disabled for similar reasons.
- *
- * @param $errors
- *   Whether to report any fatal errors with form_set_error().
- */
-function _unicode_check() {
-  // Ensure translations don't break at install time
-  $t = get_t();
-
-  // Check for mbstring extension
-  if (!function_exists('mb_strlen')) {
-    return array(UNICODE_SINGLEBYTE, $t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="@url">PHP mbstring extension</a> for improved Unicode support.', array('@url' => 'http://www.php.net/mbstring')));
-  }
-
-  // Check mbstring configuration
-  if (ini_get('mbstring.func_overload') != 0) {
-    return array(UNICODE_ERROR, $t('Multibyte string function overloading in PHP is active and must be disabled. Check the php.ini <em>mbstring.func_overload</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
-  }
-  if (ini_get('mbstring.encoding_translation') != 0) {
-    return array(UNICODE_ERROR, $t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
-  }
-  if (ini_get('mbstring.http_input') != 'pass') {
-    return array(UNICODE_ERROR, $t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_input</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
-  }
-  if (ini_get('mbstring.http_output') != 'pass') {
-    return array(UNICODE_ERROR, $t('Multibyte string output conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_output</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
-  }
-
-  // Set appropriate configuration
-  mb_internal_encoding('utf-8');
-  mb_language('uni');
-  return array(UNICODE_MULTIBYTE, '');
-}
-
-/**
  * Return Unicode library status and errors.
  */
 function unicode_requirements() {
@@ -138,20 +75,39 @@ function unicode_requirements() {
   );
   $severities = array(
     UNICODE_SINGLEBYTE => REQUIREMENT_WARNING,
-    UNICODE_MULTIBYTE => REQUIREMENT_OK,
+    UNICODE_MULTIBYTE => NULL,
     UNICODE_ERROR => REQUIREMENT_ERROR,
   );
-  list($library, $description) = _unicode_check();
+  $failed_check = unicode_check();
+  $library = $GLOBALS['multibyte'];
 
   $requirements['unicode'] = array(
     'title' => $t('Unicode library'),
     'value' => $libraries[$library],
+    'severity' => $severities[$library],
   );
-  if ($description) {
-    $requirements['unicode']['description'] = $description;
-  }
+  $t_args = array('@url' => 'http://www.php.net/mbstring');
+  switch ($failed_check) {
+    case 'mb_strlen':
+      $requirements['unicode']['description'] = $t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="@url">PHP mbstring extension</a> for improved Unicode support.', $t_args);
+      break;
 
-  $requirements['unicode']['severity'] = $severities[$library];
+    case 'mbstring.func_overload':
+      $requirements['unicode']['description'] = $t('Multibyte string function overloading in PHP is active and must be disabled. Check the php.ini <em>mbstring.func_overload</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', $t_args);
+      break;
+
+    case 'mbstring.encoding_translation':
+      $requirements['unicode']['description'] = $t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', $t_args);
+      break;
+
+    case 'mbstring.http_input':
+      $requirements['unicode']['description'] = $t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_input</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', $t_args);
+      break;
+
+    case 'mbstring.http_output':
+      $requirements['unicode']['description'] = $t('Multibyte string output conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_output</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', $t_args);
+      break;
+  }
 
   return $requirements;
 }
