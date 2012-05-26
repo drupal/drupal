@@ -5,6 +5,9 @@
  * Exposes global functionality for creating image styles.
  */
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 /**
  * Image style constant for user presets in the database.
  */
@@ -726,13 +729,25 @@ function image_style_deliver($style, $scheme) {
 
   if ($success) {
     $image = image_load($derivative_uri);
-    file_transfer($image->source, array('Content-Type' => $image->info['mime_type'], 'Content-Length' => $image->info['file_size']));
+    $uri = $image->source;
+    $headers = array(
+      'Content-Type' => $image->info['mime_type'],
+      'Content-Length' => $image->info['file_size'],
+    );
+    return new StreamedResponse(function() use ($uri) {
+      $scheme = file_uri_scheme($uri);
+      // Transfer file in 1024 byte chunks to save memory usage.
+      if ($scheme && file_stream_wrapper_valid_scheme($scheme) && $fd = fopen($uri, 'rb')) {
+        while (!feof($fd)) {
+          print fread($fd, 1024);
+        }
+        fclose($fd);
+      }
+    }, 200, $headers);
   }
   else {
     watchdog('image', 'Unable to generate the derived image located at %path.', array('%path' => $derivative_uri));
-    drupal_add_http_header('Status', '500 Internal Server Error');
-    print t('Error generating image.');
-    drupal_exit();
+    return new Response(t('Error generating image.'), 500);
   }
 }
 

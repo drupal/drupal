@@ -1968,39 +1968,6 @@ function file_unmanaged_save_data($data, $destination = NULL, $replace = FILE_EX
 }
 
 /**
- * Transfers a file to the client using HTTP.
- *
- * Pipes a file through Drupal to the client.
- *
- * @param $uri
- *   String specifying the file URI to transfer.
- * @param $headers
- *   An array of HTTP headers to send along with file.
- */
-function file_transfer($uri, $headers) {
-  if (ob_get_level()) {
-    ob_end_clean();
-  }
-
-  foreach ($headers as $name => $value) {
-    drupal_add_http_header($name, $value);
-  }
-  drupal_send_headers();
-  $scheme = file_uri_scheme($uri);
-  // Transfer file in 1024 byte chunks to save memory usage.
-  if ($scheme && file_stream_wrapper_valid_scheme($scheme) && $fd = fopen($uri, 'rb')) {
-    while (!feof($fd)) {
-      print fread($fd, 1024);
-    }
-    fclose($fd);
-  }
-  else {
-    drupal_not_found();
-  }
-  drupal_exit();
-}
-
-/**
  * Page callback: Handles private file transfers.
  *
  * Call modules that implement hook_file_download() to find out if a file is
@@ -2529,7 +2496,8 @@ function file_directory_temp() {
  *   A file object.
  *
  * @return
- *   An associative array of headers, as expected by file_transfer().
+ *   An associative array of headers, as expected by
+ *   \Symfony\Component\HttpFoundation\StreamedResponse.
  */
 function file_get_content_headers($file) {
   $name = mime_header_encode($file->filename);
