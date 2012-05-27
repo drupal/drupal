@@ -15,9 +15,9 @@
 
 use Drupal\entity\EntityFieldQuery;
 
-require_once DRUPAL_ROOT . '/core/modules/field/tests/field_test.entity.inc';
-require_once DRUPAL_ROOT . '/core/modules/field/tests/field_test.field.inc';
-require_once DRUPAL_ROOT . '/core/modules/field/tests/field_test.storage.inc';
+require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.entity.inc';
+require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.field.inc';
+require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.storage.inc';
 
 /**
  * Implements hook_permission().
