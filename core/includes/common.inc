@@ -828,13 +828,6 @@ function drupal_http_request($url, array $options = array()) {
     // clash with the HTTP status codes.
     $result->code = -$errno;
     $result->error = trim($errstr) ? trim($errstr) : t('Error opening socket @socket', array('@socket' => $socket));
-
-    // Mark that this request failed. This will trigger a check of the web
-    // server's ability to make outgoing HTTP requests the next time that
-    // requirements checking is performed.
-    // See system_requirements().
-    variable_set('drupal_http_request_fails', TRUE);
-
     return $result;
   }
 
