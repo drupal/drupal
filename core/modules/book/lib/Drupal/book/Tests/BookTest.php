@@ -2,13 +2,15 @@
 
 /**
  * @file
- * Tests for book.module.
+ * Definition of Drupal\book\Tests\BookTest.
  */
+
+namespace Drupal\book\Tests;
 
 use Drupal\node\Node;
 use Drupal\simpletest\WebTestBase;
 
-class BookTestCase extends WebTestBase {
+class BookTest extends WebTestBase {
   protected $book;
   // $book_author is a user with permission to create and edit books.
   protected $book_author;
