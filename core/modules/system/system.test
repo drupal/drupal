@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Config\FileStorage;
 use Drupal\Component\Graph\Graph;
 use Drupal\simpletest\WebTestBase;
 use Drupal\simpletest\UnitTestBase;
@@ -90,7 +91,8 @@ class ModuleTestCase extends WebTestBase {
     // Get the path to the module's config dir.
     $module_config_dir = drupal_get_path('module', $module) . '/config';
     if (is_dir($module_config_dir)) {
-      $files = glob($module_config_dir . '/' . '*.xml');
+      $files = glob($module_config_dir . '/*.' . FileStorage::getFileExtension());
+      $this->assertTrue($files);
       $config_dir = config_get_config_directory();
       // Get the filename of each config file.
       foreach ($files as $file) {
@@ -120,7 +122,8 @@ class ModuleTestCase extends WebTestBase {
     // Get the path to the module's config dir.
     $module_config_dir = drupal_get_path('module', $module) . '/config';
     if (is_dir($module_config_dir)) {
-      $files = glob($module_config_dir . '/' . '*.xml');
+      $files = glob($module_config_dir . '/*.' . FileStorage::getFileExtension());
+      $this->assertTrue($files);
       $config_dir = config_get_config_directory();
       // Get the filename of each config file.
       foreach ($files as $file) {
