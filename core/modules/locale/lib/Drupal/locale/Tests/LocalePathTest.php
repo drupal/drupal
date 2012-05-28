@@ -60,7 +60,7 @@ class LocalePathTest extends WebTestBase {
     // Check that the "xx" front page is readily available because path prefix
     // negotiation is pre-configured.
     $this->drupalGet($prefix);
-    $this->assertText(t('Welcome to Drupal'), t('The "xx" front page is readily available.'));
+    $this->assertText(t('Welcome to Drupal'), t('The "xx" front page is readibly available.'));
 
     // Create a node.
     $node = $this->drupalCreateNode(array('type' => 'page'));

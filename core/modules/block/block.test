@@ -111,7 +111,7 @@ class BlockTestCase extends WebTestBase {
 
     // Set visibility only for authenticated users, to verify delete functionality.
     $edit = array();
-    $edit['roles[2]'] = TRUE;
+    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
     $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/configure', $edit, t('Save block'));
 
     // Delete the created custom block & verify that it's been deleted and no longer appearing on the page.

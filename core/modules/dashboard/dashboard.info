@@ -3,6 +3,5 @@ description = Provides a dashboard page in the administrative interface for orga
 core = 8.x
 package = Core
 version = VERSION
-files[] = dashboard.test
 dependencies[] = block
 configure = admin/dashboard/customize

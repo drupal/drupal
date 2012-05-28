@@ -5,8 +5,6 @@
  * Defines an entity type.
  */
 
-use Drupal\entity\EntityController;
-
 /**
  * Implements hook_entity_info().
  */
@@ -68,7 +66,7 @@ function field_test_entity_info() {
       'name' => t('Test Entity with a specified bundle.'),
       'base table' => 'test_entity_bundle',
       'fieldable' => TRUE,
-      'controller class' => 'TestEntityBundleController',
+      'controller class' => 'Drupal\field_test\TestEntityBundleController',
       'field cache' => FALSE,
       'entity keys' => array(
         'id' => 'ftid',
@@ -475,23 +473,4 @@ function field_test_entity_nested_form_submit($form, &$form_state) {
   field_test_entity_save($entity_2);
 
   drupal_set_message(t('test_entities @id_1 and @id_2 have been updated.', array('@id_1' => $entity_1->ftid, '@id_2' => $entity_2->ftid)));
-}
-
-/**
- * Controller class for the test_entity_bundle entity type.
- *
- * This extends the Drupal\entity\EntityController class, adding
- * required special handling for bundles (since they are not stored in the
- * database).
- */
-class TestEntityBundleController extends EntityController {
-
-  protected function attachLoad(&$entities, $revision_id = FALSE) {
-    // Add bundle information.
-    foreach ($entities as $key => $entity) {
-      $entity->fttype = 'test_entity_bundle';
-      $entities[$key] = $entity;
-    }
-    parent::attachLoad($entities, $revision_id);
-  }
 }

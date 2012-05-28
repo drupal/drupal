@@ -2,13 +2,15 @@
 
 /**
  * @file
- * Tests for book.module.
+ * Definition of Drupal\book\Tests\BookTest.
  */
+
+namespace Drupal\book\Tests;
 
 use Drupal\node\Node;
 use Drupal\simpletest\WebTestBase;
 
-class BookTestCase extends WebTestBase {
+class BookTest extends WebTestBase {
   protected $book;
   // $book_author is a user with permission to create and edit books.
   protected $book_author;
@@ -282,8 +284,8 @@ class BookTestCase extends WebTestBase {
 
      // Give anonymous users the permission 'node test view'.
      $edit = array();
-     $edit['1[node test view]'] = TRUE;
-     $this->drupalPost('admin/people/permissions/1', $edit, t('Save permissions'));
+     $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
+     $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
      $this->assertText(t('The changes have been saved.'), t("Permission 'node test view' successfully assigned to anonymous users."));
 
     // Test correct display of the block.
@@ -318,8 +320,8 @@ class BookTestCase extends WebTestBase {
 
      // Give anonymous users the permission 'node test view'.
      $edit = array();
-     $edit['1[node test view]'] = TRUE;
-     $this->drupalPost('admin/people/permissions/1', $edit, t('Save permissions'));
+     $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
+     $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
      $this->assertText(t('The changes have been saved.'), t('Permission \'node test view\' successfully assigned to anonymous users.'));
 
      // Create a book.
