@@ -2,13 +2,15 @@
 
 /**
  * @file
- * Tests for dblog.module.
+ * Definition of Drupal\dblog\Tests\DBLogTest.
  */
 
+namespace Drupal\dblog\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use SimpleXMLElement;
 
-class DBLogTestCase extends WebTestBase {
+class DBLogTest extends WebTestBase {
   protected $profile = 'standard';
 
   protected $big_user;
@@ -477,7 +479,7 @@ class DBLogTestCase extends WebTestBase {
       $count = $this->getTypeCount($types);
       $this->assertEqual(array_sum($count), $type['count'], 'Count matched');
     }
-    
+
     // Clear all logs and make sure the confirmation message is found.
     $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
     $this->assertText(t('Database log cleared.'), t('Confirmation message found'));
@@ -592,4 +594,3 @@ class DBLogTestCase extends WebTestBase {
     $this->assertLink(html_entity_decode($message_text), 0, $message);
   }
 }
-
