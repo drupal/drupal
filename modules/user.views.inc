@@ -72,6 +72,16 @@ function user_views_data() {
     ),
   );
 
+  // uid_raw
+  $data['users']['uid_raw'] = array(
+    'help' => t('The raw numeric user ID.'),
+    'real field' => 'uid',
+    'filter' => array(
+      'title' => t('The user ID'),
+      'handler' => 'views_handler_filter_numeric',
+    ),
+  );
+
   // uid
   $data['users']['uid_representative'] = array(
     'relationship' => array(
