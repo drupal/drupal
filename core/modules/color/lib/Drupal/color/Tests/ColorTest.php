@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Tests for color module.
+ * Definition of Drupal\color\Tests\ColorTest.
  */
+
+namespace Drupal\color\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the Color module functionality.
  */
-class ColorTestCase extends WebTestBase {
+class ColorTest extends WebTestBase {
   protected $big_user;
   protected $themes;
   protected $colorTests;
