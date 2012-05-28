@@ -48,8 +48,13 @@ class views_handler_field_date extends views_handler_field {
       '#title' => t('Custom date format'),
       '#description' => t('If "Custom", see <a href="http://us.php.net/manual/en/function.date.php" target="_blank">the PHP docs</a> for date formats. Otherwise, enter the number of different time units to display, which defaults to 2.'),
       '#default_value' => isset($this->options['custom_date_format']) ? $this->options['custom_date_format'] : '',
-      '#dependency' => array('edit-options-date-format' => array('custom', 'raw time ago', 'time ago', 'raw time hence', 'time hence', 'raw time span', 'time span', 'raw time span', 'inverse time span', 'time span')),
     );
+    // Setup #states for all possible date_formats on the custom_date_format form element.
+    foreach (array('custom', 'raw time ago', 'time ago', 'raw time hence', 'time hence', 'raw time span', 'time span', 'raw time span', 'inverse time span', 'time span') as $custom_date_possible) {
+      $form['custom_date_format']['#states']['visible'][] = array(
+        ':input[name="options[date_format]"]' => array('value' => $custom_date_possible),
+      );
+    }
 
     parent::options_form($form, $form_state);
   }

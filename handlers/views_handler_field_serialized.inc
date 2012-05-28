@@ -38,7 +38,11 @@ class views_handler_field_serialized extends views_handler_field {
       '#type' => 'textfield',
       '#title' => t('Which key should be displayed'),
       '#default_value' => $this->options['key'],
-      '#dependency' => array('edit-options-format' => array('key')),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[format]"]' => array('value' => 'key'),
+        ),
+      ),
     );
   }
 

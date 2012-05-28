@@ -42,14 +42,14 @@ class views_plugin_argument_validate_user extends views_plugin_argument_validate
 
     $form['roles'] = array(
       '#type' => 'checkboxes',
-      '#prefix' => '<div id="edit-options-validate-options-user-roles-wrapper">',
-      '#suffix' => '</div>',
       '#title' => t('Restrict to the selected roles'),
       '#options' => array_map('check_plain', user_roles(TRUE)),
       '#default_value' => $this->options['roles'],
       '#description' => t('If no roles are selected, users from any role will be allowed.'),
-      '#dependency' => array(
-        'edit-options-validate-options-user-restrict-roles' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[validate][options][user][restrict_roles]"]' => array('checked' => TRUE),
+        ),
       ),
     );
   }

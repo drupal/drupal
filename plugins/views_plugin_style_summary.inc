@@ -54,8 +54,10 @@ class views_plugin_style_summary extends views_plugin_style {
       '#type' => 'textfield',
       '#title' => t('Items to display'),
       '#default_value' => $this->options['items_per_page'],
-      '#dependency' => array(
-        'edit-options-summary-options-' . str_replace('_', '-', $this->definition['name']) . '-override' => array(1)
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[summary][options][' . $this->definition['name'] . '][override]"]' => array('checked' => TRUE),
+        ),
       ),
     );
   }

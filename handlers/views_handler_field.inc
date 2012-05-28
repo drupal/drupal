@@ -471,17 +471,22 @@ class views_handler_field extends views_handler {
       '#type' => 'textfield',
       '#title' => t('Label'),
       '#default_value' => $label,
-      '#dependency' => array(
-        'edit-options-custom-label' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[custom_label]"]' => array('checked' => TRUE),
+        ),
       ),
+
       '#weight' => -102,
     );
     $form['element_label_colon'] = array(
       '#type' => 'checkbox',
       '#title' => t('Place a colon after the label'),
       '#default_value' => $this->options['element_label_colon'],
-      '#dependency' => array(
-        'edit-options-custom-label' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[custom_label]"]' => array('checked' => TRUE),
+        ),
       ),
       '#weight' => -101,
     );
@@ -514,8 +519,10 @@ class views_handler_field extends views_handler {
       '#type' => 'select',
       '#default_value' => $this->options['element_type'],
       '#description' => t('Choose the HTML element to wrap around this field, e.g. H1, H2, etc.'),
-      '#dependency' => array(
-        'edit-options-element-type-enable' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[element_type_enable]"]' => array('checked' => TRUE),
+        ),
       ),
       '#fieldset' => 'style_settings',
     );
@@ -523,8 +530,10 @@ class views_handler_field extends views_handler {
     $form['element_class_enable'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create a CSS class'),
-      '#dependency' => array(
-        'edit-options-element-type-enable' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[element_type_enable]"]' => array('checked' => TRUE),
+        ),
       ),
       '#default_value' => !empty($this->options['element_class']) || (string) $this->options['element_class'] == '0',
       '#fieldset' => 'style_settings',
@@ -534,11 +543,12 @@ class views_handler_field extends views_handler {
       '#description' => t('You may use token substitutions from the rewriting section in this class.'),
       '#type' => 'textfield',
       '#default_value' => $this->options['element_class'],
-      '#dependency' => array(
-        'edit-options-element-class-enable' => array(1),
-        'edit-options-element-type-enable' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[element_type_enable]"]' => array('checked' => TRUE),
+          ':input[name="options[element_class_enable]"]' => array('checked' => TRUE),
+        ),
       ),
-      '#dependency_count' => 2,
       '#fieldset' => 'style_settings',
     );
 
@@ -554,16 +564,20 @@ class views_handler_field extends views_handler {
       '#type' => 'select',
       '#default_value' => $this->options['element_label_type'],
       '#description' => t('Choose the HTML element to wrap around this label, e.g. H1, H2, etc.'),
-      '#dependency' => array(
-        'edit-options-element-label-type-enable' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[element_label_type_enable]"]' => array('checked' => TRUE),
+        ),
       ),
       '#fieldset' => 'style_settings',
     );
     $form['element_label_class_enable'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create a CSS class'),
-      '#dependency' => array(
-        'edit-options-element-label-type-enable' => array(1)
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[element_label_type_enable]"]' => array('checked' => TRUE),
+        ),
       ),
       '#default_value' => !empty($this->options['element_label_class']) || (string) $this->options['element_label_class'] == '0',
       '#fieldset' => 'style_settings',
@@ -573,11 +587,12 @@ class views_handler_field extends views_handler {
       '#description' => t('You may use token substitutions from the rewriting section in this class.'),
       '#type' => 'textfield',
       '#default_value' => $this->options['element_label_class'],
-      '#dependency' => array(
-        'edit-options-element-label-class-enable' => array(1),
-        'edit-options-element-label-type-enable' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[element_label_type_enable]"]' => array('checked' => TRUE),
+          ':input[name="options[element_label_class_enable]"]' => array('checked' => TRUE),
+        ),
       ),
-      '#dependency_count' => 2,
       '#fieldset' => 'style_settings',
     );
 
@@ -593,8 +608,10 @@ class views_handler_field extends views_handler {
       '#type' => 'select',
       '#default_value' => $this->options['element_wrapper_type'],
       '#description' => t('Choose the HTML element to wrap around this field and label, e.g. H1, H2, etc. This may not be used if the field and label are not rendered together, such as with a table.'),
-      '#dependency' => array(
-        'edit-options-element-wrapper-type-enable' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[element_wrapper_type_enable]"]' => array('checked' => TRUE),
+        ),
       ),
       '#fieldset' => 'style_settings',
     );
@@ -602,8 +619,10 @@ class views_handler_field extends views_handler {
     $form['element_wrapper_class_enable'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create a CSS class'),
-      '#dependency' => array(
-        'edit-options-element-wrapper-type-enable' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[element_wrapper_type_enable]"]' => array('checked' => TRUE),
+        ),
       ),
       '#default_value' => !empty($this->options['element_wrapper_class']) || (string) $this->options['element_wrapper_class'] == '0',
       '#fieldset' => 'style_settings',
@@ -613,11 +632,12 @@ class views_handler_field extends views_handler {
       '#description' => t('You may use token substitutions from the rewriting section in this class.'),
       '#type' => 'textfield',
       '#default_value' => $this->options['element_wrapper_class'],
-      '#dependency' => array(
-        'edit-options-element-wrapper-class-enable' => array(1),
-        'edit-options-element-wrapper-type-enable' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[element_wrapper_class_enable]"]' => array('checked' => TRUE),
+          ':input[name="options[element_wrapper_type_enable]"]' => array('checked' => TRUE),
+        ),
       ),
-      '#dependency_count' => 2,
       '#fieldset' => 'style_settings',
     );
 
@@ -651,8 +671,10 @@ class views_handler_field extends views_handler {
         '#type' => 'textarea',
         '#default_value' => $this->options['alter']['text'],
         '#description' => t('The text to display for this field. You may include HTML. You may enter data from this view as per the "Replacement patterns" below.'),
-        '#dependency' => array(
-          'edit-options-alter-alter-text' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][alter_text]"]' => array('checked' => TRUE),
+          ),
         ),
       );
 
@@ -667,8 +689,10 @@ class views_handler_field extends views_handler {
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['path'],
         '#description' => t('The Drupal path or absolute URL for this link. You may enter data from this view as per the "Replacement patterns" below.'),
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+          ),
         ),
         '#maxlength' => 255,
       );
@@ -676,16 +700,20 @@ class views_handler_field extends views_handler {
         '#type' => 'checkbox',
         '#title' => t('Use absolute path'),
         '#default_value' => $this->options['alter']['absolute'],
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+          ),
         ),
       );
       $form['alter']['replace_spaces'] = array(
         '#type' => 'checkbox',
         '#title' => t('Replace spaces with dashes'),
         '#default_value' => $this->options['alter']['replace_spaces'],
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1)
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+          ),
         ),
       );
       $form['alter']['external'] = array(
@@ -693,16 +721,20 @@ class views_handler_field extends views_handler {
         '#title' => t('External server URL'),
         '#default_value' => $this->options['alter']['external'],
         '#description' => t("Links to an external server using a full URL: e.g. 'http://www.example.com' or 'www.example.com'."),
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+          ),
         ),
       );
       $form['alter']['path_case'] = array(
         '#type' => 'select',
         '#title' => t('Transform the case'),
         '#description' => t('When printing url paths, how to transform the case of the filter value.'),
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+          ),
         ),
        '#options' => array(
           'none' => t('No transform'),
@@ -718,8 +750,10 @@ class views_handler_field extends views_handler {
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['link_class'],
         '#description' => t('The CSS class to apply to the link.'),
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+          ),
         ),
       );
       $form['alter']['alt'] = array(
@@ -727,8 +761,10 @@ class views_handler_field extends views_handler {
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['alt'],
         '#description' => t('Text to place as "title" text which most browsers display as a tooltip when hovering over the link.'),
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+          ),
         ),
       );
       $form['alter']['rel'] = array(
@@ -736,8 +772,10 @@ class views_handler_field extends views_handler {
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['rel'],
         '#description' => t('Include Rel attribute for use in lightbox2 or other javascript utility.'),
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+          ),
         ),
       );
       $form['alter']['prefix'] = array(
@@ -745,8 +783,10 @@ class views_handler_field extends views_handler {
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['prefix'],
         '#description' => t('Any text to display before this link. You may include HTML.'),
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+          ),
         ),
       );
       $form['alter']['suffix'] = array(
@@ -754,8 +794,10 @@ class views_handler_field extends views_handler {
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['suffix'],
         '#description' => t('Any text to display after this link. You may include HTML.'),
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+          ),
         ),
       );
       $form['alter']['target'] = array(
@@ -763,8 +805,10 @@ class views_handler_field extends views_handler {
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['target'],
         '#description' => t("Target of the link, such as _blank, _parent or an iframe's name. This field is rarely used."),
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+          ),
         ),
       );
 
@@ -816,10 +860,18 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
         '#value' => $output,
-        '#dependency' => array(
-          'edit-options-alter-make-link' => array(1),
-          'edit-options-alter-alter-text' => array(1),
-          'edit-options-alter-more-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            array(
+              ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
+            ),
+            array(
+              ':input[name="options[alter][alter_text]"]' => array('checked' => TRUE),
+            ),
+            array(
+              ':input[name="options[alter][more_link]"]' => array('checked' => TRUE),
+            ),
+          ),
         ),
       );
 
@@ -835,8 +887,10 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['max_length'],
         '#description' => t('The maximum number of characters this field can be.'),
-        '#dependency' => array(
-          'edit-options-alter-trim' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
+          ),
         ),
       );
 
@@ -845,8 +899,10 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
         '#title' => t('Trim only on a word boundary'),
         '#description' => t('If checked, this field be trimmed only on a word boundary. This is guaranteed to be the maximum characters stated or less. If there are no word boundaries this could trim a field to nothing.'),
         '#default_value' => $this->options['alter']['word_boundary'],
-        '#dependency' => array(
-          'edit-options-alter-trim' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
+          ),
         ),
       );
 
@@ -855,8 +911,10 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
         '#title' => t('Add an ellipsis'),
         '#description' => t('If checked, a "..." will be added if a field was trimmed.'),
         '#default_value' => $this->options['alter']['ellipsis'],
-        '#dependency' => array(
-          'edit-options-alter-trim' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
+          ),
         ),
       );
 
@@ -865,8 +923,10 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
         '#title' => t('Add a read-more link if output is trimmed.'),
         '#description' => t('If checked, a read-more link will be added at the end of the trimmed output'),
         '#default_value' => $this->options['alter']['more_link'],
-        '#dependency' => array(
-          'edit-options-alter-trim' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
+          ),
         ),
       );
 
@@ -875,10 +935,11 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
         '#title' => t('More link text'),
         '#default_value' => $this->options['alter']['more_link_text'],
         '#description' => t('The text which will be displayed on the more link. You may enter data from this view as per the "Replacement patterns" above.'),
-        '#dependency_count' => 2,
-        '#dependency' => array(
-          'edit-options-alter-trim' => array(1),
-          'edit-options-alter-more-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
+            ':input[name="options[alter][more_link]"]' => array('checked' => TRUE),
+          ),
         ),
       );
       $form['alter']['more_link_path'] = array(
@@ -886,10 +947,11 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
         '#title' => t('More link path'),
         '#default_value' => $this->options['alter']['more_link_path'],
         '#description' => t('The path which is used for the more link. You may enter data from this view as per the "Replacement patterns" above.'),
-        '#dependency_count' => 2,
-        '#dependency' => array(
-          'edit-options-alter-trim' => array(1),
-          'edit-options-alter-more-link' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
+            ':input[name="options[alter][more_link]"]' => array('checked' => TRUE),
+          ),
         ),
       );
 
@@ -898,8 +960,10 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
         '#title' => t('Field can contain HTML'),
         '#description' => t('If checked, HTML corrector will be run to ensure tags are properly closed after trimming.'),
         '#default_value' => $this->options['alter']['html'],
-        '#dependency' => array(
-          'edit-options-alter-trim' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
+          ),
         ),
       );
 
@@ -915,8 +979,10 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
         '#title' => t('Preserve certain tags'),
         '#description' => t('List the tags that need to be preserved during the stripping process. example &quot;&lt;p&gt; &lt;br&gt;&quot; which will preserve all p and br elements'),
         '#default_value' => $this->options['alter']['preserve_tags'],
-        '#dependency' => array(
-          'edit-options-alter-strip-tags' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[alter][strip_tags]"]' => array('checked' => TRUE),
+          ),
         ),
       );
 

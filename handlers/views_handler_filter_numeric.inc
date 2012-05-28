@@ -147,7 +147,7 @@ class views_handler_filter_numeric extends views_handler_filter {
     // render the form items we need.
     $which = 'all';
     if (!empty($form['operator'])) {
-      $source = ($form['operator']['#type'] == 'radios') ? 'radio:options[operator]' : 'edit-options-operator';
+      $source = ':input[name="options[operator]"]';
     }
 
     if (!empty($form_state['exposed'])) {
@@ -158,7 +158,7 @@ class views_handler_filter_numeric extends views_handler_filter {
         $which = in_array($this->operator, $this->operator_values(2)) ? 'minmax' : 'value';
       }
       else {
-        $source = 'edit-' . drupal_html_id($this->options['expose']['operator_id']);
+        $source = ':input[name="' . $this->options['expose']['operator_id'] . '"]';
       }
     }
 
@@ -168,8 +168,13 @@ class views_handler_filter_numeric extends views_handler_filter {
         '#title' => empty($form_state['exposed']) ? t('Value') : '',
         '#size' => 30,
         '#default_value' => $this->value['value'],
-        '#dependency' => array($source => $this->operator_values(1)),
       );
+      // Setup #states for all operators with one value.
+      foreach ($this->operator_values(1) as $operator) {
+        $form['value']['value']['#states']['visible'][] = array(
+          $source => array('value' => $operator),
+        );
+      }
       if (!empty($form_state['exposed']) && !isset($form_state['input'][$identifier]['value'])) {
         $form_state['input'][$identifier]['value'] = $this->value['value'];
       }
@@ -202,11 +207,15 @@ class views_handler_filter_numeric extends views_handler_filter {
         '#default_value' => $this->value['max'],
       );
       if ($which == 'all') {
-        $dependency = array(
-          '#dependency' => array($source => $this->operator_values(2)),
-        );
-        $form['value']['min'] += $dependency;
-        $form['value']['max'] += $dependency;
+        $states = array();
+        // Setup #states for all operators with two values.
+        foreach ($this->operator_values(2) as $operator) {
+          $states['#states']['visible'][] = array(
+            $source => array('value' => $operator),
+          );
+        }
+        $form['value']['min'] += $states;
+        $form['value']['max'] += $states;
       }
       if (!empty($form_state['exposed']) && !isset($form_state['input'][$identifier]['min'])) {
         $form_state['input'][$identifier]['min'] = $this->value['min'];

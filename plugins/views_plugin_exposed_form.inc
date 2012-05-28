@@ -71,8 +71,10 @@ class views_plugin_exposed_form extends views_plugin {
       '#description' => t('Text to display in the reset button of the exposed form.'),
       '#default_value' => $this->options['reset_button_label'],
       '#required' => TRUE,
-      '#dependency' => array(
-        'edit-exposed-form-options-reset-button' => array(1)
+      '#states' => array(
+        'invisible' => array(
+          'input[name="exposed_form_options[reset_button]"]' => array('checked' => FALSE),
+        ),
       ),
     );
 
@@ -112,8 +114,10 @@ class views_plugin_exposed_form extends views_plugin {
       '#title' => t('Hide submit button'),
       '#description' => t('Hide submit button if javascript is enabled.'),
       '#default_value' => $this->options['autosubmit_hide'],
-      '#dependency' => array(
-        'edit-exposed-form-options-autosubmit' => array(1),
+      '#states' => array(
+        'invisible' => array(
+          'input[name="exposed_form_options[autosubmit]"]' => array('checked' => FALSE),
+        ),
       ),
     );
   }

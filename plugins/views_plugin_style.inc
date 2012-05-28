@@ -220,17 +220,21 @@ class views_plugin_style extends views_plugin {
             '#title' => t('Use rendered output to group rows'),
             '#default_value' => $grouping['rendered'],
             '#description' => t('If enabled the rendered output of the grouping field is used to group the rows.'),
-            '#dependency' => array(
-              'edit-style-options-grouping-' . $i . '-field' => array_keys($field_labels),
-            )
+            '#states' => array(
+              'invisible' => array(
+                ':input[name="style_options[grouping][' . $i . '][field]"]' => array('value' => ''),
+              ),
+            ),
           );
           $form['grouping'][$i]['rendered_strip'] = array(
             '#type' => 'checkbox',
             '#title' => t('Remove tags from rendered output'),
             '#default_value' => $grouping['rendered_strip'],
-            '#dependency' => array(
-              'edit-style-options-grouping-' . $i . '-field' => array_keys($field_labels),
-            )
+            '#states' => array(
+              'invisible' => array(
+                ':input[name="style_options[grouping][' . $i . '][field]"]' => array('value' => ''),
+              ),
+            ),
           );
         }
       }

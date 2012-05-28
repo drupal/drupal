@@ -103,8 +103,10 @@ class ViewsUiBaseViewsWizard implements ViewsWizardInterface {
     $form['displays']['page']['options'] = array(
       '#type' => 'container',
       '#attributes' => array('class' => array('options-set'),),
-      '#dependency' => array(
-        'edit-page-create' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="page[create]"]' => array('checked' => TRUE),
+        ),
       ),
       '#pre_render' => array('ctools_dependent_pre_render'),
       '#prefix' => '<div><div id="edit-page-wrapper">',
@@ -147,7 +149,7 @@ class ViewsUiBaseViewsWizard implements ViewsWizardInterface {
       '#size' => 5,
       '#element_validate' => array('views_element_validate_integer'),
     );
-    $form['displays']['page']['options']['pager'] = array(
+    $form['displays']['page']['options']['pagerz'] = array(
       '#title' => t('Use a pager'),
       '#type' => 'checkbox',
       '#default_value' => TRUE,
@@ -159,10 +161,11 @@ class ViewsUiBaseViewsWizard implements ViewsWizardInterface {
     );
     $form['displays']['page']['options']['link_properties'] = array(
       '#type' => 'container',
-      '#dependency' => array(
-        'edit-page-link' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="page[link]"]' => array('checked' => TRUE),
+        ),
       ),
-      '#pre_render' => array('ctools_dependent_pre_render'),
       '#prefix' => '<div id="edit-page-link-properties-wrapper">',
       '#suffix' => '</div>',
     );
@@ -194,10 +197,11 @@ class ViewsUiBaseViewsWizard implements ViewsWizardInterface {
       );
       $form['displays']['page']['options']['feed_properties'] = array(
         '#type' => 'container',
-        '#dependency' => array(
-          'edit-page-feed' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="page[feed]"]' => array('checked' => TRUE),
+          ),
         ),
-        '#pre_render' => array('ctools_dependent_pre_render'),
         '#prefix' => '<div id="edit-page-feed-properties-wrapper">',
         '#suffix' => '</div>',
       );
@@ -213,8 +217,10 @@ class ViewsUiBaseViewsWizard implements ViewsWizardInterface {
         '#options' => $feed_row_options,
         '#default_value' => key($feed_row_options),
         '#access' => (count($feed_row_options) > 1),
-        '#dependency' => array(
-          'edit-page-feed' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="page[feed]"]' => array('checked' => TRUE),
+          ),
         ),
         '#pre_render' => array('ctools_dependent_pre_render'),
         '#prefix' => '<div id="edit-page-feed-properties-row-plugin-wrapper">',
@@ -239,8 +245,10 @@ class ViewsUiBaseViewsWizard implements ViewsWizardInterface {
     $form['displays']['block']['options'] = array(
       '#type' => 'container',
       '#attributes' => array('class' => array('options-set'),),
-      '#dependency' => array(
-        'edit-block-create' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="block[create]"]' => array('checked' => TRUE),
+        ),
       ),
       '#pre_render' => array('ctools_dependent_pre_render'),
       '#prefix' => '<div id="edit-block-wrapper">',

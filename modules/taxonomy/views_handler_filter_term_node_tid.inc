@@ -82,7 +82,11 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
       '#type' => 'checkbox',
       '#title' => t('Show hierarchy in dropdown'),
       '#default_value' => !empty($this->options['hierarchy']),
-      '#dependency' => array('radio:options[type]' => array('select')),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[type]"]' => array('value' => 'select'),
+        ),
+      ),
     );
   }
 

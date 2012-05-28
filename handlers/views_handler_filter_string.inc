@@ -186,7 +186,7 @@ class views_handler_filter_string extends views_handler_filter {
     // render the form items we need.
     $which = 'all';
     if (!empty($form['operator'])) {
-      $source = ($form['operator']['#type'] == 'radios') ? 'radio:options[operator]' : 'edit-options-operator';
+      $source = ':input[name="options[operator]"]';
     }
     if (!empty($form_state['exposed'])) {
       $identifier = $this->options['expose']['identifier'];
@@ -196,7 +196,7 @@ class views_handler_filter_string extends views_handler_filter {
         $which = in_array($this->operator, $this->operator_values(1)) ? 'value' : 'none';
       }
       else {
-        $source = 'edit-' . drupal_html_id($this->options['expose']['operator_id']);
+        $source = ':input[name="' . $this->options['expose']['operator_id'] . '"]';
       }
     }
 
@@ -212,9 +212,12 @@ class views_handler_filter_string extends views_handler_filter {
       }
 
       if ($which == 'all') {
-        $form['value'] += array(
-          '#dependency' => array($source => $this->operator_values(1)),
-        );
+        // Setup #states for all operators with one value.
+        foreach ($this->operator_values(1) as $operator) {
+          $form['value']['#states']['visible'][] = array(
+            $source => array('value' => $operator),
+          );
+        }
       }
     }
 

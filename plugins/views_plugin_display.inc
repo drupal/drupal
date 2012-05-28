@@ -1477,17 +1477,21 @@ class views_plugin_display extends views_plugin {
           '#title' => t("Display 'more' link only if there is more content"),
           '#description' => t("Leave this unchecked to display the 'more' link even if there are no more items to display."),
           '#default_value' => !$this->get_option('use_more_always'),
-            '#dependency' => array(
-              'edit-use-more' => array(TRUE),
+          '#states' => array(
+            'visible' => array(
+              ':input[name="use_more"]' => array('checked' => TRUE),
             ),
+          ),
         );
         $form['use_more_text'] = array(
           '#type' => 'textfield',
           '#title' => t('More link text'),
           '#description' => t("The text to display for the more link."),
           '#default_value' => $this->get_option('use_more_text'),
-          '#dependency' => array(
-            'edit-use-more' => array(TRUE),
+          '#states' => array(
+            'visible' => array(
+              ':input[name="use_more"]' => array('checked' => TRUE),
+            ),
           ),
         );
         break;
@@ -1767,7 +1771,11 @@ class views_plugin_display extends views_plugin {
           '#title' => t('Custom URL'),
           '#default_value' => $this->get_option('link_url'),
           '#description' => t('A Drupal path or external URL the more link will point to. Note that this will override the link display setting above.') . $output,
-          '#dependency' => array('radio:link_display' => array('custom_url')),
+          '#states' => array(
+            'visible' => array(
+              ':input[name="link_display"]' => array('value' => 'custom_url'),
+            ),
+          ),
         );
         break;
       case 'analyze-theme':

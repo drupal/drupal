@@ -51,9 +51,10 @@ class views_plugin_argument_default_taxonomy_tid extends views_plugin_argument_d
       '#type' => 'checkbox',
       '#title' => t('Limit terms by vocabulary'),
       '#default_value'=> $this->options['limit'],
-      '#process' => array('form_process_checkbox', 'ctools_dependent_process'),
-      '#dependency' => array(
-        'edit-options-argument-default-taxonomy-tid-node' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[argument_default][taxonomy_tid][node]"]' => array('checked' => TRUE),
+        ),
       ),
     );
 
@@ -64,16 +65,15 @@ class views_plugin_argument_default_taxonomy_tid extends views_plugin_argument_d
     }
 
     $form['vocabularies'] = array(
-      '#prefix' => '<div><div id="edit-options-vids">',
-      '#suffix' => '</div></div>',
       '#type' => 'checkboxes',
       '#title' => t('Vocabularies'),
       '#options' => $options,
       '#default_value' => $this->options['vocabularies'],
-      '#process' => array('form_process_checkboxes', 'ctools_dependent_process'),
-      '#dependency' => array(
-        'edit-options-argument-default-taxonomy-tid-limit' => array(1),
-        'edit-options-argument-default-taxonomy-tid-node' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[argument_default][taxonomy_tid][limit]"]' => array('checked' => TRUE),
+          ':input[name="options[argument_default][taxonomy_tid][node]"]' => array('checked' => TRUE),
+        ),
       ),
     );
 
@@ -86,8 +86,10 @@ class views_plugin_argument_default_taxonomy_tid extends views_plugin_argument_d
         ',' => t('Filter to items that share all terms'),
         '+' => t('Filter to items that share any term'),
       ),
-      '#dependency' => array(
-        'edit-options-argument-default-taxonomy-tid-node' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[argument_default][taxonomy_tid][node]"]' => array('checked' => TRUE),
+        ),
       ),
     );
   }

@@ -333,8 +333,10 @@ function views_ui_add_form($form, &$form_state) {
     '#title_display' => 'invisible',
     '#size' => 64,
     '#default_value' => !empty($form_state['view']) ? $form_state['view']->description : '',
-    '#dependency' => array(
-      'edit-description-enable' => array(1),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="description_enable"]' => array('checked' => TRUE),
+      ),
     ),
   );
 
@@ -4755,24 +4757,37 @@ function views_ui_admin_settings_basic() {
       'above' => t('Above the preview'),
       'below' => t('Below the preview'),
     ),
-    '#id' => 'edit-show-sql',
+//    '#id' => 'edit-show-sql',
     '#default_value' => variable_get('views_ui_show_sql_query_where', 'above'),
-    '#dependency' => array('edit-views-ui-show-preview-information' => array(TRUE)),
-    '#prefix' => '<div id="edit-show-sql-wrapper" class="views-dependent">',
-    '#suffix' => '</div>',
+//    '#dependency' => array('edit-views-ui-show-preview-information' => array(TRUE)),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
+      ),
+    ),
+//    '#prefix' => '<div id="edit-show-sql-wrapper" class="views-dependent">',
+//    '#suffix' => '</div>',
   );
 
   $form['live_preview']['views_ui_show_sql_query'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show the SQL query'),
     '#default_value' => variable_get('views_ui_show_sql_query', FALSE),
-    '#dependency' => array('edit-views-ui-show-preview-information' => array(TRUE)),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
+      ),
+    ),
   );
   $form['live_preview']['views_ui_show_performance_statistics'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show performance statistics'),
     '#default_value' => variable_get('views_ui_show_performance_statistics', FALSE),
-    '#dependency' => array('edit-views-ui-show-preview-information' => array(TRUE)),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $form['live_preview']['views_show_additional_queries'] = array(
@@ -4780,7 +4795,11 @@ function views_ui_admin_settings_basic() {
     '#title' => t('Show other queries run during render during live preview'),
     '#description' => t("Drupal has the potential to run many queries while a view is being rendered. Checking this box will display every query run during view render as part of the live preview."),
     '#default_value' => variable_get('views_show_additional_queries', FALSE),
-    '#dependency' => array('edit-views-ui-show-preview-information' => array(TRUE)),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
 //  $form['live_preview']['views_ui_show_performance_statistics_where'] = array(
@@ -4865,7 +4884,11 @@ function views_ui_admin_settings_advanced() {
     '#title' => t('Page region to output performance statistics/debug messages'),
     '#default_value' => variable_get('views_devel_region', 'footer'),
     '#options' => $regions,
-    '#dependency' => array('edit-views-devel-output' => array(1)),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="views_devel_output"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 
   $options = views_fetch_plugin_names('display_extender');

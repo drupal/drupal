@@ -36,7 +36,7 @@ class views_handler_field_math extends views_handler_field_numeric {
 
     // Then move the existing help:
     $form['expression_help'] = $form['alter']['help'];
-    unset($form['expression_help']['#dependency']);
+    unset($form['expression_help']['#states']);
     unset($form['alter']['help']);
   }
 

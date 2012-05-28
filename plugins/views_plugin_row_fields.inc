@@ -48,12 +48,11 @@ class views_plugin_row_fields extends views_plugin_row {
       '#options' => $options,
       '#default_value' => $this->options['inline'],
       '#description' => t('Inline fields will be displayed next to each other rather than one after another. Note that some fields will ignore this if they are block elements, particularly body fields and other formatted HTML.'),
-      '#dependency' => array(
-        'edit-row-options-default-field-elements' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="row_options[default_field_elements]"]' => array('checked' => TRUE),
+        ),
       ),
-      '#prefix' => '<div id="edit-row-options-inline-wrapper"><div>',
-      '#suffix' => '</div></div>',
-
     );
 
     $form['separator'] = array(
@@ -62,8 +61,10 @@ class views_plugin_row_fields extends views_plugin_row {
       '#size' => 10,
       '#default_value' => isset($this->options['separator']) ? $this->options['separator'] : '',
       '#description' => t('The separator may be placed between inline fields to keep them from squishing up next to each other. You can use HTML in this field.'),
-      '#dependency' => array(
-        'edit-row-options-default-field-elements' => array(1),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="row_options[default_field_elements]"]' => array('checked' => TRUE),
+        ),
       ),
     );
 

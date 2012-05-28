@@ -503,7 +503,11 @@ class views_handler_field_field extends views_handler_field {
         'ol' => t('Ordered list'),
         'separator' => t('Simple separator'),
       ),
-      '#dependency' => array('edit-options-group-rows' => array(TRUE)),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
+        ),
+      ),
       '#default_value' => $this->options['multi_type'],
       '#fieldset' => 'multiple_field_settings',
     );
@@ -512,11 +516,12 @@ class views_handler_field_field extends views_handler_field {
       '#type' => 'textfield',
       '#title' => t('Separator'),
       '#default_value' => $this->options['separator'],
-      '#dependency' => array(
-        'radio:options[multi_type]' => array('separator'),
-        'edit-options-group-rows' => array(TRUE),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
+          ':input[name="options[multi_type]"]' => array('value' => 'separator'),
+        ),
       ),
-      '#dependency_count' => 2,
       '#fieldset' => 'multiple_field_settings',
     );
 
@@ -528,7 +533,11 @@ class views_handler_field_field extends views_handler_field {
       '#options' => $options,
       '#default_value' => $this->options['delta_limit'],
       '#prefix' => '<div class="container-inline">',
-      '#dependency' => array('edit-options-group-rows' => array(TRUE)),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
+        ),
+      ),
       '#fieldset' => 'multiple_field_settings',
     );
 
@@ -539,7 +548,11 @@ class views_handler_field_field extends views_handler_field {
       '#field_prefix' => $prefix,
       '#field_suffix' => $suffix,
       '#default_value' => $this->options['delta_offset'],
-      '#dependency' => array('edit-options-group-rows' => array(TRUE)),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
+        ),
+      ),
       '#description' => t('(first item is 0)'),
       '#fieldset' => 'multiple_field_settings',
     );
@@ -548,7 +561,11 @@ class views_handler_field_field extends views_handler_field {
       '#type' => 'checkbox',
       '#default_value' => $this->options['delta_reversed'],
       '#suffix' => $suffix,
-      '#dependency' => array('edit-options-group-rows' => array(TRUE)),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
+        ),
+      ),
       '#description' => t('(start from last values)'),
       '#fieldset' => 'multiple_field_settings',
     );
@@ -557,7 +574,11 @@ class views_handler_field_field extends views_handler_field {
       '#type' => 'checkbox',
       '#default_value' => $this->options['delta_first_last'],
       '#suffix' => '</div>',
-      '#dependency' => array('edit-options-group-rows' => array(TRUE)),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
+        ),
+      ),
       '#fieldset' => 'multiple_field_settings',
     );
   }

@@ -73,11 +73,11 @@ class views_handler_area_text extends views_handler_area {
         '#collapsed' => TRUE,
         '#value' => $output,
         '#id' => 'edit-options-token-help',
-        '#dependency' => array(
-          'edit-options-tokenize' => array(1),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[tokenize]"]' => array('checked' => TRUE),
+          ),
         ),
-        '#prefix' => '<div>',
-        '#suffix' => '</div>',
       );
     }
   }

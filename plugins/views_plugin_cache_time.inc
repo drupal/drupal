@@ -41,9 +41,10 @@ class views_plugin_cache_time extends views_plugin_cache {
       '#maxlength' => '30',
       '#description' => t('Length of time in seconds raw query results should be cached.'),
       '#default_value' => $this->options['results_lifespan_custom'],
-      '#process' => array('form_process_select','ctools_dependent_process'),
-      '#dependency' => array(
-        'edit-cache-options-results-lifespan' => array('custom'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="cache_options[results_lifespan]"]' => array('value' => 'custom'),
+        ),
       ),
     );
     $form['output_lifespan'] = array(
@@ -60,9 +61,10 @@ class views_plugin_cache_time extends views_plugin_cache {
       '#maxlength' => '30',
       '#description' => t('Length of time in seconds rendered HTML output should be cached.'),
       '#default_value' => $this->options['output_lifespan_custom'],
-      '#process' => array('form_process_select','ctools_dependent_process'),
-      '#dependency' => array(
-        'edit-cache-options-output-lifespan' => array('custom'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="cache_options[output_lifespan]"]' => array('value' => 'custom'),
+        ),
       ),
     );
   }

@@ -65,13 +65,16 @@ class views_handler_field_term_node_tid extends views_handler_field_prerender_li
     }
 
     $form['vocabularies'] = array(
-      '#prefix' => '<div><div id="edit-options-vocabularies">',
-      '#suffix' => '</div></div>',
       '#type' => 'checkboxes',
       '#title' => t('Vocabularies'),
       '#options' => $options,
       '#default_value' => $this->options['vocabularies'],
-      '#dependency' => array('edit-options-limit' => array(TRUE)),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[limit]"]' => array('checked' => TRUE),
+        ),
+      ),
+
     );
 
     parent::options_form($form, $form_state);

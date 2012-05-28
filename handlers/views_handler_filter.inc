@@ -357,8 +357,10 @@ class views_handler_filter extends views_handler {
         '#title' => t('Operator identifier'),
         '#size' => 40,
         '#description' => t('This will appear in the URL after the ? to identify this operator.'),
-        '#dependency' => array(
-          'edit-options-expose-use-operator' => array(1)
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[expose][use_operator]"]' => array('checked' => TRUE),
+          ),
         ),
         '#fieldset' => 'more',
       );

@@ -260,7 +260,11 @@ class views_plugin_query_default extends views_plugin_query {
       '#title' => t('Pure Distinct'),
       '#description' => t('This will prevent views from adding the base column to the distinct field. If this is not selected and the base column is a primary key, then a non-pure distinct will not function properly because the primary key is always unique.'),
       '#default_value' => !empty($this->options['pure_distinct']),
-      '#dependency' => array('edit-query-options-distinct' => '1'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="query[options][distinct]"]' => array('checked' => TRUE),
+        ),
+      ),
     );
     $form['slave'] = array(
       '#type' => 'checkbox',

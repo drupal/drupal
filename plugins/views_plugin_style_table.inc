@@ -207,9 +207,7 @@ class views_plugin_style_table extends views_plugin_style {
     }
 
     foreach ($columns as $field => $column) {
-      $safe = str_replace(array('][', '_', ' '), '-', $field);
-      // the $id of the column for dependency checking.
-      $id = 'edit-style-options-columns-' . $safe;
+      $column_selector = ':input[name="style_options[columns][' . $field . ']"]';
 
       $form['columns'][$field] = array(
         '#type' => 'select',
@@ -220,14 +218,22 @@ class views_plugin_style_table extends views_plugin_style {
         $form['info'][$field]['sortable'] = array(
           '#type' => 'checkbox',
           '#default_value' => !empty($this->options['info'][$field]['sortable']),
-          '#dependency' => array($id => array($field)),
+          '#states' => array(
+            'visible' => array(
+              $column_selector => array('value' => $field),
+            ),
+          ),
         );
         $form['info'][$field]['default_sort_order'] = array(
           '#type' => 'select',
           '#options' => array('asc' => t('Ascending'), 'desc' => t('Descending')),
           '#default_value' => !empty($this->options['info'][$field]['default_sort_order']) ? $this->options['info'][$field]['default_sort_order'] : 'asc',
-          '#dependency_count' => 2,
-          '#dependency' => array($id => array($field), 'edit-style-options-info-' . $safe . '-sortable' => array(1)),
+          '#states' => array(
+            'visible' => array(
+              $column_selector => array('value' => $field),
+              ':input[name="style_options[info][' . $field . '][sortable]"]' => array('checked' => TRUE),
+            ),
+          ),
         );
         // Provide an ID so we can have such things.
         $radio_id = drupal_html_id('edit-default-' . $field);
@@ -239,7 +245,11 @@ class views_plugin_style_table extends views_plugin_style {
           // because 'radio' doesn't fully support '#id' =(
           '#attributes' => array('id' => $radio_id),
           '#default_value' => $default,
-          '#dependency' => array($id => array($field)),
+          '#states' => array(
+            'visible' => array(
+              $column_selector => array('value' => $field),
+            ),
+          ),
         );
       }
       $form['info'][$field]['align'] = array(
@@ -251,18 +261,30 @@ class views_plugin_style_table extends views_plugin_style {
           'views-align-center' => t('Center'),
           'views-align-right' => t('Right'),
           ),
-        '#dependency' => array($id => array($field)),
+        '#states' => array(
+          'visible' => array(
+            $column_selector => array('value' => $field),
+          ),
+        ),
       );
       $form['info'][$field]['separator'] = array(
         '#type' => 'textfield',
         '#size' => 10,
         '#default_value' => isset($this->options['info'][$field]['separator']) ? $this->options['info'][$field]['separator'] : '',
-        '#dependency' => array($id => array($field)),
+        '#states' => array(
+          'visible' => array(
+            $column_selector => array('value' => $field),
+          ),
+        ),
       );
       $form['info'][$field]['empty_column'] = array(
         '#type' => 'checkbox',
         '#default_value' => isset($this->options['info'][$field]['empty_column']) ? $this->options['info'][$field]['empty_column'] : FALSE,
-        '#dependency' => array($id => array($field)),
+        '#states' => array(
+          'visible' => array(
+            $column_selector => array('value' => $field),
+          ),
+        ),
       );
 
       // markup for the field name

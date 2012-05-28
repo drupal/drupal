@@ -44,7 +44,11 @@ class views_handler_field_numeric extends views_handler_field {
         '#title' => t('Precision'),
         '#default_value' => $this->options['precision'],
         '#description' => t('Specify how many digits to print after the decimal point.'),
-        '#dependency' => array('edit-options-set-precision' => array(TRUE)),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[set_precision]"]' => array('checked' => TRUE),
+          ),
+        ),
         '#size' => 2,
       );
       $form['decimal'] = array(
@@ -80,14 +84,22 @@ class views_handler_field_numeric extends views_handler_field {
       '#title' => t('Singular form'),
       '#default_value' => $this->options['format_plural_singular'],
       '#description' => t('Text to use for the singular form.'),
-      '#dependency' => array('edit-options-format-plural' => array(TRUE)),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[format_plural]"]' => array('checked' => TRUE),
+        ),
+      ),
     );
     $form['format_plural_plural'] = array(
       '#type' => 'textfield',
       '#title' => t('Plural form'),
       '#default_value' => $this->options['format_plural_plural'],
       '#description' => t('Text to use for the plural form, @count will be replaced with the value.'),
-      '#dependency' => array('edit-options-format-plural' => array(TRUE)),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[format_plural]"]' => array('checked' => TRUE),
+        ),
+      ),
     );
     $form['prefix'] = array(
       '#type' => 'textfield',

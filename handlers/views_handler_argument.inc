@@ -269,8 +269,10 @@ class views_handler_argument extends views_handler {
       '#size' => 20,
       '#default_value' => $this->options['exception']['title'],
       '#description' => t('Override the view and other argument titles. Use "%1" for the first argument, "%2" for the second, etc.'),
-      '#dependency' => array(
-        'edit-options-exception-title-enable' => array('1'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[exception][title_enable]"]' => array('checked' => TRUE),
+        ),
       ),
     );
 
@@ -304,8 +306,10 @@ class views_handler_argument extends views_handler {
       '#title_display' => 'invisible',
       '#default_value' => $this->options['title'],
       '#description' => t('Override the view and other argument titles. Use "%1" for the first argument, "%2" for the second, etc.'),
-      '#dependency' => array(
-        'edit-options-title-enable' => array('1'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[title_enable]"]' => array('checked' => TRUE),
+        ),
       ),
       '#fieldset' => 'argument_present',
     );
@@ -322,8 +326,10 @@ class views_handler_argument extends views_handler {
       '#title_display' => 'invisible',
       '#default_value' => $this->options['breadcrumb'],
       '#description' => t('Enter a breadcrumb name you would like to use. See "Title" for percent substitutions.'),
-      '#dependency' => array(
-        'edit-options-breadcrumb-enable' => array('1'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[breadcrumb_enable]"]' => array('checked' => TRUE),
+        ),
       ),
       '#fieldset' => 'argument_present',
     );
@@ -345,8 +351,10 @@ class views_handler_argument extends views_handler {
       '#type' => 'select',
       '#title' => t('Validator'),
       '#default_value' => $this->options['validate']['type'],
-      '#dependency' => array(
-        'edit-options-specify-validation' => array('1'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[specify_validation]"]' => array('checked' => TRUE),
+        ),
       ),
     );
 
@@ -382,11 +390,12 @@ class views_handler_argument extends views_handler {
               '#type' => 'item',
               // Even if the plugin has no options add the key to the form_state.
               '#input' => TRUE, // trick it into checking input to make #process run
-              '#dependency' => array(
-                'edit-options-specify-validation' => array('1'),
-                'edit-options-validate-type' => array($id),
+              '#states' => array(
+                'visible' => array(
+                  ':input[name="options[specify_validation]"]' => array('checked' => TRUE),
+                  ':input[name="options[validate][type]"]' => array('value' => $id),
+                ),
               ),
-              '#dependency_count' => 2,
               '#id' => 'edit-options-validate-options-' . $id,
             );
             $plugin->options_form($form['validate']['options'][$id], $form_state);
@@ -404,8 +413,10 @@ class views_handler_argument extends views_handler {
       '#title' => t('Action to take if filter value does not validate'),
       '#default_value' => $this->options['validate']['fail'],
       '#options' => $validate_options,
-      '#dependency' => array(
-        'edit-options-specify-validation' => array('1'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[specify_validation]"]' => array('checked' => TRUE),
+        ),
       ),
       '#fieldset' => 'argument_present',
     );
@@ -560,8 +571,11 @@ class views_handler_argument extends views_handler {
       '#id' => 'edit-options-default-argument-type',
       '#title' => t('Type'),
       '#default_value' => $this->options['default_argument_type'],
-
-      '#dependency' => array('radio:options[default_action]' => array('default')),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[default_action]"]' => array('value' => 'default'),
+        ),
+      ),
       // Views custom key, moves this element to the appropriate container
       // under the radio button.
       '#argument_option' => 'default',
@@ -582,11 +596,12 @@ class views_handler_argument extends views_handler {
             '#type' => 'item',
             // Even if the plugin has no options add the key to the form_state.
             '#input' => TRUE,
-            '#dependency' => array(
-              'radio:options[default_action]' => array('default'),
-              'edit-options-default-argument-type' => array($id)
+            '#states' => array(
+              'visible' => array(
+                ':input[name="options[default_action]"]' => array('value' => 'default'),
+                ':input[name="options[default_argument_type]"]' => array('value' => $id),
+              ),
             ),
-            '#dependency_count' => 2,
           );
           $options[$id] = $info['title'];
           $plugin->options_form($form['argument_default'][$id], $form_state);
@@ -623,7 +638,11 @@ class views_handler_argument extends views_handler {
       '#title' => t('Sort order'),
       '#options' => array('asc' => t('Ascending'), 'desc' => t('Descending')),
       '#default_value' => $this->options['summary']['sort_order'],
-      '#dependency' => array('radio:options[default_action]' => array('summary')),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[default_action]"]' => array('value' => 'summary'),
+        ),
+      ),
     );
     $form['summary']['number_of_records'] = array(
       '#type' => 'radios',
@@ -633,7 +652,11 @@ class views_handler_argument extends views_handler {
         0 => $this->get_sort_name(),
         1 => t('Number of records')
       ),
-      '#dependency' => array('radio:options[default_action]' => array('summary')),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[default_action]"]' => array('value' => 'summary'),
+        ),
+      ),
     );
 
     $form['summary']['format'] = array(
@@ -641,7 +664,11 @@ class views_handler_argument extends views_handler {
       '#title' => t('Format'),
       '#options' => $format_options,
       '#default_value' => $this->options['summary']['format'],
-      '#dependency' => array('radio:options[default_action]' => array('summary')),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[default_action]"]' => array('value' => 'summary'),
+        ),
+      ),
     );
 
     foreach ($summary_plugins as $id => $info) {
@@ -656,11 +683,12 @@ class views_handler_argument extends views_handler {
           '#id' => 'edit-options-summary-options-' . $id,
           '#type' => 'item',
           '#input' => TRUE, // trick it into checking input to make #process run
-          '#dependency' => array(
-            'radio:options[default_action]' => array('summary'),
-            'radio:options[summary][format]' => array($id),
+          '#states' => array(
+            'visible' => array(
+              ':input[name="options[default_action]"]' => array('value' => 'summary'),
+              ':input[name="options[summary][format]"]' => array('value' => $id),
+            ),
           ),
-          '#dependency_count' => 2,
         );
         $options[$id] = $info['title'];
         $plugin->options_form($form['summary']['options'][$id], $form_state);

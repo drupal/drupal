@@ -29,10 +29,8 @@ class views_handler_field_custom extends views_handler_field {
 
     // Remove the checkbox
     unset($form['alter']['alter_text']);
-    unset($form['alter']['text']['#dependency']);
-    unset($form['alter']['text']['#process']);
-    unset($form['alter']['help']['#dependency']);
-    unset($form['alter']['help']['#process']);
+    unset($form['alter']['text']['#states']);
+    unset($form['alter']['help']['#states']);
     $form['#pre_render'][] = 'views_handler_field_custom_pre_render_move_text';
   }
 

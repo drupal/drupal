@@ -39,7 +39,11 @@ class views_handler_argument_field_list extends views_handler_argument_numeric {
       '#title' => t('Display list value as human readable'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['summary']['human'],
-      '#dependency' => array('radio:options[default_action]' => array('summary')),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="options[default_action]"]' => array('value' => 'summary'),
+        ),
+      ),
     );
   }
 
