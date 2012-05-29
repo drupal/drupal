@@ -2,7 +2,9 @@
 
 /**
  * @file
- * Multiple language handling functionality.
+ * Language Negotiation API.
+ *
+ * @see http://drupal.org/node/1497272
  */
 
 /**
@@ -11,10 +13,99 @@
 const LANGUAGE_NEGOTIATION_DEFAULT = 'language-default';
 
 /**
- * Chooses a language for the given type based on language negotiation settings.
+ * @defgroup language_negotiation Language Negotiation API functionality
+ * @{
+ * Functions to customize the language types and the negotiation process.
+ *
+ * The language negotiation API is based on two major concepts:
+ * - Language types: types of translatable data (the types of data that a user
+ *   can view or request).
+ * - Language negotiation methods: functions for determining which language to
+ *   use to present a particular piece of data to the user.
+ * Both language types and language negotiation methods are customizable.
+ *
+ * Drupal defines three built-in language types:
+ * - Interface language: The page's main language, used to present translated
+ *   user interface elements such as titles, labels, help text, and messages.
+ * - Content language: The language used to present content that is available
+ *   in more than one language (see
+ *   @link field_language Field Language API @endlink for details).
+ * - URL language: The language associated with URLs. When generating a URL,
+ *   this value will be used by url() as a default if no explicit preference is
+ *   provided.
+ * Modules can define additional language types through
+ * hook_language_types_info(), and alter existing language type definitions
+ * through hook_language_types_info_alter().
+ *
+ * Language types may be configurable or fixed. The language negotiation
+ * methods associated with a configurable language type can be explicitly
+ * set through the user interface. A fixed language type has predetermined
+ * (module-defined) language negotiation settings and, thus, does not appear in
+ * the configuration page. Here is a code snippet that makes the content
+ * language (which by default inherits the interface language's values)
+ * configurable:
+ * @code
+ * function mymodule_language_types_info_alter(&$language_types) {
+ *   unset($language_types[LANGUAGE_TYPE_CONTENT]['fixed']);
+ * }
+ * @endcode
+ *
+ * Every language type can have a different set of language negotiation methods
+ * assigned to it. Different language types often share the same language
+ * negotiation settings, but they can have independent settings if needed. If
+ * two language types are configured the same way, their language switcher
+ * configuration will be functionally identical and the same settings will act
+ * on both language types.
+ *
+ * Drupal defines the following built-in language negotiation methods:
+ * - URL: Determine the language from the URL (path prefix or domain).
+ * - Session: Determine the language from a request/session parameter.
+ * - User: Follow the user's language preference.
+ * - Browser: Determine the language from the browser's language settings.
+ * - Default language: Use the default site language.
+ * Language negotiation methods are simple callback functions that implement a
+ * particular logic to return a language code. For instance, the URL method
+ * searches for a valid path prefix or domain name in the current request URL.
+ * If a language negotiation method does not return a valid language code, the
+ * next method associated to the language type (based on method weight) is
+ * invoked.
+ *
+ * Modules can define additional language negotiation methods through
+ * hook_language_negotiation_info(), and alter existing methods through
+ * hook_language_negotiation_info_alter(). Here is an example snippet that lets
+ * path prefixes be ignored for administrative paths:
+ * @code
+ * function mymodule_language_negotiation_info_alter(&$negotiation_info) {
+ *   // Replace the core function with our own function.
+ *   module_load_include('language', 'inc', 'language.negotiation');
+ *   $negotiation_info[LANGUAGE_NEGOTIATION_URL]['callbacks']['negotiation'] = 'mymodule_from_url';
+ *   $negotiation_info[LANGUAGE_NEGOTIATION_URL]['file'] = drupal_get_path('module', 'mymodule') . '/mymodule.module';
+ * }
+ *
+ * function mymodule_from_url($languages) {
+ *   // Use the core URL language negotiation method to get a valid language
+ *   // code.
+ *   module_load_include('language', 'inc', 'language.negotiation');
+ *   $langcode = language_from_url($languages);
+ *
+ *   // If we are on an administrative path, override with the default language.
+ *   if (isset($_GET['q']) && strtok($_GET['q'], '/') == 'admin') {
+ *     return language_default()->langcode;
+ *   }
+ *   return $langcode;
+ * }
+ * ?>
+ * @endcode
+ *
+ * For more information, see
+ * @link http://drupal.org/node/1497272 Language Negotiation API @endlink
+ */
+
+/**
+ * Chooses a language based on language negotiation method settings.
  *
  * @param $type
- *   The language type key.
+ *   The language type key to find the language for.
  *
  * @return
  *   The negotiated language object.
@@ -68,8 +159,8 @@ function language_types_info() {
  * Returns only the configurable language types.
  *
  * A language type maybe configurable or fixed. A fixed language type is a type
- * whose negotiation values are unchangeable and defined while defining the
- * language type itself.
+ * whose language negotiation methods are module-defined and not altered through
+ * the user interface.
  *
  * @param $stored
  *   (optional) By default, retrieves values from the 'language_types' variable
@@ -162,6 +253,10 @@ function language_types_set() {
  *
  * @param $type
  *   The language type.
+ *
+ * @return
+ *   The identifier of the first language negotiation method for the given
+ *   language type, or the default method if none exists.
  */
 function language_negotiation_method_get_first($type) {
   $negotiation = variable_get("language_negotiation_$type", array());
@@ -169,7 +264,7 @@ function language_negotiation_method_get_first($type) {
 }
 
 /**
- * Checks if a language negotiation method is enabled for a language type.
+ * Checks whether a language negotiation method is enabled for a language type.
  *
  * @param $method_id
  *   The language negotiation method ID.
@@ -259,7 +354,7 @@ function language_negotiation_purge() {
  * @param $type
  *   The language type.
  * @param $method_weights
- *   An array of language negotiation method weights keyed by method id.
+ *   An array of language negotiation method weights keyed by method ID.
  */
 function language_negotiation_set($type, $method_weights) {
   // Save only the necessary fields.
@@ -278,8 +373,7 @@ function language_negotiation_set($type, $method_weights) {
       // If the language negotiation method does not express any preference
       // about types, make it available for any configurable type.
       $types = array_flip(isset($method['types']) ? $method['types'] : $default_types);
-      // Check if the language negotiation method is defined and has the right
-      // type.
+      // Check whether the method is defined and has the right type.
       if (isset($types[$type])) {
         $method_data = array();
         foreach ($method_fields as $field) {
@@ -328,13 +422,14 @@ function language_negotiation_info() {
  * Invokes a language negotiation method and caches the results.
  *
  * @param $method_id
- *   The language negotiation method ID.
+ *   The language negotiation method's identifier.
  * @param $method
- *   (optional) The language negotiation method to be invoked. If not passed it
- *   will be explicitly loaded through language_negotiation_info().
+ *   (optional) An associative array of information about the method to be
+ *   invoked (see hook_language_negotiation_info() for details). If not passed
+ *   in, it will be loaded through language_negotiation_info().
  *
  * @return
- *   The language negotiation method's return value.
+ *   A language object representing the language chosen by the method.
  */
 function language_negotiation_method_invoke($method_id, $method = NULL) {
   $results = &drupal_static(__FUNCTION__);
@@ -361,10 +456,10 @@ function language_negotiation_method_invoke($method_id, $method = NULL) {
     $results[$method_id] = isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
   }
 
-  // Since objects are resources we need to return a clone to prevent the
-  // language negotiation method cache to be unintentionally altered. The same
-  // language negotiation methods might be used with different language types
-  // based on configuration.
+  // Since objects are resources, we need to return a clone to prevent the
+  // language negotiation method cache from being unintentionally altered. The
+  // same methods might be used with different language types based on
+  // configuration.
   return !empty($results[$method_id]) ? clone($results[$method_id]) : $results[$method_id];
 }
 
@@ -381,8 +476,8 @@ function language_from_default() {
 /**
  * Split the given path into prefix and actual path.
  *
- * Parse the given path and return the language object identified by the
- * prefix and the actual path.
+ * Parse the given path and return the language object identified by the prefix
+ * and the actual path.
  *
  * @param $path
  *   The path to split.
@@ -434,3 +529,7 @@ function language_fallback_get_candidates($type = LANGUAGE_TYPE_CONTENT) {
 
   return $fallback_candidates;
 }
+
+/**
+ * @} End of "language_negotiation"
+ */

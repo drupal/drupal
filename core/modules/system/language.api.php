@@ -62,22 +62,22 @@ function hook_language_switch_links_alter(array &$links, $type, $path) {
 }
 
 /**
- * Allow modules to define their own language types.
+ * Define language types.
  *
  * @return
- *   An associative array of language type definitions.
+ *   An associative array of language type definitions. The keys are the
+ *   identifiers, which are also used as names for global variables representing
+ *   the types in the bootstrap phase. The values are associative arrays that
+ *   may contain the following elements:
+ *   - name: The human-readable language type identifier.
+ *   - description: A description of the language type.
+ *   - fixed: A fixed array of language negotiation method identifiers to use to
+ *     initialize this language. Defining this key makes the language type
+ *     non-configurable, so it will always use the specified methods in the
+ *     given priority order. Omit to make the language type configurable.
  *
- *   Each language type has an identifier key which is used as the name for the
- *   global variable corresponding to the language type in the bootstrap phase.
- *
- *   The language type definition is an associative array that may contain the
- *   following key-value pairs:
- *   - "name": The human-readable language type identifier.
- *   - "description": A description of the language type.
- *   - "fixed": A fixed array of language negotiation method identifiers to use
- *     to initialize this language. Defining this key makes the language type
- *     non-configurable and will always use the specified methods in the given
- *     priority order.
+ * @see hook_language_types_info_alter()
+ * @ingroup language_negotiation
  */
 function hook_language_types_info() {
   return array(
@@ -94,10 +94,11 @@ function hook_language_types_info() {
 /**
  * Perform alterations on language types.
  *
- * @see hook_language_types_info().
- *
  * @param $language_types
  *   Array of language type definitions.
+ *
+ * @see hook_language_types_info()
+ * @ingroup language_negotiation
  */
 function hook_language_types_info_alter(array &$language_types) {
   if (isset($language_types['custom_language_type'])) {
@@ -106,31 +107,35 @@ function hook_language_types_info_alter(array &$language_types) {
 }
 
 /**
- * Allow modules to define their own language negotiation methods.
+ * Define language negotiation methods.
  *
  * @return
- *   An array of language negotiation method definitions. Each method has an
- *   identifier key. The language negotiation method definition is an indexed
- *   array that may contain the following key-value pairs:
- *   - "types": An array of allowed language types. If a language negotiation
+ *   An associative array of language negotiation method definitions. The keys
+ *   are method identifiers, and the values are associative arrays definining
+ *   each method, with the following elements:
+ *   - types: An array of allowed language types. If a language negotiation
  *     method does not specify which language types it should be used with, it
  *     will be available for all the configurable language types.
- *   - "callbacks": An array of functions that will be called to perform various
- *     tasks. Possible key-value pairs are:
- *     - "negotiation": Required. The callback that will determine the language
- *       value.
- *     - "language_switch": The callback that will determine the language
- *       switch links associated to the current language method.
- *     - "url_rewrite": The callback that will provide URL rewriting.
- *   - "file": A file that will be included before the callback is invoked; this
- *     allows callback functions to be in separate files.
- *   - "weight": The default weight the language negotiation method has.
- *   - "name": A human-readable identifier.
- *   - "description": A description of the language negotiation method.
- *   - "config": An internal path pointing to the language negotiation method
- *     configuration page.
- *   - "cache": The value Drupal's page cache should be set to for the current
- *     language negotiation method to be invoked.
+ *   - callbacks: An associative array of functions that will be called to
+ *     perform various tasks. Possible elements are:
+ *     - negotiation: (required) Name of the callback function that determines
+ *       the language value.
+ *     - language_switch: (optional) Name of the callback function that
+ *       determines links for a language switcher block associated with this
+ *       method. See language_switcher_url() for an example.
+ *     - url_rewrite: (optional) Name of the callback function that provides URL
+ *       rewriting, if needed by this method.
+ *   - file: The file where callback functions are defined (this file will be
+ *     included before the callbacks are invoked).
+ *   - weight: The default weight of the method.
+ *   - name: The translated human-readable name for the method.
+ *   - description: A translated longer description of the method.
+ *   - config: An internal path pointing to the method's configuration page.
+ *   - cache: The value Drupal's page cache should be set to for the current
+ *     method to be invoked.
+ *
+ * @see hook_language_negotiation_info_alter()
+ * @ingroup language_negotiation
  */
 function hook_language_negotiation_info() {
   return array(
@@ -155,6 +160,9 @@ function hook_language_negotiation_info() {
  *
  * @param $negotiation_info
  *   Array of language negotiation method definitions.
+ *
+ * @see hook_language_negotiation_info()
+ * @ingroup language_negotiation
  */
 function hook_language_negotiation_info_alter(array &$negotiation_info) {
   if (isset($negotiation_info['custom_language_method'])) {
