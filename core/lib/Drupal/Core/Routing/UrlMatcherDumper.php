@@ -32,8 +32,17 @@ class UrlMatcherDumper implements MatcherDumperInterface {
    */
   protected $routes;
 
-  public function __construct(Connection $connection) {
+  /**
+   * The name of the SQL table to which to dump the routes.
+   *
+   * @var string
+   */
+  protected $tableName;
+
+  public function __construct(Connection $connection, $table = 'router') {
     $this->connection = $connection;
+
+    $this->tableName = $table;
   }
 
   /**
@@ -67,15 +76,31 @@ class UrlMatcherDumper implements MatcherDumperInterface {
       'route_set' => '',
     );
 
-    $compiled = $this->compileRoutes($this->routes, $route_set);
+    //$compiled = $this->compileRoutes($this->routes, $route_set);
 
     // Convert all of the routes into database records.
-    $insert = $this->connection->insert('router');
+    $insert = $this->connection->insert($this->tableName)->fields(array(
+      'name',
+      'route_set',
+      'fit',
+      'pattern',
+      'pattern_outline',
+      'route',
+    ));
 
 
 
     foreach ($this->routes as $name => $route) {
-      $insert->values($record);
+      $compiled = $route->compile();
+      $values = array(
+        'name' => $name,
+        'route_set' => $options['route_set'],
+        'fit' => $compiled->getFit(),
+        'pattern' => $compiled->getPattern(),
+        'pattern_outline' => $compiled->getPatternOutline(),
+        'route' => serialize($route),
+      );
+      $insert->values($values);
     }
 
     // Delete any old records in this route set first, then insert the new ones.
@@ -83,7 +108,7 @@ class UrlMatcherDumper implements MatcherDumperInterface {
     // unstable router states due to random failures.
     $txn = $this->connection->startTransaction();
 
-    $this->connection->delete('router')
+    $this->connection->delete($this->tableName)
       ->condition('route_set', $options['route_set'])
       ->execute();
 
