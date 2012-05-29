@@ -142,9 +142,12 @@ function _update_process_fetch_task($project) {
   $project_name = $project['name'];
 
   if (empty($fail[$fetch_url_base]) || $fail[$fetch_url_base] < $max_fetch_attempts) {
-    $xml = drupal_http_request($url, array('headers' => array('accept' => 'text/xml')));
-    if (!isset($xml->error) && isset($xml->data)) {
-      $data = $xml->data;
+    $result = drupal_http_request($url, array('headers' => array('accept' => 'text/xml')));
+    if (isset($result->error)) {
+      watchdog('update', 'HTTP request to @url failed with error: @error.', array('@url' => $url, '@error' => $result->error));
+    }
+    elseif (!isset($result->error) && isset($result->data)) {
+      $data = $result->data;
     }
   }
 

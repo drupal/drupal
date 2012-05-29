@@ -1,0 +1,218 @@
+<?php
+
+/**
+ * @file
+ * Definition of Drupal\update\Tests\UpdateCoreTest.
+ */
+
+namespace Drupal\update\Tests;
+
+class UpdateCoreTest extends UpdateTestBase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Update core functionality',
+      'description' => 'Tests the update module through a series of functional tests using mock XML data.',
+      'group' => 'Update',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('update_test', 'update');
+    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer modules'));
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Tests the update module when no updates are available.
+   */
+  function testNoUpdatesAvailable() {
+    $this->setSystemInfo7_0();
+    $this->refreshUpdateStatus(array('drupal' => '0'));
+    $this->standardTests();
+    $this->assertText(t('Up to date'));
+    $this->assertNoText(t('Update available'));
+    $this->assertNoText(t('Security update required!'));
+  }
+
+  /**
+   * Tests the update module when one normal update ("7.1") is available.
+   */
+  function testNormalUpdateAvailable() {
+    $this->setSystemInfo7_0();
+    $this->refreshUpdateStatus(array('drupal' => '1'));
+    $this->standardTests();
+    $this->assertNoText(t('Up to date'));
+    $this->assertText(t('Update available'));
+    $this->assertNoText(t('Security update required!'));
+    $this->assertRaw(l('7.1', 'http://example.com/drupal-7-1-release'), t('Link to release appears.'));
+    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-1.tar.gz'), t('Link to download appears.'));
+    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-1-release'), t('Link to release notes appears.'));
+  }
+
+  /**
+   * Tests the update module when a security update ("7.2") is available.
+   */
+  function testSecurityUpdateAvailable() {
+    $this->setSystemInfo7_0();
+    $this->refreshUpdateStatus(array('drupal' => '2-sec'));
+    $this->standardTests();
+    $this->assertNoText(t('Up to date'));
+    $this->assertNoText(t('Update available'));
+    $this->assertText(t('Security update required!'));
+    $this->assertRaw(l('7.2', 'http://example.com/drupal-7-2-release'), t('Link to release appears.'));
+    $this->assertRaw(l(t('Download'), 'http://example.com/drupal-7-2.tar.gz'), t('Link to download appears.'));
+    $this->assertRaw(l(t('Release notes'), 'http://example.com/drupal-7-2-release'), t('Link to release notes appears.'));
+  }
+
+  /**
+   * Ensure proper results where there are date mismatches among modules.
+   */
+  function testDatestampMismatch() {
+    $system_info = array(
+      '#all' => array(
+        // We need to think we're running a -dev snapshot to see dates.
+        'version' => '7.0-dev',
+        'datestamp' => time(),
+      ),
+      'block' => array(
+        // This is 2001-09-09 01:46:40 GMT, so test for "2001-Sep-".
+        'datestamp' => '1000000000',
+      ),
+    );
+    variable_set('update_test_system_info', $system_info);
+    $this->refreshUpdateStatus(array('drupal' => 'dev'));
+    $this->assertNoText(t('2001-Sep-'));
+    $this->assertText(t('Up to date'));
+    $this->assertNoText(t('Update available'));
+    $this->assertNoText(t('Security update required!'));
+  }
+
+  /**
+   * Check that running cron updates the list of available updates.
+   */
+  function testModulePageRunCron() {
+    $this->setSystemInfo7_0();
+    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
+    variable_set('update_test_xml_map', array('drupal' => '0'));
+
+    $this->cronRun();
+    $this->drupalGet('admin/modules');
+    $this->assertNoText(t('No update information available.'));
+  }
+
+  /**
+   * Check the messages at admin/modules when the site is up to date.
+   */
+  function testModulePageUpToDate() {
+    $this->setSystemInfo7_0();
+    // Instead of using refreshUpdateStatus(), set these manually.
+    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
+    variable_set('update_test_xml_map', array('drupal' => '0'));
+
+    $this->drupalGet('admin/reports/updates');
+    $this->clickLink(t('Check manually'));
+    $this->assertText(t('Checked available update data for one project.'));
+    $this->drupalGet('admin/modules');
+    $this->assertNoText(t('There are updates available for your version of Drupal.'));
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+  }
+
+  /**
+   * Check the messages at admin/modules when missing an update.
+   */
+  function testModulePageRegularUpdate() {
+    $this->setSystemInfo7_0();
+    // Instead of using refreshUpdateStatus(), set these manually.
+    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
+    variable_set('update_test_xml_map', array('drupal' => '1'));
+
+    $this->drupalGet('admin/reports/updates');
+    $this->clickLink(t('Check manually'));
+    $this->assertText(t('Checked available update data for one project.'));
+    $this->drupalGet('admin/modules');
+    $this->assertText(t('There are updates available for your version of Drupal.'));
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+  }
+
+  /**
+   * Check the messages at admin/modules when missing a security update.
+   */
+  function testModulePageSecurityUpdate() {
+    $this->setSystemInfo7_0();
+    // Instead of using refreshUpdateStatus(), set these manually.
+    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
+    variable_set('update_test_xml_map', array('drupal' => '2-sec'));
+
+    $this->drupalGet('admin/reports/updates');
+    $this->clickLink(t('Check manually'));
+    $this->assertText(t('Checked available update data for one project.'));
+    $this->drupalGet('admin/modules');
+    $this->assertNoText(t('There are updates available for your version of Drupal.'));
+    $this->assertText(t('There is a security update available for your version of Drupal.'));
+
+    // Make sure admin/appearance warns you you're missing a security update.
+    $this->drupalGet('admin/appearance');
+    $this->assertNoText(t('There are updates available for your version of Drupal.'));
+    $this->assertText(t('There is a security update available for your version of Drupal.'));
+
+    // Make sure duplicate messages don't appear on Update status pages.
+    $this->drupalGet('admin/reports/status');
+    // We're expecting "There is a security update..." inside the status report
+    // itself, but the drupal_set_message() appears as an li so we can prefix
+    // with that and search for the raw HTML.
+    $this->assertNoRaw('<li>' . t('There is a security update available for your version of Drupal.'));
+
+    $this->drupalGet('admin/reports/updates');
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+
+    $this->drupalGet('admin/reports/updates/settings');
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+  }
+
+  /**
+   * Tests the update module when the update server returns 503 (Service unavailable) errors.
+   */
+  function testServiceUnavailable() {
+    $this->refreshUpdateStatus(array(), '503-error');
+    // Ensure that no "Warning: SimpleXMLElement..." parse errors are found.
+    $this->assertNoText('SimpleXMLElement');
+    $this->assertUniqueText(t('Failed to get available update data for one project.'));
+  }
+
+  /**
+   * Tests that exactly one fetch task per project is created and not more.
+   */
+  function testFetchTasks() {
+    $projecta = array(
+      'name' => 'aaa_update_test',
+    );
+    $projectb = array(
+      'name' => 'bbb_update_test',
+    );
+    $queue = queue('update_fetch_tasks');
+    $this->assertEqual($queue->numberOfItems(), 0, 'Queue is empty');
+    update_create_fetch_task($projecta);
+    $this->assertEqual($queue->numberOfItems(), 1, 'Queue contains one item');
+    update_create_fetch_task($projectb);
+    $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
+    // Try to add project a again.
+    update_create_fetch_task($projecta);
+    $this->assertEqual($queue->numberOfItems(), 2, 'Queue still contains two items');
+
+    // Clear cache and try again.
+    _update_cache_clear();
+    drupal_static_reset('_update_create_fetch_task');
+    update_create_fetch_task($projecta);
+    $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
+  }
+
+  protected function setSystemInfo7_0() {
+    $setting = array(
+      '#all' => array(
+        'version' => '7.0',
+      ),
+    );
+    variable_set('update_test_system_info', $setting);
+  }
+}

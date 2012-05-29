@@ -3,4 +3,3 @@ description = Logs and records system events to syslog.
 package = Core
 version = VERSION
 core = 8.x
-files[] = syslog.test

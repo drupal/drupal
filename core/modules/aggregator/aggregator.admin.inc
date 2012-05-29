@@ -323,6 +323,9 @@ function aggregator_form_opml_submit($form, &$form_state) {
     if (!isset($response->error)) {
       $data = $response->data;
     }
+    else {
+      watchdog('aggregator', 'HTTP request to @url failed with error: @error', array('@url' => $form_state['values']['remote'], '@error' => $response->error));
+    }
   }
 
   $feeds = _aggregator_parse_opml($data);

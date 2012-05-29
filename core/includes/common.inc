@@ -830,13 +830,6 @@ function drupal_http_request($url, array $options = array()) {
     // clash with the HTTP status codes.
     $result->code = -$errno;
     $result->error = trim($errstr) ? trim($errstr) : t('Error opening socket @socket', array('@socket' => $socket));
-
-    // Mark that this request failed. This will trigger a check of the web
-    // server's ability to make outgoing HTTP requests the next time that
-    // requirements checking is performed.
-    // See system_requirements().
-    variable_set('drupal_http_request_fails', TRUE);
-
     return $result;
   }
 
@@ -3976,6 +3969,8 @@ function drupal_region_class($region) {
  *       which drupal_add_js() happened earlier in the page request.
  *   - defer: If set to TRUE, the defer attribute is set on the &lt;script&gt;
  *     tag. Defaults to FALSE.
+ *   - async: If set to TRUE, the async attribute is set on the &lt;script&gt;
+ *     tag. Defaults to FALSE.
  *   - cache: If set to FALSE, the JavaScript file is loaded anew on every page
  *     call; in other words, it is not cached. Used only when 'type' references
  *     a JavaScript file. Defaults to TRUE.
@@ -4048,6 +4043,7 @@ function drupal_add_js($data = NULL, $options = NULL) {
           'preprocess' => TRUE,
           'cache' => TRUE,
           'defer' => FALSE,
+          'async' => FALSE,
           'browsers' => array(),
         ),
       );
@@ -4095,6 +4091,7 @@ function drupal_js_defaults($data = NULL) {
     'scope' => 'header',
     'cache' => TRUE,
     'defer' => FALSE,
+    'async' => FALSE,
     'preprocess' => TRUE,
     'version' => NULL,
     'data' => $data,
@@ -4289,9 +4286,16 @@ function drupal_pre_render_scripts($elements) {
             break;
         }
 
-        // The defer attribute must not be specified if src is not defined.
-        if (!empty($item['defer']) && isset($element['#attributes']['src'])) {
-          $element['#attributes']['defer'] = 'defer';
+        // The defer and async attributes must not be specified if the src
+        // attribute is not present.
+        if (!empty($element['#attributes']['src'])) {
+          // Both may be specified for legacy browser fallback purposes.
+          if (!empty($item['async'])) {
+            $element['#attributes']['async'] = 'async';
+          }
+          if (!empty($item['defer'])) {
+            $element['#attributes']['defer'] = 'defer';
+          }
         }
 
         $elements[] = $element;

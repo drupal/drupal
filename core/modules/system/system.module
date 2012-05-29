@@ -3417,26 +3417,6 @@ function system_time_zones($blank = NULL) {
 }
 
 /**
- * Checks whether the server is capable of issuing HTTP requests.
- *
- * The function sets the drupal_http_request_fail system variable to TRUE if
- * drupal_http_request() does not work and then the system status report page
- * will contain an error.
- *
- * @return
- *  TRUE if this installation can issue HTTP requests.
- */
-function system_check_http_request() {
-  // Try to get the content of the front page via drupal_http_request().
-  $result = drupal_http_request(url('', array('absolute' => TRUE)), array('max_redirects' => 0));
-  // We only care that we get a http response - this means that Drupal
-  // can make a http request.
-  $works = isset($result->code) && ($result->code >= 100) && ($result->code < 600);
-  variable_set('drupal_http_request_fails', !$works);
-  return $works;
-}
-
-/**
  * Menu callback; Retrieve a JSON object containing a suggested time zone name.
  */
 function system_timezone($abbreviation = '', $offset = -1, $is_daylight_saving_time = NULL) {
