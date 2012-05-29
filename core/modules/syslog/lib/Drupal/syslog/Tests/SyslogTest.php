@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Tests for syslog.module.
+ * Definition of Drupal\syslog\Tests\SyslogTest.
  */
+
+namespace Drupal\syslog\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the Syslog module functionality.
  */
-class SyslogTestCase extends WebTestBase {
+class SyslogTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Syslog functionality',
