@@ -20,26 +20,6 @@ function translation_views_data_alter(&$data) {
     'field' => 'tnid',
   );
 
-  // Language field
-  $data['node']['language'] = array(
-    'group' => t('Content translation'),
-    'title' => t('Language'),
-    'help' => t('The language the content is in.'),
-    'field' => array(
-      'handler' => 'views_handler_field_node_language',
-      'click sortable' => TRUE,
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_node_language',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_node_language',
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-  );
-
   // The translation ID (nid of the "source" translation)
   $data['node']['tnid'] = array(
     'group' => t('Content translation'),
