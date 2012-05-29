@@ -7,15 +7,9 @@
 
 namespace Drupal\Core;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 use Drupal\Core\EventSubscriber\ViewSubscriber;
 use Drupal\Core\EventSubscriber\AccessSubscriber;
@@ -26,8 +20,6 @@ use Drupal\Core\EventSubscriber\LegacyControllerSubscriber;
 use Drupal\Core\EventSubscriber\MaintenanceModeSubscriber;
 use Drupal\Core\EventSubscriber\RequestCloseSubscriber;
 use Drupal\Core\EventSubscriber\RouterListener;
-
-use Exception;
 
 /**
  * The DrupalKernel class is the core of Drupal itself.
