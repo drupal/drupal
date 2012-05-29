@@ -1810,7 +1810,8 @@ class view extends views_db_object {
     $this->save_locale_strings();
 
     cache('cache_views')->delete('views_urls');
-    cache_clear_all(); // clear the page cache as well.
+    // Clear the page cache as well.
+    cache_invalidate(array('content' => TRUE));
   }
 
   /**
@@ -1847,8 +1848,10 @@ class view extends views_db_object {
     cache('cache_views')->delete('views_query:' . $this->name);
 
     if ($clear) {
-      cache_clear_all(); // this clears the block and page caches only.
-      menu_router_rebuild(); // force a menu rebuild when a view is deleted.
+      // Clear the block and page caches.
+      cache_invalidate(array('content' => TRUE));
+      // Force a menu rebuild when a view is deleted.
+      menu_router_rebuild();
     }
   }
 
