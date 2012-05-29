@@ -4759,12 +4759,13 @@ function views_ui_admin_settings_basic() {
     ),
 //    '#id' => 'edit-show-sql',
     '#default_value' => variable_get('views_ui_show_sql_query_where', 'above'),
+    // @todo: try to fix this states behavior.
 //    '#dependency' => array('edit-views-ui-show-preview-information' => array(TRUE)),
-    '#states' => array(
-      'visible' => array(
-        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
-      ),
-    ),
+//    '#states' => array(
+//      'visible' => array(
+//        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
+//      ),
+//    ),
 //    '#prefix' => '<div id="edit-show-sql-wrapper" class="views-dependent">',
 //    '#suffix' => '</div>',
   );
@@ -4773,21 +4774,21 @@ function views_ui_admin_settings_basic() {
     '#type' => 'checkbox',
     '#title' => t('Show the SQL query'),
     '#default_value' => variable_get('views_ui_show_sql_query', FALSE),
-    '#states' => array(
-      'visible' => array(
-        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
-      ),
-    ),
+//    '#states' => array(
+//      'visible' => array(
+//        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
+//      ),
+//    ),
   );
   $form['live_preview']['views_ui_show_performance_statistics'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show performance statistics'),
     '#default_value' => variable_get('views_ui_show_performance_statistics', FALSE),
-    '#states' => array(
-      'visible' => array(
-        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
-      ),
-    ),
+//    '#states' => array(
+//      'visible' => array(
+//        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
+//      ),
+//    ),
   );
 
   $form['live_preview']['views_show_additional_queries'] = array(
@@ -4795,11 +4796,11 @@ function views_ui_admin_settings_basic() {
     '#title' => t('Show other queries run during render during live preview'),
     '#description' => t("Drupal has the potential to run many queries while a view is being rendered. Checking this box will display every query run during view render as part of the live preview."),
     '#default_value' => variable_get('views_show_additional_queries', FALSE),
-    '#states' => array(
-      'visible' => array(
-        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
-      ),
-    ),
+//    '#states' => array(
+//      'visible' => array(
+//        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
+//      ),
+//    ),
   );
 
 //  $form['live_preview']['views_ui_show_performance_statistics_where'] = array(
