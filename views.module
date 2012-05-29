@@ -2409,10 +2409,6 @@ if (!function_exists('poll_views_api')) {
   function poll_views_api() { return views_views_api(); }
 }
 
-if (!function_exists('profile_views_api')) {
-  function profile_views_api() { return views_views_api(); }
-}
-
 if (!function_exists('search_views_api')) {
   function search_views_api() { return views_views_api(); }
 }
