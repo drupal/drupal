@@ -2429,10 +2429,6 @@ if (!function_exists('translation_views_api')) {
   function translation_views_api() { return views_views_api(); }
 }
 
-if (!function_exists('upload_views_api')) {
-  function upload_views_api() { return views_views_api(); }
-}
-
 if (!function_exists('user_views_api')) {
   function user_views_api() { return views_views_api(); }
 }
