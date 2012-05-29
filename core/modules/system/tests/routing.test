@@ -99,5 +99,109 @@ class UrlMatcherDumperTestCase extends WebTestBase {
     }
   }
 
+  /**
+   * Confirms that we can add routes to the dumper when it already has some.
+   */
+  protected function prepareTables() {
+    $connection = Database::getConnection();
+
+    $tables['test_routes'] = array(
+      'description' => 'Maps paths to various callbacks (access, page and title)',
+      'fields' => array(
+        'name' => array(
+          'description' => 'Primary Key: Machine name of this route',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'pattern' => array(
+          'description' => 'The path pattern for this URI',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'pattern_outline' => array(
+          'description' => 'The pattern',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'access_callback' => array(
+          'description' => 'The callback which determines the access to this router path. Defaults to user_access.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'access_arguments' => array(
+          'description' => 'A serialized array of arguments for the access callback.',
+          'type' => 'blob',
+          'not null' => FALSE,
+        ),
+        'fit' => array(
+          'description' => 'A numeric representation of how specific the path is.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'number_parts' => array(
+          'description' => 'Number of parts in this router path.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'size' => 'small',
+        ),
+        'route' => array(
+          'description' => 'A serialized Route object',
+          'type' => 'text',
+        ),
+      ),
+      'indexes' => array(
+        'fit' => array('fit'),
+        'pattern_outline' => array('pattern_outline'),
+      ),
+      'primary key' => array('name'),
+    );
+
+
+    $schema = $connection->schema();
+    $schema->dropTable('test_routes');
+    $schema->createTable('test_routes', $tables['test_routes']);
+  }
+
+}
+
+/**
+ * Basic tests for the Route.
+ *
+ * Note: This should be a UnitTestBase, but those are broken right now in
+ * Drupal HEAD.  Convert it to a UnitTest when that gets fixed.
+ */
+class RouteTestCase extends WebTestBase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Routes',
+      'description' => 'Confirm that route object is functioning properly.',
+      'group' => 'Routng',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  public function testCompilation() {
+
+    $route = new Route('test/{something}/more');
+    $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');
+    $compiled = $route->compile();
+
+    $this->assertEqual($route, $compiled->getRoute(), t('Compiled route has the correct route object.'));
+    $this->assertEqual($compiled->getFit(), 5 /* That's 101 binary*/, t('The fit was correct.'));
+
+  }
 
 }
