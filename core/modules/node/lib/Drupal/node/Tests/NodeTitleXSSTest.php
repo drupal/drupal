@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Definition of Drupal\node\Tests\NodeTitleXSSTest.
+ */
+
+namespace Drupal\node\Tests;
+
+class NodeTitleXSSTest extends NodeTestBase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Node title XSS filtering',
+      'description' => 'Create a node with dangerous tags in its title and test that they are escaped.',
+      'group' => 'Node',
+    );
+  }
+
+  function testNodeTitleXSS() {
+    // Prepare a user to do the stuff.
+    $web_user = $this->drupalCreateUser(array('create page content', 'edit any page content'));
+    $this->drupalLogin($web_user);
+
+    $xss = '<script>alert("xss")</script>';
+    $title = $xss . $this->randomName();
+    $edit = array("title" => $title);
+
+    $this->drupalPost('node/add/page', $edit, t('Preview'));
+    $this->assertNoRaw($xss, t('Harmful tags are escaped when previewing a node.'));
+
+    $settings = array('title' => $title);
+    $node = $this->drupalCreateNode($settings);
+
+    $this->drupalGet('node/' . $node->nid);
+    // assertTitle() decodes HTML-entities inside the <title> element.
+    $this->assertTitle($edit["title"] . ' | Drupal', t('Title is diplayed when viewing a node.'));
+    $this->assertNoRaw($xss, t('Harmful tags are escaped when viewing a node.'));
+
+    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->assertNoRaw($xss, t('Harmful tags are escaped when editing a node.'));
+  }
+}
