@@ -29,10 +29,27 @@ class RouteCompiler implements RouteCompilerInterface {
 
     $fit = $this->getFit($route->getPattern());
 
-    return new CompiledRoute($route, $fit);
+    $pattern_outline = $this->getPatternOutline($route->getPattern());
+
+    return new CompiledRoute($route, $fit, $pattern_outline);
 
   }
 
+  /**
+   * Returns the pattern outline.
+   *
+   * The pattern outline is the path pattern but normalized so that all
+   * placeholders are equal strings.
+   *
+   * @param string $path
+   *   The path pattern to normalize to an outline.
+   *
+   * @return string
+   *   The path pattern outline.
+   */
+  public function getPatternOutline($path) {
+    return preg_replace('#\{\w+\}#', '%', $path);
+  }
 
   /**
    * Determines the fitness of the provided path.

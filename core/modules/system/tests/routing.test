@@ -194,13 +194,13 @@ class RouteTestCase extends WebTestBase {
   }
 
   public function testCompilation() {
-
-    $route = new Route('test/{something}/more');
+    $route = new Route('/test/{something}/more');
     $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');
     $compiled = $route->compile();
 
     $this->assertEqual($route, $compiled->getRoute(), t('Compiled route has the correct route object.'));
     $this->assertEqual($compiled->getFit(), 5 /* That's 101 binary*/, t('The fit was correct.'));
+    $this->assertEqual($compiled->getPatternOutline(), '/test/%/more', t('The pattern outline was correct.'));
 
   }
 
