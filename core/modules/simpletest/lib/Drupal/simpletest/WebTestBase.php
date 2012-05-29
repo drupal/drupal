@@ -857,9 +857,14 @@ abstract class WebTestBase extends TestBase {
     file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10));
 
     // Remove all prefixed tables.
-    $tables = db_find_tables($this->databasePrefix . '%');
+    $connection_info = Database::getConnectionInfo('default');
+    $tables = db_find_tables($connection_info['default']['prefix']['default'] . '%');
+    if (empty($tables)) {
+      $this->fail('Failed to find test tables to drop.');
+    }
+    $prefix_length = strlen($connection_info['default']['prefix']['default']);
     foreach ($tables as $table) {
-      if (db_drop_table(substr($table, strlen($this->databasePrefix)))) {
+      if (db_drop_table(substr($table, $prefix_length))) {
         unset($tables[$table]);
       }
     }
