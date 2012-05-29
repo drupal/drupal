@@ -22,7 +22,6 @@ maintainer. Current component maintainers for Drupal 8:
 
 Ajax system
 - Alex Bronstein 'effulgentsia' <http://drupal.org/user/78040>
-- Randy Fay 'rfay' <http://drupal.org/user/30906>
 - Earl Miles 'merlinofchaos' <http://drupal.org/user/26979>
 
 Base system
