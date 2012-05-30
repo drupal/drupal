@@ -1482,7 +1482,7 @@ class views_plugin_query_default extends views_plugin_query {
 
         $this->pager->post_execute($view->result);
 
-        if ($this->pager->use_pager()) {
+        if ($this->pager->use_count_query() || !empty($view->get_total_rows)) {
           $view->total_rows = $this->pager->get_total_items();
         }
       }

@@ -175,6 +175,25 @@ class ViewsPagerTest extends ViewsSqlTest {
     return $view;
   }
 
+  public function testViewTotalRowsWithoutPager() {
+    $this->createNodes(23);
+
+    $view = $this->viewsPagerNoLimit();
+    $view->get_total_rows = TRUE;
+    $view->set_display('default');
+    $this->executeView($view);
+
+    $this->assertEqual($view->total_rows, 23, "'total_rows' is calculated when pager type is 'none' and 'get_total_rows' is TRUE.");
+  }
+
+  public function createNodes($count) {
+    if ($count >= 0) {
+      for ($i = 0; $i < $count; $i++) {
+        $this->drupalCreateNode();
+      }
+    }
+  }
+
   /**
    * Tests the some pager plugin.
    */
