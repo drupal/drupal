@@ -1086,7 +1086,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
  *   A keyed array containing the current state of the form. The current
  *   user-submitted data is stored in $form_state['values'], though
  *   form validation functions are passed an explicit copy of the
- *   values for the sake of simplicity. Validation handlers can also
+ *   values for the sake of simplicity. Validation handlers can also use
  *   $form_state to pass information on to submit handlers. For example:
  *     $form_state['data_for_submission'] = $data;
  *   This technique is useful when validation requires file parsing,
