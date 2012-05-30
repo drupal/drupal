@@ -620,6 +620,7 @@ function template_preprocess_views_view_table(&$vars) {
 
   $count = 0;
   foreach ($vars['rows'] as $num => $row) {
+    $vars['row_classes'][$num] = array();
     if ($row_class_special) {
       $vars['row_classes'][$num][] = ($count++ % 2 == 0) ? 'odd' : 'even';
     }
