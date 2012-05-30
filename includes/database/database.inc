@@ -988,6 +988,9 @@ abstract class DatabaseConnection extends PDO {
    * @param $name
    *   Optional name of the savepoint.
    *
+   * @return DatabaseTransaction
+   *   A DatabaseTransaction object.
+   *
    * @see DatabaseTransaction
    */
   public function startTransaction($name = '') {
