@@ -38,55 +38,40 @@ abstract class UnitTestBase extends TestBase {
   protected function setUp() {
     global $conf;
 
-    // Store necessary current values before switching to the test environment.
-    $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
+    // Create the database prefix for this test.
+    $this->prepareDatabasePrefix();
 
-    // Reset all statics so that test is performed with a clean environment.
+    // Prepare the environment for running tests.
+    $this->prepareEnvironment();
+    $this->originalThemeRegistry = theme_get_registry(FALSE);
+
+    // Reset all statics and variables to perform tests in a clean environment.
+    $conf = array();
     drupal_static_reset();
 
-    // Generate temporary prefixed database to ensure that tests have a clean starting point.
-    $this->databasePrefix = Database::getConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
+    // Empty out module list.
+    module_list(TRUE, FALSE, FALSE, array());
+    // Prevent module_load_all() from attempting to refresh it.
+    $has_run = &drupal_static('module_load_all');
+    $has_run = TRUE;
 
-    // Create test directory.
-    $public_files_directory = $this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10);
-    file_prepare_directory($public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-    $conf['file_public_path'] = $public_files_directory;
+    // Re-implant theme registry.
+    // Required for l() and other functions to work correctly and not trigger
+    // database lookups.
+    $theme_get_registry = &drupal_static('theme_get_registry');
+    $theme_get_registry[FALSE] = $this->originalThemeRegistry;
 
-    // Clone the current connection and replace the current prefix.
-    $connection_info = Database::getConnectionInfo('default');
-    Database::renameConnection('default', 'simpletest_original_default');
-    foreach ($connection_info as $target => $value) {
-      $connection_info[$target]['prefix'] = array(
-        'default' => $value['prefix']['default'] . $this->databasePrefix,
-      );
-    }
-    Database::addConnectionInfo('default', 'default', $connection_info['default']);
+    $conf['file_public_path'] = $this->public_files_directory;
 
-    // Set user agent to be consistent with web test case.
+    // Change the database prefix.
+    // All static variables need to be reset before the database prefix is
+    // changed, since Drupal\Core\Utility\CacheArray implementations attempt to
+    // write back to persistent caches when they are destructed.
+    $this->changeDatabasePrefix();
+
+    // Set user agent to be consistent with WebTestBase.
     $_SERVER['HTTP_USER_AGENT'] = $this->databasePrefix;
 
-    // If locale is enabled then t() will try to access the database and
-    // subsequently will fail as the database is not accessible.
-    $module_list = module_list();
-    if (isset($module_list['locale'])) {
-      $this->originalModuleList = $module_list;
-      unset($module_list['locale']);
-      module_list(TRUE, FALSE, FALSE, $module_list);
-    }
     $this->setup = TRUE;
-  }
-
-  protected function tearDown() {
-    global $conf;
-
-    // Get back to the original connection.
-    Database::removeConnection('default');
-    Database::renameConnection('simpletest_original_default', 'default');
-
-    $conf['file_public_path'] = $this->originalFileDirectory;
-    // Restore modules if necessary.
-    if (isset($this->originalModuleList)) {
-      module_list(TRUE, FALSE, FALSE, $this->originalModuleList);
-    }
   }
 }
