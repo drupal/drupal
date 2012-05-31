@@ -42,7 +42,7 @@ class NullBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
-  function set($cid, $data, $expire = CACHE_PERMANENT) {}
+  function set($cid, $data, $expire = CACHE_PERMANENT, array $tags = array()) {}
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
@@ -73,6 +73,11 @@ class NullBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::garbageCollection().
    */
   function garbageCollection() {}
+
+  /**
+   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
+   */
+  public function invalidateTags(array $tags) {}
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::isEmpty().
