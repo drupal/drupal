@@ -202,7 +202,6 @@ function locale_views_data() {
 function locale_views_data_alter(&$data) {
   // Language field
   $data['node']['language'] = array(
-    'group' => t('Content'),
     'title' => t('Language'),
     'help' => t('The language the content is in.'),
     'field' => array(

@@ -168,6 +168,28 @@ function comment_views_data() {
     ),
   );
 
+
+  // Language field
+  if (module_exists('locale')) {
+    $data['comment']['language'] = array(
+      'title' => t('Language'),
+      'help' => t('The language the comment is in.'),
+      'field' => array(
+        'handler' => 'views_handler_field_locale_language',
+        'click sortable' => TRUE,
+      ),
+      'filter' => array(
+        'handler' => 'views_handler_filter_locale_language',
+      ),
+      'argument' => array(
+        'handler' => 'views_handler_argument_locale_language',
+      ),
+      'sort' => array(
+        'handler' => 'views_handler_sort',
+      ),
+    );
+  }
+
   $data['comments']['timestamp']['moved to'] = array('comment', 'changed');
   // changed (when comment was last updated)
   $data['comment']['changed'] = array(
