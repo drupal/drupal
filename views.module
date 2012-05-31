@@ -2397,6 +2397,10 @@ if (!function_exists('image_views_api')) {
   function image_views_api() { return views_views_api(); }
 }
 
+if (!function_exists('language_views_api')) {
+  function language_views_api() { return views_views_api(); }
+}
+
 if (!function_exists('locale_views_api')) {
   function locale_views_api() { return views_views_api(); }
 }
