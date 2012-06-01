@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\system\Tests\QueueTest.
+ */
+
+namespace Drupal\system\Tests;
+
 use Drupal\Core\Queue\Memory;
 use Drupal\Core\Queue\System;
 use Drupal\simpletest\WebTestBase;
@@ -7,7 +14,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests the basic queue functionality.
  */
-class QueueTestCase extends WebTestBase {
+class QueueTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Queue functionality',
