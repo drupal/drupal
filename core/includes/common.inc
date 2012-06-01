@@ -4901,8 +4901,7 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
     // Add the table drag JavaScript to the page before the module JavaScript
     // to ensure that table drag behaviors are registered before any module
     // uses it.
-    drupal_add_library('system', 'jquery.cookie');
-    drupal_add_js('core/misc/tabledrag.js', array('weight' => -1));
+    drupal_add_library('system', 'drupal.tabledrag');
     $js_added = TRUE;
   }
 

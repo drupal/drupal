@@ -1218,6 +1218,18 @@ function system_library_info() {
     ),
   );
 
+  // Drupal's tabledrag library.
+  $libraries['drupal.tabledrag'] = array(
+    'title' => 'Drupal tabledrag',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/tabledrag.js' => array('group' => JS_LIBRARY, 'weight' => -1),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery.cookie'),
+    ),
+  );
+
   // Drupal's collapsible fieldset.
   $libraries['drupal.collapse'] = array(
     'title' => 'Drupal collapsible fieldset',
