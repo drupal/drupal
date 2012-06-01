@@ -460,7 +460,7 @@ function theme_pager_first($variables) {
 
   // If we are anywhere but the first page
   if ($pager_page_array[$element] > 0) {
-    $output = theme('pager_link', array('text' => $text, 'page_new' => pager_load_array(0, $element, $pager_page_array), 'element' => $element, 'parameters' => $parameters));
+    $output = theme('pager_link', array('text' => $text, 'page_new' => pager_load_array(0, $element, $pager_page_array), 'element' => $element, 'parameters' => $parameters, 'attributes' => array('rel' => 'first')));
   }
 
   return $output;
@@ -498,7 +498,7 @@ function theme_pager_previous($variables) {
     }
     // The previous page is not the first page.
     else {
-      $output = theme('pager_link', array('text' => $text, 'page_new' => $page_new, 'element' => $element, 'parameters' => $parameters));
+      $output = theme('pager_link', array('text' => $text, 'page_new' => $page_new, 'element' => $element, 'parameters' => $parameters, 'attributes' => array('rel' => 'prev')));
     }
   }
 
@@ -536,7 +536,7 @@ function theme_pager_next($variables) {
     }
     // The next page is not the last page.
     else {
-      $output = theme('pager_link', array('text' => $text, 'page_new' => $page_new, 'element' => $element, 'parameters' => $parameters));
+      $output = theme('pager_link', array('text' => $text, 'page_new' => $page_new, 'element' => $element, 'parameters' => $parameters, 'attributes' => array('rel' => 'next')));
     }
   }
 
@@ -565,7 +565,7 @@ function theme_pager_last($variables) {
 
   // If we are anywhere but the last page
   if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
-    $output = theme('pager_link', array('text' => $text, 'page_new' => pager_load_array($pager_total[$element] - 1, $element, $pager_page_array), 'element' => $element, 'parameters' => $parameters));
+    $output = theme('pager_link', array('text' => $text, 'page_new' => pager_load_array($pager_total[$element] - 1, $element, $pager_page_array), 'element' => $element, 'parameters' => $parameters, 'attributes' => array('rel' => 'last')));
   }
 
   return $output;
