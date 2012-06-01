@@ -79,16 +79,19 @@ function module_list($refresh = FALSE, $bootstrap_refresh = FALSE, $sort = FALSE
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['list'] = &drupal_static(__FUNCTION__ . ':list', array());
+    $drupal_static_fast['list'] = &drupal_static(__FUNCTION__ . ':list');
     $drupal_static_fast['sorted_list'] = &drupal_static(__FUNCTION__ . ':sorted_list');
   }
   $list = &$drupal_static_fast['list'];
   $sorted_list = &$drupal_static_fast['sorted_list'];
 
-  if (empty($list) || $refresh || $fixed_list) {
+  if (!isset($list) || $refresh || isset($fixed_list)) {
     $list = array();
     $sorted_list = NULL;
-    if ($fixed_list) {
+    // The fixed list may be a completely empty array, thus check for isset().
+    // Calling code may use this to empty out the module list entirely. For
+    // example, unit tests need to ensure that no modules are invoked.
+    if (isset($fixed_list)) {
       foreach ($fixed_list as $name => $module) {
         drupal_get_filename('module', $name, $module['filename']);
         $list[$name] = $name;

@@ -540,6 +540,181 @@ abstract class TestBase {
   }
 
   /**
+   * Generates a database prefix for running tests.
+   *
+   * The database prefix is used by prepareEnvironment() to setup a public files
+   * directory for the test to be run, which also contains the PHP error log,
+   * which is written to in case of a fatal error. Since that directory is based
+   * on the database prefix, all tests (even unit tests) need to have one, in
+   * order to access and read the error log.
+   *
+   * @see TestBase::prepareEnvironment()
+   *
+   * The generated database table prefix is used for the Drupal installation
+   * being performed for the test. It is also used as user agent HTTP header
+   * value by the cURL-based browser of DrupalWebTestCase, which is sent to the
+   * Drupal installation of the test. During early Drupal bootstrap, the user
+   * agent HTTP header is parsed, and if it matches, all database queries use
+   * the database table prefix that has been generated here.
+   *
+   * @see WebTestBase::curlInitialize()
+   * @see drupal_valid_test_ua()
+   * @see WebTestBase::setUp()
+   */
+  protected function prepareDatabasePrefix() {
+    $this->databasePrefix = 'simpletest' . mt_rand(1000, 1000000);
+
+    // As soon as the database prefix is set, the test might start to execute.
+    // All assertions as well as the SimpleTest batch operations are associated
+    // with the testId, so the database prefix has to be associated with it.
+    db_update('simpletest_test_id')
+      ->fields(array('last_prefix' => $this->databasePrefix))
+      ->condition('test_id', $this->testId)
+      ->execute();
+  }
+
+  /**
+   * Changes the database connection to the prefixed one.
+   *
+   * @see WebTestBase::setUp()
+   */
+  protected function changeDatabasePrefix() {
+    if (empty($this->databasePrefix)) {
+      $this->prepareDatabasePrefix();
+    }
+
+    // Clone the current connection and replace the current prefix.
+    $connection_info = Database::getConnectionInfo('default');
+    Database::renameConnection('default', 'simpletest_original_default');
+    foreach ($connection_info as $target => $value) {
+      $connection_info[$target]['prefix'] = array(
+        'default' => $value['prefix']['default'] . $this->databasePrefix,
+      );
+    }
+    Database::addConnectionInfo('default', 'default', $connection_info['default']);
+  }
+
+  /**
+   * Prepares the current environment for running the test.
+   *
+   * Backups various current environment variables and resets them, so they do
+   * not interfere with the Drupal site installation in which tests are executed
+   * and can be restored in TestBase::tearDown().
+   *
+   * Also sets up new resources for the testing environment, such as the public
+   * filesystem and configuration directories.
+   *
+   * @see TestBase::tearDown()
+   */
+  protected function prepareEnvironment() {
+    global $user, $language_interface, $conf;
+
+    // Backup current in-memory configuration.
+    $this->originalConf = $conf;
+
+    // Backup statics and globals.
+    $this->originalContainer = clone drupal_container();
+    $this->originalLanguage = $language_interface;
+    $this->originalConfigDirectory = $GLOBALS['config_directory_name'];
+
+    // Save further contextual information.
+    $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
+    $this->originalProfile = drupal_get_profile();
+    $this->originalUser = $user;
+
+    // Save and clean the shutdown callbacks array because it is static cached
+    // and will be changed by the test run. Otherwise it will contain callbacks
+    // from both environments and the testing environment will try to call the
+    // handlers defined by the original one.
+    $callbacks = &drupal_register_shutdown_function();
+    $this->originalShutdownCallbacks = $callbacks;
+    $callbacks = array();
+
+    // Create test directory ahead of installation so fatal errors and debug
+    // information can be logged during installation process.
+    // Use temporary files directory with the same prefix as the database.
+    $this->public_files_directory = $this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10);
+    $this->private_files_directory = $this->public_files_directory . '/private';
+    $this->temp_files_directory = $this->private_files_directory . '/temp';
+
+    // Create the directories
+    file_prepare_directory($this->public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    file_prepare_directory($this->private_files_directory, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($this->temp_files_directory, FILE_CREATE_DIRECTORY);
+    $this->generatedTestFiles = FALSE;
+
+    // Create and set a new configuration directory and signature key.
+    // The child site automatically adjusts the global $config_directory_name to
+    // a test-prefix-specific directory within the public files directory.
+    // @see config_get_config_directory()
+    $GLOBALS['config_directory_name'] = 'simpletest/' . substr($this->databasePrefix, 10) . '/config';
+    $this->configFileDirectory = $this->originalFileDirectory . '/' . $GLOBALS['config_directory_name'];
+    file_prepare_directory($this->configFileDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+
+    // Log fatal errors.
+    ini_set('log_errors', 1);
+    ini_set('error_log', $this->public_files_directory . '/error.log');
+
+    // Set the test information for use in other parts of Drupal.
+    $test_info = &$GLOBALS['drupal_test_info'];
+    $test_info['test_run_id'] = $this->databasePrefix;
+    $test_info['in_child_site'] = FALSE;
+  }
+
+  /**
+   * Deletes created files, database tables, and reverts all environment changes.
+   *
+   * This method needs to be invoked for both unit and integration tests.
+   *
+   * @see TestBase::prepareDatabasePrefix()
+   * @see TestBase::changeDatabasePrefix()
+   * @see TestBase::prepareEnvironment()
+   */
+  protected function tearDown() {
+    global $user, $language_interface, $conf;
+
+    // In case a fatal error occurred that was not in the test process read the
+    // log to pick up any fatal errors.
+    simpletest_log_read($this->testId, $this->databasePrefix, get_class($this), TRUE);
+
+    $emailCount = count(variable_get('drupal_test_email_collector', array()));
+    if ($emailCount) {
+      $message = format_plural($emailCount, '1 e-mail was sent during this test.', '@count e-mails were sent during this test.');
+      $this->pass($message, t('E-mail'));
+    }
+
+    // Delete temporary files directory.
+    file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10));
+
+    // Restore original database connection.
+    Database::removeConnection('default');
+    Database::renameConnection('simpletest_original_default', 'default');
+
+    // Reset all static variables.
+    drupal_static_reset();
+
+    // Restore has_run state.
+    $has_run = &drupal_static('module_load_all');
+    $has_run = TRUE;
+
+    // Restore original in-memory configuration.
+    $conf = $this->originalConf;
+
+    // Restore original statics and globals.
+    drupal_container($this->originalContainer);
+    $language_interface = $this->originalLanguage;
+    $GLOBALS['config_directory_name'] = $this->originalConfigDirectory;
+
+    // Restore original shutdown callbacks.
+    $callbacks = &drupal_register_shutdown_function();
+    $callbacks = $this->originalShutdownCallbacks;
+
+    // Restore original user session.
+    $user = $this->originalUser;
+    drupal_save_session(TRUE);
+  }
+
+  /**
    * Handle errors during test runs.
    *
    * Because this is registered in set_error_handler(), it has to be public.

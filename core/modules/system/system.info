@@ -8,7 +8,6 @@ required = TRUE
 configure = admin/config/system
 
 ; Tests in tests directory.
-files[] = tests/actions.test
 files[] = tests/ajax.test
 files[] = tests/batch.test
 files[] = tests/bootstrap.test
@@ -22,7 +21,6 @@ files[] = tests/form.test
 files[] = tests/image.test
 files[] = tests/installer.test
 files[] = tests/lock.test
-files[] = tests/mail.test
 files[] = tests/menu.test
 files[] = tests/module.test
 files[] = tests/pager.test

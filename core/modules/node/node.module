@@ -676,7 +676,7 @@ function node_type_update_nodes($old_type, $type) {
  *  TRUE to rebuild node types. Equivalent to calling node_types_rebuild().
  *
  * @return
- *   Associative array with two components:
+ *   An object with two properties:
  *   - names: Associative array of the names of node types, keyed by the type.
  *   - types: Associative array of node type objects, keyed by the type.
  *   Both of these arrays will include new types that have been defined by

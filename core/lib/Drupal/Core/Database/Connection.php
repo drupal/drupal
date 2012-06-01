@@ -819,6 +819,9 @@ abstract class Connection extends PDO {
    * @param $name
    *   Optional name of the savepoint.
    *
+   * @return Drupal\Core\Database\Transaction
+   *   A DatabaseTransaction object.
+   *
    * @see Drupal\Core\Database\Transaction
    */
   public function startTransaction($name = '') {
