@@ -528,3 +528,17 @@ $conf['404_fast_html'] = '<!DOCTYPE html><head><title>404 Not Found</title></hea
  * Remove the leading hash signs to disable.
  */
 # $conf['allow_authorize_operations'] = FALSE;
+
+/**
+ * Load local development override configuration, if available.
+ *
+ * Use settings.local.php to override variables on secondary (staging,
+ * development, etc) installations of this site. Typically used to disable
+ * caching, JavaScript/CSS compression, re-routing of outgoing e-mails, and
+ * other things that should not happen on development and testing sites.
+ *
+ * Keep this code block at the end of this file to take full effect.
+ */
+# if (file_exists(DRUPAL_ROOT . '/' . $conf_path . '/settings.local.php')) {
+#   include DRUPAL_ROOT . '/' . $conf_path . '/settings.local.php';
+# }

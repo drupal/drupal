@@ -3,5 +3,4 @@ description = Checks for available updates, and can securely install or update m
 version = VERSION
 package = Core
 core = 8.x
-files[] = update.test
 configure = admin/reports/updates/settings

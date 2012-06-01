@@ -3,6 +3,5 @@ description = Filters content in preparation for display.
 package = Core
 version = VERSION
 core = 8.x
-files[] = filter.test
 required = TRUE
 configure = admin/config/content/formats
