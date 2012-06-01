@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Database\Database;
 
 /**
@@ -705,7 +707,7 @@ function drupal_site_offline() {
  * bubble up to menu_execute_active_handler() should call drupal_not_found().
  */
 function drupal_not_found() {
-  drupal_deliver_page(MENU_NOT_FOUND);
+  throw new NotFoundHttpException();
 }
 
 /**
@@ -718,7 +720,7 @@ function drupal_not_found() {
  * drupal_access_denied().
  */
 function drupal_access_denied() {
-  drupal_deliver_page(MENU_ACCESS_DENIED);
+  throw new AccessDeniedHttpException();
 }
 
 /**
@@ -5101,13 +5103,10 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
   return (($skip_anonymous && $user->uid == 0) || ($token == drupal_get_token($value)));
 }
 
-function _drupal_bootstrap_full() {
-  static $called = FALSE;
-
-  if ($called) {
-    return;
-  }
-  $called = TRUE;
+/**
+ * Loads code for subsystems and modules, and registers stream wrappers.
+ */
+function _drupal_bootstrap_code() {
   require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'core/includes/path.inc');
   require_once DRUPAL_ROOT . '/core/includes/theme.inc';
   require_once DRUPAL_ROOT . '/core/includes/pager.inc';
@@ -5126,16 +5125,38 @@ function _drupal_bootstrap_full() {
 
   // Load all enabled modules
   module_load_all();
+
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();
 
+  // Now that stream wrappers are registered, log fatal errors from a simpletest
+  // child site to a test specific file directory.
   $test_info = &$GLOBALS['drupal_test_info'];
   if (!empty($test_info['in_child_site'])) {
-    // Running inside the simpletest child site, log fatal errors to test
-    // specific file directory.
     ini_set('log_errors', 1);
     ini_set('error_log', 'public://error.log');
   }
+}
+
+/**
+ * Temporary BC function for scripts not using DrupalKernel.
+ *
+ * DrupalKernel skips this and replicates it via event listeners.
+ *
+ * @see Drupal\Core\EventSubscriber\PathSubscriber;
+ * @see Drupal\Core\EventSubscriber\LegacyRequestSubscriber;
+ */
+function _drupal_bootstrap_full($skip = FALSE) {
+  static $called = FALSE;
+
+  if ($called || $skip) {
+    $called = TRUE;
+    return;
+  }
+
+  // Initialize language (which can strip path prefix) prior to initializing
+  // current_path().
+  drupal_language_initialize();
 
   // Initialize current_path() prior to invoking hook_init().
   drupal_path_initialize();

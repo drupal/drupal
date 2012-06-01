@@ -5,6 +5,8 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Maximum age of temporary files in seconds.
  */
@@ -1114,11 +1116,13 @@ function system_menu() {
  *
  * @see system_cron_access().
  */
+
 function system_cron_page() {
   drupal_page_is_cacheable(FALSE);
   drupal_cron_run();
 
-  // Returning nothing causes no output to be generated.
+  // HTTP 204 is "No content", meaning "I did what you asked and we're done."
+  return new Response('', 204);
 }
 
 /**
@@ -2008,8 +2012,11 @@ function system_add_module_assets() {
  * Implements hook_custom_theme().
  */
 function system_custom_theme() {
-  if (user_access('view the administration theme') && path_is_admin(current_path())) {
-    return variable_get('admin_theme');
+  if ($request = request()) {
+    $path = $request->attributes->get('system_path');
+    if (user_access('view the administration theme') && path_is_admin($path)) {
+      return variable_get('admin_theme');
+    }
   }
 }
 

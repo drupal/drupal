@@ -824,7 +824,7 @@ class CronRunTestCase extends WebTestBase {
     // Run cron anonymously with the valid cron key.
     $key = config('system.cron')->get('cron_key');
     $this->drupalGet('cron/' . $key);
-    $this->assertResponse(200);
+    $this->assertResponse(204);
   }
 
   /**

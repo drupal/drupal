@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Lock;
 
-use PDOException;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 /**
  * Defines the database lock backend. This is the default backend in Drupal.
@@ -53,7 +53,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
           // We never need to try again.
           $retry = FALSE;
         }
-        catch (PDOException $e) {
+        catch (DatabaseExceptionWrapper $e) {
           // Suppress the error. If this is our first pass through the loop,
           // then $retry is FALSE. In this case, the insert must have failed
           // meaning some other request acquired the lock but did not release it.

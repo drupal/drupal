@@ -2328,9 +2328,12 @@ function user_delete_multiple(array $uids) {
  * Page callback wrapper for user_view().
  */
 function user_view_page($account) {
+  if (is_object($account)) {
+    return user_view($account);
+  }
   // An administrator may try to view a non-existent account,
   // so we give them a 404 (versus a 403 for non-admins).
-  return is_object($account) ? user_view($account) : MENU_NOT_FOUND;
+  drupal_not_found();
 }
 
 /**

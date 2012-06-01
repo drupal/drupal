@@ -5,6 +5,8 @@
  * Displays the Drupal administration interface in an overlay.
  */
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Implements hook_help().
  */
@@ -19,7 +21,7 @@ function overlay_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
+ * Implements hook_menu()
  */
 function overlay_menu() {
   $items['overlay-ajax/%'] = array(
@@ -32,7 +34,7 @@ function overlay_menu() {
   $items['overlay/dismiss-message'] = array(
     'title' => '',
     'page callback' => 'overlay_user_dismiss_message',
-    'access arguments' => array('access overlay'),
+    'access callback' => 'overlay_user_dismiss_message_access',
     'type' => MENU_CALLBACK,
   );
   return $items;
@@ -299,25 +301,48 @@ function overlay_page_alter(&$page) {
 }
 
 /**
+ * Access callback; determines access to dismiss the overlay accessibility message.
+ *
+ * @see overlay_user_dismiss_message()
+ * @see overlay_menu()
+ */
+function overlay_user_dismiss_message_access() {
+  global $user;
+  if (!user_access('access overlay')) {
+    return FALSE;
+  }
+  // It's unlikely, but possible that "access overlay" permission is granted to
+  // the anonymous role. In this case, we do not display the message to disable
+  // the overlay, so there is nothing to dismiss.
+  if (empty($user->uid)) {
+    return FALSE;
+  }
+  return TRUE;
+}
+
+/**
  * Menu callback; dismisses the overlay accessibility message for this user.
+ *
+ * @see overlay_user_dismiss_message_access()
+ * @see overlay_menu()
  */
 function overlay_user_dismiss_message() {
   global $user;
-  // It's unlikely, but possible that "access overlay" permission is granted to
-  // the anonymous role. In this case, we do not display the message to disable
-  // the overlay, so there is nothing to dismiss. Also, protect against
-  // cross-site request forgeries by validating a token.
-  if (empty($user->uid) || !isset($_GET['token']) || !drupal_valid_token($_GET['token'], 'overlay')) {
-    return MENU_ACCESS_DENIED;
+
+  // @todo CSRF tokens are validated in page callbacks rather than access
+  //   callbacks, because access callbacks are also invoked during menu link
+  //   generation. Add token support to routing: http://drupal.org/node/755584.
+  $token = request()->query->get('token');
+  if (!isset($token) || !drupal_valid_token($token, 'overlay')) {
+    drupal_access_denied();
   }
-  else {
-    $account = user_load($user->uid);
-    $account->data['overlay_message_dismissed'] = 1;
-    $account->save();
-    drupal_set_message(t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
-    // Destination is normally given. Go to the user profile as a fallback.
-    drupal_goto('user/' . $user->uid . '/edit');
-  }
+
+  $account = user_load($user->uid);
+  $account->data['overlay_message_dismissed'] = 1;
+  $account->save();
+  drupal_set_message(t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
+  // Destination is normally given. Go to the user profile as a fallback.
+  drupal_goto('user/' . $user->uid . '/edit');
 }
 
 /**
@@ -667,7 +692,8 @@ function overlay_overlay_child_initialize() {
   // it to the same content rendered in overlay_exit(), at the end of the page
   // request. This allows us to check if anything actually did change, and, if
   // so, trigger an immediate Ajax refresh of the parent window.
-  if (!empty($_POST) || isset($_GET['token'])) {
+  $token = request()->query->get('token');
+  if (!empty($_POST) || isset($token)) {
     foreach (overlay_supplemental_regions() as $region) {
       overlay_store_rendered_content($region, overlay_render_region($region));
     }
@@ -979,5 +1005,5 @@ function overlay_trigger_refresh() {
  * @see Drupal.overlay.refreshRegions()
  */
 function overlay_ajax_render_region($region) {
-  print overlay_render_region($region);
+  return new Response(overlay_render_region($region));
 }

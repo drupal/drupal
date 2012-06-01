@@ -4,6 +4,7 @@ use Drupal\Core\Database\Database;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @file
@@ -137,12 +138,12 @@ const DRUPAL_BOOTSTRAP_SESSION = 4;
 const DRUPAL_BOOTSTRAP_PAGE_HEADER = 5;
 
 /**
- * Seventh bootstrap phase: find out language of the page.
+ * Seventh bootstrap phase: load code for subsystems and modules.
  */
-const DRUPAL_BOOTSTRAP_LANGUAGE = 6;
+const DRUPAL_BOOTSTRAP_CODE = 6;
 
 /**
- * Final bootstrap phase: Drupal is fully loaded; validate and fix input data.
+ * Final bootstrap phase: initialize language, path, theme, and modules.
  */
 const DRUPAL_BOOTSTRAP_FULL = 7;
 
@@ -1606,6 +1607,29 @@ function request_uri($omit_query_string = FALSE) {
 }
 
 /**
+ * Returns the current global request object.
+ *
+ * @todo Replace this function with a proper dependency injection container.
+ *
+ * @staticvar Symfony\Component\HttpFoundation\Request $request
+ *
+ * @param Symfony\Component\HttpFoundation\Request $new_request
+ *   Optional. The new request object to store. This parameter should only be
+ *   used by index.php.
+ *
+ * @return Symfony\Component\HttpFoundation\Request
+ *   The current request object.
+ */
+function request(Request $new_request = NULL) {
+  static $request;
+
+  if ($new_request) {
+    $request = $new_request;
+  }
+  return $request;
+}
+
+/**
  * Logs an exception.
  *
  * This is a wrapper function for watchdog() which automatically decodes an
@@ -2094,7 +2118,7 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
     DRUPAL_BOOTSTRAP_VARIABLES,
     DRUPAL_BOOTSTRAP_SESSION,
     DRUPAL_BOOTSTRAP_PAGE_HEADER,
-    DRUPAL_BOOTSTRAP_LANGUAGE,
+    DRUPAL_BOOTSTRAP_CODE,
     DRUPAL_BOOTSTRAP_FULL,
   );
   // Not drupal_static(), because the only legitimate API to control this is to
@@ -2147,12 +2171,12 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
           _drupal_bootstrap_page_header();
           break;
 
-        case DRUPAL_BOOTSTRAP_LANGUAGE:
-          drupal_language_initialize();
+        case DRUPAL_BOOTSTRAP_CODE:
+          require_once DRUPAL_ROOT . '/core/includes/common.inc';
+          _drupal_bootstrap_code();
           break;
 
         case DRUPAL_BOOTSTRAP_FULL:
-          require_once DRUPAL_ROOT . '/core/includes/common.inc';
           _drupal_bootstrap_full();
           break;
       }
@@ -2375,7 +2399,6 @@ function _drupal_bootstrap_page_header() {
 
   if (!drupal_is_cli()) {
     ob_start();
-    drupal_page_header();
   }
 }
 

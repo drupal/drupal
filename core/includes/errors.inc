@@ -5,6 +5,8 @@
  * Functions for error handling.
  */
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Error reporting level: display no errors.
  */
@@ -215,10 +217,6 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
   watchdog('php', '%type: !message in %function (line %line of %file).', $error, $error['severity_level']);
 
-  if ($fatal) {
-    drupal_add_http_header('Status', '500 Service unavailable (with message)');
-  }
-
   if (drupal_is_cli()) {
     if ($fatal) {
       // When called from CLI, simply output a plain text message.
@@ -254,8 +252,14 @@ function _drupal_log_error($error, $fatal = FALSE) {
       drupal_set_title(t('Error'));
       // We fallback to a maintenance page at this point, because the page generation
       // itself can generate errors.
-      print theme('maintenance_page', array('content' => t('The website encountered an unexpected error. Please try again later.')));
-      exit;
+      $output = theme('maintenance_page', array('content' => t('The website encountered an unexpected error. Please try again later.')));
+
+      $response = new Response($output, 500);
+      if ($fatal) {
+        $response->setStatusCode(500, '500 Service unavailable (with message)');
+      }
+
+      return $response;
     }
   }
 }

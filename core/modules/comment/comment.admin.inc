@@ -260,7 +260,7 @@ function comment_confirm_delete_page($cid) {
   if ($comment = comment_load($cid)) {
     return drupal_get_form('comment_confirm_delete', $comment);
   }
-  return MENU_NOT_FOUND;
+  drupal_not_found();
 }
 
 /**

@@ -84,10 +84,7 @@ module_list(TRUE, FALSE, FALSE, $module_list);
 drupal_load('module', 'system');
 drupal_load('module', 'user');
 
-// We also want to have the language system available, but we do *NOT* want to
-// actually call drupal_bootstrap(DRUPAL_BOOTSTRAP_LANGUAGE), since that would
-// also force us through the DRUPAL_BOOTSTRAP_PAGE_HEADER phase, which loads
-// all the modules, and that's exactly what we're trying to avoid.
+// Initialize the language system.
 drupal_language_initialize();
 
 // Initialize the maintenance theme for this administrative script.

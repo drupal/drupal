@@ -1,10 +1,5 @@
 <?php
 
-use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Database\Query\SelectExtender;
-use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\node\Node;
-
 /**
  * @file
  * The core module that allows content to be submitted to the site.
@@ -12,6 +7,13 @@ use Drupal\node\Node;
  * Modules and scripts may programmatically submit nodes using the usual form
  * API pattern.
  */
+
+use Symfony\Component\HttpFoundation\Response;
+
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectExtender;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\node\Node;
 
 /**
  * Denotes that the node is not published.
@@ -2442,8 +2444,7 @@ function node_feed($nids = FALSE, $channel = array()) {
   $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language'], $channel_extras);
   $output .= "</rss>\n";
 
-  drupal_add_http_header('Content-Type', 'application/rss+xml; charset=utf-8');
-  print $output;
+  return new Response($output, 200, array('Content-Type' =>  'application/rss+xml; charset=utf-8'));
 }
 
 /**

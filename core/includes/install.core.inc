@@ -3,6 +3,9 @@
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\TaskException;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * @file
  * API functions for installing Drupal.
@@ -248,6 +251,14 @@ function install_begin_request(&$install_state) {
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
+  // A request object from the HTTPFoundation to tell us about the request.
+  $request = Request::createFromGlobals();
+
+  // Set the global $request object.  This is a temporary measure to
+  // keep legacy utility functions working.  It should be moved to a dependency
+  // injection container at some point.
+  request($request);
+
   // This must go after drupal_bootstrap(), which unsets globals!
   global $conf;
 
@@ -477,6 +488,15 @@ function install_run_task($task, &$install_state) {
     elseif ($current_batch == $function) {
       include_once DRUPAL_ROOT . '/core/includes/batch.inc';
       $output = _batch_page();
+      // Because Batch API now returns a JSON response for intermediary steps,
+      // but the installer doesn't handle Response objects yet, just send the
+      // output here and emulate the old model.
+      // @todo Replace this when we refactor the installer to use a request-
+      //   response workflow.
+      if ($output instanceof Response) {
+        $output->send();
+        $output = NULL;
+      }
       // The task is complete when we try to access the batch page and receive
       // FALSE in return, since this means we are at a URL where we are no
       // longer requesting a batch ID.

@@ -5,6 +5,8 @@
  * Admin page callbacks for the system module.
  */
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Menu callback; Provide the administration overview page.
  */
@@ -2302,6 +2304,9 @@ function system_batch_page() {
 
   if ($output === FALSE) {
     drupal_access_denied();
+  }
+  elseif ($output instanceof Response) {
+    return $output;
   }
   elseif (isset($output)) {
     // Force a page without blocks or messages to

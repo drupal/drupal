@@ -658,7 +658,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
       // sent by Drupal.
       $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png; name="' . $test_image->filename . '"', t('Content-Type header was sent.'));
       $this->assertEqual($this->drupalGetHeader('Content-Disposition'), 'inline; filename="' . $test_image->filename . '"', t('Content-Disposition header was sent.'));
-      $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'private', t('Cache-Control header was sent.'));
+      $this->assertTrue(strstr($this->drupalGetHeader('Cache-Control'),'private') !== FALSE, t('Cache-Control header was sent.'));
 
       // Log out and try to access the file.
       $this->drupalLogout();
