@@ -5,6 +5,8 @@
  * Interface translation summary, editing and deletion user interfaces.
  */
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * String search screen.
  */
@@ -511,7 +513,7 @@ function locale_translate_delete_page($lid) {
     return drupal_get_form('locale_translate_delete_form', $source);
   }
   else {
-    return drupal_not_found();
+    throw new NotFoundHttpException();
   }
 }
 

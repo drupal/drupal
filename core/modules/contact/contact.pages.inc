@@ -5,6 +5,8 @@
  * Page callbacks for the Contact module.
  */
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * Form constructor for the site-wide contact form.
  *
@@ -41,8 +43,7 @@ function contact_site_form($form, &$form_state) {
       drupal_set_message(t('The contact form has not been configured. <a href="@add">Add one or more categories</a> to the form.', array('@add' => url('admin/structure/contact/add'))), 'error');
     }
     else {
-      drupal_not_found();
-      drupal_exit();
+      throw new NotFoundHttpException();
     }
   }
 

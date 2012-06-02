@@ -22,6 +22,7 @@
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Implements hook_menu().
@@ -98,7 +99,7 @@ function openid_test_yadis_xrds() {
     // that the XRI has been properly encoded. The "+" sign in the _xrd_r query
     // parameter is decoded to a space by PHP.
     if (arg(3) == 'xri' && (arg(4) != '@example*résumé;%25' || $_GET['_xrd_r'] != 'application/xrds xml')) {
-      drupal_not_found();
+      throw new NotFoundHttpException();
     }
     $output = '<?xml version="1.0" encoding="UTF-8"?>
       <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)" xmlns:openid="http://openid.net/xmlns/1.0">

@@ -5,13 +5,14 @@
  * User page callbacks for the Statistics module.
  */
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * Page callback: Displays statistics for a node.
  *
  * @return array
  *   A render array containing node statistics. If information for the node was
- *   not found, this will deliver a page not found error via
- *   drupal_not_found().
+ *   not found, this will throw a NotFoundHttpException.
  *
  * @see statistics_menu()
  */
@@ -58,7 +59,7 @@ function statistics_node_tracker() {
     return $build;
   }
   else {
-    drupal_not_found();
+    throw new NotFoundHttpException();
   }
 }
 
@@ -67,8 +68,7 @@ function statistics_node_tracker() {
  *
  * @return array
  *   A render array containing user statistics. If information for the user was
- *   not found, this will deliver a page not found error via
- *   drupal_not_found().
+ *   not found, this will throw a NotFoundHttpException.
  *
  * @see statistics_menu()
  */
@@ -106,6 +106,6 @@ function statistics_user_tracker() {
     return $build;
   }
   else {
-    drupal_not_found();
+    throw new NotFoundHttpException();
   }
 }

@@ -6,6 +6,7 @@
  */
 
 use Drupal\comment\Comment;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Page callback: Presents an administrative comment listing.
@@ -260,7 +261,7 @@ function comment_confirm_delete_page($cid) {
   if ($comment = comment_load($cid)) {
     return drupal_get_form('comment_confirm_delete', $comment);
   }
-  drupal_not_found();
+  throw new NotFoundHttpException();
 }
 
 /**

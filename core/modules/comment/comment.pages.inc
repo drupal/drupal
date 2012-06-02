@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Node;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Form constructor for the comment reply form.
@@ -122,5 +123,5 @@ function comment_approve($cid) {
     drupal_set_message(t('Comment approved.'));
     drupal_goto('node/' . $comment->nid);
   }
-  drupal_not_found();
+  throw new NotFoundHttpException();
 }

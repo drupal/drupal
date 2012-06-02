@@ -1034,9 +1034,8 @@ function search_box($form, &$form_state, $form_id) {
  */
 function search_box_form_submit($form, &$form_state) {
   // The search form relies on control of the redirect destination for its
-  // functionality, so we override any static destination set in the request,
-  // for example by drupal_access_denied() or drupal_not_found()
-  // (see http://drupal.org/node/292565).
+  // functionality, so we override any static destination set in the request.
+  // See http://drupal.org/node/292565.
   if (isset($_GET['destination'])) {
     unset($_GET['destination']);
   }

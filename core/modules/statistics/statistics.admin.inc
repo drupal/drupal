@@ -5,6 +5,8 @@
  * Admin page callbacks for the Statistics module.
  */
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * Page callback: Displays the "recent hits" page.
  *
@@ -225,7 +227,7 @@ function statistics_top_referrers() {
  *
  * @return array
  *   A render array containing page access statistics. If information for the
- *   page was not found, drupal_not_found() is called.
+ *   page was not found, a NotFoundHttpException is thrown.
  */
 function statistics_access_log($aid) {
   $access = db_query('SELECT a.*, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE aid = :aid', array(':aid' => $aid))->fetch();
@@ -264,7 +266,7 @@ function statistics_access_log($aid) {
     return $build;
   }
   else {
-    drupal_not_found();
+    throw new NotFoundHttpException();
   }
 }
 

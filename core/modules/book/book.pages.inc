@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Node;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Page callback: Prints a listing of all books.
@@ -53,7 +54,7 @@ function book_export($type, $nid) {
   }
   else {
     drupal_set_message(t('Unknown export format.'));
-    drupal_not_found();
+    throw new NotFoundHttpException();
   }
 }
 
@@ -84,7 +85,7 @@ function book_export_html($nid) {
       return theme('book_export_html', array('title' => $node->title, 'contents' => $contents, 'depth' => $node->book['depth']));
     }
     else {
-      drupal_not_found();
+      throw new NotFoundHttpException();
     }
   }
   else {

@@ -10,6 +10,7 @@
  */
 
 use Drupal\node\Node;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Comment is awaiting approval.
@@ -506,7 +507,7 @@ function comment_permalink($cid) {
     $_GET['page'] = $page;
     return menu_execute_active_handler('node/' . $node->nid, FALSE);
   }
-  drupal_not_found();
+  throw new NotFoundHttpException();
 }
 
 /**

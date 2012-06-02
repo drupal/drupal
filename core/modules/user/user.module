@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @file
@@ -2333,7 +2334,7 @@ function user_view_page($account) {
   }
   // An administrator may try to view a non-existent account,
   // so we give them a 404 (versus a 403 for non-admins).
-  drupal_not_found();
+  throw new NotFoundHttpException();
 }
 
 /**

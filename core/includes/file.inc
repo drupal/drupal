@@ -1997,7 +1997,7 @@ function file_transfer($uri, $headers) {
  * modules returned headers the download will start with the returned headers.
  * If a module returns -1 drupal_access_denied() will be returned. If the file
  * exists but no modules responded drupal_access_denied() will be returned.
- * If the file does not exist drupal_not_found() will be returned.
+ * If the file does not exist a NotFoundHttpException will be thrown.
  *
  * @see hook_file_download()
  * @see system_menu()

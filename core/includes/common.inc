@@ -699,18 +699,6 @@ function drupal_site_offline() {
 }
 
 /**
- * Delivers a "page not found" error to the browser.
- *
- * Page callback functions wanting to report a "page not found" message should
- * return MENU_NOT_FOUND instead of calling drupal_not_found(). However,
- * functions that are invoked in contexts where that return value might not
- * bubble up to menu_execute_active_handler() should call drupal_not_found().
- */
-function drupal_not_found() {
-  throw new NotFoundHttpException();
-}
-
-/**
  * Delivers an "access denied" error to the browser.
  *
  * Page callback functions wanting to report an "access denied" message should
@@ -2354,8 +2342,7 @@ function l($text, $path, array $options = array()) {
  * Delivers a page callback result to the browser in the appropriate format.
  *
  * This function is most commonly called by menu_execute_active_handler(), but
- * can also be called by error conditions such as drupal_not_found(),
- * drupal_access_denied(), and drupal_site_offline().
+ * can also be called by error conditions such as drupal_site_offline().
  *
  * When a user requests a page, index.php calls menu_execute_active_handler(),
  * which calls the 'page callback' function registered in hook_menu(). The page

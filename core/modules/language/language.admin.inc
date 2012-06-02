@@ -5,6 +5,8 @@
  * Administration functions for language.module.
  */
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * User interface for the language overview screen.
  */
@@ -375,8 +377,7 @@ function language_admin_delete_form($form, &$form_state, $language) {
   $languages = language_list();
 
   if (!isset($languages[$langcode])) {
-    drupal_not_found();
-    drupal_exit();
+    throw new NotFoundHttpException();
   }
   else {
     $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
