@@ -32,7 +32,6 @@ files[] = tests/session.test
 files[] = tests/symfony.test
 files[] = tests/tablesort.test
 files[] = tests/theme.test
-files[] = tests/unicode.test
 files[] = tests/update.test
 files[] = tests/uuid.test
 files[] = tests/xmlrpc.test

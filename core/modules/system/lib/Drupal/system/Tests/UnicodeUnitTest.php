@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Various unicode handling tests.
+ * Definition of Drupal\system\Tests\UnicodeUnitTest.
  */
+
+namespace Drupal\system\Tests;
 
 use Drupal\simpletest\UnitTestBase;
 
