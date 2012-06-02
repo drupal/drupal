@@ -9,6 +9,7 @@
  */
 
 use Drupal\Component\Graph\Graph;
+use Drupal\Core\Config\FileStorage;
 
 /**
  * Minimum schema version of Drupal 7 required for upgrade to Drupal 8.
@@ -877,64 +878,66 @@ function update_retrieve_dependencies() {
  * Provide a generalised method to migrate variables from Drupal 7 to Drupal 8's
  * configuration management system.
  *
- * @param $config_name
- *   The name of the configuration object to retrieve. The name corresponds to
- *   an XML configuration file. For example, passing "book.admin" will return
- *   the config object containing the contents of book.admin.xml.
- * @param $variable_map
- *   An array to map new to old configuration naming conventions. Example:
+ * @param string $config_name
+ *   The configuration object name to retrieve.
+ * @param array $variable_map
+ *   An associative array that maps old variables names to new configuration
+ *   object keys; e.g.:
  *   @code
- *     array('new_config' => 'old_config')
+ *     array('old_variable' => 'new_config.sub_key')
  *   @endcode
- *   This would update the value for new_config to the value old_config has in
- *   the variable table.
+ *   This would migrate the value contained in variable name 'old_variable' into
+ *   the data key 'new_config.sub_key' of the configuration object $config_name.
  */
-function update_variables_to_config($config_name, array $variable_map = array()) {
+function update_variables_to_config($config_name, array $variable_map) {
+  // Build the new configuration object.
+  // This potentially loads an existing configuration object, in case another
+  // update function migrated configuration values into $config_name already.
   $config = config($config_name);
-  $config_data = array_keys($config->get());
+  $original_data = $config->get();
 
-  if (!empty($config_data)) {
-    // Build a list of variables to select from the database and build a mapping
-    // of variable names to config keys.
-    foreach ($config_data as $config_key) {
-      if (isset($variable_map[$config_key])) {
-        $variables[] = $variable_map[$config_key];
-        $config_keys[$variable_map[$config_key]] = $config_key;
-      }
-      else {
-        $variables[] = $config_key;
-        $config_keys[$config_key] = $config_key;
-      }
-    }
+  // Extract the module namespace/owner from the configuration object name.
+  $module = strtok($config_name, '.');
 
-    // Get any variables currently defined that match the new setting names in
-    // the config file.
-    $query = db_select('variable', 'v')
-      ->fields('v')
-      ->condition('name', $variables, 'IN');
+  // Load and set default configuration values.
+  // Throws a FileStorageReadException if there is no default configuration
+  // file, which is required to exist.
+  $file = new FileStorage($config_name);
+  $file->setPath(drupal_get_path('module', $module) . '/config');
+  $default_data = $file->read();
 
-    $var_values = $query->execute()->fetchAllKeyed(0);
-    if (!empty($var_values)) {
-      // Update the config system settings to use the values previously stored in
-      // the variable table.
-      try {
-        foreach($var_values as $name => $val) {
-          $config->set($config_keys[$name], unserialize($val));
-        }
-        $config->save();
-        // Delete the old variables. The config system will throw an exception if a
-        // value cannot be saved, so this code will not run if there is a problem
-        // running the update.
-        $del = db_delete('variable')->condition('name', $variables, 'IN');
-        $del->execute();
-      }
-      // @TODO We may want to do different error handling for different
-      // exception types, but for now we'll just log the exception.
-      catch (Exception $e) {
-        watchdog_exception('update', $e);
-      }
+  // Merge any possibly existing original data into default values.
+  // Only relevant when being called repetitively on the same config object.
+  if (!empty($original_data)) {
+    $data = drupal_array_merge_deep($default_data, $original_data);
+  }
+  else {
+    $data = $default_data;
+  }
+
+  // Apply the default values.
+  $config->setData($data);
+
+  // Fetch existing variables.
+  $variables = db_query('SELECT name, value FROM {variable} WHERE name IN (:variables)', array(':variables' => array_keys($variable_map)))->fetchAllKeyed();
+
+  // Set configuration values according to the provided variable mapping.
+  foreach ($variable_map as $variable_name => $config_key) {
+    // This function migrates variables regardless of their value, including
+    // NULL values. Any possibly required customizations need to be performed
+    // manually, either via variable_set() before calling this function or via
+    // config() after calling this function.
+    if (isset($variables[$variable_name])) {
+      $value = unserialize($variables[$variable_name]);
+      $config->set($config_key, $value);
     }
   }
+
+  // Save the configuration object.
+  $config->save();
+
+  // Delete the migrated variables.
+  db_delete('variable')->condition('name', array_keys($variable_map), 'IN')->execute();
 }
 
 /**

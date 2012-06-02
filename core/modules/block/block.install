@@ -224,6 +224,8 @@ function block_install() {
 
 /**
  * Block cache is always enabled in 8.x.
+ *
+ * @ingroup config_upgrade
  */
 function block_update_8000() {
   variable_del('block_cache');

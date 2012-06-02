@@ -128,6 +128,7 @@ abstract class UpgradePathTestCase extends WebTestBase {
     $this->prepareD8Session();
 
     // Restore necessary variables.
+    // @todo Convert into config('system.site')->set('mail')?
     $this->variable_set('site_mail', 'simpletest@example.com');
 
     drupal_set_time_limit($this->timeLimit);
@@ -142,6 +143,8 @@ abstract class UpgradePathTestCase extends WebTestBase {
    * @param $value
    *   The value to set. This can be any PHP data type; these functions take care
    *   of serialization as necessary.
+   *
+   * @todo Update for D8 configuration system.
    */
   protected function variable_set($name, $value) {
     db_delete('variable')

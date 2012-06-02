@@ -157,6 +157,8 @@ function locale_update_8000() {
 
 /**
  * Language type 'language' renamed to 'language_interface'.
+ *
+ * @ingroup config_upgrade
  */
 function locale_update_8001() {
   // Only change language_types if we had this setting saved. Keep order
@@ -242,6 +244,8 @@ function locale_update_8002() {
 
 /**
  * Converts language domains to new format.
+ *
+ * @ingroup config_upgrade
  */
 function locale_update_8003() {
   $message = '';
@@ -274,6 +278,8 @@ function locale_update_8003() {
 
 /**
  * Rename language providers to language negotiation methods.
+ *
+ * @ingroup config_upgrade
  */
 function locale_update_8004() {
   $types = variable_get('language_types', NULL);
@@ -437,6 +443,8 @@ function locale_update_8006() {
 
 /**
  * Convert language_negotiation_* variables to use the new callbacks.
+ *
+ * @ingroup config_upgrade
  */
 function locale_update_8007() {
   $variable_names = array(
@@ -510,6 +518,8 @@ function locale_update_8007() {
 
 /**
  * Rename the option variables of the locale language negotiation.
+ *
+ * @ingroup config_upgrade
  */
 function locale_update_8008() {
   $variable_name_map = array(

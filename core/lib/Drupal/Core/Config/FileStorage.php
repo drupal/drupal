@@ -105,13 +105,13 @@ class FileStorage {
    */
   public function read() {
     if (!$this->exists()) {
-      throw new FileStorageReadException('Configuration file does not exist.');
+      throw new FileStorageReadException("Configuration file '$this->name' does not exist.");
     }
 
     $data = file_get_contents($this->getFilePath());
     $data = $this->decode($data);
     if ($data === FALSE) {
-      throw new FileStorageReadException('Unable to decode configuration file.');
+      throw new FileStorageReadException("Failed to decode configuration file '$this->name'.");
     }
     return $data;
   }

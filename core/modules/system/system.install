@@ -1688,6 +1688,17 @@ function system_update_last_removed() {
 }
 
 /**
+ * @defgroup config_upgrade Configuration system upgrade functions
+ * @{
+ * Module update functions that
+ * - update variables prior to configuration system conversions
+ * - convert variables to the new configuration system
+ * - update configuration system values after conversion
+ *
+ * @} End of "defgroup config_upgrade".
+ */
+
+/**
  * @defgroup updates-7.x-to-8.x Updates from 7.x to 8.x
  * @{
  * Update functions from 7.x to 8.x.
@@ -1713,7 +1724,14 @@ function system_update_8001() {
 }
 
 /**
- * Set Bartik as default theme if it implicitly was the default before.
+ * Set 'node' as front page path and Bartik as default theme if it implicitly was before.
+ *
+ * Node module became optional. The default front page path was changed to
+ * 'user'. Since 'node' was the implicit default front page path previously and
+ * may not have been explicitly configured as such, this update ensures that the
+ * old implicit default is still the default.
+ *
+ * @see http://drupal.org/node/375397
  *
  * The default theme for Drupal core was changed from Bartik to Stark.
  * Installation profiles (including Standard and Minimal) were changed to
@@ -1723,8 +1741,14 @@ function system_update_8001() {
  * default.
  *
  * @see http://drupal.org/node/1181776
+ *
+ * @ingroup config_upgrade
  */
 function system_update_8002() {
+  $front_page = variable_get('site_frontpage');
+  if (!isset($front_page)) {
+    variable_set('site_frontpage', 'node');
+  }
   $theme = variable_get('theme_default');
   if (!isset($theme)) {
     variable_set('theme_default', 'bartik');
@@ -1864,16 +1888,30 @@ function system_update_8008() {
 
 /**
  * Moves cron system settings from variable to config.
+ *
+ * @ingroup config_upgrade
  */
 function system_update_8009() {
-  update_variables_to_config('system.cron');
+  update_variables_to_config('system.cron', array(
+    'cron_max_threshold' => 'cron_max_threshold',
+    'cron_safe_threshold' => 'cron_safe_threshold',
+    'cron_threshold_warning' => 'cron_threshold_warning',
+    'cron_threshold_error' => 'cron_threshold_error',
+    'cron_key' => 'cron_key',
+  ));
 }
 
 /**
- * Moves system settings from variable to config.
+ * Moves RSS system settings from variable to config.
+ *
+ * @ingroup config_upgrade
  */
 function system_update_8010() {
-  update_variables_to_config('system.rss-publishing');
+  update_variables_to_config('system.rss-publishing', array(
+    'feed_description' => 'feed_description',
+    'feed_default_items' => 'feed_default_items',
+    'feed_item_length' => 'feed_item_length',
+  ));
 }
 
 /**
