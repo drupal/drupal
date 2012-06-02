@@ -20,6 +20,7 @@ if ($args['execute-test']) {
   // Masquerade as Apache for running tests.
   simpletest_script_init("Apache");
   simpletest_script_run_one_test($args['test-id'], $args['execute-test']);
+  // Sub-process script execution ends here.
 }
 else {
   // Run administrative functions as CLI.
@@ -74,17 +75,8 @@ drupal_set_time_limit(0);
 
 simpletest_script_reporter_init();
 
-// Setup database for test results.
-$test_id = db_insert('simpletest_test_id')->useDefaults(array('test_id'))->execute();
-
 // Execute tests.
-simpletest_script_execute_batch($test_id, simpletest_script_get_test_list());
-
-// Retrieve the last database prefix used for testing and the last test class
-// that was run from. Use the information to read the lgo file in case any
-// fatal errors caused the test to crash.
-list($last_prefix, $last_test_class) = simpletest_last_test_get($test_id);
-simpletest_log_read($test_id, $last_prefix, $last_test_class);
+simpletest_script_execute_batch(simpletest_script_get_test_list());
 
 // Stop the timer.
 simpletest_script_reporter_timer_stop();
@@ -96,8 +88,8 @@ if ($args['xml']) {
   simpletest_script_reporter_write_xml_results();
 }
 
-// Cleanup our test results.
-simpletest_clean_results_table($test_id);
+// Clean up all test results.
+simpletest_clean_results_table();
 
 // Test complete, exit.
 exit;
@@ -308,8 +300,8 @@ function simpletest_script_init($server_software) {
 /**
  * Execute a batch of tests.
  */
-function simpletest_script_execute_batch($test_id, $test_classes) {
-  global $args;
+function simpletest_script_execute_batch($test_classes) {
+  global $args, $test_ids;
 
   // Multi-process execution.
   $children = array();
@@ -320,6 +312,8 @@ function simpletest_script_execute_batch($test_id, $test_classes) {
       }
 
       // Fork a child process.
+      $test_id = db_insert('simpletest_test_id')->useDefaults(array('test_id'))->execute();
+      $test_ids[] = $test_id;
       $test_class = array_shift($test_classes);
       $command = simpletest_script_command($test_id, $test_class);
       $process = proc_open($command, array(), $pipes, NULL, NULL, array('bypass_shell' => TRUE));
@@ -332,6 +326,7 @@ function simpletest_script_execute_batch($test_id, $test_classes) {
       // Register our new child.
       $children[] = array(
         'process' => $process,
+        'test_id' => $test_id,
         'class' => $test_class,
         'pipes' => $pipes,
       );
@@ -347,8 +342,12 @@ function simpletest_script_execute_batch($test_id, $test_classes) {
         // The child exited, unregister it.
         proc_close($child['process']);
         if ($status['exitcode']) {
-          echo 'FATAL ' . $test_class . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').' . "\n";
+          echo 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').' . "\n";
         }
+        // Free-up space by removing any potentially created resources.
+        simpletest_script_cleanup($child['test_id'], $child['class'], $status['exitcode']);
+
+        // Remove this child.
         unset($children[$cid]);
       }
     }
@@ -377,6 +376,8 @@ function simpletest_script_run_one_test($test_id, $test_class) {
     // Finished, kill this runner.
     exit(0);
   }
+  // DrupalTestCase::run() catches exceptions already, so this is only reached
+  // when an exception is thrown in the wrapping test runner environment.
   catch (Exception $e) {
     echo (string) $e;
     exit(1);
@@ -400,6 +401,83 @@ function simpletest_script_command($test_id, $test_class) {
   }
   $command .= " --php " . escapeshellarg($php) . " --test-id $test_id --execute-test " . escapeshellarg($test_class);
   return $command;
+}
+
+/**
+ * Removes all remnants of a test runner.
+ *
+ * In case a (e.g., fatal) error occurs after the test site has been fully setup
+ * and the error happens in many tests, the environment that executes the tests
+ * can easily run out of memory or disk space. This function ensures that all
+ * created resources are properly cleaned up after every executed test.
+ *
+ * This clean-up only exists in this script, since SimpleTest module itself does
+ * not use isolated sub-processes for each test being run, so a fatal error
+ * halts not only the test, but also the test runner (i.e., the parent site).
+ *
+ * @param int $test_id
+ *   The test ID of the test run.
+ * @param string $test_class
+ *   The class name of the test run.
+ * @param int $exitcode
+ *   The exit code of the test runner.
+ *
+ * @see simpletest_script_run_one_test()
+ */
+function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
+  // Retrieve the last database prefix used for testing.
+  list($db_prefix, ) = simpletest_last_test_get($test_id);
+
+  // If no database prefix was found, then the test was not set up correctly.
+  if (empty($db_prefix)) {
+    echo "\nFATAL $test_class: Found no database prefix for test ID $test_id. (Check whether setUp() is invoked correctly.)";
+    return;
+  }
+
+  // Do not output verbose cleanup messages in case of a positive exitcode.
+  $output = !empty($exitcode);
+  $messages = array();
+
+  $messages[] = "- Found database prefix '$db_prefix' for test ID $test_id.";
+
+  // Read the log file in case any fatal errors caused the test to crash.
+  simpletest_log_read($test_id, $db_prefix, $test_class);
+
+  // Check whether a test file directory was setup already.
+  // @see prepareEnvironment()
+  $public_files = variable_get('file_public_path', conf_path() . '/files');
+  $test_directory = $public_files . '/simpletest/' . substr($db_prefix, 10);
+  if (is_dir($test_directory)) {
+    // Output the error_log.
+    if (is_file($test_directory . '/error.log')) {
+      if ($errors = file_get_contents($test_directory . '/error.log')) {
+        $output = TRUE;
+        $messages[] = $errors;
+      }
+    }
+
+    // Delete the test files directory.
+    // simpletest_clean_temporary_directories() cannot be used here, since it
+    // would also delete file directories of other tests that are potentially
+    // running concurrently.
+    file_unmanaged_delete_recursive($test_directory);
+    $messages[] = "- Removed test files directory.";
+  }
+
+  // Clear out all database tables from the test.
+  $count = 0;
+  foreach (db_find_tables($db_prefix . '%') as $table) {
+    db_drop_table($table);
+    $count++;
+  }
+  if ($count) {
+    $messages[] = "- " . format_plural($count, 'Removed 1 leftover table.', 'Removed @count leftover tables.');
+  }
+
+  if ($output) {
+    echo implode("\n", $messages);
+    echo "\n";
+  }
 }
 
 /**
@@ -504,9 +582,9 @@ function simpletest_script_reporter_init() {
  * Display jUnit XML test results.
  */
 function simpletest_script_reporter_write_xml_results() {
-  global $args, $test_id, $results_map;
+  global $args, $test_ids, $results_map;
 
-  $results = db_query("SELECT * FROM {simpletest} WHERE test_id = :test_id ORDER BY test_class, message_id", array(':test_id' => $test_id));
+  $results = db_query("SELECT * FROM {simpletest} WHERE test_id IN (:test_ids) ORDER BY test_class, message_id", array(':test_ids' => $test_ids));
 
   $test_class = '';
   $xml_files = array();
@@ -584,14 +662,14 @@ function simpletest_script_reporter_timer_stop() {
  * Display test results.
  */
 function simpletest_script_reporter_display_results() {
-  global $args, $test_id, $results_map;
+  global $args, $test_ids, $results_map;
 
   if ($args['verbose']) {
     // Report results.
     echo "Detailed test results\n";
     echo "---------------------\n";
 
-    $results = db_query("SELECT * FROM {simpletest} WHERE test_id = :test_id ORDER BY test_class, message_id", array(':test_id' => $test_id));
+    $results = db_query("SELECT * FROM {simpletest} WHERE test_id IN (:test_ids) ORDER BY test_class, message_id", array(':test_ids' => $test_ids));
     $test_class = '';
     foreach ($results as $result) {
       if (isset($results_map[$result->status])) {
