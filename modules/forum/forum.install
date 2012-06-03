@@ -458,7 +458,7 @@ function forum_update_7011() {
     ->execute();
 }
 
- /**
+/**
  * Add 'created' and 'last_comment_timestamp' indexes.
  */
 function forum_update_7012() {
