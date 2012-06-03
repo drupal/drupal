@@ -219,6 +219,8 @@ function forum_schema() {
     ),
     'indexes' => array(
       'forum_topics' => array('nid', 'tid', 'sticky', 'last_comment_timestamp'),
+      'created' => array('created'),
+      'last_comment_timestamp' => array('last_comment_timestamp'),
     ),
     'foreign keys' => array(
       'tracked_node' => array(
@@ -454,4 +456,12 @@ function forum_update_7011() {
   db_delete('forum_index')
     ->condition('nid', $select, 'IN')
     ->execute();
+}
+
+ /**
+ * Add 'created' and 'last_comment_timestamp' indexes.
+ */
+function forum_update_7012() {
+  db_add_index('forum_index', 'created', array('created'));
+  db_add_index('forum_index', 'last_comment_timestamp', array('last_comment_timestamp'));
 }
