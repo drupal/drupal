@@ -2,6 +2,10 @@
 Drupal 7.15, xxxx-xx-xx (development version)
 -----------------------
 - Fixed notice: Undefined index: default_image in image_field_prepare_view()
+- Fixed data loss issue due to field_has_data() returning inconsistent results.
+  The fix adds an optional DANGEROUS_ACCESS_CHECK_OPT_OUT tag to entity field
+  queries which field storage engines can respond to (API addition:
+  http://drupal.org/node/1597378).
 - Fixed issue where field form structure was incomplete if field_access()
   returned FALSE. Instead of being incomplete, the form structure now has
   #access set to FALSE and field form validation is skipped (array structure
