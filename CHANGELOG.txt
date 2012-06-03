@@ -1,6 +1,7 @@
 
 Drupal 7.15, xxxx-xx-xx (development version)
 -----------------------
+- Fixed notice: Undefined index: default_image in image_field_prepare_view()
 - Fixed issue where field form structure was incomplete if field_access()
   returned FALSE. Instead of being incomplete, the form structure now has
   #access set to FALSE and field form validation is skipped (array structure
