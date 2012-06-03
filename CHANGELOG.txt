@@ -10,6 +10,7 @@ Drupal 7.15, xxxx-xx-xx (development version)
   returned FALSE. Instead of being incomplete, the form structure now has
   #access set to FALSE and field form validation is skipped (array structure
   change).
+- Added EntityFieldQuery support for taxonomy bundles.
 
 Drupal 7.14 2012-05-02
 ----------------------
