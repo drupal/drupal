@@ -84,7 +84,10 @@ Drupal.tableDrag = function (table, tableSettings) {
 
   // Make each applicable row draggable.
   // Match immediate children of the parent element to allow nesting.
-  $table.find('> tr.draggable, > tbody > tr.draggable').each(function () { self.makeDraggable(this); });
+  var $rows = $table.find('> tr.draggable, > tbody > tr.draggable');
+  if ($rows.length > 1) {
+    $rows.each(function () { self.makeDraggable(this); });
+  }
 
   // Add a link before the table for users to show or hide weight columns.
   $table.before($('<a href="#" class="tabledrag-toggle-weight"></a>')
