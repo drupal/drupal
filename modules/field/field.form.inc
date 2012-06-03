@@ -37,90 +37,86 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
 
   // Collect widget elements.
   $elements = array();
-  if (field_access('edit', $field, $entity_type, $entity)) {
-    // Store field information in $form_state.
-    if (!field_form_get_state($parents, $field_name, $langcode, $form_state)) {
-      $field_state = array(
-        'field' => $field,
-        'instance' => $instance,
-        'items_count' => count($items),
-        'array_parents' => array(),
-        'errors' => array(),
+
+  // Store field information in $form_state.
+  if (!field_form_get_state($parents, $field_name, $langcode, $form_state)) {
+    $field_state = array(
+      'field' => $field,
+      'instance' => $instance,
+      'items_count' => count($items),
+      'array_parents' => array(),
+      'errors' => array(),
+    );
+    field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
+  }
+
+  // If field module handles multiple values for this form element, and we are
+  // displaying an individual element, process the multiple value form.
+  if (!isset($get_delta) && field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
+    // Store the entity in the form.
+    $form['#entity'] = $entity;
+    $elements = field_multiple_value_form($field, $instance, $langcode, $items, $form, $form_state);
+  }
+  // If the widget is handling multiple values (e.g Options), or if we are
+  // displaying an individual element, just get a single form element and make
+  // it the $delta value.
+  else {
+    $delta = isset($get_delta) ? $get_delta : 0;
+    $function = $instance['widget']['module'] . '_field_widget_form';
+    if (function_exists($function)) {
+      $element = array(
+        '#entity' => $entity,
+        '#entity_type' => $instance['entity_type'],
+        '#bundle' => $instance['bundle'],
+        '#field_name' => $field_name,
+        '#language' => $langcode,
+        '#field_parents' => $parents,
+        '#columns' => array_keys($field['columns']),
+        '#title' => check_plain($instance['label']),
+        '#description' => field_filter_xss($instance['description']),
+        // Only the first widget should be required.
+        '#required' => $delta == 0 && $instance['required'],
+        '#delta' => $delta,
       );
-      field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
-    }
-
-    // If field module handles multiple values for this form element, and we
-    // are displaying an individual element, process the multiple value form.
-    if (!isset($get_delta) && field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
-      // Store the entity in the form.
-      $form['#entity'] = $entity;
-      $elements = field_multiple_value_form($field, $instance, $langcode, $items, $form, $form_state);
-    }
-    // If the widget is handling multiple values (e.g Options), or if we are
-    // displaying an individual element, just get a single form element and
-    // make it the $delta value.
-    else {
-      $delta = isset($get_delta) ? $get_delta : 0;
-      $function = $instance['widget']['module'] . '_field_widget_form';
-      if (function_exists($function)) {
-        $element = array(
-          '#entity' => $entity,
-          '#entity_type' => $instance['entity_type'],
-          '#bundle' => $instance['bundle'],
-          '#field_name' => $field_name,
-          '#language' => $langcode,
-          '#field_parents' => $parents,
-          '#columns' => array_keys($field['columns']),
-          '#title' => check_plain($instance['label']),
-          '#description' => field_filter_xss($instance['description']),
-          // Only the first widget should be required.
-          '#required' => $delta == 0 && $instance['required'],
-          '#delta' => $delta,
+      if ($element = $function($form, $form_state, $field, $instance, $langcode, $items, $delta, $element)) {
+        // Allow modules to alter the field widget form element.
+        $context = array(
+          'form' => $form,
+          'field' => $field,
+          'instance' => $instance,
+          'langcode' => $langcode,
+          'items' => $items,
+          'delta' => $delta,
         );
-        if ($element = $function($form, $form_state, $field, $instance, $langcode, $items, $delta, $element)) {
-          // Allow modules to alter the field widget form element.
-          $context = array(
-            'form' => $form,
-            'field' => $field,
-            'instance' => $instance,
-            'langcode' => $langcode,
-            'items' => $items,
-            'delta' => $delta,
-          );
-          drupal_alter(array('field_widget_form', 'field_widget_' . $instance['widget']['type'] . '_form'), $element, $form_state, $context);
+        drupal_alter(array('field_widget_form', 'field_widget_' . $instance['widget']['type'] . '_form'), $element, $form_state, $context);
 
-          // If we're processing a specific delta value for a field where the
-          // field module handles multiples, set the delta in the result.
-          // For fields that handle their own processing, we can't make
-          // assumptions about how the field is structured, just merge in the
-          // returned element.
-          if (field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
-            $elements[$delta] = $element;
-          }
-          else {
-            $elements = $element;
-          }
+        // If we're processing a specific delta value for a field where the
+        // field module handles multiples, set the delta in the result.
+        // For fields that handle their own processing, we can't make
+        // assumptions about how the field is structured, just merge in the
+        // returned element.
+        if (field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
+          $elements[$delta] = $element;
+        }
+        else {
+          $elements = $element;
         }
       }
     }
   }
 
-  if ($elements) {
-    // Also aid in theming of field widgets by rendering a classified
-    // container.
-    $addition[$field_name] = array(
-      '#type' => 'container',
-      '#attributes' => array(
-        'class' => array(
-          'field-type-' . drupal_html_class($field['type']),
-          'field-name-' . drupal_html_class($field_name),
-          'field-widget-' . drupal_html_class($instance['widget']['type']),
-        ),
+  // Also aid in theming of field widgets by rendering a classified container.
+  $addition[$field_name] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array(
+        'field-type-' . drupal_html_class($field['type']),
+        'field-name-' . drupal_html_class($field_name),
+        'field-widget-' . drupal_html_class($instance['widget']['type']),
       ),
-      '#weight' => $instance['widget']['weight'],
-    );
-  }
+    ),
+    '#weight' => $instance['widget']['weight'],
+  );
 
   // Populate the 'array_parents' information in $form_state['field'] after
   // the form is built, so that we catch changes in the form structure performed
@@ -136,6 +132,7 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
     // when $langcode is unknown.
     '#language' => $langcode,
     $langcode => $elements,
+    '#access' => field_access('edit', $field, $entity_type, $entity),
   );
 
   return $addition;
@@ -362,31 +359,33 @@ function field_default_form_errors($entity_type, $entity, $field, $instance, $la
   $field_state = field_form_get_state($form['#parents'], $field['field_name'], $langcode, $form_state);
 
   if (!empty($field_state['errors'])) {
-    $function = $instance['widget']['module'] . '_field_widget_error';
-    $function_exists = function_exists($function);
-
-    // Locate the correct element in the the form.
+    // Locate the correct element in the form.
     $element = drupal_array_get_nested_value($form_state['complete form'], $field_state['array_parents']);
+    // Only set errors if the element is accessible.
+    if (!isset($element['#access']) || $element['#access']) {
+      $function = $instance['widget']['module'] . '_field_widget_error';
+      $function_exists = function_exists($function);
 
-    $multiple_widget = field_behaviors_widget('multiple values', $instance) != FIELD_BEHAVIOR_DEFAULT;
-    foreach ($field_state['errors'] as $delta => $delta_errors) {
-      // For multiple single-value widgets, pass errors by delta.
-      // For a multiple-value widget, all errors are passed to the main widget.
-      $error_element = $multiple_widget ? $element : $element[$delta];
-      foreach ($delta_errors as $error) {
-        if ($function_exists) {
-          $function($error_element, $error, $form, $form_state);
-        }
-        else {
-          // Make sure that errors are reported (even incorrectly flagged) if
-          // the widget module fails to implement hook_field_widget_error().
-          form_error($error_element, $error['error']);
+      $multiple_widget = field_behaviors_widget('multiple values', $instance) != FIELD_BEHAVIOR_DEFAULT;
+      foreach ($field_state['errors'] as $delta => $delta_errors) {
+        // For multiple single-value widgets, pass errors by delta.
+        // For a multiple-value widget, pass all errors to the main widget.
+        $error_element = $multiple_widget ? $element : $element[$delta];
+        foreach ($delta_errors as $error) {
+          if ($function_exists) {
+            $function($error_element, $error, $form, $form_state);
+          }
+          else {
+            // Make sure that errors are reported (even incorrectly flagged) if
+            // the widget module fails to implement hook_field_widget_error().
+            form_error($error_element, $error['error']);
+          }
         }
       }
+      // Reinitialize the errors list for the next submit.
+      $field_state['errors'] = array();
+      field_form_set_state($form['#parents'], $field['field_name'], $langcode, $form_state, $field_state);
     }
-    // Reinitialize the errors list for the next submit.
-    $field_state['errors'] = array();
-    field_form_set_state($form['#parents'], $field['field_name'], $langcode, $form_state, $field_state);
   }
 }
 

@@ -1650,6 +1650,18 @@ class FieldFormTestCase extends FieldTestCase {
 
     $langcode = LANGUAGE_NONE;
 
+    // Test that the form structure includes full information for each delta
+    // apart from #access.
+    $entity_type = 'test_entity';
+    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+
+    $form = array();
+    $form_state = form_state_defaults();
+    field_attach_form($entity_type, $entity, $form, $form_state);
+
+    $this->assertEqual($form[$field_name_no_access][$langcode][0]['value']['#entity_type'], $entity_type, 'The correct entity type is set in the field structure.');
+    $this->assertFalse($form[$field_name_no_access]['#access'], 'Field #access is FALSE for the field without edit access.');
+
     // Display creation form.
     $this->drupalGet('test-entity/add/test-bundle');
     $this->assertNoFieldByName("{$field_name_no_access}[$langcode][0][value]", '', t('Widget is not displayed if field access is denied.'));

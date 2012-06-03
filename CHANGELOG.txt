@@ -1,8 +1,10 @@
 
 Drupal 7.15, xxxx-xx-xx (development version)
 -----------------------
-
-
+- Fixed issue where field form structure was incomplete if field_access()
+  returned FALSE. Instead of being incomplete, the form structure now has
+  #access set to FALSE and field form validation is skipped (array structure
+  change).
 
 Drupal 7.14 2012-05-02
 ----------------------
@@ -52,7 +54,6 @@ Drupal 7.14 2012-05-02
     case.
   - system_update_7061() converts filepaths too aggressively.
   - Trigger upgrade path: Node triggers removed when upgrading to 7-x from 6.25.
-
 
 Drupal 7.13 2012-05-02
 ----------------------
