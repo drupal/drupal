@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Drupal\Core\StreamWrapper\LocalStream;
+use Drupal\Core\File\File;
 
 /**
  * Stream wrapper bit flags that are the basis for composite types.
@@ -86,7 +87,7 @@ define('STREAM_WRAPPERS_LOCAL_NORMAL', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_N
  * @{
  * Common file handling functions.
  *
- * Fields on the file object:
+ * Fields on the file entity:
  * - fid: File ID
  * - uid: The {users}.uid of the user who is associated with the file.
  * - filename: Name of the file with no path components. This may differ from
@@ -577,7 +578,7 @@ function file_save_htaccess($directory, $private = TRUE) {
 }
 
 /**
- * Loads file objects from the database.
+ * Loads file entities from the database.
  *
  * @param array|bool $fids
  *   An array of file IDs, or FALSE to load all files.
@@ -589,7 +590,7 @@ function file_save_htaccess($directory, $private = TRUE) {
  *   loadable by this function.
  *
  * @return array
- *   An array of file objects, indexed by fid.
+ *   An array of file entities, indexed by fid.
  *
  * @todo Remove $conditions in Drupal 8.
  *
@@ -603,13 +604,13 @@ function file_load_multiple($fids = array(), array $conditions = array()) {
 }
 
 /**
- * Loads a single file object from the database.
+ * Loads a single file entity from the database.
  *
  * @param $fid
  *   A file ID.
  *
- * @return
- *   An object representing the file, or FALSE if the file was not found.
+ * @return Drupal\Core\File\File
+ *   A file entity or FALSE if the file was not found.
  *
  * @see hook_file_load()
  * @see file_load_multiple()
@@ -620,60 +621,10 @@ function file_load($fid) {
 }
 
 /**
- * Saves a file object to the database.
- *
- * If the $file->fid is not set a new record will be added.
- *
- * @param $file
- *   A file object returned by file_load().
- *
- * @return
- *   The updated file object.
- *
- * @see hook_file_insert()
- * @see hook_file_update()
- */
-function file_save(stdClass $file) {
-  $file->timestamp = REQUEST_TIME;
-  $file->filesize = filesize($file->uri);
-  if (!isset($file->langcode)) {
-    // Default the file's language code to none, because files are language
-    // neutral more often than language dependent. Until we have better flexible
-    // settings.
-    // @todo See http://drupal.org/node/258785 and followups.
-    $file->langcode = LANGUAGE_NOT_SPECIFIED;
-  }
-
-  // Load the stored entity, if any.
-  if (!empty($file->fid) && !isset($file->original)) {
-    $file->original = entity_load_unchanged('file', $file->fid);
-  }
-
-  module_invoke_all('file_presave', $file);
-  module_invoke_all('entity_presave', $file, 'file');
-
-  if (empty($file->fid)) {
-    drupal_write_record('file_managed', $file);
-    // Inform modules about the newly added file.
-    module_invoke_all('file_insert', $file);
-    module_invoke_all('entity_insert', $file, 'file');
-  }
-  else {
-    drupal_write_record('file_managed', $file, 'fid');
-    // Inform modules that the file has been updated.
-    module_invoke_all('file_update', $file);
-    module_invoke_all('entity_update', $file, 'file');
-  }
-
-  unset($file->original);
-  return $file;
-}
-
-/**
  * Determines where a file is used.
  *
- * @param $file
- *   A file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  *
  * @return
  *   A nested array with usage data. The first level is keyed by module name,
@@ -683,7 +634,7 @@ function file_save(stdClass $file) {
  * @see file_usage_add()
  * @see file_usage_delete()
  */
-function file_usage_list(stdClass $file) {
+function file_usage_list(File $file) {
   $result = db_select('file_usage', 'f')
     ->fields('f', array('module', 'type', 'id', 'count'))
     ->condition('fid', $file->fid)
@@ -706,8 +657,8 @@ function file_usage_list(stdClass $file) {
  * - The User module associates an image with a user, so $type would be 'user'
  *   and the $id would be the user's uid.
  *
- * @param $file
- *   A file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  * @param $module
  *   The name of the module using the file.
  * @param $type
@@ -720,7 +671,7 @@ function file_usage_list(stdClass $file) {
  * @see file_usage_list()
  * @see file_usage_delete()
  */
-function file_usage_add(stdClass $file, $module, $type, $id, $count = 1) {
+function file_usage_add(File $file, $module, $type, $id, $count = 1) {
   db_merge('file_usage')
     ->key(array(
       'fid' => $file->fid,
@@ -735,15 +686,15 @@ function file_usage_add(stdClass $file, $module, $type, $id, $count = 1) {
   // Make sure that a used file is permament.
   if ($file->status != FILE_STATUS_PERMANENT) {
     $file->status = FILE_STATUS_PERMANENT;
-    file_save($file);
+    $file->save();
   }
 }
 
 /**
  * Removes a record to indicate that a module is no longer using a file.
  *
- * @param $file
- *   A file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  * @param $module
  *   The name of the module using the file.
  * @param $type
@@ -759,9 +710,8 @@ function file_usage_add(stdClass $file, $module, $type, $id, $count = 1) {
  *
  * @see file_usage_add()
  * @see file_usage_list()
- * @see file_delete()
  */
-function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $count = 1) {
+function file_usage_delete(File $file, $module, $type = NULL, $id = NULL, $count = 1) {
   // Delete rows that have a exact or less value to prevent empty rows.
   $query = db_delete('file_usage')
     ->condition('module', $module)
@@ -795,7 +745,7 @@ function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $c
   $usage = file_usage_list($file);
   if (empty($usage)) {
     $file->status = 0;
-    file_save($file);
+    $file->save();
   }
 }
 
@@ -814,8 +764,8 @@ function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $c
  *   temporary file, the resulting file will also be a temporary file. See
  *   file_save_upload() for details on temporary files.
  *
- * @param $source
- *   A file object.
+ * @param Drupal\Core\File\File $source
+ *   A file entity.
  * @param $destination
  *   A string containing the destination that $source should be copied to.
  *   This must be a stream wrapper URI.
@@ -834,7 +784,7 @@ function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $c
  * @see file_unmanaged_copy()
  * @see hook_file_copy()
  */
-function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
+function file_copy(File $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
     if (($realpath = drupal_realpath($source->uri)) !== FALSE) {
       watchdog('file', 'File %file (%realpath) could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => $realpath, '%destination' => $destination));
@@ -866,7 +816,7 @@ function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
       $file->filename = drupal_basename($destination);
     }
 
-    $file = file_save($file);
+    $file->save();
 
     // Inform modules that the file has been copied.
     module_invoke_all('file_copy', $file, $source);
@@ -1061,8 +1011,8 @@ function file_destination($destination, $replace) {
  *   replace the file or rename the file based on the $replace parameter.
  * - Adds the new file to the files database.
  *
- * @param $source
- *   A file object.
+ * @param Drupal\Core\File\File $source
+ *   A file entity.
  * @param $destination
  *   A string containing the destination that $source should be moved to.
  *   This must be a stream wrapper URI.
@@ -1070,20 +1020,20 @@ function file_destination($destination, $replace) {
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
  *       the destination name exists then its database entry will be updated and
- *       file_delete() called on the source file after hook_file_move is called.
+ *       $source->delete() called after invoking hook_file_move().
  *       If no database entry is found then the source files record will be
  *       updated.
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
  *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  *
- * @return
- *   Resulting file object for success, or FALSE in the event of an error.
+ * @return Drupal\Core\File\File
+ *   Resulting file entity for success, or FALSE in the event of an error.
  *
  * @see file_unmanaged_move()
  * @see hook_file_move()
  */
-function file_move(stdClass $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
+function file_move(File $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
     if (($realpath = drupal_realpath($source->uri)) !== FALSE) {
       watchdog('file', 'File %file (%realpath) could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => $realpath, '%destination' => $destination));
@@ -1115,14 +1065,14 @@ function file_move(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
       $file->filename = drupal_basename($destination);
     }
 
-    $file = file_save($file);
+    $file->save();
 
     // Inform modules that the file has been moved.
     module_invoke_all('file_move', $file, $source);
 
     // Delete the original if it's not in use elsewhere.
     if ($delete_source && !file_usage_list($source)) {
-      file_delete($source);
+      $source->delete();
     }
 
     return $file;
@@ -1298,30 +1248,31 @@ function file_create_filename($basename, $directory) {
  * file usages instead. That will automatically mark the file as temporary and
  * remove it during cleanup.
  *
- * @param $file
- *   A file object.
+ * @param $fid
+ *   The file id.
  *
  * @see file_unmanaged_delete()
  * @see file_usage_list()
- * @see file_usage_delete()
- * @see hook_file_predelete()
- * @see hook_file_delete()
  */
-function file_delete(stdClass $file) {
-  // Let other modules clean up any references to the file prior to deletion.
-  module_invoke_all('file_predelete', $file);
-  module_invoke_all('entity_predelete', $file, 'file');
+function file_delete($fid) {
+  return file_delete_multiple(array($fid));
+}
 
-  // Attempt to delete the file on the filesystem. Failures will be logged in
-  // watchdog.
-  file_unmanaged_delete($file->uri);
-
-  db_delete('file_managed')->condition('fid', $file->fid)->execute();
-  db_delete('file_usage')->condition('fid', $file->fid)->execute();
-
-  // Let other modules respond to file deletion.
-  module_invoke_all('file_delete', $file);
-  module_invoke_all('entity_delete', $file, 'file');
+/**
+ * Deletes files.
+ *
+ * Instead of directly deleting a file, it is strongly recommended to delete
+ * file usages instead. That will automatically mark the file as temporary and
+ * remove it during cleanup.
+ *
+ * @param $fid
+ *   The file id.
+ *
+ * @see file_unmanaged_delete()
+ * @see file_usage_list()
+ */
+function file_delete_multiple(array $fids) {
+  entity_delete_multiple('file', $fids);
 }
 
 /**
@@ -1455,7 +1406,7 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  *   in the event of an error, or NULL if no file was uploaded. The
  *   documentation for the "File interface" group, which you can find under
  *   Related topics, or the header at the top of this file, documents the
- *   components of a file object. In addition to the standard components,
+ *   components of a file entity. In addition to the standard components,
  *   this function adds:
  *   - source: Path to the file before it is moved.
  *   - destination: Path to the file after it is moved (same as 'uri').
@@ -1501,15 +1452,16 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
       drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $_FILES['files']['name'][$source])), 'error');
       return FALSE;
   }
-
-  // Begin building file object.
-  $file = new stdClass();
-  $file->uid      = $user->uid;
-  $file->status   = 0;
-  $file->filename = trim(drupal_basename($_FILES['files']['name'][$source]), '.');
-  $file->uri      = $_FILES['files']['tmp_name'][$source];
-  $file->filemime = file_get_mimetype($file->filename);
-  $file->filesize = $_FILES['files']['size'][$source];
+  // Begin building file entity.
+  $values = array(
+    'uid' => $user->uid,
+    'status' => 0,
+    'filename' => trim(drupal_basename($_FILES['files']['name'][$source]), '.'),
+    'uri' => $_FILES['files']['tmp_name'][$source],
+    'filesize' => $_FILES['files']['size'][$source],
+  );
+  $values['filemime'] = file_get_mimetype($values['filename']);
+  $file = entity_create('file', $values);
 
   $extensions = '';
   if (isset($validators['file_validate_extensions'])) {
@@ -1621,12 +1573,10 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
   }
 
   // If we made it this far it's safe to record this file in the database.
-  if ($file = file_save($file)) {
-    // Add file to the cache.
-    $upload_cache[$source] = $file;
-    return $file;
-  }
-  return FALSE;
+  $file->save();
+  // Add file to the cache.
+  $upload_cache[$source] = $file;
+  return $file;
 }
 
 /**
@@ -1672,12 +1622,12 @@ function drupal_move_uploaded_file($filename, $uri) {
  * After executing the validator callbacks specified hook_file_validate() will
  * also be called to allow other modules to report errors about the file.
  *
- * @param $file
- *   A Drupal file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  * @param $validators
  *   An optional, associative array of callback functions used to validate the
  *   file. The keys are function names and the values arrays of callback
- *   parameters which will be passed in after the file object. The
+ *   parameters which will be passed in after the file entity. The
  *   functions should return an array of error messages; an empty array
  *   indicates that the file passed validation. The functions will be called in
  *   the order specified.
@@ -1687,7 +1637,7 @@ function drupal_move_uploaded_file($filename, $uri) {
  *
  * @see hook_file_validate()
  */
-function file_validate(stdClass &$file, $validators = array()) {
+function file_validate(File $file, $validators = array()) {
   // Call the validation functions specified by this function's caller.
   $errors = array();
   foreach ($validators as $function => $args) {
@@ -1704,13 +1654,13 @@ function file_validate(stdClass &$file, $validators = array()) {
 /**
  * Checks for files with names longer than can be stored in the database.
  *
- * @param $file
- *   A Drupal file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  *
  * @return
  *   An array. If the file name is too long, it will contain an error message.
  */
-function file_validate_name_length(stdClass $file) {
+function file_validate_name_length(File $file) {
   $errors = array();
 
   if (empty($file->filename)) {
@@ -1725,8 +1675,8 @@ function file_validate_name_length(stdClass $file) {
 /**
  * Checks that the filename ends with an allowed extension.
  *
- * @param $file
- *   A Drupal file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  * @param $extensions
  *   A string with a space separated list of allowed extensions.
  *
@@ -1736,7 +1686,7 @@ function file_validate_name_length(stdClass $file) {
  *
  * @see hook_file_validate()
  */
-function file_validate_extensions(stdClass $file, $extensions) {
+function file_validate_extensions(File $file, $extensions) {
   $errors = array();
 
   $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote($extensions)) . ')$/i';
@@ -1751,8 +1701,8 @@ function file_validate_extensions(stdClass $file, $extensions) {
  *
  * This check is not enforced for the user #1.
  *
- * @param $file
- *   A Drupal file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  * @param $file_limit
  *   An integer specifying the maximum file size in bytes. Zero indicates that
  *   no limit should be enforced.
@@ -1766,7 +1716,7 @@ function file_validate_extensions(stdClass $file, $extensions) {
  *
  * @see hook_file_validate()
  */
-function file_validate_size(stdClass $file, $file_limit = 0, $user_limit = 0) {
+function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
   global $user;
 
   $errors = array();
@@ -1788,15 +1738,15 @@ function file_validate_size(stdClass $file, $file_limit = 0, $user_limit = 0) {
 /**
  * Checks that the file is recognized by image_get_info() as an image.
  *
- * @param $file
- *   A Drupal file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  *
  * @return
  *   An array. If the file is not an image, it will contain an error message.
  *
  * @see hook_file_validate()
  */
-function file_validate_is_image(stdClass $file) {
+function file_validate_is_image(File $file) {
   $errors = array();
 
   $info = image_get_info($file->uri);
@@ -1813,9 +1763,8 @@ function file_validate_is_image(stdClass $file) {
  * Non-image files will be ignored. If a image toolkit is available the image
  * will be scaled to fit within the desired maximum dimensions.
  *
- * @param $file
- *   A Drupal file object. This function may resize the file affecting its
- *   size.
+ * @param Drupal\Core\File\File $file
+ *   A file entity. This function may resize the file affecting its size.
  * @param $maximum_dimensions
  *   An optional string in the form WIDTHxHEIGHT e.g. '640x480' or '85x85'. If
  *   an image toolkit is installed the image will be resized down to these
@@ -1831,7 +1780,7 @@ function file_validate_is_image(stdClass $file) {
  *
  * @see hook_file_validate()
  */
-function file_validate_image_resolution(stdClass $file, $maximum_dimensions = 0, $minimum_dimensions = 0) {
+function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $minimum_dimensions = 0) {
   $errors = array();
 
   // Check first that the file is an image.
@@ -1883,8 +1832,8 @@ function file_validate_image_resolution(stdClass $file, $maximum_dimensions = 0,
  *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  *
- * @return
- *   A file object, or FALSE on error.
+ * @return Drupal\Core\File\File
+ *   A file entity, or FALSE on error.
  *
  * @see file_unmanaged_save_data()
  */
@@ -1901,14 +1850,12 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
   }
 
   if ($uri = file_unmanaged_save_data($data, $destination, $replace)) {
-    // Create a file object.
-    $file = new stdClass();
-    $file->fid = NULL;
-    $file->uri = $uri;
-    $file->filename = drupal_basename($uri);
-    $file->filemime = file_get_mimetype($file->uri);
-    $file->uid      = $user->uid;
-    $file->status   = FILE_STATUS_PERMANENT;
+    // Create a file entity.
+    $file = entity_create('file', array(
+      'uri' => $uri,
+      'uid' => $user->uid,
+      'status' => FILE_STATUS_PERMANENT,
+    ));
     // If we are replacing an existing file re-use its database record.
     if ($replace == FILE_EXISTS_REPLACE) {
       $existing_files = file_load_multiple(array(), array('uri' => $uri));
@@ -1924,7 +1871,8 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
       $file->filename = drupal_basename($destination);
     }
 
-    return file_save($file);
+    $file->save();
+    return $file;
   }
   return FALSE;
 }
@@ -2503,16 +2451,16 @@ function file_directory_temp() {
 }
 
 /**
- * Examines a file object and returns appropriate content headers for download.
+ * Examines a file entity and returns appropriate content headers for download.
  *
- * @param $file
- *   A file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  *
  * @return
  *   An associative array of headers, as expected by
  *   \Symfony\Component\HttpFoundation\StreamedResponse.
  */
-function file_get_content_headers($file) {
+function file_get_content_headers(File $file) {
   $name = mime_header_encode($file->filename);
   $type = mime_header_encode($file->filemime);
   // Serve images, text, and flash content for display rather than download.

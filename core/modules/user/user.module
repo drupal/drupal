@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\File\File;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -593,7 +594,7 @@ function user_file_download($uri) {
 /**
  * Implements hook_file_move().
  */
-function user_file_move($file, $source) {
+function user_file_move(File $file, File $source) {
   // If a user's picture is replaced with a new one, update the record in
   // the users table.
   if (isset($file->fid) && isset($source->fid) && $file->fid != $source->fid) {
@@ -609,7 +610,7 @@ function user_file_move($file, $source) {
 /**
  * Implements hook_file_predelete().
  */
-function user_file_predelete($file) {
+function user_file_predelete(File $file) {
   // Remove any references to the file.
   db_update('users')
     ->fields(array('picture' => 0))
@@ -1229,7 +1230,7 @@ function template_preprocess_user_picture(&$variables) {
   if (variable_get('user_pictures', 0)) {
     $account = $variables['account'];
     if (!empty($account->picture)) {
-      // @TODO: Ideally this function would only be passed file objects, but
+      // @TODO: Ideally this function would only be passed file entities, but
       // since there's a lot of legacy code that JOINs the {users} table to
       // {node} or {comments} and passes the results into this function if we
       // a numeric value in the picture field we'll assume it's a file id

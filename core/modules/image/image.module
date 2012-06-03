@@ -7,6 +7,7 @@
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Drupal\Core\File\File;
 
 /**
  * Image style constant for user presets in the database.
@@ -311,7 +312,7 @@ function image_file_download($uri) {
 /**
  * Implements hook_file_move().
  */
-function image_file_move($file, $source) {
+function image_file_move(File $file, File $source) {
   // Delete any image derivatives at the original image path.
   image_path_flush($source->uri);
 }
@@ -319,7 +320,7 @@ function image_file_move($file, $source) {
 /**
  * Implements hook_file_predelete().
  */
-function image_file_predelete($file) {
+function image_file_predelete(File $file) {
   // Delete any image derivatives of this image.
   image_path_flush($file->uri);
 }
@@ -396,7 +397,7 @@ function image_field_update_field($field, $prior_field, $has_data) {
     // Is there a new file?
     if ($file_new) {
       $file_new->status = FILE_STATUS_PERMANENT;
-      file_save($file_new);
+      $file_new->save();
       file_usage_add($file_new, 'image', 'default_image', $field['id']);
     }
 
@@ -464,7 +465,7 @@ function image_field_update_instance($instance, $prior_instance) {
     // Save the new file, if present.
     if ($file_new) {
       $file_new->status = FILE_STATUS_PERMANENT;
-      file_save($file_new);
+      $file_new->save();
       file_usage_add($file_new, 'image', 'default_image', $instance['id']);
     }
     // Delete the old file, if present.

@@ -137,7 +137,7 @@ class EntityCrudHookTestCase extends WebTestBase {
   public function testFileHooks() {
     $url = 'public://entity_crud_hook_test.file';
     file_put_contents($url, 'Test test test');
-    $file = (object) array(
+    $file = entity_create('file', array(
       'fid' => NULL,
       'uid' => 1,
       'filename' => 'entity_crud_hook_test.file',
@@ -146,9 +146,9 @@ class EntityCrudHookTestCase extends WebTestBase {
       'filesize' => filesize($url),
       'status' => 1,
       'timestamp' => REQUEST_TIME,
-    );
+    ));
     $_SESSION['entity_crud_hook_test'] = array();
-    file_save($file);
+    $file->save();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_file_presave called',
@@ -167,7 +167,7 @@ class EntityCrudHookTestCase extends WebTestBase {
 
     $_SESSION['entity_crud_hook_test'] = array();
     $file->filename = 'new.entity_crud_hook_test.file';
-    file_save($file);
+    $file->save();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_file_presave called',
@@ -177,7 +177,7 @@ class EntityCrudHookTestCase extends WebTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    file_delete($file);
+    $file->delete();
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_file_predelete called',

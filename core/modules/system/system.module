@@ -271,6 +271,8 @@ function system_entity_info() {
     'file' => array(
       'label' => t('File'),
       'base table' => 'file_managed',
+      'controller class' => 'Drupal\Core\File\FileStorageController',
+      'entity class' => 'Drupal\Core\File\File',
       'entity keys' => array(
         'id' => 'fid',
         'label' => 'filename',
@@ -3095,7 +3097,7 @@ function system_cron() {
       $references = file_usage_list($file);
       if (empty($references)) {
         if (file_exists($file->uri)) {
-          file_delete($file);
+          $file->delete();
         }
         else {
           watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->uri), WATCHDOG_ERROR);

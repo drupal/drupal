@@ -6,6 +6,7 @@
  */
 
 use Drupal\entity\EntityFieldQuery;
+use Drupal\Core\File\File;
 
 // Load all Field module hooks for File.
 require_once DRUPAL_ROOT . '/core/modules/file/file.field.inc';
@@ -347,7 +348,7 @@ function file_progress_implementation() {
 /**
  * Implements hook_file_predelete().
  */
-function file_file_predelete($file) {
+function file_file_predelete(File $file) {
   // TODO: Remove references to a file that is in-use.
 }
 
@@ -601,7 +602,7 @@ function file_managed_file_submit($form, &$form_state) {
     // it's up to the implementing module to remove usages of files to have them
     // removed.
     if ($element['#file'] && $element['#file']->status == 0) {
-      file_delete($element['#file']);
+      file_delete($element['#file']->fid);
     }
     // Update both $form_state['values'] and $form_state['input'] to reflect
     // that the file has been removed, so that the form is rebuilt correctly.
@@ -631,7 +632,7 @@ function file_managed_file_submit($form, &$form_state) {
  *   The FAPI element whose values are being saved.
  *
  * @return
- *   The file object representing the file that was saved, or FALSE if no file
+ *   The file entity representing the file that was saved, or FALSE if no file
  *   was saved.
  */
 function file_managed_file_save_upload($element) {
@@ -735,7 +736,8 @@ function theme_file_link($variables) {
   $icon_directory = $variables['icon_directory'];
 
   $url = file_create_url($file->uri);
-  $icon = theme('file_icon', array('file' => $file, 'icon_directory' => $icon_directory));
+  // theme_file_icon() requires a file entity, make sure it gets one.
+  $icon = theme('file_icon', array('file' => ($file instanceof File) ? $file : file_load($file->fid), 'icon_directory' => $icon_directory));
 
   // Set options as per anchor format described at
   // http://microformats.org/wiki/file-format-examples
@@ -762,7 +764,7 @@ function theme_file_link($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - file: A file object for which to make an icon.
+ *   - file: A file entity for which to make an icon.
  *   - icon_directory: (optional) A path to a directory of icons to be used for
  *     files. Defaults to the value of the "file_icon_directory" variable.
  *
@@ -778,10 +780,10 @@ function theme_file_icon($variables) {
 }
 
 /**
- * Creates a URL to the icon for a file object.
+ * Creates a URL to the icon for a file entity.
  *
- * @param $file
- *   A file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  * @param $icon_directory
  *   (optional) A path to a directory of icons to be used for files. Defaults to
  *   the value of the "file_icon_directory" variable.
@@ -789,7 +791,7 @@ function theme_file_icon($variables) {
  * @return
  *   A URL string to the icon, or FALSE if an appropriate icon cannot be found.
  */
-function file_icon_url($file, $icon_directory = NULL) {
+function file_icon_url(File $file, $icon_directory = NULL) {
   if ($icon_path = file_icon_path($file, $icon_directory)) {
     return base_path() . $icon_path;
   }
@@ -797,10 +799,10 @@ function file_icon_url($file, $icon_directory = NULL) {
 }
 
 /**
- * Creates a path to the icon for a file object.
+ * Creates a path to the icon for a file entity.
  *
- * @param $file
- *   A file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  * @param $icon_directory
  *   (optional) A path to a directory of icons to be used for files. Defaults to
  *   the value of the "file_icon_directory" variable.
@@ -809,7 +811,7 @@ function file_icon_url($file, $icon_directory = NULL) {
  *   A string to the icon as a local path, or FALSE if an appropriate icon could
  *   not be found.
  */
-function file_icon_path($file, $icon_directory = NULL) {
+function file_icon_path(File $file, $icon_directory = NULL) {
   // Use the default set of icons if none specified.
   if (!isset($icon_directory)) {
     $icon_directory = variable_get('file_icon_directory', drupal_get_path('module', 'file') . '/icons');
@@ -852,13 +854,13 @@ function file_icon_path($file, $icon_directory = NULL) {
 /**
  * Determines the generic icon MIME package based on a file's MIME type.
  *
- * @param $file
- *   A file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  *
  * @return
  *   The generic icon MIME package expected for this file.
  */
-function file_icon_map($file) {
+function file_icon_map(File $file) {
   switch ($file->filemime) {
     // Word document types.
     case 'application/msword':
@@ -984,8 +986,8 @@ function file_icon_map($file) {
 /**
  * Retrieves a list of references to a file.
  *
- * @param $file
- *   A file object.
+ * @param Drupal\Core\File\File $file
+ *   A file entity.
  * @param $field
  *   (optional) A field array to be used for this check. If given, limits the
  *   reference check to the given field.
@@ -1000,7 +1002,7 @@ function file_icon_map($file) {
  * @return
  *   An integer value.
  */
-function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISION, $field_type = 'file') {
+function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_REVISION, $field_type = 'file') {
   $references = drupal_static(__FUNCTION__, array());
   $fields = isset($field) ? array($field['field_name'] => $field) : field_info_fields();
 

@@ -486,7 +486,7 @@ class ImageFileMoveTest extends ImageToolkitTestCase {
    */
   function testNormal() {
     // Pick a file for testing.
-    $file = current($this->drupalGetTestFiles('image'));
+    $file = entity_create('file', (array) current($this->drupalGetTestFiles('image')));
 
     // Create derivative image.
     $style = image_style_load(key(image_styles()));

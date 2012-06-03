@@ -870,8 +870,7 @@ class CronRunTestCase extends WebTestBase {
    * Ensure that temporary files are removed.
    *
    * Create files for all the possible combinations of age and status. We are
-   * using UPDATE statements rather than file_save() because it would set the
-   * timestamp.
+   * using UPDATE statements because using the API would set the timestamp.
    */
   function testTempFileCleanup() {
     // Temporary file that is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.

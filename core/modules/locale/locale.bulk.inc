@@ -297,7 +297,7 @@ function locale_translate_batch_import($filepath, &$context) {
   // The filename is either {langcode}.po or {prefix}.{langcode}.po, so
   // we can extract the language code to use for the import from the end.
   if (preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $langcode)) {
-    $file = (object) array('filename' => drupal_basename($filepath), 'uri' => $filepath);
+    $file = entity_create('file', array('filename' => drupal_basename($filepath), 'uri' => $filepath));
     _locale_import_read_po('db-store', $file, array(), $langcode[2]);
     $context['results'][] = $filepath;
   }
