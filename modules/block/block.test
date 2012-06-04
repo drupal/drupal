@@ -97,7 +97,7 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Set visibility only for authenticated users, to verify delete functionality.
     $edit = array();
-    $edit['roles[2]'] = TRUE;
+    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
     $this->drupalPost('admin/structure/block/manage/block/' . $bid . '/configure', $edit, t('Save block'));
 
     // Delete the created custom block & verify that it's been deleted and no longer appearing on the page.
@@ -171,7 +171,7 @@ class BlockTestCase extends DrupalWebTestCase {
     // authenticated users.
     $edit = array();
     $edit['pages'] = 'user*';
-    $edit['roles[2]'] = TRUE;
+    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
     $this->drupalPost('admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure', $edit, t('Save block'));
 
     // Move block to the first sidebar.

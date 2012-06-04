@@ -2119,9 +2119,13 @@ class UserRolesAssignmentTestCase extends DrupalWebTestCase {
   /**
    * Check role on user object.
    *
-   * @param object $account User.
-   * @param integer $rid Role id.
-   * @param bool $is_assigned True if the role should present on the account.
+   * @param object $account
+   *   The user account to check.
+   * @param string $rid
+   *   The role ID to search for.
+   * @param bool $is_assigned
+   *   (optional) Whether to assert that $rid exists (TRUE) or not (FALSE).
+   *   Defaults to TRUE.
    */
   private function userLoadAndCheckRoleAssigned($account, $rid, $is_assigned = TRUE) {
     $account = user_load($account->uid, TRUE);

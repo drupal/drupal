@@ -314,7 +314,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['format'] = drupal_strtolower($this->randomName());
     $edit['name'] = $this->randomName();
-    $edit['roles[2]'] = 1;
+    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
     $edit['filters[' . $second_filter . '][status]'] = TRUE;
     $edit['filters[' . $first_filter . '][status]'] = TRUE;
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
@@ -324,7 +324,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $format = filter_format_load($edit['format']);
     $this->assertNotNull($format, t('Format found in database.'));
 
-    $this->assertFieldByName('roles[2]', '', t('Role found.'));
+    $this->assertFieldByName('roles[' . DRUPAL_AUTHENTICATED_RID . ']', '', t('Role found.'));
     $this->assertFieldByName('filters[' . $second_filter . '][status]', '', t('Line break filter found.'));
     $this->assertFieldByName('filters[' . $first_filter . '][status]', '', t('Url filter found.'));
 
@@ -335,8 +335,8 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     // Allow authenticated users on full HTML.
     $format = filter_format_load($full);
     $edit = array();
-    $edit['roles[1]'] = 0;
-    $edit['roles[2]'] = 1;
+    $edit['roles[' . DRUPAL_ANONYMOUS_RID . ']'] = 0;
+    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
     $this->drupalPost('admin/config/content/formats/' . $full, $edit, t('Save configuration'));
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), t('Full HTML format successfully updated.'));
 
@@ -386,10 +386,10 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     // Full HTML.
     $edit = array();
-    $edit['roles[2]'] = FALSE;
+    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = FALSE;
     $this->drupalPost('admin/config/content/formats/' . $full, $edit, t('Save configuration'));
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), t('Full HTML format successfully reverted.'));
-    $this->assertFieldByName('roles[2]', $edit['roles[2]'], t('Changes reverted.'));
+    $this->assertFieldByName('roles[' . DRUPAL_AUTHENTICATED_RID . ']', $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'], t('Changes reverted.'));
 
     // Filter order.
     $edit = array();
@@ -1807,7 +1807,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['format'] = drupal_strtolower($this->randomName());
     $edit['name'] = $name;
-    $edit['roles[1]'] = 1;
+    $edit['roles[' . DRUPAL_ANONYMOUS_RID . ']'] = 1;
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertRaw(t('Added text format %format.', array('%format' => $name)), t('New format created.'));
     $this->assertText('hook_filter_format_insert invoked.', t('hook_filter_format_insert was invoked.'));
@@ -1816,7 +1816,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
 
     // Update text format.
     $edit = array();
-    $edit['roles[2]'] = 1;
+    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
     $this->drupalPost('admin/config/content/formats/' . $format_id, $edit, t('Save configuration'));
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $name)), t('Format successfully updated.'));
     $this->assertText('hook_filter_format_update invoked.', t('hook_filter_format_update() was invoked.'));

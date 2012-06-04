@@ -551,7 +551,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
 
     // Remove access comments permission from anon user.
     $edit = array(
-      '1[access comments]' => FALSE,
+      DRUPAL_ANONYMOUS_RID . '[access comments]' => FALSE,
     );
     $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
 
