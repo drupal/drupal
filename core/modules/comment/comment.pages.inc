@@ -26,8 +26,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   (optional) Some comments are replies to other comments. In those cases,
  *   $pid is the parent comment's comment ID. Defaults to NULL.
  *
- * @return
- *   The rendered parent node or comment plus the new comment form.
+ * @return array
+ *   An associative array containing:
+ *   - An array for rendering the node or parent comment.
+ *     - comment_node: If the comment is a reply to the node.
+ *     - comment_parent: If the comment is a reply to another comment.
+ *   - comment_form: The comment form as a renderable array.
  */
 function comment_reply(Node $node, $pid = NULL) {
   // Set the breadcrumb trail.
