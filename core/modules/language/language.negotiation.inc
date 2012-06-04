@@ -223,7 +223,8 @@ function language_from_url($languages) {
       // Get only the host, not the port.
       $http_host= $_SERVER['HTTP_HOST'];
       if (strpos($http_host, ':') !== FALSE) {
-        $http_host = current(explode(':', $http_host));
+        $http_host_tmp = explode(':', $http_host);
+        $http_host = current($http_host_tmp);
       }
       $domains = language_negotiation_url_domains();
       foreach ($languages as $language) {
