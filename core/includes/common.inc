@@ -699,19 +699,6 @@ function drupal_site_offline() {
 }
 
 /**
- * Delivers an "access denied" error to the browser.
- *
- * Page callback functions wanting to report an "access denied" message should
- * return MENU_ACCESS_DENIED instead of calling drupal_access_denied(). However,
- * functions that are invoked in contexts where that return value might not
- * bubble up to menu_execute_active_handler() should call
- * drupal_access_denied().
- */
-function drupal_access_denied() {
-  throw new AccessDeniedHttpException();
-}
-
-/**
  * Performs an HTTP request.
  *
  * This is a flexible and powerful HTTP client implementation. Correctly

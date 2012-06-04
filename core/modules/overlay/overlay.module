@@ -6,6 +6,7 @@
  */
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Implements hook_help().
@@ -334,7 +335,7 @@ function overlay_user_dismiss_message() {
   //   generation. Add token support to routing: http://drupal.org/node/755584.
   $token = request()->query->get('token');
   if (!isset($token) || !drupal_valid_token($token, 'overlay')) {
-    drupal_access_denied();
+    throw new AccessDeniedHttpException();
   }
 
   $account = user_load($user->uid);

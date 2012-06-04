@@ -6,6 +6,7 @@
  */
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Menu callback; Provide the administration overview page.
@@ -280,7 +281,7 @@ function system_theme_enable() {
     }
     drupal_goto('admin/appearance');
   }
-  return drupal_access_denied();
+  throw new AccessDeniedHttpException();
 }
 
 /**
@@ -308,7 +309,7 @@ function system_theme_disable() {
     }
     drupal_goto('admin/appearance');
   }
-  return drupal_access_denied();
+  throw new AccessDeniedHttpException();
 }
 
 /**
@@ -355,7 +356,7 @@ function system_theme_default() {
     }
     drupal_goto('admin/appearance');
   }
-  return drupal_access_denied();
+  throw new AccessDeniedHttpException();
 }
 
 /**
@@ -2303,7 +2304,7 @@ function system_batch_page() {
   $output = _batch_page();
 
   if ($output === FALSE) {
-    drupal_access_denied();
+    throw new AccessDeniedHttpException();
   }
   elseif ($output instanceof Response) {
     return $output;

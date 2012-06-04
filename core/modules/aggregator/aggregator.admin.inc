@@ -5,6 +5,8 @@
  * Admin page callbacks for the aggregator module.
  */
 
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
 /**
  * Page callback: Displays the aggregator administration page.
  *
@@ -411,7 +413,7 @@ function aggregator_admin_refresh_feed($feed) {
   //   generation. Add token support to routing: http://drupal.org/node/755584.
   $token = request()->query->get('token');
   if (!isset($token) || !drupal_valid_token($token, 'aggregator/update/' . $feed->fid)) {
-    drupal_access_denied();
+    throw new AccessDeniedHttpException();
   }
 
   aggregator_refresh($feed);

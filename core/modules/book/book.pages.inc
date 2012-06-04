@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Node;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -89,7 +90,7 @@ function book_export_html($nid) {
     }
   }
   else {
-    drupal_access_denied();
+    throw new AccessDeniedHttpException();
   }
 }
 

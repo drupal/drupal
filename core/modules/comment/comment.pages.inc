@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Node;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -117,7 +118,7 @@ function comment_approve($cid) {
   //   generation. Add token support to routing: http://drupal.org/node/755584.
   $token = request()->query->get('token');
   if (!isset($token) || !drupal_valid_token($token, "comment/$cid/approve")) {
-    drupal_access_denied();
+    throw new AccessDeniedHttpException();
   }
 
   if ($comment = comment_load($cid)) {

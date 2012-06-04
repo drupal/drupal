@@ -7,6 +7,7 @@
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Core\File\File;
 
 /**
@@ -695,7 +696,7 @@ function image_style_deliver($style, $scheme) {
     else {
       $headers = module_invoke_all('file_download', $image_uri);
       if (in_array(-1, $headers) || empty($headers)) {
-        return drupal_access_denied();
+        throw new AccessDeniedHttpException();
       }
       if (count($headers)) {
         foreach ($headers as $name => $value) {

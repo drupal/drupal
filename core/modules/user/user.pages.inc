@@ -5,6 +5,8 @@
  * User page callback file for the user module.
  */
 
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
 /**
  * Menu callback; Retrieve a JSON object containing autocomplete suggestions for existing users.
  */
@@ -157,7 +159,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
     else {
       // Deny access, no more clues.
       // Everything will be in the watchdog's URL for the administrator to check.
-      drupal_access_denied();
+      throw new AccessDeniedHttpException();
     }
   }
 }
@@ -480,7 +482,7 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
       drupal_goto("user/$account->uid/cancel");
     }
   }
-  drupal_access_denied();
+  throw new AccessDeniedHttpException();
 }
 
 /**

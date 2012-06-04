@@ -5,6 +5,8 @@
  * Administrative page callbacks for the shortcut module.
  */
 
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
 /**
  * Returns the maximum number of shortcut "slots" available per shortcut set.
  *
@@ -775,5 +777,5 @@ function shortcut_link_add_inline($shortcut_set) {
     drupal_goto();
   }
 
-  return drupal_access_denied();
+  throw new AccessDeniedHttpException();
 }
