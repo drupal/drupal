@@ -2196,3 +2196,28 @@ class CommentThreadingTestCase extends CommentHelperCase {
     $this->assertEqual($reply_loaded->thread, '02.01/');
   }
 }
+
+/**
+ * Tests that comments behave correctly when the node is changed.
+ */
+class CommentNodeChangesTestCase extends CommentHelperCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Comment deletion on node changes',
+      'description' => 'Tests that comments behave correctly when the node is changed.',
+      'group' => 'Comment',
+    );
+  }
+
+  /**
+   * Tests that comments are deleted with the node.
+   */
+  function testNodeDeletion() {
+    $this->drupalLogin($this->web_user);
+    $comment = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $this->assertTrue(comment_load($comment->id), 'The comment could be loaded.');
+    node_delete($this->node->nid);
+    $this->assertFalse(comment_load($comment->id), 'The comment could not be loaded after the node was deleted.');
+  }
+}
