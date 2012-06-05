@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Upgrade tests for the conversion of serial role IDs to role machine names.
+ */
+
+/**
+ * Tests upgrading a bare database with user role data.
+ *
+ * Loads a bare installation of Drupal 7 with role data and runs the
+ * upgrade process on it.
+ */
+class UserRoleUpgradePathTestCase extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Role upgrade test',
+      'description'  => 'Upgrade tests with role data.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.bare.standard_all.database.php.gz',
+      drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.roles.database.php',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Tests expected role ID conversions after a successful upgrade.
+   */
+  public function testRoleUpgrade() {
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
+
+    // Check that "gärtner" has been converted to "4" and that the role
+    // edit page for it exists.
+    $this->drupalGet('admin/people/permissions/roles/edit/4');
+    $this->assertResponse(200, 'Role edit page for "gärtner" was found.');
+
+    // Check that the anonymous user role ID has been converted from "1" to
+    // "anonymous".
+    $this->drupalGet('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID);
+    $this->assertResponse(200, 'Permission edit page for "anonymous" was found.');
+
+    // Check that the authenticated user role ID has been converted from "2" to
+    // "authenticated".
+    $this->drupalGet('admin/people/permissions/' . DRUPAL_AUTHENTICATED_RID);
+    $this->assertResponse(200, 'Permission edit page for "authenticated" was found.');
+
+    // Check that the permission for "gärtner" still exists.
+    $this->drupalGet('admin/people/permissions/4');
+    $this->assertFieldChecked('edit-4-edit-own-comments', 'Edit own comments permission for "gärtner" is set correctly.');
+
+    // Check that the role visibility setting for the who's online block still
+    // exists.
+    $this->drupalGet('admin/structure/block/manage/user/online/configure');
+    $this->assertFieldChecked('edit-roles-5', "Who's online block visibility setting is correctly set for the long role name.");
+    // Check that the role name is still displayed as expected.
+    $this->assertText('gärtner', 'Role name is displayed on block visibility settings.');
+    $this->assertText('very long role name that has exactly sixty-four characters in it', 'Role name is displayed on block visibility settings.');
+    $this->assertText('very_long role name that has exactly sixty-four characters in it', 'Role name is displayed on block visibility settings.');
+
+    // The administrative user role must still be assigned to the
+    // "administrator" role (rid 3).
+    $this->drupalGet('admin/config/people/accounts');
+    $this->assertFieldByName('user_admin_role', 3);
+  }
+}

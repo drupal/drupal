@@ -55,8 +55,8 @@ function user_schema() {
     'description' => 'Stores the permissions assigned to user roles.',
     'fields' => array(
       'rid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 64,
         'not null' => TRUE,
         'description' => 'Foreign Key: {role}.rid.',
       ),
@@ -81,7 +81,7 @@ function user_schema() {
     ),
     'foreign keys' => array(
       'role' => array(
-        'table' => 'roles',
+        'table' => 'role',
         'columns' => array('rid' => 'rid'),
       ),
     ),
@@ -91,17 +91,20 @@ function user_schema() {
     'description' => 'Stores user roles.',
     'fields' => array(
       'rid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        // The role ID is often used as part of a compound index; at least MySQL
+        // has a maximum index length of 1000 characters (333 on utf8), so we
+        // limit the maximum length.
+        'length' => 64,
         'not null' => TRUE,
         'description' => 'Primary Key: Unique role ID.',
       ),
       'name' => array(
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Unique role name.',
+        'description' => 'Role label.',
         'translatable' => TRUE,
       ),
       'weight' => array(
@@ -110,9 +113,6 @@ function user_schema() {
         'default' => 0,
         'description' => 'The weight of this role in listings and the user interface.',
       ),
-    ),
-    'unique keys' => array(
-      'name' => array('name'),
     ),
     'primary key' => array('rid'),
     'indexes' => array(
@@ -268,10 +268,9 @@ function user_schema() {
         'description' => 'Primary Key: {users}.uid for user.',
       ),
       'rid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 64,
         'not null' => TRUE,
-        'default' => 0,
         'description' => 'Primary Key: {role}.rid for role.',
       ),
     ),
@@ -285,7 +284,7 @@ function user_schema() {
         'columns' => array('uid' => 'uid'),
       ),
       'role' => array(
-        'table' => 'roles',
+        'table' => 'role',
         'columns' => array('rid' => 'rid'),
       ),
     ),
@@ -321,29 +320,12 @@ function user_install() {
     ))
     ->execute();
 
-  // Built-in roles.
-  $rid_anonymous = db_insert('role')
-    ->fields(array('name' => 'anonymous user', 'weight' => 0))
+  // Insert built-in roles.
+  db_insert('role')
+    ->fields(array('rid', 'name', 'weight'))
+    ->values(array(DRUPAL_ANONYMOUS_RID, 'Anonymous user', 0))
+    ->values(array(DRUPAL_AUTHENTICATED_RID, 'Authenticated user', 1))
     ->execute();
-  $rid_authenticated = db_insert('role')
-    ->fields(array('name' => 'authenticated user', 'weight' => 1))
-    ->execute();
-
-  // Sanity check to ensure the anonymous and authenticated role IDs are the
-  // same as the drupal defined constants. In certain situations, this will
-  // not be true.
-  if ($rid_anonymous != DRUPAL_ANONYMOUS_RID) {
-    db_update('role')
-      ->fields(array('rid' => DRUPAL_ANONYMOUS_RID))
-      ->condition('rid', $rid_anonymous)
-      ->execute();
-  }
-  if ($rid_authenticated != DRUPAL_AUTHENTICATED_RID) {
-    db_update('role')
-      ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
-      ->condition('rid', $rid_authenticated)
-      ->execute();
-  }
 }
 
 /**
@@ -396,6 +378,67 @@ function user_update_8001() {
   // preferred language is a new feature in Drupal 8, assume that for updated
   // sites, existing user entities are in the user's preferred language.
   db_update('users')->expression('langcode', 'preferred_langcode')->execute();
+}
+
+/**
+ * Replace serial role IDs with machine name strings.
+ */
+function user_update_8002() {
+  // Change serial rid columns into strings.
+  $column = array(
+    'type' => 'varchar',
+    'length' => 64,
+    'not null' => TRUE,
+    'description' => 'Primary Key: Unique role ID.',
+  );
+  db_change_field('role', 'rid', 'rid', $column);
+
+  $column['description'] = 'Foreign Key: {role}.rid.';
+  db_change_field('role_permission', 'rid', 'rid', $column);
+
+  $column['description'] = 'Primary Key: {role}.rid for role.';
+  db_change_field('users_roles', 'rid', 'rid', $column);
+
+  // Enlarge the role name (label) column.
+  $column = array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'Role label.',
+    'translatable' => TRUE,
+  );
+  db_change_field('role', 'name', 'name', $column);
+  // Remove unique index.
+  db_drop_unique_key('role', 'name');
+
+  // Rename the built-in serial role IDs into the hardcoded machine names.
+  db_update('role')
+    ->fields(array('rid' => DRUPAL_ANONYMOUS_RID))
+    ->condition('rid', 1)
+    ->execute();
+  db_update('role')
+    ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
+    ->condition('rid', 2)
+    ->execute();
+
+  db_update('role_permission')
+    ->fields(array('rid' => DRUPAL_ANONYMOUS_RID))
+    ->condition('rid', 1)
+    ->execute();
+  db_update('role_permission')
+    ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
+    ->condition('rid', 2)
+    ->execute();
+
+  db_update('users_roles')
+    ->fields(array('rid' => DRUPAL_ANONYMOUS_RID))
+    ->condition('rid', 1)
+    ->execute();
+  db_update('users_roles')
+    ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
+    ->condition('rid', 2)
+    ->execute();
 }
 
 /**

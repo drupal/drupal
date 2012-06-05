@@ -150,12 +150,12 @@ const DRUPAL_BOOTSTRAP_FULL = 7;
 /**
  * Role ID for anonymous users; should match what's in the "role" table.
  */
-const DRUPAL_ANONYMOUS_RID = 1;
+const DRUPAL_ANONYMOUS_RID = 'anonymous';
 
 /**
  * Role ID for authenticated users; should match what's in the "role" table.
  */
-const DRUPAL_AUTHENTICATED_RID = 2;
+const DRUPAL_AUTHENTICATED_RID = 'authenticated';
 
 /**
  * The number of bytes in a kilobyte.

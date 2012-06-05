@@ -4,12 +4,6 @@
   padding-right: 1.5em;
 }
 
-#user-admin-roles .form-item-name {
-  float: right;
-  margin-left: 1em;
-  margin-right: 0;
-}
-
 /**
  * Password strength indicator.
  */

@@ -15,18 +15,6 @@
 }
 
 /**
- * Override default textfield float to put the "Add role" button next to
- * the input textfield.
- */
-#user-admin-roles td.edit-name {
-  clear: both;
-}
-#user-admin-roles .form-item-name {
-  float: left; /* LTR */
-  margin-right: 1em; /* LTR */
-}
-
-/**
  * Password strength indicator.
  */
 .password-strength {

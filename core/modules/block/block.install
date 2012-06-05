@@ -118,8 +118,8 @@ function block_schema() {
         'description' => "The block's unique delta within module, from {block}.delta.",
       ),
       'rid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 64,
         'not null' => TRUE,
         'description' => "The user's role ID from {users_roles}.rid.",
       ),
@@ -127,6 +127,12 @@ function block_schema() {
     'primary key' => array('module', 'delta', 'rid'),
     'indexes' => array(
       'rid' => array('rid'),
+    ),
+    'foreign keys' => array(
+      'role' => array(
+        'table' => 'role',
+        'columns' => array('rid' => 'rid'),
+      ),
     ),
   );
 
@@ -223,6 +229,17 @@ function block_install() {
  */
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function block_update_dependencies() {
+  // Convert role IDs after User module converted {role}.
+  $dependencies['block'][8002] = array(
+    'user' => 8002,
+  );
+  return $dependencies;
+}
+
+/**
  * Block cache is always enabled in 8.x.
  *
  * @ingroup config_upgrade
@@ -266,6 +283,32 @@ function block_update_8001() {
     'primary key' => array('module', 'delta', 'type', 'langcode'),
   );
   db_create_table('block_language', $schema);
+}
+
+/**
+ * Replace serial role IDs with machine name strings.
+ *
+ * @see user_update_8002()
+ */
+function block_update_8002() {
+  // Change serial rid column into string.
+  $column = array(
+    'type' => 'varchar',
+    'length' => 64,
+    'not null' => TRUE,
+    'description' => "The user's role ID from {users_roles}.rid.",
+  );
+  db_change_field('block_role', 'rid', 'rid', $column);
+
+  // Rename the built-in serial role IDs into the hardcoded machine names.
+  db_update('block_role')
+    ->fields(array('rid' => DRUPAL_ANONYMOUS_RID))
+    ->condition('rid', 1)
+    ->execute();
+  db_update('block_role')
+    ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
+    ->condition('rid', 2)
+    ->execute();
 }
 
 /**
