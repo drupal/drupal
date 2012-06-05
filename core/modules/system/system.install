@@ -226,29 +226,38 @@ function system_requirements($phase) {
     }
   }
 
-  // Test settings.php file writability
+  // Test configuration files and directory for writability.
   if ($phase == 'runtime') {
-    $conf_dir = drupal_verify_install_file(conf_path(), FILE_NOT_WRITABLE, 'dir');
-    $conf_file = drupal_verify_install_file(conf_path() . '/settings.php', FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE);
-    if (!$conf_dir || !$conf_file) {
+    $conf_errors = array();
+    $conf_path = conf_path();
+    if (!drupal_verify_install_file($conf_path, FILE_NOT_WRITABLE, 'dir')) {
+      $conf_errors[] = $t("The directory %file is not protected from modifications and poses a security risk. You must change the directory's permissions to be non-writable.", array('%file' => $conf_path));
+    }
+    foreach (array('settings.php', 'settings.local.php') as $conf_file) {
+      $full_path = $conf_path . '/' . $conf_file;
+      if (file_exists($full_path) && !drupal_verify_install_file($full_path, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE)) {
+        $conf_errors[] = $t("The file %file is not protected from modifications and poses a security risk. You must change the file's permissions to be non-writable.", array('%file' => $full_path));
+      }
+    }
+    if (!empty($conf_errors)) {
+      if (count($conf_errors) == 1) {
+        $description = $conf_errors[0];
+      }
+      else {
+        $description = theme('item_list', array('items' => $conf_errors));
+      }
       $requirements['settings.php'] = array(
         'value' => $t('Not protected'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => '',
+        'description' => $description,
       );
-      if (!$conf_dir) {
-        $requirements['settings.php']['description'] .= $t('The directory %file is not protected from modifications and poses a security risk. You must change the directory\'s permissions to be non-writable. ', array('%file' => conf_path()));
-      }
-      if (!$conf_file) {
-        $requirements['settings.php']['description'] .= $t('The file %file is not protected from modifications and poses a security risk. You must change the file\'s permissions to be non-writable.', array('%file' => conf_path() . '/settings.php'));
-      }
     }
     else {
       $requirements['settings.php'] = array(
         'value' => $t('Protected'),
       );
     }
-    $requirements['settings.php']['title'] = $t('Configuration file');
+    $requirements['settings.php']['title'] = $t('Configuration files');
   }
 
   // Report cron status.
