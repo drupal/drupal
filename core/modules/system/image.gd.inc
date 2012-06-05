@@ -222,7 +222,19 @@ function image_gd_desaturate(stdClass $image) {
 function image_gd_load(stdClass $image) {
   $extension = str_replace('jpg', 'jpeg', $image->info['extension']);
   $function = 'imagecreatefrom' . $extension;
-  return (function_exists($function) && $image->resource = $function($image->source));
+  if (function_exists($function) && $image->resource = $function($image->source)) {
+    if (!imageistruecolor($image->resource)) {
+      // Convert indexed images to true color, so that filters work
+      // correctly and don't result in unnecessary dither.
+      $new_image = image_gd_create_tmp($image, $image->info['width'], $image->info['height']);
+      imagecopy($new_image, $image->resource, 0, 0, 0, 0, $image->info['width'], $image->info['height']);
+      imagedestroy($image->resource);
+      $image->resource = $new_image;
+    }
+    return (bool) $image->resource;
+  }
+
+  return FALSE;
 }
 
 /**
