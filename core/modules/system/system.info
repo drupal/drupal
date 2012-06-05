@@ -36,3 +36,4 @@ files[] = tests/uuid.test
 files[] = tests/xmlrpc.test
 files[] = tests/upgrade/upgrade.test
 files[] = tests/upgrade/upgrade.language.test
+files[] = tests/upgrade/upgrade.roles.test

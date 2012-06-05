@@ -641,7 +641,8 @@ function user_search_execute($keys = NULL, $conditions = NULL) {
   $find = array();
   // Replace wildcards with MySQL/PostgreSQL wildcards.
   $keys = preg_replace('!\*+!', '%', $keys);
-  $query = db_select('users')->extend('PagerDefault');
+  $query = db_select('users')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
   $query->fields('users', array('uid'));
   if (user_access('administer users')) {
     // Administrators can also search in the otherwise private email field.
@@ -1568,14 +1569,13 @@ function user_menu() {
   $items['admin/people/permissions/roles/edit/%user_role'] = array(
     'title' => 'Edit role',
     'page arguments' => array('user_admin_role', 5),
-    'access callback' => 'user_role_edit_access',
-    'access arguments' => array(5),
+    'access arguments' => array('administer permissions'),
   );
   $items['admin/people/permissions/roles/delete/%user_role'] = array(
     'title' => 'Delete role',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_role_delete_confirm', 5),
-    'access callback' => 'user_role_edit_access',
+    'access callback' => 'user_role_delete_access',
     'access arguments' => array(5),
     'file' => 'user.admin.inc',
   );
@@ -2655,24 +2655,10 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
     $query->innerJoin('role_permission', 'p', 'r.rid = p.rid');
     $query->condition('p.permission', $permission);
   }
-  $result = $query->execute();
-
-  $roles = array();
-  foreach ($result as $role) {
-    switch ($role->rid) {
-      // We only translate the built in role names
-      case DRUPAL_ANONYMOUS_RID:
-        if (!$membersonly) {
-          $roles[$role->rid] = t($role->name);
-        }
-        break;
-      case DRUPAL_AUTHENTICATED_RID:
-        $roles[$role->rid] = t($role->name);
-        break;
-      default:
-        $roles[$role->rid] = $role->name;
-    }
+  if ($membersonly) {
+    $query->condition('r.rid', DRUPAL_ANONYMOUS_RID, '!=');
   }
+  $roles = $query->execute()->fetchAllKeyed();
 
   if (empty($permission)) {
     $user_roles[$cid] = $roles;
@@ -2686,13 +2672,11 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
  * Fetches a user role by role ID.
  *
  * @param $rid
- *   An integer representing the role ID.
+ *   A string representing the role ID.
  *
  * @return
  *   A fully-loaded role object if a role with the given ID exists, or FALSE
  *   otherwise.
- *
- * @see user_role_load_by_name()
  */
 function user_role_load($rid) {
   return db_select('role', 'r')
@@ -2703,34 +2687,14 @@ function user_role_load($rid) {
 }
 
 /**
- * Fetches a user role by role name.
- *
- * @param $role_name
- *   A string representing the role name.
- *
- * @return
- *   A fully-loaded role object if a role with the given name exists, or FALSE
- *   otherwise.
- *
- * @see user_role_load()
- */
-function user_role_load_by_name($role_name) {
-  return db_select('role', 'r')
-    ->fields('r')
-    ->condition('name', $role_name)
-    ->execute()
-    ->fetchObject();
-}
-
-/**
  * Save a user role to the database.
  *
  * @param $role
- *   A role object to modify or add. If $role->rid is not specified, a new
- *   role will be created.
+ *   A role object to modify or add.
+ *
  * @return
  *   Status constant indicating if role was created or updated.
- *   Failure to write the user role record will return FALSE. Otherwise.
+ *   Failure to write the user role record will return FALSE. Otherwise
  *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation
  *   performed.
  */
@@ -2749,13 +2713,19 @@ function user_role_save($role) {
   // Let modules modify the user role before it is saved to the database.
   module_invoke_all('user_role_presave', $role);
 
-  if (!empty($role->rid) && $role->name) {
-    $status = drupal_write_record('role', $role, 'rid');
-    module_invoke_all('user_role_update', $role);
-  }
-  else {
+  $exists = db_select('role', 'r')
+    ->fields('r', array('rid'))
+    ->condition('rid', $role->rid)
+    ->execute()
+    ->fetchAll();
+
+  if (empty($exists)) {
     $status = drupal_write_record('role', $role);
     module_invoke_all('user_role_insert', $role);
+  }
+  else {
+    $status = drupal_write_record('role', $role, 'rid');
+    module_invoke_all('user_role_update', $role);
   }
 
   // Clear the user access cache.
@@ -2769,15 +2739,10 @@ function user_role_save($role) {
  * Delete a user role from database.
  *
  * @param $role
- *   A string with the role name, or an integer with the role ID.
+ *   A string with the role ID.
  */
 function user_role_delete($role) {
-  if (is_int($role)) {
-    $role = user_role_load($role);
-  }
-  else {
-    $role = user_role_load_by_name($role);
-  }
+  $role = user_role_load($role);
 
   db_delete('role')
     ->condition('rid', $role->rid)
@@ -2798,10 +2763,10 @@ function user_role_delete($role) {
 }
 
 /**
- * Menu access callback for user role editing.
+ * Menu access callback for user role deletion.
  */
-function user_role_edit_access($role) {
-  // Prevent the system-defined roles from being altered or removed.
+function user_role_delete_access($role) {
+  // Prevent the system-defined roles from being removed.
   if ($role->rid == DRUPAL_ANONYMOUS_RID || $role->rid == DRUPAL_AUTHENTICATED_RID) {
     return FALSE;
   }

@@ -215,7 +215,9 @@ class TextFieldTestCase extends WebTestBase {
     $format = filter_format_load($edit['format']);
     $format_id = $format->format;
     $permission = filter_permission_name($format);
-    $rid = max(array_keys($this->web_user->roles));
+    $roles = $this->web_user->roles;
+    unset($roles[DRUPAL_AUTHENTICATED_RID]);
+    $rid = key($roles);
     user_role_grant_permissions($rid, array($permission));
     $this->drupalLogin($this->web_user);
 

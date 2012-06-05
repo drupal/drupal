@@ -400,17 +400,24 @@ abstract class WebTestBase extends TestBase {
   /**
    * Internal helper function; Create a role with specified permissions.
    *
-   * @param $permissions
+   * @param array $permissions
    *   Array of permission names to assign to role.
-   * @param $name
-   *   (optional) String for the name of the role.  Defaults to a random string.
-   * @return
+   * @param string $rid
+   *   (optional) The role ID (machine name). Defaults to a random name.
+   * @param string $name
+   *   (optional) The label for the role. Defaults to a random string.
+   *
+   * @return string
    *   Role ID of newly created role, or FALSE if role creation failed.
    */
-  protected function drupalCreateRole(array $permissions, $name = NULL) {
-    // Generate random name if it was not passed.
-    if (!$name) {
-      $name = $this->randomName();
+  protected function drupalCreateRole(array $permissions, $rid = NULL, $name = NULL) {
+    // Generate a random, lowercase machine name if none was passed.
+    if (!isset($rid)) {
+      $rid = strtolower($this->randomName(8));
+    }
+    // Generate a random label.
+    if (!isset($name)) {
+      $name = $this->randomString(8);
     }
 
     // Check the all the permissions strings are valid.
@@ -420,14 +427,29 @@ abstract class WebTestBase extends TestBase {
 
     // Create new role.
     $role = new stdClass();
+    $role->rid = $rid;
     $role->name = $name;
-    user_role_save($role);
-    user_role_grant_permissions($role->rid, $permissions);
+    $result = user_role_save($role);
 
-    $this->assertTrue(isset($role->rid), t('Created role of name: @name, id: @rid', array('@name' => $name, '@rid' => (isset($role->rid) ? $role->rid : t('-n/a-')))), t('Role'));
-    if ($role && !empty($role->rid)) {
-      $count = db_query('SELECT COUNT(*) FROM {role_permission} WHERE rid = :rid', array(':rid' => $role->rid))->fetchField();
-      $this->assertTrue($count == count($permissions), t('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), t('Role'));
+    $this->assertIdentical($result, SAVED_NEW, t('Created role ID @rid with name @name.', array(
+      '@name' => var_export($role->name, TRUE),
+      '@rid' => var_export($role->rid, TRUE),
+    )), t('Role'));
+
+    if ($result === SAVED_NEW) {
+      // Grant the specified permissions to the role, if any.
+      if (!empty($permissions)) {
+        user_role_grant_permissions($role->rid, $permissions);
+
+        $assigned_permissions = db_query('SELECT permission FROM {role_permission} WHERE rid = :rid', array(':rid' => $role->rid))->fetchCol();
+        $missing_permissions = array_diff($permissions, $assigned_permissions);
+        if (!$missing_permissions) {
+          $this->pass(t('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), t('Role'));
+        }
+        else {
+          $this->fail(t('Failed to create permissions: @perms', array('@perms' => implode(', ', $missing_permissions))), t('Role'));
+        }
+      }
       return $role->rid;
     }
     else {

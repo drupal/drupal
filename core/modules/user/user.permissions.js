@@ -32,12 +32,12 @@ Drupal.behaviors.permissions = {
         .attr('title', Drupal.t("This permission is inherited from the authenticated user role."))
         .hide();
 
-      $table.find('input[type=checkbox]').not('.rid-2, .rid-1').addClass('real-checkbox').each(function () {
+      $table.find('input[type=checkbox]').not('.rid-anonymous, .rid-authenticated').addClass('real-checkbox').each(function () {
         $dummy.clone().insertAfter(this);
       });
 
       // Initialize the authenticated user checkbox.
-      $table.find('input[type=checkbox].rid-2')
+      $table.find('input[type=checkbox].rid-authenticated')
         .bind('click.permissions', self.toggle)
         // .triggerHandler() cannot be used here, as it only affects the first
         // element.

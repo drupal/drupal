@@ -29,7 +29,7 @@ function poll_page() {
     ->groupBy('n.title')
     ->groupBy('p.active')
     ->groupBy('n.created')
-    ->extend('PagerDefault')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->limit($polls_per_page)
     ->addTag('node_access');
   $select->setCountQuery($count_select);
@@ -56,7 +56,9 @@ function poll_votes($node) {
   $header[] = array('data' => t('Vote'), 'field' => 'pc.chtext');
   $header[] = array('data' => t('Timestamp'), 'field' => 'pv.timestamp', 'sort' => 'desc');
 
-  $select = db_select('poll_vote', 'pv')->extend('PagerDefault')->extend('TableSort');
+  $select = db_select('poll_vote', 'pv')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('TableSort');
   $select->join('poll_choice', 'pc', 'pv.chid = pc.chid');
   $select->join('users', 'u', 'pv.uid = u.uid');
   $queried_votes = $select

@@ -2922,7 +2922,9 @@ function system_actions_manage() {
     array('data' => t('Label'), 'field' => 'label'),
     array('data' => $instances_present ? t('Operations') : '', 'colspan' => '2')
   );
-  $query = db_select('actions')->extend('PagerDefault')->extend('TableSort');
+  $query = db_select('actions')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('TableSort');
   $result = $query
     ->fields('actions')
     ->limit(50)

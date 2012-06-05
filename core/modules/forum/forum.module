@@ -893,7 +893,9 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     }
   }
 
-  $query = db_select('forum_index', 'f')->extend('PagerDefault')->extend('TableSort');
+  $query = db_select('forum_index', 'f')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('TableSort');
   $query->fields('f');
   $query
     ->condition('f.tid', $tid)

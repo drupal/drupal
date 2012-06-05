@@ -55,7 +55,9 @@ class UserAdminTest extends WebTestBase {
     $this->assertText($user_c->name, t('Found user C on filtered by perm admin users page'));
 
     // Filter the users by role. Grab the system-generated role name for User C.
-    $edit['role'] = max(array_flip($user_c->roles));
+    $roles = $user_c->roles;
+    unset($roles[DRUPAL_AUTHENTICATED_RID]);
+    $edit['role'] = key($roles);
     $this->drupalPost('admin/people', $edit, t('Refine'));
 
     // Check if the correct users show up when filtered by role.

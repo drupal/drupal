@@ -849,7 +849,8 @@ function comment_node_page_additions(Node $node) {
  * to consider the trailing "/" so we use a substring only.
  */
 function comment_get_thread(Node $node, $mode, $comments_per_page) {
-  $query = db_select('comment', 'c')->extend('PagerDefault');
+  $query = db_select('comment', 'c')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
   $query->addField('c', 'cid');
   $query
     ->condition('c.nid', $node->nid)

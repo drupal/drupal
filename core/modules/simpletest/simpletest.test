@@ -635,7 +635,7 @@ class SimpleTestInstallationProfileModuleTestsTestCase extends WebTestBase {
    * - but still install the drupal_system_listing_compatible_test.module
    *   contained in the Testing profile.
    *
-   * @see DrupalSystemListingCompatibleTestCase
+   * @see Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest
    */
   protected $profile = 'testing';
 
@@ -661,10 +661,10 @@ class SimpleTestInstallationProfileModuleTestsTestCase extends WebTestBase {
     $this->drupalGet('admin/config/development/testing');
     $this->assertText('Installation profile module tests helper');
     $edit = array(
-      'DrupalSystemListingCompatibleTestCase' => TRUE,
+      'Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest' => TRUE,
     );
     $this->drupalPost(NULL, $edit, t('Run tests'));
-    $this->assertText('DrupalSystemListingCompatibleTestCase test executed.');
+    $this->assertText('SystemListingCompatibleTest test executed.');
   }
 }
 
@@ -681,7 +681,7 @@ class SimpleTestOtherInstallationProfileModuleTestsTestCase extends WebTestBase 
    * which should not be found.
    *
    * @see SimpleTestInstallationProfileModuleTestsTestCase
-   * @see DrupalSystemListingCompatibleTestCase
+   * @see Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest
    */
   protected $profile = 'minimal';
 

@@ -1,12 +1,17 @@
 <?php
 
+/**
+ * Definition of Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest.
+ */
+
+namespace Drupal\drupal_system_listing_compatible_test\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Helper to verify tests in installation profile modules.
  */
-class DrupalSystemListingCompatibleTestCase extends WebTestBase {
+class SystemListingCompatibleTest extends WebTestBase {
   /**
    * Use the Minimal profile.
    *
@@ -34,7 +39,7 @@ class DrupalSystemListingCompatibleTestCase extends WebTestBase {
   /**
    * Non-empty test* method required to executed the test case class.
    */
-  function testDrupalSystemListing() {
+  function testSystemListing() {
     $this->pass(__CLASS__ . ' test executed.');
   }
 }

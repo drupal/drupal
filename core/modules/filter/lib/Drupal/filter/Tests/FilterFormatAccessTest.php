@@ -106,8 +106,10 @@ class FilterFormatAccessTest extends WebTestBase {
   }
 
   function testFormatRoles() {
-    // Get the role ID assigned to the regular user; it must be the maximum.
-    $rid = max(array_keys($this->web_user->roles));
+    // Get the role ID assigned to the regular user.
+    $roles = $this->web_user->roles;
+    unset($roles[DRUPAL_AUTHENTICATED_RID]);
+    $rid = key($roles);
 
     // Check that this role appears in the list of roles that have access to an
     // allowed text format, but does not appear in the list of roles that have

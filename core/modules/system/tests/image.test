@@ -345,7 +345,7 @@ class ImageToolkitGdTestCase extends WebTestBase {
           'arguments' => array(90, 0xFF00FF), // Fuchsia background.
           'width' => 20,
           'height' => 40,
-          'corners' => array($this->fuchsia, $this->red, $this->green, $this->blue),
+          'corners' => array($this->transparent, $this->red, $this->green, $this->blue),
         ),
         'rotate_transparent_5' => array(
           'function' => 'rotate',
@@ -379,7 +379,7 @@ class ImageToolkitGdTestCase extends WebTestBase {
             array_fill(0, 3, 76) + array(3 => 0),
             array_fill(0, 3, 149) + array(3 => 0),
             array_fill(0, 3, 29) + array(3 => 0),
-            array_fill(0, 3, 0) + array(3 => 127)
+            array_fill(0, 3, 225) + array(3 => 127)
           ),
         ),
       );
@@ -394,11 +394,14 @@ class ImageToolkitGdTestCase extends WebTestBase {
           continue 2;
         }
 
-        // Transparent GIFs and the imagefilter function don't work together.
-        // There is a todo in image.gd.inc to correct this.
+        // All images should be converted to truecolor when loaded.
+        $image_truecolor = imageistruecolor($image->resource);
+        $this->assertTrue($image_truecolor, t('Image %file after load is a truecolor image.', array('%file' => $file)));
+
         if ($image->info['extension'] == 'gif') {
           if ($op == 'desaturate') {
-            $values['corners'][3] = $this->white;
+            // Transparent GIFs and the imagefilter function don't work together.
+            $values['corners'][3][3] = 0;
           }
         }
 
@@ -424,30 +427,6 @@ class ImageToolkitGdTestCase extends WebTestBase {
         if ($image->info['width'] != $values['width'] || $image->info['height'] != $values['height']) {
           $correct_dimensions_object = FALSE;
         }
-        // Now check each of the corners to ensure color correctness.
-        foreach ($values['corners'] as $key => $corner) {
-          // Get the location of the corner.
-          switch ($key) {
-            case 0:
-              $x = 0;
-              $y = 0;
-              break;
-            case 1:
-              $x = $values['width'] - 1;
-              $y = 0;
-              break;
-            case 2:
-              $x = $values['width'] - 1;
-              $y = $values['height'] - 1;
-              break;
-            case 3:
-              $x = 0;
-              $y = $values['height'] - 1;
-              break;
-          }
-          $color = $this->getPixelColor($image, $x, $y);
-          $correct_colors = $this->colorsAreEqual($color, $corner);
-        }
 
         $directory = file_default_scheme() . '://imagetests';
         file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
@@ -455,9 +434,34 @@ class ImageToolkitGdTestCase extends WebTestBase {
 
         $this->assertTrue($correct_dimensions_real, t('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
         $this->assertTrue($correct_dimensions_object, t('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
+
         // JPEG colors will always be messed up due to compression.
         if ($image->info['extension'] != 'jpg') {
-          $this->assertTrue($correct_colors, t('Image %file object after %action action has the correct color placement.', array('%file' => $file, '%action' => $op)));
+          // Now check each of the corners to ensure color correctness.
+          foreach ($values['corners'] as $key => $corner) {
+            // Get the location of the corner.
+            switch ($key) {
+              case 0:
+                $x = 0;
+                $y = 0;
+                break;
+              case 1:
+                $x = $values['width'] - 1;
+                $y = 0;
+                break;
+              case 2:
+                $x = $values['width'] - 1;
+                $y = $values['height'] - 1;
+                break;
+              case 3:
+                $x = 0;
+                $y = $values['height'] - 1;
+                break;
+            }
+            $color = $this->getPixelColor($image, $x, $y);
+            $correct_colors = $this->colorsAreEqual($color, $corner);
+            $this->assertTrue($correct_colors, t('Image %file object after %action action has the correct color placement at corner %corner.', array('%file' => $file, '%action' => $op, '%corner' => $key)));
+          }
         }
       }
     }

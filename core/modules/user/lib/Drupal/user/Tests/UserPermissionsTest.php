@@ -26,10 +26,10 @@ class UserPermissionsTest extends WebTestBase {
 
     $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'access user profiles', 'administer site configuration', 'administer modules', 'administer users'));
 
-    // Find the new role ID - it must be the maximum.
-    $all_rids = array_keys($this->admin_user->roles);
-    sort($all_rids);
-    $this->rid = array_pop($all_rids);
+    // Find the new role ID.
+    $all_rids = $this->admin_user->roles;
+    unset($all_rids[DRUPAL_AUTHENTICATED_RID]);
+    $this->rid = key($all_rids);
   }
 
   /**

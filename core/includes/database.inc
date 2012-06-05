@@ -29,10 +29,10 @@ use Drupal\Core\Database\Query\Condition;
  * inherits much of its syntax and semantics.
  *
  * Most Drupal database SELECT queries are performed by a call to db_query() or
- * db_query_range(). Module authors should also consider using the PagerDefault
- * Extender for queries that return results that need to be presented on
- * multiple pages, and the Tablesort Extender for generating appropriate queries
- * for sortable tables.
+ * db_query_range(). Module authors should also consider using the
+ * Drupal\Core\Database\Query\PagerSelectExtender for queries that return
+ * results that need to be presented on multiple pages, and the Tablesort
+ * Extender for generating appropriate queries for sortable tables.
  *
  * For example, one might wish to return a list of the most recent 10 nodes
  * authored by a given user. Instead of directly issuing the SQL query

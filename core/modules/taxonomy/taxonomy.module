@@ -233,7 +233,7 @@ function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = arr
     $count_query = clone $query;
     $count_query->addExpression('COUNT(t.nid)');
 
-    $query = $query->extend('PagerDefault');
+    $query = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     if ($limit !== FALSE) {
       $query = $query->limit($limit);
     }
@@ -429,7 +429,7 @@ function taxonomy_term_access($op, $term) {
  * Return the vocabulary name given the vocabulary object.
  */
 function taxonomy_admin_vocabulary_title_callback(Vocabulary $vocabulary) {
-  return check_plain($vocabulary->name);
+  return $vocabulary->name;
 }
 
 /**

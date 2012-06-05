@@ -19,7 +19,8 @@
  */
 function tracker_page($account = NULL, $set_title = FALSE) {
   if ($account) {
-    $query = db_select('tracker_user', 't')->extend('PagerDefault');
+    $query = db_select('tracker_user', 't')
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query->condition('t.uid', $account->uid);
 
     if ($set_title) {
@@ -30,7 +31,8 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     }
   }
   else {
-    $query = db_select('tracker_node', 't', array('target' => 'slave'))->extend('PagerDefault');
+    $query = db_select('tracker_node', 't', array('target' => 'slave'))
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
   }
 
   // This array acts as a placeholder for the data selected later
