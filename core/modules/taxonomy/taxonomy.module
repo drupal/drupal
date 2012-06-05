@@ -429,7 +429,7 @@ function taxonomy_term_access($op, $term) {
  * Return the vocabulary name given the vocabulary object.
  */
 function taxonomy_admin_vocabulary_title_callback(Vocabulary $vocabulary) {
-  return check_plain($vocabulary->name);
+  return $vocabulary->name;
 }
 
 /**
