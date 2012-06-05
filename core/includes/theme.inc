@@ -2546,8 +2546,40 @@ function template_preprocess_html(&$variables) {
   $variables['head_title_array'] = $head_title;
   $variables['head_title'] = implode(' | ', $head_title);
 
-  // Display the html.tpl.php’s default mobile metatags for responsive design.
-  $variables['default_mobile_metatags'] = TRUE;
+  // Display the html.tpl.php's default mobile metatags for responsive design.
+  $elements = array(
+    'MobileOptimized' => array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'MobileOptimized',
+        'content' => 'width',
+      ),
+    ),
+    'HandheldFriendly' => array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'HandheldFriendly',
+        'content' => 'true',
+      ),
+    ),
+    'viewport' => array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'viewport',
+        'content' => 'width=device-width',
+      ),
+    ),
+    'cleartype' => array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'http-equiv' => 'cleartype',
+        'content' => 'on',
+      ),
+    ),
+  );
+  foreach ($elements as $name => $element) {
+    drupal_add_html_head($element, $name);
+  }
 
   // Populate the page template suggestions.
   if ($suggestions = theme_get_suggestions(arg(), 'html')) {
