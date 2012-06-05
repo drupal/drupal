@@ -105,7 +105,9 @@ function database_test_even_pager_query($limit) {
     ->orderBy('age');
 
   // This should result in 2 pages of results.
-  $query = $query->extend('PagerDefault')->limit($limit);
+  $query = $query
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->limit($limit);
 
   $names = $query->execute()->fetchCol();
 
@@ -129,7 +131,9 @@ function database_test_odd_pager_query($limit) {
     ->orderBy('pid');
 
   // This should result in 4 pages of results.
-  $query = $query->extend('PagerDefault')->limit($limit);
+  $query = $query
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->limit($limit);
 
   $names = $query->execute()->fetchCol();
 
@@ -213,7 +217,9 @@ function database_test_theme_tablesort($form, &$form_state) {
   $count_query = clone $query;
   $count_query->addExpression('COUNT(u.uid)');
 
-  $query = $query->extend('PagerDefault')->extend('TableSort');
+  $query = $query
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('TableSort');
   $query
     ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
     ->limit(50)

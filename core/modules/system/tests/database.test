@@ -2087,7 +2087,7 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
 
   function testHavingCountQuery() {
     $query = db_select('test')
-      ->extend('PagerDefault')
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->groupBy('age')
       ->having('age + 1 > 0');
     $query->addField('test', 'age');
@@ -2352,7 +2352,8 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
    * This is a regression test for #467984.
    */
   function testInnerPagerQuery() {
-    $query = db_select('test', 't')->extend('PagerDefault');
+    $query = db_select('test', 't')
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query
       ->fields('t', array('age'))
       ->orderBy('age')
@@ -2373,7 +2374,8 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
    * This is a regression test for #467984.
    */
   function testHavingPagerQuery() {
-    $query = db_select('test', 't')->extend('PagerDefault');
+    $query = db_select('test', 't')
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query
       ->fields('t', array('name'))
       ->orderBy('name')
@@ -2393,7 +2395,8 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
   function testElementNumbers() {
     $_GET['page'] = '3, 2, 1, 0';
 
-    $name = db_select('test', 't')->extend('PagerDefault')
+    $name = db_select('test', 't')
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->element(2)
       ->fields('t', array('name'))
       ->orderBy('age')
@@ -2404,7 +2407,8 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
 
     // Setting an element smaller than the previous one
     // should not overwrite the pager $maxElement with a smaller value.
-    $name = db_select('test', 't')->extend('PagerDefault')
+    $name = db_select('test', 't')
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->element(1)
       ->fields('t', array('name'))
       ->orderBy('age')
@@ -2413,7 +2417,8 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
       ->fetchField();
     $this->assertEqual($name, 'George', t('Pager query #2 with a specified element ID returned the correct results.'));
 
-    $name = db_select('test', 't')->extend('PagerDefault')
+    $name = db_select('test', 't')
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->fields('t', array('name'))
       ->orderBy('age')
       ->limit(1)

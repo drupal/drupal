@@ -1519,7 +1519,9 @@ function node_search_admin() {
  */
 function node_search_execute($keys = NULL, $conditions = NULL) {
   // Build matching conditions
-  $query = db_select('search_index', 'i', array('target' => 'slave'))->extend('Drupal\search\SearchQuery')->extend('PagerDefault');
+  $query = db_select('search_index', 'i', array('target' => 'slave'))
+    ->extend('Drupal\search\SearchQuery')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
   $query->join('node', 'n', 'n.nid = i.sid');
   $query
     ->condition('n.status', 1)
@@ -2488,7 +2490,7 @@ function node_page_default() {
     ->condition('status', 1)
     ->orderBy('sticky', 'DESC')
     ->orderBy('created', 'DESC')
-    ->extend('PagerDefault')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->limit(variable_get('default_nodes_main', 10))
     ->addTag('node_access');
 

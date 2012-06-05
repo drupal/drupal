@@ -158,7 +158,9 @@ function user_admin_account() {
   $count_query = clone $query;
   $count_query->addExpression('COUNT(u.uid)');
 
-  $query = $query->extend('PagerDefault')->extend('TableSort');
+  $query = $query
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('TableSort');
   $query
     ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
     ->limit(50)

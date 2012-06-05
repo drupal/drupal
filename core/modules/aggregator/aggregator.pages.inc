@@ -134,7 +134,7 @@ function aggregator_load_feed_items($type, $data = NULL) {
   }
 
   $result = $query
-    ->extend('PagerDefault')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->limit(20)
     ->orderBy('i.timestamp', 'DESC')
     ->orderBy('i.iid', 'DESC')

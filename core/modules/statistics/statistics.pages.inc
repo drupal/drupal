@@ -25,7 +25,9 @@ function statistics_node_tracker() {
         array('data' => t('User'), 'field' => 'u.name'),
         array('data' => t('Operations')));
 
-    $query = db_select('accesslog', 'a', array('target' => 'slave'))->extend('PagerDefault')->extend('TableSort');
+    $query = db_select('accesslog', 'a', array('target' => 'slave'))
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend('TableSort');
     $query->join('users', 'u', 'a.uid = u.uid');
 
     $query
@@ -79,7 +81,9 @@ function statistics_user_tracker() {
         array('data' => t('Timestamp'), 'field' => 'timestamp', 'sort' => 'desc'),
         array('data' => t('Page'), 'field' => 'path'),
         array('data' => t('Operations')));
-    $query = db_select('accesslog', 'a', array('target' => 'slave'))->extend('PagerDefault')->extend('TableSort');
+    $query = db_select('accesslog', 'a', array('target' => 'slave'))
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend('TableSort');
     $query
       ->fields('a', array('aid', 'timestamp', 'path', 'title'))
       ->condition('uid', $account->uid)

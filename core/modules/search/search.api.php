@@ -157,8 +157,8 @@ function hook_search_admin() {
 /**
  * Execute a search for a set of key words.
  *
- * Use database API with the 'PagerDefault' query extension to perform your
- * search.
+ * Use database API with the 'Drupal\Core\Database\Query\PagerSelectExtender'
+ * query extension to perform your search.
  *
  * If your module uses hook_update_index() and search_index() to index its
  * items, use table 'search_index' aliased to 'i' as the main table in your
@@ -195,7 +195,9 @@ function hook_search_admin() {
  */
 function hook_search_execute($keys = NULL, $conditions = NULL) {
   // Build matching conditions
-  $query = db_select('search_index', 'i', array('target' => 'slave'))->extend('Drupal\search\SearchQuery')->extend('PagerDefault');
+  $query = db_select('search_index', 'i', array('target' => 'slave'))
+    ->extend('Drupal\search\SearchQuery')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
   $query->join('node', 'n', 'n.nid = i.sid');
   $query
     ->condition('n.status', 1)

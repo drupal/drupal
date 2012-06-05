@@ -75,7 +75,9 @@ function _locale_translate_seek() {
     $limit_language = $query['language'];
   }
 
-  $sql_query = $sql_query->extend('PagerDefault')->limit(50);
+  $sql_query = $sql_query
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->limit(50);
   $locales = $sql_query->execute();
 
   $header = array(t('String'), t('Context'), ($limit_language) ? t('Language') : t('Languages'), array('data' => t('Operations'), 'colspan' => '2'));

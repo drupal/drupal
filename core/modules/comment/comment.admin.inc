@@ -79,7 +79,9 @@ function comment_admin_overview($form, &$form_state, $arg) {
     'operations' => array('data' => t('Operations')),
   );
 
-  $query = db_select('comment', 'c')->extend('PagerDefault')->extend('TableSort');
+  $query = db_select('comment', 'c')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('TableSort');
   $query->join('node', 'n', 'n.nid = c.nid');
   $query->addField('n', 'title', 'node_title');
   $query->addTag('node_access');

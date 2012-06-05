@@ -9,7 +9,7 @@ namespace Drupal\entity;
 
 use Drupal\entity\EntityFieldQueryException;
 use Drupal\Core\Database\Query\Select;
-use PagerDefault;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 
 /**
  * Retrieves entities matching a given set of conditions.
@@ -571,10 +571,10 @@ class EntityFieldQuery {
    */
   public function pager($limit = 10, $element = NULL) {
     if (!isset($element)) {
-      $element = PagerDefault::$maxElement++;
+      $element = PagerSelectExtender::$maxElement++;
     }
-    elseif ($element >= PagerDefault::$maxElement) {
-      PagerDefault::$maxElement = $element + 1;
+    elseif ($element >= PagerSelectExtender::$maxElement) {
+      PagerSelectExtender::$maxElement = $element + 1;
     }
 
     $this->pager = array(

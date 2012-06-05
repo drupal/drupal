@@ -641,7 +641,8 @@ function user_search_execute($keys = NULL, $conditions = NULL) {
   $find = array();
   // Replace wildcards with MySQL/PostgreSQL wildcards.
   $keys = preg_replace('!\*+!', '%', $keys);
-  $query = db_select('users')->extend('PagerDefault');
+  $query = db_select('users')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
   $query->fields('users', array('uid'));
   if (user_access('administer users')) {
     // Administrators can also search in the otherwise private email field.

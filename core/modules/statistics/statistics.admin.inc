@@ -25,7 +25,9 @@ function statistics_recent_hits() {
     array('data' => t('Operations'))
   );
 
-  $query = db_select('accesslog', 'a', array('target' => 'slave'))->extend('PagerDefault')->extend('TableSort');
+  $query = db_select('accesslog', 'a', array('target' => 'slave'))
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('TableSort');
   $query->join('users', 'u', 'a.uid = u.uid');
   $query
     ->fields('a', array('aid', 'timestamp', 'path', 'title', 'uid'))
@@ -71,7 +73,9 @@ function statistics_top_pages() {
     array('data' => t('Total page generation time'), 'field' => 'total_time')
   );
 
-  $query = db_select('accesslog', 'a', array('target' => 'slave'))->extend('PagerDefault')->extend('TableSort');
+  $query = db_select('accesslog', 'a', array('target' => 'slave'))
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('TableSort');
   $query->addExpression('COUNT(path)', 'hits');
   // MAX(title) avoids having empty node titles which otherwise causes
   // duplicates in the top pages list.
@@ -124,7 +128,9 @@ function statistics_top_visitors() {
     array('data' => t('Total page generation time'), 'field' => 'total'),
     array('data' => user_access('block IP addresses') ? t('Operations') : '', 'colspan' => 2),
   );
-  $query = db_select('accesslog', 'a', array('target' => 'slave'))->extend('PagerDefault')->extend('TableSort');
+  $query = db_select('accesslog', 'a', array('target' => 'slave'))
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('TableSort');
   $query->leftJoin('blocked_ips', 'bl', 'a.hostname = bl.ip');
   $query->leftJoin('users', 'u', 'a.uid = u.uid');
 
@@ -184,7 +190,9 @@ function statistics_top_referrers() {
     array('data' => t('Url'), 'field' => 'url'),
     array('data' => t('Last visit'), 'field' => 'last'),
   );
-  $query = db_select('accesslog', 'a')->extend('PagerDefault')->extend('TableSort');
+  $query = db_select('accesslog', 'a')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('TableSort');
 
   $query->addExpression('COUNT(url)', 'hits');
   $query->addExpression('MAX(timestamp)', 'last');
