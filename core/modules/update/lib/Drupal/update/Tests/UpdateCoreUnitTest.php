@@ -9,6 +9,9 @@ namespace Drupal\update\Tests;
 
 use Drupal\simpletest\UnitTestBase;
 
+/**
+ * Tests update functionality unrelated to the database.
+ */
 class UpdateCoreUnitTest extends UnitTestBase {
 
   public static function getInfo() {
@@ -25,7 +28,7 @@ class UpdateCoreUnitTest extends UnitTestBase {
   }
 
   /**
-   * Tests _update_build_fetch_url according to issue 1481156
+   * Tests that _update_build_fetch_url() builds the URL correctly.
    */
   function testUpdateBuildFetchUrl() {
     //first test that we didn't break the trivial case

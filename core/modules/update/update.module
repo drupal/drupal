@@ -2,10 +2,13 @@
 
 /**
  * @file
- * The "Update status" module checks for available updates of Drupal core and
- * any installed contributed modules and themes. It warns site administrators
- * if newer releases are available via the system status report
- * (admin/reports/status), the module and theme pages, and optionally via email.
+ * Handles updates of Drupal core and contributed projects.
+ *
+ * The module checks for available updates of Drupal core and any installed
+ * contributed modules and themes. It warns site administrators if newer
+ * releases are available via the system status report (admin/reports/status),
+ * the module and theme pages, and optionally via e-mail. It also provides the
+ * ability to install contributed modules and themes via an user interface.
  */
 
 /**
@@ -246,11 +249,14 @@ function update_menu() {
 }
 
 /**
- * Determine if the current user can access the updater menu items.
+ * Access callback: Resolves if the current user can access updater menu items.
  *
- * This is used as a menu system access callback. It both enforces the
- * 'administer software updates' permission and the global killswitch for the
- * authorize.php script.
+ * It both enforces the 'administer software updates' permission and the global
+ * kill switch for the authorize.php script.
+ *
+ * @return
+ *   TRUE if the current user can access the updater menu items; FALSE
+ *   otherwise.
  *
  * @see update_menu()
  */
@@ -327,10 +333,10 @@ function update_themes_disabled($themes) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for system_modules().
  *
- * Adds a submit handler to the system modules form, so that if a site admin
- * saves the form, we invalidate the cache of available updates.
+ * Adds a form submission handler to the system modules form, so that if a site
+ * admin saves the form, we invalidate the cache of available updates.
  *
  * @see _update_cache_clear()
  */
@@ -339,7 +345,9 @@ function update_form_system_modules_alter(&$form, $form_state) {
 }
 
 /**
- * Helper function for use as a form submit callback.
+ * Form submission handler for system_modules().
+ *
+ * @see update_form_system_modules_alter()
  */
 function update_cache_clear_submit($form, &$form_state) {
   // Clear all update module caches.
@@ -347,7 +355,7 @@ function update_cache_clear_submit($form, &$form_state) {
 }
 
 /**
- * Prints a warning message when there is no data about available updates.
+ * Returns a warning message when there is no data about available updates.
  */
 function _update_no_data() {
   $destination = drupal_get_destination();
@@ -358,20 +366,22 @@ function _update_no_data() {
 }
 
 /**
- * Internal helper to try to get the update information from the cache
- * if possible, and to refresh the cache when necessary.
+ * Tries to get update information from cache and refreshes it when necessary.
  *
  * In addition to checking the cache lifetime, this function also ensures that
  * there are no .info files for enabled modules or themes that have a newer
  * modification timestamp than the last time we checked for available update
- * data. If any .info file was modified, it almost certainly means a new
- * version of something was installed. Without fresh available update data,
- * the logic in update_calculate_project_data() will be wrong and produce
- * confusing, bogus results.
+ * data. If any .info file was modified, it almost certainly means a new version
+ * of something was installed. Without fresh available update data, the logic in
+ * update_calculate_project_data() will be wrong and produce confusing, bogus
+ * results.
  *
  * @param $refresh
- *   Boolean to indicate if this method should refresh the cache automatically
- *   if there's no data.
+ *   (optional) Boolean to indicate if this method should refresh the cache
+ *   automatically if there's no data. Defaults to FALSE.
+ *
+ * @return
+ *   Array of data about available releases, keyed by project shortname.
  *
  * @see update_refresh()
  * @see update_get_projects()
@@ -428,7 +438,11 @@ function update_get_available($refresh = FALSE) {
 }
 
 /**
- * Wrapper to load the include file and then create a new fetch task.
+ * Creates a new fetch task after loading the necessary include file.
+ *
+ * @param $project
+ *   Associative array of information about a project. See update_get_projects()
+ *   for the keys used.
  *
  * @see _update_create_fetch_task()
  */
@@ -438,7 +452,7 @@ function update_create_fetch_task($project) {
 }
 
 /**
- * Wrapper to load the include file and then refresh the release data.
+ * Refreshes the release data after loading the necessary include file.
  *
  * @see _update_refresh()
  */
@@ -448,7 +462,9 @@ function update_refresh() {
 }
 
 /**
- * Wrapper to load the include file and then attempt to fetch update data.
+ * Attempts to fetch update data after loading the necessary include file.
+ *
+ * @see _update_fetch_data()
  */
 function update_fetch_data() {
   module_load_include('inc', 'update', 'update.fetch');
@@ -456,7 +472,7 @@ function update_fetch_data() {
 }
 
 /**
- * Return all currently cached data about available releases for all projects.
+ * Returns all currently cached data about available releases for all projects.
  *
  * @return
  *   Array of data about available releases, keyed by project shortname.
@@ -481,17 +497,17 @@ function _update_get_cached_available_releases() {
 /**
  * Implements hook_mail().
  *
- * Constructs the email notification message when the site is out of date.
+ * Constructs the e-mail notification message when the site is out of date.
  *
  * @param $key
  *   Unique key to indicate what message to build, always 'status_notify'.
  * @param $message
  *   Reference to the message array being built.
  * @param $params
- *   Array of parameters to indicate what kind of text to include in the
- *   message body. This is a keyed array of message type ('core' or 'contrib')
- *   as the keys, and the status reason constant (UPDATE_NOT_SECURE, etc) for
- *   the values.
+ *   Array of parameters to indicate what kind of text to include in the message
+ *   body. This is a keyed array of message type ('core' or 'contrib') as the
+ *   keys, and the status reason constant (UPDATE_NOT_SECURE, etc) for the
+ *   values.
  *
  * @see drupal_mail()
  * @see _update_cron_notify()
@@ -518,22 +534,23 @@ function update_mail($key, &$message, $params) {
 }
 
 /**
- * Helper function to return the appropriate message text when the site is out
- * of date or missing a security update.
+ * Returns the appropriate message text when site is out of date or not secure.
  *
  * These error messages are shared by both update_requirements() for the
  * site-wide status report at admin/reports/status and in the body of the
- * notification emails generated by update_cron().
+ * notification e-mail messages generated by update_cron().
  *
  * @param $msg_type
- *   String to indicate what kind of message to generate. Can be either
- *   'core' or 'contrib'.
+ *   String to indicate what kind of message to generate. Can be either 'core'
+ *   or 'contrib'.
  * @param $msg_reason
  *   Integer constant specifying why message is generated.
  * @param $report_link
- *   Boolean that controls if a link to the updates report should be added.
+ *   (optional) Boolean that controls if a link to the updates report should be
+ *   added. Defaults to FALSE.
  * @param $language
- *   An optional language object to use.
+ *   (optional) A language object to use. Defaults to NULL.
+ *
  * @return
  *   The properly translated error message for the given key.
  */
@@ -603,10 +620,9 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
 }
 
 /**
- * Private sort function to order projects based on their status.
+ * Orders projects based on their status.
  *
- * @see update_requirements()
- * @see uasort()
+ * Callback for uasort() within update_requirements().
  */
 function _update_project_status_sort($a, $b) {
   // The status constants are numerically in the right order, so we can
@@ -621,17 +637,16 @@ function _update_project_status_sort($a, $b) {
 /**
  * Returns HTML for the last time we checked for update data.
  *
- * In addition to properly formating the given timestamp, this function also
+ * In addition to properly formatting the given timestamp, this function also
  * provides a "Check manually" link that refreshes the available update and
  * redirects back to the same page.
  *
  * @param $variables
  *   An associative array containing:
- *   - 'last': The timestamp when the site last checked for available updates.
+ *   - last: The timestamp when the site last checked for available updates.
  *
  * @see theme_update_report()
  * @see theme_update_available_updates_form()
- *
  * @ingroup themeable
  */
 function theme_update_last_check($variables) {
@@ -647,7 +662,7 @@ function theme_update_last_check($variables) {
  * Implements hook_verify_update_archive().
  *
  * First, we ensure that the archive isn't a copy of Drupal core, which the
- * Update manager does not yet support. @see http://drupal.org/node/606592
+ * update manager does not yet support. See http://drupal.org/node/606592
  *
  * Then, we make sure that at least one module included in the archive file has
  * an .info file which claims that the code is compatible with the current
@@ -719,19 +734,19 @@ function update_verify_update_archive($project, $archive_file, $directory) {
  * cleared when we're populating it after successfully fetching new available
  * update data. Usage of the core cache API results in all sorts of potential
  * problems that would result in attempting to fetch available update data all
- * the time, including if a site has a "minimum cache lifetime" (which is both
- * a minimum and a maximum) defined, or if a site uses memcache or another
- * plug-able cache system that assumes volatile caches.
+ * the time, including if a site has a "minimum cache lifetime" (which is both a
+ * minimum and a maximum) defined, or if a site uses memcache or another
+ * pluggable cache system that assumes volatile caches.
  *
- * Update module still uses the {cache_update} table, but instead of using
- * the cache API, there are private helper functions that implement these same
- * basic tasks but ensure that the cache is not prematurely cleared, and that
- * the data is always stored in the database, even if memcache or another cache
- * backend is in use.
+ * The Update Manager module still uses the {cache_update} table, but instead of
+ * using the cache API, there are private helper functions that implement these
+ * same basic tasks but ensure that the cache is not prematurely cleared, and
+ * that the data is always stored in the database, even if memcache or another
+ * cache backend is in use.
  */
 
 /**
- * Store data in the private update status cache table.
+ * Stores data in the private update status cache table.
  *
  * @param $cid
  *   The cache ID to save the data with.
@@ -743,6 +758,8 @@ function update_verify_update_archive($project, $archive_file, $directory) {
  *     by explicitly using _update_cache_clear().
  *   - A Unix timestamp: Indicates that the item should be kept at least until
  *     the given time, after which it will be invalidated.
+ *
+ * @see _update_cache_get()
  */
 function _update_cache_set($cid, $data, $expire) {
   $fields = array(
@@ -764,12 +781,15 @@ function _update_cache_set($cid, $data, $expire) {
 }
 
 /**
- * Retrieve data from the private update status cache table.
+ * Retrieves data from the private update status cache table.
  *
  * @param $cid
  *   The cache ID to retrieve.
+ *
  * @return
- *   The data for the given cache ID, or NULL if the ID was not found.
+ *   An array of data for the given cache ID, or NULL if the ID was not found.
+ *
+ * @see _update_cache_set()
  */
 function _update_cache_get($cid) {
   $cache = db_query("SELECT data, created, expire, serialized FROM {cache_update} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
@@ -782,7 +802,10 @@ function _update_cache_get($cid) {
 }
 
 /**
- * Return an array of cache items with a given cache ID prefix.
+ * Returns an array of cache items with a given cache ID prefix.
+ *
+ * @param string $cid_prefix
+ *   The cache ID prefix.
  *
  * @return
  *   Associative array of cache items, keyed by cache ID.
@@ -808,12 +831,12 @@ function _update_get_cache_multiple($cid_prefix) {
  * Invalidates cached data relating to update status.
  *
  * @param $cid
- *   Optional cache ID of the record to clear from the private update module
- *   cache. If empty, all records will be cleared from the table except
- *   fetch tasks.
+ *   (optional) Cache ID of the record to clear from the private update module
+ *   cache. If empty, all records will be cleared from the table except fetch
+ *   tasks. Defaults to NULL.
  * @param $wildcard
- *   If $wildcard is TRUE, cache IDs starting with $cid are deleted in
- *   addition to the exact cache ID specified by $cid.
+ *   (optional) If TRUE, cache IDs starting with $cid are deleted in addition to
+ *   the exact cache ID specified by $cid. Defaults to FALSE.
  */
 function _update_cache_clear($cid = NULL, $wildcard = FALSE) {
   if (empty($cid)) {
@@ -838,18 +861,18 @@ function _update_cache_clear($cid = NULL, $wildcard = FALSE) {
 /**
  * Implements hook_cache_flush().
  *
- * Called from update.php (among others) to flush the caches.
- * Since we're running update.php, we are likely to install a new version of
- * something, in which case, we want to check for available update data again.
- * However, because we have our own caching system, we need to directly clear
- * the database table ourselves at this point and return nothing, for example,
- * on sites that use memcache where cache_clear_all() won't know how to purge
- * this data.
+ * Called from update.php (among others) to flush the caches. Since we're
+ * running update.php, we are likely to install a new version of something, in
+ * which case, we want to check for available update data again. However,
+ * because we have our own caching system, we need to directly clear the
+ * database table ourselves at this point and return nothing, for example, on
+ * sites that use memcache where cache_clear_all() won't know how to purge this
+ * data.
  *
- * However, we only want to do this from update.php, since otherwise, we'd
- * lose all the available update data on every cron run. So, we specifically
- * check if the site is in MAINTENANCE_MODE == 'update' (which indicates
- * update.php is running, not update module... alas for overloaded names).
+ * However, we only want to do this from update.php, since otherwise, we'd lose
+ * all the available update data on every cron run. So, we specifically check if
+ * the site is in MAINTENANCE_MODE == 'update' (which indicates update.php is
+ * running, not update module... alas for overloaded names).
  */
 function update_cache_flush() {
   if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
@@ -863,7 +886,7 @@ function update_cache_flush() {
  */
 
 /**
- * Return a short unique identifier for this Drupal installation.
+ * Returns a short unique identifier for this Drupal installation.
  *
  * @return
  *   An eight character string uniquely identifying this Drupal installation.
@@ -877,14 +900,15 @@ function _update_manager_unique_identifier() {
 }
 
 /**
- * Return the directory where update archive files should be extracted.
+ * Returns the directory where update archive files should be extracted.
  *
  * @param $create
- *   If TRUE, attempt to create the directory if it does not already exist.
+ *   (optional) Whether to attempt to create the directory if it does not
+ *   already exist. Defaults to TRUE.
  *
  * @return
- *   The full path to the temporary directory where update file archives
- *   should be extracted.
+ *   The full path to the temporary directory where update file archives should
+ *   be extracted.
  */
 function _update_manager_extract_directory($create = TRUE) {
   $directory = &drupal_static(__FUNCTION__, '');
@@ -898,14 +922,15 @@ function _update_manager_extract_directory($create = TRUE) {
 }
 
 /**
- * Return the directory where update archive files should be cached.
+ * Returns the directory where update archive files should be cached.
  *
  * @param $create
- *   If TRUE, attempt to create the directory if it does not already exist.
+ *   (optional) Whether to attempt to create the directory if it does not
+ *   already exist. Defaults to TRUE.
  *
  * @return
- *   The full path to the temporary directory where update file archives
- *   should be cached.
+ *   The full path to the temporary directory where update file archives should
+ *   be cached.
  */
 function _update_manager_cache_directory($create = TRUE) {
   $directory = &drupal_static(__FUNCTION__, '');
@@ -919,7 +944,7 @@ function _update_manager_cache_directory($create = TRUE) {
 }
 
 /**
- * Clear the temporary files and directories based on file age from disk.
+ * Clears the temporary files and directories based on file age from disk.
  */
 function update_clear_update_disk_cache() {
   // List of update module cache directories. Do not create the directories if
@@ -936,19 +961,19 @@ function update_clear_update_disk_cache() {
 }
 
 /**
- * Delete stale files and directories from the Update manager disk cache.
+ * Deletes stale files and directories from the update manager disk cache.
  *
- * Files and directories older than 6 hours and development snapshots older
- * than 5 minutes are considered stale. We only cache development snapshots
- * for 5 minutes since otherwise updated snapshots might not be downloaded as
+ * Files and directories older than 6 hours and development snapshots older than
+ * 5 minutes are considered stale. We only cache development snapshots for 5
+ * minutes since otherwise updated snapshots might not be downloaded as
  * expected.
  *
  * When checking file ages, we need to use the ctime, not the mtime
- * (modification time) since many (all?) tar implementations go out of their
- * way to set the mtime on the files they create to the timestamps recorded
- * in the tarball. We want to see the last time the file was changed on disk,
- * which is left alone by tar and correctly set to the time the archive file
- * was unpacked.
+ * (modification time) since many (all?) tar implementations go out of their way
+ * to set the mtime on the files they create to the timestamps recorded in the
+ * tarball. We want to see the last time the file was changed on disk, which is
+ * left alone by tar and correctly set to the time the archive file was
+ * unpacked.
  *
  * @param $path
  *   A string containing a file path or (streamwrapper) URI.

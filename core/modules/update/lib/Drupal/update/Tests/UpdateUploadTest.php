@@ -7,11 +7,15 @@
 
 namespace Drupal\update\Tests;
 
+/**
+ * Tests project upload and extract functionality.
+ */
 class UpdateUploadTest extends UpdateTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Upload and extract module functionality',
-      'description' => 'Tests the update module\'s upload and extraction functionality.',
+      'description' => 'Tests the Update Manager module\'s upload and extraction functionality.',
       'group' => 'Update',
     );
   }
@@ -52,7 +56,7 @@ class UpdateUploadTest extends UpdateTestBase {
   }
 
   /**
-   * Ensure that archiver extensions are properly merged in the UI.
+   * Ensures that archiver extensions are properly merged in the UI.
    */
   function testFileNameExtensionMerging() {
     $this->drupalGet('admin/modules/install');
@@ -63,7 +67,7 @@ class UpdateUploadTest extends UpdateTestBase {
   }
 
   /**
-   * Check the messages on Update manager pages when missing a security update.
+   * Checks the messages on update manager pages when missing a security update.
    */
   function testUpdateManagerCoreSecurityUpdateMessages() {
     $setting = array(

@@ -7,12 +7,15 @@
 
 namespace Drupal\update\Tests;
 
+/**
+ * Tests behavior related to discovering and listing updates to Drupal core.
+ */
 class UpdateCoreTest extends UpdateTestBase {
 
   public static function getInfo() {
     return array(
       'name' => 'Update core functionality',
-      'description' => 'Tests the update module through a series of functional tests using mock XML data.',
+      'description' => 'Tests the Update Manager module through a series of functional tests using mock XML data.',
       'group' => 'Update',
     );
   }
@@ -24,7 +27,7 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
-   * Tests the update module when no updates are available.
+   * Tests the Update Manager module when no updates are available.
    */
   function testNoUpdatesAvailable() {
     $this->setSystemInfo7_0();
@@ -36,7 +39,7 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
-   * Tests the update module when one normal update ("7.1") is available.
+   * Tests the Update Manager module when one normal update is available.
    */
   function testNormalUpdateAvailable() {
     $this->setSystemInfo7_0();
@@ -51,7 +54,7 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
-   * Tests the update module when a security update ("7.2") is available.
+   * Tests the Update Manager module when a security update is available.
    */
   function testSecurityUpdateAvailable() {
     $this->setSystemInfo7_0();
@@ -66,7 +69,7 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
-   * Ensure proper results where there are date mismatches among modules.
+   * Ensures proper results where there are date mismatches among modules.
    */
   function testDatestampMismatch() {
     $system_info = array(
@@ -89,7 +92,7 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
-   * Check that running cron updates the list of available updates.
+   * Checks that running cron updates the list of available updates.
    */
   function testModulePageRunCron() {
     $this->setSystemInfo7_0();
@@ -102,7 +105,7 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
-   * Check the messages at admin/modules when the site is up to date.
+   * Checks the messages at admin/modules when the site is up to date.
    */
   function testModulePageUpToDate() {
     $this->setSystemInfo7_0();
@@ -119,7 +122,7 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
-   * Check the messages at admin/modules when missing an update.
+   * Checks the messages at admin/modules when an update is missing.
    */
   function testModulePageRegularUpdate() {
     $this->setSystemInfo7_0();
@@ -136,7 +139,7 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
-   * Check the messages at admin/modules when missing a security update.
+   * Checks the messages at admin/modules when a security update is missing.
    */
   function testModulePageSecurityUpdate() {
     $this->setSystemInfo7_0();
@@ -171,7 +174,7 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
-   * Tests the update module when the update server returns 503 (Service unavailable) errors.
+   * Tests the Update Manager module when the update server returns 503 errors.
    */
   function testServiceUnavailable() {
     $this->refreshUpdateStatus(array(), '503-error');
@@ -207,6 +210,9 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
   }
 
+  /**
+   * Sets the version to 7.0 when no project-specific mapping is defined.
+   */
   protected function setSystemInfo7_0() {
     $setting = array(
       '#all' => array(

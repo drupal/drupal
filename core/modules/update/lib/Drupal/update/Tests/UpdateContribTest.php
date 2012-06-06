@@ -7,12 +7,15 @@
 
 namespace Drupal\update\Tests;
 
+/**
+ * Tests behavior related to handling updates to contributed modules and themes.
+ */
 class UpdateContribTest extends UpdateTestBase {
 
   public static function getInfo() {
     return array(
       'name' => 'Update contrib functionality',
-      'description' => 'Tests how the update module handles contributed modules and themes in a series of functional tests using mock XML data.',
+      'description' => 'Tests how the Update Manager module handles contributed modules and themes in a series of functional tests using mock XML data.',
       'group' => 'Update',
     );
   }
@@ -52,7 +55,7 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
-   * Test the basic functionality of a contrib module on the status report.
+   * Tests the basic functionality of a contrib module on the status report.
    */
   function testUpdateContribBasic() {
     $system_info = array(
@@ -80,17 +83,17 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
-   * Test that contrib projects are ordered by project name.
+   * Tests that contrib projects are ordered by project name.
    *
    * If a project contains multiple modules, we want to make sure that the
-   * available updates report is sorted by the parent project names, not by
-   * the names of the modules included in each project. In this test case, we
-   * have 2 contrib projects, "BBB Update test" and "CCC Update test".
-   * However, we have a module called "aaa_update_test" that's part of the
-   * "CCC Update test" project. We need to make sure that we see the "BBB"
-   * project before the "CCC" project, even though "CCC" includes a module
-   * that's processed first if you sort alphabetically by module name (which
-   * is the order we see things inside system_rebuild_module_data() for example).
+   * available updates report is sorted by the parent project names, not by the
+   * names of the modules included in each project. In this test case, we have
+   * two contrib projects, "BBB Update test" and "CCC Update test". However, we
+   * have a module called "aaa_update_test" that's part of the "CCC Update test"
+   * project. We need to make sure that we see the "BBB" project before the
+   * "CCC" project, even though "CCC" includes a module that's processed first
+   * if you sort alphabetically by module name (which is the order we see things
+   * inside system_rebuild_module_data() for example).
    */
   function testUpdateContribOrder() {
     // We want core to be version 7.0.
@@ -152,7 +155,7 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
-   * Test that subthemes are notified about security updates for base themes.
+   * Tests that subthemes are notified about security updates for base themes.
    */
   function testUpdateBaseThemeSecurityUpdate() {
     // Only enable the subtheme, not the base theme.
@@ -193,7 +196,7 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
-   * Test that disabled themes are only shown when desired.
+   * Tests that disabled themes are only shown when desired.
    */
   function testUpdateShowDisabledThemes() {
     // Make sure all the update_test_* themes are disabled.
@@ -254,7 +257,7 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
-   * Make sure that if we fetch from a broken URL, sane things happen.
+   * Makes sure that if we fetch from a broken URL, sane things happen.
    */
   function testUpdateBrokenFetchURL() {
     $system_info = array(
@@ -310,13 +313,12 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
-   * Check that hook_update_status_alter() works to change a status.
+   * Checks that hook_update_status_alter() works to change a status.
    *
    * We provide the same external data as if aaa_update_test 8.x-1.0 were
    * installed and that was the latest release. Then we use
    * hook_update_status_alter() to try to mark this as missing a security
-   * update, then assert if we see the appropriate warnings on the right
-   * pages.
+   * update, then assert if we see the appropriate warnings on the right pages.
    */
   function testHookUpdateStatusAlter() {
     variable_set('allow_authorize_operations', TRUE);
