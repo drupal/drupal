@@ -2,56 +2,18 @@
 
 /**
  * @file
- * Tests for the Configuration module.
+ * Definition of Drupal\config\Tests\ConfigFileContentTest.
  */
+
+namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\FileStorage;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the secure file writer.
- */
-class ConfigFileSecurityTestCase extends WebTestBase {
-  protected $filename = 'foo.bar';
-
-  protected $testContent = array('greeting' => 'Good morning, Denver!');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File security',
-      'description' => 'Tests security of saved configuration files.',
-      'group' => 'Configuration',
-    );
-  }
-
-  /**
-   * Tests that a file written by this system can be successfully read back.
-   */
-  function testFilePersist() {
-    $file = new FileStorage($this->filename);
-    $file->write($this->testContent);
-
-    unset($file);
-
-    // Reading should throw an exception in case of bad validation.
-    // Note that if any other exception is thrown, we let the test system
-    // handle catching and reporting it.
-    try {
-      $file = new FileStorage($this->filename);
-      $saved_content = $file->read();
-
-      $this->assertEqual($saved_content, $this->testContent);
-    }
-    catch (Exception $e) {
-      $this->fail('File failed verification when being read.');
-    }
-  }
-}
-
-/**
  * Tests reading and writing file contents.
  */
-class ConfigFileContentTestCase extends WebTestBase {
+class ConfigFileContentTest extends WebTestBase {
   protected $fileExtension;
 
   public static function getInfo() {
@@ -283,107 +245,5 @@ class ConfigFileContentTestCase extends WebTestBase {
 
     $key = 'invalid xml';
     $this->assertIdentical($config_data[$key], $config_parsed[$key]);
-  }
-}
-
-  /**
-   * Tests configuration overriding from settings.php.
-   */
-class ConfOverrideTestCase extends WebTestBase {
-  protected $testContent = 'Good morning, Denver!';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration overrides',
-      'description' => 'Tests configuration overrides through settings.php.',
-      'group' => 'Configuration',
-    );
-  }
-
-  /**
-   * Test configuration override.
-   */
-  function testConfigurationOverride() {
-    global $conf;
-    $config = config('system.performance');
-    $this->assertNotEqual($config->get('cache'), $this->testContent);
-
-    $conf['system.performance']['cache'] = $this->testContent;
-    $config = config('system.performance');
-    $this->assertEqual($config->get('cache'), $conf['system.performance']['cache']);
-  }
-}
-
-/**
- * Tests migration of variables into configuration objects.
- */
-class ConfigUpgradeTestCase extends WebTestBase {
-  protected $testContent = 'Olá, Sao Paulo!';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Variable migration',
-      'description' => 'Tests migration of variables into configuration objects.',
-      'group' => 'Configuration',
-    );
-  }
-
-  function setUp() {
-    parent::setUp('config_upgrade');
-    require_once DRUPAL_ROOT . '/core/includes/update.inc';
-  }
-
-  /**
-   * Tests update_variables_to_config().
-   */
-  function testConfigurationUpdate() {
-    // Ensure that the variable table has the object. The variable table will
-    // remain in place for Drupal 8 to provide an upgrade path for overridden
-    // variables.
-    db_insert('variable')
-      ->fields(array('name', 'value'))
-      ->values(array('config_upgrade_foo', serialize($this->testContent)))
-      ->values(array('config_upgrade_bar', serialize($this->testContent)))
-      ->execute();
-
-    // Perform migration.
-    update_variables_to_config('config_upgrade.test', array(
-      'config_upgrade_bar' => 'parent.bar',
-      'config_upgrade_foo' => 'foo',
-      // A default configuration value for which no variable exists.
-      'config_upgrade_baz' => 'parent.baz',
-    ));
-
-    // Verify that variables have been converted and default values exist.
-    $config = config('config_upgrade.test');
-    $this->assertIdentical($config->get('foo'), $this->testContent);
-    $this->assertIdentical($config->get('parent.bar'), $this->testContent);
-    $this->assertIdentical($config->get('parent.baz'), 'Baz');
-
-    // Verify that variables have been deleted.
-    $variables = db_query('SELECT name FROM {variable} WHERE name IN (:names)', array(':names' => array('config_upgrade_bar', 'config_upgrade_foo')))->fetchCol();
-    $this->assertFalse($variables);
-
-    // Add another variable to migrate into the same config object.
-    db_insert('variable')
-      ->fields(array('name', 'value'))
-      ->values(array('config_upgrade_additional', serialize($this->testContent)))
-      ->execute();
-
-    // Perform migration into the exsting config object.
-    update_variables_to_config('config_upgrade.test', array(
-      'config_upgrade_additional' => 'parent.additional',
-    ));
-
-    // Verify that new variables have been converted and existing still exist.
-    $config = config('config_upgrade.test');
-    $this->assertIdentical($config->get('foo'), $this->testContent);
-    $this->assertIdentical($config->get('parent.bar'), $this->testContent);
-    $this->assertIdentical($config->get('parent.baz'), 'Baz');
-    $this->assertIdentical($config->get('parent.additional'), $this->testContent);
-
-    // Verify that variables have been deleted.
-    $variables = db_query('SELECT name FROM {variable} WHERE name IN (:names)', array(':names' => array('config_upgrade_additional')))->fetchCol();
-    $this->assertFalse($variables);
   }
 }
