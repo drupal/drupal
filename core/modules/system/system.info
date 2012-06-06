@@ -21,7 +21,6 @@ files[] = tests/lock.test
 files[] = tests/menu.test
 files[] = tests/module.test
 files[] = tests/pager.test
-files[] = tests/password.test
 files[] = tests/path.test
 files[] = tests/registry.test
 files[] = tests/schema.test

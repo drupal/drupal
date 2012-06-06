@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Provides unit tests for password.inc.
+ * Definition of Drupal\system\Tests\Common\PasswordHashingTest.
  */
+
+namespace Drupal\system\Tests\Common;
 
 use Drupal\simpletest\WebTestBase;
 
