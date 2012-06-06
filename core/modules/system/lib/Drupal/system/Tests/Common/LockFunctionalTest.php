@@ -1,11 +1,17 @@
 <?php
 
 /**
- * Tests for the lock system.
+ * @file
+ * Definition of Drupal\system\Tests\Common\LockFunctionalTest.
  */
+
+namespace Drupal\system\Tests\Common;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the lock system.
+ */
 class LockFunctionalTest extends WebTestBase {
 
   public static function getInfo() {
