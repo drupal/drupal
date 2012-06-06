@@ -76,7 +76,7 @@ class CommonDrupalAlterTestCase extends WebTestBase {
  * url() calls module_implements(), which may issue a db query, which requires
  * inheriting from a web test case rather than a unit test case.
  */
-class CommonURLWebTestCase extends WebTestBase {
+class CommonURLUnitTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'URL generation tests',
@@ -278,32 +278,6 @@ class CommonURLWebTestCase extends WebTestBase {
     $result = url($url, array('query' => $query));
     $this->assertEqual($url . '&' . http_build_query($query, '', '&'), $result, t('External URL query string can be extended with a custom query string in $options.'));
   }
-}
-
-/**
- * Tests for non-DB based URL generation functions.
- */
-class CommonUrlUnitTestCase extends UnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'URL generation tests',
-      'description' => 'Confirm that drupal_get_query_array() works correctly with various input.',
-      'group' => 'Common',
-    );
-  }
-
-  /**
-   * Tests drupal_get_query_array().
-   */
-  function testDrupalGetQueryArray() {
-    $this->assertEqual(drupal_get_query_array('foo=bar'), array('foo' => 'bar'), 'Simple value works as expected.');
-    $this->assertEqual(drupal_get_query_array('foo=1'), array('foo' => '1'), 'Numeric value works as expected.');
-    $this->assertEqual(drupal_get_query_array('foo=1&bar=baz'), array('foo' => '1', 'bar' => 'baz'), 'Multiple values are parsed as well.');
-    $this->assertEqual(drupal_get_query_array('foo='), array('foo' => ''), 'An empty value is set as an empty string.');
-    $this->assertEqual(drupal_get_query_array('foo'), array('foo' => NULL), 'No value is set as a null value.');
-  }
-
 }
 
 /**
