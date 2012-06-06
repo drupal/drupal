@@ -148,6 +148,17 @@ function taxonomy_views_data() {
     ),
   );
 
+  // raw tid field
+  $data['taxonomy_term_data']['tid_raw'] = array(
+    'title' => t('Term ID'),
+    'help' => t('The tid of a taxonomy term.'),
+    'real field' => 'tid',
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+      'allow empty' => TRUE,
+    ),
+  );
+
   $data['taxonomy_term_data']['tid_representative'] = array(
     'relationship' => array(
       'title' => t('Representative node'),
