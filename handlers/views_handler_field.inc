@@ -1441,13 +1441,8 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       $tokens['!' . $count] = isset($this->view->args[$count - 1]) ? strip_tags(decode_entities($this->view->args[$count - 1])) : '';
     }
 
-    // Add replacements for query string parameters.
-    foreach ($_GET as $param => $val) {
-      if (is_array($val)) {
-        $val = implode(', ', $val);
-      }
-      $tokens['%' . $param] = strip_tags(decode_entities($val));
-    }
+    // Get flattened set of tokens for any array depth in $_GET parameters.
+    $tokens += $this->get_token_values_recursive($_GET);
 
     // Now add replacements for our fields.
     foreach ($this->view->display_handler->get_handlers('field') as $field => $handler) {
@@ -1470,6 +1465,64 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
     // Store the tokens for the row so we can reference them later if necessary.
     $this->view->style_plugin->render_tokens[$this->view->row_index] = $tokens;
     $this->last_tokens = $tokens;
+
+    return $tokens;
+  }
+
+  /**
+   * Recursive function to add replacements for nested query string parameters.
+   *
+   * E.g. if you pass in the following array:
+   *   array(
+   *     'foo' => array(
+   *       'a' => 'value',
+   *       'b' => 'value',
+   *     ),
+   *     'bar' => array(
+   *       'a' => 'value',
+   *       'b' => array(
+   *         'c' => value,
+   *       ),
+   *     ),
+   *   );
+   *
+   * Would yield the following array of tokens:
+   *   array(
+   *     '%foo_a' => 'value'
+   *     '%foo_b' => 'value'
+   *     '%bar_a' => 'value'
+   *     '%bar_b_c' => 'value'
+   *   );
+   *
+   * @param $array
+   *   An array of values.
+   *
+   * @param $parent_keys
+   *   An array of parent keys. This will represent the array depth.
+   *
+   * @return
+   *   An array of available tokens, with nested keys representative of the array structure.
+   */
+  function get_token_values_recursive(array $array, array $parent_keys = array()) {
+    $tokens = array();
+
+    foreach ($array as $param => $val) {
+      if (is_array($val)) {
+         // Copy parent_keys array, so we don't afect other elements of this iteration.
+         $child_parent_keys = $parent_keys;
+         $child_parent_keys[] = $param;
+         // Get the child tokens.
+         $child_tokens = $this->get_token_values_recursive($val, $child_parent_keys);
+         // Add them to the current tokens array.
+         $tokens += $child_tokens;
+      }
+      else {
+        // Create a token key based on array element structure.
+        $token_string = !empty($parent_keys) ? implode('_', $parent_keys) . '_' . $param : $param;
+        $tokens['%' . $token_string] = strip_tags(decode_entities($val));
+      }
+    }
+
     return $tokens;
   }
 
