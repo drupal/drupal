@@ -12,7 +12,6 @@ files[] = tests/batch.test
 files[] = tests/cache.test
 files[] = tests/common.test
 files[] = tests/database.test
-files[] = tests/error.test
 files[] = tests/file.test
 files[] = tests/filetransfer.test
 files[] = tests/form.test

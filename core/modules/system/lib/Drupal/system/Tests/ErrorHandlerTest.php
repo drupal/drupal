@@ -1,15 +1,21 @@
 <?php
 
 /**
- * Tests Drupal error and exception handlers.
+ * @file
+ * Definition of Drupal\system\Tests\ErrorHandlerTest.
  */
+
+namespace Drupal\system\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
-class DrupalErrorHandlerUnitTest extends WebTestBase {
+/**
+ * Tests error and exception handlers.
+ */
+class ErrorHandlerTest extends WebTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'Drupal error handlers',
+      'name' => 'Error handlers',
       'description' => 'Performs tests on the Drupal error and exception handler.',
       'group' => 'System',
     );
@@ -116,4 +122,3 @@ class DrupalErrorHandlerUnitTest extends WebTestBase {
     $this->assertNoRaw($message, t('Did not find error message: !message.', array('!message' => $message)));
   }
 }
-
