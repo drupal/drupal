@@ -141,7 +141,7 @@ following the instructions in the INTRODUCTION section at the top of this file:
    download Drupal 6.x and follow the instructions in its UPGRADE.txt. This
    document only applies for upgrades from 6.x to 7.x.
 
-3. In addition to updating to the latest available version of Drupal 7.x core,
+3. In addition to updating to the latest available version of Drupal 6.x core,
    you must also upgrade all of your contributed modules for Drupal to their
    latest Drupal 6.x versions.
 
