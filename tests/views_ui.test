@@ -768,16 +768,16 @@ class ViewsUIWizardJumpMenuTestCase extends ViewsUIWizardHelper {
    * Helper function to create a file and return its expected path.
    */
   function createFileAndGetPath() {
-    $file = (object) array(
+    $file = entity_create('file', array(
       'uid' => 1,
       'filename' => 'views-ui-jump-menu-test.txt',
       'uri' => 'public://views-ui-jump-menu-test.txt',
       'filemime' => 'text/plain',
       'timestamp' => 1,
       'status' => FILE_STATUS_PERMANENT,
-    );
+    ));
     file_put_contents($file->uri, 'test content');
-    $file = file_save($file);
+    $file->save();
     return file_create_url($file->uri);
   }
 
