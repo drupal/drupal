@@ -785,7 +785,7 @@ class ViewsUiBaseViewsWizard implements ViewsWizardInterface {
     if (empty($page['items_per_page'])) {
       $display_options['pager']['type'] = 'none';
     }
-    elseif ($page['pager']) {
+    elseif (isset($page['pager'])) {
       $display_options['pager']['type'] = 'full';
     }
     else {
