@@ -273,6 +273,8 @@ class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
 
     // Setup a field with cardinality > 1.
     $this->fields[3] = $field = field_create_field(array('field_name' => 'field_name_3', 'type' => 'text', 'cardinality' => FIELD_CARDINALITY_UNLIMITED));
+    // Setup a field that will have no value.
+    $this->fields[4] = $field = field_create_field(array('field_name' => 'field_name_4', 'type' => 'text', 'cardinality' => FIELD_CARDINALITY_UNLIMITED));
 
     $this->setUpInstances();
 
@@ -290,6 +292,8 @@ class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
       for ($j = 0; $j < 5; $j++) {
         $edit[$this->fields[3]['field_name']][LANGUAGE_NOT_SPECIFIED][$j]['value'] = $this->randomName(8);
       }
+      // Set this field to be empty.
+      $edit[$this->fields[4]['field_name']] = array();
 
       $this->nodes[$i] = $this->drupalCreateNode($edit);
     }
@@ -353,6 +357,10 @@ class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
       }
       $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
     }
+
+    // Test that an empty field is rendered without error.
+    $rendered_field = $view->style_plugin->get_field(4, $this->fields[4]['field_name']);
+
     $view->destroy();
 
     // Test delta limit + offset

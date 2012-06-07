@@ -47,6 +47,13 @@ class views_handler_field extends views_handler {
   var $aliases = array();
 
   /**
+   * The field value prior to any rewriting.
+   *
+   * @var mixed
+   */
+  public $original_value = NULL;
+
+  /**
    * @var array
    * Stores additional fields which get's added to the query.
    * The generated aliases are stored in $aliases.
@@ -1080,6 +1087,10 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
   function advanced_render($values) {
     if ($this->allow_advanced_render() && method_exists($this, 'render_item')) {
       $raw_items = $this->get_items($values);
+      // If there are no items, set the original value to NULL.
+      if (empty($raw_items)) {
+        $this->original_value = NULL;
+      }
     }
     else {
       $value = $this->render($values);
