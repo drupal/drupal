@@ -33,7 +33,9 @@ function _field_view_formatter_options($field_type = NULL) {
 }
 
 /**
- * A field that displays fields.
+ * A field that displays fieldapi fields.
+ *
+ * @ingroup views_field_handlers
  */
 class views_handler_field_field extends views_handler_field {
   /**
@@ -43,7 +45,7 @@ class views_handler_field_field extends views_handler_field {
   public $items = array();
 
   /**
-   * Store the field informations.
+   * Store the field information.
    * @var array
    */
   public $field_info = array();
@@ -103,8 +105,10 @@ class views_handler_field_field extends views_handler_field {
   }
 
   /**
+   * Check whether current user has access to this handler.
+   *
    * @return bool
-   *  Return TRUE if the user has access to view this field.
+   *   Return TRUE if the user has access to view this field.
    */
   function access() {
     $base_table = $this->get_base_table();
@@ -113,6 +117,9 @@ class views_handler_field_field extends views_handler_field {
 
   /**
    * Set the base_table and base_table_alias.
+   *
+   * @return string
+   *   The base table which is used in the current view "context".
    */
   function get_base_table() {
     if (!isset($this->base_table)) {
@@ -862,7 +869,7 @@ class views_handler_field_field extends views_handler_field {
       if (isset($render_array['#access'])) {
         $items[$count]['rendered']['#access'] = $render_array['#access'];
       }
-      // Only add the raw field items (for use in tokens) if the curent user
+      // Only add the raw field items (for use in tokens) if the current user
       // has access to view the field content.
       if ((!isset($items[$count]['rendered']['#access']) || $items[$count]['rendered']['#access']) && !empty($render_array['#items'][$count])) {
         $items[$count]['raw'] = $render_array['#items'][$count];
