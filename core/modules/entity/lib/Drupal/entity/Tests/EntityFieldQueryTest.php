@@ -2,17 +2,20 @@
 
 /**
  * @file
- * Unit test file for the entity API.
+ * Definition of Drupal\entity\Tests\EntityFieldQueryTest.
  */
+
+namespace Drupal\entity\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\entity\EntityFieldQuery;
 use Drupal\entity\EntityFieldQueryException;
+use stdClass;
 
 /**
  * Tests Drupal\entity\EntityFieldQuery.
  */
-class EntityFieldQueryTestCase extends WebTestBase {
+class EntityFieldQueryTest extends WebTestBase {
 
 
   public static function getInfo() {

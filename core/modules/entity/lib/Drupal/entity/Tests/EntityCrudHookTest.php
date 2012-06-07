@@ -2,8 +2,10 @@
 
 /**
  * @file
- * CRUD hook tests for the Entity CRUD API.
+ * Definition of Drupal\entity\Tests\EntityCrudHookTest.
  */
+
+namespace Drupal\entity\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
@@ -19,7 +21,7 @@ use Drupal\simpletest\WebTestBase;
  * As well as all type-specific hooks, like hook_node_insert(),
  * hook_comment_update(), etc.
  */
-class EntityCrudHookTestCase extends WebTestBase {
+class EntityCrudHookTest extends WebTestBase {
 
   protected $ids = array();
 
@@ -404,5 +406,4 @@ class EntityCrudHookTestCase extends WebTestBase {
       'entity_crud_hook_test_entity_delete called for type user',
     ));
   }
-
 }

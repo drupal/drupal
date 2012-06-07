@@ -4,6 +4,3 @@ package = Core
 version = VERSION
 core = 8.x
 required = TRUE
-files[] = tests/entity_crud_hook_test.test
-files[] = tests/entity_query.test
-files[] = tests/entity.test
