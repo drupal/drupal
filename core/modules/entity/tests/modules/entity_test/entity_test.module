@@ -12,7 +12,7 @@ function entity_test_entity_info() {
   $items['entity_test'] = array(
     'label' => t('Test entity'),
     'entity class' => 'Drupal\entity\Entity',
-    'controller class' => 'Drupal\entity\EntityDatabaseStorageController',
+    'controller class' => 'Drupal\entity\DatabaseStorageController',
     'base table' => 'entity_test',
     'fieldable' => TRUE,
     'entity keys' => array(

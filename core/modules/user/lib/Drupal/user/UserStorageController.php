@@ -9,18 +9,18 @@ namespace Drupal\user;
 
 use Drupal\entity\EntityInterface;
 use Drupal\entity\EntityMalformedException;
-use Drupal\entity\EntityDatabaseStorageController;
+use Drupal\entity\DatabaseStorageController;
 
 /**
  * Controller class for users.
  *
- * This extends the Drupal\entity\EntityDatabaseStorageController class, adding
+ * This extends the Drupal\entity\DatabaseStorageController class, adding
  * required special handling for user objects.
  */
-class UserStorageController extends EntityDatabaseStorageController {
+class UserStorageController extends DatabaseStorageController {
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::attachLoad().
+   * Overrides Drupal\entity\DatabaseStorageController::attachLoad().
    */
   function attachLoad(&$queried_users, $revision_id = FALSE) {
     // Build an array of user picture IDs so that these can be fetched later.
@@ -60,7 +60,7 @@ class UserStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::create().
+   * Overrides Drupal\entity\DatabaseStorageController::create().
    */
   public function create(array $values) {
     if (!isset($values['created'])) {
@@ -73,7 +73,7 @@ class UserStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::save().
+   * Overrides Drupal\entity\DatabaseStorageController::save().
    */
   public function save(EntityInterface $entity) {
     if (empty($entity->uid)) {
@@ -84,7 +84,7 @@ class UserStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::preSave().
+   * Overrides Drupal\entity\DatabaseStorageController::preSave().
    */
   protected function preSave(EntityInterface $entity) {
     // Update the user password if it has changed.
@@ -158,7 +158,7 @@ class UserStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::postSave().
+   * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
   protected function postSave(EntityInterface $entity, $update) {
 

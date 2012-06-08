@@ -7,16 +7,16 @@
 
 namespace Drupal\field_test;
 
-use Drupal\entity\EntityController;
+use Drupal\entity\DatabaseStorageController;
 
 /**
  * Controller class for the test_entity_bundle entity type.
  *
- * This extends the Drupal\entity\EntityController class, adding
+ * This extends the Drupal\entity\DatabaseStorageController class, adding
  * required special handling for bundles (since they are not stored in the
  * database).
  */
-class TestEntityBundleController extends EntityController {
+class TestEntityBundleController extends DatabaseStorageController {
 
   protected function attachLoad(&$entities, $revision_id = FALSE) {
     // Add bundle information.

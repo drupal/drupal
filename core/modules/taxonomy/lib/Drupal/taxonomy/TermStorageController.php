@@ -8,15 +8,15 @@
 namespace Drupal\taxonomy;
 
 use Drupal\entity\EntityInterface;
-use Drupal\entity\EntityDatabaseStorageController;
+use Drupal\entity\DatabaseStorageController;
 
 /**
  * Defines a Controller class for taxonomy terms.
  */
-class TermStorageController extends EntityDatabaseStorageController {
+class TermStorageController extends DatabaseStorageController {
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::create().
+   * Overrides Drupal\entity\DatabaseStorageController::create().
    *
    * @param array $values
    *   An array of values to set, keyed by property name. A value for the
@@ -40,7 +40,7 @@ class TermStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::buildQuery().
+   * Overrides Drupal\entity\DatabaseStorageController::buildQuery().
    */
   protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
     $query = parent::buildQuery($ids, $conditions, $revision_id);
@@ -63,7 +63,7 @@ class TermStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::cacheGet().
+   * Overrides Drupal\entity\DatabaseStorageController::cacheGet().
    */
   protected function cacheGet($ids, $conditions = array()) {
     $terms = parent::cacheGet($ids, $conditions);
@@ -78,7 +78,7 @@ class TermStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::postDelete().
+   * Overrides Drupal\entity\DatabaseStorageController::postDelete().
    */
   protected function postDelete($entities) {
     // See if any of the term's children are about to be become orphans.
@@ -109,7 +109,7 @@ class TermStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::postSave().
+   * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
   protected function postSave(EntityInterface $entity, $update) {
     if (isset($entity->parent)) {
@@ -131,7 +131,7 @@ class TermStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Implements Drupal\entity\EntityControllerInterface::resetCache().
+   * Overrides Drupal\entity\DatabaseStorageController::resetCache().
    */
   public function resetCache(array $ids = NULL) {
     drupal_static_reset('taxonomy_term_count_nodes');

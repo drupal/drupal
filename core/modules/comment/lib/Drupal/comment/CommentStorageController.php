@@ -8,18 +8,18 @@
 namespace Drupal\comment;
 
 use Drupal\entity\EntityInterface;
-use Drupal\entity\EntityDatabaseStorageController;
+use Drupal\entity\DatabaseStorageController;
 
 /**
  * Defines the controller class for comments.
  *
- * This extends the Drupal\entity\EntityDatabaseStorageController class, adding
+ * This extends the Drupal\entity\DatabaseStorageController class, adding
  * required special handling for comment entities.
  */
-class CommentStorageController extends EntityDatabaseStorageController {
+class CommentStorageController extends DatabaseStorageController {
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::buildQuery().
+   * Overrides Drupal\entity\DatabaseStorageController::buildQuery().
    */
   protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
     $query = parent::buildQuery($ids, $conditions, $revision_id);
@@ -33,7 +33,7 @@ class CommentStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::attachLoad().
+   * Overrides Drupal\entity\DatabaseStorageController::attachLoad().
    */
   protected function attachLoad(&$comments, $revision_id = FALSE) {
     // Set up standard comment properties.
@@ -47,7 +47,7 @@ class CommentStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::preSave().
+   * Overrides Drupal\entity\DatabaseStorageController::preSave().
    *
    * @see comment_int_to_alphadecimal()
    * @see comment_increment_alphadecimal()
@@ -129,7 +129,7 @@ class CommentStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::postSave().
+   * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
   protected function postSave(EntityInterface $comment, $update) {
     // Update the {node_comment_statistics} table prior to executing the hook.
@@ -140,7 +140,7 @@ class CommentStorageController extends EntityDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityDatabaseStorageController::postDelete().
+   * Overrides Drupal\entity\DatabaseStorageController::postDelete().
    */
   protected function postDelete($comments) {
     // Delete the comments' replies.
