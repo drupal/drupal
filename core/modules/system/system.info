@@ -15,7 +15,6 @@ files[] = tests/file.test
 files[] = tests/filetransfer.test
 files[] = tests/form.test
 files[] = tests/image.test
-files[] = tests/installer.test
 files[] = tests/menu.test
 files[] = tests/module.test
 files[] = tests/pager.test

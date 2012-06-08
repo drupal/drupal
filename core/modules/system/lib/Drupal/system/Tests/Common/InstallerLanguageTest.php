@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Tests for the installer.
+ * Definition of Drupal\system\Tests\Common\InstallerLanguageTest.
  */
+
+namespace Drupal\system\Tests\Common;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests installer language detection.
  */
-class InstallerLanguageTestCase extends WebTestBase {
+class InstallerLanguageTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
