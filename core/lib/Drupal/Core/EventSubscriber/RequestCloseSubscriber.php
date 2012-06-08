@@ -21,7 +21,8 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    *
    * @todo The body of this function has just been copied almost verbatim from
    *   drupal_page_footer(). There's probably a lot in here that needs to get
-   *   removed/changed.
+   *   removed/changed. Also, if possible, do more light-weight shutdowns on
+   *   AJAX requests.
    *
    * @param Symfony\Component\HttpKernel\Event\PostResponseEvent $event
    *   The Event to process.

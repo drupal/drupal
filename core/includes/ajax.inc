@@ -553,29 +553,6 @@ function ajax_prepare_response($page_callback_result) {
 }
 
 /**
- * Performs end-of-Ajax-request tasks.
- *
- * This function is the equivalent of drupal_page_footer(), but for Ajax
- * requests.
- *
- * @see drupal_page_footer()
- */
-function ajax_footer() {
-  // Even for Ajax requests, invoke hook_exit() implementations. There may be
-  // modules that need very fast Ajax responses, and therefore, run Ajax
-  // requests with an early bootstrap.
-  if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update')) {
-    module_invoke_all('exit');
-  }
-
-  // Commit the user session. See above comment about the possibility of this
-  // function running without session.inc loaded.
-  if (function_exists('drupal_session_commit')) {
-    drupal_session_commit();
-  }
-}
-
-/**
  * Form element processing handler for the #ajax form property.
  *
  * @param $element
