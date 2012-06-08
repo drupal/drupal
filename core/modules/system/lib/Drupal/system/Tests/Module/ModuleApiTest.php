@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Tests for the module API.
+ * Definition of Drupal\system\Tests\Module\ModuleApiTest.
  */
+
+namespace Drupal\system\Tests\Module;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Unit tests for the module API.
  */
-class ModuleUnitTest extends WebTestBase {
+class ModuleApiTest extends WebTestBase {
   // Requires Standard profile modules/dependencies.
   protected $profile = 'standard';
 
@@ -265,111 +267,5 @@ class ModuleUnitTest extends WebTestBase {
     $test_mtime = !empty($themes['bartik']->info['mtime']) ? $themes['bartik']->info['mtime'] : 0;
     // Ensure the mtime field contains a number that is greater than zero.
     $this->assertTrue(is_numeric($test_mtime) && ($test_mtime > 0), 'The bartik.info file modification time field contains a timestamp.');
-  }
-}
-
-/**
- * Tests class loading.
- */
-class ModuleClassLoaderTestCase extends WebTestBase {
-  protected $profile = 'testing';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Module class loader',
-      'description' => 'Tests class loading for modules.',
-      'group' => 'Module',
-    );
-  }
-
-  /**
-   * Tests that module-provided classes can be loaded when a module is enabled.
-   */
-  function testClassLoading() {
-    $expected = 'Drupal\\module_autoload_test\\SomeClass::testMethod() was invoked.';
-
-    module_enable(array('module_test', 'module_autoload_test'), FALSE);
-    $this->resetAll();
-    // Check twice to test an unprimed and primed system_list() cache.
-    for ($i=0; $i<2; $i++) {
-      $this->drupalGet('module-test/class-loading');
-      $this->assertText($expected, t('Autoloader loads classes from an enabled module.'));
-    }
-
-    module_disable(array('module_autoload_test'), FALSE);
-    $this->resetAll();
-    // Check twice to test an unprimed and primed system_list() cache.
-    for ($i=0; $i<2; $i++) {
-      $this->drupalGet('module-test/class-loading');
-      $this->assertNoText($expected, t('Autoloader does not load classes from a disabled module.'));
-    }
-  }
-}
-
-/**
- * Unit tests for module installation.
- */
-class ModuleInstallTestCase extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Module installation',
-      'description' => 'Tests the installation of modules.',
-      'group' => 'Module',
-    );
-  }
-
-  function setUp() {
-    parent::setUp('module_test');
-  }
-
-  /**
-   * Test that calls to drupal_write_record() work during module installation.
-   *
-   * This is a useful function to test because modules often use it to insert
-   * initial data in their database tables when they are being installed or
-   * enabled. Furthermore, drupal_write_record() relies on the module schema
-   * information being available, so this also checks that the data from one of
-   * the module's hook implementations, in particular hook_schema(), is
-   * properly available during this time. Therefore, this test helps ensure
-   * that modules are fully functional while Drupal is installing and enabling
-   * them.
-   */
-  function testDrupalWriteRecord() {
-    // Check for data that was inserted using drupal_write_record() while the
-    // 'module_test' module was being installed and enabled.
-    $data = db_query("SELECT data FROM {module_test}")->fetchCol();
-    $this->assertTrue(in_array('Data inserted in hook_install()', $data), t('Data inserted using drupal_write_record() in hook_install() is correctly saved.'));
-    $this->assertTrue(in_array('Data inserted in hook_enable()', $data), t('Data inserted using drupal_write_record() in hook_enable() is correctly saved.'));
-  }
-}
-
-/**
- * Unit tests for module uninstallation and related hooks.
- */
-class ModuleUninstallTestCase extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Module uninstallation',
-      'description' => 'Tests the uninstallation of modules.',
-      'group' => 'Module',
-    );
-  }
-
-  function setUp() {
-    parent::setUp('module_test', 'user');
-  }
-
-  /**
-   * Tests the hook_modules_uninstalled() of the user module.
-   */
-  function testUserPermsUninstalled() {
-    // Uninstalls the module_test module, so hook_modules_uninstalled()
-    // is executed.
-    module_disable(array('module_test'));
-    drupal_uninstall_modules(array('module_test'));
-
-    // Are the perms defined by module_test removed from {role_permission}.
-    $count = db_query("SELECT COUNT(rid) FROM {role_permission} WHERE permission = :perm", array(':perm' => 'module_test perm'))->fetchField();
-    $this->assertEqual(0, $count, t('Permissions were all removed.'));
   }
 }
