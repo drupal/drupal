@@ -1,17 +1,21 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\system\Tests\Common\SchemaTest.
+ */
+
+namespace Drupal\system\Tests\Common;
+
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\WebTestBase;
 
-/**
- * @file
- * Tests for the Database Schema API.
- */
+use Exception;
 
 /**
  * Unit tests for the Schema API.
  */
-class SchemaTestCase extends WebTestBase {
+class SchemaTest extends WebTestBase {
   /**
    * A global counter for table and field creation.
    */
