@@ -27,8 +27,8 @@ class JavaScriptTest extends WebTestBase {
   }
 
   function setUp() {
-    // Enable Locale and SimpleTest in the test environment.
-    parent::setUp('locale', 'simpletest', 'common_test');
+    // Enable Language and SimpleTest in the test environment.
+    parent::setUp('language', 'simpletest', 'common_test');
 
     // Disable preprocessing
     $config = config('system.performance');

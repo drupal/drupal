@@ -20,7 +20,7 @@ class SearchLanguageTest extends SearchTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('locale'));
+    parent::setUp(array('language'));
 
     // Create and login user.
     $test_user = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search', 'administer nodes', 'administer languages', 'access administration pages'));

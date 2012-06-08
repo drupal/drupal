@@ -424,7 +424,7 @@ class TextTranslationTestCase extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('locale', 'translation');
+    parent::setUp('translation');
 
     $full_html_format = filter_format_load('full_html');
     $this->format = $full_html_format->format;

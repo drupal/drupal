@@ -27,7 +27,7 @@ class TranslationTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('language', 'locale', 'translation', 'translation_test');
+    parent::setUp('translation', 'translation_test');
 
     // Setup users.
     $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages', 'translate content'));

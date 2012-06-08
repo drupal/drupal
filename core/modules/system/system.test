@@ -442,29 +442,27 @@ class ModuleDependencyTestCase extends ModuleTestCase {
   }
 
   /**
-   * Attempt to enable translation module without locale enabled.
+   * Attempt to enable translation module without language enabled.
    */
   function testEnableWithoutDependency() {
-    // Attempt to enable content translation without locale enabled.
+    // Attempt to enable content translation without language enabled.
     $edit = array();
     $edit['modules[Core][translation][enable]'] = 'translation';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('Some required modules must be enabled'), t('Dependency required.'));
 
-    $this->assertModules(array('translation', 'locale', 'language'), FALSE);
+    $this->assertModules(array('translation', 'language'), FALSE);
 
-    // Assert that the locale tables weren't enabled.
+    // Assert that the language tables weren't enabled.
     $this->assertTableCount('language', FALSE);
-    $this->assertTableCount('locale', FALSE);
 
     $this->drupalPost(NULL, NULL, t('Continue'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
-    $this->assertModules(array('translation', 'locale'), TRUE);
+    $this->assertModules(array('translation', 'language'), TRUE);
 
-    // Assert that the locale tables were enabled.
+    // Assert that the language tables were enabled.
     $this->assertTableCount('language', TRUE);
-    $this->assertTableCount('locale', TRUE);
   }
 
   /**
@@ -1224,7 +1222,7 @@ class DateTimeFunctionalTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('locale'));
+    parent::setUp(array('language'));
 
     // Create admin user and log in admin user.
     $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));

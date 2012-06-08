@@ -50,7 +50,6 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // is about the negotiation process which is solely in language module.
     parent::setUp(array('locale', 'language_test', 'block'));
     require_once DRUPAL_ROOT . '/core/includes/language.inc';
-    drupal_load('module', 'locale');
     $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages', 'administer blocks'));
     $this->drupalLogin($admin_user);
   }

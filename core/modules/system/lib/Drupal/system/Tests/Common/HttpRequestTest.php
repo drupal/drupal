@@ -22,7 +22,7 @@ class HttpRequestTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('system_test', 'locale');
+    parent::setUp('system_test', 'language');
   }
 
   function testDrupalHTTPRequest() {

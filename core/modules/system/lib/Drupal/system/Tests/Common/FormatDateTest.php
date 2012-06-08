@@ -28,7 +28,7 @@ class FormatDateTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('locale');
+    parent::setUp('language');
     variable_set('configurable_timezones', 1);
     variable_set('date_format_long', 'l, j. F Y - G:i');
     variable_set('date_format_medium', 'j. F Y - G:i');

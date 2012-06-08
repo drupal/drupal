@@ -23,7 +23,7 @@ class EntityTranslationTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('entity_test', 'language', 'locale');
+    parent::setUp('entity_test', 'locale');
     // Enable translations for the test entity type.
     variable_set('entity_test_translation', TRUE);
 
