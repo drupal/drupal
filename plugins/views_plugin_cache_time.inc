@@ -83,11 +83,18 @@ class views_plugin_cache_time extends views_plugin_cache {
     foreach ($custom_fields as $field) {
       ${$field} = $this->options[$field] == 'custom' ? $this->options[$field . '_custom'] : $this->options[$field];
     }
+    $results_lifespan = $this->get_lifespan('results');
+    $output_lifespan = $this->get_lifespan('output');
     return format_interval($results_lifespan, 1) . '/' . format_interval($output_lifespan, 1);
   }
 
-  function cache_expire($type) {
+  function get_lifespan($type) {
     $lifespan = $this->options[$type . '_lifespan'] == 'custom' ? $this->options[$type . '_lifespan_custom'] : $this->options[$type . '_lifespan'];
+    return $lifespan;
+  }
+
+  function cache_expire($type) {
+    $lifespan = $this->get_lifespan($type);
     if ($lifespan) {
       $cutoff = REQUEST_TIME - $lifespan;
       return $cutoff;
@@ -98,7 +105,7 @@ class views_plugin_cache_time extends views_plugin_cache {
   }
 
   function cache_set_expire($type) {
-    $lifespan = $this->options[$type . '_lifespan'] == 'custom' ? $this->options[$type . '_lifespan_custom'] : $this->options[$type . '_lifespan'];
+    $lifespan = $this->get_lifespan($type);
     if ($lifespan) {
       return time() + $lifespan;
     }
