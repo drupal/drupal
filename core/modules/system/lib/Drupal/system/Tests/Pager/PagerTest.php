@@ -2,15 +2,18 @@
 
 /**
  * @file
- * Tests for pager functionality.
+ * Definition of Drupal\system\Tests\Pager\PagerTest.
  */
 
+namespace Drupal\system\Tests\Pager;
+
 use Drupal\simpletest\WebTestBase;
+use SimpleXMLElement;
 
 /**
  * Tests pager functionality.
  */
-class PagerFunctionalWebTestCase extends WebTestBase {
+class PagerTest extends WebTestBase {
   protected $profile = 'testing';
 
   public static function getInfo() {
@@ -158,4 +161,3 @@ class PagerFunctionalWebTestCase extends WebTestBase {
     $this->assertTrue(strpos($element['class'], $class) === FALSE, $message);
   }
 }
-
