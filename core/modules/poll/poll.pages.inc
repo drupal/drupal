@@ -58,7 +58,7 @@ function poll_votes($node) {
 
   $select = db_select('poll_vote', 'pv')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   $select->join('poll_choice', 'pc', 'pv.chid = pc.chid');
   $select->join('users', 'u', 'pv.uid = u.uid');
   $queried_votes = $select

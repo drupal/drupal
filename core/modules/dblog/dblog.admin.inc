@@ -39,7 +39,7 @@ function dblog_overview() {
 
   $query = db_select('watchdog', 'w')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   $query->leftJoin('users', 'u', 'w.uid = u.uid');
   $query
     ->fields('w', array('wid', 'uid', 'severity', 'type', 'timestamp', 'message', 'variables', 'link'))
@@ -100,7 +100,7 @@ function dblog_top($type) {
 
   $query = db_select('watchdog', 'w')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   $query->addExpression('COUNT(wid)', 'count');
   $query = $query
     ->fields('w', array('message', 'variables'))

@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Various tablesort tests.
+ * Definition of Drupal\system\Tests\Common\TableSortExtenderTest.
  */
+
+namespace Drupal\system\Tests\Common;
 
 use Drupal\simpletest\UnitTestBase;
 
 /**
  * Test unicode handling features implemented in unicode.inc.
  */
-class TableSortTest extends UnitTestBase {
+class TableSortExtenderUnitTest extends UnitTestBase {
 
   /**
    * Storage for initial value of $_GET.

@@ -29,7 +29,7 @@ function path_admin_overview($keys = NULL) {
 
   $query = db_select('url_alias')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   if ($keys) {
     // Replace wildcards with PDO wildcards.
     $query->condition('alias', '%' . preg_replace('!\*+!', '%', $keys) . '%', 'LIKE');

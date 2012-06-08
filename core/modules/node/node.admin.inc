@@ -449,7 +449,7 @@ function node_admin_nodes() {
 
   $query = db_select('node', 'n')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   node_build_filter_query($query);
 
   if (!user_access('bypass node access')) {

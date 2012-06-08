@@ -895,7 +895,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
 
   $query = db_select('forum_index', 'f')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   $query->fields('f');
   $query
     ->condition('f.tid', $tid)
@@ -918,7 +918,8 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   if ($nids) {
     $nodes = node_load_multiple($nids);
 
-    $query = db_select('node', 'n')->extend('TableSort');
+    $query = db_select('node', 'n')
+      ->extend('Drupal\Core\Database\Query\TableSortExtender');
     $query->fields('n', array('nid'));
 
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');

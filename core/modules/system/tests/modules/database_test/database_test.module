@@ -161,7 +161,9 @@ function database_test_tablesort() {
   $query
     ->fields('t', array('tid', 'pid', 'task', 'priority'));
 
-  $query = $query->extend('TableSort')->orderByHeader($header);
+  $query = $query
+    ->extend('Drupal\Core\Database\Query\TableSortExtender')
+    ->orderByHeader($header);
 
   // We need all the results at once to check the sort.
   $tasks = $query->execute()->fetchAll();
@@ -190,7 +192,10 @@ function database_test_tablesort_first() {
   $query
     ->fields('t', array('tid', 'pid', 'task', 'priority'));
 
-  $query = $query->extend('TableSort')->orderByHeader($header)->orderBy('priority');
+  $query = $query
+    ->extend('Drupal\Core\Database\Query\TableSortExtender')
+    ->orderByHeader($header)
+    ->orderBy('priority');
 
   // We need all the results at once to check the sort.
   $tasks = $query->execute()->fetchAll();

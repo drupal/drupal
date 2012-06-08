@@ -2924,7 +2924,7 @@ function system_actions_manage() {
   );
   $query = db_select('actions')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   $result = $query
     ->fields('actions')
     ->limit(50)

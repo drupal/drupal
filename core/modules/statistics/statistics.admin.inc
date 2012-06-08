@@ -27,7 +27,7 @@ function statistics_recent_hits() {
 
   $query = db_select('accesslog', 'a', array('target' => 'slave'))
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   $query->join('users', 'u', 'a.uid = u.uid');
   $query
     ->fields('a', array('aid', 'timestamp', 'path', 'title', 'uid'))
@@ -75,7 +75,7 @@ function statistics_top_pages() {
 
   $query = db_select('accesslog', 'a', array('target' => 'slave'))
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   $query->addExpression('COUNT(path)', 'hits');
   // MAX(title) avoids having empty node titles which otherwise causes
   // duplicates in the top pages list.
@@ -130,7 +130,7 @@ function statistics_top_visitors() {
   );
   $query = db_select('accesslog', 'a', array('target' => 'slave'))
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   $query->leftJoin('blocked_ips', 'bl', 'a.hostname = bl.ip');
   $query->leftJoin('users', 'u', 'a.uid = u.uid');
 
@@ -192,7 +192,7 @@ function statistics_top_referrers() {
   );
   $query = db_select('accesslog', 'a')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
 
   $query->addExpression('COUNT(url)', 'hits');
   $query->addExpression('MAX(timestamp)', 'last');

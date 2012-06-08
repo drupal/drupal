@@ -160,7 +160,7 @@ function user_admin_account() {
 
   $query = $query
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   $query
     ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
     ->limit(50)
