@@ -1403,6 +1403,9 @@ function node_permission() {
     ),
     'access content overview' => array(
       'title' => t('Access the content overview page'),
+      'description' => t('Access the content overview page at <a href="@url">admin/content</a>.', array(
+        '@url' => url('admin/content'),
+      )),
     ),
     'access content' => array(
       'title' => t('View published content'),
