@@ -60,7 +60,7 @@ class views_handler_field_contextual_links extends views_handler_field {
   function render($values) {
     $links = array();
     foreach ($this->options['fields'] as $field) {
-      if (empty($this->view->field[$field]->last_render_text)) {
+      if (empty($this->view->style_plugin->rendered_fields[$this->view->row_index][$field])) {
         continue;
       }
       $title = $this->view->field[$field]->last_render_text;
