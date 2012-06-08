@@ -79,10 +79,6 @@ class views_plugin_cache_time extends views_plugin_cache {
   }
 
   function summary_title() {
-    $custom_fields = array('output_lifespan', 'results_lifespan');
-    foreach ($custom_fields as $field) {
-      ${$field} = $this->options[$field] == 'custom' ? $this->options[$field . '_custom'] : $this->options[$field];
-    }
     $results_lifespan = $this->get_lifespan('results');
     $output_lifespan = $this->get_lifespan('output');
     return format_interval($results_lifespan, 1) . '/' . format_interval($output_lifespan, 1);
