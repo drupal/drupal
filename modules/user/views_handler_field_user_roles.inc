@@ -45,7 +45,7 @@ class views_handler_field_user_roles extends views_handler_field_prerender_list 
 
   function document_self_tokens(&$tokens) {
     $tokens['[' . $this->options['id'] . '-role' . ']'] = t('The name of the role.');
-    $tokens['[' . $this->options['id'] . '-rid' . ']'] = t('The role ID of the role.');
+    $tokens['[' . $this->options['id'] . '-rid' . ']'] = t('The role machine-name of the role.');
   }
 
   function add_self_tokens(&$tokens, $item) {

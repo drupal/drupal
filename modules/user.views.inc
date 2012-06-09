@@ -395,7 +395,6 @@ function user_views_data() {
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_user_roles',
-      'numeric' => TRUE,
       'allow empty' => TRUE,
     ),
     'argument' => array(
