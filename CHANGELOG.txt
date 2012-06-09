@@ -17,6 +17,7 @@ Drupal 7.15, xxxx-xx-xx (development version)
 - Fixed regression: The first plural index on a page was not calculated
   correctly.
 - Fixed bug: Language detection by domain only worked on port 80.
+- Fixed bug which prevented image styles from being deleted on PHP 5.4.
 
 Drupal 7.14 2012-05-02
 ----------------------

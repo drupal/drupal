@@ -292,7 +292,7 @@ function image_style_name_validate($element, $form_state) {
  * @ingroup forms
  * @see image_style_delete_form_submit()
  */
-function image_style_delete_form($form, $form_state, $style) {
+function image_style_delete_form($form, &$form_state, $style) {
   $form_state['image_style'] = $style;
 
   $replacement_styles = array_diff_key(image_style_options(), array($style['name'] => ''));
