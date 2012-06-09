@@ -234,19 +234,22 @@ function views_revert_view($view) {
  * Change the settings to a more developer oriented value.
  */
 function views_development_settings() {
-  variable_set('views_ui_show_listing_filters', TRUE);
-  variable_set('views_ui_show_master_display', TRUE);
-  variable_set('views_ui_show_advanced_column', TRUE);
-  variable_set('views_ui_always_live_preview', FALSE);
-  variable_set('views_ui_always_live_preview_button', TRUE);
-  variable_set('views_ui_show_preview_information', TRUE);
-  variable_set('views_ui_show_sql_query', TRUE);
-  variable_set('views_ui_show_performance_statistics', TRUE);
-  variable_set('views_show_additional_queries', TRUE);
-  variable_set('views_devel_output', TRUE);
-  variable_set('views_devel_region', 'message');
-  variable_set('views_ui_display_embed', TRUE);
-  $message = dt("Setup the new views settings.");
+  config('views.settings')
+    ->set('views_ui_show_listing_filters', TRUE)
+    ->set('views_ui_show_master_display', TRUE)
+    ->set('views_ui_show_advanced_column', TRUE)
+    ->set('views_ui_always_live_preview', FALSE)
+    ->set('views_ui_always_live_preview_button', TRUE)
+    ->set('views_ui_show_preview_information', TRUE)
+    ->set('views_ui_show_sql_query', TRUE)
+    ->set('views_ui_show_performance_statistics', TRUE)
+    ->set('views_show_additional_queries', TRUE)
+    ->set('views_devel_output', TRUE)
+    ->set('views_devel_region', 'message')
+    ->set('views_ui_display_embed', TRUE)
+    ->save();
+
+  $message = dt('Setup the new views settings.');
   drush_log($message, 'success');
 }
 

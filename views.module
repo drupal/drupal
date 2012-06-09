@@ -1255,7 +1255,7 @@ function views_get_plugin($type, $plugin, $reset = FALSE) {
  * @return The name of the localization plugin.
  */
 function views_get_localization_plugin() {
-  $plugin = variable_get('views_localization_plugin', '');
+  $plugin = config('views.settings')->get('views_localization_plugin');
   // Provide sane default values for the localization plugin.
   if (empty($plugin)) {
     if (module_exists('locale')) {

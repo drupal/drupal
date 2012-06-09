@@ -1,0 +1,24 @@
+# Basic settings
+views_ui_show_listing_filters: '0'
+views_ui_show_advanced_help_warning: '1'
+views_ui_show_master_display: '0'
+views_ui_show_advanced_column: '0'
+views_ui_display_embed: '0'
+views_ui_custom_theme: '_default'
+views_exposed_filter_any_label: 'new_any'
+views_ui_always_live_preview: '1'
+views_ui_show_preview_information: '1'
+views_ui_show_sql_query_where: 'above'
+views_ui_show_sql_query: '0'
+views_ui_show_performance_statistics: '0'
+views_show_additional_queries: '0'
+
+# Advanced settings
+views_skip_cache: '0'
+views_sql_signature: '0'
+views_no_javascript: '0'
+views_devel_output: '0'
+views_localization_plugin: ''
+views_devel_region: 'footer'
+views_display_extenders: { }
+

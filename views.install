@@ -632,3 +632,10 @@ function views_update_7301() {
   );
   db_change_field('views_view', 'name', 'name', $new_field);
 }
+
+/**
+ * Convert settings to the config system.
+ */
+function views_update_8000() {
+  update_variables_to_config('views.settings');
+}
