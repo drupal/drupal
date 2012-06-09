@@ -758,9 +758,8 @@ function locale_get_plural($count, $langcode = NULL) {
   if (!isset($plural_indexes[$langcode][$count])) {
     // Retrieve and statically cache the plural formulas for all languages.
     if (empty($plural_formulas)) {
-      $language_list = language_list();
-      foreach ($language_list as $langcode => $lang) {
-        $plural_formulas[$langcode] = $lang->formula;
+      foreach (language_list() as $installed_language) {
+        $plural_formulas[$installed_language->language] = $installed_language->formula;
       }
     }
     // If there is a plural formula for the language, evaluate it for the given

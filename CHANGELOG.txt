@@ -14,6 +14,8 @@ Drupal 7.15, xxxx-xx-xx (development version)
 - Introduced generic entity language support. Entities may now declare their
   language property in hook_entity_info(), and modules working with entities
   may access the language using entity_language() (API change).
+- Fixed regression: The first plural index on a page was not calculated
+  correctly.
 
 Drupal 7.14 2012-05-02
 ----------------------
