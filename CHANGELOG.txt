@@ -16,6 +16,7 @@ Drupal 7.15, xxxx-xx-xx (development version)
   may access the language using entity_language() (API change).
 - Fixed regression: The first plural index on a page was not calculated
   correctly.
+- Fixed bug: Language detection by domain only worked on port 80.
 
 Drupal 7.14 2012-05-02
 ----------------------

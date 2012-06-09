@@ -2378,7 +2378,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
       array(
         'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'locale_language_negotiation_url_part' => LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN,
-        'locale_test_domain' => $language_domain,
+        'locale_test_domain' => $language_domain . ':88',
         'path' => 'admin/config',
         'expect' => $language_string,
         'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
