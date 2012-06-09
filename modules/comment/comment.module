@@ -103,6 +103,7 @@ function comment_entity_info() {
         'id' => 'cid',
         'bundle' => 'node_type',
         'label' => 'subject',
+        'language' => 'language',
       ),
       'bundles' => array(),
       'view modes' => array(

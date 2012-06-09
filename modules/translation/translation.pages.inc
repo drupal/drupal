@@ -27,7 +27,7 @@ function translation_node_overview($node) {
   else {
     // We have no translation source nid, this could be a new set, emulate that.
     $tnid = $node->nid;
-    $translations = array($node->language => $node);
+    $translations = array(entity_language('node', $node) => $node);
   }
 
   $type = variable_get('translation_language_type', LANGUAGE_TYPE_INTERFACE);

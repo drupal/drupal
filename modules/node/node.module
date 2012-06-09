@@ -177,6 +177,7 @@ function node_entity_info() {
         'revision' => 'vid',
         'bundle' => 'type',
         'label' => 'title',
+        'language' => 'language',
       ),
       'bundle keys' => array(
         'bundle' => 'type',
@@ -1682,7 +1683,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
       'extra' => $extra,
       'score' => $item->calculated_score,
       'snippet' => search_excerpt($keys, $node->rendered),
-      'language' => $node->language,
+      'language' => entity_language('node', $node),
     );
   }
   return $results;

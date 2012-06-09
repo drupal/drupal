@@ -2288,15 +2288,16 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
 
     // Generate and test sanitized tokens.
     $tests = array();
+    $langcode = entity_language('node', $node);
     $tests['[node:nid]'] = $node->nid;
     $tests['[node:vid]'] = $node->vid;
     $tests['[node:tnid]'] = $node->tnid;
     $tests['[node:type]'] = 'article';
     $tests['[node:type-name]'] = 'Article';
     $tests['[node:title]'] = check_plain($node->title);
-    $tests['[node:body]'] = _text_sanitize($instance, $node->language, $node->body[$node->language][0], 'value');
-    $tests['[node:summary]'] = _text_sanitize($instance, $node->language, $node->body[$node->language][0], 'summary');
-    $tests['[node:language]'] = check_plain($node->language);
+    $tests['[node:body]'] = _text_sanitize($instance, $langcode, $node->body[$langcode][0], 'value');
+    $tests['[node:summary]'] = _text_sanitize($instance, $langcode, $node->body[$langcode][0], 'summary');
+    $tests['[node:language]'] = check_plain($langcode);
     $tests['[node:url]'] = url('node/' . $node->nid, $url_options);
     $tests['[node:edit-url]'] = url('node/' . $node->nid . '/edit', $url_options);
     $tests['[node:author]'] = check_plain(format_username($account));
@@ -2315,9 +2316,9 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
 
     // Generate and test unsanitized tokens.
     $tests['[node:title]'] = $node->title;
-    $tests['[node:body]'] = $node->body[$node->language][0]['value'];
-    $tests['[node:summary]'] = $node->body[$node->language][0]['summary'];
-    $tests['[node:language]'] = $node->language;
+    $tests['[node:body]'] = $node->body[$langcode][0]['value'];
+    $tests['[node:summary]'] = $node->body[$langcode][0]['summary'];
+    $tests['[node:language]'] = $langcode;
     $tests['[node:author:name]'] = format_username($account);
 
     foreach ($tests as $input => $expected) {

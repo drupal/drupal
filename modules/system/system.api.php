@@ -97,6 +97,18 @@ function hook_hook_info_alter(&$hooks) {
  *     instead specify a callback function here, which will be called to
  *     determine the entity label. See also the entity_label() function, which
  *     implements this logic.
+ *   - language callback: (optional) A function taking an entity and an entity
+ *     type as arguments and returning a language code. In most situations, when
+ *     needing to determine this value, inspecting a property named after the
+ *     'language' element of the 'entity keys' should be enough. The language
+ *     callback is meant to be used primarily for temporary alterations of the
+ *     property value: entity-defining modules are encouraged to always define a
+ *     language property, instead of using the callback as main entity language
+ *     source. In fact not having a language property defined is likely to
+ *     prevent an entity from being queried by language. Moreover, given that
+ *     entity_language() is not necessarily used everywhere it would be
+ *     appropriate, modules implementing the language callback should be aware
+ *     that this might not be always called.
  *   - fieldable: Set to TRUE if you want your entity type to accept fields
  *     being attached to it.
  *   - translation: An associative array of modules registered as field
@@ -123,6 +135,12 @@ function hook_hook_info_alter(&$hooks) {
  *       'subject' should be specified here. If complex logic is required to
  *       build the label, a 'label callback' should be defined instead (see
  *       the 'label callback' section above for details).
+ *     - language: The name of the property, typically 'language', that contains
+ *       the language code representing the language the entity has been created
+ *       in. This value may be changed when editing the entity and represents
+ *       the language its textual components are supposed to have. If no
+ *       language property is available, the 'language callback' may be used
+ *       instead.
  *   - bundle keys: An array describing how the Field API can extract the
  *     information it needs from the bundle objects for this type. This entry
  *     is required if the 'path' provided in the 'bundles'/'admin' section
@@ -195,6 +213,7 @@ function hook_entity_info() {
         'id' => 'nid',
         'revision' => 'vid',
         'bundle' => 'type',
+        'language' => 'language',
       ),
       'bundle keys' => array(
         'bundle' => 'type',

@@ -432,7 +432,8 @@ function node_admin_nodes() {
   $destination = drupal_get_destination();
   $options = array();
   foreach ($nodes as $node) {
-    $l_options = $node->language != LANGUAGE_NONE && isset($languages[$node->language]) ? array('language' => $languages[$node->language]) : array();
+    $langcode = entity_language('node', $node);
+    $l_options = $langcode != LANGUAGE_NONE && isset($languages[$langcode]) ? array('language' => $languages[$langcode]) : array();
     $options[$node->nid] = array(
       'title' => array(
         'data' => array(
@@ -449,11 +450,11 @@ function node_admin_nodes() {
       'changed' => format_date($node->changed, 'short'),
     );
     if ($multilanguage) {
-      if ($node->language == LANGUAGE_NONE || isset($languages[$node->language])) {
-        $options[$node->nid]['language'] = $node->language == LANGUAGE_NONE ? t('Language neutral') : t($languages[$node->language]->name);
+      if ($langcode == LANGUAGE_NONE || isset($languages[$langcode])) {
+        $options[$node->nid]['language'] = $langcode == LANGUAGE_NONE ? t('Language neutral') : t($languages[$langcode]->name);
       }
       else {
-        $options[$node->nid]['language'] = t('Undefined language (@langcode)', array('@langcode' => $node->language));
+        $options[$node->nid]['language'] = t('Undefined language (@langcode)', array('@langcode' => $langcode));
       }
     }
     // Build a list of all the accessible operations for the current node.

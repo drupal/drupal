@@ -429,7 +429,7 @@ class TranslationTestCase extends DrupalWebTestCase {
 
     $result = TRUE;
     $languages = language_list();
-    $page_language = $languages[$node->language];
+    $page_language = $languages[entity_language('node', $node)];
     $translation_language = $languages[$translation->language];
     $url = url("node/$translation->nid", array('language' => $translation_language));
 

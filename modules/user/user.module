@@ -159,6 +159,10 @@ function user_entity_info() {
       'uri callback' => 'user_uri',
       'label callback' => 'format_username',
       'fieldable' => TRUE,
+      // $user->language is only the preferred user language for the user
+      // interface textual elements. As it is not necessarily related to the
+      // language assigned to fields, we do not define it as the entity language
+      // key.
       'entity keys' => array(
         'id' => 'uid',
       ),
@@ -3707,7 +3711,8 @@ function user_register_form($form, &$form_state) {
 
   // Attach field widgets, and hide the ones where the 'user_register_form'
   // setting is not on.
-  field_attach_form('user', $form['#user'], $form, $form_state);
+  $langcode = entity_language('user', $form['#user']);
+  field_attach_form('user', $form['#user'], $form, $form_state, $langcode);
   foreach (field_info_instances('user', 'user') as $field_name => $instance) {
     if (empty($instance['settings']['user_register_form'])) {
       $form[$field_name]['#access'] = FALSE;

@@ -396,7 +396,7 @@ function locale_form_node_form_alter(&$form, &$form_state) {
 function locale_field_node_form_submit($form, &$form_state) {
   if (field_has_translation_handler('node', 'locale')) {
     $node = (object) $form_state['values'];
-    $available_languages = field_content_languages();
+    $current_language = entity_language('node', $node);
     list(, , $bundle) = entity_extract_ids('node', $node);
 
     foreach (field_info_instances('node', $bundle) as $instance) {
@@ -406,8 +406,8 @@ function locale_field_node_form_submit($form, &$form_state) {
 
       // Handle a possible language change: new language values are inserted,
       // previous ones are deleted.
-      if ($field['translatable'] && $previous_language != $node->language) {
-        $form_state['values'][$field_name][$node->language] = $node->{$field_name}[$previous_language];
+      if ($field['translatable'] && $previous_language != $current_language) {
+        $form_state['values'][$field_name][$current_language] = $node->{$field_name}[$previous_language];
         $form_state['values'][$field_name][$previous_language] = array();
       }
     }

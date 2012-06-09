@@ -890,7 +890,7 @@ function node_update_7012() {
       ->execute();
 
     // Switch field languages to LANGUAGE_NONE, since initially they were
-    // assigned $node->language.
+    // assigned the node language.
     foreach (array('field_data_body', 'field_revision_body') as $table) {
       db_update($table)
         ->fields(array('language' => LANGUAGE_NONE))

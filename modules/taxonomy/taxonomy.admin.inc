@@ -696,7 +696,8 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     '#value' => isset($term->vocabulary_machine_name) ? $term->vocabulary_machine_name : $vocabulary->name,
   );
 
-  field_attach_form('taxonomy_term', $term, $form, $form_state);
+  $langcode = entity_language('taxonomy_term', $term);
+  field_attach_form('taxonomy_term', $term, $form, $form_state, $langcode);
 
   $form['relations'] = array(
     '#type' => 'fieldset',

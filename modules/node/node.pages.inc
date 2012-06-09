@@ -299,7 +299,7 @@ function node_form($form, &$form_state, $node) {
   }
   $form += array('#submit' => array());
 
-  field_attach_form('node', $node, $form, $form_state, $node->language);
+  field_attach_form('node', $node, $form, $form_state, entity_language('node', $node));
   return $form;
 }
 

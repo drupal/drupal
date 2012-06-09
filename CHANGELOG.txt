@@ -11,6 +11,9 @@ Drupal 7.15, xxxx-xx-xx (development version)
   #access set to FALSE and field form validation is skipped (array structure
   change).
 - Added EntityFieldQuery support for taxonomy bundles.
+- Introduced generic entity language support. Entities may now declare their
+  language property in hook_entity_info(), and modules working with entities
+  may access the language using entity_language() (API change).
 
 Drupal 7.14 2012-05-02
 ----------------------
