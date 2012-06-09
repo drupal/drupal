@@ -592,36 +592,105 @@ function taxonomy_update_7005(&$sandbox) {
     if (!empty($vocabularies)) {
       $sandbox['vocabularies'] = $vocabularies;
     }
+
+    db_create_table('taxonomy_update_7005', array(
+      'description' => 'Stores temporary data for taxonomy_update_7005.',
+      'fields' => array(
+        'n' => array(
+          'description' => 'Preserve order.',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'vocab_id' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'tid' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'nid' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'vid' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => FALSE,
+          'default' => NULL,
+        ),
+        'type' => array(
+          'type' => 'varchar',
+          'length' => 32,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'created' => array(
+          'type' => 'int',
+          'not null' => FALSE,
+        ),
+        'sticky' => array(
+          'type' => 'int',
+          'not null' => FALSE,
+        ),
+        'is_current' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => FALSE,
+        ),
+      ),
+      'primary key' => array('n'),
+    ));
+
+    // Query selects all revisions at once and processes them in revision and
+    // term weight order.
+    $query = db_select('taxonomy_term_data', 'td');
+    // We are migrating term-node relationships. If there are none for a
+    // term, we do not need the term_data row.
+    $query->join('taxonomy_term_node', 'tn', 'td.tid = tn.tid');
+    // If a term-node relationship exists for a nid that does not exist, we
+    // cannot migrate it as we have no node to relate it to; thus we do not
+    // need that row from term_node.
+    $query->join('node', 'n', 'tn.nid = n.nid');
+    // If the current term-node relationship is for the current revision of
+    // the node, this left join will match and is_current will be non-NULL
+    // (we also get the current sticky and created in this case). This
+    // tells us whether to insert into the current data tables in addition
+    // to the revision data tables.
+    $query->leftJoin('node', 'n2', 'tn.vid = n2.vid');
+    $query->addField('td', 'vid', 'vocab_id');
+    $query->addField('td', 'tid');
+    $query->addField('tn', 'nid');
+    $query->addField('tn', 'vid');
+    $query->addField('n', 'type');
+    $query->addField('n2', 'created');
+    $query->addField('n2', 'sticky');
+    $query->addField('n2', 'nid', 'is_current');
+    // This query must return a consistent ordering across multiple calls.
+    // We need them ordered by node vid (since we use that to decide when
+    // to reset the delta counters) and by term weight so they appear
+    // within each node in weight order. However, tn.vid,td.weight is not
+    // guaranteed to be unique, so we add tn.tid as an additional sort key
+    // because tn.tid,tn.vid is the primary key of the D6 term_node table
+    // and so is guaranteed unique. Unfortunately it also happens to be in
+    // the wrong order which is less efficient, but c'est la vie.
+    $query->orderBy('tn.vid');
+    $query->orderBy('td.weight');
+    $query->orderBy('tn.tid');
+    db_insert('taxonomy_update_7005')
+      ->from($query)
+      ->execute();
   }
   else {
     // We do each pass in batches of 1000.
     $batch = 1000;
 
-    // Query selects all revisions at once and processes them in revision and
-    // term weight order. Join types:
-    //
-    // - INNER JOIN term_node ON tn.tid: We are migrating term-node
-    //   relationships. If there are none for a term, we do not need the
-    //   term_data row.
-    // - INNER JOIN {node} n ON n.nid: If a term-node relationship exists for a
-    //   nid that does not exist, we cannot migrate it as we have no node to
-    //   relate it to; thus we do not need that row from term_node.
-    // - LEFT JOIN {node} n2 ON n2.vid: If the current term-node relationship
-    //   is for the current revision of the node, this left join will match and
-    //   is_current will be non-NULL (we also get the current sticky and
-    //   created in this case). This tells us whether to insert into the
-    //   current data tables in addition to the revision data tables.
-    //
-    // This query must return a consistent ordering across multiple calls.  We
-    // need them ordered by node vid (since we use that to decide when to reset
-    // the delta counters) and by term weight so they appear within each node
-    // in weight order. However, tn.vid,td.weight is not guaranteed to be
-    // unique, so we add tn.tid as an additional sort key because tn.tid,tn.vid
-    // is the primary key of the D6 term_node table and so is guaranteed
-    // unique. Unfortunately it also happens to be in the wrong order which is
-    // less efficient, but c'est la vie.
-    $query = 'SELECT td.vid AS vocab_id, td.tid, tn.nid, tn.vid, n.type, n2.created, n2.sticky, n2.nid AS is_current FROM {taxonomy_term_data} td INNER JOIN {taxonomy_term_node} tn ON td.tid = tn.tid INNER JOIN {node} n ON tn.nid = n.nid LEFT JOIN {node} n2 ON tn.vid = n2.vid ORDER BY tn.vid, td.weight ASC, tn.tid';
-    $result = db_query_range($query, $sandbox['last'], $batch);
+    $result = db_query_range('SELECT vocab_id, tid, nid, vid, type, created, sticky, is_current FROM {taxonomy_update_7005} ORDER BY n', $sandbox['last'], $batch);
     if (isset($sandbox['cursor'])) {
       $values = $sandbox['cursor']['values'];
       $deltas = $sandbox['cursor']['deltas'];
@@ -714,6 +783,7 @@ function taxonomy_update_7005(&$sandbox) {
     db_drop_table('taxonomy_term_node');
 
     // If there are no vocabs, we're done.
+    db_drop_table('taxonomy_update_7005');
     $sandbox['#finished'] = TRUE;
 
     // Determine necessity of taxonomyextras field.
