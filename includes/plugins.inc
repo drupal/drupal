@@ -575,7 +575,7 @@ class views_plugin extends views_object {
  * Get enabled display extenders.
  */
 function views_get_enabled_display_extenders() {
-  $enabled = array_filter(config('views.settings')->get('views_display_extenders'));
+  $enabled = array_filter((array) config('views.settings')->get('views_display_extenders'));
   $options = views_fetch_plugin_names('display_extender');
   foreach ($options as $name => $plugin) {
     $enabled[$name] = $name;
