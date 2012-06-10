@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Tests for Symfony2-related functionality.
+ * Definition of Drupal\system\Tests\Routing\UrlMatcherDumperTest.
  */
+
+namespace Drupal\system\Tests\Routing;
 
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -15,12 +17,12 @@ use Drupal\Core\Routing\UrlMatcherDumper;
 /**
  * Basic tests for the UrlMatcherDumper.
  */
-class UrlMatcherDumperTestCase extends UnitTestBase {
+class UrlMatcherDumperTest extends UnitTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'Routing',
+      'name' => 'Dumper tests',
       'description' => 'Confirm that the matcher dumper is functioning properly.',
-      'group' => 'Routng',
+      'group' => 'Routing',
     );
   }
 
@@ -204,35 +206,6 @@ class UrlMatcherDumperTestCase extends UnitTestBase {
     $schema = $connection->schema();
     $schema->dropTable('test_routes');
     $schema->createTable('test_routes', $tables['test_routes']);
-  }
-
-}
-
-/**
- * Basic tests for the Route.
- */
-class RouteTestCase extends UnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Routes',
-      'description' => 'Confirm that route object is functioning properly.',
-      'group' => 'Routng',
-    );
-  }
-
-  function setUp() {
-    parent::setUp();
-  }
-
-  public function testCompilation() {
-    $route = new Route('/test/{something}/more');
-    $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');
-    $compiled = $route->compile();
-
-    $this->assertEqual($route, $compiled->getRoute(), t('Compiled route has the correct route object.'));
-    $this->assertEqual($compiled->getFit(), 5 /* That's 101 binary*/, t('The fit was correct.'));
-    $this->assertEqual($compiled->getPatternOutline(), '/test/%/more', t('The pattern outline was correct.'));
-
   }
 
 }
