@@ -718,17 +718,17 @@ function node_views_analyze($view) {
         if (empty($access['type']) || $access['type'] == 'none') {
           $select = db_select('role', 'r');
           $select->innerJoin('role_permission', 'p', 'r.rid = p.rid');
-          $result = $select->fields('r', array('name'))
+          $result = $select->fields('r', array('rid'))
             ->fields('p', array('permission'))
-            ->condition('r.name', array('anonymous user', 'authenticated user'), 'IN')
+            ->condition('r.rid', array('anonymous', 'authenticated'), 'IN')
             ->condition('p.permission', 'access content')
             ->execute();
 
           foreach ($result as $role) {
             $role->safe = TRUE;
-            $roles[$role->name] = $role;
+            $roles[$role->rid] = $role;
           }
-          if (!($roles['anonymous user']->safe && $roles['authenticated user']->safe)) {
+          if (!($roles['anonymous']->safe && $roles['authenticated']->safe)) {
             $ret[] = views_ui_analysis(t('Some roles lack permission to access content, but display %display has no access control.', array('%display' => $display->display_title)), 'warning');
           }
           $filters = $display->handler->get_option('filters');
