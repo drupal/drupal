@@ -5,6 +5,8 @@
  * Contains the feed display plugin.
  */
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * The plugin that handles a feed, such as RSS or atom.
  *
@@ -39,7 +41,10 @@ class views_plugin_display_feed extends views_plugin_display_page {
     if (empty($output)) {
       return drupal_not_found();
     }
-    print $output;
+    // @todo: This is not a valid fix, because only the style plugin knows the
+    // Content-Type. There needs some global response object on the view which
+    // can be manipulated and then is used optionally.
+    return new Response($output, 200, array('Content-Type' => 'application/rss+xml; charset=utf-8'));
   }
 
   function preview() {
