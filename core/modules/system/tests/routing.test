@@ -8,17 +8,14 @@
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\UnitTestBase;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Routing\UrlMatcherDumper;
 
 /**
  * Basic tests for the UrlMatcherDumper.
- *
- * Note: This should be a UnitTestBase, but those are broken right now in
- * Drupal HEAD.  Convert it to a UnitTest when that gets fixed.
  */
-class UrlMatcherDumperTestCase extends WebTestBase {
+class UrlMatcherDumperTestCase extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Routing',
@@ -213,11 +210,8 @@ class UrlMatcherDumperTestCase extends WebTestBase {
 
 /**
  * Basic tests for the Route.
- *
- * Note: This should be a UnitTestBase, but those are broken right now in
- * Drupal HEAD.  Convert it to a UnitTest when that gets fixed.
  */
-class RouteTestCase extends WebTestBase {
+class RouteTestCase extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Routes',
