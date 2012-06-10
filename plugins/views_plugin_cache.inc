@@ -28,6 +28,24 @@ class views_plugin_cache extends views_plugin {
   var $table = 'cache_views_data';
 
   /**
+   * Stores the cache id used for the results cache, once get_results_key() got
+   * executed.
+   *
+   * @see views_plugin_cache::get_results_key
+   * @var string
+   */
+  public $_results_key;
+
+  /**
+   * Stores the cache id used for the output cache, once get_output_key() got
+   * executed.
+   *
+   * @see views_plugin_cache::get_output_key
+   * @var string
+   */
+  public $_output_key;
+
+  /**
    * Initialize the plugin.
    *
    * @param $view
@@ -99,7 +117,7 @@ class views_plugin_cache extends views_plugin {
       case 'output':
         $this->gather_headers();
         $this->storage['output'] = $this->view->display_handler->output;
-        cache($this->table)->set($this->get_results_key(), $this->storage, $this->cache_set_expire($type));
+        cache($this->table)->set($this->get_output_key(), $this->storage, $this->cache_set_expire($type));
         break;
     }
   }
@@ -130,7 +148,7 @@ class views_plugin_cache extends views_plugin {
         }
         return FALSE;
       case 'output':
-        if ($cache = cache($this->table)->get($this->get_results_key())) {
+        if ($cache = cache($this->table)->get($this->get_output_key())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->storage = $cache->data;
             $this->view->display_handler->output = $cache->data['output'];
@@ -253,7 +271,7 @@ class views_plugin_cache extends views_plugin {
       foreach (array('query','count_query') as $index) {
         // If the default query back-end is used generate SQL query strings from
         // the query objects.
-        if ($build_info[$index] instanceof SelectQueryInterface) {
+        if ($build_info[$index] instanceof Drupal\Core\Database\Query\Select) {
           $query = clone $build_info[$index];
           $query->preExecute();
           $build_info[$index] = (string)$query;

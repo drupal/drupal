@@ -37,6 +37,14 @@ class views_plugin_display extends views_plugin {
    */
   var $extender = array();
 
+  /**
+   * Stores the rendered output of the display.
+   *
+   * @see view::render
+   * @var string
+   */
+  public $output = NULL;
+
   function init(&$view, &$display, $options = NULL) {
     $this->view = &$view;
     $this->display = &$display;
