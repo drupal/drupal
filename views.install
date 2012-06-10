@@ -637,5 +637,26 @@ function views_update_7301() {
  * Convert settings to the config system.
  */
 function views_update_8000() {
-  update_variables_to_config('views.settings');
+  update_variables_to_config('views.settings', array(
+    'views_ui_show_listing_filters' => 'views_ui_show_listing_filters',
+    'views_ui_show_advanced_help_warning' => 'views_ui_show_advanced_help_warning',
+    'views_ui_show_master_display' => 'views_ui_show_master_display',
+    'views_ui_show_advanced_column' => 'views_ui_show_advanced_column',
+    'views_ui_display_embed' => 'views_ui_display_embed',
+    'views_ui_custom_theme' => 'views_ui_custom_theme',
+    'views_exposed_filter_any_label' => 'views_exposed_filter_any_label',
+    'views_ui_always_live_preview' => 'views_ui_always_live_preview',
+    'views_ui_show_preview_information' => 'views_ui_show_preview_information',
+    'views_ui_show_sql_query_where' => 'views_ui_show_sql_query_where',
+    'views_ui_show_sql_query' => 'views_ui_show_sql_query',
+    'views_ui_show_performance_statistics' => 'views_ui_show_performance_statistics',
+    'views_show_additional_queries' => 'views_show_additional_queries',
+    'views_skip_cache' => 'views_skip_cache',
+    'views_sql_signature' => 'views_sql_signature',
+    'views_no_javascript' => 'views_no_javascript',
+    'views_devel_output' => 'views_devel_output',
+    'views_localization_plugin' => 'views_localization_plugin',
+    'views_devel_region' => 'views_devel_region',
+    'views_display_extenders' => 'views_display_extenders',
+  ));
 }
