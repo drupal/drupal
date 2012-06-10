@@ -231,7 +231,7 @@ function views_ui_theme() {
  * Impements hook_custom_theme()
  */
 function views_ui_custom_theme() {
-  $theme = variable_get('views_ui_custom_theme', '_default');
+  $theme = config('views.settings')->get('views_ui_custom_theme');
 
   if ($theme != '_default') {
     $available = list_themes();

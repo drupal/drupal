@@ -1027,7 +1027,7 @@ class view extends views_db_object {
       $exposed_form->query();
     }
 
-    if (variable_get('views_sql_signature', FALSE)) {
+    if (config('views.settings')->get('views_sql_signature')) {
       $this->query->add_signature($this);
     }
 
@@ -1168,9 +1168,10 @@ class view extends views_db_object {
     }
 
     drupal_theme_initialize();
+    $config = config('views.settings');
 
     $start = microtime(TRUE);
-    if (!empty($this->live_preview) && variable_get('views_show_additional_queries', FALSE)) {
+    if (!empty($this->live_preview) && $config->get('views_show_additional_queries')) {
       $this->start_query_capture();
     }
 
@@ -1259,7 +1260,7 @@ class view extends views_db_object {
       $function($this, $this->display_handler->output, $cache);
     }
 
-    if (!empty($this->live_preview) && variable_get('views_show_additional_queries', FALSE)) {
+    if (!empty($this->live_preview) && $config->get('views_show_additional_queries')) {
       $this->end_query_capture();
     }
     $this->render_time = microtime(TRUE) - $start;

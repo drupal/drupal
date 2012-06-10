@@ -85,7 +85,7 @@ function views_ui_add_admin_css() {
  * be useful.
  */
 function views_ui_check_advanced_help() {
-  if (!variable_get('views_ui_show_advanced_help_warning', TRUE)) {
+  if (!config('views.settings')->get('views_ui_show_advanced_help_warning')) {
     return;
   }
 
@@ -115,13 +115,14 @@ function views_ui_preview($view, $display_id, $args = array()) {
   $old_q = current_path();
 
   // Determine where the query and performance statistics should be output.
-  $show_query = variable_get('views_ui_show_sql_query', FALSE);
-  $show_info = variable_get('views_ui_show_preview_information', FALSE);
-  $show_location = variable_get('views_ui_show_sql_query_where', 'above');
+  $config = config('views.settings');
+  $show_query = $config->get('views_ui_show_sql_query');
+  $show_info = $config->get('views_ui_show_preview_information');
+  $show_location = $config->get('views_ui_show_sql_query_where');
 
-  $show_stats = variable_get('views_ui_show_performance_statistics', FALSE);
+  $show_stats = $config->get('views_ui_show_performance_statistics');
   if ($show_stats) {
-    $show_stats = variable_get('views_ui_show_sql_query_where', 'above');
+    $show_stats = $config->get('views_ui_show_sql_query_where');
   }
 
   $combined = $show_query && $show_stats;
@@ -1508,7 +1509,7 @@ function views_ui_edit_page_display_tabs($view, $display_id = NULL) {
  */
 function views_ui_show_default_display($view) {
   // Always show the default display for advanced users who prefer that mode.
-  $advanced_mode = variable_get('views_ui_show_master_display', FALSE);
+  $advanced_mode = config('views.settings')->get('views_ui_show_master_display');
   // For other users, show the default display only if there are no others, and
   // hide it if there's at least one "real" display.
   $additional_displays = (count($view->display) == 1);
@@ -1687,7 +1688,7 @@ function views_ui_get_display_tab_details($view, $display) {
   // recollapse the column.
   $build['columns']['third']['#attributes']['id'] = 'views-ui-advanced-column-' . $view->name;
   // Collapse the div by default.
-  if (!variable_get('views_ui_show_advanced_column', FALSE)) {
+  if (!config('views.settings')->get('views_ui_show_advanced_column')) {
     $build['columns']['third']['#attributes']['class'][] = 'ctools-collapsed';
   }
   $build['columns']['third']['advanced'] = array('#markup' => '<h3 class="ctools-collapsible-handle"><a href="">' . t('Advanced') . '</a></h3>',);
@@ -4744,7 +4745,7 @@ function views_ui_admin_settings_basic() {
 //  $form['live_preview']['views_ui_always_live_preview_button'] = array(
 //    '#type' => 'checkbox',
 //    '#title' => t('Always show the preview button, even when the automatically update option is checked'),
-//    '#default_value' => variable_get('views_ui_always_live_preview_button', FALSE),
+//    '#default_value' => $config->get('views_ui_always_live_preview_button'),
 //  );
 
   $form['live_preview']['views_ui_show_preview_information'] = array(
@@ -4818,10 +4819,10 @@ function views_ui_admin_settings_basic() {
 }
 
 /**
-+ * Form builder submit handler; Handle submission the basic views settings.
-+ * @ingroup forms
-+ * @see system_settings_form()
-+ */
+ * Form builder submit handler; Handle submission the basic views settings.
+ * @ingroup forms
+ * @see system_settings_form()
+ */
 function views_ui_admin_settings_basic_submit(&$form, &$form_state) {
   config('views.settings')
     ->set('views_ui_show_listing_filters', $form_state['values']['views_ui_show_listing_filters'])

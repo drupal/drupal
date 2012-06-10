@@ -1052,7 +1052,7 @@ function views_add_css($file) {
  */
 function views_add_js($file) {
   // If javascript has been disabled by the user, never add js files.
-  if (variable_get('views_no_javascript', FALSE)) {
+  if (config('views.settings')->get('views_no_javascript')) {
     return;
   }
   static $base = TRUE, $ajax = TRUE;
@@ -1606,8 +1606,9 @@ function views_debug($message, $placeholders = array()) {
   if (!is_string($message)) {
     $output = '<pre>' . var_export($message, TRUE) . '</pre>';
   }
-  if (module_exists('devel') && variable_get('views_devel_output', FALSE) && user_access('access devel information')) {
-    $devel_region = variable_get('views_devel_region', 'footer');
+  $config = config('views.settings');
+  if (module_exists('devel') && $config->get('views_devel_output') && user_access('access devel information')) {
+    $devel_region = $config->get('views_devel_region');
     if ($devel_region == 'watchdog') {
       $output = $message;
       watchdog('views_logging', $output, $placeholders);

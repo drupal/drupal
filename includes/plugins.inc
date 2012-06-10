@@ -93,7 +93,7 @@ function views_views_plugins() {
         'use pager' => TRUE,
         'accept attachments' => FALSE,
         'admin' => t('Embed'),
-        'no ui' => !variable_get('views_ui_display_embed', FALSE),
+        'no ui' => !config('views.settings')->get('views_ui_display_embed'),
       ),
     ),
     'display_extender' => array(
