@@ -140,7 +140,8 @@ function hook_hook_info_alter(&$hooks) {
  *       in. This value may be changed when editing the entity and represents
  *       the language its textual components are supposed to have. If no
  *       language property is available, the 'language callback' may be used
- *       instead.
+ *       instead. This entry can be omitted if the entities of this type are not
+ *       language-aware.
  *   - bundle keys: An array describing how the Field API can extract the
  *     information it needs from the bundle objects for this type. This entry
  *     is required if the 'path' provided in the 'bundles'/'admin' section
