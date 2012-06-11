@@ -64,12 +64,12 @@ class UrlMatcherDumper implements MatcherDumperInterface {
    *
    * Available options:
    *
-   *  * class:      The class name
+   *  * route_set:  The route grouping that is being dumped. All existing
+   *     routes with this route set will be deleted on dump.
    *  * base_class: The base class name
    *
-   * @param  array  $options An array of options
-   *
-   * @return string A PHP class representing the matcher class
+   * @param $options array
+   *   $options An array of options
    */
   public function dump(array $options = array()) {
     $options += array(
@@ -87,8 +87,6 @@ class UrlMatcherDumper implements MatcherDumperInterface {
       'pattern_outline',
       'route',
     ));
-
-
 
     foreach ($this->routes as $name => $route) {
       $compiled = $route->compile();
@@ -115,13 +113,14 @@ class UrlMatcherDumper implements MatcherDumperInterface {
     $insert->execute();
 
     // Transaction ends here.
-
   }
 
   /**
    * Gets the routes to match.
    *
-   * @return RouteCollection A RouteCollection instance
+   * @return RouteCollection
+   *   A RouteCollection instance representing all routes currently in the
+   *   dumper.
    */
   public function getRoutes() {
     return $this->routes;
