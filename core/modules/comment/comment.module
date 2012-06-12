@@ -1675,7 +1675,8 @@ function comment_forms() {
  * @ingroup forms
  */
 function comment_form($form, &$form_state, Comment $comment) {
-  global $user, $language_content;
+  global $user;
+  $language_content = drupal_container()->get(LANGUAGE_TYPE_CONTENT);
 
   // During initial form build, add the comment entity to the form state for
   // use during form building and processing. During a rebuild, use what is in

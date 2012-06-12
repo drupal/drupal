@@ -2384,7 +2384,8 @@ function node_block_list_alter(&$blocks) {
  * @see node_menu()
  */
 function node_feed($nids = FALSE, $channel = array()) {
-  global $base_url, $language_content;
+  global $base_url;
+  $language_content = drupal_container()->get(LANGUAGE_TYPE_CONTENT);
 
   if ($nids === FALSE) {
     $nids = db_select('node', 'n')

@@ -24,5 +24,8 @@ class ContainerBuilder extends BaseContainerBuilder {
     // functions. This default is overridden by drupal_language_initialize()
     // during language negotiation.
     $this->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
+
+    // Register the default language content.
+    $this->register(LANGUAGE_TYPE_CONTENT, 'Drupal\\Core\\Language\\Language');
   }
 }

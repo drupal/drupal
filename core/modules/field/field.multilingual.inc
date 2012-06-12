@@ -247,8 +247,7 @@ function field_valid_language($langcode, $default = TRUE) {
   if (in_array($langcode, $enabled_languages)) {
     return $langcode;
   }
-  global $language_content;
-  return $default ? language_default()->langcode : $language_content->langcode;
+  return $default ? language_default()->langcode : drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
 }
 
 /**

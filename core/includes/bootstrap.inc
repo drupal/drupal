@@ -2626,7 +2626,6 @@ function drupal_language_initialize() {
   //   Remove after these issues:
   //   - $language_interface: http://drupal.org/node/1510686
   //   - $language_url: http://drupal.org/node/1512310
-  //   - $language_content: http://drupal.org/node/1512308
   foreach ($types as $type) {
     $GLOBALS[$type] = $container->get($type);
   }
