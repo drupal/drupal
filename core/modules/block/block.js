@@ -6,7 +6,7 @@
  * Provide the summary information for the block settings vertical tabs.
  */
 Drupal.behaviors.blockSettingsSummary = {
-  attach: function (context) {
+  attach: function () {
     // The drupalSetSummary method required for this behavior is not available
     // on the Blocks administration page, so we need to make sure this
     // behavior is processed only if drupalSetSummary is defined.
@@ -14,9 +14,25 @@ Drupal.behaviors.blockSettingsSummary = {
       return;
     }
 
-    var $context = $(context);
-    $context.find('fieldset#edit-path').drupalSetSummary(function (context) {
-      if (!$(context).find('textarea[name="pages"]').val()) {
+    function checkboxesSummary (context) {
+      var vals = [];
+      var $checkboxes = $(context).find('input[type="checkbox"]:checked + label');
+      for (var i = 0, il = $checkboxes.length; i < il; i += 1) {
+        vals.push($($checkboxes[i]).text());
+      }
+      if (!vals.length) {
+        vals.push(Drupal.t('Not restricted'));
+      }
+      return $.map(vals, $.trim).join(', ');
+    }
+
+    $('#edit-node-type').drupalSetSummary(checkboxesSummary);
+    $('#edit-language').drupalSetSummary(checkboxesSummary);
+    $('#edit-role').drupalSetSummary(checkboxesSummary);
+
+    $('#edit-path').drupalSetSummary(function (context) {
+      var $pages = $(context).find('textarea[name="pages"]');
+      if (!$pages.val()) {
         return Drupal.t('Not restricted');
       }
       else {
@@ -24,41 +40,7 @@ Drupal.behaviors.blockSettingsSummary = {
       }
     });
 
-    $context.find('fieldset#edit-node-type').drupalSetSummary(function (context) {
-      var vals = [];
-      $(context).find('input[type="checkbox"]:checked').each(function () {
-        vals.push($.trim($(this).next('label').text()));
-      });
-      if (!vals.length) {
-        vals.push(Drupal.t('Not restricted'));
-      }
-      return vals.join(', ');
-    });
-
-    $context.find('fieldset#edit-language').drupalSetSummary(function (context) {
-      var vals = [];
-      $(context).find('input[type="checkbox"]:checked').each(function () {
-        vals.push($.trim($(this).next('label').text()));
-      });
-      if (!vals.length) {
-        vals.push(Drupal.t('Not restricted'));
-      }
-      return vals.join(', ');
-    });
-
-
-    $context.find('fieldset#edit-role').drupalSetSummary(function (context) {
-      var vals = [];
-      $(context).find('input[type="checkbox"]:checked').each(function () {
-        vals.push($.trim($(this).next('label').text()));
-      });
-      if (!vals.length) {
-        vals.push(Drupal.t('Not restricted'));
-      }
-      return vals.join(', ');
-    });
-
-    $context.find('fieldset#edit-user').drupalSetSummary(function (context) {
+    $('#edit-user').drupalSetSummary(function (context) {
       var $radio = $(context).find('input[name="custom"]:checked');
       if ($radio.val() == 0) {
         return Drupal.t('Not customizable');
@@ -83,7 +65,7 @@ Drupal.behaviors.blockDrag = {
       return;
     }
 
-    var table = $('table#blocks');
+    var table = $('#blocks');
     var tableDrag = Drupal.tableDrag.blocks; // Get the blocks tableDrag object.
 
     // Add a handler for when a row is swapped, update empty regions.
