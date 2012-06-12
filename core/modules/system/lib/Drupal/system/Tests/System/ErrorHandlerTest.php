@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\ErrorHandlerTest.
+ * Definition of Drupal\system\Tests\System\ErrorHandlerTest.
  */
 
-namespace Drupal\system\Tests;
+namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;
 

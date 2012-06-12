@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\UnicodeUnitTest.
+ * Definition of Drupal\system\Tests\System\UnicodeUnitTest.
  */
 
-namespace Drupal\system\Tests;
+namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\UnitTestBase;
 

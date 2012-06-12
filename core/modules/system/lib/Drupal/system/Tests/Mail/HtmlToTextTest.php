@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\HtmlToTextTest.
+ * Definition of Drupal\system\Tests\Mail\HtmlToTextTest.
  */
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\system\Tests\Mail;
 
 use Drupal\simpletest\WebTestBase;
 

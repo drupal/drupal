@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\PasswordHashingTest.
+ * Definition of Drupal\system\Tests\System\PasswordHashingTest.
  */
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;
 

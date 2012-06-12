@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\LockFunctionalTest.
+ * Definition of Drupal\system\Tests\Lock\LockFunctionalTest.
  */
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\system\Tests\Lock;
 
 use Drupal\simpletest\WebTestBase;
 
@@ -18,7 +18,7 @@ class LockFunctionalTest extends WebTestBase {
     return array(
       'name' => 'Locking framework tests',
       'description' => 'Confirm locking works between two separate requests.',
-      'group' => 'System',
+      'group' => 'Lock',
     );
   }
 

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\QueueTest.
+ * Definition of Drupal\system\Tests\Queue\QueueTest.
  */
 
-namespace Drupal\system\Tests;
+namespace Drupal\system\Tests\Queue;
 
 use Drupal\Core\Queue\Memory;
 use Drupal\Core\Queue\System;

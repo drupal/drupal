@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\MailTest.
+ * Definition of Drupal\system\Tests\Mail\MailTest.
  */
 
-namespace Drupal\system\Tests\Common;
+namespace Drupal\system\Tests\Mail;
 
 use Drupal\Core\Mail\MailInterface;
 use Drupal\simpletest\WebTestBase;
@@ -34,7 +34,7 @@ class MailTest extends WebTestBase implements MailInterface {
     parent::setUp(array('simpletest'));
 
     // Set MailTestCase (i.e. this class) as the SMTP library
-    variable_set('mail_system', array('default-system' => 'Drupal\system\Tests\Common\MailTest'));
+    variable_set('mail_system', array('default-system' => 'Drupal\system\Tests\Mail\MailTest'));
   }
 
   /**
