@@ -687,18 +687,6 @@ function drupal_goto($path = '', array $options = array(), $http_response_code =
 }
 
 /**
- * Delivers a "site is under maintenance" message to the browser.
- *
- * Page callback functions wanting to report a "site offline" message should
- * return MENU_SITE_OFFLINE instead of calling drupal_site_offline(). However,
- * functions that are invoked in contexts where that return value might not
- * bubble up to menu_execute_active_handler() should call drupal_site_offline().
- */
-function drupal_site_offline() {
-  drupal_deliver_page(MENU_SITE_OFFLINE);
-}
-
-/**
  * Performs an HTTP request.
  *
  * This is a flexible and powerful HTTP client implementation. Correctly
@@ -2328,8 +2316,7 @@ function l($text, $path, array $options = array()) {
 /**
  * Delivers a page callback result to the browser in the appropriate format.
  *
- * This function is most commonly called by menu_execute_active_handler(), but
- * can also be called by error conditions such as drupal_site_offline().
+ * This function is most commonly called by menu_execute_active_handler().
  *
  * When a user requests a page, index.php calls menu_execute_active_handler(),
  * which calls the 'page callback' function registered in hook_menu(). The page
