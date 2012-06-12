@@ -22,7 +22,6 @@ files[] = tests/registry.test
 files[] = tests/schema.test
 files[] = tests/symfony.test
 files[] = tests/tablesort.test
-files[] = tests/theme.test
 files[] = tests/update.test
 files[] = tests/uuid.test
 files[] = tests/xmlrpc.test
