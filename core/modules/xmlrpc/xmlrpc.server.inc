@@ -2,8 +2,16 @@
 
 /**
  * @file
- * Provides API for defining and handling XML-RPC requests.
+ * Page callback file for the xmlrpc module.
  */
+
+/**
+ * Process an XML-RPC request.
+ */
+function xmlrpc_server_page() {
+  module_load_include('inc', 'xmlrpc');
+  xmlrpc_server(module_invoke_all('xmlrpc'));
+}
 
 /**
  * Invokes XML-RPC methods on this server.

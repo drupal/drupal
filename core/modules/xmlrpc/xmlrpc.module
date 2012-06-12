@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Enables XML-RPC functionality.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function xmlrpc_help($path, $args) {
+  switch ($path) {
+    case 'admin/help#xmlrpc':
+      $output = '';
+      $output .= '<p>' . t('The XML-RPC module gives external systems the opportunity to communicate with the site through the XML-RPC protocol. Pointing an XML-RPC client at <a href="@xmlrpc">xmlrpc.php</a> allows this communication to take place. For more information, see the online handbook entry for <a href="@xmlrpcapi">XML-RPC API</a>.', array(
+        '@xmlrpc' => url('xmlrpc.php', array('absolute' => TRUE)),
+        '@xmlrpcapi' => 'http://drupal.org/node/44895',
+      )) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function xmlrpc_menu() {
+  $items['xmlrpc.php'] = array(
+    'title' => 'XML-RPC',
+    'page callback' => 'xmlrpc_server_page',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'xmlrpc.server.inc',
+  );
+  return $items;
+}
+
+/**
+ * Performs one or more XML-RPC request(s).
+ *
+ * Usage example:
+ * @code
+ * $result = xmlrpc('http://example.com/xmlrpc.php', array(
+ *   'service.methodName' => array($parameter, $second, $third),
+ * ));
+ * @endcode
+ *
+ * @param $url
+ *   An absolute URL of the XML-RPC endpoint.
+ * @param $args
+ *   An associative array whose keys are the methods to call and whose values
+ *   are the arguments to pass to the respective method. If multiple methods
+ *   are specified, a system.multicall is performed.
+ * @param $options
+ *   (optional) An array of options to pass along to drupal_http_request().
+ *
+ * @return
+ *   For one request:
+ *     Either the return value of the method on success, or FALSE.
+ *     If FALSE is returned, see xmlrpc_errno() and xmlrpc_error_msg().
+ *   For multiple requests:
+ *     An array of results. Each result will either be the result
+ *     returned by the method called, or an xmlrpc_error object if the call
+ *     failed. See xmlrpc_error().
+ */
+function xmlrpc($url, $args, $options = array()) {
+  module_load_include('inc', 'xmlrpc');
+  return _xmlrpc($url, $args, $options);
+}
