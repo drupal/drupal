@@ -167,9 +167,12 @@ class LocalePluralFormatTest extends WebTestBase {
     $path = 'admin/config/regional/translate/edit/' . $lid;
     $this->drupalGet($path);
     // Labels for plural editing elements.
-    $this->assertText('Singular form');
-    $this->assertText('First plural form');
-    $this->assertText('2. plural form');
+    $this->assertFieldByXPath('//label[@for="edit-translations-hr-0"]', 'Singular form ');
+    $this->assertFieldByXPath('//label[@for="edit-translations-hr-1"]', 'First plural form ');
+    $this->assertFieldByXPath('//label[@for="edit-translations-hr-2"]', '2. plural form ');
+    $this->assertFieldByXPath('//label[@for="edit-translations-fr-0"]', 'Singular form ');
+    $this->assertFieldByXPath('//label[@for="edit-translations-fr-1"]', 'Plural form ');
+
     // Plural values for both languages.
     $this->assertFieldById('edit-translations-hr-0', '@count sat');
     $this->assertFieldById('edit-translations-hr-1', '@count sata');

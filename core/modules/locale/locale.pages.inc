@@ -386,7 +386,7 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
     }
     else {
       // Dealing with plural strings.
-      if (isset($plural_formulas[$langcode]['plurals']) && $plural_formulas[$langcode]['plurals'] > 1) {
+      if (isset($plural_formulas[$langcode]['plurals']) && $plural_formulas[$langcode]['plurals'] > 2) {
         // Add a textarea for each plural variant.
         for ($i = 0; $i < $plural_formulas[$langcode]['plurals']; $i++) {
           $form['translations'][$langcode][$i] = array(
@@ -401,7 +401,7 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
         // Fallback for unknown number of plurals.
         $form['translations'][$langcode][0] = array(
           '#type' => 'textarea',
-          '#title' => t('Sigular form'),
+          '#title' => t('Singular form'),
           '#rows' => $rows,
           '#default_value' => '',
         );
