@@ -977,6 +977,10 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
     '#value' => $form['#build_id'],
     '#id' => $form['#build_id'],
     '#name' => 'form_build_id',
+    // Form processing and validation requires this value, so ensure the
+    // submitted form value appears literally, regardless of custom #tree
+    // and #parents being set elsewhere.
+    '#parents' => array('form_build_id'),
   );
 
   // Add a token, based on either #token or form_id, to any form displayed to
@@ -1000,6 +1004,10 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
         '#id' => drupal_html_id('edit-' . $form_id . '-form-token'),
         '#type' => 'token',
         '#default_value' => drupal_get_token($form['#token']),
+        // Form processing and validation requires this value, so ensure the
+        // submitted form value appears literally, regardless of custom #tree
+        // and #parents being set elsewhere.
+        '#parents' => array('form_token'),
       );
     }
   }
@@ -1009,6 +1017,10 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
       '#type' => 'hidden',
       '#value' => $form_id,
       '#id' => drupal_html_id("edit-$form_id"),
+      // Form processing and validation requires this value, so ensure the
+      // submitted form value appears literally, regardless of custom #tree
+      // and #parents being set elsewhere.
+      '#parents' => array('form_id'),
     );
   }
   if (!isset($form['#id'])) {
