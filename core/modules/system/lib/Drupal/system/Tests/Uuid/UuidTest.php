@@ -1,12 +1,19 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\system\Tests\Uuid\UuidTest.
+*/
+
+namespace Drupal\system\Tests\Uuid;
+
 use Drupal\Component\Uuid\Uuid;
 use Drupal\simpletest\UnitTestBase;
 
 /**
  * Tests the Drupal\Component\Uuid\Uuid class.
  */
-class UuidUnitTestCase extends UnitTestBase {
+class UuidUnitTest extends UnitTestBase {
 
   /**
    * The UUID object to be used for generating UUIDs.
