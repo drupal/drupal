@@ -378,7 +378,7 @@ function field_default_form_errors($entity_type, $entity, $field, $instance, $la
           else {
             // Make sure that errors are reported (even incorrectly flagged) if
             // the widget module fails to implement hook_field_widget_error().
-            form_error($error_element, $error['error']);
+            form_error($error_element, $error['message']);
           }
         }
       }
