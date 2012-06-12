@@ -2517,45 +2517,12 @@ function drupal_deliver_html_page($page_callback_result) {
     // undefined.
     print drupal_render_page($page_callback_result);
   }
-
-  // Perform end-of-request tasks.
-  drupal_page_footer();
 }
 
 /**
  * Performs end-of-request tasks.
  *
- * This function sets the page cache if appropriate, and allows modules to
- * react to the closing of the page by calling hook_exit().
- */
-function drupal_page_footer() {
-  global $user;
-
-  module_invoke_all('exit');
-
-  // Commit the user session, if needed.
-  drupal_session_commit();
-
-  $config = config('system.performance');
-  if ($config->get('cache') && ($cache = drupal_page_set_cache())) {
-    drupal_serve_page_from_cache($cache);
-  }
-  else {
-    ob_flush();
-  }
-
-  _registry_check_code(REGISTRY_WRITE_LOOKUP_CACHE);
-  drupal_cache_system_paths();
-  module_implements_write_cache();
-  system_run_automated_cron();
-}
-
-/**
- * Performs end-of-request tasks.
- *
- * In some cases page requests need to end without calling drupal_page_footer().
- * In these cases, call drupal_exit() instead. There should rarely be a reason
- * to call exit instead of drupal_exit();
+ * There should rarely be a reason to call exit instead of drupal_exit();
  *
  * @param $destination
  *   If this function is called from drupal_goto(), then this argument

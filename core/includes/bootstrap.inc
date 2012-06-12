@@ -3054,7 +3054,7 @@ function _registry_check_code($type, $name = NULL) {
     return;
   }
 
-  // Called from drupal_page_footer, we write to permanent storage if there
+  // Called when closing requests, we write to permanent storage if there
   // changes to the lookup cache for this request.
   if ($type == REGISTRY_WRITE_LOOKUP_CACHE) {
     if ($cache_update_needed) {
