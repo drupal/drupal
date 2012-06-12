@@ -641,21 +641,28 @@ function locale_js_alter(&$javascript) {
   }
 }
 
- /**
+/**
  * Implement hook_library_info_alter().
  *
  * Provides the language support for the jQuery UI Date Picker.
  */
 function locale_library_info_alter(&$libraries, $module) {
-  global $language_interface;
-  if ($module == 'system' && isset($libraries['system']['ui.datepicker'])) {
+  if ($module == 'system' && isset($libraries['ui.datepicker'])) {
+    global $language_interface;
+    // locale.datepicker.js should be added in the JS_LIBRARY group, so that
+    // this attach behavior will execute early. JS_LIBRARY is the default for
+    // hook_library_info_alter(), thus does not have to be specified explicitly.
     $datepicker = drupal_get_path('module', 'locale') . '/locale.datepicker.js';
-    $libraries['system']['ui.datepicker']['js'][$datepicker] = array('group' => JS_THEME);
-    $libraries['system']['ui.datepicker']['js'][] = array(
+    $libraries['ui.datepicker']['js'][$datepicker] = array();
+    $libraries['ui.datepicker']['js'][] = array(
       'data' => array(
-        'jqueryuidatepicker' => array(
-          'rtl' => $language_interface->direction == LANGUAGE_RTL,
-          'firstDay' => variable_get('date_first_day', 0),
+        'jquery' => array(
+          'ui' => array(
+            'datepicker' => array(
+              'isRTL' => $language_interface->direction == LANGUAGE_RTL,
+              'firstDay' => variable_get('date_first_day', 0),
+            ),
+          ),
         ),
       ),
       'type' => 'setting',
