@@ -218,7 +218,10 @@ function update_prepare_d8_language() {
         unset($language_default->language);
       }
       unset($language_default->enabled);
-      variable_set('language_default', $language_default);
+      // In D8, the 'language_default' is not anymore an object, but an array,
+      // so make sure that the new value that is saved into this variable is an
+      // array.
+      variable_set('language_default', (array) $language_default);
     }
   }
 }

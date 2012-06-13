@@ -5,6 +5,7 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Language\Language;
 
 /**
  * @file
@@ -2676,17 +2677,18 @@ function language_list() {
     $default = language_default();
     if (language_multilingual() || module_exists('language')) {
       // Use language module configuration if available.
-      $languages = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode');
+      $languages = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode', PDO::FETCH_ASSOC);
+
+      // Initialize default property so callers have an easy reference and can
+      // save the same object without data loss.
+      foreach ($languages as $langcode => $info) {
+        $info['default'] = ($langcode == $default->langcode);
+        $languages[$langcode] = new Language($info);
+      }
     }
     else {
       // No language module, so use the default language only.
       $languages = array($default->langcode => $default);
-    }
-
-    // Initialize default property so callers have an easy reference and can
-    // save the same object without data loss.
-    foreach ($languages as $langcode => $language) {
-      $languages[$langcode]->default = ($langcode == $default->langcode);
     }
   }
 
@@ -2737,14 +2739,14 @@ function language_name($langcode) {
  *   A language object.
  */
 function language_default() {
-  $default = variable_get('language_default', (object) array(
+  $info = variable_get('language_default', array(
     'langcode' => 'en',
     'name' => 'English',
     'direction' => 0,
     'weight' => 0,
   ));
-  $default->default = TRUE;
-  return $default;
+  $info['default'] = TRUE;
+  return new Language($info);
 }
 
 /**

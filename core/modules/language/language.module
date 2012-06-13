@@ -184,7 +184,7 @@ function language_save($language) {
   if (!empty($language->default)) {
     // Set the new version of this language as default in a variable.
     $default_language = language_default();
-    variable_set('language_default', $language);
+    variable_set('language_default', (array) $language);
   }
 
   // Update language count based on enabled language count.

@@ -93,7 +93,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // be some bug.
     drupal_static_reset('language_list');
     $languages = language_list();
-    variable_set('language_default', $languages['vi']);
+    variable_set('language_default', (array) $languages['vi']);
     // First visit this page to make sure our target string is searchable.
     $this->drupalGet('admin/config');
     // Now the t()'ed string is in db so switch the language back to default.
