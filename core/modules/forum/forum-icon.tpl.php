@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Default theme implementation to display an appropriate icon for a forum post.
+ * Displays an appropriate icon for a forum post.
  *
  * Available variables:
  * - $new_posts: Indicates whether or not the topic contains new posts.
@@ -12,6 +12,8 @@
  *
  * @see template_preprocess_forum_icon()
  * @see theme_forum_icon()
+ *
+ * @ingroup themeable
  */
 ?>
 <div class="topic-status-<?php print $icon_class ?>" title="<?php print $icon_title ?>">

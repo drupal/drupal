@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\forum\Tests\ForumTest.
+ * Tests for forum.module.
  */
 
 namespace Drupal\forum\Tests;
@@ -10,14 +10,49 @@ namespace Drupal\forum\Tests;
 use Drupal\node\Node;
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Provides automated tests for the Forum module.
+ */
 class ForumTest extends WebTestBase {
+
+  /**
+   * A user with various administrative privileges.
+   */
   protected $admin_user;
+
+  /**
+   * A user that can create forum topics and edit its own topics.
+   */
   protected $edit_own_topics_user;
+
+  /**
+   * A user that can create, edit, and delete forum topics.
+   */
   protected $edit_any_topics_user;
+
+  /**
+   * A user with no special privileges.
+   */
   protected $web_user;
+
+  /**
+   * An array representing a container.
+   */
   protected $container;
+
+  /**
+   * An array representing a forum.
+   */
   protected $forum;
+
+  /**
+   * An array representing a root forum.
+   */
   protected $root_forum;
+
+  /**
+   * An array of forum topic node IDs.
+   */
   protected $nids;
 
   public static function getInfo() {
@@ -28,9 +63,6 @@ class ForumTest extends WebTestBase {
     );
   }
 
-  /**
-   * Enable modules and create users with specific permissions.
-   */
   function setUp() {
     parent::setUp(array('taxonomy', 'comment', 'forum', 'node', 'block', 'menu', 'help'));
     // Create users.
@@ -58,12 +90,12 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Tests disabling and re-enabling forum.
+   * Tests disabling and re-enabling the Forum module.
    */
   function testEnableForumField() {
     $this->drupalLogin($this->admin_user);
 
-    // Disable the forum module.
+    // Disable the Forum module.
     $edit = array();
     $edit['modules[Core][forum][enable]'] = FALSE;
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
@@ -71,7 +103,7 @@ class ForumTest extends WebTestBase {
     module_list(TRUE);
     $this->assertFalse(module_exists('forum'), t('Forum module is not enabled.'));
 
-    // Attempt to re-enable the forum module and ensure it does not try to
+    // Attempt to re-enable the Forum module and ensure it does not try to
     // recreate the taxonomy_forums field.
     $edit = array();
     $edit['modules[Core][forum][enable]'] = 'forum';
@@ -82,7 +114,7 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Login users, create forum nodes, and test forum functionality through the admin and user interfaces.
+   * Tests forum functionality through the admin and user interfaces.
    */
   function testForum() {
     //Check that the basic forum install creates a default forum topic
@@ -176,7 +208,10 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Forum nodes should not be created without choosing forum from select list.
+   * Tests that forum nodes can't be added without a parent.
+   *
+   * Verifies that forum nodes are not created without choosing "forum" from the
+   * select list.
    */
   function testAddOrphanTopic() {
     // Must remove forum topics to test creating orphan topics.
@@ -198,9 +233,10 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Run admin tests on the admin user.
+   * Runs admin tests on the admin user.
    *
-   * @param object $user The logged in user.
+   * @param object $user
+   *   The logged-in user.
    */
   private function doAdminTests($user) {
     // Login the user.
@@ -289,7 +325,7 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Edit the forum taxonomy.
+   * Edits the forum taxonomy.
    */
   function editForumTaxonomy() {
     // Backup forum taxonomy.
@@ -327,15 +363,15 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Create a forum container or a forum.
+   * Creates a forum container or a forum.
    *
    * @param $type
-   *   Forum type (forum container or forum).
+   *   The forum type (forum container or forum).
    * @param $parent
-   *   Forum parent (default = 0 = a root forum; >0 = a forum container or
-   *   another forum).
+   *   The forum parent. This defaults to 0, indicating a root forum.
+   *
    * @return
-   *   taxonomy_term_data created.
+   *   The created taxonomy term data.
    */
   function createForum($type, $parent = 0) {
     // Generate a random name/description.
@@ -368,7 +404,7 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Delete a forum.
+   * Deletes a forum.
    *
    * @param $tid
    *   The forum ID.
@@ -389,7 +425,7 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Run basic tests on the indicated user.
+   * Runs basic tests on the indicated user.
    *
    * @param $user
    *   The logged in user.
@@ -408,15 +444,15 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Create forum topic.
+   * Creates a forum topic.
    *
    * @param array $forum
-   *   Forum array.
+   *   A forum array.
    * @param boolean $container
-   *   True if $forum is a container.
+   *   TRUE if $forum is a container; FALSE otherwise.
    *
    * @return object
-   *   Topic node created.
+   *   The created topic node.
    */
   function createForumTopic($forum, $container = FALSE) {
     // Generate a random subject/body.
@@ -458,7 +494,7 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Verify the logged in user has access to a forum nodes.
+   * Verifies that the logged in user has access to a forum node.
    *
    * @param $node_user
    *   The user who creates the node.
@@ -538,10 +574,12 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Verify display of forum page.
+   * Verifies the display of a forum page.
    *
    * @param $forum
-   *   A row from taxonomy_term_data table in array.
+   *   A row from the taxonomy_term_data table in an array.
+   * @param $parent
+   *   (optional) An array representing the forum's parent.
    */
   private function verifyForumView($forum, $parent = NULL) {
     // View forum page.
@@ -561,9 +599,10 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Generate forum topics to test display of active forum block.
+   * Generates forum topics to test the display of an active forum block.
    *
-   * @param array $forum Forum array (a row from taxonomy_term_data table).
+   * @param array $forum
+   *   The forum array (a row from taxonomy_term_data table).
    */
   private function generateForumTopics($forum) {
     $this->nids = array();
@@ -574,10 +613,10 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * View forum topics to test display of active forum block.
+   * Views forum topics to test the display of an active forum block.
    *
-   * @todo The logic here is completely incorrect, since the active
-   * forum topics block is determined by comments on the node, not by views.
+   * @todo The logic here is completely incorrect, since the active forum topics
+   *   block is determined by comments on the node, not by views.
    * @todo DIE
    *
    * @param $nids

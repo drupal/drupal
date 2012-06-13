@@ -2,11 +2,20 @@
 
 /**
  * @file
- * User page callbacks for the forum module.
+ * User page callbacks for the Forum module.
  */
 
 /**
- * Menu callback; prints a forum listing.
+ * Page callback: Prints a forum listing.
+ *
+ * @param $forum_term
+ *   A tree of all forums for a given taxonomy term ID. Defaults to NULL. See
+ *   the return object of forum_forum_load() for a complete definition.
+ *
+ * @return
+ *   A string containing HTML representing the themed forum listing.
+ *
+ * @see forum_menu()
  */
 function forum_page($forum_term = NULL) {
   if (!isset($forum_term)) {
