@@ -399,7 +399,7 @@ function filter_modules_disabled($modules) {
  * @see filter_formats_reset()
  */
 function filter_formats($account = NULL) {
-  global $language_interface;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
   $formats = &drupal_static(__FUNCTION__, array());
 
   // All available formats are cached for performance.

@@ -1897,7 +1897,8 @@ function hook_custom_theme() {
  *     the message is not possible to translate.
  */
 function hook_watchdog(array $log_entry) {
-  global $base_url, $language_interface;
+  global $base_url;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   $severity_list = array(
     WATCHDOG_EMERGENCY     => t('Emergency'),

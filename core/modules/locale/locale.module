@@ -190,8 +190,8 @@ function locale_menu() {
  * Initialize date formats according to the user's current locale.
  */
 function locale_init() {
-  global $conf, $language_interface;
-
+  global $conf;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
   // For each date type (e.g. long, short), get the localized date format
   // for the user's current language and override the default setting for it
   // in $conf. This should happen on all pages except the date and time formats
@@ -389,7 +389,7 @@ function locale_language_delete($language) {
  *   Language code to use for the lookup.
  */
 function locale($string = NULL, $context = NULL, $langcode = NULL) {
-  global $language_interface;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
@@ -502,7 +502,7 @@ function locale_reset() {
  *   plural formula.
  */
 function locale_get_plural($count, $langcode = NULL) {
-  global $language_interface;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   // Used to locally cache the plural formulas for all languages.
   $plural_formulas = &drupal_static(__FUNCTION__, array());
@@ -588,7 +588,7 @@ function locale_system_update($components) {
  * file if necessary, and adds it to the page.
  */
 function locale_js_alter(&$javascript) {
-  global $language_interface;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   $dir = 'public://' . variable_get('locale_js_directory', 'languages');
   $parsed = variable_get('javascript_parsed', array());
@@ -648,7 +648,7 @@ function locale_js_alter(&$javascript) {
  */
 function locale_library_info_alter(&$libraries, $module) {
   if ($module == 'system' && isset($libraries['ui.datepicker'])) {
-    global $language_interface;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
     // locale.datepicker.js should be added in the JS_LIBRARY group, so that
     // this attach behavior will execute early. JS_LIBRARY is the default for
     // hook_library_info_alter(), thus does not have to be specified explicitly.
@@ -792,7 +792,7 @@ function locale_form_system_file_system_settings_alter(&$form, $form_state) {
  */
 function locale_preprocess_node(&$variables) {
   if ($variables['langcode'] != LANGUAGE_NOT_SPECIFIED) {
-    global $language_interface;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
     $node_language = language_load($variables['langcode']);
     if ($node_language->langcode != $language_interface->langcode) {

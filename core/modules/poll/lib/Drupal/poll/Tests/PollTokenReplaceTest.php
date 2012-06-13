@@ -23,7 +23,7 @@ class PollTokenReplaceTest extends PollTestBase {
    * Creates a poll, then tests the tokens generated from it.
    */
   function testPollTokenReplacement() {
-    global $language_interface;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
     // Craete a poll with three choices.
     $title = $this->randomName();

@@ -700,7 +700,8 @@ function user_user_view($account) {
  * @see user_validate_mail()
  */
 function user_account_form(&$form, &$form_state) {
-  global $user, $language_interface;
+  global $user;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   $account = $form['#user'];
   $register = ($form['#user']->uid > 0 ? FALSE : TRUE);

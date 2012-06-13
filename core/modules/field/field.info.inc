@@ -67,7 +67,7 @@ function field_info_cache_clear() {
  * @see _field_info_collate_types_reset()
  */
 function _field_info_collate_types() {
-  global $language_interface;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;

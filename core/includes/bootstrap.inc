@@ -2620,7 +2620,6 @@ function drupal_language_initialize() {
 
   // @todo Temporary backwards compatibility for code still using globals.
   //   Remove after these issues:
-  //   - $language_interface: http://drupal.org/node/1510686
   //   - $language_url: http://drupal.org/node/1512310
   foreach ($types as $type) {
     $GLOBALS[$type] = $container->get($type);

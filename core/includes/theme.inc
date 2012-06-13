@@ -2788,17 +2788,18 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
  * @see maintenance-page.tpl.php
  */
 function template_preprocess_maintenance_page(&$variables) {
+  global $theme;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+  // Retrieve the theme data to list all available regions.
+  $theme_data = list_themes();
+  $regions = $theme_data[$theme]->info['regions'];
+
   // Add favicon
   if (theme_get_setting('toggle_favicon')) {
     $favicon = theme_get_setting('favicon');
     $type = theme_get_setting('favicon_mimetype');
     drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
   }
-
-  global $theme;
-  // Retrieve the theme data to list all available regions.
-  $theme_data = list_themes();
-  $regions = $theme_data[$theme]->info['regions'];
 
   // Get all region content set with drupal_add_region_content().
   foreach (array_keys($regions) as $region) {
@@ -2829,8 +2830,6 @@ function template_preprocess_maintenance_page(&$variables) {
       $head_title['slogan'] = variable_get('site_slogan', '');
     }
   }
-
-  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   $variables['head_title_array']  = $head_title;
   $variables['head_title']        = implode(' | ', $head_title);

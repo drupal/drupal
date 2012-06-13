@@ -25,7 +25,7 @@ class UserTokenReplaceTest extends WebTestBase {
    * Creates a user, then tests the tokens generated from it.
    */
   function testUserTokenReplacement() {
-    global $language_interface;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
       'language' => $language_interface,

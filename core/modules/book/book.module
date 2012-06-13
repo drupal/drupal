@@ -1224,7 +1224,8 @@ function book_toc($bid, $depth_limit, $exclude = array()) {
  * @see book-export-html.tpl.php
  */
 function template_preprocess_book_export_html(&$variables) {
-  global $base_url, $language_interface;
+  global $base_url;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   $variables['title'] = check_plain($variables['title']);
   $variables['base_url'] = $base_url;

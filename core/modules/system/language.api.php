@@ -52,7 +52,7 @@ function hook_language_init() {
  *   The current path.
  */
 function hook_language_switch_links_alter(array &$links, $type, $path) {
-  global $language_interface;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language_interface->langcode])) {
     foreach ($links[$language_interface->langcode] as $link) {

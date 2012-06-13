@@ -70,7 +70,7 @@ abstract class UpgradePathTestCase extends WebTestBase {
    * @see Drupal\simpletest\WebTestBase::prepareEnvironment()
    */
   protected function setUp() {
-    global $user, $language_interface, $conf;
+    global $user, $conf;
 
     // Load the Update API.
     require_once DRUPAL_ROOT . '/core/includes/update.inc';

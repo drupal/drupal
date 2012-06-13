@@ -23,7 +23,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
    * Creates a node, then tests the statistics tokens generated from it.
    */
   function testStatisticsTokenReplacement() {
-    global $language_interface;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
     // Create user and node.
     $user = $this->drupalCreateUser(array('create page content'));

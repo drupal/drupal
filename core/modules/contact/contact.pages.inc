@@ -129,7 +129,8 @@ function contact_site_form_validate($form, &$form_state) {
  * @see contact_site_form_validate()
  */
 function contact_site_form_submit($form, &$form_state) {
-  global $user, $language_interface;
+  global $user;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   $values = $form_state['values'];
   $values['sender'] = $user;
@@ -250,7 +251,8 @@ function contact_personal_form($form, &$form_state, $recipient) {
  * @see contact_personal_form_validate()
  */
 function contact_personal_form_submit($form, &$form_state) {
-  global $user, $language_interface;
+  global $user;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   $values = $form_state['values'];
   $values['sender'] = $user;

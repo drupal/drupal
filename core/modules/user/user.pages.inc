@@ -74,7 +74,7 @@ function user_pass_validate($form, &$form_state) {
 }
 
 function user_pass_submit($form, &$form_state) {
-  global $language_interface;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   $account = $form_state['values']['account'];
   // Mail one time login URL and instructions using current language.

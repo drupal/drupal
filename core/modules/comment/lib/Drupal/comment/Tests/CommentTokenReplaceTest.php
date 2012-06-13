@@ -23,7 +23,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
    * Creates a comment, then tests the tokens generated from it.
    */
   function testCommentTokenReplacement() {
-    global $language_interface;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
       'language' => $language_interface,

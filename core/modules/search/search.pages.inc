@@ -104,7 +104,7 @@ function template_preprocess_search_results(&$variables) {
  * @see search-result.tpl.php
  */
 function template_preprocess_search_result(&$variables) {
-  global $language_interface;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   $result = $variables['result'];
   $variables['url'] = check_url($result['link']);

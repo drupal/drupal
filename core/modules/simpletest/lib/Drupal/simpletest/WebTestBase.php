@@ -578,7 +578,8 @@ abstract class WebTestBase extends TestBase {
    * @see Drupal\simpletest\WebTestBase::prepareEnvironment()
    */
   protected function setUp() {
-    global $user, $language_interface, $conf;
+    global $user, $conf;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
     // Create the database prefix for this test.
     $this->prepareDatabasePrefix();

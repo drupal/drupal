@@ -1776,7 +1776,7 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
    * Creates some terms and a node, then tests the tokens generated from them.
    */
   function testTaxonomyTokenReplacement() {
-    global $language_interface;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
     // Create two taxonomy terms.
     $term1 = $this->createTerm($this->vocabulary);

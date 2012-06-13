@@ -328,7 +328,8 @@ function hook_block_view_MODULE_DELTA_alter(&$data, $block) {
  *   An array of $blocks, keyed by the block ID.
  */
 function hook_block_list_alter(&$blocks) {
-  global $language_interface, $theme_key;
+  global $theme_key;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   // This example shows how to achieve language specific visibility setting for
   // blocks.

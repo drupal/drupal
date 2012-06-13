@@ -608,7 +608,8 @@ abstract class TestBase {
    * @see TestBase::tearDown()
    */
   protected function prepareEnvironment() {
-    global $user, $language_interface, $conf;
+    global $user, $conf;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
     // Backup current in-memory configuration.
     $this->originalConf = $conf;
@@ -672,7 +673,8 @@ abstract class TestBase {
    * @see TestBase::prepareEnvironment()
    */
   protected function tearDown() {
-    global $user, $language_interface, $conf;
+    global $user, $conf;
+    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
     // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.

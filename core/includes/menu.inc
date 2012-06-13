@@ -1095,7 +1095,6 @@ function menu_tree_output($tree) {
  */
 function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
   $tree = &drupal_static(__FUNCTION__, array());
-
   $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   // Use $mlid as a flag for whether the data being loaded is for the whole tree.
@@ -1363,7 +1362,6 @@ function menu_build_tree($menu_name, array $parameters = array()) {
 function _menu_build_tree($menu_name, array $parameters = array()) {
   // Static cache of already built menu trees.
   $trees = &drupal_static(__FUNCTION__, array());
-
   $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   // Build the cache id; sort parents to prevent duplicate storage and remove

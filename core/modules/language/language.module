@@ -234,7 +234,7 @@ function language_delete($langcode) {
  * and checks to see if a related right to left CSS file should be included.
  */
 function language_css_alter(&$css) {
-  global $language_interface;
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
 
   // If the current language is RTL, add the CSS file with the RTL overrides.
   if ($language_interface->direction == LANGUAGE_RTL) {
