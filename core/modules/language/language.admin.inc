@@ -278,8 +278,8 @@ function language_admin_add_predefined_form_validate($form, &$form_state) {
     form_set_error('predefined_langcode', t('Fill in the language details and save the language with <em>Add custom language</em>.'));
   }
   else {
-    if (language_load($langcode)) {
-      form_set_error('predefined_langcode', t('The language %language (%langcode) already exists.', array('%language' => $languages[$langcode]->name, '%langcode' => $langcode)));
+    if ($language = language_load($langcode)) {
+      form_set_error('predefined_langcode', t('The language %language (%langcode) already exists.', array('%language' => $language->name, '%langcode' => $langcode)));
     }
   }
 }
@@ -293,9 +293,8 @@ function language_admin_add_custom_form_validate($form, &$form_state) {
     // Reuse the editing form validation routine if we add a custom language.
     language_admin_edit_form_validate($form, $form_state);
 
-    $languages = language_list();
-    if (isset($languages[$langcode])) {
-     form_set_error('langcode', t('The language %language (%langcode) already exists.', array('%language' => $languages[$langcode]->name, '%langcode' => $langcode)));
+    if ($language = language_load($langcode)) {
+      form_set_error('langcode', t('The language %language (%langcode) already exists.', array('%language' => $language->name, '%langcode' => $langcode)));
     }
   }
   else {
