@@ -2737,7 +2737,7 @@ function hook_schema_alter(&$schema) {
  * @see AlterableInterface
  * @see SelectInterface
  */
-function hook_query_alter(Drupal\Database\Query\AlterableInterface $query) {
+function hook_query_alter(Drupal\Core\Database\Query\AlterableInterface $query) {
   if ($query->hasTag('micro_limit')) {
     $query->range(0, 2);
   }
@@ -2754,7 +2754,7 @@ function hook_query_alter(Drupal\Database\Query\AlterableInterface $query) {
  * @see AlterableInterface
  * @see SelectInterface
  */
-function hook_query_TAG_alter(Drupal\Database\Query\AlterableInterface $query) {
+function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $query) {
   // Skip the extra expensive alterations if site has no node access control modules.
   if (!node_access_view_all_nodes()) {
     // Prevent duplicates records.
