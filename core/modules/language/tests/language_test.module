@@ -95,7 +95,7 @@ function language_test_language_negotiation_info_alter(array &$negotiation_info)
 function language_test_store_language_negotiation() {
   $last = array();
   foreach (language_types_get_all() as $type) {
-    $last[$type] = $GLOBALS[$type]->langcode;
+    $last[$type] = drupal_container()->get($type)->langcode;
   }
   variable_set('language_test_language_negotiation_last', $last);
 }

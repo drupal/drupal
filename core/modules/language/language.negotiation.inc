@@ -321,7 +321,7 @@ function language_switcher_url($type, $path) {
  */
 function language_switcher_session($type, $path) {
   $param = variable_get('language_negotiation_session_param', 'language');
-  $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : $GLOBALS[$type]->langcode;
+  $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : drupal_container()->get($type)->langcode;
 
   $languages = language_list();
   $links = array();

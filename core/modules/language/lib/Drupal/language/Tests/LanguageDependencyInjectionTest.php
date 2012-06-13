@@ -31,22 +31,6 @@ class LanguageDependencyInjectionTest extends WebTestBase {
     drupal_container(new ContainerBuilder());
   }
 
-  /**
-   * Test dependency injected Language against the GLOBAL language object.
-   *
-   * @todo Once the PHP global is gone, we won't need this test as the same
-   * test is done without the PHP global in the following test.
-   */
-  function testDependencyInjectedLanguage() {
-    // Initialize the language system.
-    drupal_language_initialize();
-
-    $expected = $GLOBALS[LANGUAGE_TYPE_INTERFACE];
-    $result = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
-    foreach ($expected as $property => $value) {
-      $this->assertEqual($expected->$property, $result->$property, t('The dependency injected language object %prop property equals the $GLOBAL language object %prop property.', array('%prop' => $property)));
-    }
-  }
 
   /**
    * Test dependency injected languages against a new Language object.
