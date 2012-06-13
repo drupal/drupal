@@ -275,7 +275,7 @@ function user_profile_form_submit($form, &$form_state) {
     unset($_SESSION['pass_reset_'. $account->uid]);
   }
   // Clear the page cache because pages can contain usernames and/or profile information:
-  cache_clear_all();
+  cache_invalidate(array('content' => TRUE));
 
   drupal_set_message(t('The changes have been saved.'));
 }

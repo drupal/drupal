@@ -94,11 +94,9 @@ interface CacheBackendInterface {
    * @param $expire
    *   One of the following values:
    *   - CACHE_PERMANENT: Indicates that the item should never be removed unless
-   *     explicitly told to using cache_clear_all() with a cache ID.
-   *   - CACHE_TEMPORARY: Indicates that the item should be removed at the next
-   *     general cache wipe.
+   *     explicitly told to using cache->delete($cid).
    *   - A Unix timestamp: Indicates that the item should be kept at least until
-   *     the given time, after which it behaves like CACHE_TEMPORARY.
+   *     the given time.
    * @param array $tags
    *   An array of tags to be stored with the cache item. These should normally
    *   identify objects used to build the cache item, which should trigger

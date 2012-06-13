@@ -40,11 +40,6 @@ const DRUPAL_MINIMUM_PHP_MEMORY_LIMIT = '32M';
 const CACHE_PERMANENT = 0;
 
 /**
- * Indicates that the item should be removed at the next general cache wipe.
- */
-const CACHE_TEMPORARY = -1;
-
-/**
  * @defgroup logging_severity_levels Logging severity levels
  * @{
  * Logging severity levels as defined in RFC 3164.

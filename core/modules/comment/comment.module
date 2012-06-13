@@ -2096,7 +2096,7 @@ function comment_form_submit($form, &$form_state) {
   $form_state['redirect'] = $redirect;
   // Clear the block and page caches so that anonymous users see the comment
   // they have posted.
-  cache_clear_all();
+  cache_invalidate(array('content' => TRUE));
 }
 
 /**
@@ -2439,7 +2439,7 @@ function comment_unpublish_by_keyword_action_submit($form, $form_state) {
  */
 function comment_save_action(Comment $comment) {
   comment_save($comment);
-  cache_clear_all();
+  cache_invalidate(array('content' => TRUE));
   watchdog('action', 'Saved comment %title', array('%title' => $comment->subject));
 }
 

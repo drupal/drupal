@@ -611,7 +611,7 @@ function node_admin_nodes_submit($form, &$form_state) {
     }
     call_user_func_array($function, $args);
 
-    cache_clear_all();
+    cache_invalidate(array('content' => TRUE));
   }
   else {
     // We need to rebuild the form to go to a second step. For example, to

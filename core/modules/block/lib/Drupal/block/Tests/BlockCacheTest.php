@@ -66,7 +66,7 @@ class BlockCacheTest extends WebTestBase {
     $this->assertText($old_content, t('Block is served from the cache.'));
 
     // Clear the cache and verify that the stale data is no longer there.
-    cache_clear_all();
+    cache_invalidate(array('content' => TRUE));
     $this->drupalGet('');
     $this->assertNoText($old_content, t('Block cache clear removes stale cache data.'));
     $this->assertText($current_content, t('Fresh block content is displayed after clearing the cache.'));

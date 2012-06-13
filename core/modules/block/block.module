@@ -374,7 +374,7 @@ function _block_get_renderable_region($list = array()) {
           'keys' => array($block->module, $block->delta),
           'granularity' => $block->cache,
           'bin' => 'block',
-          'expire' => CACHE_TEMPORARY,
+          'tags' => array('content' => TRUE),
         ),
       );
     }

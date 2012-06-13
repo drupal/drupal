@@ -44,8 +44,8 @@ function aggregator_aggregator_parse($feed) {
     $feed->etag = $etag;
     $feed->modified = $modified;
 
-    // Clear the cache.
-    cache_clear_all();
+    // Clear the page and block caches.
+    cache_invalidate(array('content' => TRUE));
 
     return TRUE;
   }

@@ -2266,7 +2266,7 @@ function _user_cancel($edit, $account, $method) {
   }
 
   // Clear the cache for anonymous users.
-  cache_clear_all();
+  cache_invalidate(array('content' => TRUE));
 }
 
 /**

@@ -84,6 +84,6 @@ class VocabularyStorageController extends DatabaseStorageController {
   public function resetCache(array $ids = NULL) {
     drupal_static_reset('taxonomy_vocabulary_get_names');
     parent::resetCache($ids);
-    cache_clear_all();
+    cache_invalidate(array('content' => TRUE));
   }
 }

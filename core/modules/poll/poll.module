@@ -756,7 +756,7 @@ function poll_vote($form, &$form_state) {
     ->condition('chid', $choice)
     ->execute();
 
-  cache_clear_all();
+  cache_invalidate(array('content' => TRUE));
 
   if (!$user->uid) {
     // The vote is recorded so the user gets the result view instead of the

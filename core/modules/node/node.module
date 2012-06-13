@@ -3447,7 +3447,7 @@ function node_access_rebuild($batch_mode = FALSE) {
   if (!isset($batch)) {
     drupal_set_message(t('Content permissions have been rebuilt.'));
     node_access_needs_rebuild(FALSE);
-    cache_clear_all();
+    cache_invalidate(array('content' => TRUE));
   }
 }
 
@@ -3497,7 +3497,7 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
   else {
     drupal_set_message(t('The content access permissions have not been properly rebuilt.'), 'error');
   }
-  cache_clear_all();
+  cache_invalidate(array('content' => TRUE));
 }
 
 /**

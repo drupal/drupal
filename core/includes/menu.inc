@@ -3257,13 +3257,13 @@ function _menu_clear_page_cache() {
   // Clear the page and block caches, but at most twice, including at
   //  the end of the page load when there are multiple links saved or deleted.
   if ($cache_cleared == 0) {
-    cache_clear_all();
+    cache_invalidate(array('content' => TRUE));
     // Keep track of which menus have expanded items.
     _menu_set_expanded_menus();
     $cache_cleared = 1;
   }
   elseif ($cache_cleared == 1) {
-    drupal_register_shutdown_function('cache_clear_all');
+    drupal_register_shutdown_function('cache_invalidate', array('content', TRUE));
     // Keep track of which menus have expanded items.
     drupal_register_shutdown_function('_menu_set_expanded_menus');
     $cache_cleared = 2;

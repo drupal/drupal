@@ -865,9 +865,7 @@ function _update_cache_clear($cid = NULL, $wildcard = FALSE) {
  * running update.php, we are likely to install a new version of something, in
  * which case, we want to check for available update data again. However,
  * because we have our own caching system, we need to directly clear the
- * database table ourselves at this point and return nothing, for example, on
- * sites that use memcache where cache_clear_all() won't know how to purge this
- * data.
+ * the database table ourselves at this point and return nothing.
  *
  * However, we only want to do this from update.php, since otherwise, we'd lose
  * all the available update data on every cron run. So, we specifically check if

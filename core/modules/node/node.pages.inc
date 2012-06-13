@@ -520,7 +520,7 @@ function node_form_submit($form, &$form_state) {
     $form_state['rebuild'] = TRUE;
   }
   // Clear the page and block caches.
-  cache_clear_all();
+  cache_invalidate(array('content' => TRUE));
 }
 
 /**

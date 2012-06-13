@@ -67,19 +67,3 @@ function cache_invalidate(array $tags) {
 function cache_get_backends() {
   return variable_get('cache_classes', array('cache' => 'Drupal\Core\Cache\DatabaseBackend'));
 }
-
-/**
- * Expires data from the block and page caches.
- */
-function cache_clear_all() {
-  // @todo: remove before release.
-  if (func_get_args()) {
-    throw new Exception(t('cache_clear_all() no longer takes arguments, use cache() instead.'));
-  }
-  // Clear the block cache first, so stale data will
-  // not end up in the page cache.
-  if (module_exists('block')) {
-    cache('block')->expire();
-  }
-  cache('page')->expire();
-}

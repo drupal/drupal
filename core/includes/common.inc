@@ -110,10 +110,11 @@ const HTTP_REQUEST_TIMEOUT = -1;
  * specified. Use DRUPAL_CACHE_CUSTOM to disable standard block cache and
  * implement
  *
- * The block cache is cleared in cache_clear_all(), and uses the same clearing
- * policy than page cache (node, comment, user, taxonomy added or updated...).
- * Blocks requiring more fine-grained clearing might consider disabling the
- * built-in block cache (DRUPAL_NO_CACHE) and roll their own.
+ * The block cache is cleared when the 'content' cache tag is invalidated,
+ * following the same pattern as the page cache (node, comment, user, taxonomy
+ * added or updated...). Blocks requiring more fine-grained clearing might
+ * consider disabling the built-in block cache (DRUPAL_NO_CACHE)
+ * and roll their own.
  *
  * Note that user 1 is excluded from block caching.
  */
@@ -5129,7 +5130,8 @@ function drupal_page_set_cache() {
         'title' => drupal_get_title(),
         'headers' => array(),
       ),
-      'expire' => CACHE_TEMPORARY,
+      'tags' => array('content' => TRUE),
+      'expire' => CACHE_PERMANENT,
       'created' => REQUEST_TIME,
     );
 
@@ -5148,7 +5150,7 @@ function drupal_page_set_cache() {
       if (config('system.performance')->get('page_compression') && extension_loaded('zlib')) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
-      cache('page')->set($cache->cid, $cache->data, $cache->expire);
+      cache('page')->set($cache->cid, $cache->data, $cache->expire, $cache->tags);
     }
     return $cache;
   }
@@ -6050,7 +6052,8 @@ function drupal_render_cache_set(&$markup, $elements) {
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : CACHE_PERMANENT;
-  cache($bin)->set($cid, $data, $expire);
+  $tags = isset($elements['#cache']['tags']) ? $elements['#cache']['tags'] : array();
+  cache($bin)->set($cid, $data, $expire, $tags);
 }
 
 /**
@@ -6123,7 +6126,7 @@ function drupal_render_collect_attached($elements, $return = FALSE) {
  *   - #pre_render: $function with a _pre_render suffix.
  *   - #cache: An associative array prepared for drupal_render_cache_set().
  */
-function drupal_render_cache_by_query($query, $function, $expire = CACHE_TEMPORARY, $granularity = NULL) {
+function drupal_render_cache_by_query($query, $function, $expire = CACHE_PERMANENT, $granularity = NULL) {
   $cache_keys = array_merge(array($function), drupal_render_cid_parts($granularity));
   $query->preExecute();
   $cache_keys[] = hash('sha256', serialize(array((string) $query, $query->getArguments())));

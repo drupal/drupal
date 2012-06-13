@@ -213,7 +213,7 @@ class LocaleTranslationTest extends WebTestBase {
     // Test JavaScript translation rebuilding.
     file_unmanaged_delete($js_file);
     $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
-    cache_clear_all();
+    cache_invalidate(array('content' => TRUE));
     _locale_rebuild_js($langcode);
     $this->assertTrue($result = file_exists($js_file), t('JavaScript file rebuilt: %file', array('%file' => $result ? $js_file : t('not found'))));
   }

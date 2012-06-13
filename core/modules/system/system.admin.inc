@@ -717,7 +717,7 @@ function system_theme_settings_submit($form, &$form_state) {
   variable_set($key, $values);
   drupal_set_message(t('The configuration options have been saved.'));
 
-  cache_clear_all();
+  cache_invalidate(array('content' => TRUE));
 }
 
 /**
@@ -1689,15 +1689,9 @@ function system_performance_settings($form, &$form_state) {
     '#default_value' => $config->get('cache'),
     '#weight' => -2,
   );
+
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
   $period[0] = '<' . t('none') . '>';
-  $form['caching']['cache_lifetime'] = array(
-    '#type' => 'select',
-    '#title' => t('Minimum cache lifetime'),
-    '#default_value' => $config->get('cache_lifetime'),
-    '#options' => $period,
-    '#description' => t('Cached pages will not be re-created until at least this much time has elapsed.'),
-  );
   $form['caching']['page_cache_maximum_age'] = array(
     '#type' => 'select',
     '#title' => t('Expiration of cached pages'),
@@ -1765,7 +1759,6 @@ function system_performance_settings($form, &$form_state) {
 function system_performance_settings_submit($form, &$form_state) {
   $config = config('system.performance');
   $config->set('cache', $form_state['values']['cache']);
-  $config->set('cache_lifetime', $form_state['values']['cache_lifetime']);
   $config->set('page_cache_maximum_age', $form_state['values']['page_cache_maximum_age']);
   $config->set('page_compression', $form_state['values']['page_compression']);
   $config->set('preprocess_css', $form_state['values']['preprocess_css']);

@@ -91,19 +91,6 @@ class CacheTestCase extends WebTestBase {
 
     cache($bin)->expire();
   }
-
-  /**
-   * Setup the lifetime settings for caching.
-   *
-   * @param $time
-   *   The time in seconds the cache should minimal live.
-   */
-  protected function setupLifetime($time) {
-    $config = config('system.performance');
-    $config->set('cache_lifetime', $time);
-    $config->save();
-    variable_set('cache_flush', 0);
-  }
 }
 
 class CacheSavingCase extends CacheTestCase {
@@ -343,40 +330,6 @@ class CacheClearCase extends CacheTestCase {
   }
 
   /**
-   * Test minimum cache lifetime.
-   */
-  function testMinimumCacheLifetime() {
-    // Set a minimum/maximum cache lifetime.
-    $this->setupLifetime(300);
-    // Login as a newly-created user.
-    $account = $this->drupalCreateUser(array());
-    $this->drupalLogin($account);
-
-    // Set two cache objects in different bins.
-    $data = $this->randomName(100);
-    cache()->set($data, $data, CACHE_TEMPORARY);
-    $cached = cache()->get($data);
-    $this->assertTrue(isset($cached->data) && $cached->data === $data, 'Cached item retrieved.');
-    cache('page')->set($data, $data, CACHE_TEMPORARY);
-
-    // Expire temporary items in the 'page' bin.
-    cache('page')->expire();
-
-    // Since the database cache uses REQUEST_TIME, set the $_SESSION variable
-    // manually to force it to the current time.
-    $_SESSION['cache_expiration']['cache_page'] = time();
-
-    // Items in the default cache bin should not be expired.
-    $cached = cache()->get($data);
-    $this->assertTrue(isset($cached->data) && $cached->data == $data, 'Cached item retrieved');
-
-    // Despite the minimum cache lifetime, the item in the 'page' bin should
-    // be invalidated for the current user.
-    $cached = cache('page')->get($data);
-    $this->assertFalse($cached, 'Cached item was invalidated');
-  }
-
-  /**
    * Test clearing using cache tags.
    */
   function testClearTags() {
@@ -542,32 +495,6 @@ class CacheInstallTestCase extends CacheTestCase {
     $this->assertEqual($database_cache->get('cache_one')->data, 'One');
     $this->assertEqual($database_cache->get('cache_two')->data, 'Two');
     $install_cache->flush();
-    $this->assertFalse($database_cache->get('cache_one'));
-    $this->assertFalse($database_cache->get('cache_two'));
-
-    // Store multiple items in the database cache with a temporary expiration,
-    // then use the installer's cache backend to expire outdated items.
-    // Afterwards, confirm that they are no longer in the database cache.
-    $database_cache->set('cache_one', 'One', CACHE_TEMPORARY);
-    $database_cache->set('cache_two', 'Two', CACHE_TEMPORARY);
-    $this->assertEqual($database_cache->get('cache_one')->data, 'One');
-    $this->assertEqual($database_cache->get('cache_two')->data, 'Two');
-    $install_cache->expire();
-    $this->assertFalse($database_cache->get('cache_one'));
-    $this->assertFalse($database_cache->get('cache_two'));
-
-    // Store multiple items in the database cache with a temporary expiration,
-    // then use the installer's cache backend to perform garbage collection.
-    // Afterwards, confirm that they are no longer in the database cache.
-    $database_cache->set('cache_one', 'One', CACHE_TEMPORARY);
-    $database_cache->set('cache_two', 'Two', CACHE_TEMPORARY);
-    $this->assertEqual($database_cache->get('cache_one')->data, 'One');
-    $this->assertEqual($database_cache->get('cache_two')->data, 'Two');
-    // After we've checked that the items are in the cache, we need to enable
-    // garbage collection before running the garbage collector.
-    config('system.performance')->set('cache_lifetime', 1)->save();
-    variable_set('cache_flush_cache_test', 1);
-    $install_cache->garbageCollection();
     $this->assertFalse($database_cache->get('cache_one'));
     $this->assertFalse($database_cache->get('cache_two'));
 

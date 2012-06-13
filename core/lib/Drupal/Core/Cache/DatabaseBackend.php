@@ -100,14 +100,6 @@ class DatabaseBackend implements CacheBackendInterface {
     if (!isset($cache->data)) {
       return FALSE;
     }
-    // If the cached data is temporary and subject to a per-user minimum
-    // lifetime, compare the cache entry timestamp with the user session
-    // cache_expiration timestamp. If the cache entry is too old, ignore it.
-    $config = config('system.performance');
-    if ($cache->expire != CACHE_PERMANENT && $config->get('cache_lifetime') && isset($_SESSION['cache_expiration'][$this->bin]) && $_SESSION['cache_expiration'][$this->bin] > $cache->created) {
-      // Ignore cache data that is too old and thus not valid for this user.
-      return FALSE;
-    }
 
     // The cache data is invalid if any of its tags have been cleared since.
     if ($cache->tags) {
@@ -199,73 +191,17 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::expire().
    */
   function expire() {
-    if (variable_get('cache_lifetime', 0)) {
-      // We store the time in the current user's session. We then simulate
-      // that the cache was flushed for this user by not returning cached
-      // data that was cached before the timestamp.
-      $_SESSION['cache_expiration'][$this->bin] = REQUEST_TIME;
-
-      $cache_flush = variable_get('cache_flush_' . $this->bin, 0);
-      if ($cache_flush == 0) {
-        // This is the first request to clear the cache, start a timer.
-        variable_set('cache_flush_' . $this->bin, REQUEST_TIME);
-      }
-      elseif (REQUEST_TIME > ($cache_flush + variable_get('cache_lifetime', 0))) {
-        // Clear the cache for everyone; cache_lifetime seconds have passed
-        // since the first request to clear the cache.
-        db_delete($this->bin)
-          ->condition('expire', CACHE_PERMANENT, '<>')
-          ->condition('expire', REQUEST_TIME, '<')
-          ->execute();
-        variable_set('cache_flush_' . $this->bin, 0);
-      }
-    }
-    else {
-      // No minimum cache lifetime, flush all temporary cache entries now.
-      db_delete($this->bin)
-        ->condition('expire', CACHE_PERMANENT, '<>')
-        ->condition('expire', REQUEST_TIME, '<')
-        ->execute();
-    }
+    db_delete($this->bin)
+      ->condition('expire', CACHE_PERMANENT, '<>')
+      ->condition('expire', REQUEST_TIME, '<')
+      ->execute();
   }
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::garbageCollection().
    */
   function garbageCollection() {
-    $cache_lifetime = config('system.performance')->get('cache_lifetime');
-
-    // Clean-up the per-user cache expiration session data, so that the session
-    // handler can properly clean-up the session data for anonymous users.
-    if (isset($_SESSION['cache_expiration'])) {
-      $expire = REQUEST_TIME - $cache_lifetime;
-      foreach ($_SESSION['cache_expiration'] as $bin => $timestamp) {
-        if ($timestamp < $expire) {
-          unset($_SESSION['cache_expiration'][$bin]);
-        }
-      }
-      if (!$_SESSION['cache_expiration']) {
-        unset($_SESSION['cache_expiration']);
-      }
-    }
-
-    // Garbage collection of temporary items is only necessary when enforcing
-    // a minimum cache lifetime.
-    if (!$cache_lifetime) {
-      return;
-    }
-    // When cache lifetime is in force, avoid running garbage collection too
-    // often since this will remove temporary cache items indiscriminately.
-    $cache_flush = variable_get('cache_flush_' . $this->bin, 0);
-    if ($cache_flush && ($cache_flush + $cache_lifetime <= REQUEST_TIME)) {
-      // Reset the variable immediately to prevent a meltdown in heavy load situations.
-      variable_set('cache_flush_' . $this->bin, 0);
-      // Time to flush old cache data
-      db_delete($this->bin)
-        ->condition('expire', CACHE_PERMANENT, '<>')
-        ->condition('expire', $cache_flush, '<=')
-        ->execute();
-    }
+    $this->expire();
   }
 
   /**
