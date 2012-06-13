@@ -728,6 +728,8 @@ function st($string, array $args = array(), array $options = array()) {
       // that multiple files end with the same extension, even if unlikely.
       $files = install_find_translation_files($install_state['parameters']['langcode']);
       if (!empty($files)) {
+        // Include cross-dependent code from locale module and gettext.inc.
+        require_once DRUPAL_ROOT . '/core/modules/locale/locale.module';
         require_once DRUPAL_ROOT . '/core/includes/gettext.inc';
         foreach ($files as $file) {
           _locale_import_read_po('mem-store', $file);
