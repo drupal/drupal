@@ -370,29 +370,10 @@ function system_test_filetransfer_info() {
   return array(
     'system_test' => array(
       'title' => t('System Test FileTransfer'),
-      'file' => 'system_test.module',  // Should be a .inc, but for test, ok.
-      'class' => 'SystemTestFileTransfer',
+      'class' => 'Drupal\system_test\MockFileTransfer',
       'weight' => -10,
     ),
   );
-}
-
-/**
- * Mock FileTransfer object to test the settings form functionality.
- */
-class SystemTestFileTransfer {
-  public static function factory() {
-    return new SystemTestFileTransfer;
-  }
-
-  public function getSettingsForm() {
-    $form = array();
-    $form['system_test_username'] = array(
-      '#type' => 'textfield',
-      '#title' => t('System Test Username'),
-    );
-    return $form;
-  }
 }
 
 /**

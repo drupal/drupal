@@ -157,41 +157,10 @@ function update_test_filetransfer_info() {
   return array(
     'system_test' => array(
       'title' => t('Update Test FileTransfer'),
-      // This should be in an .inc file, but for testing purposes, it is OK to
-      // leave it in the main module file.
-      'file' => 'update_test.module',
-      'class' => 'UpdateTestFileTransfer',
+      'class' => 'Drupal\update_test\MockFileTransfer',
       'weight' => -20,
     ),
   );
-}
-
-/**
- * Mocks a FileTransfer object to test the settings form functionality.
- */
-class UpdateTestFileTransfer {
-
-  /**
-   * Returns an UpdateTestFileTransfer object.
-   *
-   * @return
-   *   A new UpdateTestFileTransfer object.
-   */
-  public static function factory() {
-    return new UpdateTestFileTransfer;
-  }
-
-  /**
-   * Returns a settings form with a text field to input a username.
-   */
-  public function getSettingsForm() {
-    $form = array();
-    $form['udpate_test_username'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Update Test Username'),
-    );
-    return $form;
-  }
 }
 
 /**
