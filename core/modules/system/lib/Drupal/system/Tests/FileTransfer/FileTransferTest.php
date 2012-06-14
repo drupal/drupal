@@ -1,10 +1,19 @@
 <?php
 
-use Drupal\Core\FileTransfer\FileTransfer;
+/**
+ * @file
+ * Definition of Drupal\system\Tests\FileTransfer\FileTransferTest.
+ */
+
+namespace Drupal\system\Tests\FileTransfer;
+
 use Drupal\Core\FileTransfer\FileTransferException;
 use Drupal\simpletest\WebTestBase;
 
-class FileTranferTest extends WebTestBase {
+/**
+ * File transfer tests.
+ */
+class FileTransferTest extends WebTestBase {
   protected $hostname = 'localhost';
   protected $username = 'drupal';
   protected $password = 'password';
@@ -73,7 +82,7 @@ class FileTranferTest extends WebTestBase {
     // not support expecting exceptions.
     $gotit = FALSE;
     try {
-      $this->testConnection->copyDirectory($source, '/tmp');
+      $this->testConnection->copyDirectory($source, sys_get_temp_dir());
     }
     catch (FileTransferException $e) {
       $gotit = TRUE;
@@ -88,84 +97,5 @@ class FileTranferTest extends WebTestBase {
       $gotit = FALSE;
     }
     $this->assertTrue($gotit, 'Was able to copy a directory inside of the jailed area');
-  }
-}
-
-/**
- * Mock FileTransfer object for test case.
- */
-class TestFileTransfer extends FileTransfer {
-  protected $host = NULL;
-  protected $username = NULL;
-  protected $password = NULL;
-  protected $port = NULL;
-
-  /**
-   * This is for testing the CopyRecursive logic.
-   */
-  public $shouldIsDirectoryReturnTrue = FALSE;
-
-  function __construct($jail, $username, $password, $hostname = 'localhost', $port = 9999) {
-    parent::__construct($jail, $username, $password, $hostname, $port);
-  }
-
-  static function factory($jail, $settings) {
-    return new TestFileTransfer($jail, $settings['username'], $settings['password'], $settings['hostname'], $settings['port']);
-  }
-
-  function connect() {
-    $parts = explode(':', $this->hostname);
-    $port = (count($parts) == 2) ? $parts[1] : $this->port;
-    $this->connection = new MockTestConnection();
-    $this->connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
-  }
-
-  function copyFileJailed($source, $destination) {
-    $this->connection->run("copyFile $source $destination");
-  }
-
-  protected function removeDirectoryJailed($directory) {
-    $this->connection->run("rmdir $directory");
-  }
-
-  function createDirectoryJailed($directory) {
-    $this->connection->run("mkdir $directory");
-  }
-
-  function removeFileJailed($destination) {
-    if (!ftp_delete($this->connection, $item)) {
-      throw new FileTransferException('Unable to remove to file @file.', NULL, array('@file' => $item));
-    }
-  }
-
-  function isDirectory($path) {
-    return $this->shouldIsDirectoryReturnTrue;
-  }
-
-  function isFile($path) {
-    return FALSE;
-  }
-
-  function chmodJailed($path, $mode, $recursive) {
-    return;
-  }
-}
-
-/**
- * Mock connection object for test case.
- */
-class MockTestConnection {
-
-  var $commandsRun = array();
-  var $connectionString;
-
-  function run($cmd) {
-    $this->commandsRun[] = $cmd;
-  }
-
-  function flushCommands() {
-    $out = $this->commandsRun;
-    $this->commandsRun = array();
-    return $out;
   }
 }
