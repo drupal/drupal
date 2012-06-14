@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Vocabulary.
+ * Definition of Drupal\taxonomy\Vocabulary.
  */
 
 namespace Drupal\taxonomy;

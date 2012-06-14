@@ -880,7 +880,7 @@ function block_block_list_alter(&$blocks) {
       continue;
     }
     foreach ($block_langcodes[$block->module][$block->delta] as $language_type => $langcodes) {
-      if (isset($langcodes[$GLOBALS[$language_type]->langcode])) {
+      if (isset($langcodes[drupal_container()->get($language_type)->langcode])) {
         // Found a language type - langcode combination in the configuration
         // that is applicable to the current request.
         continue 2;

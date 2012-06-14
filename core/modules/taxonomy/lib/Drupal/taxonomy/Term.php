@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Term.
+ * Definition of Drupal\taxonomy\Term.
  */
 
 namespace Drupal\taxonomy;

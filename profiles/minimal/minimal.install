@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Install, update and uninstall functions for the the minimal install profile.
+ * Install, update and uninstall functions for the minimal install profile.
  */
 
 /**

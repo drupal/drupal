@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of TermStorageController.
+ * Definition of Drupal\taxonomy\TermStorageController.
  */
 
 namespace Drupal\taxonomy;

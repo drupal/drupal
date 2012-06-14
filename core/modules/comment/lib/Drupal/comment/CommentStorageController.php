@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Entity controller class for comments.
+ * Definition of Drupal\comment\CommentStorageController.
  */
 
 namespace Drupal\comment;

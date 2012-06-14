@@ -113,7 +113,7 @@ class BookTest extends WebTestBase {
   /**
    * Check the outline of sub-pages; previous, up, and next; and printer friendly version.
    *
-   * @param Node $node
+   * @param Drupal\node\Node $node
    *   Node to check.
    * @param $nodes
    *   Nodes that should be in outline.

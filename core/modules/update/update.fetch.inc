@@ -363,7 +363,12 @@ function _update_cron_notify() {
         else {
           $target_language = $default_language;
         }
-        drupal_mail('update', 'status_notify', $target, $target_language, $params);
+        $message = drupal_mail('update', 'status_notify', $target, $target_language, $params);
+        // Track when the last mail was successfully sent to avoid sending
+        // too many e-mails.
+        if ($message['result']) {
+          variable_set('update_last_email_notification', REQUEST_TIME);
+        }
       }
     }
   }

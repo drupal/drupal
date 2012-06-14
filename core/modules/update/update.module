@@ -300,12 +300,17 @@ function update_cron() {
     // configured notifications about the new status.
     update_refresh();
     update_fetch_data();
-    _update_cron_notify();
   }
   else {
     // Otherwise, see if any individual projects are now stale or still
     // missing data, and if so, try to fetch the data.
     update_get_available(TRUE);
+  }
+  if ((REQUEST_TIME - variable_get('update_last_email_notification', 0)) > $interval) {
+    // If configured time between notifications elapsed, send email about
+    // updates possibly available.
+    module_load_include('inc', 'update', 'update.fetch');
+    _update_cron_notify();
   }
 
   // Clear garbage from disk.

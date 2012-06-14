@@ -4,4 +4,3 @@ package = Core
 version = VERSION
 core = 8.x
 dependencies[] = field
-files[] = tests/file.test

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Entity class for nodes.
+ * Definition of Drupal\node\Node.
  */
 
 namespace Drupal\node;

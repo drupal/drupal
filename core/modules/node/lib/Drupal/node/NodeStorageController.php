@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Entity controller class for nodes.
+ * Definition of Drupal\node\NodeStorageController.
  */
 
 namespace Drupal\node;

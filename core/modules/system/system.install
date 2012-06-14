@@ -116,6 +116,7 @@ function system_requirements($phase) {
     'session',
     'SimpleXML',
     'SPL',
+    'tokenizer',
     'xml',
   );
   foreach ($required_extensions as $extension) {
