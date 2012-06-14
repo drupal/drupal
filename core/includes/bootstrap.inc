@@ -2617,13 +2617,6 @@ function drupal_language_initialize() {
         ->addMethodCall('extend', array($default));
     }
   }
-
-  // @todo Temporary backwards compatibility for code still using globals.
-  //   Remove after these issues:
-  //   - $language_url: http://drupal.org/node/1512310
-  foreach ($types as $type) {
-    $GLOBALS[$type] = $container->get($type);
-  }
 }
 
 /**

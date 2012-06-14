@@ -2367,7 +2367,7 @@ function user_view_page($account) {
  */
 function user_view($account, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->langcode;
+    $langcode = drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Retrieve all profile fields and attach to $account->content.
@@ -2404,7 +2404,7 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
  */
 function user_build_content($account, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->langcode;
+    $langcode = drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Remove previously built content, if exists.

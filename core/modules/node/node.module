@@ -1132,7 +1132,7 @@ function node_revision_delete($revision_id) {
  */
 function node_view(Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->langcode;
+    $langcode = drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Populate $node->content with a render() array.
@@ -1194,7 +1194,7 @@ function node_view(Node $node, $view_mode = 'full', $langcode = NULL) {
  */
 function node_build_content(Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->langcode;
+    $langcode = drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Remove previously built content, if exists.
