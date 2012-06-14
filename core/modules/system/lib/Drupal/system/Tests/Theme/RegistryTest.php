@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\simpletest\WebTestBase;
-use ThemeRegistry;
+use Drupal\Core\Utility\ThemeRegistry;
 
 /**
  * Tests for the ThemeRegistry class.
