@@ -8,6 +8,7 @@
 use Drupal\node\Node;
 use Drupal\simpletest\WebTestBase;
 use Drupal\comment\Tests\CommentTestBase;
+use Drupal\taxonomy\Tests\TaxonomyTestBase;
 
 class RdfMappingHookTestCase extends WebTestBase {
   public static function getInfo() {
@@ -282,7 +283,7 @@ class RdfCrudTestCase extends WebTestBase {
   }
 }
 
-class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
+class RdfMappingDefinitionTestCase extends TaxonomyTestBase {
   protected $profile = 'standard';
 
   public static function getInfo() {

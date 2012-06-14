@@ -5,5 +5,4 @@ version = VERSION
 core = 8.x
 dependencies[] = options
 dependencies[] = entity
-files[] = taxonomy.test
 configure = admin/structure/taxonomy
