@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\test_theme\ThemeClass;
 
 /**
  * Tests low-level theme functions.
@@ -170,5 +171,12 @@ class ThemeTest extends WebTestBase {
 
     module_enable(array('theme_test'), FALSE);
     $this->assertIdentical(theme('theme_test_foo', array('foo' => 'c')), 'c', 'The theme registry contains theme_test_foo again after re-enabling the module.');
+  }
+
+  /**
+   * Tests theme can provide classes.
+   */
+  function testClassLoading() {
+    new ThemeClass();
   }
 }
