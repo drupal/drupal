@@ -1128,7 +1128,7 @@ function taxonomy_field_widget_info_alter(&$info) {
  */
 function taxonomy_options_list($field, $instance, $entity_type, $entity) {
   $function = !empty($field['settings']['options_list_callback']) ? $field['settings']['options_list_callback'] : 'taxonomy_allowed_values';
-  return $function($field);
+  return $function($field, $instance, $entity_type, $entity);
 }
 
 /**
@@ -1281,10 +1281,20 @@ function taxonomy_field_formatter_view($entity_type, $entity, $field, $instance,
  *
  * @param $field
  *   The field definition.
+ * @param $instance
+ *   The instance definition. It is recommended to only use instance level
+ *   properties to filter out values from a list defined by field level
+ *   properties.
+ * @param $entity_type
+ *   The entity type the field is attached to.
+ * @param $entity
+ *   The entity object the field is attached to, or NULL if no entity
+ *   exists (e.g. in field settings page).
+ *
  * @return
  *   The array of valid terms for this field, keyed by term id.
  */
-function taxonomy_allowed_values($field) {
+function taxonomy_allowed_values($field, $instance, $entity_type, $entity) {
   $options = array();
   foreach ($field['settings']['allowed_values'] as $tree) {
     if ($vocabulary = taxonomy_vocabulary_machine_name_load($tree['vocabulary'])) {
