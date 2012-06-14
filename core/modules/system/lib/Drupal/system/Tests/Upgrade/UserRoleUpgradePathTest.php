@@ -2,16 +2,19 @@
 
 /**
  * @file
- * Upgrade tests for the conversion of serial role IDs to role machine names.
+ * Definition of Drupal\system\Tests\Upgrade\UserRoleUpgradePathTest.
  */
+
+namespace Drupal\system\Tests\Upgrade;
 
 /**
  * Tests upgrading a bare database with user role data.
  *
  * Loads a bare installation of Drupal 7 with role data and runs the
- * upgrade process on it.
+ * upgrade process on it. Tests for the conversion of serial role IDs to role
+ * machine names.
  */
-class UserRoleUpgradePathTestCase extends UpgradePathTestCase {
+class UserRoleUpgradePathTest extends UpgradePathTestBase {
   public static function getInfo() {
     return array(
       'name'  => 'Role upgrade test',

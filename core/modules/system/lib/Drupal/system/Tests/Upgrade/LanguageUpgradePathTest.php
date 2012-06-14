@@ -1,8 +1,11 @@
 <?php
+
 /**
  * @file
- * Upgrade tests for the Language module.
+ * Definition of Drupal\system\Tests\Upgrade\LanguageUpgradePathTest.
  */
+
+namespace Drupal\system\Tests\Upgrade;
 
 /**
  * Tests upgrading a filled database with language data.
@@ -10,7 +13,7 @@
  * Loads a filled installation of Drupal 7 with language data and runs the
  * upgrade process on it.
  */
-class LanguageUpgradePathTestCase extends UpgradePathTestCase {
+class LanguageUpgradePathTest extends UpgradePathTestBase {
   public static function getInfo() {
     return array(
       'name'  => 'Language upgrade test',
