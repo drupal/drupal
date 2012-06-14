@@ -7,13 +7,13 @@
 
 namespace Drupal\image\Tests;
 
-use ImageToolkitTestCase;
+use Drupal\system\Tests\Image\ToolkitTestBase;
 
 /**
  * Use the image_test.module's mock toolkit to ensure that the effects are
  * properly passing parameters to the image toolkit.
  */
-class ImageEffectsTest extends ImageToolkitTestCase {
+class ImageEffectsTest extends ToolkitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Image effects',
