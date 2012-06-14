@@ -8,13 +8,10 @@
  * calling file_test_get_calls() or file_test_set_return().
  */
 
-use Drupal\Core\StreamWrapper\LocalStream;
-use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\File\File;
 
 const FILE_URL_TEST_CDN_1 = 'http://cdn1.example.com';
 const FILE_URL_TEST_CDN_2 = 'http://cdn2.example.com';
-
 
 /**
  * Implements hook_menu().
@@ -37,12 +34,12 @@ function file_test_stream_wrappers() {
   return array(
     'dummy' => array(
       'name' => t('Dummy files'),
-      'class' => 'DrupalDummyStreamWrapper',
+      'class' => 'Drupal\file_test\DummyStreamWrapper',
       'description' => t('Dummy wrapper for simpletest.'),
     ),
     'dummy-remote' => array(
       'name' => t('Dummy files (remote)'),
-      'class' => 'DrupalDummyRemoteStreamWrapper',
+      'class' => 'Drupal\file_test\DummyRemoteStreamWrapper',
       'description' => t('Dummy wrapper for simpletest (remote).'),
     ),
   );
@@ -422,43 +419,37 @@ function file_test_file_mimetype_mapping_alter(&$mapping) {
 }
 
 /**
- * Helper class for testing the stream wrapper registry.
- *
- * Dummy stream wrapper implementation (dummy://).
+ * Helper validator that returns the $errors parameter.
  */
-class DrupalDummyStreamWrapper extends LocalStream {
-  function getDirectoryPath() {
-    return variable_get('stream_public_path', 'sites/default/files');
-  }
+function file_test_validator(File $file, $errors) {
+  return $errors;
+}
 
-  /**
-   * Override getInternalUri().
-   *
-   * Return a dummy path for testing.
-   */
-  function getInternalUri() {
-    return '/dummy/example.txt';
+/**
+ * Helper function for testing file_scan_directory().
+ *
+ * Each time the function is called the file is stored in a static variable.
+ * When the function is called with no $filepath parameter, the results are
+ * returned.
+ *
+ * @param $filepath
+ *   File path
+ * @return
+ *   If $filepath is NULL, an array of all previous $filepath parameters
+ */
+function file_test_file_scan_callback($filepath = NULL) {
+  $files = &drupal_static(__FUNCTION__, array());
+  if (isset($filepath)) {
+    $files[] = $filepath;
   }
-
-  /**
-   * Override getExternalUrl().
-   *
-   * Return the HTML URI of a public file.
-   */
-  function getExternalUrl() {
-    return '/dummy/example.txt';
+  else {
+    return $files;
   }
 }
 
 /**
- * Helper class for testing the stream wrapper registry.
- *
- * Dummy remote stream wrapper implementation (dummy-remote://).
- *
- * Basically just the public scheme but not returning a local file for realpath.
+ * Reset static variables used by file_test_file_scan_callback().
  */
-class DrupalDummyRemoteStreamWrapper extends PublicStream {
-  function realpath() {
-    return FALSE;
-  }
+function file_test_file_scan_callback_reset() {
+  drupal_static_reset('file_test_file_scan_callback');
 }
