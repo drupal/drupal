@@ -760,11 +760,12 @@ function module_implements_reset() {
  * Retrieve a list of what hooks are explicitly declared.
  */
 function module_hook_info() {
-  // This function is indirectly invoked from bootstrap_invoke_all(), in which
-  // case common.inc, subsystems, and modules are not loaded yet, so it does not
-  // make sense to support hook groups resp. lazy-loaded include files prior to
-  // full bootstrap.
-  if (drupal_bootstrap(NULL, FALSE) != DRUPAL_BOOTSTRAP_FULL) {
+  // When this function is indirectly invoked from bootstrap_invoke_all() prior
+  // to all modules being loaded, we do not want to cache an incomplete
+  // hook_hook_info() result, so instead return an empty array. This requires
+  // bootstrap hook implementations to reside in the .module file, which is
+  // optimal for performance anyway.
+  if (!module_load_all(NULL)) {
     return array();
   }
   $hook_info = &drupal_static(__FUNCTION__);

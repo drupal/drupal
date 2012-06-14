@@ -138,6 +138,19 @@ class ModuleApiTest extends WebTestBase {
   }
 
   /**
+   * Test that a menu item load function can invoke hooks defined in hook_hook_info().
+   *
+   * We test this separately from testModuleInvokeAll(), because menu item load
+   * functions execute early in the request handling.
+   */
+  function testModuleInvokeAllDuringLoadFunction() {
+    module_enable(array('module_test'), FALSE);
+    $this->resetAll();
+    $this->drupalGet('module-test/hook-dynamic-loading-invoke-all-during-load/module_test');
+    $this->assertText('success!', t('Menu item load function invokes a hook defined in hook_hook_info().'));
+  }
+
+  /**
    * Test dependency resolution.
    */
   function testDependencyResolution() {

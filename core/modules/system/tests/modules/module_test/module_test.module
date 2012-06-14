@@ -78,6 +78,12 @@ function module_test_menu() {
     'page callback' => 'module_test_hook_dynamic_loading_invoke_all',
     'access arguments' => array('access content'),
   );
+  $items['module-test/hook-dynamic-loading-invoke-all-during-load/%module_test'] = array(
+    'title' => 'Test hook dynamic loading (menu item load)',
+    'page callback' => 'module_test_hook_dynamic_loading_invoke_all_during_load',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+  );
   $items['module-test/class-loading'] = array(
     'title' => 'Test loading a class from another module',
     'page callback' => 'module_test_class_loading',
@@ -106,6 +112,26 @@ function module_test_hook_dynamic_loading_invoke() {
 function module_test_hook_dynamic_loading_invoke_all() {
   $result = module_invoke_all('test_hook');
   return $result['module_test'];
+}
+
+/**
+ * Page callback for 'hook dynamic loading' test.
+ *
+ * If the hook is dynamically loaded correctly, the menu callback should
+ * return 'success!'.
+ */
+function module_test_hook_dynamic_loading_invoke_all_during_load($param) {
+  return $param;
+}
+
+/**
+ * Load function used by module_test_hook_dynamic_loading_invoke_all_during_load().
+ *
+ * @see module_test_menu().
+ */
+function module_test_load($param) {
+  $result = module_invoke_all('test_hook');
+  return $result[$param];
 }
 
 /**
