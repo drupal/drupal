@@ -3,4 +3,3 @@ description = Enriches your content with metadata to let other applications (e.g
 package = Core
 version = VERSION
 core = 8.x
-files[] = rdf.test
