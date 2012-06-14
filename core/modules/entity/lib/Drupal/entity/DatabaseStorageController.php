@@ -276,7 +276,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    * hook_node_load() or hook_user_load(). If your hook_TYPE_load()
    * expects special parameters apart from the queried entities, you can set
    * $this->hookLoadArguments prior to calling the method.
-   * See NodeController::attachLoad() for an example.
+   * See Drupal\node\NodeStorageController::attachLoad() for an example.
    *
    * @param $queried_entities
    *   Associative array of query results, keyed on the entity ID.

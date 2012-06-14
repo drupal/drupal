@@ -329,7 +329,7 @@ class TranslationTest extends WebTestBase {
   /**
    * Creates a translation for a basic page in the specified language.
    *
-   * @param Node $node
+   * @param Drupal\node\Node $node
    *   The basic page to create the translation for.
    * @param $title
    *   The title of a basic page in the specified language.

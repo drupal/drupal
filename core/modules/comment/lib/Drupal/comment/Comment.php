@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Entity class for comments.
+ * Definition of Drupal\comment\Comment.
  */
 
 namespace Drupal\comment;

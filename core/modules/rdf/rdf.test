@@ -625,7 +625,7 @@ class RdfTrackerAttributesTestCase extends WebTestBase {
    *
    * Tests the tracker page for RDFa markup.
    *
-   * @param Node $node
+   * @param Drupal\node\Node $node
    * The node just created.
    */
   function _testBasicTrackerRdfaMarkup(Node $node) {

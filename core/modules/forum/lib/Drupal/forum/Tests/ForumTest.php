@@ -498,7 +498,7 @@ class ForumTest extends WebTestBase {
    *
    * @param $node_user
    *   The user who creates the node.
-   * @param Node $node
+   * @param Drupal\node\Node $node
    *   The node being checked.
    * @param $admin
    *   Boolean to indicate whether the user can 'access administration pages'.

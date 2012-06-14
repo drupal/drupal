@@ -615,7 +615,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
   /**
    * Asserts that a string is found in the rendered node in a view mode.
    *
-   * @param Node $node
+   * @param Drupal\node\Node $node
    *   The node.
    * @param $view_mode
    *   The view mode in which the node should be displayed.
@@ -634,7 +634,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
   /**
    * Asserts that a string is not found in the rendered node in a view mode.
    *
-   * @param Node $node
+   * @param Drupal\node\Node $node
    *   The node.
    * @param $view_mode
    *   The view mode in which the node should be displayed.
@@ -655,7 +655,7 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
    * This helper function is used by assertNodeViewText() and
    * assertNodeViewNoText().
    *
-   * @param Node $node
+   * @param Drupal\node\Node $node
    *   The node.
    * @param $view_mode
    *   The view mode in which the node should be displayed.
