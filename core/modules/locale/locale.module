@@ -11,6 +11,8 @@
  *   Gettext portable object files are supported.
  */
 
+use Drupal\locale\LocaleLookup;
+
 /**
  * Regular expression pattern used to localize JavaScript strings.
  */
@@ -406,76 +408,11 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
 
   $langcode = isset($langcode) ? $langcode : $language_interface->langcode;
 
-  // Store database cached translations in a static variable. Only build the
-  // cache after $language_interface has been set to avoid an unnecessary cache
-  // rebuild.
-  if (!isset($locale_t[$langcode]) && isset($language_interface)) {
-    $locale_t[$langcode] = array();
-    // Disabling the usage of string caching allows a module to watch for
-    // the exact list of strings used on a page. From a performance
-    // perspective that is a really bad idea, so we have no user
-    // interface for this. Be careful when turning this option off!
-    if (variable_get('locale_cache_strings', 1) == 1) {
-      if ($cache = cache()->get('locale:' . $langcode)) {
-        $locale_t[$langcode] = $cache->data;
-      }
-      elseif (lock_acquire('locale_cache_' . $langcode)) {
-        // Refresh database stored cache of translations for given language.
-        // We only store short strings used in current version, to improve
-        // performance and consume less memory.
-        $result = db_query("SELECT s.source, s.context, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.version = :version AND LENGTH(s.source) < :length", array(':language' => $langcode, ':version' => VERSION, ':length' => variable_get('locale_cache_length', 75)));
-        foreach ($result as $data) {
-          $locale_t[$langcode][$data->context][$data->source] = (empty($data->translation) ? TRUE : $data->translation);
-        }
-        cache()->set('locale:' . $langcode, $locale_t[$langcode]);
-        lock_release('locale_cache_' . $langcode);
-      }
-    }
+  // Strings are cached by langcode, context and roles, using instances of the
+  // LocaleLookup class to handle string lookup and caching.
+  if (!isset($locale_t[$langcode][$context]) && isset($language_interface)) {
+    $locale_t[$langcode][$context] = new LocaleLookup($langcode, $context);
   }
-
-  // If we have the translation cached, skip checking the database
-  if (!isset($locale_t[$langcode][$context][$string])) {
-
-    // We do not have this translation cached, so get it from the DB.
-    $translation = db_query("SELECT s.lid, t.translation, s.version FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.source = :source AND s.context = :context", array(
-      ':language' => $langcode,
-      ':source' => $string,
-      ':context' => (string) $context,
-    ))->fetchObject();
-    if ($translation) {
-      // We have the source string at least.
-      // Cache translation string or TRUE if no translation exists.
-      $locale_t[$langcode][$context][$string] = (empty($translation->translation) ? TRUE : $translation->translation);
-
-      if ($translation->version != VERSION) {
-        // This is the first use of this string under current Drupal version. Save version
-        // and clear cache, to include the string into caching next time. Saved version is
-        // also a string-history information for later pruning of the tables.
-        db_update('locales_source')
-          ->fields(array('version' => VERSION))
-          ->condition('lid', $translation->lid)
-          ->execute();
-        cache()->deletePrefix('locale:');
-      }
-    }
-    else {
-      // We don't have the source string, cache this as untranslated.
-      db_merge('locales_source')
-        ->insertFields(array(
-          'location' => request_uri(),
-          'version' => VERSION,
-        ))
-        ->key(array(
-          'source' => $string,
-          'context' => (string) $context,
-        ))
-        ->execute();
-      $locale_t[$langcode][$context][$string] = TRUE;
-      // Clear locale cache so this string can be added in a later request.
-      cache()->deletePrefix('locale:');
-    }
-  }
-
   return ($locale_t[$langcode][$context][$string] === TRUE ? $string : $locale_t[$langcode][$context][$string]);
 }
 
