@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Module for testing Update Manager functionality.
+ */
+
+/**
  * Implements hook_system_theme_info().
  */
 function update_test_system_theme_info() {
@@ -34,13 +39,13 @@ function update_test_menu() {
 /**
  * Implements hook_system_info_alter().
  *
- * This checks the 'update_test_system_info' variable and sees if we need to
- * alter the system info for the given $file based on the setting. The setting
- * is expected to be a nested associative array. If the key '#all' is defined,
- * its subarray will include .info keys and values for all modules and themes
- * on the system. Otherwise, the settings array is keyed by the module or
- * theme short name ($file->name) and the subarrays contain settings just for
- * that module or theme.
+ * Checks the 'update_test_system_info' variable and sees if we need to alter
+ * the system info for the given $file based on the setting. The setting is
+ * expected to be a nested associative array. If the key '#all' is defined, its
+ * subarray will include .info keys and values for all modules and themes on the
+ * system. Otherwise, the settings array is keyed by the module or theme short
+ * name ($file->name) and the subarrays contain settings just for that module or
+ * theme.
  */
 function update_test_system_info_alter(&$info, $file) {
   $setting = variable_get('update_test_system_info', array());
@@ -56,13 +61,12 @@ function update_test_system_info_alter(&$info, $file) {
 /**
  * Implements hook_update_status_alter().
  *
- * This checks the 'update_test_update_status' variable and sees if we need to
- * alter the update status for the given project based on the setting. The
- * setting is expected to be a nested associative array. If the key '#all' is
- * defined, its subarray will include .info keys and values for all modules
- * and themes on the system. Otherwise, the settings array is keyed by the
- * module or theme short name and the subarrays contain settings just for that
- * module or theme.
+ * Checks the 'update_test_update_status' variable and sees if we need to alter
+ * the update status for the given project based on the setting. The setting is
+ * expected to be a nested associative array. If the key '#all' is defined, its
+ * subarray will include .info keys and values for all modules and themes on the
+ * system. Otherwise, the settings array is keyed by the module or theme short
+ * name and the subarrays contain settings just for that module or theme.
  */
 function update_test_update_status_alter(&$projects) {
   $setting = variable_get('update_test_update_status', array());
@@ -80,18 +84,20 @@ function update_test_update_status_alter(&$projects) {
 }
 
 /**
- * Page callback, prints mock XML for the update module.
+ * Page callback: Prints mock XML for the Update Manager module.
  *
  * The specific XML file to print depends on two things: the project we're
  * trying to fetch data for, and the desired "availability scenario" for that
- * project which we're trying to test. Before attempting to fetch this data
- * (by checking for updates on the available updates report), callers need to
- * define the 'update_test_xml_map' variable as an array, keyed by project
- * name, indicating which availability scenario to use for that project.
+ * project which we're trying to test. Before attempting to fetch this data (by
+ * checking for updates on the available updates report), callers need to define
+ * the 'update_test_xml_map' variable as an array, keyed by project name,
+ * indicating which availability scenario to use for that project.
  *
  * @param $project_name
- *   The project short name update.module is trying to fetch data for (the
+ *   The project short name the update manager is trying to fetch data for (the
  *   fetch URLs are of the form: [base_url]/[project_name]/[core_version]).
+ *
+ * @see update_test_menu()
  */
 function update_test_mock_page($project_name) {
   $xml_map = variable_get('update_test_xml_map', FALSE);
@@ -115,7 +121,7 @@ function update_test_mock_page($project_name) {
 }
 
 /**
- * Implement hook_archiver_info().
+ * Implements hook_archiver_info().
  */
 function update_test_archiver_info() {
   return array(
@@ -147,13 +153,23 @@ function update_test_filetransfer_info() {
 }
 
 /**
- * Mock FileTransfer object to test the settings form functionality.
+ * Mocks a FileTransfer object to test the settings form functionality.
  */
 class UpdateTestFileTransfer {
+
+  /**
+   * Returns an UpdateTestFileTransfer object.
+   *
+   * @return
+   *   A new UpdateTestFileTransfer object.
+   */
   public static function factory() {
     return new UpdateTestFileTransfer;
   }
 
+  /**
+   * Returns a settings form with a text field to input a username.
+   */
   public function getSettingsForm() {
     $form = array();
     $form['udpate_test_username'] = array(
@@ -165,7 +181,9 @@ class UpdateTestFileTransfer {
 }
 
 /**
- * Return an Error 503 (Service unavailable) page.
+ * Page callback: Displays an Error 503 (Service unavailable) page.
+ *
+ * @see update_test_menu()
  */
 function update_callback_service_unavailable() {
   drupal_add_http_header('Status', '503 Service unavailable');

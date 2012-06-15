@@ -2,38 +2,43 @@
 
 /**
  * @file
- * Tests for update.module.
+ * This file contains tests for the Update Manager module.
  *
- * This file contains tests for the update module. The overarching methodology
- * of these tests is we need to compare a given state of installed modules and
- * themes (e.g. version, project grouping, timestamps, etc) vs. a current
- * state of what the release history XML files we fetch say is available.  We
- * have dummy XML files (in the 'tests' subdirectory) that describe various
- * scenarios of what's available for different test projects, and we have
- * dummy .info file data (specified via hook_system_info_alter() in the
- * update_test helper module) describing what's currently installed.  Each
- * test case defines a set of projects to install, their current state (via
- * the 'update_test_system_info' variable) and the desired available update
- * data (via the 'update_test_xml_map' variable), and then performs a series
- * of assertions that the report matches our expectations given the specific
- * initial state and availability scenario.
+ * The overarching methodology of these tests is we need to compare a given
+ * state of installed modules and themes (e.g., version, project grouping,
+ * timestamps, etc) against a current state of what the release history XML
+ * files we fetch say is available. We have dummy XML files (in the
+ * modules/update/tests directory) that describe various scenarios of what's
+ * available for different test projects, and we have dummy .info file data
+ * (specified via hook_system_info_alter() in the update_test helper module)
+ * describing what's currently installed. Each test case defines a set of
+ * projects to install, their current state (via the 'update_test_system_info'
+ * variable) and the desired available update data (via the
+ * 'update_test_xml_map' variable), and then performs a series of assertions
+ * that the report matches our expectations given the specific initial state and
+ * availability scenario.
  */
 
 /**
- * Base class to define some shared functions used by all update tests.
+ * Defines some shared functions used by all update tests.
  */
 class UpdateTestHelper extends DrupalWebTestCase {
+
   /**
-   * Refresh the update status based on the desired available update scenario.
+   * Refreshes the update status based on the desired available update scenario.
    *
    * @param $xml_map
-   *   Array that maps project names to availability scenarios to fetch.
-   *   The key '#all' is used if a project-specific mapping is not defined.
+   *   Array that maps project names to availability scenarios to fetch. The key
+   *   '#all' is used if a project-specific mapping is not defined.
+   * @param $url
+   *   (optional) A string containing the URL to fetch update data from.
+   *   Defaults to 'update-test'.
    *
    * @see update_test_mock_page()
    */
   protected function refreshUpdateStatus($xml_map, $url = 'update-test') {
-    // Tell update module to fetch from the URL provided by update_test module.
+    // Tell the Update Manager module to fetch from the URL provided by
+    // update_test module.
     variable_set('update_fetch_url', url($url, array('absolute' => TRUE)));
     // Save the map for update_test_mock_page() to use.
     variable_set('update_test_xml_map', $xml_map);
@@ -42,7 +47,7 @@ class UpdateTestHelper extends DrupalWebTestCase {
   }
 
   /**
-   * Run a series of assertions that are applicable for all update statuses.
+   * Runs a series of assertions that are applicable to all update statuses.
    */
   protected function standardTests() {
     $this->assertRaw('<h3>' . t('Drupal core') . '</h3>');
@@ -52,12 +57,15 @@ class UpdateTestHelper extends DrupalWebTestCase {
 
 }
 
+/**
+ * Tests behavior related to discovering and listing updates to Drupal core.
+ */
 class UpdateCoreTestCase extends UpdateTestHelper {
 
   public static function getInfo() {
     return array(
       'name' => 'Update core functionality',
-      'description' => 'Tests the update module through a series of functional tests using mock XML data.',
+      'description' => 'Tests the Update Manager module through a series of functional tests using mock XML data.',
       'group' => 'Update',
     );
   }
@@ -69,7 +77,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Tests the update module when no updates are available.
+   * Tests the Update Manager module when no updates are available.
    */
   function testNoUpdatesAvailable() {
     $this->setSystemInfo7_0();
@@ -81,7 +89,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Tests the update module when one normal update ("7.1") is available.
+   * Tests the Update Manager module when one normal update is available.
    */
   function testNormalUpdateAvailable() {
     $this->setSystemInfo7_0();
@@ -96,7 +104,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Tests the update module when a security update ("7.2") is available.
+   * Tests the Update Manager module when a security update is available.
    */
   function testSecurityUpdateAvailable() {
     $this->setSystemInfo7_0();
@@ -111,7 +119,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Ensure proper results where there are date mismatches among modules.
+   * Ensures proper results where there are date mismatches among modules.
    */
   function testDatestampMismatch() {
     $system_info = array(
@@ -134,7 +142,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Check that running cron updates the list of available updates.
+   * Checks that running cron updates the list of available updates.
    */
   function testModulePageRunCron() {
     $this->setSystemInfo7_0();
@@ -147,7 +155,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Check the messages at admin/modules when the site is up to date.
+   * Checks the messages at admin/modules when the site is up to date.
    */
   function testModulePageUpToDate() {
     $this->setSystemInfo7_0();
@@ -164,7 +172,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Check the messages at admin/modules when missing an update.
+   * Checks the messages at admin/modules when an update is missing.
    */
   function testModulePageRegularUpdate() {
     $this->setSystemInfo7_0();
@@ -181,7 +189,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Check the messages at admin/modules when missing a security update.
+   * Checks the messages at admin/modules when a security update is missing.
    */
   function testModulePageSecurityUpdate() {
     $this->setSystemInfo7_0();
@@ -216,7 +224,7 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
-   * Tests the update module when the update server returns 503 (Service unavailable) errors.
+   * Tests the Update Manager module when the update server returns 503 errors.
    */
   function testServiceUnavailable() {
     $this->refreshUpdateStatus(array(), '503-error');
@@ -252,6 +260,9 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
   }
 
+  /**
+   * Sets the version to 7.0 when no project-specific mapping is defined.
+   */
   protected function setSystemInfo7_0() {
     $setting = array(
       '#all' => array(
@@ -263,12 +274,15 @@ class UpdateCoreTestCase extends UpdateTestHelper {
 
 }
 
+/**
+ * Tests behavior related to handling updates to contributed modules and themes.
+ */
 class UpdateTestContribCase extends UpdateTestHelper {
 
   public static function getInfo() {
     return array(
       'name' => 'Update contrib functionality',
-      'description' => 'Tests how the update module handles contributed modules and themes in a series of functional tests using mock XML data.',
+      'description' => 'Tests how the Update Manager module handles contributed modules and themes in a series of functional tests using mock XML data.',
       'group' => 'Update',
     );
   }
@@ -308,7 +322,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
   }
 
   /**
-   * Test the basic functionality of a contrib module on the status report.
+   * Tests the basic functionality of a contrib module on the status report.
    */
   function testUpdateContribBasic() {
     $system_info = array(
@@ -336,17 +350,17 @@ class UpdateTestContribCase extends UpdateTestHelper {
   }
 
   /**
-   * Test that contrib projects are ordered by project name.
+   * Tests that contrib projects are ordered by project name.
    *
    * If a project contains multiple modules, we want to make sure that the
-   * available updates report is sorted by the parent project names, not by
-   * the names of the modules included in each project. In this test case, we
-   * have 2 contrib projects, "BBB Update test" and "CCC Update test".
-   * However, we have a module called "aaa_update_test" that's part of the
-   * "CCC Update test" project. We need to make sure that we see the "BBB"
-   * project before the "CCC" project, even though "CCC" includes a module
-   * that's processed first if you sort alphabetically by module name (which
-   * is the order we see things inside system_rebuild_module_data() for example).
+   * available updates report is sorted by the parent project names, not by the
+   * names of the modules included in each project. In this test case, we have
+   * two contrib projects, "BBB Update test" and "CCC Update test". However, we
+   * have a module called "aaa_update_test" that's part of the "CCC Update test"
+   * project. We need to make sure that we see the "BBB" project before the
+   * "CCC" project, even though "CCC" includes a module that's processed first
+   * if you sort alphabetically by module name (which is the order we see things
+   * inside system_rebuild_module_data() for example).
    */
   function testUpdateContribOrder() {
     // We want core to be version 7.0.
@@ -408,7 +422,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
   }
 
   /**
-   * Test that subthemes are notified about security updates for base themes.
+   * Tests that subthemes are notified about security updates for base themes.
    */
   function testUpdateBaseThemeSecurityUpdate() {
     // Only enable the subtheme, not the base theme.
@@ -449,7 +463,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
   }
 
   /**
-   * Test that disabled themes are only shown when desired.
+   * Tests that disabled themes are only shown when desired.
    */
   function testUpdateShowDisabledThemes() {
     // Make sure all the update_test_* themes are disabled.
@@ -510,7 +524,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
   }
 
   /**
-   * Make sure that if we fetch from a broken URL, sane things happen.
+   * Makes sure that if we fetch from a broken URL, sane things happen.
    */
   function testUpdateBrokenFetchURL() {
     $system_info = array(
@@ -566,13 +580,12 @@ class UpdateTestContribCase extends UpdateTestHelper {
   }
 
   /**
-   * Check that hook_update_status_alter() works to change a status.
+   * Checks that hook_update_status_alter() works to change a status.
    *
    * We provide the same external data as if aaa_update_test 7.x-1.0 were
    * installed and that was the latest release. Then we use
    * hook_update_status_alter() to try to mark this as missing a security
-   * update, then assert if we see the appropriate warnings on the right
-   * pages.
+   * update, then assert if we see the appropriate warnings on the right pages.
    */
   function testHookUpdateStatusAlter() {
     variable_set('allow_authorize_operations', TRUE);
@@ -628,11 +641,15 @@ class UpdateTestContribCase extends UpdateTestHelper {
 
 }
 
+/**
+ * Tests project upload and extract functionality.
+ */
 class UpdateTestUploadCase extends UpdateTestHelper {
+
   public static function getInfo() {
     return array(
       'name' => 'Upload and extract module functionality',
-      'description' => 'Tests the update module\'s upload and extraction functionality.',
+      'description' => 'Tests the Update Manager module\'s upload and extraction functionality.',
       'group' => 'Update',
     );
   }
@@ -673,7 +690,7 @@ class UpdateTestUploadCase extends UpdateTestHelper {
   }
 
   /**
-   * Ensure that archiver extensions are properly merged in the UI.
+   * Ensures that archiver extensions are properly merged in the UI.
    */
   function testFileNameExtensionMerging() {
     $this->drupalGet('admin/modules/install');
@@ -684,7 +701,7 @@ class UpdateTestUploadCase extends UpdateTestHelper {
   }
 
   /**
-   * Check the messages on Update manager pages when missing a security update.
+   * Checks the messages on update manager pages when missing a security update.
    */
   function testUpdateManagerCoreSecurityUpdateMessages() {
     $setting = array(
@@ -725,6 +742,9 @@ class UpdateTestUploadCase extends UpdateTestHelper {
 
 }
 
+/**
+ * Tests update functionality unrelated to the database.
+ */
 class UpdateCoreUnitTestCase extends DrupalUnitTestCase {
 
   public static function getInfo() {
@@ -741,7 +761,7 @@ class UpdateCoreUnitTestCase extends DrupalUnitTestCase {
   }
 
   /**
-   * Tests _update_build_fetch_url according to issue 1481156
+   * Tests that _update_build_fetch_url() builds the URL correctly.
    */
   function testUpdateBuildFetchUrl() {
     //first test that we didn't break the trivial case

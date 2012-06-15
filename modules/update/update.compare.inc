@@ -6,7 +6,7 @@
  */
 
 /**
- * Fetch an array of installed and enabled projects.
+ * Fetches an array of installed and enabled projects.
  *
  * This is only responsible for generating an array of projects (taking into
  * account projects that include more than one module or theme). Other
@@ -15,14 +15,39 @@
  * that logic is only required when preparing the status report, not for
  * fetching the available release data.
  *
- * This array is fairly expensive to construct, since it involves a lot of
- * disk I/O, so we cache the results into the {cache_update} table using the
- * 'update_project_projects' cache ID. However, since this is not the data
- * about available updates fetched from the network, it is ok to invalidate it
- * somewhat quickly. If we keep this data for very long, site administrators
- * are more likely to see incorrect results if they upgrade to a newer version
- * of a module or theme but do not visit certain pages that automatically
- * clear this cache.
+ * This array is fairly expensive to construct, since it involves a lot of disk
+ * I/O, so we cache the results into the {cache_update} table using the
+ * 'update_project_projects' cache ID. However, since this is not the data about
+ * available updates fetched from the network, it is acceptable to invalidate it
+ * somewhat quickly. If we keep this data for very long, site administrators are
+ * more likely to see incorrect results if they upgrade to a newer version of a
+ * module or theme but do not visit certain pages that automatically clear this
+ * cache.
+ *
+ * @return
+ *   An associative array of currently enabled projects keyed by the
+ *   machine-readable project short name. Each project contains:
+ *   - name: The machine-readable project short name.
+ *   - info: An array with values from the main .info file for this project.
+ *     - name: The human-readable name of the project.
+ *     - package: The package that the project is grouped under.
+ *     - version: The version of the project.
+ *     - project: The Drupal.org project name.
+ *     - datestamp: The date stamp of the project's main .info file.
+ *     - _info_file_ctime: The maximum file change time for all of the .info
+ *       files included in this project.
+ *   - datestamp: The date stamp when the project was released, if known.
+ *   - includes: An associative array containing all projects included with this
+ *     project, keyed by the machine-readable short name with the human-readable
+ *     name as value.
+ *   - project_type: The type of project. Allowed values are 'module' and
+ *     'theme'.
+ *   - project_status: This indicates if the project is enabled and will always
+ *     be TRUE, as the function only returns enabled projects.
+ *   - sub_themes: If the project is a theme it contains an associative array of
+ *     all sub-themes.
+ *   - base_themes: If the project is a theme it contains an associative array
+ *     of all base-themes.
  *
  * @see update_process_project_info()
  * @see update_calculate_project_data()
@@ -53,25 +78,25 @@ function update_get_projects() {
 }
 
 /**
- * Populate an array of project data.
+ * Populates an array of project data.
  *
- * This iterates over a list of the installed modules or themes and groups
- * them by project and status. A few parts of this function assume that
- * enabled modules and themes are always processed first, and if disabled
- * modules or themes are being processed (there is a setting to control if
- * disabled code should be included in the Available updates report or not),
- * those are only processed after $projects has been populated with
- * information about the enabled code. 'Hidden' modules and themes are always
- * ignored. This function also records the latest change time on the .info
- * files for each module or theme, which is important data which is used when
- * deciding if the cached available update data should be invalidated.
+ * This iterates over a list of the installed modules or themes and groups them
+ * by project and status. A few parts of this function assume that enabled
+ * modules and themes are always processed first, and if disabled modules or
+ * themes are being processed (there is a setting to control if disabled code
+ * should be included or not in the 'Available updates' report), those are only
+ * processed after $projects has been populated with information about the
+ * enabled code. Modules and themes set as hidden are always ignored. This
+ * function also records the latest change time on the .info files for each
+ * module or theme, which is important data which is used when deciding if the
+ * cached available update data should be invalidated.
  *
  * @param $projects
  *   Reference to the array of project data of what's installed on this site.
  * @param $list
  *   Array of data to process to add the relevant info to the $projects array.
  * @param $project_type
- *   The kind of data in the list (can be 'module' or 'theme').
+ *   The kind of data in the list. Can be 'module' or 'theme'.
  * @param $status
  *   Boolean that controls what status (enabled or disabled) to process out of
  *   the $list and add to the $projects array.
@@ -211,8 +236,13 @@ function _update_process_info_list(&$projects, $list, $project_type, $status) {
 }
 
 /**
- * Given a $file object (as returned by system_get_files_database()), figure
- * out what project it belongs to.
+ * Determines what project a given file object belongs to.
+ *
+ * @param $file
+ *   A file object as returned by system_get_files_database().
+ *
+ * @return
+ *   The canonical project short name.
  *
  * @see system_get_files_database()
  */
@@ -228,7 +258,9 @@ function update_get_project_name($file) {
 }
 
 /**
- * Process the list of projects on the system to figure out the currently
+ * Determines version and type information for currently installed projects.
+ *
+ * Processes the list of projects on the system to figure out the currently
  * installed versions, and other information that is required before we can
  * compare against the available releases to produce the status report.
  *
@@ -277,7 +309,7 @@ function update_process_project_info(&$projects) {
 }
 
 /**
- * Calculate the current update status of all projects on the site.
+ * Calculates the current update status of all projects on the site.
  *
  * The results of this function are expensive to compute, especially on sites
  * with lots of modules or themes, since it involves a lot of comparisons and
@@ -285,12 +317,15 @@ function update_process_project_info(&$projects) {
  * table using the 'update_project_data' cache ID. However, since this is not
  * the data about available updates fetched from the network, it is ok to
  * invalidate it somewhat quickly. If we keep this data for very long, site
- * administrators are more likely to see incorrect results if they upgrade to
- * a newer version of a module or theme but do not visit certain pages that
+ * administrators are more likely to see incorrect results if they upgrade to a
+ * newer version of a module or theme but do not visit certain pages that
  * automatically clear this cache.
  *
  * @param array $available
  *   Data about available project releases.
+ *
+ * @return
+ *   An array of installed projects with current update status information.
  *
  * @see update_get_available()
  * @see update_get_projects()
@@ -327,52 +362,50 @@ function update_calculate_project_data($available) {
 }
 
 /**
- * Calculate the current update status of a specific project.
+ * Calculates the current update status of a specific project.
  *
- * This function is the heart of the update status feature. For each project
- * it is invoked with, it first checks if the project has been flagged with a
+ * This function is the heart of the update status feature. For each project it
+ * is invoked with, it first checks if the project has been flagged with a
  * special status like "unsupported" or "insecure", or if the project node
  * itself has been unpublished. In any of those cases, the project is marked
  * with an error and the next project is considered.
  *
  * If the project itself is valid, the function decides what major release
  * series to consider. The project defines what the currently supported major
- * versions are for each version of core, so the first step is to make sure
- * the current version is still supported. If so, that's the target version.
- * If the current version is unsupported, the project maintainer's recommended
- * major version is used. There's also a check to make sure that this function
- * never recommends an earlier release than the currently installed major
- * version.
+ * versions are for each version of core, so the first step is to make sure the
+ * current version is still supported. If so, that's the target version. If the
+ * current version is unsupported, the project maintainer's recommended major
+ * version is used. There's also a check to make sure that this function never
+ * recommends an earlier release than the currently installed major version.
  *
- * Given a target major version, it scans the available releases looking for
+ * Given a target major version, the available releases are scanned looking for
  * the specific release to recommend (avoiding beta releases and development
- * snapshots if possible). This is complicated to describe, but an example
- * will help clarify. For the target major version, find the highest patch
- * level. If there is a release at that patch level with no extra ("beta",
- * etc), then we recommend the release at that patch level with the most
- * recent release date. If every release at that patch level has extra (only
- * betas), then recommend the latest release from the previous patch
- * level. For example:
+ * snapshots if possible). For the target major version, the highest patch level
+ * is found. If there is a release at that patch level with no extra ("beta",
+ * etc.), then the release at that patch level with the most recent release date
+ * is recommended. If every release at that patch level has extra (only betas),
+ * then the latest release from the previous patch level is recommended. For
+ * example:
  *
- * 1.6-bugfix <-- recommended version because 1.6 already exists.
- * 1.6
+ * - 1.6-bugfix <-- recommended version because 1.6 already exists.
+ * - 1.6
  *
  * or
  *
- * 1.6-beta
- * 1.5 <-- recommended version because no 1.6 exists.
- * 1.4
+ * - 1.6-beta
+ * - 1.5 <-- recommended version because no 1.6 exists.
+ * - 1.4
  *
- * It also looks for the latest release from the same major version, even a
- * beta release, to display to the user as the "Latest version" option.
- * Additionally, it finds the latest official release from any higher major
- * versions that have been released to provide a set of "Also available"
+ * Also, the latest release from the same major version is looked for, even beta
+ * releases, to display to the user as the "Latest version" option.
+ * Additionally, the latest official release from any higher major versions that
+ * have been released is searched for to provide a set of "Also available"
  * options.
  *
- * Finally, and most importantly, it keeps scanning the release history until
- * it gets to the currently installed release, searching for anything marked
- * as a security update. If any security updates have been found between the
- * recommended release and the installed version, all of the releases that
+ * Finally, and most importantly, the release history continues to be scanned
+ * until the currently installed release is reached, searching for anything
+ * marked as a security update. If any security updates have been found between
+ * the recommended release and the installed version, all of the releases that
  * included a security fix are recorded so that the site administrator can be
  * warned their site is insecure, and links pointing to the release notes for
  * each security update can be included (which, in turn, will link to the
@@ -381,9 +414,15 @@ function update_calculate_project_data($available) {
  * This function relies on the fact that the .xml release history data comes
  * sorted based on major version and patch level, then finally by release date
  * if there are multiple releases such as betas from the same major.patch
- * version (e.g. 5.x-1.5-beta1, 5.x-1.5-beta2, and 5.x-1.5). Development
+ * version (e.g., 5.x-1.5-beta1, 5.x-1.5-beta2, and 5.x-1.5). Development
  * snapshots for a given major version are always listed last.
  *
+ * @param $project
+ *   An array containing information about a specific project.
+ * @param $project_data
+ *   An array containing information about a specific project.
+ * @param $available
+ *   Data about available project releases of a specific project.
  */
 function update_calculate_project_update_status($project, &$project_data, $available) {
   foreach (array('title', 'link') as $attribute) {
@@ -707,16 +746,16 @@ function update_calculate_project_update_status($project, &$project_data, $avail
 }
 
 /**
- * Retrieve data from {cache_update} or empty the cache when necessary.
+ * Retrieves data from {cache_update} or empties the cache when necessary.
  *
  * Two very expensive arrays computed by this module are the list of all
- * installed modules and themes (and .info data, project associations, etc),
- * and the current status of the site relative to the currently available
- * releases. These two arrays are cached in the {cache_update} table and used
- * whenever possible. The cache is cleared whenever the administrator visits
- * the status report, available updates report, or the module or theme
- * administration pages, since we should always recompute the most current
- * values on any of those pages.
+ * installed modules and themes (and .info data, project associations, etc), and
+ * the current status of the site relative to the currently available releases.
+ * These two arrays are cached in the {cache_update} table and used whenever
+ * possible. The cache is cleared whenever the administrator visits the status
+ * report, available updates report, or the module or theme administration
+ * pages, since we should always recompute the most current values on any of
+ * those pages.
  *
  * Note: while both of these arrays are expensive to compute (in terms of disk
  * I/O and some fairly heavy CPU processing), neither of these is the actual
@@ -726,13 +765,13 @@ function update_calculate_project_update_status($project, &$project_data, $avail
  * hour and never get invalidated just by visiting a page on the site.
  *
  * @param $cid
- *   The cache id of data to return from the cache. Valid options are
+ *   The cache ID of data to return from the cache. Valid options are
  *   'update_project_data' and 'update_project_projects'.
  *
  * @return
  *   The cached value of the $projects array generated by
- *   update_calculate_project_data() or update_get_projects(), or an empty
- *   array when the cache is cleared.
+ *   update_calculate_project_data() or update_get_projects(), or an empty array
+ *   when the cache is cleared.
  */
 function update_project_cache($cid) {
   $projects = array();
@@ -764,13 +803,13 @@ function update_project_cache($cid) {
 }
 
 /**
- * Filter the project .info data to only save attributes we need.
+ * Filters the project .info data to only save attributes we need.
  *
  * @param array $info
  *   Array of .info file data as returned by drupal_parse_info_file().
  *
  * @return
- *   Array of .info file data we need for the Update manager.
+ *   Array of .info file data we need for the update manager.
  *
  * @see _update_process_info_list()
  */
