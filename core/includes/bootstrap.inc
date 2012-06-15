@@ -3013,10 +3013,15 @@ function drupal_classloader() {
         break;
     }
 
-    // Register explicit vendor namespaces.
+    // Register explicit PSR-0 vendor namespaces.
     $loader->registerNamespaces(array(
       // All Symfony-borrowed code lives in /core/vendor/Symfony.
       'Symfony' => DRUPAL_ROOT . '/core/vendor',
+    ));
+    // Register PEAR-style vendor namespaces.
+    $loader->registerPrefixes(array(
+      // All Twig-borrowed code lives in /core/vendor/Twig.
+      'Twig' => DRUPAL_ROOT . '/core/vendor',
     ));
     // Register the Drupal namespace for classes in core as a fallback.
     // This allows to register additional namespaces within the Drupal namespace
