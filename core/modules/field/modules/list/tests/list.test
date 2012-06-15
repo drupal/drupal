@@ -7,11 +7,12 @@
 
 use Drupal\field\FieldException;
 use Drupal\field\FieldValidationException;
+use Drupal\field\Tests\FieldTestBase;
 
 /**
  * Tests for the 'List' field types.
  */
-class ListFieldTestCase extends FieldTestCase {
+class ListFieldTestBase extends FieldTestBase {
   public static function getInfo() {
     return array(
       'name' => 'List field',
@@ -117,46 +118,6 @@ class ListFieldTestCase extends FieldTestCase {
 }
 
 /**
- * Sets up a List field for testing allowed values functions.
- */
-class ListDynamicValuesTestCase extends FieldTestCase {
-  function setUp() {
-    parent::setUp(array('list', 'field_test', 'list_test'));
-
-    $this->field_name = 'test_list';
-    $this->field = array(
-      'field_name' => $this->field_name,
-      'type' => 'list_text',
-      'cardinality' => 1,
-      'settings' => array(
-        'allowed_values_function' => 'list_test_dynamic_values_callback',
-      ),
-    );
-    $this->field = field_create_field($this->field);
-
-    $this->instance = array(
-      'field_name' => $this->field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
-      'required' => TRUE,
-      'widget' => array(
-        'type' => 'options_select',
-      ),
-    );
-    $this->instance = field_create_instance($this->instance);
-    $this->test = array(
-      'id' => mt_rand(1, 10),
-      // Make sure this does not equal the ID so that
-      // list_test_dynamic_values_callback() always returns 4 values.
-      'vid' => mt_rand(20, 30),
-      'bundle' => 'test_bundle',
-      'label' => $this->randomName(),
-    );
-    $this->entity = call_user_func_array('field_test_create_stub_entity', $this->test);
-  }
-}
-
-/**
  * Tests the List field allowed values function.
  */
 class ListDynamicValuesValidationTestCase extends ListDynamicValuesTestCase {
@@ -202,7 +163,7 @@ class ListDynamicValuesValidationTestCase extends ListDynamicValuesTestCase {
 /**
  * List module UI tests.
  */
-class ListFieldUITestCase extends FieldTestCase {
+class ListFieldUITestCase extends FieldTestBase {
   public static function getInfo() {
     return array(
       'name' => 'List field UI',

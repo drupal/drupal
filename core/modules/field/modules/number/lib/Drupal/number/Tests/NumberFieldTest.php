@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Tests for number.module.
+ * Definition of Drupal\number\NumberFieldTest.
  */
+
+namespace Drupal\number\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests for number field types.
  */
-class NumberFieldTestCase extends WebTestBase {
+class NumberFieldTest extends WebTestBase {
   protected $field;
   protected $instance;
   protected $web_user;

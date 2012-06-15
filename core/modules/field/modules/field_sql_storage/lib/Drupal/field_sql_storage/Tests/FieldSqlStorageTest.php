@@ -1,21 +1,24 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\field_sql_storage\FieldSqlStorageTest.
+ */
+
+namespace Drupal\field_sql_storage\Tests;
+
 use Drupal\Core\Database\Database;
 use Drupal\field\FieldException;
 use Drupal\simpletest\WebTestBase;
-
+use Exception;
+use PDO;
 /**
- * @file
- * Tests for field_sql_storage.module.
+ * Tests field storage.
  *
  * Field_sql_storage.module implements the default back-end storage plugin
  * for the Field Strage API.
  */
-
-/**
- * Tests field storage.
- */
-class FieldSqlStorageTestCase extends WebTestBase {
+class FieldSqlStorageTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name'  => 'Field SQL Storage tests',
