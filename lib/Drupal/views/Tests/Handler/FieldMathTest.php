@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFieldMath.
+ * Definition of Drupal\views\Tests\Handler\FieldMathTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the core views_handler_field_math handler.
  */
-class ViewsHandlerFieldMath extends ViewsSqlTest {
+class FieldMathTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: Math',

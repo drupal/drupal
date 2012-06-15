@@ -2,15 +2,19 @@
 
 /**
  * @file
- * Definition of ViewsHandlerTestXss.
+ * Definition of Drupal\views\Tests\Handler\FieldXssTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the core views_handler_field_css handler.
  *
  * @see CommonXssUnitTest
  */
-class ViewsHandlerTestXss extends ViewsSqlTest {
+class FieldXssTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: Xss',

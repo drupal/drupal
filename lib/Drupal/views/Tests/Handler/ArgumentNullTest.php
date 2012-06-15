@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerArgumentNullTest.
+ * Definition of Drupal\views\Tests\Handler\ArgumentNullTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the core views_handler_argument_null handler.
  */
-class ViewsHandlerArgumentNullTest extends ViewsSqlTest {
+class ArgumentNullTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Argument: Null',

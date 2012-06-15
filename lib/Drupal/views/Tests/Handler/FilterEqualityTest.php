@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFilterEqualityTest.
+ * Definition of Drupal\views\Tests\Handler\FilterEqualityTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the core views_handler_filter_equality handler.
  */
-class ViewsHandlerFilterEqualityTest extends ViewsSqlTest {
+class FilterEqualityTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Filter: Equality',

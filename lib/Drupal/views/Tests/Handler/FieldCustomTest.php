@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFieldCustomTest.
+ * Definition of Drupal\views\Tests\Handler\FieldCustomTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the core views_handler_field_custom handler.
  */
-class ViewsHandlerFieldCustomTest extends ViewsSqlTest {
+class FieldCustomTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: Custom',

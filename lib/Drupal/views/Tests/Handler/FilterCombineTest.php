@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFilterCombineTest.
+ * Definition of Drupal\views\Tests\Handler\FilterCombineTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the combine filter handler.
  */
-class ViewsHandlerFilterCombineTest extends ViewsSqlTest {
+class FilterCombineTest extends ViewsSqlTest {
   var $column_map = array();
 
   public static function getInfo() {

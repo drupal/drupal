@@ -244,27 +244,6 @@ files[] = plugins/views_plugin_style_summary_unformatted.inc
 files[] = plugins/views_plugin_style_table.inc
 
 ; Tests
-files[] = tests/handlers/views_handler_area_text.test
-files[] = tests/handlers/views_handler_argument_null.test
-files[] = tests/handlers/views_handler_argument_string.test
-files[] = tests/handlers/views_handler_field.test
-files[] = tests/handlers/views_handler_field_boolean.test
-files[] = tests/handlers/views_handler_field_custom.test
-files[] = tests/handlers/views_handler_field_counter.test
-files[] = tests/handlers/views_handler_field_date.test
-files[] = tests/handlers/views_handler_field_file_size.test
-files[] = tests/handlers/views_handler_field_math.test
-files[] = tests/handlers/views_handler_field_url.test
-files[] = tests/handlers/views_handler_field_xss.test
-files[] = tests/handlers/views_handler_filter_combine.test
-files[] = tests/handlers/views_handler_filter_date.test
-files[] = tests/handlers/views_handler_filter_equality.test
-files[] = tests/handlers/views_handler_filter_in_operator.test
-files[] = tests/handlers/views_handler_filter_numeric.test
-files[] = tests/handlers/views_handler_filter_string.test
-files[] = tests/handlers/views_handler_sort_random.test
-files[] = tests/handlers/views_handler_sort_date.test
-files[] = tests/handlers/views_handler_sort.test
 files[] = tests/test_plugins/views_test_plugin_access_test_dynamic.inc
 files[] = tests/test_plugins/views_test_plugin_access_test_static.inc
 files[] = tests/plugins/views_plugin_display.test

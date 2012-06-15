@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerSortDateTest.
+ * Definition of Drupal\views\Tests\Handler\SortDateTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests for core views_handler_sort_date handler.
  */
-class ViewsHandlerSortDateTest extends ViewsSqlTest {
+class SortDateTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Sort: date',

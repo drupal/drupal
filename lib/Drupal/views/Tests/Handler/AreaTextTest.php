@@ -2,15 +2,19 @@
 
 /**
  * @file
- * Definition of ViewsHandlerAreaTextTest.
+ * Definition of Drupal\views\Tests\Handler\AreaTextTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the text area handler.
  *
  * @see views_handler_area_text
  */
-class ViewsHandlerAreaTextTest extends ViewsSqlTest {
+class AreaTextTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Area: Text',

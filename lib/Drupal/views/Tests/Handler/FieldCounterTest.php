@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFilterCounterTest.
+ * Definition of Drupal\views\Tests\Handler\FilterCounterTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the views_handler_field_counter handler.
  */
-class ViewsHandlerFilterCounterTest extends ViewsSqlTest {
+class FilterCounterTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: Counter',

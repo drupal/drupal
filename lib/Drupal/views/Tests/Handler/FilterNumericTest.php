@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFilterNumericTest.
+ * Definition of Drupal\views\Tests\Handler\FilterNumericTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the numeric filter handler.
  */
-class ViewsHandlerFilterNumericTest extends ViewsSqlTest {
+class FilterNumericTest extends ViewsSqlTest {
   var $column_map = array();
 
   public static function getInfo() {

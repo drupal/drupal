@@ -2,15 +2,19 @@
 
 /**
  * @file
- * Definition of ViewsHandlerTestFileSize.
+ * Definition of Drupal\views\Tests\Handler\FieldFileSizeTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the core views_handler_field_file_size handler.
  *
  * @see CommonXssUnitTest
  */
-class ViewsHandlerTestFileSize extends ViewsSqlTest {
+class FieldFileSizeTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: file_size',

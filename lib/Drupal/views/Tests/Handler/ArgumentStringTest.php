@@ -1,13 +1,20 @@
 <?php
+
 /**
  * @file
- * Definition of ViewsHandlerArgumentNullTest.
+ * Definition of Drupal\views\Tests\Handler\ArgumentStringTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
+
+use view;
 
 /**
  * Tests the core views_handler_argument_string handler.
  */
-class ViewsHandlerArgumentStringTest extends ViewsSqlTest {
+class ArgumentStringTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Argument: String',

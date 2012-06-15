@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerSortTest.
+ * Definition of Drupal\views\Tests\Handler\SortTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests for core views_handler_sort handler.
  */
-class ViewsHandlerSortTest extends ViewsSqlTest {
+class SortTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Sort: generic',

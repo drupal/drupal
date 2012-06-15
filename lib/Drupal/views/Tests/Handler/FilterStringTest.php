@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFilterStringTest.
+ * Definition of Drupal\views\Tests\Handler\FilterStringTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the core views_handler_filter_string handler.
  */
-class ViewsHandlerFilterStringTest extends ViewsSqlTest {
+class FilterStringTest extends ViewsSqlTest {
   var $column_map = array();
 
   public static function getInfo() {

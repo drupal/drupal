@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFieldDateTest.
+ * Definition of Drupal\views\Tests\Handler\FieldDateTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the core views_handler_field_date handler.
  */
-class ViewsHandlerFieldDateTest extends ViewsSqlTest {
+class FieldDateTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: Date',

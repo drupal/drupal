@@ -2,13 +2,19 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFilterDateTest.
+ * Definition of Drupal\views\Tests\Handler\FilterDateTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
+
+use view;
 
 /**
  * Tests the core views_handler_filter_date handler.
  */
-class ViewsHandlerFilterDateTest extends ViewsSqlTest {
+class FilterDateTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Filter: Date',

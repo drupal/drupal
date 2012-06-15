@@ -2,15 +2,19 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFieldTest.
+ * Definition of Drupal\views\Tests\Handler\FieldTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the generic field handler
  *
  * @see views_handler_field
  */
-class ViewsHandlerFieldTest extends ViewsSqlTest {
+class FieldTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field',

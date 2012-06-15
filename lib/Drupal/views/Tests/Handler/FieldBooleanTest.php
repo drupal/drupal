@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFieldBooleanTest.
+ * Definition of Drupal\views\Tests\Handler\FieldBooleanTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the core views_handler_field_boolean handler.
  */
-class ViewsHandlerFieldBooleanTest extends ViewsSqlTest {
+class FieldBooleanTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: Boolean',

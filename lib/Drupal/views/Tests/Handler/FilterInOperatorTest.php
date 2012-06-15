@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerFilterInOperator.
+ * Definition of Drupal\views\Tests\Handler\FilterInOperatorTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests the core views_handler_filter_in_operator handler.
  */
-class ViewsHandlerFilterInOperator extends ViewsSqlTest {
+class FilterInOperatorTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Filter: in_operator',

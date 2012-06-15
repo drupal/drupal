@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlerSortRandomTest.
+ * Definition of Drupal\views\Tests\Handler\SortRandomTest.
  */
+
+namespace Drupal\views\Tests\Handler;
+
+use ViewsSqlTest;
 
 /**
  * Tests for core views_handler_sort_random handler.
  */
-class ViewsHandlerSortRandomTest extends ViewsSqlTest {
+class SortRandomTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Sort: random',
