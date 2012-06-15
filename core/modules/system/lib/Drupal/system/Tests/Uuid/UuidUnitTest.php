@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Uuid\UuidTest.
+ * Definition of Drupal\system\Tests\Uuid\UuidUnitTest.
 */
 
 namespace Drupal\system\Tests\Uuid;
