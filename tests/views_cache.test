@@ -163,9 +163,6 @@ class ViewsCacheTest extends ViewsSqlTest {
       'type' => 'time',
       'output_lifespan' => '3600',
     ));
-    // @todo The cache plugin expects settings['data'] to be set.
-    // Maybe the cache plugin should be changed.
-    drupal_add_js('setting', array('example' => ''));
 
     $view->preview();
     $view->destroy();

@@ -230,7 +230,9 @@ class views_plugin_cache extends views_plugin {
     $this->storage['js'] = array_diff_assoc($js, $js_start);
 
     // Special case the settings key and get the difference of the data.
-    $this->storage['js']['settings'] = array_diff_assoc($js['settings']['data'], $js_start['settings']['data']);
+    $settings = isset($js['settings']['data']) ? $js['settings']['data'] : array();
+    $settings_start = isset($js_start['settings']['data']) ? $js_start['settings']['data'] : array();
+    $this->storage['js']['settings'] = array_diff_assoc($settings, $settings_start);
   }
 
   /**
