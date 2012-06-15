@@ -643,11 +643,13 @@ function drupal_encode_path($path) {
  * callback.
  *
  * @param $path
- *   A Drupal path or a full URL.
+ *   (optional) A Drupal path or a full URL, which will be passed to url() to
+ *   compute the redirect for the URL.
  * @param $options
- *   An associative array of additional URL options to pass to url().
+ *   (optional) An associative array of additional URL options to pass to url().
  * @param $http_response_code
- *   The valid values for 3xx redirection status codes are defined in
+ *   (optional) The HTTP status code to use for the redirection, defaults to
+ *   302. The valid values for 3xx redirection status codes are defined in
  *   @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3 RFC 2616 @endlink
  *   and the
  *   @link http://tools.ietf.org/html/draft-reschke-http-status-308-07 draft for the new HTTP status codes: @endlink
@@ -1990,8 +1992,9 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  * alternative than url().
  *
  * @param $path
- *   The internal path or external URL being linked to, such as "node/34" or
- *   "http://example.com/foo". A few notes:
+ *   (optional) The internal path or external URL being linked to, such as
+ *   "node/34" or "http://example.com/foo". The default value is equivalent to
+ *   passing in '<front>'. A few notes:
  *   - If you provide a full URL, it will be considered an external URL.
  *   - If you provide only the path (e.g. "node/34"), it will be
  *     considered an internal link. In this case, it should be a system URL,
@@ -2007,7 +2010,8 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  *     include them in $path, or use $options['query'] to let this function
  *     URL encode them.
  * @param $options
- *   An associative array of additional options, with the following elements:
+ *   (optional) An associative array of additional options, with the following
+ *   elements:
  *   - 'query': An array of query key/value-pairs (without any URL-encoding) to
  *     append to the URL.
  *   - 'fragment': A fragment identifier (named anchor) to append to the URL.
