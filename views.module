@@ -182,6 +182,11 @@ function _views_find_module_templates($cache, $path) {
   $templates = array();
   $regex = '/' . '\.tpl\.php' . '$' . '/';
 
+  // @todo Remove this once #1626580 is committed. For now, We need to remove
+  //   the sites/all part of the path because drupal_system_listing() is already
+  //   adding that.
+  $path = preg_replace('/^sites\/all\//', '', $path);
+
   // Because drupal_system_listing works the way it does, we check for real
   // templates separately from checking for patterns.
   $files = drupal_system_listing($regex, $path, 'name', 0);
