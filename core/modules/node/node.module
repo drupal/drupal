@@ -1159,7 +1159,7 @@ function node_view(Node $node, $view_mode = 'full', $langcode = NULL) {
 
   // Allow modules to modify the structured node.
   $type = 'node';
-  drupal_alter(array('node_view', 'entity_view'), $build, $type);
+  drupal_alter(array('node_view', 'entity_view'), $build, $node);
 
   return $build;
 }
@@ -1239,7 +1239,7 @@ function node_build_content(Node $node, $view_mode = 'full', $langcode = NULL) {
 
   // Allow modules to make their own additions to the node.
   module_invoke_all('node_view', $node, $view_mode, $langcode);
-  module_invoke_all('entity_view', $node, 'node', $view_mode, $langcode);
+  module_invoke_all('entity_view', $node, $view_mode, $langcode);
 }
 
 /**

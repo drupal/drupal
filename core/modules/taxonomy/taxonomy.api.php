@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\entity\EntityInterface;
+
 /**
  * @file
  * Hooks provided by the Taxonomy module.
@@ -237,10 +239,12 @@ function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
  *
  * @param $build
  *   A renderable array representing the taxonomy term content.
+ * @param Drupal\taxonomy\Term $term
+ *   The taxonomy term being rendered.
  *
  * @see hook_entity_view_alter()
  */
-function hook_taxonomy_term_view_alter(&$build) {
+function hook_taxonomy_term_view_alter(&$build, Drupal\taxonomy\Term $term) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;

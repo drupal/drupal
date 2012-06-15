@@ -5,11 +5,13 @@
  * Test module for the Entity CRUD API.
  */
 
+use Drupal\entity\EntityInterface;
+
 /**
  * Implements hook_entity_presave().
  */
-function entity_crud_hook_test_entity_presave($entity, $type) {
-  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+function entity_crud_hook_test_entity_presave(EntityInterface $entity) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->entityType());
 }
 
 /**
@@ -57,8 +59,8 @@ function entity_crud_hook_test_user_presave() {
 /**
  * Implements hook_entity_insert().
  */
-function entity_crud_hook_test_entity_insert($entity, $type) {
-  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+function entity_crud_hook_test_entity_insert(EntityInterface $entity) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->entityType());
 }
 
 /**
@@ -155,8 +157,8 @@ function entity_crud_hook_test_user_load() {
 /**
  * Implements hook_entity_update().
  */
-function entity_crud_hook_test_entity_update($entity, $type) {
-  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+function entity_crud_hook_test_entity_update(EntityInterface $entity) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->entityType());
 }
 
 /**
@@ -204,8 +206,8 @@ function entity_crud_hook_test_user_update() {
 /**
  * Implements hook_entity_predelete().
  */
-function entity_crud_hook_test_entity_predelete($entity, $type) {
-  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+function entity_crud_hook_test_entity_predelete(EntityInterface $entity) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->entityType());
 }
 
 /**
@@ -253,8 +255,8 @@ function entity_crud_hook_test_user_predelete() {
 /**
  * Implements hook_entity_delete().
  */
-function entity_crud_hook_test_entity_delete($entity, $type) {
-  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+function entity_crud_hook_test_entity_delete(EntityInterface $entity) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $entity->entityType());
 }
 
 /**

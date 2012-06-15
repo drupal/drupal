@@ -226,45 +226,39 @@ function hook_entity_info_alter(&$entity_info) {
  * This is a generic load hook called for all entity types loaded via the
  * entity API.
  *
- * @param $entities
+ * @param array $entities
  *   The entities keyed by entity ID.
- * @param $type
+ * @param string $entity_type
  *   The type of entities being loaded (i.e. node, user, comment).
  */
-function hook_entity_load($entities, $type) {
+function hook_entity_load($entities, $entity_type) {
   foreach ($entities as $entity) {
-    $entity->foo = mymodule_add_something($entity, $type);
+    $entity->foo = mymodule_add_something($entity);
   }
 }
 
 /**
  * Act on an entity before it is about to be created or updated.
  *
- * @param $entity
+ * @param Drupal\entity\EntityInterface $entity
  *   The entity object.
- * @param $type
- *   The type of entity being saved (i.e. node, user, comment).
  */
-function hook_entity_presave($entity, $type) {
+function hook_entity_presave(Drupal\entity\EntityInterface $entity) {
   $entity->changed = REQUEST_TIME;
 }
 
 /**
  * Act on entities when inserted.
  *
- * @param $entity
+ * @param Drupal\entity\EntityInterface $entity
  *   The entity object.
- * @param $type
- *   The type of entity being inserted (i.e. node, user, comment).
  */
-function hook_entity_insert($entity, $type) {
+function hook_entity_insert(Drupal\entity\EntityInterface $entity) {
   // Insert the new entity into a fictional table of all entities.
-  $info = entity_get_info($type);
-  list($id) = entity_extract_ids($type, $entity);
   db_insert('example_entity')
     ->fields(array(
-      'type' => $type,
-      'id' => $id,
+      'type' => $entity->entityType(),
+      'id' => $entity->id(),
       'created' => REQUEST_TIME,
       'updated' => REQUEST_TIME,
     ))
@@ -274,21 +268,17 @@ function hook_entity_insert($entity, $type) {
 /**
  * Act on entities when updated.
  *
- * @param $entity
+ * @param Drupal\entity\EntityInterface $entity
  *   The entity object.
- * @param $type
- *   The type of entity being updated (e.g. node, user, comment).
  */
-function hook_entity_update($entity, $type) {
+function hook_entity_update(Drupal\entity\EntityInterface $entity) {
   // Update the entity's entry in a fictional table of all entities.
-  $info = entity_get_info($type);
-  list($id) = entity_extract_ids($type, $entity);
   db_update('example_entity')
     ->fields(array(
       'updated' => REQUEST_TIME,
     ))
-    ->condition('type', $type)
-    ->condition('id', $id)
+    ->condition('type', $entity->entityType())
+    ->condition('id', $entity->id())
     ->execute();
 }
 
@@ -297,15 +287,14 @@ function hook_entity_update($entity, $type) {
  *
  * This hook runs after the entity type-specific predelete hook.
  *
- * @param $entity
+ * @param Drupal\entity\EntityInterface $entity
  *   The entity object for the entity that is about to be deleted.
- * @param $type
- *   The type of entity being deleted (e.g. node, user, comment).
  */
-function hook_entity_predelete($entity, $type) {
+function hook_entity_predelete(Drupal\entity\EntityInterface $entity) {
   // Count references to this entity in a custom table before they are removed
   // upon entity deletion.
-  list($id) = entity_extract_ids($type, $entity);
+  $id = $entity->id();
+  $type = $entity->entityType();
   $count = db_select('example_entity_data')
     ->condition('type', $type)
     ->condition('id', $id)
@@ -327,18 +316,14 @@ function hook_entity_predelete($entity, $type) {
  *
  * This hook runs after the entity type-specific delete hook.
  *
- * @param $entity
+ * @param Drupal\entity\EntityInterface $entity
  *   The entity object for the entity that has been deleted.
- * @param $type
- *   The type of entity being deleted (i.e. node, user, comment).
  */
-function hook_entity_delete($entity, $type) {
+function hook_entity_delete(Drupal\entity\EntityInterface $entity) {
   // Delete the entity's entry from a fictional table of all entities.
-  $info = entity_get_info($type);
-  list($id) = entity_extract_ids($type, $entity);
   db_delete('example_entity')
-    ->condition('type', $type)
-    ->condition('id', $id)
+    ->condition('type', $entity->entityType())
+    ->condition('id', $entity->id())
     ->execute();
 }
 
@@ -364,17 +349,15 @@ function hook_entity_delete($entity, $type) {
  *   ($query->pager && $query->count), allowing the driver to return 0 from
  *   the count query and disable the pager.
  */
-function hook_entity_query_alter($query) {
+function hook_entity_query_alter(Drupal\entity\EntityFieldQuery $query) {
   $query->executeCallback = 'my_module_query_callback';
 }
 
 /**
  * Act on entities being assembled before rendering.
  *
- * @param $entity
+ * @param Drupal\entity\EntityInterface $entity
  *   The entity object.
- * @param $type
- *   The type of entity being rendered (i.e. node, user, comment).
  * @param $view_mode
  *   The view mode the entity is rendered in.
  * @param $langcode
@@ -389,7 +372,7 @@ function hook_entity_query_alter($query) {
  * @see hook_node_view()
  * @see hook_user_view()
  */
-function hook_entity_view($entity, $type, $view_mode, $langcode) {
+function hook_entity_view(Drupal\entity\EntityInterface $entity, $view_mode, $langcode) {
   $entity->content['my_additional_field'] = array(
     '#markup' => $additional_field,
     '#weight' => 10,
@@ -412,8 +395,8 @@ function hook_entity_view($entity, $type, $view_mode, $langcode) {
  *
  * @param $build
  *   A renderable array representing the entity content.
- * @param $type
- *   The type of entity being rendered (i.e. node, user, comment).
+ * @param Drupal\entity\EntityInterface $entity
+ *   The entity object being rendered.
  *
  * @see hook_entity_view()
  * @see hook_comment_view_alter()
@@ -421,7 +404,7 @@ function hook_entity_view($entity, $type, $view_mode, $langcode) {
  * @see hook_taxonomy_term_view_alter()
  * @see hook_user_view_alter()
  */
-function hook_entity_view_alter(&$build, $type) {
+function hook_entity_view_alter(&$build, Drupal\entity\EntityInterface $entity) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
@@ -438,14 +421,14 @@ function hook_entity_view_alter(&$build, $type) {
  * view. Only use this if attaching the data during the entity loading phase
  * is not appropriate, for example when attaching other 'entity' style objects.
  *
- * @param $entities
+ * @param array $entities
  *   The entities keyed by entity ID.
- * @param $type
- *   The type of entities being loaded (i.e. node, user, comment).
+ * @param string $entity_type
+ *   The type of entities being viewed (i.e. node, user, comment).
  */
-function hook_entity_prepare_view($entities, $type) {
+function hook_entity_prepare_view($entities, $entity_type) {
   // Load a specific node into the user object for later theming.
-  if ($type == 'user') {
+  if (!empty($entities) && $entity_type == 'user') {
     $nodes = mymodule_get_user_nodes(array_keys($entities));
     foreach ($entities as $uid => $entity) {
       $entity->user_node = $nodes[$uid];

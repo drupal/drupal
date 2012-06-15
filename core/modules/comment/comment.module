@@ -994,8 +994,7 @@ function comment_view(Comment $comment, Node $node, $view_mode = 'full', $langco
   }
 
   // Allow modules to modify the structured comment.
-  $type = 'comment';
-  drupal_alter(array('comment_view', 'entity_view'), $build, $type);
+  drupal_alter(array('comment_view', 'entity_view'), $build, $comment);
 
   return $build;
 }
@@ -1044,7 +1043,7 @@ function comment_build_content(Comment $comment, Node $node, $view_mode = 'full'
 
   // Allow modules to make their own additions to the comment.
   module_invoke_all('comment_view', $comment, $view_mode, $langcode);
-  module_invoke_all('entity_view', $comment, 'comment', $view_mode, $langcode);
+  module_invoke_all('entity_view', $comment, $view_mode, $langcode);
 }
 
 /**

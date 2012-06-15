@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\entity\EntityInterface;
+
 /**
  * @file
  * Hooks provided by the User module.
@@ -359,11 +361,13 @@ function hook_user_view($account, $view_mode, $langcode) {
  *
  * @param $build
  *   A renderable array representing the user.
+ * @param Drupal\user\User $account
+ *   The user account being rendered.
  *
  * @see user_view()
  * @see hook_entity_view_alter()
  */
-function hook_user_view_alter(&$build) {
+function hook_user_view_alter(&$build, Drupal\user\User $account) {
   // Check for the existence of a field added by another module.
   if (isset($build['an_additional_field'])) {
     // Change its weight.

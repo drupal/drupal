@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\entity\EntityInterface;
+
 /**
  * @file
  * Hooks provided by the Comment module.
@@ -91,11 +93,13 @@ function hook_comment_view(Drupal\comment\Comment $comment, $view_mode, $langcod
  *
  * @param $build
  *   A renderable array representing the comment.
+ * @param Drupal\comment\Comment $comment
+ *   The comment being rendered.
  *
  * @see comment_view()
  * @see hook_entity_view_alter()
  */
-function hook_comment_view_alter(&$build) {
+function hook_comment_view_alter(&$build, Drupal\comment\Comment $comment) {
   // Check for the existence of a field added by another module.
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
