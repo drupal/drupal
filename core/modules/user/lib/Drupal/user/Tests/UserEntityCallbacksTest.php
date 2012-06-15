@@ -25,19 +25,19 @@ class UserEntityCallbacksTest extends WebTestBase {
     parent::setUp('user');
 
     $this->account = $this->drupalCreateUser();
-    $this->anonymous = drupal_anonymous_user();
+    $this->anonymous = entity_create('user', (array) drupal_anonymous_user());
   }
 
   /**
    * Test label callback.
    */
   function testLabelCallback() {
-    $this->assertEqual(entity_label('user', $this->account), $this->account->name, t('The username should be used as label'));
+    $this->assertEqual($this->account->label(), $this->account->name, t('The username should be used as label'));
 
     // Setup a random anonymous name to be sure the name is used.
     $name = $this->randomName();
     variable_set('anonymous', $name);
-    $this->assertEqual(entity_label('user', $this->anonymous), $name, t('The variable anonymous should be used for name of uid 0'));
+    $this->assertEqual($this->anonymous->label(), $name, t('The variable anonymous should be used for name of uid 0'));
   }
 
   /**

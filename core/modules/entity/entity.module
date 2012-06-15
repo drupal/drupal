@@ -6,6 +6,7 @@
  */
 
 use Drupal\entity\EntityMalformedException;
+use Drupal\entity\EntityInterface;
 
 /**
  * Implements hook_help().
@@ -414,31 +415,19 @@ function entity_uri($entity_type, $entity) {
 /**
  * Returns the label of an entity.
  *
- * See the 'label callback' component of the hook_entity_info() return value
- * for more information.
+ * This is a wrapper for Drupal\entity\EntityInterface::label(). This function
+ * should only be used as a callback, e.g. for menu title callbacks.
  *
- * @param $entity_type
- *   The entity type; e.g., 'node' or 'user'.
- * @param $entity
+ * @param Drupal\entity\EntityInterface $entity
  *   The entity for which to generate the label.
  *
  * @return
- *   The entity label, or FALSE if not found.
+ *   The label of the entity, or NULL if there is no label defined.
  *
- * @todo
- *   Remove once all entity types are implementing the EntityInterface.
+ * @see Drupal\entity\EntityInterface::label()
  */
-function entity_label($entity_type, $entity) {
-  $label = FALSE;
-  $info = entity_get_info($entity_type);
-  if (isset($info['label callback'])) {
-    $label = $info['label callback']($entity_type, $entity);
-  }
-  elseif (!empty($info['entity keys']['label']) && isset($entity->{$info['entity keys']['label']})) {
-    $label = $entity->{$info['entity keys']['label']};
-  }
-
-  return $label;
+function entity_page_label(EntityInterface $entity) {
+  return $entity->label();
 }
 
 /**

@@ -86,8 +86,6 @@ class Entity implements EntityInterface {
 
   /**
    * Implements EntityInterface::label().
-   *
-   * @see entity_label()
    */
   public function label() {
     $label = FALSE;

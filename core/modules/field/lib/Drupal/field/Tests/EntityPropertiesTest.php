@@ -36,7 +36,7 @@ class EntityPropertiesTest extends FieldTestBase {
     $entity = field_test_create_stub_entity();
 
     foreach ($entity_types as $entity_type) {
-      $label = entity_label($entity_type, $entity);
+      $label = entity_create($entity_type, (array) $entity)->label();
 
       switch ($entity_type) {
         case 'test_entity_no_label':

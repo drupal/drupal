@@ -81,6 +81,7 @@ function field_test_entity_info() {
       'fieldable' => TRUE,
       'field cache' => FALSE,
       'base table' => 'test_entity',
+      'revision table' => 'test_entity_revision',
       'entity keys' => array(
         'id' => 'ftid',
         'revision' => 'ftvid',
@@ -94,6 +95,7 @@ function field_test_entity_info() {
       'fieldable' => TRUE,
       'field cache' => FALSE,
       'base table' => 'test_entity',
+      'revision table' => 'test_entity_revision',
       'entity keys' => array(
         'id' => 'ftid',
         'revision' => 'ftvid',
@@ -108,6 +110,7 @@ function field_test_entity_info() {
       'fieldable' => TRUE,
       'field cache' => FALSE,
       'base table' => 'test_entity',
+      'revision table' => 'test_entity_revision',
       'label callback' => 'field_test_entity_label_callback',
       'entity keys' => array(
         'id' => 'ftid',
