@@ -106,10 +106,10 @@ function node_filters() {
 
   // Language filter if language support is present.
   if (language_multilingual()) {
-    $languages = language_list();
-    $language_options = array(LANGUAGE_NOT_SPECIFIED => t('- None -'));
+    $languages = language_list(LANGUAGE_ALL);
     foreach ($languages as $langcode => $language) {
-      $language_options[$langcode] = $language->name;
+      // Make locked languages appear special in the list.
+      $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
     }
     $filters['language'] = array(
       'title' => t('language'),
@@ -476,7 +476,7 @@ function node_admin_nodes() {
   $nodes = node_load_multiple($nids);
 
   // Prepare the list of nodes.
-  $languages = language_list();
+  $languages = language_list(LANGUAGE_ALL);
   $destination = drupal_get_destination();
   $options = array();
   foreach ($nodes as $node) {

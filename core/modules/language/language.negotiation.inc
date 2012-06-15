@@ -368,7 +368,7 @@ function language_url_rewrite_url(&$path, &$options) {
     $options['language'] = $language_url;
   }
   // We allow only enabled languages here.
-  elseif (!isset($languages[$options['language']->langcode])) {
+  elseif (is_object($options['language']) && !isset($languages[$options['language']->langcode])) {
     unset($options['language']);
     return;
   }
@@ -377,7 +377,7 @@ function language_url_rewrite_url(&$path, &$options) {
     switch (variable_get('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX)) {
       case LANGUAGE_NEGOTIATION_URL_DOMAIN:
         $domains = language_negotiation_url_domains();
-        if (!empty($domains[$options['language']->langcode])) {
+        if (is_object($options['language']) && !empty($domains[$options['language']->langcode])) {
           // Ask for an absolute URL with our modified base_url.
           global $is_https;
           $url_scheme = ($is_https) ? 'https://' : 'http://';
@@ -396,7 +396,7 @@ function language_url_rewrite_url(&$path, &$options) {
 
       case LANGUAGE_NEGOTIATION_URL_PREFIX:
         $prefixes = language_negotiation_url_prefixes();
-        if (!empty($prefixes[$options['language']->langcode])) {
+        if (is_object($options['language']) &&!empty($prefixes[$options['language']->langcode])) {
           $options['prefix'] = $prefixes[$options['language']->langcode] . '/';
         }
         break;

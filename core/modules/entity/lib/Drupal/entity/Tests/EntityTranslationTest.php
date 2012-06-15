@@ -66,7 +66,7 @@ class EntityTranslationTest extends WebTestBase {
       'name' => 'test',
       'uid' => $GLOBALS['user']->uid,
     ));
-    $this->assertFalse($entity->language(), 'No entity language has been specified.');
+    $this->assertEqual($entity->language()->langcode, LANGUAGE_NOT_SPECIFIED, 'Entity language not specified.');
     $this->assertFalse($entity->translations(), 'No translations are available');
 
     // Set the value in default language.

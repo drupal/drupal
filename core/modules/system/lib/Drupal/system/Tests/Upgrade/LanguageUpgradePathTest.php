@@ -40,7 +40,7 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
 
     // Ensure Catalan was properly upgraded to be the new default language.
     $this->assertTrue(language_default()->langcode == 'ca', t('Catalan is the default language'));
-    $languages = language_list();
+    $languages = language_list(LANGUAGE_ALL);
     foreach ($languages as $language) {
       $this->assertTrue($language->default == ($language->langcode == 'ca'), t('@language default property properly set', array('@language' => $language->name)));
     }

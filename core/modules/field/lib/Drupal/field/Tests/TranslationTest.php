@@ -69,11 +69,11 @@ class TranslationTest extends FieldTestBase {
 
     // Test hook_field_languages() invocation on a translatable field.
     variable_set('field_test_field_available_languages_alter', TRUE);
-    $enabled_langcodes = field_content_languages();
+    $langcodes = field_content_languages();
     $available_langcodes = field_available_languages($this->entity_type, $this->field);
     foreach ($available_langcodes as $delta => $langcode) {
       if ($langcode != 'xx' && $langcode != 'en') {
-        $this->assertTrue(in_array($langcode, $enabled_langcodes), t('%language is an enabled language.', array('%language' => $langcode)));
+        $this->assertTrue(in_array($langcode, $langcodes), t('%language is an enabled language.', array('%language' => $langcode)));
       }
     }
     $this->assertTrue(in_array('xx', $available_langcodes), t('%language was made available.', array('%language' => 'xx')));
@@ -263,6 +263,9 @@ class TranslationTest extends FieldTestBase {
 
     $enabled_langcodes = field_content_languages();
     $langcodes = array();
+    // This array is used to store, for each field name, which one of the locked
+    // languages will be used for display.
+    $locked_languages = array();
 
     // Generate field translations for languages different from the first
     // enabled.
@@ -277,6 +280,15 @@ class TranslationTest extends FieldTestBase {
       while (isset($langcodes[$langcode]));
       $langcodes[$langcode] = TRUE;
       $entity->{$field_name}[$langcode] = $this->_generateTestFieldValues($field['cardinality']);
+      // If the langcode is one of the locked languages, then that one
+      // will also be used for display. Otherwise, the default one should be
+      // used, which is LANGUAGE_NOT_SPECIFIED.
+      if (language_is_locked($langcode)) {
+        $locked_languages[$field_name] = $langcode;
+      }
+      else {
+        $locked_languages[$field_name] = LANGUAGE_NOT_SPECIFIED;
+      }
     }
 
     // Test multiple-fields display languages for untranslatable entities.
@@ -286,14 +298,13 @@ class TranslationTest extends FieldTestBase {
     $display_langcodes = field_language($entity_type, $entity, NULL, $requested_langcode);
     foreach ($instances as $instance) {
       $field_name = $instance['field_name'];
-      $this->assertTrue($display_langcodes[$field_name] == LANGUAGE_NOT_SPECIFIED, t('The display language for field %field_name is %language.', array('%field_name' => $field_name, '%language' => LANGUAGE_NOT_SPECIFIED)));
+      $this->assertTrue($display_langcodes[$field_name] == $locked_languages[$field_name], t('The display language for field %field_name is %language.', array('%field_name' => $field_name, '%language' => $locked_languages[$field_name])));
     }
 
     // Test multiple-fields display languages for translatable entities.
     field_test_entity_info_translatable($entity_type, TRUE);
     drupal_static_reset('field_language');
     $display_langcodes = field_language($entity_type, $entity, NULL, $requested_langcode);
-
     foreach ($instances as $instance) {
       $field_name = $instance['field_name'];
       $langcode = $display_langcodes[$field_name];

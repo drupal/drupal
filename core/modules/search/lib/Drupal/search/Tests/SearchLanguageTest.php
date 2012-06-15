@@ -28,10 +28,6 @@ class SearchLanguageTest extends SearchTestBase {
   }
 
   function testLanguages() {
-    // Check that there are initially no languages displayed.
-    $this->drupalGet('search/node');
-    $this->assertNoText(t('Languages'), t('No languages to choose from.'));
-
     // Add predefined language.
     $edit = array('predefined_langcode' => 'fr');
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
@@ -60,9 +56,5 @@ class SearchLanguageTest extends SearchTestBase {
     $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
     $this->drupalPost('admin/config/regional/language/delete/en', array(), t('Delete'));
-
-    // Check that there are again no languages displayed.
-    $this->drupalGet('search/node');
-    $this->assertNoText(t('Languages'), t('No languages to choose from.'));
   }
 }

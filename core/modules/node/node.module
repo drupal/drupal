@@ -2658,8 +2658,9 @@ function node_form_search_form_alter(&$form, $form_state) {
 
     // Languages:
     $language_options = array();
-    foreach (language_list() as $langcode => $language) {
-      $language_options[$langcode] = $language->name;
+    foreach (language_list(LANGUAGE_ALL) as $langcode => $language) {
+      // Make locked languages appear special in the list.
+      $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
     }
     if (count($language_options) > 1) {
       $form['advanced']['language'] = array(

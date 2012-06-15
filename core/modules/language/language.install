@@ -12,8 +12,13 @@
  * system on multilingual sites without needing any preliminary configuration.
  */
 function language_install() {
-  // Add the default language to the database too.
+  // Add the default language at first so that language_list() returns this in
+  // language_special_languages().
   language_save(language_default());
+  $languages = language_locked_languages();
+  foreach ($languages as $language) {
+    language_save($language);
+  }
 
   // Enable URL language detection for each configurable language type.
   require_once DRUPAL_ROOT . '/core/includes/language.inc';
@@ -81,6 +86,13 @@ function language_schema() {
         'not null' => TRUE,
         'default' => 0,
         'description' => 'Weight, used in lists of languages.',
+      ),
+      'locked' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'A boolean indicating whether the administrator can edit or delete the language.',
       ),
     ),
     'primary key' => array('langcode'),

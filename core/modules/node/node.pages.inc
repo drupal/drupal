@@ -187,17 +187,17 @@ function node_form($form, &$form_state, Node $node) {
   $form['#node'] = $node;
 
   if (variable_get('node_type_language_' . $node->type, 0) && module_exists('language')) {
-    $languages = language_list();
+    $languages = language_list(LANGUAGE_ALL);
     $language_options = array();
     foreach ($languages as $langcode => $language) {
-      $language_options[$langcode] = $language->name;
+      // Make locked languages appear special in the list.
+      $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
     }
     $form['langcode'] = array(
       '#type' => 'select',
       '#title' => t('Language'),
-      '#default_value' => (isset($node->langcode) ? $node->langcode : ''),
+      '#default_value' => (isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED),
       '#options' => $language_options,
-      '#empty_value' => LANGUAGE_NOT_SPECIFIED,
     );
   }
   else {

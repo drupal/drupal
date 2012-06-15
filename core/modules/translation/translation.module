@@ -197,7 +197,7 @@ function translation_node_view(Node $node, $view_mode) {
   // If the site has no translations or is not multilingual we have no content
   // translation links to display.
   if (isset($node->tnid) && language_multilingual() && $translations = translation_node_get_translations($node->tnid)) {
-    $languages = language_list();
+    $languages = language_list(LANGUAGE_ALL);
 
     // There might be a language provider enabled defining custom language
     // switch links which need to be taken into account while generating the
@@ -212,7 +212,6 @@ function translation_node_view(Node $node, $view_mode) {
     foreach ($translations as $langcode => $translation) {
       // Do not show links to the same node or to unpublished translations.
       if ($translation->status && isset($languages[$langcode]) && $langcode != $node->langcode) {
-        $language = $languages[$langcode];
         $key = "translation_$langcode";
 
         if (isset($custom_links->links[$langcode])) {
@@ -221,8 +220,8 @@ function translation_node_view(Node $node, $view_mode) {
         else {
           $links[$key] = array(
             'href' => "node/{$translation->nid}",
-            'title' => $language->name,
-            'language' => $language,
+            'title' => language_name($langcode),
+            'language' => $languages[$langcode],
           );
         }
 

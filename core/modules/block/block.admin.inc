@@ -418,9 +418,9 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
       $default_language_type = $setting->type;
     }
 
-    // Fetch the enabled languages.
-    $enabled_languages = language_list(TRUE);
-    foreach ($enabled_languages as $language) {
+    // Fetch languages.
+    $languages = language_list(LANGUAGE_ALL);
+    foreach ($languages as $language) {
       // @TODO $language->name is not wrapped with t(), it should be replaced
       // by CMI translation implementation.
       $langcodes_options[$language->langcode] = $language->name;

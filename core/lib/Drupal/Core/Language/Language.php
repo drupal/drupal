@@ -21,7 +21,6 @@ class Language {
   public $name = 'English';
   public $langcode = 'en';
   public $direction = 0;
-  public $enabled = 1;
   public $weight = 0;
   public $default = FALSE;
   public $method_id = NULL;

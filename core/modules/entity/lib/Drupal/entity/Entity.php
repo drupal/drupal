@@ -205,14 +205,15 @@ class Entity implements EntityInterface {
   protected function getFieldLangcode($field, $langcode = NULL) {
     // Only apply the given langcode if the entity is language-specific.
     // Otherwise translatable fields are handled as non-translatable fields.
-    if (field_is_translatable($this->entityType, $field) && ($default_language = $this->language())) {
+    if (field_is_translatable($this->entityType, $field) && ($default_language = $this->language()) && !language_is_locked($this->langcode)) {
       // For translatable fields the values in default language are stored using
       // the language code of the default language.
       return isset($langcode) ? $langcode : $default_language->langcode;
     }
     else {
-      // Non-translatable fields always use LANGUAGE_NOT_SPECIFIED.
-      return LANGUAGE_NOT_SPECIFIED;
+      // If there is a langcode defined for this field, just return it. Otherwise
+      // return LANGUAGE_NOT_SPECIFIED.
+      return (isset($this->langcode) ? $this->langcode : LANGUAGE_NOT_SPECIFIED);
     }
   }
 

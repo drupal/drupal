@@ -204,6 +204,11 @@ const LANGUAGE_NOT_APPLICABLE = 'zxx';
 const LANGUAGE_MULTIPLE = 'mul';
 
 /**
+ * The language code used when referring to all languages.
+ */
+const LANGUAGE_ALL = TRUE;
+
+/**
  * The type of language used to define the content language.
  */
 const LANGUAGE_TYPE_CONTENT = 'language_content';
@@ -2653,18 +2658,28 @@ function language_multilingual() {
 /**
  * Returns a list of configured languages.
  *
+ * @param $all
+ *   (optional) A flag depending on the need for locked languages in the
+ *   returned list.
+ *
  * @return
  *   An associative array of languages, keyed by the language code, ordered by
  *   weight ascending and name ascending.
  */
-function language_list() {
+function language_list($all = FALSE) {
+
   $languages = &drupal_static(__FUNCTION__);
+
   // Initialize master language list.
   if (!isset($languages)) {
+    // Initialize local language list cache.
+   $languages = array();
+
+    // Fill in master language list based on current configuration.
     $default = language_default();
     if (language_multilingual() || module_exists('language')) {
       // Use language module configuration if available.
-      $languages = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode', PDO::FETCH_ASSOC);
+      $languages = db_query('SELECT *, 0 as `default` FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode', PDO::FETCH_ASSOC);
 
       // Initialize default property so callers have an easy reference and can
       // save the same object without data loss.
@@ -2677,8 +2692,57 @@ function language_list() {
       // No language module, so use the default language only.
       $languages = array($default->langcode => $default);
     }
+    // Add the special languages, they will be filtered later if needed.
+    $languages += language_locked_languages();
   }
 
+  // Filter the full list of languages based on the value of the $all flag. By
+  // default we remove the locked languages, but the caller may request for
+  // those languages to be added as well.
+  $filtered_languages = array();
+  foreach ($languages as $langcode => $language) {
+    if ($language->locked && !$all) {
+      continue;
+     }
+    $filtered_languages[$langcode] = $language;
+  }
+
+  return $filtered_languages;
+}
+
+/**
+ * Returns a list with the locked languages.
+ *
+ * @param int $weight
+ *   An integer value that is used as the start value for the weights of the
+ *   locked languages.
+ *
+ * @return
+ *   An array of language objects.
+ */
+function language_locked_languages($weight = 20) {
+  $locked_language = array(
+    'default' => FALSE,
+    'locked' => TRUE,
+    'enabled' => TRUE,
+  );
+
+  $languages = array();
+  $languages[LANGUAGE_NOT_SPECIFIED] = new Language(array(
+    'langcode' => LANGUAGE_NOT_SPECIFIED,
+    'name' => t('Not specified'),
+    'weight' => $weight++,
+  ) + $locked_language);
+  $languages[LANGUAGE_NOT_APPLICABLE] = new Language(array(
+    'langcode' => LANGUAGE_NOT_APPLICABLE,
+    'name' => t('Not applicable'),
+    'weight' => $weight++,
+  ) + $locked_language);
+  $languages[LANGUAGE_MULTIPLE] = new Language(array(
+    'langcode' => LANGUAGE_MULTIPLE,
+    'name' => t('Multiple'),
+    'weight' => $weight++,
+  ) + $locked_language);
   return $languages;
 }
 
@@ -2692,7 +2756,7 @@ function language_list() {
  *   A fully-populated language object or FALSE.
  */
 function language_load($langcode) {
-  $languages = language_list();
+  $languages = language_list(LANGUAGE_ALL);
   return isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
 }
 
@@ -2720,6 +2784,16 @@ function language_name($langcode) {
 }
 
 /**
+ * Checks if a language is locked.
+ *
+ * @param $langcode
+ *   The language code.
+ */
+function language_is_locked($langcode) {
+  return array_key_exists($langcode, language_locked_languages());
+}
+
+/**
  * Returns the default language used on the site.
  *
  * @return
@@ -2731,6 +2805,7 @@ function language_default() {
     'name' => 'English',
     'direction' => 0,
     'weight' => 0,
+    'locked' => 0,
   ));
   $info['default'] = TRUE;
   return new Language($info);

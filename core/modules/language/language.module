@@ -39,7 +39,7 @@ function language_help($path, $arg) {
 
     case 'admin/structure/block/manage/%/%':
       if ($arg[4] == 'language' && $arg[5] == 'language_interface') {
-        return '<p>' . t('This block is only shown if <a href="@languages">at least two languages are enabled</a> and <a href="@configuration">language negotiation</a> is set to <em>URL</em> or <em>Session</em>.', array('@languages' => url('admin/config/regional/language'), '@configuration' => url('admin/config/regional/language/detection'))) . '</p>';
+        return '<p>' . t('With multiple languages enabled, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
       break;
   }
@@ -77,14 +77,16 @@ function language_menu() {
     'title' => 'Edit language',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('language_admin_edit_form', 5),
-    'access arguments' => array('administer languages'),
+    'access callback' => 'language_access_language_edit_or_delete',
+    'access arguments' => array(5),
     'file' => 'language.admin.inc',
   );
   $items['admin/config/regional/language/delete/%language'] = array(
     'title' => 'Confirm delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('language_admin_delete_form', 5),
-    'access arguments' => array('administer languages'),
+    'access callback' => 'language_access_language_edit_or_delete',
+    'access arguments' => array(5),
     'file' => 'language.admin.inc',
   );
 
@@ -116,6 +118,13 @@ function language_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Editing or deleting locked languages should not be possible.
+ */
+function language_access_language_edit_or_delete($language) {
+  return !$language->locked && user_access('administer languages');
 }
 
 /**
@@ -187,8 +196,8 @@ function language_save($language) {
     variable_set('language_default', (array) $language);
   }
 
-  // Update language count based on enabled language count.
-  variable_set('language_count', db_query('SELECT COUNT(langcode) FROM {language}')->fetchField());
+  // Update language count based on unlocked language count.
+  variable_set('language_count', db_query('SELECT COUNT(langcode) FROM {language} WHERE locked = 0')->fetchField());
 
   // Kill the static cache in language_list().
   drupal_static_reset('language_list');
@@ -205,8 +214,8 @@ function language_save($language) {
  *   TRUE if language is successfully deleted. Otherwise FALSE.
  */
 function language_delete($langcode) {
-  $languages = language_list();
-  if (isset($languages[$langcode])) {
+  $languages = language_list(LANGUAGE_ALL);
+  if (isset($languages[$langcode]) && !$languages[$langcode]->locked) {
     $language = $languages[$langcode];
 
     module_invoke_all('language_delete', $language);
@@ -388,6 +397,10 @@ function language_modules_disabled($modules) {
  * Implements hook_language_insert().
  */
 function language_language_insert($language) {
+  if (!empty($language->locked)) {
+    return;
+  }
+
   language_negotiation_include();
 
   // Add new language to the list of language prefixes.
@@ -405,6 +418,10 @@ function language_language_insert($language) {
  * Implements hook_language_update().
  */
 function language_language_update($language) {
+  if (!empty($language->locked)) {
+    return;
+  }
+
   language_negotiation_include();
 
   // If the language is the default, then ensure that no other languages have
@@ -521,15 +538,16 @@ function language_url_outbound_alter(&$path, &$options, $original_path) {
       $callbacks = array_keys($callbacks);
     }
 
+    // No language dependent path allowed in this mode.
+    if (empty($callbacks)) {
+      unset($options['language']);
+      return;
+    }
+
     foreach ($callbacks as $callback) {
       if (function_exists($callback)) {
         $callback($path, $options);
       }
-    }
-
-    // No language dependent path allowed in this mode.
-    if (empty($callbacks)) {
-      unset($options['language']);
     }
   }
 }
