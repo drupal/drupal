@@ -160,32 +160,41 @@ class LocalePluralFormatTest extends WebTestBase {
 
     // Check if the source appears on the translation page.
     $this->drupalGet('admin/config/regional/translate');
-    $this->assertText("1 hour, @count hours");
+    $this->assertText("1 hour");
+    $this->assertText("@count hours");
 
     // Look up editing page for this plural string and check fields.
-    $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", array(':source' => "1 hour" . LOCALE_PLURAL_DELIMITER . "@count hours"))->fetchField();
-    $path = 'admin/config/regional/translate/edit/' . $lid;
+    $path = 'admin/config/regional/translate/';
     $this->drupalGet($path);
     // Labels for plural editing elements.
-    $this->assertFieldByXPath('//label[@for="edit-translations-hr-0"]', 'Singular form ');
-    $this->assertFieldByXPath('//label[@for="edit-translations-hr-1"]', 'First plural form ');
-    $this->assertFieldByXPath('//label[@for="edit-translations-hr-2"]', '2. plural form ');
-    $this->assertFieldByXPath('//label[@for="edit-translations-fr-0"]', 'Singular form ');
-    $this->assertFieldByXPath('//label[@for="edit-translations-fr-1"]', 'Plural form ');
+    $this->assertText('Singular form');
+    $this->assertText('First plural form');
+    $this->assertText('2. plural form');
+    $this->assertNoText('3. plural form');
 
-    // Plural values for both languages.
-    $this->assertFieldById('edit-translations-hr-0', '@count sat');
-    $this->assertFieldById('edit-translations-hr-1', '@count sata');
-    $this->assertFieldById('edit-translations-hr-2', '@count sati');
-    $this->assertNoFieldById('edit-translations-hr-3');
-    $this->assertFieldById('edit-translations-fr-0', '1 heure');
-    $this->assertFieldById('edit-translations-fr-1', '@count heures');
-    $this->assertNoFieldById('edit-translations-fr-2');
+    // Plural values for langcode hr.
+    $this->assertText('@count sat');
+    $this->assertText('@count sata');
+    $this->assertText('@count sati');
 
-    // Edit some translations and see if that took effect.
+    // Edit langcode hr translations and see if that took effect.
     $edit = array(
-      'translations[fr][0]' => '1 heure edited',
-      'translations[hr][1]' => '@count sata edited',
+      'strings[10][translations][1]' => '@count sata edited',
+    );
+    $this->drupalPost($path, $edit, t('Save translations'));
+
+    $search = array(
+      'langcode' => 'fr',
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    // Plural values for the langcode fr.
+    $this->assertText('1 heure');
+    $this->assertText('@count heures');
+    $this->assertNoText('2. plural form');
+
+    // Edit langcode fr translations and see if that took effect.
+    $edit = array(
+      'strings[10][translations][0]' => '1 heure edited',
     );
     $this->drupalPost($path, $edit, t('Save translations'));
 
@@ -194,21 +203,36 @@ class LocalePluralFormatTest extends WebTestBase {
     // not save our source string for performance optimization if we do not ask
     // specifically for a language.
     format_plural(1, '1 day', '@count days', array(), array('langcode' => 'fr'));
-    // Look up editing page for this plural string and check fields.
     $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", array(':source' => "1 day" . LOCALE_PLURAL_DELIMITER . "@count days"))->fetchField();
-    $path = 'admin/config/regional/translate/edit/' . $lid;
+    // Look up editing page for this plural string and check fields.
+    $search = array(
+      'string' => '1 day',
+      'langcode' => 'fr',
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
 
-    // Save complete translations for the string in both languages.
+    // Save complete translations for the string in langcode fr.
     $edit = array(
-      'translations[fr][0]' => '1 jour',
-      'translations[fr][1]' => '@count jours',
-      'translations[hr][0]' => '@count dan',
-      'translations[hr][1]' => '@count dana',
-      'translations[hr][2]' => '@count dana',
+      "strings[$lid][translations][0]" => '1 jour',
+      "strings[$lid][translations][1]" => '@count jours',
     );
     $this->drupalPost($path, $edit, t('Save translations'));
 
-    // Get the French translations.
+    // Save complete translations for the string in langcode hr.
+    $search = array(
+      'string' => '1 day',
+      'langcode' => 'hr',
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+
+    $edit = array(
+      "strings[$lid][translations][0]" => '@count dan',
+      "strings[$lid][translations][1]" => '@count dana',
+      "strings[$lid][translations][2]" => '@count dana',
+    );
+    $this->drupalPost($path, $edit, t('Save translations'));
+
+   // Get the French translations.
     $this->drupalPost('admin/config/regional/translate/export', array(
       'langcode' => 'fr',
     ), t('Export'));
@@ -224,7 +248,6 @@ class LocalePluralFormatTest extends WebTestBase {
     $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count sat\"\nmsgstr[1] \"@count sata edited\"\nmsgstr[2] \"@count sati\"", t('Edited Croatian plural translations exported properly.'));
     $this->assertRaw("msgid \"1 day\"\nmsgid_plural \"@count days\"\nmsgstr[0] \"@count dan\"\nmsgstr[1] \"@count dana\"\nmsgstr[2] \"@count dana\"", t('Added Croatian plural translations exported properly.'));
   }
-
 
   /**
    * Imports a standalone .po file in a given language.

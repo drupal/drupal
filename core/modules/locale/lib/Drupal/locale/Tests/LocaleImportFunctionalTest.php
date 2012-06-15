@@ -91,7 +91,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     // Ensure string wasn't overwritten.
     $search = array(
       'string' => 'Montag',
-      'language' => 'fr',
+      'langcode' => 'fr',
       'translation' => 'translated',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
@@ -113,7 +113,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     // Ensure string was overwritten.
     $search = array(
       'string' => 'Montag',
-      'language' => 'fr',
+      'langcode' => 'fr',
       'translation' => 'translated',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
@@ -149,7 +149,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     // Ensure string wasn't overwritten.
     $search = array(
       'string' => 'januari',
-      'language' => 'fr',
+      'langcode' => 'fr',
       'translation' => 'translated',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
@@ -168,7 +168,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     // Ensure string was overwritten.
     $search = array(
       'string' => 'januari',
-      'language' => 'fr',
+      'langcode' => 'fr',
       'translation' => 'translated',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
@@ -201,7 +201,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     // Ensure strings were successfully imported.
     $search = array(
       'string' => 'lundi',
-      'language' => $langcode,
+      'langcode' => $langcode,
       'translation' => 'translated',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
@@ -241,20 +241,15 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'overwrite_options[not_customized]' => TRUE,
     ));
     $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 0, '%delete' => 1)), t('The translation file was successfully imported.'));
-    // This is the language indicator on the translation search screen for
-    // untranslated strings.
-    $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
+
     $str = "Operations";
     $search = array(
       'string' => $str,
-      'language' => 'all',
-      'translation' => 'all',
+      'langcode' => $langcode,
+      'translation' => 'untranslated',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    // assertText() seems to remove the input field where $str always could be
-    // found, so this is not a false assert.
-    $this->assertText($str, t('Search found the string.'));
-    $this->assertRaw($language_indicator, t('String is untranslated again.'));
+    $this->assertText($str, t('Search found the string as untranslated.'));
   }
 
   /**

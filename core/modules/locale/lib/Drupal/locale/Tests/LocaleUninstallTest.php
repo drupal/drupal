@@ -61,11 +61,13 @@ class LocaleUninstallTest extends WebTestBase {
     $user = $this->drupalCreateUser(array('translate interface', 'access administration pages'));
     $this->drupalLogin($user);
     $this->drupalGet('admin/config/regional/translate/translate');
-    $string = db_query('SELECT min(lid) AS lid FROM {locales_source} WHERE location LIKE :location', array(
+    $string = db_query('SELECT min(lid) AS lid, source FROM {locales_source} WHERE location LIKE :location', array(
       ':location' => '%.js%',
     ))->fetchObject();
-    $edit = array('translations[fr][0]' => 'french translation');
-    $this->drupalPost('admin/config/regional/translate/edit/' . $string->lid, $edit, t('Save translations'));
+    $edit = array('string' => $string->source);
+    $this->drupalPost('admin/config/regional/translate', $edit, t('Filter'));
+    $edit = array('strings[' . $string->lid . '][translations][0]' => 'french translation');
+    $this->drupalPost('admin/config/regional/translate', $edit, t('Save translations'));
     _locale_rebuild_js('fr');
     $locale_javascripts = variable_get('locale_translation_javascript', array());
     $js_file = 'public://' . variable_get('locale_js_directory', 'languages') . '/fr_' . $locale_javascripts['fr'] . '.js';

@@ -1,0 +1,50 @@
+#locale-translate-filter-form .form-item-langcode,
+#locale-translate-filter-form .form-item-translation,
+#locale-translate-filter-form .form-item-customized {
+  float: left; /* LTR */
+  padding-right: 1em; /* LTR */
+  margin-bottom: 0;
+  /**
+   * In Opera 9, DOM elements with the property of "overflow: auto"
+   * will partially hide its contents with unnecessary scrollbars when
+   * its immediate child is floated without an explicit width set.
+   */
+  width: 15em;
+}
+#locale-translate-filter-form .form-type-select select {
+  width: 100%;
+}
+#locale-translate-filter-form .form-actions {
+  float: left; /* LTR */
+  padding: 3.5ex 0 0 0em; /* LTR */
+}
+#locale-translate-edit-form th{
+  width: 50%;
+  table-layout: fixed;
+}
+#locale-translate-edit-form tr .form-item{
+  white-space: normal;
+}
+#locale-translate-edit-form td {
+  vertical-align: top
+}
+
+#locale-translate-edit-form tr.changed {
+  background: #ffb;
+}
+
+#locale-translate-edit-form tr .form-type-item abbr.ajax-changed {
+  position: absolute;
+}
+
+#locale-translate-filter-form fieldset.form-wrapper {
+  margin-bottom:0;
+}
+
+#locale-translate-edit-form #edit-strings table.locale-translate-edit-table {
+  margin-top: 54px;
+}
+
+#locale-translate-edit-form #edit-strings table.locale-translate-edit-table.changed {
+  margin-top: 0;
+}

@@ -89,7 +89,7 @@ function locale_help($path, $arg) {
       return $output;
 
     case 'admin/config/regional/language':
-      return '<p>' . t('Interface text can be translated. <a href="@translations">Download contributed translations</a> from Drupal.org.', array('@translations' => 'http://localize.drupal.org')) . '</p>';
+      return '<p>' . t('Interface text can be <a href="@translate">translated</a>. <a href="@translations">Download contributed translations</a> from Drupal.org.', array('@translations' => 'http://localize.drupal.org', '@translate' => url('admin/config/regional/translate'))) . '</p>';
 
     case 'admin/config/regional/translate':
       $output = '<p>' . t('This page allows a translator to search for specific translated and untranslated strings, and is used when creating or editing translations. (Note: For translation tasks involving many strings, it may be more convenient to <a href="@export">export</a> strings for offline editing in a desktop Gettext translation editor.) Searches may be limited to strings in a specific language.', array('@export' => url('admin/config/regional/translate/export'))) . '</p>';
@@ -113,7 +113,7 @@ function locale_menu() {
   $items['admin/config/regional/translate'] = array(
     'title' => 'User interface translation',
     'description' => 'Translate the built-in user interface.',
-    'page callback' => 'locale_translate_seek_screen',
+    'page callback' => 'locale_translate_page',
     'access arguments' => array('translate interface'),
     'file' => 'locale.pages.inc',
     'weight' => -5,
@@ -140,20 +140,6 @@ function locale_menu() {
     'weight' => 30,
     'type' => MENU_LOCAL_TASK,
     'file' => 'locale.bulk.inc',
-  );
-  $items['admin/config/regional/translate/edit/%'] = array(
-    'title' => 'Edit string',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_translate_edit_form', 5),
-    'access arguments' => array('translate interface'),
-    'file' => 'locale.pages.inc',
-  );
-  $items['admin/config/regional/translate/delete/%'] = array(
-    'title' => 'Delete string',
-    'page callback' => 'locale_translate_delete_page',
-    'page arguments' => array(5),
-    'access arguments' => array('translate interface'),
-    'file' => 'locale.pages.inc',
   );
 
   // Localize date formats.
@@ -266,6 +252,10 @@ function locale_theme() {
   return array(
     'locale_date_format_form' => array(
       'render element' => 'form',
+    ),
+    'locale_translate_edit_form_strings' => array(
+      'render element' => 'form',
+      'file' => 'locale.pages.inc',
     ),
   );
 }
@@ -636,13 +626,15 @@ function locale_form_language_admin_overview_form_alter(&$form, &$form_state) {
     );
     if ($langcode != 'en' || locale_translate_english()) {
       $form['languages'][$langcode]['locale_statistics'] = array(
-        '#type' => 'link',
-        '#title' => t('@translated/@total (@ratio%)', array(
-          '@translated' => $stats[$langcode]['translated'],
-          '@total' => $total_strings,
-          '@ratio' => $stats[$langcode]['ratio'],
-        )),
-        '#href' => 'admin/config/regional/translate/translate',
+        '#markup' => l(
+          t('@translated/@total (@ratio%)', array(
+            '@translated' => $stats[$langcode]['translated'],
+            '@total' => $total_strings,
+            '@ratio' => $stats[$langcode]['ratio'],
+          )),
+          'admin/config/regional/translate/translate',
+          array('query' => array('langcode' => $langcode))
+        ),
       );
     }
     else {
