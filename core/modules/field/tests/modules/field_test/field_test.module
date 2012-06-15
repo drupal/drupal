@@ -117,7 +117,7 @@ function field_test_field_available_languages_alter(&$langcodes, $context) {
  */
 function field_test_field_language_alter(&$display_langcode, $context) {
   if (variable_get('field_test_language_fallback', TRUE)) {
-    locale_field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
+    field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
   }
 }
 

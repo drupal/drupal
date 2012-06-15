@@ -1473,8 +1473,8 @@ function hook_field_attach_prepare_translation_alter(&$entity, $context) {
 function hook_field_language_alter(&$display_langcode, $context) {
   // Do not apply core language fallback rules if they are disabled or if Locale
   // is not registered as a translation handler.
-  if (variable_get('locale_field_language_fallback', TRUE) && field_has_translation_handler($context['entity_type'], 'locale')) {
-    locale_field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
+  if (variable_get('field_language_fallback', TRUE) && field_has_translation_handler($context['entity_type'])) {
+    field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
   }
 }
 

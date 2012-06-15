@@ -2,27 +2,27 @@
 
 /**
  * @file
- * Definition of Drupal\locale\Tests\LocaleMultilingualFieldsTest.
+ * Definition of Drupal\node\Tests\NodeFieldMultilingualTestCase.
  */
 
-namespace Drupal\locale\Tests;
+namespace Drupal\node\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Functional test for multilingual fields.
  */
-class LocaleMultilingualFieldsTest extends WebTestBase {
+class NodeFieldMultilingualTestCase extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Multilingual fields',
       'description' => 'Test multilingual support for fields.',
-      'group' => 'Locale',
+      'group' => 'Field API',
     );
   }
 
   function setUp() {
-    parent::setUp(array('node', 'locale'));
+    parent::setUp(array('node', 'language'));
 
     // Create Basic page node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));

@@ -209,43 +209,6 @@ function locale_permission() {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
- */
-function locale_form_node_form_alter(&$form, &$form_state) {
-  $form['#submit'][] = 'locale_field_node_form_submit';
-}
-
-/**
- * Form submit handler for node_form().
- *
- * Checks if Locale is registered as a translation handler and handle possible
- * node language changes.
- *
- * This submit handler needs to run before entity_form_submit_build_entity()
- * is invoked by node_form_submit_build_node(), because it alters the values of
- * attached fields. Therefore, it cannot be a hook_node_submit() implementation.
- */
-function locale_field_node_form_submit($form, &$form_state) {
-  if (field_has_translation_handler('node', 'locale')) {
-    $bundle = $form_state['values']['type'];
-    $node_language = $form_state['values']['langcode'];
-
-    foreach (field_info_instances('node', $bundle) as $instance) {
-      $field_name = $instance['field_name'];
-      $field = field_info_field($field_name);
-      $previous_langcode = $form[$field_name]['#language'];
-
-      // Handle a possible language change: new language values are inserted,
-      // previous ones are deleted.
-      if ($field['translatable'] && $previous_langcode != $node_language) {
-        $form_state['values'][$field_name][$node_language] = $form_state['values'][$field_name][$previous_langcode];
-        $form_state['values'][$field_name][$previous_langcode] = array();
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_theme().
  */
 function locale_theme() {
@@ -258,68 +221,6 @@ function locale_theme() {
       'file' => 'locale.pages.inc',
     ),
   );
-}
-
-/**
- * Implements hook_field_language_alter().
- */
-function locale_field_language_alter(&$display_langcode, $context) {
-  // Do not apply core language fallback rules if they are disabled or if Locale
-  // is not registered as a translation handler.
-  if (variable_get('locale_field_language_fallback', TRUE) && field_has_translation_handler($context['entity_type'], 'locale')) {
-    locale_field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
-  }
-}
-
-/**
- * Applies language fallback rules to the fields attached to the given entity.
- *
- * Core language fallback rules simply check if fields have a field translation
- * for the requested language code. If so the requested language is returned,
- * otherwise all the fallback candidates are inspected to see if there is a
- * field translation available in another language.
- * By default this is called by locale_field_language_alter(), but this
- * behavior can be disabled by setting the 'locale_field_language_fallback'
- * variable to FALSE.
- *
- * @param $field_langcodes
- *   A reference to an array of language codes keyed by field name.
- * @param $entity
- *   The entity to be displayed.
- * @param $langcode
- *   The language code $entity has to be displayed in.
- */
-function locale_field_language_fallback(&$field_langcodes, $entity, $langcode) {
-  // Lazily init fallback candidates to avoid unnecessary calls.
-  $fallback_candidates = NULL;
-  $field_languages = array();
-
-  foreach ($field_langcodes as $field_name => $field_langcode) {
-    // If the requested language is defined for the current field use it,
-    // otherwise search for a fallback value among the fallback candidates.
-    if (isset($entity->{$field_name}[$langcode])) {
-      $field_langcodes[$field_name] = $langcode;
-    }
-    elseif (!empty($entity->{$field_name})) {
-      if (!isset($fallback_candidates)) {
-        require_once DRUPAL_ROOT . '/core/includes/language.inc';
-        $fallback_candidates = language_fallback_get_candidates();
-      }
-      foreach ($fallback_candidates as $fallback_langcode) {
-        if (isset($entity->{$field_name}[$fallback_langcode])) {
-          $field_langcodes[$field_name] = $fallback_langcode;
-          break;
-        }
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_entity_info_alter().
- */
-function locale_entity_info_alter(&$entity_info) {
-  $entity_info['node']['translation']['locale'] = TRUE;
 }
 
 /**

@@ -226,6 +226,11 @@ function node_entity_info() {
     ),
   );
 
+  // Add a translation handler for fields if the language module is enabled.
+  if (module_exists('language')) {
+    $return['node']['translation']['node'] = TRUE;
+  }
+
   // Search integration is provided by node.module, so search-related
   // view modes for nodes are defined here and not in search.module.
   if (module_exists('search')) {

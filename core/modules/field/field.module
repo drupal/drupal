@@ -369,6 +369,49 @@ function field_system_info_alter(&$info, $file, $type) {
 }
 
 /**
+ * Applies language fallback rules to the fields attached to the given entity.
+ *
+ * Core language fallback rules simply check if fields have a field translation
+ * for the requested language code. If so, the requested language is returned,
+ * otherwise all the fallback candidates are inspected to see if there is a
+ * field translation available in another language.
+ * By default this is called by field_field_language_alter(), but this
+ * behavior can be disabled by setting the 'field_language_fallback'
+ * variable to FALSE.
+ *
+ * @param $field_langcodes
+ *   A reference to an array of language codes keyed by field name.
+ * @param $entity
+ *   The entity to be displayed.
+ * @param $langcode
+ *   The language code $entity has to be displayed in.
+ */
+function field_language_fallback(&$field_langcodes, $entity, $langcode) {
+  // Lazily init fallback candidates to avoid unnecessary calls.
+  $fallback_candidates = NULL;
+
+  foreach ($field_langcodes as $field_name => $field_langcode) {
+    // If the requested language is defined for the current field use it,
+    // otherwise search for a fallback value among the fallback candidates.
+    if (isset($entity->{$field_name}[$langcode])) {
+      $field_langcodes[$field_name] = $langcode;
+    }
+    elseif (!empty($entity->{$field_name})) {
+      if (!isset($fallback_candidates)) {
+        require_once DRUPAL_ROOT . '/core/includes/language.inc';
+        $fallback_candidates = language_fallback_get_candidates();
+      }
+      foreach ($fallback_candidates as $fallback_langcode) {
+        if (isset($entity->{$field_name}[$fallback_langcode])) {
+          $field_langcodes[$field_name] = $fallback_langcode;
+          break;
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_cache_flush().
  */
 function field_cache_flush() {

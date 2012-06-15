@@ -46,7 +46,7 @@
  *   language, the translation handler is responsible for performing one of the
  *   following actions:
  *   - Ignore missing translations, i.e. do not show any field values for the
- *     requested language. For example, see locale_field_language_alter().
+ *     requested language. For example, see field_field_language_alter().
  *   - Provide a value in a different language as fallback. By default, the
  *     fallback logic is applied separately to each field to ensure that there
  *     is a value for each field to display.
@@ -68,6 +68,13 @@
  */
 function field_language_insert() {
   field_info_cache_clear();
+  // If the number of languages is bigger than 1, enable the core language
+  // fallback rules.
+  // Because the language_count is updated only after the hook is invoked, we
+  // check if the language_count is bigger or equal with 1 at the current time.
+  if (variable_get('language_count', 1) >= 1) {
+    variable_set('field_language_fallback', TRUE);
+  }
 }
 
 /**
@@ -82,6 +89,13 @@ function field_language_update() {
  */
 function field_language_delete() {
   field_info_cache_clear();
+  // If the number of languages is less than 2, disable the core language
+  // fallback rules.
+  // Because the language_count is updated after the hook is invoked, we check
+  // if the language_count is less or equal with 2 at the current time.
+  if (variable_get('language_count', 1) <= 2) {
+    variable_set('field_language_fallback', FALSE);
+  }
 }
 
 /**
@@ -260,8 +274,8 @@ function field_valid_language($langcode, $default = TRUE) {
  *
  * If translation handlers are found, we let modules provide alternative display
  * language codes for fields not having the requested language code available.
- * Core language fallback rules are provided by locale_field_language_fallback()
- * which is called by locale_field_language_alter().
+ * Core language fallback rules are provided by field_language_fallback()
+ * which is called by field_field_language_alter().
  *
  * @param $entity_type
  *   The type of $entity.
@@ -314,6 +328,11 @@ function field_language($entity_type, $entity, $field_name = NULL, $langcode = N
         'entity' => $entity,
         'langcode' => $langcode,
       );
+      // Do not apply core language fallback rules if they are disabled or if
+      // the entity does not have a translation handler registered.
+      if (variable_get('field_language_fallback', FALSE) && field_has_translation_handler($context['entity_type'])) {
+        field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
+      }
       drupal_alter('field_language', $display_langcode, $context);
     }
 

@@ -493,6 +493,9 @@ function theme_node_preview($variables) {
  * @see node_form_submit_build_node()
  */
 function node_form_submit($form, &$form_state) {
+  // Handle possible field translations first and then build the node from the
+  // submitted values.
+  node_field_language_form_submit($form, $form_state);
   $node = node_form_submit_build_node($form, $form_state);
   $insert = empty($node->nid);
   $node->save();
@@ -521,6 +524,30 @@ function node_form_submit($form, &$form_state) {
   }
   // Clear the page and block caches.
   cache_invalidate(array('content' => TRUE));
+}
+
+/**
+ * Handles possible node language changes.
+ *
+ */
+function node_field_language_form_submit($form, &$form_state) {
+  if (field_has_translation_handler('node', 'node')) {
+    $bundle = $form_state['values']['type'];
+    $node_language = $form_state['values']['langcode'];
+
+    foreach (field_info_instances('node', $bundle) as $instance) {
+      $field_name = $instance['field_name'];
+      $field = field_info_field($field_name);
+      $previous_langcode = $form[$field_name]['#language'];
+
+      // Handle a possible language change: New language values are inserted,
+      // previous ones are deleted.
+      if ($field['translatable'] && $previous_langcode != $node_language) {
+        $form_state['values'][$field_name][$node_language] = $form_state['values'][$field_name][$previous_langcode];
+        $form_state['values'][$field_name][$previous_langcode] = array();
+      }
+    }
+  }
 }
 
 /**

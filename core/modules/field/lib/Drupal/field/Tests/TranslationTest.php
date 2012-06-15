@@ -23,7 +23,7 @@ class TranslationTest extends FieldTestBase {
   }
 
   function setUp() {
-    parent::setUp('locale', 'field_test');
+    parent::setUp('language', 'field_test');
 
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
 
