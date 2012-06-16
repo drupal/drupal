@@ -895,7 +895,7 @@ function template_preprocess_views_view_rss(&$vars) {
   // During live preview we don't want to output the header since the contents
   // of the feed are being displayed inside a normal HTML page.
   if (empty($vars['view']->live_preview)) {
-    drupal_add_http_header('Content-Type', 'application/rss+xml; charset=utf-8');
+    $vars['view']->getResponse()->headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
   }
 }
 

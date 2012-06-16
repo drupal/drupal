@@ -5,6 +5,8 @@
  * Provides the view object type and associated methods.
  */
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * @defgroup views_objects Objects that represent a View or part of a view
  * @{
@@ -246,6 +248,13 @@ class view extends views_db_object {
    * @var array[views_handler_area]
    */
   var $empty;
+
+  /**
+   * Stores the current response object.
+   *
+   * @var Symfony\Component\HttpFoundation\Response
+   */
+  protected $response = NULL;
 
   /**
    * Constructor
@@ -1170,6 +1179,9 @@ class view extends views_db_object {
     drupal_theme_initialize();
     $config = config('views.settings');
 
+    // Set the response so other parts can alter it.
+    $this->response = new Response('', 200);
+
     $start = microtime(TRUE);
     if (!empty($this->live_preview) && $config->get('views_show_additional_queries')) {
       $this->start_query_capture();
@@ -1474,6 +1486,29 @@ class view extends views_db_object {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Sets the used response object of the view.
+   *
+   * @param Symfony\Component\HttpFoundation\Response $response
+   *   The response object which should be set.
+   */
+  public function setResponse(Response $response) {
+    $this->response = $response;
+  }
+
+  /**
+   * Gets the response object used by the view.
+   *
+   * @return Symfony\Component\HttpFoundation\Response
+   *   The response object of the view.
+   */
+  public function getResponse() {
+    if (!isset($this->response)) {
+      $this->response = new Response();
+    }
+    return $this->response;
   }
 
   /**
