@@ -36,7 +36,7 @@ function node_views_data() {
     // this explains how the 'node' table (named in the line above)
     // links toward the node_revision table.
     'node_revision' => array(
-      'handler' => 'views_join', // this is actually optional
+      'handler' => 'Drupal\views\Join', // this is actually optional
       'left_table' => 'node_revision', // Because this is a direct link it could be left out.
       'left_field' => 'nid',
       'field' => 'nid',

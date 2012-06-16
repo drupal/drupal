@@ -5,6 +5,8 @@
  * Definition of views_handler_relationship_node_term_data.
  */
 
+use Drupal\views\Join;
+
 /**
  * Relationship handler to return the taxonomy terms of nodes.
  *
@@ -81,7 +83,7 @@ class views_handler_relationship_node_term_data extends views_handler_relationsh
       $def['table formula'] = $query;
     }
 
-    $join = new views_join();
+    $join = new Join();
 
     $join->definition = $def;
     $join->construct();

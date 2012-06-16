@@ -5,6 +5,8 @@
  * Definition of views_handler_field_ncs_last_comment_name.
  */
 
+use Drupal\views\Join;
+
 /**
  * Field handler to present the name of the last comment poster.
  *
@@ -16,7 +18,7 @@ class views_handler_field_ncs_last_comment_name extends views_handler_field {
     // have to join in a specially related user table.
     $this->ensure_my_table();
     // join 'users' to this table via vid
-    $join = new views_join();
+    $join = new Join();
     $join->construct('users', $this->table_alias, 'last_comment_uid', 'uid');
     $join->extra = array(array('field' => 'uid', 'operator' => '!=', 'value' => '0'));
 

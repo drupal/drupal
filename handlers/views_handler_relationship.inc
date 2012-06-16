@@ -5,6 +5,8 @@
  * Views' relationship handlers.
  */
 
+use Drupal\views\Join;
+
 /**
  * @defgroup views_relationship_handlers Views relationship handlers
  * @{
@@ -129,7 +131,7 @@ class views_handler_relationship extends views_handler {
       $join = new $def['join_handler'];
     }
     else {
-      $join = new views_join();
+      $join = new Join();
     }
 
     $join->definition = $def;

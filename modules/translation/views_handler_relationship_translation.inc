@@ -5,6 +5,8 @@
  * Definition of views_handler_relationship_translation.
  */
 
+use Drupal\views\Join;
+
 /**
  * Handles relationships for content translation sets and provides multiple
  * options.
@@ -88,7 +90,7 @@ class views_handler_relationship_translation extends views_handler_relationship 
       $join = new $def['join_handler'];
     }
     else {
-      $join = new views_join();
+      $join = new Join();
     }
 
     $join->definition = $def;

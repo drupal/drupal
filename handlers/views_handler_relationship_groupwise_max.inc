@@ -7,6 +7,7 @@
 
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\View;
+use Drupal\views\JoinSubquery;
 
 /**
  * Relationship handler that allows a groupwise maximum of the linked in table.
@@ -368,7 +369,7 @@ class views_handler_relationship_groupwise_max extends views_handler_relationshi
       $join = new $def['join_handler'];
     }
     else {
-      $join = new views_join_subquery();
+      $join = new JoinSubquery();
     }
 
     $join->definition = $def;

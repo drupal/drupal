@@ -5,6 +5,8 @@
  * Contains a search filter handler.
  */
 
+use Drupal\views\Join;
+
 /**
  * Field handler to provide simple renderer that allows linking to a node.
  *
@@ -127,7 +129,7 @@ class views_handler_filter_search extends views_handler_filter {
       $search_condition = db_and();
 
       // Create a new join to relate the 'serach_total' table to our current 'search_index' table.
-      $join = new views_join;
+      $join = new Join();
       $join->construct('search_total', $search_index, 'word', 'word');
       $search_total = $this->query->add_relationship('search_total', $join, $search_index);
 

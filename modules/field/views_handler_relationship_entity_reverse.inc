@@ -5,6 +5,8 @@
  * Definition of views_handler_relationship_entity_reverse.
  */
 
+use Drupal\views\Join;
+
 /**
  * A relationship handlers which reverse entity references.
  *
@@ -45,7 +47,7 @@ class views_handler_relationship_entity_reverse extends views_handler_relationsh
       $first_join = new $this->definition['join_handler'];
     }
     else {
-      $first_join = new views_join();
+      $first_join = new Join();
     }
     $first_join->definition = $first;
     $first_join->construct();
@@ -70,7 +72,7 @@ class views_handler_relationship_entity_reverse extends views_handler_relationsh
       $second_join = new $this->definition['join_handler'];
     }
     else {
-      $second_join = new views_join();
+      $second_join = new Join();
     }
     $second_join->definition = $second;
     $second_join->construct();

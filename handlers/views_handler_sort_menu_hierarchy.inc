@@ -5,6 +5,8 @@
  * Definition of views_handler_sort_menu_hierarchy.
  */
 
+use Drupal\views\Join;
+
 /**
  * Sort in menu hierarchy order.
  *
@@ -38,7 +40,7 @@ class views_handler_sort_menu_hierarchy extends views_handler_sort {
     $max_depth = isset($this->definition['max depth']) ? $this->definition['max depth'] : MENU_MAX_DEPTH;
     for ($i = 1; $i <= $max_depth; ++$i) {
       if ($this->options['sort_within_level']) {
-        $join = new views_join();
+        $join = new Join();
         $join->construct('menu_links', $this->table_alias, $this->field . $i, 'mlid');
         $menu_links = $this->query->add_table('menu_links', NULL, $join);
         $this->query->add_orderby($menu_links, 'weight', $this->options['order']);

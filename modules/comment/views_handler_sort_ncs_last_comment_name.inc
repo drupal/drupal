@@ -5,6 +5,8 @@
  * Definition of views_handler_sort_ncs_last_comment_name.
  */
 
+use Drupal\views\Join;
+
 /**
  * Sort handler to sort by last comment name which might be in 2 different
  * fields.
@@ -14,7 +16,7 @@
 class views_handler_sort_ncs_last_comment_name extends views_handler_sort {
   function query() {
     $this->ensure_my_table();
-    $join = new views_join();
+    $join = new Join();
     $join->construct('users', $this->table_alias, 'last_comment_uid', 'uid');
 
     // @todo this might be safer if we had an ensure_relationship rather than guessing
