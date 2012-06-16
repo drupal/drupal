@@ -228,14 +228,15 @@ function locale_translate_add_language_set_batch($langcode) {
  *   (optional) Language code to limit files being imported.
  * @param $finish_feedback
  *   (optional) Whether to give feedback to the user when finished.
+ * @param $force
+ *   (optional) Import all available files, even if they were imported before.
  *
  * @todo
  *   Integrate with update status to identify projects needed and integrate
  *   l10n_update functionality to feed in translation files alike.
  *   See http://drupal.org/node/1191488.
  */
-function locale_translate_batch_import_files($langcode = NULL, $finish_feedback = FALSE) {
-  $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
+function locale_translate_batch_import_files($langcode = NULL, $finish_feedback = FALSE, $force = FALSE) {
   $files = array();
   if (!empty($langcode)) {
     $langcodes = array($langcode);
@@ -246,9 +247,38 @@ function locale_translate_batch_import_files($langcode = NULL, $finish_feedback 
     $langcodes = array_keys(language_list());
   }
   foreach ($langcodes as $langcode) {
-    $files = array_merge($files, file_scan_directory($directory, '!' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '') . '\.po$!', array('recurse' => FALSE)));
+    $files = array_merge($files, locale_translate_get_interface_translation_files($langcode));
+  }
+  if (!$force) {
+    $result = db_select('locale_file', 'lf')
+      ->fields('lf', array('langcode', 'uri', 'timestamp'))
+      ->condition('langcode', $langcodes)
+      ->execute()
+      ->fetchAllAssoc('uri');
+    foreach ($result as $uri => $info) {
+      if (isset($files[$uri]) && filemtime($uri) <= $info->timestamp) {
+        // The file is already imported and it did not change since the import.
+        // Remove it from file list and don't import it again.
+        unset($files[$uri]);
+      }
+    }
   }
   return locale_translate_batch_build($files, $finish_feedback);
+}
+
+/**
+ * Get an array of available interface translation file.
+ *
+ * @param $langcode
+ *   The langcode for the interface translation files. Pass NULL to get all
+ *   available interface translation files.
+ *
+ * @return array
+ *   An array of interface translation files.
+ */
+function locale_translate_get_interface_translation_files($langcode = NULL) {
+  $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
+  return file_scan_directory($directory, '!' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '') . '\.po$!', array('recurse' => FALSE));
 }
 
 /**
@@ -297,8 +327,12 @@ function locale_translate_batch_import($filepath, &$context) {
   // The filename is either {langcode}.po or {prefix}.{langcode}.po, so
   // we can extract the language code to use for the import from the end.
   if (preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $langcode)) {
-    $file = entity_create('file', array('filename' => drupal_basename($filepath), 'uri' => $filepath));
-    _locale_import_read_po('db-store', $file, array(), $langcode[2]);
+    $file = locale_translate_file_create($filepath, $langcode[2]);
+    $success = _locale_import_read_po('db-store', $file, array(), $langcode[2]);
+    if ($success == NULL) {
+      $file->langcode = $langcode[2];
+      locale_translate_update_file_history($file);
+    }
     $context['results'][] = $filepath;
   }
 }
@@ -310,4 +344,67 @@ function locale_translate_batch_finished($success, $results) {
   if ($success) {
     drupal_set_message(format_plural(count($results), 'One translation file imported.', '@count translation files imported.'));
   }
+}
+
+/**
+ * Creates a file object and populates the timestamp property.
+ *
+ * @param $filepath
+ *   The filepath of a file to import.
+ *
+ * @return
+ *   An object representing the file.
+ */
+function locale_translate_file_create($filepath) {
+  $file = new stdClass();
+  $file->filename = drupal_basename($filepath);
+  $file->uri = $filepath;
+  $file->timestamp = filemtime($file->uri);
+  return $file;
+}
+
+/**
+ * Update the {locale_file} table.
+ *
+ * @param $file
+ *   Object representing the file just imported.
+ *
+ * @return integer
+ *   FALSE on failure. Otherwise SAVED_NEW or SAVED_UPDATED.
+ *
+ * @see drupal_write_record()
+ */
+function locale_translate_update_file_history($file) {
+  // Update or write new record.
+  if (db_query("SELECT uri FROM {locale_file} WHERE uri = :uri AND langcode = :langcode", array(':uri' => $file->uri, ':langcode' => $file->langcode))->fetchField()) {
+    $update = array('uri', 'langcode');
+  }
+  else {
+    $update = array();
+  }
+  return drupal_write_record('locale_file', $file, $update);
+}
+
+/**
+ * Deletes all interface translation files depending on the langcode.
+ *
+ * @param $langcode
+ *   A langcode or NULL. Pass NULL to delete all interface translation files.
+ */
+function locale_translate_delete_translation_files($langcode) {
+  $files = locale_translate_get_interface_translation_files($langcode);
+  if (!empty($files)) {
+    foreach ($files as $file) {
+      $success = file_unmanaged_delete($file->uri);
+      if (!$success) {
+        return FALSE;
+      }
+      // Remove the registered translation file if any.
+      db_delete('locale_file')
+        ->condition('langcode', $langcode)
+        ->coddition('uri', $file->uri)
+        ->execute();
+    }
+  }
+  return TRUE;
 }

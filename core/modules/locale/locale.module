@@ -200,6 +200,10 @@ function locale_language_delete($language) {
     ->condition('language', $language->langcode)
     ->execute();
 
+  // Remove interface translation files.
+  module_load_include('inc', 'locale', 'locale.bulk');
+  locale_translate_delete_translation_files($language->langcode);
+
   _locale_invalidate_js($language->langcode);
 
   // Changing the language settings impacts the interface:

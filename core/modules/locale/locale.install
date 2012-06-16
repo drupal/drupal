@@ -126,6 +126,39 @@ function locale_schema() {
     ),
   );
 
+  $schema['locale_file'] = array(
+    'description' => 'File import status information for interface translation files.',
+    'fields' => array(
+      'langcode' => array(
+        'description' => 'Reference to the {languages}.langcode for this translation.',
+        'type' => 'varchar',
+        'length' => '12',
+        'not null' => TRUE,
+      ),
+      'filename' => array(
+        'description' => 'Filename for importing the file.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uri' => array(
+        'description' => 'File system path for importing the file.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'timestamp' => array(
+        'description' => 'Unix timestamp of the file itself from the point when it was last imported.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('uri', 'langcode'),
+  );
+
   return $schema;
 }
 
@@ -548,6 +581,45 @@ function locale_update_8009() {
       ->condition('module', 'locale')
       ->execute();
   }
+}
+
+/**
+ * Add {locale_file} table.
+ */
+function locale_update_8010() {
+  $table = array(
+    'description' => 'File import status information for interface translation files.',
+    'fields' => array(
+      'langcode' => array(
+        'description' => 'Reference to the {languages}.langcode for this translation.',
+        'type' => 'varchar',
+        'length' => '12',
+        'not null' => TRUE,
+      ),
+      'filename' => array(
+        'description' => 'Filename for importing the file.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uri' => array(
+        'description' => 'File system path for importing the file.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'timestamp' => array(
+        'description' => 'Unix timestamp of the file itself from the point when it was last imported.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('uri', 'langcode'),
+  );
+  db_create_table('locale_file', $table);
 }
 
 /**
