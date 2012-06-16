@@ -660,7 +660,7 @@ function hook_views_api() {
  */
 function hook_views_default_views() {
   // Begin copy and paste of output from the Export tab of a view.
-  $view = new view;
+  $view = new Drupal\views\View();
   $view->name = 'frontpage';
   $view->description = 'Emulates the default Drupal front page; you may set the default home page path to this view to make it your front page.';
   $view->tag = 'default';

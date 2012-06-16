@@ -5,11 +5,13 @@
  * Tests views.
  */
 
+use Drupal\views\View;
+
 /**
  * Implements hook_views_default_views().
  */
 function views_test_views_default_views() {
-  $view = new view;
+  $view = new View();
   $view->name = 'test_views_groupby_save';
   $view->description = '';
   $view->tag = '';
@@ -31,7 +33,7 @@ function views_test_views_default_views() {
 
   $views[$view->name] = $view;
 
-  $view = new view;
+  $view = new View();
   $view->name = 'test_rename_reset_button';
   $view->description = '';
   $view->tag = '';
@@ -70,7 +72,7 @@ function views_test_views_default_views() {
 
   $views[$view->name] = $view;
 
-  $view = new view;
+  $view = new View();
   $view->name = 'test_exposed_admin_ui';
   $view->description = '';
   $view->tag = '';
@@ -110,7 +112,7 @@ function views_test_views_default_views() {
 
   $views[$view->name] = $view;
 
-  $view = new view;
+  $view = new View();
   $view->name = 'test_filter_in_operator_ui';
   $view->description = '';
   $view->tag = '';
@@ -142,7 +144,7 @@ function views_test_views_default_views() {
 
   $views[$view->name] = $view;
 
-  $view = new view;
+  $view = new View();
   $view->name = 'test_argument_default_current_user';
   $view->description = '';
   $view->tag = '';

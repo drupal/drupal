@@ -5,6 +5,8 @@
  * Definition of ViewsPagerTest.
  */
 
+use Drupal\views\View;
+
 /**
  * Tests the pluggable pager system.
  */
@@ -95,7 +97,7 @@ class ViewsPagerTest extends ViewsSqlTest {
   }
 
   public function viewsStorePagerSettings() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_store_pager_settings';
     $view->description = '';
     $view->tag = '';
@@ -154,7 +156,7 @@ class ViewsPagerTest extends ViewsSqlTest {
   }
 
   public function viewsPagerNoLimit() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_pager_none';
     $view->description = '';
     $view->tag = '';
@@ -230,7 +232,7 @@ class ViewsPagerTest extends ViewsSqlTest {
   }
 
   public function viewsPagerLimit() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_pager_some';
     $view->description = '';
     $view->tag = '';
@@ -314,7 +316,7 @@ class ViewsPagerTest extends ViewsSqlTest {
   }
 
   function viewPagerFullZeroItemsPerPage() {
-    $view = new view;
+    $view = new View();
     $view->name = 'view_pager_full_zero_items_per_page';
     $view->description = '';
     $view->tag = '';
@@ -354,7 +356,7 @@ class ViewsPagerTest extends ViewsSqlTest {
   }
 
   function viewsPagerFull() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_pager_full';
     $view->description = '';
     $view->tag = '';
@@ -380,7 +382,7 @@ class ViewsPagerTest extends ViewsSqlTest {
   }
 
   function viewsPagerFullFields() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_pager_full';
     $view->description = '';
     $view->tag = '';

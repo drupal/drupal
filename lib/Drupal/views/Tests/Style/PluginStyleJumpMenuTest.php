@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests\Style;
 
 use ViewsSqlTest;
-use view;
+use Drupal\views\View;
 
 /**
  * Tests jump menu style functionality.
@@ -63,7 +63,7 @@ class PluginStyleJumpMenuTest extends ViewsSqlTest {
   }
 
   function getJumpMenuView() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_jump_menu';
     $view->description = '';
     $view->tag = 'default';

@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests;
 
 use ViewsSqlTest;
-use view;
+use Drupal\views\View;
 
 /**
  * Tests Views argument validators.
@@ -47,7 +47,7 @@ class ArgumentValidatorTest extends ViewsSqlTest {
 
   function view_test_argument_validate_php($string) {
     $code = 'return $argument == \''. $string .'\';';
-    $view = new view;
+    $view = new View();
     $view->name = 'view_argument_validate_numeric';
     $view->description = '';
     $view->tag = '';
@@ -79,7 +79,7 @@ class ArgumentValidatorTest extends ViewsSqlTest {
   }
 
   function view_argument_validate_numeric() {
-    $view = new view;
+    $view = new View();
     $view->name = 'view_argument_validate_numeric';
     $view->description = '';
     $view->tag = '';

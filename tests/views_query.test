@@ -6,6 +6,7 @@
  */
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\views\View;
 
 /**
  * Abstract class for views testing.
@@ -362,13 +363,11 @@ abstract class ViewsSqlTest extends ViewsTestCase {
   /**
    * Build and return a basic view of the views_test table.
    *
-   * @return view
+   * @return Drupal\views\View
    */
   protected function getBasicView() {
-    views_include('view');
-
     // Create the basic view.
-    $view = new view();
+    $view = new View();
     $view->name = 'test_view';
     $view->add_display('default');
     $view->base_table = 'views_test';

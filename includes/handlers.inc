@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\views\View;
 
 /**
  * Instantiate and construct a new handler
@@ -213,7 +214,7 @@ class views_handler extends views_object {
       $options['field'] = $this->actual_field;
     }
 
-    $types = views_object_types();
+    $types = View::views_object_types();
     $plural = $this->handler_type;
     if (isset($types[$this->handler_type]['plural'])) {
       $plural = $types[$this->handler_type]['plural'];
@@ -430,7 +431,7 @@ class views_handler extends views_object {
   function groupby_form(&$form, &$form_state) {
     $view = &$form_state['view'];
     $display_id = $form_state['display_id'];
-    $types = views_object_types();
+    $types = View::views_object_types();
     $type = $form_state['type'];
     $id = $form_state['id'];
 

@@ -23,11 +23,6 @@ class AnalyzeTest extends ViewsSqlTest {
 
   public function setUp() {
     parent::setUp('views_ui');
-    module_enable(array('views_ui'));
-    // @TODO Figure out why it's required to clear the cache here.
-    views_module_include('views_default', TRUE);
-    views_get_all_views(TRUE);
-    menu_router_rebuild();
 
     // Add an admin user will full rights;
     $this->admin = $this->drupalCreateUser(array('administer views'));

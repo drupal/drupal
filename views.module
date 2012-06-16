@@ -10,6 +10,7 @@
  */
 
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\views\View;
 
 /**
  * Advertise the current views api version
@@ -970,7 +971,7 @@ function &views_set_page_view($view = NULL) {
  * this returns a reference, so be careful! You can unintentionally modify the
  * $view object.
  *
- * @return view
+ * @return Drupal\views\View
  *   A fully formed, empty $view object.
  */
 function &views_get_page_view() {
@@ -981,7 +982,7 @@ function &views_get_page_view() {
  * Set the current 'current view' that is being built/rendered so that it is
  * easy for other modules or items in drupal_eval to identify
  *
- * @return view
+ * @return Drupal\views\View
  */
 function &views_set_current_view($view = NULL) {
   static $cache = NULL;
@@ -997,7 +998,7 @@ function &views_set_current_view($view = NULL) {
  * this returns a reference, so be careful! You can unintentionally modify the
  * $view object.
  *
- * @return view
+ * @return Drupal\views\View
  */
 function &views_get_current_view() {
   return views_set_current_view();
@@ -1303,13 +1304,12 @@ function views_get_all_templates() {
 /**
  * Create an empty view to work with.
  *
- * @return view
+ * @return Drupal\views\View
  *   A fully formed, empty $view object. This object must be populated before
  *   it can be successfully saved.
  */
 function views_new_view() {
-  views_include('view');
-  $view = new view();
+  $view = new View();
   $view->vid = 'new';
   $view->add_display('default');
 
@@ -1492,7 +1492,7 @@ function views_view_is_disabled($view) {
  *   The name of the view.
  * @param $reset
  *   If TRUE, reset this entry in the load cache.
- * @return view
+ * @return Drupal\views\View
  *   A reference to the $view object. Use $reset if you're sure you want
  *   a fresh one.
  */
@@ -1543,9 +1543,10 @@ function views_load_display_records(&$views) {
     return;
   }
 
-  foreach (view::db_objects() as $key) {
-    $object_name = "views_$key";
-    $result = db_query("SELECT * FROM {{$object_name}} WHERE vid IN (:vids) ORDER BY vid, position",
+  foreach (View::db_objects() as $key => $object) {
+    $table_name = "views_" . $key;
+    $object_name = 'Drupal\views\Views' . $object;
+    $result = db_query("SELECT * FROM {{$table_name}} WHERE vid IN (:vids) ORDER BY vid, position",
       array(':vids' => array_keys($names)));
 
     foreach ($result as $data) {

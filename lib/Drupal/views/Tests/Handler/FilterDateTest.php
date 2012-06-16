@@ -8,8 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use ViewsSqlTest;
-
-use view;
+use Drupal\views\View;
 
 /**
  * Tests the core views_handler_filter_date handler.
@@ -157,7 +156,7 @@ class FilterDateTest extends ViewsSqlTest {
   }
 
   function views_test_between() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_filter_date_between';
     $view->description = '';
     $view->tag = '';

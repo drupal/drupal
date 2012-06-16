@@ -5,6 +5,8 @@
  * Definition of ViewsTranslatableTest.
  */
 
+use Drupal\views\View;
+
 /**
  * Tests Views pluggable translations.
  */
@@ -132,7 +134,7 @@ class ViewsTranslatableTest extends ViewsSqlTest {
   }
 
   public function view_unpack_translatable() {
-    $view = new view;
+    $view = new View();
     $view->name = 'view_unpack_translatable';
     $view->description = '';
     $view->tag = '';

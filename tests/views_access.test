@@ -5,6 +5,8 @@
  * Definition of ViewsAccessTest.
  */
 
+use Drupal\views\View;
+
 /**
  * Basic test for pluggable access.
  */
@@ -159,7 +161,7 @@ class ViewsAccessTest extends ViewsSqlTest {
   }
 
   function view_access_none() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_access_none';
     $view->description = '';
     $view->tag = '';
@@ -182,7 +184,7 @@ class ViewsAccessTest extends ViewsSqlTest {
   }
 
   function view_access_perm() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_access_perm';
     $view->description = '';
     $view->tag = '';
@@ -206,7 +208,7 @@ class ViewsAccessTest extends ViewsSqlTest {
   }
 
   function view_access_role() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_access_role';
     $view->description = '';
     $view->tag = '';
@@ -232,7 +234,7 @@ class ViewsAccessTest extends ViewsSqlTest {
   }
 
   function view_access_dynamic() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_access_dynamic';
     $view->description = '';
     $view->tag = '';
@@ -258,7 +260,7 @@ class ViewsAccessTest extends ViewsSqlTest {
   }
 
   function view_access_static() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_access_static';
     $view->description = '';
     $view->tag = '';

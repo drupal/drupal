@@ -5,6 +5,8 @@
  * Definition of ViewsUserArgumentDefault.
  */
 
+use Drupal\views\View;
+
 /**
  * Tests views user argument default plugin.
  */
@@ -41,7 +43,7 @@ class ViewsUserArgumentDefault extends ViewsSqlTest {
   }
 
   function view_plugin_argument_default_current_user() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_plugin_argument_default_current_user';
     $view->description = '';
     $view->tag = '';

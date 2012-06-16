@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\views\View;
 
 /**
  * Create an array of Views admin CSS for adding or attaching.
@@ -1997,7 +1998,6 @@ function views_ui_import_page($form, &$form_state) {
  */
 function views_ui_import_validate($form, &$form_state) {
   $view = '';
-  views_include('view');
   // Be forgiving if someone pastes views code that starts with '<?php'.
   if (substr($form_state['values']['view'], 0, 5) == '<?php') {
     $form_state['values']['view'] = substr($form_state['values']['view'], 5);
@@ -2071,7 +2071,7 @@ function views_ui_import_validate($form, &$form_state) {
         }
       }
 
-      foreach (views_object_types() as $type => $info) {
+      foreach (View::views_object_types() as $type => $info) {
         $handlers = $display->handler->get_handlers($type);
         if ($handlers) {
           foreach ($handlers as $id => $handler) {
@@ -2202,7 +2202,7 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
   $build = array(
     '#theme_wrappers' => array('views_ui_display_tab_bucket'),
   );
-  $types = views_object_types();
+  $types = View::views_object_types();
 
   $build['#overridden'] = FALSE;
   $build['#defaulted'] = FALSE;
@@ -3342,7 +3342,7 @@ function views_ui_config_type_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $type = $form_state['type'];
 
-  $types = views_object_types();
+  $types = View::views_object_types();
   if (!$view->set_display($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
@@ -3374,7 +3374,7 @@ function views_ui_config_type_form($form, &$form_state) {
  * Submit handler for type configuration form
  */
 function views_ui_config_type_form_submit($form, &$form_state) {
-  $types = views_object_types();
+  $types = View::views_object_types();
   $display = &$form_state['view']->display[$form_state['display_id']];
 
   // Store in cache
@@ -3389,7 +3389,7 @@ function views_ui_rearrange_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $type = $form_state['type'];
 
-  $types = views_object_types();
+  $types = View::views_object_types();
   if (!$view->set_display($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
@@ -3549,7 +3549,7 @@ function theme_views_ui_expose_filter_form($variables) {
  * Submit handler for rearranging form
  */
 function views_ui_rearrange_form_submit($form, &$form_state) {
-  $types = views_object_types();
+  $types = View::views_object_types();
   $display = &$form_state['view']->display[$form_state['display_id']];
 
   $old_fields = $display->handler->get_option($types[$form_state['type']]['plural']);
@@ -3585,7 +3585,7 @@ function views_ui_rearrange_filter_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $type = $form_state['type'];
 
-  $types = views_object_types();
+  $types = View::views_object_types();
   if (!$view->set_display($display_id)) {
     views_ajax_render(t('Invalid display id @display', array('@display' => $display_id)));
   }
@@ -3851,7 +3851,7 @@ function theme_views_ui_rearrange_filter_form(&$vars) {
  * Submit handler for rearranging form
  */
 function views_ui_rearrange_filter_form_submit($form, &$form_state) {
-  $types = views_object_types();
+  $types = View::views_object_types();
   $display = &$form_state['view']->display[$form_state['display_id']];
   $remember_groups = array();
 
@@ -3976,7 +3976,7 @@ function views_ui_add_item_form($form, &$form_state) {
   }
   $display = &$view->display[$display_id];
 
-  $types = views_object_types();
+  $types = View::views_object_types();
   $ltitle = $types[$type]['ltitle'];
   $section = $types[$type]['plural'];
 
@@ -4094,7 +4094,7 @@ function views_ui_add_item_form($form, &$form_state) {
  */
 function views_ui_add_item_form_submit($form, &$form_state) {
   $type = $form_state['type'];
-  $types = views_object_types();
+  $types = View::views_object_types();
   $section = $types[$type]['plural'];
 
   // Handle the override select.
@@ -4182,7 +4182,7 @@ function views_ui_config_item_form($form, &$form_state) {
       $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
     }
     else {
-      $types = views_object_types();
+      $types = View::views_object_types();
 
       // If this item can come from the default display, show a dropdown
       // that lets the user choose which display the changes should apply to.
@@ -4302,7 +4302,7 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   // Run it through the handler's submit function.
   $form_state['handler']->options_submit($form['options'], $form_state);
   $item = $form_state['handler']->options;
-  $types = views_object_types();
+  $types = View::views_object_types();
 
   // For footer/header $handler_type is area but $type is footer/header.
   // For all other handle types it's the same.
@@ -4357,7 +4357,7 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   // Run it through the handler's submit function.
   $form_state['handler']->options_submit($form['options'], $form_state);
   $item = $form_state['handler']->options;
-  $types = views_object_types();
+  $types = View::views_object_types();
 
   // For footer/header $handler_type is area but $type is footer/header.
   // For all other handle types it's the same.
@@ -4434,7 +4434,7 @@ function views_ui_config_item_group_form($type, &$form_state) {
     }
     else {
       $handler->init($view, $item);
-      $types = views_object_types();
+      $types = View::views_object_types();
 
       $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->ui_name()));
 
@@ -4535,7 +4535,7 @@ function views_ui_config_item_extra_form($form, &$form_state) {
     }
     else {
       $handler->init($view, $item);
-      $types = views_object_types();
+      $types = View::views_object_types();
 
       $form['#title'] = t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->ui_name()));
 
@@ -4606,7 +4606,7 @@ function views_ui_config_style_form($form, &$form_state) {
     }
     else {
       $handler->init($view, $item);
-      $types = views_object_types();
+      $types = View::views_object_types();
 
       $form['#title'] = t('Configure summary style for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->ui_name()));
 
@@ -5016,7 +5016,6 @@ function views_ui_edit_display_form_change_theme($form, &$form_state) {
 function views_ui_autocomplete_tag($string = '') {
   $matches = array();
   // get matches from default views:
-  views_include('view');
   $views = views_get_all_views();
   foreach ($views as $view) {
     if (!empty($view->tag) && strpos($view->tag, $string) === 0) {
@@ -5371,7 +5370,7 @@ function views_ui_field_list() {
   foreach ($views as $view) {
     foreach ($view->display as $display_id => $display) {
       if ($view->set_display($display_id)) {
-        foreach (views_object_types() as $type => $info) {
+        foreach (View::views_object_types() as $type => $info) {
           foreach ($view->get_items($type, $display_id) as $item) {
             $data = views_fetch_data($item['table']);
             if (isset($data[$item['field']]) && isset($data[$item['field']][$type])

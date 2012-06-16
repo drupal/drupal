@@ -5,6 +5,8 @@
  * Contains the base display plugin.
  */
 
+use Drupal\views\View;
+
 /**
  * @defgroup views_display_plugins Views display plugins
  * @{
@@ -40,7 +42,7 @@ class views_plugin_display extends views_plugin {
   /**
    * Stores the rendered output of the display.
    *
-   * @see view::render
+   * @see View::render
    * @var string
    */
   public $output = NULL;
@@ -916,7 +918,7 @@ class views_plugin_display extends views_plugin {
   function get_handlers($type) {
     if (!isset($this->handlers[$type])) {
       $this->handlers[$type] = array();
-      $types = views_object_types();
+      $types = View::views_object_types();
       $plural = $types[$type]['plural'];
 
       foreach ($this->get_option($plural) as $id => $info) {
@@ -2696,7 +2698,7 @@ class views_plugin_display extends views_plugin {
     }
 
     // Validate handlers
-    foreach (views_object_types() as $type => $info) {
+    foreach (View::views_object_types() as $type => $info) {
       foreach ($this->get_handlers($type) as $handler) {
         $result = $handler->validate();
         if (!empty($result) && is_array($result)) {
@@ -2721,7 +2723,7 @@ class views_plugin_display extends views_plugin {
    *
    */
   function is_identifier_unique($id, $identifier) {
-    foreach (views_object_types() as $type => $info) {
+    foreach (View::views_object_types() as $type => $info) {
       foreach ($this->get_handlers($type) as $key => $handler) {
         if ($handler->can_expose() && $handler->is_exposed()) {
           if ($id != $key && $identifier == $handler->options['expose']['identifier']) {
@@ -2818,7 +2820,7 @@ class views_plugin_display extends views_plugin {
     else {
       $type = $option;
     }
-    $types = views_object_types();
+    $types = View::views_object_types();
     foreach ($storage[$option] as $id => $info) {
       if (!empty($types[$type]['type'])) {
         $handler_type = $types[$type]['type'];
@@ -2976,7 +2978,7 @@ class views_plugin_display extends views_plugin {
     else {
       $type = $option;
     }
-    $types = views_object_types();
+    $types = View::views_object_types();
     foreach ($storage[$option] as $id => $info) {
       if (!empty($types[$type]['type'])) {
         $handler_type = $types[$type]['type'];

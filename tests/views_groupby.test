@@ -6,6 +6,7 @@
  */
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\views\View;
 
 /**
  * Tests aggregate functionality of views, for example count.
@@ -62,7 +63,7 @@ class ViewsQueryGroupByTest extends ViewsSqlTest {
   //}
 
   public function viewsAggregateCountView() {
-    $view = new view;
+    $view = new View();
     $view->name = 'aggregate_count';
     $view->description = '';
     $view->tag = '';
@@ -147,7 +148,7 @@ class ViewsQueryGroupByTest extends ViewsSqlTest {
   }
 
   function viewsGroupByViewHelper($group_by) {
-    $view = new view;
+    $view = new View();
     $view->name = 'group_by_count';
     $view->description = '';
     $view->tag = '';
@@ -241,7 +242,7 @@ class ViewsQueryGroupByTest extends ViewsSqlTest {
   }
 
   function viewsGroupByCountViewOnlyFilters() {
-    $view = new view;
+    $view = new View();
     $view->name = 'group_by_in_filters';
     $view->description = '';
     $view->tag = '';

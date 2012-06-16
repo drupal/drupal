@@ -11,7 +11,7 @@
 function taxonomy_views_default_views() {
   $views = array();
 
-  $view = new view;
+  $view = new Drupal\views\View();
   $view->name = 'taxonomy_term';
   $view->description = 'A view to emulate Drupal core\'s handling of taxonomy/term.';
   $view->tag = 'default';

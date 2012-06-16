@@ -5,6 +5,8 @@
  * Definition of ViewsCacheTest.
  */
 
+use Drupal\views\View;
+
 /**
  * Basic test for pluggable caching.
  *
@@ -22,13 +24,11 @@ class ViewsCacheTest extends ViewsSqlTest {
   /**
    * Build and return a basic view of the views_test table.
    *
-   * @return view
+   * @return Drupal\views\View
    */
   protected function getBasicView() {
-    views_include('view');
-
     // Create the basic view.
-    $view = new view();
+    $view = new View();
     $view->name = 'test_view';
     $view->add_display('default');
     $view->base_table = 'views_test';

@@ -8,8 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use ViewsSqlTest;
-
-use view;
+use Drupal\views\View;
 
 /**
  * Tests the core views_handler_argument_string handler.
@@ -60,10 +59,10 @@ class ArgumentStringTest extends ViewsSqlTest {
    * Provide a test view for testGlossary.
    *
    * @see testGlossary
-   * @return view
+   * @return Drupal\views\View
    */
   function viewGlossary() {
-    $view = new view();
+    $view = new View();
     $view->name = 'test_glossary';
     $view->description = '';
     $view->tag = 'default';

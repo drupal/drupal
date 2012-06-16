@@ -5,6 +5,8 @@
  * Definition of ViewsUpgradeTestCase.
  */
 
+use Drupal\views\View;
+
 /**
  * Try to test the upgrade path of all conversions.
  *
@@ -107,7 +109,7 @@ class ViewsUpgradeTestCase extends ViewsSqlTest {
   }
 
   public function viewsMovedToField() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_views_move_to_field';
     $view->description = '';
     $view->tag = '';
@@ -128,7 +130,7 @@ class ViewsUpgradeTestCase extends ViewsSqlTest {
   }
 
   public function viewsMovedToHandler() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_views_move_to_handler';
     $view->description = '';
     $view->tag = '';
@@ -153,7 +155,7 @@ class ViewsUpgradeTestCase extends ViewsSqlTest {
   }
 
   public function viewsMovedToTable() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_views_move_to_table';
     $view->description = '';
     $view->tag = '';
@@ -175,7 +177,7 @@ class ViewsUpgradeTestCase extends ViewsSqlTest {
 
   protected function viewUpgradeImport() {
     $import = '
-      $view = new view;
+      $view = new Drupal\views\View();
       $view->name = "comments_recent";
       $view->description = "Contains a block and a page to list recent comments; the block will automatically link to the page, which displays the comment body as well as a link to the node.";
       $view->tag = "default";

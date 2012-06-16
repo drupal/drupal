@@ -5,6 +5,8 @@
  * Provide structure for the administrative interface to Views.
  */
 
+use Drupal\views\View;
+
 /**
  * Implements hook_menu().
  */
@@ -268,7 +270,6 @@ function views_ui_edit_page_title($view) {
  */
 function views_ui_cache_load($name) {
   ctools_include('object-cache');
-  views_include('view');
   $view = ctools_object_cache_get('view', $name);
   $original_view = views_get_view($name);
 
@@ -457,7 +458,7 @@ function views_ui_view_preview_section_handler_links($view, $type, $title = FALS
   $handlers = $view->display_handler->get_handlers($type);
   $links = array();
 
-  $types = views_object_types();
+  $types = View::views_object_types();
   if ($title) {
     $links[$type . '-title'] = array(
       'title' => $types[$type]['title'],

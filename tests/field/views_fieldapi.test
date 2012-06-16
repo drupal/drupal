@@ -5,6 +5,8 @@
  * Tests the fieldapi integration of viewsdata.
  */
 
+use Drupal\views\View;
+
 /**
  * @TODO
  *   - Test on a generic entity not on a node.
@@ -438,7 +440,7 @@ class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
   }
 
   protected function getFieldView() {
-    $view = new view;
+    $view = new View();
     $view->name = 'view_fieldapi';
     $view->description = '';
     $view->tag = 'default';

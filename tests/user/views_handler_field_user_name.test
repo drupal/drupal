@@ -5,6 +5,8 @@
  * Definition of viewsHandlerFieldUserNameTest.
  */
 
+use Drupal\views\View;
+
 /**
  * Tests the field username handler.
  *
@@ -53,7 +55,7 @@ class viewsHandlerFieldUserNameTest extends ViewsSqlTest {
 
   }
   function view_user_name() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_views_handler_field_user_name';
     $view->description = '';
     $view->tag = 'default';

@@ -5,6 +5,8 @@
  * Definition of ViewsUserTestCase.
  */
 
+use Drupal\views\View;
+
 /**
  * Tests basic user module integration into views.
  */
@@ -52,7 +54,7 @@ class ViewsUserTestCase extends ViewsSqlTest {
   }
 
   function test_view_user_relationship() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_user_relationship';
     $view->description = '';
     $view->tag = 'default';

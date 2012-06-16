@@ -5,6 +5,8 @@
  * Definition of ViewsArgumentDefaultTest.
  */
 
+use Drupal\views\View;
+
 /**
  * Basic test for pluggable argument default.
  */
@@ -87,7 +89,7 @@ class ViewsArgumentDefaultTest extends ViewsSqlTest {
   }
 
   function view_argument_default_fixed() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_argument_default_fixed';
     $view->description = '';
     $view->tag = '';

@@ -5,6 +5,8 @@
  * Provides the interface and base class for Views Wizard plugins.
  */
 
+use Drupal\views\View;
+
 /**
  * Defines a common interface for Views Wizard plugins.
  */
@@ -552,7 +554,7 @@ class ViewsUiBaseViewsWizard implements ViewsWizardInterface {
             // Generate a unique ID for each field so we don't overwrite
             // existing ones.
             foreach ($path_fields as &$field) {
-              $field['id'] = view::generate_item_id($field['id'], $display_options['default']['fields']);
+              $field['id'] = View::generate_item_id($field['id'], $display_options['default']['fields']);
               $display_options['default']['fields'][$field['id']] = $field;
             }
 

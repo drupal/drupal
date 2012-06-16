@@ -59,7 +59,6 @@ files[] = handlers/views_handler_sort_random.inc
 files[] = includes/base.inc
 files[] = includes/handlers.inc
 files[] = includes/plugins.inc
-files[] = includes/view.inc
 ; Modules
 files[] = modules/aggregator/views_handler_argument_aggregator_fid.inc
 files[] = modules/aggregator/views_handler_argument_aggregator_iid.inc

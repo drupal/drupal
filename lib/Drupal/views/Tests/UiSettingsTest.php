@@ -134,17 +134,16 @@ class UiSettingsTest extends WebTestBase {
     $edit = array(
       'views_ui_display_embed' => TRUE,
     );
+    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
     $this->drupalPost('admin/structure/views/add', $view, t('Continue & edit'));
     $this->assertFieldById('edit-displays-top-add-display-embed');
+
     $edit = array(
       'views_ui_display_embed' => FALSE,
     );
+    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
     views_invalidate_cache();
     $this->drupalPost('admin/structure/views/add', $view, t('Continue & edit'));
     $this->assertNoFieldById('edit-displays-top-add-display-embed');
-
-    //
-
   }
-
 }

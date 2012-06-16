@@ -104,7 +104,7 @@ function views_schema_6000() {
         'minimum_version' => '2',
         'current_version' => '3.0',
       ),
-      'object' => 'view',
+      'object' => 'Drupal\views\View',
       // the callback to load the displays
       'subrecords callback' => 'views_load_display_records',
       // the variable that holds enabled/disabled status

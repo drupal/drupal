@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\views\View;
 
 /**
  * Relationship handler that allows a groupwise maximum of the linked in table.
@@ -170,8 +171,7 @@ class views_handler_relationship_groupwise_max extends views_handler_relationshi
    * We use this to obtain our subquery SQL.
    */
   function get_temporary_view() {
-    views_include('view');
-    $view = new view();
+    $view = new View();
     $view->vid = 'new'; // @todo: what's this?
     $view->base_table = $this->definition['base'];
     $view->add_display('default');

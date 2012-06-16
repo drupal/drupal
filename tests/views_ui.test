@@ -143,7 +143,7 @@ class ViewsUIWizardBasicTestCase extends ViewsUIWizardHelper {
 
     // Check if the export screen works.
     $this->drupalGet('admin/structure/views/view/' . $view3['name'] . '/export');
-    $this->assertRaw('$view = new view();');
+    $this->assertRaw('$view = new Drupal\views\View();');
     $this->assertRaw($view3['human_name']);
     $this->assertRaw($view3['description']);
 

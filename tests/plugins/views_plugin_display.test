@@ -5,6 +5,8 @@
  * Definition of ViewsPluginDisplayTestCase.
  */
 
+use Drupal\views\View;
+
 /**
  *
  */
@@ -35,10 +37,10 @@ class ViewsPluginDisplayTestCase extends ViewsSqlTest {
    * Returns a test view for testFilterGroupsOverriding.
    *
    * @see testFilterGroupsOverriding
-   * @return view
+   * @return Drupal\views\View
    */
   function viewFilterGroupsOverriding() {
-    $view = new view();
+    $view = new View();
     $view->name = 'test_filter_group_override';
     $view->description = '';
     $view->tag = 'default';
@@ -100,10 +102,10 @@ class ViewsPluginDisplayTestCase extends ViewsSqlTest {
    *
    * @see testFilterGroupUpdating
    *
-   * @return view
+   * @return Drupal\views\View
    */
   function viewFilterGroupsUpdating() {
-    $view = new view();
+    $view = new View();
     $view->name = 'test_filter_groups';
     $view->description = '';
     $view->tag = 'default';

@@ -5,6 +5,8 @@
  * Definition of ViewsUserArgumentValidate.
  */
 
+use Drupal\views\View;
+
 /**
  * Tests views user argument argument handler.
  */
@@ -81,7 +83,7 @@ class ViewsUserArgumentValidate extends ViewsSqlTest {
   }
 
   function view_argument_validate_user($argtype) {
-    $view = new view;
+    $view = new View();
     $view->name = 'view_argument_validate_user';
     $view->description = '';
     $view->tag = '';

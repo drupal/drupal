@@ -5,6 +5,8 @@
  * Definition of viewsHandlerArgumentCommentUserUidTest.
  */
 
+use Drupal\views\View;
+
 /**
  * Tests the argument_comment_user_uid handler.
  */
@@ -69,7 +71,7 @@ class viewsHandlerArgumentCommentUserUidTest extends ViewsSqlTest {
   }
 
   function view_comment_user_uid() {
-    $view = new view;
+    $view = new View();
     $view->name = 'test_comment_user_uid';
     $view->description = '';
     $view->tag = 'default';
