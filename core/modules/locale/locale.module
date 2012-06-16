@@ -525,7 +525,7 @@ function locale_form_language_admin_overview_form_alter(&$form, &$form_state) {
       'translated' => 0,
       'ratio' => 0,
     );
-    if ($langcode != 'en' || locale_translate_english()) {
+    if (!$language->locked && ($langcode != 'en' || locale_translate_english())) {
       $form['languages'][$langcode]['locale_statistics'] = array(
         '#markup' => l(
           t('@translated/@total (@ratio%)', array(
