@@ -1264,8 +1264,8 @@ class views_plugin_display extends views_plugin {
         '***DEFAULT_LANGUAGE***' => t("Default site language"),
         LANGUAGE_NOT_SPECIFIED => t('Language neutral'),
     );
-    if (module_exists('locale')) {
-      $languages = array_merge($languages, locale_language_list());
+    if (module_exists('language')) {
+      $languages = array_merge($languages, language_list());
     }
     $field_language = array();
     $options['field_language'] = array(
