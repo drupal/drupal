@@ -2,15 +2,20 @@
 
 /**
  * @file
- * Definition of ViewsAccessTest.
+ * Definition of Drupal\views\Tests\AccessTest
  */
 
+namespace Drupal\views\Tests;
+
+use Drupal\simpletest\WebTestBase;
+use ViewsSqlTest;
 use Drupal\views\View;
+use views_test_plugin_access_test_dynamic;
 
 /**
  * Basic test for pluggable access.
  */
-class ViewsAccessTest extends ViewsSqlTest {
+class AccessTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Access',
