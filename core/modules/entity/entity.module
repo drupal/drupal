@@ -420,14 +420,18 @@ function entity_uri($entity_type, $entity) {
  *
  * @param Drupal\entity\EntityInterface $entity
  *   The entity for which to generate the label.
+ * @param $langcode
+ *   (optional) The language code of the language that should be used for
+ *   getting the label. If set to NULL, the entity's default language is
+ *   used.
  *
  * @return
  *   The label of the entity, or NULL if there is no label defined.
  *
  * @see Drupal\entity\EntityInterface::label()
  */
-function entity_page_label(EntityInterface $entity) {
-  return $entity->label();
+function entity_page_label(EntityInterface $entity, $langcode = NULL) {
+  return $entity->label($langcode);
 }
 
 /**

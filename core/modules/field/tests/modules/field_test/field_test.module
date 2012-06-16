@@ -211,11 +211,13 @@ function field_test_dummy_field_storage_query(EntityFieldQuery $query) {
  *   The entity type.
  * @param $entity
  *   The entity object.
+ * @param $langcocde
+ *   (optional) The langcode.
  *
  * @return
  *   The label of the entity prefixed with "label callback".
  */
-function field_test_entity_label_callback($entity_type, $entity) {
+function field_test_entity_label_callback($entity_type, $entity, $langcode = NULL) {
   return 'label callback ' . $entity->ftlabel;
 }
 

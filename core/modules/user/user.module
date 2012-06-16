@@ -186,6 +186,9 @@ function user_uri($user) {
 /**
  * Entity label callback.
  *
+ * This label callback has langcode for security reasons. The username is the
+ * visual identifier for a user and needs to be consistent in all languages.
+ *
  * @param $entity_type
  *   The entity type.
  * @param $entity

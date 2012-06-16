@@ -87,11 +87,11 @@ class Entity implements EntityInterface {
   /**
    * Implements EntityInterface::label().
    */
-  public function label() {
+  public function label($langcode = NULL) {
     $label = FALSE;
     $entity_info = $this->entityInfo();
     if (isset($entity_info['label callback']) && function_exists($entity_info['label callback'])) {
-      $label = $entity_info['label callback']($this->entityType, $this);
+      $label = $entity_info['label callback']($this->entityType, $this, $langcode);
     }
     elseif (!empty($entity_info['entity keys']['label']) && isset($this->{$entity_info['entity keys']['label']})) {
       $label = $this->{$entity_info['entity keys']['label']};
