@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsBasicTest.
+ * Definition of Drupal\views\Tests\BasicTest.
  */
+
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
 
 /**
  * Basic test class for Views query builder tests.
  */
-class ViewsBasicTest extends ViewsSqlTest {
+class BasicTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Basic query test',
