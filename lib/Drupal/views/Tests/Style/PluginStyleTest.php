@@ -2,13 +2,19 @@
 
 /**
  * @file
- * Definition of ViewsPluginStyleTestCase.
+ * Definition of Drupal\views\Tests\Style\PluginStyleTest.
  */
+
+namespace Drupal\views\Tests\Style;
+
+use stdClass;
+use DOMDocument;
+use ViewsSqlTest;
 
 /**
  * Tests some general style plugin related functionality.
  */
-class ViewsPluginStyleTestCase extends ViewsSqlTest {
+class PluginStyleTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Styles',

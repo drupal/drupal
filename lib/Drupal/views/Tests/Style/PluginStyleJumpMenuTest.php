@@ -2,13 +2,18 @@
 
 /**
  * @file
- * Definition of viewsPluginStyleJumpMenuTest.
+ * Definition of Drupal\views\Tests\Style\PluginStyleJumpMenuTest.
  */
+
+namespace Drupal\views\Tests\Style;
+
+use ViewsSqlTest;
+use view;
 
 /**
  * Tests jump menu style functionality.
  */
-class viewsPluginStyleJumpMenuTest extends ViewsSqlTest {
+class PluginStyleJumpMenuTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Jump menu',

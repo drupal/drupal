@@ -2,13 +2,18 @@
 
 /**
  * @file
- * Definition of ViewsPluginStyleUnformattedTestCase.
+ * Definition of Drupal\views\Tests\Style\PluginStyleUnformattedTest.
  */
+
+namespace Drupal\views\Tests\Style;
+
+use DOMDocument;
+use ViewsSqlTest;
 
 /**
  * Tests the default/unformatted row style.
  */
-class ViewsPluginStyleUnformattedTestCase extends ViewsSqlTest {
+class PluginStyleUnformattedTest extends ViewsSqlTest {
 
   /**
    * Stores all created nodes.
