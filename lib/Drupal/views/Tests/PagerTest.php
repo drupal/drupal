@@ -2,15 +2,18 @@
 
 /**
  * @file
- * Definition of ViewsPagerTest.
+ * Definition of Drupal\views\Tests\PagerTest.
  */
 
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
 use Drupal\views\View;
 
 /**
  * Tests the pluggable pager system.
  */
-class ViewsPagerTest extends ViewsSqlTest {
+class PagerTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Pager',

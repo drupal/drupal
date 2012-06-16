@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsHandlersTest.
+ * Definition of Drupal\views\Tests\HandlersTest.
  */
+
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
 
 /**
  * Tests abstract handlers of views.
  */
-class ViewsHandlersTest extends ViewsSqlTest {
+class HandlersTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Handlers test',
@@ -43,7 +47,7 @@ class ViewsHandlersTest extends ViewsSqlTest {
    * Tests views_break_phrase_string function.
    */
   function test_views_break_phrase_string() {
-    $empty_stdclass = new stdClass();
+    $empty_stdclass = new \StdClass();
     $empty_stdclass->operator = 'or';
     $empty_stdclass->value = array();
 
@@ -79,7 +83,7 @@ class ViewsHandlersTest extends ViewsSqlTest {
    * Tests views_break_phrase function.
    */
   function test_views_break_phrase() {
-    $empty_stdclass = new stdClass();
+    $empty_stdclass = new \StdClass();
     $empty_stdclass->operator = 'or';
     $empty_stdclass->value = array();
 

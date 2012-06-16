@@ -2,15 +2,18 @@
 
 /**
  * @file
- * Definition of ViewsViewTest.
+ * Definition of Drupal\views\Tests\ViewTest.
  */
 
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
 use Drupal\views\View;
 
 /**
  * Views class tests.
  */
-class ViewsViewTest extends ViewsSqlTest {
+class ViewTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Test the view class',

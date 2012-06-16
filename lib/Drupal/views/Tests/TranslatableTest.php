@@ -2,15 +2,18 @@
 
 /**
  * @file
- * Definition of ViewsTranslatableTest.
+ * Definition of Drupal\views\Tests\TranslatableTest.
  */
 
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
 use Drupal\views\View;
 
 /**
  * Tests Views pluggable translations.
  */
-class ViewsTranslatableTest extends ViewsSqlTest {
+class TranslatableTest extends ViewsSqlTest {
   var $strings;
 
   public static function getInfo() {

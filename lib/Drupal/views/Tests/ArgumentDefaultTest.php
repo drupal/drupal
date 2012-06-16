@@ -2,18 +2,21 @@
 
 /**
  * @file
- * Definition of ViewsArgumentDefaultTest.
+ * Definition of Drupal\views\Tests\ArgumentDefaultTest.
  */
 
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
 use Drupal\views\View;
 
 /**
  * Basic test for pluggable argument default.
  */
-class ViewsArgumentDefaultTest extends ViewsSqlTest {
+class ArgumentDefaultTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
-      'name' => 'Argument_default',
+      'name' => 'Argument default',
       'description' => 'Tests pluggable argument_default for views.',
       'group' => 'Views Plugins'
     );

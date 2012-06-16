@@ -2,9 +2,12 @@
 
 /**
  * @file
- * Definition of ViewsCacheTest.
+ * Definition of Drupal\views\Tests\CacheTest.
  */
 
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
 use Drupal\views\View;
 
 /**
@@ -12,7 +15,7 @@ use Drupal\views\View;
  *
  * @see views_plugin_cache
  */
-class ViewsCacheTest extends ViewsSqlTest {
+class CacheTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Cache',

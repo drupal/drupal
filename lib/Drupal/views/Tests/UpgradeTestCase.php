@@ -2,9 +2,12 @@
 
 /**
  * @file
- * Definition of ViewsUpgradeTestCase.
+ * Definition of Drupal\views\Tests\UpgradeTestCase.
  */
 
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
 use Drupal\views\View;
 
 /**
@@ -12,7 +15,7 @@ use Drupal\views\View;
  *
  * You can find all conversions by searching for "moved to".
  */
-class ViewsUpgradeTestCase extends ViewsSqlTest {
+class UpgradeTestCase extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Views Upgrade test',
