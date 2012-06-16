@@ -2,13 +2,18 @@
 
 /**
  * @file
- * Definition of ViewsArgumentValidatorTest.
+ * Definition of Drupal\views\Tests\ArgumentValidatorTest.
  */
+
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
+use view;
 
 /**
  * Tests Views argument validators.
  */
-class ViewsArgumentValidatorTest extends ViewsSqlTest {
+class ArgumentValidatorTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Argument validator',

@@ -250,7 +250,6 @@ files[] = tests/plugins/views_plugin_display.test
 files[] = tests/views_access.test
 files[] = tests/views_analyze.test
 files[] = tests/views_argument_default.test
-files[] = tests/views_argument_validator.test
 files[] = tests/views_exposed_form.test
 files[] = tests/field/views_fieldapi.test
 files[] = tests/views_glossary.test
