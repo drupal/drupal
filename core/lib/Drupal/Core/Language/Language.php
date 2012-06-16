@@ -24,6 +24,7 @@ class Language {
   public $weight = 0;
   public $default = FALSE;
   public $method_id = NULL;
+  public $locked = FALSE;
 
   /**
    * Language constructor builds the default language object.
