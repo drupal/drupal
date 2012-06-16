@@ -73,7 +73,6 @@ function entity_get_info($entity_type = NULL) {
           'controller class' => 'Drupal\entity\DatabaseStorageController',
           'static cache' => TRUE,
           'field cache' => TRUE,
-          'load hook' => $name . '_load',
           'bundles' => array(),
           'view modes' => array(),
           'entity keys' => array(),
