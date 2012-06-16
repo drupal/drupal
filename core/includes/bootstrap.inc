@@ -2691,9 +2691,9 @@ function language_list($all = FALSE) {
     else {
       // No language module, so use the default language only.
       $languages = array($default->langcode => $default);
+      // Add the special languages, they will be filtered later if needed.
+      $languages += language_locked_languages($default->weight);
     }
-    // Add the special languages, they will be filtered later if needed.
-    $languages += language_locked_languages();
   }
 
   // Filter the full list of languages based on the value of the $all flag. By
@@ -2720,7 +2720,7 @@ function language_list($all = FALSE) {
  * @return
  *   An array of language objects.
  */
-function language_locked_languages($weight = 20) {
+function language_locked_languages($weight = 0) {
   $locked_language = array(
     'default' => FALSE,
     'locked' => TRUE,
@@ -2731,17 +2731,17 @@ function language_locked_languages($weight = 20) {
   $languages[LANGUAGE_NOT_SPECIFIED] = new Language(array(
     'langcode' => LANGUAGE_NOT_SPECIFIED,
     'name' => t('Not specified'),
-    'weight' => $weight++,
+    'weight' => ++$weight,
   ) + $locked_language);
   $languages[LANGUAGE_NOT_APPLICABLE] = new Language(array(
     'langcode' => LANGUAGE_NOT_APPLICABLE,
     'name' => t('Not applicable'),
-    'weight' => $weight++,
+    'weight' => ++$weight,
   ) + $locked_language);
   $languages[LANGUAGE_MULTIPLE] = new Language(array(
     'langcode' => LANGUAGE_MULTIPLE,
     'name' => t('Multiple'),
-    'weight' => $weight++,
+    'weight' => ++$weight,
   ) + $locked_language);
   return $languages;
 }

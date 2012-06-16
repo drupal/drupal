@@ -234,7 +234,8 @@ function update_prepare_d8_language() {
       );
       db_add_field('language', 'locked', $locked_spec);
 
-      $languages = language_locked_languages();
+      $max_language_weight = db_query('SELECT MAX(weight) FROM {language}')->fetchField();
+      $languages = language_locked_languages($max_language_weight);
       foreach ($languages as $language) {
         db_insert('language')
           ->fields(array(

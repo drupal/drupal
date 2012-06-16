@@ -14,8 +14,8 @@
 function language_install() {
   // Add the default language at first so that language_list() returns this in
   // language_special_languages().
-  language_save(language_default());
-  $languages = language_locked_languages();
+  $default_language = language_save(language_default());
+  $languages = language_locked_languages($default_language->weight);
   foreach ($languages as $language) {
     language_save($language);
   }
