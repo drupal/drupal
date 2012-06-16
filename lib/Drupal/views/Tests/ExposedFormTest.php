@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsExposedFormTest.
+ * Definition of Drupal\views\Tests\ExposedFormTest.
  */
+
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
 
 /**
  * Tests exposed forms.
  */
-class ViewsExposedFormTest extends ViewsSqlTest {
+class ExposedFormTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Exposed forms',

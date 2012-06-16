@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsAnalyzeTest.
+ * Definition of Drupal\views\Tests\AnalyzeTest.
  */
+
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
 
 /**
  * Tests the views analyze system.
  */
-class ViewsAnalyzeTest extends ViewsSqlTest {
+class AnalyzeTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Views Analyze',

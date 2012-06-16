@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Definition of ViewsGlossaryTestCase.
+ * Definition of Drupal\views\Tests\GlossaryTest.
  */
+
+namespace Drupal\views\Tests;
+
+use ViewsSqlTest;
 
 /**
  * Tests glossary view ( summary of arguments ).
  */
-class ViewsGlossaryTestCase extends ViewsSqlTest {
+class GlossaryTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Glossary Test',
