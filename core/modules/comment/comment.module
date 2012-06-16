@@ -1836,12 +1836,13 @@ function comment_form($form, &$form_state, Comment $comment) {
   }
   $form['node_type'] = array('#type' => 'value', '#value' => 'comment_node_' . $node->type);
 
-  // If a content type has multilingual support we set the comment to inherit the
-  // content language. Otherwise mark the comment as language neutral.
+  // Make the comment inherit the node language unless specifically set.
   $comment_langcode = $comment->langcode;
-  if (($comment_langcode == LANGUAGE_NOT_SPECIFIED) && variable_get('node_type_language_' . $node->type, 0)) {
+  if ($comment_langcode == LANGUAGE_NOT_SPECIFIED) {
     $comment_langcode = $language_content->langcode;
   }
+
+  // Uses the language of the content as comment language.
   $form['langcode'] = array(
     '#type' => 'value',
     '#value' => $comment_langcode,

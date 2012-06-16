@@ -458,7 +458,9 @@ function node_uninstall() {
         ->condition('name', 'node_options_' . $type)
         ->condition('name', 'node_submitted_' . $type)
         ->condition('name', 'node_permissions_' . $type)
-        ->condition('name', 'node_type_language_' . $type)
+        ->condition('name', 'node_type_language_default_' . $type)
+        ->condition('name', 'node_type_language_hidden_' . $type)
+        ->condition('name', 'node_type_language_translation_enabled_' . $type)
       )
       ->execute();
   }
@@ -520,9 +522,9 @@ function _update_7000_node_get_types() {
 function node_update_8001() {
   $types = db_query('SELECT type FROM {node_type}')->fetchCol();
   foreach ($types as $type) {
-    $language = variable_get('language_content_type_' . $type);
-    if (isset($language)) {
-      variable_set('node_type_language_' . $type, $language);
+    $node_type_language = variable_get('language_content_type_' . $type);
+    if (isset($node_type_language)) {
+      variable_set('node_type_language_' . $type, $node_type_language);
     }
     variable_del('language_content_type_' . $type);
   }
@@ -543,6 +545,29 @@ function node_update_8002() {
 }
 
 /**
- * @} End of "addtogroup updates-7.x-to-8.x".
+ * Rename node type language variable names.
+ */
+function node_update_8003() {
+  $types = db_query('SELECT type FROM {node_type}')->fetchCol();
+  foreach ($types as $type) {
+    variable_set('node_type_language_default_' . $type, LANGUAGE_NOT_SPECIFIED);
+    $node_type_language = variable_get('node_type_language_' . $type, 0);
+    if ($node_type_language == 0) {
+      variable_set('node_type_language_hidden_' . $type, TRUE);
+    }
+    if ($node_type_language == 2) {
+      // Translation was enabled, so enable it again and
+      // unhide the language selector. Because if language is
+      // LANGUAGE_NOT_SPECIFIED and the selector hidden, translation
+      // cannot be enabled.
+      variable_set('node_type_language_hidden_' . $type, FALSE);
+      variable_set('node_type_language_translation_enabled_' . $type, TRUE);
+    }
+    variable_del('node_type_language_' . $type);
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-8.x"
  * The next series of updates should start at 9000.
  */

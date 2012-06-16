@@ -91,7 +91,7 @@ function node_add($type) {
     'uid' => $user->uid,
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => $type,
-    'langcode' => LANGUAGE_NOT_SPECIFIED,
+    'langcode' => node_type_get_default_langcode($type)
   ));
   drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)), PASS_THROUGH);
   $output = drupal_get_form($type . '_node_form', $node);
@@ -186,7 +186,7 @@ function node_form($form, &$form_state, Node $node) {
   // @todo D8: Remove. Modules should access the node using $form_state['node'].
   $form['#node'] = $node;
 
-  if (variable_get('node_type_language_' . $node->type, 0) && module_exists('language')) {
+  if (module_exists('language')) {
     $languages = language_list(LANGUAGE_ALL);
     $language_options = array();
     foreach ($languages as $langcode => $language) {
@@ -196,16 +196,15 @@ function node_form($form, &$form_state, Node $node) {
     $form['langcode'] = array(
       '#type' => 'select',
       '#title' => t('Language'),
-      '#default_value' => (isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED),
+      '#default_value' => $node->langcode,
       '#options' => $language_options,
+      '#access' => !variable_get('node_type_language_hidden_' . $node->type, TRUE),
     );
   }
   else {
     $form['langcode'] = array(
       '#type' => 'value',
-      // New nodes without multilingual support get the default language, old
-      // nodes keep their language if language.module is not available.
-      '#value' => !isset($form['#node']->nid) ? language_default()->langcode : $node->langcode,
+      '#value' => $node->langcode,
     );
   }
 

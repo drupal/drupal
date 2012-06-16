@@ -52,11 +52,9 @@ class LocaleUninstallTest extends WebTestBase {
     $this->assertEqual(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode, $this->langcode, t('Current language: %lang', array('%lang' => drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode)));
 
     // Enable multilingual workflow option for articles.
-    variable_set('node_type_language_article', 1);
-
+    variable_set('node_type_language_hidden_article',FALSE);
     // Change JavaScript translations directory.
     variable_set('locale_js_directory', 'js_translations');
-
     // Build the JavaScript translation file for French.
     $user = $this->drupalCreateUser(array('translate interface', 'access administration pages'));
     $this->drupalLogin($user);

@@ -38,7 +38,7 @@ class LocaleCommentLanguageTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Set "Article" content type to use multilingual support.
-    $edit = array('node_type_language' => 1);
+    $edit = array('node_type_language_hidden' => FALSE);
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
 
     // Enable content language negotiation UI.

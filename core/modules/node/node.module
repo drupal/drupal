@@ -634,6 +634,47 @@ function node_field_extra_fields() {
 }
 
 /**
+ * Get the default language for a node type.
+ *
+ * @param string $node_type
+ *   The type of node.
+ *
+ * @return string
+ *   The language code of the node type's default langcode.
+ */
+function node_type_get_default_langcode($node_type) {
+  $default_value = variable_get('node_type_language_default_' . $node_type, 'site_default');
+
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+
+  if ($default_value == LANGUAGE_NOT_SPECIFIED) {
+    return LANGUAGE_NOT_SPECIFIED;
+  }
+
+  switch ($default_value) {
+    case 'site_default':
+      $default_value = language_default()->langcode;
+      break;
+
+    case 'current_interface':
+      $default_value = $language_interface->langcode;
+      break;
+
+    case 'authors_default':
+      global $user;
+      if (!empty($user->preferred_langcode)) {
+        $default_value = $user->preferred_langcode;
+      }
+      else {
+        $default_value = $language_interface->langcode;
+      }
+      break;
+  }
+
+  return $default_value;
+}
+
+/**
  * Deletes a node type from the database.
  *
  * @param $name

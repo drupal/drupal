@@ -82,9 +82,9 @@ class LocaleContentTest extends WebTestBase {
 
     // Set "Basic page" content type to use multilingual support.
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
+    $this->assertText(t('Language settings'), t('Multilingual support fieldset present on content type configuration form.'));
     $edit = array(
-      'node_type_language' => 1,
+      'node_type_language_hidden' => FALSE,
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
@@ -152,7 +152,7 @@ class LocaleContentTest extends WebTestBase {
     // Set "Article" content type to use multilingual support.
     $this->drupalGet('admin/structure/types/manage/article');
     $edit = array(
-      'node_type_language' => 1,
+      'node_type_language_hidden' => FALSE,
     );
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Article')), t('Article content type has been updated.'));

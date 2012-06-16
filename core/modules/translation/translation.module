@@ -22,11 +22,6 @@
 use Drupal\node\Node;
 
 /**
- * Identifies a content type which has translation support enabled.
- */
-const TRANSLATION_ENABLED = 2;
-
-/**
  * Implements hook_help().
  */
 function translation_help($path, $arg) {
@@ -119,11 +114,34 @@ function translation_permission() {
  * Implements hook_form_FORM_ID_alter() for node_type_form().
  */
 function translation_form_node_type_form_alter(&$form, &$form_state) {
+  // Hide form element if default language is a constant.
+  // TODO: When form #states allows OR values change this to use form #states.
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'translation') . '/translation.js',
+  );
   // Add translation option to content type form.
-  $form['workflow']['node_type_language']['#type'] = 'radios';
-  $form['workflow']['node_type_language']['#options'] = array(t('Disabled'), t('Enabled'), TRANSLATION_ENABLED => t('Enabled, with translation'));
-  // Description based on text from node.module.
-  $form['workflow']['node_type_language']['#description'] = t('Add a language selection field to the editing form, allowing you to select from one of the <a href="@languages">enabled languages</a>. You can also turn on translation for this content type, which lets you have content translated to any of the installed languages. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('@languages' => url('admin/config/regional/language')));
+  $form['language']['node_type_language_translation_enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable translation'),
+    '#default_value' => variable_get('node_type_language_translation_enabled_' . $form['#node_type']->type, FALSE),
+    '#element_validate' => array('translation_node_type_language_translation_enabled_validate'),
+    '#prefix' => "<label class='form-item-node-type-language-translation-enabled'>" . t('Translation') . "</label>",
+  );
+}
+
+/**
+ * Checks if translation can be enabled.
+ *
+ * If language is set to one of the special languages
+ * and language selector is not hidden, translation cannot be enabled.
+ */
+function translation_node_type_language_translation_enabled_validate($element, &$form_state, $form) {
+  if (language_is_locked($form_state['values']['node_type_language_default']) && $form_state['values']['node_type_language_hidden'] && $form_state['values']['node_type_language_translation_enabled']) {
+    foreach (language_locked_languages() as $language) {
+      $locked_languages[] = $language->name;
+    }
+    form_set_error('node_type_language_translation_enabled', t('Translation is not supported if language is always one of: @locked_languages', array('@locked_languages' => implode(", ", $locked_languages))));
+  }
 }
 
 /**
@@ -144,9 +162,9 @@ function translation_form_node_form_alter(&$form, &$form_state) {
       $form['langcode']['#disabled'] = TRUE;
     }
     elseif (!empty($node->nid) && !empty($node->tnid)) {
-      // Disable languages for existing translations, so it is not possible to switch this
-      // node to some language which is already in the translation set. Also remove the
-      // language neutral option.
+      // Disable languages for existing translations, so it is not possible
+      // to switch this node to some language which is already in the
+      // translation set. Also remove the language neutral option.
       unset($form['langcode']['#options'][LANGUAGE_NOT_SPECIFIED]);
       foreach (translation_node_get_translations($node->tnid) as $langcode => $translation) {
         if ($translation->nid != $node->nid) {
@@ -165,7 +183,7 @@ function translation_form_node_form_alter(&$form, &$form_state) {
         '#weight' => 30,
       );
       if ($node->tnid == $node->nid) {
-        // This is the source node of the translation
+        // This is the source node of the translation.
         $form['translation']['retranslate'] = array(
           '#type' => 'checkbox',
           '#title' => t('Flag translations as outdated'),
@@ -366,7 +384,7 @@ function translation_node_validate(Node $node, $form) {
   if (translation_supported_type($node->type) && (!empty($node->tnid) || !empty($form['#node']->translation_source->nid))) {
     $tnid = !empty($node->tnid) ? $node->tnid : $form['#node']->translation_source->nid;
     $translations = translation_node_get_translations($tnid);
-    if (isset($translations[$node->langcode]) && $translations[$node->langcode]->nid != $node->nid ) {
+    if (isset($translations[$node->langcode]) && $translations[$node->langcode]->nid != $node->nid) {
       form_set_error('langcode', t('There is already a translation in this language.'));
     }
   }
@@ -460,7 +478,7 @@ function translation_node_get_translations($tnid) {
  *   TRUE if translation is supported, and FALSE if not.
  */
 function translation_supported_type($type) {
-  return variable_get('node_type_language_' . $type, 0) == TRANSLATION_ENABLED;
+  return variable_get('node_type_language_translation_enabled_' . $type, FALSE);
 }
 
 /**

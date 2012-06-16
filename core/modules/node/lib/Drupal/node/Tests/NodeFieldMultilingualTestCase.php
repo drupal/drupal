@@ -44,7 +44,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
 
     // Set "Basic page" content type to use multilingual support.
     $edit = array(
-      'node_type_language' => 1,
+      'node_type_language_hidden' => FALSE,
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
@@ -60,7 +60,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
    */
   function testMultilingualNodeForm() {
     // Create "Basic page" content.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = node_type_get_default_langcode('page');
     $title_key = "title";
     $title_value = $this->randomName(8);
     $body_key = "body[$langcode][0][value]";
@@ -70,7 +70,6 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $edit = array();
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
-    $edit['langcode'] = 'en';
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the node exists in the database.
@@ -109,7 +108,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
    */
   function testMultilingualDisplaySettings() {
     // Create "Basic page" content.
-    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $langcode = node_type_get_default_langcode('page');
     $title_key = "title";
     $title_value = $this->randomName(8);
     $body_key = "body[$langcode][0][value]";
@@ -119,7 +118,6 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $edit = array();
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
-    $edit['langcode'] = 'en';
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the node exists in the database.

@@ -21,6 +21,17 @@ Drupal.behaviors.contentTypes = {
       }
       return vals.join(', ');
     });
+    $('fieldset#edit-language', context).drupalSetSummary(function(context) {
+      var vals = [];
+
+      vals.push($(".form-item-node-type-language-default select option:selected", context).text());
+
+      $('input:checked', context).next('label').each(function() {
+        vals.push(Drupal.checkPlain($(this).text()));
+      });
+
+      return vals.join(', ');
+    });
     $context.find('fieldset#edit-display').drupalSetSummary(function(context) {
       var vals = [];
       var $context = $(context);

@@ -75,12 +75,11 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     $this->assertRaw('<td>Chuvash</td>', 'There is a Chuvash translation of the node.');
     $this->assertLinkByHref("node/$translation_nid", 0, 'The translation table links to the Chuvash translation.');
     $this->assertRaw('<td>Catalan</td><td>n/a</td><td>Not translated</td>', 'There is no Catalan translation of this node.');
-
     // Check for node content type settings upgrade.
     $this->drupalGet('node/add/article');
-    $this->assertFieldByName('langcode');
+    $this->assertField('langcode', 'There is a language selector.');
     $this->drupalGet('node/add/page');
-    $this->assertNoFieldByName('langcode');
+    $this->assertNoField('langcode', 'There is no language selector.');
 
     // Check that the user language value was retained in both langcode and
     // preferred_langcode.

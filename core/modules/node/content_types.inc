@@ -185,11 +185,37 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#description' => t('Users with the <em>Administer content</em> permission will be able to override these options.'),
   );
   if (module_exists('language')) {
-    $form['workflow']['node_type_language'] = array(
+    $lang_options = array();
+
+    $languages = language_list(LANGUAGE_ALL);
+    foreach ($languages as $langcode => $language) {
+      $lang_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
+    }
+
+    $lang_options += array(
+      'site_default' => t("Site's default language"),
+      'current_interface' => t('Current interface language'),
+      'authors_default' => t("Author's preferred language"),
+    );
+
+    $form['language'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Language settings'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'additional_settings',
+    );
+    $form['language']['node_type_language_default'] = array(
+      '#type' => 'select',
+      '#title' => t('Default language'),
+      '#options' => $lang_options,
+      '#default_value' => variable_get('node_type_language_default_' . $type->type, 'site_default'),
+      '#description' => t('Explanation of the language options is found on the <a href="@languages_list_page">languages list page</a>.', array('@languages_list_page' => url('admin/config/regional/language'))),
+    );
+    $form['language']['node_type_language_hidden'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Multilingual support'),
-      '#default_value' => variable_get('node_type_language_' . $type->type, 0),
-      '#description' => t('Add a language selection field to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/config/regional/language'))),
+      '#title' => t('Hide language selector'),
+      '#default_value' => variable_get('node_type_language_hidden_' . $type->type, TRUE),
     );
   }
   $form['display'] = array(

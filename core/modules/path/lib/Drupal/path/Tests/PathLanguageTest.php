@@ -42,7 +42,8 @@ class PathLanguageTest extends PathTestBase {
    */
   function testAliasTranslation() {
     // Set 'page' content type to enable translation.
-    variable_set('node_type_language_page', TRANSLATION_ENABLED);
+    variable_set('node_type_language_hidden_page', FALSE);
+    variable_set('node_type_language_translation_enabled_page', TRUE);
 
     $english_node = $this->drupalCreateNode(array('type' => 'page'));
     $english_alias = $this->randomName();
