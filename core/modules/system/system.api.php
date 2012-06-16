@@ -3586,7 +3586,7 @@ function hook_date_format_types_alter(&$types) {
  * used with the associated date type -- a user has to choose a format for each
  * date type in the administrative interface. There is one exception: locale
  * initialization chooses a locale-specific format for the three core-provided
- * types (see locale_get_localized_date_format() for details). If your module
+ * types (see system_get_localized_date_format() for details). If your module
  * needs to ensure that a date type it defines has a format associated with it,
  * call @code variable_set('date_format_' . $type, $format); @endcode
  * where $type is the machine-readable name defined in hook_date_format_types(),

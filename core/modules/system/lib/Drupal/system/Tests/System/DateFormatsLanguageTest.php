@@ -2,28 +2,28 @@
 
 /**
  * @file
- * Definition of Drupal\locale\Tests\LocaleDateFormatsTest.
+ * Definition of Drupal\system\Tests\System\DateFormatsLanguageTest.
  */
 
-namespace Drupal\locale\Tests;
+namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Functional tests for localizing date formats.
  */
-class LocaleDateFormatsTest extends WebTestBase {
+class DateFormatsLanguageTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
       'name' => 'Localize date formats',
       'description' => 'Tests for the localization of date formats.',
-      'group' => 'Locale',
+      'group' => 'System',
     );
   }
 
   function setUp() {
-    parent::setUp(array('node', 'locale'));
+    parent::setUp(array('node', 'language'));
 
     // Create Article node type.
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));

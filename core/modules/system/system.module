@@ -199,6 +199,9 @@ function system_theme() {
       'render element' => 'form',
       'file' => 'system.admin.inc',
     ),
+    'system_date_format_localize_form' => array(
+      'render element' => 'form',
+    ),
   ));
 }
 
@@ -1110,6 +1113,36 @@ function system_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
+
+  // Localize date formats.
+  if (module_exists('language')) {
+    $items['admin/config/regional/date-time/locale'] = array(
+      'title' => 'Localize',
+      'description' => 'Configure date formats for each locale',
+      'page callback' => 'system_date_format_language_overview_page',
+      'access arguments' => array('administer site configuration'),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => -8,
+      'file' => 'system.admin.inc',
+    );
+    $items['admin/config/regional/date-time/locale/%/edit'] = array(
+      'title' => 'Localize date formats',
+      'description' => 'Configure date formats for each locale',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('system_date_format_localize_form', 5),
+      'access arguments' => array('administer site configuration'),
+      'file' => 'system.admin.inc',
+    );
+    $items['admin/config/regional/date-time/locale/%/reset'] = array(
+      'title' => 'Reset date formats',
+      'description' => 'Reset localized date formats to global defaults',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('system_date_format_localize_reset_form', 5),
+      'access arguments' => array('administer site configuration'),
+      'file' => 'system.admin.inc',
+    );
+  }
+
   return $items;
 }
 
@@ -1967,6 +2000,24 @@ function system_filetransfer_info() {
  * Implements hook_init().
  */
 function system_init() {
+  global $conf;
+
+  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+  // For each date type (e.g. long, short), get the localized date format
+  // for the user's current language and override the default setting for it
+  // in $conf. This should happen on all pages except the date and time formats
+  // settings page, where we want to display the site default and not the
+  // localized version.
+  if (strpos(current_path(), 'admin/config/regional/date-time/formats') !== 0) {
+    $languages = array($language_interface->langcode);
+
+    // Setup appropriate date formats for this locale.
+    $formats = system_get_localized_date_format($languages);
+    foreach ($formats as $format_type => $format) {
+      $conf[$format_type] = $format;
+    }
+  }
+
   $path = drupal_get_path('module', 'system');
   // Add the CSS for this module. These aren't in system.info, because they
   // need to be in the CSS_SYSTEM group rather than the CSS_DEFAULT group.
@@ -2000,6 +2051,64 @@ function system_init() {
 
   // Add CSS/JS files from module .info files.
   system_add_module_assets();
+}
+
+/**
+ * Select locale date format details from database.
+ *
+ * @param $languages
+ *   An array of language codes.
+ *
+ * @return
+ *   An array of date formats.
+ */
+function system_get_localized_date_format($languages) {
+  $formats = array();
+
+  // Get list of different format types.
+  $format_types = system_get_date_types();
+  $short_default = variable_get('date_format_short', 'm/d/Y - H:i');
+
+  // Loop through each language until we find one with some date formats
+  // configured.
+  foreach ($languages as $language) {
+    $date_formats = system_date_format_locale($language);
+    if (!empty($date_formats)) {
+      // We have locale-specific date formats, so check for their types. If
+      // we're missing a type, use the default setting instead.
+      foreach ($format_types as $type => $type_info) {
+        // If format exists for this language, use it.
+        if (!empty($date_formats[$type])) {
+          $formats['date_format_' . $type] = $date_formats[$type];
+        }
+        // Otherwise get default variable setting. If this is not set, default
+        // to the short format.
+        else {
+          $formats['date_format_' . $type] = variable_get('date_format_' . $type, $short_default);
+        }
+      }
+
+      // Return on the first match.
+      return $formats;
+    }
+  }
+
+  // No locale specific formats found, so use defaults.
+  $system_types = array('short', 'medium', 'long');
+  // Handle system types separately as they have defaults if no variable exists.
+  $formats['date_format_short'] = $short_default;
+  $formats['date_format_medium'] = variable_get('date_format_medium', 'D, m/d/Y - H:i');
+  $formats['date_format_long'] = variable_get('date_format_long', 'l, F j, Y - H:i');
+
+  // For non-system types, get the default setting, otherwise use the short
+  // format.
+  foreach ($format_types as $type => $type_info) {
+    if (!in_array($type, $system_types)) {
+      $formats['date_format_' . $type] = variable_get('date_format_' . $type, $short_default);
+    }
+  }
+
+  return $formats;
 }
 
 /**
