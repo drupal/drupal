@@ -851,7 +851,7 @@ function user_admin_roles($form, $form_state) {
     $form['roles'][$role->rid]['edit'] = array(
       '#type' => 'link',
       '#title' => t('edit role'),
-      '#href' => 'admin/people/permissions/roles/edit/' . $role->rid,
+      '#href' => 'admin/people/roles/edit/' . $role->rid,
     );
     $form['roles'][$role->rid]['permissions'] = array(
       '#type' => 'link',
@@ -1004,14 +1004,14 @@ function user_admin_role_submit($form, &$form_state) {
   else {
     drupal_set_message(t('The role has been added.'));
   }
-  $form_state['redirect'] = 'admin/people/permissions/roles';
+  $form_state['redirect'] = 'admin/people/roles';
 }
 
 /**
  * Form submit handler for the user_admin_role() form.
  */
 function user_admin_role_delete_submit($form, &$form_state) {
-  $form_state['redirect'] = 'admin/people/permissions/roles/delete/' . $form_state['values']['role']['rid'];
+  $form_state['redirect'] = 'admin/people/roles/delete/' . $form_state['values']['role']['rid'];
 }
 
 /**
@@ -1022,7 +1022,7 @@ function user_admin_role_delete_confirm($form, &$form_state, $role) {
     '#type' => 'value',
     '#value' => $role->rid,
   );
-  return confirm_form($form, t('Are you sure you want to delete the role %name ?', array('%name' => $role->name)), 'admin/people/permissions/roles', t('This action cannot be undone.'), t('Delete'));
+  return confirm_form($form, t('Are you sure you want to delete the role %name ?', array('%name' => $role->name)), 'admin/people/roles', t('This action cannot be undone.'), t('Delete'));
 }
 
 /**
@@ -1031,6 +1031,6 @@ function user_admin_role_delete_confirm($form, &$form_state, $role) {
 function user_admin_role_delete_confirm_submit($form, &$form_state) {
   user_role_delete($form_state['values']['rid']);
   drupal_set_message(t('The role has been deleted.'));
-  $form_state['redirect'] = 'admin/people/permissions/roles';
+  $form_state['redirect'] = 'admin/people/roles';
 }
 
