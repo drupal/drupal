@@ -2,15 +2,18 @@
 
 /**
  * @file
- * Definition of ViewsUserTestCase.
+ * Definition of Drupal\views\Tests\User\UserTestCase.
  */
 
+namespace Drupal\views\Tests\User;
+
 use Drupal\views\View;
+use ViewsSqlTest;
 
 /**
  * Tests basic user module integration into views.
  */
-class ViewsUserTestCase extends ViewsSqlTest {
+class UserTestCase extends ViewsSqlTest {
   var $users = array();
   var $nodes = array();
 

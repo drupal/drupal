@@ -2,15 +2,18 @@
 
 /**
  * @file
- * Definition of ViewsUserArgumentDefault.
+ * Definition of Drupal\views\Tests\User\UserArgumentDefault.
  */
 
+namespace Drupal\views\Tests\User;
+
 use Drupal\views\View;
+use ViewsSqlTest;
 
 /**
  * Tests views user argument default plugin.
  */
-class ViewsUserArgumentDefault extends ViewsSqlTest {
+class UserArgumentDefault extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Tests user argument default plugin',
