@@ -56,7 +56,6 @@ files[] = handlers/views_handler_sort_group_by_numeric.inc
 files[] = handlers/views_handler_sort_menu_hierarchy.inc
 files[] = handlers/views_handler_sort_random.inc
 ; Includes
-files[] = includes/base.inc
 files[] = includes/handlers.inc
 files[] = includes/plugins.inc
 ; Modules

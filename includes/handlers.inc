@@ -8,6 +8,7 @@
 use Drupal\Core\Database\Database;
 use Drupal\views\View;
 use Drupal\views\Join;
+use Drupal\views\ViewsObject;
 
 /**
  * Instantiate and construct a new handler
@@ -134,8 +135,6 @@ function views_get_table_join($table, $base_table) {
  * It creates a common interface to create consistency amongst
  * handlers and data.
  *
- * This class would be abstract in PHP5, but PHP4 doesn't understand that.
- *
  * Definition terms:
  * - table: The actual table this uses; only specify if different from
  *          the table this is attached to.
@@ -155,7 +154,7 @@ function views_get_table_join($table, $base_table) {
  *                    control is provided.
  * - access arguments: An array of arguments for the access callback.
  */
-class views_handler extends views_object {
+abstract class views_handler extends ViewsObject {
   /**
    * The top object of a view.
    *

@@ -2,13 +2,15 @@
 
 /**
  * @file
- * Provides the basic object definitions used by plugins and handlers.
+ * Definition of Drupal\views\ViewsObject;
  */
 
+namespace Drupal\views;
+
 /**
- * Basic definition for many views objects.
+ * Provides the basic object definitions used by plugins and handlers.
  */
-class views_object {
+class ViewsObject {
   /**
    * Except for displays, options for the object will be held here.
    */
@@ -48,8 +50,8 @@ class views_object {
    * @return array
    *   Returns the options of this handler/plugin.
    *
-   * @see views_object::export_option()
-   * @see views_object::unpack_translatable()
+   * @see Drupal\views\ViewsObject::export_option()
+   * @see Drupal\views\ViewsObject::unpack_translatable()
    */
   function option_definition() { return array(); }
 

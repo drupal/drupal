@@ -5,8 +5,7 @@
  * Built in plugins for Views output handling.
  */
 
-// @todo: Remove this once update.php can use the registry
-views_include('base');
+use Drupal\views\ViewsObject;
 
 /**
  * Implements hook_views_plugins().
@@ -467,7 +466,7 @@ function views_discover_plugins() {
 /**
  * Abstract base class to provide interface common to all plugins.
  */
-class views_plugin extends views_object {
+abstract class views_plugin extends ViewsObject {
   /**
    * The top object of a view.
    *

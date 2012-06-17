@@ -1108,7 +1108,6 @@ function views_include_handlers($reset = FALSE) {
     return;
   }
 
-  views_include('base');
   views_include('handlers');
   views_include('cache');
   views_include('plugins');
