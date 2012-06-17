@@ -167,4 +167,11 @@ class Node extends Entity {
     $duplicate->vid = NULL;
     return $duplicate;
   }
+
+  /**
+   * Overrides Drupal\entity\Entity::getRevisionId().
+   */
+  public function getRevisionId() {
+    return $this->vid;
+  }
 }

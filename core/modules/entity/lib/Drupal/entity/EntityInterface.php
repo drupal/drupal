@@ -187,4 +187,22 @@ interface EntityInterface {
    * @see entity_get_info()
    */
   public function entityInfo();
+
+  /**
+   * Returns the revision identifier of the entity.
+   *
+   * @return
+   *   The revision identifier of the entity, or NULL if the entity does not
+   *   have a revision identifier.
+   */
+  public function getRevisionId();
+
+  /**
+   * Checks if this entity is the current revision.
+   *
+   * @return bool
+   *   TRUE if the entity is the current revision, FALSE otherwise.
+   */
+  public function isCurrentRevision();
+
 }

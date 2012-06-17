@@ -75,6 +75,9 @@ class NodeRevisionsTest extends NodeTestBase {
       $this->assertText($log, t('Log message found.'));
     }
 
+    // Confirm that this is the current revision.
+    $this->assertTrue($node->isCurrentRevision(), 'Third node revision is the current one.');
+
     // Confirm that revisions revert properly.
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/revert", array(), t('Revert'));
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.',
@@ -82,6 +85,10 @@ class NodeRevisionsTest extends NodeTestBase {
                               '%revision-date' => format_date($nodes[1]->revision_timestamp))), t('Revision reverted.'));
     $reverted_node = node_load($node->nid);
     $this->assertTrue(($nodes[1]->body[LANGUAGE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[LANGUAGE_NOT_SPECIFIED][0]['value']), t('Node reverted correctly.'));
+
+    // Confirm that this is not the current version.
+    $node = node_load($node->nid, $node->vid);
+    $this->assertFalse($node->isCurrentRevision(), 'Third node revision is not the current one.');
 
     // Confirm revisions delete properly.
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/delete", array(), t('Delete'));

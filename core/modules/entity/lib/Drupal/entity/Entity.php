@@ -39,6 +39,13 @@ class Entity implements EntityInterface {
   protected $enforceIsNew;
 
   /**
+   * Indicates whether this is the current revision.
+   *
+   * @var bool
+   */
+  public $isCurrentRevision = TRUE;
+
+  /**
    * Constructs a new entity object.
    */
   public function __construct(array $values = array(), $entity_type) {
@@ -248,4 +255,19 @@ class Entity implements EntityInterface {
   public function entityInfo() {
     return entity_get_info($this->entityType);
   }
+
+  /**
+   * Implements Drupal\entity\EntityInterface::getRevisionId().
+   */
+  public function getRevisionId() {
+    return NULL;
+  }
+
+  /**
+   * Implements Drupal\entity\EntityInterface::isCurrentRevision().
+   */
+  public function isCurrentRevision() {
+    return $this->isCurrentRevision;
+  }
+
 }
