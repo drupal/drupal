@@ -7,6 +7,7 @@
 
 use Drupal\Core\Database\Database;
 use Drupal\views\View;
+use Drupal\views\Analyzer;
 
 /**
  * Create an array of Views admin CSS for adding or attaching.
@@ -3008,13 +3009,13 @@ function views_ui_analyze_view_form($form, &$form_state) {
   $form['#title'] = t('View analysis');
   $form['#section'] = 'analyze';
 
-  views_include('analyze');
-  $messages = views_analyze_view($view);
+  $analyzer = new Analyzer($view);
+  $messages = $analyzer->getMessages();
 
   $form['analysis'] = array(
     '#prefix' => '<div class="form-item">',
     '#suffix' => '</div>',
-    '#markup' => views_analyze_format_result($view, $messages),
+    '#markup' => $analyzer->formatMessages($messages),
   );
 
   // Inform the standard button function that we want an OK button.

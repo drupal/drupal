@@ -7,6 +7,8 @@
  * @ingroup views_module_handlers
  */
 
+use Drupal\views\Analyzer;
+
 /**
  * Implements hook_views_data().
  */
@@ -729,7 +731,7 @@ function node_views_analyze($view) {
             $roles[$role->rid] = $role;
           }
           if (!($roles['anonymous']->safe && $roles['authenticated']->safe)) {
-            $ret[] = views_ui_analysis(t('Some roles lack permission to access content, but display %display has no access control.', array('%display' => $display->display_title)), 'warning');
+            $ret[] = Analyzer::formatMessage(t('Some roles lack permission to access content, but display %display has no access control.', array('%display' => $display->display_title)), 'warning');
           }
           $filters = $display->handler->get_option('filters');
           foreach ($filters as $filter) {
@@ -737,7 +739,7 @@ function node_views_analyze($view) {
               continue 2;
             }
           }
-          $ret[] = views_ui_analysis(t('Display %display has no access control but does not contain a filter for published nodes.', array('%display' => $display->display_title)), 'warning');
+          $ret[] = Analyzer::formatMessage(t('Display %display has no access control but does not contain a filter for published nodes.', array('%display' => $display->display_title)), 'warning');
         }
       }
     }
@@ -745,7 +747,7 @@ function node_views_analyze($view) {
   foreach ($view->display as $id => $display) {
     if ($display->display_plugin == 'page') {
       if ($display->handler->get_option('path') == 'node/%') {
-        $ret[] = views_ui_analysis(t('Display %display has set node/% as path. This will not produce what you want. If you want to have multiple versions of the node view, use panels.', array('%display' => $display->display_title)), 'warning');
+        $ret[] = Analyzer::formatMessage(t('Display %display has set node/% as path. This will not produce what you want. If you want to have multiple versions of the node view, use panels.', array('%display' => $display->display_title)), 'warning');
       }
     }
   }

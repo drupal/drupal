@@ -8,6 +8,8 @@
  * views-revert - Drush command to revert views overridden in the system.
  */
 
+use Drupal\views\Analyzer;
+
 /**
  * Implement hook_drush_help().
  */
@@ -423,9 +425,11 @@ function drush_views_analyze() {
   $messages_count = 0;
   $total = 0;
 
+  $analyzer = new Analyzer();
   foreach (views_get_all_views() as $view_name => $view) {
     $total++;
-    if ($messages = views_analyze_view($view)) {
+    $analyzer->setView($view);
+    if ($messages = $analyzer->getMessages($view)) {
       drush_print($view_name);
       foreach ($messages as $message) {
         $messages_count++;
