@@ -2,15 +2,18 @@
 
 /**
  * @file
- * Definition of ViewsPluginDisplayTestCase.
+ * Definition of Drupal\views\Tests\Plugins\DisplayTestCase.
  */
 
+namespace Drupal\views\Tests\Plugins;
+
+use ViewsSqlTest;
 use Drupal\views\View;
 
 /**
  *
  */
-class ViewsPluginDisplayTestCase extends ViewsSqlTest {
+class DisplayTestCase extends ViewsSqlTest {
 
   public static function getInfo() {
     return array(

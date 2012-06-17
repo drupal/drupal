@@ -2,15 +2,18 @@
 
 /**
  * @file
- * Definition of viewsHandlerArgumentCommentUserUidTest.
+ * Definition of Drupal\views\Tests\Comment\ArgumentCommentUserUidTest.
  */
 
+namespace Drupal\views\Tests\Comment;
+
+use ViewsSqlTest;
 use Drupal\views\View;
 
 /**
  * Tests the argument_comment_user_uid handler.
  */
-class viewsHandlerArgumentCommentUserUidTest extends ViewsSqlTest {
+class ArgumentCommentUserUidTest extends ViewsSqlTest {
   protected $profile = 'standard';
 
   public static function getInfo() {
