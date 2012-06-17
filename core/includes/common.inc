@@ -993,7 +993,7 @@ function drupal_http_request($url, array $options = array()) {
 /**
  * Verifies the syntax of the given e-mail address.
  *
- * Empty e-mail addresses are allowed. See RFC 2822 for details.
+ * See @link http://tools.ietf.org/html/rfc5321 RFC 5321 @endlink for details.
  *
  * @param $mail
  *   A string containing an e-mail address.
