@@ -2860,7 +2860,7 @@ function hook_install() {
  *   to run mymodule 8.x-1.*.
  * - mymodule_update_8200(): This is the first update to get the database ready
  *   to run mymodule 8.x-2.*. Users can directly update from 7.x-2.* to 8.x-2.*
- *   and they get all 80xx  and 82xx updates, but not 81xx updates, because
+ *   and they get all 80xx and 82xx updates, but not 81xx updates, because
  *   those reside in the 8.x-1.x branch only.
  *
  * A good rule of thumb is to remove updates older than two major releases of
