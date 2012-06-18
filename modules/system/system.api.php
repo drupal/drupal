@@ -3248,33 +3248,30 @@ function hook_install() {
 /**
  * Perform a single update.
  *
- * For each patch which requires a database change add a new hook_update_N()
- * which will be called by update.php. The database updates are numbered
- * sequentially according to the version of Drupal you are compatible with.
+ * For each change that requires one or more actions to be performed when
+ * updating a site, add a new hook_update_N(), which will be called by
+ * update.php. The documentation block preceding this function is stripped of
+ * newlines and used as the description for the update on the pending updates
+ * task list. Schema updates should adhere to the
+ * @link http://drupal.org/node/150215 Schema API. @endlink
  *
- * Schema updates should adhere to the Schema API:
- * @link http://drupal.org/node/150215 http://drupal.org/node/150215 @endlink
- *
- * Database updates consist of 3 parts:
- * - 1 digit for Drupal core compatibility
- * - 1 digit for your module's major release version (e.g. is this the 5.x-1.* (1) or 5.x-2.* (2) series of your module?)
- * - 2 digits for sequential counting starting with 00
- *
- * The 2nd digit should be 0 for initial porting of your module to a new Drupal
- * core API.
+ * Implementations of hook_update_N() are named (module name)_update_(number).
+ * The numbers are composed of three parts:
+ * - 1 digit for Drupal core compatibility.
+ * - 1 digit for your module's major release version (e.g., is this the 7.x-1.*
+ *   (1) or 7.x-2.* (2) series of your module?). This digit should be 0 for
+ *   initial porting of your module to a new Drupal core API.
+ * - 2 digits for sequential counting, starting with 00.
  *
  * Examples:
- * - mymodule_update_5200()
- *   - This is the first update to get the database ready to run mymodule 5.x-2.*.
- * - mymodule_update_6000()
- *   - This is the required update for mymodule to run with Drupal core API 6.x.
- * - mymodule_update_6100()
- *   - This is the first update to get the database ready to run mymodule 6.x-1.*.
- * - mymodule_update_6200()
- *   - This is the first update to get the database ready to run mymodule 6.x-2.*.
- *     Users can directly update from 5.x-2.* to 6.x-2.* and they get all 60XX
- *     and 62XX updates, but not 61XX updates, because those reside in the
- *     6.x-1.x branch only.
+ * - mymodule_update_7000(): This is the required update for mymodule to run
+ *   with Drupal core API 7.x when upgrading from Drupal core API 6.x.
+ * - mymodule_update_7100(): This is the first update to get the database ready
+ *   to run mymodule 7.x-1.*.
+ * - mymodule_update_7200(): This is the first update to get the database ready
+ *   to run mymodule 7.x-2.*. Users can directly update from 6.x-2.* to 7.x-2.*
+ *   and they get all 70xx and 72xx updates, but not 71xx updates, because
+ *   those reside in the 7.x-1.x branch only.
  *
  * A good rule of thumb is to remove updates older than two major releases of
  * Drupal. See hook_update_last_removed() to notify Drupal about the removals.
@@ -3293,8 +3290,8 @@ function hook_install() {
  * information between successive calls, and the $sandbox['#finished'] value
  * to provide feedback regarding completion level.
  *
- * See the batch operations page for more information on how to use the batch API:
- * @link http://drupal.org/node/180528 http://drupal.org/node/180528 @endlink
+ * See the batch operations page for more information on how to use the
+ * @link http://drupal.org/node/180528 Batch API. @endlink
  *
  * @param $sandbox
  *   Stores information for multipass updates. See above for more information.
@@ -3305,9 +3302,14 @@ function hook_install() {
  *   reason, it will throw a PDOException.
  *
  * @return
- *   Optionally update hooks may return a translated string that will be displayed
- *   to the user. If no message is returned, no message will be presented to the
- *   user.
+ *   Optionally, update hooks may return a translated string that will be
+ *   displayed to the user after the update has completed. If no message is
+ *   returned, no message will be presented to the user.
+ *
+ * @see batch
+ * @see schemaapi
+ * @see hook_update_last_removed()
+ * @see update_get_update_list()
  */
 function hook_update_N(&$sandbox) {
   // For non-multipass updates, the signature can simply be;
