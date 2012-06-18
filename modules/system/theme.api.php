@@ -93,11 +93,13 @@ function hook_form_system_theme_settings_alter(&$form, &$form_state) {
 }
 
 /**
- * Preprocess theme variables.
+ * Preprocess theme variables for templates.
  *
  * This hook allows modules to preprocess theme variables for theme templates.
- * It is called for all invocations of theme(), to allow modules to add to
- * or override variables for all theme hooks.
+ * It is called for all theme hooks implemented as templates, but not for theme
+ * hooks implemented as functions. hook_preprocess_HOOK() can be used to
+ * preprocess variables for a specific theme hook, whether implemented as a
+ * template or function.
  *
  * For more detailed information, see theme().
  *
@@ -159,11 +161,13 @@ function hook_preprocess_HOOK(&$variables) {
 }
 
 /**
- * Process theme variables.
+ * Process theme variables for templates.
  *
- * This hook allows modules to process theme variables for theme templates.
- * It is called for all invocations of theme(), to allow modules to add to
- * or override variables for all theme hooks.
+ * This hook allows modules to process theme variables for theme templates. It
+ * is called for all theme hooks implemented as templates, but not for theme
+ * hooks implemented as functions. hook_process_HOOK() can be used to process
+ * variables for a specific theme hook, whether implemented as a template or
+ * function.
  *
  * For more detailed information, see theme().
  *
@@ -199,7 +203,11 @@ function hook_process(&$variables, $hook) {
  *   The variables array (modify in place).
  */
 function hook_process_HOOK(&$variables) {
-  $variables['classes'] .= ' my_added_class';
+  // @todo There are no use-cases in Drupal core for this hook. Find one from a
+  //   contributed module, or come up with a good example. Coming up with a good
+  //   example might be tough, since the intent is for nearly everything to be
+  //   achievable via preprocess functions, and for process functions to only be
+  //   used when requiring the later execution time.
 }
 
 /**
