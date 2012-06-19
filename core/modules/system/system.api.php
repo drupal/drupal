@@ -634,7 +634,7 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  * is invoked to retrieve a value that is used in the path in place of the
  * wildcard. A good example is user.module, which defines
  * user_uid_optional_to_arg() (corresponding to the menu entry
- * 'user/%user_uid_optional'). This function returns the user ID of the
+ * 'tracker/%user_uid_optional'). This function returns the user ID of the
  * current user.
  *
  * The _to_arg() function will get called with three arguments:
