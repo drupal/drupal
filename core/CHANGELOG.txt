@@ -37,6 +37,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Made interface translation directly accessible from language list.
       * Centralized interface translation import to one directory.
       * Drupal can now be translated to English and English can be deleted.
+      * Much improved built-in translation interface.
       * Added support for singular/plural discovery and translation.
       * Customized translations are tracked so your modifications can
         be identified and protected from translation update overwrites.
