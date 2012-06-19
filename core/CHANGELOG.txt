@@ -48,6 +48,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Added language options to block visibility.
     * Much improved language APIs for developers:
       * Added simple APIs and hooks to save/delete/update languages.
+      * New Language class wraps language information, used universally.
       * Unified database schemas and APIs to make it easier to spot where
         language codes are referenced.
       * Made the language negotiation system APIs more consistent for
