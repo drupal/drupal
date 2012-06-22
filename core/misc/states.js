@@ -108,8 +108,8 @@ states.Dependent.prototype = {
         this.values[selector][state.name] = null;
 
         // Monitor state changes of the specified state for this dependee.
-        $(selector).bind('state:' + state, $.proxy(function (e) {
-          this.update(selector, state, e.value);
+        $(selector).bind('state:' + state, {selector: selector, state: state}, $.proxy(function (e) {
+          this.update(e.data.selector, e.data.state, e.value);
         }, this));
 
         // Make sure the event we just bound ourselves to is actually fired.
