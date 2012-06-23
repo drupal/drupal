@@ -12,7 +12,7 @@ class HttpMethodMatcher implements PartialMatcherInterface {
 
   protected $routes;
 
-  public function __construct(RouteCollection $routes) {
+  public function setCollection(RouteCollection $routes) {
     $this->routes = $routes;
   }
 
@@ -25,7 +25,7 @@ class HttpMethodMatcher implements PartialMatcherInterface {
    * @return RouteCollection
    *   A RouteCollection of matched routes.
    */
-  public function matchByRequest(Request $request) {
+  public function matchRequestPartial(Request $request) {
 
     $method = $request->getMethod();
 

@@ -3,14 +3,11 @@
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * A PartialMatcher works like a UrlMatcher, but will return multiple candidate routes.
  */
-interface PartialMatcherInterface {
-
-  public function setCollection(RouteCollection $collection);
+interface InitialMatcherInterface {
 
   /**
    * Matches a request against multiple routes.

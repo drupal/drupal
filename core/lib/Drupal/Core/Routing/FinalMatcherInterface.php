@@ -8,7 +8,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * A PartialMatcher works like a UrlMatcher, but will return multiple candidate routes.
  */
-interface PartialMatcherInterface {
+interface FinalMatcherInterface {
 
   public function setCollection(RouteCollection $collection);
 
@@ -21,5 +21,5 @@ interface PartialMatcherInterface {
    * @return RouteCollection
    *   A RouteCollection of matched routes.
    */
-  public function matchRequestPartial(Request $request);
+  public function matchRequest(Request $request);
 }

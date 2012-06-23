@@ -2,12 +2,26 @@
 
 namespace Drupal\Core\Routing;
 
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 /**
  * A NestedMatcher allows for multiple-stage resolution of a route.
  */
-interface NestedMatcherInterface extends UrlMatcherInterface {
+interface NestedMatcherInterface extends RequestMatcherInterface {
+
+  /**
+   * Sets the first matcher for the matching plan.
+   *
+   * Partial matchers will be run in the order in which they are added.
+   *
+   * @param InitialMatcherInterface $matcher
+   *   An initial matcher.  It is responsible for its own configuration and
+   *   initial route collection
+   *
+   * @return NestedMatcherInterface
+   *   The current matcher.
+   */
+  public function setInitialMatcher(InitialMatcherInterface $initial);
 
   /**
    * Adds a partial matcher to the matching plan.
@@ -15,7 +29,7 @@ interface NestedMatcherInterface extends UrlMatcherInterface {
    * Partial matchers will be run in the order in which they are added.
    *
    * @param PartialMatcherInterface $matcher
-   *   A partial
+   *   A partial matcher.
    *
    * @return NestedMatcherInterface
    *   The current matcher.
@@ -32,5 +46,5 @@ interface NestedMatcherInterface extends UrlMatcherInterface {
    * @return NestedMatcherInterface
    *   The current matcher.
    */
-  public function setFinalMatcher(UrlMatcherInterface $final);
+  public function setFinalMatcher(FinalMatcherInterface $final);
 }
