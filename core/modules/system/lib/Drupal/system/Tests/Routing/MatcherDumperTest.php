@@ -12,12 +12,12 @@ use Symfony\Component\Routing\RouteCollection;
 
 use Drupal\simpletest\UnitTestBase;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Routing\UrlMatcherDumper;
+use Drupal\Core\Routing\MatcherDumper;
 
 /**
  * Basic tests for the UrlMatcherDumper.
  */
-class UrlMatcherDumperTest extends UnitTestBase {
+class MatcherDumperTest extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Dumper tests',
@@ -35,9 +35,9 @@ class UrlMatcherDumperTest extends UnitTestBase {
    */
   function testCreate() {
     $connection = Database::getConnection();
-    $dumper= new UrlMatcherDumper($connection);
+    $dumper= new MatcherDumper($connection);
 
-    $class_name = 'Drupal\Core\Routing\UrlMatcherDumper';
+    $class_name = 'Drupal\Core\Routing\MatcherDumper';
     $this->assertTrue($dumper instanceof $class_name, t('Dumper created successfully'));
   }
 
@@ -46,7 +46,7 @@ class UrlMatcherDumperTest extends UnitTestBase {
    */
   function testAddRoutes() {
     $connection = Database::getConnection();
-    $dumper= new UrlMatcherDumper($connection);
+    $dumper= new MatcherDumper($connection);
 
     $route = new Route('test');
     $collection = new RouteCollection();
@@ -67,7 +67,7 @@ class UrlMatcherDumperTest extends UnitTestBase {
    */
   function testAddAdditionalRoutes() {
     $connection = Database::getConnection();
-    $dumper= new UrlMatcherDumper($connection);
+    $dumper= new MatcherDumper($connection);
 
     $route = new Route('test');
     $collection = new RouteCollection();
@@ -103,7 +103,7 @@ class UrlMatcherDumperTest extends UnitTestBase {
    */
   public function testDump() {
     $connection = Database::getConnection();
-    $dumper= new UrlMatcherDumper($connection, 'test_routes');
+    $dumper= new MatcherDumper($connection, 'test_routes');
 
     $route = new Route('/test/{my}/path');
     $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');

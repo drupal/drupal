@@ -9,9 +9,9 @@ use Symfony\Component\Routing\RouteCollection;
 use Drupal\Core\Database\Connection;
 
 /**
- * Description of UrlMatcherDumper.
+ * Dumps Route information to a database table.
  */
-class UrlMatcherDumper implements MatcherDumperInterface {
+class MatcherDumper implements MatcherDumperInterface {
 
   /**
    * The maximum number of path elements for a route pattern;
