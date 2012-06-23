@@ -97,7 +97,7 @@ jQuery.fn.fieldUIPopulateOptions = function (options, selected) {
       html += '<option value="' + value + '"' + (is_selected ? ' selected="selected"' : '') + '>' + text + '</option>';
     });
 
-    $(this).html(html).attr('disabled', disabled ? 'disabled' : '');
+    $(this).html(html).attr('disabled', disabled ? 'disabled' : false);
   });
 };
 

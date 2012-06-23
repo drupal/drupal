@@ -110,7 +110,7 @@ Drupal.file = Drupal.file || {
     var $fieldsToTemporarilyDisable = $('div.form-managed-file input.form-file').not($enabledFields).not(':disabled');
     $fieldsToTemporarilyDisable.attr('disabled', 'disabled');
     setTimeout(function (){
-      $fieldsToTemporarilyDisable.attr('disabled', '');
+      $fieldsToTemporarilyDisable.attr('disabled', false);
     }, 1000);
   },
   /**
