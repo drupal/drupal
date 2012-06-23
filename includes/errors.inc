@@ -230,8 +230,10 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
   if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     if ($fatal) {
-      // When called from JavaScript, simply output the error message.
-      print t('%type: !message in %function (line %line of %file).', $error);
+      if (error_displayable($error)) {
+        // When called from JavaScript, simply output the error message.
+        print t('%type: !message in %function (line %line of %file).', $error);
+      }
       exit;
     }
   }

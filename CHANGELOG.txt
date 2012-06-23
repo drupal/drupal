@@ -19,6 +19,7 @@ Drupal 7.15, xxxx-xx-xx (development version)
   correctly.
 - Fixed bug: Language detection by domain only worked on port 80.
 - Fixed bug which prevented image styles from being deleted on PHP 5.4.
+- Made Ajax alert dialogs respect error reporting settings.
 
 Drupal 7.14 2012-05-02
 ----------------------
