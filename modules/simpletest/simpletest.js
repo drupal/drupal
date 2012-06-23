@@ -7,49 +7,50 @@ Drupal.behaviors.simpleTestMenuCollapse = {
   attach: function (context, settings) {
     var timeout = null;
     // Adds expand-collapse functionality.
-    $('div.simpletest-image').each(function () {
-      direction = settings.simpleTest[$(this).attr('id')].imageDirection;
-      $(this).html(settings.simpleTest.images[direction]);
-    });
-
-    // Adds group toggling functionality to arrow images.
-    $('div.simpletest-image').click(function () {
-      var trs = $(this).closest('tbody').children('.' + settings.simpleTest[this.id].testClass);
+    $('div.simpletest-image').once('simpletest-image', function () {
+      var $this = $(this);
       var direction = settings.simpleTest[this.id].imageDirection;
-      var row = direction ? trs.length - 1 : 0;
+      $this.html(settings.simpleTest.images[direction]);
 
-      // If clicked in the middle of expanding a group, stop so we can switch directions.
-      if (timeout) {
-        clearTimeout(timeout);
-      }
+      // Adds group toggling functionality to arrow images.
+      $this.click(function () {
+        var trs = $this.closest('tbody').children('.' + settings.simpleTest[this.id].testClass);
+        var direction = settings.simpleTest[this.id].imageDirection;
+        var row = direction ? trs.length - 1 : 0;
 
-      // Function to toggle an individual row according to the current direction.
-      // We set a timeout of 20 ms until the next row will be shown/hidden to
-      // create a sliding effect.
-      function rowToggle() {
-        if (direction) {
-          if (row >= 0) {
-            $(trs[row]).hide();
-            row--;
-            timeout = setTimeout(rowToggle, 20);
+        // If clicked in the middle of expanding a group, stop so we can switch directions.
+        if (timeout) {
+          clearTimeout(timeout);
+        }
+
+        // Function to toggle an individual row according to the current direction.
+        // We set a timeout of 20 ms until the next row will be shown/hidden to
+        // create a sliding effect.
+        function rowToggle() {
+          if (direction) {
+            if (row >= 0) {
+              $(trs[row]).hide();
+              row--;
+              timeout = setTimeout(rowToggle, 20);
+            }
+          }
+          else {
+            if (row < trs.length) {
+              $(trs[row]).removeClass('js-hide').show();
+              row++;
+              timeout = setTimeout(rowToggle, 20);
+            }
           }
         }
-        else {
-          if (row < trs.length) {
-            $(trs[row]).removeClass('js-hide').show();
-            row++;
-            timeout = setTimeout(rowToggle, 20);
-          }
-        }
-      }
 
-      // Kick-off the toggling upon a new click.
-      rowToggle();
+        // Kick-off the toggling upon a new click.
+        rowToggle();
 
-      // Toggle the arrow image next to the test group title.
-      $(this).html(settings.simpleTest.images[(direction ? 0 : 1)]);
-      settings.simpleTest[this.id].imageDirection = !direction;
+        // Toggle the arrow image next to the test group title.
+        $this.html(settings.simpleTest.images[(direction ? 0 : 1)]);
+        settings.simpleTest[this.id].imageDirection = !direction;
 
+      });
     });
   }
 };
@@ -60,7 +61,7 @@ Drupal.behaviors.simpleTestMenuCollapse = {
  */
 Drupal.behaviors.simpleTestSelectAll = {
   attach: function (context, settings) {
-    $('td.simpletest-select-all').each(function () {
+    $('td.simpletest-select-all').once('simpletest-select-all', function () {
       var testCheckboxes = settings.simpleTest['simpletest-test-group-' + $(this).attr('id')].testNames;
       var groupCheckbox = $('<input type="checkbox" class="form-checkbox" id="' + $(this).attr('id') + '-select-all" />');
 
