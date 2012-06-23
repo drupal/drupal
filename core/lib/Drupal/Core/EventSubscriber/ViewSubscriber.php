@@ -10,7 +10,7 @@ namespace Drupal\Core\EventSubscriber;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Drupal\Core\ContentNegotiation;
@@ -39,10 +39,10 @@ class ViewSubscriber implements EventSubscriberInterface {
    * from an JSON-type response is a JSON string, so just wrap it into a
    * Response object.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
    *   The Event to process.
    */
-  public function onView(GetResponseEvent $event) {
+  public function onView(GetResponseForControllerResultEvent $event) {
 
     $request = $event->getRequest();
 
@@ -56,7 +56,7 @@ class ViewSubscriber implements EventSubscriberInterface {
     }
   }
 
-  public function onJson(GetResponseEvent $event) {
+  public function onJson(GetResponseForControllerResultEvent $event) {
     $page_callback_result = $event->getControllerResult();
 
     $response = new JsonResponse();
@@ -65,7 +65,7 @@ class ViewSubscriber implements EventSubscriberInterface {
     return $response;
   }
 
-  public function onAjax(GetResponseEvent $event) {
+  public function onAjax(GetResponseForControllerResultEvent $event) {
     $page_callback_result = $event->getControllerResult();
 
     // Construct the response content from the page callback result.
@@ -79,7 +79,7 @@ class ViewSubscriber implements EventSubscriberInterface {
     return $response;
   }
 
-  public function onIframeUpload(GetResponseEvent $event) {
+  public function onIframeUpload(GetResponseForControllerResultEvent $event) {
     $page_callback_result = $event->getControllerResult();
 
     // Construct the response content from the page callback result.
@@ -106,10 +106,10 @@ class ViewSubscriber implements EventSubscriberInterface {
    * an HTML-type response is a render array from a legacy page callback and
    * render it.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
    *   The Event to process.
    */
-  public function onHtml(GetResponseEvent $event) {
+  public function onHtml(GetResponseForControllerResultEvent $event) {
     $page_callback_result = $event->getControllerResult();
     return new Response(drupal_render_page($page_callback_result));
   }
