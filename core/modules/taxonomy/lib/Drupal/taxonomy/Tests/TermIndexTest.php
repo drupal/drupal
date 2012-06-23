@@ -140,7 +140,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
       ':tid' => $term_1->tid,
-      ))->fetchField();
+    ))->fetchField();
     $this->assertEqual(0, $index_count, 'Term 1 is not indexed.');
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->nid,
