@@ -78,7 +78,7 @@ Drupal.behaviors.simpleTestSelectAll = {
             }
           });
         }
-        $(groupCheckbox).attr('checked', (checkedTests == testCheckboxes.length));
+        $(groupCheckbox).attr('checked', (checkedTests === testCheckboxes.length));
       };
 
       // Have the single-test checkboxes follow the group checkbox.

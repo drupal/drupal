@@ -41,7 +41,7 @@ Drupal.behaviors.shortcutDrag = {
           }
         });
         var total = slots - count;
-        if (total == -1) {
+        if (total === -1) {
           var disabled = $(table).find('tr.shortcut-status-disabled');
           // To maintain the shortcut links limit, we need to move the last
           // element from the enabled section to the disabled section.
@@ -57,7 +57,7 @@ Drupal.behaviors.shortcutDrag = {
             tableDrag.rowStatusChange(changedRowObject);
           }
         }
-        else if (total != visibleLength) {
+        else if (total !== visibleLength) {
           if (total > visibleLength) {
             // Less slots on screen than needed.
             $('.shortcut-slot-empty:hidden:last').show();

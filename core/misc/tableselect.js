@@ -11,7 +11,7 @@ Drupal.behaviors.tableSelect = {
 
 Drupal.tableSelect = function () {
   // Do not add a "Select all" checkbox if there are no rows with checkboxes in the table
-  if ($(this).find('td input:checkbox').length == 0) {
+  if ($(this).find('td input:checkbox').length === 0) {
     return;
   }
 
@@ -49,13 +49,13 @@ Drupal.tableSelect = function () {
     // If this is a shift click, we need to highlight everything in the range.
     // Also make sure that we are actually checking checkboxes over a range and
     // that a checkbox has been checked or unchecked before.
-    if (e.shiftKey && lastChecked && lastChecked != e.target) {
+    if (e.shiftKey && lastChecked && lastChecked !== e.target) {
       // We use the checkbox's parent TR to do our range searching.
       Drupal.tableSelectRange($(e.target).closest('tr')[0], $(lastChecked).closest('tr')[0], e.target.checked);
     }
 
     // If all checkboxes are checked, make sure the select-all one is checked too, otherwise keep unchecked.
-    updateSelectAll((checkboxes.length == checkboxes.filter(':checked').length));
+    updateSelectAll((checkboxes.length === checkboxes.filter(':checked').length));
 
     // Keep track of the last checked checkbox.
     lastChecked = e.target;
@@ -69,7 +69,7 @@ Drupal.tableSelectRange = function (from, to, state) {
   // Traverse through the sibling nodes.
   for (var i = from[mode], $i; i; i = i[mode]) {
     // Make sure that we're only dealing with elements.
-    if (i.nodeType != 1) {
+    if (i.nodeType !== 1) {
       continue;
     }
     $i = $(i);
@@ -81,7 +81,7 @@ Drupal.tableSelectRange = function (from, to, state) {
 
     if (to.nodeType) {
       // If we are at the end of the range, stop.
-      if (i == to) {
+      if (i === to) {
         break;
       }
     }

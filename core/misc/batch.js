@@ -12,7 +12,7 @@ Drupal.behaviors.batch = {
 
       // Success: redirect to the summary.
       var updateCallback = function (progress, status, pb) {
-        if (progress == 100) {
+        if (progress === '100') {
           pb.stopMonitoring();
           window.location = settings.batch.uri + '&op=finished';
         }

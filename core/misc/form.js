@@ -22,7 +22,7 @@ $.fn.drupalSetSummary = function (callback) {
 
   // To facilitate things, the callback should always be a function. If it's
   // not, we wrap it into an anonymous function which just returns the value.
-  if (typeof callback != 'function') {
+  if (typeof callback !== 'function') {
     var val = callback;
     callback = function () { return val; };
   }

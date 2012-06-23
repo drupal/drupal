@@ -31,7 +31,7 @@ Drupal.toolbar.init = function() {
   var collapsed = $.cookie('Drupal.toolbar.collapsed');
 
   // Expand or collapse the toolbar based on the cookie value.
-  if (collapsed == 1) {
+  if (collapsed === '1') {
     Drupal.toolbar.collapse();
   }
   else {

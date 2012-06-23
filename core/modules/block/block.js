@@ -10,7 +10,7 @@ Drupal.behaviors.blockSettingsSummary = {
     // The drupalSetSummary method required for this behavior is not available
     // on the Blocks administration page, so we need to make sure this
     // behavior is processed only if drupalSetSummary is defined.
-    if (typeof jQuery.fn.drupalSetSummary == 'undefined') {
+    if (typeof jQuery.fn.drupalSetSummary === 'undefined') {
       return;
     }
 
@@ -42,7 +42,7 @@ Drupal.behaviors.blockSettingsSummary = {
 
     $('#edit-user').drupalSetSummary(function (context) {
       var $radio = $(context).find('input[name="custom"]:checked');
-      if ($radio.val() == 0) {
+      if ($radio.val() === 0) {
         return Drupal.t('Not customizable');
       }
       else {
@@ -61,7 +61,7 @@ Drupal.behaviors.blockSettingsSummary = {
 Drupal.behaviors.blockDrag = {
   attach: function (context, settings) {
     // tableDrag is required and we should be on the blocks admin page.
-    if (typeof Drupal.tableDrag == 'undefined' || typeof Drupal.tableDrag.blocks == 'undefined') {
+    if (typeof Drupal.tableDrag === 'undefined' || typeof Drupal.tableDrag.blocks === 'undefined') {
       return;
     }
 
@@ -88,7 +88,7 @@ Drupal.behaviors.blockDrag = {
       var regionName = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
       var regionField = $rowElement.find('select.block-region-select');
       // Check whether the newly picked region is available for this block.
-      if (regionField.find('option[value=' + regionName + ']').length == 0) {
+      if (regionField.find('option[value=' + regionName + ']').length === 0) {
         // If not, alert the user and keep the block in its old region setting.
         alert(Drupal.t('The block cannot be placed in this region.'));
         // Simulate that there was a selected element change, so the row is put
@@ -129,14 +129,14 @@ Drupal.behaviors.blockDrag = {
       table.find('tr.region-message').each(function () {
         var $this = $(this);
         // If the dragged row is in this region, but above the message row, swap it down one space.
-        if ($this.prev('tr').get(0) == rowObject.element) {
+        if ($this.prev('tr').get(0) === rowObject.element) {
           // Prevent a recursion problem when using the keyboard to move rows up.
-          if ((rowObject.method != 'keyboard' || rowObject.direction == 'down')) {
+          if ((rowObject.method !== 'keyboard' || rowObject.direction === 'down')) {
             rowObject.swap('after', this);
           }
         }
         // This region has become empty.
-        if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length == 0) {
+        if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length === 0) {
           $this.removeClass('region-populated').addClass('region-empty');
         }
         // This region has become populated.

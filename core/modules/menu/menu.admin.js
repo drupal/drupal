@@ -37,7 +37,7 @@ Drupal.menu_update_parent_list = function () {
       // Add new options to dropdown.
       jQuery.each(options, function(index, value) {
         $('fieldset#edit-menu #edit-menu-parent').append(
-          $('<option ' + (index == selected ? ' selected="selected"' : '') + '></option>').val(index).text(value)
+          $('<option ' + (index === selected ? ' selected="selected"' : '') + '></option>').val(index).text(value)
         );
       });
     }

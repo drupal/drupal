@@ -31,12 +31,12 @@ Drupal.behaviors.setTimezone = {
       var isDaylightSavingTime;
       // If the offset from UTC is identical on January 1 and July 1,
       // assume daylight saving time is not used in this time zone.
-      if (offsetJan == offsetJul) {
+      if (offsetJan === offsetJul) {
         isDaylightSavingTime = '';
       }
       // If the maximum annual offset is equivalent to the current offset,
       // assume daylight saving time is in effect.
-      else if (Math.max(offsetJan, offsetJul) == offsetNow) {
+      else if (Math.max(offsetJan, offsetJul) === offsetNow) {
         isDaylightSavingTime = 1;
       }
       // Otherwise, assume daylight saving time is not in effect.

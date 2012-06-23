@@ -2,7 +2,7 @@
  * @file
  * Attaches the behaviors for the Field UI module.
  */
- 
+
 (function($) {
 
 "use strict";
@@ -54,11 +54,11 @@ Drupal.fieldUIFieldOverview = {
       this.targetTextfield
         .data('field_ui_edited', false)
         .bind('keyup', function (e) {
-          $(this).data('field_ui_edited', $(this).val() != '');
+          $(this).data('field_ui_edited', $(this).val() !== '');
         });
 
       $this.bind('change keyup', function (e, updateText) {
-        var updateText = (typeof updateText == 'undefined' ? true : updateText);
+        var updateText = (typeof updateText === 'undefined' ? true : updateText);
         var selectedField = this.options[this.selectedIndex].value;
         var selectedFieldType = (selectedField in fields ? fields[selectedField].type : null);
         var selectedFieldWidget = (selectedField in fields ? fields[selectedField].widget : null);
@@ -85,7 +85,7 @@ Drupal.fieldUIFieldOverview = {
 jQuery.fn.fieldUIPopulateOptions = function (options, selected) {
   return this.each(function () {
     var disabled = false;
-    if (options.length == 0) {
+    if (options.length === 0) {
       options = [this.initialValue];
       disabled = true;
     }
@@ -99,7 +99,7 @@ jQuery.fn.fieldUIPopulateOptions = function (options, selected) {
     jQuery.each(options, function (value, text) {
       // Figure out which value should be selected. The 'selected' param
       // takes precedence.
-      var is_selected = ((typeof selected != 'undefined' && value == selected) || (typeof selected == 'undefined' && text == previousSelectedText));
+      var is_selected = ((typeof selected !== 'undefined' && value === selected) || (typeof selected === 'undefined' && text === previousSelectedText));
       html += '<option value="' + value + '"' + (is_selected ? ' selected="selected"' : '') + '>' + text + '</option>';
     });
 
@@ -154,7 +154,7 @@ Drupal.fieldUIOverview = {
 
     // Handle region change.
     var region = rowHandler.getRegion();
-    if (region != rowHandler.region) {
+    if (region !== rowHandler.region) {
       // Remove parenting.
       $row.find('select.field-parent').val('');
       // Let the row handler deal with the region change.
@@ -175,11 +175,11 @@ Drupal.fieldUIOverview = {
     var row = dragObject.rowObject.element;
     var $row = $(row);
     var rowHandler = $row.data('fieldUIRowHandler');
-    if (rowHandler !== undefined) {
+    if (typeof rowHandler === 'undefined') {
       var regionRow = $row.prevAll('tr.region-message').get(0);
       var region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
 
-      if (region != rowHandler.region) {
+      if (region !== rowHandler.region) {
         // Let the row handler deal with the region change.
         var refreshRows = rowHandler.regionChange(region);
         // Update the row region.
@@ -206,14 +206,14 @@ Drupal.fieldUIOverview = {
       var $this = $(this);
       // If the dragged row is in this region, but above the message row, swap
       // it down one space.
-      if ($this.prev('tr').get(0) == rowObject.group[rowObject.group.length - 1]) {
+      if ($this.prev('tr').get(0) === rowObject.group[rowObject.group.length - 1]) {
         // Prevent a recursion problem when using the keyboard to move rows up.
-        if ((rowObject.method != 'keyboard' || rowObject.direction == 'down')) {
+        if ((rowObject.method !== 'keyboard' || rowObject.direction === 'down')) {
           rowObject.swap('after', this);
         }
       }
       // This region has become empty.
-      if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length == 0) {
+      if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length === 0) {
         $this.removeClass('region-populated').addClass('region-empty');
       }
       // This region has become populated.
@@ -300,7 +300,7 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
    * Returns the region corresponding to the current form values of the row.
    */
   getRegion: function () {
-    return (this.$formatSelect.val() == 'hidden') ? 'hidden' : 'visible';
+    return (this.$formatSelect.val() === 'hidden') ? 'hidden' : 'visible';
   },
 
   /**
@@ -327,10 +327,10 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
     var currentValue = this.$formatSelect.val();
     switch (region) {
       case 'visible':
-        if (currentValue == 'hidden') {
+        if (currentValue === 'hidden') {
           // Restore the formatter back to the default formatter. Pseudo-fields do
           // not have default formatters, we just return to 'visible' for those.
-          var value = (this.defaultFormatter != undefined) ? this.defaultFormatter : 'visible';
+          var value = (typeof this.defaultFormatter !== 'undefined') ? this.defaultFormatter : 'visible';
         }
         break;
 
@@ -338,7 +338,7 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
         var value = 'hidden';
         break;
     }
-    if (value != undefined) {
+    if (typeof value !== 'undefined') {
       this.$formatSelect.val(value);
     }
 

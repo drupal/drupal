@@ -27,7 +27,7 @@ Drupal.behaviors.dashboard = {
       var $this = $(this);
       var empty_text = "";
       // If the region is empty
-      if ($this.find('.block').length == 0) {
+      if ($this.find('.block').length === 0) {
         // Check if we are in customize mode and grab the correct empty text
         if ($('#dashboard').hasClass('customize-mode')) {
           empty_text = Drupal.settings.dashboard.emptyRegionTextActive;
@@ -35,7 +35,7 @@ Drupal.behaviors.dashboard = {
           empty_text = Drupal.settings.dashboard.emptyRegionTextInactive;
         }
         // We need a placeholder.
-        if ($this.find('.placeholder').length == 0) {
+        if ($this.find('.placeholder').length === 0) {
           $this.append('<div class="placeholder"></div>');
         }
         $this.find('.placeholder').html(empty_text);

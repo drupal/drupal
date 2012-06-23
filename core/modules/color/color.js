@@ -12,7 +12,7 @@ Drupal.behaviors.color = {
     var i, j, colors, field_name;
     // This behavior attaches by ID, so is only valid once on a page.
     var form = $(context).find('#system-theme-settings .color-form').once('color');
-    if (form.length == 0) {
+    if (form.length === 0) {
       return;
     }
     var inputs = [];
@@ -45,7 +45,7 @@ Drupal.behaviors.color = {
       // Add rows (or columns for horizontal gradients).
       // Each gradient line should have a height (or width for horizontal
       // gradients) of 10px (because we divided the height/width by 10 above).
-      for (j = 0; j < (settings.gradients[i]['direction'] == 'vertical' ? height[i] : width[i]); ++j) {
+      for (j = 0; j < (settings.gradients[i]['direction'] === 'vertical' ? height[i] : width[i]); ++j) {
         gradient.append('<div class="gradient-line"></div>');
       }
     }
@@ -53,7 +53,7 @@ Drupal.behaviors.color = {
     // Set up colorScheme selector.
     form.find('#edit-scheme').change(function () {
       var schemes = settings.color.schemes, colorScheme = this.options[this.selectedIndex].value;
-      if (colorScheme != '' && schemes[colorScheme]) {
+      if (colorScheme !== '' && schemes[colorScheme]) {
         // Get colors of active scheme.
         colors = schemes[colorScheme];
         for (field_name in colors) {
@@ -76,8 +76,8 @@ Drupal.behaviors.color = {
      * This algorithm ensures relative ordering on the saturation and luminance
      * axes is preserved, and performs a simple hue shift.
      *
-     * It is also symmetrical. If: shift_color(c, a, b) == d, then
-     * shift_color(d, b, a) == c.
+     * It is also symmetrical. If: shift_color(c, a, b) === d, then
+     * shift_color(d, b, a) === c.
      */
     function shift_color(given, ref1, ref2) {
       // Convert to HSL.
@@ -87,7 +87,7 @@ Drupal.behaviors.color = {
       given[0] += ref2[0] - ref1[0];
 
       // Saturation: interpolate.
-      if (ref1[1] == 0 || ref2[1] == 0) {
+      if (ref1[1] === 0 || ref2[1] === 0) {
         given[1] = ref2[1];
       }
       else {
@@ -101,7 +101,7 @@ Drupal.behaviors.color = {
       }
 
       // Luminance: interpolate.
-      if (ref1[2] == 0 || ref2[2] == 0) {
+      if (ref1[2] === 0 || ref2[2] === 0) {
         given[2] = ref2[2];
       }
       else {
@@ -129,7 +129,7 @@ Drupal.behaviors.color = {
       });
 
       // Change input value.
-      if ($(input).val() && $(input).val() != color) {
+      if ($(input).val() && $(input).val() !== color) {
         $(input).val(color);
 
         // Update locked values.

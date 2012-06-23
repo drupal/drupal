@@ -22,7 +22,7 @@ Drupal.behaviors.verticalTabs = {
 
       // Check if there are some fieldsets that can be converted to vertical-tabs
       var $fieldsets = $this.find('> fieldset');
-      if ($fieldsets.length == 0) {
+      if ($fieldsets.length === 0) {
         return;
       }
 
@@ -42,7 +42,7 @@ Drupal.behaviors.verticalTabs = {
           .removeClass('collapsible collapsed')
           .addClass('vertical-tabs-pane')
           .data('verticalTab', vertical_tab);
-        if (this.id == focusID) {
+        if (this.id === focusID) {
           tab_focus = $this;
         }
       });
@@ -88,7 +88,7 @@ Drupal.verticalTab = function (settings) {
   // Keyboard events added:
   // Pressing the Enter key will open the tab pane.
   this.link.keydown(function(event) {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       self.focus();
       // Set focus on the first input field of the visible fieldset/tab pane.
       $("fieldset.vertical-tabs-pane :input:visible:enabled:first").focus();

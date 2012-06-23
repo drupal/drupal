@@ -35,7 +35,7 @@ Drupal.behaviors.copyFieldValue = {
         // Add the behavior to update target fields on blur of the primary field.
         for (var delta in targetIds) {
           var targetField = $('#' + targetIds[delta]);
-          if (targetField.val() == '') {
+          if (targetField.val() === '') {
             targetField.val(this.value);
           }
         }

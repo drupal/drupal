@@ -36,12 +36,12 @@ Drupal.behaviors.password = {
         var result = Drupal.evaluatePasswordStrength(passwordInput.val(), settings.password);
 
         // Update the suggestions for how to improve the password.
-        if (passwordDescription.html() != result.message) {
+        if (passwordDescription.html() !== result.message) {
           passwordDescription.html(result.message);
         }
 
         // Only show the description box if there is a weakness in the password.
-        if (result.strength == 100) {
+        if (result.strength === 100) {
           passwordDescription.hide();
         }
         else {

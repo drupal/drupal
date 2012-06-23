@@ -15,7 +15,7 @@
         this.logoChanged = true;
       }
       // Remove the logo if the setting is toggled off.
-      if (Drupal.settings.color.logo == null) {
+      if (Drupal.settings.color.logo === null) {
         $('div').remove('#preview-logo');
       }
 

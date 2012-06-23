@@ -245,12 +245,12 @@ Drupal.formatPlural = function (count, singular, plural, args, options) {
   args = args || {};
   args['@count'] = count;
   // Determine the index of the plural form.
-  var index = Drupal.locale.pluralFormula ? Drupal.locale.pluralFormula(args['@count']) : ((args['@count'] == 1) ? 0 : 1);
+  var index = Drupal.locale.pluralFormula ? Drupal.locale.pluralFormula(args['@count']) : ((args['@count'] === 1) ? 0 : 1);
 
-  if (index == 0) {
+  if (index === 0) {
     return Drupal.t(singular, args, options);
   }
-  else if (index == 1) {
+  else if (index === 1) {
     return Drupal.t(plural, args, options);
   }
   else {
@@ -322,7 +322,7 @@ Drupal.encodePath = function (item) {
  */
 Drupal.getSelection = function (element) {
   var range1, range2, start, end;
-  if (typeof element.selectionStart != 'number' && document.selection) {
+  if (typeof element.selectionStart !== 'number' && document.selection) {
     // The current selection.
     range1 = document.selection.createRange();
     range2 = range1.duplicate();
@@ -352,7 +352,7 @@ Drupal.ajaxError = function (xmlhttp, uri) {
   statusCode += "\n" + Drupal.t("Debugging information follows.");
   pathText = "\n" + Drupal.t("Path: !uri", {'!uri': uri} );
   statusText = '';
-  // In some cases, when statusCode == 0, xmlhttp.statusText may not be defined.
+  // In some cases, when statusCode === 0, xmlhttp.statusText may not be defined.
   // Unfortunately, testing for it with typeof, etc, doesn't seem to catch that
   // and the test causes an exception. So we need to catch the exception here.
   try {
@@ -372,7 +372,7 @@ Drupal.ajaxError = function (xmlhttp, uri) {
   responseText = responseText.replace(/[\n]+\s+/g,"\n");
 
   // We don't need readyState except for status == 0.
-  readyStateText = xmlhttp.status == 0 ? ("\n" + Drupal.t("ReadyState: !readyState", {'!readyState': xmlhttp.readyState})) : "";
+  readyStateText = xmlhttp.status === 0 ? ("\n" + Drupal.t("ReadyState: !readyState", {'!readyState': xmlhttp.readyState})) : "";
 
   message = statusCode + pathText + statusText + responseText + readyStateText;
   return message;

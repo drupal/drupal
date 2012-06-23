@@ -24,7 +24,7 @@ Drupal.behaviors.AJAX = {
     // Load all Ajax behaviors specified in the settings.
     for (var base in settings.ajax) {
       var element_settings = settings.ajax[base];
-      if (typeof element_settings.selector == 'undefined') {
+      if (typeof element_settings.selector === 'undefined') {
         element_settings.selector = '#' + base;
       }
       $(element_settings.selector).once('drupal-ajax', function() {
@@ -151,14 +151,14 @@ Drupal.ajax = function (base, element, element_settings) {
     success: function (response, status) {
       // Sanity check for browser support (object expected).
       // When using iFrame uploads, responses must be returned as a string.
-      if (typeof response == 'string') {
+      if (typeof response === 'string') {
         response = $.parseJSON(response);
       }
       return ajax.success(response, status);
     },
     complete: function (response, status) {
       ajax.ajaxing = false;
-      if (status == 'error' || status == 'parsererror') {
+      if (status === 'error' || status === 'parsererror') {
         return ajax.error(response, ajax.url);
       }
     },
@@ -206,7 +206,7 @@ Drupal.ajax.prototype.keypressResponse = function (element, event) {
   // except for form elements of type 'text' and 'textarea', where the
   // spacebar activation causes inappropriate activation if #ajax['keypress'] is
   // TRUE. On a text-type widget a space should always be a space.
-  if (event.which == 13 || (event.which == 32 && element.type != 'text' && element.type != 'textarea')) {
+  if (event.which === 13 || (event.which === 32 && element.type !== 'text' && element.type !== 'textarea')) {
     $(ajax.element_settings.element).trigger(ajax.element_settings.event);
     return false;
   }
@@ -257,7 +257,7 @@ Drupal.ajax.prototype.eventResponse = function (element, event) {
 
   // For radio/checkbox, allow the default event. On IE, this means letting
   // it actually check the box.
-  if (typeof element.type != 'undefined' && (element.type == 'checkbox' || element.type == 'radio')) {
+  if (typeof element.type !== 'undefined' && (element.type === 'checkbox' || element.type === 'radio')) {
     return true;
   }
   else {
@@ -352,7 +352,7 @@ Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
   $(this.element).addClass('progress-disabled').attr('disabled', true);
 
   // Insert progressbar or throbber.
-  if (this.progress.type == 'bar') {
+  if (this.progress.type === 'bar') {
     var progressBar = new Drupal.progressBar('ajax-progress-' + this.element.id, $.noop, this.progress.method, $.noop);
     if (this.progress.message) {
       progressBar.setProgress(-1, this.progress.message);
@@ -364,7 +364,7 @@ Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
     this.progress.object = progressBar;
     $(this.element).after(this.progress.element);
   }
-  else if (this.progress.type == 'throbber') {
+  else if (this.progress.type === 'throbber') {
     this.progress.element = $('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
     if (this.progress.message) {
       this.progress.element.find('.throbber').after('<div class="message">' + this.progress.message + '</div>');
@@ -418,12 +418,12 @@ Drupal.ajax.prototype.getEffect = function (response) {
   var speed = response.speed || this.speed;
 
   var effect = {};
-  if (type == 'none') {
+  if (type === 'none') {
     effect.showEffect = 'show';
     effect.hideEffect = 'hide';
     effect.showSpeed = '';
   }
-  else if (type == 'fade') {
+  else if (type === 'fade') {
     effect.showEffect = 'fadeIn';
     effect.hideEffect = 'fadeOut';
     effect.showSpeed = speed;
@@ -492,7 +492,7 @@ Drupal.ajax.prototype.commands = {
     // content satisfies the requirement of a single top-level element, and
     // only use the container DIV created above when it doesn't. For more
     // information, please see http://drupal.org/node/736066.
-    if (new_content.length != 1 || new_content.get(0).nodeType != 1) {
+    if (new_content.length !== 1 || new_content.get(0).nodeType !== 1) {
       new_content = new_content_wrapped;
     }
 
@@ -511,7 +511,7 @@ Drupal.ajax.prototype.commands = {
     wrapper[method](new_content);
 
     // Immediately hide the new content if we're using any effects.
-    if (effect.showEffect != 'show') {
+    if (effect.showEffect !== 'show') {
       new_content.hide();
     }
 
@@ -522,7 +522,7 @@ Drupal.ajax.prototype.commands = {
       new_content.show();
       new_content.find('.ajax-new-content')[effect.showEffect](effect.showSpeed);
     }
-    else if (effect.showEffect != 'show') {
+    else if (effect.showEffect !== 'show') {
       new_content[effect.showEffect](effect.showSpeed);
     }
 

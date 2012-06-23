@@ -51,7 +51,7 @@ Drupal.behaviors.machineName = {
           // Determine the initial machine name value. Unless the machine name form
           // element is disabled or not empty, the initial default value is based on
           // the human-readable form element value.
-          if ($target.is(':disabled') || $target.val() != '') {
+          if ($target.is(':disabled') || $target.val() !== '') {
             var machine = $target.val();
           }
           else {
@@ -84,12 +84,12 @@ Drupal.behaviors.machineName = {
           // Preview the machine name in realtime when the human-readable name
           // changes, but only if there is no machine name yet; i.e., only upon
           // initial creation, not when editing.
-          if ($target.val() == '') {
+          if ($target.val() === '') {
             $source.bind('keyup.machineName change.machineName', function () {
               machine = self.transliterate($(this).val(), options);
               // Set the machine name to the transliterated value.
-              if (machine != '') {
-                if (machine != options.replace) {
+              if (machine !== '') {
+                if (machine !== options.replace) {
                   $target.val(machine);
                   $preview.html(options.field_prefix + Drupal.checkPlain(machine) + options.field_suffix);
                 }

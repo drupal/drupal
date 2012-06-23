@@ -33,7 +33,7 @@ Drupal.behaviors.overlayChild = {
       // Use setTimeout to close the child window from a separate thread,
       // because the current one is busy processing Drupal behaviors.
       setTimeout(function () {
-        if (typeof settings.redirect == 'string') {
+        if (typeof settings.redirect === 'string') {
           parent.Drupal.overlay.redirect(settings.redirect);
         }
         else {
@@ -116,7 +116,7 @@ Drupal.overlayChild.behaviors.parseForms = function (context, settings) {
     // Obtain the action attribute of the form.
     var action = $(this).attr('action');
     // Keep internal forms in the overlay.
-    if (action == undefined || (action.indexOf('http') != 0 && action.indexOf('https') != 0)) {
+    if (typeof action === 'undefined' || (action.indexOf('http') !== 0 && action.indexOf('https') !== 0)) {
       action += (action.indexOf('?') > -1 ? '&' : '?') + 'render=overlay';
       $(this).attr('action', action);
     }
