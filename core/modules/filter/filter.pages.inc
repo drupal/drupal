@@ -70,7 +70,7 @@ function theme_filter_tips($variables) {
       if (count($tiplist) > 0) {
         $output .= '<ul class="tips">';
         foreach ($tiplist as $tip) {
-          $output .= '<li' . ($long ? ' id="filter-' . str_replace("/", "-", $tip['id']) . '">' : '>') . $tip['tip'] . '</li>';
+          $output .= '<li' . ($long ? ' class="filter-' . str_replace("/", "-", $tip['id']) . '">' : '>') . $tip['tip'] . '</li>';
         }
         $output .= '</ul>';
       }
