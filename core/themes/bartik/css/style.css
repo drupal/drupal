@@ -54,7 +54,7 @@ samp,
 var {
   padding: 0 0.4em;
   font-size: 0.77em;
-  font-family: Menlo, Consolas, "Andale Mono", "Lucida Console", "Nimbus Mono L", "DejaVu Sans Mono", monospace, "Courier New";
+  font-family: Menlo, Consolas, "Andale Mono", "Lucida Console", "Nimbus Mono L", "DejaVu Sans Mono", "Courier New", monospace;
 }
 code {
   background-color: #f2f2f2;
