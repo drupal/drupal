@@ -298,7 +298,7 @@ function dashboard_admin($launch_customize = FALSE) {
         drupal_get_path('module', 'dashboard') . '/dashboard.js',
         array('data' => $js_settings, 'type' => 'setting'),
       ),
-      'library' => array(array('system', 'ui.sortable')),
+      'library' => array(array('system', 'jquery.ui.sortable')),
     ),
   );
   return $build;

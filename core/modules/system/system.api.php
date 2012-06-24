@@ -374,7 +374,7 @@ function hook_library_info() {
     ),
     'dependencies' => array(
       // Require jQuery UI core by System module.
-      array('system', 'ui'),
+      array('system', 'jquery.ui.core'),
       // Require our other library.
       array('my_module', 'library-1'),
       // Require another library.
