@@ -18,12 +18,26 @@ use Drupal\Core\Routing\MatcherDumper;
  * Basic tests for the UrlMatcherDumper.
  */
 class MatcherDumperTest extends UnitTestBase {
+
+  /**
+   * A collection of shared fixture data for tests.
+   *
+   * @var RoutingFixtures
+   */
+  protected $fixtures;
+
   public static function getInfo() {
     return array(
       'name' => 'Dumper tests',
       'description' => 'Confirm that the matcher dumper is functioning properly.',
       'group' => 'Routing',
     );
+  }
+
+  function __construct($test_id = NULL) {
+    parent::__construct($test_id);
+
+    $this->fixtures = new RoutingFixtures();
   }
 
   function setUp() {
@@ -132,80 +146,13 @@ class MatcherDumperTest extends UnitTestBase {
    * Creates a test database table just for unit testing purposes.
    */
   protected function prepareTables($connection) {
-
-    $tables['test_routes'] = array(
-      'description' => 'Maps paths to various callbacks (access, page and title)',
-      'fields' => array(
-        'name' => array(
-          'description' => 'Primary Key: Machine name of this route',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => '',
-        ),
-        'pattern' => array(
-          'description' => 'The path pattern for this URI',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => '',
-        ),
-        'pattern_outline' => array(
-          'description' => 'The pattern',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => '',
-        ),
-        'route_set' => array(
-          'description' => 'The route set grouping to which a route belongs.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => '',
-        ),
-        'access_callback' => array(
-          'description' => 'The callback which determines the access to this router path. Defaults to user_access.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => '',
-        ),
-        'access_arguments' => array(
-          'description' => 'A serialized array of arguments for the access callback.',
-          'type' => 'blob',
-          'not null' => FALSE,
-        ),
-        'fit' => array(
-          'description' => 'A numeric representation of how specific the path is.',
-          'type' => 'int',
-          'not null' => TRUE,
-          'default' => 0,
-        ),
-        'number_parts' => array(
-          'description' => 'Number of parts in this router path.',
-          'type' => 'int',
-          'not null' => TRUE,
-          'default' => 0,
-          'size' => 'small',
-        ),
-        'route' => array(
-          'description' => 'A serialized Route object',
-          'type' => 'text',
-        ),
-      ),
-      'indexes' => array(
-        'fit' => array('fit'),
-        'pattern_outline' => array('pattern_outline'),
-        'route_set' => array('route_set'),
-      ),
-      'primary key' => array('name'),
-    );
-
-
+    $tables = $this->fixtures->routingTableDefinition();
     $schema = $connection->schema();
-    $schema->dropTable('test_routes');
-    $schema->createTable('test_routes', $tables['test_routes']);
+
+    foreach ($tables as $name => $table) {
+      $schema->dropTable($name);
+      $schema->createTable($name, $table);
+    }
   }
 
 }

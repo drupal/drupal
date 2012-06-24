@@ -24,6 +24,13 @@ class CompiledRoute {
   protected $patternOutline;
 
   /**
+   * The number of parts in the path of this route.
+   *
+   * @var int
+   */
+  protected $numParts;
+
+  /**
    * The Route object of which this object is the compiled version.
    *
    * @var Symfony\Component\Routing\Route
@@ -45,11 +52,14 @@ class CompiledRoute {
     *   The fitness of the route.
     * @param string $fit
     *   The pattern outline for this route.
+    *  @param int $num_parts
+    *   The number of parts in the path.
     */
-  public function __construct(Route $route, $fit, $pattern_outline) {
+  public function __construct(Route $route, $fit, $pattern_outline, $num_parts) {
     $this->route = $route;
     $this->fit = $fit;
     $this->patternOutline = $pattern_outline;
+    $this->numParts = $num_parts;
   }
 
   /**
@@ -62,6 +72,19 @@ class CompiledRoute {
    */
   public function getFit() {
     return $this->fit;
+  }
+
+  /**
+   * Returns the number of parts in this route's path.
+   *
+   * The string "foo/bar/baz" has 3 parts, regardless of how many of them are
+   * placeholders.
+   *
+   * @return int
+   *   The number of parts in the path.
+   */
+  public function getNumParts() {
+    return $this->numParts;
   }
 
   /**

@@ -85,6 +85,7 @@ class MatcherDumper implements MatcherDumperInterface {
       'fit',
       'pattern',
       'pattern_outline',
+      'number_parts',
       'route',
     ));
 
@@ -96,6 +97,7 @@ class MatcherDumper implements MatcherDumperInterface {
         'fit' => $compiled->getFit(),
         'pattern' => $compiled->getPattern(),
         'pattern_outline' => $compiled->getPatternOutline(),
+        'number_parts' => $compiled->getNumParts(),
         'route' => serialize($route),
       );
       $insert->values($values);
