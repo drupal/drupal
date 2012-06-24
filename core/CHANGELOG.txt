@@ -1,6 +1,7 @@
 
 Drupal 8.0, xxxx-xx-xx (development version)
 ----------------------
+- Replaced the core routing system with one built on the Symfony2 framework.
 - Configuration:
     * Added a centralized file-based configuration system.
     * Allows module authors to provide configuration in a standard format.
@@ -8,7 +9,12 @@ Drupal 8.0, xxxx-xx-xx (development version)
 - Included the HTML5 Shiv library to support HTML5 elements in IE 8 and below.
 - Included the following Symfony2 components:
     * ClassLoader - PSR-0-compatible autoload routines.
+    * DependencyInjection - Flexible dependency injection container.
+    * EventDispatcher - Object-oriented lightweight event handling system.
     * HttpFoundation - Abstraction objects for HTTP requests and responses.
+    * HttpKernel - Core system for managing incoming HTTP request and responses.
+    * Routing - Framework for mapping incoming requests to controller information.
+    * Yaml - Parser for YAML files.
 - Removed modules from core.
     * The following modules have been removed from core, because contributed
       modules with similar functionality are available:
