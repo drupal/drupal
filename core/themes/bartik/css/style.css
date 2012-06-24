@@ -47,6 +47,14 @@ tr.odd {
 img {
   outline: 0;
 }
+
+/**
+ * The generic monospace font family is listed before Courier new to avoid a
+ * a bug in font-size rendering:
+ * http://meyerweb.com/eric/thoughts/2010/02/12/fixed-monospace-sizing
+ *
+ * @todo Remove when IE8 is no longer supported.
+ */
 code,
 pre,
 kbd,
@@ -54,7 +62,7 @@ samp,
 var {
   padding: 0 0.4em;
   font-size: 0.77em;
-  font-family: Menlo, Consolas, "Andale Mono", "Lucida Console", "Nimbus Mono L", "DejaVu Sans Mono", "Courier New", monospace;
+  font-family: Menlo, Consolas, "Andale Mono", "Lucida Console", "Nimbus Mono L", "DejaVu Sans Mono", monospace, "Courier New";
 }
 code {
   background-color: #f2f2f2;
