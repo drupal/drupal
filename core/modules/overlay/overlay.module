@@ -211,7 +211,7 @@ function overlay_library_info() {
       $module_path . '/overlay-parent.css' => array(),
     ),
     'dependencies' => array(
-      array('system', 'ui'),
+      array('system', 'jquery.ui.core'),
       array('system', 'jquery.bbq'),
     ),
   );
