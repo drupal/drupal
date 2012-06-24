@@ -132,10 +132,10 @@ class SearchCommentTest extends SearchTestBase {
 
     $this->drupalLogout();
     $this->setRolePermissions(DRUPAL_ANONYMOUS_RID);
-    $this->checkCommentAccess('Anon user has search permission but no access comments permission, comments should not be indexed');
+    $this->assertCommentAccess(FALSE, 'Anon user has search permission but no access comments permission, comments should not be indexed');
 
     $this->setRolePermissions(DRUPAL_ANONYMOUS_RID, TRUE);
-    $this->checkCommentAccess('Anon user has search permission and access comments permission, comments should be indexed', TRUE);
+    $this->assertCommentAccess(TRUE, 'Anon user has search permission and access comments permission, comments should be indexed');
 
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/people/permissions');
@@ -144,29 +144,28 @@ class SearchCommentTest extends SearchTestBase {
     $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID, FALSE, FALSE);
 
     $this->setRolePermissions($this->admin_role);
-    $this->checkCommentAccess('Admin user has search permission but no access comments permission, comments should not be indexed');
+    $this->assertCommentAccess(FALSE, 'Admin user has search permission but no access comments permission, comments should not be indexed');
 
     $this->setRolePermissions($this->admin_role, TRUE);
-    $this->checkCommentAccess('Admin user has search permission and access comments permission, comments should be indexed', TRUE);
+    $this->assertCommentAccess(TRUE, 'Admin user has search permission and access comments permission, comments should be indexed');
 
     $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID);
-    $this->checkCommentAccess('Authenticated user has search permission but no access comments permission, comments should not be indexed');
+    $this->assertCommentAccess(FALSE, 'Authenticated user has search permission but no access comments permission, comments should not be indexed');
 
     $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID, TRUE);
-    $this->checkCommentAccess('Authenticated user has search permission and access comments permission, comments should be indexed', TRUE);
+    $this->assertCommentAccess(TRUE, 'Authenticated user has search permission and access comments permission, comments should be indexed');
 
     // Verify that access comments permission is inherited from the
     // authenticated role.
     $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID, TRUE, FALSE);
     $this->setRolePermissions($this->admin_role);
-    $this->checkCommentAccess('Admin user has search permission and no access comments permission, but comments should be indexed because admin user inherits authenticated user\'s permission to access comments', TRUE);
+    $this->assertCommentAccess(TRUE, 'Admin user has search permission and no access comments permission, but comments should be indexed because admin user inherits authenticated user\'s permission to access comments');
 
     // Verify that search content permission is inherited from the authenticated
     // role.
     $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID, TRUE, TRUE);
     $this->setRolePermissions($this->admin_role, TRUE, FALSE);
-    $this->checkCommentAccess('Admin user has access comments permission and no search permission, but comments should be indexed because admin user inherits authenticated user\'s permission to search', TRUE);
-
+    $this->assertCommentAccess(TRUE, 'Admin user has access comments permission and no search permission, but comments should be indexed because admin user inherits authenticated user\'s permission to search');
   }
 
   /**
@@ -183,7 +182,7 @@ class SearchCommentTest extends SearchTestBase {
   /**
    * Update search index and search for comment.
    */
-  function checkCommentAccess($message, $assume_access = FALSE) {
+  function assertCommentAccess($assume_access, $message) {
     // Invoke search index update.
     search_touch_node($this->node->nid);
     $this->cronRun();
@@ -193,10 +192,16 @@ class SearchCommentTest extends SearchTestBase {
       'search_block_form' => "'" . $this->comment_subject . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
-    $method = $assume_access ? 'assertText' : 'assertNoText';
-    $verb = $assume_access ? 'found' : 'not found';
-    $this->{$method}($this->node->title, "Node $verb in search results: " . $message);
-    $this->{$method}($this->comment_subject, "Comment subject $verb in search results: " . $message);
+
+    if ($assume_access) {
+      $expected_node_result = $this->assertText($this->node->title);
+      $expected_comment_result = $this->assertText($this->comment_subject);
+    }
+    else {
+      $expected_node_result = $this->assertNoText($this->node->title);
+      $expected_comment_result = $this->assertNoText($this->comment_subject);
+    }
+    $this->assertTrue($expected_node_result && $expected_comment_result, $message);
   }
 
   /**
