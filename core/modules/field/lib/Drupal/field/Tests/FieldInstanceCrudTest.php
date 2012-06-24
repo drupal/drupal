@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Definition of Drupal\field\Tests\FielInstanceCrudTest.
+ * Definition of Drupal\field\Tests\FieldInstanceCrudTest.
  */
 
 namespace Drupal\field\Tests;
 
 use Drupal\field\FieldException;
 
-class FielInstanceCrudTest extends FieldTestBase {
+class FieldInstanceCrudTest extends FieldTestBase {
   protected $field;
 
   public static function getInfo() {
