@@ -187,8 +187,8 @@ class LocaleFileImportStatus extends WebTestBase {
     variable_set('locale_translate_file_directory', $dir);
     $langcode = 'de';
     $this->addLanguage($langcode);
-    $file_uri = $dir . '/po_' . $this->randomString() . '.' . $langcode . '.po';
-    file_put_contents($file_uri, $this->randomString());
+    $file_uri = $dir . '/po_' . $this->randomName() . '.' . $langcode . '.po';
+    file_put_contents($file_uri, $this->randomName());
     $this->assertTrue(is_file($file_uri), 'Translation file is created.');
     language_delete($langcode);
     $this->assertTrue($file_uri);
