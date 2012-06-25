@@ -266,7 +266,7 @@ Drupal.overlay.loadChild = function (event) {
   var iframe = event.data.self;
   var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
   var iframeWindow = iframeDocument.defaultView || iframeDocument.parentWindow;
-  if (iframeWindow.location === 'about:blank') {
+  if (iframeWindow.location.href === 'about:blank') {
     return;
   }
 
