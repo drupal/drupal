@@ -393,18 +393,21 @@ function locale_translate_update_file_history($file) {
  */
 function locale_translate_delete_translation_files($langcode) {
   $files = locale_translate_get_interface_translation_files($langcode);
+  $return = TRUE;
   if (!empty($files)) {
     foreach ($files as $file) {
       $success = file_unmanaged_delete($file->uri);
       if (!$success) {
-        return FALSE;
+        $return = FALSE;
       }
-      // Remove the registered translation file if any.
-      db_delete('locale_file')
-        ->condition('langcode', $langcode)
-        ->coddition('uri', $file->uri)
-        ->execute();
+      else {
+        // Remove the registered translation file if any.
+        db_delete('locale_file')
+          ->condition('langcode', $langcode)
+          ->condition('uri', $file->uri)
+          ->execute();
+      }
     }
   }
-  return TRUE;
+  return $return;
 }
