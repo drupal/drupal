@@ -860,7 +860,7 @@ function views_ui_break_lock_confirm($form, &$form_state, $view) {
   $form = array();
 
   if (empty($view->locked)) {
-    $form['#markup'] = t('There is no lock on view %view to break.', array('%name' => $view->name));
+    $form['message']['#markup'] = t('There is no lock on view %name to break.', array('%name' => $view->name));
     return $form;
   }
 
