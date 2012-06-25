@@ -1526,7 +1526,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/position/',
     'version' => $libraries['jquery.ui.core']['version'],
     'js' => array(
-      'core/misc/ui/jquery.ui.position.min.js' => array(),
+      'core/misc/ui/ui/jquery.ui.position.min.js' => array(),
     ),
   );
   $libraries['jquery.ui.progressbar'] = array(
@@ -1657,7 +1657,7 @@ function system_library_info() {
       'core/misc/ui/ui/jquery.ui.widget.js' => array('group' => JS_LIBRARY, 'weight' => -10),
     ),
     'dependencies' => array(
-      array('system', 'ui'),
+      array('system', 'jquery.ui.core'),
     ),
   );
   $libraries['jquery.effects.core'] = array(

@@ -28,6 +28,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
     * Support for generating and validating UUIDs.
 - JavaScript changes:
     * Updated to jQuery 1.7
+    * Updated to jQuery UI 1.9
 - Tremendously improved language support all around.
     * Great language improvements for users:
       * Improved language selection with user preference detection in the
