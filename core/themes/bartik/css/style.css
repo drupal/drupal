@@ -52,8 +52,6 @@ img {
  * The generic monospace font family is listed before Courier new to avoid a
  * a bug in font-size rendering:
  * http://meyerweb.com/eric/thoughts/2010/02/12/fixed-monospace-sizing
- *
- * @todo Remove when IE8 is no longer supported.
  */
 code,
 pre,
