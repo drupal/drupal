@@ -5720,8 +5720,9 @@ function drupal_render_page($page) {
  * any children, it is the responsibility of the theme function to render
  * these children. For elements that are not allowed to have any children,
  * e.g. buttons or textfields, the theme function can be used to render the
- * element itself. If #theme is not present and the element has children, they
- * are rendered and concatenated into a string by drupal_render_children().
+ * element itself. If #theme is not present and the element has children, each
+ * child is itself rendered by a call to drupal_render(), and the results are
+ * concatenated.
  *
  * The #theme_wrappers property contains an array of theme functions which will
  * be called, in order, after #theme has run. These can be used to add further
