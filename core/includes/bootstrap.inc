@@ -2458,7 +2458,7 @@ function drupal_container(ContainerBuilder $reset = NULL) {
     $container = $reset;
   }
   elseif (!isset($container)) {
-    $container = new ContainerBuilder();
+    // HALP!!
   }
   return $container;
 }

@@ -107,7 +107,7 @@ class ExceptionController extends ContainerAware {
       drupal_static_reset('menu_set_active_trail');
       menu_reset_static_cache();
 
-      $response = $this->container->get('httpkernel')->handle($subrequest, HttpKernel::SUB_REQUEST);
+      $response = $this->container->get('http_kernel')->handle($subrequest, HttpKernel::SUB_REQUEST);
       $response->setStatusCode(403, 'Access denied');
     }
     else {
@@ -172,7 +172,7 @@ class ExceptionController extends ContainerAware {
       drupal_static_reset('menu_set_active_trail');
       menu_reset_static_cache();
 
-      $response = $this->container->get('httpkernel')->handle($subrequest, HttpKernel::SUB_REQUEST);
+      $response = $this->container->get('http_kernel')->handle($subrequest, HttpKernel::SUB_REQUEST);
       $response->setStatusCode(404, 'Not Found');
     }
     else {
