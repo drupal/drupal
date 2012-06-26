@@ -1526,7 +1526,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/position/',
     'version' => $libraries['jquery.ui.core']['version'],
     'js' => array(
-      'core/misc/ui/ui/jquery.ui.position.min.js' => array(),
+      'core/misc/ui/ui/jquery.ui.position.js' => array(),
     ),
   );
   $libraries['jquery.ui.progressbar'] = array(
