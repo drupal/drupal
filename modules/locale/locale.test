@@ -180,6 +180,36 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
 }
 
 /**
+ * Tests localization of the JavaScript libraries.
+ *
+ * Currently, only the jQuery datepicker is localized using Drupal translations.
+ */
+class LocaleLibraryInfoAlterTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Javascript library localisation',
+      'description' => 'Tests the localisation of JavaScript libraries.',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale', 'locale_test');
+  }
+
+  /**
+   * Verifies that the datepicker can be localized.
+   *
+   * @see locale_library_info_alter()
+   */
+  public function testLibraryInfoAlter() {
+    drupal_add_library('system', 'ui.datepicker');
+    $scripts = drupal_get_js();
+    $this->assertTrue(strpos($scripts, 'locale.datepicker.js'), t('locale.datepicker.js added to scripts.'));
+  }
+}
+
+/**
  * Functional tests for JavaScript parsing for translatable strings.
  */
 class LocaleJavascriptTranslationTest extends DrupalWebTestCase {
@@ -1515,7 +1545,6 @@ class LocaleUninstallFrenchFunctionalTest extends LocaleUninstallFunctionalTest 
   }
 }
 
-
 /**
  * Functional tests for the language switching feature.
  */
@@ -2795,6 +2824,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     }
   }
 }
+
 /**
  * Functional tests for localizing date formats.
  */
