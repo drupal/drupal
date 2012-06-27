@@ -113,6 +113,15 @@ Drupal.detachBehaviors = function (context, settings, trigger) {
 };
 
 /**
+ * Helper to test document width for mobile configurations.
+ * @todo Temporary solution for the mobile initiative.
+ */
+Drupal.checkWidthBreakpoint = function (width) {
+  width = width || Drupal.settings.widthBreakpoint || 640;
+  return (document.documentElement.clientWidth > width);
+};
+
+/**
  * Encode special characters in a plain-text string for display as HTML.
  *
  * @param str
