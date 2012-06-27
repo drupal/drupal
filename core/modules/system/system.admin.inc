@@ -1735,12 +1735,6 @@ function system_performance_settings($form, &$form_state) {
     '#disabled' => $disabled,
   );
 
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save configuration'),
-  );
-
   $form['#submit'][] = 'drupal_clear_css_cache';
   $form['#submit'][] = 'drupal_clear_js_cache';
   // This form allows page compression settings to be changed, which can
@@ -1748,7 +1742,7 @@ function system_performance_settings($form, &$form_state) {
   $form['#submit'][] = 'system_clear_page_cache_submit';
   $form['#submit'][] = 'system_performance_settings_submit';
 
-  return $form;
+  return system_config_form($form, $form_state);
 }
 
 /**

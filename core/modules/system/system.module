@@ -3026,6 +3026,63 @@ function system_settings_form_submit($form, &$form_state) {
 }
 
 /**
+ * Adds default behavior to a configuration form.
+ *
+ * This includes a consistent 'Save configuration' button, theme definition,
+ * and submit handler.
+ *
+ * @param array $form
+ *   An associative array containing the structure of the form.
+ * @param array $form_state
+ *   Reference to an associative array containing state of the form.
+ *
+ * @return array
+ *   The form structure.
+ *
+ * @see system_config_form_submit()
+ * @ingroup forms
+ *
+ * @todo Replace this temporary helper with a more sophisticated solution:
+ *   http://drupal.org/node/1324618.
+ */
+function system_config_form($form, &$form_state) {
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+
+  // Add system_config_form_submit() to output a consistent confirmation
+  // message. Since this prevents drupal_prepare_form() from adding the form's
+  // primary submit handler, do that first, using the same logic.
+  if (!isset($form['#submit'])) {
+    $form['#submit'] = array();
+    if (function_exists($form_state['build_info']['form_id'] . '_submit')) {
+      $form['#submit'][] = $form_state['build_info']['form_id'] . '_submit';
+    }
+    elseif (isset($form_state['build_info']['base_form_id']) && function_exists($form_state['build_info']['base_form_id'] . '_submit')) {
+      $form['#submit'][] = $form_state['build_info']['base_form_id'] . '_submit';
+    }
+  }
+  $form['#submit'][] = 'system_config_form_submit';
+
+  // By default, render the form using theme_system_settings_form().
+  if (!isset($form['#theme'])) {
+    $form['#theme'] = 'system_settings_form';
+  }
+  return $form;
+}
+
+/**
+ * Form submission handler for system_config_form().
+ *
+ * @see system_config_form()
+ */
+function system_config_form_submit($form, &$form_state) {
+  drupal_set_message(t('The configuration options have been saved.'));
+}
+
+/**
  * Helper function to sort requirements.
  */
 function _system_sort_requirements($a, $b) {
