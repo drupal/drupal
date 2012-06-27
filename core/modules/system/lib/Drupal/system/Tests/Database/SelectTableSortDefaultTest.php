@@ -79,7 +79,10 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
    */
   function testTableSortDefaultSort() {
     $this->drupalGet('database_test/tablesort_default_sort');
-    // Any PHP errors or notices thrown would trigger a simpletest exception, so
-    // no additional assertions are needed.
+
+    // Verify that the table was displayed. Just the header is checked for
+    // because if there were any fatal errors or exceptions in displaying the
+    // sorted table, it would not print the table.
+    $this->assertText(t('Username'));
   }
 }

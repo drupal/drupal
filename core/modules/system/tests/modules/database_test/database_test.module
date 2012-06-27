@@ -224,7 +224,7 @@ function database_test_theme_tablesort($form, &$form_state) {
 
   $query = $query
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('TableSort');
+    ->extend('Drupal\Core\Database\Query\TableSortExtender');
   $query
     ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
     ->limit(50)
