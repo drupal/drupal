@@ -2994,13 +2994,13 @@ function drupal_classloader() {
 
   if (!isset($loader)) {
     // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
-    require_once DRUPAL_ROOT . '/core/vendor/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+    require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 
     // @todo Use a cleaner way than variable_get() to switch autoloaders.
     switch (variable_get('autoloader_mode', 'default')) {
       case 'apc':
         if (function_exists('apc_store')) {
-          require_once DRUPAL_ROOT . '/core/vendor/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
+          require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
           $loader = new ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
           break;
         }
@@ -3015,13 +3015,19 @@ function drupal_classloader() {
 
     // Register explicit PSR-0 vendor namespaces.
     $loader->registerNamespaces(array(
-      // All Symfony-borrowed code lives in /core/vendor/Symfony.
-      'Symfony' => DRUPAL_ROOT . '/core/vendor',
+      // All Symfony-borrowed code lives in /core/vendor/symfony.
+      'Symfony\Component\ClassLoader' => DRUPAL_ROOT . '/core/vendor/symfony/class-loader',
+      'Symfony\Component\DependencyInjection' => DRUPAL_ROOT . '/core/vendor/symfony/dependency-injection',
+      'Symfony\Component\EventDispatcher' => DRUPAL_ROOT . '/core/vendor/symfony/event-dispatcher',
+      'Symfony\Component\HttpFoundation' => DRUPAL_ROOT . '/core/vendor/symfony/http-foundation',
+      'Symfony\Component\HttpKernel' => DRUPAL_ROOT . '/core/vendor/symfony/http-kernel',
+      'Symfony\Component\Routing' => DRUPAL_ROOT . '/core/vendor/symfony/routing',
+      'Symfony\Component\Yaml' => DRUPAL_ROOT . '/core/vendor/symfony/yaml',
     ));
     // Register PEAR-style vendor namespaces.
     $loader->registerPrefixes(array(
-      // All Twig-borrowed code lives in /core/vendor/Twig.
-      'Twig' => DRUPAL_ROOT . '/core/vendor',
+      // All Twig-borrowed code lives in /core/vendor/twig.
+      'Twig' => DRUPAL_ROOT . '/core/vendor/twig/twig/lib',
     ));
     // Register the Drupal namespace for classes in core as a fallback.
     // This allows to register additional namespaces within the Drupal namespace

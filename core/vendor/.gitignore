@@ -1,0 +1,3 @@
+# SimpleTest breaks with the following files, so avoid adding them.
+symfony/dependency-injection/Symfony/Component/DependencyInjection/Tests/Fixtures/php/services1-1.php
+symfony/class-loader/Symfony/Component/ClassLoader/Tests/Fixtures/php5.4/traits.php

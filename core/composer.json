@@ -1,0 +1,13 @@
+{
+  "require": {
+    "symfony/class-loader": "2.1.*",
+    "symfony/dependency-injection": "2.1.*",
+    "symfony/event-dispatcher": "2.1.*",
+    "symfony/http-foundation": "2.1.*",
+    "symfony/http-kernel": "2.1.*",
+    "symfony/routing": "2.1.*",
+    "symfony/yaml": "2.1.*",
+    "twig/twig": "1.8.*"
+  },
+  "minimum-stability": "beta"
+}
