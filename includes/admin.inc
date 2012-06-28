@@ -1194,7 +1194,7 @@ function views_ui_preview_form($form, &$form_state, $view, $display_id = 'defaul
     '#type' => 'checkbox',
     '#id' => 'edit-displays-live-preview',
     '#title' => t('Auto preview'),
-    '#default_value' => variable_get('views_ui_always_live_preview', TRUE),
+    '#default_value' => config('views.settings')->get('views_ui_always_live_preview'),
   );
 
   // Add the arguments textfield
