@@ -15,7 +15,44 @@ class DrupalBundle extends Bundle
   {
     parent::build($container);
 
-    $definitions = array(
+    $definitions = $this->getDefinitions();
+
+    foreach ($definitions as $id => $info) {
+      $info += array(
+        'tags' => array(),
+        'references' => array(),
+        'methods' => array(),
+      );
+
+      $references = array();
+      foreach ($info['references'] as $ref_id) {
+        $references[] = new Reference($ref_id);
+      }
+
+      $definition = new Definition($info['class'], $references);
+
+      foreach($info['tags'] as $tag) {
+        $definition->addTag($tag);
+      }
+
+      foreach ($info['methods'] as $method => $args) {
+        $definition->addMethodCall($method, $args);
+      }
+
+      $container->setDefinition($id, $definition);
+    }
+
+    $this->registerLanguages($container);
+
+    // Add a compiler pass for registering event subscribers.
+    $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
+  }
+
+  /**
+   * Returns an array of definitions for the services we want to register.
+   */
+  function getDefinitions() {
+    return array(
       'dispatcher' => array(
         'class' => 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher',
         'references' => array(
@@ -86,34 +123,12 @@ class DrupalBundle extends Bundle
         'tags' => array('kernel.event_subscriber')
       ),
     );
+  }
 
-    foreach ($definitions as $id => $info) {
-      $info += array(
-        'tags' => array(),
-        'references' => array(),
-        'methods' => array(),
-      );
-
-      $references = array();
-      foreach ($info['references'] as $ref_id) {
-        $references[] = new Reference($ref_id);
-      }
-
-      $definition = new Definition($info['class'], $references);
-
-      foreach($info['tags'] as $tag) {
-        $definition->addTag($tag);
-      }
-
-      foreach ($info['methods'] as $method => $args) {
-        $definition->addMethodCall($method, $args);
-      }
-
-      $container->setDefinition($id, $definition);
-    }
-
-
-    // Add language-related services.
+  /**
+   * Registers language-related services to the container.
+   */
+  function registerLanguages($container) {
 
     $types = language_types_get_all();
 
@@ -145,8 +160,5 @@ class DrupalBundle extends Bundle
           ->addMethodCall('extend', array($info));
       }
     }
-
-    // Add a compiler pass for registering event subscribers.
-    $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
   }
 }
