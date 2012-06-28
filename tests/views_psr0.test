@@ -23,6 +23,8 @@ use Drupal\views\Tests\TranslatableTest;
 use Drupal\views\Tests\UiSettingsTest;
 use Drupal\views\Tests\UpgradeTestCase;
 use Drupal\views\Tests\ViewTest;
+use Drupal\views\Tests\QueryGroupByTest;
+use Drupal\views\Tests\UiGroupByTest;
 use Drupal\views\Tests\Comment\ArgumentCommentUserUidTest;
 use Drupal\views\Tests\Comment\FilterCommentUserUidTest;
 use Drupal\views\Tests\Field\ApiDataTest;
@@ -72,6 +74,8 @@ class TranslatablePSR0Test extends TranslatableTest {}
 class UiSettingsPSR0Test extends UiSettingsTest {}
 class UpgradeTestCasePSR0Test extends UpgradeTestCase {}
 class ViewPSR0Test extends ViewTest {}
+class UiGroupByPSR0Test extends UiGroupByTest {}
+class QueryGroupByPSR0Test extends QueryGroupByTest {}
 class ArgumentCommentUserUidPSR0Test extends ArgumentCommentUserUidTest {}
 class FilterCommentUserUidPSR0Test extends FilterCommentUserUidTest {}
 class ApiDataPSR0Test extends ApiDataTest {}

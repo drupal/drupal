@@ -244,7 +244,6 @@ files[] = plugins/views_plugin_style_table.inc
 ; Tests
 files[] = tests/test_plugins/views_test_plugin_access_test_dynamic.inc
 files[] = tests/test_plugins/views_test_plugin_access_test_static.inc
-files[] = tests/views_groupby.test
 files[] = tests/views_plugin_localization_test.inc
 files[] = tests/views_query.test
 files[] = tests/views_test.views_default.inc
