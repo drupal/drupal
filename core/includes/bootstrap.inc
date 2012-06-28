@@ -4,7 +4,8 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Database;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Language\Language;
 
@@ -2458,7 +2459,15 @@ function drupal_container(ContainerBuilder $reset = NULL) {
     $container = $reset;
   }
   elseif (!isset($container)) {
-    // HALP!!
+    // This will only ever happen if an error has been thrown. Just build a new
+    // ContainerBuilder with only the language_interface and language_content
+    // services.
+    $container = new ContainerBuilder();
+    // An interface language always needs to be available for t() and other
+    // functions. This default is overridden by drupal_language_initialize()
+    // during language negotiation.
+    $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
+    $container->register(LANGUAGE_TYPE_CONTENT, 'Drupal\\Core\\Language\\Language');
   }
   return $container;
 }
@@ -2609,30 +2618,10 @@ function get_t() {
  * @see Drupal\Core\Language\Language
  */
 function drupal_language_initialize() {
-  $types = language_types_get_all();
-  $container = drupal_container();
-
-  // Ensure a language object is registered for each language type, whether the
-  // site is multilingual or not.
   if (language_multilingual()) {
-    include_once DRUPAL_ROOT . '/core/includes/language.inc';
-    foreach ($types as $type) {
-      $language = language_types_initialize($type);
-      $container->set($type, NULL);
-      $container->register($type, 'Drupal\\Core\\Language\\Language')
-        ->addMethodCall('extend', array($language));
-    }
     // Allow modules to react on language system initialization in multilingual
     // environments.
     bootstrap_invoke_all('language_init');
-  }
-  else {
-    $default = language_default();
-    foreach ($types as $type) {
-      $container->set($type, NULL);
-      $container->register($type, 'Drupal\\Core\\Language\\Language')
-        ->addMethodCall('extend', array($default));
-    }
   }
 }
 

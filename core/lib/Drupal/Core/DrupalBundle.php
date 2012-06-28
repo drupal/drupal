@@ -14,13 +14,6 @@ class DrupalBundle extends Bundle
   public function build(ContainerBuilder $container)
   {
     parent::build($container);
-    // An interface language always needs to be available for t() and other
-    // functions. This default is overridden by drupal_language_initialize()
-    // during language negotiation.
-    $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
-
-    // Register the default language content.
-    $container->register(LANGUAGE_TYPE_CONTENT, 'Drupal\\Core\\Language\\Language');
 
     $definitions = array(
       'dispatcher' => array(
@@ -119,6 +112,41 @@ class DrupalBundle extends Bundle
       $container->setDefinition($id, $definition);
     }
 
+
+    // Add language-related services.
+
+    $types = language_types_get_all();
+
+    // Ensure a language object is registered for each language type, whether the
+    // site is multilingual or not.
+    if (language_multilingual()) {
+      include_once DRUPAL_ROOT . '/core/includes/language.inc';
+      foreach ($types as $type) {
+        $language = language_types_initialize($type);
+        // We cannot pass an object as a parameter to a method on a service.
+        $info = get_object_vars($language);
+        $container->set($type, NULL);
+        $container->register($type, 'Drupal\\Core\\Language\\Language')
+          ->addMethodCall('extend', array($info));
+      }
+    }
+    else {
+      $info = variable_get('language_default', array(
+        'langcode' => 'en',
+        'name' => 'English',
+        'direction' => 0,
+        'weight' => 0,
+        'locked' => 0,
+      ));
+      $info['default'] = TRUE;
+      foreach ($types as $type) {
+        $container->set($type, NULL);
+        $container->register($type, 'Drupal\\Core\\Language\\Language')
+          ->addMethodCall('extend', array($info));
+      }
+    }
+
+    // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
   }
 }
