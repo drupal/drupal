@@ -1009,8 +1009,8 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
   //   results in making it unserializable due to PDO limitations.
   $form_state['view'] = clone($view);
 
-  $form['#attached']['library'][] = array('system', 'ui.tabs');
-  $form['#attached']['library'][] = array('system', 'ui.dialog');
+  $form['#attached']['library'][] = array('system', 'jquery.ui.tabs');
+  $form['#attached']['library'][] = array('system', 'jquery.ui.dialog');
   $form['#attached']['library'][] = array('system', 'drupal.ajax');
   $form['#attached']['library'][] = array('system', 'jquery.form');
   $form['#attached']['library'][] = array('system', 'drupal.states');

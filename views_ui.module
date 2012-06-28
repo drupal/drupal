@@ -825,9 +825,9 @@ function _views_ui_get_displays_list($view) {
  */
 
 function views_ui_library_alter(&$libraries, $module) {
-  if ($module == 'system' && isset($libraries['ui.dialog'])) {
-    if (version_compare($libraries['ui.dialog']['version'], '1.7.2', '>=')) {
-      $libraries['ui.dialog']['js'][drupal_get_path('module', 'views') . '/js/jquery.ui.dialog.patch.js'] = array();
+  if ($module == 'system' && isset($libraries['jquery.ui.dialog'])) {
+    if (version_compare($libraries['jquery.ui.dialog']['version'], '1.7.2', '>=')) {
+      $libraries['jquery.ui.dialog']['js'][drupal_get_path('module', 'views') . '/js/jquery.ui.dialog.patch.js'] = array();
     }
   }
 }
