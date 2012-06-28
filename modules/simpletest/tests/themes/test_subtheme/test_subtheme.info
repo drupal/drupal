@@ -1,0 +1,7 @@
+name = Theme test subtheme
+description = Test theme which uses test_basetheme as the base theme.
+core = 7.x
+base theme = test_basetheme
+hidden = TRUE
+
+settings[subtheme_override] = subtheme value

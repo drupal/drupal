@@ -737,7 +737,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
  *   names of the themes and the values are objects having the following
  *   properties:
  *   - 'filename': The name of the .info file.
- *   - 'name': The name of the theme.
+ *   - 'name': The machine name of the theme.
  *   - 'status': 1 for enabled, 0 for disabled themes.
  *   - 'info': The contents of the .info file.
  *   - 'stylesheets': A two dimensional array, using the first key for the
@@ -747,7 +747,10 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
  *   - 'scripts': An associative array of JavaScripts, using the filename as key
  *     and the complete filepath as value.
  *   - 'engine': The name of the theme engine.
- *   - 'base theme': The name of the base theme.
+ *   - 'base_theme': The name of the base theme.
+ *   - 'base_themes': An ordered array of all the base themes. If the first item
+ *     is NULL, a base theme is missing for this theme.
+ *   - 'sub_themes': An unordered array of sub-themes of this theme.
  */
 function list_themes($refresh = FALSE) {
   $list = &drupal_static(__FUNCTION__, array());
@@ -801,6 +804,47 @@ function list_themes($refresh = FALSE) {
   }
 
   return $list;
+}
+
+/**
+ * Find all the base themes for the specified theme.
+ *
+ * Themes can inherit templates and function implementations from earlier themes.
+ *
+ * @param $themes
+ *   An array of available themes.
+ * @param $key
+ *   The name of the theme whose base we are looking for.
+ * @param $used_keys
+ *   A recursion parameter preventing endless loops.
+ * @return
+ *   Returns an array of all of the theme's ancestors; the first element's value
+ *   will be NULL if an error occurred.
+ */
+function drupal_find_base_themes($themes, $key, $used_keys = array()) {
+  $base_key = $themes[$key]->info['base theme'];
+  // Does the base theme exist?
+  if (!isset($themes[$base_key])) {
+    return array($base_key => NULL);
+  }
+
+  $current_base_theme = array($base_key => $themes[$base_key]->info['name']);
+
+  // Is the base theme itself a child of another theme?
+  if (isset($themes[$base_key]->info['base theme'])) {
+    // Do we already know the base themes of this theme?
+    if (isset($themes[$base_key]->base_themes)) {
+      return $themes[$base_key]->base_themes + $current_base_theme;
+    }
+    // Prevent loops.
+    if (!empty($used_keys[$base_key])) {
+      return array($base_key => NULL);
+    }
+    $used_keys[$base_key] = TRUE;
+    return drupal_find_base_themes($themes, $base_key, $used_keys) + $current_base_theme;
+  }
+  // If we get here, then this is our parent theme.
+  return $current_base_theme;
 }
 
 /**

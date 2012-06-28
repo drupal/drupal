@@ -124,6 +124,37 @@ class ThemeTestCase extends DrupalWebTestCase {
     module_enable(array('theme_test'), FALSE);
     $this->assertIdentical(theme('theme_test_foo', array('foo' => 'c')), 'c', 'The theme registry contains theme_test_foo again after re-enabling the module.');
   }
+
+  /**
+   * Test the list_themes() function.
+   */
+  function testListThemes() {
+    $themes = list_themes();
+    // Check if drupal_theme_access() retrieves enabled themes properly from list_themes().
+    $this->assertTrue(drupal_theme_access('test_theme'), t('Enabled theme detected'));
+    // Check if list_themes() returns disabled themes.
+    $this->assertTrue(array_key_exists('test_basetheme', $themes), t('Disabled theme detected'));
+    // Check for base theme and subtheme lists.
+    $base_theme_list = array('test_basetheme' => 'Theme test base theme');
+    $sub_theme_list = array('test_subtheme' => 'Theme test subtheme');
+    $this->assertIdentical($themes['test_basetheme']->sub_themes, $sub_theme_list, t('Base theme\'s object includes list of subthemes.'));
+    $this->assertIdentical($themes['test_subtheme']->base_themes, $base_theme_list, t('Subtheme\'s object includes list of base themes.'));
+    // Check for theme engine in subtheme.
+    $this->assertIdentical($themes['test_subtheme']->engine, 'phptemplate', t('Subtheme\'s object includes the theme engine.'));
+    // Check for theme engine prefix.
+    $this->assertIdentical($themes['test_basetheme']->prefix, 'phptemplate', t('Base theme\'s object includes the theme engine prefix.'));
+    $this->assertIdentical($themes['test_subtheme']->prefix, 'phptemplate', t('Subtheme\'s object includes the theme engine prefix.'));
+  }
+
+  /**
+   * Test the theme_get_setting() function.
+   */
+  function testThemeGetSetting() {
+    $GLOBALS['theme_key'] = 'test_theme';
+    $this->assertIdentical(theme_get_setting('theme_test_setting'), 'default value', t('theme_get_setting() uses the default theme automatically.'));
+    $this->assertNotEqual(theme_get_setting('subtheme_override', 'test_basetheme'), theme_get_setting('subtheme_override', 'test_subtheme'), t('Base theme\'s default settings values can be overridden by subtheme.'));
+    $this->assertIdentical(theme_get_setting('basetheme_only', 'test_subtheme'), 'base theme value', t('Base theme\'s default settings values are inherited by subtheme.'));
+  }
 }
 
 /**

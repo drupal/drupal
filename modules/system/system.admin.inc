@@ -400,7 +400,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
   // Default settings are defined in theme_get_setting() in includes/theme.inc
   if ($key) {
     $var = 'theme_' . $key . '_settings';
-    $themes = system_rebuild_theme_data();
+    $themes = list_themes();
     $features = $themes[$key]->info['features'];
   }
   else {
