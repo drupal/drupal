@@ -5,6 +5,7 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -3661,7 +3662,7 @@ function system_timezone($abbreviation = '', $offset = -1, $is_daylight_saving_t
   // interpreted as the empty string.
   $abbreviation = $abbreviation ? $abbreviation : '';
   $timezone = timezone_name_from_abbr($abbreviation, intval($offset), $is_daylight_saving_time);
-  drupal_json_output($timezone);
+  return new JsonResponse($timezone);
 }
 
 /**

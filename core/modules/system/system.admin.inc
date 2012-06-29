@@ -5,6 +5,7 @@
  * Admin page callbacks for the system module.
  */
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -2206,7 +2207,7 @@ function system_add_date_format_type_form_submit($form, &$form_state) {
  */
 function system_date_time_lookup() {
   $result = format_date(REQUEST_TIME, 'custom', $_GET['format']);
-  drupal_json_output($result);
+  return new JsonResponse($result);
 }
 
 /**

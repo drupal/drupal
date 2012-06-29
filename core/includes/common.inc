@@ -5012,24 +5012,6 @@ function drupal_json_decode($var) {
 }
 
 /**
- * Returns data in JSON format.
- *
- * This function should be used for JavaScript callback functions returning
- * data in JSON format. It sets the header for JavaScript output.
- *
- * @param $var
- *   (optional) If set, the variable will be converted to JSON and output.
- */
-function drupal_json_output($var = NULL) {
-  // We are returning JSON, so tell the browser.
-  drupal_add_http_header('Content-Type', 'application/json');
-
-  if (isset($var)) {
-    echo drupal_json_encode($var);
-  }
-}
-
-/**
  * Gets a salt useful for hardening against SQL injection.
  *
  * @return

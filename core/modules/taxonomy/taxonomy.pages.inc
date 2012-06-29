@@ -7,6 +7,7 @@
 
 use Drupal\taxonomy\Term;
 use Drupal\taxonomy\Vocabulary;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Menu callback; displays all nodes associated with a term.
@@ -166,5 +167,5 @@ function taxonomy_autocomplete($field_name, $tags_typed = '') {
     }
   }
 
-  drupal_json_output($term_matches);
+  return new JsonResponse($term_matches);
 }

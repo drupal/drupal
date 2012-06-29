@@ -200,8 +200,8 @@ class TermTest extends TaxonomyTestBase {
     // Test autocomplete on term 3, which contains a comma.
     // The term will be quoted, and the " will be encoded in unicode (\u0022).
     $input = substr($term_objects['term3']->name, 0, 3);
-    $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
-    $this->assertRaw('{"\u0022' . $term_objects['term3']->name . '\u0022":"' . $term_objects['term3']->name . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term3']->name)));
+    $json = $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
+    $this->assertEqual($json, '{"\u0022' . $term_objects['term3']->name . '\u0022":"' . $term_objects['term3']->name . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term3']->name)));
 
     // Test autocomplete on term 4 - it is alphanumeric only, so no extra
     // quoting.

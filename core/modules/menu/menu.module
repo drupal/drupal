@@ -12,6 +12,7 @@
  */
 
 use Drupal\node\Node;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Maximum length of menu name as entered by the user. Database length is 32
@@ -396,7 +397,7 @@ function menu_parent_options_js() {
   }
   $options = _menu_get_options(menu_get_menus(), $available_menus, array('mlid' => 0));
 
-  drupal_json_output($options);
+  return new JsonResponse($options);
 }
 
 /**
