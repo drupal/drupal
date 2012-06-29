@@ -1,21 +1,23 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Config\Config.
+ */
+
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Config\ConfigException;
-
 /**
- * Represents the default configuration storage object.
+ * Defines the default configuration object.
  */
-class DrupalConfig {
+class Config {
 
   /**
-   * The storage engine to save this config object to.
+   * The name of the configuration object.
    *
-   * @var StorageInterface
+   * @var string
    */
-  protected $storage;
+  protected $name;
 
   /**
    * The data of the configuration object.
@@ -25,38 +27,36 @@ class DrupalConfig {
   protected $data = array();
 
   /**
-   * Constructs a DrupalConfig object.
+   * The injected storage dispatcher object.
    *
-   * @param StorageInterface $storage
-   *   The storage engine where this config object should be saved.
-   *
-   * @todo $this should really know about $name and make it publicly accessible.
+   * @var Drupal\Core\Config\StorageDispatcher
    */
-  public function __construct(StorageInterface $storage) {
-    $this->storage = $storage;
-    $this->read();
+  protected $storageDispatcher;
+
+  /**
+   * Constructs a configuration object.
+   *
+   * @param Drupal\Core\Config\StorageDispatcher $storageDispatcher
+   *   A storage dispatcher object to use for reading and writing the
+   *   configuration data.
+   */
+  public function __construct(StorageDispatcher $storageDispatcher) {
+    $this->storageDispatcher = $storageDispatcher;
   }
 
   /**
-   * Reads config data from the active store into our object.
+   * Returns the name of this configuration object.
    */
-  public function read() {
-    $data = $this->storage->read();
-    $this->setData($data !== FALSE ? $data : array());
+  public function getName() {
+    return $this->name;
+  }
+
+  /**
+   * Sets the name of this configuration object.
+   */
+  public function setName($name) {
+    $this->name = $name;
     return $this;
-  }
-
-  /**
-   * Checks whether a particular value is overridden.
-   *
-   * @param $key
-   *   @todo
-   *
-   * @return
-   *   @todo
-   */
-  public function isOverridden($key) {
-    return isset($this->_overrides[$key]);
   }
 
   /**
@@ -89,7 +89,7 @@ class DrupalConfig {
   public function get($key = '') {
     global $conf;
 
-    $name = $this->storage->getName();
+    $name = $this->getName();
     if (isset($conf[$name])) {
       $merged_data = drupal_array_merge_deep($this->data, $conf[$name]);
     }
@@ -201,13 +201,48 @@ class DrupalConfig {
     else {
       drupal_array_unset_nested_value($this->data, $parts);
     }
+    return $this;
+  }
+
+  /**
+   * Loads configuration data into this object.
+   */
+  public function load() {
+    $this->setData(array());
+    $data = $this->storageDispatcher->selectStorage('read', $this->name)->read($this->name);
+    if ($data !== FALSE) {
+      $this->setData($data);
+    }
+    return $this;
   }
 
   /**
    * Saves the configuration object.
    */
   public function save() {
-    $this->storage->write($this->data);
+    $this->sortByKey($this->data);
+    $this->storageDispatcher->selectStorage('write', $this->name)->write($this->name, $this->data);
+    return $this;
+  }
+
+  /**
+   * Sorts all keys in configuration data.
+   *
+   * Ensures that re-inserted keys appear in the same location as before, in
+   * order to ensure an identical order regardless of storage controller.
+   * A consistent order is important for any storage that allows any kind of
+   * diff operation.
+   *
+   * @param array $data
+   *   An associative array to sort recursively by key name.
+   */
+  public function sortByKey(array &$data) {
+    ksort($data);
+    foreach ($data as &$value) {
+      if (is_array($value)) {
+        $this->sortByKey($value);
+      }
+    }
   }
 
   /**
@@ -215,6 +250,7 @@ class DrupalConfig {
    */
   public function delete() {
     $this->data = array();
-    $this->storage->delete();
+    $this->storageDispatcher->selectStorage('write', $this->name)->delete($this->name);
+    return $this;
   }
 }

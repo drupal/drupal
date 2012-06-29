@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Core\Config\ConfigException;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -80,5 +81,14 @@ class ConfigUpgradeTest extends WebTestBase {
     // Verify that variables have been deleted.
     $variables = db_query('SELECT name FROM {variable} WHERE name IN (:names)', array(':names' => array('config_upgrade_additional')))->fetchCol();
     $this->assertFalse($variables);
+
+    // Verify that a default module configuration file is required to exist.
+    try {
+      update_variables_to_config('config_upgrade.missing.default.config', array());
+      $this->fail('Exception was not thrown on missing default module configuration file.');
+    }
+    catch (ConfigException $e) {
+      $this->pass('Exception was thrown on missing default module configuration file.');
+    }
   }
 }

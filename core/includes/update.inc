@@ -10,6 +10,7 @@
 
 use Drupal\Component\Graph\Graph;
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Config\ConfigException;
 
 /**
  * Minimum schema version of Drupal 7 required for upgrade to Drupal 8.
@@ -942,11 +943,11 @@ function update_variables_to_config($config_name, array $variable_map) {
   $module = strtok($config_name, '.');
 
   // Load and set default configuration values.
-  // Throws a FileStorageReadException if there is no default configuration
-  // file, which is required to exist.
-  $file = new FileStorage($config_name);
-  $file->setPath(drupal_get_path('module', $module) . '/config');
-  $default_data = $file->read();
+  $file = new FileStorage(array('directory' => drupal_get_path('module', $module) . '/config'));
+  if (!$file->exists($config_name)) {
+    throw new ConfigException("Default configuration file $config_name for $module extension not found but is required to exist.");
+  }
+  $default_data = $file->read($config_name);
 
   // Merge any possibly existing original data into default values.
   // Only relevant when being called repetitively on the same config object.
