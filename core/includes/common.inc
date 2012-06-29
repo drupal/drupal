@@ -757,10 +757,51 @@ function drupal_http_request($url, array $options = array()) {
     'timeout' => 30.0,
     'context' => NULL,
   );
+
+  // Merge the default headers.
+  $options['headers'] += array(
+    'User-Agent' => 'Drupal (+http://drupal.org/)',
+  );
+
   // stream_socket_client() requires timeout to be a float.
   $options['timeout'] = (float) $options['timeout'];
 
+  // Use a proxy if one is defined and the host is not on the excluded list.
+  $proxy_server = variable_get('proxy_server', '');
+  if ($proxy_server && _drupal_http_use_proxy($uri['host'])) {
+    // Set the scheme so we open a socket to the proxy server.
+    $uri['scheme'] = 'proxy';
+    // Set the path to be the full URL.
+    $uri['path'] = $url;
+    // Since the URL is passed as the path, we won't use the parsed query.
+    unset($uri['query']);
+
+    // Add in username and password to Proxy-Authorization header if needed.
+    if ($proxy_username = variable_get('proxy_username', '')) {
+      $proxy_password = variable_get('proxy_password', '');
+      $options['headers']['Proxy-Authorization'] = 'Basic ' . base64_encode($proxy_username . (!empty($proxy_password) ? ":" . $proxy_password : ''));
+    }
+    // Some proxies reject requests with any User-Agent headers, while others
+    // require a specific one.
+    $proxy_user_agent = variable_get('proxy_user_agent', '');
+    // The default value matches neither condition.
+    if ($proxy_user_agent === NULL) {
+      unset($options['headers']['User-Agent']);
+    }
+    elseif ($proxy_user_agent) {
+      $options['headers']['User-Agent'] = $proxy_user_agent;
+    }
+  }
+
   switch ($uri['scheme']) {
+    case 'proxy':
+      // Make the socket connection to a proxy server.
+      $socket = 'tcp://' . $proxy_server . ':' . variable_get('proxy_port', 8080);
+      // The Host header still needs to match the real request.
+      $options['headers']['Host'] = $uri['host'];
+      $options['headers']['Host'] .= isset($uri['port']) && $uri['port'] != 80 ? ':' . $uri['port'] : '';
+      break;
+
     case 'http':
     case 'feed':
       $port = isset($uri['port']) ? $uri['port'] : 80;
@@ -770,12 +811,14 @@ function drupal_http_request($url, array $options = array()) {
       // checking the host that do not take into account the port number.
       $options['headers']['Host'] = $uri['host'] . ($port != 80 ? ':' . $port : '');
       break;
+
     case 'https':
       // Note: Only works when PHP is compiled with OpenSSL support.
       $port = isset($uri['port']) ? $uri['port'] : 443;
       $socket = 'ssl://' . $uri['host'] . ':' . $port;
       $options['headers']['Host'] = $uri['host'] . ($port != 443 ? ':' . $port : '');
       break;
+
     default:
       $result->error = 'invalid schema ' . $uri['scheme'];
       $result->code = -1003;
@@ -804,11 +847,6 @@ function drupal_http_request($url, array $options = array()) {
   if (isset($uri['query'])) {
     $path .= '?' . $uri['query'];
   }
-
-  // Merge the default headers.
-  $options['headers'] += array(
-    'User-Agent' => 'Drupal (+http://drupal.org/)',
-  );
 
   // Only add Content-Length if we actually have any content or if it is a POST
   // or PUT request. Some non-standard servers get confused by Content-Length in
@@ -980,6 +1018,18 @@ function drupal_http_request($url, array $options = array()) {
 
   return $result;
 }
+
+/**
+ * Helper function for determining hosts excluded from needing a proxy.
+ *
+ * @return
+ *   TRUE if a proxy should be used for this host.
+ */
+function _drupal_http_use_proxy($host) {
+  $proxy_exceptions = variable_get('proxy_exceptions', array('localhost', '127.0.0.1'));
+  return !in_array(strtolower($host), $proxy_exceptions, TRUE);
+}
+
 /**
  * @} End of "defgroup http_handling".
  */
