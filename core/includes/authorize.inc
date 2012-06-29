@@ -208,7 +208,7 @@ function authorize_filetransfer_form_validate($form, &$form_state) {
     $filetransfer = authorize_get_filetransfer($backend, $form_state['values']['connection_settings'][$backend]);
     try {
       if (!$filetransfer) {
-        throw new Exception(t('Error, this type of connection protocol (%backend) does not exist.', array('%backend' => $backend)));
+        throw new Exception(t('The connection protocol %backend does not exist.', array('%backend' => $backend)));
       }
       $filetransfer->connect();
     }
