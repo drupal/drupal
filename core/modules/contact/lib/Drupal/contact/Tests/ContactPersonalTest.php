@@ -41,6 +41,17 @@ class ContactPersonalTest extends WebTestBase {
    * Tests access to the personal contact form.
    */
   function testPersonalContactAccess() {
+    // Test allowed access to admin user's contact form.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('user/' . $this->admin_user->uid . '/contact');
+    $this->assertResponse(200);
+
+    // Test denied access to admin user's own contact form.
+    $this->drupalLogout();
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('user/' . $this->admin_user->uid . '/contact');
+    $this->assertResponse(403);
+
     // Test allowed access to user with contact form enabled.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
@@ -60,9 +71,15 @@ class ContactPersonalTest extends WebTestBase {
     $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
     $this->assertResponse(200);
 
+    // Test that anonymous users can access admin user's contact form.
+    $this->drupalGet('user/' . $this->admin_user->uid . '/contact');
+    $this->assertResponse(200);
+
     // Revoke the personal contact permission for the anonymous user.
     user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access user contact forms'));
     $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(403);
+    $this->drupalGet('user/' . $this->admin_user->uid . '/contact');
     $this->assertResponse(403);
 
     // Disable the personal contact form.

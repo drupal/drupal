@@ -122,14 +122,14 @@ function _contact_personal_tab_access($account) {
     return FALSE;
   }
 
-  // User administrators should always have access to personal contact forms.
-  if (user_access('administer users')) {
-    return TRUE;
-  }
-
   // Users may not contact themselves.
   if ($user->uid == $account->uid) {
     return FALSE;
+  }
+
+  // User administrators should always have access to personal contact forms.
+  if (user_access('administer users')) {
+    return TRUE;
   }
 
   // If the requested user has disabled their contact form, or this preference
