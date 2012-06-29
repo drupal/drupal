@@ -1,26 +1,65 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Config\DatabaseStorage.
+ */
+
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Config\StorageBase;
+use Drupal\Core\Database\Database;
 use Exception;
 
 /**
- * Represents an SQL-based configuration storage object.
+ * Defines the Database storage controller.
  */
-class DatabaseStorage extends StorageBase {
+class DatabaseStorage implements StorageInterface {
 
   /**
-   * Implements StorageInterface::read().
+   * Database connection options for this storage controller.
+   *
+   * - connection: The connection key to use.
+   * - target: The target on the connection to use.
+   *
+   * @var array
    */
-  public function read() {
+  protected $options;
+
+  /**
+   * Implements Drupal\Core\Config\StorageInterface::__construct().
+   */
+  public function __construct(array $options = array()) {
+    $options += array(
+      'connection' => 'default',
+      'target' => 'default',
+    );
+    $this->options = $options;
+  }
+
+  /**
+   * Returns the database connection to use.
+   */
+  protected function getConnection() {
+    return Database::getConnection($this->options['target'], $this->options['connection']);
+  }
+
+  /**
+   * Implements Drupal\Core\Config\StorageInterface::read().
+   *
+   * @throws PDOException
+   * @throws Drupal\Core\Database\DatabaseExceptionWrapper
+   *   Only thrown in case $this->options['throw_exception'] is TRUE.
+   */
+  public function read($name) {
+    $data = array();
     // There are situations, like in the installer, where we may attempt a
     // read without actually having the database available. In this case,
     // catch the exception and just return an empty array so the caller can
     // handle it if need be.
-    $data = array();
+    // @todo Remove this and use appropriate StorageDispatcher configuration in
+    //   the installer instead.
     try {
-      $raw = db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $this->name))->fetchField();
+      $raw = $this->getConnection()->query('SELECT data FROM {config} WHERE name = :name', array(':name' => $name), $this->options)->fetchField();
       if ($raw !== FALSE) {
         $data = $this->decode($raw);
       }
@@ -31,43 +70,63 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
-   * Implements StorageInterface::writeToActive().
+   * Implements Drupal\Core\Config\StorageInterface::write().
+   *
+   * @throws PDOException
+   *
+   * @todo Ignore slave targets for data manipulation operations.
    */
-  public function writeToActive($data) {
+  public function write($name, array $data) {
     $data = $this->encode($data);
-    return db_merge('config')
-      ->key(array('name' => $this->name))
+    $options = array('return' => Database::RETURN_AFFECTED) + $this->options;
+    return (bool) $this->getConnection()->merge('config', $options)
+      ->key(array('name' => $name))
       ->fields(array('data' => $data))
       ->execute();
   }
 
   /**
-   * @todo
+   * Implements Drupal\Core\Config\StorageInterface::delete().
+   *
+   * @throws PDOException
+   *
+   * @todo Ignore slave targets for data manipulation operations.
    */
-  public function deleteFromActive() {
-    db_delete('config')
-      ->condition('name', $this->name)
+  public function delete($name) {
+    $options = array('return' => Database::RETURN_AFFECTED) + $this->options;
+    return (bool) $this->getConnection()->delete('config', $options)
+      ->condition('name', $name)
       ->execute();
   }
 
   /**
-   * Implements StorageInterface::encode().
+   * Implements Drupal\Core\Config\StorageInterface::encode().
    */
   public static function encode($data) {
     return serialize($data);
   }
 
   /**
-   * Implements StorageInterface::decode().
+   * Implements Drupal\Core\Config\StorageInterface::decode().
+   *
+   * @throws ErrorException
+   *   unserialize() triggers E_NOTICE if the string cannot be unserialized.
    */
   public static function decode($raw) {
-    return unserialize($raw);
+    $data = @unserialize($raw);
+    return $data !== FALSE ? $data : array();
   }
 
   /**
-   * Implements StorageInterface::getNamesWithPrefix().
+   * Implements Drupal\Core\Config\StorageInterface::listAll().
+   *
+   * @throws PDOException
+   * @throws Drupal\Core\Database\DatabaseExceptionWrapper
+   *   Only thrown in case $this->options['throw_exception'] is TRUE.
    */
-  static public function getNamesWithPrefix($prefix = '') {
-    return db_query('SELECT name FROM {config} WHERE name LIKE :name', array(':name' => db_like($prefix) . '%'))->fetchCol();
+  public function listAll($prefix = '') {
+    return $this->getConnection()->query('SELECT name FROM {config} WHERE name LIKE :name', array(
+      ':name' => db_like($prefix) . '%',
+    ), $this->options)->fetchCol();
   }
 }

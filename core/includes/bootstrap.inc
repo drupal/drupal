@@ -288,8 +288,6 @@ const REGISTRY_WRITE_LOOKUP_CACHE = 2;
  */
 const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 
-require_once DRUPAL_ROOT . '/core/includes/config.inc';
-
 /**
  * Starts the timer with the specified name.
  *
@@ -477,6 +475,25 @@ function find_conf_path($http_host, $script_name, $require_settings = TRUE) {
   }
   $conf = "$confdir/default";
   return $conf;
+}
+
+/**
+ * Returns the path of the configuration directory.
+ *
+ * @return string
+ *   The configuration directory path.
+ */
+function config_get_config_directory() {
+  global $config_directory_name;
+
+  if ($test_prefix = drupal_valid_test_ua()) {
+    // @see Drupal\simpletest\WebTestBase::setUp()
+    $path = conf_path() . '/files/simpletest/' . substr($test_prefix, 10) . '/config';
+  }
+  else {
+    $path = conf_path() . '/files/' . $config_directory_name;
+  }
+  return $path;
 }
 
 /**
@@ -2265,6 +2282,9 @@ function _drupal_bootstrap_configuration() {
 
   // Activate the class loader.
   drupal_classloader();
+
+  // Load the procedural configuration system helper functions.
+  require_once DRUPAL_ROOT . '/core/includes/config.inc';
 }
 
 /**
