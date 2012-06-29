@@ -443,11 +443,11 @@ db_insert('node')->fields(array(
   'translate',
 ))
 ->values(array(
-  'nid' => '38',
-  'vid' => '50',
+  'nid' => '50',
+  'vid' => '70',
   'type' => 'article',
   'language' => 'und',
-  'title' => 'Node title 38',
+  'title' => 'Node title 50',
   'uid' => '6',
   'status' => '1',
   'created' => '1263769200',
@@ -459,11 +459,11 @@ db_insert('node')->fields(array(
   'translate' => '0',
 ))
 ->values(array(
-  'nid' => '39',
-  'vid' => '55',
+  'nid' => '51',
+  'vid' => '75',
   'type' => 'article',
   'language' => 'ca',
-  'title' => 'Node title 39',
+  'title' => 'Node title 51',
   'uid' => '6',
   'status' => '1',
   'created' => '1263769300',
@@ -475,11 +475,11 @@ db_insert('node')->fields(array(
   'translate' => '0',
 ))
 ->values(array(
-  'nid' => '40',
-  'vid' => '60',
+  'nid' => '52',
+  'vid' => '80',
   'type' => 'article',
   'language' => 'en',
-  'title' => 'Node title 40',
+  'title' => 'Node title 52',
   'uid' => '6',
   'status' => '1',
   'created' => '1263769534',
@@ -487,15 +487,15 @@ db_insert('node')->fields(array(
   'comment' => '0',
   'promote' => '0',
   'sticky' => '0',
-  'tnid' => '40',
+  'tnid' => '52',
   'translate' => '0',
 ))
 ->values(array(
-  'nid' => '41',
-  'vid' => '65',
+  'nid' => '53',
+  'vid' => '85',
   'type' => 'article',
   'language' => 'cv',
-  'title' => 'Node title 41',
+  'title' => 'Node title 53',
   'uid' => '6',
   'status' => '1',
   'created' => '1263770064',
@@ -503,7 +503,7 @@ db_insert('node')->fields(array(
   'comment' => '0',
   'promote' => '0',
   'sticky' => '0',
-  'tnid' => '40',
+  'tnid' => '52',
   'translate' => '0',
 ))
 ->execute();
@@ -518,7 +518,7 @@ db_insert('node_comment_statistics')->fields(array(
   'comment_count',
 ))
 ->values(array(
-  'nid' => '38',
+  'nid' => '50',
   'cid' => '0',
   'last_comment_timestamp' => '1314997642',
   'last_comment_name' => NULL,
@@ -541,10 +541,10 @@ db_insert('node_revision')->fields(array(
   'sticky',
 ))
 ->values(array(
-  'nid' => '38',
-  'vid' => '50',
+  'nid' => '50',
+  'vid' => '70',
   'uid' => '6',
-  'title' => 'Node title 38',
+  'title' => 'Node title 50',
   'log' => 'Added a LANGUAGE_NOT_SPECIFIED node to comment on.',
   'timestamp' => '1314997642',
   'status' => '1',
@@ -553,10 +553,10 @@ db_insert('node_revision')->fields(array(
   'sticky' => '0',
 ))
 ->values(array(
-  'nid' => '39',
-  'vid' => '55',
+  'nid' => '51',
+  'vid' => '75',
   'uid' => '6',
-  'title' => 'Node title 39',
+  'title' => 'Node title 51',
   'log' => 'Created a Catalan node.',
   'timestamp' => '1263769300',
   'status' => '1',
@@ -565,10 +565,10 @@ db_insert('node_revision')->fields(array(
   'sticky' => '0',
 ))
 ->values(array(
-  'nid' => '40',
-  'vid' => '60',
+  'nid' => '52',
+  'vid' => '80',
   'uid' => '6',
-  'title' => 'Node title 40',
+  'title' => 'Node title 52',
   'log' => 'Created source translation in English.',
   'timestamp' => '1263769534',
   'status' => '1',
@@ -577,10 +577,10 @@ db_insert('node_revision')->fields(array(
   'sticky' => '0',
 ))
 ->values(array(
-  'nid' => '41',
-  'vid' => '65',
+  'nid' => '53',
+  'vid' => '85',
   'uid' => '6',
-  'title' => 'Node title 41',
+  'title' => 'Node title 53',
   'log' => 'Created Chuvash translation.',
   'timestamp' => '1263770064',
   'status' => '1',
@@ -607,8 +607,8 @@ db_insert('field_data_body')->fields(array(
   'entity_type' => 'node',
   'bundle' => 'article',
   'deleted' => '0',
-  'entity_id' => '38',
-  'revision_id' => '50',
+  'entity_id' => '50',
+  'revision_id' => '70',
   'language' => 'und',
   'delta' => '0',
   'body_value' => 'Node body',
@@ -634,8 +634,8 @@ db_insert('field_revision_body')->fields(array(
   'entity_type' => 'node',
   'bundle' => 'article',
   'deleted' => '0',
-  'entity_id' => '38',
-  'revision_id' => '50',
+  'entity_id' => '50',
+  'revision_id' => '70',
   'language' => 'und',
   'delta' => '0',
   'body_value' => 'Node body',
@@ -664,7 +664,7 @@ db_insert('comment')->fields(array(
 ->values(array(
   'cid' => '1',
   'pid' => '0',
-  'nid' => '38',
+  'nid' => '50',
   'uid' => '6',
   'subject' => 'First test comment',
   'hostname' => '127.0.0.1',
@@ -680,7 +680,7 @@ db_insert('comment')->fields(array(
 ->values(array(
   'cid' => '2',
   'pid' => '0',
-  'nid' => '38',
+  'nid' => '50',
   'uid' => '6',
   'subject' => 'Reply to first test comment',
   'hostname' => '127.0.0.1',

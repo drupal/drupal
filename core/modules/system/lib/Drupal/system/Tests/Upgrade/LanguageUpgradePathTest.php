@@ -46,8 +46,8 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     }
 
     // Check that both comments display on the node.
-    $this->drupalGet('node/38');
-    $this->assertText('Node title 38', t('Node 38 displayed after update.'));
+    $this->drupalGet('node/50');
+    $this->assertText('Node title 50', t('Node 50 displayed after update.'));
     $this->assertText('First test comment', t('Comment 1 displayed after update.'));
     $this->assertText('Reply to first test comment', t('Comment 2 displayed after update.'));
 
@@ -61,10 +61,10 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     $this->assertTrue($this->xpath('//div[@id="block-language-language-interface"]'), t('The language switcher block is being correctly showed.'));
 
     // Test that the 'language' property was properly renamed to 'langcode'.
-    $language_none_nid = 38;
-    $spanish_nid = 39;
-    $translation_source_nid = 40;
-    $translation_nid = 41;
+    $language_none_nid = 50;
+    $spanish_nid = 51;
+    $translation_source_nid = 52;
+    $translation_nid = 53;
     // Check directly for the $node->langcode property.
     $this->assertEqual(node_load($language_none_nid)->langcode, LANGUAGE_NOT_SPECIFIED, "'language' property was renamed to 'langcode' for LANGUAGE_NOT_SPECIFIED node.");
     $this->assertEqual(node_load($spanish_nid)->langcode, 'ca', "'language' property was renamed to 'langcode' for Catalan node.");

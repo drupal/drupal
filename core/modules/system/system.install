@@ -1925,6 +1925,19 @@ function system_update_8010() {
 }
 
 /**
+ * Update the module and base fields for the blog node type.
+ */
+function system_update_8011() {
+  db_update('node_type')
+    ->fields(array(
+      'module' => 'node',
+      'base' => 'node_content',
+    ))
+    ->condition('module', 'blog')
+    ->execute();
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

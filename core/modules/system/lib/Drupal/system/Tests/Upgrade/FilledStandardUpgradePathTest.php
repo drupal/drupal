@@ -84,5 +84,10 @@ class FilledStandardUpgradePathTest extends UpgradePathTestBase {
     // Confirm that no {menu_links} entry exists for user/autocomplete.
     $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
     $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+
+    // Verify that the blog node type has been assigned to node module.
+    $blog_type = node_type_load('blog');
+    $this->assertEqual($blog_type->module, 'node', "Content type 'blog' has been reassigned from the blog module to the node module.");
+    $this->assertEqual($blog_type->base, 'node_content', "The base string used to construct callbacks corresponding to content type 'Blog' has been reassigned to 'node_content'.");
   }
 }

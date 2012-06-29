@@ -160,12 +160,21 @@ for ($i = 0; $i < 24; $i++) {
 $node_id = 0;
 $revision_id = 0;
 module_load_include('inc', 'node', 'node.pages');
-for ($i = 0; $i < 24; $i++) {
+for ($i = 0; $i < 36; $i++) {
   $uid = intval($i / 8) + 3;
   $user = user_load($uid);
   $node = new stdClass();
   $node->uid = $uid;
-  $node->type = $i < 12 ? 'page' : 'story';
+  $node->type = 'page';
+  if ($i < 12) {
+    $node->type = 'page';
+  }
+  else if ($i < 24) {
+    $node->type = 'story';
+  }
+  else if (module_exists('blog')) {
+    $node->type = 'blog';
+  }
   $node->sticky = 0;
   ++$node_id;
   ++$revision_id;
