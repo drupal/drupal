@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Database\Query\AlterableInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Implements hook_query_alter().
@@ -84,11 +85,10 @@ function database_test_menu() {
  */
 function database_test_db_query_temporary() {
   $table_name = db_query_temporary('SELECT status FROM {system}', array());
-  drupal_json_output(array(
+  return new JsonResponse(array(
     'table_name' => $table_name,
     'row_count' => db_select($table_name)->countQuery()->execute()->fetchField(),
   ));
-  exit;
 }
 
 /**
@@ -111,10 +111,9 @@ function database_test_even_pager_query($limit) {
 
   $names = $query->execute()->fetchCol();
 
-  drupal_json_output(array(
+  return new JsonResponse(array(
     'names' => $names,
   ));
-  exit;
 }
 
 /**
@@ -137,10 +136,9 @@ function database_test_odd_pager_query($limit) {
 
   $names = $query->execute()->fetchCol();
 
-  drupal_json_output(array(
+  return new JsonResponse(array(
     'names' => $names,
   ));
-  exit;
 }
 
 /**
@@ -168,10 +166,9 @@ function database_test_tablesort() {
   // We need all the results at once to check the sort.
   $tasks = $query->execute()->fetchAll();
 
-  drupal_json_output(array(
+  return new JsonResponse(array(
     'tasks' => $tasks,
   ));
-  exit;
 }
 
 /**
@@ -200,10 +197,9 @@ function database_test_tablesort_first() {
   // We need all the results at once to check the sort.
   $tasks = $query->execute()->fetchAll();
 
-  drupal_json_output(array(
+  return new JsonResponse(array(
     'tasks' => $tasks,
   ));
-  exit;
 }
 
 /**

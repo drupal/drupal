@@ -5,6 +5,7 @@
  * User page callback file for the user module.
  */
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -19,7 +20,7 @@ function user_autocomplete($string = '') {
     }
   }
 
-  drupal_json_output($matches);
+  return new JsonResponse($matches);
 }
 
 /**
