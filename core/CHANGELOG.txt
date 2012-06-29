@@ -15,6 +15,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
     * HttpKernel - Core system for managing incoming HTTP request and responses.
     * Routing - Framework for mapping incoming requests to controller information.
     * Yaml - Parser for YAML files.
+- Support added for making HTTP requests through a proxy server.
 - Removed modules from core.
     * The following modules have been removed from core, because contributed
       modules with similar functionality are available:
