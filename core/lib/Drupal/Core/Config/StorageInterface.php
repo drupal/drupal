@@ -1,64 +1,80 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Config\StorageInterface.
- */
-
 namespace Drupal\Core\Config;
 
 /**
- * Defines an interface for configuration storage controllers.
+ * Defines an interface for configuration storage manipulation.
  *
  * Classes implementing this interface allow reading and writing configuration
  * data from and to the storage.
+ *
+ * @todo Remove all active/file methods. They belong onto DrupalConfig only.
  */
 interface StorageInterface {
 
   /**
-   * Constructs the storage controller.
-   *
-   * @param array $options
-   *   An associative array containing configuration options specific to the
-   *   storage controller.
-   */
-  public function __construct(array $options = array());
-
-  /**
-   * Reads configuration data from the storage.
+   * Constructs a storage manipulation class.
    *
    * @param string $name
-   *   The name of a configuration object to load.
-   *
-   * @return array
-   *   The configuration data stored for the configuration object name. If no
-   *   configuration data exists for the given name, an empty array is returned.
+   *   (optional) The name of a configuration object to load.
    */
-  public function read($name);
+  function __construct($name = NULL);
 
   /**
-   * Writes configuration data to the storage.
+   * Reads the configuration data from the storage.
+   */
+  function read();
+
+  /**
+   * Copies the configuration data from the storage into a file.
+   */
+  function copyToFile();
+
+  /**
+   * Copies the configuration data from the file into the storage.
+   */
+  function copyFromFile();
+
+  /**
+   * Deletes the configuration data file.
+   */
+  function deleteFile();
+
+  /**
+   * Checks whether the file and the storage is in sync.
    *
-   * @param string $name
-   *   The name of a configuration object to save.
-   * @param array $data
+   * @return
+   *   TRUE if the file and the storage contains the same data, FALSE
+   *   if not.
+   */
+  function isOutOfSync();
+
+  /**
+   * Writes the configuration data into the active storage and the file.
+   *
+   * @param $data
    *   The configuration data to write.
-   *
-   * @return bool
-   *   TRUE on success, FALSE in case of an error.
    */
-  public function write($name, array $data);
+  function write($data);
 
   /**
-   * Deletes a configuration object from the storage.
+   * Writes the configuration data into the active storage but not the file.
    *
-   * @param string $name
-   *   The name of a configuration object to delete.
+   * Use this function if you need to make temporary changes to your
+   * configuration.
    *
-   * @return bool
-   *   TRUE on success, FALSE otherwise.
+   * @param $data
+   *   The configuration data to write into active storage.
    */
-  public function delete($name);
+  function writeToActive($data);
+
+  /**
+   * Writes the configuration data into the file.
+   *
+   * @param $data
+   *   The configuration data to write into the file.
+   */
+  function writeToFile($data);
 
   /**
    * Encodes configuration data into the storage-specific format.
@@ -89,13 +105,23 @@ interface StorageInterface {
   public static function decode($raw);
 
   /**
+   * Gets the name of this object.
+   */
+  public function getName();
+
+  /**
+   * Sets the name of this object.
+   */
+  public function setName($name);
+
+  /**
    * Gets configuration object names starting with a given prefix.
    *
    * Given the following configuration objects:
    * - node.type.article
    * - node.type.page
    *
-   * Passing the prefix 'node.type.' will return an array containing the above
+   * Passing the prefix 'node.type' will return an array containing the above
    * names.
    *
    * @param string $prefix
@@ -105,5 +131,5 @@ interface StorageInterface {
    * @return array
    *   An array containing matching configuration object names.
    */
-  public function listAll($prefix = '');
+  static function getNamesWithPrefix($prefix = '');
 }

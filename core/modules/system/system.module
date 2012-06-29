@@ -380,8 +380,7 @@ function system_element_info() {
   $types['email'] = array(
     '#input' => TRUE,
     '#size' => 60,
-    // user.module is not loaded in case of early bootstrap errors.
-    '#maxlength' => defined('EMAIL_MAX_LENGTH') ? EMAIL_MAX_LENGTH : 255,
+    '#maxlength' => EMAIL_MAX_LENGTH,
     '#autocomplete_path' => FALSE,
     '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
     '#element_validate' => array('form_validate_email'),

@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Config\DatabaseStorage;
+use Drupal\Core\Config\FileStorage;
 
 /**
  * Indicates that a module has not been installed yet.
@@ -376,17 +376,24 @@ function drupal_uninstall_modules($module_list = array(), $uninstall_dependents 
     $module_list = array_keys($module_list);
   }
 
-  $storage = new DatabaseStorage();
   foreach ($module_list as $module) {
     // Uninstall the module.
     module_load_install($module);
     module_invoke($module, 'uninstall');
     drupal_uninstall_schema($module);
 
-    // Remove all configuration belonging to the module.
-    $config_names = $storage->listAll($module . '.');
-    foreach ($config_names as $config_name) {
-      config($config_name)->delete();
+    // Remove any stray configuration settings.
+    // Get the names of default configurations provided by this module
+    // by scanning its config directory.
+    $module_config_dir = drupal_get_path('module', $module) . '/config';
+    if (is_dir($module_config_dir)) {
+      $files = glob($module_config_dir . '/*.' . FileStorage::getFileExtension());
+      foreach ($files as $file) {
+        $config_name = basename($file, '.' . FileStorage::getFileExtension());
+        $file_storage = new FileStorage($config_name);
+        // Delete the configuration from storage.
+        $file_storage->delete();
+      }
     }
 
     watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);

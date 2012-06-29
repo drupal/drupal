@@ -1,36 +1,59 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Config\FileStorage.
- */
-
 namespace Drupal\Core\Config;
 
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Defines the file storage controller.
+ * Represents the file storage controller.
+ *
+ * @todo Implement StorageInterface after removing DrupalConfig methods.
+ * @todo Consider to extend StorageBase.
  */
-class FileStorage implements StorageInterface {
+class FileStorage {
 
   /**
-   * Configuration options for this storage controller.
+   * The name of the configuration object.
    *
-   * - directory: The filesystem path for configuration objects.
-   *
-   * @var array
+   * @var string
    */
-  protected $options;
+  protected $name;
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::__construct().
+   * The filesystem path containing the configuration object.
+   *
+   * @var string
    */
-  public function __construct(array $options = array()) {
-    if (!isset($options['directory'])) {
-      $options['directory'] = config_get_config_directory();
+  protected $path;
+
+  /**
+   * Implements StorageInterface::__construct().
+   */
+  public function __construct($name = NULL) {
+    $this->name = $name;
+  }
+
+  /**
+   * Returns the path containing the configuration file.
+   *
+   * @return string
+   *   The relative path to the configuration object.
+   */
+  public function getPath() {
+    // If the path has not been set yet, retrieve and assign the default path
+    // for configuration files.
+    if (!isset($this->path)) {
+      $this->setPath(config_get_config_directory());
     }
-    $this->options = $options;
+    return $this->path;
+  }
+
+  /**
+   * Sets the path containing the configuration file.
+   */
+  public function setPath($directory) {
+    $this->path = $directory;
+    return $this;
   }
 
   /**
@@ -39,8 +62,8 @@ class FileStorage implements StorageInterface {
    * @return string
    *   The path to the configuration file.
    */
-  public function getFilePath($name) {
-    return $this->options['directory'] . '/' . $name . '.' . self::getFileExtension();
+  public function getFilePath() {
+    return $this->getPath() . '/' . $this->getName() . '.' . self::getFileExtension();
   }
 
   /**
@@ -59,65 +82,50 @@ class FileStorage implements StorageInterface {
    * @return bool
    *   TRUE if the configuration file exists, FALSE otherwise.
    */
-  public function exists($name) {
-    return file_exists($this->getFilePath($name));
+  protected function exists() {
+    return file_exists($this->getFilePath());
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::read().
+   * Implements StorageInterface::write().
    *
-   * @throws Symfony\Component\Yaml\Exception\ParseException
+   * @throws FileStorageException
    */
-  public function read($name) {
-    if (!$this->exists($name)) {
-      return array();
+  public function write($data) {
+    $data = $this->encode($data);
+    if (!file_put_contents($this->getFilePath(), $data)) {
+      throw new FileStorageException('Failed to write configuration file: ' . $this->getFilePath());
     }
-    $data = file_get_contents($this->getFilePath($name));
-    // @todo Yaml throws a ParseException on invalid data. Is it expected to be
-    //   caught or not?
+  }
+
+  /**
+   * Implements StorageInterface::read().
+   *
+   * @throws FileStorageReadException
+   */
+  public function read() {
+    if (!$this->exists()) {
+      throw new FileStorageReadException("Configuration file '$this->name' does not exist.");
+    }
+
+    $data = file_get_contents($this->getFilePath());
     $data = $this->decode($data);
     if ($data === FALSE) {
-      return array();
-    }
-    // A simple string is valid YAML for any reason.
-    if (!is_array($data)) {
-      return array();
+      throw new FileStorageReadException("Failed to decode configuration file '$this->name'.");
     }
     return $data;
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::write().
-   *
-   * @throws Symfony\Component\Yaml\Exception\DumpException
-   * @throws Drupal\Core\Config\StorageException
+   * Deletes a configuration file.
    */
-  public function write($name, array $data) {
-    $data = $this->encode($data);
-    $status = @file_put_contents($this->getFilePath($name), $data);
-    if ($status === FALSE) {
-      throw new StorageException('Failed to write configuration file: ' . $this->getFilePath($name));
-    }
-    return TRUE;
+  public function delete() {
+    // Needs error handling and etc.
+    @drupal_unlink($this->getFilePath());
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::delete().
-   */
-  public function delete($name) {
-    if (!$this->exists($name)) {
-      if (!file_exists($this->options['directory'])) {
-        throw new StorageException($this->options['directory'] . '/ not found.');
-      }
-      return FALSE;
-    }
-    return drupal_unlink($this->getFilePath($name));
-  }
-
-  /**
-   * Implements Drupal\Core\Config\StorageInterface::encode().
-   *
-   * @throws Symfony\Component\Yaml\Exception\DumpException
+   * Implements StorageInterface::encode().
    */
   public static function encode($data) {
     // The level where you switch to inline YAML is set to PHP_INT_MAX to ensure
@@ -126,9 +134,7 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::decode().
-   *
-   * @throws Symfony\Component\Yaml\Exception\ParseException
+   * Implements StorageInterface::decode().
    */
   public static function decode($raw) {
     if (empty($raw)) {
@@ -138,18 +144,28 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::listAll().
+   * Implements StorageInterface::getName().
    */
-  public function listAll($prefix = '') {
-    // glob() silently ignores the error of a non-existing search directory,
-    // even with the GLOB_ERR flag.
-    if (!file_exists($this->options['directory'])) {
-      throw new StorageException($this->options['directory'] . '/ not found.');
-    }
-    $extension = '.' . self::getFileExtension();
-    $files = glob($this->options['directory'] . '/' . $prefix . '*' . $extension);
-    $clean_name = function ($value) use ($extension) {
-      return basename($value, $extension);
+  public function getName() {
+    return $this->name;
+  }
+
+  /**
+   * Implements StorageInterface::setName().
+   */
+  public function setName($name) {
+    $this->name = $name;
+  }
+
+  /**
+   * Implements StorageInterface::getNamesWithPrefix().
+   */
+  public static function getNamesWithPrefix($prefix = '') {
+    // @todo Use $this->getPath() to allow for contextual search of files in
+    //   custom paths.
+    $files = glob(config_get_config_directory() . '/' . $prefix . '*.' . FileStorage::getFileExtension());
+    $clean_name = function ($value) {
+      return basename($value, '.' . FileStorage::getFileExtension());
     };
     return array_map($clean_name, $files);
   }

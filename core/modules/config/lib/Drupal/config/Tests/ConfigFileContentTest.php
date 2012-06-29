@@ -7,7 +7,6 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Config\FileStorage;
 use Drupal\simpletest\WebTestBase;
 
@@ -15,6 +14,8 @@ use Drupal\simpletest\WebTestBase;
  * Tests reading and writing file contents.
  */
 class ConfigFileContentTest extends WebTestBase {
+  protected $fileExtension;
+
   public static function getInfo() {
     return array(
       'name' => 'File content',
@@ -25,14 +26,15 @@ class ConfigFileContentTest extends WebTestBase {
 
   function setUp() {
     parent::setUp();
+
+    $this->fileExtension = FileStorage::getFileExtension();
   }
 
   /**
    * Tests setting, writing, and reading of a configuration setting.
    */
   function testReadWriteConfig() {
-    $database_storage = new DatabaseStorage();
-
+    $config_dir = config_get_config_directory();
     $name = 'foo.bar';
     $key = 'foo';
     $value = 'bar';
@@ -60,15 +62,16 @@ class ConfigFileContentTest extends WebTestBase {
     $config = config($name);
 
     // Verify an configuration object is returned.
-    $this->assertEqual($config->getName(), $name);
+//    $this->assertEqual($config->name, $name);
     $this->assertTrue($config, t('Config object created.'));
 
     // Verify the configuration object is empty.
     $this->assertEqual($config->get(), array(), t('New config object is empty.'));
 
     // Verify nothing was saved.
-    $db_data = $database_storage->read($name);
-    $this->assertIdentical($db_data, array());
+    $db_config = db_query('SELECT * FROM {config} WHERE name = :name', array(':name' => $name))->fetch();
+    $this->assertIdentical($db_config, FALSE, t('Active store does not have a record for %name', array('%name' => $name)));
+    $this->assertFalse(file_exists($config_dir . '/' . $name . '.' . $this->fileExtension), 'Configuration file does not exist.');
 
     // Add a top level value
     $config = config($name);
@@ -94,12 +97,15 @@ class ConfigFileContentTest extends WebTestBase {
     $config->save();
 
     // Verify the database entry exists.
-    $db_data = $database_storage->read($name);
-    $this->assertTrue($db_data);
+    $db_config = db_query('SELECT * FROM {config} WHERE name = :name', array(':name' => $name))->fetch();
+    $this->assertEqual($db_config->name, $name, t('After saving configuration, active store has a record for %name', array('%name' => $name)));
+
+    // Verify the file exists.
+    $this->assertTrue(file_exists($config_dir . '/' . $name . '.' . $this->fileExtension), t('After saving configuration, config file exists.'));
 
     // Read top level value
     $config = config($name);
-    $this->assertEqual($config->getName(), $name);
+//    $this->assertEqual($config->name, $name);
     $this->assertTrue($config, 'Config object created.');
     $this->assertEqual($config->get($key), 'bar', t('Top level configuration value found.'));
 
@@ -152,27 +158,30 @@ class ConfigFileContentTest extends WebTestBase {
     $config->set($key, $value)->save();
 
     // Verify the database entry exists from a chained save.
-    $db_data = $database_storage->read($chained_name);
-    $this->assertEqual($db_data, $config->get());
+    $db_config = db_query('SELECT * FROM {config} WHERE name = :name', array(':name' => $chained_name))->fetch();
+    $this->assertEqual($db_config->name, $chained_name, t('After saving configuration by chaining through set(), active store has a record for %name', array('%name' => $chained_name)));
+
+    // Verify the file exists from a chained save.
+    $this->assertTrue(file_exists($config_dir . '/' . $chained_name . '.' . $this->fileExtension), t('After saving configuration by chaining through set(), config file exists.'));
 
     // Get file listing for all files starting with 'foo'. Should return
     // two elements.
-    $files = $database_storage->listAll('foo');
+    $files = FileStorage::getNamesWithPrefix('foo');
     $this->assertEqual(count($files), 2, 'Two files listed with the prefix \'foo\'.');
 
     // Get file listing for all files starting with 'biff'. Should return
     // one element.
-    $files = $database_storage->listAll('biff');
+    $files = FileStorage::getNamesWithPrefix('biff');
     $this->assertEqual(count($files), 1, 'One file listed with the prefix \'biff\'.');
 
     // Get file listing for all files starting with 'foo.bar'. Should return
     // one element.
-    $files = $database_storage->listAll('foo.bar');
+    $files = FileStorage::getNamesWithPrefix('foo.bar');
     $this->assertEqual(count($files), 1, 'One file listed with the prefix \'foo.bar\'.');
 
     // Get file listing for all files starting with 'bar'. Should return
     // an empty array.
-    $files = $database_storage->listAll('bar');
+    $files = FileStorage::getNamesWithPrefix('bar');
     $this->assertEqual($files, array(), 'No files listed with the prefix \'bar\'.');
 
     // Delete the configuration.
@@ -180,14 +189,17 @@ class ConfigFileContentTest extends WebTestBase {
     $config->delete();
 
     // Verify the database entry no longer exists.
-    $db_data = $database_storage->read($name);
-    $this->assertIdentical($db_data, array());
+    $db_config = db_query('SELECT * FROM {config} WHERE name = :name', array(':name' => $name))->fetch();
+    $this->assertIdentical($db_config, FALSE);
+    $this->assertFalse(file_exists($config_dir . '/' . $name . $this->fileExtension));
+
+    // Attempt to delete non-existing configuration.
   }
 
   /**
    * Tests serialization of configuration to file.
    */
-  function testSerialization() {
+  function testConfigSerialization() {
     $name = $this->randomName(10) . '.' . $this->randomName(10);
     $config_data = array(
       // Indexed arrays; the order of elements is essential.
@@ -204,10 +216,17 @@ class ConfigFileContentTest extends WebTestBase {
       'invalid xml' => '</title><script type="text/javascript">alert("Title XSS!");</script> & < > " \' ',
     );
 
-    // Encode and write, and reload and decode the configuration data.
-    $filestorage = new FileStorage();
-    $filestorage->write($name, $config_data);
-    $config_parsed = $filestorage->read($name);
+    // Attempt to read non-existing configuration.
+    $config = config($name);
+
+    foreach ($config_data as $key => $value) {
+      $config->set($key, $value);
+    }
+
+    $config->save();
+
+    $config_filestorage = new FileStorage($name);
+    $config_parsed = $config_filestorage->read();
 
     $key = 'numeric keys';
     $this->assertIdentical($config_data[$key], $config_parsed[$key]);

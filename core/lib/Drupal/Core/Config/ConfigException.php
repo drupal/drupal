@@ -1,15 +1,8 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Core\Config\ConfigException.
- */
-
 namespace Drupal\Core\Config;
 
-use RuntimeException;
-
 /**
- * A base exception thrown in any configuration system operations.
+ * @todo
  */
-class ConfigException extends RuntimeException {}
+class ConfigException extends \Exception {}

@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Module;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Config\FileStorage;
 use Drupal\simpletest\WebTestBase;
 
@@ -78,49 +77,65 @@ class ModuleTestBase extends WebTestBase {
   }
 
   /**
-   * Asserts that the default configuration of a module has been installed.
+   * Assert that a module's config files have been loaded.
    *
    * @param string $module
    *   The name of the module.
    *
    * @return bool
-   *   TRUE if configuration has been installed, FALSE otherwise.
+   *   TRUE if the module's config files exist, FALSE otherwise.
    */
-  function assertModuleConfig($module) {
+  function assertModuleConfigFilesExist($module) {
+    // Define test variable.
+    $files_exist = TRUE;
+    // Get the path to the module's config dir.
     $module_config_dir = drupal_get_path('module', $module) . '/config';
-    if (!is_dir($module_config_dir)) {
-      return;
-    }
-    $module_file_storage = new FileStorage(array('directory' => $module_config_dir));
-    $names = $module_file_storage->listAll();
-
-    // Verify that the config directory is not empty.
-    $this->assertTrue($names);
-
-    // Look up each default configuration object name in the active store, and
-    // if it exists, remove it from the stack.
-    foreach ($names as $key => $name) {
-      if (config($name)->get()) {
-        unset($names[$key]);
+    if (is_dir($module_config_dir)) {
+      $files = glob($module_config_dir . '/*.' . FileStorage::getFileExtension());
+      $this->assertTrue($files);
+      $config_dir = config_get_config_directory();
+      // Get the filename of each config file.
+      foreach ($files as $file) {
+        $parts = explode('/', $file);
+        $filename = array_pop($parts);
+        if (!file_exists($config_dir . '/' . $filename)) {
+          $files_exist = FALSE;
+        }
       }
     }
-    // Verify that all configuration has been installed (which means that $names
-    // is empty).
-    return $this->assertFalse($names, format_string('All default configuration of @module module found.', array('@module' => $module)));
+
+    return $this->assertTrue($files_exist, t('All config files defined by the @module module have been copied to the live config directory.', array('@module' => $module)));
   }
 
   /**
-   * Asserts that no configuration exists for a given module.
+   * Assert that none of a module's default config files are loaded.
    *
    * @param string $module
    *   The name of the module.
    *
    * @return bool
-   *   TRUE if no configuration was found, FALSE otherwise.
+   *   TRUE if the module's config files do not exist, FALSE otherwise.
    */
-  function assertNoModuleConfig($module) {
-    $names = config_get_storage_names_with_prefix($module . '.');
-    return $this->assertFalse($names, format_string('No configuration found for @module module.', array('@module' => $module)));
+  function assertModuleConfigFilesDoNotExist($module) {
+    // Define test variable.
+    $files_exist = FALSE;
+    // Get the path to the module's config dir.
+    $module_config_dir = drupal_get_path('module', $module) . '/config';
+    if (is_dir($module_config_dir)) {
+      $files = glob($module_config_dir . '/*.' . FileStorage::getFileExtension());
+      $this->assertTrue($files);
+      $config_dir = config_get_config_directory();
+      // Get the filename of each config file.
+      foreach ($files as $file) {
+        $parts = explode('/', $file);
+        $filename = array_pop($parts);
+        if (file_exists($config_dir . '/' . $filename)) {
+          $files_exist = TRUE;
+        }
+      }
+    }
+
+    return $this->assertFalse($files_exist, t('All config files defined by the @module module have been deleted from the live config directory.', array('@module' => $module)));
   }
 
   /**

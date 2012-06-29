@@ -106,7 +106,7 @@ class EnableDisableTest extends ModuleTestBase {
           $this->assertText(t('hook_modules_enabled fired for @module', array('@module' => $module_to_enable)));
           $this->assertModules(array($module_to_enable), TRUE);
           $this->assertModuleTablesExist($module_to_enable);
-          $this->assertModuleConfig($module_to_enable);
+          $this->assertModuleConfigFilesExist($module_to_enable);
           $this->assertLogMessage('system', "%module module installed.", array('%module' => $module_to_enable), WATCHDOG_INFO);
           $this->assertLogMessage('system', "%module module enabled.", array('%module' => $module_to_enable), WATCHDOG_INFO);
         }
@@ -187,7 +187,7 @@ class EnableDisableTest extends ModuleTestBase {
     //  Check that the module's database tables still exist.
     $this->assertModuleTablesExist($module);
     //  Check that the module's config files still exist.
-    $this->assertModuleConfig($module);
+    $this->assertModuleConfigFilesExist($module);
 
     // Uninstall the module.
     $edit = array();
@@ -209,6 +209,6 @@ class EnableDisableTest extends ModuleTestBase {
     // Check that the module's database tables no longer exist.
     $this->assertModuleTablesDoNotExist($module);
     // Check that the module's config files no longer exist.
-    $this->assertNoModuleConfig($module);
+    $this->assertModuleConfigFilesDoNotExist($module);
   }
 }
