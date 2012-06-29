@@ -117,43 +117,8 @@ function openid_requirements($phase) {
 }
 
 /**
- * @addtogroup updates-6.x-to-7.x
- * @{
+ * Implements hook_update_last_removed().
  */
-
-/**
- * Add a table to store nonces.
- */
-function openid_update_6000() {
-  $schema['openid_nonce'] = array(
-    'description' => 'Stores received openid.response_nonce per OpenID endpoint URL to prevent replay attacks.',
-    'fields' => array(
-      'idp_endpoint_uri' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'description' => 'URI of the OpenID Provider endpoint.',
-      ),
-      'nonce' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'description' => 'The value of openid.response_nonce'
-        ),
-      'expires' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'A Unix timestamp indicating when the entry should expire.',
-        ),
-      ),
-    'indexes' => array(
-      'nonce' => array('nonce'),
-      'expires' => array('expires'),
-    ),
-  );
-
-  db_create_table('openid_nonce', $schema['openid_nonce']);
+function openid_update_last_removed() {
+  return 6000;
 }
-
-/**
- * @} End of "addtogroup updates-6.x-to-7.x".
- */
