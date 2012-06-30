@@ -1,11 +1,11 @@
 
-tr.taxonomy-term-preview {
+.taxonomy-term-preview {
   background-color: #eee;
 }
-tr.taxonomy-term-divider-top {
+.taxonomy-term-divider-top {
   border-bottom: none;
 }
-tr.taxonomy-term-divider-bottom {
+.taxonomy-term-divider-bottom {
   border-top: 1px dotted #ccc;
 }
 .taxonomy-term-description {
