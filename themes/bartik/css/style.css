@@ -1488,7 +1488,7 @@ ol.search-results {
 }
 .search-results li:last-child {
   border-bottom: none;
-  padding-bottom: none;
+  padding-bottom: 0;
   margin-bottom: 1em;
 }
 .search-results .search-snippet-info {
