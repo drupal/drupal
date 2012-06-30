@@ -5,10 +5,32 @@ namespace Drupal\system\Tests\Routing;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+use Drupal\Core\Database\Connection;
+
 /**
  * Utility methods to generate sample data, database configuration, etc.
  */
 class RoutingFixtures {
+
+  public function createTables(Connection $connection) {
+    $tables = $this->routingTableDefinition();
+    $schema = $connection->schema();
+
+    foreach ($tables as $name => $table) {
+      $schema->dropTable($name);
+      $schema->createTable($name, $table);
+    }
+  }
+
+  public function dropTables(Connection $connection) {
+    $tables = $this->routingTableDefinition();
+    $schema = $connection->schema();
+
+    foreach ($tables as $name => $table) {
+      $schema->dropTable($name);
+    }
+  }
+
 
   /**
    * Returns a standard set of routes for testing.

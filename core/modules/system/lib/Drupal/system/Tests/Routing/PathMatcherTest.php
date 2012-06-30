@@ -41,6 +41,12 @@ class PathMatcherTest extends UnitTestBase {
     $this->fixtures = new RoutingFixtures();
   }
 
+  public function tearDown() {
+    $this->fixtures->dropTables(Database::getConnection());
+
+   parent::tearDown();
+  }
+
   /**
    * Confirms that the correct candidate outlines are generated.
    */

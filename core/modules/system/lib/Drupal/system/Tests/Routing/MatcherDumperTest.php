@@ -126,7 +126,7 @@ class MatcherDumperTest extends UnitTestBase {
 
     $dumper->addRoutes($collection);
 
-    $this->prepareTables($connection);
+    $this->fixtures->createTables($connection);
 
     $dumper->dump(array('route_set' => 'test'));
 
@@ -141,18 +141,4 @@ class MatcherDumperTest extends UnitTestBase {
     $this->assertTrue($loaded_route instanceof Route, t('Route object retrieved successfully.'));
 
   }
-
-  /**
-   * Creates a test database table just for unit testing purposes.
-   */
-  protected function prepareTables($connection) {
-    $tables = $this->fixtures->routingTableDefinition();
-    $schema = $connection->schema();
-
-    foreach ($tables as $name => $table) {
-      $schema->dropTable($name);
-      $schema->createTable($name, $table);
-    }
-  }
-
 }
