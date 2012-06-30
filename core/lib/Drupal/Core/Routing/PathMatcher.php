@@ -29,7 +29,6 @@ class PathMatcher implements InitialMatcherInterface {
 
   public function __construct(Connection $connection, $table = 'router') {
     $this->connection = $connection;
-
     $this->tableName = $table;
   }
 
@@ -46,26 +45,18 @@ class PathMatcher implements InitialMatcherInterface {
 
     $path = $request->getPathInfo();
 
-    $parts = array_slide(explode('/', $path), 0, MatcherDumper::MAX_PARTS);
-
-    $number_parts = count($parts);
+    $parts = array_slice(array_filter(explode('/', $path)), 0, MatcherDumper::MAX_PARTS);
 
     $ancestors = $this->getCandidateOutlines($parts);
 
-    // @todo We want to allow matching more than one result because there could
-    //   be more than one result with the same path. But how do we do that and
-    //   limit by fit?
-    $routes = $this->connection
-      ->select($this->tableName, 'r')
-      ->fields('r', array('name', 'route'))
-      ->condition('pattern_outline', $ancestors, 'IN')
-      ->condition('number_parts', $number_parts)
-      ->execute()
-      ->fetchAllKeyed();
+    $routes = $this->connection->query("SELECT name, route FROM {{$this->tableName}} WHERE pattern_outline IN (:patterns) ORDER BY fit", array(
+      ':patterns' => $ancestors,
+    ))
+    ->fetchAllKeyed();
 
     $collection = new RouteCollection();
     foreach ($routes as $name => $route) {
-      $collection->add($name, $route);
+      $collection->add($name, unserialize($route));
     }
 
     return $collection;
@@ -93,7 +84,7 @@ class PathMatcher implements InitialMatcherInterface {
     $masks = range($end, $start);
 
     foreach ($masks as $i) {
-      $current = '';
+      $current = '/';
       for ($j = $length; $j >= 0; $j--) {
         // Check the bit on the $j offset.
         if ($i & (1 << $j)) {
