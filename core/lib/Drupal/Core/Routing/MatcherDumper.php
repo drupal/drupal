@@ -90,6 +90,7 @@ class MatcherDumper implements MatcherDumperInterface {
     ));
 
     foreach ($this->routes as $name => $route) {
+      $route->setOption('compiler_class', '\Drupal\Core\Routing\RouteCompiler');
       $compiled = $route->compile();
       $values = array(
         'name' => $name,
