@@ -2768,6 +2768,37 @@ function node_search_validate($form, &$form_state) {
 /**
  * Implements hook_form_FORM_ID_alter().
  *
+ * Alters System module's site information settings form to add a global default
+ * setting for number of posts to show on node listing pages.
+ *
+ * @see node_page_default()
+ * @see taxonomy_term_page()
+ * @see node_form_system_site_information_settings_form_submit()
+ */
+function node_form_system_site_information_settings_form_alter(&$form, &$form_state, $form_id) {
+  $form['front_page']['default_nodes_main'] = array(
+    '#type' => 'select',
+    '#title' => t('Number of posts on front page'),
+    '#default_value' => variable_get('default_nodes_main', 10),
+    '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
+    '#access' => (variable_get('site_frontpage') == 'node'),
+    '#description' => t('The maximum number of posts displayed on overview pages such as the front page.'),
+  );
+  $form['#submit'][] = 'node_form_system_site_information_settings_form_submit';
+}
+
+/**
+ * Form submission handler for system_site_information_settings().
+ *
+ * @see node_form_system_site_information_settings_form_alter()
+ */
+function node_form_system_site_information_settings_form_submit($form, &$form_state) {
+  variable_set('default_nodes_main', $form_state['values']['default_nodes_main']);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
  * Alters the theme form to use the admin theme on node editing.
  *
  * @see node_form_system_themes_admin_form_submit()
