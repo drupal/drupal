@@ -596,6 +596,8 @@ function hook_node_load($nodes, $types) {
  *   - "view"
  * @param object $account
  *   The user object to perform the access check operation on.
+ * @param object $langcode
+ *   The language code to perform the access check operation on.
  *
  * @return integer
  *   - NODE_ACCESS_ALLOW: if the operation is to be allowed.
@@ -604,7 +606,7 @@ function hook_node_load($nodes, $types) {
  *
  * @ingroup node_access
  */
-function hook_node_access($node, $op, $account) {
+function hook_node_access($node, $op, $account, $langcode) {
   $type = is_string($node) ? $node : $node->type;
 
   $configured_types = node_permissions_get_configured_types();
