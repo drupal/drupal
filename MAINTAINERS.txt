@@ -147,6 +147,10 @@ User experience and usability
 - Roy Scholten 'yoroy' <http://drupal.org/user/41502>
 - Bojhan Somers 'Bojhan' <http://drupal.org/user/87969>
 
+Node Access
+- Moshe Weitzman 'moshe weitzman' <http://drupal.org/user/23>
+- Ken Rickard 'agentrickard' <http://drupal.org/user/20975>
+- Jess Myrbo 'xjm' <http://drupal.org/user/65776>
 
 Module maintainers
 ------------------
