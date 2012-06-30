@@ -79,4 +79,34 @@ class LanguageUrlRewritingTest extends WebTestBase {
     $this->drupalGet("$prefix/$path");
     $this->assertResponse(404, $message2);
   }
+
+  /**
+   * Check URL rewriting when using a domain name and a non-standard port.
+   */
+  function testDomainNameNegotiationPort() {
+    $language_domain = 'example.fr';
+    $edit = array(
+      'language_negotiation_url_part' => 1,
+      'domain[fr]' => $language_domain
+    );
+    $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+
+    // Enable domain configuration.
+    variable_set('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_DOMAIN);
+
+    // Reset static caching.
+    drupal_static_reset('language_list');
+    drupal_static_reset('language_url_outbound_alter');
+    drupal_static_reset('language_url_rewrite_url');
+
+    // Fake a different port.
+    $_SERVER['HTTP_HOST'] .= ':88';
+
+    // Create an absolute French link.
+    $language = language_load('fr');
+    $url = url('', array('absolute' => TRUE, 'language' => $language));
+
+    $this->assertTrue(strcmp($url, 'http://example.fr:88/') == 0, 'The right port is used.');
+  }
+
 }

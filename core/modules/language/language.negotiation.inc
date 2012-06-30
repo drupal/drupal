@@ -383,6 +383,15 @@ function language_url_rewrite_url(&$path, &$options) {
           $url_scheme = ($is_https) ? 'https://' : 'http://';
           $options['absolute'] = TRUE;
           $options['base_url'] = $url_scheme . $domains[$options['language']->langcode];
+
+          // HTTP_HOST will optionally contain the port. Preserve that for
+          // the domain of the target language as well.
+          $http_host = $_SERVER['HTTP_HOST'];
+          if (strpos($http_host, ':') !== FALSE) {
+            $http_host_tmp = explode(':', $http_host);
+            $options['base_url'] .= ':' . end($http_host_tmp);
+          }
+
           if (isset($options['https']) && variable_get('https', FALSE)) {
             if ($options['https'] === TRUE) {
               $options['base_url'] = str_replace('http://', 'https://', $options['base_url']);
