@@ -42,7 +42,7 @@ class DrupalBundle extends Bundle
       $container->setDefinition($id, $definition);
     }
 
-    $this->registerLanguages($container);
+    $this->registerLanguageServices($container);
 
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
@@ -128,7 +128,7 @@ class DrupalBundle extends Bundle
   /**
    * Registers language-related services to the container.
    */
-  function registerLanguages($container) {
+  function registerLanguageServices($container) {
 
     $types = language_types_get_all();
 
