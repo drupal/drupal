@@ -22,6 +22,7 @@ class DrupalBundle extends Bundle
         'tags' => array(),
         'references' => array(),
         'methods' => array(),
+        'arguments' => array(),
       );
 
       $references = array();
@@ -30,6 +31,15 @@ class DrupalBundle extends Bundle
       }
 
       $definition = new Definition($info['class'], $references);
+
+      if (isset($info['factory_class']) && isset($info['factory_method'])) {
+        $definition->setFactoryClass($info['factory_class']);
+        $definition->setFactoryMethod($info['factory_method']);
+      }
+
+      foreach ($info['arguments'] as $argument) {
+        $definition->addArgument($argument);
+      }
 
       foreach($info['tags'] as $tag) {
         $definition->addTag($tag);
@@ -121,6 +131,18 @@ class DrupalBundle extends Bundle
         'class' => 'Symfony\Component\HttpKernel\EventListener\ExceptionListener',
         'references' => array('exception_controller'),
         'tags' => array('kernel.event_subscriber')
+      ),
+      'database' => array(
+        'class' => 'Drupal\Core\Database\Connection',
+        'factory_class' => 'Drupal\Core\Database\Database',
+        'factory_method' => 'getConnection',
+        'arguments' => array('default'),
+      ),
+      'database.slave' => array(
+        'class' => 'Drupal\Core\Database\Connection',
+        'factory_class' => 'Drupal\Core\Database\Database',
+        'factory_method' => 'getConnection',
+        'arguments' => array('slave'),
       ),
     );
   }
