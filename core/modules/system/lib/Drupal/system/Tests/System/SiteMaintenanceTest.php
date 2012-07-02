@@ -27,7 +27,7 @@ class SiteMaintenanceTest extends WebTestBase {
     parent::setUp(array('node'));
 
     // Configure 'node' as front page.
-    variable_set('site_frontpage', 'node');
+    config('system.site')->set('page.front', 'node')->save();
 
     // Create a user allowed to access site in maintenance mode.
     $this->user = $this->drupalCreateUser(array('access site in maintenance mode'));
@@ -48,7 +48,7 @@ class SiteMaintenanceTest extends WebTestBase {
 
     $admin_message = t('Operating in maintenance mode. <a href="@url">Go online.</a>', array('@url' => url('admin/config/development/maintenance')));
     $user_message = t('Operating in maintenance mode.');
-    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')));
+    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => config('system.site')->get('name')));
 
     $this->drupalGet('');
     $this->assertRaw($admin_message, t('Found the site maintenance mode message.'));

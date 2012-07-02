@@ -1465,7 +1465,13 @@ function system_ip_blocking_delete_submit($form, &$form_state) {
  * @ingroup forms
  * @see system_settings_form()
  */
-function system_site_information_settings() {
+function system_site_information_settings($form, &$form_state) {
+  $site_config = config('system.site');
+  $site_mail = $site_config->get('mail');
+  if (empty($site_mail)) {
+    $site_mail = ini_get('sendmail_from');
+  }
+
   $form['site_information'] = array(
     '#type' => 'fieldset',
     '#title' => t('Site details'),
@@ -1473,19 +1479,19 @@ function system_site_information_settings() {
   $form['site_information']['site_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Site name'),
-    '#default_value' => variable_get('site_name', 'Drupal'),
+    '#default_value' => $site_config->get('name'),
     '#required' => TRUE
   );
   $form['site_information']['site_slogan'] = array(
     '#type' => 'textfield',
     '#title' => t('Slogan'),
-    '#default_value' => variable_get('site_slogan', ''),
+    '#default_value' => $site_config->get('slogan'),
     '#description' => t("How this is used depends on your site's theme."),
   );
   $form['site_information']['site_mail'] = array(
     '#type' => 'email',
     '#title' => t('E-mail address'),
-    '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
+    '#default_value' => $site_mail,
     '#description' => t("The <em>From</em> address in automated e-mails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this e-mail being flagged as spam.)"),
     '#required' => TRUE,
   );
@@ -1496,7 +1502,7 @@ function system_site_information_settings() {
   $form['front_page']['site_frontpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Default front page'),
-    '#default_value' => (variable_get('site_frontpage') != 'user' ? drupal_get_path_alias(variable_get('site_frontpage', 'user')) : ''),
+    '#default_value' => ($site_config->get('page.front') != 'user' ? drupal_get_path_alias($site_config->get('page.front')) : ''),
     '#size' => 40,
     '#description' => t('Optionally, specify a relative URL to display as the front page.  Leave blank to display the default content feed.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)),
@@ -1508,7 +1514,7 @@ function system_site_information_settings() {
   $form['error_page']['site_403'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 403 (access denied) page'),
-    '#default_value' => variable_get('site_403', ''),
+    '#default_value' => $site_config->get('page.403'),
     '#size' => 40,
     '#description' => t('This page is displayed when the requested document is denied to the current user. Leave blank to display a generic "access denied" page.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)),
@@ -1516,7 +1522,7 @@ function system_site_information_settings() {
   $form['error_page']['site_404'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 404 (not found) page'),
-    '#default_value' => variable_get('site_404', ''),
+    '#default_value' => $site_config->get('page.404'),
     '#size' => 40,
     '#description' => t('This page is displayed when no other content matches the requested document. Leave blank to display a generic "page not found" page.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)),
@@ -1524,7 +1530,7 @@ function system_site_information_settings() {
 
   $form['#validate'][] = 'system_site_information_settings_validate';
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
 }
 
 /**
@@ -1559,6 +1565,20 @@ function system_site_information_settings_validate($form, &$form_state) {
   if (!empty($form_state['values']['site_404']) && !drupal_valid_path($form_state['values']['site_404'])) {
     form_set_error('site_404', t("The path '%path' is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_404'])));
   }
+}
+
+/**
+ * Form submission handler for system_site_information_settings().
+ */
+function system_site_information_settings_submit($form, &$form_state) {
+  config('system.site')
+    ->set('name', $form_state['values']['site_name'])
+    ->set('mail', $form_state['values']['site_mail'])
+    ->set('slogan', $form_state['values']['site_slogan'])
+    ->set('page.front', $form_state['values']['site_frontpage'])
+    ->set('page.403', $form_state['values']['site_403'])
+    ->set('page.404', $form_state['values']['site_404'])
+    ->save();
 }
 
 /**
@@ -2219,7 +2239,7 @@ function system_site_maintenance_mode() {
   $form['maintenance_mode_message'] = array(
     '#type' => 'textarea',
     '#title' => t('Message to display when in maintenance mode'),
-    '#default_value' => variable_get('maintenance_mode_message', t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))),
+    '#default_value' => variable_get('maintenance_mode_message', t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => config('system.site')->get('name')))),
   );
 
   return system_settings_form($form);

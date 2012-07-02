@@ -31,7 +31,7 @@ class MatchPathTest extends WebTestBase {
 
     // Set up a random site front page to test the '<front>' placeholder.
     $this->front = $this->randomName();
-    variable_set('site_frontpage', $this->front);
+    config('system.site')->set('page.front', $this->front)->save();
     // Refresh our static variables from the database.
     $this->refreshVariables();
   }

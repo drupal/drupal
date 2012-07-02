@@ -69,7 +69,7 @@ function taxonomy_term_page(Term $term) {
  */
 function taxonomy_term_feed(Term $term) {
   $channel['link'] = url('taxonomy/term/' . $term->tid, array('absolute' => TRUE));
-  $channel['title'] = variable_get('site_name', 'Drupal') . ' - ' . $term->name;
+  $channel['title'] = config('system.site')->get('name') . ' - ' . $term->name;
   // Only display the description if we have a single term, to avoid clutter and confusion.
   // HTML will be removed from feed description.
   $channel['description'] = check_markup($term->description, $term->format, '', TRUE);

@@ -28,11 +28,11 @@ function hook_language_init() {
 
   switch (drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode) {
     case 'it':
-      $conf['site_name'] = 'Il mio sito Drupal';
+      $conf['system.site']['name'] = 'Il mio sito Drupal';
       break;
 
     case 'fr':
-      $conf['site_name'] = 'Mon site Drupal';
+      $conf['system.site']['name'] = 'Mon site Drupal';
       break;
   }
 }

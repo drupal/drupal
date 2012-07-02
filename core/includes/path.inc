@@ -22,7 +22,7 @@ function drupal_path_initialize() {
   // If on the front page, resolve to the front page path, including for calls
   // to current_path() while drupal_get_normal_path() is in progress.
   if (empty($path)) {
-    $path = variable_get('site_frontpage', 'user');
+    $path = config('system.site')->get('page.front');
     _current_path($path);
   }
 
@@ -298,7 +298,7 @@ function drupal_is_front_page() {
   $is_front_page = &$drupal_static_fast['is_front_page'];
 
   if (!isset($is_front_page)) {
-    $is_front_page = (current_path() == variable_get('site_frontpage', 'user'));
+    $is_front_page = (current_path() == config('system.site')->get('page.front'));
   }
 
   return $is_front_page;
@@ -329,7 +329,7 @@ function drupal_match_path($path, $patterns) {
     $replacements = array(
       '|',
       '.*',
-      '\1' . preg_quote(variable_get('site_frontpage', 'user'), '/') . '\2'
+      '\1' . preg_quote(config('system.site')->get('page.front'), '/') . '\2'
     );
     $patterns_quoted = preg_quote($patterns, '/');
     $regexps[$patterns] = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';

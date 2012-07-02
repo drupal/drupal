@@ -25,7 +25,7 @@ class LocalePathTest extends WebTestBase {
     parent::setUp(array('node', 'locale', 'path'));
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-    variable_set('site_frontpage', 'node');
+    config('system.site')->set('page.front', 'node')->save();
   }
 
   /**

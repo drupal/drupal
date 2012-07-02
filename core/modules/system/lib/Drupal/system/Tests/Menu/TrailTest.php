@@ -119,8 +119,10 @@ class TrailTest extends MenuTestBase {
    */
   function testCustom403And404Pages() {
     // Set the custom 403 and 404 pages we will use.
-    variable_set('site_403', 'menu-test/custom-403-page');
-    variable_set('site_404', 'menu-test/custom-404-page');
+    config('system.site')
+      ->set('page.403', 'menu-test/custom-403-page')
+      ->set('page.404', 'menu-test/custom-404-page')
+      ->save();
 
     // Define the paths we'll visit to trigger 403 and 404 responses during
     // this test, and the expected active trail for each case.

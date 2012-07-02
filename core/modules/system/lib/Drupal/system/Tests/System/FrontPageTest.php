@@ -31,7 +31,7 @@ class FrontPageTest extends WebTestBase {
     $this->node_path = "node/" . $this->drupalCreateNode(array('promote' => 1))->nid;
 
     // Configure 'node' as front page.
-    variable_set('site_frontpage', 'node');
+    config('system.site')->set('page.front', 'node')->save();
     // Enable front page logging in system_test.module.
     variable_set('front_page_output', 1);
   }

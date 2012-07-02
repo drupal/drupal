@@ -41,7 +41,7 @@ class HttpRequestTest extends WebTestBase {
     $result = drupal_http_request(url('node', array('absolute' => TRUE)));
     $this->assertEqual($result->code, 200, t('Fetched page successfully.'));
     $this->drupalSetContent($result->data);
-    $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => variable_get('site_name', 'Drupal'))), t('Site title matches.'));
+    $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => config('system.site')->get('name'))), t('Site title matches.'));
 
     // Test that code and status message is returned.
     $result = drupal_http_request(url('pagedoesnotexist', array('absolute' => TRUE)));

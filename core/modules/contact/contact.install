@@ -68,11 +68,15 @@ function contact_schema() {
  * Implements hook_install().
  */
 function contact_install() {
+  $site_mail = config('system.site')->get('mail');
+  if (empty($site_mail)) {
+    $site_mail = ini_get('sendmail_from');
+  }
   // Insert a default contact category.
   db_insert('contact')
     ->fields(array(
       'category' => 'Website feedback',
-      'recipients' => variable_get('site_mail', ini_get('sendmail_from')),
+      'recipients' => $site_mail,
       'selected' => 1,
       'reply' => '',
     ))

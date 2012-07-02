@@ -2482,6 +2482,7 @@ function drupal_deliver_html_page($page_callback_result) {
 
   // Menu status constants are integers; page content is a string or array.
   if (is_int($page_callback_result)) {
+    $site_config = config('system.site');
     // @todo: Break these up into separate functions?
     switch ($page_callback_result) {
       case MENU_NOT_FOUND:
@@ -2498,7 +2499,7 @@ function drupal_deliver_html_page($page_callback_result) {
           $_GET['destination'] = current_path();
         }
 
-        $path = drupal_get_normal_path(variable_get('site_404', ''));
+        $path = drupal_get_normal_path($site_config->get('page.404'));
         if ($path && $path != current_path()) {
           // Custom 404 handler. Set the active item in case there are tabs to
           // display, or other dependencies on the path.
@@ -2527,7 +2528,7 @@ function drupal_deliver_html_page($page_callback_result) {
           $_GET['destination'] = current_path();
         }
 
-        $path = drupal_get_normal_path(variable_get('site_403', ''));
+        $path = drupal_get_normal_path($site_config->get('page.403'));
         if ($path && $path != current_path()) {
           // Custom 403 handler. Set the active item in case there are tabs to
           // display or other dependencies on the path.
@@ -2550,7 +2551,7 @@ function drupal_deliver_html_page($page_callback_result) {
         drupal_add_http_header('Status', '503 Service unavailable');
         drupal_set_title(t('Site under maintenance'));
         print theme('maintenance_page', array('content' => filter_xss_admin(variable_get('maintenance_mode_message',
-          t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))))));
+          t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => $site_config->get('name')))))));
         break;
     }
   }

@@ -664,7 +664,7 @@ abstract class WebTestBase extends TestBase {
 
     // Restore necessary variables.
     variable_set('install_task', 'done');
-    variable_set('site_mail', 'simpletest@example.com');
+    config('system.site')->set('mail', 'simpletest@example.com')->save();
     variable_set('date_default_timezone', date_default_timezone_get());
 
     // Set up English language.

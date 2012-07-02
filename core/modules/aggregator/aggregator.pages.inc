@@ -11,7 +11,7 @@
  * @see aggregator_menu()
  */
 function aggregator_page_last() {
-  drupal_add_feed('aggregator/rss', variable_get('site_name', 'Drupal') . ' ' . t('aggregator'));
+  drupal_add_feed('aggregator/rss', config('system.site')->get('name') . ' ' . t('aggregator'));
 
   $items = aggregator_load_feed_items('sum');
 
@@ -61,7 +61,7 @@ function aggregator_page_source_form($form, $form_state, $feed) {
  * @ingroup forms
  */
 function aggregator_page_category($category) {
-  drupal_add_feed('aggregator/rss/' . $category['cid'], variable_get('site_name', 'Drupal') . ' ' . t('aggregator - @title', array('@title' => $category['title'])));
+  drupal_add_feed('aggregator/rss/' . $category['cid'], config('system.site')->get('name') . ' ' . t('aggregator - @title', array('@title' => $category['title'])));
 
   // It is safe to include the cid in the query because it's loaded from the
   // database by aggregator_category_load().
@@ -452,7 +452,7 @@ function theme_aggregator_page_rss($variables) {
     $items .= format_rss_item($feed->ftitle . ': ' . $feed->title, $feed->link, $feed->description, array('pubDate' => date('r', $feed->timestamp)));
   }
 
-  $site_name = variable_get('site_name', 'Drupal');
+  $site_name = config('system.site')->get('name');
   $url = url((isset($category) ? 'aggregator/categories/' . $category->cid : 'aggregator'), array('absolute' => TRUE));
   $description = isset($category) ? t('@site_name - aggregated feeds in category @title', array('@site_name' => $site_name, '@title' => $category->title)) : t('@site_name - aggregated feeds', array('@site_name' => $site_name));
 
@@ -504,7 +504,7 @@ function theme_aggregator_page_opml($variables) {
   $output  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<opml version=\"1.1\">\n";
   $output .= "<head>\n";
-  $output .= '<title>' . check_plain(variable_get('site_name', 'Drupal')) . "</title>\n";
+  $output .= '<title>' . check_plain(config('system.site')->get('name')) . "</title>\n";
   $output .= '<dateModified>' . gmdate(DATE_RFC2822, REQUEST_TIME) . "</dateModified>\n";
   $output .= "</head>\n";
   $output .= "<body>\n";

@@ -111,13 +111,15 @@ class TokenReplaceTest extends WebTestBase {
     );
 
     // Set a few site variables.
-    variable_set('site_name', '<strong>Drupal<strong>');
-    variable_set('site_slogan', '<blink>Slogan</blink>');
+    config('system.site')
+      ->set('name', '<strong>Drupal<strong>')
+      ->set('slogan', '<blink>Slogan</blink>')
+      ->save();
 
     // Generate and test sanitized tokens.
     $tests = array();
-    $tests['[site:name]'] = check_plain(variable_get('site_name', 'Drupal'));
-    $tests['[site:slogan]'] = check_plain(variable_get('site_slogan', ''));
+    $tests['[site:name]'] = check_plain(config('system.site')->get('name'));
+    $tests['[site:slogan]'] = check_plain(config('system.site')->get('slogan'));
     $tests['[site:mail]'] = 'simpletest@example.com';
     $tests['[site:url]'] = url('<front>', $url_options);
     $tests['[site:url-brief]'] = preg_replace(array('!^https?://!', '!/$!'), '', url('<front>', $url_options));
@@ -132,8 +134,8 @@ class TokenReplaceTest extends WebTestBase {
     }
 
     // Generate and test unsanitized tokens.
-    $tests['[site:name]'] = variable_get('site_name', 'Drupal');
-    $tests['[site:slogan]'] = variable_get('site_slogan', '');
+    $tests['[site:name]'] = config('system.site')->get('name');
+    $tests['[site:slogan]'] = config('system.site')->get('slogan');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array(), array('language' => $language_interface, 'sanitize' => FALSE));

@@ -94,7 +94,7 @@ class ExceptionController {
     $system_path = $request->attributes->get('system_path');
     watchdog('access denied', $system_path, NULL, WATCHDOG_WARNING);
 
-    $path = drupal_get_normal_path(variable_get('site_403', ''));
+    $path = drupal_get_normal_path(config('system.site')->get('page.403'));
     if ($path && $path != $system_path) {
       // Keep old path for reference, and to allow forms to redirect to it.
       if (!isset($_GET['destination'])) {
@@ -160,7 +160,7 @@ class ExceptionController {
       $_GET['destination'] = $system_path;
     }
 
-    $path = drupal_get_normal_path(variable_get('site_404', ''));
+    $path = drupal_get_normal_path(config('system.site')->get('page.404'));
     if ($path && $path != $system_path) {
       // @todo Um, how do I specify an override URL again? Totally not clear. Do
       //   that and sub-call the kernel rather than using meah().

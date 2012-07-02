@@ -25,8 +25,10 @@ class PageCacheTest extends WebTestBase {
   function setUp() {
     parent::setUp(array('node', 'system_test'));
 
-    variable_set('site_name', 'Drupal');
-    variable_set('site_frontpage', 'node');
+    config('system.site')
+      ->set('name', 'Drupal')
+      ->set('page.front', 'node')
+      ->save();
   }
 
   /**
@@ -140,7 +142,7 @@ class PageCacheTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
     $this->assertFalse($this->drupalGetHeader('Content-Encoding'), t('A Content-Encoding header was not sent.'));
-    $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => variable_get('site_name', 'Drupal'))), t('Site title matches.'));
+    $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => config('system.site')->get('name'))), t('Site title matches.'));
     $this->assertRaw('</html>', t('Page was not compressed.'));
   }
 }

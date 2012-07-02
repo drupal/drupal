@@ -2458,17 +2458,18 @@ function template_preprocess_html(&$variables) {
     drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
   }
 
+  $site_config = config('system.site');
   // Construct page title.
   if (drupal_get_title()) {
     $head_title = array(
       'title' => strip_tags(drupal_get_title()),
-      'name' => check_plain(variable_get('site_name', 'Drupal')),
+      'name' => check_plain($site_config->get('name')),
     );
   }
   else {
-    $head_title = array('name' => check_plain(variable_get('site_name', 'Drupal')));
-    if (variable_get('site_slogan', '')) {
-      $head_title['slogan'] = filter_xss_admin(variable_get('site_slogan', ''));
+    $head_title = array('name' => check_plain($site_config->get('name')));
+    if ($site_config->get('slogan')) {
+      $head_title['slogan'] = filter_xss_admin($site_config->get('slogan'));
     }
   }
   $variables['head_title_array'] = $head_title;
@@ -2534,6 +2535,7 @@ function template_preprocess_html(&$variables) {
  */
 function template_preprocess_page(&$variables) {
   $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+  $site_config = config('system.site');
 
   // Move some variables to the top level for themer convenience and template cleanliness.
   $variables['show_messages'] = $variables['page']['#show_messages'];
@@ -2562,8 +2564,8 @@ function template_preprocess_page(&$variables) {
   $variables['main_menu']         = theme_get_setting('toggle_main_menu') ? menu_main_menu() : array();
   $variables['secondary_menu']    = theme_get_setting('toggle_secondary_menu') ? menu_secondary_menu() : array();
   $variables['action_links']      = menu_local_actions();
-  $variables['site_name']         = (theme_get_setting('toggle_name') ? filter_xss_admin(variable_get('site_name', 'Drupal')) : '');
-  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? filter_xss_admin(variable_get('site_slogan', '')) : '');
+  $variables['site_name']         = (theme_get_setting('toggle_name') ? filter_xss_admin($site_config->get('name')) : '');
+  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? filter_xss_admin($site_config->get('slogan')) : '');
   $variables['tabs']              = menu_local_tabs();
 
   if ($node = menu_get_object()) {
@@ -2745,17 +2747,21 @@ function template_preprocess_maintenance_page(&$variables) {
     $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
   }
 
+  $site_config = config('system.site');
+  $site_name = $site_config->get('name');
+  $site_slogan = $site_config->get('slogan');
+
   // Construct page title
   if (drupal_get_title()) {
     $head_title = array(
       'title' => strip_tags(drupal_get_title()),
-      'name' => variable_get('site_name', 'Drupal'),
+      'name' => $site_name,
     );
   }
   else {
-    $head_title = array('name' => variable_get('site_name', 'Drupal'));
-    if (variable_get('site_slogan', '')) {
-      $head_title['slogan'] = variable_get('site_slogan', '');
+    $head_title = array('name' => $site_name);
+    if ($site_slogan) {
+      $head_title['slogan'] = $site_slogan;
     }
   }
 
@@ -2772,8 +2778,8 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['main_menu']         = array();
   $variables['secondary_menu']    = array();
-  $variables['site_name']         = (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : '');
-  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : '');
+  $variables['site_name']         = (theme_get_setting('toggle_name') ? $site_name : '');
+  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? $site_slogan : '');
   $variables['tabs']              = '';
   $variables['title']             = drupal_get_title();
 

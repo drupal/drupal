@@ -98,7 +98,7 @@ class FunctionsTest extends WebTestBase {
     // Required to verify the "active" class in expected links below, and
     // because the current path is different when running tests manually via
     // simpletest.module ('batch') and via the testing framework ('').
-    _current_path(variable_get('site_frontpage', 'user'));
+    _current_path(config('system.site')->get('page.front'));
 
     // Verify that a list of links is properly rendered.
     $variables = array();

@@ -661,7 +661,7 @@ function overlay_overlay_parent_initialize() {
   // Let the client side know which paths are administrative.
   $paths = path_get_admin_paths();
   foreach ($paths as &$type) {
-    $type = str_replace('<front>', variable_get('site_frontpage', 'user'), $type);
+    $type = str_replace('<front>', config('system.site')->get('page.front'), $type);
   }
   drupal_add_js(array('overlay' => array('paths' => $paths)), 'setting');
   $path_prefixes = array();

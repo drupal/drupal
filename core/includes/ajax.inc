@@ -516,7 +516,7 @@ function ajax_prepare_response($page_callback_result) {
 
       case MENU_SITE_OFFLINE:
         $commands[] = ajax_command_alert(filter_xss_admin(variable_get('maintenance_mode_message',
-          t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))))));
+          t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => config('system.site')->get('name'))))));
         break;
     }
   }

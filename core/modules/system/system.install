@@ -1938,6 +1938,22 @@ function system_update_8011() {
 }
 
 /**
+ * Moves site system settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8012() {
+  update_variables_to_config('system.site', array(
+    'site_name' => 'name',
+    'site_mail' => 'mail',
+    'site_slogan' => 'slogan',
+    'site_frontpage' => 'page.front',
+    'site_403' => 'page.403',
+    'site_404' => 'page.404',
+  ));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

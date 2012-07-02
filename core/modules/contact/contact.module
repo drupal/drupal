@@ -170,7 +170,7 @@ function contact_load($cid) {
 function contact_mail($key, &$message, $params) {
   $language = $message['language'];
   $variables = array(
-    '!site-name' => variable_get('site_name', 'Drupal'),
+    '!site-name' => config('system.site')->get('name'),
     '!subject' => $params['subject'],
     '!category' => isset($params['category']['category']) ? $params['category']['category'] : '',
     '!form-url' => url(current_path(), array('absolute' => TRUE, 'language' => $language)),

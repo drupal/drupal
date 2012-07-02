@@ -50,7 +50,10 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
 
     if (empty($path)) {
       // @todo Temporary hack. Fix when configuration is injectable.
-      $path = variable_get('site_frontpage', 'user');
+      $path = config('system.site')->get('page.front');
+      if (empty($path)) {
+        $path = 'user';
+      }
     }
 
     $this->setPath($request, $path);

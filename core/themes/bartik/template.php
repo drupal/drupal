@@ -43,6 +43,7 @@ function bartik_process_html(&$variables) {
  * Implements hook_process_HOOK() for page.tpl.php.
  */
 function bartik_process_page(&$variables) {
+  $site_config = config('system.site');
   // Hook into color.module.
   if (module_exists('color')) {
     _color_page_alter($variables);
@@ -53,11 +54,11 @@ function bartik_process_page(&$variables) {
   $variables['hide_site_slogan'] = theme_get_setting('toggle_slogan') ? FALSE : TRUE;
   if ($variables['hide_site_name']) {
     // If toggle_name is FALSE, the site_name will be empty, so we rebuild it.
-    $variables['site_name'] = filter_xss_admin(variable_get('site_name', 'Drupal'));
+    $variables['site_name'] = filter_xss_admin($site_config->get('name'));
   }
   if ($variables['hide_site_slogan']) {
     // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we rebuild it.
-    $variables['site_slogan'] = filter_xss_admin(variable_get('site_slogan', ''));
+    $variables['site_slogan'] = filter_xss_admin($site_config->get('slogan'));
   }
   // Since the title and the shortcut link are both block level elements,
   // positioning them next to each other is much simpler with a wrapper div.
@@ -94,17 +95,18 @@ function bartik_preprocess_maintenance_page(&$variables) {
  * Implements hook_process_HOOK() for maintenance-page.tpl.php.
  */
 function bartik_process_maintenance_page(&$variables) {
+  $site_config = config('system.site');
   // Always print the site name and slogan, but if they are toggled off, we'll
   // just hide them visually.
   $variables['hide_site_name']   = theme_get_setting('toggle_name') ? FALSE : TRUE;
   $variables['hide_site_slogan'] = theme_get_setting('toggle_slogan') ? FALSE : TRUE;
   if ($variables['hide_site_name']) {
     // If toggle_name is FALSE, the site_name will be empty, so we rebuild it.
-    $variables['site_name'] = filter_xss_admin(variable_get('site_name', 'Drupal'));
+    $variables['site_name'] = filter_xss_admin($site_config->get('name'));
   }
   if ($variables['hide_site_slogan']) {
     // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we rebuild it.
-    $variables['site_slogan'] = filter_xss_admin(variable_get('site_slogan', ''));
+    $variables['site_slogan'] = filter_xss_admin($site_config->get('slogan'));
   }
 }
 

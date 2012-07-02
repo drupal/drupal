@@ -135,7 +135,6 @@ abstract class UpgradePathTestBase extends WebTestBase {
     $this->prepareD8Session();
 
     // Restore necessary variables.
-    // @todo Convert into config('system.site')->set('mail')?
     $this->variable_set('site_mail', 'simpletest@example.com');
 
     drupal_set_time_limit($this->timeLimit);

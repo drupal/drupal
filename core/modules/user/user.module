@@ -1880,7 +1880,7 @@ function user_login($form, &$form_state) {
     ),
   );
 
-  $form['name']['#description'] = t('Enter your @s username.', array('@s' => variable_get('site_name', 'Drupal')));
+  $form['name']['#description'] = t('Enter your @s username.', array('@s' => config('system.site')->get('name')));
   $form['pass'] = array('#type' => 'password',
     '#title' => t('Password'),
     '#description' => t('Enter the password that accompanies your username.'),
@@ -3308,7 +3308,11 @@ function _user_mail_notify($op, $account, $language = NULL) {
     if ($op == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.
-      drupal_mail('user', 'register_pending_approval_admin', variable_get('site_mail', ini_get('sendmail_from')), language_default(), $params);
+      $site_mail = config('system.site')->get('mail');
+      if (empty($site_mail)) {
+        $site_mail = ini_get('sendmail_from');
+      }
+      drupal_mail('user', 'register_pending_approval_admin', $site_mail, language_default(), $params);
     }
   }
   return empty($mail) ? NULL : $mail['result'];

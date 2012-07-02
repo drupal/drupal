@@ -118,7 +118,11 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *   accepted at php-level, which still doesn't guarantee it to be delivered.)
  */
 function drupal_mail($module, $key, $to, $language, $params = array(), $from = NULL, $send = TRUE) {
-  $default_from = variable_get('site_mail', ini_get('sendmail_from'));
+  $site_mail = config('system.site')->get('mail');
+  if (empty($site_mail)) {
+    $site_mail = ini_get('sendmail_from');
+  }
+  $default_from = $site_mail;
 
   // Bundle up the variables into a structured array for altering.
   $message = array(

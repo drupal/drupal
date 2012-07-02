@@ -51,7 +51,7 @@ class SimpleTestTest extends WebTestBase {
     if (!$this->inCURL()) {
       $this->drupalGet('node');
       $this->assertTrue($this->drupalGetHeader('Date'), t('An HTTP header was received.'));
-      $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => variable_get('site_name', 'Drupal'))), t('Site title matches.'));
+      $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => config('system.site')->get('name'))), t('Site title matches.'));
       $this->assertNoTitle('Foo', t('Site title does not match.'));
       // Make sure that we are locked out of the installer when prefixing
       // using the user-agent header. This is an important security check.

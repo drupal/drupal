@@ -136,7 +136,7 @@ class RouterTest extends WebTestBase {
   function testMaintenanceModeLoginPaths() {
     variable_set('maintenance_mode', TRUE);
 
-    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')));
+    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => config('system.site')->get('name')));
     $this->drupalGet('node');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');

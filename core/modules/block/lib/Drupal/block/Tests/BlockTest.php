@@ -167,7 +167,7 @@ class BlockTest extends WebTestBase {
   function testBlockVisibility() {
     // Enable Node module and change the front page path to 'node'.
     module_enable(array('node'));
-    variable_set('site_frontpage', 'node');
+    config('system.site')->set('page.front', 'node')->save();
 
     $block = array();
 

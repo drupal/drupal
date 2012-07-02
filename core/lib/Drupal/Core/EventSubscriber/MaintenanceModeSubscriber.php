@@ -39,7 +39,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
       // Deliver the 503 page.
       drupal_maintenance_theme();
       drupal_set_title(t('Site under maintenance'));
-      $content = theme('maintenance_page', array('content' => filter_xss_admin(variable_get('maintenance_mode_message', t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))))));
+      $content = theme('maintenance_page', array('content' => filter_xss_admin(variable_get('maintenance_mode_message', t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => config('system.site')->get('name')))))));
       $response = new Response('Service unavailable', 503);
       $response->setContent($content);
       $event->setResponse($response);

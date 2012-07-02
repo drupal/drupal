@@ -521,7 +521,7 @@ function _update_get_cached_available_releases() {
 function update_mail($key, &$message, $params) {
   $language = $message['language'];
   $langcode = $language->langcode;
-  $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => variable_get('site_name', 'Drupal')), array('langcode' => $langcode));
+  $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => config('system.site')->get('name')), array('langcode' => $langcode));
   foreach ($params as $msg_type => $msg_reason) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $language);
   }
