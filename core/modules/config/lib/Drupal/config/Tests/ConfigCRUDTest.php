@@ -29,10 +29,13 @@ class ConfigCRUDTest extends WebTestBase {
     $storage = new DatabaseStorage();
     $name = 'config_test.crud';
 
-    // Create a new configuration object.
     $config = config($name);
+    $this->assertIdentical($config->isNew(), TRUE);
+
+    // Create a new configuration object.
     $config->set('value', 'initial');
     $config->save();
+    $this->assertIdentical($config->isNew(), FALSE);
 
     // Verify the active store contains the saved value.
     $actual_data = $storage->read($name);
@@ -41,6 +44,7 @@ class ConfigCRUDTest extends WebTestBase {
     // Update the configuration object instance.
     $config->set('value', 'instance-update');
     $config->save();
+    $this->assertIdentical($config->isNew(), FALSE);
 
     // Verify the active store contains the updated value.
     $actual_data = $storage->read($name);
@@ -49,24 +53,28 @@ class ConfigCRUDTest extends WebTestBase {
     // Verify a call to config() immediately returns the updated value.
     $new_config = config($name);
     $this->assertIdentical($new_config->get(), $config->get());
+    $this->assertIdentical($config->isNew(), FALSE);
 
     // Delete the configuration object.
     $config->delete();
 
     // Verify the configuration object is empty.
     $this->assertIdentical($config->get(), array());
+    $this->assertIdentical($config->isNew(), TRUE);
 
     // Verify the active store contains no value.
     $actual_data = $storage->read($name);
-    $this->assertIdentical($actual_data, array());
+    $this->assertIdentical($actual_data, FALSE);
 
     // Verify config() returns no data.
     $new_config = config($name);
     $this->assertIdentical($new_config->get(), $config->get());
+    $this->assertIdentical($config->isNew(), TRUE);
 
     // Re-create the configuration object.
     $config->set('value', 're-created');
     $config->save();
+    $this->assertIdentical($config->isNew(), FALSE);
 
     // Verify the active store contains the updated value.
     $actual_data = $storage->read($name);
@@ -75,6 +83,7 @@ class ConfigCRUDTest extends WebTestBase {
     // Verify a call to config() immediately returns the updated value.
     $new_config = config($name);
     $this->assertIdentical($new_config->get(), $config->get());
+    $this->assertIdentical($config->isNew(), FALSE);
   }
 
   /**

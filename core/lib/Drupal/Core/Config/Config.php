@@ -20,6 +20,13 @@ class Config {
   protected $name;
 
   /**
+   * Whether the configuration object is new or has been saved to the storage.
+   *
+   * @var bool
+   */
+  protected $isNew = TRUE;
+
+  /**
    * The data of the configuration object.
    *
    * @var array
@@ -57,6 +64,13 @@ class Config {
   public function setName($name) {
     $this->name = $name;
     return $this;
+  }
+
+  /**
+   * Returns whether this configuration object is new.
+   */
+  public function isNew() {
+    return $this->isNew;
   }
 
   /**
@@ -208,9 +222,13 @@ class Config {
    * Loads configuration data into this object.
    */
   public function load() {
-    $this->setData(array());
     $data = $this->storageDispatcher->selectStorage('read', $this->name)->read($this->name);
-    if ($data !== FALSE) {
+    if ($data === FALSE) {
+      $this->isNew = TRUE;
+      $this->setData(array());
+    }
+    else {
+      $this->isNew = FALSE;
       $this->setData($data);
     }
     return $this;
@@ -222,6 +240,7 @@ class Config {
   public function save() {
     $this->sortByKey($this->data);
     $this->storageDispatcher->selectStorage('write', $this->name)->write($this->name, $this->data);
+    $this->isNew = FALSE;
     return $this;
   }
 
@@ -251,6 +270,7 @@ class Config {
   public function delete() {
     $this->data = array();
     $this->storageDispatcher->selectStorage('write', $this->name)->delete($this->name);
+    $this->isNew = TRUE;
     return $this;
   }
 }

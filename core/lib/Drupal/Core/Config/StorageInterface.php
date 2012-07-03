@@ -30,9 +30,9 @@ interface StorageInterface {
    * @param string $name
    *   The name of a configuration object to load.
    *
-   * @return array
+   * @return array|bool
    *   The configuration data stored for the configuration object name. If no
-   *   configuration data exists for the given name, an empty array is returned.
+   *   configuration data exists for the given name, FALSE is returned.
    */
   public function read($name);
 

@@ -68,7 +68,7 @@ class ConfigFileContentTest extends WebTestBase {
 
     // Verify nothing was saved.
     $db_data = $database_storage->read($name);
-    $this->assertIdentical($db_data, array());
+    $this->assertIdentical($db_data, FALSE);
 
     // Add a top level value
     $config = config($name);
@@ -181,7 +181,7 @@ class ConfigFileContentTest extends WebTestBase {
 
     // Verify the database entry no longer exists.
     $db_data = $database_storage->read($name);
-    $this->assertIdentical($db_data, array());
+    $this->assertIdentical($db_data, FALSE);
   }
 
   /**

@@ -548,13 +548,11 @@ function image_styles() {
  * @see image_effect_load()
  */
 function image_style_load($name) {
-  $style = config('image.style.' . $name)->get();
-
-  // @todo Requires a more reliable + generic method to check for whether the
-  //   configuration object exists.
-  if (!isset($style['name'])) {
+  $config = config('image.style.' . $name);
+  if ($config->isNew()) {
     return FALSE;
   }
+  $style = $config->get();
 
   if (!empty($style['effects'])) {
     foreach ($style['effects'] as $ieid => $effect) {
@@ -579,6 +577,8 @@ function image_style_load($name) {
  */
 function image_style_save($style) {
   $config = config('image.style.' . $style['name']);
+  $is_new = $config->isNew();
+
   $config->set('name', $style['name']);
   if (isset($style['effects'])) {
     $config->set('effects', $style['effects']);
@@ -587,11 +587,9 @@ function image_style_save($style) {
     $config->set('effects', array());
   }
   $config->save();
-  // @todo is_new must only be set when the configuration object did not exist
-  //   yet.
-  $style['is_new'] = TRUE;
 
   // Let other modules update as necessary on save.
+  $style['is_new'] = $is_new;
   module_invoke_all('image_style_save', $style);
 
   // Clear all caches and flush.

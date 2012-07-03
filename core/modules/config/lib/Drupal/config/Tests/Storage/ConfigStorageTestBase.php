@@ -32,18 +32,18 @@ abstract class ConfigStorageTestBase extends WebTestBase {
   function testCRUD() {
     $name = 'config_test.storage';
 
-    // Reading a non-existing name returns an empty data array.
+    // Reading a non-existing name returns FALSE.
     $data = $this->storage->read($name);
-    $this->assertIdentical($data, array());
+    $this->assertIdentical($data, FALSE);
 
-    // Reading a name containing non-decodeable data returns an empty array.
+    // Reading a name containing non-decodeable data returns FALSE.
     $this->insert($name, '');
     $data = $this->storage->read($name);
-    $this->assertIdentical($data, array());
+    $this->assertIdentical($data, FALSE);
 
     $this->update($name, 'foo');
     $data = $this->storage->read($name);
-    $this->assertIdentical($data, array());
+    $this->assertIdentical($data, FALSE);
 
     $this->delete($name);
 
@@ -76,9 +76,9 @@ abstract class ConfigStorageTestBase extends WebTestBase {
     $result = $this->storage->delete($name);
     $this->assertIdentical($result, FALSE);
 
-    // Reading from a non-existing storage bin returns an empty data array.
+    // Reading from a non-existing storage bin returns FALSE.
     $data = $this->invalidStorage->read($name);
-    $this->assertIdentical($data, array());
+    $this->assertIdentical($data, FALSE);
 
     // Writing to a non-existing storage bin throws an exception.
     try {

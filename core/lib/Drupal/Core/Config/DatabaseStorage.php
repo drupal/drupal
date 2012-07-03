@@ -51,7 +51,7 @@ class DatabaseStorage implements StorageInterface {
    *   Only thrown in case $this->options['throw_exception'] is TRUE.
    */
   public function read($name) {
-    $data = array();
+    $data = FALSE;
     // There are situations, like in the installer, where we may attempt a
     // read without actually having the database available. In this case,
     // catch the exception and just return an empty array so the caller can
@@ -114,7 +114,7 @@ class DatabaseStorage implements StorageInterface {
    */
   public static function decode($raw) {
     $data = @unserialize($raw);
-    return $data !== FALSE ? $data : array();
+    return is_array($data) ? $data : FALSE;
   }
 
   /**

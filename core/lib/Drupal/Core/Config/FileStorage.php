@@ -70,19 +70,12 @@ class FileStorage implements StorageInterface {
    */
   public function read($name) {
     if (!$this->exists($name)) {
-      return array();
+      return FALSE;
     }
     $data = file_get_contents($this->getFilePath($name));
     // @todo Yaml throws a ParseException on invalid data. Is it expected to be
     //   caught or not?
     $data = $this->decode($data);
-    if ($data === FALSE) {
-      return array();
-    }
-    // A simple string is valid YAML for any reason.
-    if (!is_array($data)) {
-      return array();
-    }
     return $data;
   }
 
@@ -131,10 +124,12 @@ class FileStorage implements StorageInterface {
    * @throws Symfony\Component\Yaml\Exception\ParseException
    */
   public static function decode($raw) {
-    if (empty($raw)) {
-      return array();
+    $data = Yaml::parse($raw);
+    // A simple string is valid YAML for any reason.
+    if (!is_array($data)) {
+      return FALSE;
     }
-    return Yaml::parse($raw);
+    return $data;
   }
 
   /**
