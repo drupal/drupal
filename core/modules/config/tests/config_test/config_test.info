@@ -1,0 +1,6 @@
+name = Configuration test module
+package = Core
+version = VERSION
+core = 8.x
+dependencies[] = config
+hidden = TRUE

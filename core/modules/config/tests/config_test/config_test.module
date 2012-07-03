@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * Implements MODULE_config_import_create().
+ */
+function config_test_config_import_create($name, $new_config, $old_config) {
+  // Only configurable thingies require custom handling. Any other module
+  // settings can be synchronized directly.
+  if (strpos($name, 'config_test.dynamic.') !== 0) {
+    return FALSE;
+  }
+  // Set a global value we can check in test code.
+  $GLOBALS['hook_config_import'] = __FUNCTION__;
+
+  $new_config->save();
+  return TRUE;
+}
+
+/**
+ * Implements MODULE_config_import_change().
+ */
+function config_test_config_import_change($name, $new_config, $old_config) {
+  // Only configurable thingies require custom handling. Any other module
+  // settings can be synchronized directly.
+  if (strpos($name, 'config_test.dynamic.') !== 0) {
+    return FALSE;
+  }
+  // Set a global value we can check in test code.
+  $GLOBALS['hook_config_import'] = __FUNCTION__;
+
+  $new_config->save();
+  return TRUE;
+}
+
+/**
+ * Implements MODULE_config_import_delete().
+ */
+function config_test_config_import_delete($name, $new_config, $old_config) {
+  // Only configurable thingies require custom handling. Any other module
+  // settings can be synchronized directly.
+  if (strpos($name, 'config_test.dynamic.') !== 0) {
+    return FALSE;
+  }
+  // Set a global value we can check in test code.
+  $GLOBALS['hook_config_import'] = __FUNCTION__;
+
+  $old_config->delete();
+  return TRUE;
+}
+

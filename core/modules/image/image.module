@@ -500,6 +500,50 @@ function image_path_flush($path) {
 }
 
 /**
+ * Implements MODULE_config_import_create().
+ */
+function image_config_import_create($name, $new_config, $old_config) {
+  // Only image styles require custom handling. Any other module settings can be
+  // synchronized directly.
+  if (strpos($name, 'image.style.') !== 0) {
+    return FALSE;
+  }
+  $style = $new_config->get();
+  return image_style_save($style);
+}
+
+/**
+ * Implements MODULE_config_import_change().
+ */
+function image_config_import_change($name, $new_config, $old_config) {
+  // Only image styles require custom handling. Any other module settings can be
+  // synchronized directly.
+  if (strpos($name, 'image.style.') !== 0) {
+    return FALSE;
+  }
+  $style = $new_config->get();
+  return image_style_save($style);
+}
+
+/**
+ * Implements MODULE_config_import_delete().
+ */
+function image_config_import_delete($name, $new_config, $old_config) {
+  // Only image styles require custom handling. Any other module settings can be
+  // synchronized directly.
+  if (strpos($name, 'image.style.') !== 0) {
+    return FALSE;
+  }
+  // @todo image_style_delete() supports the notion of a "replacement style"
+  //   to be used by other modules instead of the deleted style. Essential!
+  //   But that is impossible currently, since the config system only knows
+  //   about deleted and added changes. Introduce an 'old_ID' key within
+  //   config objects as a standard?
+  $style = $old_config->get();
+  return image_style_delete($style);
+}
+
+/**
  * Get an array of all styles and their settings.
  *
  * @return
