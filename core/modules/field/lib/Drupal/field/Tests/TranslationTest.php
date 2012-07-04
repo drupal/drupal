@@ -135,7 +135,7 @@ class TranslationTest extends FieldTestBase {
     $options = array();
     $entities = array();
     $entity_type = 'test_entity';
-    $entity_count = mt_rand(2, 5);
+    $entity_count = 5;
     $available_langcodes = field_available_languages($this->entity_type, $this->field);
 
     for ($id = 1; $id <= $entity_count; ++$id) {

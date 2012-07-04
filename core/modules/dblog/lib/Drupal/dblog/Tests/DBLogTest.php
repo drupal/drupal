@@ -430,7 +430,7 @@ class DBLogTest extends WebTestBase {
       $severity = WATCHDOG_EMERGENCY;
       for ($j = 0; $j < 3; $j++) {
         $types[] = $type = array(
-          'count' => mt_rand(1, 5),
+          'count' => $j + 1,
           'type' => $type_name,
           'severity' => $severity++,
         );
