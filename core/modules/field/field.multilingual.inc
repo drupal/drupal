@@ -313,7 +313,7 @@ function field_language($entity_type, $entity, $field_name = NULL, $langcode = N
         // that language for display. If not, the default one will be
         // LANGUAGE_NOT_SPECIFIED.
         $display_langcode[$instance['field_name']] = LANGUAGE_NOT_SPECIFIED;
-        foreach (language_locked_languages() as $language_locked) {
+        foreach (language_list(LANGUAGE_LOCKED) as $language_locked) {
           if (isset($entity->{$instance['field_name']}[$language_locked->langcode])) {
             $display_langcode[$instance['field_name']] = $language_locked->langcode;
             break;

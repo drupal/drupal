@@ -8,6 +8,7 @@
 namespace Drupal\language\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\Language;
 
 /**
  * Functional tests for the language list configuration forms.
@@ -161,5 +162,28 @@ class LanguageListTest extends WebTestBase {
     // We need raw here because %language and %langcode will add HTML.
     $t_args = array('%language' => 'English', '%langcode' => 'en');
     $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args), t('The English language has been removed.'));
+  }
+
+  /**
+   * Functional tests for the language states (locked or configurable).
+   */
+  function testLanguageStates() {
+    // Add some languages, and also lock some of them.
+    language_save(new Language(array('name' => $this->randomName(), 'langcode' => 'l1')));
+    language_save(new Language(array('name' => $this->randomName(), 'langcode' => 'l2', 'locked' => TRUE)));
+    language_save(new Language(array('name' => $this->randomName(), 'langcode' => 'l3')));
+    language_save(new Language(array('name' => $this->randomName(), 'langcode' => 'l4', 'locked' => TRUE)));
+    $expected_locked_languages = array('l4' => 'l4', 'l2' => 'l2', 'und' => 'und', 'zxx' => 'zxx', 'mul' => 'mul');
+    $expected_all_languages = array('l4' => 'l4', 'l3' => 'l3', 'l2' => 'l2', 'l1' => 'l1', 'en' => 'en', 'und' => 'und', 'zxx' => 'zxx', 'mul' => 'mul');
+    $expected_conf_languages = array('l3' => 'l3', 'l1' => 'l1', 'en' => 'en');
+
+    $locked_languages = language_list(LANGUAGE_LOCKED);
+    $this->assertEqual(array_diff_key($expected_locked_languages, $locked_languages), array(), t('Locked languages loaded correctly.'));
+
+    $all_languages = language_list(LANGUAGE_ALL);
+    $this->assertEqual(array_diff_key($expected_all_languages, $all_languages), array(), t('All languages loaded correctly.'));
+
+    $conf_languages = language_list();
+    $this->assertEqual(array_diff_key($expected_conf_languages, $conf_languages), array(), t('Configurable languages loaded correctly.'));
   }
 }

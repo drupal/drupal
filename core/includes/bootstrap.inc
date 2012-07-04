@@ -204,9 +204,19 @@ const LANGUAGE_NOT_APPLICABLE = 'zxx';
 const LANGUAGE_MULTIPLE = 'mul';
 
 /**
- * The language code used when referring to all languages.
+ * The language state when referring to configurable languages.
  */
-const LANGUAGE_ALL = TRUE;
+const LANGUAGE_CONFIGURABLE = 1;
+
+/**
+ * The language state when referring to locked languages.
+ */
+const LANGUAGE_LOCKED = 2;
+
+/**
+ * The language state used when referring to all languages.
+ */
+const LANGUAGE_ALL = 3;
 
 /**
  * The type of language used to define the content language.
@@ -2676,17 +2686,17 @@ function language_multilingual() {
 }
 
 /**
- * Returns a list of configured languages.
+ * Returns a list of languages set up on the site.
  *
- * @param $all
- *   (optional) A flag depending on the need for locked languages in the
- *   returned list.
+ * @param $flags
+ *   (optional) Specifies the state of the languages that have to be returned.
+ *   It can be: LANGUAGE_CONFIGURABLE, LANGUAGE_LOCKED, LANGUAGE_ALL.
  *
  * @return
  *   An associative array of languages, keyed by the language code, ordered by
  *   weight ascending and name ascending.
  */
-function language_list($all = FALSE) {
+function language_list($flags = LANGUAGE_CONFIGURABLE) {
 
   $languages = &drupal_static(__FUNCTION__);
 
@@ -2712,7 +2722,7 @@ function language_list($all = FALSE) {
       // No language module, so use the default language only.
       $languages = array($default->langcode => $default);
       // Add the special languages, they will be filtered later if needed.
-      $languages += language_locked_languages($default->weight);
+      $languages += language_default_locked_languages($default->weight);
     }
   }
 
@@ -2721,7 +2731,7 @@ function language_list($all = FALSE) {
   // those languages to be added as well.
   $filtered_languages = array();
   foreach ($languages as $langcode => $language) {
-    if ($language->locked && !$all) {
+    if (($language->locked && !($flags & LANGUAGE_LOCKED)) || (!$language->locked && !($flags & LANGUAGE_CONFIGURABLE))) {
       continue;
      }
     $filtered_languages[$langcode] = $language;
@@ -2731,7 +2741,7 @@ function language_list($all = FALSE) {
 }
 
 /**
- * Returns a list with the locked languages.
+ * Returns a list of the default locked languages.
  *
  * @param int $weight
  *   An integer value that is used as the start value for the weights of the
@@ -2740,7 +2750,7 @@ function language_list($all = FALSE) {
  * @return
  *   An array of language objects.
  */
-function language_locked_languages($weight = 0) {
+function language_default_locked_languages($weight = 0) {
   $locked_language = array(
     'default' => FALSE,
     'locked' => TRUE,
@@ -2810,7 +2820,8 @@ function language_name($langcode) {
  *   The language code.
  */
 function language_is_locked($langcode) {
-  return array_key_exists($langcode, language_locked_languages());
+  $language = language_load($langcode);
+  return ($language ? $language->locked : FALSE);
 }
 
 /**
