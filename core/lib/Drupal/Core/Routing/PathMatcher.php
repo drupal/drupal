@@ -4,6 +4,7 @@ namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 use Drupal\Core\Database\Connection;
 
@@ -57,6 +58,10 @@ class PathMatcher implements InitialMatcherInterface {
     $collection = new RouteCollection();
     foreach ($routes as $name => $route) {
       $collection->add($name, unserialize($route));
+    }
+
+    if (!count($collection->all())) {
+      throw new ResourceNotFoundException();
     }
 
     return $collection;

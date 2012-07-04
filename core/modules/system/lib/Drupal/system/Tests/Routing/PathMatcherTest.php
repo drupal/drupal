@@ -10,11 +10,14 @@ namespace Drupal\system\Tests\Routing;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 use Drupal\simpletest\UnitTestBase;
 use Drupal\Core\Routing\PathMatcher;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Routing\MatcherDumper;
+
+use Exception;
 
 /**
  * Basic tests for the UrlMatcherDumper.
@@ -99,9 +102,56 @@ class PathMatcherTest extends UnitTestBase {
    * Confirms that we can find routes whose pattern would match the request.
    */
   function testOutlinePathMatch() {
+    $connection = Database::getConnection();
+    $matcher = new PathMatcher($connection, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper->addRoutes($this->fixtures->complexRouteCollection());
+    $dumper->dump();
+
+    $path = '/path/1/one';
+
+    $request = Request::create($path, 'GET');
+
+    $routes = $matcher->matchRequestPartial($request);
+
+    // All of the matching paths have the correct pattern.
+    foreach ($routes as $route) {
+      $this->assertEqual($route->compile()->getPatternOutline(), '/path/%/one', t('Found path has correct pattern'));
+    }
+
+    $this->assertEqual(count($routes->all()), 2, t('The correct number of routes was found.'));
+    $this->assertNotNull($routes->get('route_a'), t('The first matching route was found.'));
+    $this->assertNotNull($routes->get('route_b'), t('The second matching route was not found.'));
+  }
+
+  /**
+   * Confirm that an exception is thrown when no matching path is found.
+   */
+  function testOutlinePathNoMatch() {
+    $connection = Database::getConnection();
+    $matcher = new PathMatcher($connection, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper->addRoutes($this->fixtures->complexRouteCollection());
+    $dumper->dump();
+
+    $path = '/no/such/path';
+
+    $request = Request::create($path, 'GET');
+
+    try {
+      $routes = $matcher->matchRequestPartial($request);
+      $this->fail(t('No exception was thrown.'));
+    }
+    catch (Exception $e) {
+      $this->assertTrue($e instanceof ResourceNotFoundException, t('The correct exception was thrown.'));
+    }
 
   }
 
-
 }
-

@@ -31,7 +31,6 @@ class RoutingFixtures {
     }
   }
 
-
   /**
    * Returns a standard set of routes for testing.
    *
@@ -56,6 +55,36 @@ class RoutingFixtures {
     $collection->add('route_d', $route);
 
     $route = new Route('path/two');
+    $route->setRequirement('_method', 'GET|HEAD');
+    $collection->add('route_e', $route);
+
+    return $collection;
+  }
+
+  /**
+   * Returns a complex set of routes for testing.
+   *
+   * @return \Symfony\Component\Routing\RouteCollection
+   */
+  public function complexRouteCollection() {
+    $collection = new RouteCollection();
+
+    $route = new Route('/path/{thing}/one');
+    $route->setRequirement('_method', 'GET');
+    $collection->add('route_a', $route);
+
+    $route = new Route('/path/{thing}/one');
+    $route->setRequirement('_method', 'PUT');
+    $collection->add('route_b', $route);
+
+    $route = new Route('/somewhere/{item}/over/the/rainbow');
+    $route->setRequirement('_method', 'GET');
+    $collection->add('route_c', $route);
+
+    $route = new Route('/another/{thing}/about/{item}');
+    $collection->add('route_d', $route);
+
+    $route = new Route('/path/add/one');
     $route->setRequirement('_method', 'GET|HEAD');
     $collection->add('route_e', $route);
 
