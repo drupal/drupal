@@ -99,7 +99,12 @@ class MatcherDumper implements MatcherDumperInterface {
         'pattern' => $compiled->getPattern(),
         'pattern_outline' => $compiled->getPatternOutline(),
         'number_parts' => $compiled->getNumParts(),
-        'route' => serialize($route),
+        // This is only temporary. We need to strip off the compiled route from
+        // route object in order to serialize it. Cloning strips off the
+        // compiled route object. Remove this once
+        // https://github.com/symfony/symfony/pull/4755 is merged and brought
+        // back downstream.
+       'route' => serialize(clone($route)),
       );
       $insert->values($values);
     }
