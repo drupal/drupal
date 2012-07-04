@@ -777,7 +777,8 @@ abstract class WebTestBase extends TestBase {
 
     // Reload module list and implementations to ensure that test module hooks
     // aren't called after tests.
-    module_list(TRUE);
+    drupal_static_reset('system_list');
+    module_list_reset();
     module_implements_reset();
 
     // Reset the Field API.

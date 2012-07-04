@@ -80,7 +80,7 @@ global $conf;
 // display errors via the maintenance theme.
 $module_list['system']['filename'] = 'core/modules/system/system.module';
 $module_list['user']['filename'] = 'core/modules/user/user.module';
-module_list(TRUE, FALSE, FALSE, $module_list);
+module_list(NULL, $module_list);
 drupal_load('module', 'system');
 drupal_load('module', 'user');
 

@@ -30,7 +30,8 @@ function module_load_all($bootstrap = FALSE) {
   $has_run = &$drupal_static_fast['has_run'];
 
   if (isset($bootstrap)) {
-    foreach (module_list(TRUE, $bootstrap) as $module) {
+    $type = $bootstrap ? 'bootstrap' : 'module_enabled';
+    foreach (module_list($type) as $module) {
       drupal_load('module', $module);
     }
     // $has_run will be TRUE if $bootstrap is FALSE.
@@ -39,88 +40,67 @@ function module_load_all($bootstrap = FALSE) {
   return $has_run;
 }
 
-
 /**
  * Returns a list of currently active modules.
  *
- * Usually, this returns a list of all enabled modules. When called early on in
- * the bootstrap, it will return a list of vital modules only (those needed to
- * generate cached pages).
+ * Acts as a wrapper around system_list(), returning either a list of all
+ * enabled modules, or just modules needed for bootstrap.
  *
- * All parameters to this function are optional and should generally not be
- * changed from their defaults.
+ * The returned module list is always based on system_list(). The only exception
+ * to that is when a fixed list of modules has been passed in previously, in
+ * which case system_list() is omitted and the fixed list is always returned in
+ * subsequent calls until manually reverted via module_list_reset().
  *
- * @param $refresh
- *   (optional) Whether to force the module list to be regenerated (such as
- *   after the administrator has changed the system settings). Defaults to
- *   FALSE.
- * @param $bootstrap_refresh
- *   (optional) When $refresh is TRUE, setting $bootstrap_refresh to TRUE forces
- *   the module list to be regenerated using the reduced set of modules loaded
- *   in "bootstrap mode" for cached pages. Otherwise, setting $refresh to TRUE
- *   generates the complete list of enabled modules.
- * @param $sort
- *   (optional) By default, modules are ordered by weight and module name. Set
- *   this option to TRUE to return a module list ordered only by module name.
- * @param $fixed_list
- *   (optional) If an array of module names is provided, this will override the
- *   module list with the given set of modules. This will persist until the next
- *   call with $refresh set to TRUE or with a new $fixed_list passed in. This
- *   parameter is primarily intended for internal use (e.g., in install.php and
- *   update.php).
+ * @param string $type
+ *   The type of list to return:
+ *   - module_enabled: All enabled modules.
+ *   - bootstrap: All enabled modules required for bootstrap.
+ * @param array $fixed_list
+ *   (optional) An array of module names to override the list of modules. This
+ *   list will persist until the next call with a new $fixed_list passed in.
+ *   Primarily intended for internal use (e.g., in install.php and update.php).
+ *   Use module_list_reset() to undo the $fixed_list override.
  *
- * @return
+ * @return array
  *   An associative array whose keys and values are the names of the modules in
  *   the list.
  */
-function module_list($refresh = FALSE, $bootstrap_refresh = FALSE, $sort = FALSE, $fixed_list = NULL) {
-  // system_list() may be reset within a request, so the module list needs to be
-  // reset, too.
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['list'] = &drupal_static(__FUNCTION__ . ':list');
-    $drupal_static_fast['sorted_list'] = &drupal_static(__FUNCTION__ . ':sorted_list');
-  }
-  $list = &$drupal_static_fast['list'];
-  $sorted_list = &$drupal_static_fast['sorted_list'];
+function module_list($type = 'module_enabled', array $fixed_list = NULL) {
+  // This static is only used for $fixed_list.
+  $module_list = &drupal_static(__FUNCTION__);
 
-  if (!isset($list) || $refresh || isset($fixed_list)) {
-    $list = array();
-    $sorted_list = NULL;
-    // The fixed list may be a completely empty array, thus check for isset().
-    // Calling code may use this to empty out the module list entirely. For
-    // example, unit tests need to ensure that no modules are invoked.
-    if (isset($fixed_list)) {
-      foreach ($fixed_list as $name => $module) {
-        drupal_get_filename('module', $name, $module['filename']);
-        $list[$name] = $name;
-      }
+  // The list that will be be returned. Separate from $module_list in order
+  // to not duplicate the static cache of system_list().
+  $list = $module_list;
+
+  if (isset($fixed_list)) {
+    $module_list = array();
+    foreach ($fixed_list as $name => $module) {
+      drupal_get_filename('module', $name, $module['filename']);
+      $module_list[$name] = $name;
+    }
+    $list = $module_list;
+  }
+  elseif (!isset($module_list)) {
+    if ($type == 'bootstrap') {
+      $list = system_list('bootstrap');
     }
     else {
-      if ($refresh) {
-        // For the $refresh case, make sure that system_list() returns fresh
-        // data.
-        drupal_static_reset('system_list');
-      }
-      if ($bootstrap_refresh) {
-        $list = system_list('bootstrap');
-      }
-      else {
-        // Not using drupal_map_assoc() here as that requires common.inc.
-        $list = array_keys(system_list('module_enabled'));
-        $list = (!empty($list) ? array_combine($list, $list) : array());
-      }
+      // Not using drupal_map_assoc() here as that requires common.inc.
+      $list = array_keys(system_list($type));
+      $list = (!empty($list) ? array_combine($list, $list) : array());
     }
-  }
-  if ($sort) {
-    if (!isset($sorted_list)) {
-      $sorted_list = $list;
-      ksort($sorted_list);
-    }
-    return $sorted_list;
   }
   return $list;
+}
+
+/**
+ * Reverts an enforced fixed list of module_list().
+ *
+ * Subsequent calls to module_list() will no longer use a fixed list.
+ */
+function module_list_reset() {
+  drupal_static_reset('module_list');
 }
 
 /**
@@ -465,7 +445,6 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         ->execute();
       // Refresh the module list to include it.
       system_list_reset();
-      module_list(TRUE);
       module_implements_reset();
       _system_update_bootstrap_status();
       // Update the registry to include it.
@@ -588,7 +567,6 @@ function module_disable($module_list, $disable_dependents = TRUE) {
   if (!empty($invoke_modules)) {
     // Refresh the module list to exclude the disabled modules.
     system_list_reset();
-    module_list(TRUE);
     module_implements_reset();
     // Invoke hook_modules_disabled before disabling modules,
     // so we can still call module hooks to get information.
@@ -662,16 +640,13 @@ function module_hook($module, $hook) {
  *
  * @param $hook
  *   The name of the hook (e.g. "help" or "menu").
- * @param $sort
- *   By default, modules are ordered by weight and filename, settings this option
- *   to TRUE, module list will be ordered by module name.
  *
  * @return
  *   An array with the names of the modules which are implementing this hook.
  *
  * @see module_implements_write_cache()
  */
-function module_implements($hook, $sort = FALSE) {
+function module_implements($hook) {
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
@@ -696,8 +671,7 @@ function module_implements($hook, $sort = FALSE) {
     $implementations['#write_cache'] = TRUE;
     $hook_info = module_hook_info();
     $implementations[$hook] = array();
-    $list = module_list(FALSE, FALSE, $sort);
-    foreach ($list as $module) {
+    foreach (module_list() as $module) {
       $include_file = isset($hook_info[$hook]['group']) && module_load_include('inc', $module, $module . '.' . $hook_info[$hook]['group']);
       // Since module_hook() may needlessly try to load the include file again,
       // function_exists() is used directly here.

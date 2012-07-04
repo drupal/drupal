@@ -49,11 +49,8 @@ abstract class UnitTestBase extends TestBase {
     $conf = array();
     drupal_static_reset();
 
-    // Empty out module list.
-    module_list(TRUE, FALSE, FALSE, array());
-    // Prevent module_load_all() from attempting to refresh it.
-    $has_run = &drupal_static('module_load_all');
-    $has_run = TRUE;
+    // Enforce an empty module list.
+    module_list(NULL, array());
 
     // Re-implant theme registry.
     // Required for l() and other functions to work correctly and not trigger

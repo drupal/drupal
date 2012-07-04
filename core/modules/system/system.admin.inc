@@ -1199,7 +1199,7 @@ function system_modules_submit($form, &$form_state) {
 
   // Gets module list after install process, flushes caches and displays a
   // message if there are changes.
-  $post_install_list = module_list(TRUE);
+  $post_install_list = module_list();
   if ($pre_install_list != $post_install_list) {
     drupal_flush_all_caches();
     drupal_set_message(t('The configuration options have been saved.'));

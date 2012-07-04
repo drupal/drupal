@@ -64,7 +64,7 @@ function help_links_as_list() {
   $module_info = system_rebuild_module_data();
 
   $modules = array();
-  foreach (module_implements('help', TRUE) as $module) {
+  foreach (module_implements('help') as $module) {
     if (module_invoke($module, 'help', "admin/help#$module", $empty_arg)) {
       $modules[$module] = $module_info[$module]->info['name'];
     }

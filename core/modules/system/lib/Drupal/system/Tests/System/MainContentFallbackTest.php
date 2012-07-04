@@ -48,7 +48,7 @@ class MainContentFallbackTest extends WebTestBase {
     $edit['modules[Core][block][enable]'] = FALSE;
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
-    module_list(TRUE);
+    drupal_static_reset('system_list');
     $this->assertFalse(module_exists('block'), t('Block module disabled.'));
 
     // At this point, no region is filled and fallback should be triggered.
@@ -82,7 +82,7 @@ class MainContentFallbackTest extends WebTestBase {
     $edit['modules[Core][block][enable]'] = 'block';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
-    module_list(TRUE);
+    drupal_static_reset('system_list');
     $this->assertTrue(module_exists('block'), t('Block module re-enabled.'));
   }
 }

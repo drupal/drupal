@@ -55,7 +55,7 @@ class ModuleApiTest extends WebTestBase {
       ->condition('type', 'module')
       ->execute();
     // Reset the module list.
-    module_list(TRUE);
+    system_list_reset();
     // Move contact to the end of the array.
     unset($module_list[array_search('contact', $module_list)]);
     $module_list[] = 'contact';
@@ -66,12 +66,12 @@ class ModuleApiTest extends WebTestBase {
       'system' => array('filename' => drupal_get_path('module', 'system')),
       'menu' => array('filename' => drupal_get_path('module', 'menu')),
     );
-    module_list(FALSE, FALSE, FALSE, $fixed_list);
+    module_list(NULL, $fixed_list);
     $new_module_list = array_combine(array_keys($fixed_list), array_keys($fixed_list));
     $this->assertModuleList($new_module_list, t('When using a fixed list'));
 
     // Reset the module list.
-    module_list(TRUE);
+    module_list_reset();
     $this->assertModuleList($module_list, t('After reset'));
   }
 
@@ -84,8 +84,6 @@ class ModuleApiTest extends WebTestBase {
   protected function assertModuleList(Array $expected_values, $condition) {
     $expected_values = array_combine($expected_values, $expected_values);
     $this->assertEqual($expected_values, module_list(), t('@condition: module_list() returns correct results', array('@condition' => $condition)));
-    ksort($expected_values);
-    $this->assertIdentical($expected_values, module_list(FALSE, FALSE, TRUE), t('@condition: module_list() returns correctly sorted results', array('@condition' => $condition)));
   }
 
   /**

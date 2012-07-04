@@ -132,7 +132,7 @@ class ModuleTestBase extends WebTestBase {
    *   Expected module state.
    */
   function assertModules(array $modules, $enabled) {
-    module_list(TRUE);
+    drupal_static_reset('system_list');
     foreach ($modules as $module) {
       if ($enabled) {
         $message = 'Module "@module" is enabled.';

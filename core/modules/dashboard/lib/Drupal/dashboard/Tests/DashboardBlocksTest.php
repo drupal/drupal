@@ -96,13 +96,13 @@ class DashboardBlocksTest extends WebTestBase {
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
     $this->assertNoRaw('assigned to the invalid region', t('Dashboard blocks gracefully disabled.'));
-    module_list(TRUE);
+    system_list_reset();
     $this->assertFalse(module_exists('dashboard'), t('Dashboard disabled.'));
 
     $edit['modules[Core][dashboard][enable]'] = 'dashboard';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
-    module_list(TRUE);
+    system_list_reset();
     $this->assertTrue(module_exists('dashboard'), t('Dashboard enabled.'));
 
     $this->drupalGet('admin/dashboard');

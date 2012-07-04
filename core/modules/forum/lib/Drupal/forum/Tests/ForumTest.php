@@ -100,7 +100,7 @@ class ForumTest extends WebTestBase {
     $edit['modules[Core][forum][enable]'] = FALSE;
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
-    module_list(TRUE);
+    system_list_reset();
     $this->assertFalse(module_exists('forum'), t('Forum module is not enabled.'));
 
     // Attempt to re-enable the Forum module and ensure it does not try to
@@ -109,7 +109,7 @@ class ForumTest extends WebTestBase {
     $edit['modules[Core][forum][enable]'] = 'forum';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
-    module_list(TRUE);
+    system_list_reset();
     $this->assertTrue(module_exists('forum'), t('Forum module is enabled.'));
   }
 

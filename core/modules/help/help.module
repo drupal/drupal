@@ -18,7 +18,9 @@ function help_menu() {
     'file' => 'help.admin.inc',
   );
 
-  foreach (module_implements('help', TRUE) as $module) {
+  $modules = module_implements('help');
+  ksort($modules);
+  foreach ($modules as $module) {
     $items['admin/help/' . $module] = array(
       'title' => $module,
       'page callback' => 'help_page',

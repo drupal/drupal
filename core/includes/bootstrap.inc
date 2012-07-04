@@ -1085,14 +1085,7 @@ function drupal_page_is_cacheable($allow_caching = NULL) {
  * @see bootstrap_hooks()
  */
 function bootstrap_invoke_all($hook) {
-  // Bootstrap modules should have been loaded when this function is called, so
-  // we don't need to tell module_list() to reset its internal list (and we
-  // therefore leave the first parameter at its default value of FALSE). We
-  // still pass in TRUE for the second parameter, though; in case this is the
-  // first time during the bootstrap that module_list() is called, we want to
-  // make sure that its internal cache is primed with the bootstrap modules
-  // only.
-  foreach (module_list(FALSE, TRUE) as $module) {
+  foreach (module_list('bootstrap') as $module) {
     drupal_load('module', $module);
     module_invoke($module, $hook);
   }

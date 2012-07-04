@@ -13,8 +13,6 @@ use Drupal\simpletest\WebTestBase;
  * Tests class loading.
  */
 class ClassLoaderTest extends WebTestBase {
-  protected $profile = 'testing';
-
   public static function getInfo() {
     return array(
       'name' => 'Module class loader',

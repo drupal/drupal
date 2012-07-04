@@ -56,7 +56,7 @@ function _drupal_maintenance_theme() {
   // Ensure that system.module is loaded.
   if (!function_exists('_system_rebuild_theme_data')) {
     $module_list['system']['filename'] = 'core/modules/system/system.module';
-    module_list(TRUE, FALSE, FALSE, $module_list);
+    module_list(NULL, $module_list);
     drupal_load('module', 'system');
   }
 
