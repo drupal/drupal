@@ -4,19 +4,12 @@ namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 /**
  * This class filters routes based on their HTTP Method.
  */
-class HttpMethodMatcher implements PartialMatcherInterface {
-
-  protected $routes;
-
-  public function setCollection(RouteCollection $routes) {
-    $this->routes = $routes;
-
-    return $this;
-  }
+class HttpMethodMatcher extends PartialMatcher {
 
   /**
    * Matches a request against multiple routes.
