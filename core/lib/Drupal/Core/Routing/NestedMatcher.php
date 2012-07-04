@@ -118,9 +118,9 @@ class NestedMatcher implements NestedMatcherInterface {
       $collection = $matcher->matchRequestPartial($request);
     }
 
-    $route = $this->finalMatcher->setCollection($collection)->matchRequest($request);
+    $attributes = $this->finalMatcher->setCollection($collection)->matchRequest($request);
 
-    return $route;
+    return $attributes;
   }
 
   /**

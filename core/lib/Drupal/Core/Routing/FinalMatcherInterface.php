@@ -18,8 +18,8 @@ interface FinalMatcherInterface {
    * @param Request $request
    *   A Request object against which to match.
    *
-   * @return RouteCollection
-   *   A RouteCollection of matched routes.
+   * @return array
+   *   An array of parameters
    */
   public function matchRequest(Request $request);
 }
