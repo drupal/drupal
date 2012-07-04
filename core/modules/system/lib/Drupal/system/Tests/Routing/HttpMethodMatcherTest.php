@@ -10,15 +10,26 @@ namespace Drupal\system\Tests\Routing;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 use Drupal\simpletest\UnitTestBase;
 use Drupal\Core\Routing\HttpMethodMatcher;
 use Drupal\Core\Routing\NestedMatcher;
 
+use Exception;
+
 /**
  * Basic tests for the UrlMatcherDumper.
  */
-class PartialMatcherTest extends UnitTestBase {
+class HttpMethodMatcherTest extends UnitTestBase {
+
+  /**
+   * A collection of shared fixture data for tests.
+   *
+   * @var RoutingFixtures
+   */
+  protected $fixtures;
+
   public static function getInfo() {
     return array(
       'name' => 'Partial matcher HTTP Method tests',
@@ -27,6 +38,11 @@ class PartialMatcherTest extends UnitTestBase {
     );
   }
 
+  function __construct($test_id = NULL) {
+    parent::__construct($test_id);
+
+    $this->fixtures = new RoutingFixtures();
+  }
   public function setUp() {
     parent::setUp();
   }
@@ -37,7 +53,7 @@ class PartialMatcherTest extends UnitTestBase {
   public function testFilterRoutes() {
 
     $matcher = new HttpMethodMatcher();
-    $matcher->setCollection($this->sampleRouteCollection());
+    $matcher->setCollection($this->fixtures->sampleRouteCollection());
 
     $routes = $matcher->matchRequestPartial(Request::create('path/one', 'GET'));
 
@@ -56,7 +72,7 @@ class PartialMatcherTest extends UnitTestBase {
 
     $matcher = new NestedMatcher();
 
-    $matcher->setInitialMatcher(new MockPathMatcher($this->sampleRouteCollection()));
+    $matcher->setInitialMatcher(new MockPathMatcher($this->fixtures->sampleRouteCollection()));
     $matcher->addPartialMatcher(new HttpMethodMatcher());
     $matcher->setFinalMatcher(new MockFinalMatcher());
 
@@ -68,33 +84,25 @@ class PartialMatcherTest extends UnitTestBase {
   }
 
   /**
-   * Returns a standard set of routes for testing.
-   *
-   * @return \Symfony\Component\Routing\RouteCollection
+   * Confirms that the HttpMethod matcher throws an exception for no-route.
    */
-  protected function sampleRouteCollection() {
-    $collection = new RouteCollection();
+  public function testNoRouteFound() {
+    $matcher = new HttpMethodMatcher();
 
-    $route = new Route('path/one');
-    $route->setRequirement('_method', 'GET');
-    $collection->add('route_a', $route);
+    // Remove the sample route that would match any method.
+    $routes = $this->fixtures->sampleRouteCollection();
+    $routes->remove('route_d');
 
-    $route = new Route('path/one');
-    $route->setRequirement('_method', 'PUT');
-    $collection->add('route_b', $route);
+    $matcher->setCollection($routes);
 
-    $route = new Route('path/two');
-    $route->setRequirement('_method', 'GET');
-    $collection->add('route_c', $route);
+    try {
+      $routes = $matcher->matchRequestPartial(Request::create('path/one', 'DELETE'));
+      $this->fail(t('No exception was thrown.'));
+    }
+    catch (Exception $e) {
+      $this->assertTrue($e instanceof MethodNotAllowedException, t('The correct exception was thrown.'));
+    }
 
-    $route = new Route('path/three');
-    $collection->add('route_d', $route);
-
-    $route = new Route('path/two');
-    $route->setRequirement('_method', 'GET|HEAD');
-    $collection->add('route_e', $route);
-
-    return $collection;
   }
 }
 
