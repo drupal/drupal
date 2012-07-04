@@ -14,6 +14,8 @@ class HttpMethodMatcher implements PartialMatcherInterface {
 
   public function setCollection(RouteCollection $routes) {
     $this->routes = $routes;
+
+    return $this;
   }
 
   /**

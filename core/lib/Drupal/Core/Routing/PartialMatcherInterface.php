@@ -10,6 +10,15 @@ use Symfony\Component\Routing\RouteCollection;
  */
 interface PartialMatcherInterface {
 
+  /**
+   * Sets the route collection this matcher should use.
+   *
+   * @param RouteCollection $collection
+   *   The collection against which to match.
+   *
+   * @return PartialMatcherInterface
+   *   The current matcher.
+   */
   public function setCollection(RouteCollection $collection);
 
   /**
