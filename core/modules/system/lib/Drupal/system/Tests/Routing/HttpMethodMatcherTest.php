@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Routing\PartialMatcherTest.
+ * Definition of Drupal\system\Tests\Routing\HttpMethodMMatcherTest.
  */
 
 namespace Drupal\system\Tests\Routing;
@@ -20,7 +20,7 @@ use Drupal\Core\Routing\FirstEntryFinalMatcher;
 use Exception;
 
 /**
- * Basic tests for the UrlMatcherDumper.
+ * Basic tests for the HttpMethodMatcher class.
  */
 class HttpMethodMatcherTest extends UnitTestBase {
 
