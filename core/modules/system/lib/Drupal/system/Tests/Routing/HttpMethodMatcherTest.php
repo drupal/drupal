@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Drupal\simpletest\UnitTestBase;
 use Drupal\Core\Routing\HttpMethodMatcher;
 use Drupal\Core\Routing\NestedMatcher;
+use Drupal\Core\Routing\FirstEntryFinalMatcher;
 
 use Exception;
 
@@ -74,7 +75,7 @@ class HttpMethodMatcherTest extends UnitTestBase {
 
     $matcher->setInitialMatcher(new MockPathMatcher($this->fixtures->sampleRouteCollection()));
     $matcher->addPartialMatcher(new HttpMethodMatcher());
-    $matcher->setFinalMatcher(new MockFinalMatcher());
+    $matcher->setFinalMatcher(new FirstEntryFinalMatcher());
 
     $request = Request::create('/path/one', 'GET');
 
