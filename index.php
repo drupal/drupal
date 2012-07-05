@@ -11,10 +11,7 @@
  * See COPYRIGHT.txt and LICENSE.txt files in the "core" directory.
  */
 
-use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 
 /**
  * Root directory of Drupal installation.
@@ -39,9 +36,6 @@ request($request);
 // @see Drupal\Core\EventSubscriber\LegacyRequestSubscriber;
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
-$dispatcher = new EventDispatcher();
-$resolver = new ControllerResolver();
-
-$kernel = new DrupalKernel($dispatcher, $resolver);
+$kernel = drupal_container()->get('httpkernel');
 $response = $kernel->handle($request)->prepare($request)->send();
 $kernel->terminate($request, $response);

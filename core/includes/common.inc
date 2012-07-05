@@ -5104,9 +5104,9 @@ function _drupal_bootstrap_code() {
 }
 
 /**
- * Temporary BC function for scripts not using DrupalKernel.
+ * Temporary BC function for scripts not using HttpKernel.
  *
- * DrupalKernel skips this and replicates it via event listeners.
+ * HttpKernel skips this and replicates it via event listeners.
  *
  * @see Drupal\Core\EventSubscriber\PathSubscriber;
  * @see Drupal\Core\EventSubscriber\LegacyRequestSubscriber;
