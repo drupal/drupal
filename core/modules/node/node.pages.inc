@@ -23,7 +23,9 @@ function node_page_edit($node) {
 }
 
 /**
- * Page callback: Presents the node add form.
+ * Page callback: Displays add content links for available content types.
+ *
+ * Redirects to node/add/[type] if only one content type is available.
  *
  * @see node_menu()
  */
