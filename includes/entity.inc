@@ -634,6 +634,9 @@ class EntityFieldQuery {
 
   /**
    * Adds a condition on field values.
+   * 
+   * Note that entities with empty field values will be excluded from the
+   * EntityFieldQuery results when using this method.
    *
    * @param $field
    *   Either a field name or a field array.
@@ -858,7 +861,9 @@ class EntityFieldQuery {
    * Orders the result set by a given field column.
    *
    * If called multiple times, the query will order by each specified column in
-   * the order this method is called.
+   * the order this method is called. Note that entities with empty field
+   * values will be excluded from the EntityFieldQuery results when using this
+   * method.
    *
    * @param $field
    *   Either a field name or a field array.
