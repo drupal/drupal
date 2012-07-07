@@ -318,7 +318,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       t('Weight'),
       t('Parent'),
       t('Machine name'),
-      t('Field'),
+      t('Field type'),
       t('Widget'),
       array('data' => t('Operations'), 'colspan' => 2),
     ),

@@ -173,7 +173,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $table_headers = array(
       t('Label'),
       t('Machine name'),
-      t('Field'),
+      t('Field type'),
       t('Widget'),
       t('Operations'),
     );
