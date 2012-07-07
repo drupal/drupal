@@ -89,6 +89,10 @@ class CascadingStylesheetsTest extends WebTestBase {
     drupal_add_css($css);
     $styles = drupal_get_css();
     $this->assertTrue(strpos($styles, $css) > 0, t('Rendered CSS includes the added stylesheet.'));
+    // Verify that newlines are properly added inside style tags.
+    $query_string = variable_get('css_js_query_string', '0');
+    $css_processed = "<style media=\"all\">\n@import url(\"" . check_plain(file_create_url($css)) . "?" . $query_string ."\");\n</style>";
+    $this->assertEqual(trim($styles), $css_processed, t('Rendered CSS includes newlines inside style tags for JavaScript use.'));
   }
 
   /**

@@ -3304,7 +3304,11 @@ function drupal_pre_render_styles($elements) {
             $import_batch = array_slice($import, 0, 31);
             $import = array_slice($import, 31);
             $element = $style_element_defaults;
-            $element['#value'] = implode("\n", $import_batch);
+            // This simplifies the JavaScript regex, allowing each line
+            // (separated by \n) to be treated as a completely different string.
+            // This means that we can use ^ and $ on one line at a time, and not
+            // worry about style tags since they'll never match the regex.
+            $element['#value'] = "\n" . implode("\n", $import_batch) . "\n";
             $element['#attributes']['media'] = $group['media'];
             $element['#browsers'] = $group['browsers'];
             $elements[] = $element;
