@@ -316,7 +316,8 @@ function image_field_widget_settings_form($field, $instance) {
  */
 function image_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
 
-  // Add display_field setting to field because file_field_widget_form() assumes it is set.
+  // Add display_field setting to field because file_field_widget_form() assumes
+  // it is set.
   $field['settings']['display_field'] = 0;
 
   $elements = file_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
@@ -365,7 +366,7 @@ function image_field_widget_process($element, &$form_state, $form) {
   $widget_settings = $instance['widget']['settings'];
 
   $element['#theme'] = 'image_widget';
-  $element['#attached']['css'][] = drupal_get_path('module', 'image') . '/image.css';
+  $element['#attached']['css'][] = drupal_get_path('module', 'image') . '/image.theme.css';
 
   // Add the image preview.
   if ($element['#file'] && $widget_settings['preview_image_style']) {
@@ -435,7 +436,7 @@ function image_field_widget_process($element, &$form_state, $form) {
 /**
  * Returns HTML for an image field widget.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: A render element representing the image field widget.
  *
@@ -577,7 +578,7 @@ function image_field_formatter_view($entity_type, $entity, $field, $instance, $l
 /**
  * Returns HTML for an image field formatter.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - item: An array of image data.
  *   - image_style: An optional image style.

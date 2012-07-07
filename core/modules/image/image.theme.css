@@ -2,13 +2,13 @@
 /**
  * Image upload widget.
  */
-div.image-preview {
+.image-preview {
   float: left; /* LTR */
   padding: 0 10px 10px 0; /* LTR */
 }
-div.image-widget-data {
+.image-widget-data {
   float: left; /* LTR */
 }
-div.image-widget-data input.text-field {
+.image-widget-data .text-field {
   width: auto;
 }
