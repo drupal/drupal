@@ -3310,8 +3310,9 @@ function _node_query_node_access_alter($query, $type) {
     // @endcode
     //
     // So instead of directly adding to the query object, we need to collect
-    // in a separate db_and() object and then at the end add it to the query.
-    $entity_conditions = db_and();
+    // all of the node access conditions in a separate db_and() object and
+    // then add it to the query at the end.
+    $node_conditions = db_and();
   }
   foreach ($tables as $nalias => $tableinfo) {
     $table = $tableinfo['table'];
@@ -3345,16 +3346,24 @@ function _node_query_node_access_alter($query, $type) {
         $field = 'entity_id';
       }
       $subquery->where("$nalias.$field = na.nid");
-      $query->exists($subquery);
+
+      // For an entity query, attach the subquery to entity conditions.
+      if ($type == 'entity') {
+        $node_conditions->exists($subquery);
+      }
+      // Otherwise attach it to the node query itself.
+      else {
+        $query->exists($subquery);
+      }
     }
   }
 
   if ($type == 'entity' && count($subquery->conditions())) {
     // All the node access conditions are only for field values belonging to
     // nodes.
-    $entity_conditions->condition("$base_alias.entity_type", 'node');
+    $node_conditions->condition("$base_alias.entity_type", 'node');
     $or = db_or();
-    $or->condition($entity_conditions);
+    $or->condition($node_conditions);
     // If the field value belongs to a non-node entity type then this function
     // does not do anything with it.
     $or->condition("$base_alias.entity_type", 'node', '<>');
