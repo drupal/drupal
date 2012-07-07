@@ -44,8 +44,6 @@ class MiscUnitTest extends UnitTestBase {
     // Get the available memory and multiply it by two to make it unreasonably
     // high.
     $twice_avail_memory = ($memory_limit * 2) . 'MB';
-    $this->assertFalse(drupal_check_memory_limit($twice_avail_memory), 'drupal_check_memory_limit() returns FALSE for twice the available memory limit.');
-
     // The function should always return true if the memory limit is set to -1.
     $this->assertTrue(drupal_check_memory_limit($twice_avail_memory, -1), 'drupal_check_memory_limit() returns TRUE when a limit of -1 (none) is supplied');
 
