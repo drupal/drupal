@@ -53,7 +53,7 @@ function trigger_assign($module_to_display = NULL) {
  * @ingroup forms
  */
 function trigger_unassign($form, $form_state, $module, $hook = NULL, $aid = NULL) {
-  if (!($hook && $aid)) {
+  if (!isset($hook, $aid)) {
     drupal_goto('admin/structure/trigger');
   }
 

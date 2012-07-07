@@ -65,11 +65,33 @@ function trigger_menu() {
     'description' => 'Unassign an action from a trigger.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('trigger_unassign'),
-    'access arguments' => array('administer actions'),
+    // Only accessible if there are any actions that can be unassigned.
+    'access callback' => 'trigger_menu_unassign_access',
+    // Only output in the breadcrumb, not in menu trees.
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'file' => 'trigger.admin.inc',
   );
 
   return $items;
+}
+
+/**
+ * Access callback: Determines if triggers can be unassigned.
+ *
+ * @return bool
+ *   TRUE if there are triggers that the user can unassign, FALSE otherwise.
+ *
+ * @see trigger_menu()
+ */
+function trigger_menu_unassign_access() {
+  if (!user_access('administer actions')) {
+    return FALSE;
+  }
+  $count = db_select('trigger_assignments')
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  return $count > 0;
 }
 
 /**

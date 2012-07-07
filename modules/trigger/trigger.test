@@ -740,3 +740,32 @@ class TriggerOrphanedActionsTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('!post %title has been updated.', array('!post' => 'Basic page', '%title' => $edit["title"])), t('Make sure the Basic page can be updated with the missing trigger function.'));
   }
 }
+
+/**
+ * Tests the unassigning of triggers.
+ */
+class TriggerUnassignTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Trigger unassigning',
+      'description' => 'Tests the unassigning of triggers.',
+      'group' => 'Trigger',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('trigger', 'trigger_test');
+    $web_user = $this->drupalCreateUser(array('administer actions'));
+    $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Tests an attempt to unassign triggers when none are assigned.
+   */
+  function testUnassignAccessDenied() {
+    $this->drupalGet('admin/structure/trigger/unassign');
+    $this->assertResponse(403, 'If there are no actions available, return access denied.');
+  }
+
+}
