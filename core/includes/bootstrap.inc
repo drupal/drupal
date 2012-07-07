@@ -3512,6 +3512,7 @@ function drupal_check_memory_limit($required, $memory_limit = NULL) {
   // There is sufficient memory if:
   // - No memory limit is set.
   // - The memory limit is set to unlimited (-1).
-  // - The memory limit is greater than the memory required for the operation.
-  return ((!$memory_limit) || ($memory_limit == -1) || (parse_size($memory_limit) > parse_size($required)));
+  // - The memory limit is greater than or equal to the memory required for
+  //   the operation.
+  return ((!$memory_limit) || ($memory_limit == -1) || (parse_size($memory_limit) >= parse_size($required)));
 }

@@ -52,5 +52,8 @@ class MiscUnitTest extends UnitTestBase {
     // Test that even though we have 30MB of memory available - the function
     // returns FALSE when given an upper limit for how much memory can be used.
     $this->assertFalse(drupal_check_memory_limit('30MB', '16MB'), 'drupal_check_memory_limit() returns FALSE with a 16MB upper limit on a 30MB requirement.');
+
+    // Test that an equal amount of memory to the amount requested returns TRUE.
+    $this->assertTrue(drupal_check_memory_limit('30MB', '30MB'), 'drupal_check_memory_limit() returns TRUE when requesting 30MB on a 30MB requirement.');
   }
 }
