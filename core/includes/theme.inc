@@ -2103,7 +2103,7 @@ function theme_more_help_link($variables) {
  *   - title: A descriptive title of the feed.
  */
 function theme_feed_icon($variables) {
-  $text = t('Subscribe to @feed-title', array('@feed-title' => $variables['title']));
+  $text = t('Subscribe to !feed-title', array('!feed-title' => $variables['title']));
   if ($image = theme('image', array('uri' => 'core/misc/feed.png', 'width' => 16, 'height' => 16, 'alt' => $text))) {
     return l($image, $variables['url'], array('html' => TRUE, 'attributes' => array('class' => array('feed-icon'), 'title' => $text)));
   }

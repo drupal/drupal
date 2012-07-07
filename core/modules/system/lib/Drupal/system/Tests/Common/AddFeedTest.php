@@ -89,4 +89,16 @@ class AddFeedTest extends WebTestBase {
     $generated_pattern = '%<link +rel="alternate" +type="application/rss.xml" +title="' . $title . '" +href="' . $url . '" */>%';
     return $generated_pattern;
   }
+
+  /**
+   * Check that special characters are correctly escaped. Test for issue #1211668.
+   */
+  function testFeedIconEscaping() {
+    $variables = array();
+    $variables['url'] = 'node';
+    $variables['title'] = '<>&"\'';
+    $text = theme_feed_icon($variables);
+    preg_match('/title="(.*?)"/', $text, $matches);
+    $this->assertEqual($matches[1], 'Subscribe to &amp;&quot;&#039;', 'theme_feed_icon() escapes reserved HTML characters.');
+  }
 }
