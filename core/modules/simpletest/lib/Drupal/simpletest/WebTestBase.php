@@ -1463,6 +1463,7 @@ abstract class WebTestBase extends TestBase {
           case 'url':
           case 'number':
           case 'range':
+          case 'color':
           case 'hidden':
           case 'password':
           case 'email':

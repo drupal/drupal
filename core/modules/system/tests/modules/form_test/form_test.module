@@ -163,6 +163,12 @@ function form_test_menu() {
     'page arguments' => array('form_test_range_invalid'),
     'access callback' => TRUE,
   );
+  $items['form-test/color'] = array(
+    'title' => 'Color',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_color'),
+    'access callback' => TRUE,
+  );
   $items['form-test/checkboxes-radios'] = array(
     'title' => t('Checkboxes, Radios'),
     'page callback' => 'drupal_get_form',
@@ -1414,6 +1420,32 @@ function form_test_range_invalid($form, &$form_state) {
 }
 
 /**
+ * Form constructor for testing #type 'color' elements.
+ *
+ * @see form_test_color_submit()
+ * @ingroup forms
+ */
+function form_test_color($form, &$form_state) {
+  $form['color'] = array(
+    '#type' => 'color',
+    '#title' => 'Color',
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  return $form;
+}
+
+/**
+ * Form submission handler for form_test_color().
+ */
+function form_test_color_submit($form, &$form_state) {
+  drupal_json_output($form_state['values']);
+  exit;
+}
+
+/**
  * Builds a form to test the placeholder attribute.
  */
 function form_test_placeholder_test($form, &$form_state) {
@@ -1636,6 +1668,16 @@ function _form_test_disabled_elements($form, &$form_state) {
       '#disabled' => TRUE,
     );
   }
+
+  // Color.
+  $form['color'] = array(
+    '#type' => 'color',
+    '#title' => 'color',
+    '#disabled' => TRUE,
+    '#default_value' => '#0000ff',
+    '#test_hijack_value' => '#ff0000',
+    '#disabled' => TRUE,
+  );
 
   // Date.
   $form['date'] = array(

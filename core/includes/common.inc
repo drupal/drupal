@@ -6949,6 +6949,9 @@ function drupal_common_theme() {
     'range' => array(
       'render element' => 'element',
     ),
+    'color' => array(
+      'render element' => 'element',
+    ),
     'form' => array(
       'render element' => 'element',
     ),

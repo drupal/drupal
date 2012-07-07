@@ -5,6 +5,8 @@
  * Functions for form and batch generation and processing.
  */
 
+use Drupal\Core\Utility\Color;
+
 /**
  * @defgroup forms Form builder functions
  * @{
@@ -4178,6 +4180,47 @@ function form_validate_url(&$element, &$form_state) {
   if ($value !== '' && !valid_url($value, TRUE)) {
     form_error($element, t('The URL %url is not valid.', array('%url' => $value)));
   }
+}
+
+/**
+ * Form element validation handler for #type 'color'.
+ */
+function form_validate_color(&$element, &$form_state) {
+  $value = trim($element['#value']);
+
+  // Default to black if no value is given.
+  // @see http://www.w3.org/TR/html5/number-state.html#color-state
+  if ($value === '') {
+    form_set_value($element, '#000000', $form_state);
+  }
+  else {
+    // Try to parse the value and normalize it.
+    try {
+      form_set_value($element, Color::rgbToHex(Color::hexToRgb($value)), $form_state);
+    }
+    catch (InvalidArgumentException $e) {
+      form_error($element, t('%name must be a valid color.', array('%name' => empty($element['#title']) ? $element['#parents'][0] : $element['#title'])));
+    }
+  }
+}
+
+/**
+ * Returns HTML for a color form element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #attributes.
+ *
+ * @ingroup themeable
+ */
+function theme_color($variables) {
+  $element = $variables['element'];
+  $element['#attributes']['type'] = 'color';
+  element_set_attributes($element, array('id', 'name', 'value'));
+  _form_set_class($element, array('form-color'));
+
+  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**

@@ -425,6 +425,13 @@ function system_element_info() {
     '#theme' => 'range',
     '#theme_wrappers' => array('form_element'),
   );
+  $types['color'] = array(
+    '#input' => TRUE,
+    '#process' => array('ajax_process_form'),
+    '#element_validate' => array('form_validate_color'),
+    '#theme' => 'color',
+    '#theme_wrappers' => array('form_element'),
+  );
   $types['machine_name'] = array(
     '#input' => TRUE,
     '#default_value' => NULL,

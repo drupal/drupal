@@ -384,6 +384,41 @@ class FormTest extends WebTestBase {
   }
 
   /**
+   * Tests validation of #type 'color' elements.
+   */
+  function testColorValidation() {
+    // Keys are inputs, values are expected results.
+    $values = array(
+      '' => '#000000',
+      '#000' => '#000000',
+      'AAA' => '#aaaaaa',
+      '#af0DEE' => '#af0dee',
+      '#99ccBc' => '#99ccbc',
+      '#aabbcc' => '#aabbcc',
+      '123456' => '#123456',
+    );
+
+    // Tests that valid values are properly normalized.
+    foreach ($values as $input => $expected) {
+      $edit = array(
+        'color' => $input,
+      );
+      $result = json_decode($this->drupalPost('form-test/color', $edit, 'Submit'));
+      $this->assertEqual($result->color, $expected);
+    }
+
+    // Tests invalid values are rejected.
+    $values = array('#0008', '#1234', '#fffffg', '#abcdef22', '17', '#uaa');
+    foreach ($values as $input) {
+      $edit = array(
+        'color' => $input,
+      );
+      $this->drupalPost('form-test/color', $edit, 'Submit');
+      $this->assertRaw(t('%name must be a valid color.', array('%name' => 'Color')));
+    }
+  }
+
+  /**
    * Test handling of disabled elements.
    *
    * @see _form_test_disabled_elements()
@@ -426,7 +461,7 @@ class FormTest extends WebTestBase {
 
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
-    $this->assertEqual(count($disabled_elements), 39, 'The correct elements have the disabled property in the HTML code.');
+    $this->assertEqual(count($disabled_elements), 40, 'The correct elements have the disabled property in the HTML code.');
 
     $this->drupalPost(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);
