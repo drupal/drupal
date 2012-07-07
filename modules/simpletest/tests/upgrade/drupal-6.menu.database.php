@@ -126,6 +126,33 @@ db_insert('menu_links')->fields(array(
   'p9' => '0',
   'updated' => '0',
 ))
+->values(array(
+  'menu_name' => 'secondary-links',
+  'mlid' => '206',
+  'plid' => '0',
+  'link_path' => 'node',
+  'router_path' => 'node',
+  'link_title' => 'node-page-with-query',
+  'options' => 'a:2:{s:5:"query";s:14:"page=1&node=10";s:10:"attributes";a:1:{s:5:"title";s:0:"";}}',
+  'module' => 'menu',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '2',
+  'depth' => '1',
+  'customized' => '1',
+  'p1' => '206',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
 ->execute();
 db_insert('blocks')->fields(array(
   'bid',
