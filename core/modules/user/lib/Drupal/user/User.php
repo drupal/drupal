@@ -91,7 +91,7 @@ class User extends Entity {
    *
    * @var integer
    */
-  public $status = 0;
+  public $status = 1;
 
   /**
    * The user's timezone.
