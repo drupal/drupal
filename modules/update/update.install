@@ -82,6 +82,7 @@ function update_uninstall() {
     'update_check_frequency',
     'update_fetch_url',
     'update_last_check',
+    'update_last_email_notification',
     'update_notification_threshold',
     'update_notify_emails',
     'update_max_fetch_attempts',
