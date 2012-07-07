@@ -21,6 +21,7 @@ class DrupalBundle extends Bundle
       $info += array(
         'tags' => array(),
         'references' => array(),
+        'parameters' => array(),
         'methods' => array(),
         'arguments' => array(),
       );
@@ -31,6 +32,11 @@ class DrupalBundle extends Bundle
       }
 
       $definition = new Definition($info['class'], $references);
+
+      foreach ($info['parameters'] as $key => $param) {
+        $container->setParameter($key, $param);
+        $definition->addArgument("%{$key}%");
+      }
 
       if (isset($info['factory_class']) && isset($info['factory_method'])) {
         $definition->setFactoryClass($info['factory_class']);
@@ -63,6 +69,31 @@ class DrupalBundle extends Bundle
    */
   function getDefinitions() {
     return array(
+      // Register configuration storage dispatcher.
+      'config.storage.dispatcher' => array(
+        'class' => 'Drupal\Core\Config\StorageDispatcher',
+        'parameters' => array(
+          'conifg.storage.info' => array(
+            'Drupal\Core\Config\DatabaseStorage' => array(
+              'connection' => 'default',
+              'target' => 'default',
+              'read' => TRUE,
+              'write' => TRUE,
+            ),
+            'Drupal\Core\Config\FileStorage' => array(
+              'directory' => config_get_config_directory(),
+              'read' => TRUE,
+              'write' => FALSE,
+            ),
+          ),
+        ),
+      ),
+      'config.factory' => array(
+        'class' => 'Drupal\Core\Config\ConfigFactory',
+        'references' => array(
+          'config.storage.dispatcher'
+        )
+      ),
       'dispatcher' => array(
         'class' => 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher',
         'references' => array(

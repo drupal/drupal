@@ -21,7 +21,6 @@ define('DRUPAL_ROOT', getcwd());
 // Bootstrap the lowest level of what we need.
 require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
-drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
 
 // Create a request object from the HTTPFoundation.
 $request = Request::createFromGlobals();
