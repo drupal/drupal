@@ -23,6 +23,8 @@ Drupal 7.15, xxxx-xx-xx (development version)
 - Fixed bug which prevented the jQuery UI Datepicker from being localized.
 - Fixed bug which prevented sub-themes from inheriting the default values of
   theme settings defined by the base theme.
+- Fixed bug which prevented notifications from being sent when core, module, and
+  theme updates are available.
 
 Drupal 7.14 2012-05-02
 ----------------------
