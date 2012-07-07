@@ -19,7 +19,7 @@ function views_ajax() {
     $name = $_REQUEST['view_name'];
     $display_id = $_REQUEST['view_display_id'];
     $args = isset($_REQUEST['view_args']) && $_REQUEST['view_args'] !== '' ? explode('/', $_REQUEST['view_args']) : array();
-    $path = isset($_REQUEST['view_path']) ? $_REQUEST['view_path'] : NULL;
+    $path = isset($_REQUEST['view_path']) ? rawurldecode($_REQUEST['view_path']) : NULL;
     $dom_id = isset($_REQUEST['view_dom_id']) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $_REQUEST['view_dom_id']) : NULL;
     $pager_element = isset($_REQUEST['pager_element']) ? intval($_REQUEST['pager_element']) : NULL;
 
