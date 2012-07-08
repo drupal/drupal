@@ -1041,6 +1041,8 @@ function form_test_form_state_values_clean_advanced_form_submit($form, &$form_st
  * Build a form to test a checkbox.
  */
 function _form_test_checkbox($form, &$form_state) {
+  $form['#submit'] = array('_form_test_submit_values_json');
+
   // A required checkbox.
   $form['required_checkbox'] = array(
     '#type' => 'checkbox',
@@ -1105,19 +1107,11 @@ function _form_test_checkbox($form, &$form_state) {
 }
 
 /**
- * Return the form values via JSON.
- */
-function _form_test_checkbox_submit($form, &$form_state) {
-  // This won't have a proper JSON header, but Drupal doesn't check for that
-  // anyway so this is fine until it's replaced with a JsonResponse.
-  print drupal_json_encode($form_state['values']);
-  exit();
-}
-
-/**
  * Builds a form to test #type 'select' validation.
  */
 function form_test_select($form, &$form_state) {
+  $form['#submit'] = array('_form_test_submit_values_json');
+
   $base = array(
     '#type' => 'select',
     '#options' => drupal_map_assoc(array('one', 'two', 'three')),
@@ -1213,16 +1207,6 @@ function form_test_select($form, &$form_state) {
 
   $form['submit'] = array('#type' => 'submit', '#value' => 'Submit');
   return $form;
-}
-
-/**
- * Form submit handler for form_test_select().
- */
-function form_test_select_submit($form, &$form_state) {
-  // This won't have a proper JSON header, but Drupal doesn't check for that
-  // anyway so this is fine until it's replaced with a JsonResponse.
-  print drupal_json_encode($form_state['values']);
-  exit();
 }
 
 /**
@@ -1350,6 +1334,8 @@ function form_test_number($form, &$form_state, $element = 'number') {
  * @ingroup forms
  */
 function form_test_range($form, &$form_state) {
+  $form['#submit'] = array('_form_test_submit_values_json');
+
   $form['with_default_value'] = array(
     '#type' => 'range',
     '#title' => 'Range with default value',
@@ -1390,16 +1376,6 @@ function form_test_range($form, &$form_state) {
 }
 
 /**
- * Form submission handler for form_test_range().
- */
-function form_test_range_submit($form, &$form_state) {
-  // This won't have a proper JSON header, but Drupal doesn't check for that
-  // anyway so this is fine until it's replaced with a JsonResponse.
-  print drupal_json_encode($form_state['values']);
-  exit;
-}
-
-/**
  * Form constructor for testing invalid #type 'range' elements.
  *
  * @ingroup forms
@@ -1426,6 +1402,8 @@ function form_test_range_invalid($form, &$form_state) {
  * @ingroup forms
  */
 function form_test_color($form, &$form_state) {
+  $form['#submit'] = array('_form_test_submit_values_json');
+
   $form['color'] = array(
     '#type' => 'color',
     '#title' => 'Color',
@@ -1435,14 +1413,6 @@ function form_test_color($form, &$form_state) {
     '#value' => 'Submit',
   );
   return $form;
-}
-
-/**
- * Form submission handler for form_test_color().
- */
-function form_test_color_submit($form, &$form_state) {
-  drupal_json_output($form_state['values']);
-  exit;
 }
 
 /**
@@ -1526,6 +1496,7 @@ function form_test_checkboxes_radios($form, &$form_state, $customize = FALSE) {
  * @ingroup forms
  */
 function form_test_email($form, &$form_state) {
+  $form['#submit'] = array('_form_test_submit_values_json');
   $form['email'] = array(
     '#type' => 'email',
     '#title' => 'E-Mail address',
@@ -1545,22 +1516,13 @@ function form_test_email($form, &$form_state) {
 }
 
 /**
- * Form submission handler for form_test_email().
- */
-function form_test_email_submit($form, &$form_state) {
-  // This won't have a proper JSON header, but Drupal doesn't check for that
-  // anyway so this is fine until it's replaced with a JsonResponse.
-  print drupal_json_encode($form_state['values']);
-  exit();
-}
-
-/**
  * Form constructor for testing #type 'url' elements.
  *
  * @see form_test_url_submit()
  * @ingroup forms
  */
 function form_test_url($form, &$form_state) {
+  $form['#submit'] = array('_form_test_submit_values_json');
   $form['url'] = array(
     '#type' => 'url',
     '#title' => 'Optional URL',
@@ -1580,19 +1542,11 @@ function form_test_url($form, &$form_state) {
 }
 
 /**
- * Form submission handler for form_test_url().
- */
-function form_test_url_submit($form, &$form_state) {
-  // This won't have a proper JSON header, but Drupal doesn't check for that
-  // anyway so this is fine until it's replaced with a JsonResponse.
-  print drupal_json_encode($form_state['values']);
-  exit();
-}
-
-/**
  * Build a form to test disabled elements.
  */
 function _form_test_disabled_elements($form, &$form_state) {
+  $form['#submit'] = array('_form_test_submit_values_json');
+
   // Elements that take a simple default value.
   foreach (array('textfield', 'textarea', 'search', 'tel', 'hidden') as $type) {
     $form[$type] = array(
@@ -1792,19 +1746,11 @@ function _form_test_disabled_elements($form, &$form_state) {
 }
 
 /**
- * Return the form values via JSON.
- */
-function _form_test_disabled_elements_submit($form, &$form_state) {
-  // This won't have a proper JSON header, but Drupal doesn't check for that
-  // anyway so this is fine until it's replaced with a JsonResponse.
-  print drupal_json_encode($form_state['values']);
-  exit();
-}
-
-/**
  * Build a form to test input forgery of enabled elements.
  */
 function _form_test_input_forgery($form, &$form_state) {
+  $form['#submit'] = array('_form_test_submit_values_json');
+
   // For testing that a user can't submit a value not matching one of the
   // allowed options.
   $form['checkboxes'] = array(
@@ -1814,22 +1760,11 @@ function _form_test_input_forgery($form, &$form_state) {
       'two' => 'Two',
     ),
   );
-
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
   );
   return $form;
-}
-
-/**
- * Return the form values via JSON.
- */
-function _form_test_input_forgery_submit($form, &$form_state) {
-  // This won't have a proper JSON header, but Drupal doesn't check for that
-  // anyway so this is fine until it's replaced with a JsonResponse.
-  print drupal_json_encode($form_state['values']);
-  exit();
 }
 
 /**
