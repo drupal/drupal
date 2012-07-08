@@ -6,6 +6,7 @@
  */
 
 use Drupal\views\Join;
+use Drupal\search\SearchQuery;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.
@@ -179,6 +180,8 @@ class views_handler_filter_search extends views_handler_filter {
 
 /**
  * Extends the core SearchQuery.
+ *
+ * @todo: Make this class PSR-0 compatible.
  */
 class viewsSearchQuery extends SearchQuery {
   public function &conditions() {
