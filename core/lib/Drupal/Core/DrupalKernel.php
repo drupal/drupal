@@ -35,7 +35,7 @@ class DrupalKernel extends Kernel {
 
     $modules = array_keys(system_list('module_enabled'));
     foreach ($modules as $module) {
-      $class = "\Drupal\{$module}\{$module}Bundle";
+      $class = "\Drupal\\{$module}\\{$module}Bundle";
       if (class_exists($class)) {
         $bundles[] = new $class();
       }
