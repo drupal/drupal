@@ -221,8 +221,6 @@ function views_ajax_error($message) {
  * This makes some assumptions about the client.
  */
 function views_ajax_form_wrapper($form_id, &$form_state) {
-  ctools_include('dependent');
-
   // This won't override settings already in.
   $form_state += array(
     'rerender' => FALSE,
