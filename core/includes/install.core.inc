@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\TaskException;
 
@@ -1416,6 +1417,8 @@ function install_bootstrap_full(&$install_state) {
   // Clear the module list that was overriden earlier in the process.
   // This will allow all freshly installed modules to be loaded.
   module_list_reset();
+  $kernel = new DrupalKernel('prod', FALSE);
+  $kernel->boot();
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 }
 

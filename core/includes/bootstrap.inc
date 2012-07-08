@@ -6,6 +6,7 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Language\Language;
 
@@ -2459,14 +2460,39 @@ function drupal_container(Container $reset = NULL) {
     $container = $reset;
   }
   elseif (!isset($container)) {
-    // This will only ever happen if an error has been thrown. Just build a new
-    // ContainerBuilder with only the language_interface service.
+    // During a normal page request, as opposed to during installation, this will only
+    // ever happen if an error has been thrown. We need to build a new ContainerBuilder
+    // with only the language_interface service.
     $container = new ContainerBuilder();
-
     // An interface language always needs to be available for t() and other
     // functions. This default is overridden by drupal_language_initialize()
     // during language negotiation.
     $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
+
+    // If we are at the beginning of the installation process, we also need the config
+    // services.
+    if (variable_get('install_task', '') != 'done') {
+      // Register configuration storage dispatcher.
+      $container->setParameter('config.storage.info', array(
+        'Drupal\Core\Config\DatabaseStorage' => array(
+          'connection' => 'default',
+          'target' => 'default',
+          'read' => TRUE,
+          'write' => TRUE,
+        ),
+        'Drupal\Core\Config\FileStorage' => array(
+          'directory' => config_get_config_directory(),
+          'read' => TRUE,
+          'write' => FALSE,
+        ),
+      ));
+      $container->register('config.storage.dispatcher', 'Drupal\Core\Config\StorageDispatcher')
+        ->addArgument('%config.storage.info%');
+
+      // Register configuration object factory.
+      $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
+        ->addArgument(new Reference('config.storage.dispatcher'));
+    }
   }
   return $container;
 }
