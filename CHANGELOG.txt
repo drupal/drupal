@@ -27,6 +27,8 @@ Drupal 7.15, xxxx-xx-xx (development version)
   theme updates are available.
 - Performance improvement: Removed needless call to system_rebuild_module_data()
   in field_sync_field_status(), greatly speeding up bulk module enable/disable.
+- Renamed the "Field" column on the Manage Fields screen to "Field type", since
+  the former was confusing and inaccurate (UI change).
 
 Drupal 7.14 2012-05-02
 ----------------------
