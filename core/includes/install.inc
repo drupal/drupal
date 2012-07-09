@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Config\DatabaseStorage;
 
 /**
  * Indicates that a module has not been installed yet.
