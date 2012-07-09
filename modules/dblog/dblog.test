@@ -424,7 +424,7 @@ class DBLogTestCase extends DrupalWebTestCase {
       $severity = WATCHDOG_EMERGENCY;
       for ($j = 0; $j < 3; $j++) {
         $types[] = $type = array(
-          'count' => mt_rand(1, 5),
+          'count' => $j + 1,
           'type' => $type_name,
           'severity' => $severity++,
         );
@@ -473,7 +473,7 @@ class DBLogTestCase extends DrupalWebTestCase {
       $count = $this->getTypeCount($types);
       $this->assertEqual(array_sum($count), $type['count'], 'Count matched');
     }
-    
+
     // Clear all logs and make sure the confirmation message is found.
     $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
     $this->assertText(t('Database log cleared.'), t('Confirmation message found'));

@@ -97,7 +97,7 @@ class ActionLoopTestCase extends DrupalWebTestCase {
     // recursion level should be kept low enough to prevent the xdebug
     // infinite recursion protection mechanism from aborting the request.
     // See http://drupal.org/node/587634.
-    variable_set('actions_max_stack', mt_rand(3, 12));
+    variable_set('actions_max_stack', 7);
     $this->triggerActions();
   }
 
