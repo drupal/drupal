@@ -99,7 +99,7 @@ class FieldUiTestBase extends WebTestBase {
     $label = $initial_edit['fields[_add_existing_field][label]'];
     $field_name = $initial_edit['fields[_add_existing_field][field_name]'];
 
-    // First step : 'Add existing field' on the 'Manage fields' page.
+    // First step : 'Re-use existing field' on the 'Manage fields' page.
     $this->drupalPost("$bundle_path/fields", $initial_edit, t('Save'));
 
     // Second step : 'Instance settings' form.

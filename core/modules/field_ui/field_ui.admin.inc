@@ -556,7 +556,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
     );
   }
 
-  // Additional row: add existing field.
+  // Additional row: re-use existing field.
   $existing_fields = field_ui_existing_field_options($entity_type, $bundle);
   if ($existing_fields && $widget_type_options) {
     // Build list of options.
@@ -582,7 +582,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
         '#size' => 15,
         '#description' => t('Label'),
         '#attributes' => array('class' => array('label-textfield')),
-        '#prefix' => '<div class="label-input"><div class="add-new-placeholder">' . t('Add existing field') .'</div>',
+        '#prefix' => '<div class="label-input"><div class="add-new-placeholder">' . t('Re-use existing field') .'</div>',
         '#suffix' => '</div>',
       ),
       'weight' => array(
@@ -737,7 +737,7 @@ function _field_ui_field_name_exists($value) {
 }
 
 /**
- * Validates the 'add existing field' row of field_ui_field_overview_form().
+ * Validates the 're-use existing field' row of field_ui_field_overview_form().
  *
  * @see field_ui_field_overview_form_validate()
  */
@@ -747,27 +747,27 @@ function _field_ui_field_overview_form_validate_add_existing($form, &$form_state
   if (isset($form_state['values']['fields']['_add_existing_field'])) {
     $field = $form_state['values']['fields']['_add_existing_field'];
 
-    // Validate if any information was provided in the 'add existing field' row.
+    // Validate if any information was provided in the 're-use existing field' row.
     if (array_filter(array($field['label'], $field['field_name'], $field['widget_type']))) {
       // Missing label.
       if (!$field['label']) {
-        form_set_error('fields][_add_existing_field][label', t('Add existing field: you need to provide a label.'));
+        form_set_error('fields][_add_existing_field][label', t('Re-use existing field: you need to provide a label.'));
       }
 
       // Missing existing field name.
       if (!$field['field_name']) {
-        form_set_error('fields][_add_existing_field][field_name', t('Add existing field: you need to select a field.'));
+        form_set_error('fields][_add_existing_field][field_name', t('Re-use existing field: you need to select a field.'));
       }
 
       // Missing widget type.
       if (!$field['widget_type']) {
-        form_set_error('fields][_add_existing_field][widget_type', t('Add existing field: you need to select a widget.'));
+        form_set_error('fields][_add_existing_field][widget_type', t('Re-use existing field: you need to select a widget.'));
       }
       // Wrong widget type.
       elseif ($field['field_name'] && ($existing_field = field_info_field($field['field_name']))) {
         $widget_types = field_ui_widget_type_options($existing_field['type']);
         if (!isset($widget_types[$field['widget_type']])) {
-          form_set_error('fields][_add_existing_field][widget_type', t('Add existing field: invalid widget.'));
+          form_set_error('fields][_add_existing_field][widget_type', t('Re-use existing field: invalid widget.'));
         }
       }
     }
@@ -840,7 +840,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     }
   }
 
-  // Add existing field.
+  // Re-use existing field.
   if (!empty($form_values['_add_existing_field']['field_name'])) {
     $values = $form_values['_add_existing_field'];
     $field = field_info_field($values['field_name']);

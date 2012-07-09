@@ -85,9 +85,9 @@ class ManageFieldsTest extends FieldUiTestBase {
       $this->assertRaw($table_header . '</th>', t('%table_header table header was found.', array('%table_header' => $table_header)));
     }
 
-    // "Add new field" and "Add existing field" aren't a table heading so just
+    // "Add new field" and "Re-use existing field" aren't a table heading so just
     // test the text.
-    foreach (array('Add new field', 'Add existing field') as $element) {
+    foreach (array('Add new field', 'Re-use existing field') as $element) {
       $this->assertText($element, t('"@element" was found.', array('@element' => $element)));
     }
   }
@@ -106,7 +106,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     );
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, $edit);
 
-    // Assert the field appears in the "add existing field" section for
+    // Assert the field appears in the "re-use existing field" section for
     // different entity types; e.g. if a field was added in a node entity, it
     // should also appear in the 'taxonomy term' entity.
     $vocabulary = taxonomy_vocabulary_load(1);
@@ -141,9 +141,9 @@ class ManageFieldsTest extends FieldUiTestBase {
    * Tests adding an existing field in another content type.
    */
   function addExistingField() {
-    // Check "Add existing field" appears.
+    // Check "Re-use existing field" appears.
     $this->drupalGet('admin/structure/types/manage/page/fields');
-    $this->assertRaw(t('Add existing field'), t('"Add existing field" was found.'));
+    $this->assertRaw(t('Re-use existing field'), t('"Re-use existing field" was found.'));
 
     // Check that the list of options respects entity type restrictions on
     // fields. The 'comment' field is restricted to the 'comment' entity type
@@ -307,11 +307,11 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->drupalGet($bundle_path);
     $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $instance['label'], t('Field was created and appears in the overview page.'));
 
-    // Check that the instance does not appear in the 'add existing field' row
+    // Check that the instance does not appear in the 're-use existing field' row
     // on other bundles.
     $bundle_path = 'admin/structure/types/manage/article/fields/';
     $this->drupalGet($bundle_path);
-    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), t("The 'add existing field' select respects field types 'no_ui' property."));
+    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), t("The 're-use existing field' select respects field types 'no_ui' property."));
   }
 
   /**
