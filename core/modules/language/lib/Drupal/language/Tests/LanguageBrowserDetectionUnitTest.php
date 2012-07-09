@@ -105,7 +105,6 @@ class LanguageBrowserDetectionUnitTest extends UnitTestBase {
       'eh' => 'eh-oh-laa-laa',
 
       // Different qvalues.
-      'en-US,en;q=0.5,fr;q=0.25' => 'en-US',
       'fr,en;q=0.5' => 'fr-CA',
       'fr,en;q=0.5,fr-CA;q=0.25' => 'fr',
 
