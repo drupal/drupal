@@ -767,8 +767,8 @@ abstract class TestBase {
    * miscellaneous characters. Use this method when testing general input
    * where the content is not restricted.
    *
-   * Do not use this method when special characters are not allowed (e.g., in
-   * machine or file names); instead, use
+   * Do not use this method when special characters are not possible (e.g., in
+   * machine or file names that have already been validated); instead, use
    * Drupal\simpletest\TestBase::randomName().
    *
    * @param $length
