@@ -635,10 +635,21 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $this->assertText(t('No strings available.'), t("Search didn't find the string."));
 
     // Ensure untranslated string appears if searching on 'only untranslated
-    // strings'.
+    // strings' in "all" (hasn't been translated to any language).
     $search = array(
       'string' => $name,
       'language' => 'all',
+      'translation' => 'untranslated',
+      'group' => 'all',
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->assertNoText(t('No strings available.'), t('Search found the string.'));
+
+    // Ensure untranslated string appears if searching on 'only untranslated
+    // strings' in the custom language (hasn't been translated to that specific language).
+    $search = array(
+      'string' => $name,
+      'language' => $langcode,
       'translation' => 'untranslated',
       'group' => 'all',
     );

@@ -1860,7 +1860,16 @@ function _locale_translate_seek() {
   }
 
   $sql_query = db_select('locales_source', 's');
-  $sql_query->leftJoin('locales_target', 't', 't.lid = s.lid');
+
+  $limit_language = NULL;
+  if ($query['language'] != 'en' && $query['language'] != 'all') {
+    $sql_query->leftJoin('locales_target', 't', "t.lid = s.lid AND t.language = :langcode", array(':langcode' => $query['language']));
+    $limit_language = $query['language'];
+  }
+  else {
+    $sql_query->leftJoin('locales_target', 't', 't.lid = s.lid');
+  }
+
   $sql_query->fields('s', array('source', 'location', 'context', 'lid', 'textgroup'));
   $sql_query->fields('t', array('translation', 'language'));
 
@@ -1887,12 +1896,6 @@ function _locale_translate_seek() {
       }
       $sql_query->condition($condition);
       break;
-  }
-
-  $limit_language = NULL;
-  if ($query['language'] != 'en' && $query['language'] != 'all') {
-    $sql_query->condition('language', $query['language']);
-    $limit_language = $query['language'];
   }
 
   // Add a condition on the text group.
