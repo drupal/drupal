@@ -1369,6 +1369,8 @@ abstract class WebTestBase extends TestBase {
             break;
           case 'restripe':
             break;
+          case 'add_css':
+            break;
         }
       }
       $content = $dom->saveHTML();
@@ -1463,6 +1465,7 @@ abstract class WebTestBase extends TestBase {
           case 'url':
           case 'number':
           case 'range':
+          case 'color':
           case 'hidden':
           case 'password':
           case 'email':

@@ -205,8 +205,8 @@ class ModuleApiTest extends WebTestBase {
     // Try to uninstall the PHP module by itself. This should be rejected,
     // since the modules which it depends on need to be uninstalled first, and
     // that is too destructive to perform automatically.
-    $result = drupal_uninstall_modules(array('php'));
-    $this->assertFalse($result, t('Calling drupal_uninstall_modules() on a module whose dependents are not uninstalled fails.'));
+    $result = module_uninstall(array('php'));
+    $this->assertFalse($result, t('Calling module_uninstall() on a module whose dependents are not uninstalled fails.'));
     foreach (array('forum', 'poll', 'php') as $module) {
       $this->assertNotEqual(drupal_get_installed_schema_version($module), SCHEMA_UNINSTALLED, t('The @module module was not uninstalled.', array('@module' => $module)));
     }
@@ -214,17 +214,17 @@ class ModuleApiTest extends WebTestBase {
     // Now uninstall all three modules explicitly, but in the incorrect order,
     // and make sure that drupal_uninstal_modules() uninstalled them in the
     // correct sequence.
-    $result = drupal_uninstall_modules(array('poll', 'php', 'forum'));
-    $this->assertTrue($result, t('drupal_uninstall_modules() returns the correct value.'));
+    $result = module_uninstall(array('poll', 'php', 'forum'));
+    $this->assertTrue($result, t('module_uninstall() returns the correct value.'));
     foreach (array('forum', 'poll', 'php') as $module) {
       $this->assertEqual(drupal_get_installed_schema_version($module), SCHEMA_UNINSTALLED, t('The @module module was uninstalled.', array('@module' => $module)));
     }
-    $this->assertEqual(variable_get('test_module_uninstall_order', array()), array('forum', 'poll', 'php'), t('Modules were uninstalled in the correct order by drupal_uninstall_modules().'));
+    $this->assertEqual(variable_get('test_module_uninstall_order', array()), array('forum', 'poll', 'php'), t('Modules were uninstalled in the correct order by module_uninstall().'));
 
     // Uninstall the profile module from above, and make sure that the profile
     // itself is not on the list of dependent modules to be uninstalled.
-    $result = drupal_uninstall_modules(array('comment'));
-    $this->assertTrue($result, t('drupal_uninstall_modules() returns the correct value.'));
+    $result = module_uninstall(array('comment'));
+    $this->assertTrue($result, t('module_uninstall() returns the correct value.'));
     $this->assertEqual(drupal_get_installed_schema_version('comment'), SCHEMA_UNINSTALLED, t('Comment module was uninstalled.'));
     $uninstalled_modules = variable_get('test_module_uninstall_order', array());
     $this->assertTrue(in_array('comment', $uninstalled_modules), t('Comment module is in the list of uninstalled modules.'));

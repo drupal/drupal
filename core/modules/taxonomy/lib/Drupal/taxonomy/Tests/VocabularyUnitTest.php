@@ -206,7 +206,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
 
     module_disable(array('taxonomy'));
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
-    drupal_uninstall_modules(array('taxonomy'));
+    module_uninstall(array('taxonomy'));
     module_enable(array('taxonomy'));
 
     // Now create a vocabulary with the same name. All field instances

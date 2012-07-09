@@ -1,6 +1,9 @@
 
 Drupal 8.0, xxxx-xx-xx (development version)
 ----------------------
+- Improved entity system.
+    * Added support for saving and deleting entities through the controller.
+    * Entities are now classed objects, implementing EntityInterface.
 - Replaced the core routing system with one built on the Symfony2 framework.
 - Configuration:
     * Added a centralized file-based configuration system.

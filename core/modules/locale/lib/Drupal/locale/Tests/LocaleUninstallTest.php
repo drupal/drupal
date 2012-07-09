@@ -87,7 +87,7 @@ class LocaleUninstallTest extends WebTestBase {
 
     // Uninstall Locale.
     module_disable($locale_module);
-    drupal_uninstall_modules($locale_module);
+    module_uninstall($locale_module);
 
     // Visit the front page.
     $this->drupalGet('');

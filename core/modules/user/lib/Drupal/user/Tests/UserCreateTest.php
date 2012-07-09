@@ -30,9 +30,18 @@ class UserCreateTest extends WebTestBase {
     $user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($user);
 
+    // Test user creation page for valid fields.
+    $this->drupalGet('admin/people/create');
+    $this->assertFieldbyId('edit-status-0', 0, 'The user status option Blocked exists.', 'User login');
+    $this->assertFieldbyId('edit-status-1', 1, 'The user status option Active exists.', 'User login');
+    $this->assertFieldByXPath('//input[@type="radio" and @id="edit-status-1" and @checked="checked"]', NULL, 'Default setting for user status is active.');
+
+    // We create two users, notifying one and not notifying the other, to
+    // ensure that the tests work in both cases.
     foreach (array(FALSE, TRUE) as $notify) {
+      $name = $this->randomName();
       $edit = array(
-        'name' => $this->randomName(),
+        'name' => $name,
         'mail' => $this->randomName() . '@example.com',
         'pass[pass1]' => $pass = $this->randomString(),
         'pass[pass2]' => $pass,
@@ -51,6 +60,8 @@ class UserCreateTest extends WebTestBase {
 
       $this->drupalGet('admin/people');
       $this->assertText($edit['name'], 'User found in list of users');
+      $user = user_load_by_name($name);
+      $this->assertEqual($user->status == 1, 'User is not blocked');
     }
   }
 }

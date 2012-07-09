@@ -540,13 +540,12 @@ function _book_add_form_elements(&$form, &$form_state, Node $node) {
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
     '#attributes' => array(
-      'class' => array('book-form'),
+      'class' => array('book-outline-form'),
     ),
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'book') . '/book.js'),
     ),
     '#tree' => TRUE,
-    '#attributes' => array('class' => array('book-outline-form')),
   );
   foreach (array('menu_name', 'mlid', 'nid', 'router_path', 'has_children', 'options', 'module', 'original_bid', 'parent_depth_limit') as $key) {
     $form['book'][$key] = array(

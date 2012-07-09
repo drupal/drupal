@@ -32,7 +32,7 @@ class UninstallTest extends WebTestBase {
     // Uninstalls the module_test module, so hook_modules_uninstalled()
     // is executed.
     module_disable(array('module_test'));
-    drupal_uninstall_modules(array('module_test'));
+    module_uninstall(array('module_test'));
 
     // Are the perms defined by module_test removed from {role_permission}.
     $count = db_query("SELECT COUNT(rid) FROM {role_permission} WHERE permission = :perm", array(':perm' => 'module_test perm'))->fetchField();

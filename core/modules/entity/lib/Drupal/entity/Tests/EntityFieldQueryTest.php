@@ -27,7 +27,7 @@ class EntityFieldQueryTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('field_test'));
+    parent::setUp(array('node', 'field_test', 'entity_query_access_test', 'node_access_test'));
 
     field_test_create_bundle('bundle1');
     field_test_create_bundle('bundle2');
@@ -1526,6 +1526,26 @@ class EntityFieldQueryTest extends WebTestBase {
 
     unset($_GET['sort']);
     unset($_GET['order']);
+  }
+
+  /**
+   * Tests EntityFieldQuery access on non-node entities.
+   */
+  function testEntityFieldQueryAccess() {
+    // Test as a user with ability to bypass node access.
+    $privileged_user = $this->drupalCreateUser(array('bypass node access', 'access content'));
+    $this->drupalLogin($privileged_user);
+    $this->drupalGet('entity-query-access/test/' . $this->fields[0]['field_name']);
+    $this->assertText('Found entity', 'Returned access response with entities.');
+    $this->drupalLogout();
+
+    // Test as a user that does not have ability to bypass node access or view
+    // all nodes.
+    $regular_user = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($regular_user);
+    $this->drupalGet('entity-query-access/test/' . $this->fields[0]['field_name']);
+    $this->assertText('Found entity', 'Returned access response with entities.');
+    $this->drupalLogout();
   }
 
   /**
