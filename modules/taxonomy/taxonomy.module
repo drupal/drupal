@@ -1136,7 +1136,7 @@ class TaxonomyTermController extends DrupalDefaultEntityController {
     if (isset($conditions['name'])) {
       $query_conditions = &$query->conditions();
       foreach ($query_conditions as $key => $condition) {
-        if ($condition['field'] == 'base.name') {
+        if (is_array($condition) && $condition['field'] == 'base.name') {
           $query_conditions[$key]['operator'] = 'LIKE';
           $query_conditions[$key]['value'] = db_like($query_conditions[$key]['value']);
         }
