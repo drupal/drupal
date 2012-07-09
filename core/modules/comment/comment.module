@@ -10,7 +10,9 @@
  */
 
 use Drupal\node\Node;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Comment is awaiting approval.
@@ -501,11 +503,13 @@ function comment_permalink($cid) {
     // Find the current display page for this comment.
     $page = comment_get_display_page($comment->cid, $node->type);
 
-    // Return the node view, this will show the correct comment in context.
-    // @todo Refactor to use Symfony's Request object.
-    _current_path('node/' . $node->nid);
+    // @todo: Cleaner sub request handling.
+    $subrequest = Request::create('/node/' . $node->nid, 'GET', request()->query->all(), request()->cookies->all(), array(), request()->server->all());
+    $subrequest->query->set('page', $page);
+    // @todo: Convert the pager to use the request object.
     $_GET['page'] = $page;
-    return menu_execute_active_handler('node/' . $node->nid, FALSE);
+    request($subrequest);
+    return drupal_container()->get('httpkernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
   }
   throw new NotFoundHttpException();
 }

@@ -5,6 +5,8 @@
  * Fake an HTTP request, for use during testing.
  */
 
+use Symfony\Component\HttpFoundation\Request;
+
 // Set a global variable to indicate a mock HTTP request.
 $is_http_mock = !empty($_SERVER['HTTPS']);
 
@@ -28,5 +30,12 @@ if (!drupal_valid_test_ua()) {
   exit;
 }
 
-drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-menu_execute_active_handler();
+// Continue with normal request handling.
+$request = Request::createFromGlobals();
+request($request);
+
+drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
+
+$kernel = drupal_container()->get('httpkernel');
+$response = $kernel->handle($request)->prepare($request)->send();
+$kernel->terminate($request, $response);

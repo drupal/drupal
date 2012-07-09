@@ -481,56 +481,6 @@ function menu_get_item($path = NULL, $router_item = NULL) {
 }
 
 /**
- * Execute the page callback associated with the current path.
- *
- * @param $path
- *   The drupal path whose handler is to be be executed. If set to NULL, then
- *   the current path is used.
- * @param $deliver
- *   (optional) A boolean to indicate whether the content should be sent to the
- *   browser using the appropriate delivery callback (TRUE) or whether to return
- *   the result to the caller (FALSE).
- */
-function menu_execute_active_handler($path = NULL, $deliver = TRUE) {
-  // Check if site is offline.
-  $page_callback_result = _menu_site_is_offline() ? MENU_SITE_OFFLINE : MENU_SITE_ONLINE;
-
-  // Allow other modules to change the site status but not the path because that
-  // would not change the global variable. hook_url_inbound_alter() can be used
-  // to change the path. Code later will not use the $read_only_path variable.
-  $read_only_path = !empty($path) ? $path : current_path();
-  drupal_alter('menu_site_status', $page_callback_result, $read_only_path);
-
-  // Only continue if the site status is not set.
-  if ($page_callback_result == MENU_SITE_ONLINE) {
-    if ($router_item = menu_get_item($path)) {
-      if ($router_item['access']) {
-        if ($router_item['include_file']) {
-          require_once DRUPAL_ROOT . '/' . $router_item['include_file'];
-        }
-        $page_callback_result = call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
-      }
-      else {
-        $page_callback_result = MENU_ACCESS_DENIED;
-      }
-    }
-    else {
-      $page_callback_result = MENU_NOT_FOUND;
-    }
-  }
-
-  // Deliver the result of the page callback to the browser, or if requested,
-  // return it raw, so calling code can do more processing.
-  if ($deliver) {
-    $default_delivery_callback = (isset($router_item) && $router_item) ? $router_item['delivery_callback'] : NULL;
-    drupal_deliver_page($page_callback_result, $default_delivery_callback);
-  }
-  else {
-    return $page_callback_result;
-  }
-}
-
-/**
  * Loads objects into the map as defined in the $item['load_functions'].
  *
  * @param $item
@@ -2295,8 +2245,8 @@ function menu_get_active_menu_names() {
  * Set the active path, which determines which page is loaded.
  *
  * Note that this may not have the desired effect unless invoked very early
- * in the page load, such as during hook_boot, or unless you call
- * menu_execute_active_handler() to generate your page output.
+ * in the page load, such as during hook_boot, or unless you do a subrequest
+ * to generate your page output.
  *
  * @param $path
  *   A Drupal path - not a path alias.
@@ -2660,7 +2610,7 @@ function menu_router_rebuild() {
   if (!lock_acquire(__FUNCTION__)) {
     // Wait for another request that is already doing this work.
     // We choose to block here since otherwise the router item may not
-    // be available in menu_execute_active_handler() resulting in a 404.
+    // be available during routing resulting in a 404.
     lock_wait(__FUNCTION__);
     return FALSE;
   }

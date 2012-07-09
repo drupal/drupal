@@ -6,7 +6,9 @@
  */
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Menu callback; Retrieve a JSON object containing autocomplete suggestions for existing users.
@@ -495,8 +497,10 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
 function user_page() {
   global $user;
   if ($user->uid) {
-    menu_set_active_item('user/' . $user->uid);
-    return menu_execute_active_handler(NULL, FALSE);
+    // @todo: Cleaner sub request handling.
+    $subrequest = Request::create('/user/' . $user->uid, 'GET', request()->query->all(), request()->cookies->all(), array(), request()->server->all());
+    request($subrequest);
+    return drupal_container()->get('httpkernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
   }
   else {
     return drupal_get_form('user_login');

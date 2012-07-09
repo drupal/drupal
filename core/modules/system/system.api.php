@@ -4106,9 +4106,8 @@ function hook_countries_alter(&$countries) {
  * Control site status before menu dispatching.
  *
  * The hook is called after checking whether the site is offline but before
- * the current router item is retrieved and executed by
- * menu_execute_active_handler(). If the site is in offline mode,
- * $menu_site_status is set to MENU_SITE_OFFLINE.
+ * the current router item is retrieved and executed. If the site is in offline
+ * mode, $menu_site_status is set to MENU_SITE_OFFLINE.
  *
  * @param $menu_site_status
  *   Supported values are MENU_SITE_OFFLINE, MENU_ACCESS_DENIED,

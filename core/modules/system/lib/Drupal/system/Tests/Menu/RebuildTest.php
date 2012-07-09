@@ -36,10 +36,10 @@ class RebuildTest extends WebTestBase {
     $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();
     $this->assertFalse($admin_exists, t("The path 'admin/' has been deleted and doesn't exist in the database."));
 
-    // Now we enable the rebuild variable and trigger menu_execute_active_handler()
-    // to rebuild the menu item. Now 'admin' should exist.
+    // Now we enable the rebuild variable and send a request to rebuild the menu
+    // item. Now 'admin' should exist.
     variable_set('menu_rebuild_needed', TRUE);
-    // menu_execute_active_handler() should trigger the rebuild.
+    // The request should trigger the rebuild.
     $this->drupalGet('<front>');
     $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();
     $this->assertEqual($admin_exists, 'admin', t("The menu has been rebuilt, the path 'admin' now exists again."));
