@@ -25,7 +25,7 @@ class views_handler_field_date extends views_handler_field {
     $date_formats = array();
     $date_types = system_get_date_types();
     foreach ($date_types as $key => $value) {
-      $date_formats[$value['type']] = check_plain(t($value['title'] . ' format')) . ': ' . format_date(REQUEST_TIME, $value['type']);
+      $date_formats[$value['type']] = t('@date_format format', array('@date_format' => $value['title'])) . ': ' . format_date(REQUEST_TIME, $value['type']);
     }
 
     $form['date_format'] = array(
@@ -46,7 +46,7 @@ class views_handler_field_date extends views_handler_field {
     $form['custom_date_format'] = array(
       '#type' => 'textfield',
       '#title' => t('Custom date format'),
-      '#description' => t('If "Custom", see <a href="http://us.php.net/manual/en/function.date.php" target="_blank">the PHP docs</a> for date formats. Otherwise, enter the number of different time units to display, which defaults to 2.'),
+      '#description' => t('If "Custom", see the <a href="@url" target="_blank">PHP manual</a> for date formats. Otherwise, enter the number of different time units to display, which defaults to 2.', array('@url' => 'http://php.net/manual/function.date.php')),
       '#default_value' => isset($this->options['custom_date_format']) ? $this->options['custom_date_format'] : '',
     );
     // Setup #states for all possible date_formats on the custom_date_format form element.
