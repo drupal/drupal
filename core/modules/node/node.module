@@ -1759,13 +1759,17 @@ function theme_node_search_admin($variables) {
  * @param object $account
  *   (optional) A user object representing the user for whom the operation is
  *   to be performed. Determines access for a user other than the current user.
+ * @param $langcode
+ *   (optional) Language code for the variant of the node. Different language
+ *   variants might have different permissions associated. If NULL, the
+ *   original langcode of the node is used.
  *
  * @return
  *   TRUE if the operation may be performed, FALSE otherwise.
  *
  * @see node_menu()
  */
-function _node_revision_access(Node $node, $op = 'view', $account = NULL) {
+function _node_revision_access(Node $node, $op = 'view', $account = NULL, $langcode = NULL) {
   $access = &drupal_static(__FUNCTION__, array());
 
   $map = array(
@@ -1784,8 +1788,14 @@ function _node_revision_access(Node $node, $op = 'view', $account = NULL) {
     $account = $GLOBALS['user'];
   }
 
-  // Statically cache access by revision ID, user account ID, and operation.
-  $cid = $node->vid . ':' . $account->uid . ':' . $op;
+  // If no language code was provided, default to the node revision's langcode.
+  if (empty($langcode)) {
+    $langcode = $node->langcode;
+  }
+
+  // Statically cache access by revision ID, language code, user account ID,
+  // and operation.
+  $cid = $node->vid . ':' . $langcode . ':' . $account->uid . ':' . $op;
 
   if (!isset($access[$cid])) {
     // Perform basic permission checks first.
@@ -1810,7 +1820,7 @@ function _node_revision_access(Node $node, $op = 'view', $account = NULL) {
     else {
       // First check the access to the current revision and finally, if the
       // node passed in is not the current revision then access to that, too.
-      $access[$cid] = node_access($op, $node_current_revision, $account) && ($is_current_revision || node_access($op, $node, $account));
+      $access[$cid] = node_access($op, $node_current_revision, $account, $langcode) && ($is_current_revision || node_access($op, $node, $account, $langcode));
     }
   }
 
