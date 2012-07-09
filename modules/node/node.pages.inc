@@ -15,6 +15,13 @@ function node_page_edit($node) {
   return drupal_get_form($node->type . '_node_form', $node);
 }
 
+/**
+ * Page callback: Displays add content links for available content types.
+ *
+ * Redirects to node/add/[type] if only one content type is available.
+ *
+ * @see node_menu()
+ */
 function node_add_page() {
   $item = menu_get_item();
   $content = system_admin_menu_block($item);
