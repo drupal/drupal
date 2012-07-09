@@ -15,7 +15,7 @@ class RegisterKernelListenersPass implements CompilerPassInterface
   public function process(ContainerBuilder $container)
   {
     if (!$container->hasDefinition('dispatcher')) {
-        return;
+      return;
     }
 
     $definition = $container->getDefinition('dispatcher');
@@ -28,7 +28,7 @@ class RegisterKernelListenersPass implements CompilerPassInterface
       $refClass = new \ReflectionClass($class);
       $interface = 'Symfony\Component\EventDispatcher\EventSubscriberInterface';
       if (!$refClass->implementsInterface($interface)) {
-          throw new \InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, $interface));
+        throw new \InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, $interface));
       }
       $definition->addMethodCall('addSubscriberService', array($id, $class));
     }
