@@ -29,6 +29,8 @@ Drupal 7.15, xxxx-xx-xx (development version)
   in field_sync_field_status(), greatly speeding up bulk module enable/disable.
 - Renamed the "Field" column on the Manage Fields screen to "Field type", since
   the former was confusing and inaccurate (UI change).
+- Fixed bug which made it impossible to search for strings that have not been
+  translated into a particular language.
 
 Drupal 7.14 2012-05-02
 ----------------------
