@@ -99,6 +99,8 @@ class LanguageUrlRewritingTest extends WebTestBase {
     drupal_static_reset('language_url_outbound_alter');
     drupal_static_reset('language_url_rewrite_url');
 
+    // Remember current HTTP_HOST.
+    $http_host = $_SERVER['HTTP_HOST'];
     // Fake a different port.
     $_SERVER['HTTP_HOST'] .= ':88';
 
@@ -107,6 +109,9 @@ class LanguageUrlRewritingTest extends WebTestBase {
     $url = url('', array('absolute' => TRUE, 'language' => $language));
 
     $this->assertTrue(strcmp($url, 'http://example.fr:88/') == 0, 'The right port is used.');
+
+    // Restore HTTP_HOST.
+    $_SERVER['HTTP_HOST'] = $http_host;
   }
 
 }
