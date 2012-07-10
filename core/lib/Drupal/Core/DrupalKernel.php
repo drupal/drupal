@@ -62,6 +62,10 @@ class DrupalKernel extends Kernel {
   protected function buildContainer()
   {
     $container = $this->getContainerBuilder();
+
+    if ($bootstrap_container = drupal_container()) {
+      $container->merge($bootstrap_container);
+    }
     foreach ($this->bundles as $bundle) {
       $bundle->build($container);
     }

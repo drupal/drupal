@@ -6,6 +6,7 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Language\Language;
@@ -2460,38 +2461,63 @@ function drupal_container(Container $reset = NULL) {
     $container = $reset;
   }
   elseif (!isset($container)) {
-    // During a normal page request, as opposed to during installation, this will only
-    // ever happen if an error has been thrown. We need to build a new ContainerBuilder
-    // with only the language_interface service.
+    // Return a ContainerBuilder instance with the bare essentials needed for any
+    // full bootstrap regardless of whether there will be a DrupalKernel involved.
+    // This will get merged with the full Kernel-built Container on normal page
+    // requests.
     $container = new ContainerBuilder();
     // An interface language always needs to be available for t() and other
-    // functions. This default is overridden by drupal_language_initialize()
-    // during language negotiation.
+    // functions.
     $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
+    // Register configuration storage dispatcher.
+    $container->setParameter('config.storage.info', array(
+      'Drupal\Core\Config\DatabaseStorage' => array(
+        'connection' => 'default',
+        'target' => 'default',
+        'read' => TRUE,
+        'write' => TRUE,
+      ),
+      'Drupal\Core\Config\FileStorage' => array(
+        'directory' => config_get_config_directory(),
+        'read' => TRUE,
+        'write' => FALSE,
+      ),
+    ));
+    $container->register('config.storage.dispatcher', 'Drupal\Core\Config\StorageDispatcher')
+      ->addArgument('%config.storage.info%');
 
-    // If we are at the beginning of the installation process, we also need the config
-    // services.
-    if (variable_get('install_task', '') != 'done') {
-      // Register configuration storage dispatcher.
-      $container->setParameter('config.storage.info', array(
-        'Drupal\Core\Config\DatabaseStorage' => array(
-          'connection' => 'default',
-          'target' => 'default',
-          'read' => TRUE,
-          'write' => TRUE,
-        ),
-        'Drupal\Core\Config\FileStorage' => array(
-          'directory' => config_get_config_directory(),
-          'read' => TRUE,
-          'write' => FALSE,
-        ),
+    // Register configuration object factory.
+    $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
+      ->addArgument(new Reference('config.storage.dispatcher'));
+
+    // Ensure a language object is registered for each language type, whether the
+    // site is multilingual or not.
+    $types = language_types_get_all();
+    if (language_multilingual()) {
+      include_once DRUPAL_ROOT . '/core/includes/language.inc';
+      foreach ($types as $type) {
+        $language = language_types_initialize($type);
+        // We cannot pass an object as a parameter to a method on a service.
+        $info = get_object_vars($language);
+        $container->set($type, NULL);
+        $container->register($type, 'Drupal\\Core\\Language\\Language')
+          ->addMethodCall('extend', array($info));
+      }
+    }
+    else {
+      $info = variable_get('language_default', array(
+        'langcode' => 'en',
+        'name' => 'English',
+        'direction' => 0,
+        'weight' => 0,
+        'locked' => 0,
       ));
-      $container->register('config.storage.dispatcher', 'Drupal\Core\Config\StorageDispatcher')
-        ->addArgument('%config.storage.info%');
-
-      // Register configuration object factory.
-      $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
-        ->addArgument(new Reference('config.storage.dispatcher'));
+      $info['default'] = TRUE;
+      foreach ($types as $type) {
+        $container->set($type, NULL);
+        $container->register($type, 'Drupal\\Core\\Language\\Language')
+          ->addMethodCall('extend', array($info));
+      }
     }
   }
   return $container;

@@ -13,8 +13,6 @@ class DrupalBundle extends Bundle
 {
   public function build(ContainerBuilder $container)
   {
-    parent::build($container);
-
     $definitions = $this->getDefinitions();
 
     foreach ($definitions as $id => $info) {
@@ -55,10 +53,11 @@ class DrupalBundle extends Bundle
         $definition->addMethodCall($method, $args);
       }
 
+      if (isset($info['container_aware'])) {
+        $definition->addMethodCall('setContainer', array(new Reference('service_container')));
+      }
       $container->setDefinition($id, $definition);
     }
-
-    $this->registerLanguageServices($container);
 
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
@@ -69,31 +68,6 @@ class DrupalBundle extends Bundle
    */
   function getDefinitions() {
     return array(
-      // Register configuration storage dispatcher.
-      'config.storage.dispatcher' => array(
-        'class' => 'Drupal\Core\Config\StorageDispatcher',
-        'parameters' => array(
-          'conifg.storage.info' => array(
-            'Drupal\Core\Config\DatabaseStorage' => array(
-              'connection' => 'default',
-              'target' => 'default',
-              'read' => TRUE,
-              'write' => TRUE,
-            ),
-            'Drupal\Core\Config\FileStorage' => array(
-              'directory' => config_get_config_directory(),
-              'read' => TRUE,
-              'write' => FALSE,
-            ),
-          ),
-        ),
-      ),
-      'config.factory' => array(
-        'class' => 'Drupal\Core\Config\ConfigFactory',
-        'references' => array(
-          'config.storage.dispatcher'
-        )
-      ),
       'dispatcher' => array(
         'class' => 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher',
         'references' => array(
@@ -156,7 +130,7 @@ class DrupalBundle extends Bundle
       'exception_controller' => array(
         'class' => 'Drupal\Core\ExceptionController',
         'references' => array('content_negotiation'),
-        'methods' => array('setContainer' => array('service_container'))
+        'container_aware' => TRUE,
       ),
       'exception_listener' => array(
         'class' => 'Symfony\Component\HttpKernel\EventListener\ExceptionListener',
@@ -176,42 +150,5 @@ class DrupalBundle extends Bundle
         'arguments' => array('slave'),
       ),
     );
-  }
-
-  /**
-   * Registers language-related services to the container.
-   */
-  function registerLanguageServices($container) {
-
-    $types = language_types_get_all();
-
-    // Ensure a language object is registered for each language type, whether the
-    // site is multilingual or not.
-    if (language_multilingual()) {
-      include_once DRUPAL_ROOT . '/core/includes/language.inc';
-      foreach ($types as $type) {
-        $language = language_types_initialize($type);
-        // We cannot pass an object as a parameter to a method on a service.
-        $info = get_object_vars($language);
-        $container->set($type, NULL);
-        $container->register($type, 'Drupal\\Core\\Language\\Language')
-          ->addMethodCall('extend', array($info));
-      }
-    }
-    else {
-      $info = variable_get('language_default', array(
-        'langcode' => 'en',
-        'name' => 'English',
-        'direction' => 0,
-        'weight' => 0,
-        'locked' => 0,
-      ));
-      $info['default'] = TRUE;
-      foreach ($types as $type) {
-        $container->set($type, NULL);
-        $container->register($type, 'Drupal\\Core\\Language\\Language')
-          ->addMethodCall('extend', array($info));
-      }
-    }
   }
 }
