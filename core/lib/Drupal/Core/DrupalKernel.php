@@ -7,7 +7,7 @@
 
 namespace Drupal\Core;
 
-use Drupal\Core\DrupalBundle;
+use Drupal\Core\CoreBundle;
 use Symfony\Component\HttpKernel\Kernel;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -18,10 +18,9 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
  */
 class DrupalKernel extends Kernel {
 
-  public function registerBundles()
-  {
+  public function registerBundles() {
     $bundles = array(
-      new DrupalBundle(),
+      new CoreBundle(),
     );
 
     // Rather than bootstrapping to a higher phase prior to booting the Kernel, which
@@ -47,8 +46,7 @@ class DrupalKernel extends Kernel {
   /**
    * Initializes the service container.
    */
-  protected function initializeContainer()
-  {
+  protected function initializeContainer() {
     $this->container = $this->buildContainer();
     $this->container->set('kernel', $this);
     drupal_container($this->container);
@@ -59,8 +57,7 @@ class DrupalKernel extends Kernel {
    *
    * @return ContainerBuilder The compiled service container
    */
-  protected function buildContainer()
-  {
+  protected function buildContainer() {
     $container = $this->getContainerBuilder();
 
     if ($bootstrap_container = drupal_container()) {
@@ -73,19 +70,16 @@ class DrupalKernel extends Kernel {
     return $container;
   }
 
-
   /**
    * Gets a new ContainerBuilder instance used to build the service container.
    *
    * @return ContainerBuilder
    */
-  protected function getContainerBuilder()
-  {
+  protected function getContainerBuilder() {
     return new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
   }
 
-  public function registerContainerConfiguration(LoaderInterface $loader)
-  {
+  public function registerContainerConfiguration(LoaderInterface $loader) {
     // We have to define this method because it's not defined in the base class
     // but is part of the KernelInterface interface. However, the LoaderInterface
     // class is part of the config component, which we are not using, so this

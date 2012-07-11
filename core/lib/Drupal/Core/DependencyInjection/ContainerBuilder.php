@@ -18,21 +18,16 @@ use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
  */
 class ContainerBuilder extends BaseContainerBuilder {
 
-  public function addCompilerPass(CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION)
-  {
-    if (!isset($this->compiler) || null === $this->compiler) {
-      $this->compiler = new Compiler();
-    }
+  public function __construct() {
+    parent::__construct();
+    $this->compiler = new Compiler();
+  }
 
+  public function addCompilerPass(CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION) {
     $this->compiler->addPass($pass, $type);
   }
 
-  public function compile()
-  {
-    if (null === $this->compiler) {
-      $this->compiler = new Compiler();
-    }
-
+  public function compile() {
     $this->compiler->compile($this);
     $this->parameterBag->resolve();
     // TODO: The line below is commented out because there is code that calls

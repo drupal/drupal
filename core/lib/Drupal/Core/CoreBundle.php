@@ -9,10 +9,14 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
-class DrupalBundle extends Bundle
+/**
+ * This is where Drupal core registers all of its services to the Dependency
+ * Injection Container. Modules wishing to register services to the container
+ * should extend Symfony's Bundle class directly, not this class.
+ */
+class CoreBundle extends Bundle
 {
-  public function build(ContainerBuilder $container)
-  {
+  public function build(ContainerBuilder $container) {
     $container->register('dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
       ->addArgument(new Reference('service_container'));
     $container->register('resolver', 'Symfony\Component\HttpKernel\Controller\ControllerResolver');
@@ -57,6 +61,5 @@ class DrupalBundle extends Bundle
 
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
-
   }
 }
