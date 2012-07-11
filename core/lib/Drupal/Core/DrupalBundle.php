@@ -13,49 +13,42 @@ class DrupalBundle extends Bundle
 {
   public function build(ContainerBuilder $container)
   {
-    $definitions = $this->getDefinitions();
-
-    foreach ($definitions as $id => $info) {
-      $info += array(
-        'tags' => array(),
-        'references' => array(),
-        'parameters' => array(),
-        'methods' => array(),
-        'arguments' => array(),
-      );
-
-      $references = array();
-      foreach ($info['references'] as $ref_id) {
-        $references[] = new Reference($ref_id);
-      }
-
-      $definition = new Definition($info['class'], $references);
-
-      foreach ($info['parameters'] as $key => $param) {
-        $container->setParameter($key, $param);
-        $definition->addArgument("%{$key}%");
-      }
-
-      if (isset($info['factory_class']) && isset($info['factory_method'])) {
-        $definition->setFactoryClass($info['factory_class']);
-        $definition->setFactoryMethod($info['factory_method']);
-      }
-
-      foreach ($info['arguments'] as $argument) {
-        $definition->addArgument($argument);
-      }
-
-      foreach($info['tags'] as $tag) {
-        $definition->addTag($tag);
-      }
-
-      foreach ($info['methods'] as $method => $args) {
-        $definition->addMethodCall($method, $args);
-      }
-
-      $container->setDefinition($id, $definition);
-    }
-
+    $container->register('dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
+      ->addArgument(new Reference('service_container'));
+    $container->register('resolver', 'Symfony\Component\HttpKernel\Controller\ControllerResolver');
+    $container->register('http_kernel', 'Symfony\Component\HttpKernel\HttpKernel')
+      ->addArgument(new Reference('dispatcher'))
+      ->addArgument(new Reference('resolver'));
+    $container->register('matcher', 'Drupal\Core\LegacyUrlMatcher');
+    $container->register('router_listener', 'Drupal\Core\EventSubscriber\RouterListener')
+      ->addArgument(new Reference('matcher'))
+      ->addTag('kernel.event_subscriber');
+    $container->register('content_negotiation', 'Drupal\Core\ContentNegotiation');
+    $container->register('view_subscriber', 'Drupal\Core\EventSubscriber\ViewSubscriber')
+      ->addArgument(new Reference('content_negotiation'))
+      ->addTag('kernel.event_subscriber');
+    $container->register('access_subscriber', 'Drupal\Core\EventSubscriber\AccessSubscriber')
+      ->addTag('kernel.event_subscriber');
+    $container->register('maintenance_mode_subscriber', 'Drupal\Core\EventSubscriber\MaintenanceModeSubscriber')
+      ->addTag('kernel.event_subscriber');
+    $container->register('path_subscriber', 'Drupal\Core\EventSubscriber\PathSubscriber')
+      ->addTag('kernel.event_subscriber');
+    $container->register('legacy_request_subscriber', 'Drupal\Core\EventSubscriber\LegacyRequestSubscriber')
+      ->addTag('kernel.event_subscriber');
+    $container->register('legacy_controller_subscriber', 'Drupal\Core\EventSubscriber\LegacyControllerSubscriber')
+      ->addTag('kernel.event_subscriber');
+    $container->register('finish_response_subscriber', 'Drupal\Core\EventSubscriber\FinishResponseSubscriber')
+      ->addTag('kernel.event_subscriber');
+    $container->register('request_close_subscriber', 'Drupal\Core\EventSubscriber\RequestCloseSubscriber')
+      ->addTag('kernel.event_subscriber');
+    $container->register('database', 'Drupal\Core\Database\Connection')
+      ->setFactoryClass('Drupal\Core\Database\Database')
+      ->setFactoryMethod('getConnection')
+      ->addArgument('default');
+    $container->register('database.slave', 'Drupal\Core\Database\Connection')
+      ->setFactoryClass('Drupal\Core\Database\Database')
+      ->setFactoryMethod('getConnection')
+      ->addArgument('slave');
     $container->register('exception_listener', 'Symfony\Component\HttpKernel\EventListener\ExceptionListener')
       ->addTag('kernel.event_subscriber')
       ->addArgument(new Reference('service_container'))
@@ -65,84 +58,5 @@ class DrupalBundle extends Bundle
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
 
-  }
-
-  /**
-   * Returns an array of definitions for the services we want to register.
-   */
-  function getDefinitions() {
-    return array(
-      'dispatcher' => array(
-        'class' => 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher',
-        'references' => array(
-          'service_container',
-        ),
-      ),
-      'resolver' => array(
-        'class' => 'Symfony\Component\HttpKernel\Controller\ControllerResolver',
-      ),
-      'http_kernel' => array(
-        'class' => 'Symfony\Component\HttpKernel\HttpKernel',
-        'references' => array(
-          'dispatcher', 'resolver',
-        )
-      ),
-      'matcher' => array(
-        'class' => 'Drupal\Core\LegacyUrlMatcher',
-      ),
-      'router_listener' => array(
-        'class' => 'Drupal\Core\EventSubscriber\RouterListener',
-        'references' => array('matcher'),
-        'tags' => array('kernel.event_subscriber')
-      ),
-      'content_negotiation' => array(
-        'class' => 'Drupal\Core\ContentNegotiation',
-      ),
-      'view_subscriber' => array(
-        'class' => 'Drupal\Core\EventSubscriber\ViewSubscriber',
-        'references' => array('content_negotiation'),
-        'tags' => array('kernel.event_subscriber')
-      ),
-      'access_subscriber' => array(
-        'class' => 'Drupal\Core\EventSubscriber\AccessSubscriber',
-        'tags' => array('kernel.event_subscriber')
-      ),
-      'maintenance_mode_subscriber' => array(
-        'class' => 'Drupal\Core\EventSubscriber\MaintenanceModeSubscriber',
-        'tags' => array('kernel.event_subscriber')
-      ),
-      'path_subscriber' => array(
-        'class' => 'Drupal\Core\EventSubscriber\PathSubscriber',
-        'tags' => array('kernel.event_subscriber')
-      ),
-      'legacy_request_subscriber' => array(
-        'class' => 'Drupal\Core\EventSubscriber\LegacyRequestSubscriber',
-        'tags' => array('kernel.event_subscriber')
-      ),
-      'legacy_controller_subscriber' => array(
-        'class' => 'Drupal\Core\EventSubscriber\LegacyControllerSubscriber',
-        'tags' => array('kernel.event_subscriber')
-      ),
-      'finish_response_subscriber' => array(
-        'class' => 'Drupal\Core\EventSubscriber\FinishResponseSubscriber',
-        'tags' => array('kernel.event_subscriber')
-      ),
-      'request_close_subscriber' => array(
-        'class' => 'Drupal\Core\EventSubscriber\RequestCloseSubscriber',
-        'tags' => array('kernel.event_subscriber')
-      ),
-      'database' => array(
-        'class' => 'Drupal\Core\Database\Connection',
-        'factory_class' => 'Drupal\Core\Database\Database',
-        'factory_method' => 'getConnection',
-        'arguments' => array('default'),
-      ),
-      'database.slave' => array(
-        'class' => 'Drupal\Core\Database\Connection',
-        'factory_class' => 'Drupal\Core\Database\Database',
-        'factory_method' => 'getConnection',
-        'arguments' => array('slave'),
-      ),
-    );
   }
 }
