@@ -181,17 +181,17 @@ function _field_info_collate_types($reset = FALSE) {
  *     whose field is active.
  */
 function _field_info_collate_fields($reset = FALSE) {
-  static $cached_info;
+  static $info;
 
   if ($reset) {
-    $cached_info = NULL;
+    $info = NULL;
     cache_clear_all('field_info_fields', 'cache_field');
     return;
   }
 
-  if (!isset($cached_info)) {
+  if (!isset($info)) {
     if ($cached = cache_get('field_info_fields', 'cache_field')) {
-      $cached_info = $cached->data;
+      $info = $cached->data;
     }
     else {
       $definitions = array(
@@ -243,11 +243,10 @@ function _field_info_collate_fields($reset = FALSE) {
       }
 
       cache_set('field_info_fields', $info, 'cache_field');
-      $cached_info = $info;
     }
   }
 
-  return $cached_info;
+  return $info;
 }
 
 /**
