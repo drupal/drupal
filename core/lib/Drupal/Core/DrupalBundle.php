@@ -53,14 +53,18 @@ class DrupalBundle extends Bundle
         $definition->addMethodCall($method, $args);
       }
 
-      if (isset($info['container_aware'])) {
-        $definition->addMethodCall('setContainer', array(new Reference('service_container')));
-      }
       $container->setDefinition($id, $definition);
     }
 
+    $container->register('exception_listener', 'Symfony\Component\HttpKernel\EventListener\ExceptionListener')
+      ->addTag('kernel.event_subscriber')
+      ->addArgument(new Reference('service_container'))
+      ->setFactoryClass('Drupal\Core\ExceptionController')
+      ->setFactoryMethod('getExceptionListener');
+
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
+
   }
 
   /**
@@ -125,16 +129,6 @@ class DrupalBundle extends Bundle
       ),
       'request_close_subscriber' => array(
         'class' => 'Drupal\Core\EventSubscriber\RequestCloseSubscriber',
-        'tags' => array('kernel.event_subscriber')
-      ),
-      'exception_controller' => array(
-        'class' => 'Drupal\Core\ExceptionController',
-        'references' => array('content_negotiation'),
-        'container_aware' => TRUE,
-      ),
-      'exception_listener' => array(
-        'class' => 'Symfony\Component\HttpKernel\EventListener\ExceptionListener',
-        'references' => array('exception_controller'),
         'tags' => array('kernel.event_subscriber')
       ),
       'database' => array(
