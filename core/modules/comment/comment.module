@@ -509,7 +509,7 @@ function comment_permalink($cid) {
     // @todo: Convert the pager to use the request object.
     $_GET['page'] = $page;
     request($subrequest);
-    return drupal_container()->get('httpkernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
+    return drupal_container()->get('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
   }
   throw new NotFoundHttpException();
 }
