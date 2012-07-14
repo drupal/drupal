@@ -660,3 +660,42 @@ function template_preprocess_views_view_row_comment(&$vars) {
   }
   $vars['comment'] = drupal_render($build);
 }
+
+/**
+ * Implements hook_views_wizard().
+ */
+function comment_views_wizard() {
+  $plugins['comment'] = array(
+    'name' => 'comment',
+    'base_table' => 'comment',
+    'created_column' => 'created',
+    'class' => 'Drupal\views\Plugins\views\wizard\Comment',
+    'title' => t('Comments'),
+    'filters' => array(
+      'status' => array(
+        'value' => COMMENT_PUBLISHED,
+        'table' => 'comment',
+        'field' => 'status',
+      ),
+      'status_node' => array(
+        'value' => NODE_PUBLISHED,
+        'table' => 'node',
+        'field' => 'status',
+        'relationship' => 'nid',
+      ),
+    ),
+    'path_field' => array(
+      'id' => 'cid',
+      'table' => 'comment',
+      'field' => 'cid',
+      'exclude' => TRUE,
+      'link_to_comment' => FALSE,
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => 'comment/[cid]#comment-[cid]',
+      ),
+    ),
+  );
+
+  return $plugins;
+}

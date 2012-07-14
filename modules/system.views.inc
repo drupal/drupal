@@ -576,3 +576,27 @@ function _views_file_status($choice = NULL) {
 
   return $status;
 }
+
+/**
+ * Implements hook_views_wizard().
+ */
+function system_views_wizard() {
+  $plugins['file_managed'] = array(
+    'name' => 'file_managed',
+    'base_table' => 'file_managed',
+    'created_column' => 'timestamp',
+    'class' => 'Drupal\views\Plugins\views\wizard\File',
+    'title' => t('Files'),
+    'filters' => array(
+    ),
+    'path_field' => array(
+      'id' => 'uri',
+      'table' => 'file_managed',
+      'field' => 'uri',
+      'exclude' => TRUE,
+      'file_download_path' => TRUE,
+    ),
+  );
+
+  return $plugins;
+}

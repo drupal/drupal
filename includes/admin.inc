@@ -8,6 +8,7 @@
 use Drupal\Core\Database\Database;
 use Drupal\views\View;
 use Drupal\views\Analyzer;
+use Drupal\views\Plugins\Type\WizardManager;
 
 /**
  * Create an array of Views admin CSS for adding or attaching.

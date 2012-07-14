@@ -11,6 +11,10 @@
 
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\View;
+use Drupal\Component\Plugin\PluginManagerInterface;
+
+// @todo: Should views_get_plugin_manager be moved to a ceperate file?
+use Drupal\views\Plugins\Type\StylePluginManager;
 
 /**
  * Advertise the current views api version

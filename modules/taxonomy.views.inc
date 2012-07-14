@@ -538,3 +538,29 @@ function views_taxonomy_set_breadcrumb(&$breadcrumb, &$argument) {
     $breadcrumb[$path] = check_plain($parent->name);
   }
 }
+
+/**
+ * Implements hook_views_wizard().
+ */
+function taxonomy_views_wizard() {
+  $plugins['taxonomy_term'] = array(
+    'name' => 'taxonomy_term',
+    'base_table' => 'taxonomy_term_data',
+    'class' => 'Drupal\views\Plugins\views\wizard\TaxonomyTerm',
+    'title' => t('Taxonomy terms'),
+    'filters' => array(
+    ),
+    'path_field' => array(
+      'id' => 'tid',
+      'table' => 'taxonomy_term_data',
+      'field' => 'tid',
+      'exclude' => TRUE,
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => 'taxonomy/term/[tid]',
+      ),
+    ),
+  );
+
+  return $plugins;
+}
