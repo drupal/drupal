@@ -23,14 +23,8 @@ class DrupalKernel extends Kernel {
       new CoreBundle(),
     );
 
-    // Rather than bootstrapping to a higher phase prior to booting the Kernel, which
-    // would ensure these files are loaded already, we want to boot the Kernel as
-    // early as possible in the bootstrapping phase.
     // TODO: Somehow remove the necessity of calling system_list() to find out which
     // bundles exist.
-    require_once DRUPAL_ROOT . '/core/includes/cache.inc';
-    require_once DRUPAL_ROOT . '/core/includes/module.inc';
-    require_once DRUPAL_ROOT . '/core/includes/database.inc';
 
     $modules = array_keys(system_list('module_enabled'));
     foreach ($modules as $module) {
