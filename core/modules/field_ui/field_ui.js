@@ -58,7 +58,7 @@ Drupal.fieldUIFieldOverview = {
         });
 
       $this.bind('change keyup', function (e, updateText) {
-        var updateText = (typeof updateText === 'undefined' ? true : updateText);
+        updateText = (typeof updateText === 'undefined' ? true : updateText);
         var selectedField = this.options[this.selectedIndex].value;
         var selectedFieldType = (selectedField in fields ? fields[selectedField].type : null);
         var selectedFieldWidget = (selectedField in fields ? fields[selectedField].widget : null);
@@ -325,19 +325,18 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
     // When triggered by a row drag, the 'format' select needs to be adjusted
     // to the new region.
     var currentValue = this.$formatSelect.val();
-    switch (region) {
-      case 'visible':
-        if (currentValue === 'hidden') {
-          // Restore the formatter back to the default formatter. Pseudo-fields do
-          // not have default formatters, we just return to 'visible' for those.
-          var value = (typeof this.defaultFormatter !== 'undefined') ? this.defaultFormatter : 'visible';
-        }
-        break;
-
-      default:
-        var value = 'hidden';
-        break;
+    var value;
+    if (region === 'visible') {
+      if (currentValue === 'hidden') {
+        // Restore the formatter back to the default formatter. Pseudo-fields do
+        // not have default formatters, we just return to 'visible' for those.
+        value = (typeof this.defaultFormatter !== 'undefined') ? this.defaultFormatter : 'visible';
+      }
     }
+    else {
+      value = 'hidden';
+    }
+
     if (typeof value !== 'undefined') {
       this.$formatSelect.val(value);
     }
