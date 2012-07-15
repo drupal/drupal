@@ -218,6 +218,8 @@ function number_field_formatter_settings_form($field, $instance, $view_mode, $fo
       '.' => t('Decimal point'),
       ',' => t('Comma'),
       ' ' => t('Space'),
+      chr(8201) => t('Thin space'),
+      "'" => t('Apostrophe'),
     );
     $element['thousand_separator'] = array(
       '#type' => 'select',
