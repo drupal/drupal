@@ -242,12 +242,12 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     $loggedInUser = $this->drupalCreateUser(array());
     $this->drupalLogin($loggedInUser);
 
-    $this->DrupalGet('user/login');
+    $this->drupalGet('user/login');
     // Check that we got to 'user'.
     $this->assertTrue($this->url == url('user', array('absolute' => TRUE)), t("Logged-in user redirected to q=user on accessing q=user/login"));
 
     // user/register should redirect to user/UID/edit.
-    $this->DrupalGet('user/register');
+    $this->drupalGet('user/register');
     $this->assertTrue($this->url == url('user/' . $this->loggedInUser->uid . '/edit', array('absolute' => TRUE)), t("Logged-in user redirected to q=user/UID/edit on accessing q=user/register"));
   }
 
