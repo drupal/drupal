@@ -6,6 +6,7 @@
  */
 
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Drupal\aggregator\Plugin\FetcherManager;
 
 /**
  * Page callback: Displays the aggregator administration page.
@@ -442,16 +443,11 @@ function aggregator_admin_form($form, $form_state) {
   aggregator_sanitize_configuration();
 
   // Get all available fetchers.
-  $fetchers = module_implements('aggregator_fetch');
-  foreach ($fetchers as $k => $module) {
-    if ($info = module_invoke($module, 'aggregator_fetch_info')) {
-      $label = $info['title'] . ' <span class="description">' . $info['description'] . '</span>';
-    }
-    else {
-      $label = $module;
-    }
-    unset($fetchers[$k]);
-    $fetchers[$module] = $label;
+  $fetcher_manager = new FetcherManager();
+  $fetchers = array();
+  foreach ($fetcher_manager->getDefinitions() as $id => $definition) {
+    $label = $definition['title'] . ' <span class="description">' . $definition['description'] . '</span>';
+    $fetchers[$id] = $label;
   }
 
   // Get all available parsers.

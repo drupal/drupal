@@ -5,6 +5,8 @@
  * Used to aggregate syndicated content (RSS, RDF, and Atom).
  */
 
+use Drupal\aggregator\Plugin\FetcherManager;
+
 /**
  * Denotes that a feed's items should never expire.
  */
@@ -594,19 +596,18 @@ function aggregator_remove($feed) {
  *   An array containing the fetcher, parser, and processors.
  */
 function _aggregator_get_variables() {
-  // Fetch the feed.
   $fetcher = variable_get('aggregator_fetcher', 'aggregator');
-  if ($fetcher == 'aggregator') {
-    include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/aggregator.fetcher.inc';
-  }
+
   $parser = variable_get('aggregator_parser', 'aggregator');
   if ($parser == 'aggregator') {
     include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/aggregator.parser.inc';
   }
+
   $processors = variable_get('aggregator_processors', array('aggregator'));
   if (in_array('aggregator', $processors)) {
     include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/aggregator.processor.inc';
   }
+
   return array($fetcher, $parser, $processors);
 }
 
@@ -620,9 +621,16 @@ function aggregator_refresh($feed) {
   // Store feed URL to track changes.
   $feed_url = $feed->url;
 
-  // Fetch the feed.
   list($fetcher, $parser, $processors) = _aggregator_get_variables();
-  $success = module_invoke($fetcher, 'aggregator_fetch', $feed);
+
+  // Fetch the feed.
+  $fetcher_manager = new FetcherManager();
+  try {
+    $success = $fetcher_manager->createInstance($fetcher)->fetch($feed);
+  }
+  catch (PluginException $e) {
+    $success = FALSE;
+  }
 
   // We store the hash of feed data in the database. When refreshing a
   // feed we compare stored hash and new hash calculated from downloaded
@@ -786,6 +794,19 @@ function aggregator_sanitize_configuration() {
  */
 function _aggregator_items($count) {
   return format_plural($count, '1 item', '@count items');
+}
+
+/**
+ * Implements hook_aggregator_fetch_info().
+ */
+function aggregator_aggregator_fetch_info() {
+  return array(
+    'aggregator' => array(
+      'class' => 'Drupal\aggregator\Plugin\aggregator\fetcher\DefaultFetcher',
+      'title' => t('Default fetcher'),
+      'description' => t('Downloads data from a URL using Drupal\'s HTTP request handler.'),
+    ),
+  );
 }
 
 /**

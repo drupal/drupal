@@ -11,58 +11,29 @@
  */
 
 /**
- * Create an alternative fetcher for aggregator.module.
- *
- * A fetcher downloads feed data to a Drupal site. The fetcher is called at the
- * first of the three aggregation stages: first, data is downloaded by the
- * active fetcher; second, it is converted to a common format by the active
- * parser; and finally, it is passed to all active processors, which manipulate
- * or store the data.
- *
- * Modules that define this hook can be set as active fetcher on
- * admin/config/services/aggregator. Only one fetcher can be active at a time.
- *
- * @param $feed
- *   A feed object representing the resource to be downloaded. $feed->url
- *   contains the link to the feed. Download the data at the URL and expose it
- *   to other modules by attaching it to $feed->source_string.
- *
- * @return
- *   TRUE if fetching was successful, FALSE otherwise.
- *
- * @see hook_aggregator_fetch_info()
- * @see hook_aggregator_parse()
- * @see hook_aggregator_process()
- *
- * @ingroup aggregator
- */
-function hook_aggregator_fetch($feed) {
-  $feed->source_string = mymodule_fetch($feed->url);
-}
-
-/**
- * Specify the title and short description of your fetcher.
+ * Specify the class, title, and short description of your fetcher plugins.
  *
  * The title and the description provided are shown on
- * admin/config/services/aggregator among other places. Use as title the human
- * readable name of the fetcher and as description a brief (40 to 80 characters)
- * explanation of the fetcher's functionality.
- *
- * This hook is only called if your module implements hook_aggregator_fetch().
- * If this hook is not implemented aggregator will use your module's file name
- * as title and there will be no description.
+ * admin/config/services/aggregator among other places.
  *
  * @return
- *   An associative array defining a title and a description string.
- *
- * @see hook_aggregator_fetch()
+ *   An associative array whose keys define the fetcher id and whose values
+ *   contain the fetcher definitions. Each fetcher definition is itself an
+ *   associative array, with the following key-value pairs:
+ *   - class: (required) The PHP class containing the fetcher implementation.
+ *   - title: (required) A human readable name of the fetcher.
+ *   - description: (required) A brief (40 to 80 characters) explanation of the
+ *     fetcher's functionality.
  *
  * @ingroup aggregator
  */
 function hook_aggregator_fetch_info() {
   return array(
-    'title' => t('Default fetcher'),
-    'description' => t('Default fetcher for resources available by URL.'),
+    'aggregator' => array(
+      'class' => 'Drupal\aggregator\Plugin\aggregator\fetcher\DefaultFetcher',
+      'title' => t('Default fetcher'),
+      'description' => t('Downloads data from a URL using Drupal\'s HTTP request handler.'),
+    ),
   );
 }
 
