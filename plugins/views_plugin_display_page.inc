@@ -552,9 +552,8 @@ class views_plugin_display_page extends views_plugin_display {
           form_error($form['path'], t('"%" may not be used for the first segment of a path.'));
         }
 
-        // automatically remove '/' from path.
-        $form_state['values']['path'] = trim($form_state['values']['path'], '/');
-
+        // automatically remove '/' and trailing whitespace from path.
+        $form_state['values']['path'] = trim($form_state['values']['path'], '/ ');
         break;
       case 'menu':
         $path = $this->get_option('path');
