@@ -18,13 +18,13 @@ Drupal.behaviors.password = {
       innerWrapper.addClass('password-parent');
 
       // Add the password confirmation layer.
-      outerWrapper.find('input.password-confirm').parent().prepend('<div class="password-confirm">' + translate['confirmTitle'] + ' <span></span></div>').addClass('confirm-parent');
+      outerWrapper.find('input.password-confirm').parent().prepend('<div class="password-confirm">' + translate.confirmTitle + ' <span></span></div>').addClass('confirm-parent');
       var confirmInput = outerWrapper.find('input.password-confirm');
       var confirmResult = outerWrapper.find('div.password-confirm');
       var confirmChild = confirmResult.find('span');
 
       // Add the description box.
-      var passwordMeter = '<div class="password-strength"><div class="password-strength-text" aria-live="assertive"></div><div class="password-strength-title">' + translate['strengthTitle'] + '</div><div class="password-indicator"><div class="indicator"></div></div></div>';
+      var passwordMeter = '<div class="password-strength"><div class="password-strength-text" aria-live="assertive"></div><div class="password-strength-title">' + translate.strengthTitle + '</div><div class="password-indicator"><div class="indicator"></div></div></div>';
       confirmInput.parent().after('<div class="password-suggestions description"></div>');
       innerWrapper.prepend(passwordMeter);
       var passwordDescription = outerWrapper.find('div.password-suggestions').hide();
@@ -159,7 +159,6 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
     strength = 5;
   }
 
-  var indicatorText;
   // Based on the strength, work out what text should be shown by the password strength meter.
   if (strength < 60) {
     indicatorText = translate.weak;

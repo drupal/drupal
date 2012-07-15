@@ -15,11 +15,14 @@ Drupal.behaviors.permissions = {
       // performed without triggering internal layout and re-rendering processes
       // in the browser.
       var $table = $(this);
+      var $ancestor, method;
       if ($table.prev().length) {
-        var $ancestor = $table.prev(), method = 'after';
+        $ancestor = $table.prev();
+        method = 'after';
       }
       else {
-        var $ancestor = $table.parent(), method = 'append';
+        $ancestor = $table.parent();
+        method = 'append';
       }
       $table.detach();
 
