@@ -29,8 +29,8 @@ Drupal.behaviors.termDrag = {
       }
 
       if (settings.taxonomy.forwardStep) {
-        for (var n = rows - settings.taxonomy.forwardStep - 1; n < rows - 1; n++) {
-          $(table[0].tBodies[0].rows[n]).addClass('taxonomy-term-preview');
+        for (var k = rows - settings.taxonomy.forwardStep - 1; k < rows - 1; k++) {
+          $(table[0].tBodies[0].rows[k]).addClass('taxonomy-term-preview');
         }
         $(table[0].tBodies[0].rows[rows - settings.taxonomy.forwardStep - 2]).addClass('taxonomy-term-divider-top');
         $(table[0].tBodies[0].rows[rows - settings.taxonomy.forwardStep - 1]).addClass('taxonomy-term-divider-bottom');
