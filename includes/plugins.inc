@@ -87,6 +87,7 @@ function views_views_plugins() {
         'title' => t('Embed'),
         'help' => t('Provide a display which can be embedded using the views api.'),
         'handler' => 'views_plugin_display_embed',
+        'theme' => 'views_view',
         'uses hook menu' => FALSE,
         'use ajax' => TRUE,
         'use pager' => TRUE,
