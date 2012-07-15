@@ -90,7 +90,7 @@ function system_requirements($phase) {
   // (register_globals off), when it is in fact on. We can only guarantee
   // register_globals is off if the value returned is 'off', '', or 0.
   if (!empty($register_globals) && strtolower($register_globals) != 'off') {
-    $requirements['php_register_globals']['description'] = $t('<em>register_globals</em> is enabled. Drupal requires this configuration directive to be disabled. Your site may not be secure when <em>register_globals</em> is enabled. The PHP manual has instructions for <a href="http://php.net/configuration.changes">how to change configuration settings</a>.');
+    $requirements['php_register_globals']['description'] = $t('<em>register_globals</em> is enabled. Drupal requires this configuration directive to be disabled. Your site may not be secure when <em>register_globals</em> is enabled. The PHP manual has instructions for <a href="@url">how to change configuration settings</a>.', array('@url' => 'http://php.net/configuration.changes'));
     $requirements['php_register_globals']['severity'] = REQUIREMENT_ERROR;
     $requirements['php_register_globals']['value'] = $t("Enabled ('@value')", array('@value' => $register_globals));
   }
