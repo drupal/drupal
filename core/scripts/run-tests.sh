@@ -47,18 +47,11 @@ if ($args['clean']) {
   exit;
 }
 
-// Load SimpleTest files.
-$groups = simpletest_test_get_all();
-$all_tests = array();
-foreach ($groups as $group => $tests) {
-  $all_tests = array_merge($all_tests, array_keys($tests));
-}
-$test_list = array();
-
 if ($args['list']) {
   // Display all available tests.
   echo "\nAvailable test groups & classes\n";
   echo   "-------------------------------\n\n";
+  $groups = simpletest_test_get_all();
   foreach ($groups as $group => $tests) {
     echo $group . "\n";
     foreach ($tests as $class => $info) {
@@ -129,6 +122,9 @@ All arguments are long options.
 
   --all       Run all available tests.
 
+  --module    Run all tests belonging to the specified module name.
+              (e.g., 'node')
+
   --class     Run tests identified by specific class names, instead of group names.
 
   --file      Run tests identified by specific file names, instead of group names.
@@ -181,6 +177,7 @@ function simpletest_script_parse_args() {
     'php' => '',
     'concurrency' => 1,
     'all' => FALSE,
+    'module' => FALSE,
     'class' => FALSE,
     'file' => FALSE,
     'color' => FALSE,
@@ -489,44 +486,65 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
  * @return List of tests.
  */
 function simpletest_script_get_test_list() {
-  global $args, $all_tests, $groups;
+  global $args;
 
   $test_list = array();
   if ($args['all']) {
+    $groups = simpletest_test_get_all();
+    $all_tests = array();
+    foreach ($groups as $group => $tests) {
+      $all_tests = array_merge($all_tests, array_keys($tests));
+    }
     $test_list = $all_tests;
   }
   else {
     if ($args['class']) {
-      // Check for valid class names.
       foreach ($args['test_names'] as $class_name) {
-        if (in_array($class_name, $all_tests)) {
-          $test_list[] = $class_name;
-        }
+        $test_list[] = $class_name;
+      }
+    }
+    elseif ($args['module']) {
+      $modules = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules', 'name', 0);
+      foreach ($args['test_names'] as $module) {
+        // PSR-0 only.
+        $dir = dirname($modules[$module]->uri) . "/lib/Drupal/$module/Tests";
+        $files = file_scan_directory($dir, '@\.php$@', array(
+          'key' => 'name',
+          'recurse' => TRUE,
+        ));
+        $test_list = array_merge($test_list, array_keys($files));
       }
     }
     elseif ($args['file']) {
-      $files = array();
+      // Extract test case class names from specified files.
       foreach ($args['test_names'] as $file) {
-        $files[drupal_realpath($file)] = 1;
-      }
-
-      // Check for valid class names.
-      foreach ($all_tests as $class_name) {
-        $refclass = new ReflectionClass($class_name);
-        $file = $refclass->getFileName();
-        if (isset($files[$file])) {
-          $test_list[] = $class_name;
+        if (!file_exists($file)) {
+          simpletest_script_print_error('File not found: ' . $file);
+          exit;
+        }
+        $content = file_get_contents($file);
+        // Extract a potential namespace.
+        $namespace = FALSE;
+        if (preg_match('@^namespace ([^ ;]+)@m', $content, $matches)) {
+          $namespace = $matches[1];
+        }
+        // Extract all class names.
+        // Abstract classes are excluded on purpose.
+        preg_match_all('@^class ([^ ]+)@m', $content, $matches);
+        if (!$namespace) {
+          $test_list = array_merge($test_list, $matches[1]);
+        }
+        else {
+          foreach ($matches[1] as $class_name) {
+            $test_list[] = $namespace . '\\' . $class_name;
+          }
         }
       }
     }
     else {
-      // Check for valid group names and get all valid classes in group.
+      $groups = simpletest_test_get_all();
       foreach ($args['test_names'] as $group_name) {
-        if (isset($groups[$group_name])) {
-          foreach ($groups[$group_name] as $class_name => $info) {
-            $test_list[] = $class_name;
-          }
-        }
+        $test_list = array_merge($test_list, array_keys($groups[$group_name]));
       }
     }
   }
@@ -542,7 +560,7 @@ function simpletest_script_get_test_list() {
  * Initialize the reporter.
  */
 function simpletest_script_reporter_init() {
-  global $args, $all_tests, $test_list, $results_map;
+  global $args, $test_list, $results_map;
 
   $results_map = array(
     'pass' => 'Pass',
