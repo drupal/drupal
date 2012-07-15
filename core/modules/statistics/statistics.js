@@ -4,7 +4,7 @@
 
   $(document).ready(function() {
     var nid = Drupal.settings.statistics.nid;
-    var basePath = Drupal.settings.basePath
+    var basePath = Drupal.settings.basePath;
     $.ajax({
       type: "POST",
       cache: false,
