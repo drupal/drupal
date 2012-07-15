@@ -1583,4 +1583,23 @@ class EntityFieldQueryTest extends WebTestBase {
       $this->fail('Exception thrown: '. $e->getMessage());
     }
   }
+
+  /**
+   * Tests EFQ table prefixing with multiple conditions and an altered join.
+   *
+   * @see field_test_query_efq_table_prefixing_test_alter()
+   */
+  function testTablePrefixing() {
+    $query = new EntityFieldQuery();
+    $query = $query
+      ->entityCondition('entity_type', 'test_entity')
+      ->entityCondition('bundle', 'test_bundle')
+      ->entityCondition('entity_id', '1')
+      ->addTag('efq_table_prefixing_test');
+
+    $expected = array(array('test_entity', 1));
+
+    $this->assertEntityFieldQuery($query, $expected, 'An EntityFieldQuery returns the expected results when altered with an additional join on the base table.');
+  }
+
 }
