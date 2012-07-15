@@ -8,18 +8,6 @@
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * Returns the maximum number of shortcut "slots" available per shortcut set.
- *
- * This is used as a limitation in the user interface only.
- *
- * @return
- *   The maximum number of shortcuts allowed to be added to a shortcut set.
- */
-function shortcut_max_slots() {
-  return variable_get('shortcut_max_slots', 7);
-}
-
-/**
  * Form callback: builds the form for switching shortcut sets.
  *
  * @param $form
@@ -85,7 +73,6 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
     }
 
     $form['#attached'] = array(
-      'css' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.css'),
       'js' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.js'),
     );
 
@@ -270,37 +257,23 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
   $form['shortcuts'] = array(
     '#tree' => TRUE,
     '#weight' => -20,
-    'enabled' => array(),
-    'disabled' => array(),
+    'links' => array(),
   );
 
   foreach ($shortcut_set->links as $link) {
     $mlid = $link['mlid'];
-    $status = $link['hidden'] ? 'disabled' : 'enabled';
-    $form['shortcuts'][$status][$mlid]['name']['#markup'] = l($link['link_title'], $link['link_path']);
-    $form['shortcuts'][$status][$mlid]['weight'] = array(
+    $form['shortcuts']['links'][$mlid]['name']['#markup'] = l($link['link_title'], $link['link_path']);
+    $form['shortcuts']['links'][$mlid]['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight'),
       '#delta' => 50,
       '#default_value' => $link['weight'],
       '#attributes' => array('class' => array('shortcut-weight')),
     );
-    $form['shortcuts'][$status][$mlid]['status'] = array(
-      '#type' => 'select',
-      '#title' => t('Status'),
-      '#options' => array('disabled' => t('Disabled'), 'enabled' => t('Enabled')),
-      '#default_value' => $status,
-      '#attributes' => array('class' => array('shortcut-status-select')),
-    );
 
-    $form['shortcuts'][$status][$mlid]['edit']['#markup'] = l(t('edit'), 'admin/config/user-interface/shortcut/link/' . $mlid);
-    $form['shortcuts'][$status][$mlid]['delete']['#markup'] = l(t('delete'), 'admin/config/user-interface/shortcut/link/' . $mlid . '/delete');
+    $form['shortcuts']['links'][$mlid]['edit']['#markup'] = l(t('edit'), 'admin/config/user-interface/shortcut/link/' . $mlid);
+    $form['shortcuts']['links'][$mlid]['delete']['#markup'] = l(t('delete'), 'admin/config/user-interface/shortcut/link/' . $mlid . '/delete');
   }
-
-  $form['#attached'] = array(
-    'css' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.css'),
-    'js' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.js'),
-  );
 
   $form['actions'] = array(
     '#type' => 'actions',
@@ -318,13 +291,10 @@ function shortcut_set_customize($form, &$form_state, $shortcut_set) {
  * Submit handler for shortcut_set_customize().
  */
 function shortcut_set_customize_submit($form, &$form_state) {
-  foreach ($form_state['values']['shortcuts'] as $group => $links) {
-    foreach ($links as $mlid => $data) {
-      $link = menu_link_load($mlid);
-      $link['hidden'] = $data['status'] == 'enabled' ? 0 : 1;
-      $link['weight'] = $data['weight'];
-      menu_link_save($link);
-    }
+  foreach ($form_state['values']['shortcuts']['links'] as $mlid => $data) {
+    $link = menu_link_load($mlid);
+    $link['weight'] = $data['weight'];
+    menu_link_save($link);
   }
   drupal_set_message(t('The shortcut set has been updated.'));
 }
@@ -341,60 +311,26 @@ function shortcut_set_customize_submit($form, &$form_state) {
  */
 function theme_shortcut_set_customize($variables) {
   $form = $variables['form'];
-  $map = array('disabled' => t('Disabled'), 'enabled' => t('Enabled'));
-  $shortcuts_by_status = array(
-    'enabled' => element_children($form['shortcuts']['enabled']),
-    'disabled' => element_children($form['shortcuts']['disabled']),
-  );
+
   // Do not add any rows to the table if there are no shortcuts to display.
   $statuses = empty($shortcuts_by_status['enabled']) && empty($shortcuts_by_status['disabled']) ? array() : array_keys($shortcuts_by_status);
 
   $rows = array();
-  foreach ($statuses as $status) {
-    drupal_add_tabledrag('shortcuts', 'match', 'sibling', 'shortcut-status-select');
-    drupal_add_tabledrag('shortcuts', 'order', 'sibling', 'shortcut-weight');
+  drupal_add_tabledrag('shortcuts', 'order', 'sibling', 'shortcut-weight');
+  foreach (element_children($form['shortcuts']['links']) as $key) {
+    $shortcut = &$form['shortcuts']['links'][$key];
+    $row = array();
+    $row[] = drupal_render($shortcut['name']);
+    $row[] = drupal_render($shortcut['weight']);
+    $row[] = drupal_render($shortcut['edit']);
+    $row[] = drupal_render($shortcut['delete']);
     $rows[] = array(
-      'data' => array(array(
-        'colspan' => 5,
-        'data' => '<strong>' . $map[$status] . '</strong>',
-      )),
-      'class' => array('shortcut-status', 'shortcut-status-' . $status),
+      'data' => $row,
+      'class' => array('draggable'),
     );
-
-    foreach ($shortcuts_by_status[$status] as $key) {
-      $shortcut = &$form['shortcuts'][$status][$key];
-      $row = array();
-      $row[] = drupal_render($shortcut['name']);
-      $row[] = drupal_render($shortcut['weight']);
-      $row[] = drupal_render($shortcut['status']);
-      $row[] = drupal_render($shortcut['edit']);
-      $row[] = drupal_render($shortcut['delete']);
-      $rows[] = array(
-        'data' => $row,
-        'class' => array('draggable'),
-      );
-    }
-
-    if ($status == 'enabled') {
-      for ($i = 0; $i < shortcut_max_slots(); $i++) {
-        $rows['empty-' . $i] = array(
-          'data' => array(array(
-            'colspan' => 5,
-            'data' => '<em>' . t('Empty') . '</em>',
-          )),
-          'class' => array('shortcut-slot-empty'),
-        );
-      }
-      $count_shortcuts = count($shortcuts_by_status[$status]);
-      if (!empty($count_shortcuts)) {
-        for ($i = 0; $i < min($count_shortcuts, shortcut_max_slots()); $i++) {
-          $rows['empty-' . $i]['class'][] = 'shortcut-slot-hidden';
-        }
-      }
-    }
   }
 
-  $header = array(t('Name'), t('Weight'), t('Status'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Name'), t('Weight'), array('data' => t('Operations'), 'colspan' => 2));
   $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'shortcuts'), 'empty' => t('No shortcuts available. <a href="@link">Add a shortcut</a>.', array('@link' => url('admin/config/user-interface/shortcut/' . $form['#shortcut_set_name'] . '/add-link')))));
   $output .= drupal_render($form['actions']);
   $output = drupal_render_children($form) . $output;
@@ -537,7 +473,7 @@ function shortcut_link_add_submit($form, &$form_state) {
   $shortcut_set = $form_state['values']['shortcut_set'];
   $shortcut_link = $form_state['values']['shortcut_link'];
   $shortcut_link['menu_name'] = $shortcut_set->set_name;
-  shortcut_admin_add_link($shortcut_link, $shortcut_set, shortcut_max_slots());
+  shortcut_admin_add_link($shortcut_link, $shortcut_set);
   shortcut_set_save($shortcut_set);
   $form_state['redirect'] = 'admin/config/user-interface/shortcut/' . $shortcut_link['menu_name'];
   drupal_set_message(t('Added a shortcut for %title.', array('%title' => $shortcut_link['link_title'])));
@@ -553,28 +489,8 @@ function shortcut_link_add_submit($form, &$form_state) {
  *   The links in the shortcut set will be re-weighted so that the new link is
  *   at the end, and some existing links may be disabled (if the $limit
  *   parameter is provided).
- * @param $limit
- *   (optional) The maximum number of links that are allowed to be enabled for
- *   this shortcut set. If provided, existing links at the end of the list that
- *   exceed the limit will be automatically disabled. If not provided, no limit
- *   will be enforced.
  */
-function shortcut_admin_add_link($shortcut_link, &$shortcut_set, $limit = NULL) {
-  if (isset($limit)) {
-    // Disable any existing links at the end of the list that would cause the
-    // limit to be exceeded. Take into account whether or not the new link will
-    // be enabled and count towards the total.
-    $number_enabled = !empty($shortcut_link['hidden']) ? 0 : 1;
-    foreach ($shortcut_set->links as &$link) {
-      if (!$link['hidden']) {
-        $number_enabled++;
-        if ($number_enabled > $limit) {
-          $link['hidden'] = 1;
-        }
-      }
-    }
-  }
-
+function shortcut_admin_add_link($shortcut_link, &$shortcut_set) {
   // Normalize the path in case it is an alias.
   $shortcut_link['link_path'] = drupal_get_normal_path($shortcut_link['link_path']);
 
@@ -767,7 +683,7 @@ function shortcut_link_add_inline($shortcut_set) {
       'link_title' => $title,
       'link_path' => $_GET['link'],
     );
-    shortcut_admin_add_link($link, $shortcut_set, shortcut_max_slots());
+    shortcut_admin_add_link($link, $shortcut_set);
     if (shortcut_set_save($shortcut_set)) {
       drupal_set_message(t('Added a shortcut for %title.', array('%title' => $link['link_title'])));
     }
