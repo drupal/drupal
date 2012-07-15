@@ -3,6 +3,12 @@
 "use strict";
 
 /**
+ * Store the state of weight columns display for all tables.
+ * Default value is to hide weight columns.
+ */
+var showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'));
+
+/**
  * Drag and drop table rows with field manipulation.
  *
  * Using the drupal_add_tabledrag() function, any table with weights or parent
@@ -89,15 +95,10 @@ Drupal.tableDrag = function (table, tableSettings) {
   // Add a link before the table for users to show or hide weight columns.
   $table.before($('<a href="#" class="tabledrag-toggle-weight"></a>')
     .attr('title', Drupal.t('Re-order rows by numerical weight instead of dragging.'))
-    .click(function () {
-      if ($.cookie('Drupal.tableDrag.showWeight') === '1') {
-        self.hideColumns();
-      }
-      else {
-        self.showColumns();
-      }
-      return false;
-    })
+    .click($.proxy(function (e) {
+      e.preventDefault();
+      this.toggleColumns();
+    }, this))
     .wrap('<div class="tabledrag-toggle-weight-wrapper"></div>')
     .parent()
   );
@@ -112,6 +113,15 @@ Drupal.tableDrag = function (table, tableSettings) {
   // as event handlers do not have direct access to the tableDrag object.
   $(document).bind('mousemove', function (event) { return self.dragRow(event, self); });
   $(document).bind('mouseup', function (event) { return self.dropRow(event, self); });
+  // React to localStorage event showing or hiding weight columns.
+  $(window).bind('storage', $.proxy(function (e) {
+    // Only react to 'Drupal.tableDrag.showWeight' value change.
+    if (e.originalEvent.key === 'Drupal.tableDrag.showWeight') {
+      // This was changed in another window, get the new value for this window.
+      showWeight = JSON.parse(e.originalEvent.newValue);
+      this.displayColumns(showWeight);
+    }
+  }, this));
 };
 
 /**
@@ -120,7 +130,7 @@ Drupal.tableDrag = function (table, tableSettings) {
  *
  * Identify and mark each cell with a CSS class so we can easily toggle
  * show/hide it. Finally, hide columns if user does not have a
- * 'Drupal.tableDrag.showWeight' cookie.
+ * 'Drupal.tableDrag.showWeight' localStorage value.
  */
 Drupal.tableDrag.prototype.initColumns = function () {
   var $table = $(this.table);
@@ -163,25 +173,42 @@ Drupal.tableDrag.prototype.initColumns = function () {
       });
     }
   }
+  this.displayColumns(showWeight);
+};
 
-  // Now hide cells and reduce colspans unless cookie indicates previous choice.
-  // Set a cookie if it is not already present.
-  if ($.cookie('Drupal.tableDrag.showWeight') === null) {
-    $.cookie('Drupal.tableDrag.showWeight', 0, {
-      path: Drupal.settings.basePath,
-      // The cookie expires in one year.
-      expires: 365
-    });
+/**
+ * Hide or display weight columns. Triggers an event on change.
+ *
+ * @param bool displayWeight
+ *   'true' will show weight columns.
+ */
+Drupal.tableDrag.prototype.displayColumns = function (displayWeight) {
+  if (displayWeight) {
+    this.showColumns();
+  }
+  // Default action is to hide columns.
+  else {
     this.hideColumns();
   }
-  // Check cookie value and show/hide weight columns accordingly.
+  // Trigger an event to allow other scripts to react to this display change.
+  // Force the extra parameter as a bool.
+  $('table.tabledrag-processed').trigger('columnschange', !!displayWeight);
+};
+
+/**
+ * Toggle the weight column depending on 'showWeight' value.
+ * Store only default override.
+ */
+Drupal.tableDrag.prototype.toggleColumns = function () {
+  showWeight = !showWeight;
+  this.displayColumns(showWeight);
+  if (showWeight) {
+    // Save default override.
+    localStorage.setItem('Drupal.tableDrag.showWeight', showWeight);
+  }
   else {
-    if ($.cookie('Drupal.tableDrag.showWeight') === '1') {
-      this.showColumns();
-    }
-    else {
-      this.hideColumns();
-    }
+    // Reset the value to its default.
+    localStorage.removeItem('Drupal.tableDrag.showWeight');
   }
 };
 
@@ -201,14 +228,6 @@ Drupal.tableDrag.prototype.hideColumns = function () {
   });
   // Change link text.
   $('.tabledrag-toggle-weight').text(Drupal.t('Show row weights'));
-  // Change cookie.
-  $.cookie('Drupal.tableDrag.showWeight', 0, {
-    path: Drupal.settings.basePath,
-    // The cookie expires in one year.
-    expires: 365
-  });
-  // Trigger an event to allow other scripts to react to this display change.
-  $('table.tabledrag-processed').trigger('columnschange', 'hide');
 };
 
 /**
