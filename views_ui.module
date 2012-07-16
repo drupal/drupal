@@ -152,6 +152,13 @@ function views_ui_menu() {
     'page callback' => 'views_ui_field_list',
   ) + $base;
 
+  // A page in the Reports section to show usage of plugins in all views.
+  $items['admin/reports/views-plugins'] = array(
+    'title' => 'Views plugins',
+    'description' => 'Overview of plugins used in all views.',
+    'page callback' => 'views_ui_plugin_list',
+  ) + $base;
+
   return $items;
 }
 

@@ -270,6 +270,57 @@ function _views_find_module_templates($cache, $path) {
 }
 
 /**
+ * Returns a list of plugins and metadata about them.
+ *
+ * @return array
+ *   An array keyed by PLUGIN_TYPE:PLUGIN_NAME, like 'display:page' or
+ *   'pager:full', containing an array with the following keys:
+ *   - title: The plugin's title.
+ *   - type: The plugin type.
+ *   - module: The module providing the plugin.
+ *   - views: An array of enabled Views that are currently using this plugin,
+ *     keyed by machine name.
+ */
+function views_plugin_list() {
+  $plugin_data = views_fetch_plugin_data();
+  $plugins = array();
+  foreach (views_get_enabled_views() as $view) {
+    foreach ($view->display as $display_id => $display) {
+      foreach ($plugin_data as $type => $info) {
+        if ($type == 'display' && isset($display->display_plugin)) {
+          $name = $display->display_plugin;
+        }
+        elseif (isset($display->display_options["{$type}_plugin"])) {
+          $name = $display->display_options["{$type}_plugin"];
+        }
+        elseif (isset($display->display_options[$type]['type'])) {
+          $name = $display->display_options[$type]['type'];
+        }
+        else {
+          continue;
+        }
+
+        // Key first by the plugin type, then the name.
+        $key = $type . ':' . $name;
+        // Add info for this plugin.
+        if (!isset($plugins[$key])) {
+          $plugins[$key] = array(
+            'type' => $type,
+            'title' => check_plain($info[$name]['title']),
+            'module' => check_plain($info[$name]['module']),
+            'views' => array(),
+          );
+        }
+
+        // Add this view to the list for this plugin.
+        $plugins[$key]['views'][$view->name] = $view->name;
+      }
+    }
+  }
+  return $plugins;
+}
+
+/**
  * A theme preprocess function to automatically allow view-based node
  * templates if called from a view.
  *

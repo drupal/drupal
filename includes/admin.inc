@@ -5411,3 +5411,26 @@ function views_ui_field_list() {
 
   return $output;
 }
+
+/**
+ * Lists all plugins and what enabled Views use them.
+ */
+function views_ui_plugin_list() {
+  $rows = views_plugin_list();
+  foreach ($rows as &$row) {
+    // Link each view name to the view itself.
+    foreach ($row['views'] as $row_name => $view) {
+      $row['views'][$row_name] = l($view, "admin/structure/views/view/$view");
+    }
+    $row['views'] = implode(', ', $row['views']);
+  }
+
+  // Sort rows by field name.
+  ksort($rows);
+  return array(
+    '#theme' => 'table',
+    '#header' => array(t('Type'), t('Name'), t('Provided by'), t('Used in')),
+    '#rows' => $rows,
+    '#empty' => t('There are no enabled views.'),
+  );
+}
