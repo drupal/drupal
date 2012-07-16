@@ -229,7 +229,7 @@ Drupal.behaviors.viewsUiRenderAddViewButton.attach = function (context, settings
   if (!$menu.length) {
     return;
   }
-  var $addDisplayDropdown = $('<li class="add"><a href="#"><span class="icon add"></span>Add</a><ul class="action-list" style="display:none;"></ul></li>');
+  var $addDisplayDropdown = $('<li class="add"><a href="#"><span class="icon add"></span>' + Drupal.t('Add') + '</a><ul class="action-list" style="display:none;"></ul></li>');
   var $displayButtons = $menu.nextAll('input.add-display').detach();
   $displayButtons.appendTo($addDisplayDropdown.find('.action-list')).wrap('<li>')
     .parent().first().addClass('first').end().last().addClass('last');
