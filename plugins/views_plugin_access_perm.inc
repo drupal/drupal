@@ -49,7 +49,7 @@ class views_plugin_access_perm extends views_plugin_access {
       }
     }
 
-    asort($perms);
+    ksort($perms);
 
     $form['perm'] = array(
       '#type' => 'select',
