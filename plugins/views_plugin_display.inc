@@ -975,9 +975,18 @@ class views_plugin_display extends views_plugin {
 
   /**
    * Retrieve a list of fields for the current display with the
-   *  relationship associated if it exists.
+   * relationship associated if it exists.
+   *
+   * @param $groupable_only
+   *  Return only an array of field labels from handler that return TRUE
+   *  from use_string_group_by method.
    */
   function get_field_labels() {
+    // Use func_get_arg so the function signature isn't amended
+    // but we can still pass TRUE into the function to filter
+    // by groupable handlers.
+    $groupable_only = func_get_arg(0);
+
     $options = array();
     foreach ($this->get_handlers('relationship') as $relationship => $handler) {
       if ($label = $handler->label()) {
@@ -989,6 +998,10 @@ class views_plugin_display extends views_plugin {
     }
 
     foreach ($this->get_handlers('field') as $id => $handler) {
+      if ($groupable_only && !$handler->use_string_group_by()) {
+        // Continue to next handler if it's not groupable.
+        continue;
+      }
       if ($label = $handler->label()) {
         $options[$id] = $label;
       }
