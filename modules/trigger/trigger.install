@@ -80,6 +80,11 @@ function trigger_update_7000() {
 }
 
 /**
+ * @addtogroup updates-7.x-extra
+ * @{
+ */
+
+/**
  * Increase the length of the "hook" field to 78 characters.
  *
  * This is a separate function for those who ran an older version of
@@ -105,3 +110,7 @@ function trigger_update_7002() {
       ->execute();
   }
 }
+
+/**
+ * @} End of "addtogroup updates-7.x-extra".
+ */

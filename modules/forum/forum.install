@@ -352,17 +352,17 @@ function forum_update_7001() {
 }
 
 /**
+ * @addtogroup updates-7.x-extra
+ * @{
+ */
+
+/**
  * Add new index to forum_index table.
  */
 function forum_update_7002() {
   db_drop_index('forum_index', 'forum_topics');
   db_add_index('forum_index', 'forum_topics', array('nid', 'tid', 'sticky', 'last_comment_timestamp'));
 }
-
-/**
- * @addtogroup updates-7.x-extra
- * @{
- */
 
 /**
  * Rename field to 'taxonomy_forums'.
@@ -442,10 +442,6 @@ function forum_update_7003() {
 }
 
 /**
- * @} End of "addtogroup updates-7.x-extra".
- */
-
-/**
  * Update {forum_index} so that only published nodes are indexed.
  */
 function forum_update_7011() {
@@ -465,3 +461,7 @@ function forum_update_7012() {
   db_add_index('forum_index', 'created', array('created'));
   db_add_index('forum_index', 'last_comment_timestamp', array('last_comment_timestamp'));
 }
+
+/**
+ * @} End of "addtogroup updates-7.x-extra".
+ */

@@ -2953,6 +2953,16 @@ function system_update_7069() {
 }
 
 /**
+ * @} End of "defgroup updates-6.x-to-7.x".
+ * The next series of updates should start at 8000.
+ */
+
+/**
+ * @defgroup updates-7.x-extra Extra system updates for 7.x
+ * @{
+ */
+
+/**
  * Remove the obsolete 'drupal_badge_color' and 'drupal_badge_size' variables.
  */
 function system_update_7070() {
@@ -2981,16 +2991,6 @@ function system_update_7071() {
 function system_update_7072() {
   variable_del('site_offline_message');
 }
-
-/**
- * @} End of "defgroup updates-6.x-to-7.x".
- * The next series of updates should start at 8000.
- */
-
-/**
- * @defgroup updates-7.x-extra Extra system updates for 7.x
- * @{
- */
 
 /**
  * Add binary to {file_managed}, in case system_update_7034() was run without

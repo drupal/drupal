@@ -117,6 +117,11 @@ function _list_update_7001_extract_allowed_values($string, $position_keys) {
 }
 
 /**
+ * @addtogroup updates-7.x-extra
+ * @{
+ */
+
+/**
  * Re-apply list_update_7001() for deleted fields.
  */
 function list_update_7002() {
@@ -127,3 +132,7 @@ function list_update_7002() {
   // it can simply be executed once more..
   list_update_7001();
 }
+
+/**
+ * @} End of "addtogroup updates-7.x-extra".
+ */

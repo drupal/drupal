@@ -126,14 +126,6 @@ function locale_update_7002() {
 }
 
 /**
- * Update "language_count" variable.
- */
-function locale_update_7003() {
-  $languages = language_list('enabled');
-  variable_set('language_count', count($languages[1]));
-}
-
-/**
  * @} End of "addtogroup updates-6.x-to-7.x".
  */
 
@@ -141,6 +133,14 @@ function locale_update_7003() {
  * @addtogroup updates-7.x-extra
  * @{
  */
+
+/**
+ * Update "language_count" variable.
+ */
+function locale_update_7003() {
+  $languages = language_list('enabled');
+  variable_set('language_count', count($languages[1]));
+}
 
 /**
  * Remove duplicates in {locales_source}.

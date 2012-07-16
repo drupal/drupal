@@ -847,6 +847,15 @@ function node_update_7010() {
 }
 
 /**
+ * @} End of "addtogroup updates-6.x-to-7.x".
+ */
+
+/**
+ * @addtogroup updates-7.x-extra
+ * @{
+ */
+
+/**
  * Update the database from Drupal 6 to match the schema.
  */
 function node_update_7011() {
@@ -915,5 +924,5 @@ function node_update_7013() {
 }
 
 /**
- * @} End of "addtogroup updates-6.x-to-7.x".
+ * @} End of "addtogroup updates-7.x-extra".
  */

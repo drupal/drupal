@@ -254,6 +254,11 @@ function image_update_7000() {
 }
 
 /**
+ * @addtogroup updates-7.x-extra
+ * @{
+ */
+
+/**
  * Rename possibly misnamed {image_effect} table to {image_effects}.
  */
 function image_update_7001() {
@@ -441,6 +446,10 @@ function image_update_7004() {
     }
   }
 }
+
+/**
+ * @} End of "addtogroup updates-7.x-extra".
+ */
 
 /**
  * Implements hook_requirements() to check the PHP GD Library.

@@ -345,6 +345,15 @@ function comment_update_7006(&$sandbox) {
 }
 
 /**
+ * @} End of "addtogroup updates-6.x-to-7.x".
+ */
+
+/**
+ * @addtogroup updates-7.x-extra
+ * @{
+ */
+
+/**
  * Add an index to the created column.
  */
 function comment_update_7007() {
@@ -370,15 +379,6 @@ function comment_update_7008() {
   db_drop_index('comment', 'comment_pid_status');
   db_drop_index('comment', 'nid');
 }
-
-/**
- * @} End of "addtogroup updates-6.x-to-7.x".
- */
-
-/**
- * @addtogroup updates-7.x-extra
- * @{
- */
 
 /**
  * Change the last_comment_timestamp column description.
