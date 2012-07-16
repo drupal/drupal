@@ -1613,6 +1613,16 @@ function views_export_view(&$view, $indent = '') {
   return $view->export($indent);
 }
 
+/**
+ * Export callback to change view status.
+ */
+function views_export_status($view, $status) {
+  ctools_export_set_object_status($view, $status);
+  views_invalidate_cache();
+  // Set the menu to be rebuilt.
+  variable_set('menu_rebuild_needed', TRUE);
+}
+
 // ------------------------------------------------------------------
 // Views debug helper functions
 

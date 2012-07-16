@@ -114,6 +114,7 @@ function views_schema_6000() {
       'save callback' => 'views_save_view',
       'delete callback' => 'views_delete_view',
       'export callback' => 'views_export_view',
+      'status callback' => 'views_export_status',
       'cache defaults' => TRUE,
       'default cache bin' => 'cache_views',
     ),
