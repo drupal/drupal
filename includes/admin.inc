@@ -3196,11 +3196,13 @@ function theme_views_ui_reorder_displays_form($vars) {
   drupal_add_tabledrag('reorder-displays', 'order', 'sibling', 'weight');
 
   $output = drupal_render($form['override']);
+  $output .= '<div class="scroll">';
   $output .= theme('table',
     array('header' => $header,
     'rows' => $rows,
     'attributes' => array('id' => 'reorder-displays'),
   ));
+  $output .= '</div>';
   $output .= drupal_render_children($form);
 
   return $output;
