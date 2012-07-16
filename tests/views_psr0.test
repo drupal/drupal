@@ -58,6 +58,14 @@ use Drupal\views\Tests\User\HandlerFieldUserNameTest;
 use Drupal\views\Tests\User\UserArgumentDefault;
 use Drupal\views\Tests\User\UserArgumentValidate;
 use Drupal\views\Tests\User\UserTestCase;
+use Drupal\views\Tests\WizardBasicTest;
+use Drupal\views\Tests\WizardDefaultViewsTest;
+use Drupal\views\Tests\WizardItemsPerPageTest;
+use Drupal\views\Tests\WizardJumpMenuTest;
+use Drupal\views\Tests\WizardMenuTest;
+use Drupal\views\Tests\WizardOverrideDisplaysTest;
+use Drupal\views\Tests\WizardSortingTest;
+use Drupal\views\Tests\WizardTaggedWithTest;
 
 class AccessPSR0Test extends AccessTest {}
 class AnalyzePSR0Test extends AnalyzeTest {}
@@ -109,3 +117,11 @@ class HandlerFieldUserNamePSR0Test extends HandlerFieldUserNameTest {}
 class UserArgumentDefaultPSR0Test extends UserArgumentDefault {}
 class UserArgumentValidatePSR0Test extends UserArgumentValidate {}
 class UserPSR0Test extends UserTestCase {}
+class WizardBasicPSR0Test extends WizardBasicTest {}
+class WizardDefaultViewsPSR0Test extends WizardDefaultViewsTest {}
+class WizardItemsPerPagePSR0Test extends WizardItemsPerPageTest {}
+class WizardJumpMenuPSR0Test extends WizardJumpMenuTest {}
+class WizardMenuPSR0Test extends WizardMenuTest {}
+class WizardOverrideDisplaysPSR0Test extends WizardOverrideDisplaysTest {}
+class WizardSortingPSR0Test extends WizardSortingTest {}
+class WizardTaggedWithPSR0Test extends WizardTaggedWithTest {}

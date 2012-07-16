@@ -247,5 +247,4 @@ files[] = tests/test_plugins/views_test_plugin_access_test_static.inc
 files[] = tests/views_plugin_localization_test.inc
 files[] = tests/views_query.test
 files[] = tests/views_test.views_default.inc
-files[] = tests/views_ui.test
 files[] = tests/views_psr0.test
