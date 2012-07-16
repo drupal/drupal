@@ -96,7 +96,13 @@ class View extends ViewsDbObject {
 
   var $use_ajax = FALSE;
 
-  // Where the results of a query will go.
+  /**
+   * Where the results of a query will go.
+   *
+   * The array must use a numeric index starting at 0.
+   *
+   * @var array
+   */
   var $result = array();
 
   // May be used to override the current pager info.
@@ -1140,6 +1146,9 @@ class View extends ViewsDbObject {
     }
     else {
       $this->query->execute($this);
+      // Enforce the array key rule as documented in
+      // views_plugin_query::execute().
+      $this->result = array_values($this->result);
       $this->_post_execute();
       if ($cache) {
         $cache->cache_set('results');

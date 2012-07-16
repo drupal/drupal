@@ -65,7 +65,8 @@ class views_plugin_query extends views_plugin {
    * Values to set: $view->result, $view->total_rows, $view->execute_time,
    * $view->pager['current_page'].
    *
-   * $view->result should contain an array of objects.
+   * $view->result should contain an array of objects. The array must use a
+   * numeric index starting at 0.
    *
    * @param view $view
    *   The view which is executed.
