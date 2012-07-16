@@ -14,9 +14,12 @@ class views_handler_field_user_language extends views_handler_field_user {
 
   function render_link($data, $values) {
     $uid = $this->get_value($values, 'uid');
-    if (!empty($this->options['link_to_user']) && user_access('access user profiles') && $uid) {
-      $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = 'user/' . $uid;
+    if (!empty($this->options['link_to_user'])) {
+      $uid = $this->get_value($values, 'uid');
+      if (user_access('access user profiles') && $uid) {
+        $this->options['alter']['make_link'] = TRUE;
+        $this->options['alter']['path'] = 'user/' . $uid;
+      }
     }
     if (empty($data)) {
       $lang = language_default();
