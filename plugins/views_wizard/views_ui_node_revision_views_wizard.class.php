@@ -10,6 +10,16 @@
  */
 class ViewsUiNodeRevisionViewsWizard extends ViewsUiNodeViewsWizard {
 
+  /**
+   * Node revisions do not support full posts or teasers, so remove them.
+   */
+  protected function row_style_options($type) {
+    $options = parent::row_style_options($type);
+    unset($options['teasers']);
+    unset($options['full_posts']);
+    return $options;
+  }
+
   protected function default_display_options($form, $form_state) {
     $display_options = parent::default_display_options($form, $form_state);
 
