@@ -2444,7 +2444,8 @@ function drupal_get_bootstrap_phase() {
  * @code
  * // Register the LANGUAGE_TYPE_INTERFACE definition. Registered definitions
  * // do not necessarily need to be named by a constant.
- * // See http://symfony.com/doc/current/components/dependency_injection.html
+ * // See 
+ * // http://symfony.com/doc/current/components/dependency_injection/introduction.html
  * // for usage examples of adding object initialization code after register().
  * $container = drupal_container();
  * $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
