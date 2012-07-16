@@ -237,6 +237,8 @@ function node_views_data() {
   // table so they can be re-used with other query backends.
   // @see views_handler_field_entity
 
+  $data['views_entity_node']['table']['group'] = t('Content');
+
   $data['node']['view_node']['moved to'] = array('views_entity_node', 'view_node');
   $data['views_entity_node']['view_node'] = array(
     'field' => array(
