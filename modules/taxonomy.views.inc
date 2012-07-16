@@ -86,6 +86,24 @@ function taxonomy_views_data() {
       'handler' => 'views_handler_field',
     ),
   );
+  $data['taxonomy_vocabulary']['weight'] = array(
+    'title' => t('Weight'),
+    'help' => t('The taxonomy vocabulary weight'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+      'name field' => 'weight',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+  );
 
   // ----------------------------------------------------------------------
  // taxonomy_term_data table
@@ -210,6 +228,9 @@ function taxonomy_views_data() {
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_numeric',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
     ),
   );
 
