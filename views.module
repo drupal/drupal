@@ -2024,7 +2024,9 @@ function views_exposed_form_submit(&$form, &$form_state) {
  *   Array. The form structure, if any. Otherwise, return FALSE.
  */
 function views_exposed_form_cache($views_name, $display_name, $form_output = NULL) {
-  static $views_exposed;
+  // When running tests for exposed filters, this cache should
+  // be cleared between each test.
+  $views_exposed = &drupal_static(__FUNCTION__);
 
   // Save the form output
   if (!empty($form_output)) {
