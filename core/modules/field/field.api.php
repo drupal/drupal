@@ -936,6 +936,38 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $cont
 }
 
 /**
+ * Alters the widget properties of a field instance before it gets displayed.
+ *
+ * Note that instead of hook_field_widget_properties_alter(), which is called
+ * for all fields on all entity types,
+ * hook_field_widget_properties_ENTITY_TYPE_alter() may be used to alter widget
+ * properties for fields on a specific entity type only.
+ *
+ * This hook is called once per field per added or edit entity. If the result
+ * of the hook involves reading from the database, it is highly recommended to
+ * statically cache the information.
+ *
+ * @param $widget
+ *   The instance's widget properties.
+ * @param $context
+ *   An associative array containing:
+ *   - entity_type: The entity type; e.g., 'node' or 'user'.
+ *   - entity: The entity object.
+ *   - field: The field that the widget belongs to.
+ *   - instance: The instance of the field.
+ *
+ * @see hook_field_widget_properties_ENTITY_TYPE_alter()
+ */
+function hook_field_widget_properties_alter(&$widget, $context) {
+  // Change a widget's type according to the time of day.
+  $field = $context['field'];
+  if ($context['entity_type'] == 'node' && $field['field_name'] == 'field_foo') {
+    $time = date('H');
+    $widget['type'] = $time < 12 ? 'widget_am' : 'widget_pm';
+  }
+}
+
+/**
  * Flag a field-level validation error.
  *
  * @param $element
@@ -2324,38 +2356,6 @@ function hook_field_display_ENTITY_TYPE_alter(&$display, $context) {
 function hook_field_extra_fields_display_alter(&$displays, $context) {
   if ($context['entity_type'] == 'taxonomy_term' && $context['view_mode'] == 'full') {
     $displays['description']['visible'] = FALSE;
-  }
-}
-
-/**
- * Alters the widget properties of a field instance before it gets displayed.
- *
- * Note that instead of hook_field_widget_properties_alter(), which is called
- * for all fields on all entity types,
- * hook_field_widget_properties_ENTITY_TYPE_alter() may be used to alter widget
- * properties for fields on a specific entity type only.
- *
- * This hook is called once per field per added or edit entity. If the result
- * of the hook involves reading from the database, it is highly recommended to
- * statically cache the information.
- *
- * @param $widget
- *   The instance's widget properties.
- * @param $context
- *   An associative array containing:
- *   - entity_type: The entity type; e.g., 'node' or 'user'.
- *   - entity: The entity object.
- *   - field: The field that the widget belongs to.
- *   - instance: The instance of the field.
- *
- * @see hook_field_widget_properties_ENTITY_TYPE_alter()
- */
-function hook_field_widget_properties_alter(&$widget, $context) {
-  // Change a widget's type according to the time of day.
-  $field = $context['field'];
-  if ($context['entity_type'] == 'node' && $field['field_name'] == 'field_foo') {
-    $time = date('H');
-    $widget['type'] = $time < 12 ? 'widget_am' : 'widget_pm';
   }
 }
 
