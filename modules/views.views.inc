@@ -57,6 +57,14 @@ function views_views_data() {
     ),
   );
 
+  $data['views']['area_text_custom'] = array(
+    'title' => t('Unfiltered text'),
+    'help' => t('Add unrestricted, custom text or markup. This is similar to the custom text field.'),
+    'area' => array(
+      'handler' => 'views_handler_area_text_custom',
+    ),
+  );
+
   $data['views']['view'] = array(
     'title' => t('View area'),
     'help' => t('Insert a view inside an area.'),

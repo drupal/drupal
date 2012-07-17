@@ -31,7 +31,7 @@ class views_handler_area_text extends views_handler_area {
       '#wysiwyg' => FALSE,
     );
 
-
+    // @TODO: Refactor token handling into a base class.
     $form['tokenize'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use replacement tokens from the first row'),

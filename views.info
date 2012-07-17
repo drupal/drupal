@@ -12,6 +12,7 @@ dependencies[] = ctools
 files[] = handlers/views_handler_area.inc
 files[] = handlers/views_handler_area_result.inc
 files[] = handlers/views_handler_area_text.inc
+files[] = handlers/views_handler_area_text_custom.inc
 files[] = handlers/views_handler_area_view.inc
 files[] = handlers/views_handler_argument.inc
 files[] = handlers/views_handler_argument_date.inc
