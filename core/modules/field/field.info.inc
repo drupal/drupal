@@ -624,7 +624,8 @@ function field_info_fields() {
  * @return
  *   The field array, as returned by field_read_fields(), with an
  *   additional element 'bundles', whose value is an array of all the bundles
- *   this field belongs to keyed by entity type.
+ *   this field belongs to keyed by entity type. NULL if the field was not
+ *   found.
  *
  * @see field_info_field_by_id()
  */
