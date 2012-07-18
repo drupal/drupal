@@ -694,6 +694,10 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *   - "title arguments": Arguments to send to t() or your custom callback,
  *     with path component substitution as described above.
  *   - "description": The untranslated description of the menu item.
+ *   - description callback: Function to generate the description; defaults to
+ *     t(). If you require only the raw string to be output, set this to FALSE.
+ *   - description arguments: Arguments to send to t() or your custom callback,
+ *     with path component substitution as described above.
  *   - "page callback": The function to call to display a web page when the user
  *     visits the path. If omitted, the parent menu item's callback will be used
  *     instead.

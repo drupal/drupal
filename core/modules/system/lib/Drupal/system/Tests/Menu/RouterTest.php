@@ -72,6 +72,16 @@ class RouterTest extends WebTestBase {
   }
 
   /**
+   * Tests menu item descriptions.
+   */
+  function testDescriptionMenuItems() {
+    // Verify that the menu router item title is output as page title.
+    $this->drupalGet('menu_callback_description');
+    $this->assertText(t('Menu item description text'));
+    $this->assertRaw(check_plain('<strong>Menu item description arguments</strong>'));
+  }
+
+  /**
    * Test the theme callback when it is set to use an administrative theme.
    */
   function testThemeCallbackAdministrative() {

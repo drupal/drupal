@@ -604,12 +604,13 @@ function _menu_check_access(&$item, $map) {
  *   $item['title'] is localized according to $item['title_callback'].
  *   If an item's callback is check_plain(), $item['options']['html'] becomes
  *   TRUE.
- *   $item['description'] is translated using t().
+ *   $item['description'] is computed using $item['description_callback'] if
+ *   specified; otherwise it is translated using t().
  *   When doing link translation and the $item['options']['attributes']['title']
  *   (link title attribute) matches the description, it is translated as well.
  */
 function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
-  $callback = $item['title_callback'];
+  $title_callback = $item['title_callback'];
   $item['localized_options'] = $item['options'];
   // All 'class' attributes are assumed to be an array during rendering, but
   // links stored in the database may use an old string value.
@@ -628,7 +629,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
   if (!$link_translate || ($item['title'] == $item['link_title'])) {
     // t() is a special case. Since it is used very close to all the time,
     // we handle it directly instead of using indirect, slower methods.
-    if ($callback == 't') {
+    if ($title_callback == 't') {
       if (empty($item['title_arguments'])) {
         $item['title'] = t($item['title']);
       }
@@ -636,15 +637,15 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
         $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
       }
     }
-    elseif ($callback) {
+    elseif ($title_callback) {
       if (empty($item['title_arguments'])) {
-        $item['title'] = $callback($item['title']);
+        $item['title'] = $title_callback($item['title']);
       }
       else {
-        $item['title'] = call_user_func_array($callback, menu_unserialize($item['title_arguments'], $map));
+        $item['title'] = call_user_func_array($title_callback, menu_unserialize($item['title_arguments'], $map));
       }
       // Avoid calling check_plain again on l() function.
-      if ($callback == 'check_plain') {
+      if ($title_callback == 'check_plain') {
         $item['localized_options']['html'] = TRUE;
       }
     }
@@ -656,10 +657,33 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
   // Translate description, see the motivation above.
   if (!empty($item['description'])) {
     $original_description = $item['description'];
-    $item['description'] = t($item['description']);
-    if ($link_translate && isset($item['options']['attributes']['title']) && $item['options']['attributes']['title'] == $original_description) {
-      $item['localized_options']['attributes']['title'] = $item['description'];
+  }
+  if (!empty($item['description_arguments']) || !empty($item['description'])) {
+    $description_callback = $item['description_callback'];
+    // If the description callback is t(), call it directly.
+    if ($description_callback == 't') {
+      if (empty($item['description_arguments'])) {
+        $item['description'] = t($item['description']);
+      }
+      else {
+        $item['description'] = t($item['description'], menu_unserialize($item['description_arguments'], $map));
+      }
     }
+    elseif ($description_callback) {
+      // If there are no arguments, call the description callback directly.
+      if (empty($item['description_arguments'])) {
+        $item['description'] = $description_callback($item['description']);
+      }
+      // Otherwise, use call_user_func_array() to pass the arguments.
+      else {
+        $item['description'] = call_user_func_array($description_callback, menu_unserialize($item['description_arguments'], $map));
+      }
+    }
+  }
+  // If the title and description are the same, use the translated description
+  // as a localized title.
+  if ($link_translate && isset($original_description) && isset($item['options']['attributes']['title']) && $item['options']['attributes']['title'] == $original_description) {
+    $item['localized_options']['attributes']['title'] = $item['description'];
   }
 }
 
@@ -1354,6 +1378,8 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
       'theme_arguments',
       'type',
       'description',
+      'description_callback',
+      'description_arguments',
     ));
     for ($i = 1; $i <= MENU_MAX_DEPTH; $i++) {
       $query->orderBy('p' . $i, 'ASC');
@@ -3634,6 +3660,8 @@ function _menu_router_build($callbacks) {
       'theme arguments' => array(),
       'theme callback' => '',
       'description' => '',
+      'description arguments' => array(),
+      'description callback' => 't',
       'position' => '',
       'context' => 0,
       'tab_parent' => '',
@@ -3688,6 +3716,8 @@ function _menu_router_save($menu, $masks) {
       'theme_arguments',
       'type',
       'description',
+      'description_callback',
+      'description_arguments',
       'position',
       'weight',
       'include_file',
@@ -3718,6 +3748,8 @@ function _menu_router_save($menu, $masks) {
       'theme_arguments' => serialize($item['theme arguments']),
       'type' => $item['type'],
       'description' => $item['description'],
+      'description_callback' => $item['description callback'],
+      'description_arguments' => ($item['description arguments'] ? serialize($item['description arguments']) : ''),
       'position' => $item['position'],
       'weight' => $item['weight'],
       'include_file' => $item['include file'],

@@ -1161,6 +1161,20 @@ function system_schema() {
         'type' => 'text',
         'not null' => TRUE,
       ),
+      'description_callback' => array(
+        'description' => 'A function which will alter the description. Defaults to t().',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'description_arguments' => array(
+        'description' => 'A serialized array of arguments for the description callback. If empty, the description will be used as the sole argument for the description callback.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
       'position' => array(
         'description' => 'The position of the block (left or right) on the system administration page for this item.',
         'type' => 'varchar',
@@ -1952,6 +1966,32 @@ function system_update_8012() {
     'site_403' => 'page.403',
     'site_404' => 'page.404',
   ));
+}
+
+/**
+ * Add description_callback and description_arguments fields to {menu_router}.
+ */
+function system_update_8013() {
+  if (!db_field_exists('menu_router', 'description_callback')) {
+    $spec = array(
+      'description' => 'A function which will alter the description. Defaults to t().',
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+    );
+    db_add_field('menu_router', 'description_callback', $spec);
+  }
+  if (!db_field_exists('menu_router', 'description_arguments')) {
+    $spec = array(
+      'description' => 'A serialized array of arguments for the description callback. If empty, the description will be used as the sole argument for the description callback.',
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+    );
+    db_add_field('menu_router', 'description_arguments', $spec);
+  }
 }
 
 /**
