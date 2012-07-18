@@ -88,6 +88,30 @@ function update_prepare_d8_bootstrap() {
   include_once DRUPAL_ROOT . '/core/includes/install.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
+  // Check whether settings.php needs to be rewritten.
+  $settings_exist = !empty($GLOBALS['config_directory_name']);
+
+  // If any of the required settings needs to be written, then settings.php
+  // needs to be writable.
+  if (!$settings_exist) {
+    $settings_file = conf_path() . '/settings.php';
+    $writable = drupal_verify_install_file($settings_file, FILE_EXIST | FILE_READABLE | FILE_WRITABLE);
+    $requirements['settings file']['title'] = 'Settings file';
+    if ($writable) {
+      $requirements['settings file'] += array(
+        'value' => 'settings.php is writable.',
+      );
+    }
+    else {
+      $requirements['settings file'] += array(
+        'value' => 'settings.php is not writable.',
+        'severity' => REQUIREMENT_ERROR,
+        'description' => 'Drupal requires write permissions to <em>' . $settings_file . '</em> during the update process. If you are unsure how to grant file permissions, consult the <a href="http://drupal.org/server-permissions">online handbook</a>.',
+      );
+    }
+    update_extra_requirements($requirements);
+  }
+
   // If the site has not updated to Drupal 8 yet, check to make sure that it is
   // running an up-to-date version of Drupal 7 before proceeding. Note this has
   // to happen AFTER the database bootstraps because of
@@ -99,10 +123,12 @@ function update_prepare_d8_bootstrap() {
       'drupal 7 version' => array(
         'title' => 'Drupal 7 version',
         'value' => $has_required_schema ? 'You are running a current version of Drupal 7.' : 'You are not running a current version of Drupal 7',
-        'severity' => $has_required_schema ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+        'severity' => $has_required_schema ? NULL : REQUIREMENT_ERROR,
         'description' => $has_required_schema ? '' : 'Please update your Drupal 7 installation to the most recent version before attempting to upgrade to Drupal 8',
       ),
     );
+    update_extra_requirements($requirements);
+
     if ($has_required_schema) {
       // Bootstrap variables so we can update theme while preparing the update
       // process.
@@ -112,6 +138,12 @@ function update_prepare_d8_bootstrap() {
       update_prepare_stored_includes();
       // Update the environment for the language bootstrap if needed.
       update_prepare_d8_language();
+
+      // Ensure the configuration directory exists and is writable or create it.
+      // If no $config_directory_name has been specified in settings.php and
+      // created manually already, and the directory cannot be created by the
+      // web server, an exception will be thrown, halting the update.
+      drupal_install_config_directory();
 
       // Change language column to langcode in url_alias.
       if (db_table_exists('url_alias') && db_field_exists('url_alias', 'language')) {

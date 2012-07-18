@@ -248,6 +248,58 @@ function drupal_rewrite_settings($settings = array()) {
 }
 
 /**
+ * Creates the config directory and ensures it is operational.
+ *
+ * @see install_settings_form_submit()
+ * @see update_prepare_d8_bootstrap()
+ */
+function drupal_install_config_directory() {
+  global $config_directory_name;
+
+  // Add a randomized config directory name to settings.php, unless it was
+  // manually defined in the existing already.
+  if (!$config_directory_name) {
+    $settings['config_directory_name'] = array(
+      'value' => 'config_' . drupal_hash_base64(drupal_random_bytes(55)),
+      'required' => TRUE,
+    );
+    // Rewrite settings.php, which also sets the value as global variable.
+    drupal_rewrite_settings($settings);
+  }
+
+  // Ensure that the config directory exists or can be created, and is writable.
+  if (!install_ensure_config_directory()) {
+    // This should never fail, since if the config directory was specified in
+    // settings.php it will have already been created and verified earlier, and
+    // if it wasn't specified in settings.php, it is created here inside the
+    // public files directory, which has already been verified to be writable
+    // itself. But if it somehow fails anyway, the installation cannot proceed.
+    // Bail out using a similar error message as in system_requirements().
+    throw new Exception(st('The directory %directory could not be created or could not be made writable. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see the <a href="@handbook_url">online handbook</a>.', array(
+      '%directory' => config_get_config_directory(),
+      '@handbook_url' => 'http://drupal.org/server-permissions',
+    )));
+  }
+}
+
+/**
+ * Ensures that the config directory exists and is writable, or can be made so.
+ */
+function install_ensure_config_directory() {
+  // The config directory must be defined in settings.php.
+  global $config_directory_name;
+  if (empty($config_directory_name)) {
+    return FALSE;
+  }
+  // The logic here is similar to that used by system_requirements() for other
+  // directories that the installer creates.
+  else {
+    $config_directory = config_get_config_directory();
+    return file_prepare_directory($config_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  }
+}
+
+/**
  * Verify an install profile for installation.
  *
  * @param $install_state

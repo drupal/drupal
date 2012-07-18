@@ -900,23 +900,6 @@ function install_verify_pdo() {
 }
 
 /**
- * Ensure that the config directory exists and is writable, or can be made so.
- */
-function install_ensure_config_directory() {
-  // The config directory must be defined in settings.php.
-  global $config_directory_name;
-  if (empty($config_directory_name)) {
-    return FALSE;
-  }
-  // The logic here is similar to that used by system_requirements() for other
-  // directories that the installer creates.
-  else {
-    $config_directory = config_get_config_directory();
-    return file_prepare_directory($config_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-  }
-}
-
-/**
  * Installation task; define a form to configure and rewrite settings.php.
  *
  * @param $form_state
@@ -1051,7 +1034,7 @@ function install_database_errors($database, $settings_file) {
  * Form API submit for install_settings form.
  */
 function install_settings_form_submit($form, &$form_state) {
-  global $install_state, $config_directory_name;
+  global $install_state;
 
   // Update global settings array and save.
   $settings['databases'] = array(
@@ -1063,26 +1046,10 @@ function install_settings_form_submit($form, &$form_state) {
     'required' => TRUE,
   );
 
-  // Add the config directory to settings.php. If someone already defined one
-  // in the existing settings.php, use that; otherwise, use a randomized
-  // directory name.
-  $settings['config_directory_name'] = array(
-    'value'     => $config_directory_name ? $config_directory_name : 'config_' . drupal_hash_base64(drupal_random_bytes(55)),
-    'required'  => TRUE,
-  );
-
   drupal_rewrite_settings($settings);
 
-  // Ensure that the new config directory can be created and made writable.
-  if (!install_ensure_config_directory()) {
-    // This should never fail, since if the config directory was specified in
-    // settings.php it will have already been created and verified earlier, and
-    // if it wasn't specified in settings.php, it is created here inside the
-    // public files directory, which has already been verified to be writable
-    // itself. But if it somehow fails anyway, the installation cannot proceed.
-    // Bail out using a similar error message as in system_requirements().
-    throw new Exception(st('The directory %directory could not be created or could not be made writable. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see the <a href="@handbook_url">online handbook</a>.', array('%directory' => config_get_config_directory(), '@handbook_url' => 'http://drupal.org/server-permissions')));
-  }
+  // Add the config directory to settings.php.
+  drupal_install_config_directory();
 
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This
