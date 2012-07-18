@@ -35,7 +35,7 @@ class views_handler_area_text_custom extends views_handler_area_text {
 
   function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
-      return $this->render_textarea($this->options['content']);
+      return $this->render_textarea_custom($this->options['content']);
     }
 
     return '';
@@ -44,12 +44,12 @@ class views_handler_area_text_custom extends views_handler_area_text {
   /**
    * Render a text area with filter_xss_admin.
    */
-  function render_textarea($value) {
+  function render_textarea_custom($value) {
     if ($value) {
       if ($this->options['tokenize']) {
         $value = $this->view->style_plugin->tokenize_value($value, 0);
       }
-      return filter_xss_admin($value);
+      return $this->sanitize_value($value, 'xss_admin');
     }
   }
 
