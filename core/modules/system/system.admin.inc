@@ -1664,6 +1664,7 @@ function system_logging_settings() {
       ERROR_REPORTING_HIDE => t('None'),
       ERROR_REPORTING_DISPLAY_SOME => t('Errors and warnings'),
       ERROR_REPORTING_DISPLAY_ALL => t('All messages'),
+      ERROR_REPORTING_DISPLAY_VERBOSE => t('All messages, with backtrace information'),
     ),
     '#description' => t('It is recommended that sites running on production environments do not display any errors.'),
   );

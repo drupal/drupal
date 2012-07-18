@@ -23,6 +23,11 @@ const ERROR_REPORTING_DISPLAY_SOME = 1;
 const ERROR_REPORTING_DISPLAY_ALL = 2;
 
 /**
+ * Error reporting level: display all messages, plus backtrace information.
+ */
+const ERROR_REPORTING_DISPLAY_VERBOSE = 3;
+
+/**
  * Maps PHP error constants to watchdog severity levels.
  *
  * The error constants are documented at
@@ -71,7 +76,8 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
   if ($error_level & error_reporting()) {
     $types = drupal_error_levels();
     list($severity_msg, $severity_level) = $types[$error_level];
-    $caller = _drupal_get_last_caller(debug_backtrace());
+    $backtrace = debug_backtrace();
+    $caller = _drupal_get_last_caller($backtrace);
 
     if (!function_exists('filter_xss_admin')) {
       require_once DRUPAL_ROOT . '/core/includes/common.inc';
@@ -87,6 +93,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
       '%file' => $caller['file'],
       '%line' => $caller['line'],
       'severity_level' => $severity_level,
+      'backtrace' => $backtrace,
     ), $error_level == E_RECOVERABLE_ERROR);
   }
 }
@@ -167,7 +174,8 @@ function _drupal_render_exception_safe($exception) {
 function error_displayable($error = NULL) {
   $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
   $updating = (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update');
-  $all_errors_displayed = ($error_level == ERROR_REPORTING_DISPLAY_ALL);
+  $all_errors_displayed = ($error_level == ERROR_REPORTING_DISPLAY_ALL) ||
+    ($error_level == ERROR_REPORTING_DISPLAY_VERBOSE);
   $error_needs_display = ($error_level == ERROR_REPORTING_DISPLAY_SOME &&
     isset($error) && $error['%type'] != 'Notice' && $error['%type'] != 'Strict warning');
 
@@ -178,9 +186,10 @@ function error_displayable($error = NULL) {
  * Logs a PHP error or exception and displays an error page in fatal cases.
  *
  * @param $error
- *   An array with the following keys: %type, !message, %function, %file, %line
- *   and severity_level. All the parameters are plain-text, with the exception
- *   of !message, which needs to be a safe HTML string.
+ *   An array with the following keys: %type, !message, %function, %file,
+ *   %line, severity_level, and backtrace. All the parameters are plain-text,
+ *   with the exception of !message, which needs to be a safe HTML string, and
+ *   backtrace, which is a standard PHP backtrace.
  * @param $fatal
  *   TRUE if the error is fatal.
  */
@@ -194,6 +203,10 @@ function _drupal_log_error($error, $fatal = FALSE) {
     }
     drupal_maintenance_theme();
   }
+
+  // Backtrace array is not a valid replacement value for t().
+  $backtrace = $error['backtrace'];
+  unset($error['backtrace']);
 
   // When running inside the testing framework, we relay the errors
   // to the tested site by the way of HTTP headers.
@@ -241,13 +254,34 @@ function _drupal_log_error($error, $fatal = FALSE) {
       $class = 'error';
 
       // If error type is 'User notice' then treat it as debug information
-      // instead of an error message, see dd().
+      // instead of an error message.
+      // @see debug()
       if ($error['%type'] == 'User notice') {
         $error['%type'] = 'Debug';
         $class = 'status';
       }
 
-      drupal_set_message(t('%type: !message in %function (line %line of %file).', $error), $class);
+      // Attempt to reduce verbosity by removing DRUPAL_ROOT from the file path
+      // in the message. This does not happen for (false) security.
+      $root_length = strlen(DRUPAL_ROOT);
+      if (substr($error['%file'], 0, $root_length) == DRUPAL_ROOT) {
+        $error['%file'] = substr($error['%file'], $root_length + 1);
+      }
+      $message = t('%type: !message in %function (line %line of %file).', $error);
+
+      // Check if verbose error reporting is on.
+      $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
+
+      if ($error_level == ERROR_REPORTING_DISPLAY_VERBOSE) {
+        // First trace is the error itself, already contained in the message.
+        // While the second trace is the error source and also contained in the
+        // message, the message doesn't contain argument values, so we output it
+        // once more in the backtrace.
+        array_shift($backtrace);
+        // Generate a backtrace containing only scalar argument values.
+        $message .= '<pre class="backtrace">' . format_backtrace($backtrace) . '</pre>';
+      }
+      drupal_set_message($message, $class);
     }
 
     if ($fatal) {
@@ -270,12 +304,12 @@ function _drupal_log_error($error, $fatal = FALSE) {
  * Gets the last caller from a backtrace.
  *
  * @param $backtrace
- *   A standard PHP backtrace.
+ *   A standard PHP backtrace. Passed by reference.
  *
  * @return
  *   An associative array with keys 'file', 'line' and 'function'.
  */
-function _drupal_get_last_caller($backtrace) {
+function _drupal_get_last_caller(&$backtrace) {
   // Errors that occur inside PHP internal functions do not generate
   // information about file and line. Ignore black listed functions.
   $blacklist = array('debug', '_drupal_error_handler', '_drupal_exception_handler');
@@ -301,4 +335,41 @@ function _drupal_get_last_caller($backtrace) {
     $call['function'] = 'main()';
   }
   return $call;
+}
+
+/**
+ * Formats a backtrace into a plain-text string.
+ *
+ * The calls show values for scalar arguments and type names for complex ones.
+ *
+ * @param array $backtrace
+ *   A standard PHP backtrace.
+ *
+ * @return string
+ *   A plain-text line-wrapped string ready to be put inside <pre>.
+ */
+function format_backtrace(array $backtrace) {
+  $return = '';
+  foreach ($backtrace as $trace) {
+    $call = array('function' => '', 'args' => array());
+    if (isset($trace['class'])) {
+      $call['function'] = $trace['class'] . $trace['type'] . $trace['function'];
+    }
+    elseif (isset($trace['function'])) {
+      $call['function'] = $trace['function'];
+    }
+    else {
+      $call['function'] = 'main';
+    }
+    foreach ($trace['args'] as $arg) {
+      if (is_scalar($arg)) {
+        $call['args'][] = is_string($arg) ? '\'' . filter_xss($arg) . '\'' : $arg;
+      }
+      else {
+        $call['args'][] = ucfirst(gettype($arg));
+      }
+    }
+    $return .= $call['function'] . '(' . implode(', ', $call['args']) . ")\n";
+  }
+  return $return;
 }
