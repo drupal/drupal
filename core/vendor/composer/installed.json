@@ -3,7 +3,7 @@
         "name": "twig/twig",
         "version": "v1.8.3",
         "version_normalized": "1.8.3.0",
-        "time": "2012-06-17 18:48:16",
+        "time": "2012-06-18 01:48:16",
         "source": {
             "type": "git",
             "url": "git://github.com/fabpot/Twig.git",
@@ -58,7 +58,7 @@
         "version": "v2.1.0-BETA1",
         "version_normalized": "2.1.0.0-beta1",
         "target-dir": "Symfony/Component/DependencyInjection",
-        "time": "2012-06-12 11:59:42",
+        "time": "2012-06-12 18:59:42",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/DependencyInjection",
@@ -108,7 +108,7 @@
         "version": "v2.1.0-BETA1",
         "version_normalized": "2.1.0.0-beta1",
         "target-dir": "Symfony/Component/EventDispatcher",
-        "time": "2012-05-15 16:56:32",
+        "time": "2012-05-15 23:56:32",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/EventDispatcher",
@@ -155,7 +155,7 @@
         "version": "v2.1.0-BETA1",
         "version_normalized": "2.1.0.0-beta1",
         "target-dir": "Symfony/Component/HttpFoundation",
-        "time": "2012-06-12 06:10:53",
+        "time": "2012-06-12 13:10:53",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/HttpFoundation",
@@ -202,7 +202,7 @@
         "version": "v2.1.0-BETA1",
         "version_normalized": "2.1.0.0-beta1",
         "target-dir": "Symfony/Component/HttpKernel",
-        "time": "2012-06-12 11:59:42",
+        "time": "2012-06-12 18:59:42",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/HttpKernel",
@@ -259,7 +259,7 @@
         "version": "v2.1.0-BETA1",
         "version_normalized": "2.1.0.0-beta1",
         "target-dir": "Symfony/Component/Routing",
-        "time": "2012-06-12 11:59:42",
+        "time": "2012-06-12 18:59:42",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Routing",
@@ -310,7 +310,7 @@
         "version": "v2.1.0-BETA1",
         "version_normalized": "2.1.0.0-beta1",
         "target-dir": "Symfony/Component/Yaml",
-        "time": "2012-06-09 15:04:17",
+        "time": "2012-06-09 22:04:17",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Yaml",
@@ -357,7 +357,7 @@
         "version": "v2.1.0-BETA1",
         "version_normalized": "2.1.0.0-beta1",
         "target-dir": "Symfony/Component/ClassLoader",
-        "time": "2012-04-23 05:37:21",
+        "time": "2012-04-23 12:37:21",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/ClassLoader",
@@ -396,6 +396,77 @@
         "autoload": {
             "psr-0": {
                 "Symfony\\Component\\ClassLoader": ""
+            }
+        }
+    },
+    {
+        "name": "doctrine/common",
+        "version": "2.2.2",
+        "version_normalized": "2.2.2.0",
+        "time": "2012-04-13 07:46:44",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/doctrine/common",
+            "reference": "2.2.2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/doctrine/common/zipball/2.2.2",
+            "reference": "2.2.2",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "type": "library",
+        "installation-source": "dist",
+        "license": [
+            "LGPL"
+        ],
+        "authors": [
+            {
+                "name": "Jonathan Wage",
+                "email": "jonwage@gmail.com",
+                "homepage": "http://www.jwage.com/",
+                "role": null
+            },
+            {
+                "name": "Guilherme Blanco",
+                "email": "guilhermeblanco@gmail.com",
+                "homepage": null,
+                "role": null
+            },
+            {
+                "name": "Roman Borschel",
+                "email": "roman@code-factory.org",
+                "homepage": null,
+                "role": null
+            },
+            {
+                "name": "Benjamin Eberlei",
+                "email": "kontakt@beberlei.de",
+                "homepage": null,
+                "role": null
+            },
+            {
+                "name": "Johannes Schmitt",
+                "email": "schmittjoh@gmail.com",
+                "homepage": "https://github.com/schmittjoh",
+                "role": null
+            }
+        ],
+        "description": "Common Library for Doctrine projects",
+        "homepage": "http://www.doctrine-project.org",
+        "keywords": [
+            "collections",
+            "spl",
+            "eventmanager",
+            "annotations",
+            "persistence"
+        ],
+        "autoload": {
+            "psr-0": {
+                "Doctrine\\Common": "lib/"
             }
         }
     }

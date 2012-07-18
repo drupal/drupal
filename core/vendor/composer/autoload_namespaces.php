@@ -14,4 +14,5 @@ return array(
     'Symfony\\Component\\EventDispatcher' => $vendorDir . '/symfony/event-dispatcher/',
     'Symfony\\Component\\DependencyInjection' => $vendorDir . '/symfony/dependency-injection/',
     'Symfony\\Component\\ClassLoader' => $vendorDir . '/symfony/class-loader/',
+    'Doctrine\\Common' => $vendorDir . '/doctrine/common/lib/',
 );

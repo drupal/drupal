@@ -3048,6 +3048,7 @@ function drupal_classloader() {
       'Symfony\Component\HttpKernel' => DRUPAL_ROOT . '/core/vendor/symfony/http-kernel',
       'Symfony\Component\Routing' => DRUPAL_ROOT . '/core/vendor/symfony/routing',
       'Symfony\Component\Yaml' => DRUPAL_ROOT . '/core/vendor/symfony/yaml',
+      'Doctrine\Common' => DRUPAL_ROOT . '/core/vendor/doctrine/common/lib',
     ));
     // Register PEAR-style vendor namespaces.
     $loader->registerPrefixes(array(

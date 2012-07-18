@@ -1,6 +1,10 @@
 {
-    "hash": "ec77094fc475b57afb7a27f63983ead1",
+    "hash": "2ea132b64c01235b70e9fb16c528ea0e",
     "packages": [
+        {
+            "package": "doctrine/common",
+            "version": "2.2.2"
+        },
         {
             "package": "symfony/class-loader",
             "version": "v2.1.0-BETA1"
