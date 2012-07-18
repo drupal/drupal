@@ -586,6 +586,9 @@ abstract class WebTestBase extends TestBase {
 
     // Prepare the environment for running tests.
     $this->prepareEnvironment();
+    if (!$this->setupEnvironment) {
+      return FALSE;
+    }
 
     // Reset all statics and variables to perform tests in a clean environment.
     $conf = array();
@@ -596,6 +599,9 @@ abstract class WebTestBase extends TestBase {
     // changed, since Drupal\Core\Utility\CacheArray implementations attempt to
     // write back to persistent caches when they are destructed.
     $this->changeDatabasePrefix();
+    if (!$this->setupDatabasePrefix) {
+      return FALSE;
+    }
 
     // Preset the 'install_profile' system variable, so the first call into
     // system_rebuild_module_data() (in drupal_install_system()) will register
@@ -753,6 +759,12 @@ abstract class WebTestBase extends TestBase {
    * and reset the database prefix.
    */
   protected function tearDown() {
+    // Ensure that TestBase::changeDatabasePrefix() has run and TestBase::$setup
+    // was not tricked into TRUE, since the following code would delete the
+    // entire parent site otherwise.
+    if (!$this->setupDatabasePrefix) {
+      return FALSE;
+    }
     // Remove all prefixed tables.
     $connection_info = Database::getConnectionInfo('default');
     $tables = db_find_tables($connection_info['default']['prefix']['default'] . '%');

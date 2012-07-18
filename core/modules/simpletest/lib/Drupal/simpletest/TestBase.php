@@ -86,6 +86,10 @@ abstract class TestBase {
    */
   protected $setup = FALSE;
 
+  protected $setupDatabasePrefix = FALSE;
+
+  protected $setupEnvironment = FALSE;
+
   /**
    * Constructor for Test.
    *
@@ -582,6 +586,12 @@ abstract class TestBase {
   protected function changeDatabasePrefix() {
     if (empty($this->databasePrefix)) {
       $this->prepareDatabasePrefix();
+      // If $this->prepareDatabasePrefix() failed to work, return without
+      // setting $this->setupDatabasePrefix to TRUE, so setUp() methods will
+      // know to bail out.
+      if (empty($this->databasePrefix)) {
+        return;
+      }
     }
 
     // Clone the current connection and replace the current prefix.
@@ -593,6 +603,9 @@ abstract class TestBase {
       );
     }
     Database::addConnectionInfo('default', 'default', $connection_info['default']);
+
+    // Indicate the database prefix was set up correctly.
+    $this->setupDatabasePrefix = TRUE;
   }
 
   /**
@@ -661,6 +674,9 @@ abstract class TestBase {
     $test_info = &$GLOBALS['drupal_test_info'];
     $test_info['test_run_id'] = $this->databasePrefix;
     $test_info['in_child_site'] = FALSE;
+
+    // Indicate the environment was set up correctly.
+    $this->setupEnvironment = TRUE;
   }
 
   /**
