@@ -212,6 +212,14 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form-test/redirect'] = array(
+    'title' => 'Redirect test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_redirect'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   $items['form_test/form-labels'] = array(
     'title' => 'Form label test',
     'page callback' => 'drupal_get_form',
@@ -2041,6 +2049,43 @@ function form_test_clicked_button_validate($form, &$form_state) {
  */
 function form_test_clicked_button_submit($form, &$form_state) {
   drupal_set_message('Submit handler for form_test_clicked_button executed.');
+}
+
+/**
+ * Form builder to detect form redirect.
+ */
+function form_test_redirect($form, &$form_state) {
+  $form['redirection'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use redirection'),
+  );
+  $form['destination'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Redirect destination'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="redirection"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Form submit handler to test different redirect behaviours.
+ */
+function form_test_redirect_submit(&$form, &$form_state) {
+  if (!empty($form_state['values']['redirection'])) {
+    $form_state['redirect'] = !empty($form_state['values']['destination']) ? $form_state['values']['destination'] : NULL;
+  }
+  else {
+    $form_state['redirect'] = FALSE;
+  }
 }
 
 /**

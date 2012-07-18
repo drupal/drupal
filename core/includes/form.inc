@@ -1265,7 +1265,7 @@ function drupal_redirect_form($form_state) {
         $function($form_state['redirect']);
       }
     }
-    drupal_goto(current_path());
+    drupal_goto(current_path(), array('query' => request()->query->all()));
   }
 }
 
