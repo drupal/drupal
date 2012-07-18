@@ -2,178 +2,27 @@
 
 /**
  * @file
- * Tests for list.module.
+ * Definition of Drupal\options\Tests\OptionsFieldUITest.
  */
 
-use Drupal\field\FieldException;
-use Drupal\field\FieldValidationException;
+namespace Drupal\options\Tests;
+
 use Drupal\field\Tests\FieldTestBase;
 
 /**
- * Tests for the 'List' field types.
+ * Options module UI tests.
  */
-class ListFieldTestBase extends FieldTestBase {
+class OptionsFieldUITest extends FieldTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'List field',
-      'description' => 'Test the List field type.',
+      'name' => 'Options field UI',
+      'description' => 'Test the Options field UI functionality.',
       'group' => 'Field types',
     );
   }
 
   function setUp() {
-    parent::setUp(array('list', 'field_test'));
-
-    $this->field_name = 'test_list';
-    $this->field = array(
-      'field_name' => $this->field_name,
-      'type' => 'list_integer',
-      'cardinality' => 1,
-      'settings' => array(
-        'allowed_values' => array(1 => 'One', 2 => 'Two', 3 => 'Three'),
-      ),
-    );
-    $this->field = field_create_field($this->field);
-
-    $this->instance = array(
-      'field_name' => $this->field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
-      'widget' => array(
-        'type' => 'options_buttons',
-      ),
-    );
-    $this->instance = field_create_instance($this->instance);
-  }
-
-  /**
-   * Test that allowed values can be updated.
-   */
-  function testUpdateAllowedValues() {
-    $langcode = LANGUAGE_NOT_SPECIFIED;
-
-    // All three options appear.
-    $entity = field_test_create_stub_entity();
-    $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
-
-    // Use one of the values in an actual entity, and check that this value
-    // cannot be removed from the list.
-    $entity = field_test_create_stub_entity();
-    $entity->{$this->field_name}[$langcode][0] = array('value' => 1);
-    field_test_entity_save($entity);
-    $this->field['settings']['allowed_values'] = array(2 => 'Two');
-    try {
-      field_update_field($this->field);
-      $this->fail(t('Cannot update a list field to not include keys with existing data.'));
-    }
-    catch (FieldException $e) {
-      $this->pass(t('Cannot update a list field to not include keys with existing data.'));
-    }
-    // Empty the value, so that we can actually remove the option.
-    $entity->{$this->field_name}[$langcode] = array();
-    field_test_entity_save($entity);
-
-    // Removed options do not appear.
-    $this->field['settings']['allowed_values'] = array(2 => 'Two');
-    field_update_field($this->field);
-    $entity = field_test_create_stub_entity();
-    $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
-    $this->assertTrue(empty($form[$this->field_name][$langcode][3]), t('Option 3 does not exist'));
-
-    // Completely new options appear.
-    $this->field['settings']['allowed_values'] = array(10 => 'Update', 20 => 'Twenty');
-    field_update_field($this->field);
-    $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
-    $this->assertTrue(empty($form[$this->field_name][$langcode][2]), t('Option 2 does not exist'));
-    $this->assertTrue(empty($form[$this->field_name][$langcode][3]), t('Option 3 does not exist'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][10]), t('Option 10 exists'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][20]), t('Option 20 exists'));
-
-    // Options are reset when a new field with the same name is created.
-    field_delete_field($this->field_name);
-    unset($this->field['id']);
-    $this->field['settings']['allowed_values'] = array(1 => 'One', 2 => 'Two', 3 => 'Three');
-    $this->field = field_create_field($this->field);
-    $this->instance = array(
-      'field_name' => $this->field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
-      'widget' => array(
-        'type' => 'options_buttons',
-      ),
-    );
-    $this->instance = field_create_instance($this->instance);
-    $entity = field_test_create_stub_entity();
-    $form = drupal_get_form('field_test_entity_form', $entity);
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
-    $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
-  }
-}
-
-/**
- * Tests the List field allowed values function.
- */
-class ListDynamicValuesValidationTestCase extends ListDynamicValuesTestCase {
-  public static function getInfo() {
-    return array(
-      'name' => 'List field dynamic values',
-      'description' => 'Test the List field allowed values function.',
-      'group' => 'Field types',
-    );
-  }
-
-  /**
-   * Test that allowed values function gets the entity.
-   */
-  function testDynamicAllowedValues() {
-    // Verify that the test passes against every value we had.
-    foreach ($this->test as $key => $value) {
-      $this->entity->test_list[LANGUAGE_NOT_SPECIFIED][0]['value'] = $value;
-      try {
-        field_attach_validate('test_entity', $this->entity);
-        $this->pass("$key should pass");
-      }
-      catch (FieldValidationException $e) {
-        // This will display as an exception, no need for a separate error.
-        throw($e);
-      }
-    }
-    // Now verify that the test does not pass against anything else.
-    foreach ($this->test as $key => $value) {
-      $this->entity->test_list[LANGUAGE_NOT_SPECIFIED][0]['value'] = is_numeric($value) ? (100 - $value) : ('X' . $value);
-      $pass = FALSE;
-      try {
-        field_attach_validate('test_entity', $this->entity);
-      }
-      catch (FieldValidationException $e) {
-        $pass = TRUE;
-      }
-      $this->assertTrue($pass, $key . ' should not pass');
-    }
-  }
-}
-
-/**
- * List module UI tests.
- */
-class ListFieldUITestCase extends FieldTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'List field UI',
-      'description' => 'Test the List field UI functionality.',
-      'group' => 'Field types',
-    );
-  }
-
-  function setUp() {
-    parent::setUp(array('list', 'field_test', 'taxonomy', 'field_ui'));
+    parent::setUp(array('options', 'field_test', 'taxonomy', 'field_ui'));
 
     // Create test user.
     $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));
@@ -186,11 +35,11 @@ class ListFieldUITestCase extends FieldTestBase {
   }
 
   /**
-   * List (integer) : test 'allowed values' input.
+   * Options (integer) : test 'allowed values' input.
    */
-  function testListAllowedValuesInteger() {
-    $this->field_name = 'field_list_integer';
-    $this->createListField('list_integer');
+  function testOptionsAllowedValuesInteger() {
+    $this->field_name = 'field_options_integer';
+    $this->createOptionsField('list_integer');
 
     // Flat list of textual values.
     $string = "Zero\nOne";
@@ -237,11 +86,11 @@ class ListFieldUITestCase extends FieldTestBase {
   }
 
   /**
-   * List (float) : test 'allowed values' input.
+   * Options (float) : test 'allowed values' input.
    */
-  function testListAllowedValuesFloat() {
-    $this->field_name = 'field_list_float';
-    $this->createListField('list_float');
+  function testOptionsAllowedValuesFloat() {
+    $this->field_name = 'field_options_float';
+    $this->createOptionsField('list_float');
 
     // Flat list of textual values.
     $string = "Zero\nOne";
@@ -287,11 +136,11 @@ class ListFieldUITestCase extends FieldTestBase {
   }
 
   /**
-   * List (text) : test 'allowed values' input.
+   * Options (text) : test 'allowed values' input.
    */
-  function testListAllowedValuesText() {
-    $this->field_name = 'field_list_text';
-    $this->createListField('list_text');
+  function testOptionsAllowedValuesText() {
+    $this->field_name = 'field_options_text';
+    $this->createOptionsField('list_text');
 
     // Flat list of textual values.
     $string = "Zero\nOne";
@@ -342,11 +191,11 @@ class ListFieldUITestCase extends FieldTestBase {
   }
 
   /**
-   * List (boolen) : test 'On/Off' values input.
+   * Options (boolen) : test 'On/Off' values input.
    */
-  function testListAllowedValuesBoolean() {
-    $this->field_name = 'field_list_boolean';
-    $this->createListField('list_boolean');
+  function testOptionsAllowedValuesBoolean() {
+    $this->field_name = 'field_options_boolean';
+    $this->createOptionsField('list_boolean');
 
     // Check that the separate 'On' and 'Off' form fields work.
     $on = $this->randomName();
@@ -357,7 +206,7 @@ class ListFieldUITestCase extends FieldTestBase {
       'off' => $off,
     );
     $this->drupalPost($this->admin_path, $edit, t('Save settings'));
-    $this->assertText("Saved field_list_boolean configuration.", t("The 'On' and 'Off' form fields work for boolean fields."));
+    $this->assertText("Saved field_options_boolean configuration.", t("The 'On' and 'Off' form fields work for boolean fields."));
     // Test the allowed_values on the field settings form.
     $this->drupalGet($this->admin_path);
     $this->assertFieldByName('on', $on, t("The 'On' value is stored correctly."));
@@ -374,7 +223,7 @@ class ListFieldUITestCase extends FieldTestBase {
    * @param string $type
    *   'list_integer', 'list_float', 'list_text' or 'list_boolean'
    */
-  protected function createListField($type) {
+  protected function createOptionsField($type) {
     // Create a test field and instance.
     $field = array(
       'field_name' => $this->field_name,

@@ -374,3 +374,25 @@ function _update_7000_field_create_instance($field, &$instance) {
     ->fields($record)
     ->execute();
 }
+
+/**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
+
+/**
+ * Reassign all list.module fields to be controlled by options.module.
+ */
+function field_update_8001() {
+  db_update('field_config')
+    ->fields(array(
+      'module' => 'options',
+    ))
+    ->condition('module', 'list')
+    ->execute();
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-8.x".
+ * The next series of updates should start at 9000.
+ */

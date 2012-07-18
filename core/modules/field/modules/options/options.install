@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the list module.
+ * Install, update and uninstall functions for the options module.
  */
 
 /**
  * Implements hook_field_schema().
  */
-function list_field_schema($field) {
+function options_field_schema($field) {
   switch ($field['type']) {
     case 'list_text':
       $columns = array(

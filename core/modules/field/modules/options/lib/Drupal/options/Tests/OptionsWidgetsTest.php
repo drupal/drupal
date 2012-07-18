@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\options\OptionsWidgetsTest.
+ * Definition of Drupal\options\Tests\OptionsWidgetsTest.
  */
 
 namespace Drupal\options\Tests;
@@ -22,7 +22,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('list', 'field_test', 'list_test', 'taxonomy', 'field_ui'));
+    parent::setUp(array('options', 'field_test', 'options_test', 'taxonomy', 'field_ui'));
 
     // Field with cardinality 1.
     $this->card_1 = array(
@@ -275,7 +275,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Test optgroups.
 
     $this->card_1['settings']['allowed_values'] = array();
-    $this->card_1['settings']['allowed_values_function'] = 'list_test_allowed_values_callback';
+    $this->card_1['settings']['allowed_values_function'] = 'options_test_allowed_values_callback';
     field_update_field($this->card_1);
 
     // Display form: with no field data, nothing is selected
@@ -390,7 +390,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Use a callback function defining optgroups.
     $this->card_2['settings']['allowed_values'] = array();
-    $this->card_2['settings']['allowed_values_function'] = 'list_test_allowed_values_callback';
+    $this->card_2['settings']['allowed_values_function'] = 'options_test_allowed_values_callback';
     field_update_field($this->card_2);
     $instance['required'] = FALSE;
     field_update_instance($instance);

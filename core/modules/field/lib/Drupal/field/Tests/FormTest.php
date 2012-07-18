@@ -17,7 +17,7 @@ class FormTest extends FieldTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'field_test', 'list'));
+    parent::setUp(array('node', 'field_test', 'options'));
 
     $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
     $this->drupalLogin($web_user);

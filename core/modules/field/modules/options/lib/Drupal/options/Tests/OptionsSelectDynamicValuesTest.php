@@ -2,17 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\options\OptionsWidgetsTest.
+ * Definition of Drupal\options\Tests\OptionsSelectDynamicValuesTest.
  */
 
 namespace Drupal\options\Tests;
 
-use ListDynamicValuesTestCase;
-
 /**
- * Test an options select on a list field with a dynamic allowed values function.
+ * Tests an options select with a dynamic allowed values function.
  */
-class OptionsSelectDynamicValuesTest extends ListDynamicValuesTestCase {
+class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTest {
   public static function getInfo() {
     return array(
       'name' => 'Options select dynamic values',
@@ -34,7 +32,7 @@ class OptionsSelectDynamicValuesTest extends ListDynamicValuesTestCase {
 
     // Display form.
     $this->drupalGet('test-entity/manage/' . $this->entity->ftid . '/edit');
-    $options = $this->xpath('//select[@id="edit-test-list-und"]/option');
+    $options = $this->xpath('//select[@id="edit-test-options-und"]/option');
     $this->assertEqual(count($options), count($this->test) + 1);
     foreach ($options as $option) {
       $value = (string) $option['value'];

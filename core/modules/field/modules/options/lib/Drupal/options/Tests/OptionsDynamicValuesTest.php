@@ -2,25 +2,27 @@
 
 /**
  * @file
- * Tests for list.module.
+ * Definition of Drupal\options\Tests\OptionsDynamicValuesTest.
  */
+
+namespace Drupal\options\Tests;
 
 use Drupal\field\Tests\FieldTestBase;
 
 /**
- * Sets up a List field for testing allowed values functions.
+ * Sets up a Options field for testing allowed values functions.
  */
-class ListDynamicValuesTestCase extends FieldTestBase {
+class OptionsDynamicValuesTest extends FieldTestBase {
   function setUp() {
-    parent::setUp(array('list', 'field_test', 'list_test'));
+    parent::setUp(array('options', 'field_test', 'options_test'));
 
-    $this->field_name = 'test_list';
+    $this->field_name = 'test_options';
     $this->field = array(
       'field_name' => $this->field_name,
       'type' => 'list_text',
       'cardinality' => 1,
       'settings' => array(
-        'allowed_values_function' => 'list_test_dynamic_values_callback',
+        'allowed_values_function' => 'options_test_dynamic_values_callback',
       ),
     );
     $this->field = field_create_field($this->field);
@@ -38,7 +40,7 @@ class ListDynamicValuesTestCase extends FieldTestBase {
     $this->test = array(
       'id' => mt_rand(1, 10),
       // Make sure this does not equal the ID so that
-      // list_test_dynamic_values_callback() always returns 4 values.
+      // options_test_dynamic_values_callback() always returns 4 values.
       'vid' => mt_rand(20, 30),
       'bundle' => 'test_bundle',
       'label' => $this->randomName(),

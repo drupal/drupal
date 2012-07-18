@@ -22,7 +22,7 @@ class AlterTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('field_ui', 'field_test', 'text', 'list'));
+    parent::setUp(array('field_ui', 'field_test', 'text', 'options'));
 
     // Create Article node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
