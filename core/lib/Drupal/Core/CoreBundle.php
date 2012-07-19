@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
@@ -17,11 +18,15 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 class CoreBundle extends Bundle
 {
   public function build(ContainerBuilder $container) {
+
+    $container->addScope(new Scope('request'));
+
     $container->register('dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
       ->addArgument(new Reference('service_container'));
     $container->register('resolver', 'Symfony\Component\HttpKernel\Controller\ControllerResolver');
-    $container->register('http_kernel', 'Symfony\Component\HttpKernel\HttpKernel')
+    $container->register('http_kernel', 'Drupal\Core\HttpKernel')
       ->addArgument(new Reference('dispatcher'))
+      ->addArgument(new Reference('service_container'))
       ->addArgument(new Reference('resolver'));
     $container->register('matcher', 'Drupal\Core\LegacyUrlMatcher');
     $container->register('router_listener', 'Drupal\Core\EventSubscriber\RouterListener')
@@ -58,6 +63,11 @@ class CoreBundle extends Bundle
       ->addArgument(new Reference('service_container'))
       ->setFactoryClass('Drupal\Core\ExceptionController')
       ->setFactoryMethod('getExceptionListener');
+    $container->register('request', 'Symfony\Component\HttpFoundation\Request')
+      ->setSynthetic(TRUE);
+    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
+      ->addArgument(new Reference('request'))
+      ->setScope('request');
 
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
