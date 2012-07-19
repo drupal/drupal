@@ -627,24 +627,40 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
  *
  * @return
  *   An associative array of the currently available themes. The keys are the
- *   names of the themes and the values are objects having the following
+ *   themes' machine names and the values are objects having the following
  *   properties:
- *   - 'filename': The name of the .info file.
- *   - 'name': The machine name of the theme.
- *   - 'status': 1 for enabled, 0 for disabled themes.
- *   - 'info': The contents of the .info file.
- *   - 'stylesheets': A two dimensional array, using the first key for the
- *     'media' attribute (e.g. 'all'), the second for the name of the file
- *     (e.g. style.css). The value is a complete filepath
- *     (e.g. themes/bartik/style.css).
- *   - 'scripts': An associative array of JavaScripts, using the filename as key
- *     and the complete filepath as value.
- *   - 'engine': The name of the theme engine.
- *   - 'base_theme': The name of the base theme.
- *   - 'base_themes': An ordered array of all the base themes. If the first item
- *     is NULL, a base theme is missing for this theme.
- *   - 'sub_themes': An unordered array of sub-themes of this theme.
- */
+ *   - filename: The filepath and name of the .info file.
+ *   - name: The machine name of the theme.
+ *   - status: 1 for enabled, 0 for disabled themes.
+ *   - info: The contents of the .info file.
+ *   - stylesheets: A two dimensional array, using the first key for the
+ *     media attribute (e.g. 'all'), the second for the name of the file
+ *     (e.g. style.css). The value is a complete filepath (e.g.
+ *     themes/bartik/style.css). Not set if no stylesheets are defined in the
+ *     .info file.
+ *   - scripts: An associative array of JavaScripts, using the filename as key
+ *     and the complete filepath as value. Not set if no scripts are defined in
+ *     the .info file.
+ *   - prefix: The base theme engine prefix.
+ *   - engine: The machine name of the theme engine.
+ *   - base_theme: If this is a sub-theme, the machine name of the base theme
+ *     defined in the .info file. Otherwise, the element is not set.
+ *   - base_themes: If this is a sub-theme, an associative array of the
+ *     base-theme ancestors of this theme, starting with this theme's base
+ *     theme, then the base theme's own base theme, etc. Each entry has an
+ *     array key equal to the theme's machine name, and a value equal to the
+ *     human-readable theme name; if a theme with matching machine name does
+ *     not exist in the system, the value will instead be NULL (and since the
+ *     system would not know whether that theme itself has a base theme, that
+ *     will end the array of base themes). This is not set if the theme is not
+ *     a sub-theme.
+ *   - sub_themes: An associative array of themes on the system that are
+ *     either direct sub-themes (that is, they declare this theme to be
+ *     their base theme), direct sub-themes of sub-themes, etc. The keys are
+ *     the themes' machine names, and the values are the themes' human-readable
+ *     names. This element is not set if there are no themes on the system that
+ *     declare this theme as their base theme. 
+*/
 function list_themes($refresh = FALSE) {
   $list = &drupal_static(__FUNCTION__, array());
 
