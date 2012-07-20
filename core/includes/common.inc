@@ -1599,7 +1599,7 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
  * Arbitrary elements may be added using the $args associative array.
  */
 function format_rss_channel($title, $link, $description, $items, $langcode = NULL, $args = array()) {
-  $langcode = $langcode ? $langcode : drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
+  $langcode = $langcode ? $langcode : language_manager(LANGUAGE_TYPE_CONTENT)->langcode;
 
   $output = "<channel>\n";
   $output .= ' <title>' . check_plain($title) . "</title>\n";
@@ -1901,7 +1901,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   }
 
   if (empty($langcode)) {
-    $langcode = drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $langcode = language_manager(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
 
   switch ($type) {
@@ -2077,7 +2077,7 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  *   - 'language': An optional language object. If the path being linked to is
  *     internal to the site, $options['language'] is used to look up the alias
  *     for the URL. If $options['language'] is omitted, the language will be
- *     obtained from drupal_container()->get(LANGUAGE_TYPE_URL).
+ *     obtained from language_manager(LANGUAGE_TYPE_URL).
  *   - 'https': Whether this URL should point to a secure location. If not
  *     defined, the current scheme is used, so the user stays on http or https
  *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can
@@ -2322,7 +2322,7 @@ function l($text, $path, array $options = array()) {
 
   // Append active class.
   if (($path == current_path() || ($path == '<front>' && drupal_is_front_page())) &&
-      (empty($options['language']) || $options['language']->langcode == drupal_container()->get(LANGUAGE_TYPE_URL)->langcode)) {
+      (empty($options['language']) || $options['language']->langcode == language_manager(LANGUAGE_TYPE_URL)->langcode)) {
     $options['attributes']['class'][] = 'active';
   }
 
@@ -6012,7 +6012,7 @@ function drupal_render_cid_parts($granularity = NULL) {
   // part.
   if (language_multilingual()) {
     foreach (language_types_get_configurable() as $language_type) {
-      $cid_parts[] = drupal_container()->get($language_type)->langcode;
+      $cid_parts[] = language_manager($language_type)->langcode;
     }
   }
 

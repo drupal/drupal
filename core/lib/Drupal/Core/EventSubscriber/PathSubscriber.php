@@ -80,7 +80,6 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
     // @todo Decouple the above, but for now, invoke it and update the path
     //   prior to front page and alias resolution. When above is decoupled, also
     //   add 'langcode' (determined from $request only) to $request->attributes.
-    _current_path($path);
     drupal_language_initialize();
     $path = _current_path();
 

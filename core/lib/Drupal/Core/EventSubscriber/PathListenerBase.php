@@ -21,9 +21,5 @@ abstract class PathListenerBase {
 
   public function setPath(Request $request, $path) {
     $request->attributes->set('system_path', $path);
-
-    // @todo Remove this line once code has been refactored to use the request
-    //   object directly.
-    _current_path($path);
   }
 }

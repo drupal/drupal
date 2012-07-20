@@ -110,7 +110,7 @@ const LANGUAGE_NEGOTIATION_DEFAULT = 'language-default';
  * @return
  *   The negotiated language object.
  */
-function language_types_initialize($type) {
+function language_types_initialize($type, $args = array()) {
   // Execute the language negotiation methods in the order they were set up and
   // return the first valid language found.
   $negotiation = variable_get("language_negotiation_$type", array());
@@ -120,6 +120,7 @@ function language_types_initialize($type) {
     if (isset($method['types']) && !in_array($type, $method['types'])) {
       continue;
     }
+    $method['args'] = $args;
     $language = language_negotiation_method_invoke($method_id, $method);
     if ($language) {
       // Remember the method ID used to detect the language.
@@ -452,7 +453,8 @@ function language_negotiation_method_invoke($method_id, $method = NULL) {
     // satisfied we can execute the callback.
     $cache = !isset($method['cache']) || $user->uid || $method['cache'] == variable_get('cache', 0);
     $callback = isset($method['callbacks']['negotiation']) ? $method['callbacks']['negotiation'] : FALSE;
-    $langcode = $cache && function_exists($callback) ? $callback($languages) : FALSE;
+    $args = isset($method['args']) ? $method['args'] : array();
+    $langcode = $cache && function_exists($callback) ? $callback($languages, $args) : FALSE;
     $results[$method_id] = isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
   }
 

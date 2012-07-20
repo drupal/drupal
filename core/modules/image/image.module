@@ -965,7 +965,7 @@ function image_style_path($style_name, $uri) {
  * @see image_effect_definition_load()
  */
 function image_effect_definitions() {
-  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
 
   // hook_image_effect_info() includes translated strings, so each language is
   // cached separately.

@@ -52,7 +52,7 @@ const LANGUAGE_NEGOTIATION_URL_DOMAIN = 1;
  *   The current interface language code.
  */
 function language_from_interface() {
-  return drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
+  return language_manager(LANGUAGE_TYPE_INTERFACE)->langcode;
 }
 
 /**
@@ -200,7 +200,7 @@ function language_from_session($languages) {
  * @return
  *   A valid language code on success, FALSE otherwise.
  */
-function language_from_url($languages) {
+function language_from_url($languages, $args = array()) {
   $language_url = FALSE;
 
   if (!language_negotiation_method_enabled(LANGUAGE_NEGOTIATION_URL)) {
@@ -212,7 +212,19 @@ function language_from_url($languages) {
       // Language negotiation happens before the public function current_path()
       // is available.
       // @todo Refactor with Symfony's Request object.
-      list($language, $path) = language_url_split_prefix(_current_path(), $languages);
+      if (isset($args['request'])) {
+        $request = $args['request'];
+
+        $current_path = $request->attributes->get('system_path');
+        if (!isset($current_path)) {
+          $current_path = trim($request->getPathInfo(), '/');
+        }
+      }
+      else {
+        $current_path = _current_path();
+      }
+
+      list($language, $path) = language_url_split_prefix($current_path, $languages);
       _current_path($path);
       if ($language !== FALSE) {
         $language_url = $language->langcode;
@@ -278,7 +290,7 @@ function language_from_url($languages) {
  * @return
  *   A valid language code.
  */
-function language_url_fallback($language = NULL, $language_type = LANGUAGE_TYPE_INTERFACE) {
+function language_url_fallback($language = NULL, $args = array(), $language_type = LANGUAGE_TYPE_INTERFACE) {
   $default = language_default();
   $prefix = (variable_get('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX) == LANGUAGE_NEGOTIATION_URL_PREFIX);
 
@@ -291,7 +303,8 @@ function language_url_fallback($language = NULL, $language_type = LANGUAGE_TYPE_
     return $default->langcode;
   }
   else {
-    return drupal_container()->get($language_type)->langcode;
+    $langcode = language_manager($language_type)->langcode;
+    return $langcode;
   }
 }
 
@@ -321,7 +334,7 @@ function language_switcher_url($type, $path) {
  */
 function language_switcher_session($type, $path) {
   $param = variable_get('language_negotiation_session_param', 'language');
-  $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : drupal_container()->get($type)->langcode;
+  $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : language_manager($type)->langcode;
 
   $languages = language_list();
   $links = array();
@@ -364,7 +377,7 @@ function language_url_rewrite_url(&$path, &$options) {
 
   // Language can be passed as an option, or we go for current URL language.
   if (!isset($options['language'])) {
-    $language_url = drupal_container()->get(LANGUAGE_TYPE_URL);
+    $language_url = language_manager(LANGUAGE_TYPE_URL);
     $options['language'] = $language_url;
   }
   // We allow only enabled languages here.

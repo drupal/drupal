@@ -16,22 +16,19 @@ class LanguageManager {
 
   private $container;
 
-  public function __construct(Request $request) {
+  public function __construct(Request $request = NULL) {
     $this->request = $request;
   }
 
-  public function interfaceLanguage() {
-    $language = language_types_initialize(LANGUAGE_TYPE_INTERFACE);
+  public function getLanguage($type) {
+    if (language_multilingual()) {
+      $language = language_types_initialize($type, array('request' => $this->request));
+    }
+    else {
+      $language = language_default();
+    }
+
     return $language;
   }
 
-  public function contentLanguage() {
-    $language = language_types_initialize(LANGUAGE_TYPE_CONTENT);
-    return $language;
-  }
-
-  public function urlLanguage() {
-    $language = language_types_initialize(LANGUAGE_TYPE_URL);
-    return $language;
-  }
 }

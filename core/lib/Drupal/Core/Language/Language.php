@@ -44,8 +44,8 @@ class Language {
    *
    * @todo Remove this function once $GLOBALS['language'] is gone.
    */
-  public function extend($info) {
-    $vars = is_array($info) ? $info : get_object_vars($info);
+  public function extend($obj) {
+    $vars = get_object_vars($obj);
     foreach ($vars as $var => $value) {
       $this->$var = $value;
     }

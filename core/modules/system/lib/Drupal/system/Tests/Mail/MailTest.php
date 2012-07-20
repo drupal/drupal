@@ -41,7 +41,7 @@ class MailTest extends WebTestBase implements MailInterface {
    * Assert that the pluggable mail system is functional.
    */
   public function testPluggableFramework() {
-    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
 
     // Use MailTestCase for sending a message.
     $message = drupal_mail('simpletest', 'mail_test', 'testing@example.com', $language_interface);

@@ -1458,7 +1458,7 @@ function t($string, array $args = array(), array $options = array()) {
 
   // Merge in default.
   if (empty($options['langcode'])) {
-    $options['langcode'] = drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $options['langcode'] = language_manager(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
   if (empty($options['context'])) {
     $options['context'] = '';
@@ -2442,7 +2442,7 @@ function drupal_get_bootstrap_phase() {
  * $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
  *
  * // Retrieve the LANGUAGE_TYPE_INTERFACE object.
- * $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+ * $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
  * @endcode
  *
  * @param $reset
@@ -2489,36 +2489,6 @@ function drupal_container(Container $reset = NULL) {
     // Register configuration object factory.
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage.dispatcher'));
-
-    // Ensure a language object is registered for each language type, whether the
-    // site is multilingual or not.
-    $types = language_types_get_all();
-    if (language_multilingual()) {
-      include_once DRUPAL_ROOT . '/core/includes/language.inc';
-      foreach ($types as $type) {
-        $language = language_types_initialize($type);
-        // We cannot pass an object as a parameter to a method on a service.
-        $info = get_object_vars($language);
-        $container->set($type, NULL);
-        $container->register($type, 'Drupal\\Core\\Language\\Language')
-          ->addMethodCall('extend', array($info));
-      }
-    }
-    else {
-      $info = variable_get('language_default', array(
-        'langcode' => 'en',
-        'name' => 'English',
-        'direction' => 0,
-        'weight' => 0,
-        'locked' => 0,
-      ));
-      $info['default'] = TRUE;
-      foreach ($types as $type) {
-        $container->set($type, NULL);
-        $container->register($type, 'Drupal\\Core\\Language\\Language')
-          ->addMethodCall('extend', array($info));
-      }
-    }
   }
   return $container;
 }
@@ -2666,14 +2636,50 @@ function get_t() {
 /**
  * Initializes all the defined language types.
  *
- * @see Drupal\Core\Language\Language
+ * @see language_manager()
  */
 function drupal_language_initialize() {
   if (language_multilingual()) {
+    $types = language_types_get_all();
+    include_once DRUPAL_ROOT . '/core/includes/language.inc';
+    foreach ($types as $type) {
+      language_manager($type);
+    }
     // Allow modules to react on language system initialization in multilingual
     // environments.
     bootstrap_invoke_all('language_init');
   }
+}
+
+/**
+ * Initializes the passed in language type.
+ *
+ * The 'language_manager' service is only available within the scope of a kernel
+ * request. When it's not available, we return a default language object,
+ * regardless of the type passed in.
+ *
+ * @see Drupal\Core\Language\LanguageManager
+ */
+function language_manager($type) {
+  static $default_language;
+  static $initiated = FALSE; // Whether the language_manager has been initiated.
+  $languages = &drupal_static(__FUNCTION__, array());
+  if ($initiated) {
+    if (!isset($languages[$type])) {
+      $languages[$type] = drupal_container()->get('language_manager')->getLanguage($type);
+    }
+    return $languages[$type];
+  }
+  if (drupal_container()->has('language_manager')) {
+    $initiated = TRUE;
+    $languages[$type] = drupal_container()->get('language_manager')->getLanguage($type);
+    return  $languages[$type];
+  }
+  if (isset($default_language)) {
+    return $default_language;
+  }
+  $default_language = language_default();
+  return $default_language;
 }
 
 /**

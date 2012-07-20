@@ -30,7 +30,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $response->headers->set('X-UA-Compatible', 'IE=edge,chrome=1', false);
 
     // Set the Content-language header.
-    $response->headers->set('Content-language', drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode);
+    $response->headers->set('Content-language', language_manager(LANGUAGE_TYPE_INTERFACE)->langcode);
 
     // Because pages are highly dynamic, set the last-modified time to now
     // since the page is in fact being regenerated right now.
