@@ -1270,7 +1270,8 @@ function taxonomy_vocabulary_machine_name_load($name) {
  *   A term's ID
  *
  * @return
- *   A term object. Results are statically cached.
+ *   A taxonomy term object, or FALSE if the term was not found. Results are
+ *   statically cached.
  */
 function taxonomy_term_load($tid) {
   if (!is_numeric($tid)) {
