@@ -1584,7 +1584,6 @@ function system_site_information_settings_submit($form, &$form_state) {
 /**
  * Form builder; Cron form.
  *
- * @see system_settings_form()
  * @ingroup forms
  */
 function system_cron_settings($form, &$form_state) {
@@ -1596,40 +1595,34 @@ function system_cron_settings($form, &$form_state) {
     '#value' => t('Run cron'),
     '#submit' => array('system_run_cron_submit'),
   );
+
   $status = '<p>' . t('Last run: %cron-last ago.', array('%cron-last' => format_interval(REQUEST_TIME - variable_get('cron_last')),)) . '</p>';
   $form['status'] = array(
     '#markup' => $status,
   );
+
   $form['cron'] = array(
     '#type' => 'fieldset',
   );
   $form['cron']['cron_safe_threshold'] = array(
     '#type' => 'select',
     '#title' => t('Run cron every'),
-    '#default_value' => config('system.cron')->get('cron_safe_threshold'),
+    '#default_value' => config('system.cron')->get('threshold.autorun'),
     '#options' => array(0 => t('Never')) + drupal_map_assoc(array(3600, 10800, 21600, 43200, 86400, 604800), 'format_interval'),
   );
-  // @todo This needs to be reviewed when #1324618 gets in.
-  $form_state['config']['cron_safe_threshold'] = array(
-    'name' => 'system.cron',
-    'path' => 'cron_safe_threshold',
-  );
 
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
-  return $form;
+  return system_config_form($form, $form_state);
 }
 
 /**
  * Form builder submit handler; Handle submission for cron settings.
  *
  * @ingroup forms
- * @see system_settings_form()
  */
 function system_cron_settings_submit($form, &$form_state) {
   config('system.cron')
-    ->set('cron_safe_threshold', $form_state['values']['cron_safe_threshold'])
+    ->set('threshold.autorun', $form_state['values']['cron_safe_threshold'])
     ->save();
-  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**

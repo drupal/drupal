@@ -263,11 +263,11 @@ function system_requirements($phase) {
 
   // Report cron status.
   if ($phase == 'runtime') {
-    $config = config('system.cron');
+    $cron_config = config('system.cron');
     // Cron warning threshold defaults to two days.
-    $threshold_warning = $config->get('cron_threshold_warning');
+    $threshold_warning = $cron_config->get('threshold.requirements_warning');
     // Cron error threshold defaults to two weeks.
-    $threshold_error = $config->get('cron_threshold_error');
+    $threshold_error = $cron_config->get('threshold.requirements_error');
     // Cron configuration help text.
     $help = $t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', array('@cron-handbook' => 'http://drupal.org/cron'));
 
@@ -294,7 +294,7 @@ function system_requirements($phase) {
     }
 
     $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . $config->get('cron_key'))));
+    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . $cron_config->get('key'))));
 
     $requirements['cron'] = array(
       'title' => $t('Cron maintenance tasks'),
@@ -506,21 +506,6 @@ function system_requirements($phase) {
  * Implements hook_install().
  */
 function system_install() {
-  // Create tables.
-  drupal_install_schema('system');
-  $versions = drupal_get_schema_versions('system');
-  $version = $versions ? max($versions) : SCHEMA_INSTALLED;
-  drupal_set_installed_schema_version('system', $version);
-
-  // Clear out module list and hook implementation statics before calling
-  // system_rebuild_theme_data().
-  drupal_static_reset('system_list');
-  module_list_reset();
-  module_implements_reset();
-
-  // Load system theme data appropriately.
-  system_rebuild_theme_data();
-
   // Enable the default theme.
   variable_set('theme_default', 'stark');
   db_update('system')
@@ -532,7 +517,7 @@ function system_install() {
   // Populate the cron key variable.
   $cron_key = drupal_hash_base64(drupal_random_bytes(55));
   config('system.cron')
-    ->set('cron_key', $cron_key)
+    ->set('key', $cron_key)
     ->save();
 }
 
@@ -1918,11 +1903,10 @@ function system_update_8008() {
  */
 function system_update_8009() {
   update_variables_to_config('system.cron', array(
-    'cron_max_threshold' => 'cron_max_threshold',
-    'cron_safe_threshold' => 'cron_safe_threshold',
-    'cron_threshold_warning' => 'cron_threshold_warning',
-    'cron_threshold_error' => 'cron_threshold_error',
-    'cron_key' => 'cron_key',
+    'cron_key' => 'key',
+    'cron_safe_threshold' => 'threshold.autorun',
+    'cron_threshold_warning' => 'threshold.requirements_warning',
+    'cron_threshold_error' => 'threshold.requirements_error',
   ));
 }
 

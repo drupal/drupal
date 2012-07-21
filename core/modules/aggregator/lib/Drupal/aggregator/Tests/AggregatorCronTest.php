@@ -22,7 +22,7 @@ class AggregatorCronTest extends AggregatorTestBase {
   public function testCron() {
     // Create feed and test basic updating on cron.
     global $base_url;
-    $key = config('system.cron')->get('cron_key');
+    $key = config('system.cron')->get('key');
     $this->createSampleNodes();
     $feed = $this->createFeed();
     $this->cronRun();

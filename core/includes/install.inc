@@ -357,10 +357,11 @@ function drupal_verify_profile($install_state) {
  * functions can be made available while other modules are installed.
  */
 function drupal_install_system() {
+  // Create tables.
+  drupal_install_schema('system');
+
   $system_path = drupal_get_path('module', 'system');
   require_once DRUPAL_ROOT . '/' . $system_path . '/system.install';
-  module_invoke('system', 'install');
-
   $system_versions = drupal_get_schema_versions('system');
   $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
   db_insert('system')
@@ -375,8 +376,19 @@ function drupal_install_system() {
         'bootstrap' => 0,
       ))
     ->execute();
+
+  // Clear out module list and hook implementation statics before calling
+  // system_rebuild_theme_data().
+  drupal_static_reset('system_list');
+  module_list_reset();
+  module_implements_reset();
+
   system_rebuild_module_data();
+  system_rebuild_theme_data();
+
   config_install_default_config('system');
+
+  module_invoke('system', 'install');
 }
 
 /**

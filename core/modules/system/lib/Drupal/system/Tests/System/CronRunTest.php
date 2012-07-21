@@ -38,7 +38,7 @@ class CronRunTest extends WebTestBase {
     $this->assertResponse(403);
 
     // Run cron anonymously with the valid cron key.
-    $key = config('system.cron')->get('cron_key');
+    $key = config('system.cron')->get('key');
     $this->drupalGet('cron/' . $key);
     $this->assertResponse(204);
   }
@@ -56,7 +56,7 @@ class CronRunTest extends WebTestBase {
     $cron_safe_threshold = 100;
     variable_set('cron_last', $cron_last);
     config('system.cron')
-      ->set('cron_safe_threshold', $cron_safe_threshold)
+      ->set('threshold.autorun', $cron_safe_threshold)
       ->save();
     $this->drupalGet('');
     $this->assertTrue($cron_last == variable_get('cron_last', NULL), t('Cron does not run when the cron threshold is not passed.'));
