@@ -246,14 +246,6 @@ Drupal.tableDrag.prototype.showColumns = function () {
   });
   // Change link text.
   $('.tabledrag-toggle-weight').text(Drupal.t('Hide row weights'));
-  // Change cookie.
-  $.cookie('Drupal.tableDrag.showWeight', 1, {
-    path: Drupal.settings.basePath,
-    // The cookie expires in one year.
-    expires: 365
-  });
-  // Trigger an event to allow other scripts to react to this display change.
-  $('table.tabledrag-processed').trigger('columnschange', 'show');
 };
 
 /**
