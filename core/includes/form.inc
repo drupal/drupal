@@ -167,6 +167,8 @@ function drupal_get_form($form_id) {
  *       automatically loaded by form_get_cache(). By default the current menu
  *       router item's 'file' definition is added, if any. Use
  *       form_load_include() to add include files from a form constructor.
+ *     - form_id: Identification of the primary form being constructed and
+ *       processed.
  *     - base_form_id: Identification for a base form, as declared in a
  *       hook_forms() implementation.
  *   - rebuild_info: Internal. Similar to 'build_info', but pertaining to
