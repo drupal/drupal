@@ -2641,7 +2641,6 @@ function get_t() {
 function drupal_language_initialize() {
   if (language_multilingual()) {
     $types = language_types_get_all();
-    include_once DRUPAL_ROOT . '/core/includes/language.inc';
     foreach ($types as $type) {
       language_manager($type);
     }
@@ -2662,19 +2661,28 @@ function drupal_language_initialize() {
  */
 function language_manager($type) {
   static $default_language;
-  static $initiated = FALSE; // Whether the language_manager has been initiated.
+  // Keep track of whether the language_manager has been initiated.
+  static $initiated = FALSE;
+  // Keep track of whether we are in a multilingual environment.
+  static $multilingual = FALSE;
   $languages = &drupal_static(__FUNCTION__, array());
-  if ($initiated) {
+  if ($multilingual && $initiated) {
     if (!isset($languages[$type])) {
       $languages[$type] = drupal_container()->get('language_manager')->getLanguage($type);
     }
     return $languages[$type];
   }
-  if (drupal_container()->has('language_manager')) {
-    $initiated = TRUE;
-    $languages[$type] = drupal_container()->get('language_manager')->getLanguage($type);
-    return  $languages[$type];
+  if (language_multilingual()) {
+    $multilingual = TRUE;
+    if (drupal_container()->has('language_manager')) {
+      include_once DRUPAL_ROOT . '/core/includes/language.inc';
+      $initiated = TRUE;
+      $languages[$type] = drupal_container()->get('language_manager')->getLanguage($type);
+      return  $languages[$type];
+    }
   }
+  // If this is not a multilingual environment or we have not yet entered the
+  // request scope, just use the default language regardless of $type.
   if (isset($default_language)) {
     return $default_language;
   }

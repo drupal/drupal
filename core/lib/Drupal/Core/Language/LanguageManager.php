@@ -21,13 +21,7 @@ class LanguageManager {
   }
 
   public function getLanguage($type) {
-    if (language_multilingual()) {
-      $language = language_types_initialize($type, array('request' => $this->request));
-    }
-    else {
-      $language = language_default();
-    }
-
+    $language = language_types_initialize($type, array('request' => $this->request));
     return $language;
   }
 
