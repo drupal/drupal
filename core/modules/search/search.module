@@ -646,6 +646,7 @@ function search_index($sid, $module, $text) {
               if ($linknid > 0) {
                 $node = db_query('SELECT title, nid, vid FROM {node} WHERE nid = :nid', array(':nid' => $linknid), array('target' => 'slave'))->fetchObject();
                 $link = TRUE;
+                // Do not use $node->label(), $node comes from the database.
                 $linktitle = $node->title;
               }
             }

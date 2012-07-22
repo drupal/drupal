@@ -83,7 +83,7 @@ function book_export_html($nid) {
     if (isset($node->book)) {
       $tree = book_menu_subtree_data($node->book);
       $contents = book_export_traverse($tree, 'book_node_export');
-      return theme('book_export_html', array('title' => $node->title, 'contents' => $contents, 'depth' => $node->book['depth']));
+      return theme('book_export_html', array('title' => $node->label(), 'contents' => $contents, 'depth' => $node->book['depth']));
     }
     else {
       throw new NotFoundHttpException();
@@ -103,7 +103,7 @@ function book_export_html($nid) {
  * @see book_menu()
  */
 function book_outline(Node $node) {
-  drupal_set_title($node->title);
+  drupal_set_title($node->label());
   return drupal_get_form('book_outline_form', $node);
 }
 
@@ -210,7 +210,7 @@ function book_outline_form_submit($form, &$form_state) {
  */
 function book_remove_form($form, &$form_state, Node $node) {
   $form['#node'] = $node;
-  $title = array('%title' => $node->title);
+  $title = array('%title' => $node->label());
 
   if ($node->book['has_children']) {
     $description = t('%title has associated child pages, which will be relocated automatically to maintain their connection to the book. To recreate the hierarchy (as it was before removing this page), %title may be added again using the Outline tab, and each of its former child pages will need to be relocated manually.', $title);

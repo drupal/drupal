@@ -61,9 +61,9 @@ class SearchEmbedFormTest extends SearchTestBase {
     $this->submit_count = $count;
 
     // Now verify that we can see and submit the form from the search results.
-    $this->drupalGet('search/node/' . $this->node->title);
+    $this->drupalGet('search/node/' . $this->node->label());
     $this->assertText(t('Your name'), 'Form is visible');
-    $this->drupalPost('search/node/' . $this->node->title,
+    $this->drupalPost('search/node/' . $this->node->label(),
       array('name' => 'John'),
       t('Send away'));
     $this->assertText(t('Test form was submitted'), 'Form message appears');

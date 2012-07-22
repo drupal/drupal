@@ -296,7 +296,7 @@ function translation_node_prepare(Node $node) {
     if (!empty($source_node->tnid)) {
       $translations = translation_node_get_translations($source_node->tnid);
       if (isset($translations[$langcode])) {
-        drupal_set_message(t('A translation of %title in %language already exists, a new %type will be created instead of a translation.', array('%title' => $source_node->title, '%language' => $language_list[$langcode]->name, '%type' => $node->type)), 'error');
+        drupal_set_message(t('A translation of %title in %language already exists, a new %type will be created instead of a translation.', array('%title' => $source_node->label(), '%language' => $language_list[$langcode]->name, '%type' => $node->type)), 'error');
         return;
       }
     }

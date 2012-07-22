@@ -37,6 +37,7 @@ function poll_page() {
     ->fetchAllAssoc('nid');
 
   $output = '<ul>';
+  // Do not use $node->label() here because $node comes from the database.
   foreach ($queried_nodes as $node) {
     $output .= '<li>' . l($node->title, "node/$node->nid") . ' - ' . format_plural($node->votes, '1 vote', '@count votes') . ' - ' . ($node->active ? t('open') : t('closed')) . '</li>';
   }
@@ -50,7 +51,7 @@ function poll_page() {
  */
 function poll_votes($node) {
   $votes_per_page = 20;
-  drupal_set_title($node->title);
+  drupal_set_title($node->label());
 
   $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
   $header[] = array('data' => t('Vote'), 'field' => 'pc.chtext');
@@ -93,7 +94,7 @@ function poll_votes($node) {
  * Callback for the 'results' tab for polls you can vote on
  */
 function poll_results($node) {
-  drupal_set_title($node->title);
+  drupal_set_title($node->label());
   $node->show_results = TRUE;
   return node_show($node);
 }

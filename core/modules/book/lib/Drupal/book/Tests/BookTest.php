@@ -142,15 +142,15 @@ class BookTest extends WebTestBase {
 
     // Check previous, up, and next links.
     if ($previous) {
-      $this->assertRaw(l('<b>‹</b> ' . $previous->title, 'node/' . $previous->nid, array('html'=> TRUE, 'attributes' => array('rel' => array('prev'), 'title' => t('Go to previous page')))), t('Previous page link found.'));
+      $this->assertRaw(l('<b>‹</b> ' . $previous->label(), 'node/' . $previous->nid, array('html' => TRUE, 'attributes' => array('rel' => array('prev'), 'title' => t('Go to previous page')))), t('Previous page link found.'));
     }
 
     if ($up) {
-      $this->assertRaw(l('up', 'node/' . $up->nid, array('html'=> TRUE,'attributes' => array('title' => t('Go to parent page')))), t('Up page link found.'));
+      $this->assertRaw(l('up', 'node/' . $up->nid, array('html'=> TRUE, 'attributes' => array('title' => t('Go to parent page')))), t('Up page link found.'));
     }
 
     if ($next) {
-      $this->assertRaw(l($next->title . ' <b>›</b>', 'node/' . $next->nid, array('html'=> TRUE, 'attributes' => array('rel' => array('next'), 'title' => t('Go to next page')))), t('Next page link found.'));
+      $this->assertRaw(l($next->label() . ' <b>›</b>', 'node/' . $next->nid, array('html'=> TRUE, 'attributes' => array('rel' => array('next'), 'title' => t('Go to next page')))), t('Next page link found.'));
     }
 
     // Compute the expected breadcrumb.
@@ -172,7 +172,7 @@ class BookTest extends WebTestBase {
 
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->nid);
-    $this->assertText($node->title, t('Printer friendly title found.'));
+    $this->assertText($node->label(), t('Printer friendly title found.'));
     $this->assertRaw(check_markup($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], $node->body[LANGUAGE_NOT_SPECIFIED][0]['format']), t('Printer friendly body found.'));
 
     $number++;
@@ -186,7 +186,7 @@ class BookTest extends WebTestBase {
   function generateOutlinePattern($nodes) {
     $outline = '';
     foreach ($nodes as $node) {
-      $outline .= '(node\/' . $node->nid . ')(.*?)(' . $node->title . ')(.*?)';
+      $outline .= '(node\/' . $node->nid . ')(.*?)(' . $node->label() . ')(.*?)';
     }
 
     return '/<nav id="book-navigation-' . $this->book->nid . '"(.*?)<ul(.*?)' . $outline . '<\/ul>/s';
@@ -241,7 +241,7 @@ class BookTest extends WebTestBase {
 
     // Make sure each part of the book is there.
     foreach ($nodes as $node) {
-      $this->assertText($node->title, t('Node title found in printer friendly version.'));
+      $this->assertText($node->label(), t('Node title found in printer friendly version.'));
       $this->assertRaw(check_markup($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], $node->body[LANGUAGE_NOT_SPECIFIED][0]['format']), t('Node body found in printer friendly version.'));
     }
 
@@ -292,8 +292,8 @@ class BookTest extends WebTestBase {
     $nodes = $this->createBook();
     $this->drupalGet('<front>');
     $this->assertText($block_title, t('Book navigation block is displayed.'));
-    $this->assertText($this->book->title, t('Link to book root (@title) is displayed.', array('@title' => $nodes[0]->title)));
-    $this->assertNoText($nodes[0]->title, t('No links to individual book pages are displayed.'));
+    $this->assertText($this->book->label(), t('Link to book root (@title) is displayed.', array('@title' => $nodes[0]->label())));
+    $this->assertNoText($nodes[0]->label(), t('No links to individual book pages are displayed.'));
   }
 
   /**

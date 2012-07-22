@@ -18,7 +18,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 function statistics_node_tracker() {
   if ($node = node_load(arg(1))) {
-
     $header = array(
         array('data' => t('Time'), 'field' => 'a.timestamp', 'sort' => 'desc'),
         array('data' => t('Referrer'), 'field' => 'a.url'),
@@ -50,6 +49,7 @@ function statistics_node_tracker() {
       );
     }
 
+    // Do not use $node->label() here, because $node comes from the database.
     drupal_set_title($node->title);
     $build['statistics_table'] = array(
       '#theme' => 'table',

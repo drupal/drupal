@@ -86,11 +86,11 @@ class LocalePathTest extends WebTestBase {
 
     // Confirm English language path alias works.
     $this->drupalGet($english_path);
-    $this->assertText($node->title, t('English alias works.'));
+    $this->assertText($node->label(), t('English alias works.'));
 
     // Confirm custom language path alias works.
     $this->drupalGet($prefix . '/' . $custom_language_path);
-    $this->assertText($node->title, t('Custom language alias works.'));
+    $this->assertText($node->label(), t('Custom language alias works.'));
 
     // Create a custom path.
     $custom_path = $this->randomName(8);
@@ -132,18 +132,18 @@ class LocalePathTest extends WebTestBase {
     // Test that both node titles link to our path alias.
     $this->drupalGet('<front>');
     $custom_path_url = base_path() . $GLOBALS['script_path'] . $custom_path;
-    $elements = $this->xpath('//a[@href=:href and .=:title]', array(':href' => $custom_path_url, ':title' => $first_node->title));
+    $elements = $this->xpath('//a[@href=:href and .=:title]', array(':href' => $custom_path_url, ':title' => $first_node->label()));
     $this->assertTrue(!empty($elements), t('First node links to the path alias.'));
-    $elements = $this->xpath('//a[@href=:href and .=:title]', array(':href' => $custom_path_url, ':title' => $second_node->title));
+    $elements = $this->xpath('//a[@href=:href and .=:title]', array(':href' => $custom_path_url, ':title' => $second_node->label()));
     $this->assertTrue(!empty($elements), t('Second node links to the path alias.'));
 
     // Confirm that the custom path leads to the first node.
     $this->drupalGet($custom_path);
-    $this->assertText($first_node->title, t('Custom alias returns first node.'));
+    $this->assertText($first_node->label(), t('Custom alias returns first node.'));
 
     // Confirm that the custom path with prefix leads to the second node.
     $this->drupalGet($prefix . '/' . $custom_path);
-    $this->assertText($second_node->title, t('Custom alias with prefix returns second node.'));
+    $this->assertText($second_node->label(), t('Custom alias with prefix returns second node.'));
 
   }
 }

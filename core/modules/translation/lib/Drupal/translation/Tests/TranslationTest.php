@@ -138,7 +138,7 @@ class TranslationTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/language/delete/es', array(), t('Delete'));
     $this->drupalLogin($this->translator);
     $this->drupalGet('node/' . $node->nid . '/translate');
-    $this->assertRaw(t('Translations of %title', array('%title' => $node->title)), t('Translation overview page available with only one language enabled.'));
+    $this->assertRaw(t('Translations of %title', array('%title' => $node->label())), t('Translation overview page available with only one language enabled.'));
   }
 
   /**
@@ -345,7 +345,7 @@ class TranslationTest extends WebTestBase {
 
     $field_langcode = LANGUAGE_NOT_SPECIFIED;
     $body_key = "body[$field_langcode][0][value]";
-    $this->assertFieldByXPath('//input[@id="edit-title"]', $node->title, "Original title value correctly populated.");
+    $this->assertFieldByXPath('//input[@id="edit-title"]', $node->label(), "Original title value correctly populated.");
     $this->assertFieldByXPath("//textarea[@name='$body_key']", $node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], "Original body value correctly populated.");
 
     $edit = array();

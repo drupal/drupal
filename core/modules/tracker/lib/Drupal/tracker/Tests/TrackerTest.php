@@ -65,14 +65,14 @@ class TrackerTest extends WebTestBase {
     ));
 
     $this->drupalGet('tracker');
-    $this->assertNoText($unpublished->title, t('Unpublished node do not show up in the tracker listing.'));
-    $this->assertText($published->title, t('Published node show up in the tracker listing.'));
+    $this->assertNoText($unpublished->label(), t('Unpublished node do not show up in the tracker listing.'));
+    $this->assertText($published->label(), t('Published node show up in the tracker listing.'));
     $this->assertLink(t('My recent content'), 0, t('User tab shows up on the global tracker page.'));
 
     // Delete a node and ensure it no longer appears on the tracker.
     node_delete($published->nid);
     $this->drupalGet('tracker');
-    $this->assertNoText($published->title, t('Deleted node do not show up in the tracker listing.'));
+    $this->assertNoText($published->label(), t('Deleted node do not show up in the tracker listing.'));
   }
 
   /**
@@ -108,17 +108,17 @@ class TrackerTest extends WebTestBase {
     $this->drupalPost('comment/reply/' . $other_published_my_comment->nid, $comment, t('Save'));
 
     $this->drupalGet('user/' . $this->user->uid . '/track');
-    $this->assertNoText($unpublished->title, t("Unpublished nodes do not show up in the users's tracker listing."));
-    $this->assertText($my_published->title, t("Published nodes show up in the user's tracker listing."));
-    $this->assertNoText($other_published_no_comment->title, t("Other user's nodes do not show up in the user's tracker listing."));
-    $this->assertText($other_published_my_comment->title, t("Nodes that the user has commented on appear in the user's tracker listing."));
+    $this->assertNoText($unpublished->label(), t("Unpublished nodes do not show up in the users's tracker listing."));
+    $this->assertText($my_published->label(), t("Published nodes show up in the user's tracker listing."));
+    $this->assertNoText($other_published_no_comment->label(), t("Other user's nodes do not show up in the user's tracker listing."));
+    $this->assertText($other_published_my_comment->label(), t("Nodes that the user has commented on appear in the user's tracker listing."));
 
     // Verify that unpublished comments are removed from the tracker.
     $admin_user = $this->drupalCreateUser(array('post comments', 'administer comments', 'access user profiles'));
     $this->drupalLogin($admin_user);
     $this->drupalPost('comment/1/edit', array('status' => COMMENT_NOT_PUBLISHED), t('Save'));
     $this->drupalGet('user/' . $this->user->uid . '/track');
-    $this->assertNoText($other_published_my_comment->title, 'Unpublished comments are not counted on the tracker listing.');
+    $this->assertNoText($other_published_my_comment->label(), 'Unpublished comments are not counted on the tracker listing.');
   }
 
   /**
@@ -230,7 +230,7 @@ class TrackerTest extends WebTestBase {
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->title, t('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
+      $this->assertText($node->label(), t('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
     }
     $this->assertText('1 new', t('New comment is counted on the tracker listing pages.'));
     $this->assertText('updated', t('Node is listed as updated'));
@@ -240,7 +240,7 @@ class TrackerTest extends WebTestBase {
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->title, t('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
+      $this->assertText($node->label(), t('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
     }
     $this->assertText('1 new', t('New comment is counted on the tracker listing pages.'));
   }
@@ -259,7 +259,7 @@ class TrackerTest extends WebTestBase {
 
     // Assert that the node is displayed.
     $this->drupalGet('tracker');
-    $this->assertText($node->title, t('Node is displayed on the tracker listing pages.'));
+    $this->assertText($node->label(), t('Node is displayed on the tracker listing pages.'));
 
     // Unpublish the node and ensure that it's no longer displayed.
     $edit = array(

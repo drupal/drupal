@@ -44,7 +44,7 @@ function translation_node_overview(Node $node) {
       $translation_node = node_load($translations[$langcode]->nid);
       $path = 'node/' . $translation_node->nid;
       $links = language_negotiation_get_switch_links($type, $path);
-      $title = empty($links->links[$langcode]['href']) ? l($translation_node->title, $path) : l($translation_node->title, $links->links[$langcode]['href'], $links->links[$langcode]);
+      $title = empty($links->links[$langcode]['href']) ? l($translation_node->label(), $path) : l($translation_node->label(), $links->links[$langcode]['href'], $links->links[$langcode]);
       if (node_access('update', $translation_node)) {
         $text = t('edit');
         $path = 'node/' . $translation_node->nid . '/edit';
@@ -72,7 +72,7 @@ function translation_node_overview(Node $node) {
     $rows[] = array($language_name, $title, $status, implode(" | ", $options));
   }
 
-  drupal_set_title(t('Translations of %title', array('%title' => $node->title)), PASS_THROUGH);
+  drupal_set_title(t('Translations of %title', array('%title' => $node->label())), PASS_THROUGH);
 
   $build['translation_node_overview'] = array(
     '#theme' => 'table',

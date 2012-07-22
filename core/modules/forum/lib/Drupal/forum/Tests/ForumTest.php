@@ -531,7 +531,7 @@ class ForumTest extends WebTestBase {
     // View forum node.
     $this->drupalGet('node/' . $node->nid);
     $this->assertResponse(200);
-    $this->assertTitle($node->title . ' | Drupal', t('Forum node was displayed'));
+    $this->assertTitle($node->label() . ' | Drupal', t('Forum node was displayed'));
     $breadcrumb = array(
       l(t('Home'), NULL),
       l(t('Forums'), 'forum'),
@@ -544,7 +544,7 @@ class ForumTest extends WebTestBase {
     $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertTitle('Edit Forum topic ' . $node->title . ' | Drupal', t('Forum edit node was displayed'));
+      $this->assertTitle('Edit Forum topic ' . $node->label() . ' | Drupal', t('Forum edit node was displayed'));
     }
 
     if ($response == 200) {

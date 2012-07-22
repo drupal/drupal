@@ -355,7 +355,7 @@ class MenuTest extends WebTestBase {
 
       // Verify menu link link.
       $this->clickLink($title);
-      $title = $parent_node->title;
+      $title = $parent_node->label();
       $this->assertTitle(t("@title | Drupal", array('@title' => $title)), t('Parent menu link link target was correct'));
     }
 
@@ -365,7 +365,7 @@ class MenuTest extends WebTestBase {
 
     // Verify menu link link.
     $this->clickLink($title);
-    $title = $item_node->title;
+    $title = $item_node->label();
     $this->assertTitle(t("@title | Drupal", array('@title' => $title)), t('Menu link link target was correct'));
   }
 

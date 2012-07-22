@@ -36,7 +36,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 function comment_reply(Node $node, $pid = NULL) {
   // Set the breadcrumb trail.
-  drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->title, 'node/' . $node->nid)));
+  drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->label(), 'node/' . $node->nid)));
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $build = array();
 

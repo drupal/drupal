@@ -100,6 +100,6 @@ class StatisticsReportsTest extends StatisticsTestBase {
     $this->assertText('All time', t('Found the alll time popular content.'));
     $this->assertText('Last viewed', t('Found the last viewed popular content.'));
 
-    $this->assertRaw(l($node->title, 'node/' . $node->nid), t('Found link to visited node.'));
+    $this->assertRaw(l($node->label(), 'node/' . $node->nid), t('Found link to visited node.'));
   }
 }

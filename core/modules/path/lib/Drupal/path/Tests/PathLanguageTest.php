@@ -56,7 +56,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Confirm that the alias works.
     $this->drupalGet($english_alias);
-    $this->assertText($english_node->title, 'Alias works.');
+    $this->assertText($english_node->label(), 'Alias works.');
 
     // Translate the node into French.
     $this->drupalGet('node/' . $english_node->nid . '/translate');
@@ -78,7 +78,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Confirm that the alias works.
     $this->drupalGet('fr/' . $edit['path[alias]']);
-    $this->assertText($french_node->title, 'Alias for French translation works.');
+    $this->assertText($french_node->label(), 'Alias for French translation works.');
 
     // Confirm that the alias is returned by url(). Languages are cached on
     // many levels, and we need to clear those caches.
@@ -112,11 +112,11 @@ class PathLanguageTest extends PathTestBase {
     // path alias for French matching the english alias. So drupal_lookup_path()
     // needs to use the URL language to check whether the alias is valid.
     $this->drupalGet($english_alias);
-    $this->assertText($english_node->title, 'Alias for English translation works.');
+    $this->assertText($english_node->label(), 'Alias for English translation works.');
 
     // Check that the French alias works.
     $this->drupalGet("fr/$french_alias");
-    $this->assertText($french_node->title, 'Alias for French translation works.');
+    $this->assertText($french_node->label(), 'Alias for French translation works.');
 
     // Disable URL language negotiation.
     $edit = array('language_interface[enabled][language-url]' => FALSE);
@@ -124,7 +124,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Check that the English alias still works.
     $this->drupalGet($english_alias);
-    $this->assertText($english_node->title, 'Alias for English translation works.');
+    $this->assertText($english_node->label(), 'Alias for English translation works.');
 
     // Check that the French alias is not available. We check the unprefixed
     // alias because we disabled URL language negotiation above. In this

@@ -81,7 +81,8 @@ class SearchCommentTest extends SearchTestBase {
       'search_block_form' => "'" . $edit_comment['subject'] . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertText($node->title, t('Node found in search results.'));
+    $node2 = node_load($node->nid, NULL, TRUE);
+    $this->assertText($node2->label(), t('Node found in search results.'));
     $this->assertText($edit_comment['subject'], t('Comment subject found in search results.'));
 
     // Search for the comment body.
@@ -89,7 +90,7 @@ class SearchCommentTest extends SearchTestBase {
       'search_block_form' => "'" . $comment_body . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertText($node->title, t('Node found in search results.'));
+    $this->assertText($node2->label(), t('Node found in search results.'));
 
     // Verify that comment is rendered using proper format.
     $this->assertText($comment_body, t('Comment body text found in search results.'));
@@ -194,11 +195,11 @@ class SearchCommentTest extends SearchTestBase {
     $this->drupalPost('', $edit, t('Search'));
 
     if ($assume_access) {
-      $expected_node_result = $this->assertText($this->node->title);
+      $expected_node_result = $this->assertText($this->node->label());
       $expected_comment_result = $this->assertText($this->comment_subject);
     }
     else {
-      $expected_node_result = $this->assertNoText($this->node->title);
+      $expected_node_result = $this->assertNoText($this->node->label());
       $expected_comment_result = $this->assertNoText($this->comment_subject);
     }
     $this->assertTrue($expected_node_result && $expected_comment_result, $message);
@@ -236,7 +237,7 @@ class SearchCommentTest extends SearchTestBase {
     // Search for the node title. Should be found, and 'Add new comment' should
     // not be part of the search snippet.
     $this->drupalPost('search/node', array('keys' => 'short'), t('Search'));
-    $this->assertText($node->title, t('Search for keyword worked'));
+    $this->assertText($node->label(), t('Search for keyword worked'));
     $this->assertNoText(t('Add new comment'), t('Add new comment does not appear on search results page'));
   }
 }

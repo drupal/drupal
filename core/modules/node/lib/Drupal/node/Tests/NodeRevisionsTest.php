@@ -81,7 +81,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // Confirm that revisions revert properly.
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/revert", array(), t('Revert'));
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.',
-                        array('@type' => 'Basic page', '%title' => $nodes[1]->title,
+                        array('@type' => 'Basic page', '%title' => $nodes[1]->label(),
                               '%revision-date' => format_date($nodes[1]->revision_timestamp))), t('Revision reverted.'));
     $reverted_node = node_load($node->nid);
     $this->assertTrue(($nodes[1]->body[LANGUAGE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[LANGUAGE_NOT_SPECIFIED][0]['value']), t('Node reverted correctly.'));
@@ -94,7 +94,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/delete", array(), t('Delete'));
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.',
                         array('%revision-date' => format_date($nodes[1]->revision_timestamp),
-                              '@type' => 'Basic page', '%title' => $nodes[1]->title)), t('Revision deleted.'));
+                              '@type' => 'Basic page', '%title' => $nodes[1]->label())), t('Revision deleted.'));
     $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid', array(':nid' => $node->nid, ':vid' => $nodes[1]->vid))->fetchField() == 0, t('Revision not found.'));
 
     // Set the revision timestamp to an older date to make sure that the
@@ -109,7 +109,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->drupalPost("node/$node->nid/revisions/{$nodes[2]->vid}/revert", array(), t('Revert'));
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.', array(
       '@type' => 'Basic page',
-      '%title' => $nodes[2]->title,
+      '%title' => $nodes[2]->label(),
       '%revision-date' => format_date($old_revision_date),
     )));
   }

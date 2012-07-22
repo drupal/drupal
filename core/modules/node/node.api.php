@@ -485,7 +485,7 @@ function hook_node_predelete(Drupal\node\Node $node) {
  * @ingroup node_api_hooks
  */
 function hook_node_delete(Drupal\node\Node $node) {
-  drupal_set_message(t('Node: @title has been deleted', array('@title' => $node->title)));
+  drupal_set_message(t('Node: @title has been deleted', array('@title' => $node->label())));
 }
 
 /**

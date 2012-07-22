@@ -37,15 +37,15 @@ class NodeLoadMultipleTest extends NodeTestBase {
 
     // Confirm that promoted nodes appear in the default node listing.
     $this->drupalGet('node');
-    $this->assertText($node1->title, t('Node title appears on the default listing.'));
-    $this->assertText($node2->title, t('Node title appears on the default listing.'));
-    $this->assertNoText($node3->title, t('Node title does not appear in the default listing.'));
-    $this->assertNoText($node4->title, t('Node title does not appear in the default listing.'));
+    $this->assertText($node1->label(), t('Node title appears on the default listing.'));
+    $this->assertText($node2->label(), t('Node title appears on the default listing.'));
+    $this->assertNoText($node3->label(), t('Node title does not appear in the default listing.'));
+    $this->assertNoText($node4->label(), t('Node title does not appear in the default listing.'));
 
     // Load nodes with only a condition. Nodes 3 and 4 will be loaded.
     $nodes = node_load_multiple(FALSE, array('promote' => 0));
-    $this->assertEqual($node3->title, $nodes[$node3->nid]->title, t('Node was loaded.'));
-    $this->assertEqual($node4->title, $nodes[$node4->nid]->title, t('Node was loaded.'));
+    $this->assertEqual($node3->label(), $nodes[$node3->nid]->label(), t('Node was loaded.'));
+    $this->assertEqual($node4->label(), $nodes[$node4->nid]->label(), t('Node was loaded.'));
     $count = count($nodes);
     $this->assertTrue($count == 2, t('@count nodes loaded.', array('@count' => $count)));
 
@@ -64,9 +64,9 @@ class NodeLoadMultipleTest extends NodeTestBase {
     $nodes = node_load_multiple(array(1, 2, 3, 4), array('type' => 'article'));
     $count = count($nodes);
     $this->assertTrue($count == 3, t('@count nodes loaded', array('@count' => $count)));
-    $this->assertEqual($nodes[$node1->nid]->title, $node1->title, t('Node successfully loaded.'));
-    $this->assertEqual($nodes[$node2->nid]->title, $node2->title, t('Node successfully loaded.'));
-    $this->assertEqual($nodes[$node3->nid]->title, $node3->title, t('Node successfully loaded.'));
+    $this->assertEqual($nodes[$node1->nid]->label(), $node1->label(), t('Node successfully loaded.'));
+    $this->assertEqual($nodes[$node2->nid]->label(), $node2->label(), t('Node successfully loaded.'));
+    $this->assertEqual($nodes[$node3->nid]->label(), $node3->label(), t('Node successfully loaded.'));
     $this->assertFalse(isset($nodes[$node4->nid]));
 
     // Now that all nodes have been loaded into the static cache, ensure that
@@ -74,15 +74,15 @@ class NodeLoadMultipleTest extends NodeTestBase {
     $nodes = node_load_multiple(array(1, 2, 3, 4), array('type' => 'article'));
     $count = count($nodes);
     $this->assertTrue($count == 3, t('@count nodes loaded.', array('@count' => $count)));
-    $this->assertEqual($nodes[$node1->nid]->title, $node1->title, t('Node successfully loaded'));
-    $this->assertEqual($nodes[$node2->nid]->title, $node2->title, t('Node successfully loaded'));
-    $this->assertEqual($nodes[$node3->nid]->title, $node3->title, t('Node successfully loaded'));
+    $this->assertEqual($nodes[$node1->nid]->label(), $node1->label(), t('Node successfully loaded'));
+    $this->assertEqual($nodes[$node2->nid]->label(), $node2->label(), t('Node successfully loaded'));
+    $this->assertEqual($nodes[$node3->nid]->label(), $node3->label(), t('Node successfully loaded'));
     $this->assertFalse(isset($nodes[$node4->nid]), t('Node was not loaded'));
 
     // Load nodes by nid, where type = article and promote = 0.
     $nodes = node_load_multiple(array(1, 2, 3, 4), array('type' => 'article', 'promote' => 0));
     $count = count($nodes);
     $this->assertTrue($count == 1, t('@count node loaded', array('@count' => $count)));
-    $this->assertEqual($nodes[$node3->nid]->title, $node3->title, t('Node successfully loaded.'));
+    $this->assertEqual($nodes[$node3->nid]->label(), $node3->label(), t('Node successfully loaded.'));
   }
 }

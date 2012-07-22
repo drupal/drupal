@@ -85,12 +85,12 @@ class NodeBlockFunctionalTest extends NodeTestBase {
 
     // Test that only the 2 latest nodes are shown.
     $this->drupalLogin($this->web_user);
-    $this->assertNoText($node1->title, t('Node not found in block.'));
-    $this->assertText($node2->title, t('Node found in block.'));
-    $this->assertText($node3->title, t('Node found in block.'));
+    $this->assertNoText($node1->label(), t('Node not found in block.'));
+    $this->assertText($node2->label(), t('Node found in block.'));
+    $this->assertText($node3->label(), t('Node found in block.'));
 
     // Check to make sure nodes are in the right order.
-    $this->assertTrue($this->xpath('//div[@id="block-node-recent"]/div/table/tbody/tr[position() = 1]/td/div/a[text() = "' . $node3->title . '"]'), t('Nodes were ordered correctly in block.'));
+    $this->assertTrue($this->xpath('//div[@id="block-node-recent"]/div/table/tbody/tr[position() = 1]/td/div/a[text() = "' . $node3->label() . '"]'), t('Nodes were ordered correctly in block.'));
 
     // Set the number of recent nodes to show to 10.
     $this->drupalLogout();
@@ -109,10 +109,10 @@ class NodeBlockFunctionalTest extends NodeTestBase {
 
     // Test that all four nodes are shown.
     $this->drupalGet('');
-    $this->assertText($node1->title, t('Node found in block.'));
-    $this->assertText($node2->title, t('Node found in block.'));
-    $this->assertText($node3->title, t('Node found in block.'));
-    $this->assertText($node4->title, t('Node found in block.'));
+    $this->assertText($node1->label(), t('Node found in block.'));
+    $this->assertText($node2->label(), t('Node found in block.'));
+    $this->assertText($node3->label(), t('Node found in block.'));
+    $this->assertText($node4->label(), t('Node found in block.'));
 
     // Create the custom block.
     $custom_block = array();

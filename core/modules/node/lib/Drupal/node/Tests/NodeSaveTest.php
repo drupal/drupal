@@ -134,7 +134,7 @@ class NodeSaveTest extends NodeTestBase {
 
     // Update the node without applying changes.
     $node->save();
-    $this->assertEqual($node->title, 'test_changes', 'No changes have been determined.');
+    $this->assertEqual($node->label(), 'test_changes', 'No changes have been determined.');
 
     // Apply changes.
     $node->title = 'updated';
@@ -142,10 +142,10 @@ class NodeSaveTest extends NodeTestBase {
 
     // The hook implementations node_test_node_presave() and
     // node_test_node_update() determine changes and change the title.
-    $this->assertEqual($node->title, 'updated_presave_update', 'Changes have been determined.');
+    $this->assertEqual($node->label(), 'updated_presave_update', 'Changes have been determined.');
 
     // Test the static node load cache to be cleared.
     $node = node_load($node->nid);
-    $this->assertEqual($node->title, 'updated_presave', 'Static cache has been cleared.');
+    $this->assertEqual($node->label(), 'updated_presave', 'Static cache has been cleared.');
   }
 }

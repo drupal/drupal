@@ -77,7 +77,7 @@ function book_admin_settings_validate($form, &$form_state) {
  * @ingroup forms
  */
 function book_admin_edit($form, $form_state, Node $node) {
-  drupal_set_title($node->title);
+  drupal_set_title($node->label());
   $form['#node'] = $node;
   _book_admin_table($node, $form);
   $form['save'] = array(
@@ -138,12 +138,12 @@ function book_admin_edit_submit($form, &$form_state) {
         $node->log = t('Title changed from %original to %current.', array('%original' => $node->title, '%current' => $values['title']));
 
         $node->save();
-        watchdog('content', 'book: updated %title.', array('%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/' . $node->nid));
+        watchdog('content', 'book: updated %title.', array('%title' => $node->label()), WATCHDOG_NOTICE, l(t('view'), 'node/' . $node->nid));
       }
     }
   }
 
-  drupal_set_message(t('Updated book %title.', array('%title' => $form['#node']->title)));
+  drupal_set_message(t('Updated book %title.', array('%title' => $form['#node']->label())));
 }
 
 /**

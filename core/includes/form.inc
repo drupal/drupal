@@ -4633,8 +4633,8 @@ function _form_set_class(&$element, $class = array()) {
  *   //   and the batch processing can continue to the next operation.
  *
  *   $node = node_load(array('uid' => $uid, 'type' => $type));
- *   $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
- *   $context['message'] = check_plain($node->title);
+ *   $context['results'][] = $node->nid . ' : ' . check_plain($node->label());
+ *   $context['message'] = check_plain($node->label());
  * }
  *
  * // More advanced example: multi-step operation - load all nodes, five by five
@@ -4653,10 +4653,10 @@ function _form_set_class(&$element, $class = array()) {
  *     ->execute();
  *   foreach ($result as $row) {
  *     $node = node_load($row->nid, NULL, TRUE);
- *     $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
+ *     $context['results'][] = $node->nid . ' : ' . check_plain($node->label());
  *     $context['sandbox']['progress']++;
  *     $context['sandbox']['current_node'] = $node->nid;
- *     $context['message'] = check_plain($node->title);
+ *     $context['message'] = check_plain($node->label());
  *   }
  *   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
  *     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];

@@ -323,6 +323,7 @@ function node_title_list($result, $title = NULL) {
   $items = array();
   $num_rows = FALSE;
   foreach ($result as $node) {
+    // Do not use $node->label() here, because $node comes from the database.
     $items[] = l($node->title, 'node/' . $node->nid, !empty($node->comment_count) ? array('attributes' => array('title' => format_plural($node->comment_count, '1 comment', '@count comments'))) : array());
     $num_rows = TRUE;
   }
@@ -1268,7 +1269,7 @@ function node_build_content(Node $node, $view_mode = 'full', $langcode = NULL) {
     '#attributes' => array('class' => array('links', 'inline')),
   );
   if ($view_mode == 'teaser') {
-    $node_title_stripped = strip_tags($node->title);
+    $node_title_stripped = strip_tags($node->label());
     $links['node-readmore'] = array(
       'title' => t('Read more<span class="element-invisible"> about @title</span>', array('@title' => $node_title_stripped)),
       'href' => 'node/' . $node->nid,
@@ -1303,7 +1304,7 @@ function node_build_content(Node $node, $view_mode = 'full', $langcode = NULL) {
  */
 function node_show(Node $node, $message = FALSE) {
   if ($message) {
-    drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title, '%date' => format_date($node->revision_timestamp))), PASS_THROUGH);
+    drupal_set_title(t('Revision of %title from %date', array('%title' => $node->label(), '%date' => format_date($node->revision_timestamp))), PASS_THROUGH);
   }
 
   // For markup consistency with other pages, use node_view_multiple() rather than node_view().
@@ -1611,7 +1612,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE))),
       'type' => check_plain(node_type_get_name($node)),
-      'title' => $node->title,
+      'title' => $node->label(),
       'user' => theme('username', array('account' => $node)),
       'date' => $node->changed,
       'node' => $node,
@@ -2065,7 +2066,7 @@ function node_type_page_title($type) {
  * @see node_menu()
  */
 function node_page_title(Node $node) {
-  return $node->title;
+  return $node->label();
 }
 
 /**
@@ -2264,7 +2265,7 @@ function theme_node_recent_content($variables) {
   $node = $variables['node'];
 
   $output = '<div class="node-title">';
-  $output .= l($node->title, 'node/' . $node->nid);
+  $output .= l($node->label(), 'node/' . $node->nid);
   $output .= theme('mark', array('type' => node_mark($node->nid, $node->changed)));
   $output .= '</div><div class="node-author">';
   $output .= theme('username', array('account' => user_load($node->uid)));
@@ -2487,7 +2488,7 @@ function node_feed($nids = FALSE, $channel = array()) {
       $item_text .= drupal_render($build);
     }
 
-    $items .= format_rss_item($node->title, $node->link, $item_text, $node->rss_elements);
+    $items .= format_rss_item($node->label(), $node->link, $item_text, $node->rss_elements);
   }
 
   $channel_defaults = array(
@@ -2602,7 +2603,7 @@ function node_page_view(Node $node) {
   // If there is a menu link to this node, the link becomes the last part
   // of the active trail, and the link name becomes the page title.
   // Thus, we must explicitly set the page title to be the node title.
-  drupal_set_title($node->title);
+  drupal_set_title($node->label());
   $uri = entity_uri('node', $node);
   // Set the node path as the canonical URL to prevent duplicate content.
   drupal_add_html_head_link(array('rel' => 'canonical', 'href' => url($uri['path'], $uri['options'])), TRUE);
@@ -2645,7 +2646,7 @@ function _node_index_node(Node $node) {
   unset($build['#theme']);
   $node->rendered = drupal_render($build);
 
-  $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->rendered;
+  $text = '<h1>' . check_plain($node->label()) . '</h1>' . $node->rendered;
 
   // Fetch extra data normally not visible
   $extra = module_invoke_all('node_update_index', $node);
@@ -3747,7 +3748,7 @@ function node_action_info() {
  */
 function node_publish_action(Node $node, $context = array()) {
   $node->status = NODE_PUBLISHED;
-  watchdog('action', 'Set @type %title to published.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to published.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
 }
 
 /**
@@ -3763,7 +3764,7 @@ function node_publish_action(Node $node, $context = array()) {
  */
 function node_unpublish_action(Node $node, $context = array()) {
   $node->status = NODE_NOT_PUBLISHED;
-  watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
 }
 
 /**
@@ -3779,7 +3780,7 @@ function node_unpublish_action(Node $node, $context = array()) {
  */
 function node_make_sticky_action(Node $node, $context = array()) {
   $node->sticky = NODE_STICKY;
-  watchdog('action', 'Set @type %title to sticky.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to sticky.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
 }
 
 /**
@@ -3795,7 +3796,7 @@ function node_make_sticky_action(Node $node, $context = array()) {
  */
 function node_make_unsticky_action(Node $node, $context = array()) {
   $node->sticky = NODE_NOT_STICKY;
-  watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
 }
 
 /**
@@ -3811,7 +3812,7 @@ function node_make_unsticky_action(Node $node, $context = array()) {
  */
 function node_promote_action(Node $node, $context = array()) {
   $node->promote = NODE_PROMOTED;
-  watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
 }
 
 /**
@@ -3827,7 +3828,7 @@ function node_promote_action(Node $node, $context = array()) {
  */
 function node_unpromote_action(Node $node, $context = array()) {
   $node->promote = NODE_NOT_PROMOTED;
-  watchdog('action', 'Removed @type %title from front page.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Removed @type %title from front page.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
 }
 
 /**
@@ -3840,7 +3841,7 @@ function node_unpromote_action(Node $node, $context = array()) {
  */
 function node_save_action(Node $node) {
   $node->save();
-  watchdog('action', 'Saved @type %title', array('@type' => node_type_get_name($node), '%title' => $node->title));
+  watchdog('action', 'Saved @type %title', array('@type' => node_type_get_name($node), '%title' => $node->label()));
 }
 
 /**
@@ -3861,7 +3862,7 @@ function node_save_action(Node $node) {
 function node_assign_owner_action(Node $node, $context) {
   $node->uid = $context['owner_uid'];
   $owner_name = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $context['owner_uid']))->fetchField();
-  watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' =>  node_type_get_name($node), '%title' => $node->title, '%name' => $owner_name));
+  watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' =>  node_type_get_name($node), '%title' => $node->label(), '%name' => $owner_name));
 }
 
 /**
@@ -3975,9 +3976,9 @@ function node_unpublish_by_keyword_action_submit($form, $form_state) {
 function node_unpublish_by_keyword_action(Node $node, $context) {
   foreach ($context['keywords'] as $keyword) {
     $elements = node_view(clone $node);
-    if (strpos(drupal_render($elements), $keyword) !== FALSE || strpos($node->title, $keyword) !== FALSE) {
+    if (strpos(drupal_render($elements), $keyword) !== FALSE || strpos($node->label(), $keyword) !== FALSE) {
       $node->status = NODE_NOT_PUBLISHED;
-      watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title));
+      watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
       break;
     }
   }

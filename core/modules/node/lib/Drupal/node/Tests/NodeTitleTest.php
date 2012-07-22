@@ -42,18 +42,18 @@ class NodeTitleTest extends NodeTestBase {
     // Test <title> tag.
     $this->drupalGet("node/$node->nid");
     $xpath = '//title';
-    $this->assertEqual(current($this->xpath($xpath)), $node->title .' | Drupal', 'Page title is equal to node title.', 'Node');
+    $this->assertEqual(current($this->xpath($xpath)), $node->label() .' | Drupal', 'Page title is equal to node title.', 'Node');
 
     // Test breadcrumb in comment preview.
     $this->drupalGet("comment/reply/$node->nid");
     $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
-    $this->assertEqual(current($this->xpath($xpath)), $node->title, 'Node breadcrumb is equal to node title.', 'Node');
+    $this->assertEqual(current($this->xpath($xpath)), $node->label(), 'Node breadcrumb is equal to node title.', 'Node');
 
     // Test node title in comment preview.
-    $this->assertEqual(current($this->xpath('//article[@id=:id]/h2/a', array(':id' => 'node-' . $node->nid))), $node->title, 'Node preview title is equal to node title.', 'Node');
+    $this->assertEqual(current($this->xpath('//article[@id=:id]/h2/a', array(':id' => 'node-' . $node->nid))), $node->label(), 'Node preview title is equal to node title.', 'Node');
 
     // Test node title is clickable on teaser list (/node).
     $this->drupalGet('node');
-    $this->clickLink($node->title);
+    $this->clickLink($node->label());
   }
 }

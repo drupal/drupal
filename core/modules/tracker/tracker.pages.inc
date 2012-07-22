@@ -70,6 +70,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
 
       $row = array(
         'type' => check_plain(node_type_get_name($node->type)),
+        // Do not use $node->label(), because $node comes from the database.
         'title' => array('data' => l($node->title, 'node/' . $node->nid) . ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed)))),
         'author' => array('data' => theme('username', array('account' => $node))),
         'replies' => array('class' => array('replies'), 'data' => $comments),
