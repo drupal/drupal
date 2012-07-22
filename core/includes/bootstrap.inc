@@ -1632,6 +1632,9 @@ function request(Request $new_request = NULL) {
   if ($new_request) {
     $request = $new_request;
   }
+  elseif (drupal_container()->has('request')) {
+    $request = drupal_container()->get('request');
+  }
   return $request;
 }
 

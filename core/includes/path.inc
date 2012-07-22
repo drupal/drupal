@@ -358,6 +358,9 @@ function drupal_match_path($path, $patterns) {
  * @see request_path()
  */
 function current_path() {
+  if (drupal_container()->has('request')) {
+    return drupal_container()->get('request')->attributes->get('system_path');
+  }
   return _current_path();
 }
 

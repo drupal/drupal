@@ -225,7 +225,9 @@ function language_from_url($languages, $args = array()) {
       }
 
       list($language, $path) = language_url_split_prefix($current_path, $languages);
-      _current_path($path);
+      if ($request) {
+        $request->attributes->set('system_path', $path);
+      }
       if ($language !== FALSE) {
         $language_url = $language->langcode;
       }

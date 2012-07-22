@@ -25,11 +25,6 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 // Create a request object from the HTTPFoundation.
 $request = Request::createFromGlobals();
 
-// Set the global $request object. This is a temporary measure to keep legacy
-// utility functions working. It should be moved to a dependency injection
-// container at some point.
-request($request);
-
 // Bootstrap all of Drupal's subsystems, but do not initialize anything that
 // depends on the fully resolved Drupal path, because path resolution happens
 // during the REQUEST event of the kernel.
