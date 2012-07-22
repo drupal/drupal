@@ -1073,12 +1073,17 @@ function views_break_phrase_string($str, &$handler = NULL) {
     return $handler;
   }
 
-  if (preg_match('/^(\w+[+ ])+\w+$/', $str)) {
-    // The '+' character in a query string may be parsed as ' '.
+  // Determine if the string has 'or' operators (plus signs) or 'and' operators
+  // (commas) and split the string accordingly. If we have an 'and' operator,
+  // spaces are treated as part of the word being split, but otherwise they are
+  // treated the same as a plus sign.
+  $or_wildcard = '[^\s+,]';
+  $and_wildcard = '[^+,]';
+  if (preg_match("/^({$or_wildcard}+[+ ])+{$or_wildcard}+$/", $str)) {
     $handler->operator = 'or';
     $handler->value = preg_split('/[+ ]/', $str);
   }
-  else if (preg_match('/^((\w|\s)+,)*(\w|\s)+$/', $str)) {
+  elseif (preg_match("/^({$and_wildcard}+,)*{$and_wildcard}+$/", $str)) {
     $handler->operator = 'and';
     $handler->value = explode(',', $str);
   }
