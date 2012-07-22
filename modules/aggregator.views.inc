@@ -243,6 +243,9 @@ function aggregator_views_data() {
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
   );
 
   // link
@@ -257,7 +260,6 @@ function aggregator_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
-    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
@@ -275,7 +277,6 @@ function aggregator_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort_date',
     ),
-    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_date',
     ),
@@ -293,7 +294,6 @@ function aggregator_views_data() {
       'handler' => 'views_handler_field_xss',
       'click sortable' => FALSE,
      ),
-    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
