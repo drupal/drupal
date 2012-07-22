@@ -1486,12 +1486,14 @@ function views_get_disabled_views() {
  * @param bool $optgroup
  *  If TRUE, returns an array with optgroups for each view (will be ignored for
  *  $views_only = TRUE). Can be used by select
+ * @param bool $sort
+ *  If TRUE, the list of views is sorted ascending.
  *
  * @return array
  *  an associative array for use in select.
  *  - key: view name and display id separated by ':', or the view name only
  */
-function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclude_view = NULL, $optgroup = FALSE) {
+function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclude_view = NULL, $optgroup = FALSE, $sort = FALSE) {
 
   // Filter the big views array.
   switch ($filter) {
@@ -1537,6 +1539,9 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
         }
       }
     }
+  }
+  if ($sort) {
+    ksort($options);
   }
   return $options;
 }
