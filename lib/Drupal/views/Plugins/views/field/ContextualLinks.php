@@ -70,7 +70,7 @@ class ContextualLinks extends FieldPluginBase {
       if (!empty($this->view->field[$field]->options['alter']['path'])) {
         $path = $this->view->field[$field]->options['alter']['path'];
       }
-      if (!empty($title)) {
+      if (!empty($title) && !empty($path)) {
         // Make sure that tokens are replaced for this paths as well.
         $tokens = $this->get_render_tokens(array());
         $path = strip_tags(decode_entities(strtr($path, $tokens)));
