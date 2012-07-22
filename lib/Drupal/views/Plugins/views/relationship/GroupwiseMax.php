@@ -154,21 +154,6 @@ class GroupwiseMax extends relationshipPluginBase {
   }
 
   /**
-   * Perform any necessary changes to the form values prior to storage.
-   * There is no need for this function to actually store the data.
-   *
-   * Generate the subquery string when the user submits the options, and store
-   * it. This saves the expense of generating it when the view is run.
-   */
-  function options_submit(&$form, &$form_state) {
-    // Get the new user options from the form values.
-    $new_options = $form_state['values']['options'];
-    $subquery = $this->left_query($new_options);
-    // Add the subquery string to the options we're about to store.
-    $this->options['subquery_string'] = $subquery;
-  }
-
-  /**
    * Helper function to create a pseudo view.
    *
    * We use this to obtain our subquery SQL.
@@ -179,6 +164,14 @@ class GroupwiseMax extends relationshipPluginBase {
     $view->base_table = $this->definition['base'];
     $view->add_display('default');
     return $view;
+  }
+
+  /**
+   * When the form is submitted, take sure to clear the subquery string cache.
+   */
+  function options_form_submit(&$form, &$form_state) {
+    $cid = 'views_relationship_groupwise_max:' . $this->view->name . ':' . $this->view->current_display . ':' . $this->options['id'];
+    cache_clear_all($cid, 'cache_views_data');
   }
 
   /**
@@ -364,7 +357,15 @@ class GroupwiseMax extends relationshipPluginBase {
     }
     else {
       // Get the stored subquery SQL string.
-      $def['left_query'] = $this->options['subquery_string'];
+      $cid = 'views_relationship_groupwise_max:' . $this->view->name . ':' . $this->view->current_display . ':' . $this->options['id'];
+      $cache = cache_get($cid, 'cache_views_data');
+      if (isset($cache->data)) {
+        $def['left_query'] = $cache->data;
+      }
+      else {
+        $def['left_query'] = $this->left_query($this->options);
+        cache_set($cid, $def['left_query'], 'cache_views_data');
+      }
     }
 
     if (!empty($def['join_handler']) && class_exists($def['join_handler'])) {
