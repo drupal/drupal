@@ -219,14 +219,6 @@ div.add-or-remove-shortcuts {
   padding-right: 6px;
 }
 
-/* Dashboard */
-#dashboard div.block div.content {
-  padding: 10px 5px 5px 5px;
-}
-#dashboard div.block div.content ul.menu {
-  margin-right: 20px;
-}
-
 /* Recent content block */
 #block-node-recent .more-link {
   padding: 0 0 5px 5px;

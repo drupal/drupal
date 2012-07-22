@@ -23,6 +23,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
     * The following modules have been removed from core, because contributed
       modules with similar functionality are available:
       * Blog
+      * Dashboard
       * Profile
       * Trigger
 - Removed the Garland theme from core.

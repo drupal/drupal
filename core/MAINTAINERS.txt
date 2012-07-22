@@ -174,9 +174,6 @@ Contact module
 Contextual module
 - Daniel F. Kudwien 'sun' <http://drupal.org/user/54136>
 
-Dashboard module
-- ?
-
 Database Logging module
 - Khalid Baheyeldin 'kbahey' <http://drupal.org/user/4063>
 
