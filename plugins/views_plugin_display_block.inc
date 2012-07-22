@@ -206,16 +206,21 @@ class views_plugin_display_block extends views_plugin_display {
       $hashes[$md5_delta] = $delta;
       $delta = $md5_delta;
     }
-    db_update('block')
-      ->fields(array('delta' => $delta))
-      ->condition('delta', $old_delta)
-      ->execute();
+
+    // Maybe people don't have block module installed, so let's skip this.
+    if (module_exists('block')) {
+      db_update('block')
+        ->fields(array('delta' => $delta))
+        ->condition('delta', $old_delta)
+        ->execute();
+    }
 
     // Update the hashes if needed.
     if ($hashes != $old_hashes) {
       variable_set('views_block_hashes', $hashes);
     }
   }
+
   /**
    * Save the block cache setting in the blocks table if this block allready
    * exists in the blocks table. Dirty fix untill http://drupal.org/node/235673 gets in.
