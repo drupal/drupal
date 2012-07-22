@@ -146,10 +146,17 @@ function views_ui_menu() {
   ) + $base;
 
   // A page in the Reports section to show usage of fields in all views
-  $items['admin/reports/views-fields'] = array(
-    'title' => 'Fields used in views',
+  $items['admin/reports/fields/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['admin/reports/fields/views-fields'] = array(
+    'title' => 'Used in views',
     'description' => 'Overview of fields used in all views.',
     'page callback' => 'views_ui_field_list',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 0,
   ) + $base;
 
   // A page in the Reports section to show usage of plugins in all views.
