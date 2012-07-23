@@ -383,18 +383,10 @@ update_prepare_d8_bootstrap();
 // Determine if the current user has access to run update.php.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
 
-
-// Ensure the default language is properly registered within the Dependency
-// Injection container during the upgrade process.
-$default = language_default();
-drupal_container()->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language')
-  ->addMethodCall('extend', array($default));
-
 // A request object from the HTTPFoundation to tell us about the request.
 // @todo These two lines were copied from index.php which has its own todo about
 // a change required here. Revisit this when that change has been made.
 $request = Request::createFromGlobals();
-request($request);
 
 // There can be conflicting 'op' parameters because both update and batch use
 // this parameter name. We need the 'op' coming from a POST request to trump

@@ -255,6 +255,15 @@ function update_prepare_d8_language() {
       // array.
       variable_set('language_default', (array) $language_default);
      }
+     else {
+      variable_set('language_default', array(
+        'langcode' => 'en',
+        'name' => 'English',
+        'direction' => 0,
+        'weight' => 0,
+        'locked' => 0,
+      ));
+     }
 
     // Adds the locked column and saves the special languages.
     if (!db_field_exists('language', 'locked')) {
