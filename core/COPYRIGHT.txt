@@ -56,6 +56,10 @@ PHP
 
   ArchiveTar - Copyright (c) 1997 - 2008 Vincent Blavet
 
+  Doctrine Common - Copyright (c) 2006 - 2012 Alexander Mols, Benjamin Eberlei,
+    Fabio B. Silva, Guilherme Blanco, Johannes M. Schmitt, Jonathan Wage,
+    Lukas K. Smith, Marco Pivetta et al.
+
   Symfony2 - Copyright (c) 2004 - 2012 Fabien Potencier
     - YUI - Copyright (c) 2010 Yahoo! Inc.
     - Zend Framework (1.10dev - 2010-01-24) - Copyright (c) 2005-2010 Zend
