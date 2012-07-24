@@ -985,7 +985,8 @@ class views_plugin_display extends views_plugin {
     // Use func_get_arg so the function signature isn't amended
     // but we can still pass TRUE into the function to filter
     // by groupable handlers.
-    $groupable_only = func_get_arg(0);
+    $args = func_get_args();
+    $groupable_only = isset($args[0]) ? $args[0] : FALSE;
 
     $options = array();
     foreach ($this->get_handlers('relationship') as $relationship => $handler) {
