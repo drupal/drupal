@@ -47,6 +47,9 @@ class LocaleUninstallTest extends WebTestBase {
     );
     language_save($language);
 
+    // Make sure the language interface object gets freshly initialized.
+    drupal_static_reset('language_manager');
+
     // Check the UI language.
     drupal_language_initialize();
     $this->assertEqual(language_manager(LANGUAGE_TYPE_INTERFACE)->langcode, $this->langcode, t('Current language: %lang', array('%lang' => language_manager(LANGUAGE_TYPE_INTERFACE)->langcode)));

@@ -19,6 +19,7 @@ class CoreBundle extends Bundle
 {
   public function build(ContainerBuilder $container) {
 
+    // Add a 'request' scope for services that depend on the Request object.
     $container->addScope(new Scope('request'));
 
     $container->register('dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')

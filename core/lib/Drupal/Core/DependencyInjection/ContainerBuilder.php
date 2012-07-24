@@ -30,10 +30,6 @@ class ContainerBuilder extends BaseContainerBuilder {
   public function compile() {
     $this->compiler->compile($this);
     $this->parameterBag->resolve();
-    // TODO: The line below is commented out because there is code that calls
-    // the set() method on the container after it has been built - that method
-    // throws an exception if the container's parameters have been frozen.
-    //$this->parameterBag = new FrozenParameterBag($this->parameterBag->all());
   }
 
 }

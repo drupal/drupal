@@ -28,7 +28,8 @@ class DrupalKernel extends Kernel {
 
     $modules = array_keys(system_list('module_enabled'));
     foreach ($modules as $module) {
-      $class = "\Drupal\\{$module}\\{$module}Bundle";
+      $camelized = ContainerBuilder::camelize($module);
+      $class = "\Drupal\\{$module}\\{$camelized}Bundle";
       if (class_exists($class)) {
         $bundles[] = new $class();
       }
@@ -41,6 +42,9 @@ class DrupalKernel extends Kernel {
    * Initializes the service container.
    */
   protected function initializeContainer() {
+    // @todo We should be compiling the container and dumping to php so we don't
+    // have to recompile every time. There is a separate issue for this, see
+    // http://drupal.org/node/1668892.
     $this->container = $this->buildContainer();
     $this->container->set('kernel', $this);
     drupal_container($this->container);
@@ -73,10 +77,14 @@ class DrupalKernel extends Kernel {
     return new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
   }
 
+  /**
+   * This method is part of the KernelInterface interface, but takes an object
+   * implementing LoaderInterface as its only parameter. This is part of the
+   * Config compoment from Symfony, which is not provided by Drupal core.
+   *
+   * Modules wishing to provide an extension to this class which uses this
+   * method are responsible for ensuring the Config component exists.
+   */
   public function registerContainerConfiguration(LoaderInterface $loader) {
-    // We have to define this method because it's not defined in the base class
-    // but is part of the KernelInterface interface. However, the LoaderInterface
-    // class is part of the config component, which we are not using, so this
-    // is badness :-/
   }
 }

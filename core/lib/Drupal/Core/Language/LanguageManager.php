@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class LanguageManager {
 
-  private $container;
+  private $request;
 
   public function __construct(Request $request = NULL) {
     $this->request = $request;

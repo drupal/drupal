@@ -275,7 +275,7 @@ function install_begin_request(&$install_state) {
   include_once DRUPAL_ROOT . '/core/includes/session.inc';
 
   // Set up $language, so t() caller functions will still work.
-  //drupal_language_initialize();
+  drupal_language_initialize();
 
   require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
   // Override the module list with a minimal set of modules.
