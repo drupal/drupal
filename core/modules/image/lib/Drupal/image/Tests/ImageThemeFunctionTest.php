@@ -68,4 +68,28 @@ class ImageThemeFunctionTest extends WebTestBase {
     $this->assertEqual($expected_result, $rendered_element, 'theme_image_formatter() correctly renders a link fragment.');
   }
 
+  /**
+   * Tests usage of the image style theme function.
+   */
+  function testImageStyleTheme() {
+    // Create an image.
+    $files = $this->drupalGetTestFiles('image');
+    $file = reset($files);
+    $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
+
+    // Create a style.
+    image_style_save(array('name' => 'test'));
+    $url = image_style_url('test', $original_uri);
+
+    $path = $this->randomName();
+    $element = array(
+      '#theme' => 'image_style',
+      '#style_name' => 'test',
+      '#uri' => $original_uri,
+    );
+    $rendered_element = render($element);
+    $expected_result = '<img src="' . $url . '" alt="" />';
+    $this->assertEqual($expected_result, $rendered_element, 'theme_image_style() renders an image correctly.');
+  }
+
 }

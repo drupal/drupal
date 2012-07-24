@@ -180,7 +180,7 @@ function image_theme() {
     'image_style' => array(
       'variables' => array(
         'style_name' => NULL,
-        'path' => NULL,
+        'uri' => NULL,
         'width' => NULL,
         'height' => NULL,
         'alt' => '',
