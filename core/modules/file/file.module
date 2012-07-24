@@ -42,7 +42,6 @@ function file_menu() {
 
   $items['file/ajax'] = array(
     'page callback' => 'file_ajax_upload',
-    'delivery callback' => 'ajax_deliver',
     'access arguments' => array('access content'),
     'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,

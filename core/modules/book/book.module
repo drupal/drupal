@@ -1418,7 +1418,7 @@ function book_menu_subtree_data($link) {
       $query->join('menu_router', 'm', 'm.path = ml.router_path');
       $query->join('book', 'b', 'ml.mlid = b.mlid');
       $query->fields('b');
-      $query->fields('m', array('load_functions', 'to_arg_functions', 'access_callback', 'access_arguments', 'page_callback', 'page_arguments', 'delivery_callback', 'title', 'title_callback', 'title_arguments', 'type'));
+      $query->fields('m', array('load_functions', 'to_arg_functions', 'access_callback', 'access_arguments', 'page_callback', 'page_arguments', 'title', 'title_callback', 'title_arguments', 'type'));
       $query->fields('ml');
       $query->condition('menu_name', $link['menu_name']);
       for ($i = 1; $i <= MENU_MAX_DEPTH && $link["p$i"]; ++$i) {

@@ -703,12 +703,6 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *     instead.
  *   - "page arguments": An array of arguments to pass to the page callback
  *     function, with path component substitution as described above.
- *   - "delivery callback": The function to call to package the result of the
- *     page callback function and send it to the browser. Defaults to
- *     drupal_deliver_html_page() unless a value is inherited from a parent menu
- *     item. Note that this function is called even if the access checks fail,
- *     so any custom delivery callback function should take that into account.
- *     See drupal_deliver_html_page() for an example.
  *   - "access callback": A function returning TRUE if the user has access
  *     rights to this menu item, and FALSE if not. It can also be a boolean
  *     constant instead of a function, and you can also use numeric values
@@ -3644,51 +3638,6 @@ function hook_date_formats_alter(&$formats) {
 }
 
 /**
- * Alters the delivery callback used to send the result of the page callback to the browser.
- *
- * Called by drupal_deliver_page() to allow modules to alter how the
- * page is delivered to the browser.
- *
- * This hook is intended for altering the delivery callback based on
- * information unrelated to the path of the page accessed. For example,
- * it can be used to set the delivery callback based on a HTTP request
- * header (as shown in the code sample). To specify a delivery callback
- * based on path information, use hook_menu() or hook_menu_alter().
- *
- * This hook can also be used as an API function that can be used to explicitly
- * set the delivery callback from some other function. For example, for a module
- * named MODULE:
- * @code
- * function MODULE_page_delivery_callback_alter(&$callback, $set = FALSE) {
- *   static $stored_callback;
- *   if ($set) {
- *     $stored_callback = $callback;
- *   }
- *   elseif (isset($stored_callback)) {
- *     $callback = $stored_callback;
- *   }
- * }
- * function SOMEWHERE_ELSE() {
- *   $desired_delivery_callback = 'foo';
- *   MODULE_page_delivery_callback_alter($desired_delivery_callback, TRUE);
- * }
- * @endcode
- *
- * @param $callback
- *   The name of a function.
- *
- * @see drupal_deliver_page()
- */
-function hook_page_delivery_callback_alter(&$callback) {
-  // jQuery sets a HTTP_X_REQUESTED_WITH header of 'XMLHttpRequest'.
-  // If a page would normally be delivered as an html page, and it is called
-  // from jQuery, deliver it instead as an Ajax response.
-  if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' && $callback == 'drupal_deliver_html_page') {
-    $callback = 'ajax_deliver';
-  }
-}
-
-/**
  * Alters theme operation links.
  *
  * @param $theme_groups
@@ -4117,8 +4066,7 @@ function hook_countries_alter(&$countries) {
  *   Supported values are MENU_SITE_OFFLINE, MENU_ACCESS_DENIED,
  *   MENU_NOT_FOUND and MENU_SITE_ONLINE. Any other value than
  *   MENU_SITE_ONLINE will skip the default menu handling system and be passed
- *   for delivery to drupal_deliver_page() with a NULL
- *   $default_delivery_callback.
+ *   for delivery directly.
  * @param $path
  *   Contains the system path that is going to be loaded. This is read only,
  *   use hook_url_inbound_alter() to change the path.

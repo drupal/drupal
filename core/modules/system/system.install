@@ -1060,13 +1060,6 @@ function system_schema() {
         'type' => 'blob',
         'not null' => FALSE,
       ),
-      'delivery_callback' => array(
-        'description' => 'The name of the function that sends the result of the page_callback function to the browser.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
       'fit' => array(
         'description' => 'A numeric representation of how specific the path is.',
         'type' => 'int',

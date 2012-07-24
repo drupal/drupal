@@ -1368,7 +1368,6 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
       'access_arguments',
       'page_callback',
       'page_arguments',
-      'delivery_callback',
       'tab_parent',
       'tab_root',
       'title',
@@ -3609,10 +3608,6 @@ function _menu_router_build($callbacks) {
             }
           }
         }
-        // Same for delivery callbacks.
-        if (!isset($item['delivery callback']) && isset($parent['delivery callback'])) {
-          $item['delivery callback'] = $parent['delivery callback'];
-        }
         // Same for theme callbacks.
         if (!isset($item['theme callback']) && isset($parent['theme callback'])) {
           $item['theme callback'] = $parent['theme callback'];
@@ -3654,7 +3649,6 @@ function _menu_router_build($callbacks) {
       'access callback' => '',
       'page arguments' => array(),
       'page callback' => '',
-      'delivery callback' => '',
       'title arguments' => array(),
       'title callback' => 't',
       'theme arguments' => array(),
@@ -3703,7 +3697,6 @@ function _menu_router_save($menu, $masks) {
       'access_arguments',
       'page_callback',
       'page_arguments',
-      'delivery_callback',
       'fit',
       'number_parts',
       'context',
@@ -3735,7 +3728,6 @@ function _menu_router_save($menu, $masks) {
       'access_arguments' => serialize($item['access arguments']),
       'page_callback' => $item['page callback'],
       'page_arguments' => serialize($item['page arguments']),
-      'delivery_callback' => $item['delivery callback'],
       'fit' => $item['_fit'],
       'number_parts' => $item['_number_parts'],
       'context' => $item['context'],

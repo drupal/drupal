@@ -24,14 +24,14 @@ class AjaxTestBase extends WebTestBase {
   /**
    * Assert that a command with the required properties exists within the array of Ajax commands returned by the server.
    *
-   * The Ajax framework, via the ajax_deliver() and ajax_render() functions,
-   * returns an array of commands. This array sometimes includes commands
-   * automatically provided by the framework in addition to commands returned by
-   * a particular page callback. During testing, we're usually interested that a
-   * particular command is present, and don't care whether other commands
-   * precede or follow the one we're interested in. Additionally, the command
-   * we're interested in may include additional data that we're not interested
-   * in. Therefore, this function simply asserts that one of the commands in
+   * The Ajax framework, via the ajax_render() function, returns an array of
+   * commands. This array sometimes includes commands automatically provided by
+   * the framework in addition to commands returned by a particular page
+   * callback. During testing, we're usually interested that a particular
+   * command is present, and don't care whether other commands precede or
+   * follow the one we're interested in. Additionally, the command we're
+   * interested in may include additional data that we're not interested in.
+   * Therefore, this function simply asserts that one of the commands in
    * $haystack contains all of the keys and values in $needle. Furthermore, if
    * $needle contains a 'settings' key with an array value, we simply assert
    * that all keys and values within that array are present in the command we're

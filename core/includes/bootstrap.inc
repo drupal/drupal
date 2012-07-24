@@ -2550,10 +2550,10 @@ function drupal_maintenance_theme() {
  * If fast 404 pages are enabled, and this is a matching page then print a
  * simple 404 page and exit.
  *
- * This function is called from drupal_deliver_html_page() at the time when a
- * a normal 404 page is generated, but it can also optionally be called directly
- * from settings.php to prevent a Drupal bootstrap on these pages. See
- * documentation in settings.php for the benefits and drawbacks of using this.
+ * This function is called when a normal 404 page is generated, but it can also
+ * optionally be called directly from settings.php to prevent a Drupal
+ * bootstrap on these pages. See documentation in settings.php for the benefits
+ * and drawbacks of using this.
  *
  * Paths to dynamically-generated content, such as image styles, should also be
  * accounted for in this function.

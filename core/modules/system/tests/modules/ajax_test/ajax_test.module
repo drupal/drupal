@@ -12,14 +12,12 @@ function ajax_test_menu() {
   $items['ajax-test/render'] = array(
     'title' => 'ajax_render',
     'page callback' => 'ajax_test_render',
-    'delivery callback' => 'ajax_deliver',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['ajax-test/render-error'] = array(
     'title' => 'ajax_render_error',
     'page callback' => 'ajax_test_error',
-    'delivery callback' => 'ajax_deliver',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -40,7 +38,7 @@ function ajax_test_system_theme_info() {
 }
 
 /**
- * Menu callback; Return an element suitable for use by ajax_deliver().
+ * Page callback: Returns an element suitable for use by ajax_render().
  *
  * Additionally ensures that ajax_render() incorporates JavaScript settings
  * generated during the page request by invoking drupal_add_js() with a dummy

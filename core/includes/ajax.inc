@@ -47,9 +47,7 @@
  *     function named by #ajax['callback'], which returns the form element that
  *     has been updated and needs to be returned to the browser, or
  *     alternatively, an array of custom Ajax commands.
- *   - The page delivery callback for 'system/ajax', ajax_deliver(), renders the
- *     element returned by #ajax['callback'], and returns the JSON string
- *     created by ajax_render() to the browser.
+ *   - The array is serialized using ajax_render() and sent to the browser.
  *   - The browser unserializes the returned JSON string into an array of
  *     command objects and executes each command, resulting in the old page
  *     content within and including the HTML element specified by
@@ -417,72 +415,6 @@ function ajax_base_page_theme() {
       return $theme;
     }
   }
-}
-
-/**
- * Packages and sends the result of a page callback as an Ajax response.
- *
- * This function is the equivalent of drupal_deliver_html_page(), but for Ajax
- * requests. Like that function, it:
- * - Adds needed HTTP headers.
- * - Prints rendered output.
- * - Performs end-of-request tasks.
- *
- * @param $page_callback_result
- *   The result of a page callback. Can be one of:
- *   - NULL: to indicate no content.
- *   - An integer menu status constant: to indicate an error condition.
- *   - A string of HTML content.
- *   - A renderable array of content.
- *
- * @see drupal_deliver_html_page()
- */
-function ajax_deliver($page_callback_result) {
-  // Browsers do not allow JavaScript to read the contents of a user's local
-  // files. To work around that, the jQuery Form plugin submits forms containing
-  // a file input element to an IFRAME, instead of using XHR. Browsers do not
-  // normally expect JSON strings as content within an IFRAME, so the response
-  // must be customized accordingly.
-  // @see http://malsup.com/jquery/form/#file-upload
-  // @see Drupal.ajax.prototype.beforeSend()
-  $iframe_upload = !empty($_POST['ajax_iframe_upload']);
-
-  // Emit a Content-Type HTTP header if none has been added by the page callback
-  // or by a wrapping delivery callback.
-  if (is_null(drupal_get_http_header('Content-Type'))) {
-    if (!$iframe_upload) {
-      // Standard JSON can be returned to a browser's XHR object, and to
-      // non-browser user agents.
-      // @see http://www.ietf.org/rfc/rfc4627.txt?number=4627
-      drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
-    }
-    else {
-      // Browser IFRAMEs expect HTML. With most other content types, Internet
-      // Explorer presents the user with a download prompt.
-      drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-    }
-  }
-
-  // Print the response.
-  $commands = ajax_prepare_response($page_callback_result);
-  $json = ajax_render($commands);
-  if (!$iframe_upload) {
-    // Standard JSON can be returned to a browser's XHR object, and to
-    // non-browser user agents.
-    print $json;
-  }
-  else {
-    // Browser IFRAMEs expect HTML. Browser extensions, such as Linkification
-    // and Skype's Browser Highlighter, convert URLs, phone numbers, etc. into
-    // links. This corrupts the JSON response. Protect the integrity of the
-    // JSON data by making it the value of a textarea.
-    // @see http://malsup.com/jquery/form/#file-upload
-    // @see http://drupal.org/node/1009382
-    print '<textarea>' . $json . '</textarea>';
-  }
-
-  // Perform end-of-request tasks.
-  ajax_footer();
 }
 
 /**
