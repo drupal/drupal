@@ -22,7 +22,7 @@ function dblog_overview() {
     WATCHDOG_ERROR       => 'dblog-error',
     WATCHDOG_CRITICAL      => 'dblog-critical',
     WATCHDOG_ALERT     => 'dblog-alert',
-    WATCHDOG_EMERGENCY     => 'dblog-emerg',
+    WATCHDOG_EMERGENCY     => 'dblog-emergency',
   );
 
   $build['dblog_filter_form'] = drupal_get_form('dblog_filter_form');

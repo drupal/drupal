@@ -547,7 +547,7 @@ class DBLogTest extends WebTestBase {
       'dblog-error' => WATCHDOG_ERROR,
       'dblog-critical' => WATCHDOG_CRITICAL,
       'dblog-alert' => WATCHDOG_ALERT,
-      'dblog-emerg' => WATCHDOG_EMERGENCY,
+      'dblog-emergency' => WATCHDOG_EMERGENCY,
     );
 
     // Find the class that contains the severity.

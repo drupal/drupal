@@ -54,6 +54,6 @@ table#admin-dblog tr.dblog-warning td.icon {
 table#admin-dblog tr.dblog-error td.icon,
 table#admin-dblog tr.dblog-critical td.icon,
 table#admin-dblog tr.dblog-alert td.icon,
-table#admin-dblog tr.dblog-emerg td.icon {
+table#admin-dblog tr.dblog-emergency td.icon {
   background-image: url(../../misc/message-16-error.png);
 }
