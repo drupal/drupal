@@ -2231,14 +2231,18 @@ function theme_node_recent_block($variables) {
       'data' => theme('node_recent_content', array('node' => $node)),
       'class' => 'title-author',
     );
-    $row[] = array(
-      'data' => node_access('update', $node) ? l(t('edit'), 'node/' . $node->nid . '/edit', $l_options) : '',
-      'class' => 'edit',
-    );
-    $row[] = array(
-      'data' => node_access('delete', $node) ? l(t('delete'), 'node/' . $node->nid . '/delete', $l_options) : '',
-      'class' => 'delete',
-    );
+    if (node_access('update', $node)) {
+      $row[] = array(
+        'data' => l(t('edit'), 'node/' . $node->nid . '/edit', $l_options),
+        'class' => 'edit',
+      );
+    }
+    if (node_access('delete', $node)) {
+      $row[] = array(
+        'data' => l(t('delete'), 'node/' . $node->nid . '/delete', $l_options),
+        'class' => 'delete',
+      );
+    }
     $rows[] = $row;
   }
 
