@@ -596,14 +596,15 @@ function aggregator_remove($feed) {
  *   An array containing the fetcher, parser, and processors.
  */
 function _aggregator_get_variables() {
-  $fetcher = variable_get('aggregator_fetcher', 'aggregator');
+  $config = config('aggregator.settings');
+  $fetcher = $config->get('fetcher');
 
-  $parser = variable_get('aggregator_parser', 'aggregator');
+  $parser = $config->get('parser');
   if ($parser == 'aggregator') {
     include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/aggregator.parser.inc';
   }
 
-  $processors = variable_get('aggregator_processors', array('aggregator'));
+  $processors = $config->get('processors');
   if (in_array('aggregator', $processors)) {
     include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/aggregator.processor.inc';
   }
@@ -747,7 +748,7 @@ function theme_aggregator_block_item($variables) {
  *   The filtered content.
  */
 function aggregator_filter_xss($value) {
-  return filter_xss($value, preg_split('/\s+|<|>/', variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'), -1, PREG_SPLIT_NO_EMPTY));
+  return filter_xss($value, preg_split('/\s+|<|>/', config('aggregator.settings')->get('items.allowed_html'), -1, PREG_SPLIT_NO_EMPTY));
 }
 
 /**
@@ -775,9 +776,12 @@ function aggregator_sanitize_configuration() {
     }
   }
   if ($reset) {
-    variable_del('aggregator_fetcher');
-    variable_del('aggregator_parser');
-    variable_del('aggregator_processors');
+    // Reset aggregator config if necessary using the module defaults.
+    config('aggregator.settings')
+      ->set('fetcher', 'aggregator')
+      ->set('parser', 'aggregator')
+      ->set('processors', array('aggregator' => 'aggregator'))
+      ->save();
     return TRUE;
   }
   return FALSE;

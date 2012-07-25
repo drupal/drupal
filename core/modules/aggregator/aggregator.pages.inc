@@ -219,7 +219,7 @@ function aggregator_categorize_items($items, $feed_source = '') {
     }
     $done = TRUE;
     $form['categories'][$item->iid] = array(
-      '#type' => variable_get('aggregator_category_selector', 'checkboxes'),
+      '#type' => config('aggregator.settings')->get('source.category_selector'),
       '#default_value' => $selected,
       '#options' => $categories,
       '#size' => 10,
@@ -356,8 +356,9 @@ function aggregator_page_sources() {
   foreach ($result as $feed) {
     // Most recent items:
     $summary_items = array();
-    if (variable_get('aggregator_summary_items', 3)) {
-      $items = db_query_range('SELECT i.title, i.timestamp, i.link FROM {aggregator_item} i WHERE i.fid = :fid ORDER BY i.timestamp DESC', 0, variable_get('aggregator_summary_items', 3), array(':fid' => $feed->fid));
+    $aggregator_summary_items = config('aggregator.settings')->get('source.list_max');
+    if ($aggregator_summary_items) {
+      $items = db_query_range('SELECT i.title, i.timestamp, i.link FROM {aggregator_item} i WHERE i.fid = :fid ORDER BY i.timestamp DESC', 0, $aggregator_summary_items, array(':fid' => $feed->fid));
       foreach ($items as $item) {
         $summary_items[] = theme('aggregator_summary_item', array('item' => $item));
       }
@@ -380,9 +381,10 @@ function aggregator_page_categories() {
 
   $output = '';
   foreach ($result as $category) {
-    if (variable_get('aggregator_summary_items', 3)) {
+    $aggregator_summary_items = config('aggregator.settings')->get('source.list_max');
+    if ($aggregator_summary_items) {
       $summary_items = array();
-      $items = db_query_range('SELECT i.title, i.timestamp, i.link, f.title as feed_title, f.link as feed_link FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON i.iid = ci.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE ci.cid = :cid ORDER BY i.timestamp DESC', 0, variable_get('aggregator_summary_items', 3), array(':cid' => $category->cid));
+      $items = db_query_range('SELECT i.title, i.timestamp, i.link, f.title as feed_title, f.link as feed_link FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON i.iid = ci.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE ci.cid = :cid ORDER BY i.timestamp DESC', 0, $aggregator_summary_items, array(':cid' => $category->cid));
       foreach ($items as $item) {
         $summary_items[] = theme('aggregator_summary_item', array('item' => $item));
       }
@@ -439,7 +441,7 @@ function theme_aggregator_page_rss($variables) {
   foreach ($feeds as $feed) {
     switch ($feed_length) {
       case 'teaser':
-        $summary = text_summary($feed->description, NULL, variable_get('aggregator_teaser_length', 600));
+        $summary = text_summary($feed->description, NULL, config('aggregator.settings')->get('items.teaser_length'));
         if ($summary != $feed->description) {
           $summary .= '<p><a href="' . check_url($feed->link) . '">' . t('read more') . "</a></p>\n";
         }

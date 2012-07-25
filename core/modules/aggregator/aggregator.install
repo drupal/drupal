@@ -6,20 +6,6 @@
  */
 
 /**
- * Implements hook_uninstall().
- */
-function aggregator_uninstall() {
-  variable_del('aggregator_allowed_html_tags');
-  variable_del('aggregator_summary_items');
-  variable_del('aggregator_clear');
-  variable_del('aggregator_category_selector');
-  variable_del('aggregator_fetcher');
-  variable_del('aggregator_parser');
-  variable_del('aggregator_processors');
-  variable_del('aggregator_teaser_length');
-}
-
-/**
  * Implements hook_schema().
  */
 function aggregator_schema() {
@@ -270,4 +256,22 @@ function aggregator_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Moves aggregator settings from variables to config.
+ *
+ * @ingroup config_upgrade
+ */
+function aggregrator_update_8000() {
+  update_variables_to_config('aggregator.settings', array(
+    'aggregator_fetcher' => 'fetcher',
+    'aggregator_parser' => 'parser',
+    'aggregator_processors' => 'processors',
+    'aggregator_allowed_html_tags' => 'items.allowed_html',
+    'aggregator_teaser_length' => 'items.teaser_length',
+    'aggregator_clear' => 'items.expire',
+    'aggregator_summary_items' => 'source.list_max',
+    'aggregator_category_selector' => 'source.category_selector',
+  ));
 }

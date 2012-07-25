@@ -435,7 +435,7 @@ function aggregator_admin_form($form, $form_state) {
     '#title' => t('Allowed HTML tags'),
     '#size' => 80,
     '#maxlength' => 255,
-    '#default_value' => variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'),
+    '#default_value' => config('aggregator.settings')->get('items.allowed_html'),
     '#description' => t('A space-separated list of HTML tags allowed in the content of feed items. Disallowed tags are stripped from the content.'),
   );
 
@@ -484,7 +484,7 @@ function aggregator_admin_form($form, $form_state) {
       '#title' => t('Fetcher'),
       '#description' => t('Fetchers download data from an external source. Choose a fetcher suitable for the external source you would like to download from.'),
       '#options' => $fetchers,
-      '#default_value' => variable_get('aggregator_fetcher', 'aggregator'),
+      '#default_value' => config('aggregator.settings')->get('fetcher'),
     );
   }
   if (count($parsers) > 1) {
@@ -493,7 +493,7 @@ function aggregator_admin_form($form, $form_state) {
       '#title' => t('Parser'),
       '#description' => t('Parsers transform downloaded data into standard structures. Choose a parser suitable for the type of feeds you would like to aggregate.'),
       '#options' => $parsers,
-      '#default_value' => variable_get('aggregator_parser', 'aggregator'),
+      '#default_value' => config('aggregator.settings')->get('parser'),
     );
   }
   if (count($processors) > 1) {
@@ -502,7 +502,7 @@ function aggregator_admin_form($form, $form_state) {
       '#title' => t('Processors'),
       '#description' => t('Processors act on parsed feed data, for example they store feed items. Choose the processors suitable for your task.'),
       '#options' => $processors,
-      '#default_value' => variable_get('aggregator_processors', array('aggregator')),
+      '#default_value' => config('aggregator.settings')->get('processors'),
     );
   }
   if (count($basic_conf)) {
@@ -519,23 +519,31 @@ function aggregator_admin_form($form, $form_state) {
   // Implementing modules will expect an array at $form['modules'].
   $form['modules'] = array();
 
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save configuration'),
-  );
-
-  return $form;
+  return system_config_form($form, $form_state);
 }
 
 /**
  * Form submission handler for aggregator_admin_form().
  */
 function aggregator_admin_form_submit($form, &$form_state) {
-  if (isset($form_state['values']['aggregator_processors'])) {
-    $form_state['values']['aggregator_processors'] = array_filter($form_state['values']['aggregator_processors']);
+  $config = config('aggregator.settings');
+  $config
+    ->set('items.allowed_html', $form_state['values']['aggregator_allowed_html_tags'])
+    ->set('items.expire', $form_state['values']['aggregator_clear'])
+    ->set('items.teaser_length', $form_state['values']['aggregator_teaser_length'])
+    ->set('source.list_max', $form_state['values']['aggregator_summary_items'])
+    ->set('source.category_selector', $form_state['values']['aggregator_category_selector']);
+
+  if (isset($form_state['values']['aggregator_fetcher'])) {
+    $config->set('fetcher', $form_state['values']['aggregator_fetcher']);
   }
-  system_settings_form_submit($form, $form_state);
+  if (isset($form_state['values']['aggregator_parser'])) {
+    $config->set('parser', $form_state['values']['aggregator_parser']);
+  }
+  if (isset($form_state['values']['aggregator_processors'])) {
+    $config->set('processors', array_filter($form_state['values']['aggregator_processors']));
+  }
+  $config->save();
 }
 
 /**

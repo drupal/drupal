@@ -24,7 +24,7 @@ class FeedParserTest extends AggregatorTestBase {
     // Do not remove old aggregator items during these tests, since our sample
     // feeds have hardcoded dates in them (which may be expired when this test
     // is run).
-    variable_set('aggregator_clear', AGGREGATOR_CLEAR_NEVER);
+    config('aggregator.settings')->set('items.expire', AGGREGATOR_CLEAR_NEVER)->save();
   }
 
   /**
