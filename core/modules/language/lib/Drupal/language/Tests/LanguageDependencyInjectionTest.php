@@ -27,7 +27,7 @@ class LanguageDependencyInjectionTest extends WebTestBase {
     parent::setUp('language');
 
     // Ensure we are building a new Language object for each test.
-    drupal_static_reset('language_manager');
+    language_manager();
   }
 
 
@@ -60,6 +60,7 @@ class LanguageDependencyInjectionTest extends WebTestBase {
       'name' => 'French',
       'direction' => 0,
       'weight' => 0,
+      'method_id' => 'language-default',
       'default' => TRUE,
     );
     variable_set('language_default', $new_language_default);

@@ -498,7 +498,8 @@ function user_page() {
   global $user;
   if ($user->uid) {
     // @todo: Cleaner sub request handling.
-    $subrequest = Request::create('/user/' . $user->uid, 'GET', request()->query->all(), request()->cookies->all(), array(), request()->server->all());
+    $request = drupal_container()->get('request');
+    $subrequest = Request::create('/user/' . $user->uid, 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
     return drupal_container()->get('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
   }
   else {

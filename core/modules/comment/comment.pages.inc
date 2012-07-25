@@ -116,7 +116,7 @@ function comment_approve($cid) {
   // @todo CSRF tokens are validated in page callbacks rather than access
   //   callbacks, because access callbacks are also invoked during menu link
   //   generation. Add token support to routing: http://drupal.org/node/755584.
-  $token = request()->query->get('token');
+  $token = drupal_container()->get('request')->query->get('token');
   if (!isset($token) || !drupal_valid_token($token, "comment/$cid/approve")) {
     throw new AccessDeniedHttpException();
   }

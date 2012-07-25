@@ -255,11 +255,6 @@ function install_begin_request(&$install_state) {
   // A request object from the HTTPFoundation to tell us about the request.
   $request = Request::createFromGlobals();
 
-  // Set the global $request object.  This is a temporary measure to
-  // keep legacy utility functions working.  It should be moved to a dependency
-  // injection container at some point.
-  request($request);
-
   // This must go after drupal_bootstrap(), which unsets globals!
   global $conf;
 

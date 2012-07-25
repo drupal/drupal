@@ -1612,32 +1612,6 @@ function request_uri($omit_query_string = FALSE) {
 }
 
 /**
- * Returns the current global request object.
- *
- * @todo Replace this function with a proper dependency injection container.
- *
- * @staticvar Symfony\Component\HttpFoundation\Request $request
- *
- * @param Symfony\Component\HttpFoundation\Request $new_request
- *   Optional. The new request object to store. This parameter should only be
- *   used by index.php.
- *
- * @return Symfony\Component\HttpFoundation\Request
- *   The current request object.
- */
-function request(Request $new_request = NULL) {
-  static $request;
-
-  if ($new_request) {
-    $request = $new_request;
-  }
-  elseif (drupal_container()->has('request')) {
-    $request = drupal_container()->get('request');
-  }
-  return $request;
-}
-
-/**
  * Logs an exception.
  *
  * This is a wrapper function for watchdog() which automatically decodes an
@@ -2659,37 +2633,46 @@ function drupal_language_initialize() {
  * request. When it's not available, we return a default language object,
  * regardless of the type passed in.
  *
+ * Note that this function is provided for legacy code that needs to get e.g.
+ * the interface language outside the scope of a request. Code that runs within
+ * the scope of a request should call
+ * drupal_container()->get('language_manager')->getLanguage($type)
+ * directly.
+ *
  * @see Drupal\Core\Language\LanguageManager
  */
-function language_manager($type) {
-  static $default_language;
-  // Keep track of whether the language_manager has been initiated.
-  static $initiated = FALSE;
+function language_manager($type = NULL) {
   // Keep track of whether we are in a multilingual environment.
   static $multilingual = FALSE;
-  $languages = &drupal_static(__FUNCTION__, array());
-  if ($multilingual && $initiated) {
-    if (!isset($languages[$type])) {
-      $languages[$type] = drupal_container()->get('language_manager')->getLanguage($type);
+  // Keep track of whether the language_manager service is available.
+  static $language_manager_service = FALSE;
+  if ($multilingual && $language_manager_service) {
+    if (!$type) {
+      drupal_container()->get('language_manager')->reset();
+      return;
     }
-    return $languages[$type];
+    return drupal_container()->get('language_manager')->getLanguage($type);
   }
   if (language_multilingual()) {
     $multilingual = TRUE;
     if (drupal_container()->has('language_manager')) {
-      include_once DRUPAL_ROOT . '/core/includes/language.inc';
-      $initiated = TRUE;
-      $languages[$type] = drupal_container()->get('language_manager')->getLanguage($type);
-      return  $languages[$type];
+      $language_manager_service = TRUE;
+      return drupal_container()->get('language_manager')->getLanguage($type);
     }
+  }
+  // We can't use drupal_static() here because resetting is not a simple case of
+  // drupal_static_reset().
+  static $languages;
+  // If no type was passed in, reset the languages array.
+  if (!$type) {
+    $languages = array();
   }
   // If this is not a multilingual environment or we have not yet entered the
   // request scope, just use the default language regardless of $type.
-  if (isset($default_language)) {
-    return $default_language;
+  if (!isset($languages[$type])) {
+    $languages[$type] = language_default();
   }
-  $default_language = language_default();
-  return $default_language;
+  return $languages[$type];
 }
 
 /**

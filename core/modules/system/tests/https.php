@@ -32,7 +32,6 @@ if (!drupal_valid_test_ua()) {
 
 // Continue with normal request handling.
 $request = Request::createFromGlobals();
-request($request);
 
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
