@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugins\views\display\Default.
+ * Definition of Drupal\views\Plugins\views\display\DefaultDisplay.
  */
 
 namespace Drupal\views\Plugins\views\display;
@@ -12,7 +12,7 @@ namespace Drupal\views\Plugins\views\display;
  *
  * @ingroup views_display_plugins
  */
-class Default extends DisplayPluginBase {
+class DefaultDisplay extends DisplayPluginBase {
   /**
    * Determine if this display is the 'default' display which contains
    * fallback settings

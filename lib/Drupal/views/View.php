@@ -9,6 +9,7 @@ namespace Drupal\views;
 
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\views\Plugins\Type\QueryPluginManager;
+use Drupal\views\Plugins\Type\DisplayPluginManager;
 
 /**
  * @defgroup views_objects Objects that represent a View or part of a view
@@ -471,7 +472,8 @@ class View extends ViewsDbObject {
         $this->display[$id] = clone $this->display[$id];
         unset($this->display[$id]->handler);
       }
-      $this->display[$id]->handler = views_get_plugin('display', $this->display[$id]->display_plugin);
+      $plugin_manager = new DisplayPluginManager();
+      $this->display[$id]->handler = $plugin_manager->createInstance($this->display[$id]->display_plugin);
       if (!empty($this->display[$id]->handler)) {
         $this->display[$id]->handler->localization_keys = array($id);
         // Initialize the new display handler with data.

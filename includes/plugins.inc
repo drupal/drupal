@@ -19,7 +19,7 @@ function views_views_plugins() {
       'default' => array(
         'title' => t('Master'),
         'help' => t('Default settings for this view.'),
-        'class' => 'Drupal\views\Plugins\views\display\Default',
+        'class' => 'Drupal\views\Plugins\views\display\DefaultDisplay',
         'theme' => 'views_view',
         'no ui' => TRUE,
         'no remove' => TRUE,
