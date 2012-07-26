@@ -679,7 +679,8 @@ function forum_block_save($delta = '', $edit = array()) {
 function forum_block_view($delta = '') {
   $query = db_select('forum_index', 'f')
     ->fields('f')
-    ->addTag('node_access');
+    ->addTag('node_access')
+    ->addMetaData('base_table', 'forum_index');
   switch ($delta) {
     case 'active':
       $title = t('Active forum topics');
@@ -928,6 +929,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $query
     ->condition('f.tid', $tid)
     ->addTag('node_access')
+    ->addMetaData('base_table', 'forum_index')
     ->orderBy('f.sticky', 'DESC')
     ->orderByHeader($forum_topic_list_header)
     ->limit($forum_per_page);
@@ -936,6 +938,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $count_query->condition('f.tid', $tid);
   $count_query->addExpression('COUNT(*)');
   $count_query->addTag('node_access');
+  $count_query->addMetaData('base_table', 'forum_index');
 
   $query->setCountQuery($count_query);
   $result = $query->execute();

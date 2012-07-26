@@ -39,6 +39,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
   // while keeping the correct order.
   $nodes = $query
     ->addTag('node_access')
+    ->addMetaData('base_table', 'tracker_node')
     ->fields('t', array('nid', 'changed'))
     ->condition('t.published', 1)
     ->orderBy('t.changed', 'DESC')

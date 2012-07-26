@@ -3258,10 +3258,9 @@ function _node_query_node_access_alter($query, $type) {
 
   $tables = $query->getTables();
   $base_table = $query->getMetaData('base_table');
-  // If no base table is specified explicitly, search for one.
+  // If the base table is not given, default to node if present.
   if (!$base_table) {
-    $fallback = '';
-    foreach ($tables as $alias => $table_info) {
+    foreach ($tables as $table_info) {
       if (!($table_info instanceof SelectInterface)) {
         $table = $table_info['table'];
         // If the node table is in the query, it wins immediately.
@@ -3269,38 +3268,11 @@ function _node_query_node_access_alter($query, $type) {
           $base_table = $table;
           break;
         }
-        // Check whether the table has a foreign key to node.nid. If it does,
-        // do not run this check again as we found a base table and only node
-        // can triumph that.
-        if (!$base_table) {
-          // The schema is cached.
-          $schema = drupal_get_schema($table);
-          if (isset($schema['fields']['nid'])) {
-            if (isset($schema['foreign keys'])) {
-              foreach ($schema['foreign keys'] as $relation) {
-                if ($relation['table'] === 'node' && $relation['columns'] === array('nid' => 'nid')) {
-                  $base_table = $table;
-                }
-              }
-            }
-            else {
-              // At least it's a nid. A table with a field called nid is very
-              // very likely to be a node.nid in a node access query.
-              $fallback = $table;
-            }
-          }
-        }
       }
     }
-    // If there is nothing else, use the fallback.
+    // Bail out if the base table is missing.
     if (!$base_table) {
-      if ($fallback) {
-        watchdog('security', 'Your node listing query is using @fallback as a base table in a query tagged for node access. This might not be secure and might not even work. Specify foreign keys in your schema to node.nid ', array('@fallback' => $fallback), WATCHDOG_WARNING);
-        $base_table = $fallback;
-      }
-      else {
-        throw new Exception(t('Query tagged for node access but there is no nid. Add foreign keys to node.nid in schema to fix.'));
-      }
+      throw new Exception(t('Query tagged for node access but there is no node table, specify the base_table using meta data.'));
     }
   }
 
