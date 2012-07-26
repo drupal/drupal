@@ -112,7 +112,7 @@ function views_views_plugins() {
       'default' => array(
         'title' => t('Unformatted list'),
         'help' => t('Displays rows one after another.'),
-        'class' => 'Drupal\views\Plugins\views\style\Default',
+        'class' => 'Drupal\views\Plugins\views\style\DefaultStyle',
         'theme' => 'views_view_unformatted',
         'uses row plugin' => TRUE,
         'uses row class' => TRUE,
