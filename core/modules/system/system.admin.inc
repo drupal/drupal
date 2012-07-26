@@ -1882,47 +1882,48 @@ function system_image_toolkit_settings() {
  * Form builder; Configure how the site handles RSS feeds.
  *
  * @ingroup forms
- * @see system_settings_form()
  */
 function system_rss_feeds_settings($form, &$form_state) {
+  $rss_config = config('system.rss');
   $form['feed_description'] = array(
     '#type' => 'textarea',
     '#title' => t('Feed description'),
-    '#default_value' => config('system.rss-publishing')->get('feed_description'),
+    '#default_value' => $rss_config->get('channel.description'),
     '#description' => t('Description of your site, included in each feed.')
   );
   $form['feed_default_items'] = array(
     '#type' => 'select',
     '#title' => t('Number of items in each feed'),
-    '#default_value' => config('system.rss-publishing')->get('feed_default_items'),
+    '#default_value' => $rss_config->get('items.limit'),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('Default number of items to include in each feed.')
   );
   $form['feed_item_length'] = array(
     '#type' => 'select',
     '#title' => t('Feed content'),
-    '#default_value' => config('system.rss-publishing')->get('feed_item_length'),
-    '#options' => array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')),
+    '#default_value' => $rss_config->get('items.view_mode'),
+    '#options' => array(
+      'title' => t('Titles only'),
+      'teaser' => t('Titles plus teaser'),
+      'fulltext' => t('Full text'),
+    ),
     '#description' => t('Global setting for the default display of content items in each feed.')
   );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
 
-  return $form;
+  return system_config_form($form, $form_state);
 }
 
 /**
  * Form builder submit handler; Handle submission for RSS feeds settings.
  *
  * @ingroup forms
- * @see system_settings_form()
  */
 function system_rss_feeds_settings_submit($form, &$form_state) {
-  // Set the RSS publishing parameters.
-  $config = config('system.rss-publishing');
-  $config->set('feed_description', $form_state['values']['feed_description']);
-  $config->set('feed_default_items', $form_state['values']['feed_default_items']);
-  $config->set('feed_item_length', $form_state['values']['feed_item_length']);
-  $config->save();
+  config('system.rss')
+    ->set('channel.description', $form_state['values']['feed_description'])
+    ->set('items.limit', $form_state['values']['feed_default_items'])
+    ->set('items.view_mode', $form_state['values']['feed_item_length'])
+    ->save();
 }
 
 /**

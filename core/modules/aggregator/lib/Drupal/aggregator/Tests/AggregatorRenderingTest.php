@@ -83,8 +83,8 @@ class AggregatorRenderingTest extends AggregatorTestBase {
   public function testFeedPage() {
     // Increase the number of items published in the rss.xml feed so we have
     // enough articles to test paging.
-    $config = config('system.rss-publishing');
-    $config->set('feed_default_items', 30);
+    $config = config('system.rss');
+    $config->set('items.limit', 30);
     $config->save();
 
     // Create a feed with 30 items.
@@ -98,7 +98,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $this->assertTrue(!empty($elements), t('Individual source page contains a pager.'));
 
     // Reset the number of items in rss.xml to the default value.
-    $config->set('feed_default_items', 10);
+    $config->set('items.limit', 10);
     $config->save();
   }
 }

@@ -1909,10 +1909,10 @@ function system_update_8009() {
  * @ingroup config_upgrade
  */
 function system_update_8010() {
-  update_variables_to_config('system.rss-publishing', array(
-    'feed_description' => 'feed_description',
-    'feed_default_items' => 'feed_default_items',
-    'feed_item_length' => 'feed_item_length',
+  update_variables_to_config('system.rss', array(
+    'feed_description' => 'channel.description',
+    'feed_default_items' => 'items.limit',
+    'feed_item_length' => 'items.view_mode',
   ));
 }
 
