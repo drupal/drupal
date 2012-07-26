@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Definition of Drupal\tracker\Tests\TrackerNodeAccessTest.
+ */
+
+namespace Drupal\tracker\Tests;
+
+use Drupal\simpletest\WebTestBase;
+
+/**
+ * Tests for private node access on /tracker.
+ */
+class TrackerNodeAccessTest extends WebTestBase {
+  protected $access_user;
+  protected $no_access_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Tracker Node Access Tests',
+      'description' => 'Tests for private node access on /tracker.',
+      'group' => 'Tracker',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp(array('node', 'comment', 'tracker', 'node_access_test'));
+    node_access_rebuild();
+    variable_set('node_access_test_private', TRUE);
+  }
+
+
+  /**
+   * Ensure private node on /tracker is only visible to users with permission.
+   */
+  function testTrackerNodeAccess() {
+    // Create user with node test view permission.
+    $access_user = $this->drupalCreateUser(array('node test view'));
+
+    // Create user without node test view permission.
+    $no_access_user = $this->drupalCreateuser();
+
+    $this->drupalLogin($access_user);
+
+    // Create some nodes.
+    $private_node = $this->drupalCreateNode(array(
+      'title' => t('Private node test'),
+      'private'=> TRUE,
+    ));
+    $public_node = $this->drupalCreateNode(array(
+      'title' => t('Public node test'),
+      'private'=>FALSE,
+    ));
+
+    // User with access should see both nodes created.
+    $this->drupalGet('tracker');
+    $this->assertText($private_node->title, 'Private node is visible to user with private access.');
+    $this->assertText($public_node->title, 'Public node is visible to user with private access.');
+
+    // User without access should not see private node.
+    $this->drupalLogin($no_access_user);
+    $this->drupalGet('tracker');
+    $this->assertNoText($private_node->title, 'Private node is not visible to user without private access.');
+    $this->assertText($public_node->title, 'Public node is visible to user without private access.');
+  }
+}
