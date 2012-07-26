@@ -9,11 +9,22 @@ namespace Drupal\views\Plugins\Type;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\views\Plugins\views\Discovery\ViewsDiscovery;
+use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 
 class HandlerPluginManager extends PluginManagerBase {
-  public function __construct() {
-    $this->discovery = new ViewsDiscovery('views_plugins', 'handler');
-    $this->factory = new DefaultFactory($this);
+  /**
+   * The handler type of this plugin manager, for example filter or field.
+   *
+   * @var string
+   */
+  protected $type;
+
+  public function __construct($type) {
+    $this->type = $type;
+
+    if (in_array($this->type, array('sort', 'filter', 'relationship', 'field', 'area', 'argument'))) {
+      $this->discovery = new AnnotatedClassDiscovery('views', $this->type);
+    }
+    $this->factory = new DefaultFactory($this->discovery);
   }
 }
