@@ -458,6 +458,12 @@ function form_test_validate_required_form($form, &$form_state) {
     '#title' => 'Radios (optional)',
     '#options' => $options,
   );
+  $form['radios_optional_default_value_false'] = array(
+    '#type' => 'radios',
+    '#title' => 'Radios (optional, with a default value of FALSE)',
+    '#options' => $options,
+    '#default_value' => FALSE,
+  );
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => 'Submit');
   return $form;

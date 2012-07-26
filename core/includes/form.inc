@@ -2338,30 +2338,27 @@ function form_type_checkboxes_value($element, $input = FALSE) {
  */
 function form_type_radios_value(&$element, $input = FALSE) {
   if ($input !== FALSE) {
-    // There may not be a submitted value for multiple radio buttons, if none of
-    // the options was checked by default. If there is no submitted input value
-    // for this element (NULL), _form_builder_handle_input_element()
-    // automatically attempts to use the #default_value (if set) or an empty
-    // string (''). However, an empty string would fail validation in
-    // _form_validate(), in case it is not contained in the list of allowed
-    // values in #options.
-    if (!isset($input)) {
-      // Signify a garbage value to disable the #default_value handling and take
-      // over NULL as #value.
-      $element['#has_garbage_value'] = TRUE;
-      // There was a user submission so validation is a must. If this element is
-      // #required, then an appropriate error message will be output. While an
-      // optional #type 'radios' does not necessarily make sense from a user
-      // interaction perspective, there may be use-cases for that and it is not
-      // the job of Form API to artificially limit possibilities.
+    // When there's user input (including NULL), return it as the value.
+    // However, if NULL is submitted, _form_builder_handle_input_element() will
+    // apply the default value, and we want that validated against #options
+    // unless it's empty. (An empty #default_value, such as NULL or FALSE, can
+    // be used to indicate that no radio button is selected by default.)
+    if (!isset($input) && !empty($element['#default_value'])) {
       $element['#needs_validation'] = TRUE;
     }
-    // The value stays the same, but the flags above will ensure it is
-    // processed properly.
     return $input;
   }
-  elseif (isset($element['#default_value'])) {
-    return $element['#default_value'];
+  else {
+    // For default value handling, simply return #default_value. Additionally,
+    // for a NULL default value, set #has_garbage_value to prevent
+    // _form_builder_handle_input_element() converting the NULL to an empty
+    // string, so that code can distinguish between nothing selected and the
+    // selection of a radio button whose value is an empty string.
+    $value = isset($element['#default_value']) ? $element['#default_value'] : NULL;
+    if (!isset($value)) {
+      $element['#has_garbage_value'] = TRUE;
+    }
+    return $value;
   }
 }
 

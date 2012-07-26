@@ -196,6 +196,8 @@ class FormTest extends WebTestBase {
     $this->assertNoFieldChecked('edit-radios-bar');
     $this->assertNoFieldChecked('edit-radios-optional-foo');
     $this->assertNoFieldChecked('edit-radios-optional-bar');
+    $this->assertNoFieldChecked('edit-radios-optional-default-value-false-foo');
+    $this->assertNoFieldChecked('edit-radios-optional-default-value-false-bar');
 
     // Submit again with required fields set and verify that there are no
     // error messages.
