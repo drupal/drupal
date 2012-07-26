@@ -26,3 +26,15 @@ msgstr "samedi"
 
 msgid "Sunday"
 msgstr "dimanche"
+
+msgid "Allowed HTML source string"
+msgstr "<strong>Allowed HTML translation string</strong>"
+
+msgid "Another allowed HTML source string"
+msgstr "<script>Disallowed HTML translation string</script>"
+
+msgid "Source string for multiline translation"
+msgstr ""
+"Multiline translation string "
+"to make sure that "
+"import works with it."

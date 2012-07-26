@@ -5,7 +5,10 @@
  * Mass import-export and batch import functionality for Gettext .po files.
  */
 
-include_once DRUPAL_ROOT . '/core/includes/gettext.inc';
+use Drupal\Component\Gettext\PoStreamWriter;
+use Drupal\locale\Gettext;
+use Drupal\locale\PoDatabaseReader;
+
 
 /**
  * User interface for the translation import screen.
@@ -107,7 +110,39 @@ function locale_translate_import_form_submit($form, &$form_state) {
     $customized = $form_state['values']['customized'] ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED;
 
     // Now import strings into the language
-    if ($return = _locale_import_po($file, $language->langcode, $form_state['values']['overwrite_options'], $customized) == FALSE) {
+    try {
+      // Try to allocate enough time to parse and import the data.
+      drupal_set_time_limit(240);
+
+      $report = GetText::fileToDatabase($file, $language->langcode, $form_state['values']['overwrite_options'], $customized);
+      $additions = $report['additions'];
+      $updates = $report['updates'];
+      $deletes = $report['deletes'];
+      $skips = $report['skips'];
+
+      menu_router_rebuild();
+      // Clear cache and force refresh of JavaScript translations.
+      _locale_invalidate_js($language->langcode);
+      cache()->deletePrefix('locale:');
+
+      drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)));
+      watchdog('locale', 'Imported %file into %locale: %number new strings added, %update updated and %delete removed.', array('%file' => $file->filename, '%locale' => $language->langcode, '%number' => $additions, '%update' => $updates, '%delete' => $deletes));
+      if ($skips) {
+        if (module_exists('dblog')) {
+          $skip_message = format_plural($skips, 'A translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+        }
+        else {
+          $skip_message = format_plural($skips, 'A translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
+        }
+        drupal_set_message($skip_message, 'error');
+        watchdog('locale', '@count disallowed HTML string(s) in %file', array('@count' => $skips, '%file' => $file->uri), WATCHDOG_WARNING);
+      }
+      $variables = array('%filename' => $file->filename);
+      drupal_set_message(t('The translation import of %filename is done.', $variables));
+      watchdog('locale', 'The translation import of %filename is done.', $variables);
+
+    } catch (Exception $exc) {
+      drupal_set_message(print_r($exc, TRUE));
       $variables = array('%filename' => $file->filename);
       drupal_set_message(t('The translation import of %filename failed.', $variables), 'error');
       watchdog('locale', 'The translation import of %filename failed.', $variables, WATCHDOG_ERROR);
@@ -207,7 +242,44 @@ function locale_translate_export_form_submit($form, &$form_state) {
     $language = NULL;
   }
   $content_options = isset($form_state['values']['content_options']) ? $form_state['values']['content_options'] : array();
-  _locale_export_po($language, _locale_export_po_generate($language, _locale_export_get_strings($language, $content_options)));
+  $reader = new PoDatabaseReader();
+  $languageName = '';
+  if ($language != NULL) {
+    $reader->setLangcode($language->langcode);
+    $reader->setOptions($content_options);
+    $languages = language_list();
+    $languageName = isset($languages[$language->langcode]) ? $languages[$language->langcode]->name : '';
+    $filename = $language->langcode .'.po';
+  }
+  else {
+    // Template required.
+    $filename = 'drupal.pot';
+  }
+
+  $item = $reader->readItem();
+  if (!empty($item)) {
+    $uri = tempnam('temporary://', 'po_');
+    $header = $reader->getHeader();
+    $header->setProjectName(variable_get('site_name', 'Drupal'));
+    $header->setLanguageName($languageName);
+
+    $writer = new PoStreamWriter;
+    $writer->setUri($uri);
+    $writer->setHeader($header);
+
+    $writer->open();
+    $writer->writeItem($item);
+    $writer->writeItems($reader);
+    $writer->close();
+
+    header("Content-Disposition: attachment; filename=$filename");
+    header("Content-Type: text/plain; charset=utf-8");
+    print file_get_contents($uri);
+    drupal_exit();
+  }
+  else {
+    drupal_set_message('Nothing to export.');
+  }
 }
 
 /**
@@ -257,7 +329,7 @@ function locale_translate_batch_import_files($langcode = NULL, $finish_feedback 
       ->fetchAllAssoc('uri');
     foreach ($result as $uri => $info) {
       if (isset($files[$uri]) && filemtime($uri) <= $info->timestamp) {
-        // The file is already imported and it did not change since the import.
+        // The file is already imported and not changed since the last import.
         // Remove it from file list and don't import it again.
         unset($files[$uri]);
       }
@@ -318,22 +390,32 @@ function locale_translate_batch_build($files, $finish_feedback = FALSE) {
 /**
  * Perform interface translation import as a batch step.
  *
+ * The given filepath is matched against ending with '{langcode}.po'. When
+ * matched the filepath is added to batch context.
+ *
  * @param $filepath
  *   Path to a file to import.
- * @param $results
+ * @param $context
  *   Contains a list of files imported.
  */
 function locale_translate_batch_import($filepath, &$context) {
   // The filename is either {langcode}.po or {prefix}.{langcode}.po, so
   // we can extract the language code to use for the import from the end.
   if (preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $langcode)) {
-    $file = locale_translate_file_create($filepath, $langcode[2]);
-    $success = _locale_import_read_po('db-store', $file, array(), $langcode[2]);
-    if ($success == NULL) {
-      $file->langcode = $langcode[2];
+    $file = entity_create('file', array('filename' => drupal_basename($filepath), 'uri' => $filepath));
+    // We need only the last match
+    $langcode = array_pop($langcode);
+    try {
+      $report = GetText::fileToDatabase($file, $langcode, array(), LOCALE_NOT_CUSTOMIZED);
+      $file->langcode = $langcode;
+      $file->timestamp = filemtime($file->uri);
       locale_translate_update_file_history($file);
+      $context['results']['files'][$filepath] = $filepath;
+      $context['results']['stats'][$filepath] = $report;
+    } catch (Exception $exception) {
+      $context['results']['files'][$filepath] = $filepath;
+      $context['results']['failed_files'][$filepath] = $filepath;
     }
-    $context['results'][] = $filepath;
   }
 }
 
@@ -342,7 +424,30 @@ function locale_translate_batch_import($filepath, &$context) {
  */
 function locale_translate_batch_finished($success, $results) {
   if ($success) {
-    drupal_set_message(format_plural(count($results), 'One translation file imported.', '@count translation files imported.'));
+    $additions = $updates = $deletes = $skips = 0;
+    drupal_set_message(format_plural(count($results['files']), 'One translation file imported.', '@count translation files imported.'));
+    $skipped_files = array();
+    foreach ($results['stats'] as $filepath => $report) {
+      $additions += $report['additions'];
+      $updates += $report['updates'];
+      $deletes += $report['deletes'];
+      $skips += $report['skips'];
+      if ($report['skips'] > 0) {
+        $skipped_files[] = $filepath;
+      }
+    }
+    drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)));
+    watchdog('locale', 'The translation was succesfully imported. %number new strings added, %update updated and %delete removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes));
+    if ($skips) {
+      if (module_exists('dblog')) {
+        $skip_message = format_plural($skips, 'A translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+      }
+      else {
+        $skip_message = format_plural($skips, 'A translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
+      }
+      drupal_set_message($skip_message, 'error');
+      watchdog('locale', '@count disallowed HTML string(s) in files: @files.', array('@count' => $skips, '@files' => implode(',', $skipped_files)), WATCHDOG_WARNING);
+    }
   }
 }
 

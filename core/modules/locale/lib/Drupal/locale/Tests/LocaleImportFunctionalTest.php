@@ -197,6 +197,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     // Ensure the translation file was automatically imported when language was
     // added.
     $this->assertText(t('One translation file imported.'), t('Language file automatically imported.'));
+    $this->assertText(t('A translation string was skipped because of disallowed or malformed HTML'), t('Language file automatically imported.'));
 
     // Ensure strings were successfully imported.
     $search = array(
@@ -206,6 +207,27 @@ class LocaleImportFunctionalTest extends WebTestBase {
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), t('String successfully imported.'));
+
+    // Ensure multiline string was imported.
+    $search = array(
+      'string' => 'Source string for multiline translation',
+      'langcode' => $langcode,
+      'translation' => 'all',
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->assertText('Multiline translation string to make sure that import works with it.', t('String successfully imported.'));
+
+    // Ensure 'Allowed HTML source string' was imported but the translation for
+    // 'Another allowed HTML source string' was not because it contains invalid
+    // HTML.
+    $search = array(
+      'string' => 'HTML source string',
+      'langcode' => $langcode,
+      'translation' => 'all',
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->assertText('Allowed HTML source string', t('String successfully imported.'));
+    $this->assertNoText('Another allowed HTML source string', t('String with disallowed translation not imported.'));
   }
 
   /**
