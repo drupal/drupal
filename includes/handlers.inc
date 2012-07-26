@@ -11,6 +11,24 @@ use Drupal\views\Join;
 use Drupal\views\ViewsObject;
 
 /**
+ * Instantiate and construct a new plugin.
+ *
+ * @todo
+ * Figure out what to keep from _views_create_handler.
+ */
+function _views_create_plugin($type, $plugin_id, $definition) {
+  $manager = views_get_plugin_manager($type);
+  $instance = $manager->createInstance($plugin_id);
+
+  $instance->set_definition($definition);
+
+  // Let the handler have something like a constructor.
+  $instance->construct();
+
+  return $instance;
+}
+
+/**
  * Instantiate and construct a new handler
  */
 function _views_create_handler($definition, $type = 'handler', $handler_type = NULL) {

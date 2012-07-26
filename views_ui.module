@@ -6,6 +6,7 @@
  */
 
 use Drupal\views\View;
+use Drupal\views\Plugins\Type\WizardManager;
 
 /**
  * Implements hook_menu().
@@ -550,7 +551,8 @@ function views_ui_ctools_plugin_directory($module, $plugin) {
  */
 function views_ui_get_wizard($wizard_type) {
   ctools_include('plugins');
-  $wizard = ctools_get_plugins('views_ui', 'views_wizard', $wizard_type);
+  $manager = new WizardManager();
+  $wizard = $manager->getDefinition($wizard_type);
   // @todo - handle this via an alter hook instead.
   if (!$wizard) {
     // Must be a base table using the default wizard plugin.
@@ -576,7 +578,7 @@ function views_ui_get_wizard($wizard_type) {
  */
 function views_ui_get_wizards() {
   ctools_include('plugins');
-  $wizard_plugins = ctools_get_plugins('views_ui', 'views_wizard');
+  $wizard_plugins = module_invoke_all('views_wizard');
   $wizard_tables = array();
   foreach ($wizard_plugins as $name => $info) {
     $wizard_tables[$info['base_table']] = TRUE;
@@ -611,13 +613,6 @@ function views_ui_views_wizard_defaults() {
     // so they are documented.
     'title' => '',
     'base_table' => NULL,
-    // This is a callback that takes the wizard as argument and returns
-    // an instantiazed Views UI form wizard object.
-    'get_instance' => 'views_ui_get_form_wizard_instance',
-    'form_wizard_class' => array(
-      'file' => 'views_ui_base_views_wizard',
-      'class' => 'ViewsUiBaseViewsWizard',
-    ),
   );
 }
 
@@ -628,22 +623,15 @@ function views_ui_ctools_plugin_type() {
   return array(
     'views_wizard' => array(
       'child plugins' => TRUE,
-      'classes' => array(
-        'form_wizard_class',
-      ),
       'defaults' => views_ui_views_wizard_defaults(),
     ),
   );
 }
 
 function views_ui_get_form_wizard_instance($wizard) {
-  if (isset($wizard['form_wizard_class']['class'])) {
-    $class = $wizard['form_wizard_class']['class'];
-    return new $class($wizard);
-  }
-  else {
-    return new ViewsUiBaseViewsWizard($wizard);
-  }
+  $manager = new WizardManager();
+  $instance = $manager->createInstance($wizard['name']);
+  return $instance;
 }
 
 /**

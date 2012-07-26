@@ -15,6 +15,16 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 
 // @todo: Should views_get_plugin_manager be moved to a ceperate file?
 use Drupal\views\Plugins\Type\StylePluginManager;
+use Drupal\views\Plugins\Type\DisplayPluginManager;
+use Drupal\views\Plugins\Type\AccessPluginManager;
+use Drupal\views\Plugins\Type\ArgumentDefaultPluginManager;
+use Drupal\views\Plugins\Type\ArgumentValidatorPluginManager;
+use Drupal\views\Plugins\Type\CachePluginManager;
+use Drupal\views\Plugins\Type\LocalizationPluginManager;
+use Drupal\views\Plugins\Type\PagerPluginManager;
+use Drupal\views\Plugins\Type\QueryPluginManager;
+use Drupal\views\Plugins\Type\RowPluginManager;
+use Drupal\views\Plugins\Type\ExposedFormPluginManager;
 
 /**
  * Advertise the current views api version
@@ -1337,10 +1347,38 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
  */
 function views_get_plugin($type, $plugin, $reset = FALSE) {
   views_include('handlers');
+
   $definition = views_fetch_plugin_data($type, $plugin, $reset);
   if (!empty($definition)) {
-    return _views_create_handler($definition, $type);
+    return _views_create_plugin($type, $plugin, $definition);
   }
+}
+
+/**
+ * Returns the plugin manager used for a certain plugin type.
+ *
+ * @param string $type
+ *   The plugin type to use.
+ *
+ * @param PluginManagerInterface
+ */
+function views_get_plugin_manager($type) {
+  switch ($type) {
+    case 'style':
+      $manager = new StylePluginManager();
+      break;
+    case 'display':
+      $manager = new DisplayPluginManager();
+      break;
+    case 'localization':
+      $manager = new LocalizationPluginManager();
+      break;
+    case 'row':
+      $manager = new RowPluginManager();
+      break;
+  }
+
+  return $manager;
 }
 
 /**

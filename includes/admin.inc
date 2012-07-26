@@ -379,8 +379,11 @@ function views_ui_add_form($form, &$form_state) {
 
   // Build the rest of the form based on the currently selected wizard plugin.
   $wizard_key = $show_form['wizard_key']['#default_value'];
-  $get_instance = $wizard_plugins[$wizard_key]['get_instance'];
-  $wizard_instance = $get_instance($wizard_plugins[$wizard_key]);
+
+  views_include_handlers();
+  $manager = new WizardManager();
+  $info = $manager->getDefinition($wizard_key);
+  $wizard_instance = $manager->createInstance($wizard_key, $info);
   $form = $wizard_instance->build_form($form, $form_state);
 
   $form['save'] = array(
@@ -702,9 +705,9 @@ function views_ui_nojs_submit($form, &$form_state) {
  */
 function views_ui_wizard_form_validate($form, &$form_state) {
   $wizard = views_ui_get_wizard($form_state['values']['show']['wizard_key']);
+  $manager = new WizardManager();
   $form_state['wizard'] = $wizard;
-  $get_instance = $wizard['get_instance'];
-  $form_state['wizard_instance'] = $get_instance($wizard);
+  $form_state['wizard_instance'] = $manager->createInstance($wizard['name']);
   $errors = $form_state['wizard_instance']->validate($form, $form_state);
   foreach ($errors as $name => $message) {
     form_set_error($name, $message);

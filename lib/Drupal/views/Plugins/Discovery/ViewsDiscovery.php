@@ -37,7 +37,11 @@ class ViewsDiscovery extends HookDiscovery {
    * Implements Drupal\Component\Plugin\Discovery\DicoveryInterface::getDefinitions().
    */
   public function getDefinitions() {
-    $definitions = parent::getDefinitions();
+    views_include('plugins');
+    views_include_handlers();
+
+    $definitions = module_invoke_all($this->hook);
+    drupal_alter($this->hook, $definitions);
     return $definitions[$this->viewsPluginType];
   }
 }

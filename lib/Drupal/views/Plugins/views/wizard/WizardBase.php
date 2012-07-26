@@ -273,7 +273,7 @@ class WizardBase implements WizardInterface {
     $style_form =& $form['displays'][$type]['options']['style'];
     $style = $style_form['style_plugin']['#default_value'];
     // @fixme
-    return;
+
     $style_plugin = views_get_plugin('style', $style);
     if (isset($style_plugin) && $style_plugin->uses_row_plugin()) {
       $options = $this->row_style_options($type);

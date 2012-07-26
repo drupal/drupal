@@ -9,12 +9,11 @@ namespace Drupal\views\Plugins\Type;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Core\Plugin\Discovery\HookDiscovery;
-use Drupal\Core\Plugin\MapClassLoader;
+use Drupal\views\Plugins\Discovery\WizardDiscovery;
 
 class WizardManager extends PluginManagerBase {
   public function __construct() {
-    $this->discovery = new HookDiscovery('views_wizard');
+    $this->discovery = new WizardDiscovery('views_wizard');
     $this->factory = new DefaultFactory($this->discovery);
   }
 }
