@@ -1353,10 +1353,10 @@ function views_get_localization_plugin() {
   // Provide sane default values for the localization plugin.
   if (empty($plugin)) {
     if (module_exists('locale')) {
-      $plugin = 'core';
+      $plugin = 'Core';
     }
     else {
-      $plugin = 'none';
+      $plugin = 'None';
     }
   }
 
