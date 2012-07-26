@@ -2546,7 +2546,7 @@ function hook_file_url_alter(&$uri) {
  * The returned 'requirements' will be listed on the status report in the
  * administration section, with indication of the severity level.
  * Moreover, any requirement with a severity of REQUIREMENT_ERROR severity will
- * result in a notice on the the administration overview page.
+ * result in a notice on the administration configuration page.
  *
  * @param $phase
  *   The phase in which requirements are checked:
