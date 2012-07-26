@@ -12,7 +12,6 @@
  * - $forums_defined: A flag to indicate that the forums are configured.
  *
  * @see template_preprocess_forums()
- * @see theme_forums()
  *
  * @ingroup themeable
  */
