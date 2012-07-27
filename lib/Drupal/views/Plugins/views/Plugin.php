@@ -12,6 +12,11 @@ use Drupal\Component\Plugin\PluginBase;
 use Drupal\views\Plugin\PluginInterface;
 
 abstract class Plugin extends PluginBase {
+  public function __construct(array $configuration, $plugin_id) {
+    $this->configuration = $configuration;
+    $this->plugin_id = $plugin_id;
+  }
+
   /**
    * Except for displays, options for the object will be held here.
    */

@@ -5,12 +5,14 @@
  * Definition of views_handler_filter_node_status.
  */
 
+use Drupal\views\Plugins\views\filter\FilterPluginBase;
+
 /**
  * Filter by published status.
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_node_status extends views_handler_filter {
+class views_handler_filter_node_status extends FilterPluginBase {
   function admin_summary() { }
   function operator_form(&$form, &$form_state) { }
   function can_expose() { return FALSE; }

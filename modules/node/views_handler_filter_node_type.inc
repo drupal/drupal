@@ -5,12 +5,14 @@
  * Definition of views_handler_filter_node_type.
  */
 
+use Drupal\views\Plugins\views\filter\InOperator;
+
 /**
  * Filter by node type.
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_node_type extends views_handler_filter_in_operator {
+class views_handler_filter_node_type extends InOperator {
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Content types');

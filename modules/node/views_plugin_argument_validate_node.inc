@@ -5,10 +5,12 @@
  * Contains the 'node' argument validator plugin.
  */
 
+use Drupal\views\Plugins\views\argument_validator\ArgumentValidatorPluginBase;
+
 /**
  * Validate whether an argument is an acceptable node.
  */
-class views_plugin_argument_validate_node extends views_plugin_argument_validate {
+class views_plugin_argument_validate_node extends ArgumentValidatorPluginBase {
   function option_definition() {
     $options = parent::option_definition();
     $options['types'] = array('default' => array());

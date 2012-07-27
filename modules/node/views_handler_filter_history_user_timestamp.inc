@@ -5,6 +5,8 @@
  * Definition of views_handler_filter_history_user_timestamp.
  */
 
+use Drupal\views\Plugins\views\filter\FilterPluginBase;
+
 /**
  * Filter for new content.
  *
@@ -13,7 +15,7 @@
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_history_user_timestamp extends views_handler_filter {
+class views_handler_filter_history_user_timestamp extends FilterPluginBase {
   // Don't display empty space where the operator would be.
   var $no_operator = TRUE;
 
