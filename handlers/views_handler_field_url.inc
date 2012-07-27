@@ -34,7 +34,10 @@ class views_handler_field_url extends views_handler_field {
   function render($values) {
     $value = $this->get_value($values);
     if (!empty($this->options['display_as_link'])) {
-      return l($this->sanitize_value($value), $value, array('html' => TRUE));
+      $this->options['alter']['make_link'] = TRUE;
+      $this->options['alter']['path'] = $value;
+      $text = !empty($this->options['text']) ? $this->sanitize_value($this->options['text']) : $this->sanitize_value($value, 'url');
+      return $text;
     }
     else {
       return $this->sanitize_value($value, 'url');
