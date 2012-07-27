@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugins\views\sort;
 
-use Drupal\views\Plugins\views\Plugin;
+use Drupal\views\Plugins\views\Handler;
 
 /**
  * @defgroup views_sort_handlers Views sort handlers
@@ -20,7 +20,7 @@ use Drupal\views\Plugins\views\Plugin;
  *
  * @ingroup views_sort_handlers
  */
-class SortPluginBase extends Plugin {
+class SortPluginBase extends Handler {
 
   /**
    * Determine if a sort can be exposed.
@@ -219,7 +219,7 @@ class SortPluginBase extends Plugin {
  *
  * @ingroup views_sort_handlers
  */
-class views_handler_sort_broken extends views_handler_sort {
+class views_handler_sort_broken extends SortPluginBase {
   function ui_name($short = FALSE) {
     return t('Broken/missing handler');
   }
