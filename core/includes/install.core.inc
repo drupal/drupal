@@ -1298,7 +1298,7 @@ function install_select_language(&$install_state) {
       }
       // One language, but not an interactive installation. Assume the user
       // knows what he is doing.
-      $langcode = current($files);
+      $file = current($files);
       $install_state['parameters']['langcode'] = $file->langcode;
       return;
     }
