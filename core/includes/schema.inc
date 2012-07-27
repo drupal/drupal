@@ -73,7 +73,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
         // we force the system_list() static cache to be refreshed to ensure
         // that it contains the complete list of modules before we go on to call
         // module_load_all_includes().
-        drupal_static_reset('system_list');
+        system_list_reset();
         module_load_all_includes('install');
       }
 

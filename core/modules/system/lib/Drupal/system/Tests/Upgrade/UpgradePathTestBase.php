@@ -253,7 +253,8 @@ abstract class UpgradePathTestBase extends WebTestBase {
 
     // Reload module list. For modules that are enabled in the test database,
     // but not on the test client, we need to load the code here.
-    $new_modules = array_diff(module_list(TRUE), $this->loadedModules);
+    system_list_reset();
+    $new_modules = array_diff(module_list(), $this->loadedModules);
     foreach ($new_modules as $module) {
       drupal_load('module', $module);
     }
