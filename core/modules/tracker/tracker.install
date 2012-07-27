@@ -10,7 +10,6 @@
  */
 function tracker_uninstall() {
   variable_del('tracker_index_nid');
-  variable_del('tracker_batch_size');
 }
 
 /**
@@ -116,3 +115,23 @@ function tracker_schema() {
 
   return $schema;
 }
+
+/**
+ * @defgroup updates-7.x-to-8.x Updates from 7.x to 8.x
+ * @{
+ * Update functions from 7.x to 8.x.
+ */
+
+/**
+ * Moves tracker settings from variable to config.
+ */
+function tracker_update_8000() {
+  update_variables_to_config('tracker.settings', array(
+    'tracker_batch_size' => 'cron_index_limit',
+  ));
+}
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x".
+ * The next series of updates should start at 9000.
+ */
