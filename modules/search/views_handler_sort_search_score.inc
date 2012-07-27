@@ -5,12 +5,14 @@
  * Definition of views_handler_sort_search_score.
  */
 
+use Drupal\views\Plugins\views\sort\SortPluginBase;
+
 /**
  * Field handler to provide simple renderer that allows linking to a node.
  *
  * @ingroup views_sort_handlers
  */
-class views_handler_sort_search_score extends views_handler_sort {
+class views_handler_sort_search_score extends SortPluginBase {
   function query() {
     // Check to see if the search filter/argument added 'score' to the table.
     // Our filter stores it as $handler->search_score -- and we also

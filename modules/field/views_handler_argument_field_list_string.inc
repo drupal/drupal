@@ -5,13 +5,16 @@
  * Definition of views_handler_argument_field_list_text.
  */
 
+use Drupal\views\Plugins\views\argument\String;
+
+
 /**
  * Argument handler for list field to show the human readable name in the
  * summary.
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_field_list_string extends views_handler_argument_string {
+class views_handler_argument_field_list_string extends String {
   /**
    * Stores the allowed values of this field.
    *

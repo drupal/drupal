@@ -7,13 +7,14 @@
 
 use Drupal\views\Join;
 use Drupal\search\SearchQuery;
+use Drupal\views\Plugins\views\filter\FilterPluginBase;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_search extends views_handler_filter {
+class views_handler_filter_search extends FilterPluginBase {
   var $always_multiple = TRUE;
 
   /**

@@ -5,12 +5,14 @@
  * Definition of views_handler_argument_aggregator_iid.
  */
 
+use Drupal\views\Plugins\views\argument\Numeric;
+
 /**
  * Argument handler to accept an aggregator item id.
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_aggregator_iid extends views_handler_argument_numeric {
+class views_handler_argument_aggregator_iid extends Numeric {
   /**
    * Override the behavior of title(). Get the title of the category.
    */

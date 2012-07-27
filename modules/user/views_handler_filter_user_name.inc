@@ -5,12 +5,14 @@
  * Definition of views_handler_filter_user_name.
  */
 
+use Drupal\views\Plugins\views\filter\InOperator;
+
 /**
  * Filter handler for usernames.
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_user_name extends views_handler_filter_in_operator {
+class views_handler_filter_user_name extends InOperator {
   var $always_multiple = TRUE;
 
   function value_form(&$form, &$form_state) {

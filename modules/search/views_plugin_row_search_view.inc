@@ -5,10 +5,12 @@
  * Definition of views_plugin_row_search_view.
  */
 
+use Drupal\views\Plugins\views\row\RowPluginBase;
+
 /**
  * Plugin which performs a node_view on the resulting object.
  */
-class views_plugin_row_search_view extends views_plugin_row {
+class views_plugin_row_search_view extends RowPluginBase {
   function option_definition() {
     $options = parent::option_definition();
 

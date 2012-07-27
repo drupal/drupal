@@ -5,10 +5,12 @@
  * Contains the node RSS row style plugin.
  */
 
+use Drupal\views\Plugins\views\row\RowPluginBase;
+
 /**
  * Plugin which performs a comment_view on the resulting object.
  */
-class views_plugin_row_comment_view extends views_plugin_row {
+class views_plugin_row_comment_view extends RowPluginBase {
   var $base_field = 'cid';
   var $base_table = 'comment';
 

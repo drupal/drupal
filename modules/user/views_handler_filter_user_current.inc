@@ -5,12 +5,14 @@
  * Definition of views_handler_filter_user_current.
  */
 
+use Drupal\views\Plugins\views\filter\BooleanOperator;
+
 /**
  * Filter handler for the current user.
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_user_current extends views_handler_filter_boolean_operator {
+class views_handler_filter_user_current extends BooleanOperator {
   function construct() {
     parent::construct();
     $this->value_value = t('Is the logged in user');

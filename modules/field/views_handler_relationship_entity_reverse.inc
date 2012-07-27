@@ -6,13 +6,14 @@
  */
 
 use Drupal\views\Join;
+use Drupal\views\Plugins\views\relationship\RelationshipPluginBase;
 
 /**
  * A relationship handlers which reverse entity references.
  *
  * @ingroup views_relationship_handlers
  */
-class views_handler_relationship_entity_reverse extends views_handler_relationship  {
+class views_handler_relationship_entity_reverse extends RelationshipPluginBase  {
   function init(&$view, &$options) {
     parent::init($view, $options);
 

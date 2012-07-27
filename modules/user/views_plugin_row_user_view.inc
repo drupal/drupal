@@ -5,12 +5,14 @@
  * Contains the user view row plugin.
  */
 
+use Drupal\views\Plugins\views\row\RowPluginBase;
+
 /**
  * A row plugin which renders a user via user_view.
  *
  * @ingroup views_row_plugins
  */
-class views_plugin_row_user_view extends views_plugin_row {
+class views_plugin_row_user_view extends RowPluginBase {
   var $base_table = 'users';
   var $base_field = 'uid';
 

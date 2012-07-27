@@ -6,6 +6,8 @@
  */
 
 use Drupal\views\Join;
+use Drupal\views\Plugins\views\sort\SortPluginBase;
+
 
 /**
  * Sort handler to sort by last comment name which might be in 2 different
@@ -13,7 +15,7 @@ use Drupal\views\Join;
  *
  * @ingroup views_sort_handlers
  */
-class views_handler_sort_ncs_last_comment_name extends views_handler_sort {
+class views_handler_sort_ncs_last_comment_name extends SortPluginBase {
   function query() {
     $this->ensure_my_table();
     $join = new Join();

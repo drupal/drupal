@@ -5,12 +5,14 @@
  * Definition of views_handler_sort_comment_thread.
  */
 
+use Drupal\views\Plugins\views\sort\SortPluginBase;
+
 /**
  * Sort handler for ordering by thread.
  *
  * @ingroup views_sort_handlers
  */
-class views_handler_sort_comment_thread extends views_handler_sort {
+class views_handler_sort_comment_thread extends SortPluginBase {
   function query() {
     $this->ensure_my_table();
 

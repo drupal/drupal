@@ -5,13 +5,15 @@
  * Definition of views_handler_field_aggregator_title_link.
  */
 
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+
 /**
  * Field handler that turns an item's title into a clickable link to the original
  * source article.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_aggregator_title_link extends views_handler_field {
+class views_handler_field_aggregator_title_link extends FieldPluginBase {
   function construct() {
     parent::construct();
     $this->additional_fields['link'] = 'link';

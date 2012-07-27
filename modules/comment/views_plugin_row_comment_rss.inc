@@ -5,10 +5,12 @@
  * Contains the comment RSS row style plugin.
  */
 
+use Drupal\views\Plugins\views\row\RowPluginBase;
+
 /**
  * Plugin which formats the comments as RSS items.
  */
-class views_plugin_row_comment_rss extends views_plugin_row {
+class views_plugin_row_comment_rss extends RowPluginBase {
    var $base_table = 'comment';
    var $base_field = 'cid';
 

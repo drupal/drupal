@@ -5,13 +5,15 @@
  * Definition of views_handler_field_aggregator_category.
  */
 
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+
 /**
  * Field handler to provide simple renderer that allows linking to aggregator
  * category.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_aggregator_category extends views_handler_field {
+class views_handler_field_aggregator_category extends FieldPluginBase {
   /**
    * Constructor to provide additional field to add.
    */

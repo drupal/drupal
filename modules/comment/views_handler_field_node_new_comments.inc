@@ -5,12 +5,14 @@
  * Definition of views_handler_field_node_new_comments.
  */
 
+use Drupal\views\Plugins\views\field\Numeric;
+
 /**
  * Field handler to display the number of new comments.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node_new_comments extends views_handler_field_numeric {
+class views_handler_field_node_new_comments extends Numeric {
   function init(&$view, &$options) {
     parent::init($view, $options);
 

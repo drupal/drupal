@@ -5,10 +5,12 @@
  * Contains the user from URL argument default plugin.
  */
 
+use Drupal\views\Plugins\views\argument_default\ArgumentDefaultPluginBase;
+
 /**
  * Default argument plugin to extract a user via menu_get_object.
  */
-class views_plugin_argument_default_user extends views_plugin_argument_default {
+class views_plugin_argument_default_user extends ArgumentDefaultPluginBase {
   function option_definition() {
     $options = parent::option_definition();
     $options['user'] = array('default' => '', 'bool' => TRUE, 'translatable' => FALSE);

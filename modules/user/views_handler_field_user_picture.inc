@@ -5,12 +5,14 @@
  * Definition of views_handler_field_user_picture.
  */
 
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+
 /**
  * Field handler to provide simple renderer that allows using a themed user link.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_user_picture extends views_handler_field {
+class views_handler_field_user_picture extends FieldPluginBase {
   function construct() {
     parent::construct();
     $this->additional_fields['uid'] = 'uid';

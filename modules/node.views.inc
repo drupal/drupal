@@ -182,14 +182,14 @@ function node_views_data() {
     'title' => t('Promoted to front page'),
     'help' => t('Whether or not the content is promoted to the front page.'),
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'promoted-notpromoted' => array(t('Promoted'), t('Not promoted')),
       ),
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
       'label' => t('Promoted to front page'),
       'type' => 'yes-no',
     ),

@@ -5,12 +5,14 @@
  * Definition of views_handler_field_comment.
  */
 
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+
 /**
  * Field handler to allow linking to a comment.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_comment extends views_handler_field {
+class views_handler_field_comment extends FieldPluginBase {
   /**
    * Override init function to provide generic option to link to comment.
    */

@@ -5,12 +5,14 @@
  * Definition of views_handler_argument_vocabulary_machine_name.
  */
 
+use Drupal\views\Plugins\views\argument\String;
+
 /**
  * Argument handler to accept a vocabulary machine name.
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_vocabulary_machine_name extends views_handler_argument_string {
+class views_handler_argument_vocabulary_machine_name extends String {
   /**
    * Override the behavior of title(). Get the name of the vocabulary..
    */

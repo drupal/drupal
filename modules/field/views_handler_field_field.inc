@@ -5,6 +5,8 @@
  * Definition of views_handler_field_field.
  */
 
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+
 /**
  * Helper function: Return an array of formatter options for a field type.
  *
@@ -37,7 +39,7 @@ function _field_view_formatter_options($field_type = NULL) {
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_field extends views_handler_field {
+class views_handler_field_field extends FieldPluginBase {
   /**
    * An array to store field renderable arrays for use by render_items.
    * @var array

@@ -5,12 +5,14 @@
  * Definition of views_handler_filter_user_permissions.
  */
 
+use Drupal\views\Plugins\views\filter\ManyToOne;
+
 /**
  * Filter handler for user roles.
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_user_permissions extends views_handler_filter_many_to_one {
+class views_handler_filter_user_permissions extends ManyToOne {
   function get_value_options() {
     $module_info = system_get_info('module');
 

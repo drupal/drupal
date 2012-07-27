@@ -5,12 +5,14 @@
  * Definition of views_handler_field_search_score.
  */
 
+use Drupal\views\Plugins\views\field\Numeric;
+
 /**
  * Field handler to provide simple renderer that allows linking to a node.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_search_score extends views_handler_field_numeric {
+class views_handler_field_search_score extends Numeric {
   function option_definition() {
     $options = parent::option_definition();
 

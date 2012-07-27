@@ -5,12 +5,14 @@
  * Definition of views_handler_field_accesslog_path.
  */
 
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+
 /**
  * Field handler to provide simple renderer that turns a URL into a clickable link.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_accesslog_path extends views_handler_field {
+class views_handler_field_accesslog_path extends FieldPluginBase {
   /**
    * Override init function to provide generic option to link to node.
    */

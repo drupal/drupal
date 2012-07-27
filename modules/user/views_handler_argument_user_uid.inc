@@ -5,12 +5,14 @@
  * Definition of views_handler_argument_user_uid.
  */
 
+use Drupal\views\Plugins\views\argument\Numeric;
+
 /**
  * Argument handler to accept a user id.
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_user_uid extends views_handler_argument_numeric {
+class views_handler_argument_user_uid extends Numeric {
   /**
    * Override the behavior of title(). Get the name of the user.
    *

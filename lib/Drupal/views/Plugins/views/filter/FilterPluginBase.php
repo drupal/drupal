@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugins\views\filter;
 
 use Drupal\views\Plugins\views\Plugin;
+use Drupal\views\Plugins\views\Handler;
 
 /**
  * @defgroup views_filter_handlers Views filter handlers
@@ -35,7 +36,7 @@ use Drupal\views\Plugins\views\Plugin;
  *
  * @ingroup views_filter_handlers
  */
-class FilterPluginBase extends Plugin {
+class FilterPluginBase extends Handler {
   /**
    * Contains the actual value of the field,either configured in the views ui
    * or entered in the exposed filters.
@@ -723,7 +724,7 @@ class FilterPluginBase extends Plugin {
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_broken extends views_handler_filter {
+class views_handler_filter_broken extends FilterPluginBase {
   function ui_name($short = FALSE) {
     return t('Broken/missing handler');
   }

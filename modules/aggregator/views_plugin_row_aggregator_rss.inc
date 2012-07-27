@@ -5,10 +5,12 @@
  * Contains the Aggregator Item RSS row style plugin.
  */
 
+use Drupal\views\Plugins\views\row\RowPluginBase;
+
 /**
  * Plugin which loads an aggregator item and formats it as an RSS item.
  */
-class views_plugin_row_aggregator_rss extends views_plugin_row {
+class views_plugin_row_aggregator_rss extends RowPluginBase {
   var $base_table = 'aggregator_item';
   var $base_field = 'iid';
 

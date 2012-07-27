@@ -5,12 +5,14 @@
  * Definition of views_handler_field_node_comment.
  */
 
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+
 /**
  * Display node comment status.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node_comment extends views_handler_field {
+class views_handler_field_node_comment extends FieldPluginBase {
   function render($values) {
     $value = $this->get_value($values);
     switch ($value) {
