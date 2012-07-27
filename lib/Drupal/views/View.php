@@ -472,8 +472,7 @@ class View extends ViewsDbObject {
         $this->display[$id] = clone $this->display[$id];
         unset($this->display[$id]->handler);
       }
-      $plugin_manager = new DisplayPluginManager();
-      $this->display[$id]->handler = $plugin_manager->createInstance($this->display[$id]->display_plugin);
+      $this->display[$id]->handler = views_get_plugin('display', $this->display[$id]->display_plugin);
       if (!empty($this->display[$id]->handler)) {
         $this->display[$id]->handler->localization_keys = array($id);
         // Initialize the new display handler with data.
