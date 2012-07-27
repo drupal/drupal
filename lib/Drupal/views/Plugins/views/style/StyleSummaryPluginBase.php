@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugins\views\style;
 
-use Drupal\views\Plugins\Plugin;
+use Drupal\views\Plugins\views\Plugin;
 
 /**
  * The default style plugin for summaries.
