@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @ingroup views_display_plugins
  */
-class Feed extends DisplayPluginBase {
+class Feed extends Page {
   function init(&$view, &$display, $options = NULL) {
     parent::init($view, $display, $options);
 
