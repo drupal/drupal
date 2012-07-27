@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Definition of views_handler_filter_node_status.
+ * Definition of Drupal\node\Plugins\views\filter\Status
  */
+
+namespace Drupal\node\Plugins\views\filter;
 
 use Drupal\views\Plugins\views\filter\FilterPluginBase;
 
@@ -12,7 +14,7 @@ use Drupal\views\Plugins\views\filter\FilterPluginBase;
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_node_status extends FilterPluginBase {
+class Status extends FilterPluginBase {
   function admin_summary() { }
   function operator_form(&$form, &$form_state) { }
   function can_expose() { return FALSE; }

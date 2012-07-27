@@ -34,6 +34,23 @@ function views_api_version() {
 }
 
 /**
+ * Implements hook_init().
+ *
+ *
+ */
+function views_init() {
+  $core_modules = array('aggregator', 'book', 'comment', 'contact', 'field', 'filter', 'locale', 'node', 'search', 'statistics', 'system', 'taxonomy', 'translation', 'user');
+  $path = drupal_get_path('module', 'views');
+  $loader = drupal_classloader();
+  foreach ($core_modules as $module) {
+    if (function_exists($module . '_views_api')) {
+      $name = $module . '\\Plugins';
+      $loader->registerNamespace('Drupal\\' . $name, DRUPAL_ROOT . '/' . $path . '/lib');
+    }
+  }
+}
+
+/**
  * Implements hook_ctools_exportable_info().
  */
 function views_ctools_exportable_info() {
