@@ -1250,7 +1250,7 @@ class ArgumentPluginBase extends Handler {
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_broken extends views_handler_argument {
+class views_handler_argument_broken extends ArgumentPluginBase {
   function ui_name($short = FALSE) {
     return t('Broken/missing handler');
   }

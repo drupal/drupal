@@ -167,7 +167,7 @@ class RelationshipPluginBase extends Plugin {
  *
  * @ingroup views_relationship_handlers
  */
-class views_handler_relationship_broken extends views_handler_relationship {
+class views_handler_relationship_broken extends RelationshipPluginBase {
   function ui_name($short = FALSE) {
     return t('Broken/missing handler');
   }

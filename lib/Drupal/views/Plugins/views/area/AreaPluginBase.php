@@ -98,7 +98,7 @@ class AreaPluginBase extends Handler {
  *
  * @ingroup views_area_handlers
  */
-class views_handler_area_broken extends views_handler_area {
+class views_handler_area_broken extends AreaPluginBase {
   function ui_name($short = FALSE) {
     return t('Broken/missing handler');
   }
