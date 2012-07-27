@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugins\views\area;
 
 use Drupal\views\Plugins\views\Plugin;
+use Drupal\views\Plugins\views\Handler;
 
 /**
  * @defgroup views_area_handlers Views area handlers
@@ -21,7 +22,7 @@ use Drupal\views\Plugins\views\Plugin;
  *
  * @ingroup views_area_handlers
  */
-class AreaPluginBase extends Plugin {
+class AreaPluginBase extends Handler {
   /**
    * Get this field's label.
    */

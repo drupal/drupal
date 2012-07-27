@@ -268,7 +268,7 @@ function views_views_plugins() {
         'title' => t('SQL Query'),
         'help' => t('Query will be generated and run using the Drupal database API.'),
         'class' => 'views_plugin_query_default',
-        'class' => 'Drupal\views\Plugins\views\query\SqlQuery',
+        'class' => 'Drupal\views\Plugins\views\query\Sql',
       ),
     ),
     'cache' => array(

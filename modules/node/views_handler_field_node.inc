@@ -5,6 +5,8 @@
  * Contains the basic 'node' field handler.
  */
 
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+
 /**
  * Field handler to provide simple renderer that allows linking to a node.
  * Definition terms:
@@ -12,7 +14,7 @@
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node extends views_handler_field {
+class views_handler_field_node extends FieldPluginBase {
 
   function init(&$view, &$options) {
     parent::init($view, $options);

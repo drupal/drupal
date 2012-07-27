@@ -70,7 +70,8 @@ function _views_create_handler($definition, $type = 'handler', $handler_type = N
     $handler = new $definition['override handler'];
   }
   else {
-    $handler = new $definition['handler'];
+    // @todo: $definition['handler'] is kind of a bad.
+    $handler = new $definition['handler']($definition, $definition['handler']);
   }
 
   $handler->set_definition($definition);

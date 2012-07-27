@@ -9,7 +9,7 @@ namespace Drupal\views\Plugins\views\display;
 
 use Drupal\views\View;
 use Drupal\views\Plugins\views\Plugin;
-use Drupal\views\Plugins\views\query\QueryPluginType;
+use Drupal\views\Plugins\Type\QueryPluginManager;
 
 /**
  * @defgroup views_display_plugins Views display plugins
@@ -881,6 +881,10 @@ class DisplayPluginBase extends Plugin {
           // access & cache store their options as siblings with the
           // type; all others use an 'options' array.
           if ($type != 'access' && $type != 'cache') {
+            if (!isset($options['options'])) {
+//              debug($type);
+//              debug($options);
+            }
             $options = $options['options'];
           }
       }
@@ -889,7 +893,7 @@ class DisplayPluginBase extends Plugin {
         $plugin = views_get_plugin($type, $name);
       }
       else {
-        $plugin_type = new QueryPluginType();
+        $plugin_type = new QueryPluginManager();
         $plugin = $plugin_type->createInstance($name);
       }
 

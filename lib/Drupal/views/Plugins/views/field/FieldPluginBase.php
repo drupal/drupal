@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugins\views\field;
 
 use Drupal\views\Plugins\views\Plugin;
+use Drupal\views\Plugins\views\Handler;
 
 /**
  * @defgroup views_field_handlers Views field handlers
@@ -46,7 +47,7 @@ define('VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY', 2);
  *
  * @ingroup views_field_handlers
  */
-class FieldPluginBase extends Plugin {
+class FieldPluginBase extends Handler {
 
   var $field_alias = 'unknown';
   var $aliases = array();
@@ -1624,7 +1625,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_broken extends views_handler_field {
+class views_handler_field_broken extends FieldPluginBase {
   function ui_name($short = FALSE) {
     return t('Broken/missing handler');
   }
@@ -1648,7 +1649,7 @@ class views_handler_field_broken extends views_handler_field {
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_file_size extends views_handler_field {
+class views_handler_field_file_size extends FieldPluginBase {
   function option_definition() {
     $options = parent::option_definition();
 
@@ -1691,7 +1692,7 @@ class views_handler_field_file_size extends views_handler_field {
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_xss extends views_handler_field {
+class views_handler_field_xss extends FieldPluginBase {
   function render($values) {
     $value = $this->get_value($values);
     return $this->sanitize_value($value, 'xss');

@@ -1364,17 +1364,39 @@ function views_get_plugin($type, $plugin, $reset = FALSE) {
  */
 function views_get_plugin_manager($type) {
   switch ($type) {
-    case 'style':
-      $manager = new StylePluginManager();
-      break;
     case 'display':
       $manager = new DisplayPluginManager();
       break;
-    case 'localization':
-      $manager = new LocalizationPluginManager();
+    case 'style':
+      $manager = new StylePluginManager();
       break;
     case 'row':
       $manager = new RowPluginManager();
+      break;
+    case 'argument default':
+      $manager = new ArgumentDefaultPluginManager();
+      break;
+    case 'argument validator':
+      $manager = new ArgumentValidatorPluginManager();
+      break;
+    case 'access':
+      $manager = new AccessPluginManager();
+      break;
+    case 'query':
+      $manager = new QueryPluginManager();
+      break;
+    case 'cache':
+      $manager = new CachePluginManager();
+      break;
+    // @todo: find out whether to use underscores or spaces.
+    case 'exposed_form':
+      $manager = new ExposedFormPluginManager();
+      break;
+    case 'pager':
+      $manager = new PagerPluginManager();
+      break;
+    case 'localization':
+      $manager = new LocalizationPluginManager();
       break;
   }
 
