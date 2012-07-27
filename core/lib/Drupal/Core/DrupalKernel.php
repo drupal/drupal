@@ -58,6 +58,7 @@ class DrupalKernel extends Kernel {
   protected function buildContainer() {
     $container = $this->getContainerBuilder();
 
+    // Merge in the minimal bootstrap container.
     if ($bootstrap_container = drupal_container()) {
       $container->merge($bootstrap_container);
     }

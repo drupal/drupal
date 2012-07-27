@@ -2407,25 +2407,20 @@ function drupal_get_bootstrap_phase() {
 /**
  * Retrieves the Drupal Container to standardize object construction.
  *
- * Example:
- * @code
- * // Register the LANGUAGE_TYPE_INTERFACE definition. Registered definitions
- * // do not necessarily need to be named by a constant.
- * // See 
- * // http://symfony.com/doc/current/components/dependency_injection/introduction.html
- * // for usage examples of adding object initialization code after register().
- * $container = drupal_container();
- * $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
+ * On a normal page request the container is built by the kernel and passed in
+ * to this function which stores it statically. Any full bootstrap outside of
+ * the context of a page request will require a container with a minimal set of
+ * services. If this function is called without the $reset parameter, and no
+ * container object has been statically cached, it builds this minimal container,
+ * registering the services that are required.
  *
- * // Retrieve the LANGUAGE_TYPE_INTERFACE object.
- * $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
- * @endcode
+ * @see Drupal\Core\DrupalKernel
  *
  * @param $reset
  *   A new container instance to reset the Drupal container to.
  *
- * @return Drupal\Component\DependencyInjection\ContainerBuilder
- *   The instance of the Drupal Container used to set up and maintain object
+ * @return Symfony\Component\DependencyInjection\Container
+ *   The instance of the Container used to set up and maintain object
  *   instances.
  */
 function drupal_container(Container $reset = NULL) {
@@ -2442,9 +2437,6 @@ function drupal_container(Container $reset = NULL) {
     // This will get merged with the full Kernel-built Container on normal page
     // requests.
     $container = new ContainerBuilder();
-    // An interface language always needs to be available for t() and other
-    // functions.
-    $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
     // Register configuration storage dispatcher.
     $container->setParameter('config.storage.info', array(
       'Drupal\Core\Config\DatabaseStorage' => array(
