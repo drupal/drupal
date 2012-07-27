@@ -445,9 +445,9 @@ function views_discover_plugins() {
         if (!isset($def['path'])) {
           $def['path'] = $path;
         }
-        if (!isset($def['file'])) {
-          $def['file'] = $def['handler'] . '.inc';
-        }
+//        if (!isset($def['file'])) {
+//          $def['file'] = $def['handler'] . '.inc';
+//        }
         if (!isset($def['parent'])) {
           $def['parent'] = 'parent';
         }

@@ -5,6 +5,8 @@
  * Contains the node view row style plugin.
  */
 
+use Drupal\views\Plugins\views\row\RowPluginBase;
+
 /**
  * Plugin which performs a node_view on the resulting object.
  *
@@ -12,7 +14,7 @@
  *
  * @ingroup views_row_plugins
  */
-class views_plugin_row_node_view extends views_plugin_row {
+class views_plugin_row_node_view extends RowPluginBase {
   // Basic properties that let the row style follow relationships.
   var $base_table = 'node';
   var $base_field = 'nid';

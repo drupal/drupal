@@ -5,11 +5,13 @@
  * Contains the node RSS row style plugin.
  */
 
+use Drupal\views\Plugins\views\row\RowPluginBase;
+
 /**
  * Plugin which performs a node_view on the resulting object
  * and formats it as an RSS item.
  */
-class views_plugin_row_node_rss extends views_plugin_row {
+class views_plugin_row_node_rss extends RowPluginBase {
   // Basic properties that let the row style follow relationships.
   var $base_table = 'node';
   var $base_field = 'nid';

@@ -579,8 +579,7 @@ class View extends ViewsDbObject {
       $this->style_options = $this->display_handler->get_option('style_options');
     }
 
-    $style_manager = new StylePluginManager();
-    $this->style_plugin = $style_manager->createInstance($this->plugin_name);
+    $this->style_plugin = views_get_plugin('style', $this->plugin_name);
 
     if (empty($this->style_plugin)) {
       return FALSE;
