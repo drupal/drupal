@@ -60,11 +60,11 @@ function node_views_data() {
     ),
     // Information for accepting a nid as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     // Information for sorting on a nid.
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
 
@@ -82,14 +82,14 @@ function node_views_data() {
       'link_to_node default' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
   );
 
@@ -98,14 +98,14 @@ function node_views_data() {
     'title' => t('Post date'), // The item it appears as on the UI,
     'help' => t('The date the content was posted.'), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'handler' => 'Drupal\views\Plugins\views\field\Date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'handler' => 'Drupal\views\Plugins\views\sort\Date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'handler' => 'Drupal\views\Plugins\views\filter\Date',
     ),
   );
 
@@ -114,14 +114,14 @@ function node_views_data() {
     'title' => t('Updated date'), // The item it appears as on the UI,
     'help' => t('The date the content was last updated.'), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'handler' => 'Drupal\views\Plugins\views\field\Date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'handler' => 'Drupal\views\Plugins\views\sort\Date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'handler' => 'Drupal\views\Plugins\views\filter\Date',
     ),
   );
 
@@ -134,7 +134,7 @@ function node_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_node_type',
@@ -149,20 +149,20 @@ function node_views_data() {
     'title' => t('Published'),
     'help' => t('Whether or not the content is published.'),
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'published-notpublished' => array(t('Published'), t('Not published')),
       ),
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
       'label' => t('Published'),
       'type' => 'yes-no',
       'use equal' => TRUE, // Use status = 1 instead of status <> 0 in WHERE statment
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
 
@@ -204,19 +204,19 @@ function node_views_data() {
     'help' => t('Whether or not the content is sticky.'), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'sticky' => array(t('Sticky'), t('Not sticky')),
       ),
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
       'label' => t('Sticky'),
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
       'help' => t('Whether or not the content is sticky. To list sticky content first, set this to descending.'),
     ),
   );
@@ -380,7 +380,7 @@ function node_views_data() {
     'relationship' => array(
       'title' => t('Author'),
       'help' => t('Relate content to the user who created it.'),
-      'handler' => 'views_handler_relationship',
+      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
       'base' => 'users',
       'field' => 'uid',
       'label' => t('author'),
@@ -389,7 +389,7 @@ function node_views_data() {
       'handler' => 'views_handler_filter_user_name',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
     ),
     'field' => array(
       'handler' => 'views_handler_field_user',
@@ -450,7 +450,7 @@ function node_views_data() {
     'title' => t('User'),
     'help' => t('Relate a content revision to the user who created the revision.'),
     'relationship' => array(
-      'handler' => 'views_handler_relationship',
+      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
       'base' => 'users',
       'base field' => 'uid',
       'label' => t('revision user'),
@@ -473,14 +473,14 @@ function node_views_data() {
     ),
     // Information for accepting a nid as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     // Information for sorting on a nid.
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'relationship' => array(
-      'handler' => 'views_handler_relationship',
+      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
       'base' => 'node',
       'base field' => 'vid',
       'title' => t('Content'),
@@ -499,13 +499,13 @@ function node_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
   );
 
@@ -515,10 +515,10 @@ function node_views_data() {
     'help' => t('The log message entered when the revision was created.'), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_xss',
+      'handler' => 'Drupal\views\Plugins\views\field\Xss',
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
   );
 
@@ -528,14 +528,14 @@ function node_views_data() {
     'title' => t('Updated date'), // The item it appears as on the UI,
     'help' => t('The date the node was last updated.'), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'handler' => 'Drupal\views\Plugins\views\field\Date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'handler' => 'Drupal\views\Plugins\views\sort\Date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'handler' => 'Drupal\views\Plugins\views\filter\Date',
     ),
   );
 

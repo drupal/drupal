@@ -44,10 +44,10 @@ function system_views_data() {
       'numeric' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
 
@@ -60,13 +60,13 @@ function system_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
   );
 
@@ -79,13 +79,13 @@ function system_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
   );
 
@@ -98,13 +98,13 @@ function system_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
   );
 
@@ -128,10 +128,10 @@ function system_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
   );
 
@@ -144,7 +144,7 @@ function system_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_file_status',
@@ -156,14 +156,14 @@ function system_views_data() {
     'title' => t('Upload date'),
     'help' => t('The date the file was uploaded.'),
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'handler' => 'Drupal\views\Plugins\views\field\Date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'handler' => 'Drupal\views\Plugins\views\sort\Date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'handler' => 'Drupal\views\Plugins\views\filter\Date',
     ),
   );
 
@@ -391,65 +391,65 @@ function system_views_data() {
     'title' => t('Module'),
     'help' => t('The module managing this file relationship.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
   $data['file_usage']['type'] = array(
     'title' => t('Entity type'),
     'help' => t('The type of entity that is related to the file.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
   $data['file_usage']['id'] = array(
     'title' => t('Entity ID'),
     'help' => t('The ID of the entity that is related to the file.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
   $data['file_usage']['count'] = array(
     'title' => t('Use count'),
     'help' => t('The number of times the file is used by this entity.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
 
@@ -470,18 +470,18 @@ function system_views_data() {
     'title' => t('Module/Theme/Theme engine filename'),
     'help' => t('The path of the primary file for this item, relative to the Drupal root; e.g. modules/node/node.module.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
       'name field' => 'filename', // the field to display in the summary.
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
   // - name
@@ -489,18 +489,18 @@ function system_views_data() {
     'title' => t('Module/Theme/Theme engine name'),
     'help' => t('The name of the item; e.g. node.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
       'name field' => 'name', // the field to display in the summary.
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
   // - type
@@ -508,18 +508,18 @@ function system_views_data() {
     'title' => t('Type'),
     'help' => t('The type of the item, either module, theme, or theme_engine.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
       'name field' => 'type', // the field to display in the summary.
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_system_type',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
   // - status
@@ -527,18 +527,18 @@ function system_views_data() {
     'title' => t('Status'),
     'help' => t('Boolean indicating whether or not this item is enabled.'),
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
       'name field' => 'status', // the field to display in the summary.
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
   // - schema version
@@ -546,18 +546,18 @@ function system_views_data() {
     'title' => t('Schema version'),
     'help' => t("The module's database schema version number. -1 if the module is not installed (its tables do not exist); 0 or the largest N of the module's hook_update_N() function that has either been run or existed when the module was first installed."),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
       'name field' => 'schema_version', // the field to display in the summary.
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
 

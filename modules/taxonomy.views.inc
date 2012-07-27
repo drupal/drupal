@@ -40,11 +40,11 @@ function taxonomy_views_data() {
     'title' => t('Name'), // The item it appears as on the UI,
     'field' => array(
       'help' => t('Name of the vocabulary a term is a member of. This will be the vocabulary that whichever term the "Taxonomy: Term" field is; and can similarly cause duplicates.'),
-      'handler' => 'views_handler_field',
+      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
       'help' => t('The taxonomy vocabulary name'),
     ),
   );
@@ -52,7 +52,7 @@ function taxonomy_views_data() {
     'title' => t('Machine name'), // The item it appears as on the UI,
     'field' => array(
       'help' => t('Machine-Name of the vocabulary a term is a member of. This will be the vocabulary that whichever term the "Taxonomy: Term" field is; and can similarly cause duplicates.'),
-      'handler' => 'views_handler_field',
+      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
       'click sortable' => TRUE,
     ),
     'filter' => array(
@@ -68,7 +68,7 @@ function taxonomy_views_data() {
     'title' => t('Vocabulary ID'), // The item it appears as on the UI,
     'help' => t('The taxonomy vocabulary ID'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -76,32 +76,32 @@ function taxonomy_views_data() {
       'name field' => 'name',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
   $data['taxonomy_vocabulary']['description'] = array(
     'title' => t('Description'), // The item it appears as on the UI,
     'help' => t('The taxonomy vocabulary description'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
     ),
   );
   $data['taxonomy_vocabulary']['weight'] = array(
     'title' => t('Weight'),
     'help' => t('The taxonomy vocabulary weight'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
       'name field' => 'weight',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
   );
 
@@ -146,11 +146,11 @@ function taxonomy_views_data() {
     'title' => t('Term ID'),
     'help' => t('The tid of a taxonomy term.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_taxonomy',
@@ -172,7 +172,7 @@ function taxonomy_views_data() {
     'help' => t('The tid of a taxonomy term.'),
     'real field' => 'tid',
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
       'allow empty' => TRUE,
     ),
   );
@@ -182,7 +182,7 @@ function taxonomy_views_data() {
       'title' => t('Representative node'),
       'label'  => t('Representative node'),
       'help' => t('Obtains a single representative node for each term, according to a chosen sort criterion.'),
-      'handler' => 'views_handler_relationship_groupwise_max',
+      'handler' => 'Drupal\views\Plugins\views\relationship\GroupwiseMax',
       'relationship field' => 'tid',
       'outer field' => 'taxonomy_term_data.tid',
       'argument table' => 'taxonomy_term_data',
@@ -201,14 +201,14 @@ function taxonomy_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
       'help' => t('Taxonomy term name.'),
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
       'help' => t('Taxonomy term name.'),
       'many to one' => TRUE,
       'empty field name' => t('Uncategorized'),
@@ -220,17 +220,17 @@ function taxonomy_views_data() {
     'title' => t('Weight'),
     'help' => t('The term weight field'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
     ),
   );
 
@@ -239,11 +239,11 @@ function taxonomy_views_data() {
     'title' => t('Term description'),
     'help' => t('The description associated with a taxonomy term.'),
     'field' => array(
-      'handler' => 'views_handler_field_markup',
+      'handler' => 'Drupal\views\Plugins\views\field\Markup',
       'format' => array('field' => 'format'),
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
   );
 
@@ -292,7 +292,7 @@ function taxonomy_views_data() {
     'title' => t('Content with term'),
     'help' => t('Relate all content tagged with a term.'),
     'relationship' => array(
-      'handler' => 'views_handler_relationship',
+      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
       'base' => 'node',
       'base field' => 'nid',
       'label' => t('node'),
@@ -436,7 +436,7 @@ function taxonomy_field_views_data($field) {
 
     // Add the relationship only on the tid field.
     $data[$table_name][$field['field_name'] . '_tid']['relationship'] = array(
-      'handler' => 'views_handler_relationship',
+      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
       'base' => 'taxonomy_term_data',
       'base field' => 'tid',
       'label' => t('term from !field_name', array('!field_name' => $field['field_name'])),
