@@ -89,7 +89,7 @@ function search_views_data() {
       'handler' => 'views_handler_argument_node_nid',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_equality',
+      'handler' => 'Drupal\views\Plugins\views\filter\Equality',
     ),
   );
 
@@ -107,7 +107,7 @@ function search_views_data() {
       'handler' => 'views_handler_argument_node_nid',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_equality',
+      'handler' => 'Drupal\views\Plugins\views\filter\Equality',
     ),
   );
 

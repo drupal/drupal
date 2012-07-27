@@ -30,7 +30,7 @@ function translation_views_data_alter(&$data) {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_node_tnid',
@@ -39,14 +39,14 @@ function translation_views_data_alter(&$data) {
       'validate type' => 'tnid',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'relationship' => array(
       'title' => t('Source translation'),
       'help' => t('The source that this content was translated from.'),
       'base' => 'node',
       'base field' => 'nid',
-      'handler' => 'views_handler_relationship',
+      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
       'label' => t('Source translation'),
     ),
   );
@@ -94,11 +94,11 @@ function translation_views_data_alter(&$data) {
     'title' => t('Translation status'),
     'help' => t('The translation status of the content - whether or not the translation needs to be updated.'),
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
       'label' => t('Outdated'),
       'type' => 'yes-no',
     ),

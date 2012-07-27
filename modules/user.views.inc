@@ -59,12 +59,12 @@ function user_views_data() {
       'handler' => 'views_handler_filter_user_name',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'relationship' => array(
       'title' => t('Content authored'),
       'help' => t('Relate content to the user who created it. This relationship will create one record for each content item created by the user.'),
-      'handler' => 'views_handler_relationship',
+      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
       'base' => 'node',
       'base field' => 'uid',
       'field' => 'uid',
@@ -78,7 +78,7 @@ function user_views_data() {
     'real field' => 'uid',
     'filter' => array(
       'title' => t('The user ID'),
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
   );
 
@@ -88,7 +88,7 @@ function user_views_data() {
       'title' => t('Representative node'),
       'label'  => t('Representative node'),
       'help' => t('Obtains a single representative node for each user, according to a chosen sort criterion.'),
-      'handler' => 'views_handler_relationship_groupwise_max',
+      'handler' => 'Drupal\views\Plugins\views\relationship\GroupwiseMax',
       'relationship field' => 'uid',
       'outer field' => 'users.uid',
       'argument table' => 'users',
@@ -118,13 +118,13 @@ function user_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
       'title' => t('Name (raw)'),
       'help' => t('The user or author name. This filter does not check if the user exists and allows partial matching. Does not utilize autocomplete.')
     ),
@@ -140,13 +140,13 @@ function user_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
   );
 
@@ -159,7 +159,7 @@ function user_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_node_language',
@@ -180,10 +180,10 @@ function user_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
       'label' => t('Has Avatar'),
       'type' => 'yes-no',
     ),
@@ -203,14 +203,14 @@ function user_views_data() {
     'title' => t('Created date'), // The item it appears as on the UI,
     'help' => t('The date the user was created.'), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'handler' => 'Drupal\views\Plugins\views\field\Date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'handler' => 'Drupal\views\Plugins\views\sort\Date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'handler' => 'Drupal\views\Plugins\views\filter\Date',
     ),
   );
 
@@ -274,14 +274,14 @@ function user_views_data() {
     'title' => t('Last access'), // The item it appears as on the UI,
     'help' => t("The user's last access date."), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'handler' => 'Drupal\views\Plugins\views\field\Date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'handler' => 'Drupal\views\Plugins\views\sort\Date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'handler' => 'Drupal\views\Plugins\views\filter\Date',
     ),
   );
 
@@ -290,14 +290,14 @@ function user_views_data() {
     'title' => t('Last login'), // The item it appears as on the UI,
     'help' => t("The user's last login date."), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'handler' => 'Drupal\views\Plugins\views\field\Date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'handler' => 'Drupal\views\Plugins\views\sort\Date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'handler' => 'Drupal\views\Plugins\views\filter\Date',
     ),
   );
 
@@ -307,19 +307,19 @@ function user_views_data() {
     'help' => t('Whether a user is active or blocked.'), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'active-blocked' => array(t('Active'), t('Blocked')),
       ),
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
       'label' => t('Active'),
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
 
@@ -329,11 +329,11 @@ function user_views_data() {
     'help' => t("The user's signature."), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_markup',
+      'handler' => 'Drupal\views\Plugins\views\field\Markup',
       'format' => filter_fallback_format(),
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
   );
 
@@ -357,7 +357,7 @@ function user_views_data() {
     'title' => t('Data'),
     'help' => t('Provide serialized data of the user'),
     'field' => array(
-      'handler' => 'views_handler_field_serialized',
+      'handler' => 'Drupal\views\Plugins\views\field\Serialized',
     ),
   );
 
@@ -485,14 +485,14 @@ function user_views_data() {
     'title' => t('Authmap ID'),
     'help' => t('The Authmap ID.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
       'numeric' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
       'numeric' => TRUE,
     ),
   );
@@ -500,26 +500,26 @@ function user_views_data() {
     'title' => t('Authentication name'),
     'help' => t('The unique authentication name.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
     ),
   );
   $data['authmap']['module'] = array(
     'title' => t('Authentication module'),
     'help' => t('The name of the module managing the authentication entry.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'Drupal\views\Plugins\views\field\FieldNumeric',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argment\String',
     ),
   );
 

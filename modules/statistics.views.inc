@@ -32,14 +32,14 @@ function statistics_views_data() {
     'help' => t('The total number of times the node has been viewed.'),
 
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
 
@@ -49,14 +49,14 @@ function statistics_views_data() {
     'help' => t('The total number of times the node has been viewed today.'),
 
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
 
@@ -66,14 +66,14 @@ function statistics_views_data() {
     'help' => t('The most recent time the node has been viewed.'),
 
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'handler' => 'Drupal\views\Plugins\views\field\Date',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'handler' => 'Drupal\views\Plugins\views\filter\Date',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
 
@@ -104,19 +104,19 @@ function statistics_views_data() {
     'title' => t('Aid'),
     'help' => t('Unique access event ID.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
       'name field' => 'wid',
       'numeric' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
 
@@ -130,13 +130,13 @@ function statistics_views_data() {
       'click sortable' => TRUE,
      ),
      'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
      ),
      'argument' => array(
-       'handler' => 'views_handler_argument_string',
+       'handler' => 'Drupal\views\Plugins\views\argument\String',
      ),
      'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
      ),
   );
 
@@ -150,13 +150,13 @@ function statistics_views_data() {
       'click sortable' => TRUE,
      ),
      'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
      ),
      'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
      ),
      'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\sort\String',
      ),
   );
 
@@ -170,10 +170,10 @@ function statistics_views_data() {
       'click sortable' => TRUE,
      ),
      'filter' => array(
-       'handler' => 'views_handler_filter_string',
+       'handler' => 'Drupal\views\Plugins\views\filter\String',
      ),
      'sort' => array(
-       'handler' => 'views_handler_sort',
+       'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
      ),
      //No argument here.  Can't send forward slashes as arguments.
      //Can be worked around by node ID.
@@ -185,14 +185,14 @@ function statistics_views_data() {
     'title' => t('Referrer'),
     'help' => t('Referrer URI.'),
     'field' => array(
-      'handler' => 'views_handler_field_url',
+      'handler' => 'Drupal\views\Plugins\views\field\Url',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
   );
 
@@ -201,17 +201,17 @@ function statistics_views_data() {
     'title' => t('Hostname'),
     'help' => t('Hostname of user that visited the page.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
   );
 
@@ -220,7 +220,7 @@ function statistics_views_data() {
     'title' => t('User'),
     'help' => t('The user who visited the site.'),
     'relationship' => array(
-      'handler' => 'views_handler_relationship',
+      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
       'base' => 'users',
       'base field' => 'uid',
      ),
@@ -231,14 +231,14 @@ function statistics_views_data() {
     'title' => t('Timer'),
     'help' => t('Time in milliseconds that the page took to load.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\Sort\SortPluginBase',
     ),
   );
 
@@ -247,14 +247,14 @@ function statistics_views_data() {
     'title' => t('Timestamp'),
     'help' => t('Timestamp of when the page was visited.'),
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'handler' => 'Drupal\views\Plugins\views\field\Date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'handler' => 'Drupal\views\Plugins\views\filter\Date',
     ),
   );
 
