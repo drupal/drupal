@@ -7,10 +7,11 @@
  * @ingroup views_argument_handlers
  */
 
+use Drupal\views\Plugins\views\argument\Date;
 /**
  * Argument handler for a full date (CCYYMMDD)
  */
-class views_handler_argument_node_created_fulldate extends views_handler_argument_date {
+class views_handler_argument_node_created_fulldate extends Date {
   /**
    * Constructor implementation
    */
@@ -40,7 +41,7 @@ class views_handler_argument_node_created_fulldate extends views_handler_argumen
 /**
  * Argument handler for a year (CCYY)
  */
-class views_handler_argument_node_created_year extends views_handler_argument_date {
+class views_handler_argument_node_created_year extends Date {
   /**
    * Constructor implementation
    */
@@ -54,7 +55,7 @@ class views_handler_argument_node_created_year extends views_handler_argument_da
 /**
  * Argument handler for a year plus month (CCYYMM)
  */
-class views_handler_argument_node_created_year_month extends views_handler_argument_date {
+class views_handler_argument_node_created_year_month extends Date {
   /**
    * Constructor implementation
    */
@@ -84,7 +85,7 @@ class views_handler_argument_node_created_year_month extends views_handler_argum
 /**
  * Argument handler for a month (MM)
  */
-class views_handler_argument_node_created_month extends views_handler_argument_date {
+class views_handler_argument_node_created_month extends Date {
   /**
    * Constructor implementation
    */
@@ -120,7 +121,7 @@ class views_handler_argument_node_created_month extends views_handler_argument_d
 /**
  * Argument handler for a day (DD)
  */
-class views_handler_argument_node_created_day extends views_handler_argument_date {
+class views_handler_argument_node_created_day extends Date {
   /**
    * Constructor implementation
    */
@@ -157,7 +158,7 @@ class views_handler_argument_node_created_day extends views_handler_argument_dat
 /**
  * Argument handler for a week.
  */
-class views_handler_argument_node_created_week extends views_handler_argument_date {
+class views_handler_argument_node_created_week extends Date {
   /**
    * Constructor implementation
    */
