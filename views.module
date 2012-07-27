@@ -25,6 +25,7 @@ use Drupal\views\Plugins\Type\PagerPluginManager;
 use Drupal\views\Plugins\Type\QueryPluginManager;
 use Drupal\views\Plugins\Type\RowPluginManager;
 use Drupal\views\Plugins\Type\ExposedFormPluginManager;
+use Drupal\views\Plugins\Type\HandlerPluginManager;
 
 /**
  * Advertise the current views api version
@@ -1414,6 +1415,9 @@ function views_get_plugin_manager($type) {
       break;
     case 'localization':
       $manager = new LocalizationPluginManager();
+      break;
+    case 'sort':
+      $manager = new HandlerPluginManager('sort');
       break;
   }
 

@@ -6,11 +6,18 @@
  */
 
 use Drupal\views\Plugins\views\sort\SortPluginBase;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.
  *
  * @ingroup views_sort_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "search_score"
+ * )
  */
 class views_handler_sort_search_score extends SortPluginBase {
   function query() {

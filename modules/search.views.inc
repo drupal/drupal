@@ -70,7 +70,7 @@ function search_views_data() {
     ),
     // Information for sorting on a search score.
     'sort' => array(
-      'handler' => 'views_handler_sort_search_score',
+      'plugin_id' => 'search_score',
       'no group by' => TRUE,
     ),
   );

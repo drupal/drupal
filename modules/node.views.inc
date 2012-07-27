@@ -64,7 +64,7 @@ function node_views_data() {
     ),
     // Information for sorting on a nid.
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -82,7 +82,7 @@ function node_views_data() {
       'link_to_node default' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
@@ -102,7 +102,7 @@ function node_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\Date',
+      'plugin_id' => 'date'
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\Date',
@@ -118,7 +118,7 @@ function node_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\Date',
+      'plugin_id' => 'date'
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\Date',
@@ -134,7 +134,7 @@ function node_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_node_type',
@@ -162,7 +162,7 @@ function node_views_data() {
       'use equal' => TRUE, // Use status = 1 instead of status <> 0 in WHERE statment
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -194,7 +194,7 @@ function node_views_data() {
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -216,7 +216,7 @@ function node_views_data() {
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
       'help' => t('Whether or not the content is sticky. To list sticky content first, set this to descending.'),
     ),
   );
@@ -477,7 +477,7 @@ function node_views_data() {
     ),
     // Information for sorting on a nid.
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'relationship' => array(
       'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
@@ -499,7 +499,7 @@ function node_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\String',
@@ -532,7 +532,7 @@ function node_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\Date',
+      'plugin_id' => 'date'
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\Date',

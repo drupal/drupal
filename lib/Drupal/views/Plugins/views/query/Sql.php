@@ -1533,7 +1533,7 @@ class Sql extends QueryPluginBase {
           'argument' => 'views_handler_argument_group_by_numeric',
           'field' => 'views_handler_field_numeric',
           'filter' => 'views_handler_filter_group_by_numeric',
-          'sort' => 'views_handler_sort_group_by_numeric',
+          'sort' => 'groupby_numeric',
         ),
       ),
       'count_distinct' => array(
@@ -1543,7 +1543,7 @@ class Sql extends QueryPluginBase {
           'argument' => 'views_handler_argument_group_by_numeric',
           'field' => 'views_handler_field_numeric',
           'filter' => 'views_handler_filter_group_by_numeric',
-          'sort' => 'views_handler_sort_group_by_numeric',
+          'sort' => 'groupby_numeric',
         ),
       ),
       'sum' => array(
@@ -1552,7 +1552,7 @@ class Sql extends QueryPluginBase {
         'handler' => array(
           'argument' => 'views_handler_argument_group_by_numeric',
           'filter' => 'views_handler_filter_group_by_numeric',
-          'sort' => 'views_handler_sort_group_by_numeric',
+          'sort' => 'groupby_numeric',
         ),
       ),
       'avg' => array(
@@ -1561,7 +1561,7 @@ class Sql extends QueryPluginBase {
         'handler' => array(
           'argument' => 'views_handler_argument_group_by_numeric',
           'filter' => 'views_handler_filter_group_by_numeric',
-          'sort' => 'views_handler_sort_group_by_numeric',
+          'sort' => 'groupby_numeric',
         ),
       ),
       'min' => array(
@@ -1570,7 +1570,7 @@ class Sql extends QueryPluginBase {
         'handler' => array(
           'argument' => 'views_handler_argument_group_by_numeric',
           'filter' => 'views_handler_filter_group_by_numeric',
-          'sort' => 'views_handler_sort_group_by_numeric',
+          'sort' => 'groupby_numeric',
         ),
       ),
       'max' => array(
@@ -1579,7 +1579,7 @@ class Sql extends QueryPluginBase {
         'handler' => array(
           'argument' => 'views_handler_argument_group_by_numeric',
           'filter' => 'views_handler_filter_group_by_numeric',
-          'sort' => 'views_handler_sort_group_by_numeric',
+          'sort' => 'groupby_numeric',
         ),
       ),
       'stddev_pop' => array(
@@ -1588,7 +1588,7 @@ class Sql extends QueryPluginBase {
         'handler' => array(
           'argument' => 'views_handler_argument_group_by_numeric',
           'filter' => 'views_handler_filter_group_by_numeric',
-          'sort' => 'views_handler_sort_group_by_numeric',
+          'sort' => 'groupby_numeric',
         ),
       )
     );

@@ -8,6 +8,8 @@
 namespace Drupal\views\Plugins\views\sort;
 
 use Drupal\views\Join;
+use Drupal\Core\Annotation\Plugin;
+
 
 /**
  * Sort in menu hierarchy order.
@@ -18,7 +20,9 @@ use Drupal\views\Join;
  *
  * This is only really useful for the {menu_links} table.
  *
- * @ingroup views_sort_handlers
+ *  @Plugin(
+ *   plugin_id = "menu_hierarchy"
+ * )
  */
 class MenuHierarchy extends SortPluginBase {
   function option_definition() {

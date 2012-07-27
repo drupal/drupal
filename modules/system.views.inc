@@ -47,7 +47,7 @@ function system_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -60,7 +60,7 @@ function system_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\String',
@@ -79,7 +79,7 @@ function system_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\String',
@@ -98,7 +98,7 @@ function system_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\String',
@@ -128,7 +128,7 @@ function system_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
@@ -144,7 +144,7 @@ function system_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_file_status',
@@ -160,7 +160,7 @@ function system_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\Date',
+      'plugin_id' => 'date'
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\Date',
@@ -401,7 +401,7 @@ function system_views_data() {
       'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
   $data['file_usage']['type'] = array(
@@ -418,7 +418,7 @@ function system_views_data() {
       'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
   $data['file_usage']['id'] = array(
@@ -435,7 +435,7 @@ function system_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
   $data['file_usage']['count'] = array(
@@ -449,7 +449,7 @@ function system_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -481,7 +481,7 @@ function system_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
   // - name
@@ -500,7 +500,7 @@ function system_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
   // - type
@@ -519,7 +519,7 @@ function system_views_data() {
       'handler' => 'views_handler_filter_system_type',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
   // - status
@@ -538,7 +538,7 @@ function system_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
   // - schema version
@@ -557,7 +557,7 @@ function system_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 

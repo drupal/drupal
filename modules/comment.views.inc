@@ -343,7 +343,7 @@ function comment_views_data() {
     'sort' => array(
       'title' => t('Thread'),
       'help' => t('Sort by the threaded order. This will keep child comments together with their parents.'),
-      'handler' => 'views_handler_sort_comment_thread',
+      'plugin_id' => 'comment_thread',
     ),
   );
 

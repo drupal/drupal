@@ -59,7 +59,7 @@ function user_views_data() {
       'handler' => 'views_handler_filter_user_name',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'relationship' => array(
       'title' => t('Content authored'),
@@ -118,7 +118,7 @@ function user_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'argument' => array(
       'handler' => 'Drupal\views\Plugins\views\argument\String',
@@ -140,7 +140,7 @@ function user_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\String',
@@ -159,7 +159,7 @@ function user_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_node_language',
@@ -180,7 +180,7 @@ function user_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
@@ -207,7 +207,7 @@ function user_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\Date',
+      'plugin_id' => 'date'
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\Date',
@@ -278,7 +278,7 @@ function user_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\Date',
+      'plugin_id' => 'date'
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\Date',
@@ -294,7 +294,7 @@ function user_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\Date',
+      'plugin_id' => 'date'
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\Date',
@@ -319,7 +319,7 @@ function user_views_data() {
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 

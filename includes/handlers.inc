@@ -10,6 +10,8 @@ use Drupal\views\View;
 use Drupal\views\Join;
 use Drupal\views\ViewsObject;
 
+
+
 /**
  * Instantiate and construct a new plugin.
  *
@@ -20,10 +22,15 @@ function _views_create_plugin($type, $plugin_id, $definition) {
   $manager = views_get_plugin_manager($type);
   $instance = $manager->createInstance($plugin_id);
 
+  $instance->is_plugin = TRUE;
+  $instance->plugin_type = $type;
+  $instance->plugin_name = $definition['name'];
+
   $instance->set_definition($definition);
 
   // Let the handler have something like a constructor.
   $instance->construct();
+
 
   return $instance;
 }
@@ -32,58 +39,19 @@ function _views_create_plugin($type, $plugin_id, $definition) {
  * Instantiate and construct a new handler
  */
 function _views_create_handler($definition, $type = 'handler', $handler_type = NULL) {
-//  debug('Instantiating handler ' . $definition['handler']);
-  if (empty($definition['handler'])) {
-    vpr('_views_create_handler - type: @type - failed: handler has not been provided.',
-      array('@type' => isset($handler_type) ? ( $type . '(handler type: ' . $handler_type . ')' ) : $type)
-    );
-    return;
-  }
-
-  // class_exists will automatically load the code file.
-  if (!empty($definition['override handler']) &&
-      !class_exists($definition['override handler'])) {
-    vpr(
-      '_views_create_handler - loading override handler @type failed: class @override_handler could not be loaded. ' .
-      'Verify the class file has been registered in the corresponding .info-file (files[]).',
-      array(
-        '@type' => isset($handler_type) ? ( $type . '(handler type: ' . $handler_type . ')' ) : $type,
-        '@override_handler' => $definition['override handler']
-      )
-    );
-    return;
-  }
-
-  if (!class_exists($definition['handler'])) {
-    vpr(
-      '_views_create_handler - loading handler @type failed: class @handler could not be loaded. ' .
-      'Verify the class file has been registered in the corresponding .info-file (files[]).',
-      array(
-        '@type' => isset($handler_type) ? ( $type . '(handler type: ' . $handler_type . ')' ) : $type,
-        '@handler' => $definition['handler']
-      )
-    );
-    return;
-  }
-
-  if (!empty($definition['override handler'])) {
-    $handler = new $definition['override handler'];
+  if ($definition['plugin_id']) {
+    $manager = views_get_plugin_manager($handler_type);
+    $handler = $manager->createInstance($definition['plugin_id']);
   }
   else {
-    // @todo: $definition['handler'] is kind of a bad.
+    // @todo: remove this else, once all instances got converted.
     $handler = new $definition['handler']($definition, $definition['handler']);
   }
 
   $handler->set_definition($definition);
-  if ($type == 'handler') {
-    $handler->is_handler = TRUE;
-    $handler->handler_type = $handler_type;
-  }
-  else {
-    $handler->is_plugin = TRUE;
-    $handler->plugin_type = $type;
-    $handler->plugin_name = $definition['name'];
-  }
+
+  $handler->is_handler = TRUE;
+  $handler->handler_type = $handler_type;
 
   // let the handler have something like a constructor.
   $handler->construct();

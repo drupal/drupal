@@ -6,11 +6,19 @@
  */
 
 use Drupal\views\Plugins\views\sort\SortPluginBase;
+use Drupal\Core\Annotation\Plugin;
+
 
 /**
  * Sort handler for ordering by thread.
  *
  * @ingroup views_sort_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = 'comment_thread'
+ * )
  */
 class views_handler_sort_comment_thread extends SortPluginBase {
   function query() {

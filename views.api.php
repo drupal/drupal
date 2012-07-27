@@ -448,7 +448,7 @@ function hook_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'plugin_id' => 'date',
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_date',

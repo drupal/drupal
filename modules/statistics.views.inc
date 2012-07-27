@@ -39,7 +39,7 @@ function statistics_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -56,7 +56,7 @@ function statistics_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -73,7 +73,7 @@ function statistics_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\Date',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -116,7 +116,7 @@ function statistics_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -136,7 +136,7 @@ function statistics_views_data() {
        'handler' => 'Drupal\views\Plugins\views\argument\String',
      ),
      'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
      ),
   );
 
@@ -153,7 +153,7 @@ function statistics_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\String',
      ),
      'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
      ),
      'argument' => array(
       'handler' => 'Drupal\views\Plugins\views\sort\String',
@@ -173,7 +173,7 @@ function statistics_views_data() {
        'handler' => 'Drupal\views\Plugins\views\filter\String',
      ),
      'sort' => array(
-       'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+       'plugin_id' => 'standard',
      ),
      //No argument here.  Can't send forward slashes as arguments.
      //Can be worked around by node ID.
@@ -192,7 +192,7 @@ function statistics_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -208,7 +208,7 @@ function statistics_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\String',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'argument' => array(
       'handler' => 'Drupal\views\Plugins\views\argument\String',
@@ -238,7 +238,7 @@ function statistics_views_data() {
       'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\Sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -251,7 +251,7 @@ function statistics_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\Date',

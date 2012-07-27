@@ -39,7 +39,7 @@ function translation_views_data_alter(&$data) {
       'validate type' => 'tnid',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'relationship' => array(
       'title' => t('Source translation'),

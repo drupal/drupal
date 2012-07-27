@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugins\views\sort;
 
 use Drupal\views\Plugins\views\Handler;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * @defgroup views_sort_handlers Views sort handlers
@@ -15,10 +16,17 @@ use Drupal\views\Plugins\views\Handler;
  * Handlers to tell Views how to sort queries.
  */
 
+
 /**
  * Base sort handler that has no options and performs a simple sort.
  *
  * @ingroup views_sort_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "standard"
+ * )
  */
 class SortPluginBase extends Handler {
 
@@ -218,6 +226,12 @@ class SortPluginBase extends Handler {
  * A special handler to take the place of missing or broken handlers.
  *
  * @ingroup views_sort_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "broken"
+ * )
  */
 class views_handler_sort_broken extends SortPluginBase {
   function ui_name($short = FALSE) {

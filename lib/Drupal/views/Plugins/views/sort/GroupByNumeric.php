@@ -7,10 +7,14 @@
 
 namespace Drupal\views\Plugins\views\sort;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Handler for GROUP BY on simple numeric fields.
  *
- * @ingroup views_sort_handlers
+ *  @Plugin(
+ *   plugin_id = "groupby_numeric"
+ * )
  */
 class GroupByNumeric extends SortPluginBase {
   function init(&$view, &$options) {

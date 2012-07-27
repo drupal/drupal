@@ -7,13 +7,19 @@
 
 use Drupal\views\Join;
 use Drupal\views\Plugins\views\sort\SortPluginBase;
-
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Sort handler to sort by last comment name which might be in 2 different
  * fields.
  *
  * @ingroup views_sort_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "ncs_last_comment_name"
+ * )
  */
 class views_handler_sort_ncs_last_comment_name extends SortPluginBase {
   function query() {

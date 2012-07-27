@@ -82,7 +82,7 @@ function book_views_data() {
     'title' => t('Hierarchy'),
     'help' => t('The order of pages in the book hierarchy.'),
     'sort' => array(
-      'handler' => 'views_handler_sort_menu_hierarchy',
+      'plugin_id' => 'menu_hierarchy',
     ),
   );
 

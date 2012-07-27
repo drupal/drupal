@@ -44,7 +44,7 @@ function taxonomy_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
       'help' => t('The taxonomy vocabulary name'),
     ),
   );
@@ -76,7 +76,7 @@ function taxonomy_views_data() {
       'name field' => 'name',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
   $data['taxonomy_vocabulary']['description'] = array(
@@ -98,7 +98,7 @@ function taxonomy_views_data() {
       'name field' => 'weight',
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
@@ -150,7 +150,7 @@ function taxonomy_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_taxonomy',
@@ -201,7 +201,7 @@ function taxonomy_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\String',
@@ -224,7 +224,7 @@ function taxonomy_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\SortPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'Drupal\views\Plugins\views\filter\Numeric',

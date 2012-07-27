@@ -21,7 +21,7 @@
     'title' => t('Random'),
     'help' => t('Randomize the display order.'),
     'sort' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\Random',
+      'plugin_id' => 'random',
       ),
     );
 
