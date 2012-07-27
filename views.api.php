@@ -42,7 +42,8 @@
  * allows you to have a filter select from a list of options; you'll need to
  * override this to provide your list.
  *
- * Handlers have two distinct code flows; the UI flow and the view building flow.
+ * Handlers have two distinct code flows; the UI flow and the view building
+ * flow.
  *
  * For the query flow:
  * - handler->construct()
@@ -143,68 +144,57 @@
  * to display the view or make other modifications.
  *
  * There are 10 types of plugins in Views:
- * - Display
- *   - Display plugins are responsible for controlling *where* a view lives,
- *     that is how they are being exposed to other parts of drupal. Page and
- *     block are the most common displays, as well as the ubiquitous 'master'
- *     (or 'default') display.
- * - Style
- *   - Style plugins control how a view is displayed. For the most part they are
- *     object wrappers around theme templates. Styles could for example be HTML
- *     lists or tables.
- * - Row style
- *   - Row styles handle each individual record from a node. The two included
- *     by default renders the entire entity (nodes only), or selected fields.
- * - Argument default
- *   - Argument default plugins allow pluggable ways of providing default values
- *     for contextual filters (previously 'arguments'). This is useful for
- *     blocks and other display types lacking a natural argument input. Examples
- *     are plugins to extract node and user IDs from the URL.
- * - Argument validator
- *   - Validator plugins can ensure arguments are valid, and even do
- *     transformations on the arguments. They can also provide replacement
- *     patterns for the view title. For example, the 'content' validator
- *     verifies verifies that the argument value corresponds to a node, loads
- *     that node and provides the node title as a replacement pattern.
- * - Access
- *   - Access plugins are responsible for controlling access to the view. Views
- *     includes plugins for checking user roles or individual permissions.
- * - Query
- *   - Query plugins generate and execute a query, it can be seen as a data
- *     backend. The default implementation is using sql. There are contributed
- *     modules reading data from other sources, see for example the Views XML
- *     Backend module.
- * - Cache
- *   - Cache plugins control the storage and loading of caches. Currently they
- *     can do both result and render caching, but maybe one day cache the
- *     generated query.
- * - Pager plugins
- *   - Pager plugins take care of everything regarding pagers. From getting and
- *     setting the total amount of items to render the pager and setting the
- *     global pager arrays.
- * - Exposed form plugins
- *   - Exposed form plugins are responsible for building, rendering and
- *     controlling exposed forms. They can expose new parts of the view to the
- *     user and more.
- * - Localization plugins
- *   - Localization plugins take care how the view options are translated. There
- *     are example implementations for t(), 'no translation' and i18n.
- * - Display extenders
- *   - Display extender plugins allow to scale views options horizontally. This
- *     means that you can add options and do stuff on all views displays. One
- *     theoretical example is metatags for views.
+ * - Display: Display plugins are responsible for controlling *where* a view
+ *   lives; that is, how they are being exposed to other parts of Drupal. Page
+ *   and block are the most common displays, as well as the ubiquitous 'master'
+ *   (or 'default') display.
+ * - Style: Style plugins control how a view is displayed. For the most part
+ *   they are object wrappers around theme templates. Styles could for example
+ *   be HTML lists or tables.
+ * - Row style: Row styles handle each individual record from the main view
+ *   table. The two included by default render the entire entity (nodes only),
+ *   or selected fields.
+ * - Argument default: Argument default plugins allow pluggable ways of
+ *   providing default values for contextual filters (previously 'arguments').
+ *   This is useful for blocks and other display types lacking a natural
+ *   argument input. Examples are plugins to extract node and user IDs from the
+ *   URL.
+ * - Argument validator: Validator plugins can ensure arguments are valid, and
+ *   even do transformations on the arguments. They can also provide replacement
+ *   patterns for the view title. For example, the 'content' validator
+ *   verifies verifies that the argument value corresponds to a node, loads
+ *   that node and provides the node title as a replacement pattern.
+ * - Access: Access plugins are responsible for controlling access to the view.
+ *   Views includes plugins for checking user roles and individual permissions.
+ * - Query: Query plugins generate and execute a query, so they can be seen as
+ *   a data backend. The default implementation is using SQL. There are
+ *   contributed modules reading data from other sources, see for example the
+ *   Views XML Backend module.
+ * - Cache: Cache plugins control the storage and loading of caches. Currently
+ *   they can do both result and render caching, but maybe one day cache the
+ *   generated query.
+ * - Pager plugins: Pager plugins take care of everything regarding pagers.
+ *   From getting and setting the total amount of items to render the pager and
+ *   setting the global pager arrays.
+ * - Exposed form plugins: Exposed form plugins are responsible for building,
+ *   rendering and controlling exposed forms. They can expose new parts of the
+ *   view to the user and more.
+ * - Localization plugins: Localization plugins take care how the view options
+ *   are translated. There are example implementations for t(), 'no
+ *   translation' and i18n.
+ * - Display extenders: Display extender plugins allow scaling of views options
+ *   horizontally. This means that you can add options and do stuff on all
+ *   views displays. One theoretical example is metatags for views.
  *
  * Plugins are registered by implementing hook_views_plugins() in your
  * modulename.views.inc file and returning an array of data.
  * For examples please look at views_views_plugins() in
  * views/includes/plugins.inc as it has examples for all of them.
  *
- * For example plugins please look at the one provided by views, too.
+ * Similar to handlers, make sure that you add your plugin files to the
+ * module.info file.
  *
- * Similar to handlers make sure that you added the plugin file to the
- * module.info.
- *
- * The array will look something like this:
+ * The array defining plugins will look something like this:
  * @code
  * return array(
  *   'display' => array(
@@ -249,7 +239,6 @@
  * Each plugin will be registered with an identifier for the plugin, plus a
  * fairly lengthy list of items that can define how and where the plugin is
  * used. Here is an example of a row style plugin from Views core:
- *
  * @code
  *     'node' => array(
  *       'title' => t('Node'),
@@ -266,7 +255,6 @@
  * Of particular interest is the *path* directive, which works a little
  * differently from handler registration; each plugin must define its own path,
  * rather than relying on a global info for the paths. For example:
- *
  * @code
  *    'feed' => array(
  *      'title' => t('Feed'),
@@ -303,9 +291,15 @@
 
 /**
  * Describes data tables (or the equivalent) to Views.
+ *
+ * This hook should be placed in MODULENAME.views.inc and it will be
+ * auto-loaded. MODULENAME.views.inc must be in the directory specified by the
+ * 'path' key returned by MODULENAME_views_api(), or the same directory as the
+ * .module file, if 'path' is unspecified.
+ *
  * @return
  *   An associative array describing the data structure. Primary key is the
- *   name used internally by Views for the table(s) – usually the actual table
+ *   name used internally by Views for the table(s) – usually the actual table
  *   name. The values for the key entries are described in detail below.
  */
 function hook_views_data() {
@@ -322,7 +316,7 @@ function hook_views_data() {
   // );
 
   // First, the entry $data['example_table']['table'] describes properties of
-  // the actual table – not its content.
+  // the actual table – not its content.
 
   // The 'group' index will be used as a prefix in the UI for any of this
   // table's fields, sort criteria, etc. so it's easy to tell where they came
@@ -358,7 +352,8 @@ function hook_views_data() {
   // the array may then have further entries:
   //   - title: The label for the table field, as presented in Views.
   //   - help: The description text for the table field.
-  //   - relation: A description of any relation handler for the table field.
+  //   - relationship: A description of any relationship handler for the table
+  //     field.
   //   - field: A description of any field handler for the table field.
   //   - sort: A description of any sort handler for the table field.
   //   - filter: A description of any filter handler for the table field.
@@ -372,14 +367,18 @@ function hook_views_data() {
   $data['example_table']['nid'] = array(
     'title' => t('Example content'),
     'help' => t('Some example content that references a node.'),
-    // The nid is a foreign key to the {node} table. This allows us to (easily)
-    // add a relationship handler for this table field, making all the table
-    // fields for the related node available.
+    // Define a relationship to the {node} table, so example_table views can
+    // add a relationship to nodes. If you want to define a relationship the
+    // other direction, use hook_views_data_alter(), or use the 'implicit' join
+    // method described above.
     'relationship' => array(
-      'base' => 'node', // The name of the table to join with
-      'field' => 'nid', // The name of the field to join with
+      'base' => 'node', // The name of the table to join with.
+      'base field' => 'nid', // The name of the field on the joined table.
+      // 'field' => 'nid' -- see hook_views_data_alter(); not needed here.
       'handler' => 'views_handler_relationship',
-      'label' => t('Example node'),
+      'label' => t('Default label for the relationship'),
+      'title' => t('Title shown when adding the relationship'),
+      'help' => t('More information on this relationship'),
     ),
   );
 
@@ -462,23 +461,24 @@ function hook_views_data() {
 /**
  * Alter table structure.
  *
- * You can add/edit/remove to existing tables defined by hook_views_data().
+ * You can add/edit/remove existing tables defined by hook_views_data().
  *
- * This hook should be placed in MODULENAME.views.inc and it will be auto-loaded.
- * MODULENAME.views.inc must be in the directory specified by the 'path' key
- * returned by MODULENAME_views_api(), or the same directory as the .module
- * file, if 'path' is unspecified.
+ * This hook should be placed in MODULENAME.views.inc and it will be
+ * auto-loaded. MODULENAME.views.inc must be in the directory specified by the
+ * 'path' key returned by MODULENAME_views_api(), or the same directory as the
+ * .module file, if 'path' is unspecified.
  *
  * @param $data
- *   An array of all Views data, passed by reference, see hook_views_data().
+ *   An array of all Views data, passed by reference. See hook_views_data() for
+ *   structure.
  *
  * @see hook_views_data()
  */
 function hook_views_data_alter(&$data) {
-  // This example alters the title of the node: nid field for the admin.
+  // This example alters the title of the node:nid field in the Views UI.
   $data['node']['nid']['title'] = t('Node-Nid');
 
-  // This example adds a example field to the users table
+  // This example adds an example field to the users table.
   $data['users']['example_field'] = array(
     'title' => t('Example field'),
     'help' => t('Some example content that references a user'),
@@ -486,10 +486,27 @@ function hook_views_data_alter(&$data) {
   );
 
   // This example changes the handler of the node title field.
-  // In this handler you could do stuff, like preview of the node, when clicking
+  // In this handler you could do stuff, like preview of the node when clicking
   // the node title.
-
   $data['node']['title']['handler'] = 'modulename_handlers_field_node_title';
+
+  // This example adds a relationship to table {foo}, so that 'foo' views can
+  // add this table using a relationship. Because we don't want to write over
+  // the primary key field definition for the {foo}.fid field, we use a dummy
+  // field name as the key.
+  $data['foo']['dummy_name'] = array(
+    'title' => t('Example relationship'),
+    'help' => t('Example help'),
+    'relationship' => array(
+      'base' => 'example_table', // Table we're joining to.
+      'base field' => 'eid', // Field on the joined table.
+      'field' => 'fid', // Real field name on the 'foo' table.
+      'handler' => 'views_handler_relationship',
+      'label' => t('Default label for relationship'),
+      'title' => t('Title seen when adding relationship'),
+      'help' => t('More information about relationship.'),
+    ),
+  );
 
   // Note that the $data array is not returned – it is modified by reference.
 }
@@ -636,7 +653,7 @@ function hook_views_api() {
   return array(
     'api' => 3,
     'path' => drupal_get_path('module', 'example') . '/includes/views',
-    'template path' => drupal_get_path('module', 'example') . 'themes',
+    'template path' => drupal_get_path('module', 'example') . '/themes',
   );
 }
 
@@ -644,10 +661,10 @@ function hook_views_api() {
  * This hook allows modules to provide their own views which can either be used
  * as-is or as a "starter" for users to build from.
  *
- * This hook should be placed in MODULENAME.views_default.inc and it will be
- * auto-loaded. MODULENAME.views_default.inc must be in the directory specified
- * by the 'path' key returned by MODULENAME_views_api(), or the same directory
- * as the .module file, if 'path' is unspecified.
+ * This hook should be placed in MODULENAME.views.inc and it will be
+ * auto-loaded. MODULENAME.views.inc must be in the directory specified by the
+ * 'path' key returned by MODULENAME_views_api(), or the same directory as the
+ * .module file, if 'path' is unspecified.
  *
  * The $view->disabled boolean flag indicates whether the View should be
  * enabled (FALSE) or disabled (TRUE) by default.
@@ -960,10 +977,10 @@ function hook_views_post_render(&$view, &$output, &$cache) {
 /**
  * Alter the query before executing the query.
  *
- * This hook should be placed in MODULENAME.views.inc and it will be auto-loaded.
- * MODULENAME.views.inc must be in the directory specified by the 'path' key
- * returned by MODULENAME_views_api(), or the same directory as the .module
- * file, if 'path' is unspecified.
+ * This hook should be placed in MODULENAME.views.inc and it will be
+ * auto-loaded. MODULENAME.views.inc must be in the directory specified by the
+ * 'path' key returned by MODULENAME_views_api(), or the same directory as the
+ * .module file, if 'path' is unspecified.
  *
  * @param $view
  *   The view object about to be processed.
