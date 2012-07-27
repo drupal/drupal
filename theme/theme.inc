@@ -72,7 +72,7 @@ function template_preprocess_views_view(&$vars) {
   $vars['header'] = $view->display_handler->render_area('header', $empty);
   $vars['footer'] = $view->display_handler->render_area('footer', $empty);
   if ($empty) {
-    $vars['empty'] = $view->display_handler->render_area('empty');
+    $vars['empty'] = $view->display_handler->render_area('empty', $empty);
   }
 
   $vars['exposed']    = !empty($view->exposed_widgets) ? $view->exposed_widgets : '';
