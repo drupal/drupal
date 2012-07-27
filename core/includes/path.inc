@@ -213,6 +213,14 @@ function drupal_cache_system_paths() {
   // request to avoid writing to cache on every request.
   $cache = &drupal_static('drupal_lookup_path', array());
   if (empty($cache['system_paths']) && !empty($cache['map'])) {
+
+    // @todo Because caching happens during $kernel->terminate(), i.e.
+    // after we have left the scope of the Request, the call to current_path()
+    // here does not return the system path, and instead calls out to
+    // _current_path(), which returns the alias. So the alias gets used as the
+    // key instead. There is a separate issue for fixing up the path alias logic
+    // here: http://drupal.org/node/1269742
+
     // Generate a cache ID (cid) specifically for this page.
     $cid = current_path();
     // The static $map array used by drupal_lookup_path() includes all
