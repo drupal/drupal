@@ -3966,24 +3966,25 @@ function node_unpublish_by_keyword_action(Node $node, $context) {
  */
 function node_requirements($phase) {
   $requirements = array();
-  // Ensure translations don't break at install time
-  $t = get_t();
-  // Only show rebuild button if there are either 0, or 2 or more, rows
-  // in the {node_access} table, or if there are modules that
-  // implement hook_node_grants().
-  $grant_count = db_query('SELECT COUNT(*) FROM {node_access}')->fetchField();
-  if ($grant_count != 1 || count(module_implements('node_grants')) > 0) {
-    $value = format_plural($grant_count, 'One permission in use', '@count permissions in use', array('@count' => $grant_count));
-  } else {
-    $value = $t('Disabled');
-  }
-  $description = $t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to content and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed, content will automatically use the new permissions.');
+  if ($phase === 'runtime') {
+    // Only show rebuild button if there are either 0, or 2 or more, rows
+    // in the {node_access} table, or if there are modules that
+    // implement hook_node_grants().
+    $grant_count = db_query('SELECT COUNT(*) FROM {node_access}')->fetchField();
+    if ($grant_count != 1 || count(module_implements('node_grants')) > 0) {
+      $value = format_plural($grant_count, 'One permission in use', '@count permissions in use', array('@count' => $grant_count));
+    }
+    else {
+      $value = t('Disabled');
+    }
+    $description = t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to content and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed, content will automatically use the new permissions.');
 
-  $requirements['node_access'] = array(
-    'title' => $t('Node Access Permissions'),
-    'value' => $value,
-    'description' => $description . ' ' . l(t('Rebuild permissions'), 'admin/reports/status/rebuild'),
-  );
+    $requirements['node_access'] = array(
+      'title' => t('Node Access Permissions'),
+      'value' => $value,
+      'description' => $description . ' ' . l(t('Rebuild permissions'), 'admin/reports/status/rebuild'),
+    );
+  }
   return $requirements;
 }
 
