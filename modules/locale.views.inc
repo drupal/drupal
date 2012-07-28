@@ -184,7 +184,7 @@ function locale_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'plugin_id' => 'boolean',
       'label' => t('Plural'),
       'type' => 'yes-no',
     ),

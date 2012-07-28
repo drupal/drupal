@@ -105,7 +105,7 @@ function node_views_data() {
       'plugin_id' => 'date'
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Date',
+      'plugin_id' => 'date',
     ),
   );
 
@@ -121,7 +121,7 @@ function node_views_data() {
       'plugin_id' => 'date'
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Date',
+      'plugin_id' => 'date',
     ),
   );
 
@@ -156,7 +156,7 @@ function node_views_data() {
       ),
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
+      'plugin_id' => 'boolean',
       'label' => t('Published'),
       'type' => 'yes-no',
       'use equal' => TRUE, // Use status = 1 instead of status <> 0 in WHERE statment
@@ -189,7 +189,7 @@ function node_views_data() {
       ),
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
+      'plugin_id' => 'boolean',
       'label' => t('Promoted to front page'),
       'type' => 'yes-no',
     ),
@@ -211,7 +211,7 @@ function node_views_data() {
       ),
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
+      'plugin_id' => 'boolean',
       'label' => t('Sticky'),
       'type' => 'yes-no',
     ),
@@ -535,7 +535,7 @@ function node_views_data() {
       'plugin_id' => 'date'
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Date',
+      'plugin_id' => 'date',
     ),
   );
 

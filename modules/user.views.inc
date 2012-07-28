@@ -183,7 +183,7 @@ function user_views_data() {
       'plugin_id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
+      'plugin_id' => 'boolean',
       'label' => t('Has Avatar'),
       'type' => 'yes-no',
     ),
@@ -210,7 +210,7 @@ function user_views_data() {
       'plugin_id' => 'date'
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Date',
+      'plugin_id' => 'date',
     ),
   );
 
@@ -281,7 +281,7 @@ function user_views_data() {
       'plugin_id' => 'date'
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Date',
+      'plugin_id' => 'date',
     ),
   );
 
@@ -297,7 +297,7 @@ function user_views_data() {
       'plugin_id' => 'date'
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Date',
+      'plugin_id' => 'date',
     ),
   );
 
@@ -314,7 +314,7 @@ function user_views_data() {
       ),
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
+      'plugin_id' => 'boolean',
       'label' => t('Active'),
       'type' => 'yes-no',
     ),

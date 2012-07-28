@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugins\views\filter;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Simple filter to handle matching of boolean values
  *
@@ -22,6 +24,12 @@ namespace Drupal\views\Plugins\views\filter;
  *   This might be helpful for performance reasons.
  *
  * @ingroup views_filter_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "boolean"
+ * )
  */
 class BooleanOperator extends FilterPluginBase {
 

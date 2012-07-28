@@ -7,10 +7,18 @@
 
 namespace Drupal\views\Plugins\views\filter;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Simple filter to handle greater than/less than filters
  *
  * @ingroup views_filter_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "groupby_numeric"
+ * )
  */
 class GroupByNumeric extends Numeric {
   function query() {

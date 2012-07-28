@@ -95,7 +95,7 @@
    'title' => t('Combine fields filter'),
     'help' => t('Combine two fields together and search by them.'),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Combine',
+      'plugin_id' => 'combine',
     ),
   );
 

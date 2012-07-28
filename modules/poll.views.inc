@@ -34,7 +34,7 @@ function poll_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'plugin_id' => 'boolean',
       'label' => t('Active'),
       'type' => 'yes-no',
     ),

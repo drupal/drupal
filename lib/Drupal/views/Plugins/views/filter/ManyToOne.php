@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugins\views\filter;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Complex filter to handle filtering for many to one relationships,
  * such as terms (many terms per node) or roles (many roles per user).
@@ -16,6 +18,12 @@ namespace Drupal\views\Plugins\views\filter;
  * to provide something that isn't just a select list.
  *
  * @ingroup views_filter_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "many_to_one"
+ * )
  */
 class ManyToOne extends InOperator {
   /**

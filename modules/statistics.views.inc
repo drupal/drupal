@@ -70,7 +70,7 @@ function statistics_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Date',
+      'plugin_id' => 'date',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -254,7 +254,7 @@ function statistics_views_data() {
       'plugin_id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Date',
+      'plugin_id' => 'date',
     ),
   );
 

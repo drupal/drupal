@@ -279,7 +279,7 @@ function comment_views_data() {
       ),
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'plugin_id' => 'boolean',
       'label' => t('Approved comment'),
       'type' => 'yes-no',
     ),

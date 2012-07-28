@@ -98,7 +98,7 @@ function translation_views_data_alter(&$data) {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
+      'plugin_id' => 'boolean',
       'label' => t('Outdated'),
       'type' => 'yes-no',
     ),

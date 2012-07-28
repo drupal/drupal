@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugins\views\filter;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Simple filter to handle matching of multiple options selectable via checkboxes
  *
@@ -15,6 +17,12 @@ namespace Drupal\views\Plugins\views\filter;
  * - options arguments: An array of arguments to pass to the options callback.
  *
  * @ingroup views_filter_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "in_operator"
+ * )
  */
 class InOperator extends FilterPluginBase {
   var $value_form_type = 'checkboxes';

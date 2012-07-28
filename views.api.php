@@ -423,7 +423,7 @@ function hook_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'plugin_id' => 'boolean',
       // Note that you can override the field-wide label:
       'label' => t('Published'),
       // This setting is used by the boolean filter handler, as possible option.

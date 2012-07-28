@@ -163,7 +163,7 @@ function system_views_data() {
       'plugin_id' => 'date'
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Date',
+      'plugin_id' => 'date',
     ),
   );
 
@@ -535,7 +535,7 @@ function system_views_data() {
       'name field' => 'status', // the field to display in the summary.
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\BooleanOperator',
+      'plugin_id' => 'boolean',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
