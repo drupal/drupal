@@ -180,6 +180,10 @@ class ContactSitewideTest extends WebTestBase {
     $this->addCategory('bar', 'bar@example.com', $bar_autoreply, FALSE);
     $this->addCategory('no_autoreply', 'bar@example.com', '', FALSE);
 
+    // Log the current user out in order to test the name and e-mail fields.
+    $this->drupalLogout();
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
+
     // Test the auto-reply for category 'foo'.
     $email = $this->randomName(32) . '@example.com';
     $subject = $this->randomName(64);
