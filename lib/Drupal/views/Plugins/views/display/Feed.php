@@ -8,6 +8,8 @@
 namespace Drupal\views\Plugins\views\display;
 
 use Symfony\Component\HttpFoundation\Response;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * The plugin that handles a feed, such as RSS or atom.
@@ -15,6 +17,20 @@ use Symfony\Component\HttpFoundation\Response;
  * For the most part, feeds are page displays but with some subtle differences.
  *
  * @ingroup views_display_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "feed",
+ *   title = @Translation("Feed"),
+ *   help = @Translation("Display the view as a feed, such as an RSS feed."),
+ *   uses_hook_menu = TRUE,
+ *   use_ajax = FALSE,
+ *   use_pager = FALSE,
+ *   accept_attachments = FALSE,
+ *   admin = @Translation("Feed"),
+ *   help_topic = "display-feed"
+ * )
  */
 class Feed extends Page {
   function init(&$view, &$display, $options = NULL) {

@@ -8,9 +8,46 @@
 namespace Drupal\views\Plugins\views\wizard;
 
 use Drupal\views\Plugins\views\wizard\WizardBase;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
+/**
+ * @todo: replace numbers with constants.
+ */
 
 /**
  * Tests creating node revision views with the wizard.
+ *
+ * @Plugin(
+ *   plugin_id = "node_revision",
+ *   base_table = "node_revision",
+ *   created_column = "timestamp",
+ *   title = @Translation("Content revisions"),
+ *   filters = {
+ *     "status" = {
+ *       "value" = 1,
+ *       "table" = "node",
+ *       "field" = "status"
+ *     }
+ *   },
+ *   path_field = {
+ *     "id" = "vid",
+ *     "table" = "node_revision",
+ *     "field" = "vid",
+ *     "exclude" = TRUE,
+ *     "alter" = {
+ *       "alter_text" = 1,
+ *       "text" = "node/[nid]/revisions/[vid]/view"
+ *     }
+ *   },
+ *   path_fields_supplemental = {
+ *     "id" = "id",
+ *     "table" = "node",
+ *     "field" = "nid",
+ *     "exclude" = TRUE,
+ *     "link_to_node" = FALSE
+ *   }
+ * )
  */
 class NodeRevision extends WizardBase {
 

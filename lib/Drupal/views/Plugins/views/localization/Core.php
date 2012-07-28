@@ -7,10 +7,22 @@
 
 namespace Drupal\views\Plugins\views\localization;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Localization plugin to pass translatable strings through t().
  *
  * @ingroup views_localization_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "core",
+ *   title = @Translation("Core"),
+ *   help = @Translation("Use Drupal core t() function. Not recommended, as it doesn't support updates to existing strings."),
+ *   help_topic = "localization-core"
+ * )
  */
 class Core extends LocalizationPluginBase {
 

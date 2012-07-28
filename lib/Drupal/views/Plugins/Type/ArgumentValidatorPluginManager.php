@@ -10,10 +10,11 @@ namespace Drupal\views\Plugins\Type;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\views\Plugins\Discovery\ViewsDiscovery;
+use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 
 class ArgumentValidatorPluginManager extends PluginManagerBase {
   public function __construct() {
-    $this->discovery = new ViewsDiscovery('views_plugins', 'argument validator');
+    $this->discovery = new AnnotatedClassDiscovery('views', 'argument_validator');
     $this->factory = new DefaultFactory($this);
   }
 }

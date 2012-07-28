@@ -8,9 +8,40 @@
 namespace Drupal\views\Plugins\views\wizard;
 
 use Drupal\views\Plugins\views\wizard\WizardBase;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
+/**
+ * @todo: replace numbers with constants.
+ */
 
 /**
  * Tests creating user views with the wizard.
+ *
+ * @Plugin(
+ *   plugin_id = "users",
+ *   base_table = "users",
+ *   created_column = "created",
+ *   title = @Translation("Users"),
+ *   filters = {
+ *     "status" = {
+ *       "value" = 1,
+ *       "table" = "users",
+ *       "field" = "status"
+ *     }
+ *   },
+ *   path_field = {
+ *     "id" = "uid",
+ *     "table" = "users",
+ *     "field" = "uid",
+ *     "exclude" = TRUE,
+ *     "link_to_user" = FALSE,
+ *     "alter" = {
+ *       "alter_text" = 1,
+ *       "text" = "user/[uid]"
+ *     }
+ *   }
+ * )
  */
 class Users extends WizardBase {
   protected function default_display_options($form, $form_state) {

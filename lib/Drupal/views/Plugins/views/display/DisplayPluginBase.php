@@ -58,8 +58,7 @@ class DisplayPluginBase extends Plugin {
     // Load extenders as soon as possible.
     $this->extender = array();
     $extenders = views_get_enabled_display_extenders();
-    // If you update to the dev version the registry might not be loaded yet.
-    if (!empty($extenders) && class_exists('views_plugin_display_extender')) {
+    if (!empty($extenders)) {
       foreach ($extenders as $extender) {
         $plugin = views_get_plugin('display_extender', $extender);
         if ($plugin) {
@@ -390,10 +389,10 @@ class DisplayPluginBase extends Plugin {
   }
 
   /**
-   * Can this display accept attachments?
+   * Can this display accept_attachments?
    */
   function accept_attachments() {
-    if (empty($this->definition['accept attachments'])) {
+    if (empty($this->definition['accept_attachments'])) {
       return FALSE;
     }
     if (!empty($this->view->argument) && $this->get_option('hide_attachment_summary')) {
@@ -1191,7 +1190,8 @@ class DisplayPluginBase extends Plugin {
       'desc' => t('Change the title that this display will use.'),
     );
 
-    $style_plugin = views_fetch_plugin_data('style', $this->get_option('style_plugin'));
+    $manager = views_get_plugin_manager('style');
+    $style_plugin = $manager->getDefinition($this->get_option('style_plugin'));
     $style_plugin_instance = $this->get_plugin('style');
     $style_summary = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->summary_title();
     $style_title = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->plugin_title();
@@ -1207,11 +1207,11 @@ class DisplayPluginBase extends Plugin {
     );
 
     // This adds a 'Settings' link to the style_options setting if the style has options.
-    if (!empty($style_plugin['uses options'])) {
+    if (!empty($style_plugin['uses_options'])) {
       $options['style_plugin']['links']['style_options'] = t('Change settings for this format');
     }
 
-    if (!empty($style_plugin['uses row plugin'])) {
+    if (!empty($style_plugin['uses_row_plugin'])) {
       $row_plugin = views_fetch_plugin_data('row', $this->get_option('row_plugin'));
       $row_plugin_instance = $this->get_plugin('row');
       $row_summary = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->summary_title();
@@ -1225,7 +1225,7 @@ class DisplayPluginBase extends Plugin {
         'desc' => t('Change the way each row in the view is styled.'),
       );
       // This adds a 'Settings' link to the row_options setting if the row style has options.
-      if (!empty($row_plugin['uses options'])) {
+      if (!empty($row_plugin['uses_options'])) {
         $options['row_plugin']['links']['row_options'] = t('Change settings for this style');
       }
     }
@@ -1237,7 +1237,7 @@ class DisplayPluginBase extends Plugin {
         'desc' => t('Change whether or not this display will use AJAX.'),
       );
     }
-    if (!empty($this->definition['accept attachments'])) {
+    if (!empty($this->definition['accept_attachments'])) {
       $options['hide_attachment_summary'] = array(
         'category' => 'other',
         'title' => t('Hide attachments in summary'),
@@ -1275,7 +1275,7 @@ class DisplayPluginBase extends Plugin {
       $options['pager']['title'] = t('Items to display');
     }
 
-    if (!empty($pager_plugin->definition['uses options'])) {
+    if (!empty($pager_plugin->definition['uses_options'])) {
       $options['pager']['links']['pager_options'] = t('Change settings for this pager type.');
     }
 
@@ -1337,7 +1337,7 @@ class DisplayPluginBase extends Plugin {
       'desc' => t('Specify access control type for this display.'),
     );
 
-    if (!empty($access_plugin->definition['uses options'])) {
+    if (!empty($access_plugin->definition['uses_options'])) {
       $options['access']['links']['access_options'] = t('Change settings for this access type.');
     }
 
@@ -1357,11 +1357,11 @@ class DisplayPluginBase extends Plugin {
       'desc' => t('Specify caching type for this display.'),
     );
 
-    if (!empty($cache_plugin->definition['uses options'])) {
+    if (!empty($cache_plugin->definition['uses_options'])) {
       $options['cache']['links']['cache_options'] = t('Change settings for this caching type.');
     }
 
-    if (!empty($access_plugin->definition['uses options'])) {
+    if (!empty($access_plugin->definition['uses_options'])) {
       $options['access']['links']['access_options'] = t('Change settings for this access type.');
     }
 
@@ -1402,7 +1402,7 @@ class DisplayPluginBase extends Plugin {
       'desc' => t('Select the kind of exposed filter to use.'),
     );
 
-    if (!empty($exposed_form_plugin->definition['uses options'])) {
+    if (!empty($exposed_form_plugin->definition['uses_options'])) {
       $options['exposed_form']['links']['exposed_form_options'] = t('Exposed form settings for this exposed form style.');
     }
 
@@ -1584,7 +1584,7 @@ class DisplayPluginBase extends Plugin {
         );
 
         $access_plugin = views_fetch_plugin_data('access', $access['type']);
-        if (!empty($access_plugin['uses options'])) {
+        if (!empty($access_plugin['uses_options'])) {
           $form['markup'] = array(
             '#prefix' => '<div class="form-item description">',
             '#markup' => t('You may also adjust the !settings for the currently selected access restriction.', array('!settings' => $this->option_link(t('settings'), 'access_options'))),
@@ -1598,7 +1598,7 @@ class DisplayPluginBase extends Plugin {
         $plugin = $this->get_plugin('access');
         $form['#title'] .= t('Access options');
         if ($plugin) {
-          $form['#help_topic'] = $plugin->definition['help topic'];
+          $form['#help_topic'] = $plugin->definition['help_topic'];
           $form['#help_module'] = $plugin->definition['module'];
 
           $form['access_options'] = array(
@@ -1627,7 +1627,7 @@ class DisplayPluginBase extends Plugin {
         );
 
         $cache_plugin = views_fetch_plugin_data('cache', $cache['type']);
-        if (!empty($cache_plugin['uses options'])) {
+        if (!empty($cache_plugin['uses_options'])) {
           $form['markup'] = array(
             '#prefix' => '<div class="form-item description">',
             '#suffix' => '</div>',
@@ -1660,8 +1660,8 @@ class DisplayPluginBase extends Plugin {
         $form['#title'] .= t('Query options');
         $this->view->init_query();
         if ($this->view->query) {
-          if (isset($this->view->query->definition['help topic'])) {
-            $form['#help_topic'] = $this->view->query->definition['help topic'];
+          if (isset($this->view->query->definition['help_topic'])) {
+            $form['#help_topic'] = $this->view->query->definition['help_topic'];
           }
 
           if (isset($this->view->query->definition['module'])) {
@@ -1725,6 +1725,7 @@ class DisplayPluginBase extends Plugin {
         }
         break;
       case 'style_plugin':
+        $manager = views_get_plugin_manager('style');
         $form['#title'] .= t('How should this view be styled');
         $form['#help_topic'] = 'style';
         $form['style_plugin'] =  array(
@@ -1734,8 +1735,8 @@ class DisplayPluginBase extends Plugin {
           '#description' => t('If the style you choose has settings, be sure to click the settings button that will appear next to it in the View summary.'),
         );
 
-        $style_plugin = views_fetch_plugin_data('style', $this->get_option('style_plugin'));
-        if (!empty($style_plugin['uses options'])) {
+        $style_plugin = $manager->getDefinition($this->get_option('style_plugin'));
+        if (!empty($style_plugin['uses_options'])) {
           $form['markup'] = array(
             '#markup' => '<div class="form-item description">' . t('You may also adjust the !settings for the currently selected style.', array('!settings' => $this->option_link(t('settings'), 'style_options'))) . '</div>',
           );
@@ -1759,8 +1760,8 @@ class DisplayPluginBase extends Plugin {
         }
         $plugin = $this->get_plugin(empty($style) ? 'row' : 'style');
         if ($plugin) {
-          if (isset($plugin->definition['help topic'])) {
-            $form['#help_topic'] = $plugin->definition['help topic'];
+          if (isset($plugin->definition['help_topic'])) {
+            $form['#help_topic'] = $plugin->definition['help_topic'];
             $form['#help_module'] = $plugin->definition['module'];
           }
           $form[$form_state['section']] = array(
@@ -1779,7 +1780,7 @@ class DisplayPluginBase extends Plugin {
         );
 
         $row_plugin = views_fetch_plugin_data('row', $this->get_option('row_plugin'));
-        if (!empty($row_plugin['uses options'])) {
+        if (!empty($row_plugin['uses_options'])) {
           $form['markup'] = array(
             '#markup' => '<div class="form-item description">' . t('You may also adjust the !settings for the currently selected row style.', array('!settings' => $this->option_link(t('settings'), 'row_options'))) . '</div>',
           );
@@ -2134,7 +2135,7 @@ class DisplayPluginBase extends Plugin {
         );
 
         $exposed_form_plugin = views_fetch_plugin_data('exposed_form', $exposed_form['type']);
-        if (!empty($exposed_form_plugin['uses options'])) {
+        if (!empty($exposed_form_plugin['uses_options'])) {
           $form['markup'] = array(
             '#prefix' => '<div class="form-item description">',
             '#suffix' => '</div>',
@@ -2146,7 +2147,7 @@ class DisplayPluginBase extends Plugin {
         $plugin = $this->get_plugin('exposed_form');
         $form['#title'] .= t('Exposed form options');
         if ($plugin) {
-          $form['#help_topic'] = $plugin->definition['help topic'];
+          $form['#help_topic'] = $plugin->definition['help_topic'];
 
           $form['exposed_form_options'] = array(
             '#tree' => TRUE,
@@ -2170,7 +2171,7 @@ class DisplayPluginBase extends Plugin {
         );
 
         $pager_plugin = views_fetch_plugin_data('pager', $pager['type'], array($this->view->base_table));
-        if (!empty($pager_plugin['uses options'])) {
+        if (!empty($pager_plugin['uses_options'])) {
           $form['markup'] = array(
             '#prefix' => '<div class="form-item description">',
             '#suffix' => '</div>',
@@ -2183,7 +2184,7 @@ class DisplayPluginBase extends Plugin {
         $plugin = $this->get_plugin('pager');
         $form['#title'] .= t('Pager options');
         if ($plugin) {
-          $form['#help_topic'] = $plugin->definition['help topic'];
+          $form['#help_topic'] = $plugin->definition['help_topic'];
 
           $form['pager_options'] = array(
             '#tree' => TRUE,
@@ -2329,7 +2330,7 @@ class DisplayPluginBase extends Plugin {
           if ($plugin) {
             $access = array('type' => $form_state['values']['access']['type']);
             $this->set_option('access', $access);
-            if (!empty($plugin->definition['uses options'])) {
+            if (!empty($plugin->definition['uses_options'])) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('access_options'));
             }
           }
@@ -2350,7 +2351,7 @@ class DisplayPluginBase extends Plugin {
           if ($plugin) {
             $cache = array('type' => $form_state['values']['cache']['type']);
             $this->set_option('cache', $cache);
-            if (!empty($plugin->definition['uses options'])) {
+            if (!empty($plugin->definition['uses_options'])) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('cache_options'));
             }
           }
@@ -2408,7 +2409,7 @@ class DisplayPluginBase extends Plugin {
             $this->set_option('row_options', array());
 
             // send ajax form to options page if we use it.
-            if (!empty($plugin->definition['uses options'])) {
+            if (!empty($plugin->definition['uses_options'])) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('row_options'));
             }
           }
@@ -2423,7 +2424,7 @@ class DisplayPluginBase extends Plugin {
             $this->set_option($section, $form_state['values'][$section]);
             $this->set_option('style_options', array());
             // send ajax form to options page if we use it.
-            if (!empty($plugin->definition['uses options'])) {
+            if (!empty($plugin->definition['uses_options'])) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('style_options'));
             }
           }
@@ -2449,7 +2450,7 @@ class DisplayPluginBase extends Plugin {
           if ($plugin) {
             $exposed_form = array('type' => $form_state['values']['exposed_form']['type'], 'options' => array());
             $this->set_option('exposed_form', $exposed_form);
-            if (!empty($plugin->definition['uses options'])) {
+            if (!empty($plugin->definition['uses_options'])) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('exposed_form_options'));
             }
           }
@@ -2476,7 +2477,7 @@ class DisplayPluginBase extends Plugin {
 
             $pager = array('type' => $form_state['values']['pager']['type'], 'options' => $plugin->options);
             $this->set_option('pager', $pager);
-            if (!empty($plugin->definition['uses options'])) {
+            if (!empty($plugin->definition['uses_options'])) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('pager_options'));
             }
           }

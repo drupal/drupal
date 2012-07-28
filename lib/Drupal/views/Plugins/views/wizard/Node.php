@@ -8,10 +8,46 @@
 namespace Drupal\views\Plugins\views\wizard;
 
 use Drupal\views\Plugins\views\wizard\WizardBase;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
+/**
+ * @todo: replace numbers with constants.
+ */
 
 /**
  * Tests creating node views with the wizard.
+ *
+ * @Plugin(
+ *   plugin_id = "node",
+ *   base_table = "node",
+ *   created_column = "created",
+ *   title = @Translation("Content"),
+ *   available_sorts = {
+ *     "title:DESC" = @Translation("Title")
+ *   },
+ *   filters = {
+ *     "status" = {
+ *       "value" = 1,
+ *       "table" = "node",
+ *       "field" = "status"
+ *     }
+ *   },
+ *   path_field = {
+ *     "id" = "nid",
+ *     "table" = "node",
+ *     "field" = "nid",
+ *     "exclude" = TRUE,
+ *     "link_to_node" = FALSE,
+ *     "alter" = {
+ *       "alter_text" = 1,
+ *       "text" = "node/[nid]"
+ *     }
+ *   }
+ * )
+ *
  */
+
 class Node extends WizardBase {
 
   protected function row_style_options($type) {

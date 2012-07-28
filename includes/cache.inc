@@ -86,32 +86,14 @@ function _views_data_process_entity_types(&$data) {
 /**
  * Fetch the plugin data from cache.
  */
-function _views_fetch_plugin_data($type = NULL, $plugin = NULL, $reset = FALSE) {
-  static $cache = NULL;
-  if (!isset($cache) || $reset) {
-    $start = microtime(TRUE);
-    views_include('plugins');
-    views_include_handlers();
-
-    $cache = views_discover_plugins();
-
+function _views_fetch_plugin_data($type = NULL, $plugin_id = NULL, $reset = FALSE) {
+  $manager = views_get_plugin_manager($type);
+  if (!$plugin_id) {
+    return $manager->getDefinitions();
   }
-
-  if (!$type && !$plugin) {
-    return $cache;
+  else {
+    return $manager->getDefinition($plugin_id);
   }
-  elseif (!$plugin) {
-    // Not in the if above so the else below won't run
-    if (isset($cache[$type])) {
-      return $cache[$type];
-    }
-  }
-  elseif (isset($cache[$type][$plugin])) {
-    return $cache[$type][$plugin];
-  }
-
-  // Return an empty array if there is no match.
-  return array();
 }
 
 /**

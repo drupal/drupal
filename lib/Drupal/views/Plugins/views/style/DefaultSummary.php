@@ -7,14 +7,28 @@
 
 namespace Drupal\views\Plugins\views\style;
 
-use Drupal\views\Plugins\views\Plugin;
+use Drupal\views\Plugins\views\style\StylePluginBase;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * The default style plugin for summaries.
  *
  * @ingroup views_style_plugins
  */
-class StyleSummaryPluginBase extends Plugin {
+
+/**
+ * @Plugin(
+ *   plugin_id = "default_summary",
+ *   title = @Translation("List"),
+ *   help = @Translation("Displays the default summary as a list."),
+ *   theme = "views_view_summary",
+ *   type = "summary",
+ *   uses_options = TRUE,
+ *   help_topic = "style-summary"
+ * )
+ */
+class DefaultSummary extends StylePluginBase {
   function option_definition() {
     $options = parent::option_definition();
 

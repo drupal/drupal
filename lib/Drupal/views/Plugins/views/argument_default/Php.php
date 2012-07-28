@@ -7,10 +7,20 @@
 
 namespace Drupal\views\Plugins\views\argument_default;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Default argument plugin to provide a PHP code block.
  *
  * @ingroup views_argument_default_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "php",
+ *   title = @Translation("PHP Code")
+ * )
  */
 class Php extends ArgumentDefaultPluginBase {
   function option_definition() {

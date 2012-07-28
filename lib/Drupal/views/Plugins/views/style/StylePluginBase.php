@@ -7,7 +7,9 @@
 
 namespace Drupal\views\Plugins\views\style;
 
-use Drupal\views\Plugins\views\Plugin;
+use Drupal\views\Plugins\views\Plugin as ViewsPlugin;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * @defgroup views_style_plugins Views style plugins
@@ -26,7 +28,7 @@ use Drupal\views\Plugins\views\Plugin;
 /**
  * Base class to define a style plugin handler.
  */
-class StylePluginBase extends Plugin {
+class StylePluginBase extends ViewsPlugin {
   /**
    * Store all available tokens row rows.
    */
@@ -81,14 +83,14 @@ class StylePluginBase extends Plugin {
    * Return TRUE if this style also uses a row plugin.
    */
   function uses_row_plugin() {
-    return !empty($this->definition['uses row plugin']);
+    return !empty($this->definition['uses_row_plugin']);
   }
 
   /**
    * Return TRUE if this style also uses a row plugin.
    */
   function uses_row_class() {
-    return !empty($this->definition['uses row class']);
+    return !empty($this->definition['uses_row_class']);
   }
 
   /**

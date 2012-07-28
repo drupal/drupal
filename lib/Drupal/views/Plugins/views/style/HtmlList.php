@@ -7,12 +7,29 @@
 
 namespace Drupal\views\Plugins\views\style;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Style plugin to render each item in an ordered or unordered list.
  *
  * @ingroup views_style_plugins
  */
-class List extends StylePluginBase {
+
+/**
+ * @Plugin(
+ *   plugin_id = "html_list",
+ *   title = @Translation("HTML List"),
+ *   help = @Translation("Displays rows as HTML list."),
+ *   theme = "views_view_list",
+ *   uses_row_plugin = TRUE,
+ *   uses_row_class = TRUE,
+ *   uses_options = TRUE,
+ *   type = "normal",
+ *   help_topic = "style-list"
+ * )
+ */
+class HtmlList extends StylePluginBase {
   /**
    * Set default options
    */

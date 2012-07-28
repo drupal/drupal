@@ -7,10 +7,28 @@
 
 namespace Drupal\views\Plugins\views\style;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Style plugin to render each item as a row in a table.
  *
  * @ingroup views_style_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "table",
+ *   title = @Translation("Table"),
+ *   help = @Translation("Displays rows in a table."),
+ *   theme = "views_view_table",
+ *   uses_row_plugin = FALSE,
+ *   uses_row_class = TRUE,
+ *   uses_fields = TRUE,
+ *   uses_options = TRUE,
+ *   type = "normal",
+ *   help_topic = "style-table"
+ * )
  */
 class Table extends StylePluginBase {
 

@@ -7,12 +7,27 @@
 
 namespace Drupal\views\Plugins\views\style;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * The default style plugin for summaries.
  *
  * @ingroup views_style_plugins
  */
-class JumpMenuSummary extends StyleSummaryPluginBase {
+/**
+ * @Plugin(
+ *   plugin_id = "jump_menu_summary",
+ *   title = @Translation("Jump menu"),
+ *   help = @Translation("Puts all of the results into a select box and allows the user to go to a different page based upon the results."),
+ *   theme = "views_view_summary_jump_menu",
+ *   uses_options = TRUE,
+ *   type = "summary",
+ *   help_topic = "style-summary-jump-menu"
+ * )
+ */
+
+class JumpMenuSummary extends DefaultSummary {
   function option_definition() {
     $options = parent::option_definition();
 

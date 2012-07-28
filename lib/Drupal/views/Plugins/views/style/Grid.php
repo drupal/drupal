@@ -7,10 +7,28 @@
 
 namespace Drupal\views\Plugins\views\style;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Style plugin to render each item in a grid cell.
  *
  * @ingroup views_style_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "grid",
+ *   title = @Translation("Grid"),
+ *   help = @Translation("Displays rows in a grid."),
+ *   theme = "views_view_grid",
+ *   uses_fields = FALSE,
+ *   uses_row_plugin = TRUE,
+ *   uses_row_class = TRUE,
+ *   uses_options = TRUE,
+ *   type = "normal",
+ *   help_topic = "style-grid"
+ * )
  */
 class Grid extends StylePluginBase {
   /**

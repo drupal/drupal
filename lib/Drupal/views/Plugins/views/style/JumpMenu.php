@@ -7,10 +7,27 @@
 
 namespace Drupal\views\Plugins\views\style;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Style plugin to render each item as a row in a table.
  *
  * @ingroup views_style_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "jump_menu",
+ *   title = @Translation("Jump menu"),
+ *   help = @Translation("Puts all of the results into a select box and allows the user to go to a different page based upon the results."),
+ *   theme = "views_view_jump_menu",
+ *   uses_row_plugin = TRUE,
+ *   uses_fields = TRUE,
+ *   uses_options = TRUE,
+ *   type = "normal",
+ *   help_topic = "style-jump-menu"
+ * )
  */
 class JumpMenu extends StylePluginBase {
   function option_definition() {

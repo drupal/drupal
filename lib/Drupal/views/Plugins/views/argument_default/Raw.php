@@ -7,10 +7,20 @@
 
 namespace Drupal\views\Plugins\views\argument_default;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Default argument plugin to use the raw value from the URL.
  *
  * @ingroup views_argument_default_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "raw",
+ *   title = @Translation("Raw value from URL")
+ * )
  */
 class Raw extends ArgumentDefaultPluginBase {
   function option_definition() {

@@ -7,10 +7,20 @@
 
 namespace Drupal\views\Plugins\views\argument_default;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * The fixed argument default handler.
  *
  * @ingroup views_argument_default_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "fixed",
+ *   title = @Translation("Fixed"),
+ * )
  */
 class Fixed extends ArgumentDefaultPluginBase {
   function option_definition() {

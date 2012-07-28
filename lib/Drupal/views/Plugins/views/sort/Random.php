@@ -12,7 +12,7 @@ use Drupal\Core\Annotation\Plugin;
 /**
  * Handle a random sort.
  *
- *  @Plugin(
+ * @Plugin(
  *   plugin_id = "random"
  * )
  */

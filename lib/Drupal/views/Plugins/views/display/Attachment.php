@@ -7,6 +7,9 @@
 
 namespace Drupal\views\Plugins\views\display;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * The plugin that handles an attachment display.
  *
@@ -15,6 +18,21 @@ namespace Drupal\views\Plugins\views\display;
  * the same view. They can share some information.
  *
  * @ingroup views_display_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "attachment",
+ *   title = @Translation("Attachment"),
+ *   help = @Translation("Attachments added to other displays to achieve multiple views in the same view."),
+ *   theme = "views_view",
+ *   contextual_links_locations = {""},
+ *   use_ajax = TRUE,
+ *   use_pager = FALSE,
+ *   use_more = TRUE,
+ *   accept_attachments = FALSE,
+ *   help_topic = "display-attachment"
+ * )
  */
 class Attachment extends DisplayPluginBase {
   function option_definition() {

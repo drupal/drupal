@@ -367,7 +367,7 @@ class ArgumentPluginBase extends Handler {
     $validate_types = array('none' => t('- Basic validation -'));
     $plugins = views_fetch_plugin_data('argument validator');
     foreach ($plugins as $id => $info) {
-      if (!empty($info['no ui'])) {
+      if (!empty($info['no_ui'])) {
         continue;
       }
 
@@ -588,7 +588,7 @@ class ArgumentPluginBase extends Handler {
     );
 
     foreach ($plugins as $id => $info) {
-      if (!empty($info['no ui'])) {
+      if (!empty($info['no_ui'])) {
         continue;
       }
       $plugin = $this->get_plugin('argument default', $id);

@@ -10,7 +10,16 @@ namespace Drupal\views\Plugins\views\query;
 use Drupal\Core\Database\Database;
 use Drupal\views\Join;
 use Exception;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
+/**
+ * @Plugin(
+ *   plugin_id = "views_query",
+ *   title = @Translation("SQL Query"),
+ *   help = @Translation("Query will be generated and run using the Drupal database API.")
+ * )
+ */
 class Sql extends QueryPluginBase {
   /**
    * A list of tables in the order they should be added, keyed by alias.

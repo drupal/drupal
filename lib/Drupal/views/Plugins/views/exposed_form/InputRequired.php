@@ -7,10 +7,23 @@
 
 namespace Drupal\views\Plugins\views\exposed_form;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Exposed form plugin that provides an exposed form with required input.
  *
  * @ingroup views_exposed_form_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "input_required",
+ *   title = @Translation("Input required"),
+ *   help = @Translation("An exposed form that only renders a view if the form contains user input."),
+ *   uses_options = TRUE,
+ *   help_topic = "exposed-form-input-required"
+ * )
  */
 class InputRequired extends ExposedFormPluginBase {
 

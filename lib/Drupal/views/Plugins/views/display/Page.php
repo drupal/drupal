@@ -7,10 +7,30 @@
 
 namespace Drupal\views\Plugins\views\display;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * The plugin that handles a full page.
  *
  * @ingroup views_display_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "page",
+ *   title = @Translation("Page"),
+ *   help = @Translation("Display the view as a page, with a URL and menu links."),
+ *   uses_hook_menu = TRUE,
+ *   contextual_links_locations = {"page"},
+ *   theme = "views_view",
+ *   use_ajax = TRUE,
+ *   use_pager = TRUE,
+ *   use_more = TRUE,
+ *   accept_attachments = TRUE,
+ *   admin = @Translation("Page"),
+ *   help_topic = "display-page"
+ * )
  */
 class Page extends DisplayPluginBase {
   /**

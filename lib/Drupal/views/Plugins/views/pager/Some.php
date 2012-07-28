@@ -7,10 +7,24 @@
 
 namespace Drupal\views\Plugins\views\pager;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Plugin for views without pagers.
  *
  * @ingroup views_pager_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "some",
+ *   title = @Translation("Display a specified number of items"),
+ *   help = @Translation("Display a limited number items that this view might find."),
+ *   help_topic = "pager-some",
+ *   uses_options = TRUE,
+ *   type = "basic"
+ * )
  */
 class Some extends PagerPluginBase {
   function summary_title() {

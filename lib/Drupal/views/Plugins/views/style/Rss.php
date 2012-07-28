@@ -7,10 +7,26 @@
 
 namespace Drupal\views\Plugins\views\style;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Default style plugin to render an RSS feed.
  *
  * @ingroup views_style_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "rss",
+ *   title = @Translation("RSS Feed"),
+ *   help = @Translation("Generates an RSS feed from a view."),
+ *   theme = "views_view_rss",
+ *   uses_row_plugin = TRUE,
+ *   uses_options = TRUE,
+ *   type = "feed",
+ *   help_topic = "style-rss"
+ * )
  */
 class Rss extends StylePluginBase {
   function attach_to($display_id, $path, $title) {

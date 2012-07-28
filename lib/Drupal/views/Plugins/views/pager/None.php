@@ -7,10 +7,24 @@
 
 namespace Drupal\views\Plugins\views\pager;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Plugin for views without pagers.
  *
  * @ingroup views_pager_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "none",
+ *   title = @Translation("Display all items"),
+ *   help = @Translation("Display all items that this view might find."),
+ *   help_topic = "pager-none",
+ *   uses_options = TRUE,
+ *   type = "basic"
+ * )
  */
 class None extends PagerPluginBase {
 

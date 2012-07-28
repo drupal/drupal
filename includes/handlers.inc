@@ -20,11 +20,12 @@ use Drupal\views\ViewsObject;
  */
 function _views_create_plugin($type, $plugin_id, $definition) {
   $manager = views_get_plugin_manager($type);
+
   $instance = $manager->createInstance($plugin_id);
 
   $instance->is_plugin = TRUE;
   $instance->plugin_type = $type;
-  $instance->plugin_name = $definition['name'];
+  $instance->plugin_name = $plugin_id;
 
   $instance->set_definition($definition);
 

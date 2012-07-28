@@ -26,6 +26,7 @@ use Drupal\views\Plugins\Type\QueryPluginManager;
 use Drupal\views\Plugins\Type\RowPluginManager;
 use Drupal\views\Plugins\Type\ExposedFormPluginManager;
 use Drupal\views\Plugins\Type\HandlerPluginManager;
+use Drupal\views\Plugins\Type\DisplayExtenderPluginManager;
 
 /**
  * Advertise the current views api version
@@ -459,7 +460,7 @@ function views_menu() {
  */
 function views_menu_alter(&$callbacks) {
   $our_paths = array();
-  $views = views_get_applicable_views('uses hook menu');
+  $views = views_get_applicable_views('uses_hook_menu');
   foreach ($views as $data) {
     list($view, $display_id) = $data;
     $result = $view->execute_hook_menu($display_id, $callbacks);
@@ -673,7 +674,7 @@ function views_block_info() {
     $view->init_display();
     foreach ($view->display as $display_id => $display) {
 
-      if (isset($display->handler) && !empty($display->handler->definition['uses hook block'])) {
+      if (isset($display->handler) && !empty($display->handler->definition['uses_hook_block'])) {
         $result = $display->handler->execute_hook_block_list();
         if (is_array($result)) {
           $items = array_merge($items, $result);
@@ -818,7 +819,7 @@ function views_add_block_contextual_links(&$block, $view, $display_id, $block_ty
  * defined any contextual links that are intended to be displayed in the
  * requested location; if so, it attaches them. The contextual links intended
  * for a particular location are defined by the 'contextual links' and
- * 'contextual links locations' properties in hook_views_plugins() and
+ * 'contextual_links_locations' properties in hook_views_plugins() and
  * hook_views_plugins_alter(); as a result, these hook implementations have
  * full control over where and how contextual links are rendered for each
  * display.
@@ -858,7 +859,7 @@ function views_add_block_contextual_links(&$block, $view, $display_id, $block_ty
  *   If you are rendering a view and its contextual links in another location,
  *   you can pass in a different value for this parameter. However, you will
  *   also need to use hook_views_plugins() or hook_views_plugins_alter() to
- *   declare, via the 'contextual links locations' array key, which view
+ *   declare, via the 'contextual_links_locations' array key, which view
  *   displays support having their contextual links rendered in the location
  *   you have defined.
  * @param $view
@@ -879,14 +880,19 @@ function views_add_contextual_links(&$render_element, $location, $view, $display
     // contextual links that are intended to be displayed in the requested
     // location.
     $plugin = views_fetch_plugin_data('display', $view->display[$display_id]->display_plugin);
-    // If contextual links locations are not set, provide a sane default. (To
+    // If contextual_links_locations are not set, provide a sane default. (To
     // avoid displaying any contextual links at all, a display plugin can still
-    // set 'contextual links locations' to, e.g., an empty array.)
-    $plugin += array('contextual links locations' => array('view'));
+    // set 'contextual_links_locations' to, e.g., {""}.)
+    if (!(isset($plugin['contextual_links_locations']) && $plugin['contextual_links_locations'] = array(""))) {
+      $plugin += array('contextual_links_locations' => array('view'));
+    }
+    else {
+      $plugin['contextual_links_locations'] = array();
+    }
     // On exposed_forms blocks contextual links should always be visible.
-    $plugin['contextual links locations'][] = 'special_block_-exp';
-    $has_links = !empty($plugin['contextual links']) && !empty($plugin['contextual links locations']);
-    if ($has_links && in_array($location, $plugin['contextual links locations'])) {
+    $plugin['contextual_links_locations'][] = 'special_block_-exp';
+    $has_links = !empty($plugin['contextual links']) && !empty($plugin['contextual_links_locations']);
+    if ($has_links && in_array($location, $plugin['contextual_links_locations'])) {
       foreach ($plugin['contextual links'] as $module => $link) {
         $args = array();
         $valid = TRUE;
@@ -1311,9 +1317,9 @@ function views_fetch_data($table = NULL, $move = TRUE, $reset = FALSE) {
 /**
  * Fetch the plugin data from cache.
  */
-function views_fetch_plugin_data($type = NULL, $plugin = NULL, $reset = FALSE) {
+function views_fetch_plugin_data($type = NULL, $plugin_id = NULL, $reset = FALSE) {
   views_include('cache');
-  return _views_fetch_plugin_data($type, $plugin, $reset);
+  return _views_fetch_plugin_data($type, $plugin_id, $reset);
 }
 
 /**
@@ -1331,23 +1337,22 @@ function views_fetch_plugin_data($type = NULL, $plugin = NULL, $reset = FALSE) {
  *   A keyed array of in the form of 'base_table' => 'Description'.
  */
 function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
-  $data = views_fetch_plugin_data();
+  $manager = views_get_plugin_manager($type);
+  $definitions = $manager->getDefinitions();
+  $plugins = array();
 
-  $plugins[$type] = array();
-
-  foreach ($data[$type] as $id => $plugin) {
-    // Skip plugins that don't conform to our key.
-    if ($key && (empty($plugin['type']) || $plugin['type'] != $key)) {
-      continue;
-    }
+  foreach ($definitions as $plugin_id => $plugin) {
     if (empty($plugin['no ui']) && (empty($base) || empty($plugin['base']) || array_intersect($base, $plugin['base']))) {
-      $plugins[$type][$id] = $plugin['title'];
+      $plugins[$plugin_id] = $plugin['title'];
+      if (!isset($plugin['title'])) {
+        dsm($plugin);
+      }
     }
   }
 
-  if (!empty($plugins[$type])) {
-    asort($plugins[$type]);
-    return $plugins[$type];
+  if (!empty($plugins)) {
+    asort($plugins);
+    return $plugins;
   }
   // fall-through
   return array();
@@ -1356,16 +1361,22 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
 /**
  * Get a handler for a plugin
  *
+ * @param string $type
+ *   The plugin type like access or display.
+ * @param string $plugin_id
+ *   The name of the plugin like standard.
+ *
  * @return views_plugin
  *
  * The created plugin object.
  */
-function views_get_plugin($type, $plugin, $reset = FALSE) {
+function views_get_plugin($type, $plugin_id, $reset = FALSE) {
   views_include('handlers');
 
-  $definition = views_fetch_plugin_data($type, $plugin, $reset);
+  $manager = views_get_plugin_manager($type);
+  $definition = $manager->getDefinition($plugin_id);
   if (!empty($definition)) {
-    return _views_create_plugin($type, $plugin, $definition);
+    return _views_create_plugin($type, $plugin_id, $definition);
   }
 }
 
@@ -1413,6 +1424,9 @@ function views_get_plugin_manager($type) {
     case 'localization':
       $manager = new LocalizationPluginManager();
       break;
+    case 'display_extender':
+      $manager = new DisplayExtenderPluginManager();
+      break;
     case 'field':
     case 'filter':
     case 'argument':
@@ -1445,6 +1459,20 @@ function views_get_localization_plugin() {
 
   return $plugin;
 }
+
+/**
+ * Get enabled display extenders.
+ */
+function views_get_enabled_display_extenders() {
+  $enabled = array_filter((array) config('views.settings')->get('views_display_extenders'));
+  $options = views_fetch_plugin_names('display_extender');
+  foreach ($options as $name => $plugin) {
+    $enabled[$name] = $name;
+  }
+
+  return array_filter($enabled);
+}
+
 
 // -----------------------------------------------------------------------
 // Views database functions
@@ -1522,7 +1550,7 @@ function views_get_applicable_views($type) {
     foreach (array_keys($view->display) as $id) {
       $plugin = views_fetch_plugin_data('display', $view->display[$id]->display_plugin);
       if (!empty($plugin[$type])) {
-        // This view uses hook menu. Clone it so that different handlers
+        // This view uses_hook_menu. Clone it so that different handlers
         // don't trip over each other, and add it to the list.
         $v = $view->clone_view();
         if ($v->set_display($id) && $v->display_handler->get_option('enabled')) {

@@ -7,6 +7,9 @@
 
 namespace Drupal\views\Plugins\views\row;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * The basic 'fields' row plugin
  *
@@ -14,6 +17,19 @@ namespace Drupal\views\Plugins\views\row;
  * or not.
  *
  * @ingroup views_row_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "fields",
+ *   title = @Translation("Fields"),
+ *   help = @Translation("Displays the fields with an optional template."),
+ *   theme = "views_view_fields",
+ *   uses_fields = TRUE,
+ *   uses_options = TRUE,
+ *   type = "normal",
+ *   help_topic = "style-row-fields"
+ * )
  */
 class Fields extends RowPluginBase {
   function option_definition() {

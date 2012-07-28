@@ -8,9 +8,46 @@
 namespace Drupal\views\Plugins\views\wizard;
 
 use Drupal\views\Plugins\wizard;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
+/**
+ * @todo: replace numbers with constants.
+ */
 
 /**
  * Tests creating comment views with the wizard.
+ *
+ * @Plugin(
+ *   plugin_id = "comment",
+ *   base_table = "comment",
+ *   created_column = "created",
+ *   title = @Translation("Comments"),
+ *   filters = {
+ *     "status" = {
+ *       "value" = 1,
+ *       "table" = "comment",
+ *       "field" = "status"
+ *     },
+ *     "status_node" = {
+ *       "value" = 1,
+ *       "table" = "node",
+ *       "field" = "status",
+ *       "relationship" = "nid",
+ *     }
+ *   },
+ *   path_field = {
+ *     "id" = "cid",
+ *     "table" = "comment",
+ *     "field" = "cid",
+ *     "exclude" = TRUE,
+ *     "link_to_comment" = FALSE,
+ *     "alter" = {
+ *       "alter_text" = 1,
+ *       "text" = "comment/[cid]#comment-[cid]"
+ *     }
+ *   }
+ * )
  */
 class Comment extends WizardBase {
 

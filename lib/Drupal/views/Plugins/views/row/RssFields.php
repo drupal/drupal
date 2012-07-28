@@ -7,8 +7,24 @@
 
 namespace Drupal\views\Plugins\views\row;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Renders an RSS item based on fields.
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "rss_fields",
+ *   title = @Translation("Fields"),
+ *   help = @Translation("Display fields as RSS items."),
+ *   theme = "views_view_row_rss",
+ *   uses_fields = TRUE,
+ *   uses_options = TRUE,
+ *   type = "feed",
+ *   help_topic = "style-row-fields"
+ * )
  */
 class RssFields extends RowPluginBase {
   function option_definition() {

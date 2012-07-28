@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Plugin;
  *
  * This is only really useful for the {menu_links} table.
  *
- *  @Plugin(
+ * @Plugin(
  *   plugin_id = "menu_hierarchy"
  * )
  */

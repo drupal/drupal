@@ -7,12 +7,27 @@
 
 namespace Drupal\views\Plugins\views\style;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * The default style plugin for summaries.
  *
  * @ingroup views_style_plugins
  */
-class UnformattedSummary extends StyleSummaryPluginBase {
+
+/**
+ * @Plugin(
+ *   plugin_id = "unformatted_summary",
+ *   title = @Translation("Unformatted"),
+ *   help = @Translation("Displays the summary unformatted, with option for one after another or inline."),
+ *   theme = "views_view_summary_unformatted",
+ *   type = "summary",
+ *   uses_options = TRUE,
+ *   help_topic = "style-summary-unformatted"
+ * )
+ */
+class UnformattedSummary extends DefaultSummary {
   function option_definition() {
     $options = parent::option_definition();
     $options['inline'] = array('default' => FALSE, 'bool' => TRUE);

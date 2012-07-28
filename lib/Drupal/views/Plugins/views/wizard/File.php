@@ -8,9 +8,25 @@
 namespace Drupal\views\Plugins\views\wizard;
 
 use Drupal\views\Plugins\views\wizard\WizardBase;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Tests creating managed files views with the wizard.
+ *
+ * @Plugin(
+ *   plugin_id = "file_managed",
+ *   base_table = "file_managed",
+ *   created_column = "timestamp",
+ *   title = @Translation("Files"),
+ *   path_field = {
+ *     "id" = "uri",
+ *     "table" = "file_managed",
+ *     "field" = "uri",
+ *     "exclude" = TRUE,
+ *     "file_download_path" = TRUE
+ *   }
+ * )
  */
 class File extends WizardBase {
   protected function default_display_options($form, $form_state) {

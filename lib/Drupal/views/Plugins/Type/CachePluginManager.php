@@ -9,11 +9,12 @@ namespace Drupal\views\Plugins\Type;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\views\Plugins\views\Discovery\ViewsDiscovery;
+use Drupal\views\Plugins\Discovery\ViewsDiscovery;
+use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 
 class CachePluginManager extends PluginManagerBase {
   public function __construct() {
-    $this->discovery = new ViewsDiscovery('views_plugins', 'cache');
+    $this->discovery = new AnnotatedClassDiscovery('views', 'cache');
     $this->factory = new DefaultFactory($this);
   }
 }

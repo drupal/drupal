@@ -756,72 +756,9 @@ function node_views_analyze($view) {
  * Implements hook_views_wizard().
  */
 function node_views_wizard() {
-  $plugins['node'] = array(
-    'name' => 'node',
-    'base_table' => 'node',
-    'created_column' => 'created',
-    'available_sorts' => array(
-      'title:DESC' => t('Title')
-    ),
-    'class' => 'Drupal\views\Plugins\views\wizard\Node',
-    'title' => t('Content'),
-    'filters' => array(
-      'status' => array(
-        'value' => NODE_PUBLISHED,
-        'table' => 'node',
-        'field' => 'status',
-      ),
-    ),
-    'path_field' => array(
-      'id' => 'nid',
-      'table' => 'node',
-      'field' => 'nid',
-      'exclude' => TRUE,
-      'link_to_node' => FALSE,
-      'alter' => array(
-        'alter_text' => 1,
-        'text' => 'node/[nid]',
-      ),
-    ),
-  );
-
+  // @todo: figure this piece out.
   if (module_exists('statistics')) {
     $plugins['node']['available_sorts']['node_counter-totalcount:DESC'] = t('Number of hits');
   }
 
-  $plugins['node_revision'] = array(
-    'name' => 'node_revision',
-    'base_table' => 'node_revision',
-    'created_column' => 'timestamp',
-    'class' => 'Drupal\views\Plugins\views\wizard\NodeRevision',
-    'title' => t('Content revisions'),
-    'filters' => array(
-      'status' => array(
-        'value' => '1',
-        'table' => 'node', // @todo - unclear if this should be node or node_revision
-        'field' => 'status',
-      ),
-    ),
-    'path_field' => array(
-      'id' => 'vid',
-      'table' => 'node_revision',
-      'field' => 'vid',
-      'exclude' => TRUE,
-      'alter' => array(
-        'alter_text' => 1,
-        'text' => 'node/[nid]/revisions/[vid]/view',
-      ),
-    ),
-    'path_fields_supplemental' => array(
-      array(
-        'id' => 'nid',
-        'table' => 'node',
-        'field' => 'nid',
-        'exclude' => TRUE,
-        'link_to_node' => FALSE,
-      ),
-    ),
-  );
-
-  return $plugins;
 }

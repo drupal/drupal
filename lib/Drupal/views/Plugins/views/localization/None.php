@@ -7,10 +7,22 @@
 
 namespace Drupal\views\Plugins\views\localization;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Localization plugin for no localization.
  *
  * @ingroup views_localization_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "none",
+ *   title = @Translation("None"),
+ *   help = @Translation("Do not pass admin strings for translation."),
+ *   help_topic = "localization-none"
+ * )
  */
 class None extends LocalizationPluginBase {
   var $translate = FALSE;

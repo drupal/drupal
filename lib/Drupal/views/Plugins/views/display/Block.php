@@ -7,10 +7,30 @@
 
 namespace Drupal\views\Plugins\views\display;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * The plugin that handles a block.
  *
  * @ingroup views_display_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "block",
+ *   title = @Translation("Block"),
+ *   help = @Translation("Display the view as a block."),
+ *   theme = "views_view",
+ *   uses_hook_block = TRUE,
+ *   contextual_links_locations = {"block"},
+ *   use_ajax = TRUE,
+ *   use_pager = TRUE,
+ *   use_more = TRUE,
+ *   accept_attachments = TRUE,
+ *   admin = @Translation("Block"),
+ *   help_topic = "display-block"
+ * )
  */
 class Block extends DisplayPluginBase {
   function option_definition() {

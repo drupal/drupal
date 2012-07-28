@@ -8,9 +8,29 @@
 namespace Drupal\views\Plugins\views\wizard;
 
 use Drupal\views\Plugins\views\wizard\WizardBase;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Tests creating taxonomy views with the wizard.
+ *
+ * @Plugin(
+ *   plugin_id = "taxonomy_term",
+ *   base_table = "taxonomy_term_data",
+ *   created_column = "created",
+ *   title = @Translation("Taxonomy terms"),
+ *   filters = {""},
+ *   path_field = {
+ *     "id" = "tid",
+ *     "table" = "taxonomy_term_data",
+ *     "field" = "tid",
+ *     "exclude" = TRUE,
+ *     "alter" = {
+ *       "alter_text" = 1,
+ *       "text" = "taxonomy/term/[tid]"
+ *     }
+ *   }
+ * )
  */
 class TaxonomyTerm extends WizardBase {
 

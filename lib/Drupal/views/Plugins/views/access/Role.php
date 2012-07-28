@@ -7,10 +7,23 @@
 
 namespace Drupal\views\Plugins\views\access;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Access plugin that provides role-based access control.
  *
  * @ingroup views_access_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "role",
+ *   title = @Translation("Role"),
+ *   help = @Translation("Access will be granted to users with any of the specified roles."),
+ *   help_topic = "access-role",
+ *   uses_options = TRUE
+ * )
  */
 class Role extends AccessPluginBase {
   function access($account) {

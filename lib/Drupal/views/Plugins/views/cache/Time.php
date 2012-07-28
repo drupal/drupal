@@ -7,10 +7,23 @@
 
 namespace Drupal\views\Plugins\views\cache;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Simple caching of query results for Views displays.
  *
  * @ingroup views_cache_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "time",
+ *   title = @Translation("Time-based"),
+ *   help = @Translation("Simple time-based caching of data."),
+ *   help_topic = "cache-time",
+ *   uses_options = TRUE
+ * )
  */
 class Time extends CachePluginBase {
   function option_definition() {

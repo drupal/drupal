@@ -260,10 +260,10 @@
  *      'title' => t('Feed'),
  *      'help' => t('Display the view as a feed, such as an RSS feed.'),
  *      'handler' => 'views_plugin_display_feed',
- *      'uses hook menu' => TRUE,
+ *      'uses_hook_menu' => TRUE,
  *      'use ajax' => FALSE,
  *      'use pager' => FALSE,
- *      'accept attachments' => FALSE,
+ *      'accept_attachments' => FALSE,
  *      'admin' => t('Feed'),
  *      'help topic' => 'display-feed',
  *     ),
@@ -535,7 +535,7 @@ function hook_views_data_alter(&$data) {
  *     - parent: The name of the plugin this plugin extends. Since Drupal 7 this
  *       is no longer required, but may still be useful from a code readability
  *       perspective.
- *     - no ui: Set to TRUE to denote that the plugin doesn't appear to be
+ *     - no_ui: Set to TRUE to denote that the plugin doesn't appear to be
  *       selectable in the ui, though on the api side they still exists.
  *     - uses options: Set to TRUE to denote that the plugin has an additional
  *       options form.
@@ -560,18 +560,15 @@ function hook_views_data_alter(&$data) {
  *       disabled there will be no ajax option in the ui.
  *     - use pager: Set to TRUE to allow paging in the display.
  *     - use more: Set to TRUE to allow the 'use more' setting in the display.
- *     - accept attachments: Set to TRUE to allow attachment displays to be
+ *     - accept_attachments: Set to TRUE to allow attachment displays to be
  *       attached to this display type.
- *     - contextual links locations: An array with places where contextual links
+ *     - contextual_links_locations: An array with places where contextual links
  *       should be added. Can for example be 'page' or 'block'. If you don't
- *       specify it there will be contextual links around the rendered view. If
- *       this is not set or regions have been specified, views will display an
- *       option to 'hide contextual links'. Use an empty array if you do not want
- *       this.
- *     - uses hook menu: Set to TRUE to have the display included by
+ *       specify it there will be contextual links around the rendered view.
+ *     - uses_hook_menu: Set to TRUE to have the display included by
  *       views_menu_alter(). views_menu_alter executes then execute_hook_menu
  *       on the display object.
- *     - uses hook block: Set to TRUE to have the display included by
+ *     - uses_hook_block: Set to TRUE to have the display included by
  *       views_block_info().
  *     - theme: The name of a theme suggestion to use for the display.
  *     - js: An array with paths to js files that should be included for the
@@ -579,8 +576,8 @@ function hook_views_data_alter(&$data) {
  *       root.
  *
  *   - Used by style plugins:
- *     - uses row plugin: Set to TRUE to allow row plugins for this style.
- *     - uses row class: Set to TRUE to allow the CSS class settings for rows.
+ *     - uses_row_plugin: Set to TRUE to allow row plugins for this style.
+ *     - uses_row_class: Set to TRUE to allow the CSS class settings for rows.
  *     - uses fields: Set to TRUE to have the style plugin accept field
  *       handlers.
  *     - uses grouping: Set to TRUE to allow the grouping settings for rows.

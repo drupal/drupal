@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Plugin;
  * This handler enables granularity, which is the ability to make dates
  * equivalent based upon nearness.
  *
- *  @Plugin(
+ * @Plugin(
  *   plugin_id = "date"
  * )
  *

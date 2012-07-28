@@ -7,10 +7,24 @@
 
 namespace Drupal\views\Plugins\views\pager;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * The plugin to handle full pager.
  *
  * @ingroup views_pager_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "mini",
+ *   title = @Translation("Paged output, mini pager"),
+ *   short_title = @Translation("Mini"),
+ *   help = @Translation("Use the mini pager output."),
+ *   help_topic = "pager-mini",
+ *   uses_options = TRUE
+ * )
  */
 class Mini extends PagerPluginBase {
   function summary_title() {

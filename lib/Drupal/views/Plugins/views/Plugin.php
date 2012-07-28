@@ -434,8 +434,8 @@ abstract class Plugin extends PluginBase {
    * This appears on the ui beside each plugin and beside the settings link.
    */
   function plugin_title() {
-    if (isset($this->definition['short title'])) {
-      return check_plain($this->definition['short title']);
+    if (isset($this->definition['short_title'])) {
+      return check_plain($this->definition['short_title']);
     }
     return check_plain($this->definition['title']);
   }

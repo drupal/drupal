@@ -7,10 +7,24 @@
 
 namespace Drupal\views\Plugins\views\pager;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * The plugin to handle full pager.
  *
  * @ingroup views_pager_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "full",
+ *   title = @Translation("Paged output, full pager"),
+ *   short_title = @Translation("Full"),
+ *   help = @Translation("Paged output, full Drupal style"),
+ *   help_topic = "pager-full",
+ *   uses_options = TRUE
+ * )
  */
 class Full extends PagerPluginBase {
   function summary_title() {

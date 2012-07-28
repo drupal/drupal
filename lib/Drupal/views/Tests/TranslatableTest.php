@@ -30,7 +30,7 @@ class TranslatableTest extends ViewsSqlTest {
     return array(
       'localization' => array(
         'test' => array(
-          'no ui' => TRUE,
+          'no_ui' => TRUE,
           'title' => t('Test'),
           'help' => t('This is a test description.'),
           'handler' => 'views_plugin_localization_test',

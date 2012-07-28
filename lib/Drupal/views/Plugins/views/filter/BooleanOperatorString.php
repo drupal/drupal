@@ -22,8 +22,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 
 /**
- * @plugin(
- *   plugid_id = "boolean_string"
+ * @Plugin(
+ *   plugin_id = "boolean_string"
  * )
  */
 class BooleanOperatorString extends BooleanOperator {

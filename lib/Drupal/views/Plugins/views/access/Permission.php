@@ -7,10 +7,23 @@
 
 namespace Drupal\views\Plugins\views\access;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Access plugin that provides permission-based access control.
  *
  * @ingroup views_access_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "permission",
+ *   title = @Translation("Permission"),
+ *   help = @Translation("Access will be granted to users with the specified permission string."),
+ *   help_topic = "access-perm",
+ *   uses_options = TRUE
+ * )
  */
 class Permission extends AccessPluginBase {
   function access($account) {

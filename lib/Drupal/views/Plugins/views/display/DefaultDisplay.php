@@ -7,10 +7,29 @@
 
 namespace Drupal\views\Plugins\views\display;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * A plugin to handle defaults on a view.
  *
  * @ingroup views_display_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "standard",
+ *   title = @Translation("Master"),
+ *   help = @Translation("Default settings for this view."),
+ *   theme = "views_view",
+ *   no_ui = TRUE,
+ *   no_remove = TRUE,
+ *   use_ajax = TRUE,
+ *   use_pager = TRUE,
+ *   use_more = TRUE,
+ *   accept_attachments = TRUE,
+ *   help_topic = "display-default"
+ * )
  */
 class DefaultDisplay extends DisplayPluginBase {
   /**

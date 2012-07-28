@@ -7,10 +7,20 @@
 
 namespace Drupal\views\Plugins\views\argument_validator;
 
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * Provide PHP code to validate whether or not an argument is ok.
  *
  * @ingroup views_argument_validate_plugins
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "php",
+ *   title = @Translation("PHP Code"),
+ * )
  */
 class Php extends ArgumentValidatorPluginBase {
   function option_definition() {
