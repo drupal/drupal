@@ -2222,22 +2222,35 @@ function system_date_time_lookup() {
  * Form builder; Configure the site's maintenance status.
  *
  * @ingroup forms
- * @see system_settings_form()
+ * @see system_site_maintenance_mode_submit()
  */
-function system_site_maintenance_mode() {
+function system_site_maintenance_mode($form, &$form_state) {
+  $config = config('system.maintenance');
   $form['maintenance_mode'] = array(
     '#type' => 'checkbox',
     '#title' => t('Put site into maintenance mode'),
-    '#default_value' => variable_get('maintenance_mode', 0),
+    '#default_value' => $config->get('enabled'),
     '#description' => t('Visitors will only see the maintenance mode message. Only users with the "Access site in maintenance mode" <a href="@permissions-url">permission</a> will be able to access the site. Authorized users can log in directly via the <a href="@user-login">user login</a> page.', array('@permissions-url' => url('admin/config/people/permissions'), '@user-login' => url('user'))),
   );
   $form['maintenance_mode_message'] = array(
     '#type' => 'textarea',
     '#title' => t('Message to display when in maintenance mode'),
-    '#default_value' => variable_get('maintenance_mode_message', t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => config('system.site')->get('name')))),
+    '#default_value' => $config->get('message'),
   );
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Form submission handler for system_site_maintenance_mode().
+ *
+ * @ingroup forms
+ */
+function system_site_maintenance_mode_submit($form, &$form_state) {
+  config('system.maintenance')
+    ->set('enabled', $form_state['values']['maintenance_mode'])
+    ->set('message', $form_state['values']['maintenance_mode_message'])
+    ->save();
 }
 
 /**

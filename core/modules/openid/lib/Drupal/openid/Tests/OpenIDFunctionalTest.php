@@ -189,7 +189,7 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
     $this->drupalLogout();
 
     // Enable maintenance mode.
-    variable_set('maintenance_mode', 1);
+    config('system.maintenance')->set('enabled', TRUE)->save();
 
     // Test logging in via the user/login page while the site is offline.
     $edit = array('openid_identifier' => $identity);
