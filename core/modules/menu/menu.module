@@ -704,10 +704,23 @@ function menu_form_node_form_alter(&$form, $form_state) {
     '#options' => $options,
     '#attributes' => array('class' => array('menu-parent-select')),
   );
+
+  // Get number of items in menu so the weight selector is sized appropriately.
+  $sql = "SELECT COUNT(*) FROM {menu_links} WHERE menu_name = :menu";
+  $result = db_query($sql, array(':menu' => $link['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
+  foreach ($result as $row) {
+    foreach ($row as $menu_items) {
+      $delta = $menu_items;
+    }
+  }
+  if ($delta < 50) {
+    // Old hardcoded value
+    $delta = 50;
+  }
   $form['menu']['link']['weight'] = array(
     '#type' => 'weight',
     '#title' => t('Weight'),
-    '#delta' => 50,
+    '#delta' => $delta,
     '#default_value' => $link['weight'],
     '#description' => t('Menu links with smaller weights are displayed before links with larger weights.'),
   );
