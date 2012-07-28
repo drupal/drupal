@@ -29,30 +29,32 @@ Drupal.behaviors.machineName = {
   attach: function (context, settings) {
     var self = this;
     var $context = $(context);
-    var source_id, options, machine;
+    var source_id, options, machine, eventData;
 
-    function clickEditHandler() {
-      $wrapper.show();
-      $target.focus();
-      $suffix.hide();
-      $source.unbind('.machineName');
-      return false;
+    function clickEditHandler(e) {
+      var data = e.data;
+      e.preventDefault();
+      data.$wrapper.show();
+      data.$target.focus();
+      data.$suffix.hide();
+      data.$source.unbind('.machineName');
     }
 
     function machineNameHandler(e) {
-      machine = self.transliterate($(e.target).val(), options);
+      var data = e.data;
+      machine = self.transliterate($(e.target).val(), data.options);
       // Set the machine name to the transliterated value.
       if (machine !== '') {
-        if (machine !== options.replace) {
-          $target.val(machine);
-          $preview.html(options.field_prefix + Drupal.checkPlain(machine) + options.field_suffix);
+        if (machine !== data.options.replace) {
+          data.$target.val(machine);
+          data.$preview.html(data.options.field_prefix + Drupal.checkPlain(machine) + data.options.field_suffix);
         }
-        $suffix.show();
+        data.$suffix.show();
       }
       else {
-        $suffix.hide();
-        $target.val(machine);
-        $preview.empty();
+        data.$suffix.hide();
+        data.$target.val(machine);
+        data.$preview.empty();
       }
     }
 
@@ -98,15 +100,23 @@ Drupal.behaviors.machineName = {
           return;
         }
 
+        eventData = {
+          $source: $source,
+          $target: $target,
+          $suffix: $suffix,
+          $wrapper: $wrapper,
+          $preview: $preview,
+          options: options
+        };
         // If it is editable, append an edit link.
-        var $link = $('<span class="admin-link"><a href="#">' + Drupal.t('Edit') + '</a></span>').click(clickEditHandler);
+        var $link = $('<span class="admin-link"><a href="#">' + Drupal.t('Edit') + '</a></span>').bind('click', eventData, clickEditHandler);
         $suffix.append(' ').append($link);
 
         // Preview the machine name in realtime when the human-readable name
         // changes, but only if there is no machine name yet; i.e., only upon
         // initial creation, not when editing.
         if ($target.val() === '') {
-          $source.bind('keyup.machineName change.machineName', machineNameHandler)
+          $source.bind('keyup.machineName change.machineName', eventData, machineNameHandler)
           // Initialize machine name preview.
           .keyup();
         }
