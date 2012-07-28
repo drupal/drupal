@@ -402,7 +402,7 @@ function comment_views_data() {
       'help' => t('The parent comment.'),
       'base' => 'comment',
       'base field' => 'cid',
-      'handler' => 'views_handler_relationship',
+      'plugin_id' => 'standard',
       'label' => t('Parent comment'),
     ),
   );
@@ -500,7 +500,7 @@ function comment_views_data() {
       'group' => t('Comment'),
       'base' => 'comment',
       'base field' => 'cid',
-      'handler' => 'views_handler_relationship',
+      'plugin_id' => 'standard',
       'label' => t('Last Comment'),
     ),
   );
@@ -596,7 +596,7 @@ function comment_views_data_alter(&$data) {
       'base' => 'comment',
       'base field' => 'nid',
       'relationship field' => 'nid',
-      'handler' => 'views_handler_relationship',
+      'plugin_id' => 'standard',
     ),
   );
 

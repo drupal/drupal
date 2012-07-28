@@ -7,8 +7,9 @@
 
 namespace Drupal\views\Plugins\views\relationship;
 
-use Drupal\views\Plugins\views\Plugin;
+use Drupal\views\Plugins\views\Handler;
 use Drupal\views\Join;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * @defgroup views_relationship_handlers Views relationship handlers
@@ -40,7 +41,13 @@ use Drupal\views\Join;
  *
  * @ingroup views_relationship_handlers
  */
-class RelationshipPluginBase extends Plugin {
+
+/**
+ * @Plugin(
+ *   plugin_id = "standard"
+ * )
+ */
+class RelationshipPluginBase extends Handler {
   /**
    * Init handler to let relationships live on tables other than
    * the table they operate on.

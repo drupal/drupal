@@ -10,6 +10,7 @@ namespace Drupal\views\Plugins\views\relationship;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\View;
 use Drupal\views\JoinSubquery;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Relationship handler that allows a groupwise maximum of the linked in table.
@@ -59,7 +60,13 @@ use Drupal\views\JoinSubquery;
  *
  * @ingroup views_relationship_handlers
  */
-class GroupwiseMax extends relationshipPluginBase {
+
+/**
+ * @plugin(
+ *   plugin_id = "groupwise_max"
+ * )
+ */
+class GroupwiseMax extends RelationshipPluginBase {
 
   /**
    * Defines default values for options.

@@ -380,7 +380,7 @@ function node_views_data() {
     'relationship' => array(
       'title' => t('Author'),
       'help' => t('Relate content to the user who created it.'),
-      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
+      'plugin_id' => 'standard',
       'base' => 'users',
       'field' => 'uid',
       'label' => t('author'),
@@ -450,7 +450,7 @@ function node_views_data() {
     'title' => t('User'),
     'help' => t('Relate a content revision to the user who created the revision.'),
     'relationship' => array(
-      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
+      'plugin_id' => 'standard',
       'base' => 'users',
       'base field' => 'uid',
       'label' => t('revision user'),
@@ -473,14 +473,14 @@ function node_views_data() {
     ),
     // Information for accepting a nid as a filter
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
+      'plugin_id' => 'numeric',
     ),
     // Information for sorting on a nid.
     'sort' => array(
       'plugin_id' => 'standard',
     ),
     'relationship' => array(
-      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
+      'plugin_id' => 'standard',
       'base' => 'node',
       'base field' => 'vid',
       'title' => t('Content'),

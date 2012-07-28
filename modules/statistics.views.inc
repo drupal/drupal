@@ -220,7 +220,7 @@ function statistics_views_data() {
     'title' => t('User'),
     'help' => t('The user who visited the site.'),
     'relationship' => array(
-      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
+      'plugin_id' => 'standard',
       'base' => 'users',
       'base field' => 'uid',
      ),

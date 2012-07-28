@@ -27,7 +27,7 @@ function book_views_data() {
     'help' => t('The book the node is in.'),
     'relationship' => array(
       'base' => 'node',
-      'handler' => 'views_handler_relationship',
+      'plugin_id' => 'standard',
       'label' => t('Book'),
     ),
     // There is no argument here; if you need an argument, add the relationship
@@ -107,7 +107,7 @@ function book_views_data() {
     'relationship' => array(
       'base' => 'node',
       'base field' => 'nid',
-      'handler' => 'views_handler_relationship',
+      'plugin_id' => 'standard',
       'label' => t('Book parent'),
     ),
   );

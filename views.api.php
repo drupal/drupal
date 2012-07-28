@@ -372,13 +372,10 @@ function hook_views_data() {
     // other direction, use hook_views_data_alter(), or use the 'implicit' join
     // method described above.
     'relationship' => array(
-      'base' => 'node', // The name of the table to join with.
-      'base field' => 'nid', // The name of the field on the joined table.
-      // 'field' => 'nid' -- see hook_views_data_alter(); not needed here.
-      'handler' => 'views_handler_relationship',
-      'label' => t('Default label for the relationship'),
-      'title' => t('Title shown when adding the relationship'),
-      'help' => t('More information on this relationship'),
+      'base' => 'node', // The name of the table to join with
+      'field' => 'nid', // The name of the field to join with
+      'plugin_id' => 'standard',
+      'label' => t('Example node'),
     ),
   );
 

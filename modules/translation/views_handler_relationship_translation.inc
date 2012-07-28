@@ -6,6 +6,7 @@
  */
 
 use Drupal\views\Join;
+use Drupal\views\Plugins\views\relationship\RelationshipPluginBase;
 
 /**
  * Handles relationships for content translation sets and provides multiple
@@ -13,7 +14,7 @@ use Drupal\views\Join;
  *
  * @ingroup views_relationship_handlers
  */
-class views_handler_relationship_translation extends views_handler_relationship {
+class views_handler_relationship_translation extends RelationshipPluginBase {
   function option_definition() {
     $options = parent::option_definition();
     $options['language'] = array('default' => 'current');

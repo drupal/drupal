@@ -46,7 +46,7 @@ function translation_views_data_alter(&$data) {
       'help' => t('The source that this content was translated from.'),
       'base' => 'node',
       'base field' => 'nid',
-      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
+      'plugin_id' => 'standard',
       'label' => t('Source translation'),
     ),
   );

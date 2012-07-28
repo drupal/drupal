@@ -292,7 +292,7 @@ function taxonomy_views_data() {
     'title' => t('Content with term'),
     'help' => t('Relate all content tagged with a term.'),
     'relationship' => array(
-      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
+      'plugin_id' => 'standard',
       'base' => 'node',
       'base field' => 'nid',
       'label' => t('node'),
@@ -436,7 +436,7 @@ function taxonomy_field_views_data($field) {
 
     // Add the relationship only on the tid field.
     $data[$table_name][$field['field_name'] . '_tid']['relationship'] = array(
-      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
+      'plugin_id' => 'standard',
       'base' => 'taxonomy_term_data',
       'base field' => 'tid',
       'label' => t('term from !field_name', array('!field_name' => $field['field_name'])),

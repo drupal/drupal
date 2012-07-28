@@ -64,7 +64,7 @@ function user_views_data() {
     'relationship' => array(
       'title' => t('Content authored'),
       'help' => t('Relate content to the user who created it. This relationship will create one record for each content item created by the user.'),
-      'handler' => 'Drupal\views\Plugins\views\relationship\RelationshipPluginBase',
+      'plugin_id' => 'standard',
       'base' => 'node',
       'base field' => 'uid',
       'field' => 'uid',
