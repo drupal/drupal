@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use ViewsSqlTest;
+use Drupal\views\Tests\ViewsSqlTest;
 
 /**
  * Tests for core views_handler_sort handler.

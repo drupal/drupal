@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use ViewsSqlTest;
+use Drupal\views\Tests\ViewsSqlTest;
 
 /**
  * Tests the combine filter handler.

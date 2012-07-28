@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests\Comment;
 
-use ViewsSqlTest;
+use Drupal\views\Tests\ViewsSqlTest;
 use Drupal\views\View;
 
 /**

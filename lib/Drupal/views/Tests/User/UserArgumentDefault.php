@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests\User;
 
 use Drupal\views\View;
-use ViewsSqlTest;
+use Drupal\views\Tests\ViewsSqlTest;
 
 /**
  * Tests views user argument default plugin.

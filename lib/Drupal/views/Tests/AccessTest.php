@@ -8,7 +8,6 @@
 namespace Drupal\views\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use ViewsSqlTest;
 use Drupal\views\View;
 use views_test_plugin_access_test_dynamic;
 

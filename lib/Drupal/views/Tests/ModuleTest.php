@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use ViewsSqlTest;
-
 /**
  * Tests basic functions from the Views module.
  */

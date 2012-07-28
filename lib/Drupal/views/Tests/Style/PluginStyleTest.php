@@ -9,7 +9,7 @@ namespace Drupal\views\Tests\Style;
 
 use stdClass;
 use DOMDocument;
-use ViewsSqlTest;
+use Drupal\views\Tests\ViewsSqlTest;
 
 /**
  * Tests some general style plugin related functionality.

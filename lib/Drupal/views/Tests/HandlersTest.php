@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use ViewsSqlTest;
-
 /**
  * Tests abstract handlers of views.
  */

@@ -8,7 +8,6 @@
 namespace Drupal\views\Tests;
 
 use Drupal\views\View;
-use ViewsSqlTest;
 
 /**
  * Tests aggregate functionality of views, for example count.

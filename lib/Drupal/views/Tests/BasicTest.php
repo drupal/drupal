@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use ViewsSqlTest;
-
 /**
  * Basic test class for Views query builder tests.
  */

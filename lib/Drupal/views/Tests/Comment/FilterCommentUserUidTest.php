@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Comment;
 
-use ViewsSqlTest;
-
 /**
  * Tests the filter_comment_user_uid handler.
  *

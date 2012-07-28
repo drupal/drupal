@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use ViewsSqlTest;
-
 /**
  * Views UI wizard tests.
  */

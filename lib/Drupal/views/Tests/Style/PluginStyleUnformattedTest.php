@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests\Style;
 
 use DOMDocument;
-use ViewsSqlTest;
+use Drupal\views\Tests\ViewsSqlTest;
 
 /**
  * Tests the default/unformatted row style.

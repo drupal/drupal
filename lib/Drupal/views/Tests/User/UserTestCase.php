@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests\User;
 
 use Drupal\views\View;
-use ViewsSqlTest;
+use Drupal\views\Tests\ViewsSqlTest;
 
 /**
  * Tests basic user module integration into views.

@@ -19,7 +19,7 @@
 namespace Drupal\views\Tests\Field;
 
 use Drupal\simpletest\WebTestBase;
-use ViewsSqlTest;
+use Drupal\views\Tests\ViewsSqlTest;
 
 /**
  * Provides some helper methods for testing fieldapi integration into views.
