@@ -69,7 +69,7 @@ function sample_search_conditions_callback($keys) {
   if (!empty($_REQUEST['sample_search_keys'])) {
     $conditions['sample_search_keys'] = $_REQUEST['sample_search_keys'];
   }
-  if ($force_keys = variable_get('sample_search_force_keywords', '')) {
+  if ($force_keys = config('sample_search.settings')->get('force_keywords')) {
     $conditions['sample_search_force_keywords'] = $force_keys;
   }
   return $conditions;
@@ -328,15 +328,16 @@ function hook_search_preprocess($text) {
  * When implementing this hook, your module should index content items that
  * were modified or added since the last run. PHP has a time limit
  * for cron, though, so it is advisable to limit how many items you index
- * per run using variable_get('search_cron_limit') (see example below). Also,
- * since the cron run could time out and abort in the middle of your run, you
- * should update your module's internal bookkeeping on when items have last
- * been indexed as you go rather than waiting to the end of indexing.
+ * per run using config('search.settings')->get('index.cron_limit') (see
+ * example below). Also, since the cron run could time out and abort in the
+ * middle of your run, you should update your module's internal bookkeeping on
+ * when items have last been indexed as you go rather than waiting to the end
+ * of indexing.
  *
  * @ingroup search
  */
 function hook_update_index() {
-  $limit = (int)variable_get('search_cron_limit', 100);
+  $limit = (int) config('search.settings')->get('index.cron_limit');
 
   $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit);
 

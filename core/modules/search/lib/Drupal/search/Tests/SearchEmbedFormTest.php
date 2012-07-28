@@ -42,8 +42,7 @@ class SearchEmbedFormTest extends SearchTestBase {
     search_update_totals();
 
     // Set up a dummy initial count of times the form has been submitted.
-    $this->submit_count = 12;
-    variable_set('search_embedded_form_submitted', $this->submit_count);
+    $this->submit_count = config('search_embedded_form.settings')->get('submitted');
     $this->refreshVariables();
   }
 
@@ -56,7 +55,7 @@ class SearchEmbedFormTest extends SearchTestBase {
       array('name' => 'John'),
       t('Send away'));
     $this->assertText(t('Test form was submitted'), 'Form message appears');
-    $count = variable_get('search_embedded_form_submitted', 0);
+    $count = config('search_embedded_form.settings')->get('submitted');
     $this->assertEqual($this->submit_count + 1, $count, 'Form submission count is correct');
     $this->submit_count = $count;
 
@@ -67,7 +66,7 @@ class SearchEmbedFormTest extends SearchTestBase {
       array('name' => 'John'),
       t('Send away'));
     $this->assertText(t('Test form was submitted'), 'Form message appears');
-    $count = variable_get('search_embedded_form_submitted', 0);
+    $count = config('search_embedded_form.settings')->get('submitted');
     $this->assertEqual($this->submit_count + 1, $count, 'Form submission count is correct');
     $this->submit_count = $count;
 
@@ -77,7 +76,7 @@ class SearchEmbedFormTest extends SearchTestBase {
       array('keys' => 'foo'),
       t('Search'));
     $this->assertNoText(t('Test form was submitted'), 'Form message does not appear');
-    $count = variable_get('search_embedded_form_submitted', 0);
+    $count = config('search_embedded_form.settings')->get('submitted');
     $this->assertEqual($this->submit_count, $count, 'Form submission count is correct');
     $this->submit_count = $count;
   }
