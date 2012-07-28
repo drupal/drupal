@@ -20,7 +20,7 @@ use Drupal\views\Plugins\views\Plugin;
 /**
  * The base plugin to handle access control.
  */
-class AccessPluginBase extends Plugin {
+abstract class AccessPluginBase extends Plugin {
   /**
    * Initialize the plugin.
    *

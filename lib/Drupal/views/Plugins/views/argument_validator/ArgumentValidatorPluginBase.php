@@ -20,7 +20,7 @@ use Drupal\views\Plugins\views\Plugin;
 /**
  * Base argument validator plugin to provide basic functionality.
  */
-class ArgumentValidatorPluginBase extends Plugin {
+abstract class ArgumentValidatorPluginBase extends Plugin {
 
   /**
    * Initialize this plugin with the view and the argument

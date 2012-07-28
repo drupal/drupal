@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugins\views\wizard;
 
-use Drupal\views\Plugins\views\wizard\WizardBase;
+use Drupal\views\Plugins\views\wizard\WizardPluginBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -49,7 +49,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class NodeRevision extends WizardBase {
+class NodeRevision extends WizardPluginBase {
 
   /**
    * Node revisions do not support full posts or teasers, so remove them.

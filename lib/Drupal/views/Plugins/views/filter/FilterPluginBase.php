@@ -42,7 +42,7 @@ use Drupal\Core\Annotation\Plugin;
  *   plugin_id = "standard"
  * )
  */
-class FilterPluginBase extends Handler {
+abstract class FilterPluginBase extends Handler {
   /**
    * Contains the actual value of the field,either configured in the views ui
    * or entered in the exposed filters.

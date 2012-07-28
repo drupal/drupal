@@ -47,7 +47,7 @@ use Drupal\Core\Annotation\Plugin;
  *   plugin_id = "standard"
  * )
  */
-class RelationshipPluginBase extends Handler {
+abstract class RelationshipPluginBase extends Handler {
   /**
    * Init handler to let relationships live on tables other than
    * the table they operate on.

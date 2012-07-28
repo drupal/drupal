@@ -20,7 +20,7 @@ use Drupal\views\Plugins\views\Plugin;
 /**
  * The fixed argument default handler; also used as the base.
  */
-class ArgumentDefaultPluginBase extends Plugin {
+abstract class ArgumentDefaultPluginBase extends Plugin {
   /**
    * Return the default argument.
    *

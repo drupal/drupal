@@ -20,7 +20,7 @@ use Drupal\views\Plugins\views\Plugin;
 /**
  * The base plugin to handle localization of Views strings.
  */
-class LocalizationPluginBase extends Plugin {
+abstract class LocalizationPluginBase extends Plugin {
   // Store for exported strings
   var $export_strings = array();
   var $translate = TRUE;

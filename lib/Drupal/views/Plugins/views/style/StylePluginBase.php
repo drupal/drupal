@@ -28,7 +28,7 @@ use Drupal\Core\Annotation\Translation;
 /**
  * Base class to define a style plugin handler.
  */
-class StylePluginBase extends ViewsPlugin {
+abstract class StylePluginBase extends ViewsPlugin {
   /**
    * Store all available tokens row rows.
    */

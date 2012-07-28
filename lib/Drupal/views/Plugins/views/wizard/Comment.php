@@ -49,7 +49,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Comment extends WizardBase {
+class Comment extends WizardPluginBase {
 
   protected function row_style_options($type) {
     $options = array();

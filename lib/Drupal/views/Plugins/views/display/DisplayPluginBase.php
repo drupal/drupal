@@ -28,7 +28,7 @@ use Drupal\views\Plugins\Type\QueryPluginManager;
  * The default display plugin handler. Display plugins handle options and
  * basic mechanisms for different output methods.
  */
-class DisplayPluginBase extends Plugin {
+abstract class DisplayPluginBase extends Plugin {
   /**
    * The top object of a view.
    *

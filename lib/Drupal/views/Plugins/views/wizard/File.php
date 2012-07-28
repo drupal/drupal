@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugins\views\wizard;
 
-use Drupal\views\Plugins\views\wizard\WizardBase;
+use Drupal\views\Plugins\views\wizard\WizardPluginBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -28,7 +28,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class File extends WizardBase {
+class File extends WizardPluginBase {
   protected function default_display_options($form, $form_state) {
     $display_options = parent::default_display_options($form, $form_state);
 

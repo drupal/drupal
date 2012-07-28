@@ -20,7 +20,7 @@ use Drupal\views\Plugins\views\Plugin;
 /**
  * The base plugin to handle caching.
  */
-class CachePluginBase extends Plugin {
+abstract class CachePluginBase extends Plugin {
   /**
    * Contains all data that should be written/read from cache.
    */

@@ -24,7 +24,7 @@ use Drupal\views\Plugins\views\Plugin;
  * Default plugin to view a single row of a table. This is really just a wrapper around
  * a theme function.
  */
-class RowPluginBase extends Plugin {
+abstract class RowPluginBase extends Plugin {
   /**
    * Initialize the row plugin.
    */

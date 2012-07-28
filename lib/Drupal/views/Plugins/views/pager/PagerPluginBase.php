@@ -20,7 +20,7 @@ use Drupal\views\Plugins\views\Plugin;
 /**
  * The base plugin to handle pager.
  */
-class PagerPluginBase extends Plugin {
+abstract class PagerPluginBase extends Plugin {
   var $current_page = NULL;
   var $total_items = 0;
 

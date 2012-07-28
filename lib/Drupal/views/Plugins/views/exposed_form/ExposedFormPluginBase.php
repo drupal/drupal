@@ -22,7 +22,7 @@ use Drupal\views\Plugins\views\Plugin;
 /**
  * The base plugin to handle exposed filter forms.
  */
-class ExposedFormPluginBase extends Plugin {
+abstract class ExposedFormPluginBase extends Plugin {
 
   /**
    * Initialize the plugin.

@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugins\views\wizard;
 
-use Drupal\views\Plugins\views\wizard\WizardBase;
+use Drupal\views\Plugins\views\wizard\WizardPluginBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -48,7 +48,7 @@ use Drupal\Core\Annotation\Translation;
  *
  */
 
-class Node extends WizardBase {
+class Node extends WizardPluginBase {
 
   protected function row_style_options($type) {
     $options = array();

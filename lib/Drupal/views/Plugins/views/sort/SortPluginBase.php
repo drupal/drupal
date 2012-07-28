@@ -28,7 +28,7 @@ use Drupal\Core\Annotation\Plugin;
  *   plugin_id = "standard"
  * )
  */
-class SortPluginBase extends Handler {
+abstract class SortPluginBase extends Handler {
 
   /**
    * Determine if a sort can be exposed.

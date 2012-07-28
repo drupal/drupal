@@ -13,7 +13,7 @@ use Drupal\views\Plugins\views\wizard\WizardInterface;
 /**
  * A very generic Views Wizard class - can be constructed for any base table.
  */
-class WizardBase implements WizardInterface {
+abstract class WizardPluginBase implements WizardInterface {
   protected $base_table;
   protected $entity_type;
   protected $entity_info = array();
