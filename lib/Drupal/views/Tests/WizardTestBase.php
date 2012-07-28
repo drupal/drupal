@@ -12,7 +12,7 @@ use ViewsSqlTest;
 /**
  * Views UI wizard tests.
  */
-class WizardTestBase extends ViewsSqlTest {
+abstract class WizardTestBase extends ViewsSqlTest {
   protected $profile = 'standard';
 
   function setUp() {

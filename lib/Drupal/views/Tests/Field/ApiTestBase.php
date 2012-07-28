@@ -24,7 +24,7 @@ use ViewsSqlTest;
 /**
  * Provides some helper methods for testing fieldapi integration into views.
  */
-class ApiTestBase extends ViewsSqlTest {
+abstract class ApiTestBase extends ViewsSqlTest {
   protected $profile = 'standard';
 
   /**
