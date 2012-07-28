@@ -1273,13 +1273,10 @@ function views_get_handler($table, $field, $key, $override = NULL) {
       return $handler;
     }
 
-    // Set up a default handler:
-    if (empty($data[$field][$key]['handler'])) {
-      $data[$field][$key]['handler'] = 'views_handler_' . $key;
-    }
-
-    if ($override) {
-      $data[$field][$key]['override handler'] = $override;
+    // @fixme: temporary.
+    // Set up a default handler, if both handler and plugin_id is not specified.
+    if (empty($data[$field][$key]['handler']) && empty($data[$field][$key]['plugin_id'])) {
+      $data[$field][$key]['plugin_id'] = 'standard';
     }
 
     $handler = _views_prepare_handler($data[$field][$key], $data, $field, $key);
@@ -1293,7 +1290,7 @@ function views_get_handler($table, $field, $key, $override = NULL) {
   vpr("Missing handler: @table @field @key", array('@table' => $table, '@field' => $field, '@key' => $key));
   $broken = array(
     'title' => t('Broken handler @table.@field', array('@table' => $table, '@field' => $field)),
-    'handler' => 'views_handler_' . $key . '_broken',
+    'plugin_id' => 'broken',
     'table' => $table,
     'field' => $field,
   );
@@ -1416,8 +1413,13 @@ function views_get_plugin_manager($type) {
     case 'localization':
       $manager = new LocalizationPluginManager();
       break;
+    case 'field':
+    case 'filter':
+    case 'argument':
+    case 'area':
     case 'sort':
-      $manager = new HandlerPluginManager('sort');
+    case 'relationship':
+      $manager = new HandlerPluginManager($type);
       break;
   }
 

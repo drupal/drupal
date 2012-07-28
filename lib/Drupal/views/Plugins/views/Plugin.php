@@ -9,7 +9,6 @@ namespace Drupal\views\Plugins\views;
 
 use Drupal\views\ViewsObject;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\views\Plugin\PluginInterface;
 
 abstract class Plugin extends PluginBase {
   public function __construct(array $configuration, $plugin_id) {

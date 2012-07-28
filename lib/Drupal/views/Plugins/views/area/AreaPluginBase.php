@@ -94,31 +94,5 @@ class AreaPluginBase extends Handler {
 }
 
 /**
- * A special handler to take the place of missing or broken handlers.
- *
- * @ingroup views_area_handlers
- */
-class views_handler_area_broken extends AreaPluginBase {
-  function ui_name($short = FALSE) {
-    return t('Broken/missing handler');
-  }
-
-  function ensure_my_table() { /* No table to ensure! */ }
-  function query($group_by = FALSE) { /* No query to run */ }
-  function render($empty = FALSE) { return ''; }
-  function options_form(&$form, &$form_state) {
-    $form['markup'] = array(
-      '#prefix' => '<div class="form-item description">',
-      '#value' => t('The handler for this item is broken or missing and cannot be used. If a module provided the handler and was disabled, re-enabling the module may restore it. Otherwise, you should probably delete this item.'),
-    );
-  }
-
-  /**
-   * Determine if the handler is considered 'broken'
-   */
-  function broken() { return TRUE; }
-}
-
-/**
  * @}
  */

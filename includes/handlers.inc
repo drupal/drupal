@@ -39,7 +39,7 @@ function _views_create_plugin($type, $plugin_id, $definition) {
  * Instantiate and construct a new handler
  */
 function _views_create_handler($definition, $type = 'handler', $handler_type = NULL) {
-  if ($definition['plugin_id']) {
+  if (!empty($definition['plugin_id'])) {
     $manager = views_get_plugin_manager($handler_type);
     $handler = $manager->createInstance($definition['plugin_id']);
   }
