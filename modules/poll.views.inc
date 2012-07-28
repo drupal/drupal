@@ -39,7 +39,7 @@ function poll_views_data() {
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 

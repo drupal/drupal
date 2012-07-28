@@ -103,7 +103,7 @@ function translation_views_data_alter(&$data) {
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 

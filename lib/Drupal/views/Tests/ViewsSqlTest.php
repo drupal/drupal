@@ -132,7 +132,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
         'plugin_id' => 'numeric',
       ),
       'sort' => array(
-        'handler' => 'views_handler_sort',
+        'plugin_id' => 'standard',
       ),
     );
     $data['views_test']['name'] = array(
@@ -149,7 +149,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
         'plugin_id' => 'string',
       ),
       'sort' => array(
-        'handler' => 'views_handler_sort',
+        'plugin_id' => 'standard',
       ),
     );
     $data['views_test']['age'] = array(
@@ -166,7 +166,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
         'plugin_id' => 'numeric',
       ),
       'sort' => array(
-        'handler' => 'views_handler_sort',
+        'plugin_id' => 'standard',
       ),
     );
     $data['views_test']['job'] = array(
@@ -183,7 +183,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
         'plugin_id' => 'string',
       ),
       'sort' => array(
-        'handler' => 'views_handler_sort',
+        'plugin_id' => 'standard',
       ),
     );
     $data['views_test']['created'] = array(

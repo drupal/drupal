@@ -44,7 +44,7 @@ function aggregator_views_data() {
       'plugin_id' => 'numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -69,7 +69,7 @@ function aggregator_views_data() {
     ),
     // Information for sorting on a nid.
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -84,7 +84,7 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
@@ -101,7 +101,7 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
@@ -119,7 +119,7 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
@@ -140,7 +140,7 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
@@ -222,7 +222,7 @@ function aggregator_views_data() {
     ),
     // Information for sorting on a fid.
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -237,7 +237,7 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
@@ -258,7 +258,7 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'plugin_id' => 'string',
@@ -360,7 +360,7 @@ function aggregator_views_data() {
       'handler' => 'views_handler_filter_aggregator_category_cid',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -373,7 +373,7 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'plugin_id' => 'string',

@@ -388,7 +388,7 @@ function hook_views_data() {
       'click sortable' => TRUE, // This is use by the table display plugin.
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'plugin_id' => 'string',
@@ -410,7 +410,7 @@ function hook_views_data() {
       'plugin_id' => 'numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -432,7 +432,7 @@ function hook_views_data() {
       'use equal' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 

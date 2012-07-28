@@ -40,7 +40,7 @@ function locale_views_data() {
       'plugin_id' => 'numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -54,7 +54,7 @@ function locale_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'plugin_id' => 'string',
@@ -189,7 +189,7 @@ function locale_views_data() {
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -215,7 +215,7 @@ function locale_views_data_alter(&$data) {
       'handler' => 'views_handler_argument_node_language',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 }

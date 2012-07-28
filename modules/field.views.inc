@@ -391,7 +391,7 @@ function field_views_field_default_views_data($field) {
         $data[$table]['delta']['sort'] = array(
           'field' => 'delta',
           'table' => $table,
-          'handler' => 'views_handler_sort',
+          'plugin_id' => 'standard',
           'additional fields' => $additional_fields,
           'field_name' => $field['field_name'],
         );

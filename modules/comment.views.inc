@@ -50,7 +50,7 @@ function comment_views_data() {
       'plugin_id' => 'string',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
@@ -69,7 +69,7 @@ function comment_views_data() {
       'plugin_id' => 'numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',
@@ -88,7 +88,7 @@ function comment_views_data() {
       'plugin_id' => 'string',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
@@ -107,7 +107,7 @@ function comment_views_data() {
       'plugin_id' => 'string',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
@@ -126,7 +126,7 @@ function comment_views_data() {
       'plugin_id' => 'string',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
@@ -145,7 +145,7 @@ function comment_views_data() {
       'plugin_id' => 'string',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
@@ -185,7 +185,7 @@ function comment_views_data() {
         'handler' => 'views_handler_argument_locale_language',
       ),
       'sort' => array(
-        'handler' => 'views_handler_sort',
+        'plugin_id' => 'standard',
       ),
     );
   }
@@ -284,7 +284,7 @@ function comment_views_data() {
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -466,7 +466,7 @@ function comment_views_data() {
       'plugin_id' => 'numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument',
@@ -562,7 +562,7 @@ function comment_views_data_alter(&$data) {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_node_comment',
