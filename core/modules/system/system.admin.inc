@@ -1646,13 +1646,13 @@ function system_run_cron_submit($form, &$form_state) {
  * Form builder; Configure error reporting settings.
  *
  * @ingroup forms
- * @see system_settings_form()
+ * @see system_logging_settings_submit()
  */
-function system_logging_settings() {
+function system_logging_settings($form, &$form_state) {
   $form['error_level'] = array(
     '#type' => 'radios',
     '#title' => t('Error messages to display'),
-    '#default_value' => variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL),
+    '#default_value' => config('system.logging')->get('error_level'),
     '#options' => array(
       ERROR_REPORTING_HIDE => t('None'),
       ERROR_REPORTING_DISPLAY_SOME => t('Errors and warnings'),
@@ -1662,7 +1662,18 @@ function system_logging_settings() {
     '#description' => t('It is recommended that sites running on production environments do not display any errors.'),
   );
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Form submission handler for system_logging_settings().
+ *
+ * @ingroup forms
+ */
+function system_logging_settings_submit($form, &$form_state) {
+  config('system.logging')
+    ->set('error_level', $form_state['values']['error_level'])
+    ->save();
 }
 
 /**

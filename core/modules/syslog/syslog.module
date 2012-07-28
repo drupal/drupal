@@ -45,18 +45,19 @@ function syslog_help($path, $arg) {
  * Implements hook_form_FORM_ID_alter().
  */
 function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
+  $config = config('syslog.settings');
   $help = module_exists('help') ? ' ' . l(t('More information'), 'admin/help/syslog') . '.' : NULL;
   $form['syslog_identity'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Syslog identity'),
-    '#default_value' => variable_get('syslog_identity', 'drupal'),
+    '#default_value' => $config->get('identity'),
     '#description'   => t('A string that will be prepended to every message logged to Syslog. If you have multiple sites logging to the same Syslog log file, a unique identity per site makes it easy to tell the log entries apart.') . $help,
   );
   if (defined('LOG_LOCAL0')) {
     $form['syslog_facility'] = array(
       '#type'          => 'select',
       '#title'         => t('Syslog facility'),
-      '#default_value' => variable_get('syslog_facility', LOG_LOCAL0),
+      '#default_value' => $config->get('facility'),
       '#options'       => syslog_facility_list(),
       '#description'   => t('Depending on the system configuration, Syslog and other logging tools use this code to identify or filter messages from within the entire system log.') . $help,
      );
@@ -64,10 +65,24 @@ function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
   $form['syslog_format'] = array(
     '#type'          => 'textarea',
     '#title'         => t('Syslog format'),
-    '#default_value' => variable_get('syslog_format', '!base_url|!timestamp|!type|!ip|!request_uri|!referer|!uid|!link|!message'),
+    '#default_value' => $config->get('format'),
     '#description'   => t('Specify the format of the syslog entry. Available variables are: <dl><dt><code>!base_url</code></dt><dd>Base URL of the site.</dd><dt><code>!timestamp</code></dt><dd>Unix timestamp of the log entry.</dd><dt><code>!type</code></dt><dd>The category to which this message belongs.</dd><dt><code>!ip</code></dt><dd>IP address of the user triggering the message.</dd><dt><code>!request_uri</code></dt><dd>The requested URI.</dd><dt><code>!referer</code></dt><dd>HTTP Referer if available.</dd><dt><code>!uid</code></dt><dd>User ID.</dd><dt><code>!link</code></dt><dd>A link to associate with the message.</dd><dt><code>!message</code></dt><dd>The message to store in the log.</dd></dl>'),
   );
-  $form['actions']['#weight'] = 1;
+
+  $form['#submit'][] = 'syslog_logging_settings_submit';
+}
+
+/**
+ * Form submission handler for system_logging_settings().
+ *
+ * @see syslog_form_system_logging_settings_alter()
+ */
+function syslog_logging_settings_submit($form, &$form_state) {
+  config('syslog.settings')
+    ->set('identity', $form_state['values']['syslog_identity'])
+    ->set('facility', $form_state['values']['syslog_facility'])
+    ->set('format', $form_state['values']['syslog_format'])
+    ->save();
 }
 
  /**
@@ -95,14 +110,18 @@ function syslog_watchdog(array $log_entry) {
   global $base_url;
 
   $log_init = &drupal_static(__FUNCTION__, FALSE);
+  $config = config('syslog.settings');
 
   if (!$log_init) {
     $log_init = TRUE;
-    $default_facility = defined('LOG_LOCAL0') ? LOG_LOCAL0 : LOG_USER;
-    openlog(variable_get('syslog_identity', 'drupal'), LOG_NDELAY, variable_get('syslog_facility', $default_facility));
+    $facility = $config->get('facility');
+    if ($facility === '') {
+      $facility = defined('LOG_LOCAL0') ? LOG_LOCAL0 : LOG_USER;
+    }
+    openlog($config->get('identity'), LOG_NDELAY, $facility);
   }
 
-  $message = strtr(variable_get('syslog_format', '!base_url|!timestamp|!type|!ip|!request_uri|!referer|!uid|!link|!message'), array(
+  $message = strtr($config->get('format'), array(
     '!base_url'    => $base_url,
     '!timestamp'   => $log_entry['timestamp'],
     '!type'        => $log_entry['type'],

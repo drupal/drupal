@@ -10,22 +10,22 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Error reporting level: display no errors.
  */
-const ERROR_REPORTING_HIDE = 0;
+const ERROR_REPORTING_HIDE = 'hide';
 
 /**
  * Error reporting level: display errors and warnings.
  */
-const ERROR_REPORTING_DISPLAY_SOME = 1;
+const ERROR_REPORTING_DISPLAY_SOME = 'some';
 
 /**
  * Error reporting level: display all messages.
  */
-const ERROR_REPORTING_DISPLAY_ALL = 2;
+const ERROR_REPORTING_DISPLAY_ALL = 'all';
 
 /**
  * Error reporting level: display all messages, plus backtrace information.
  */
-const ERROR_REPORTING_DISPLAY_VERBOSE = 3;
+const ERROR_REPORTING_DISPLAY_VERBOSE = 'verbose';
 
 /**
  * Maps PHP error constants to watchdog severity levels.
@@ -172,7 +172,7 @@ function _drupal_render_exception_safe($exception) {
  *   TRUE if an error should be displayed.
  */
 function error_displayable($error = NULL) {
-  $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
+  $error_level = config('system.logging')->get('error_level');
   $updating = (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update');
   $all_errors_displayed = ($error_level == ERROR_REPORTING_DISPLAY_ALL) ||
     ($error_level == ERROR_REPORTING_DISPLAY_VERBOSE);

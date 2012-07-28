@@ -92,8 +92,21 @@ function dblog_schema() {
 }
 
 /**
- * Implements hook_uninstall().
+ * @defgroup updates-7.x-to-8.x Updates from 7.x to 8.x
+ * @{
+ * Update functions from 7.x to 8.x.
  */
-function dblog_uninstall() {
-  variable_del('dblog_row_limit');
+
+/**
+ * Update settings to the new configuration system.
+ */
+function dblog_update_8000() {
+  update_variables_to_config('dblog.settings', array(
+    'dblog_row_limit' => 'row_limit',
+  ));
 }
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x"
+ * The next series of updates should start at 9000.
+ */

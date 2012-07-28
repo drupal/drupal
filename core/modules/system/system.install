@@ -1972,6 +1972,32 @@ function system_update_8013() {
 }
 
 /**
+ * Moves system logging settings from variables to config.
+ */
+function system_update_8014() {
+  $error_level = db_query("SELECT value FROM {variable} WHERE name = 'error_level'")->fetchField();
+  $config = config('system.logging');
+  // Only do the conversion if we have a value and it is numeric.
+  if ($error_level && is_numeric($error_level)) {
+    $map = array(
+      '0' => 'hide',
+      '1' => 'some',
+      '2' => 'all',
+      '3' => 'verbose',
+    );
+    // Update error_level value to a string identifier.
+    $config->set('error_level', $map[$error_level]);
+    // Delete the migrated variable.
+    db_delete('variable')->condition('name', 'error_level')->execute();
+  }
+  else {
+    // Update error_level to the default value.
+    $config->set('error_level', 'all');
+  }
+  $config->save();
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */
