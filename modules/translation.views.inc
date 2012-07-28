@@ -30,7 +30,7 @@ function translation_views_data_alter(&$data) {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_node_tnid',
@@ -94,7 +94,7 @@ function translation_views_data_alter(&$data) {
     'title' => t('Translation status'),
     'help' => t('The translation status of the content - whether or not the translation needs to be updated.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
+      'plugin_id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'filter' => array(

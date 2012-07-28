@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugins\views\field;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * A handler to run a field through check_markup, using a companion
  * format field.
@@ -17,6 +19,12 @@ namespace Drupal\views\Plugins\views\field;
  *           which goes with the 'body' field.
  *
  * @ingroup views_field_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "markup"
+ * )
  */
 class Markup extends FieldPluginBase {
   /**

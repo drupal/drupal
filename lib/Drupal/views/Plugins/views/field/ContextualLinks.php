@@ -7,10 +7,18 @@
 
 namespace Drupal\views\Plugins\views\field;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Provides a handler that adds contextual links.
  *
  * @ingroup views_field_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "contextual_links"
+ * )
  */
 class ContextualLinks extends FieldPluginBase {
   function option_definition() {

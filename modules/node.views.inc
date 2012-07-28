@@ -98,7 +98,7 @@ function node_views_data() {
     'title' => t('Post date'), // The item it appears as on the UI,
     'help' => t('The date the content was posted.'), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -114,7 +114,7 @@ function node_views_data() {
     'title' => t('Updated date'), // The item it appears as on the UI,
     'help' => t('The date the content was last updated.'), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -149,7 +149,7 @@ function node_views_data() {
     'title' => t('Published'),
     'help' => t('Whether or not the content is published.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
+      'plugin_id' => 'boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'published-notpublished' => array(t('Published'), t('Not published')),
@@ -182,7 +182,7 @@ function node_views_data() {
     'title' => t('Promoted to front page'),
     'help' => t('Whether or not the content is promoted to the front page.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
+      'plugin_id' => 'boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'promoted-notpromoted' => array(t('Promoted'), t('Not promoted')),
@@ -204,7 +204,7 @@ function node_views_data() {
     'help' => t('Whether or not the content is sticky.'), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
+      'plugin_id' => 'boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'sticky' => array(t('Sticky'), t('Not sticky')),
@@ -515,7 +515,7 @@ function node_views_data() {
     'help' => t('The log message entered when the revision was created.'), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Xss',
+      'plugin_id' => 'xss',
      ),
     'filter' => array(
       'plugin_id' => 'string',
@@ -528,7 +528,7 @@ function node_views_data() {
     'title' => t('Updated date'), // The item it appears as on the UI,
     'help' => t('The date the node was last updated.'), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(

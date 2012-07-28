@@ -156,7 +156,7 @@ function system_views_data() {
     'title' => t('Upload date'),
     'help' => t('The date the file was uploaded.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -391,7 +391,7 @@ function system_views_data() {
     'title' => t('Module'),
     'help' => t('The module managing this file relationship.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
      ),
     'filter' => array(
@@ -408,7 +408,7 @@ function system_views_data() {
     'title' => t('Entity type'),
     'help' => t('The type of entity that is related to the file.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
      ),
     'filter' => array(
@@ -425,7 +425,7 @@ function system_views_data() {
     'title' => t('Entity ID'),
     'help' => t('The ID of the entity that is related to the file.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -442,7 +442,7 @@ function system_views_data() {
     'title' => t('Use count'),
     'help' => t('The number of times the file is used by this entity.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
@@ -470,7 +470,7 @@ function system_views_data() {
     'title' => t('Module/Theme/Theme engine filename'),
     'help' => t('The path of the primary file for this item, relative to the Drupal root; e.g. modules/node/node.module.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -489,7 +489,7 @@ function system_views_data() {
     'title' => t('Module/Theme/Theme engine name'),
     'help' => t('The name of the item; e.g. node.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -508,7 +508,7 @@ function system_views_data() {
     'title' => t('Type'),
     'help' => t('The type of the item, either module, theme, or theme_engine.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -527,7 +527,7 @@ function system_views_data() {
     'title' => t('Status'),
     'help' => t('Boolean indicating whether or not this item is enabled.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
+      'plugin_id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -546,7 +546,7 @@ function system_views_data() {
     'title' => t('Schema version'),
     'help' => t("The module's database schema version number. -1 if the module is not installed (its tables do not exist); 0 or the largest N of the module's hook_update_N() function that has either been run or existed when the module was first installed."),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(

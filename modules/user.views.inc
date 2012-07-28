@@ -203,7 +203,7 @@ function user_views_data() {
     'title' => t('Created date'), // The item it appears as on the UI,
     'help' => t('The date the user was created.'), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -274,7 +274,7 @@ function user_views_data() {
     'title' => t('Last access'), // The item it appears as on the UI,
     'help' => t("The user's last access date."), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -290,7 +290,7 @@ function user_views_data() {
     'title' => t('Last login'), // The item it appears as on the UI,
     'help' => t("The user's last login date."), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -307,7 +307,7 @@ function user_views_data() {
     'help' => t('Whether a user is active or blocked.'), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Boolean',
+      'plugin_id' => 'boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'active-blocked' => array(t('Active'), t('Blocked')),
@@ -329,7 +329,7 @@ function user_views_data() {
     'help' => t("The user's signature."), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Markup',
+      'plugin_id' => 'markup',
       'format' => filter_fallback_format(),
     ),
     'filter' => array(
@@ -357,7 +357,7 @@ function user_views_data() {
     'title' => t('Data'),
     'help' => t('Provide serialized data of the user'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Serialized',
+      'plugin_id' => 'serialized',
     ),
   );
 
@@ -485,7 +485,7 @@ function user_views_data() {
     'title' => t('Authmap ID'),
     'help' => t('The Authmap ID.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
     ),
     'filter' => array(
       'plugin_id' => 'numeric',
@@ -500,7 +500,7 @@ function user_views_data() {
     'title' => t('Authentication name'),
     'help' => t('The unique authentication name.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'plugin_id' => 'string',
@@ -513,7 +513,7 @@ function user_views_data() {
     'title' => t('Authentication module'),
     'help' => t('The name of the module managing the authentication entry.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\FieldNumeric',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'plugin_id' => 'string',

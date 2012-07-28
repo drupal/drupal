@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugins\views\field;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler whichs allows to show machine name content as human name.
  * @ingroup views_field_handlers
@@ -14,6 +16,12 @@ namespace Drupal\views\Plugins\views\field;
  * Definition items:
  * - options callback: The function to call in order to generate the value options. If omitted, the options 'Yes' and 'No' will be used.
  * - options arguments: An array of arguments to pass to the options callback.
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "machine_name"
+ * )
  */
 class MachineName extends FieldPluginBase {
   /**

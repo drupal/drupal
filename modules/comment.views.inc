@@ -100,7 +100,7 @@ function comment_views_data() {
     'title' => t("Author's website"),
     'help' => t("The website address of the comment's author. Can be rendered as a link. Will be empty if the author is a registered user."),
     'field' => array(
-      'handler' => 'views_handler_field_url',
+      'plugin_id' => 'url',
       'click sortable' => TRUE,
     ),
     'filter' => array(
@@ -119,7 +119,7 @@ function comment_views_data() {
     'title' => t('Hostname'),
     'help' => t('Hostname of user that posted the comment.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
      ),
     'filter' => array(
@@ -138,7 +138,7 @@ function comment_views_data() {
     'title' => t('Mail'),
     'help' => t('Email of user that posted the comment. Will be empty if the author is a registered user.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
      ),
     'filter' => array(
@@ -157,7 +157,7 @@ function comment_views_data() {
     'title' => t('Post date'),
     'help' => t('Date and time of when the comment was created.'),
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -196,7 +196,7 @@ function comment_views_data() {
     'title' => t('Updated date'),
     'help' => t('Date and time of when the comment was last updated.'),
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -272,7 +272,7 @@ function comment_views_data() {
     'title' => t('Approved'),
     'help' => t('Whether the comment is approved (or still in the moderation queue).'),
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'plugin_id' => 'boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'approved-not-approved' => array(t('Approved'), t('Not Approved')),
@@ -365,7 +365,7 @@ function comment_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'plugin_id' => 'numeric',
     ),
   );
 
@@ -395,7 +395,7 @@ function comment_views_data() {
     'title' => t('Parent CID'),
     'help' => t('The Comment ID of the parent comment.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
     ),
     'relationship' => array(
       'title' => t('Parent comment'),
@@ -459,7 +459,7 @@ function comment_views_data() {
     'title' => t('Comment count'),
     'help' => t('The number of comments a node has.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'filter' => array(
@@ -523,7 +523,7 @@ function comment_views_data() {
       'handler' => 'views_handler_argument_numeric',
     ),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'plugin_id' => 'numeric',
     ),
   );
 

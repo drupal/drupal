@@ -7,10 +7,18 @@
 
 namespace Drupal\views\Plugins\views\field;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to show a counter of the current row.
  *
  * @ingroup views_field_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "counter"
+ * )
  */
 class Counter extends FieldPluginBase {
   function option_definition() {

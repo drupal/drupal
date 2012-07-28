@@ -37,7 +37,7 @@
     'title' => t('Custom text'),
     'help' => t('Provide custom text or link.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Custom',
+      'plugin_id' => 'custom',
     ),
   );
 
@@ -45,7 +45,7 @@
     'title' => t('View result counter'),
     'help' => t('Displays the actual position of the view result'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Counter',
+      'plugin_id' => 'counter',
     ),
   );
 
@@ -86,7 +86,7 @@
       'title' => t('Contextual Links'),
       'help' => t('Display fields in a contextual links menu.'),
       'field' => array(
-        'handler' => 'Drupal\views\Plugins\views\field\ContextualLinks',
+        'plugin_id' => 'contextual_links',
       ),
     );
   }
@@ -104,7 +104,7 @@
       'title' => t('Math expression'),
       'help' => t('Evaluates a mathematical expression and displays it.'),
       'field' => array(
-        'handler' => 'Drupal\views\Plugins\views\field\Math',
+        'plugin_id' => 'math',
         'float' => TRUE,
       ),
     );

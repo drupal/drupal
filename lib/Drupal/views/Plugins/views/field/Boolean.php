@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\views\Plugins\views\field;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * A handler to provide proper displays for booleans.
@@ -22,6 +23,12 @@ namespace Drupal\views\Plugins\views\field;
  *      @endcode
  *
  * @ingroup views_field_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "boolean"
+ * )
  */
 class Boolean extends FieldPluginBase {
   function option_definition() {

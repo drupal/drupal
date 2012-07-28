@@ -7,10 +7,18 @@
 
 namespace Drupal\views\Plugins\views\field;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to show data of serialized fields.
  *
  * @ingroup views_field_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "serialized"
+ * )
  */
 class Serialized extends FieldPluginBase {
 

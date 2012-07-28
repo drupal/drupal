@@ -7,8 +7,8 @@
 
 namespace Drupal\views\Plugins\views\field;
 
-use Drupal\views\Plugins\views\Plugin;
 use Drupal\views\Plugins\views\Handler;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * @defgroup views_field_handlers Views field handlers
@@ -46,6 +46,12 @@ define('VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY', 2);
  * - click sortable: If TRUE, this field may be click sorted.
  *
  * @ingroup views_field_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "standard"
+ * )
  */
 class FieldPluginBase extends Handler {
 

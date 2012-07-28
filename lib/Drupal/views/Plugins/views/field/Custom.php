@@ -7,10 +7,18 @@
 
 namespace Drupal\views\Plugins\views\field;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * A handler to provide a field that is completely custom by the administrator.
  *
  * @ingroup views_field_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "custom"
+ * )
  */
 class Custom extends FieldPluginBase {
   function query() {

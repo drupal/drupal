@@ -40,7 +40,7 @@ function taxonomy_views_data() {
     'title' => t('Name'), // The item it appears as on the UI,
     'field' => array(
       'help' => t('Name of the vocabulary a term is a member of. This will be the vocabulary that whichever term the "Taxonomy: Term" field is; and can similarly cause duplicates.'),
-      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -52,7 +52,7 @@ function taxonomy_views_data() {
     'title' => t('Machine name'), // The item it appears as on the UI,
     'field' => array(
       'help' => t('Machine-Name of the vocabulary a term is a member of. This will be the vocabulary that whichever term the "Taxonomy: Term" field is; and can similarly cause duplicates.'),
-      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
     ),
     'filter' => array(
@@ -68,7 +68,7 @@ function taxonomy_views_data() {
     'title' => t('Vocabulary ID'), // The item it appears as on the UI,
     'help' => t('The taxonomy vocabulary ID'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -83,14 +83,14 @@ function taxonomy_views_data() {
     'title' => t('Description'), // The item it appears as on the UI,
     'help' => t('The taxonomy vocabulary description'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
+      'plugin_id' => 'standard',
     ),
   );
   $data['taxonomy_vocabulary']['weight'] = array(
     'title' => t('Weight'),
     'help' => t('The taxonomy vocabulary weight'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -146,7 +146,7 @@ function taxonomy_views_data() {
     'title' => t('Term ID'),
     'help' => t('The tid of a taxonomy term.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -220,7 +220,7 @@ function taxonomy_views_data() {
     'title' => t('Weight'),
     'help' => t('The term weight field'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -239,7 +239,7 @@ function taxonomy_views_data() {
     'title' => t('Term description'),
     'help' => t('The description associated with a taxonomy term.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Markup',
+      'plugin_id' => 'markup',
       'format' => array('field' => 'format'),
     ),
     'filter' => array(

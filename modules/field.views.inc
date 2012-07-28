@@ -370,7 +370,7 @@ function field_views_field_default_views_data($field) {
           'help' => t('Delta - Appears in: @bundles.', array('@bundles' => implode(', ', $bundles_names))),
         );
         $data[$table]['delta']['field'] = array(
-          'handler' => 'views_handler_field_numeric',
+          'plugin_id' => 'numeric',
         );
         $data[$table]['delta']['argument'] = array(
           'field' => 'delta',

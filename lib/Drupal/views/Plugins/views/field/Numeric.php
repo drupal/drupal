@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugins\views\field;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Render a field as a numeric value
  *
@@ -15,6 +17,12 @@ namespace Drupal\views\Plugins\views\field;
  *          will be assumed to be integer.
  *
  * @ingroup views_field_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "numeric"
+ * )
  */
 class Numeric extends FieldPluginBase {
   function option_definition() {

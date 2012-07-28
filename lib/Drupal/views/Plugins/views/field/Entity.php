@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugins\views\field;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * A handler to display data from entity objects.
  *
@@ -17,6 +19,12 @@ namespace Drupal\views\Plugins\views\field;
  * @code views_entity_{ENTITY_TYPE} @endcode.
  *
  * @ingroup views_field_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "entity"
+ * )
  */
 class Entity extends FieldPluginBase {
 

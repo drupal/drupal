@@ -30,7 +30,7 @@ function poll_views_data() {
     'title' => t('Active'),
     'help' => t('Whether the poll is open for voting.'),
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'plugin_id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'filter' => array(

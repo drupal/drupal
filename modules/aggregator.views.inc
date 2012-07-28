@@ -33,7 +33,7 @@ function aggregator_views_data() {
     'title' => t('Feed Item ID'),
     'help' => t('The unique ID of the aggregator item.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -54,7 +54,7 @@ function aggregator_views_data() {
     'help' => t('The unique ID of the aggregator item.'), // The help that appears on the UI,
     // Information for displaying the iid
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     // Information for accepting a iid as an argument
@@ -97,7 +97,7 @@ function aggregator_views_data() {
     'title' => t('Link'), // The item it appears as on the UI,
     'help' => t('The link to the original source URL of the item.'),
     'field' => array(
-      'handler' => 'views_handler_field_url',
+      'plugin_id' => 'url',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -172,7 +172,7 @@ function aggregator_views_data() {
     'help' => t('The date the original feed item was posted. (With some feeds, this will be the date it was imported.)'),
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -207,7 +207,7 @@ function aggregator_views_data() {
     'help' => t('The unique ID of the aggregator feed.'), // The help that appears on the UI,
     // Information for displaying the fid
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     // Information for accepting a fid as an argument
@@ -254,7 +254,7 @@ function aggregator_views_data() {
     'help' => t('The link to the source URL of the feed.'),
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_url',
+      'plugin_id' => 'url',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -271,7 +271,7 @@ function aggregator_views_data() {
     'help' => t('The date the feed was last checked for new content.'),
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -305,7 +305,7 @@ function aggregator_views_data() {
     'help' => t('The date of the most recent new content on the feed.'),
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -348,7 +348,7 @@ function aggregator_views_data() {
     'title' => t('Category ID'),
     'help' => t('The unique ID of the aggregator category.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(

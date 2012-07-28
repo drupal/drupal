@@ -32,7 +32,7 @@ function statistics_views_data() {
     'help' => t('The total number of times the node has been viewed.'),
 
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
@@ -49,7 +49,7 @@ function statistics_views_data() {
     'help' => t('The total number of times the node has been viewed today.'),
 
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
@@ -66,7 +66,7 @@ function statistics_views_data() {
     'help' => t('The most recent time the node has been viewed.'),
 
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
     ),
     'filter' => array(
@@ -104,7 +104,7 @@ function statistics_views_data() {
     'title' => t('Aid'),
     'help' => t('Unique access event ID.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -126,7 +126,7 @@ function statistics_views_data() {
     'help' => t('Browser session ID of user that visited page.'),
 
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
      ),
      'filter' => array(
@@ -185,7 +185,7 @@ function statistics_views_data() {
     'title' => t('Referrer'),
     'help' => t('Referrer URI.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Url',
+      'plugin_id' => 'url',
       'click sortable' => TRUE,
      ),
     'filter' => array(
@@ -201,7 +201,7 @@ function statistics_views_data() {
     'title' => t('Hostname'),
     'help' => t('Hostname of user that visited the page.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
      ),
     'filter' => array(
@@ -231,7 +231,7 @@ function statistics_views_data() {
     'title' => t('Timer'),
     'help' => t('Time in milliseconds that the page took to load.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'filter' => array(
@@ -247,7 +247,7 @@ function statistics_views_data() {
     'title' => t('Timestamp'),
     'help' => t('Timestamp of when the page was visited.'),
     'field' => array(
-      'handler' => 'Drupal\views\Plugins\views\field\Date',
+      'plugin_id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(

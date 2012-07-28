@@ -28,7 +28,7 @@ function locale_views_data() {
     'title' => t('LID'),
     'help' => t('The ID of the source string.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
     ),
     'argument' => array(
@@ -50,7 +50,7 @@ function locale_views_data() {
     'title' => t('Location'),
     'help' => t('A description of the location or context of the string.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -87,7 +87,7 @@ function locale_views_data() {
     'title' => t('Source'),
     'help' => t('The full original string.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'plugin_id' => 'string',
@@ -100,7 +100,7 @@ function locale_views_data() {
     'title' => t('Version'),
     'help' => t('The version of Drupal core that this string is for.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
     ),
     'filter' => array(
@@ -141,7 +141,7 @@ function locale_views_data() {
     'title' => t('Translation'),
     'help' => t('The full translation string.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'plugin_id' => 'string',
@@ -170,7 +170,7 @@ function locale_views_data() {
     'title' => t('Singular LID'),
     'help' => t('The ID of the parent translation.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -180,7 +180,7 @@ function locale_views_data() {
     'title' => t('Plural'),
     'help' => t('Whether or not the translation is plural.'),
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'plugin_id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'filter' => array(

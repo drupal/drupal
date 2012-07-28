@@ -73,7 +73,7 @@ function node_example_views_data()  {
     'title' => t('Quantity'),
     'help' => t('Quantity of items.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'plugin_id' => 'numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
@@ -90,7 +90,7 @@ function node_example_views_data()  {
     'help' => t('Color of item.'),
 
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
       'click sortable' => TRUE,
      ),
      'filter' => array(

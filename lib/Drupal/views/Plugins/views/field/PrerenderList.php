@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugins\views\field;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to provide a list of items.
  *
@@ -16,6 +18,12 @@ namespace Drupal\views\Plugins\views\field;
  * Items to render should be in a list in $this->items
  *
  * @ingroup views_field_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "prerender_list"
+ * )
  */
 class PrerenderList extends FieldPluginBase {
   /**

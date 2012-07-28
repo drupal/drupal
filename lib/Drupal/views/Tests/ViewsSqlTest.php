@@ -122,7 +122,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
       'title' => t('ID'),
       'help' => t('The test data ID'),
       'field' => array(
-        'handler' => 'views_handler_field_numeric',
+        'plugin_id' => 'numeric',
         'click sortable' => TRUE,
       ),
       'argument' => array(
@@ -139,7 +139,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
       'title' => t('Name'),
       'help' => t('The name of the person'),
       'field' => array(
-        'handler' => 'views_handler_field',
+        'plugin_id' => 'standard',
         'click sortable' => TRUE,
       ),
       'argument' => array(
@@ -156,7 +156,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
       'title' => t('Age'),
       'help' => t('The age of the person'),
       'field' => array(
-        'handler' => 'views_handler_field_numeric',
+        'plugin_id' => 'numeric',
         'click sortable' => TRUE,
       ),
       'argument' => array(
@@ -173,7 +173,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
       'title' => t('Job'),
       'help' => t('The job of the person'),
       'field' => array(
-        'handler' => 'views_handler_field',
+        'plugin_id' => 'standard',
         'click sortable' => TRUE,
       ),
       'argument' => array(
@@ -190,7 +190,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
       'title' => t('Created'),
       'help' => t('The creation date of this record'),
       'field' => array(
-        'handler' => 'views_handler_field_date',
+        'plugin_id' => 'date',
         'click sortable' => TRUE,
       ),
       'argument' => array(

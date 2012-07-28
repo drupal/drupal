@@ -5,12 +5,18 @@
  */
 namespace Drupal\views\Plugins\views\field;
 
-use Drupal\views\Plugins\views\field\FieldPluginBase;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Render a numeric value as a size.
  *
  * @ingroup views_field_handlers
+ */
+
+/**
+ * @plugin(
+ *   plugin_id = "file_size"
+ * )
  */
 class FileSize extends FieldPluginBase {
   function option_definition() {

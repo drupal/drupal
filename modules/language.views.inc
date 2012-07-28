@@ -27,7 +27,7 @@ function language_views_data() {
     'title' => t('Language code'),
     'help' => t("Language code, e.g. 'de' or 'en-US'."),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'plugin_id' => 'string'
@@ -44,7 +44,7 @@ function language_views_data() {
     'title' => t('Language name'),
     'help' => t("Language name, e.g. 'German' or 'English'."),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'plugin_id' => 'standard',
     ),
     'filter' => array(
       'plugin_id' => 'string'
@@ -61,7 +61,7 @@ function language_views_data() {
     'title' => t('Direction'),
     'help' => t('Direction of language (Left-to-Right = 0, Right-to-Left = 1).'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'plugin_id' => 'numeric',
     ),
     'filter' => array(
       'plugin_id' => 'numeric'
@@ -78,7 +78,7 @@ function language_views_data() {
     'title' => t('Weight'),
     'help' => t('Weight, used in lists of languages.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'plugin_id' => 'numeric',
     ),
     'filter' => array(
       'plugin_id' => 'numeric'
