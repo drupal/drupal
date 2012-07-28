@@ -120,7 +120,7 @@ abstract class WizardPluginBase implements WizardInterface {
       '#size' => 5,
       '#element_validate' => array('views_element_validate_integer'),
     );
-    $form['displays']['page']['options']['pagerz'] = array(
+    $form['displays']['page']['options']['pager'] = array(
       '#title' => t('Use a pager'),
       '#type' => 'checkbox',
       '#default_value' => TRUE,
@@ -429,6 +429,12 @@ abstract class WizardPluginBase implements WizardInterface {
     }
     if (isset($this->plugin['available_sorts'])) {
       $sorts += $this->plugin['available_sorts'];
+    }
+
+    foreach ($sorts as &$option) {
+      if (is_object($option)) {
+        $option = $option->get();
+      }
     }
 
     // If there is no sorts option available continue.

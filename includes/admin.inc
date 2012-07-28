@@ -381,7 +381,7 @@ function views_ui_add_form($form, &$form_state) {
   $wizard_key = $show_form['wizard_key']['#default_value'];
 
   views_include_handlers();
-  $manager = new WizardManager();
+  $manager = views_get_plugin_manager('wizard');
   $info = $manager->getDefinition($wizard_key);
   $wizard_instance = $manager->createInstance($wizard_key, $info);
   $form = $wizard_instance->build_form($form, $form_state);

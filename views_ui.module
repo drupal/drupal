@@ -578,7 +578,8 @@ function views_ui_get_wizard($wizard_type) {
  */
 function views_ui_get_wizards() {
   ctools_include('plugins');
-  $wizard_plugins = module_invoke_all('views_wizard');
+  $manager = views_get_plugin_manager('wizard');
+  $wizard_plugins = $manager->getDefinitions();
   $wizard_tables = array();
   foreach ($wizard_plugins as $name => $info) {
     $wizard_tables[$info['base_table']] = TRUE;

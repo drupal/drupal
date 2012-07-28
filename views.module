@@ -27,6 +27,7 @@ use Drupal\views\Plugins\Type\RowPluginManager;
 use Drupal\views\Plugins\Type\ExposedFormPluginManager;
 use Drupal\views\Plugins\Type\HandlerPluginManager;
 use Drupal\views\Plugins\Type\DisplayExtenderPluginManager;
+use Drupal\views\Plugins\Type\WizardPluginManager;
 
 /**
  * Advertise the current views api version
@@ -1426,6 +1427,9 @@ function views_get_plugin_manager($type) {
       break;
     case 'display_extender':
       $manager = new DisplayExtenderPluginManager();
+      break;
+    case 'wizard':
+      $manager = new WizardPluginManager();
       break;
     case 'field':
     case 'filter':
