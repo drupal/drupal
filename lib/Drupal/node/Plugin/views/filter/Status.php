@@ -5,7 +5,7 @@
  * Definition of Drupal\node\Plugins\views\filter\Status
  */
 
-namespace Drupal\node\Plugins\views\filter;
+namespace Drupal\node\Plugin\views\filter;
 
 use Drupal\views\Plugins\views\filter\FilterPluginBase;
 
