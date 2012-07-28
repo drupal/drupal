@@ -30,7 +30,7 @@ function language_views_data() {
       'handler' => 'views_handler_field',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string'
+      'plugin_id' => 'string'
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
@@ -47,7 +47,7 @@ function language_views_data() {
       'handler' => 'views_handler_field',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string'
+      'plugin_id' => 'string'
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
@@ -64,7 +64,7 @@ function language_views_data() {
       'handler' => 'views_handler_field_numeric',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric'
+      'plugin_id' => 'numeric'
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',
@@ -81,7 +81,7 @@ function language_views_data() {
       'handler' => 'views_handler_field_numeric',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric'
+      'plugin_id' => 'numeric'
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',

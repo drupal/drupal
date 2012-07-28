@@ -394,7 +394,7 @@ function hook_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
@@ -410,7 +410,7 @@ function hook_views_data() {
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'plugin_id' => 'numeric',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -451,7 +451,7 @@ function hook_views_data() {
       'plugin_id' => 'date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'plugin_id' => 'date',
     ),
   );
 

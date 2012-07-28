@@ -7,10 +7,18 @@
 
 namespace Drupal\views\Plugins\views\filter;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Filter to handle dates stored as a timestamp.
  *
  * @ingroup views_filter_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "date"
+ * )
  */
 class Date extends Numeric {
   function option_definition() {

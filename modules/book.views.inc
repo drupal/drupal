@@ -71,7 +71,7 @@ function book_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'plugin_id' => 'numeric',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument',

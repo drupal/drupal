@@ -8,12 +8,19 @@
 namespace Drupal\views\Plugins\views\filter;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Basic textfield filter to handle string filtering commands
  * including equality, like, not like, etc.
  *
  * @ingroup views_filter_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "string"
+ * )
  */
 class String extends FilterPluginBase {
 

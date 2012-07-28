@@ -383,7 +383,7 @@ function field_views_field_default_views_data($field) {
         $data[$table]['delta']['filter'] = array(
           'field' => 'delta',
           'table' => $table,
-          'handler' => 'views_handler_filter_numeric',
+          'plugin_id' => 'numeric',
           'additional fields' => $additional_fields,
           'field_name' => $field['field_name'],
           'allow empty' => TRUE,

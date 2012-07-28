@@ -101,7 +101,7 @@ function taxonomy_views_data() {
       'plugin_id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
+      'plugin_id' => 'numeric',
     ),
   );
 
@@ -172,7 +172,7 @@ function taxonomy_views_data() {
     'help' => t('The tid of a taxonomy term.'),
     'real field' => 'tid',
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
+      'plugin_id' => 'numeric',
       'allow empty' => TRUE,
     ),
   );
@@ -204,7 +204,7 @@ function taxonomy_views_data() {
       'plugin_id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
       'help' => t('Taxonomy term name.'),
     ),
     'argument' => array(
@@ -227,7 +227,7 @@ function taxonomy_views_data() {
       'plugin_id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
+      'plugin_id' => 'numeric',
     ),
     'argument' => array(
       'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
@@ -243,7 +243,7 @@ function taxonomy_views_data() {
       'format' => array('field' => 'format'),
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
     ),
   );
 

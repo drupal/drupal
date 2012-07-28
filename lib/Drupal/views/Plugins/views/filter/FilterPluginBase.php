@@ -7,8 +7,8 @@
 
 namespace Drupal\views\Plugins\views\filter;
 
-use Drupal\views\Plugins\views\Plugin;
 use Drupal\views\Plugins\views\Handler;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * @defgroup views_filter_handlers Views filter handlers
@@ -35,6 +35,12 @@ use Drupal\views\Plugins\views\Handler;
  * Base class for filters.
  *
  * @ingroup views_filter_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "standard"
+ * )
  */
 class FilterPluginBase extends Handler {
   /**

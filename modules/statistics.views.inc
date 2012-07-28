@@ -36,7 +36,7 @@ function statistics_views_data() {
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
+      'plugin_id' => 'numeric',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -53,7 +53,7 @@ function statistics_views_data() {
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
+      'plugin_id' => 'numeric',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -113,7 +113,7 @@ function statistics_views_data() {
       'numeric' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
+      'plugin_id' => 'numeric',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -130,7 +130,7 @@ function statistics_views_data() {
       'click sortable' => TRUE,
      ),
      'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
      ),
      'argument' => array(
        'handler' => 'Drupal\views\Plugins\views\argument\String',
@@ -150,7 +150,7 @@ function statistics_views_data() {
       'click sortable' => TRUE,
      ),
      'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
      ),
      'sort' => array(
       'plugin_id' => 'standard',
@@ -170,7 +170,7 @@ function statistics_views_data() {
       'click sortable' => TRUE,
      ),
      'filter' => array(
-       'handler' => 'Drupal\views\Plugins\views\filter\String',
+       'plugin_id' => 'string',
      ),
      'sort' => array(
        'plugin_id' => 'standard',
@@ -189,7 +189,7 @@ function statistics_views_data() {
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -205,7 +205,7 @@ function statistics_views_data() {
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -235,7 +235,7 @@ function statistics_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
+      'plugin_id' => 'numeric',
     ),
     'sort' => array(
       'plugin_id' => 'standard',

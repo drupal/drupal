@@ -41,7 +41,7 @@ function aggregator_views_data() {
       'numeric' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'plugin_id' => 'numeric',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -65,7 +65,7 @@ function aggregator_views_data() {
     ),
     // Information for accepting a nid as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'plugin_id' => 'numeric',
     ),
     // Information for sorting on a nid.
     'sort' => array(
@@ -88,7 +88,7 @@ function aggregator_views_data() {
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -105,7 +105,7 @@ function aggregator_views_data() {
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -123,7 +123,7 @@ function aggregator_views_data() {
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
@@ -144,7 +144,7 @@ function aggregator_views_data() {
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
@@ -162,7 +162,7 @@ function aggregator_views_data() {
      ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -180,7 +180,7 @@ function aggregator_views_data() {
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'plugin_id' => 'date',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_date',
@@ -218,7 +218,7 @@ function aggregator_views_data() {
     ),
     // Information for accepting a nid as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'plugin_id' => 'numeric',
     ),
     // Information for sorting on a fid.
     'sort' => array(
@@ -241,7 +241,7 @@ function aggregator_views_data() {
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
@@ -261,7 +261,7 @@ function aggregator_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -278,7 +278,7 @@ function aggregator_views_data() {
       'handler' => 'views_handler_sort_date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'plugin_id' => 'date',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_date',
@@ -295,7 +295,7 @@ function aggregator_views_data() {
       'click sortable' => FALSE,
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -313,7 +313,7 @@ function aggregator_views_data() {
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'plugin_id' => 'date',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_date',
@@ -376,7 +376,7 @@ function aggregator_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
   );
 

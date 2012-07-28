@@ -129,7 +129,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
         'handler' => 'views_handler_argument_numeric',
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_numeric',
+        'plugin_id' => 'numeric',
       ),
       'sort' => array(
         'handler' => 'views_handler_sort',
@@ -146,7 +146,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
         'handler' => 'views_handler_argument_string',
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_string',
+        'plugin_id' => 'string',
       ),
       'sort' => array(
         'handler' => 'views_handler_sort',
@@ -163,7 +163,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
         'handler' => 'views_handler_argument_numeric',
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_numeric',
+        'plugin_id' => 'numeric',
       ),
       'sort' => array(
         'handler' => 'views_handler_sort',
@@ -180,7 +180,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
         'handler' => 'views_handler_argument_string',
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_string',
+        'plugin_id' => 'string',
       ),
       'sort' => array(
         'handler' => 'views_handler_sort',
@@ -197,7 +197,7 @@ abstract class ViewsSqlTest extends ViewsTestBase {
         'handler' => 'views_handler_argument_date',
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_date',
+        'plugin_id' => 'date',
       ),
       'sort' => array(
         'handler' => 'views_handler_sort_date',

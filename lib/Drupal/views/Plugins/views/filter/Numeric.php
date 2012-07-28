@@ -8,11 +8,18 @@
 namespace Drupal\views\Plugins\views\filter;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Simple filter to handle greater than/less than filters
  *
  * @ingroup views_filter_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "numeric"
+ * )
  */
 class Numeric extends FilterPluginBase {
   var $always_multiple = TRUE;

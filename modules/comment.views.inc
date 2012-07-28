@@ -47,7 +47,7 @@ function comment_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -66,7 +66,7 @@ function comment_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'plugin_id' => 'numeric',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -85,7 +85,7 @@ function comment_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -104,7 +104,7 @@ function comment_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -123,7 +123,7 @@ function comment_views_data() {
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -142,7 +142,7 @@ function comment_views_data() {
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'plugin_id' => 'string',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -164,7 +164,7 @@ function comment_views_data() {
       'handler' => 'views_handler_sort_date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'plugin_id' => 'date',
     ),
   );
 
@@ -203,7 +203,7 @@ function comment_views_data() {
       'handler' => 'views_handler_sort_date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'plugin_id' => 'date',
     ),
   );
 
@@ -355,11 +355,11 @@ function comment_views_data() {
       'help' => t('The content to which the comment is a reply to.'),
       'base' => 'node',
       'base field' => 'nid',
-      'handler' => 'views_handler_relationship',
+      'plugin_id' => 'standard',
       'label' => t('Content'),
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'plugin_id' => 'numeric',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',
@@ -377,11 +377,11 @@ function comment_views_data() {
       'help' => t("The User ID of the comment's author."),
       'base' => 'users',
       'base field' => 'uid',
-      'handler' => 'views_handler_relationship',
+      'plugin_id' => 'standard',
       'label' => t('author'),
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'plugin_id' => 'numeric',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',
@@ -435,7 +435,7 @@ function comment_views_data() {
       'handler' => 'views_handler_sort_date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'plugin_id' => 'date',
     ),
   );
 
@@ -463,7 +463,7 @@ function comment_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'plugin_id' => 'numeric',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -513,11 +513,11 @@ function comment_views_data() {
       'title' => t('Last comment author'),
       'base' => 'users',
       'base field' => 'uid',
-      'handler' => 'views_handler_relationship',
+      'plugin_id' => 'standard',
       'label' => t('Last comment author'),
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'plugin_id' => 'numeric',
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_numeric',

@@ -60,7 +60,7 @@ function node_views_data() {
     ),
     // Information for accepting a nid as a filter
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
+      'plugin_id' => 'numeric',
     ),
     // Information for sorting on a nid.
     'sort' => array(
@@ -86,7 +86,7 @@ function node_views_data() {
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
     ),
     'argument' => array(
       'handler' => 'Drupal\views\Plugins\views\argument\String',
@@ -502,7 +502,7 @@ function node_views_data() {
       'plugin_id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
     ),
     'argument' => array(
       'handler' => 'Drupal\views\Plugins\views\argument\String',
@@ -518,7 +518,7 @@ function node_views_data() {
       'handler' => 'Drupal\views\Plugins\views\field\Xss',
      ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
     ),
   );
 

@@ -78,7 +78,7 @@ function user_views_data() {
     'real field' => 'uid',
     'filter' => array(
       'title' => t('The user ID'),
-      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
+      'plugin_id' => 'numeric',
     ),
   );
 
@@ -124,7 +124,7 @@ function user_views_data() {
       'handler' => 'Drupal\views\Plugins\views\argument\String',
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
       'title' => t('Name (raw)'),
       'help' => t('The user or author name. This filter does not check if the user exists and allows partial matching. Does not utilize autocomplete.')
     ),
@@ -143,7 +143,7 @@ function user_views_data() {
       'plugin_id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
     ),
     'argument' => array(
       'handler' => 'Drupal\views\Plugins\views\argument\String',
@@ -333,7 +333,7 @@ function user_views_data() {
       'format' => filter_fallback_format(),
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -488,7 +488,7 @@ function user_views_data() {
       'handler' => 'Drupal\views\Plugins\views\field\Numeric',
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\Numeric',
+      'plugin_id' => 'numeric',
       'numeric' => TRUE,
     ),
     'argument' => array(
@@ -503,7 +503,7 @@ function user_views_data() {
       'handler' => 'Drupal\views\Plugins\views\field\FieldPluginBase',
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
     ),
     'argument' => array(
       'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
@@ -516,7 +516,7 @@ function user_views_data() {
       'handler' => 'Drupal\views\Plugins\views\field\FieldNumeric',
     ),
     'filter' => array(
-      'handler' => 'Drupal\views\Plugins\views\filter\String',
+      'plugin_id' => 'string',
     ),
     'argument' => array(
       'handler' => 'Drupal\views\Plugins\views\argment\String',
