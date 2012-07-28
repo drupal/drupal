@@ -1,0 +1,13 @@
+<?php
+
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
+
+function router_test_router_info() {
+  $collection = new RouteCollection();
+
+  $route = new Route('router_test/test1');
+  $collection->add('router_test_1', $route);
+
+  return $collection;
+}
