@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\bundle_test\BundleTestBundle.
+ */
+
 namespace Drupal\bundle_test;
 
 use Symfony\Component\DependencyInjection\Definition;

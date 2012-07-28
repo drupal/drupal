@@ -79,6 +79,8 @@ class DrupalKernel extends Kernel {
   }
 
   /**
+   * Overrides and eliminates this method from the parent class. Do not use.
+   *
    * This method is part of the KernelInterface interface, but takes an object
    * implementing LoaderInterface as its only parameter. This is part of the
    * Config compoment from Symfony, which is not provided by Drupal core.

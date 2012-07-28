@@ -29,6 +29,8 @@ class ExceptionController extends ContainerAware {
   protected $negotiation;
 
   /**
+   * Instantiates a new exception listener.
+   *
    * Factory method for getting an Exception Listener. Since this needs to be
    * instanciated with a controller callable, i.e. an ExceptionConroller object
    * and the name of the method to call, we can't just register it to the DIC

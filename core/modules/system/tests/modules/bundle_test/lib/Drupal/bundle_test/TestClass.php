@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\bundle_test\TestClass.
+ */
+
 namespace Drupal\bundle_test;
 
 use Symfony\Component\HttpKernel\KernelEvents;

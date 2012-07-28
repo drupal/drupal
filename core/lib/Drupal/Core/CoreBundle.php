@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\CoreBundle.
+ */
+
 namespace Drupal\Core;
 
 use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
@@ -11,6 +16,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
 /**
+ * Bundle class for mandatory core services.
+ *
  * This is where Drupal core registers all of its services to the Dependency
  * Injection Container. Modules wishing to register services to the container
  * should extend Symfony's Bundle class directly, not this class.
