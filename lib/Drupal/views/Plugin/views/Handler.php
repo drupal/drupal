@@ -251,7 +251,7 @@ class Handler extends Plugin {
   function groupby_form(&$form, &$form_state) {
     $view = &$form_state['view'];
     $display_id = $form_state['display_id'];
-    $types = views_object_types();
+    $types = Views::views_object_types();
     $type = $form_state['type'];
     $id = $form_state['id'];
 
