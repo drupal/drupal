@@ -31,9 +31,9 @@ function views_init() {
   $path = drupal_get_path('module', 'views');
   $loader = drupal_classloader();
   foreach ($core_modules as $module) {
-    if (function_exists($module . '_views_api')) {
-      $name = $module . '\\Plugin';
-      $loader->registerNamespace('Drupal\\' . $name, DRUPAL_ROOT . '/' . $path . '/lib');
+    $function = $module . '_views_api';
+    if (function_exists($function)) {
+      $loader->registerNamespace('Views\\' . $module, DRUPAL_ROOT . '/' . $path . '/lib');
     }
   }
 }
