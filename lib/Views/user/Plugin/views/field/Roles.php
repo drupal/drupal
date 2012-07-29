@@ -5,6 +5,9 @@
  * Definition of views_handler_field_user_roles.
  */
 
+namespace Views\user\Plugin\views\field;
+
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\field\PrerenderList;
 
 /**
@@ -12,7 +15,13 @@ use Drupal\views\Plugin\views\field\PrerenderList;
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_user_roles extends PrerenderList {
+
+/**
+ * @Plugin(
+ *   plugin_id = "user_roles"
+ * )
+ */
+class Roles extends PrerenderList {
   function construct() {
     parent::construct();
     $this->additional_fields['uid'] = array('table' => 'users', 'field' => 'uid');

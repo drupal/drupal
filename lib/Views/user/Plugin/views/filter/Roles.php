@@ -5,6 +5,9 @@
  * Definition of views_handler_filter_user_roles.
  */
 
+namespace Views\user\Plugin\views\filter;
+
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\filter\ManyToOne;
 
 /**
@@ -12,7 +15,13 @@ use Drupal\views\Plugin\views\filter\ManyToOne;
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_user_roles extends ManyToOne {
+
+/**
+ * @Plugin(
+ *   plugin_id = "user_roles"
+ * )
+ */
+class Roles extends ManyToOne {
   function get_value_options() {
     $this->value_options = user_roles(TRUE);
     unset($this->value_options[DRUPAL_AUTHENTICATED_RID]);

@@ -5,12 +5,22 @@
  * Definition of views_handler_field_user_language.
  */
 
+namespace Views\user\Plugin\views\field;
+
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Views field handler for user language.
  *
  * @ingroup views_field_handlers
  */
-class user_language extends User {
+
+/**
+ * @Plugin(
+ *   plugin_id = "user_language"
+ * )
+ */
+class Language extends User {
 
   function render_link($data, $values) {
     $uid = $this->get_value($values, 'uid');

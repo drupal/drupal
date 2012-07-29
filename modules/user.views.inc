@@ -47,16 +47,16 @@ function user_views_data() {
     'title' => t('Uid'),
     'help' => t('The user ID'), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'views_handler_field_user',
+      'plugin_id' => 'user',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_user_uid',
+      'plugin_id' => 'user_uid',
       'name field' => 'name', // display this field in the summary
     ),
     'filter' => array(
       'title' => t('Name'),
-      'handler' => 'views_handler_filter_user_name',
+      'plugin_id' => 'user_name',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -104,7 +104,7 @@ function user_views_data() {
     'title' => t('Current'),
     'help' => t('Filter the view to the currently logged in user.'),
     'filter' => array(
-      'handler' => 'views_handler_filter_user_current',
+      'plugin_id' => 'user_current',
       'type' => 'yes-no',
     ),
   );
@@ -114,7 +114,7 @@ function user_views_data() {
     'title' => t('Name'), // The item it appears as on the UI,
     'help' => t('The user or author name.'), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'views_handler_field_user_name',
+      'plugin_id' => 'user_name',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -136,7 +136,7 @@ function user_views_data() {
     'title' => t('E-mail'), // The item it appears as on the UI,
     'help' => t('Email address for a given user. This field is normally not shown to users, so be cautious when using it.'), // The help that appears on the UI,
     'field' => array(
-      'handler' => 'views_handler_field_user_mail',
+      'plugin_id' => 'user_mail',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -155,17 +155,17 @@ function user_views_data() {
     'title' => t('Language'), // The item it appears as on the UI,
     'help' => t('Language of the user'),
     'field' => array(
-      'handler' => 'views_handler_field_user_language',
+      'plugin_id' => 'user_language',
       'click sortable' => TRUE,
     ),
     'sort' => array(
       'plugin_id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_node_language',
+      'plugin_id' => 'node_language',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_node_language',
+      'plugin_id' => 'node_language',
     ),
   );
 
@@ -176,7 +176,7 @@ function user_views_data() {
     'help' => t("The user's picture, if allowed."), // The help that appears on the UI,
     // Information for displaying the uid
     'field' => array(
-      'handler' => 'views_handler_field_user_picture',
+      'plugin_id' => 'user_picture',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -194,7 +194,7 @@ function user_views_data() {
     'field' => array(
       'title' => t('Link'),
       'help' => t('Provide a simple link to the user.'),
-      'handler' => 'views_handler_field_user_link',
+      'plugin_id' => 'user_link',
     ),
   );
 
@@ -219,7 +219,7 @@ function user_views_data() {
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
       'field' => 'created',
-      'handler' => 'views_handler_argument_node_created_fulldate',
+      'plugin_id' => 'node_created_fulldate',
     ),
   );
 
@@ -228,7 +228,7 @@ function user_views_data() {
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
       'field' => 'created',
-      'handler' => 'views_handler_argument_node_created_year_month',
+      'plugin_id' => 'node_created_year_month',
     ),
   );
 
@@ -238,7 +238,7 @@ function user_views_data() {
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
       'field' => 'created',
-      'handler' => 'views_handler_argument_node_created_year',
+      'plugin_id' => 'node_created_year',
     ),
   );
 
@@ -247,7 +247,7 @@ function user_views_data() {
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
       'field' => 'created',
-      'handler' => 'views_handler_argument_node_created_month',
+      'plugin_id' => 'node_created_month',
     ),
   );
 
@@ -256,7 +256,7 @@ function user_views_data() {
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
       'field' => 'created',
-      'handler' => 'views_handler_argument_node_created_day',
+      'plugin_id' => 'node_created_day',
     ),
   );
 
@@ -265,7 +265,7 @@ function user_views_data() {
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
       'field' => 'created',
-      'handler' => 'views_handler_argument_node_created_week',
+      'plugin_id' => 'node_created_week',
     ),
   );
 
@@ -341,7 +341,7 @@ function user_views_data() {
     'field' => array(
       'title' => t('Edit link'),
       'help' => t('Provide a simple link to edit the user.'),
-      'handler' => 'views_handler_field_user_link_edit',
+      'plugin_id' => 'user_link_edit',
     ),
   );
 
@@ -349,7 +349,7 @@ function user_views_data() {
     'field' => array(
       'title' => t('Cancel link'),
       'help' => t('Provide a simple link to cancel the user.'),
-      'handler' => 'views_handler_field_user_link_cancel',
+      'plugin_id' => 'user_link_cancel',
     ),
   );
 
@@ -390,15 +390,15 @@ function user_views_data() {
     'title' => t('Roles'),
     'help' => t('Roles that a user belongs to.'),
     'field' => array(
-      'handler' => 'views_handler_field_user_roles',
+      'plugin_id' => 'user_roles',
       'no group by' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_user_roles',
+      'plugin_id' => 'user_roles',
       'allow empty' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_users_roles_rid',
+      'plugin_id' => 'users_roles_rid',
       'name table' => 'role',
       'name field' => 'name',
       'empty field name' => t('No role'),
@@ -450,11 +450,11 @@ function user_views_data() {
     'title' => t('Permission'),
     'help' => t('The user permissions.'),
     'field' => array(
-      'handler' => 'views_handler_field_user_permissions',
+      'plugin_id' => 'user_permissions',
       'no group by' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_user_permissions',
+      'plugin_id' => 'user_permissions',
     ),
   );
 
@@ -524,21 +524,6 @@ function user_views_data() {
   );
 
   return $data;
-}
-
-/**
- * Implements hook_views_plugins().
- */
-function user_views_plugins() {
-  return array(
-    'argument validator' => array(
-      'user' => array(
-        'title' => t('User'),
-        'handler' => 'views_plugin_argument_validate_user',
-        'path' => drupal_get_path('module', 'views') . '/modules/user', // not necessary for most modules
-      ),
-    ),
-  );
 }
 
 /**

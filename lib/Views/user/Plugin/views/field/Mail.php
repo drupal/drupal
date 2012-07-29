@@ -5,12 +5,23 @@
  * Definition of views_handler_field_user_mail.
  */
 
+namespace Views\user\Plugin\views\field;
+
+use Drupal\Core\Annotation\Plugin;
+
+/**
 /**
  * Field handler to provide acess control for the email field.
  *
  * @ingroup views_field_handlers
  */
-class user_mail extends User {
+
+/**
+ * @Plugin(
+ *   plugin_id = "user_mail"
+ * )
+ */
+class Mail extends User {
   function option_definition() {
     $options = parent::option_definition();
     $options['link_to_user'] = array('default' => 'mailto');

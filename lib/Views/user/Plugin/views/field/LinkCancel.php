@@ -5,12 +5,22 @@
  * Definition of views_handler_field_user_link_cancel.
  */
 
+namespace Views\user\Plugin\views\field;
+
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to present a link to user cancel.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_user_link_cancel extends views_handler_field_user_link {
+
+/**
+ * @Plugin(
+ *   plugin_id = "user_link_cancel"
+ * )
+ */
+class views_handler_field_user_link_cancel extends Link {
 
   function render_link($data, $values) {
     $uid = $values->{$this->aliases['uid']};

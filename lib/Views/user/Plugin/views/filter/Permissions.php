@@ -5,6 +5,9 @@
  * Definition of views_handler_filter_user_permissions.
  */
 
+namespace Views\user\Plugin\views\filter;
+
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\filter\ManyToOne;
 
 /**
@@ -12,7 +15,13 @@ use Drupal\views\Plugin\views\filter\ManyToOne;
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_user_permissions extends ManyToOne {
+
+/**
+ * @Plugin(
+ *   plugin_id = "user_permissions"
+ * )
+ */
+class Permissions extends ManyToOne {
   function get_value_options() {
     $module_info = system_get_info('module');
 

@@ -5,12 +5,23 @@
  * Definition of views_handler_field_user_permissions.
  */
 
+namespace Views\user\Plugin\views\field;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\views\Plugin\views\field\PrerenderList;
+
 /**
  * Field handler to provide a list of permissions.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_user_permissions extends views_handler_field_prerender_list {
+
+/**
+ * @Plugin(
+ *   plugin_id = "user_permissions"
+ * )
+ */
+class Permissions extends PrerenderList {
   function construct() {
     parent::construct();
     $this->additional_fields['uid'] = array('table' => 'users', 'field' => 'uid');

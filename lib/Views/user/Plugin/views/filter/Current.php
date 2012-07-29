@@ -5,6 +5,9 @@
  * Definition of views_handler_filter_user_current.
  */
 
+namespace Views\user\Plugin\views\filter;
+
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\filter\BooleanOperator;
 
 /**
@@ -12,7 +15,13 @@ use Drupal\views\Plugin\views\filter\BooleanOperator;
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_user_current extends BooleanOperator {
+
+/**
+ * @Plugin(
+ *   plugin_id = "user_current"
+ * )
+ */
+class Current extends BooleanOperator {
   function construct() {
     parent::construct();
     $this->value_value = t('Is the logged in user');

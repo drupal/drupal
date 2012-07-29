@@ -5,6 +5,9 @@
  * Definition of views_handler_field_user_picture.
  */
 
+namespace Views\user\Plugin\views\field;
+
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
@@ -12,7 +15,13 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_user_picture extends FieldPluginBase {
+
+/**
+ * @Plugin(
+ *   plugin_id = "user_picture"
+ * )
+ */
+class Picture extends FieldPluginBase {
   function construct() {
     parent::construct();
     $this->additional_fields['uid'] = 'uid';
