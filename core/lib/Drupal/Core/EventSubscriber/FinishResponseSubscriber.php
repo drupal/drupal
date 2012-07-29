@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class FinishResponseSubscriber implements EventSubscriberInterface {
 
-  private $language_manager;
+  protected $language_manager;
 
   public function __construct(LanguageManager $language_manager) {
     $this->language_manager = $language_manager;
