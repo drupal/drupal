@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
 /**
  * @Plugin(
  *   plugin_id = "php",
- *   title = @Translation("PHP Code"),
+ *   title = @Translation("PHP Code")
  * )
  */
 class Php extends ArgumentValidatorPluginBase {

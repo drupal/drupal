@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
 /**
  * @Plugin(
  *   plugin_id = "numeric",
- *   title = @Translation("Numeric"),
+ *   title = @Translation("Numeric")
  * )
  */
 class Numeric extends ArgumentValidatorPluginBase {

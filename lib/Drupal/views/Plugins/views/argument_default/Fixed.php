@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
 /**
  * @Plugin(
  *   plugin_id = "fixed",
- *   title = @Translation("Fixed"),
+ *   title = @Translation("Fixed")
  * )
  */
 class Fixed extends ArgumentDefaultPluginBase {
