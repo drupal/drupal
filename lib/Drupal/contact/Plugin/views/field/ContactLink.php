@@ -5,12 +5,23 @@
  * Definition of views_handler_field_contact_link.
  */
 
+namespace Drupal\contact\Plugin\views\field;
+
+use Drupal\user\Plugins\views\field\UserLink;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * A field that links to the user contact page, if access is permitted.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_contact_link extends views_handler_field_user_link {
+
+/**
+ * @Plugin(
+ *   plugin_id = "contact_link"
+ * )
+ */
+class ContactLink extends UserLink {
 
   function options_form(&$form, &$form_state) {
     $form['text']['#title'] = t('Link label');

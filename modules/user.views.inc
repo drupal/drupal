@@ -572,36 +572,3 @@ function user_views_query_substitutions($view) {
   global $user;
   return array('***CURRENT_USER***' => intval($user->uid));
 }
-
-/**
- * Implements hook_views_wizard().
- */
-function user_views_wizard() {
-  $plugins['users'] = array(
-    'name' => 'users',
-    'base_table' => 'users',
-    'created_column' => 'created',
-    'class' => 'Drupal\views\Plugins\views\wizard\User',
-    'title' => t('Users'),
-    'filters' => array(
-      'status' => array(
-        'value' => '1',
-        'table' => 'users',
-        'field' => 'status',
-      ),
-    ),
-    'path_field' => array(
-      'id' => 'uid',
-      'table' => 'users',
-      'field' => 'uid',
-      'exclude' => TRUE,
-      'link_to_user' => FALSE,
-      'alter' => array(
-        'alter_text' => 1,
-        'text' => 'user/[uid]',
-      ),
-    ),
-  );
-
-  return $plugins;
-}

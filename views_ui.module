@@ -577,7 +577,6 @@ function views_ui_get_wizard($wizard_type) {
  *   An array of arrays with information about all available views wizards.
  */
 function views_ui_get_wizards() {
-  ctools_include('plugins');
   $manager = views_get_plugin_manager('wizard');
   $wizard_plugins = $manager->getDefinitions();
   $wizard_tables = array();
