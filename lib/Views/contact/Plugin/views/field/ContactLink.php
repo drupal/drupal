@@ -7,7 +7,7 @@
 
 namespace Views\contact\Plugin\views\field;
 
-use Views\user\Plugin\views\field\UserLink;
+use Views\user\Plugin\views\field\Link;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Plugin;
  *   plugin_id = "contact_link"
  * )
  */
-class ContactLink extends UserLink {
+class ContactLink extends Link {
 
   function options_form(&$form, &$form_state) {
     $form['text']['#title'] = t('Link label');

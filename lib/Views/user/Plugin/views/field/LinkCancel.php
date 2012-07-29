@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Plugin;
  *   plugin_id = "user_link_cancel"
  * )
  */
-class views_handler_field_user_link_cancel extends Link {
+class LinkCancel extends Link {
 
   function render_link($data, $values) {
     $uid = $values->{$this->aliases['uid']};

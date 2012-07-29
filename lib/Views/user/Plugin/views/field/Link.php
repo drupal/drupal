@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Plugin;
  *   plugin_id = "user_link"
  * )
  */
-class UserLink extends FieldPluginBase {
+class Link extends FieldPluginBase {
   function construct() {
     parent::construct();
     $this->additional_fields['uid'] = 'uid';
