@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Helper module for testing EntityFieldQuery access on any type of entity.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function entity_query_access_test_menu() {
+  $items['entity-query-access/test/%'] = array(
+    'title' => "Retrieve a sample of entity query access data",
+    'page callback' => 'entity_query_access_test_sample_query',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Returns the results from an example EntityFieldQuery.
+ */
+function entity_query_access_test_sample_query($field_name) {
+  global $user;
+
+  // Simulate user does not have access to view all nodes.
+  $access = &drupal_static('node_access_view_all_nodes');
+  $access[$user->uid] = FALSE;
+
+  $query = new EntityFieldQuery();
+  $query
+    ->entityCondition('entity_type', 'test_entity_bundle_key')
+    ->fieldCondition($field_name, 'value', 0, '>')
+    ->entityOrderBy('entity_id', 'ASC');
+  $results = array(
+    'items' => array(),
+    'title' => t('EntityFieldQuery results'),
+  );
+  foreach ($query->execute() as $entity_type => $entity_ids) {
+    foreach ($entity_ids as $entity_id => $entity_stub) {
+      $results['items'][] = format_string('Found entity of type @entity_type with id @entity_id', array('@entity_type' => $entity_type, '@entity_id' => $entity_id));
+    }
+  }
+  if (count($results['items']) > 0) {
+    $output = theme('item_list', $results);
+  }
+  else {
+    $output = 'No results found with EntityFieldQuery.';
+  }
+  return $output;
+}

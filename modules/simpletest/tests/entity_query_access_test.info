@@ -1,0 +1,6 @@
+name = "Entity query access test"
+description = "Support module for checking entity query results."
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE

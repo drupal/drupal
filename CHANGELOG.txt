@@ -35,6 +35,8 @@ Drupal 7.15, xxxx-xx-xx (development version)
   and fix several regressions in the process.
 - Fixed regression: Optional radio buttons with an empty, non-NULL default
   value led to an illegal choice error when none were selected.
+- Fixed regression: Non-node entities couldn't be accessed with
+  EntityFieldQuery.
 
 Drupal 7.14 2012-05-02
 ----------------------
