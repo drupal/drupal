@@ -9,12 +9,15 @@ namespace Views\search\Plugin\views\row;
 
 use Drupal\views\Plugin\views\row\RowPluginBase;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Plugin which performs a node_view on the resulting object.
  *
  * @Plugin(
- *   plugin_id = "search_view"
+ *   plugin_id = "search_view",
+ *   title = @Translation("Search"),
+ *   no_uid = TRUE
  * )
  */
 class View extends RowPluginBase {
