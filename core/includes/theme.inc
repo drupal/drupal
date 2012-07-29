@@ -2485,7 +2485,7 @@ function template_preprocess_html(&$variables) {
   else {
     $head_title = array('name' => check_plain($site_config->get('name')));
     if ($site_config->get('slogan')) {
-      $head_title['slogan'] = filter_xss_admin($site_config->get('slogan'));
+      $head_title['slogan'] = strip_tags(filter_xss_admin($site_config->get('slogan')));
     }
   }
   $variables['head_title_array'] = $head_title;
@@ -2580,7 +2580,7 @@ function template_preprocess_page(&$variables) {
   $variables['main_menu']         = theme_get_setting('toggle_main_menu') ? menu_main_menu() : array();
   $variables['secondary_menu']    = theme_get_setting('toggle_secondary_menu') ? menu_secondary_menu() : array();
   $variables['action_links']      = menu_local_actions();
-  $variables['site_name']         = (theme_get_setting('toggle_name') ? filter_xss_admin($site_config->get('name')) : '');
+  $variables['site_name']         = (theme_get_setting('toggle_name') ? check_plain($site_config->get('name')) : '');
   $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? filter_xss_admin($site_config->get('slogan')) : '');
   $variables['tabs']              = menu_local_tabs();
 
@@ -2771,13 +2771,13 @@ function template_preprocess_maintenance_page(&$variables) {
   if (drupal_get_title()) {
     $head_title = array(
       'title' => strip_tags(drupal_get_title()),
-      'name' => $site_name,
+      'name' => check_plain($site_name),
     );
   }
   else {
-    $head_title = array('name' => $site_name);
+    $head_title = array('name' => check_plain($site_name));
     if ($site_slogan) {
-      $head_title['slogan'] = $site_slogan;
+      $head_title['slogan'] = strip_tags(filter_xss_admin($site_slogan));
     }
   }
 
@@ -2794,8 +2794,8 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['main_menu']         = array();
   $variables['secondary_menu']    = array();
-  $variables['site_name']         = (theme_get_setting('toggle_name') ? $site_name : '');
-  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? $site_slogan : '');
+  $variables['site_name']         = (theme_get_setting('toggle_name') ? check_plain($site_name) : '');
+  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? filter_xss_admin($site_slogan) : '');
   $variables['tabs']              = '';
   $variables['title']             = drupal_get_title();
 

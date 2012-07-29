@@ -151,7 +151,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
 
         case 'slogan':
           $slogan = config('system.site')->get('slogan');
-          $replacements[$original] = $sanitize ? check_plain($slogan) : $slogan;
+          $replacements[$original] = $sanitize ? filter_xss_admin($slogan) : $slogan;
           break;
 
         case 'mail':

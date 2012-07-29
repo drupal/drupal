@@ -119,7 +119,7 @@ class TokenReplaceTest extends WebTestBase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[site:name]'] = check_plain(config('system.site')->get('name'));
-    $tests['[site:slogan]'] = check_plain(config('system.site')->get('slogan'));
+    $tests['[site:slogan]'] = filter_xss_admin(config('system.site')->get('slogan'));
     $tests['[site:mail]'] = 'simpletest@example.com';
     $tests['[site:url]'] = url('<front>', $url_options);
     $tests['[site:url-brief]'] = preg_replace(array('!^https?://!', '!/$!'), '', url('<front>', $url_options));
