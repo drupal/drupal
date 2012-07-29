@@ -37,7 +37,7 @@ abstract class RowPluginBase extends Plugin {
   }
 
   function uses_fields() {
-    return !empty($this->definition['uses fields']);
+    return !empty($this->definition['uses_fields']);
   }
 
 

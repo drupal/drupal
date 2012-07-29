@@ -106,7 +106,7 @@ abstract class StylePluginBase extends ViewsPlugin {
       $row_uses_fields = $this->row_plugin->uses_fields();
     }
     // Otherwise, check the definition or the option.
-    return $row_uses_fields || !empty($this->definition['uses fields']) || !empty($this->options['uses_fields']);
+    return $row_uses_fields || !empty($this->definition['uses_fields']) || !empty($this->options['uses_fields']);
   }
 
   /**

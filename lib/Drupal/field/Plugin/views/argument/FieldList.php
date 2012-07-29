@@ -5,7 +5,10 @@
  * Definition of views_handler_argument_field_list.
  */
 
+namespace Drupal\field\Plugin\views\argument;
+
 use Drupal\views\Plugins\views\argument\Numeric;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Argument handler for list field to show the human readable name in the
@@ -13,7 +16,13 @@ use Drupal\views\Plugins\views\argument\Numeric;
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_field_list extends Numeric {
+
+/**
+ * @Plugin(
+ *   plugin_id = "field_list"
+ * )
+ */
+class FieldList extends Numeric {
   /**
    * Stores the allowed values of this field.
    *

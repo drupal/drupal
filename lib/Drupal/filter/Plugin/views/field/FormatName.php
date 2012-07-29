@@ -5,12 +5,23 @@
  * Definition of views_handler_field_filter_format_name.
  */
 
+namespace Drupal\filter\Plugin\views\field;
+
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to output the name of an input format.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_filter_format_name extends views_handler_field {
+
+/**
+ * @Plugin(
+ *   plugin_id = "filter_format_name"
+ * )
+ */
+class FormatName extends FieldPluginBase {
   function construct() {
     parent::construct();
     // Be explicit about the table we are using.

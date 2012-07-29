@@ -5,7 +5,10 @@
  * Definition of views_handler_argument_field_list_text.
  */
 
+namespace Drupal\field\Plugin\views\argument;
+
 use Drupal\views\Plugins\views\argument\String;
+use Drupal\Core\Annotation\Plugin;
 
 
 /**
@@ -14,7 +17,13 @@ use Drupal\views\Plugins\views\argument\String;
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_field_list_string extends String {
+
+/**
+ * @Plugin(
+ *   plugin_id = "field_list_string"
+ * )
+ */
+class ListString extends String {
   /**
    * Stores the allowed values of this field.
    *

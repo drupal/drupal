@@ -234,7 +234,7 @@ function field_views_field_default_views_data($field) {
     $real_field = reset($keys);
     $data[$table][$column]['field'] = array(
       'table' => $table,
-      'handler' => 'views_handler_field_field',
+      'plugin_id' => 'field',
       'click sortable' => TRUE,
       'field_name' => $field['field_name'],
       // Provide a real field for group by.
@@ -259,18 +259,18 @@ function field_views_field_default_views_data($field) {
       case 'serial':
       case 'numeric':
       case 'float':
-        $filter = 'views_handler_filter_numeric';
-        $argument = 'views_handler_argument_numeric';
-        $sort = 'views_handler_sort';
+        $filter = 'numeric';
+        $argument = 'numeric';
+        $sort = 'standard';
         break;
       case 'text':
       case 'blob':
         // It does not make sense to sort by blob or text.
         $allow_sort = FALSE;
       default:
-        $filter = 'views_handler_filter_string';
-        $argument = 'views_handler_argument_string';
-        $sort = 'views_handler_sort';
+        $filter = 'string';
+        $argument = 'string';
+        $sort = 'standard';
         break;
     }
 
@@ -335,7 +335,7 @@ function field_views_field_default_views_data($field) {
       $data[$table][$column_real_name]['argument'] = array(
         'field' => $column_real_name,
         'table' => $table,
-        'handler' => $argument,
+        'plugin_id' => $argument,
         'additional fields' => $additional_fields,
         'field_name' => $field['field_name'],
         'empty field name' => t('- No value -'),
@@ -343,7 +343,7 @@ function field_views_field_default_views_data($field) {
       $data[$table][$column_real_name]['filter'] = array(
         'field' => $column_real_name,
         'table' => $table,
-        'handler' => $filter,
+        'plugin_id' => $filter,
         'additional fields' => $additional_fields,
         'field_name' => $field['field_name'],
         'allow empty' => TRUE,
@@ -352,7 +352,7 @@ function field_views_field_default_views_data($field) {
         $data[$table][$column_real_name]['sort'] = array(
           'field' => $column_real_name,
           'table' => $table,
-          'handler' => $sort,
+          'plugin_id' => $sort,
           'additional fields' => $additional_fields,
           'field_name' => $field['field_name'],
         );
@@ -410,14 +410,14 @@ function list_field_views_data($field) {
   foreach ($data as $table_name => $table_data) {
     foreach ($table_data as $field_name => $field_data) {
       if (isset($field_data['filter']) && $field_name != 'delta') {
-        $data[$table_name][$field_name]['filter']['handler'] = 'views_handler_filter_field_list';
+        $data[$table_name][$field_name]['filter']['plugin_id'] = 'field_list';
       }
       if (isset($field_data['argument']) && $field_name != 'delta') {
         if ($field['type'] == 'list_text') {
-          $data[$table_name][$field_name]['argument']['handler'] = 'views_handler_argument_field_list_string';
+          $data[$table_name][$field_name]['argument']['plugin_id'] = 'field_list_string';
         }
         else {
-          $data[$table_name][$field_name]['argument']['handler'] = 'views_handler_argument_field_list';
+          $data[$table_name][$field_name]['argument']['plugin_id'] = 'field_list';
         }
       }
     }

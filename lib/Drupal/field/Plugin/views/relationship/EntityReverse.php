@@ -5,15 +5,24 @@
  * Definition of views_handler_relationship_entity_reverse.
  */
 
+namespace Drupal\field\Plugin\views\relationship;
+
 use Drupal\views\Join;
 use Drupal\views\Plugins\views\relationship\RelationshipPluginBase;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * A relationship handlers which reverse entity references.
  *
  * @ingroup views_relationship_handlers
  */
-class views_handler_relationship_entity_reverse extends RelationshipPluginBase  {
+
+/**
+ * @Plugin(
+ *   plugin_id = "entity_reverse"
+ * )
+ */
+class EntityReverse extends RelationshipPluginBase  {
   function init(&$view, &$options) {
     parent::init($view, $options);
 

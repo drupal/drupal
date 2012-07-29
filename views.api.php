@@ -578,14 +578,14 @@ function hook_views_data_alter(&$data) {
  *   - Used by style plugins:
  *     - uses_row_plugin: Set to TRUE to allow row plugins for this style.
  *     - uses_row_class: Set to TRUE to allow the CSS class settings for rows.
- *     - uses fields: Set to TRUE to have the style plugin accept field
+ *     - uses_fields: Set to TRUE to have the style plugin accept field
  *       handlers.
  *     - uses grouping: Set to TRUE to allow the grouping settings for rows.
  *     - even empty: May have the value 'even empty' to tell Views that the style
  *       should be rendered even if there are no results.
  *
  *   - Used by row plugins:
- *     - uses fields: Set to TRUE to have the row plugin accept field handlers.
+ *     - uses_fields: Set to TRUE to have the row plugin accept field handlers.
  */
 function hook_views_plugins() {
   $plugins = array();
