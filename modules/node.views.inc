@@ -625,50 +625,6 @@ function node_views_data() {
 }
 
 /**
- * Implements hook_views_plugins().
- */
-function node_views_plugins() {
-  return array(
-    'module' => 'views', // This just tells our themes are elsewhere.
-    'row' => array(
-      'node' => array(
-        'title' => t('Content'),
-        'help' => t('Display the content with standard node view.'),
-        'class' => 'views_plugin_row_node_view',
-        'path' => drupal_get_path('module', 'views') . '/modules/node', // not necessary for most modules
-        'base' => array('node'), // only works with 'node' as base.
-        'uses options' => TRUE,
-        'type' => 'normal',
-        'help topic' => 'style-node',
-      ),
-      'node_rss' => array(
-        'title' => t('Content'),
-        'help' => t('Display the content with standard node view.'),
-        'class' => 'views_plugin_row_node_rss',
-        'path' => drupal_get_path('module', 'views') . '/modules/node', // not necessary for most modules
-        'theme' => 'views_view_row_rss',
-        'base' => array('node'), // only works with 'node' as base.
-        'uses options' => TRUE,
-        'type' => 'feed',
-        'help topic' => 'style-node-rss',
-      ),
-    ),
-    'argument validator' => array(
-      'node' => array(
-        'title' => t('Content'),
-        'handler' => 'views_plugin_argument_validate_node',
-      ),
-    ),
-    'argument default' => array(
-      'node' => array(
-        'title' => t('Content ID from URL'),
-        'handler' => 'views_plugin_argument_default_node'
-      ),
-    ),
-  );
-}
-
-/**
  * Implements hook_preprocess_node().
  */
 function node_row_node_view_preprocess_node(&$vars) {
