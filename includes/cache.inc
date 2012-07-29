@@ -5,6 +5,8 @@
  * Load Views' data so that it knows what is available to build queries from.
  */
 
+use Drupal\views\Plugin\Type\ViewsPluginManager;
+
 /**
  * Fetch Views' data from the cache
  *
@@ -91,13 +93,13 @@ function _views_fetch_plugin_data($type = NULL, $plugin_id = NULL, $reset = FALS
     $plugins = array();
     $plugin_types = array('access', 'argument_default', 'argument_validator', 'cache', 'display_extender', 'display', 'exposed_form', 'localization', 'pager', 'query', 'row', 'style', 'wizard');
     foreach ($plugin_types as $plugin_type) {
-      $manager = views_get_plugin_manager($plugin_type);
+      $manager = new ViewsPluginManager($plugin_type);
       $plugins[$plugin_type] = $manager->getDefinitions();
     }
     return $plugins;
   }
 
-  $manager = views_get_plugin_manager($type);
+  $manager = new ViewsPluginManager($type);
 
   if (!$plugin_id) {
     return $manager->getDefinitions();

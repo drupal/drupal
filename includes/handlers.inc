@@ -9,8 +9,7 @@ use Drupal\Core\Database\Database;
 use Drupal\views\View;
 use Drupal\views\Join;
 use Drupal\views\ViewsObject;
-
-
+use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * Instantiate and construct a new plugin.
@@ -19,7 +18,7 @@ use Drupal\views\ViewsObject;
  * Figure out what to keep from _views_create_handler.
  */
 function _views_create_plugin($type, $plugin_id, $definition) {
-  $manager = views_get_plugin_manager($type);
+  $manager = new ViewsPluginManager($type);
 
   $instance = $manager->createInstance($plugin_id);
 
@@ -41,7 +40,7 @@ function _views_create_plugin($type, $plugin_id, $definition) {
  */
 function _views_create_handler($definition, $type = 'handler', $handler_type = NULL) {
   if (!empty($definition['plugin_id'])) {
-    $manager = views_get_plugin_manager($handler_type);
+    $manager = new ViewsPluginManager($handler_type);
     $handler = $manager->createInstance($definition['plugin_id']);
   }
   else {

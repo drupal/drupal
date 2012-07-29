@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views\display;
 
 use Drupal\views\View;
 use Drupal\views\Plugin\views\Plugin;
-use Drupal\views\Plugin\Type\QueryPluginManager;
+use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * @defgroup views_display_plugins Views display plugins
@@ -1191,7 +1191,7 @@ abstract class DisplayPluginBase extends Plugin {
       'desc' => t('Change the title that this display will use.'),
     );
 
-    $manager = views_get_plugin_manager('style');
+    $manager = new ViewsPluginManager('style');
     $style_plugin = $manager->getDefinition($this->get_option('style_plugin'));
     $style_plugin_instance = $this->get_plugin('style');
     $style_summary = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->summary_title();
@@ -1213,7 +1213,7 @@ abstract class DisplayPluginBase extends Plugin {
     }
 
     if (!empty($style_plugin['uses_row_plugin'])) {
-      $manager = views_get_plugin_manager('row');
+      $manager = new ViewsPluginManager('row');
       $row_plugin = $manager->getDefinition($this->get_option('row_plugin'));
       $row_plugin_instance = $this->get_plugin('row');
       $row_summary = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->summary_title();
@@ -1727,7 +1727,7 @@ abstract class DisplayPluginBase extends Plugin {
         }
         break;
       case 'style_plugin':
-        $manager = views_get_plugin_manager('style');
+        $manager = new ViewsPluginManager('style');
         $form['#title'] .= t('How should this view be styled');
         $form['#help_topic'] = 'style';
         $form['style_plugin'] =  array(

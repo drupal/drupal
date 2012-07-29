@@ -8,7 +8,7 @@
 use Drupal\Core\Database\Database;
 use Drupal\views\View;
 use Drupal\views\Analyzer;
-use Drupal\views\Plugin\Type\WizardManager;
+use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * Create an array of Views admin CSS for adding or attaching.
@@ -381,7 +381,7 @@ function views_ui_add_form($form, &$form_state) {
   $wizard_key = $show_form['wizard_key']['#default_value'];
 
   views_include_handlers();
-  $manager = views_get_plugin_manager('wizard');
+  $manager = new ViewsPluginManager('wizard');
   $info = $manager->getDefinition($wizard_key);
   $wizard_instance = $manager->createInstance($wizard_key, $info);
   $form = $wizard_instance->build_form($form, $form_state);
@@ -705,7 +705,7 @@ function views_ui_nojs_submit($form, &$form_state) {
  */
 function views_ui_wizard_form_validate($form, &$form_state) {
   $wizard = views_ui_get_wizard($form_state['values']['show']['wizard_key']);
-  $manager = views_get_plugin_manager('wizard');
+  $manager = new ViewsPluginManager('wizard');
   $definition = $manager->getDefinition($wizard['plugin_id']);
   $form_state['wizard'] = $wizard;
   $form_state['wizard_instance'] = $manager->createInstance($wizard['plugin_id'], $definition);

@@ -12,22 +12,7 @@
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\View;
 use Drupal\Component\Plugin\PluginManagerInterface;
-
-// @todo: Should views_get_plugin_manager be moved to a ceperate file?
-use Drupal\views\Plugin\Type\StylePluginManager;
-use Drupal\views\Plugin\Type\DisplayPluginManager;
-use Drupal\views\Plugin\Type\AccessPluginManager;
-use Drupal\views\Plugin\Type\ArgumentDefaultPluginManager;
-use Drupal\views\Plugin\Type\ArgumentValidatorPluginManager;
-use Drupal\views\Plugin\Type\CachePluginManager;
-use Drupal\views\Plugin\Type\LocalizationPluginManager;
-use Drupal\views\Plugin\Type\PagerPluginManager;
-use Drupal\views\Plugin\Type\QueryPluginManager;
-use Drupal\views\Plugin\Type\RowPluginManager;
-use Drupal\views\Plugin\Type\ExposedFormPluginManager;
-use Drupal\views\Plugin\Type\HandlerPluginManager;
-use Drupal\views\Plugin\Type\DisplayExtenderPluginManager;
-use Drupal\views\Plugin\Type\WizardPluginManager;
+use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * Advertise the current views api version
@@ -1343,7 +1328,7 @@ function views_fetch_plugin_data($type = NULL, $plugin_id = NULL, $reset = FALSE
  *   A keyed array of in the form of 'base_table' => 'Description'.
  */
 function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
-  $manager = views_get_plugin_manager($type);
+  $manager = new ViewsPluginManager($type);
   $definitions = $manager->getDefinitions();
   $plugins = array();
 
@@ -1377,74 +1362,11 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
 function views_get_plugin($type, $plugin_id, $reset = FALSE) {
   views_include('handlers');
 
-  $manager = views_get_plugin_manager($type);
+  $manager = new ViewsPluginManager($type);
   $definition = $manager->getDefinition($plugin_id);
   if (!empty($definition)) {
     return _views_create_plugin($type, $plugin_id, $definition);
   }
-}
-
-/**
- * Returns the plugin manager used for a certain plugin type.
- *
- * @param string $type
- *   The plugin type to use.
- *
- * @param PluginManagerInterface
- */
-function views_get_plugin_manager($type) {
-  switch ($type) {
-    case 'display':
-      $manager = new DisplayPluginManager();
-      break;
-    case 'style':
-      $manager = new StylePluginManager();
-      break;
-    case 'row':
-      $manager = new RowPluginManager();
-      break;
-    case 'argument_default':
-      $manager = new ArgumentDefaultPluginManager();
-      break;
-    case 'argument_validator':
-      $manager = new ArgumentValidatorPluginManager();
-      break;
-    case 'access':
-      $manager = new AccessPluginManager();
-      break;
-    case 'query':
-      $manager = new QueryPluginManager();
-      break;
-    case 'cache':
-      $manager = new CachePluginManager();
-      break;
-    // @todo: find out whether to use underscores or spaces.
-    case 'exposed_form':
-      $manager = new ExposedFormPluginManager();
-      break;
-    case 'pager':
-      $manager = new PagerPluginManager();
-      break;
-    case 'localization':
-      $manager = new LocalizationPluginManager();
-      break;
-    case 'display_extender':
-      $manager = new DisplayExtenderPluginManager();
-      break;
-    case 'wizard':
-      $manager = new WizardPluginManager();
-      break;
-    case 'field':
-    case 'filter':
-    case 'argument':
-    case 'area':
-    case 'sort':
-    case 'relationship':
-      $manager = new HandlerPluginManager($type);
-      break;
-  }
-
-  return $manager;
 }
 
 /**

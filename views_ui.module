@@ -6,7 +6,7 @@
  */
 
 use Drupal\views\View;
-use Drupal\views\Plugin\Type\WizardManager;
+use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * Implements hook_menu().
@@ -551,7 +551,7 @@ function views_ui_ctools_plugin_directory($module, $plugin) {
  */
 function views_ui_get_wizard($wizard_type) {
   ctools_include('plugins');
-  $manager = views_get_plugin_manager('wizard');
+  $manager = new ViewsPluginManager('wizard');
   $wizard = $manager->getDefinition($wizard_type);
   // @todo - handle this via an alter hook instead.
   if (!$wizard) {
@@ -577,7 +577,7 @@ function views_ui_get_wizard($wizard_type) {
  *   An array of arrays with information about all available views wizards.
  */
 function views_ui_get_wizards() {
-  $manager = views_get_plugin_manager('wizard');
+  $manager = new ViewsPluginManager('wizard');
   $wizard_plugins = $manager->getDefinitions();
   $wizard_tables = array();
   foreach ($wizard_plugins as $name => $info) {

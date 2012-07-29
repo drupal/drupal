@@ -2,16 +2,16 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\Type\HandlerPluginManager.
+ * Definition of Drupal\views\Plugin\Type\ViewsPluginManager.
  */
 
 namespace Drupal\views\Plugin\Type;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Views\Plugin\Discovery\ViewsDiscovery;
+use Drupal\views\Plugin\Discovery\ViewsDiscovery;
 
-class HandlerPluginManager extends PluginManagerBase {
+class ViewsPluginManager extends PluginManagerBase {
   /**
    * The handler type of this plugin manager, for example filter or field.
    *
