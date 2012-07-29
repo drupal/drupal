@@ -5,12 +5,23 @@
  * Definition of views_handler_field_locale_link_edit.
  */
 
+namespace Drupal\locale\Plugin\views\field;
+
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to present a link to edit a translation.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_locale_link_edit extends views_handler_field {
+
+/**
+ * @Plugin(
+ *   plugin_id = "locale_link_edit"
+ * )
+ */
+class LinkEdit extends FieldPluginBase {
   function construct() {
     parent::construct();
     $this->additional_fields['lid'] = 'lid';

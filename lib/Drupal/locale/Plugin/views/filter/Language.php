@@ -2,9 +2,12 @@
 
 /**
  * @file
- * Definition of views_handler_filter_node_language.
+ * Definition of views_handler_filter_locale_language.
  */
 
+namespace Drupal\locale\Plugin\views\filter;
+
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugins\views\filter\InOperator;
 
 /**
@@ -12,7 +15,7 @@ use Drupal\views\Plugins\views\filter\InOperator;
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_node_language extends InOperator {
+class Language extends InOperator {
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Language');

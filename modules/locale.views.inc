@@ -70,14 +70,14 @@ function locale_views_data() {
     'title' => t('Group'),
     'help' => t('The group the translation is in.'),
     'field' => array(
-      'handler' => 'views_handler_field_locale_group',
+      'plugin_id' => 'locale_group',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_locale_group',
+      'plugin_id' => 'locale_group',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_locale_group',
+      'plugin_id' => 'locale_group',
     ),
   );
 
@@ -104,7 +104,7 @@ function locale_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_locale_version',
+      'plugin_id' => 'locale_version',
     ),
     'argument' => array(
       'plugin_id' => 'string',
@@ -116,7 +116,7 @@ function locale_views_data() {
     'field' => array(
       'title' => t('Edit link'),
       'help' => t('Provide a simple link to edit the translations.'),
-      'handler' => 'views_handler_field_locale_link_edit',
+      'plugin_id' => 'locale_link_edit',
     ),
   );
 
@@ -154,14 +154,14 @@ function locale_views_data() {
     'title' => t('Language'),
     'help' => t('The language this translation is in.'),
     'field' => array(
-      'handler' => 'views_handler_field_locale_language',
+      'plugin_id' => 'locale_language',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_locale_language',
+      'plugin_id' => 'locale_language',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_locale_language',
+      'plugin_id' => 'locale_language',
     ),
   );
 
@@ -205,14 +205,14 @@ function locale_views_data_alter(&$data) {
     'title' => t('Language'),
     'help' => t('The language the content is in.'),
     'field' => array(
-      'handler' => 'views_handler_field_node_language',
+      'plugin_id' => 'node_language',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_node_language',
+      'plugin_id' => 'node_language',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_node_language',
+      'plugin_id' => 'node_language',
     ),
     'sort' => array(
       'plugin_id' => 'standard',

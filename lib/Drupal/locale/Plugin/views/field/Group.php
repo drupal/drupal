@@ -5,12 +5,23 @@
  * Definition of views_handler_field_locale_group.
  */
 
+namespace Drupal\locale\Plugin\views\field;
+
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to translate a group into its readable form.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_locale_group extends views_handler_field {
+
+/**
+ * @Plugin(
+ *   plugin_id = "locale_group"
+ * )
+ */
+class Group extends FieldPluginBase {
   function render($values) {
     $groups = module_invoke_all('locale', 'groups');
     // Sort the list.

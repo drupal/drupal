@@ -175,14 +175,14 @@ function comment_views_data() {
       'title' => t('Language'),
       'help' => t('The language the comment is in.'),
       'field' => array(
-        'handler' => 'views_handler_field_locale_language',
+        'plugin_id' => 'locale_language',
         'click sortable' => TRUE,
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_locale_language',
+        'plugin_id' => 'locale_language',
       ),
       'argument' => array(
-        'handler' => 'views_handler_argument_locale_language',
+        'plugin_id' => 'locale_language',
       ),
       'sort' => array(
         'plugin_id' => 'standard',

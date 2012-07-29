@@ -5,6 +5,9 @@
  * Definition of views_handler_filter_locale_group.
  */
 
+namespace Drupal\locale\Plugin\views\filter;
+
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugins\views\filter\InOperator;
 
 /**
@@ -12,7 +15,13 @@ use Drupal\views\Plugins\views\filter\InOperator;
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_locale_group extends InOperator {
+
+/**
+ * @Plugin(
+ *   plugin_id = "locale_group"
+ * )
+ */
+class Group extends InOperator {
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Group');

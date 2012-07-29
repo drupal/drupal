@@ -87,8 +87,6 @@ function _views_data_process_entity_types(&$data) {
  * Fetch the plugin data from cache.
  */
 function _views_fetch_plugin_data($type = NULL, $plugin_id = NULL, $reset = FALSE) {
-  $manager = views_get_plugin_manager($type);
-
   if (!$type && !$plugin_id) {
     $plugins = array();
     $plugin_types = array('access', 'argument_default', 'argument_validator', 'cache', 'display_extender', 'display', 'exposed_form', 'localization', 'pager', 'query', 'row', 'style', 'wizard');
@@ -98,6 +96,8 @@ function _views_fetch_plugin_data($type = NULL, $plugin_id = NULL, $reset = FALS
     }
     return $plugins;
   }
+
+  $manager = views_get_plugin_manager($type);
 
   if (!$plugin_id) {
     return $manager->getDefinitions();

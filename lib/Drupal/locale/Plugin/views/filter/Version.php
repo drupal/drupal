@@ -5,6 +5,9 @@
  * Definition of views_handler_filter_locale_version.
  */
 
+namespace Drupal\locale\Plugin\views\filter;
+
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugins\views\filter\InOperator;
 
 /**
@@ -12,7 +15,13 @@ use Drupal\views\Plugins\views\filter\InOperator;
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_locale_version extends InOperator {
+
+/**
+ * @Plugin(
+ *   plugin_id = "locale_version"
+ * )
+ */
+class Version extends InOperator {
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Version');

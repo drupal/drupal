@@ -5,12 +5,23 @@
  * Definition of views_handler_field_locale_language.
  */
 
+namespace Drupal\locale\Plugin\views\field;
+
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to translate a language into its readable form.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_locale_language extends views_handler_field {
+
+/**
+ * @Plugin(
+ *   plugin_id = "locale_language"
+ * )
+ */
+class Language extends FieldPluginBase {
   function option_definition() {
     $options = parent::option_definition();
     $options['native_language'] = array('default' => FALSE, 'bool' => TRUE);
