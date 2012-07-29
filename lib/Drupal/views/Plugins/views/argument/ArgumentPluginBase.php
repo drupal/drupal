@@ -40,7 +40,7 @@ use Drupal\views\Plugins\views\Handler;
  *
  * @ingroup views_argument_handlers
  */
-abstract class ArgumentPluginBase extends Handler {
+class ArgumentPluginBase extends Handler {
 
   var $validator = NULL;
   var $argument = NULL;

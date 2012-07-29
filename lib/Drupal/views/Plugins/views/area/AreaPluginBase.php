@@ -22,7 +22,7 @@ use Drupal\views\Plugins\views\Handler;
  *
  * @ingroup views_area_handlers
  */
-abstract class AreaPluginBase extends Handler {
+class AreaPluginBase extends Handler {
   /**
    * Get this field's label.
    */
