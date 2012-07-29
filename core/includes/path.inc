@@ -218,8 +218,11 @@ function drupal_cache_system_paths() {
     // after we have left the scope of the Request, the call to current_path()
     // here does not return the system path, and instead calls out to
     // _current_path(), which returns the alias. So the alias gets used as the
-    // key instead. There is a separate issue for fixing up the path alias logic
-    // here: http://drupal.org/node/1269742
+    // key instead. At lookup time, whether the alias or the source is used as
+    // the key depends on when the first call to url() is made for that path.
+    // If this is within the request scope, it uses the system_path and so will
+    // be a cache miss. There is a separate issue for fixing up the path alias
+    // logic here: http://drupal.org/node/1269742
 
     // Generate a cache ID (cid) specifically for this page.
     $cid = current_path();
@@ -369,6 +372,8 @@ function current_path() {
   if (drupal_container()->has('request')) {
     return drupal_container()->get('request')->attributes->get('system_path');
   }
+  // If we are outside the request scope, e.g. during $kernel->terminate, fall
+  // back to using the path stored in _current_path().
   return _current_path();
 }
 
