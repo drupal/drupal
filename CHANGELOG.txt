@@ -8,7 +8,7 @@ Drupal 7.15, xxxx-xx-xx (development version)
   http://drupal.org/node/1597378).
 - Fixed issue where field form structure was incomplete if field_access()
   returned FALSE. Instead of being incomplete, the form structure now has
-  #access set to FALSE and field form validation is skipped (array structure
+  #access set to FALSE and field form validation is skipped (data structure
   change).
 - Added EntityFieldQuery support for taxonomy bundles.
 - Introduced generic entity language support. Entities may now declare their
@@ -37,6 +37,10 @@ Drupal 7.15, xxxx-xx-xx (development version)
   value led to an illegal choice error when none were selected.
 - Fixed regression: Non-node entities couldn't be accessed with
   EntityFieldQuery.
+- Changed the System module's hook_block_info() implementation to assign the
+  "Main page content" and "System help" blocks to appropriate regions by
+  default and prevent error messages on the block administration page (data
+  structure change).
 
 Drupal 7.14 2012-05-02
 ----------------------

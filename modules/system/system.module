@@ -2023,6 +2023,10 @@ function system_block_info() {
     'info' => t('Main page content'),
      // Cached elsewhere.
     'cache' => DRUPAL_NO_CACHE,
+    // Auto-enable in 'content' region by default, which always exists.
+    // @see system_themes_page(), drupal_render_page()
+    'status' => 1,
+    'region' => 'content',
   );
   $blocks['powered-by'] = array(
     'info' => t('Powered by Drupal'),
@@ -2033,6 +2037,9 @@ function system_block_info() {
     'info' => t('System help'),
     'weight' => '5',
     'cache' => DRUPAL_NO_CACHE,
+    // Auto-enable in 'help' region by default, if the theme defines one.
+    'status' => 1,
+    'region' => 'help',
   );
   // System-defined menu blocks.
   foreach (menu_list_system_menus() as $menu_name => $title) {
