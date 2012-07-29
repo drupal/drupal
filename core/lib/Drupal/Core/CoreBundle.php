@@ -55,6 +55,8 @@ class CoreBundle extends Bundle
     $container->register('legacy_controller_subscriber', 'Drupal\Core\EventSubscriber\LegacyControllerSubscriber')
       ->addTag('kernel.event_subscriber');
     $container->register('finish_response_subscriber', 'Drupal\Core\EventSubscriber\FinishResponseSubscriber')
+      ->addArgument(new Reference('language_manager'))
+      ->setScope('request')
       ->addTag('kernel.event_subscriber');
     $container->register('request_close_subscriber', 'Drupal\Core\EventSubscriber\RequestCloseSubscriber')
       ->addTag('kernel.event_subscriber');

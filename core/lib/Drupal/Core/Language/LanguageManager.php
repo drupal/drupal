@@ -10,8 +10,12 @@ namespace Drupal\Core\Language;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * The LanguageManager service intializes the language types passing in the
- * Request object, which can then be used for e.g. url-based language negotiation.
+ * Class responsible for initializing each language type.
+ *
+ * This service is dependent on the 'request' service and can therefore pass the
+ * Request object to the code that deals with each particular language type.
+ * This means the Request can be used directly for things like url-based language
+ * negotiation.
  */
 class LanguageManager {
 

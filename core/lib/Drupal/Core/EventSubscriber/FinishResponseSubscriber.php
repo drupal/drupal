@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -15,6 +16,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Response subscriber to handle finished responses.
  */
 class FinishResponseSubscriber implements EventSubscriberInterface {
+
+  private $language_manager;
+
+  public function __construct(LanguageManager $language_manager) {
+    $this->language_manager = $language_manager;
+  }
 
   /**
    * Sets extra headers on successful responses.
@@ -30,7 +37,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $response->headers->set('X-UA-Compatible', 'IE=edge,chrome=1', false);
 
     // Set the Content-language header.
-    $response->headers->set('Content-language', language_manager(LANGUAGE_TYPE_INTERFACE)->langcode);
+    $response->headers->set('Content-language', $this->language_manager->getLanguage(LANGUAGE_TYPE_INTERFACE)->langcode);
 
     // Because pages are highly dynamic, set the last-modified time to now
     // since the page is in fact being regenerated right now.
