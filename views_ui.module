@@ -629,7 +629,7 @@ function views_ui_ctools_plugin_type() {
 }
 
 function views_ui_get_form_wizard_instance($wizard) {
-  $manager = new WizardManager();
+  $manager = new ViewsPluginManager('wizard');
   $instance = $manager->createInstance($wizard['name']);
   return $instance;
 }

@@ -893,7 +893,7 @@ abstract class DisplayPluginBase extends Plugin {
         $plugin = views_get_plugin($type, $name);
       }
       else {
-        $plugin_type = new QueryPluginManager();
+        $plugin_type = new ViewsPluginManager('query');
         $plugin = $plugin_type->createInstance($name);
       }
 
