@@ -7,10 +7,18 @@
 
 namespace Drupal\views\Plugins\views\area;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Views area handler to display some configurable result summary.
  *
  * @ingroup views_area_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "result"
+ * )
  */
 class Result extends AreaPluginBase {
 

@@ -1539,8 +1539,8 @@ class Sql extends QueryPluginBase {
         'title' => t('Count'),
         'method' => 'views_query_default_aggregation_method_simple',
         'handler' => array(
-          'argument' => 'views_handler_argument_group_by_numeric',
-          'field' => 'views_handler_field_numeric',
+          'argument' => 'groupby_numeric',
+          'field' => 'groupby_numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ),
@@ -1549,8 +1549,8 @@ class Sql extends QueryPluginBase {
         'title' => t('Count DISTINCT'),
         'method' => 'views_query_default_aggregation_method_distinct',
         'handler' => array(
-          'argument' => 'views_handler_argument_group_by_numeric',
-          'field' => 'views_handler_field_numeric',
+          'argument' => 'groupby_numeric',
+          'field' => 'groupby_numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ),
@@ -1559,7 +1559,8 @@ class Sql extends QueryPluginBase {
         'title' => t('Sum'),
         'method' => 'views_query_default_aggregation_method_simple',
         'handler' => array(
-          'argument' => 'views_handler_argument_group_by_numeric',
+          'argument' => 'groupby_numeric',
+          'field' => 'groupby_numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ),
@@ -1568,7 +1569,8 @@ class Sql extends QueryPluginBase {
         'title' => t('Average'),
         'method' => 'views_query_default_aggregation_method_simple',
         'handler' => array(
-          'argument' => 'views_handler_argument_group_by_numeric',
+          'argument' => 'groupby_numeric',
+          'field' => 'groupby_numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ),
@@ -1577,7 +1579,8 @@ class Sql extends QueryPluginBase {
         'title' => t('Minimum'),
         'method' => 'views_query_default_aggregation_method_simple',
         'handler' => array(
-          'argument' => 'views_handler_argument_group_by_numeric',
+          'argument' => 'groupby_numeric',
+          'field' => 'groupby_numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ),
@@ -1586,7 +1589,8 @@ class Sql extends QueryPluginBase {
         'title' => t('Maximum'),
         'method' => 'views_query_default_aggregation_method_simple',
         'handler' => array(
-          'argument' => 'views_handler_argument_group_by_numeric',
+          'argument' => 'groupby_numeric',
+          'field' => 'groupby_numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ),
@@ -1595,7 +1599,8 @@ class Sql extends QueryPluginBase {
         'title' => t('Standard derivation'),
         'method' => 'views_query_default_aggregation_method_simple',
         'handler' => array(
-          'argument' => 'views_handler_argument_group_by_numeric',
+          'argument' => 'groupby_numeric',
+          'field' => 'groupby_numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ),

@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugins\views\argument;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Abstract argument handler for simple formulae.
  *
@@ -16,6 +18,12 @@ namespace Drupal\views\Plugins\views\argument;
  * - formula: The formula to use for this handler.
  *
  * @ingroup views_argument_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "formula"
+ * )
  */
 class Formula extends ArgumentPluginBase {
   var $formula = NULL;

@@ -375,7 +375,7 @@ function field_views_field_default_views_data($field) {
         $data[$table]['delta']['argument'] = array(
           'field' => 'delta',
           'table' => $table,
-          'handler' => 'views_handler_argument_numeric',
+          'plugin_id' => 'numeric',
           'additional fields' => $additional_fields,
           'empty field name' => t('- No value -'),
           'field_name' => $field['field_name'],

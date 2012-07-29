@@ -394,7 +394,7 @@ function hook_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -498,7 +498,7 @@ function hook_views_data_alter(&$data) {
       'base' => 'example_table', // Table we're joining to.
       'base field' => 'eid', // Field on the joined table.
       'field' => 'fid', // Real field name on the 'foo' table.
-      'handler' => 'views_handler_relationship',
+      'plugin_id' => 'standard',
       'label' => t('Default label for relationship'),
       'title' => t('Title seen when adding relationship'),
       'help' => t('More information about relationship.'),

@@ -94,7 +94,7 @@ function taxonomy_views_data() {
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
+      'plugin_id' => 'numeric',
       'name field' => 'weight',
     ),
     'sort' => array(
@@ -182,7 +182,7 @@ function taxonomy_views_data() {
       'title' => t('Representative node'),
       'label'  => t('Representative node'),
       'help' => t('Obtains a single representative node for each term, according to a chosen sort criterion.'),
-      'handler' => 'Drupal\views\Plugins\views\relationship\GroupwiseMax',
+      'plugin_id' => 'groupwise_max',
       'relationship field' => 'tid',
       'outer field' => 'taxonomy_term_data.tid',
       'argument table' => 'taxonomy_term_data',
@@ -208,7 +208,7 @@ function taxonomy_views_data() {
       'help' => t('Taxonomy term name.'),
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
       'help' => t('Taxonomy term name.'),
       'many to one' => TRUE,
       'empty field name' => t('Uncategorized'),
@@ -230,7 +230,7 @@ function taxonomy_views_data() {
       'plugin_id' => 'numeric',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
+      'plugin_id' => 'numeric',
     ),
   );
 

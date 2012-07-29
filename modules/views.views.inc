@@ -29,7 +29,7 @@
     'title' => t('Null'),
     'help' => t('Allow a contextual filter value to be ignored. The query will not be altered by this contextual filter value. Can be used when contextual filter values come from the URL, and a part of the URL needs to be ignored.'),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\Null',
+      'plugin_id' => 'null',
     ),
   );
 
@@ -53,23 +53,24 @@
     'title' => t('Text area'),
     'help' => t('Provide markup text for the area.'),
     'area' => array(
-      'handler' => 'Drupal\views\Plugins\views\area\Text',
+      'plugin_id' => 'text',
     ),
   );
 
-  $data['views']['area_text_custom'] = array(
-    'title' => t('Unfiltered text'),
-    'help' => t('Add unrestricted, custom text or markup. This is similar to the custom text field.'),
-    'area' => array(
-      'handler' => 'views_handler_area_text_custom',
-    ),
-  );
+  // @todo: this class seems to be missing.
+//  $data['views']['area_text_custom'] = array(
+//    'title' => t('Unfiltered text'),
+//    'help' => t('Add unrestricted, custom text or markup. This is similar to the custom text field.'),
+//    'area' => array(
+//      'handler' => 'views_handler_area_text_custom',
+//    ),
+//  );
 
   $data['views']['view'] = array(
     'title' => t('View area'),
     'help' => t('Insert a view inside an area.'),
     'area' => array(
-      'handler' => 'Drupal\views\Plugins\views\area\View',
+      'plugin_id' => 'view',
     ),
   );
 
@@ -77,7 +78,7 @@
     'title' => t('Result summary'),
     'help' => t('Shows result summary, for example the items per page.'),
     'area' => array(
-      'handler' => 'Drupal\views\Plugins\views\area\Result',
+      'plugin_id' => 'result',
     ),
   );
 

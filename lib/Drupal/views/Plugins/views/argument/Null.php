@@ -7,10 +7,18 @@
 
 namespace Drupal\views\Plugins\views\argument;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Argument handler that ignores the argument.
  *
  * @ingroup views_argument_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "null"
+ * )
  */
 class Null extends ArgumentPluginBase {
   function option_definition() {

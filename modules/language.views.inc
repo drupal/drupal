@@ -33,7 +33,7 @@ function language_views_data() {
       'plugin_id' => 'string'
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -50,7 +50,7 @@ function language_views_data() {
       'plugin_id' => 'string'
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -67,7 +67,7 @@ function language_views_data() {
       'plugin_id' => 'numeric'
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'plugin_id' => 'numeric',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -84,7 +84,7 @@ function language_views_data() {
       'plugin_id' => 'numeric'
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'plugin_id' => 'numeric',
     ),
     'sort' => array(
       'plugin_id' => 'standard',

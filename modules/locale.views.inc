@@ -32,7 +32,7 @@ function locale_views_data() {
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'plugin_id' => 'numeric',
       'numeric' => TRUE,
       'validate type' => 'lid',
     ),
@@ -60,7 +60,7 @@ function locale_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -107,7 +107,7 @@ function locale_views_data() {
       'handler' => 'views_handler_filter_locale_version',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
   );
 

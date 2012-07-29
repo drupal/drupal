@@ -108,7 +108,7 @@ function statistics_views_data() {
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
+      'plugin_id' => 'numeric',
       'name field' => 'wid',
       'numeric' => TRUE,
     ),
@@ -133,7 +133,7 @@ function statistics_views_data() {
       'plugin_id' => 'string',
      ),
      'argument' => array(
-       'handler' => 'Drupal\views\Plugins\views\argument\String',
+       'plugin_id' => 'string',
      ),
      'sort' => array(
       'plugin_id' => 'standard',
@@ -156,7 +156,7 @@ function statistics_views_data() {
       'plugin_id' => 'standard',
      ),
      'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\sort\String',
+      'plugin_id' => 'standard',
      ),
   );
 
@@ -211,7 +211,7 @@ function statistics_views_data() {
       'plugin_id' => 'standard',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
     ),
   );
 

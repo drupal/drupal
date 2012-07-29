@@ -89,7 +89,7 @@ function node_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -389,7 +389,7 @@ function node_views_data() {
       'handler' => 'views_handler_filter_user_name',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
+      'plugin_id' => 'numeric',
     ),
     'field' => array(
       'handler' => 'views_handler_field_user',
@@ -505,7 +505,7 @@ function node_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
     ),
   );
 

@@ -53,7 +53,7 @@ function comment_views_data() {
       'plugin_id' => 'standard',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -72,7 +72,7 @@ function comment_views_data() {
       'plugin_id' => 'standard',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'plugin_id' => 'numeric',
     ),
   );
 
@@ -91,7 +91,7 @@ function comment_views_data() {
       'plugin_id' => 'standard',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -110,7 +110,7 @@ function comment_views_data() {
       'plugin_id' => 'standard',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -129,7 +129,7 @@ function comment_views_data() {
       'plugin_id' => 'standard',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -148,7 +148,7 @@ function comment_views_data() {
       'plugin_id' => 'standard',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -161,7 +161,7 @@ function comment_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'plugin_id' => 'date',
     ),
     'filter' => array(
       'plugin_id' => 'date',
@@ -200,7 +200,7 @@ function comment_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'plugin_id' => 'date',
     ),
     'filter' => array(
       'plugin_id' => 'date',
@@ -362,7 +362,7 @@ function comment_views_data() {
       'plugin_id' => 'numeric',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'plugin_id' => 'numeric',
     ),
     'field' => array(
       'plugin_id' => 'numeric',
@@ -384,7 +384,7 @@ function comment_views_data() {
       'plugin_id' => 'numeric',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'plugin_id' => 'numeric',
     ),
     'field' => array(
       'handler' => 'views_handler_field_user',
@@ -432,7 +432,7 @@ function comment_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'plugin_id' => 'date',
     ),
     'filter' => array(
       'plugin_id' => 'date',
@@ -469,7 +469,7 @@ function comment_views_data() {
       'plugin_id' => 'standard',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument',
+      'plugin_id' => 'standard',
     ),
   );
 
@@ -520,7 +520,7 @@ function comment_views_data() {
       'plugin_id' => 'numeric',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'plugin_id' => 'numeric',
     ),
     'field' => array(
       'plugin_id' => 'numeric',

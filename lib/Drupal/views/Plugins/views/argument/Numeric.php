@@ -7,11 +7,19 @@
 
 namespace Drupal\views\Plugins\views\argument;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Basic argument handler for arguments that are numeric. Incorporates
  * break_phrase.
  *
  * @ingroup views_argument_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "numeric"
+ * )
  */
 class Numeric extends ArgumentPluginBase {
   /**

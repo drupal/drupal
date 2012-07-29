@@ -7,11 +7,19 @@
 
 namespace Drupal\views\Plugins\views\argument;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Basic argument handler to implement string arguments that may have length
  * limits.
  *
  * @ingroup views_argument_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "string"
+ * )
  */
 class String extends ArgumentPluginBase {
   function init(&$view, &$options) {

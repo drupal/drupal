@@ -88,7 +88,7 @@ function user_views_data() {
       'title' => t('Representative node'),
       'label'  => t('Representative node'),
       'help' => t('Obtains a single representative node for each user, according to a chosen sort criterion.'),
-      'handler' => 'Drupal\views\Plugins\views\relationship\GroupwiseMax',
+      'plugin_id' => 'groupwise_max',
       'relationship field' => 'uid',
       'outer field' => 'users.uid',
       'argument table' => 'users',
@@ -121,7 +121,7 @@ function user_views_data() {
       'plugin_id' => 'standard',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
     ),
     'filter' => array(
       'plugin_id' => 'string',
@@ -146,7 +146,7 @@ function user_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -492,7 +492,7 @@ function user_views_data() {
       'numeric' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
+      'plugin_id' => 'numeric',
       'numeric' => TRUE,
     ),
   );
@@ -506,7 +506,7 @@ function user_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
+      'plugin_id' => 'numeric',
     ),
   );
   $data['authmap']['module'] = array(
@@ -519,7 +519,7 @@ function user_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argment\String',
+      'plugin_id' => 'string',
     ),
   );
 

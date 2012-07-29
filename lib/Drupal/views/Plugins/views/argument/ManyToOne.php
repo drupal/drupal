@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugins\views\argument;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * An argument handler for use in fields that have a many to one relationship
  * with the table(s) to the left. This adds a bunch of options that are
@@ -19,6 +21,12 @@ namespace Drupal\views\Plugins\views\argument;
  *   a default argument can be provided or a summary can be shown.
  *
  * @ingroup views_argument_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "many_to_one"
+ * )
  */
 class ManyToOne extends ArgumentPluginBase {
   function init(&$view, &$options) {

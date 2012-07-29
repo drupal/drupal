@@ -7,10 +7,18 @@
 
 namespace Drupal\views\Plugins\views\area;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Views area text handler.
  *
  * @ingroup views_area_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "text"
+ * )
  */
 class Text extends AreaPluginBase {
 

@@ -66,7 +66,7 @@ function system_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -85,7 +85,7 @@ function system_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -104,7 +104,7 @@ function system_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -398,7 +398,7 @@ function system_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -415,7 +415,7 @@ function system_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -429,7 +429,7 @@ function system_views_data() {
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
+      'plugin_id' => 'numeric',
     ),
     'filter' => array(
       'plugin_id' => 'numeric',
@@ -474,7 +474,7 @@ function system_views_data() {
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
       'name field' => 'filename', // the field to display in the summary.
     ),
     'filter' => array(
@@ -493,7 +493,7 @@ function system_views_data() {
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
       'name field' => 'name', // the field to display in the summary.
     ),
     'filter' => array(
@@ -512,7 +512,7 @@ function system_views_data() {
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\String',
+      'plugin_id' => 'string',
       'name field' => 'type', // the field to display in the summary.
     ),
     'filter' => array(
@@ -531,7 +531,7 @@ function system_views_data() {
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
+      'plugin_id' => 'numeric',
       'name field' => 'status', // the field to display in the summary.
     ),
     'filter' => array(
@@ -550,7 +550,7 @@ function system_views_data() {
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'Drupal\views\Plugins\views\argument\Numeric',
+      'plugin_id' => 'numeric',
       'name field' => 'schema_version', // the field to display in the summary.
     ),
     'filter' => array(

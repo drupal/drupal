@@ -37,7 +37,7 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'plugin_id' => 'numeric',
       'numeric' => TRUE,
     ),
     'filter' => array(
@@ -126,7 +126,7 @@ function aggregator_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -136,7 +136,7 @@ function aggregator_views_data() {
     'help' => t('The guid of the original imported item.'),
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_xss',
+      'plugin_id' => 'xss',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -147,7 +147,7 @@ function aggregator_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -176,14 +176,14 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'plugin_id' => 'date',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
       'plugin_id' => 'date',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_date',
+      'plugin_id' => 'date',
     ),
   );
 
@@ -244,7 +244,7 @@ function aggregator_views_data() {
       'plugin_id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'plugin_id' => 'string',
     ),
   );
 
@@ -275,13 +275,13 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'plugin_id' => 'date',
     ),
     'filter' => array(
       'plugin_id' => 'date',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_date',
+      'plugin_id' => 'date',
     ),
   );
 
@@ -291,7 +291,7 @@ function aggregator_views_data() {
     'help' => t('The description of the aggregator feed.'),
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_xss',
+      'plugin_id' => 'xss',
       'click sortable' => FALSE,
      ),
     'filter' => array(
@@ -309,14 +309,14 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'plugin_id' => 'date',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
       'plugin_id' => 'date',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_date',
+      'plugin_id' => 'date',
     ),
   );
 

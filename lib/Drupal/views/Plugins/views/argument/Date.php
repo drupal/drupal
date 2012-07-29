@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugins\views\argument;
 
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Abstract argument handler for dates.
  *
@@ -24,6 +26,12 @@ namespace Drupal\views\Plugins\views\argument;
  * @see views_many_to_one_helper()
  *
  * @ingroup views_argument_handlers
+ */
+
+/**
+ * @Plugin(
+ *   plugin_id = "date"
+ * )
  */
 class Date extends ArgumentPluginBase {
 
