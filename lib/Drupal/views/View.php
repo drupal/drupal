@@ -2097,7 +2097,9 @@ class View extends ViewsDbObject {
    * Find and initialize the localizer plugin.
    */
   function init_localization() {
-    if (isset($this->localization_plugin) && is_object($this->localization_plugin)) {
+    // @todo The check for the view was added to ensure that
+    //   $this->localization_plugin->init() is run.
+    if (isset($this->localization_plugin) && is_object($this->localization_plugin) && isset($this->view)) {
       return TRUE;
     }
 
