@@ -5,6 +5,11 @@
  * Definition of views_handler_field_history_user_timestamp.
  */
 
+namespace Drupal\node\Plugin\views\field;
+
+use Drupal\node\Plugin\views\field\Node;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to display the marker for new content.
  *
@@ -13,7 +18,7 @@
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_history_user_timestamp extends views_handler_field_node {
+class HistoryUserTimestamp extends Node {
   function init(&$view, &$options) {
     parent::init($view, $options);
     global $user;

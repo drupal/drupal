@@ -5,6 +5,8 @@
  * Definition of views_handler_filter_history_user_timestamp.
  */
 
+namespace Drupal\node\Plugin\views\filter;
+
 use Drupal\views\Plugins\views\filter\FilterPluginBase;
 
 /**
@@ -15,7 +17,13 @@ use Drupal\views\Plugins\views\filter\FilterPluginBase;
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_history_user_timestamp extends FilterPluginBase {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_history_user_timestamp"
+ * )
+ */
+class HistoryUserTimestamp extends FilterPluginBase {
   // Don't display empty space where the operator would be.
   var $no_operator = TRUE;
 

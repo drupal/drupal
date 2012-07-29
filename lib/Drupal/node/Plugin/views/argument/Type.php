@@ -5,10 +5,21 @@
  * Definition of views_handler_argument_node_type.
  */
 
+namespace Drupal\node\Plugin\views\argument;
+
+use Drupal\views\Plugins\views\argument\String;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Argument handler to accept a node type.
  */
-class views_handler_argument_node_type extends views_handler_argument_string {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_type"
+ * )
+ */
+class Type extends String {
   function construct() {
     parent::construct('type');
   }

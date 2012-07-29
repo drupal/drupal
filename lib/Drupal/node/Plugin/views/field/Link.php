@@ -5,12 +5,23 @@
  * Definition of views_handler_field_node_link.
  */
 
+namespace Drupal\node\Plugin\views\field;
+
+use Drupal\views\Plugins\views\field\Entity;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to present a link to the node.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node_link extends views_handler_field_entity {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_link"
+ * )
+ */
+class Link extends Entity {
 
   function option_definition() {
     $options = parent::option_definition();

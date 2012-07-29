@@ -5,6 +5,11 @@
  * Definition of views_handler_field_node_revision.
  */
 
+namespace Drupal\node\Plugin\views\field;
+
+use Drupal\node\Plugin\views\field\Node;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Contains the basic 'node_revision' field handler.
  */
@@ -14,7 +19,13 @@
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node_revision extends views_handler_field_node {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_revision"
+ * )
+ */
+class Revision extends Node {
   function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($this->options['link_to_node_revision'])) {

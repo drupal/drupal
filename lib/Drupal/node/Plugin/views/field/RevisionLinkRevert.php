@@ -5,12 +5,23 @@
  * Definition of views_handler_field_node_revision_link_revert.
  */
 
+namespace Drupal\node\Plugin\views\field;
+
+use Drupal\node\Plugin\views\field\RevisionLink;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to present a link to revert a node to a revision.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node_revision_link_revert extends views_handler_field_node_revision_link {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_revision_link_revert"
+ * )
+ */
+class RevisionLinkRevert extends RevisionLink {
 
   function access() {
     return user_access('revert revisions') || user_access('administer nodes');

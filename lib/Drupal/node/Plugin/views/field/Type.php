@@ -5,12 +5,22 @@
  * Definition of views_handler_field_node_type.
  */
 
+namespace Drupal\node\Plugin\views\field;
+
+use Drupal\node\Plugin\views\field\Node;
+
 /**
  * Field handler to translate a node type into its readable form.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node_type extends views_handler_field_node {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_type"
+ * )
+ */
+class Type extends Node {
   function option_definition() {
     $options = parent::option_definition();
     $options['machine_name'] = array('default' => FALSE, 'bool' => TRUE);

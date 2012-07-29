@@ -5,6 +5,10 @@
  * Contains the node from URL argument default plugin.
  */
 
+namespace Drupal\node\Plugin\views\argument_default;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugins\views\argument_default\ArgumentDefaultPluginBase;
 
 /**
@@ -12,7 +16,14 @@ use Drupal\views\Plugins\views\argument_default\ArgumentDefaultPluginBase;
  *
  * This plugin actually has no options so it odes not need to do a great deal.
  */
-class views_plugin_argument_default_node extends ArgumentDefaultPluginBase {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node",
+ *   title = @Translation("Content ID from URL")
+ * )
+ */
+class Node extends ArgumentDefaultPluginBase {
   function get_argument() {
     foreach (range(1, 3) as $i) {
       $node = menu_get_object('node', $i);

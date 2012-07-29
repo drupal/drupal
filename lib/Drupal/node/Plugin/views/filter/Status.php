@@ -14,6 +14,12 @@ use Drupal\views\Plugins\views\filter\FilterPluginBase;
  *
  * @ingroup views_filter_handlers
  */
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_status"
+ * )
+ */
 class Status extends FilterPluginBase {
   function admin_summary() { }
   function operator_form(&$form, &$form_state) { }

@@ -5,12 +5,23 @@
  * Definition of views_handler_field_node_link_edit.
  */
 
+namespace Drupal\node\Plugin\views\field;
+
+use Drupal\node\Plugin\views\field\Link;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to present a link node edit.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node_link_edit extends views_handler_field_node_link {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_link_edit"
+ * )
+ */
+class LinkEdit extends Link {
 
   /**
    * Renders the link.

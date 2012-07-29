@@ -5,12 +5,23 @@
  * Handler for node path field.
  */
 
+namespace Drupal\node\Plugin\views\field;
+
+use Drupal\views\Plugins\views\field\FieldPluginBase;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to present the path to the node.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node_path extends views_handler_field {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_path"
+ * )
+ */
+class Path extends FieldPluginBase {
 
   function option_definition() {
     $options = parent::option_definition();

@@ -5,10 +5,21 @@
  * Provide node vid argument handler.
  */
 
+namespace Drupal\node\Plugin\views\argument;
+
+use Drupal\views\Plugins\views\argument\Numeric;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Argument handler to accept a node revision id.
  */
-class views_handler_argument_node_vid extends views_handler_argument_numeric {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_vid"
+ * )
+ */
+class Vid extends Numeric {
   // No constructor is necessary.
 
   /**

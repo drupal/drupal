@@ -5,11 +5,22 @@
  * Defintion of views_handler_argument_node_uid_revision.
  */
 
+namespace Drupal\node\Plugin\views\argument;
+
+use Drupal\user\Plugin\views\argument\UserUid;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Filter handler to accept a user id to check for nodes that
  * user posted or created a revision on.
  */
-class views_handler_argument_node_uid_revision extends UserUid {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_uid_revision"
+ * )
+ */
+class UidRevision extends UserUid {
   function query($group_by = FALSE) {
     $this->ensure_my_table();
     $placeholder = $this->placeholder();

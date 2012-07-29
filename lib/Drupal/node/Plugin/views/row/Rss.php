@@ -5,13 +5,30 @@
  * Contains the node RSS row style plugin.
  */
 
+namespace Drupal\node\Plugin\views\row;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugins\views\row\RowPluginBase;
 
 /**
  * Plugin which performs a node_view on the resulting object
  * and formats it as an RSS item.
  */
-class views_plugin_row_node_rss extends RowPluginBase {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_rss",
+ *   title = @Translation("Content"),
+ *   help = @Translation("Display the content with standard node view."),
+ *   theme = "views_view_row_rss",
+ *   base = {"node"},
+ *   uses_options = TRUE,
+ *   type = "feed",
+ *   help_topic = "style-node-rss"
+ * )
+ */
+class Rss extends RowPluginBase {
   // Basic properties that let the row style follow relationships.
   var $base_table = 'node';
   var $base_field = 'nid';

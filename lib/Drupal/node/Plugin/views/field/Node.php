@@ -5,7 +5,10 @@
  * Contains the basic 'node' field handler.
  */
 
+namespace Drupal\node\Plugin\views\field;
+
 use Drupal\views\Plugins\views\field\FieldPluginBase;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.
@@ -14,7 +17,13 @@ use Drupal\views\Plugins\views\field\FieldPluginBase;
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node extends FieldPluginBase {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node"
+ * )
+ */
+class Node extends FieldPluginBase {
 
   function init(&$view, &$options) {
     parent::init($view, $options);

@@ -5,6 +5,10 @@
  * Contains the node view row style plugin.
  */
 
+namespace Drupal\node\Plugin\views\row;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugins\views\row\RowPluginBase;
 
 /**
@@ -14,7 +18,19 @@ use Drupal\views\Plugins\views\row\RowPluginBase;
  *
  * @ingroup views_row_plugins
  */
-class views_plugin_row_node_view extends RowPluginBase {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node",
+ *   title = @Translation("Content"),
+ *   help = @Translation("Display the content with standard node view."),
+ *   base = {"node"},
+ *   uses_options = TRUE,
+ *   type = "normal",
+ *   help_topic = "style-node"
+ * )
+ */
+class View extends RowPluginBase {
   // Basic properties that let the row style follow relationships.
   var $base_table = 'node';
   var $base_field = 'nid';

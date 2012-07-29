@@ -5,10 +5,21 @@
  * Provide node nid argument handler.
  */
 
+namespace Drupal\node\Plugin\views\argument;
+
+use Drupal\views\Plugins\views\argument\Numeric;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Argument handler to accept a node id.
  */
-class views_handler_argument_node_nid extends views_handler_argument_numeric {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_nid"
+ * )
+ */
+class Nid extends Numeric {
   /**
    * Override the behavior of title(). Get the title of the node.
    */

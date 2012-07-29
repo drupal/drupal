@@ -5,15 +5,22 @@
  * Definition of views_handler_filter_node_access.
  */
 
-use Drupal\views\Plugins\views\filter\FilterPluginBase;
+namespace Drupal\node\Plugin\views\filter;
 
+use Drupal\views\Plugins\views\filter\FilterPluginBase;
 
 /**
  * Filter by node_access records.
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_node_access extends FilterPluginBase {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_access"
+ * )
+ */
+class Access extends FilterPluginBase {
   function admin_summary() { }
   function operator_form(&$form, &$form_state) { }
   function can_expose() {

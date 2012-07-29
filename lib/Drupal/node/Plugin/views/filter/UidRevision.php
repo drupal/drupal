@@ -5,12 +5,22 @@
  * Definition of views_handler_filter_node_uid_revision.
  */
 
+namespace Drupal\node\Plugin\views\filter;
+
+use Drupal\user\Plugin\views\filter\Name;
+
 /**
  * Filter handler to check for revisions a certain user has created.
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_node_uid_revision extends views_handler_filter_user_name {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_uid_revision"
+ * )
+ */
+class UidRevision extends Name {
   function query($group_by = FALSE) {
     $this->ensure_my_table();
 

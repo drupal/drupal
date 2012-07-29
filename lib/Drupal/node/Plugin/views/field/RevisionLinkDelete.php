@@ -5,12 +5,23 @@
  * Definition of views_handler_field_node_revision_link_delete.
  */
 
+namespace Drupal\node\Plugin\views\field;
+
+use Drupal\node\Plugin\views\field\RevisionLink;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to present link to delete a node revision.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node_revision_link_delete extends views_handler_field_node_revision_link {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_revision_link_delete"
+ * )
+ */
+class RevisionLinkDelete extends RevisionLink {
 
   function access() {
     return user_access('delete revisions') || user_access('administer nodes');
