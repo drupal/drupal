@@ -5,10 +5,18 @@
  * Definition of views_handler_field_file_uri.
  */
 
+namespace Views\file\Plugin\views\field;
+
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to add rendering file paths as file URLs instead of as internal file URIs.
+ *
+ * @Plugin(
+ *   plugin_id = "file_uri"
+ * )
  */
-class views_handler_field_file_uri extends views_handler_field_file {
+class Uri extends File {
   function option_definition() {
     $options = parent::option_definition();
     $options['file_download_path'] = array('default' => FALSE, 'bool' => TRUE);

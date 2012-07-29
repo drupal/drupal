@@ -5,12 +5,24 @@
  * Definition of views_handler_field_file.
  */
 
+namespace Views\file\Plugin\views\field;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
+
+
 /**
  * Field handler to provide simple renderer that allows linking to a file.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_file extends views_handler_field {
+
+/**
+ * @Plugin(
+ *   plugin_id = "file"
+ * )
+ */
+class File extends FieldPluginBase {
   /**
    * Constructor to provide additional field to add.
    */

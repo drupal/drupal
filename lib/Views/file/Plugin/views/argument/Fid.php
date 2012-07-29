@@ -5,12 +5,23 @@
  * Definition of views_handler_argument_file_fid.
  */
 
+namespace Views\file\Plugin\views\argument;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\views\Plugin\views\argument\Numeric;
+
 /**
  * Argument handler to accept multiple file ids.
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_file_fid extends views_handler_argument_numeric {
+
+/**
+ * @Plugin(
+ *   plugin_id = "file_fid"
+ * )
+ */
+class Fid extends Numeric {
   /**
    * Override the behavior of title_query(). Get the filenames.
    */

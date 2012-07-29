@@ -5,12 +5,22 @@
  * Definition of views_handler_field_file_filemime.
  */
 
+namespace Views\file\Plugin\views\field;
+
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to add rendering MIME type images as an option on the filemime field.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_file_filemime extends views_handler_field_file {
+
+/**
+ * @Plugin(
+ *   plugin_id = "file_filemime"
+ * )
+ */
+class FileMime extends File {
   function option_definition() {
     $options = parent::option_definition();
     $options['filemime_image'] = array('default' => FALSE, 'bool' => TRUE);

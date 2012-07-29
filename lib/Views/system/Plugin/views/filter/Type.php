@@ -5,10 +5,19 @@
  * Definition of views_handler_filter_system_type.
  */
 
+namespace Views\system\Plugin\views\filter;
+
+use Drupal\views\Plugin\views\filter\InOperator;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Filter by system type.
+ *
+ * @Plugin(
+ *   plugin_id = "system_type"
+ * )
  */
-class views_handler_filter_system_type extends views_handler_filter_in_operator {
+class Type extends InOperator {
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Type');

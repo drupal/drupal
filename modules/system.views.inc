@@ -35,11 +35,11 @@ function system_views_data() {
     'title' => t('File ID'),
     'help' => t('The ID of the file.'),
     'field' => array(
-      'handler' => 'views_handler_field_file',
+      'plugin_id' => 'file',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_file_fid',
+      'plugin_id' => 'file_fid',
       'name field' => 'filename', // the field to display in the summary.
       'numeric' => TRUE,
     ),
@@ -56,7 +56,7 @@ function system_views_data() {
     'title' => t('Name'),
     'help' => t('The name of the file.'),
     'field' => array(
-      'handler' => 'views_handler_field_file',
+      'plugin_id' => 'file',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -75,7 +75,7 @@ function system_views_data() {
     'title' => t('Path'),
     'help' => t('The path of the file.'),
     'field' => array(
-      'handler' => 'views_handler_field_file_uri',
+      'plugin_id' => 'file_uri',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -94,7 +94,7 @@ function system_views_data() {
     'title' => t('Mime type'),
     'help' => t('The mime type of the file.'),
     'field' => array(
-      'handler' => 'views_handler_field_file_filemime',
+      'plugin_id' => 'file_filemime',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -114,7 +114,7 @@ function system_views_data() {
     'help' => t('The extension of the file.'),
     'real field' => 'filename',
     'field' => array(
-      'handler' => 'views_handler_field_file_extension',
+      'plugin_id' => 'field_file_extension',
       'click sortable' => FALSE,
      ),
   );
@@ -124,7 +124,7 @@ function system_views_data() {
     'title' => t('Size'),
     'help' => t('The size of the file.'),
     'field' => array(
-      'handler' => 'views_handler_field_file_size',
+      'plugin_id' => 'field_file_size',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -140,14 +140,14 @@ function system_views_data() {
     'title' => t('Status'),
     'help' => t('The status of the file.'),
     'field' => array(
-      'handler' => 'views_handler_field_file_status',
+      'plugin_id' => 'field_file_status',
       'click sortable' => TRUE,
      ),
     'sort' => array(
       'plugin_id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_file_status',
+      'plugin_id' => 'filter_file_status',
     ),
   );
 
@@ -516,7 +516,7 @@ function system_views_data() {
       'name field' => 'type', // the field to display in the summary.
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_system_type',
+      'plugin_id' => 'filter_system_type',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
