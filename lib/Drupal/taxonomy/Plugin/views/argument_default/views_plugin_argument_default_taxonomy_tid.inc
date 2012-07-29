@@ -50,7 +50,7 @@ class views_plugin_argument_default_taxonomy_tid extends views_plugin_argument_d
     $form['limit'] = array(
       '#type' => 'checkbox',
       '#title' => t('Limit terms by vocabulary'),
-      '#default_value'=> $this->options['limit'],
+      '#default_value' => $this->options['limit'],
       '#states' => array(
         'visible' => array(
           ':input[name="options[argument_default][taxonomy_tid][node]"]' => array('checked' => TRUE),
@@ -80,7 +80,7 @@ class views_plugin_argument_default_taxonomy_tid extends views_plugin_argument_d
     $form['anyall'] = array(
       '#type' => 'radios',
       '#title' => t('Multiple-value handling'),
-      '#default_value'=> $this->options['anyall'],
+      '#default_value' => $this->options['anyall'],
       '#process' => array('form_process_radios', 'ctools_dependent_process'),
       '#options' => array(
         ',' => t('Filter to items that share all terms'),
