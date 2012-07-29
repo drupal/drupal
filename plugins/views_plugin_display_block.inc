@@ -208,7 +208,7 @@ class views_plugin_display_block extends views_plugin_display {
     }
 
     // Maybe people don't have block module installed, so let's skip this.
-    if (module_exists('block')) {
+    if (db_table_exists('block')) {
       db_update('block')
         ->fields(array('delta' => $delta))
         ->condition('delta', $old_delta)
