@@ -9,7 +9,7 @@ namespace Drupal\views\Plugins\Type;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
+use Drupal\Views\Plugins\Discovery\ViewsDiscovery;
 
 class HandlerPluginManager extends PluginManagerBase {
   /**
@@ -22,9 +22,7 @@ class HandlerPluginManager extends PluginManagerBase {
   public function __construct($type) {
     $this->type = $type;
 
-    if (in_array($this->type, array('sort', 'filter', 'relationship', 'field', 'area', 'argument'))) {
-      $this->discovery = new AnnotatedClassDiscovery('views', $this->type);
-    }
+    $this->discovery = new ViewsDiscovery('views', $this->type);
     $this->factory = new DefaultFactory($this->discovery);
   }
 }

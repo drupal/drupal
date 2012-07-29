@@ -15,6 +15,6 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 class CachePluginManager extends PluginManagerBase {
   public function __construct() {
     $this->discovery = new AnnotatedClassDiscovery('views', 'cache');
-    $this->factory = new DefaultFactory($this);
+    $this->factory = new DefaultFactory($this->discovery);
   }
 }

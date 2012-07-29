@@ -9,12 +9,11 @@ namespace Drupal\views\Plugins\Type;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
-
+use Drupal\views\Plugins\Discovery\ViewsDiscovery;
 
 class DisplayPluginManager extends PluginManagerBase {
   public function __construct() {
-    $this->discovery = new AnnotatedClassDiscovery('views', 'display');
-    $this->factory = new DefaultFactory($this);
+    $this->discovery = new ViewsDiscovery('views', 'display');
+    $this->factory = new DefaultFactory($this->discovery);
   }
 }

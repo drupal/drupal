@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "standard",
+ *   plugin_id = "default",
  *   title = @Translation("Master"),
  *   help = @Translation("Default settings for this view."),
  *   theme = "views_view",

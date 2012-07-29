@@ -884,12 +884,17 @@ function views_add_contextual_links(&$render_element, $location, $view, $display
     // If contextual_links_locations are not set, provide a sane default. (To
     // avoid displaying any contextual links at all, a display plugin can still
     // set 'contextual_links_locations' to, e.g., {""}.)
-    if (!(isset($plugin['contextual_links_locations']) && $plugin['contextual_links_locations'] = array(""))) {
-      $plugin += array('contextual_links_locations' => array('view'));
+
+    if (!isset($plugin['contextual_links_locations'])) {
+      $plugin['contextual_links_locations'] = array('view');
     }
-    else {
+    elseif ($plugin['contextual_links_locations'] = array() || $plugin['contextual_links_locations'] == array('')) {
       $plugin['contextual_links_locations'] = array();
     }
+    else {
+      $plugin += array('contextual_links_locations' => array('view'));
+    }
+
     // On exposed_forms blocks contextual links should always be visible.
     $plugin['contextual_links_locations'][] = 'special_block_-exp';
     $has_links = !empty($plugin['contextual links']) && !empty($plugin['contextual_links_locations']);
@@ -1345,9 +1350,6 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
   foreach ($definitions as $plugin_id => $plugin) {
     if (empty($plugin['no ui']) && (empty($base) || empty($plugin['base']) || array_intersect($base, $plugin['base']))) {
       $plugins[$plugin_id] = $plugin['title'];
-      if (!isset($plugin['title'])) {
-        dsm($plugin);
-      }
     }
   }
 
@@ -1355,6 +1357,7 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
     asort($plugins);
     return $plugins;
   }
+
   // fall-through
   return array();
 }
@@ -1400,10 +1403,10 @@ function views_get_plugin_manager($type) {
     case 'row':
       $manager = new RowPluginManager();
       break;
-    case 'argument default':
+    case 'argument_default':
       $manager = new ArgumentDefaultPluginManager();
       break;
-    case 'argument validator':
+    case 'argument_validator':
       $manager = new ArgumentValidatorPluginManager();
       break;
     case 'access':

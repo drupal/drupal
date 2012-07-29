@@ -83,6 +83,7 @@ abstract class DisplayPluginBase extends Plugin {
       unset($options['defaults']);
     }
 
+    views_include('cache');
     // Cache for unpack_options, but not if we are in the ui.
     static $unpack_options = array();
     if (empty($view->editing)) {
@@ -1212,7 +1213,8 @@ abstract class DisplayPluginBase extends Plugin {
     }
 
     if (!empty($style_plugin['uses_row_plugin'])) {
-      $row_plugin = views_fetch_plugin_data('row', $this->get_option('row_plugin'));
+      $manager = views_get_plugin_manager('row');
+      $row_plugin = $manager->getDefinition($this->get_option('row_plugin'));
       $row_plugin_instance = $this->get_plugin('row');
       $row_summary = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->summary_title();
       $row_title = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->plugin_title();

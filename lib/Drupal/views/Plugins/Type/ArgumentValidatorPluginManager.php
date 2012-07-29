@@ -15,6 +15,6 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 class ArgumentValidatorPluginManager extends PluginManagerBase {
   public function __construct() {
     $this->discovery = new AnnotatedClassDiscovery('views', 'argument_validator');
-    $this->factory = new DefaultFactory($this);
+    $this->factory = new DefaultFactory($this->discovery);
   }
 }

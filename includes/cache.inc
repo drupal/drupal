@@ -88,6 +88,17 @@ function _views_data_process_entity_types(&$data) {
  */
 function _views_fetch_plugin_data($type = NULL, $plugin_id = NULL, $reset = FALSE) {
   $manager = views_get_plugin_manager($type);
+
+  if (!$type && !$plugin_id) {
+    $plugins = array();
+    $plugin_types = array('access', 'argument_default', 'argument_validator', 'cache', 'display_extender', 'display', 'exposed_form', 'localization', 'pager', 'query', 'row', 'style', 'wizard');
+    foreach ($plugin_types as $plugin_type) {
+      $manager = views_get_plugin_manager($plugin_type);
+      $plugins[$plugin_type] = $manager->getDefinitions();
+    }
+    return $plugins;
+  }
+
   if (!$plugin_id) {
     return $manager->getDefinitions();
   }

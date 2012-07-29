@@ -551,7 +551,7 @@ function views_ui_ctools_plugin_directory($module, $plugin) {
  */
 function views_ui_get_wizard($wizard_type) {
   ctools_include('plugins');
-  $manager = new WizardManager();
+  $manager = views_get_plugin_manager('wizard');
   $wizard = $manager->getDefinition($wizard_type);
   // @todo - handle this via an alter hook instead.
   if (!$wizard) {
