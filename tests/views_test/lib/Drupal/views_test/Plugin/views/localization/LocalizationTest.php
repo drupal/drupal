@@ -7,6 +7,7 @@
 
 namespace Drupal\views_test\Plugin\views\localization;
 
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\localization\LocalizationPluginBase;
 
 /**
@@ -14,8 +15,8 @@ use Drupal\views\Plugin\views\localization\LocalizationPluginBase;
  *
  * @Plugin(
  *   plugin_id = "test_localization",
- *   title = @Translation("Test."),
- *   help = @Translation("This is a test description."),
+ *   title = "Test.",
+ *   help = "This is a test description.",
  *   no_uid = TRUE
  * )
  */

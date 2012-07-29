@@ -7,6 +7,7 @@
 
 namespace Drupal\views_test\Plugin\views\access;
 
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 
 /**
@@ -14,8 +15,8 @@ use Drupal\views\Plugin\views\access\AccessPluginBase;
  *
  * @Plugin(
  *   plugin_id = "test_dynamic",
- *   title = @Translation("Dynamic test access plugin."),
- *   help = @Translation("Provides a dynamic test access plugin.")
+ *   title = "Dynamic test access plugin.",
+ *   help = "Provides a dynamic test access plugin."
  * )
  */
 class DynamicTest extends AccessPluginBase {

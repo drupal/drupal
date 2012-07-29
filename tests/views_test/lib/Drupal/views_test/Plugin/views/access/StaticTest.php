@@ -7,6 +7,7 @@
 
 namespace Drupal\views_test\Plugin\views\access;
 
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 
 /**
@@ -14,8 +15,8 @@ use Drupal\views\Plugin\views\access\AccessPluginBase;
  *
  * @Plugin(
  *   plugin_id = "test_static",
- *   title = @Translation("Static test access plugin"),
- *   help = @Translation("Provides a static test access plugin.")
+ *   title = "Static test access plugin",
+ *   help = "Provides a static test access plugin."
  * )
  */
 class StaticTest extends AccessPluginBase {
