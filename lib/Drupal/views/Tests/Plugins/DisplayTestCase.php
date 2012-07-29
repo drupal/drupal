@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugins\DisplayTestCase.
+ * Definition of Drupal\views\Tests\Plugin\DisplayTestCase.
  */
 
-namespace Drupal\views\Tests\Plugins;
+namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\Tests\ViewsSqlTest;
 use Drupal\views\View;

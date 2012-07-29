@@ -172,7 +172,7 @@ function node_views_data() {
     'help' => t('Filters out unpublished content if the current user cannot view it.'),
     'filter' => array(
       'field' => 'status',
-      'handler' => 'Drupal\node\Plugins\views\filter\Status',
+      'handler' => 'Drupal\node\Plugin\views\filter\Status',
       'label' => t('Published or admin'),
     ),
   );

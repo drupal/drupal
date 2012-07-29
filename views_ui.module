@@ -6,7 +6,7 @@
  */
 
 use Drupal\views\View;
-use Drupal\views\Plugins\Type\WizardManager;
+use Drupal\views\Plugin\Type\WizardManager;
 
 /**
  * Implements hook_menu().

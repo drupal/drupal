@@ -14,20 +14,20 @@ use Drupal\views\View;
 use Drupal\Component\Plugin\PluginManagerInterface;
 
 // @todo: Should views_get_plugin_manager be moved to a ceperate file?
-use Drupal\views\Plugins\Type\StylePluginManager;
-use Drupal\views\Plugins\Type\DisplayPluginManager;
-use Drupal\views\Plugins\Type\AccessPluginManager;
-use Drupal\views\Plugins\Type\ArgumentDefaultPluginManager;
-use Drupal\views\Plugins\Type\ArgumentValidatorPluginManager;
-use Drupal\views\Plugins\Type\CachePluginManager;
-use Drupal\views\Plugins\Type\LocalizationPluginManager;
-use Drupal\views\Plugins\Type\PagerPluginManager;
-use Drupal\views\Plugins\Type\QueryPluginManager;
-use Drupal\views\Plugins\Type\RowPluginManager;
-use Drupal\views\Plugins\Type\ExposedFormPluginManager;
-use Drupal\views\Plugins\Type\HandlerPluginManager;
-use Drupal\views\Plugins\Type\DisplayExtenderPluginManager;
-use Drupal\views\Plugins\Type\WizardPluginManager;
+use Drupal\views\Plugin\Type\StylePluginManager;
+use Drupal\views\Plugin\Type\DisplayPluginManager;
+use Drupal\views\Plugin\Type\AccessPluginManager;
+use Drupal\views\Plugin\Type\ArgumentDefaultPluginManager;
+use Drupal\views\Plugin\Type\ArgumentValidatorPluginManager;
+use Drupal\views\Plugin\Type\CachePluginManager;
+use Drupal\views\Plugin\Type\LocalizationPluginManager;
+use Drupal\views\Plugin\Type\PagerPluginManager;
+use Drupal\views\Plugin\Type\QueryPluginManager;
+use Drupal\views\Plugin\Type\RowPluginManager;
+use Drupal\views\Plugin\Type\ExposedFormPluginManager;
+use Drupal\views\Plugin\Type\HandlerPluginManager;
+use Drupal\views\Plugin\Type\DisplayExtenderPluginManager;
+use Drupal\views\Plugin\Type\WizardPluginManager;
 
 /**
  * Advertise the current views api version
@@ -47,7 +47,7 @@ function views_init() {
   $loader = drupal_classloader();
   foreach ($core_modules as $module) {
     if (function_exists($module . '_views_api')) {
-      $name = $module . '\\Plugins';
+      $name = $module . '\\Plugin';
       $loader->registerNamespace('Drupal\\' . $name, DRUPAL_ROOT . '/' . $path . '/lib');
     }
   }

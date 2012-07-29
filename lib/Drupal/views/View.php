@@ -8,8 +8,8 @@
 namespace Drupal\views;
 
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\views\Plugins\Type\QueryPluginManager;
-use Drupal\views\Plugins\Type\DisplayPluginManager;
+use Drupal\views\Plugin\Type\QueryPluginManager;
+use Drupal\views\Plugin\Type\DisplayPluginManager;
 
 /**
  * @defgroup views_objects Objects that represent a View or part of a view
