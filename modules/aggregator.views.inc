@@ -28,26 +28,6 @@ function aggregator_views_data() {
   // ----------------------------------------------------------------
   // Fields
 
-  // item id.
-  $data['aggregator_item']['iid'] = array(
-    'title' => t('Feed Item ID'),
-    'help' => t('The unique ID of the aggregator item.'),
-    'field' => array(
-      'plugin_id' => 'numeric',
-      'click sortable' => TRUE,
-    ),
-    'argument' => array(
-      'plugin_id' => 'numeric',
-      'numeric' => TRUE,
-    ),
-    'filter' => array(
-      'plugin_id' => 'numeric',
-    ),
-    'sort' => array(
-      'plugin_id' => 'standard',
-    ),
-  );
-
   // iid
   $data['aggregator_item']['iid'] = array(
     'title' => t('Item ID'),
@@ -59,7 +39,7 @@ function aggregator_views_data() {
     ),
     // Information for accepting a iid as an argument
     'argument' => array(
-      'handler' => 'views_handler_argument_aggregator_iid',
+      'plugin_id' => 'aggregator_iid',
       'name field' => 'title', // the field to display in the summary.
       'numeric' => TRUE,
     ),
@@ -79,7 +59,7 @@ function aggregator_views_data() {
     'help' => t('The title of the aggregator item.'),
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_aggregator_title_link',
+      'plugin_id' => 'aggregator_title_link',
       'extra' => array('link'),
       'click sortable' => TRUE,
      ),
@@ -115,7 +95,7 @@ function aggregator_views_data() {
     'help' => t('The author of the original imported item.'),
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_aggregator_xss',
+      'plugin_id' => 'aggregator_xss',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -157,7 +137,7 @@ function aggregator_views_data() {
     'help' => t('The actual content of the imported item.'),
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_aggregator_xss',
+      'plugin_id' => 'aggregator_xss',
       'click sortable' => FALSE,
      ),
     // Information for accepting a title as a filter
@@ -212,7 +192,7 @@ function aggregator_views_data() {
     ),
     // Information for accepting a fid as an argument
     'argument' => array(
-      'handler' => 'views_handler_argument_aggregator_fid',
+      'plugin_id' => 'aggregator_fid',
       'name field' => 'title', // the field to display in the summary.
       'numeric' => TRUE,
     ),
@@ -232,7 +212,7 @@ function aggregator_views_data() {
     'help' => t('The title of the aggregator feed.'),
      // Information for displaying a title as a field
     'field' => array(
-      'handler' => 'views_handler_field_aggregator_title_link',
+      'plugin_id' => 'aggregator_title_link',
       'extra' => array('link'),
       'click sortable' => TRUE,
      ),
@@ -352,12 +332,12 @@ function aggregator_views_data() {
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_aggregator_category_cid',
+      'plugin_id' => 'aggregator_category_cid',
       'name field' => 'title',
       'numeric' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_aggregator_category_cid',
+      'plugin_id' => 'aggregator_category_cid',
     ),
     'sort' => array(
       'plugin_id' => 'standard',
@@ -369,7 +349,7 @@ function aggregator_views_data() {
     'title' => t('Category'),
     'help' => t('The title of the aggregator category.'),
     'field' => array(
-      'handler' => 'views_handler_field_aggregator_category',
+      'plugin_id' => 'aggregator_category',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -381,26 +361,4 @@ function aggregator_views_data() {
   );
 
   return $data;
-}
-
-/**
- * Implements hook_views_plugins().
- */
-function aggregator_views_plugins() {
-  return array(
-    'module' => 'views', // This just tells our themes are elsewhere.
-    'row' => array(
-      'aggregator_rss' => array(
-        'title' => t('Aggregator item'),
-        'help' => t('Display the aggregator item using the data from the original source.'),
-        'handler' => 'views_plugin_row_aggregator_rss',
-        'path' => drupal_get_path('module', 'views') . '/modules/node', // not necessary for most modules
-        'theme' => 'views_view_row_rss',
-        'base' => array('aggregator_item'), // only works with 'node' as base.
-        'uses options' => TRUE,
-        'type' => 'feed',
-        'help topic' => 'style-aggregator-rss',
-      ),
-    ),
-  );
 }

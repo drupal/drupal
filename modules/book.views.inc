@@ -114,18 +114,3 @@ function book_views_data() {
 
   return $data;
 }
-
-/**
- * Implements hook_views_plugins().
- */
-function book_views_plugins() {
- return array(
-   'module' => 'views',
-   'argument default' => array(
-     'book_root' => array(
-       'title' => t('Book root from current node'),
-       'handler' => 'views_plugin_argument_default_book_root'
-     ),
-   ),
- );
-}
