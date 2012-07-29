@@ -8,6 +8,7 @@
 namespace Drupal\views;
 
 use Symfony\Component\HttpFoundation\Response;
+use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * @defgroup views_objects Objects that represent a View or part of a view
