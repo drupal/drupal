@@ -34,13 +34,6 @@ function views_test_views_data() {
   return  variable_get('views_test_views_data', array());
 }
 
-/**
- * Implements hook_views_plugins().
- */
-function views_test_views_plugins() {
-  return variable_get('views_test_views_plugins', array());
-}
-
 function views_test_test_static_access_callback($access) {
   return $access;
 }
