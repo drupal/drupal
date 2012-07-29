@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
+use Drupal\views\ManyToOneHelper;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -27,7 +28,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class ManyToOne extends InOperator {
   /**
-   * @var views_many_to_one_helper
+   * @var Drupal\views\ManyToOneHelper
    *
    * Stores the Helper object which handles the many_to_one complexity.
    */
@@ -35,7 +36,7 @@ class ManyToOne extends InOperator {
 
   function init(&$view, &$options) {
     parent::init($view, $options);
-    $this->helper = new views_many_to_one_helper($this);
+    $this->helper = new ManyToOneHelper($this);
   }
 
   function option_definition() {
@@ -48,7 +49,7 @@ class ManyToOne extends InOperator {
       $this->helper->option_definition($options);
     }
     else {
-      $helper = new views_many_to_one_helper($this);
+      $helper = new ManyToOneHelper($this);
       $helper->option_definition($options);
     }
 

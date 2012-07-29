@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\views\ManyToOneHelper;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -25,7 +26,7 @@ class String extends ArgumentPluginBase {
   function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($this->definition['many to one'])) {
-      $this->helper = new views_many_to_one_helper($this);
+      $this->helper = new ManyToOneHelper($this);
 
       // Ensure defaults for these, during summaries and stuff:
       $this->operator = 'or';

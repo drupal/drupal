@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
  * - invalid input: A string to give to the user for obviously invalid input.
  *                  This is deprecated in favor of argument validators.
  *
- * @see views_many_to_one_helper()
+ * @see Drupal\views\ManyTonOneHelper
  *
  * @ingroup views_argument_handlers
  */
