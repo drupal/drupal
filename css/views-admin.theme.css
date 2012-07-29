@@ -433,12 +433,28 @@ td.group-title {
   padding: 3px 9px;
 }
 
+.views-display-top #views-display-top {
+  max-width: 180px;
+}
+
 /* @end */
 
 /* @group Attachment details tabs
  *
  * The tabs that switch between sections
  */
+
+ul#views-display-menu-tabs {
+  margin-right: 200px;
+}
+
+ul#views-display-menu-tabs li {
+  margin-bottom: 5px;
+}
+
+ul#views-display-menu-tabs li.add ul.action-list li{
+  margin: 0;
+}
 
 .views-displays .secondary a {
   border: 1px solid #cbcbcb;
