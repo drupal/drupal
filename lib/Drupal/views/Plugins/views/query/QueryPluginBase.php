@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @file
  * Definition of Drupal\views\Plugins\views\query\QueryPluginBase.
  */
 
