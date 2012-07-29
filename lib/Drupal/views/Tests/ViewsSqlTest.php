@@ -22,7 +22,6 @@ abstract class ViewsSqlTest extends ViewsTestBase {
     // Define the schema and views data variable before enabling the test module.
     variable_set('views_test_schema', $this->schemaDefinition());
     variable_set('views_test_views_data', $this->viewsData());
-    variable_set('views_test_views_plugins', $this->viewsPlugins());
 
     module_enable(array('views_test'));
     $this->resetAll();
@@ -204,10 +203,6 @@ abstract class ViewsSqlTest extends ViewsTestBase {
       ),
     );
     return $data;
-  }
-
-  protected function viewsPlugins() {
-    return array();
   }
 
   /**

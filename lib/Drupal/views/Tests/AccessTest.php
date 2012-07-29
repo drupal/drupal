@@ -9,7 +9,6 @@ namespace Drupal\views\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\View;
-use views_test_plugin_access_test_dynamic;
 
 /**
  * Basic test for pluggable access.
@@ -35,27 +34,6 @@ class AccessTest extends ViewsSqlTest {
     $this->normal_user->roles[$this->normal_role] = $this->normal_role;
     // Reset the plugin data.
     views_fetch_plugin_data(NULL, NULL, TRUE);
-  }
-
-  function viewsPlugins() {
-    $plugins = array(
-      'access' =>  array(
-        'test_static' => array(
-          'title' => t('Static test access plugin'),
-          'help' => t('Provides a static test access plugin.'),
-          'handler' => 'views_test_plugin_access_test_static',
-          'path' => drupal_get_path('module', 'views_test') . '/test_plugins',
-        ),
-        'test_dynamic' => array(
-          'title' => t('Dynamic test access plugin'),
-          'help' => t('Provides a dynamic test access plugin.'),
-          'handler' => 'views_test_plugin_access_test_dynamic',
-          'path' => drupal_get_path('module', 'views_test') . '/test_plugins',
-        ),
-      ),
-    );
-
-    return $plugins;
   }
 
   /**

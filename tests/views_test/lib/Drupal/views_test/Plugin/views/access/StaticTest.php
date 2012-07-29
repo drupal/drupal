@@ -2,13 +2,23 @@
 
 /**
  * @file
- * Definition of views_test_plugin_access_test_static.
+ * Definition of Drupal\views_test\Plugin\views\access\StaticTest.
  */
+
+namespace Drupal\views_test\Plugin\views\access;
+
+use Drupal\views\Plugin\views\access\AccessPluginBase;
 
 /**
  * Tests a static access plugin.
+ *
+ * @Plugin(
+ *   plugin_id = "test_static",
+ *   title = @Translation("Static test access plugin"),
+ *   help = @Translation("Provides a static test access plugin.")
+ * )
  */
-class views_test_plugin_access_test_static extends views_plugin_access {
+class StaticTest extends AccessPluginBase {
   function option_definition() {
     $options = parent::option_definition();
     $options['access'] = array('default' => FALSE, 'bool' => TRUE);

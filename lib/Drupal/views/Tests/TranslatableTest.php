@@ -23,28 +23,10 @@ class TranslatableTest extends ViewsSqlTest {
     );
   }
 
-  /**
-   * The views plugin definition. Override it if you test provides a plugin.
-   */
-  public function viewsPlugins() {
-    return array(
-      'localization' => array(
-        'test' => array(
-          'no_ui' => TRUE,
-          'title' => t('Test'),
-          'help' => t('This is a test description.'),
-          'handler' => 'views_plugin_localization_test',
-          'parent' => 'parent',
-          'path' => drupal_get_path('module', 'views') .'/tests',
-        ),
-      ),
-    );
-  }
-
   public function setUp() {
     parent::setUp();
 
-    config('views.settings')->set('views_localization_plugin', 'test')->save();
+    config('views.settings')->set('views_localization_plugin', 'localization_test')->save();
     // Reset the plugin data.
     views_fetch_plugin_data(NULL, NULL, TRUE);
     $this->strings = array('Master1', 'Apply1', 'Sort By1', 'Asc1', 'Desc1', 'more1', 'Reset1', 'Offset1', 'Master1', 'title1', 'Items per page1', 'fieldlabel1', 'filterlabel1');
@@ -58,7 +40,10 @@ class TranslatableTest extends ViewsSqlTest {
     $view = $this->view_unpack_translatable();
     $view->init_localization();
 
-    $this->assertEqual('views_plugin_localization_test', get_class($view->localization_plugin), 'Make sure that init_localization initializes the right translation plugin');
+    // localization_plugin returns the plugin_id from the plugin
+    // get_class will go kaboom on a plugin_id I guess...
+    // TODO: fix this with anotation magic
+    $this->assertEqual('LocalizationTest', get_class($view->localization_plugin), 'Make sure that init_localization initializes the right translation plugin');
 
     $view->export_locale_strings();
 

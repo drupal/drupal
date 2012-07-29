@@ -2,13 +2,24 @@
 
 /**
  * @file
- * Definition of views_plugin_localization_test.
+ * Definition of Drupal\views_test\Plugin\views\localization\LocalizationTest.
  */
+
+namespace Drupal\views_test\Plugin\views\localization;
+
+use Drupal\views\Plugin\views\localization\LocalizationPluginBase;
 
 /**
  * A stump localisation plugin which has static variables to cache the input.
+ *
+ * @Plugin(
+ *   plugin_id = "test_localization",
+ *   title = @Translation("Test."),
+ *   help = @Translation("This is a test description."),
+ *   no_uid = TRUE
+ * )
  */
-class views_plugin_localization_test extends views_plugin_localization {
+class LocalizationTest extends LocalizationPluginBase {
   /**
    * Store the strings which was translated.
    */

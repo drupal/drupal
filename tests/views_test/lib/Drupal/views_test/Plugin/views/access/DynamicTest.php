@@ -2,13 +2,23 @@
 
 /**
  * @file
- * Definition of views_test_plugin_access_test_dynamic.
+ * Definition of Drupal\views_test\Plugin\views\access\DynamicTest.
  */
+
+namespace Drupal\views_test\Plugin\views\access;
+
+use Drupal\views\Plugin\views\access\AccessPluginBase;
 
 /**
  * Tests a dynamic access plugin.
+ *
+ * @Plugin(
+ *   plugin_id = "test_dynamic",
+ *   title = @Translation("Dynamic test access plugin."),
+ *   help = @Translation("Provides a dynamic test access plugin.")
+ * )
  */
-class views_test_plugin_access_test_dynamic extends views_plugin_access {
+class DynamicTest extends AccessPluginBase {
   function option_definition() {
     $options = parent::option_definition();
     $options['access'] = array('default' => FALSE, 'bool' => TRUE);
