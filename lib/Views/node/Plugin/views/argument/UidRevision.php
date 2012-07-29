@@ -7,7 +7,7 @@
 
 namespace Views\node\Plugin\views\argument;
 
-use Views\user\Plugin\views\argument\UserUid;
+use Views\user\Plugin\views\argument\Uid;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Plugin;
  *   plugin_id = "node_uid_revision"
  * )
  */
-class UidRevision extends UserUid {
+class UidRevision extends Uid {
   function query($group_by = FALSE) {
     $this->ensure_my_table();
     $placeholder = $this->placeholder();

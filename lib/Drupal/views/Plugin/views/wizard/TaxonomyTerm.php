@@ -17,7 +17,6 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   plugin_id = "taxonomy_term",
  *   base_table = "taxonomy_term_data",
- *   created_column = "created",
  *   title = @Translation("Taxonomy terms"),
  *   path_field = {
  *     "id" = "tid",

@@ -160,7 +160,7 @@ function taxonomy_views_data() {
     'filter' => array(
       'title' => t('Term'),
       'help' => t('Taxonomy term chosen from autocomplete or select widget.'),
-      'plugin_id' => 'taxonomy_tid',
+      'plugin_id' => 'taxonomy_index_tid',
       'hierarchy table' => 'taxonomy_term_hierarchy',
       'numeric' => TRUE,
     ),

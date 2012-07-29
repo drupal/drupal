@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\views\ManyToOneHelper;
 
 /**
  * An argument handler for use in fields that have a many to one relationship
@@ -31,7 +32,7 @@ use Drupal\Core\Annotation\Plugin;
 class ManyToOne extends ArgumentPluginBase {
   function init(&$view, &$options) {
     parent::init($view, $options);
-    $this->helper = new views_many_to_one_helper($this);
+    $this->helper = new ManyToOneHelper($this);
 
     // Ensure defaults for these, during summaries and stuff:
     $this->operator = 'or';
@@ -52,7 +53,7 @@ class ManyToOne extends ArgumentPluginBase {
       $this->helper->option_definition($options);
     }
     else {
-      $helper = new views_many_to_one_helper($this);
+      $helper = new ManyToOneHelper($this);
       $helper->option_definition($options);
     }
 

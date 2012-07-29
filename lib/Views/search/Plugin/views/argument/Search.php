@@ -5,7 +5,7 @@
  * Definition of views_handler_argument_search.
  */
 
-namespace Views\node\Plugin\views\argument;
+namespace Views\search\Plugin\views\argument;
 
 use Drupal\views\Join;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;

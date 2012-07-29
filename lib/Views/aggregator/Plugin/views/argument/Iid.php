@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Plugin;
  *   plugin_id = "aggregator_iid"
  * )
  */
-class views_handler_argument_aggregator_iid extends Numeric {
+class Iid extends Numeric {
   /**
    * Override the behavior of title(). Get the title of the category.
    */
