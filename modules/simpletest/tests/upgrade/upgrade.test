@@ -71,7 +71,11 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Override of DrupalWebTestCase::setUp() specialized for upgrade testing.
+   * Overrides DrupalWebTestCase::setUp() for upgrade testing.
+   *
+   * @see DrupalWebTestCase::prepareDatabasePrefix()
+   * @see DrupalWebTestCase::changeDatabasePrefix()
+   * @see DrupalWebTestCase::prepareEnvironment()
    */
   protected function setUp() {
     // We are going to set a missing zlib requirement property for usage
@@ -93,54 +97,32 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
 
     $this->loadedModules = module_list();
 
-    // Generate a temporary prefixed database to ensure that tests have a clean starting point.
-    $this->databasePrefix = 'simpletest' . mt_rand(1000, 1000000);
-    db_update('simpletest_test_id')
-      ->fields(array('last_prefix' => $this->databasePrefix))
-      ->condition('test_id', $this->testId)
-      ->execute();
+    // Create the database prefix for this test.
+    $this->prepareDatabasePrefix();
 
-    // Clone the current connection and replace the current prefix.
-    $connection_info = Database::getConnectionInfo('default');
-    Database::renameConnection('default', 'simpletest_original_default');
-    foreach ($connection_info as $target => $value) {
-      $connection_info[$target]['prefix'] = array(
-        'default' => $value['prefix']['default'] . $this->databasePrefix,
-      );
+    // Prepare the environment for running tests.
+    $this->prepareEnvironment();
+    if (!$this->setupEnvironment) {
+      return FALSE;
     }
-    Database::addConnectionInfo('default', 'default', $connection_info['default']);
 
-    // Store necessary current values before switching to prefixed database.
-    $this->originalLanguage = $language;
-    $this->originalLanguageDefault = variable_get('language_default');
-    $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
-    $this->originalProfile = drupal_get_profile();
-    $clean_url_original = variable_get('clean_url', 0);
+    // Reset all statics and variables to perform tests in a clean environment.
+    $conf = array();
+    drupal_static_reset();
+
+    // Change the database prefix.
+    // All static variables need to be reset before the database prefix is
+    // changed, since DrupalCacheArray implementations attempt to
+    // write back to persistent caches when they are destructed.
+    $this->changeDatabasePrefix();
+    if (!$this->setupDatabasePrefix) {
+      return FALSE;
+    }
 
     // Unregister the registry.
     // This is required to make sure that the database layer works properly.
     spl_autoload_unregister('drupal_autoload_class');
     spl_autoload_unregister('drupal_autoload_interface');
-
-    // Create test directories ahead of installation so fatal errors and debug
-    // information can be logged during installation process.
-    // Use mock files directories with the same prefix as the database.
-    $public_files_directory  = $this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10);
-    $private_files_directory = $public_files_directory . '/private';
-    $temp_files_directory    = $private_files_directory . '/temp';
-
-    // Create the directories.
-    file_prepare_directory($public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-    file_prepare_directory($private_files_directory, FILE_CREATE_DIRECTORY);
-    file_prepare_directory($temp_files_directory, FILE_CREATE_DIRECTORY);
-    $this->generatedTestFiles = FALSE;
-
-    // Log fatal errors.
-    ini_set('log_errors', 1);
-    ini_set('error_log', $public_files_directory . '/error.log');
-
-    // Reset all statics and variables to perform tests in a clean environment.
-    $conf = array();
 
     // Load the database from the portable PHP dump.
     // The files may be gzipped.
@@ -152,83 +134,27 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     }
 
     // Set path variables.
-    $this->variable_set('file_public_path', $public_files_directory);
-    $this->variable_set('file_private_path', $private_files_directory);
-    $this->variable_set('file_temporary_path', $temp_files_directory);
+    $this->variable_set('file_public_path', $this->public_files_directory);
+    $this->variable_set('file_private_path', $this->private_files_directory);
+    $this->variable_set('file_temporary_path', $this->temp_files_directory);
 
     $this->pass('Finished loading the dump.');
 
-    // Load user 1.
-    $this->originalUser = $user;
+    // Ensure that the session is not written to the new environment and replace
+    // the global $user session with uid 1 from the new test site.
     drupal_save_session(FALSE);
+    // Login as uid 1.
     $user = db_query('SELECT * FROM {users} WHERE uid = :uid', array(':uid' => 1))->fetchObject();
 
     // Generate and set a D6-compatible session cookie.
     $this->prepareD7Session();
 
     // Restore necessary variables.
-    $this->variable_set('clean_url', $clean_url_original);
+    $this->variable_set('clean_url', $this->originalCleanUrl);
     $this->variable_set('site_mail', 'simpletest@example.com');
 
     drupal_set_time_limit($this->timeLimit);
     $this->setup = TRUE;
-  }
-
-  /**
-   * Override of DrupalWebTestCase::tearDown() specialized for upgrade testing.
-   */
-  protected function tearDown() {
-    global $user, $language;
-
-    if (!$this->zlibInstalled) {
-      parent::tearDown();
-      return;
-    }
-
-    // In case a fatal error occurred that was not in the test process read the
-    // log to pick up any fatal errors.
-    simpletest_log_read($this->testId, $this->databasePrefix, get_class($this), TRUE);
-
-    // Delete temporary files directory.
-    file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10));
-
-    // Get back to the original connection.
-    Database::removeConnection('default');
-    Database::renameConnection('simpletest_original_default', 'default');
-
-    // Remove all prefixed tables.
-    $tables = db_find_tables($this->databasePrefix . '%');
-    foreach ($tables as $table) {
-      db_drop_table($table);
-    }
-
-    // Return the user to the original one.
-    $user = $this->originalUser;
-    drupal_save_session(TRUE);
-
-    // Ensure that internal logged in variable and cURL options are reset.
-    $this->loggedInUser = FALSE;
-    $this->additionalCurlOptions = array();
-
-    // Reload module list and implementations to ensure that test module hooks
-    // aren't called after tests.
-    module_list(TRUE);
-    module_implements('', FALSE, TRUE);
-
-    // Reset the Field API.
-    field_cache_clear();
-
-    // Rebuild caches.
-    parent::refreshVariables();
-
-    // Reset language.
-    $language = $this->originalLanguage;
-    if ($this->originalLanguageDefault) {
-      $GLOBALS['conf']['language_default'] = $this->originalLanguageDefault;
-    }
-
-    // Close the CURL handler.
-    $this->curlClose();
   }
 
   /**

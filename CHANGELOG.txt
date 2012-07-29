@@ -31,6 +31,8 @@ Drupal 7.15, xxxx-xx-xx (development version)
   the former was confusing and inaccurate (UI change).
 - Fixed bug which made it impossible to search for strings that have not been
   translated into a particular language.
+- Reorganized the testing framework to split setUp() into specific sub-methods
+  and fix several regressions in the process.
 
 Drupal 7.14 2012-05-02
 ----------------------

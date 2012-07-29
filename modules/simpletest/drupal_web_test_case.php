@@ -85,6 +85,10 @@ abstract class DrupalTestCase {
    */
   protected $setup = FALSE;
 
+  protected $setupDatabasePrefix = FALSE;
+
+  protected $setupEnvironment = FALSE;
+
   /**
    * Constructor for DrupalTestCase.
    *
@@ -1251,29 +1255,46 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Generates a random database prefix, runs the install scripts on the
-   * prefixed database and enable the specified modules. After installation
-   * many caches are flushed and the internal browser is setup so that the
-   * page requests will run on the new prefix. A temporary files directory
-   * is created with the same name as the database prefix.
+   * Generates a database prefix for running tests.
    *
-   * @param ...
-   *   List of modules to enable for the duration of the test. This can be
-   *   either a single array or a variable number of string arguments.
+   * The generated database table prefix is used for the Drupal installation
+   * being performed for the test. It is also used as user agent HTTP header
+   * value by the cURL-based browser of DrupalWebTestCase, which is sent
+   * to the Drupal installation of the test. During early Drupal bootstrap, the
+   * user agent HTTP header is parsed, and if it matches, all database queries
+   * use the database table prefix that has been generated here.
+   *
+   * @see DrupalWebTestCase::curlInitialize()
+   * @see drupal_valid_test_ua()
+   * @see DrupalWebTestCase::setUp()
    */
-  protected function setUp() {
-    global $user, $language, $conf;
-
-    // Generate a temporary prefixed database to ensure that tests have a clean starting point.
+  protected function prepareDatabasePrefix() {
     $this->databasePrefix = 'simpletest' . mt_rand(1000, 1000000);
+
+    // As soon as the database prefix is set, the test might start to execute.
+    // All assertions as well as the SimpleTest batch operations are associated
+    // with the testId, so the database prefix has to be associated with it.
     db_update('simpletest_test_id')
       ->fields(array('last_prefix' => $this->databasePrefix))
       ->condition('test_id', $this->testId)
       ->execute();
+  }
 
-    // Reset all statics and variables to perform tests in a clean environment.
-    $conf = array();
-    drupal_static_reset();
+  /**
+   * Changes the database connection to the prefixed one.
+   *
+   * @see DrupalWebTestCase::setUp()
+   */
+  protected function changeDatabasePrefix() {
+    if (empty($this->databasePrefix)) {
+      $this->prepareDatabasePrefix();
+      // If $this->prepareDatabasePrefix() failed to work, return without
+      // setting $this->setupDatabasePrefix to TRUE, so setUp() methods will
+      // know to bail out.
+      if (empty($this->databasePrefix)) {
+        return;
+      }
+    }
 
     // Clone the current connection and replace the current prefix.
     $connection_info = Database::getConnectionInfo('default');
@@ -1285,22 +1306,43 @@ class DrupalWebTestCase extends DrupalTestCase {
     }
     Database::addConnectionInfo('default', 'default', $connection_info['default']);
 
+    // Indicate the database prefix was set up correctly.
+    $this->setupDatabasePrefix = TRUE;
+  }
+
+  /**
+   * Prepares the current environment for running the test.
+   *
+   * Backups various current environment variables and resets them, so they do
+   * not interfere with the Drupal site installation in which tests are executed
+   * and can be restored in tearDown().
+   *
+   * Also sets up new resources for the testing environment, such as the public
+   * filesystem and configuration directories.
+   *
+   * @see DrupalWebTestCase::setUp()
+   * @see DrupalWebTestCase::tearDown()
+   */
+  protected function prepareEnvironment() {
+    global $user, $language, $conf;
+
     // Store necessary current values before switching to prefixed database.
     $this->originalLanguage = $language;
     $this->originalLanguageDefault = variable_get('language_default');
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
-    $clean_url_original = variable_get('clean_url', 0);
+    $this->originalCleanUrl = variable_get('clean_url', 0);
+    $this->originalUser = $user;
 
     // Set to English to prevent exceptions from utf8_truncate() from t()
     // during install if the current language is not 'en'.
     // The following array/object conversion is copied from language_default().
     $language = (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => '');
 
-    // Save and clean shutdown callbacks array because it static cached and
-    // will be changed by the test run. If we don't, then it will contain
-    // callbacks from both environments. So testing environment will try
-    // to call handlers from original environment.
+    // Save and clean the shutdown callbacks array because it is static cached
+    // and will be changed by the test run. Otherwise it will contain callbacks
+    // from both environments and the testing environment will try to call the
+    // handlers defined by the original one.
     $callbacks = &drupal_register_shutdown_function();
     $this->originalShutdownCallbacks = $callbacks;
     $callbacks = array();
@@ -1308,24 +1350,74 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Create test directory ahead of installation so fatal errors and debug
     // information can be logged during installation process.
     // Use temporary files directory with the same prefix as the database.
-    $public_files_directory  = $this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10);
-    $private_files_directory = $public_files_directory . '/private';
-    $temp_files_directory    = $private_files_directory . '/temp';
+    $this->public_files_directory = $this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10);
+    $this->private_files_directory = $this->public_files_directory . '/private';
+    $this->temp_files_directory = $this->private_files_directory . '/temp';
 
     // Create the directories
-    file_prepare_directory($public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-    file_prepare_directory($private_files_directory, FILE_CREATE_DIRECTORY);
-    file_prepare_directory($temp_files_directory, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($this->public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    file_prepare_directory($this->private_files_directory, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($this->temp_files_directory, FILE_CREATE_DIRECTORY);
     $this->generatedTestFiles = FALSE;
 
     // Log fatal errors.
     ini_set('log_errors', 1);
-    ini_set('error_log', $public_files_directory . '/error.log');
+    ini_set('error_log', $this->public_files_directory . '/error.log');
 
     // Set the test information for use in other parts of Drupal.
     $test_info = &$GLOBALS['drupal_test_info'];
     $test_info['test_run_id'] = $this->databasePrefix;
     $test_info['in_child_site'] = FALSE;
+
+    // Indicate the environment was set up correctly.
+    $this->setupEnvironment = TRUE;
+  }
+
+  /**
+   * Sets up a Drupal site for running functional and integration tests.
+   *
+   * Generates a random database prefix and installs Drupal with the specified
+   * installation profile in DrupalWebTestCase::$profile into the
+   * prefixed database. Afterwards, installs any additional modules specified by
+   * the test.
+   *
+   * After installation all caches are flushed and several configuration values
+   * are reset to the values of the parent site executing the test, since the
+   * default values may be incompatible with the environment in which tests are
+   * being executed.
+   *
+   * @param ...
+   *   List of modules to enable for the duration of the test. This can be
+   *   either a single array or a variable number of string arguments.
+   *
+   * @see DrupalWebTestCase::prepareDatabasePrefix()
+   * @see DrupalWebTestCase::changeDatabasePrefix()
+   * @see DrupalWebTestCase::prepareEnvironment()
+   */
+  protected function setUp() {
+    global $user, $language, $conf;
+
+    // Create the database prefix for this test.
+    $this->prepareDatabasePrefix();
+
+    // Prepare the environment for running tests.
+    $this->prepareEnvironment();
+    if (!$this->setupEnvironment) {
+      return FALSE;
+    }
+
+    // Reset all statics and variables to perform tests in a clean environment.
+    $conf = array();
+    drupal_static_reset();
+
+    // Change the database prefix.
+    // All static variables need to be reset before the database prefix is
+    // changed, since DrupalCacheArray implementations attempt to
+    // write back to persistent caches when they are destructed.
+    $this->changeDatabasePrefix();
+    if (!$this->setupDatabasePrefix) {
+      return FALSE;
+    }
 
     // Preset the 'install_profile' system variable, so the first call into
     // system_rebuild_module_data() (in drupal_install_system()) will register
@@ -1334,15 +1426,16 @@ class DrupalWebTestCase extends DrupalTestCase {
     // profile's hook_install() and other hook implementations are never invoked.
     $conf['install_profile'] = $this->profile;
 
+    // Perform the actual Drupal installation.
     include_once DRUPAL_ROOT . '/includes/install.inc';
     drupal_install_system();
 
     $this->preloadRegistry();
 
     // Set path variables.
-    variable_set('file_public_path', $public_files_directory);
-    variable_set('file_private_path', $private_files_directory);
-    variable_set('file_temporary_path', $temp_files_directory);
+    variable_set('file_public_path', $this->public_files_directory);
+    variable_set('file_private_path', $this->private_files_directory);
+    variable_set('file_temporary_path', $this->temp_files_directory);
 
     // Set the 'simpletest_parent_profile' variable to add the parent profile's
     // search path to the child site's search paths.
@@ -1385,18 +1478,20 @@ class DrupalWebTestCase extends DrupalTestCase {
     // the installation process.
     drupal_cron_run();
 
-    // Log in with a clean $user.
-    $this->originalUser = $user;
+    // Ensure that the session is not written to the new environment and replace
+    // the global $user session with uid 1 from the new test site.
     drupal_save_session(FALSE);
+    // Login as uid 1.
     $user = user_load(1);
 
     // Restore necessary variables.
     variable_set('install_task', 'done');
-    variable_set('clean_url', $clean_url_original);
+    variable_set('clean_url', $this->originalCleanUrl);
     variable_set('site_mail', 'simpletest@example.com');
     variable_set('date_default_timezone', date_default_timezone_get());
+
     // Set up English language.
-    unset($GLOBALS['conf']['language_default']);
+    unset($conf['language_default']);
     $language = language_default();
 
     // Use the test mail class instead of the default mail handler class.
@@ -1506,10 +1601,21 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Delete temporary files directory.
     file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10));
 
-    // Remove all prefixed tables (all the tables in the schema).
-    $schema = drupal_get_schema(NULL, TRUE);
-    foreach ($schema as $name => $table) {
-      db_drop_table($name);
+    // Remove all prefixed tables.
+    $tables = db_find_tables($this->databasePrefix . '%');
+    $connection_info = Database::getConnectionInfo('default');
+    $tables = db_find_tables($connection_info['default']['prefix']['default'] . '%');
+    if (empty($tables)) {
+      $this->fail('Failed to find test tables to drop.');
+    }
+    $prefix_length = strlen($connection_info['default']['prefix']['default']);
+    foreach ($tables as $table) {
+      if (db_drop_table(substr($table, $prefix_length))) {
+        unset($tables[$table]);
+      }
+    }
+    if (!empty($tables)) {
+      $this->fail('Failed to drop all prefixed tables.');
     }
 
     // Get back to the original connection.
@@ -1539,6 +1645,9 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Rebuild caches.
     $this->refreshVariables();
+
+    // Reset public files directory.
+    $GLOBALS['conf']['file_public_path'] = $this->originalFileDirectory;
 
     // Reset language.
     $language = $this->originalLanguage;
