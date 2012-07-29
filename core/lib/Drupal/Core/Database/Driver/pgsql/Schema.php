@@ -540,7 +540,23 @@ class Schema extends DatabaseSchema {
     // Remove old default.
     $this->fieldSetNoDefault($table, $field);
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING "' . $field . '"::' . $typecast);
+    // Convert field type.
+    // Usually, we do this via a simple typecast 'USING fieldname::type'. But
+    // the typecast does not work for conversions to bytea.
+    // @see http://www.postgresql.org/docs/current/static/datatype-binary.html
+    if ($spec['pgsql_type'] != 'bytea') {
+      $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING "' . $field . '"::' . $typecast);
+    }
+    else {
+      // Do not attempt to convert a field that is bytea already.
+      $table_information = $this->queryTableInformation($table);
+      if (!in_array($field, $table_information->blob_fields)) {
+        // Convert to a bytea type by using the SQL replace() function to
+        // convert any single backslashes in the field content to double
+        // backslashes ('\' to '\\').
+        $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING decode(replace("' . $field . '"' . ", '\\', '\\\\'), 'escape');");
+      }
+    }
 
     if (isset($spec['not null'])) {
       if ($spec['not null']) {
