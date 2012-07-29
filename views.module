@@ -1333,6 +1333,11 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
   $plugins = array();
 
   foreach ($definitions as $plugin_id => $plugin) {
+    // Skip plugins that don't conform to our key.
+    if ($key && (empty($plugin['type']) || $plugin['type'] != $key)) {
+      continue;
+    }
+
     if (empty($plugin['no ui']) && (empty($base) || empty($plugin['base']) || array_intersect($base, $plugin['base']))) {
       $plugins[$plugin_id] = $plugin['title'];
     }
