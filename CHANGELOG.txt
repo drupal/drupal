@@ -33,6 +33,8 @@ Drupal 7.15, xxxx-xx-xx (development version)
   translated into a particular language.
 - Reorganized the testing framework to split setUp() into specific sub-methods
   and fix several regressions in the process.
+- Fixed regression: Optional radio buttons with an empty, non-NULL default
+  value led to an illegal choice error when none were selected.
 
 Drupal 7.14 2012-05-02
 ----------------------
