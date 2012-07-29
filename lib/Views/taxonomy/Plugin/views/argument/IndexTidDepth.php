@@ -5,6 +5,11 @@
  * Definition of views_handler_argument_term_node_tid_depth.
  */
 
+namespace Views\taxonomy\Plugin\views\argument;
+
+use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Argument handler for taxonomy terms with depth.
  *
@@ -13,7 +18,13 @@
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_term_node_tid_depth extends views_handler_argument {
+
+/**
+ * @Plugin(
+ *   plugin_id = "taxonomy_index_tid_depth"
+ * )
+ */
+class IndexTidDepth extends ArgumentPluginBase {
   function option_definition() {
     $options = parent::option_definition();
 

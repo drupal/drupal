@@ -5,10 +5,21 @@
  * Definition of views_plugin_argument_default_taxonomy_tid.
  */
 
+namespace Views\taxonomy\Plugin\views\argument_default;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
+
 /**
  * Taxonomy tid default argument.
+ *
+ * @Plugin(
+ *   plugin_id = "taxonomy_tid",
+ *   title = @Translation("Taxonomy term ID from URL")
+ * )
  */
-class views_plugin_argument_default_taxonomy_tid extends views_plugin_argument_default {
+class Tid extends ArgumentDefaultPluginBase {
   function init(&$view, &$argument, $options) {
     parent::init($view, $argument, $options);
 

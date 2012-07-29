@@ -5,12 +5,23 @@
  * Definition of views_handler_filter_vocabulary_machine_name.
  */
 
+namespace Views\taxonomy\Plugin\views\filter;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\views\Plugin\views\filter\InOperator;
+
 /**
  * Filter by vocabulary machine name.
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_vocabulary_machine_name extends views_handler_filter_in_operator {
+
+/**
+ * @Plugin(
+ *   plugin_id = "vocabulary_machine_name"
+ * )
+ */
+class VocabularyMachineName extends InOperator {
   function get_value_options() {
     if (isset($this->value_options)) {
       return;

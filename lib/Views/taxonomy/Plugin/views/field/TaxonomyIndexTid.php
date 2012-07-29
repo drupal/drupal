@@ -5,12 +5,23 @@
  * Definition of views_handler_field_term_node_tid.
  */
 
+namespace Views\taxonomy\Plugin\views\field;
+
+use Drupal\views\Plugin\views\field\PrerenderList;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to display all taxonomy terms of a node.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_term_node_tid extends views_handler_field_prerender_list {
+
+/**
+ * @Plugin(
+ *   plugin_id = "taxonomy_index_tid"
+ * )
+ */
+class TaxonomyIndexTid extends PrerenderList {
   function init(&$view, &$options) {
     parent::init($view, $options);
     // @todo: Wouldn't it be possible to use $this->base_table and no if here?

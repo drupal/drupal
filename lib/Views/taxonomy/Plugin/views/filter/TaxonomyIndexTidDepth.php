@@ -5,6 +5,11 @@
  * Definition of views_handler_filter_term_node_tid_depth.
  */
 
+
+namespace Views\taxonomy\Plugin\views\filter;
+
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Filter handler for taxonomy terms with depth.
  *
@@ -13,7 +18,13 @@
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_term_node_tid_depth extends views_handler_filter_term_node_tid {
+
+/**
+ * @Plugin(
+ *   plugin_id = "taxonomy_index_tid_depth"
+ * )
+ */
+class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
   function operator_options($which = 'title') {
     return array(
       'or' => t('Is one of'),

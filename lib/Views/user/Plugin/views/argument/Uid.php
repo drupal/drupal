@@ -5,6 +5,9 @@
  * Definition of views_handler_argument_user_uid.
  */
 
+namespace Views\user\Plugin\views\argument;
+
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\argument\Numeric;
 
 /**
@@ -12,7 +15,13 @@ use Drupal\views\Plugin\views\argument\Numeric;
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_user_uid extends Numeric {
+
+/**
+ * @Plugin(
+ *   plugin_id = "user_uid"
+ * )
+ */
+class Uid extends Numeric {
   /**
    * Override the behavior of title(). Get the name of the user.
    *

@@ -5,6 +5,9 @@
  * Definition of views_handler_argument_users_roles_rid.
  */
 
+namespace Views\user\Plugin\views\argument;
+
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\argument\ManyToOne;
 
 /**
@@ -12,7 +15,13 @@ use Drupal\views\Plugin\views\argument\ManyToOne;
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_users_roles_rid extends ManyToOne {
+
+/**
+ * @Plugin(
+ *   plugin_id = "user_roles_rid"
+ * )
+ */
+class RolesRid extends ManyToOne {
   function title_query() {
     $titles = array();
 

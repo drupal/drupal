@@ -2,8 +2,13 @@
 
 /**
  * @file
- * Definition of views_handler_argument_term_node_tid_depth_modif.
+ * Definition of views_handler_argument_term_node_tid_depth_modifier.
  */
+
+namespace Views\taxonomy\Plugin\views\argument;
+
+use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Argument handler for to modify depth for a previous term.
@@ -13,7 +18,13 @@
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_term_node_tid_depth_modifier extends views_handler_argument {
+
+/**
+ * @Plugin(
+ *   plugin_id = "taxonomy_index_tid_depth_modifier"
+ * )
+ */
+class IndexTidDepthModifier extends ArgumentPluginBase {
   function options_form(&$form, &$form_state) { }
   function query($group_by = FALSE) { }
   function pre_query() {

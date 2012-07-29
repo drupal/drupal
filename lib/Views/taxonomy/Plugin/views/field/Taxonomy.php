@@ -5,13 +5,25 @@
  * Definition of views_handler_field_taxonomy.
  */
 
+
+namespace Views\taxonomy\Plugin\views\field;
+
+use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to provide simple renderer that allows linking to a taxonomy
  * term.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_taxonomy extends views_handler_field {
+
+/**
+ * @Plugin(
+ *   plugin_id = "taxonomy"
+ * )
+ */
+class Taxonomy extends FieldPluginBase {
   /**
    * Constructor to provide additional field to add.
    *

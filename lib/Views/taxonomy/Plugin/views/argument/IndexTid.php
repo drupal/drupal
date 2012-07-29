@@ -10,7 +10,18 @@
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_term_node_tid extends views_handler_argument_many_to_one {
+
+namespace Views\taxonomy\Plugin\views\argument;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\views\Plugin\views\argument\ManyToOne;
+
+/**
+ * @Plugin(
+ *   plugin_id = "taxonomy_index_tid"
+ * )
+ */
+class IndexTid extends ManyToOne {
   function option_definition() {
     $options = parent::option_definition();
     $options['set_breadcrumb'] = array('default' => FALSE, 'bool' => TRUE);

@@ -12,7 +12,18 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  *
  * @ingroup views_row_plugins
  */
-class views_plugin_row_user_view extends RowPluginBase {
+/**
+ * @Plugin(
+ *   plugin_id = "user",
+ *   title = @Translation("User"),
+ *   help = @Translation("Display the user with standard user view."),
+ *   base = {"users"},
+ *   uses_options = TRUE,
+ *   type = "normal",
+ *   help_topic = "style-users"
+ * )
+ */
+class View extends RowPluginBase {
   var $base_table = 'users';
   var $base_field = 'uid';
 

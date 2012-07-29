@@ -5,6 +5,9 @@
  * Definition of views_handler_argument_vocabulary_vid.
  */
 
+namespace Views\taxonomy\Plugin\views\argument;
+
+use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\argument\Numeric;
 
 /**
@@ -12,7 +15,13 @@ use Drupal\views\Plugin\views\argument\Numeric;
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_vocabulary_vid extends Numeric {
+
+/**
+ * @Plugin(
+ *   plugin_id = "vocabulary_vid"
+ * )
+ */
+class VocabularyVid extends Numeric {
   /**
    * Override the behavior of title(). Get the name of the vocabulary.
    */

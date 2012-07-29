@@ -26,14 +26,14 @@ function translation_views_data_alter(&$data) {
     'title' => t('Translation set node ID'),
     'help' => t('The ID of the translation set the content belongs to.'),
     'field' => array(
-      'handler' => 'views_handler_field_node',
+      'plugin_id' => 'node',
       'click sortable' => TRUE,
     ),
     'filter' => array(
       'plugin_id' => 'numeric',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_node_tnid',
+      'plugin_id' => 'node_tnid',
       'name field' => 'title', // the field to display in the summary.
       'numeric' => TRUE,
       'validate type' => 'tnid',
@@ -63,7 +63,7 @@ function translation_views_data_alter(&$data) {
       'base field' => 'tnid',
       'relationship table' => 'node',
       'relationship field' => 'nid',
-      'handler' => 'views_handler_relationship_translation',
+      'plugin_id' => 'translation',
       'label' => t('Translations'),
     ),
   );
@@ -74,7 +74,7 @@ function translation_views_data_alter(&$data) {
     'title' => t('Source translation'),
     'help' => t('Content that is either untranslated or is the original version of a translation set.'),
     'filter' => array(
-      'handler' => 'views_handler_filter_node_tnid',
+      'plugin_id' => 'node_tnid',
     ),
   );
 
@@ -84,7 +84,7 @@ function translation_views_data_alter(&$data) {
     'title' => t('Child translation'),
     'help' => t('Content that is a translation of a source translation.'),
     'filter' => array(
-      'handler' => 'views_handler_filter_node_tnid_child',
+      'plugin_id' => 'node_tnid_child',
     ),
   );
 
@@ -113,7 +113,7 @@ function translation_views_data_alter(&$data) {
     'title' => t('Translate link'),
     'help' => t('Provide a simple link to translate the node.'),
     'field' => array(
-      'handler' => 'views_handler_field_node_link_translate',
+      'plugin_id' => 'node_link_translate',
     ),
   );
 

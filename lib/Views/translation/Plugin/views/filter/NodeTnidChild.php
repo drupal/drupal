@@ -5,12 +5,23 @@
  * Definition of views_handler_filter_node_tnid_child.
  */
 
+namespace Views\translation\Plugin\views\filter;
+
+use Drupal\views\Plugin\views\filter\FilterPluginBase;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Filter by whether the node is not the original translation.
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_node_tnid_child extends views_handler_filter {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_tnid_child"
+ * )
+ */
+class NodeTnidChild extends FilterPluginBase {
   function admin_summary() { }
   function operator_form(&$form, &$form_state) { }
   function can_expose() { return FALSE; }

@@ -5,15 +5,24 @@
  * Definition of views_handler_relationship_node_term_data.
  */
 
+namespace Views\taxonomy\Plugin\views\relationship;
+
 use Drupal\views\Join;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Relationship handler to return the taxonomy terms of nodes.
  *
  * @ingroup views_relationship_handlers
  */
-class views_handler_relationship_node_term_data extends RelationshipPluginBase  {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_term_data"
+ * )
+ */
+class NodeTermData extends RelationshipPluginBase  {
   function init(&$view, &$options) {
     parent::init($view, $options);
 

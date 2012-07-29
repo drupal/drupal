@@ -5,12 +5,23 @@
  * Definition of views_handler_filter_term_node_tid.
  */
 
+namespace Views\taxonomy\Plugin\views\filter;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\views\Plugin\views\filter\ManyToOne;
+
 /**
  * Filter by term id.
  *
  * @ingroup views_filter_handlers
  */
-class views_handler_filter_term_node_tid extends views_handler_filter_many_to_one {
+
+/**
+ * @Plugin(
+ *   plugin_id = "taxonomy_index_tid"
+ * )
+ */
+class TaxonomyIndexTid extends ManyToOne {
   // Stores the exposed input for this filter.
   var $validated_exposed_input = NULL;
 

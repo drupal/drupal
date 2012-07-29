@@ -531,30 +531,6 @@ function user_views_data() {
  */
 function user_views_plugins() {
   return array(
-    'module' => 'views', // This just tells our themes are elsewhere.
-    'row' => array(
-      'user' => array(
-        'title' => t('User'),
-        'help' => t('Display the user with standard user view.'),
-        'handler' => 'views_plugin_row_user_view',
-        'base' => array('users'), // only works with 'users' as base.
-        'uses options' => TRUE,
-        'type' => 'normal',
-        'help topic' => 'style-users',
-      ),
-    ),
-    'argument default' => array(
-      'user' => array(
-        'title' => t('User ID from URL'),
-        'handler' => 'views_plugin_argument_default_user',
-        'path' => drupal_get_path('module', 'views') . '/modules/user', // not necessary for most modules
-      ),
-      'current_user' => array(
-        'title' => t('User ID from logged in user'),
-        'handler' => 'views_plugin_argument_default_current_user',
-        'path' => drupal_get_path('module', 'views') . '/modules/user', // not necessary for most modules
-      ),
-    ),
     'argument validator' => array(
       'user' => array(
         'title' => t('User'),

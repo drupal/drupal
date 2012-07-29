@@ -5,6 +5,10 @@
  * Definition of views_plugin_argument_validate_user.
  */
 
+namespace Views\user\Plugin\views\argument_validator;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
 /**
@@ -13,8 +17,13 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  * This supports either numeric arguments (UID) or strings (username) and
  * converts either one into the user's UID.  This validator also sets the
  * argument's title to the username.
+ *
+ * @Plugin(
+ *   plugin_id = "user",
+ *   title = @Translation("User"),
+ * )
  */
-class views_plugin_argument_validate_user extends ArgumentValidatorPluginBase {
+class User extends ArgumentValidatorPluginBase {
   function option_definition() {
     $options = parent::option_definition();
     $options['type'] = array('default' => 'uid');

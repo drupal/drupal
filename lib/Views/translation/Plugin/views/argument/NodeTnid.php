@@ -5,12 +5,23 @@
  * Provide node tnid argument handler.
  */
 
+namespace Views\translation\Plugin\views\argument;
+
+use Drupal\views\Plugin\views\argument\Numeric;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Argument handler to accept a node translation id.
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_node_tnid extends views_handler_argument_numeric {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_tnid"
+ * )
+ */
+class NodeTnid extends Numeric {
   /**
    * Override the behavior of title(). Get the title of the node.
    */

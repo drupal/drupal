@@ -5,8 +5,11 @@
  * Definition of views_handler_relationship_translation.
  */
 
+namespace Views\translation\Plugin\views\relationship;
+
 use Drupal\views\Join;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Handles relationships for content translation sets and provides multiple
@@ -14,7 +17,13 @@ use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
  *
  * @ingroup views_relationship_handlers
  */
-class views_handler_relationship_translation extends RelationshipPluginBase {
+
+/**
+ * @Plugin(
+ *   plugin_id = "translation"
+ * )
+ */
+class Translation extends RelationshipPluginBase {
   function option_definition() {
     $options = parent::option_definition();
     $options['language'] = array('default' => 'current');

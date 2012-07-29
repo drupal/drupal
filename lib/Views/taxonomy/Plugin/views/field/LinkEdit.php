@@ -5,12 +5,23 @@
  * Definition of views_handler_field_term_link_edit.
  */
 
+namespace Views\taxonomy\Plugin\views\field;
+
+use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to present a term edit link.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_term_link_edit extends views_handler_field {
+
+/**
+ * @Plugin(
+ *   plugin_id = "term_link_edit"
+ * )
+ */
+class LinkEdit extends FieldPluginBase {
   function construct() {
     parent::construct();
     $this->additional_fields['tid'] = 'tid';

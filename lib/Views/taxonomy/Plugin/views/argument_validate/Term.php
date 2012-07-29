@@ -5,10 +5,22 @@
  * Contains the 'taxonomy term' argument validator plugin.
  */
 
+
+namespace Views\taxonomy\Plugin\views\argument_validator;
+
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
+
+
 /**
  * Validate whether an argument is an acceptable node.
+ *
+ * @Plugin(
+ *   plugin_id = "taxonomy_term",
+ *   title = @Translation("Taxonomy term")
  */
-class views_plugin_argument_validate_taxonomy_term extends views_plugin_argument_validate {
+class Term extends ArgumentValidatorPluginBase {
   function init(&$view, &$argument, $options) {
     parent::init($view, $argument, $options);
 

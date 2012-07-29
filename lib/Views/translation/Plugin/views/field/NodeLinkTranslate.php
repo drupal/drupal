@@ -5,12 +5,23 @@
  * Definition of views_handler_field_node_link_translate.
  */
 
+namespace Views\translation\Plugin\views\field;
+
+use Views\node\Plugin\views\field\Link;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Field handler to present a link node translate.
  *
  * @ingroup views_field_handlers
  */
-class views_handler_field_node_link_translate extends views_handler_field_node_link {
+
+/**
+ * @Plugin(
+ *   plugin_id = "node_link_translate"
+ * )
+ */
+class NodeLinkTranslate extends Link {
   function render_link($data, $values) {
     // ensure user has access to edit this node.
     $node = $this->get_value($values);

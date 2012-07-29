@@ -5,12 +5,23 @@
  * Definition of views_handler_argument_taxonomy.
  */
 
+namespace Views\taxonomy\Plugin\views\argument;
+
+use Drupal\views\Plugin\views\argument\Numeric;
+use Drupal\Core\Annotation\Plugin;
+
 /**
  * Argument handler for basic taxonomy tid.
  *
  * @ingroup views_argument_handlers
  */
-class views_handler_argument_taxonomy extends views_handler_argument_numeric {
+
+/**
+ * @plugin(
+ *   plugin_id = "taxonomy"
+ * )
+ */
+class Taxonomy extends Numeric {
 
   /**
    * Override the behavior of title(). Get the title of the node.
