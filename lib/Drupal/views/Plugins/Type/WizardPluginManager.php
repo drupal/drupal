@@ -9,7 +9,7 @@ namespace Drupal\views\Plugins\Type;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Views\Plugins\Discovery\ViewsDiscovery;
+use Drupal\views\Plugins\Discovery\ViewsDiscovery;
 
 class WizardPluginManager extends PluginManagerBase {
   public function __construct() {
