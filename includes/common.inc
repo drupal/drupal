@@ -6493,7 +6493,7 @@ function drupal_array_set_nested_value(array &$array, array $parents, $value, $f
  *
  * @see drupal_array_set_nested_value()
  */
-function drupal_array_get_nested_value(array &$array, array $parents, &$key_exists = NULL) {
+function &drupal_array_get_nested_value(array &$array, array $parents, &$key_exists = NULL) {
   $ref = &$array;
   foreach ($parents as $parent) {
     if (is_array($ref) && array_key_exists($parent, $ref)) {
@@ -6501,7 +6501,8 @@ function drupal_array_get_nested_value(array &$array, array $parents, &$key_exis
     }
     else {
       $key_exists = FALSE;
-      return NULL;
+      $null = NULL;
+      return $null;
     }
   }
   $key_exists = TRUE;

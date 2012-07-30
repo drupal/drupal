@@ -41,6 +41,8 @@ Drupal 7.15, xxxx-xx-xx (development version)
   "Main page content" and "System help" blocks to appropriate regions by
   default and prevent error messages on the block administration page (data
   structure change).
+- Changed the drupal_array_get_nested_value() function to return a reference
+  (API addition).
 
 Drupal 7.14 2012-05-02
 ----------------------
