@@ -43,6 +43,8 @@ Drupal 7.15, xxxx-xx-xx (development version)
   structure change).
 - Changed the drupal_array_get_nested_value() function to return a reference
   (API addition).
+- Fixed database errors due to ambiguous column names that occurred when
+  EntityFieldQuery was used in certain situations.
 
 Drupal 7.14 2012-05-02
 ----------------------

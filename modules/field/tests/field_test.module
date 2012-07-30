@@ -259,3 +259,14 @@ function field_test_field_widget_form_alter(&$element, &$form_state, $context) {
       break;
   }
 }
+
+/**
+ * Implements hook_query_TAG_alter() for tag 'efq_table_prefixing_test'.
+ *
+ * @see EntityFieldQueryTestCase::testTablePrefixing()
+ */
+function field_test_query_efq_table_prefixing_test_alter(&$query) {
+  // Add an additional join onto the entity base table. This will cause an
+  // exception if the EFQ does not properly prefix the base table.
+  $query->join('test_entity','te2','%alias.ftid = test_entity.ftid');
+}

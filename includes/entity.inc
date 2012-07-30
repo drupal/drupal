@@ -1204,7 +1204,7 @@ class EntityFieldQuery {
     $select_query->addExpression(':entity_type', 'entity_type', array(':entity_type' => $entity_type));
     // Process the property conditions.
     foreach ($this->propertyConditions as $property_condition) {
-      $this->addCondition($select_query, "$base_table." . $property_condition['column'], $property_condition);
+      $this->addCondition($select_query, $base_table . '.' . $property_condition['column'], $property_condition);
     }
     // Process the four possible entity condition.
     // The id field is always present in entity keys.
@@ -1212,7 +1212,7 @@ class EntityFieldQuery {
     $id_map['entity_id'] = $sql_field;
     $select_query->addField($base_table, $sql_field, 'entity_id');
     if (isset($this->entityConditions['entity_id'])) {
-      $this->addCondition($select_query, $sql_field, $this->entityConditions['entity_id']);
+      $this->addCondition($select_query, $base_table . '.' . $sql_field, $this->entityConditions['entity_id']);
     }
 
     // If there is a revision key defined, use it.
@@ -1220,7 +1220,7 @@ class EntityFieldQuery {
       $sql_field = $entity_info['entity keys']['revision'];
       $select_query->addField($base_table, $sql_field, 'revision_id');
       if (isset($this->entityConditions['revision_id'])) {
-        $this->addCondition($select_query, $sql_field, $this->entityConditions['revision_id']);
+        $this->addCondition($select_query, $base_table . '.' . $sql_field, $this->entityConditions['revision_id']);
       }
     }
     else {
@@ -1245,7 +1245,13 @@ class EntityFieldQuery {
     }
     $id_map['bundle'] = $sql_field;
     if (isset($this->entityConditions['bundle'])) {
-      $this->addCondition($select_query, $sql_field, $this->entityConditions['bundle'], $having);
+      if (!empty($entity_info['entity keys']['bundle'])) {
+        $this->addCondition($select_query, $base_table . '.' . $sql_field, $this->entityConditions['bundle'], $having);
+      }
+      else {
+        // This entity has no bundle, so invalidate the query.
+        $select_query->where('1 = 0');
+      }
     }
 
     // Order the query.
@@ -1258,7 +1264,7 @@ class EntityFieldQuery {
         $select_query->orderBy($id_map[$key], $order['direction']);
       }
       elseif ($order['type'] == 'property') {
-        $select_query->orderBy("$base_table." . $order['specifier'], $order['direction']);
+        $select_query->orderBy($base_table . '.' . $order['specifier'], $order['direction']);
       }
     }
 
