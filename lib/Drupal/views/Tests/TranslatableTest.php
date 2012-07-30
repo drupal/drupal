@@ -40,14 +40,12 @@ class TranslatableTest extends ViewsSqlTest {
     $view = $this->view_unpack_translatable();
     $view->init_localization();
 
-    // @todo is this the correct fix?
-    $localization_instance = views_get_plugin('localization', $view->localization_plugin);
-    $this->assertEqual('LocalizationTest', get_class($localization_instance), 'Make sure that init_localization initializes the right translation plugin');
+    $this->assertEqual('LocalizationTest', get_class($view->localization_plugin), 'Make sure that init_localization initializes the right translation plugin');
 
     $view->export_locale_strings();
 
     $expected_strings = $this->strings;
-    $result_strings = $localization_instance->get_export_strings();
+    $result_strings = $view->localization_plugin->get_export_strings();
     $this->assertEqual(sort($expected_strings), sort($result_strings), 'Make sure that the localization plugin got every translatable string.');
   }
 
