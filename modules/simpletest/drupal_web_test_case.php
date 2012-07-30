@@ -566,14 +566,21 @@ abstract class DrupalTestCase {
   /**
    * Generates a random string of ASCII characters of codes 32 to 126.
    *
-   * The generated string includes alpha-numeric characters and common misc
-   * characters. Use this method when testing general input where the content
-   * is not restricted.
+   * The generated string includes alpha-numeric characters and common
+   * miscellaneous characters. Use this method when testing general input
+   * where the content is not restricted.
+   *
+   * Do not use this method when special characters are not possible (e.g., in
+   * machine or file names that have already been validated); instead,
+   * use DrupalWebTestCase::randomName().
    *
    * @param $length
    *   Length of random string to generate.
+   *
    * @return
    *   Randomly generated string.
+   *
+   * @see DrupalWebTestCase::randomName()
    */
   public static function randomString($length = 8) {
     $str = '';
@@ -592,10 +599,16 @@ abstract class DrupalTestCase {
    * require machine readable values (i.e. without spaces and non-standard
    * characters) this method is best.
    *
+   * Do not use this method when testing unvalidated user input. Instead, use
+   * DrupalWebTestCase::randomString().
+   *
    * @param $length
    *   Length of random string to generate.
+   *
    * @return
    *   Randomly generated string.
+   *
+   * @see DrupalWebTestCase::randomString()
    */
   public static function randomName($length = 8) {
     $values = array_merge(range(65, 90), range(97, 122), range(48, 57));
