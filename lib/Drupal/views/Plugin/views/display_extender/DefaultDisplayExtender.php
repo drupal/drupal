@@ -1,6 +1,10 @@
 <?php
 
-namespace Drupal\views\Plugin\views\display_extender\DefaultDisplayExtender;
+/**
+ * Definition of Drupal\views\Plugin\views\display_extender\DefaultDisplayExtender.
+ */
+
+namespace Drupal\views\Plugin\views\display_extender;
 
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
