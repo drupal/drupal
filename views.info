@@ -3,11 +3,7 @@ description = Create customized lists and queries from your database.
 package = Views
 core = 8.x
 php = 5.2
+dependencies[] = ctools
 
 ; Always available CSS
 stylesheets[all][] = css/views.css
-
-dependencies[] = ctools
-
-; Tests
-files[] = tests/views_test/views_test.views_default.inc
