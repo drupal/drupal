@@ -4,5 +4,3 @@ package = Views
 core = 8.x
 configure = admin/structure/views
 dependencies[] = views
-files[] = views_ui.module
-files[] = plugins/views_wizard/views_ui_base_views_wizard.class.php
