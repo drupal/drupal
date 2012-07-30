@@ -576,7 +576,7 @@ function form_state_keys_no_cache() {
 }
 
 /**
- * Ensures an include file is loaded loaded whenever the form is processed.
+ * Ensures an include file is loaded whenever the form is processed.
  *
  * Example:
  * @code
