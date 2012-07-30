@@ -3019,15 +3019,19 @@ function system_update_7073() {
  * Convert menu_links query strings to arrays.
  */
 function system_update_7074() {
-  $mlids = db_select('menu_links', 'ml')
-    ->fields('ml', array('mlid'))
-    ->condition('options', '%query%', 'LIKE')
-    ->execute()->fetchCol();
-  foreach ($mlids as $mlid) {
-    $menu_link = menu_link_load($mlid);
-    if (is_string($menu_link['options']['query'])) {
+  $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('ml', array('mlid', 'options'))
+    ->condition('options', '%query%', 'LIKE');
+  foreach ($query->execute() as $menu_link) {
+    $menu_link['options'] = unserialize($menu_link['options']);
+    if (isset($menu_link['options']['query']) && is_string($menu_link['options']['query'])) {
       $menu_link['options']['query'] = drupal_get_query_array($menu_link['options']['query']);
-      menu_link_save($menu_link);
+      db_update('menu_links')
+        ->fields(array(
+          'options' => serialize($menu_link['options']),
+        ))
+        ->condition('mlid', $menu_link['mlid'], '=')
+        ->execute();
     }
   }
 }
