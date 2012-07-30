@@ -1200,7 +1200,6 @@ function views_include_handlers($reset = FALSE) {
 
   views_include('handlers');
   views_include('cache');
-  views_include('plugins');
   views_module_include('views', $reset);
   $finished = TRUE;
 }
