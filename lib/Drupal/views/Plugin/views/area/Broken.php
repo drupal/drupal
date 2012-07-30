@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\sort\Broken
+ * Definition of Drupal\views\Plugin\views\area\Broken
  */
 
 namespace Drupal\views\Plugin\views\area;

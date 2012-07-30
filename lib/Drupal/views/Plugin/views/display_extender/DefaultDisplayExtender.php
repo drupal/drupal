@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\views\Plugin\views\display_extender;
+namespace Drupal\views\Plugin\views\display_extender\DefaultDisplayExtender;
 
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;

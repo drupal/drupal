@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\views_display.
+ * Definition of Drupal\views\ViewsDisplay.
  */
 
 namespace Drupal\views;

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\views\ManyToOneHelper.
+ */
+
 namespace Drupal\views;
 
 /**

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provides the interface and base class for Views Wizard plugins.
+ * Definition of Drupal\views\Plugin\views\wizard\WizardPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\wizard;
@@ -12,6 +12,7 @@ use Drupal\views\Plugin\views\wizard\WizardInterface;
 
 /**
  * A very generic Views Wizard class - can be constructed for any base table.
+ * Provides the interface and base class for Views Wizard plugins.
  */
 abstract class WizardPluginBase implements WizardInterface {
   protected $base_table;

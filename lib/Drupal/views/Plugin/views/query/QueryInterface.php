@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Definition of Drupal\views\Plugin\Query\QueryInterface.
+ * Definition of Drupal\views\Plugin\query\QueryInterface.
  */
 
 namespace Drupal\views\Plugin\views\query;

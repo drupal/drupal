@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\views\Plugin\Discovery;
+
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 
 /**
