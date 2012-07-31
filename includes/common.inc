@@ -6219,7 +6219,19 @@ function element_info_property($type, $property_name, $default = NULL) {
 }
 
 /**
- * Function used by uasort to sort structured arrays by weight, without the property weight prefix.
+ * Sorts a structured array by the 'weight' element.
+ *
+ * Note that the sorting is by the 'weight' array element, not by the render
+ * element property '#weight'.
+ *
+ * Callback for uasort() used in various functions.
+ *
+ * @param $a
+ *   First item for comparison. The compared items should be associative arrays
+ *   that optionally include a 'weight' element. For items without a 'weight'
+ *   element, a default value of 0 will be used.
+ * @param $b
+ *   Second item for comparison.
  */
 function drupal_sort_weight($a, $b) {
   $a_weight = (is_array($a) && isset($a['weight'])) ? $a['weight'] : 0;
