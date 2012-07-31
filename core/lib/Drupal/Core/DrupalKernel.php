@@ -23,9 +23,8 @@ class DrupalKernel extends Kernel {
       new CoreBundle(),
     );
 
-    // TODO: Somehow remove the necessity of calling system_list() to find out which
-    // bundles exist.
-
+    // TODO: Remove the necessity of calling system_list() to find out which
+    // bundles exist. See http://drupal.org/node/1331486
     $modules = array_keys(system_list('module_enabled'));
     foreach ($modules as $module) {
       $camelized = ContainerBuilder::camelize($module);

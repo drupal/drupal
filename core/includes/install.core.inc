@@ -1412,6 +1412,7 @@ function install_bootstrap_full(&$install_state) {
   // Clear the module list that was overriden earlier in the process.
   // This will allow all freshly installed modules to be loaded.
   module_list_reset();
+  // @todo Figure out how best to handle the Kernel constructor parameters.
   $kernel = new DrupalKernel('prod', FALSE);
   $kernel->boot();
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
