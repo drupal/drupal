@@ -1290,7 +1290,7 @@ function views_get_handler($table, $field, $key, $override = NULL) {
     'table' => $table,
     'field' => $field,
   );
-  return _views_create_handler($broken, 'handler', $key);
+  return _views_create_handler($key, $broken);
 }
 
 /**
@@ -1369,7 +1369,7 @@ function views_get_plugin($type, $plugin_id, $reset = FALSE) {
   $manager = new ViewsPluginManager($type);
   $definition = $manager->getDefinition($plugin_id);
   if (!empty($definition)) {
-    return _views_create_plugin($type, $plugin_id, $definition);
+    return _views_create_plugin($type, $definition);
   }
 }
 

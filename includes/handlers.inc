@@ -13,24 +13,19 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * Instantiate and construct a new plugin.
- *
- * @todo
- * Figure out what to keep from _views_create_handler.
  */
-function _views_create_plugin($type, $plugin_id, $definition) {
+function _views_create_plugin($type, $definition) {
   $manager = new ViewsPluginManager($type);
-
-  $instance = $manager->createInstance($plugin_id);
+  $instance = $manager->createInstance($definition['plugin_id']);
 
   $instance->is_plugin = TRUE;
   $instance->plugin_type = $type;
-  $instance->plugin_name = $plugin_id;
+  $instance->plugin_name = $definition['plugin_id'];
 
   $instance->set_definition($definition);
 
   // Let the handler have something like a constructor.
   $instance->construct();
-
 
   return $instance;
 }
@@ -38,25 +33,19 @@ function _views_create_plugin($type, $plugin_id, $definition) {
 /**
  * Instantiate and construct a new handler
  */
-function _views_create_handler($definition, $type = 'handler', $handler_type = NULL) {
-  if (!empty($definition['plugin_id'])) {
-    $manager = new ViewsPluginManager($handler_type);
-    $handler = $manager->createInstance($definition['plugin_id']);
-  }
-  else {
-    // @todo: remove this else, once all instances got converted.
-    $handler = new $definition['handler']($definition, $definition['handler']);
-  }
+function _views_create_handler($type, $definition) {
+  $manager = new ViewsPluginManager($type);
+  $instance = $manager->createInstance($definition['plugin_id']);
 
-  $handler->set_definition($definition);
+  $instance->is_handler = TRUE;
+  $instance->handler_type = $type;
 
-  $handler->is_handler = TRUE;
-  $handler->handler_type = $handler_type;
+  $instance->set_definition($definition);
 
   // let the handler have something like a constructor.
-  $handler->construct();
+  $instance->construct();
 
-  return $handler;
+  return $instance;
 }
 
 /**
@@ -76,7 +65,7 @@ function _views_prepare_handler($definition, $data, $field, $type) {
     }
   }
 
-  return _views_create_handler($definition, 'handler', $type);
+  return _views_create_handler($type, $definition);
 }
 
 /**
