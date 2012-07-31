@@ -213,7 +213,7 @@ function comment_views_data() {
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
       'field' => 'changed',
-      'handler' => 'views_handler_argument_node_created_fulldate',
+      'plugin_id' => 'node_created_fulldate',
     ),
   );
 
@@ -223,7 +223,7 @@ function comment_views_data() {
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
       'field' => 'changed',
-      'handler' => 'views_handler_argument_node_created_year_month',
+      'plugin_id' => 'node_created_year_month',
     ),
   );
 
@@ -233,7 +233,7 @@ function comment_views_data() {
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
       'field' => 'changed',
-      'handler' => 'views_handler_argument_node_created_year',
+      'plugin_id' => 'node_created_year',
     ),
   );
 
@@ -243,7 +243,7 @@ function comment_views_data() {
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
       'field' => 'changed',
-      'handler' => 'views_handler_argument_node_created_month',
+      'plugin_id' => 'node_created_month',
     ),
   );
 
@@ -253,7 +253,7 @@ function comment_views_data() {
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
       'field' => 'changed',
-      'handler' => 'views_handler_argument_node_created_day',
+      'plugin_id' => 'node_created_day',
     ),
   );
 
@@ -263,7 +263,7 @@ function comment_views_data() {
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
       'field' => 'changed',
-      'handler' => 'views_handler_argument_node_created_week',
+      'plugin_id' => 'node_created_week',
     ),
   );
 
@@ -387,7 +387,7 @@ function comment_views_data() {
       'plugin_id' => 'numeric',
     ),
     'field' => array(
-      'handler' => 'views_handler_field_user',
+      'plugin_id' => 'user',
     ),
   );
 

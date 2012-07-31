@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  *
  * @Plugin(
  *   plugin_id = "current_user",
- *   title = @Translation("User ID from logged in user"),
+ *   title = @Translation("User ID from logged in user")
  * )
  */
 class CurrentUser extends ArgumentDefaultPluginBase {

@@ -10,20 +10,20 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests the core views_handler_filter_in_operator handler.
+ * Tests the core in_operator handler.
  */
 class FilterInOperatorTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Filter: in_operator',
-      'description' => 'Test the core views_handler_filter_in_operator handler.',
+      'description' => 'Test the core in_operator handler.',
       'group' => 'Views Handlers',
     );
   }
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['age']['filter']['handler'] = 'views_handler_filter_in_operator';
+    $data['views_test']['age']['filter']['handler'] = 'in_operator';
 
     return $data;
   }

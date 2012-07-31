@@ -49,7 +49,7 @@ function image_field_views_data_views_data_alter(&$data, $field) {
     $data['file_managed'][$pseudo_field_name]['relationship'] = array(
       'title' => t('@entity using @field', array('@entity' => $entity, '@field' => $label)),
       'help' => t('Relate each @entity with a @field set to the image.', array('@entity' => $entity, '@field' => $label)),
-      'handler' => 'views_handler_relationship_entity_reverse',
+      'plugin_id' => 'entity_reverse',
       'field_name' => $field['field_name'],
       'field table' => _field_sql_storage_tablename($field),
       'field field' => $field['field_name'] . '_fid',

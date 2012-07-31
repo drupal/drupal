@@ -146,7 +146,7 @@ function statistics_views_data() {
     'help' => t('Title of page visited.'),
 
     'field' => array(
-      'handler' => 'views_handler_field_accesslog_path',
+      'plugin_id' => 'statistics_accesslog_path',
       'click sortable' => TRUE,
      ),
      'filter' => array(
@@ -166,7 +166,7 @@ function statistics_views_data() {
     'help' => t('Internal path to page visited (relative to Drupal root.)'),
 
     'field' => array(
-      'handler' => 'views_handler_field_accesslog_path',
+      'plugin_id' => 'statistics_accesslog_path',
       'click sortable' => TRUE,
      ),
      'filter' => array(
