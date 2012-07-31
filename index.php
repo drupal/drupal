@@ -18,23 +18,19 @@ use Symfony\Component\HttpFoundation\Request;
  * Root directory of Drupal installation.
  */
 define('DRUPAL_ROOT', getcwd());
-// Bootstrap the lowest level of what we need.
-require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
-drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
-
-// Create a request object from the HTTPFoundation.
-$request = Request::createFromGlobals();
 
 // Bootstrap all of Drupal's subsystems, but do not initialize anything that
 // depends on the fully resolved Drupal path, because path resolution happens
 // during the REQUEST event of the kernel.
 // @see Drupal\Core\EventSubscriber\PathSubscriber;
 // @see Drupal\Core\EventSubscriber\LegacyRequestSubscriber;
+require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
 $kernel = new DrupalKernel('prod', FALSE);
-$kernel->boot();
 
+// Create a request object from the HTTPFoundation.
+$request = Request::createFromGlobals();
 $response = $kernel->handle($request)->prepare($request)->send();
 
 $kernel->terminate($request, $response);
