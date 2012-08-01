@@ -472,6 +472,32 @@ function node_type_get_name($node) {
 }
 
 /**
+ * Title callback: Returns the sanitized node type name.
+ *
+ * @param $node_type
+ *   The node type object.
+ *
+ * @return
+ *   The node type name that is safe for printing.
+ */
+function node_type_get_clean_name($node_type) {
+  return check_plain($node_type->name);
+}
+
+/**
+ * Description callback: Returns the node type description.
+ *
+ * @param $node_type
+ *   The node type object.
+ *
+ * @return
+ *   The node type description.
+ */
+function node_type_get_description($node_type) {
+  return $node_type->description;
+}
+
+/**
  * Updates the database cache of node types.
  *
  * All new module-defined node types are saved to the database via a call to
@@ -1940,19 +1966,17 @@ function node_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  // @todo Remove this loop when we have a 'description callback' property.
-  foreach (node_type_get_types() as $type) {
-    $items['node/add/' . $type->type] = array(
-      'title' => $type->name,
-      'title callback' => 'check_plain',
-      'page callback' => 'node_add',
-      'page arguments' => array($type->type),
-      'access callback' => 'node_access',
-      'access arguments' => array('create', $type->type),
-      'description' => $type->description,
-      'file' => 'node.pages.inc',
-    );
-  }
+  $items['node/add/%node_type'] = array(
+    'title callback' => 'node_type_get_clean_name',
+    'title arguments' => array(2),
+    'page callback' => 'node_add',
+    'page arguments' => array(2),
+    'access callback' => 'node_access',
+    'access arguments' => array('create', 2),
+    'description callback' => 'node_type_get_description',
+    'description arguments' => array(2),
+    'file' => 'node.pages.inc',
+  );
   $items['node/%node'] = array(
     'title callback' => 'node_page_title',
     'title arguments' => array(1),
@@ -2890,9 +2914,9 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  *   - "update"
  *   - "delete"
  *   - "create"
- * @param Drupal\node\Node|string $node
+ * @param Drupal\node\Node|string|stdClass $node
  *   The node entity on which the operation is to be performed, or the node type
- *   (e.g., 'forum') for the 'create' operation.
+ *   object, or node type string (e.g., 'forum') for the 'create' operation.
  * @param $account
  *   (optional) A user object representing the user for whom the operation is to
  *   be performed. Determines access for a user other than the current user.
@@ -2923,16 +2947,15 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
     $account = $GLOBALS['user'];
   }
 
-  // $node may be either an object or a node type. Since node types cannot be
-  // an integer, use either nid or type as the static cache id.
-
-  $cid = is_object($node) ? $node->nid : $node;
+  // $node may be a node object, a node type object, or a node type string.
+  // Use the node ID as the primary cache ID, or the node type name otherwise.
+  $cid = is_object($node) ? (isset($node->nid) ? $node->nid : $node->type) : $node;
 
   // If no language code was provided, default to the node's langcode or
   // to an empty langcode if a node type was requested. The latter is purely
   // for caching purposes.
   if (empty($langcode)) {
-    $langcode = is_object($node) ? $node->langcode : '';
+    $langcode = (is_object($node) && isset($node->nid)) ? $node->langcode : '';
   }
 
   // If we've already checked access for this node, user and op, return from

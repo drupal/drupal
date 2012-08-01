@@ -77,25 +77,25 @@ function theme_node_add_list($variables) {
 /**
  * Page callback: Provides the node submission form.
  *
- * @param $type
- *   The node type for the submitted node.
+ * @param $node_type
+ *   The node type object for the submitted node.
  *
  * @return
  *   Returns a node submission form.
  *
  * @see node_menu()
  */
-function node_add($type) {
+function node_add($node_type) {
   global $user;
 
-  $types = node_type_get_types();
+  $type = $node_type->type;
   $node = entity_create('node', array(
     'uid' => $user->uid,
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => $type,
     'langcode' => node_type_get_default_langcode($type)
   ));
-  drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)), PASS_THROUGH);
+  drupal_set_title(t('Create @name', array('@name' => $node_type->name)), PASS_THROUGH);
   $output = drupal_get_form($type . '_node_form', $node);
 
   return $output;
