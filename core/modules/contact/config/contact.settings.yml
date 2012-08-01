@@ -1,0 +1,4 @@
+flood:
+    limit: '5'
+    interval: '3600'
+user_default_enabled: '1'
