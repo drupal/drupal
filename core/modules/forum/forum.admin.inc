@@ -71,7 +71,7 @@ function forum_form_forum($form, &$form_state, $edit = array()) {
     '#description' => t('Forums are displayed in ascending order by weight (forums with equal weights are displayed alphabetically).'),
   );
 
-  $form['vid'] = array('#type' => 'hidden', '#value' => variable_get('forum_nav_vocabulary', ''));
+  $form['vid'] = array('#type' => 'hidden', '#value' => config('forum.settings')->get('vocabulary'));
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
   if ($edit['tid']) {
@@ -88,6 +88,7 @@ function forum_form_forum($form, &$form_state, $edit = array()) {
  * Form submission handler for forum_form_forum() and forum_form_container().
  */
 function forum_form_submit($form, &$form_state) {
+  $config = config('forum.settings');
   if ($form['form_id']['#value'] == 'forum_form_container') {
     $container = TRUE;
     $type = t('forum container');
@@ -104,9 +105,9 @@ function forum_form_submit($form, &$form_state) {
   switch ($status) {
     case SAVED_NEW:
       if ($container) {
-        $containers = variable_get('forum_containers', array());
+        $containers = $config->get('containers');
         $containers[] = $term->tid;
-        variable_set('forum_containers', $containers);
+        $config->set('containers', $containers)->save();
       }
       $form_state['values']['tid'] = $term->tid;
       drupal_set_message(t('Created new @type %term.', array('%term' => $form_state['values']['name'], '@type' => $type)));
@@ -118,7 +119,6 @@ function forum_form_submit($form, &$form_state) {
       break;
   }
   $form_state['redirect'] = 'admin/structure/forum';
-  return;
 }
 
 /**
@@ -148,6 +148,7 @@ function theme_forum_form($variables) {
  * @ingroup forms
  */
 function forum_form_container($form, &$form_state, $edit = array()) {
+  $config = config('forum.settings');
   $edit += array(
     'name' => '',
     'description' => '',
@@ -181,7 +182,7 @@ function forum_form_container($form, &$form_state, $edit = array()) {
 
   $form['vid'] = array(
     '#type' => 'hidden',
-    '#value' => variable_get('forum_nav_vocabulary', ''),
+    '#value' => $config->get('vocabulary'),
   );
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
@@ -235,29 +236,42 @@ function forum_confirm_delete_submit($form, &$form_state) {
  * @see system_settings_form()
  * @ingroup forms
  */
-function forum_admin_settings($form) {
+function forum_admin_settings($form, &$form_state) {
+  $config = config('forum.settings');
   $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500));
   $form['forum_hot_topic'] = array('#type' => 'select',
     '#title' => t('Hot topic threshold'),
-    '#default_value' => variable_get('forum_hot_topic', 15),
+    '#default_value' => $config->get('topics.hot_threshold'),
     '#options' => $number,
     '#description' => t('The number of replies a topic must have to be considered "hot".'),
   );
   $number = drupal_map_assoc(array(10, 25, 50, 75, 100));
   $form['forum_per_page'] = array('#type' => 'select',
     '#title' => t('Topics per page'),
-    '#default_value' => variable_get('forum_per_page', 25),
+    '#default_value' => $config->get('topics.page_limit'),
     '#options' => $number,
     '#description' => t('Default number of forum topics displayed per page.'),
   );
   $forder = array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4 => t('Posts - least active first'));
   $form['forum_order'] = array('#type' => 'radios',
     '#title' => t('Default order'),
-    '#default_value' => variable_get('forum_order', 1),
+    '#default_value' => $config->get('topics.order'),
     '#options' => $forder,
     '#description' => t('Default display order for topics.'),
   );
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+
+/**
+ * Form submission handler for forum_admin_settings().
+ */
+function forum_admin_settings_submit($form, &$form_state) {
+  config('forum.settings')
+    ->set('topics.hot_threshold', $form_state['values']['forum_hot_topic'])
+    ->set('topics.page_limit', $form_state['values']['forum_per_page'])
+    ->set('topics.order', $form_state['values']['forum_order'])
+    ->save();
 }
 
 /**
@@ -271,8 +285,9 @@ function forum_admin_settings($form) {
  */
 function forum_overview($form, &$form_state) {
   module_load_include('inc', 'taxonomy', 'taxonomy.admin');
+  $config = config('forum.settings');
 
-  $vid = variable_get('forum_nav_vocabulary', '');
+  $vid = $config->get('vocabulary');
   $vocabulary = taxonomy_vocabulary_load($vid);
   $form = taxonomy_overview_terms($form, $form_state, $vocabulary);
 
@@ -281,7 +296,7 @@ function forum_overview($form, &$form_state) {
       $term = $form[$key]['#term'];
       $form[$key]['view']['#href'] = 'forum/' . $term['tid'];
       unset($form[$key]['operations']['#links']['delete']);
-      if (in_array($form[$key]['#term']['tid'], variable_get('forum_containers', array()))) {
+      if (in_array($form[$key]['#term']['tid'], $config->get('containers'))) {
         $form[$key]['operations']['#links']['edit']['title'] = t('edit container');
         $form[$key]['operations']['#links']['edit']['href'] = 'admin/structure/forum/edit/container/' . $term['tid'];
       }
@@ -326,7 +341,7 @@ function _forum_parent_select($tid, $title, $child_type) {
     $parent = 0;
   }
 
-  $vid = variable_get('forum_nav_vocabulary', '');
+  $vid = config('forum.settings')->get('vocabulary');
   $children = taxonomy_get_tree($vid, $tid);
 
   // A term can't be the child of itself, nor of its children.

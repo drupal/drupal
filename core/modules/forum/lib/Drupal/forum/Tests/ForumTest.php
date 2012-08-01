@@ -215,7 +215,7 @@ class ForumTest extends WebTestBase {
    */
   function testAddOrphanTopic() {
     // Must remove forum topics to test creating orphan topics.
-    $vid = variable_get('forum_nav_vocabulary');
+    $vid = config('forum.settings')->get('vocabulary');
     $tree = taxonomy_get_tree($vid);
     foreach ($tree as $term) {
       taxonomy_term_delete($term->tid);
@@ -329,7 +329,7 @@ class ForumTest extends WebTestBase {
    */
   function editForumTaxonomy() {
     // Backup forum taxonomy.
-    $vid = variable_get('forum_nav_vocabulary', '');
+    $vid = config('forum.settings')->get('vocabulary');
     $original_settings = taxonomy_vocabulary_load($vid);
 
     // Generate a random name/description.
@@ -392,7 +392,7 @@ class ForumTest extends WebTestBase {
     $this->assertRaw(t('Created new @type %term.', array('%term' => $name, '@type' => t($type))), t(ucfirst($type) . ' was created'));
 
     // Verify forum.
-    $term = db_query("SELECT * FROM {taxonomy_term_data} t WHERE t.vid = :vid AND t.name = :name AND t.description = :desc", array(':vid' => variable_get('forum_nav_vocabulary', ''), ':name' => $name, ':desc' => $description))->fetchAssoc();
+    $term = db_query("SELECT * FROM {taxonomy_term_data} t WHERE t.vid = :vid AND t.name = :name AND t.description = :desc", array(':vid' => config('forum.settings')->get('vocabulary'), ':name' => $name, ':desc' => $description))->fetchAssoc();
     $this->assertTrue(!empty($term), 'The ' . $type . ' exists in the database');
 
     // Verify forum hierarchy.
@@ -420,7 +420,7 @@ class ForumTest extends WebTestBase {
 
     // Assert that the associated term has been removed from the
     // forum_containers variable.
-    $containers = variable_get('forum_containers', array());
+    $containers = config('forum.settings')->get('containers');
     $this->assertFalse(in_array($tid, $containers), 'The forum_containers variable has been updated.');
   }
 

@@ -65,7 +65,7 @@ class NodeAccessPagerTest extends WebTestBase {
    */
   public function testForumPager() {
     // Lookup the forums vocabulary vid.
-    $vid = variable_get('forum_nav_vocabulary', 0);
+    $vid = config('forum.settings')->get('vocabulary');
     $this->assertTrue($vid, t('Forum navigation vocabulary found.'));
 
     // Lookup the general discussion term.

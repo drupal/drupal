@@ -16,6 +16,8 @@ function forum_install() {
     ->execute();
   // Forum topics are published by default, but do not have any other default
   // options set (for example, they are not promoted to the front page).
+  // @todo Convert to default module configuration, once Node module's content
+  //   types are converted.
   variable_set('node_options_forum', array('status'));
 }
 
@@ -27,20 +29,32 @@ function forum_enable() {
   // field_associate_fields() as otherwise the field won't be enabled until
   // hook modules_enabled is called which takes place after hook_enable events.
   field_associate_fields('taxonomy');
+
   // Create the forum vocabulary if it does not exist.
-  $vocabulary = taxonomy_vocabulary_load(variable_get('forum_nav_vocabulary', 0));
+  // @todo Change Forum module so forum.settings can contain the vocabulary's
+  //   machine name.
+  $config = config('forum.settings');
+  // If the module was disabled only, the current config may contain a valid
+  // vocabulary ID already.
+  $vocabulary = taxonomy_vocabulary_load($config->get('vocabulary'));
   if (!$vocabulary) {
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
-      'name' => t('Forums'),
-      'machine_name' => 'forums',
-      'langcode' => language_default()->langcode,
-      'description' => t('Forum navigation vocabulary'),
-      'hierarchy' => 1,
-      'module' => 'forum',
-      'weight' => -10,
-    ));
-    taxonomy_vocabulary_save($vocabulary);
-    variable_set('forum_nav_vocabulary', $vocabulary->vid);
+    // If the module was installed and uninstalled previously, the vocabulary
+    // with machine name 'forums' might still exist.
+    $vocabulary = taxonomy_vocabulary_machine_name_load('forums');
+    if (!$vocabulary) {
+      // Otherwise, installing from scratch; create the vocabulary.
+      $vocabulary = entity_create('taxonomy_vocabulary', array(
+        'name' => t('Forums'),
+        'machine_name' => 'forums',
+        'langcode' => language_default()->langcode,
+        'description' => t('Forum navigation vocabulary'),
+        'hierarchy' => 1,
+        'module' => 'forum',
+        'weight' => -10,
+      ));
+      taxonomy_vocabulary_save($vocabulary);
+    }
+    $config->set('vocabulary', $vocabulary->vid)->save();
   }
 
   // Create the 'taxonomy_forums' field if it doesn't already exist.
@@ -82,11 +96,11 @@ function forum_enable() {
       'display' => array(
         'default' => array(
           'type' => 'taxonomy_term_reference_link',
-         'weight' => 10,
+          'weight' => 10,
         ),
         'teaser' => array(
           'type' => 'taxonomy_term_reference_link',
-         'weight' => 10,
+          'weight' => 10,
         ),
       ),
     );
@@ -106,12 +120,6 @@ function forum_uninstall() {
   // Load the dependent Taxonomy module, in case it has been disabled.
   drupal_load('module', 'taxonomy');
 
-  variable_del('forum_containers');
-  variable_del('forum_hot_topic');
-  variable_del('forum_per_page');
-  variable_del('forum_order');
-  variable_del('forum_block_num_active');
-  variable_del('forum_block_num_new');
   variable_del('node_options_forum');
 
   field_delete_field('taxonomy_forums');
@@ -245,4 +253,21 @@ function forum_schema() {
  */
 function forum_update_last_removed() {
   return 7003;
+}
+
+/**
+ * Moves forum settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function forum_update_8000() {
+  update_variables_to_config('forum.settings', array(
+    'forum_hot_topic' => 'topics.hot_threshold',
+    'forum_per_page' => 'topics.page_limit',
+    'forum_order' => 'topics.order',
+    'forum_nav_vocabulary' => 'vocabulary',
+    'forum_containers' => 'containers',
+    'forum_block_num_active' => 'block.active.limit',
+    'forum_block_num_new' => 'block.new.limit',
+  ));
 }

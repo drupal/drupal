@@ -63,7 +63,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
     // level and for a specific existing forum.
     $this->assertUrlInboundAlter('community', 'forum');
     $this->assertUrlOutboundAlter('forum', 'community');
-    $forum_vid = variable_get('forum_nav_vocabulary');
+    $forum_vid = config('forum.settings')->get('vocabulary');
     $tid = db_insert('taxonomy_term_data')
       ->fields(array(
         'name' => $this->randomName(),

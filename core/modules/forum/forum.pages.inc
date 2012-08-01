@@ -18,13 +18,14 @@
  * @see forum_menu()
  */
 function forum_page($forum_term = NULL) {
+  $config = config('forum.settings');
   if (!isset($forum_term)) {
     // On the main page, display all the top-level forums.
     $forum_term = forum_forum_load(0);
   }
 
-  $forum_per_page = variable_get('forum_per_page', 25);
-  $sortby = variable_get('forum_order', 1);
+  $forum_per_page = $config->get('topics.page_limit');
+  $sortby = $config->get('topics.order');
 
   if (empty($forum_term->container)) {
     $topics = forum_get_topics($forum_term->tid, $sortby, $forum_per_page);
