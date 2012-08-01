@@ -1623,12 +1623,6 @@ function user_menu() {
     'page arguments' => array(1),
     'access callback' => 'user_view_access',
     'access arguments' => array(1),
-    // By assigning a different menu name, this item (and all registered child
-    // paths) are no longer considered as children of 'user'. When accessing the
-    // user account pages, the preferred menu link that is used to build the
-    // active trail (breadcrumb) will be found in this menu (unless there is
-    // more specific link), so the link to 'user' will not be in the breadcrumb.
-    'menu_name' => 'navigation',
   );
 
   $items['user/%user/view'] = array(
@@ -1725,6 +1719,17 @@ function user_menu_link_alter(&$link) {
   // default (i.e., unless it has been customized).
   if ($link['link_path'] == 'user/logout' && $link['module'] == 'system' && empty($link['customized'])) {
     $link['plid'] = 0;
+  }
+}
+
+/**
+ * Implements hook_menu_breadcrumb_alter().
+ */
+function user_menu_breadcrumb_alter(&$active_trail, $item) {
+  // Remove "My account" from the breadcrumb when $item is descendant-or-self
+  // of system path user/%.
+  if (isset($active_trail[1]['module']) && $active_trail[1]['module'] == 'system' && $active_trail[1]['link_path'] == 'user' && strpos($item['path'], 'user/%') === 0) {
+    array_splice($active_trail, 1, 1);
   }
 }
 

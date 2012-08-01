@@ -407,7 +407,10 @@ class BreadcrumbTest extends MenuTestBase {
     $trail += array(
       'user/' . $this->web_user->uid => $this->web_user->name,
     );
-    $this->assertBreadcrumb('user/' . $this->web_user->uid . '/edit', $trail, $this->web_user->name);
+    $tree = array(
+      'user' => t('My account'),
+    );
+    $this->assertBreadcrumb('user/' . $this->web_user->uid . '/edit', $trail, $this->web_user->name, $tree);
 
     // Add a Navigation menu links for 'user' and $this->admin_user.
     // Although it may be faster to manage these links via low-level API
