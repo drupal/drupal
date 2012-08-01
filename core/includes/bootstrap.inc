@@ -3014,23 +3014,23 @@ function drupal_classloader() {
         break;
     }
 
-    // Register explicit PSR-0 vendor namespaces.
-    $loader->registerNamespaces(array(
-      // All Symfony-borrowed code lives in /core/vendor/symfony.
-      'Symfony\Component\ClassLoader' => DRUPAL_ROOT . '/core/vendor/symfony/class-loader',
-      'Symfony\Component\DependencyInjection' => DRUPAL_ROOT . '/core/vendor/symfony/dependency-injection',
-      'Symfony\Component\EventDispatcher' => DRUPAL_ROOT . '/core/vendor/symfony/event-dispatcher',
-      'Symfony\Component\HttpFoundation' => DRUPAL_ROOT . '/core/vendor/symfony/http-foundation',
-      'Symfony\Component\HttpKernel' => DRUPAL_ROOT . '/core/vendor/symfony/http-kernel',
-      'Symfony\Component\Routing' => DRUPAL_ROOT . '/core/vendor/symfony/routing',
-      'Symfony\Component\Yaml' => DRUPAL_ROOT . '/core/vendor/symfony/yaml',
-      'Doctrine\Common' => DRUPAL_ROOT . '/core/vendor/doctrine/common/lib',
-    ));
-    // Register PEAR-style vendor namespaces.
-    $loader->registerPrefixes(array(
-      // All Twig-borrowed code lives in /core/vendor/twig.
-      'Twig' => DRUPAL_ROOT . '/core/vendor/twig/twig/lib',
-    ));
+    // Register namespaces for vendor libraries managed by Composer.
+    $namespaces = require DRUPAL_ROOT . '/core/vendor/composer/autoload_namespaces.php';
+    $prefixes = array();
+    foreach ($namespaces as $namespace => $path) {
+      // Composer combines libraries that use PHP 5.3 namespaces and ones that
+      // use PEAR-style class prefixes in a single array, but the Symfony class
+      // loader requires them to be registered separately. PSR-0 disallows
+      // underscores in namespace names and requires at least one in a
+      // PEAR-style class prefix.
+      if (strpos($namespace, '_') !== FALSE) {
+        $prefixes[$namespace] = $path;
+        unset($namespaces[$namespace]);
+      }
+    }
+    $loader->registerPrefixes($prefixes);
+    $loader->registerNamespaces($namespaces);
+
     // Register the Drupal namespace for classes in core as a fallback.
     // This allows to register additional namespaces within the Drupal namespace
     // (e.g., for modules) and avoids an additional file_exists() on the Drupal
