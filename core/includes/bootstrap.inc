@@ -1393,25 +1393,6 @@ function bootstrap_hooks() {
 }
 
 /**
- * Unserializes and appends elements from a serialized string.
- *
- * @param $obj
- *   The object to which the elements are appended.
- * @param $field
- *   The attribute of $obj whose value should be unserialized.
- */
-function drupal_unpack($obj, $field = 'data') {
-  if ($obj->$field && $data = unserialize($obj->$field)) {
-    foreach ($data as $key => $value) {
-      if (!empty($key) && !isset($obj->$key)) {
-        $obj->$key = $value;
-      }
-    }
-  }
-  return $obj;
-}
-
-/**
  * Translates a string to the current language or to a given language.
  *
  * The t() function serves two purposes. First, at run-time it translates
