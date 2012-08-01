@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Component\Utility\NestedArray;
+
 /**
  * Defines the default configuration object.
  */
@@ -105,7 +107,7 @@ class Config {
 
     $name = $this->getName();
     if (isset($conf[$name])) {
-      $merged_data = drupal_array_merge_deep($this->data, $conf[$name]);
+      $merged_data = NestedArray::mergeDeepArray(array($this->data, $conf[$name]));
     }
     else {
       $merged_data = $this->data;
@@ -121,7 +123,7 @@ class Config {
       }
       else {
         $key_exists = NULL;
-        $value = drupal_array_get_nested_value($merged_data, $parts, $key_exists);
+        $value = NestedArray::getValue($merged_data, $parts, $key_exists);
         return $key_exists ? $value : NULL;
       }
     }
@@ -157,7 +159,7 @@ class Config {
       $this->data[$key] = $value;
     }
     else {
-      drupal_array_set_nested_value($this->data, $parts, $value);
+      NestedArray::setValue($this->data, $parts, $value);
     }
     return $this;
   }
@@ -213,7 +215,7 @@ class Config {
       unset($this->data[$key]);
     }
     else {
-      drupal_array_unset_nested_value($this->data, $parts);
+      NestedArray::unsetValue($this->data, $parts);
     }
     return $this;
   }

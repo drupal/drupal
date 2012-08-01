@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Database\Database;
@@ -6372,19 +6373,7 @@ function element_set_attributes(array &$element, array $map) {
  * @see drupal_array_unset_nested_value()
  */
 function &drupal_array_get_nested_value(array &$array, array $parents, &$key_exists = NULL) {
-  $ref = &$array;
-  foreach ($parents as $parent) {
-    if (is_array($ref) && array_key_exists($parent, $ref)) {
-      $ref = &$ref[$parent];
-    }
-    else {
-      $key_exists = FALSE;
-      $null = NULL;
-      return $null;
-    }
-  }
-  $key_exists = TRUE;
-  return $ref;
+  return NestedArray::getValue($array, $parents, $key_exists);
 }
 
 /**
@@ -6449,16 +6438,7 @@ function &drupal_array_get_nested_value(array &$array, array $parents, &$key_exi
  * @see drupal_array_get_nested_value()
  */
 function drupal_array_set_nested_value(array &$array, array $parents, $value, $force = FALSE) {
-  $ref = &$array;
-  foreach ($parents as $parent) {
-    // PHP auto-creates container arrays and NULL entries without error if $ref
-    // is NULL, but throws an error if $ref is set, but not an array.
-    if ($force && isset($ref) && !is_array($ref)) {
-      $ref = array();
-    }
-    $ref = &$ref[$parent];
-  }
-  $ref = $value;
+  NestedArray::setValue($array, $parents, $value, $force);
 }
 
 /**
@@ -6520,15 +6500,7 @@ function drupal_array_set_nested_value(array &$array, array $parents, $value, $f
  * @see drupal_array_get_nested_value()
  */
 function drupal_array_unset_nested_value(array &$array, array $parents, &$key_existed = NULL) {
-  $unset_key = array_pop($parents);
-  $ref = &drupal_array_get_nested_value($array, $parents, $key_existed);
-  if ($key_existed && is_array($ref) && array_key_exists($unset_key, $ref)) {
-    $key_existed = TRUE;
-    unset($ref[$unset_key]);
-  }
-  else {
-    $key_existed = FALSE;
-  }
+  NestedArray::unsetValue($array, $parents, $key_existed);
 }
 
 /**
@@ -6560,11 +6532,7 @@ function drupal_array_unset_nested_value(array &$array, array $parents, &$key_ex
  * @see drupal_array_get_nested_value()
  */
 function drupal_array_nested_key_exists(array $array, array $parents) {
-  // Although this function is similar to PHP's array_key_exists(), its
-  // arguments should be consistent with drupal_array_get_nested_value().
-  $key_exists = NULL;
-  drupal_array_get_nested_value($array, $parents, $key_exists);
-  return $key_exists;
+  return NestedArray::keyExists($array, $parents);
 }
 
 /**

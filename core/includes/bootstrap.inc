@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Database;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
@@ -2089,28 +2090,7 @@ function drupal_array_merge_deep() {
  * @see drupal_array_merge_deep()
  */
 function drupal_array_merge_deep_array($arrays) {
-  $result = array();
-
-  foreach ($arrays as $array) {
-    foreach ($array as $key => $value) {
-      // Renumber integer keys as array_merge_recursive() does. Note that PHP
-      // automatically converts array keys that are integer strings (e.g., '1')
-      // to integers.
-      if (is_integer($key)) {
-        $result[] = $value;
-      }
-      // Recurse when both values are arrays.
-      elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
-        $result[$key] = drupal_array_merge_deep_array(array($result[$key], $value));
-      }
-      // Otherwise, use the latter value, overriding any previous value.
-      else {
-        $result[$key] = $value;
-      }
-    }
-  }
-
-  return $result;
+  return NestedArray::mergeDeepArray($arrays);
 }
 
 /**
