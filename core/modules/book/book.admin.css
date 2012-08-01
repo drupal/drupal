@@ -7,6 +7,6 @@
 /**
  * Book outline on book edit form.
  */
-.js #edit-book-pick-book {
+.js .book-outline-form .form-submit {
   display: none;
 }
