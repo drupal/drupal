@@ -5,6 +5,7 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
+use Drupal\Core\Utility\ModuleInfo;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -2180,18 +2181,16 @@ function system_get_localized_date_format($languages) {
  * Adds CSS and JavaScript files declared in module .info files.
  */
 function system_add_module_assets() {
-  foreach (system_get_info('module') as $module => $info) {
-    if (!empty($info['stylesheets'])) {
-      foreach ($info['stylesheets'] as $media => $stylesheets) {
-        foreach ($stylesheets as $stylesheet) {
-          drupal_add_css($stylesheet, array('every_page' => TRUE, 'media' => $media));
-        }
+  foreach (system_get_module_info('stylesheets') as $module => $value) {
+    foreach ($value as $media => $stylesheets) {
+      foreach ($stylesheets as $stylesheet) {
+        drupal_add_css($stylesheet, array('every_page' => TRUE, 'media' => $media));
       }
     }
-    if (!empty($info['scripts'])) {
-      foreach ($info['scripts'] as $script) {
-        drupal_add_js($script, array('every_page' => TRUE));
-      }
+  }
+  foreach (system_get_module_info('scripts') as $module => $scripts) {
+    foreach ($scripts as $script) {
+      drupal_add_js($script, array('every_page' => TRUE));
     }
   }
 }
@@ -2597,18 +2596,44 @@ function system_update_files_database(&$files, $type) {
 function system_get_info($type, $name = NULL) {
   $info = array();
   if ($type == 'module') {
-    $type = 'module_enabled';
+    $result = db_query('SELECT name, info FROM {system} WHERE type = :type AND status = 1', array(':type' => 'module'));
+    foreach ($result as $record) {
+      $info[$record->name] = unserialize($record->info);
+    }
   }
-  $list = system_list($type);
-  foreach ($list as $shortname => $item) {
-    if (!empty($item->status)) {
-      $info[$shortname] = $item->info;
+  else {
+    $list = system_list($type);
+    foreach ($list as $shortname => $item) {
+      if (!empty($item->status)) {
+        $info[$shortname] = $item->info;
+      }
     }
   }
   if (isset($name)) {
     return isset($info[$name]) ? $info[$name] : array();
   }
   return $info;
+}
+
+/**
+ * Return .info data for modules.
+ *
+ * @param string $property
+ *   The .info property to retrieve.
+ *
+ * @return array
+ *   An array keyed by module name, with the .info file property as values.
+ *   Only modules with the property specified in their .info file will be
+ *   returned.
+ *
+ * @see Drupal\Core\Utility\ModuleInfo
+ */
+function system_get_module_info($property) {
+  static $info;
+  if (!isset($info)) {
+    $info = new ModuleInfo('system_info', 'cache');
+  }
+  return $info[$property];
 }
 
 /**

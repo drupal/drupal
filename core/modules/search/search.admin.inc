@@ -29,13 +29,9 @@ function search_reindex_confirm_submit(&$form, &$form_state) {
  * Helper function to get real module names.
  */
 function _search_get_module_names() {
-
   $search_info = search_get_info(TRUE);
-  $system_info = system_get_info('module');
-  $names = array();
-  foreach ($search_info as $module => $info) {
-    $names[$module] = $system_info[$module]['name'];
-  }
+  $names = system_get_module_info('name');
+  $names = array_intersect_key($names, $search_info);
   asort($names, SORT_STRING);
   return $names;
 }

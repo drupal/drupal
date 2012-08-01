@@ -83,14 +83,7 @@ function module_list($type = 'module_enabled', array $fixed_list = NULL) {
     $list = $module_list;
   }
   elseif (!isset($module_list)) {
-    if ($type == 'bootstrap') {
-      $list = system_list('bootstrap');
-    }
-    else {
-      // Not using drupal_map_assoc() here as that requires common.inc.
-      $list = array_keys(system_list($type));
-      $list = (!empty($list) ? array_combine($list, $list) : array());
-    }
+    $list = system_list($type);
   }
   return $list;
 }
@@ -115,9 +108,9 @@ function module_list_reset() {
  *
  * @return
  *   An associative array of modules or themes, keyed by name. For $type
- *   'bootstrap', the array values equal the keys. For $type 'module_enabled'
- *   or 'theme', the array values are objects representing the respective
- *   database row, with the 'info' property already unserialized.
+ *   'bootstrap' and 'module_enabled', the array values equal the keys.
+ *   For $type 'theme', the array values are objects representing the
+ *   respective database row, with the 'info' property already unserialized.
  *
  * @see module_list()
  * @see list_themes()
@@ -168,13 +161,13 @@ function system_list($type) {
       // consistent with the one used in module_implements().
       $result = db_query("SELECT * FROM {system} WHERE type = 'theme' OR (type = 'module' AND status = 1) ORDER BY weight ASC, name ASC");
       foreach ($result as $record) {
-        $record->info = unserialize($record->info);
         // Build a list of all enabled modules.
         if ($record->type == 'module') {
-          $lists['module_enabled'][$record->name] = $record;
+          $lists['module_enabled'][$record->name] = $record->name;
         }
         // Build a list of themes.
         if ($record->type == 'theme') {
+          $record->info = unserialize($record->info);
           $lists['theme'][$record->name] = $record;
         }
         // Build a list of filenames so drupal_get_filename can use it.
@@ -227,6 +220,7 @@ function system_list_reset() {
   drupal_static_reset('system_rebuild_module_data');
   drupal_static_reset('list_themes');
   cache('bootstrap')->deleteMultiple(array('bootstrap_modules', 'system_list'));
+  cache()->delete('system_info');
 }
 
 /**
