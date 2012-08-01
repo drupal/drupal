@@ -42,7 +42,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       //   does not yet support file uploads.
       $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
       $node = node_load($nid, NULL, TRUE);
-      $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
+      $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
       $this->assertFileExists($node_file, t('New file saved to disk on node creation.'));
 
       // Ensure the file can be downloaded.
@@ -218,7 +218,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->drupalPost("admin/structure/types/manage/$type_name/fields/$field_name", $edit, t('Save settings'));
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
+    $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $this->assertFileExists($node_file, t('New file saved to disk on node creation.'));
 
     // Ensure the private file is available to the user who uploaded it.
@@ -284,7 +284,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->drupalLogin($user);
 
     $comment = comment_load($cid);
-    $comment_file = (object) $comment->{'field_' . $name}[LANGUAGE_NOT_SPECIFIED][0];
+    $comment_file = file_load($comment->{'field_' . $name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $this->assertFileExists($comment_file, t('New file saved to disk on node creation.'));
     // Test authenticated file download.
     $url = file_create_url($comment_file->uri);

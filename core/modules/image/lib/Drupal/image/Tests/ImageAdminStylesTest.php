@@ -235,7 +235,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url($style_name, $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['uri']), t('Image displayed using style @style.', array('@style' => $style_name)));
+    $this->assertRaw(image_style_url($style_name, file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), t('Image displayed using style @style.', array('@style' => $style_name)));
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = strtolower($this->randomName(10));
@@ -245,7 +245,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPost('admin/config/media/image-styles/edit/' . $style_name, $edit, t('Update style'));
     $this->assertText(t('Changes to the style have been saved.'), t('Style %name was renamed to %new_name.', array('%name' => $style_name, '%new_name' => $new_style_name)));
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url($new_style_name, $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['uri']), t('Image displayed using style replacement style.'));
+    $this->assertRaw(image_style_url($new_style_name, file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), t('Image displayed using style replacement style.'));
 
     // Delete the style and choose a replacement style.
     $edit = array(
@@ -256,6 +256,6 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertRaw($message, $message);
 
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url('thumbnail', $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['uri']), t('Image displayed using style replacement style.'));
+    $this->assertRaw(image_style_url('thumbnail', file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), t('Image displayed using style replacement style.'));
   }
 }

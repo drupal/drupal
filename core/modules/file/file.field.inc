@@ -180,18 +180,23 @@ function _file_generic_settings_file_directory_validate($element, &$form_state) 
 }
 
 /**
- * Implements hook_field_load().
+ * Implements hook_field_prepare_view().
  */
-function file_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
-
+function file_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
+  // Remove files specified to not be displayed.
   $fids = array();
   foreach ($entities as $id => $entity) {
-    // Load the files from the files table.
     foreach ($items[$id] as $delta => $item) {
-      if (!empty($item['fid'])) {
+      if (!file_field_displayed($item, $field)) {
+        unset($items[$id][$delta]);
+      }
+      elseif (!empty($item['fid'])) {
+        // Load the files from the files table.
         $fids[] = $item['fid'];
       }
     }
+    // Ensure consecutive deltas.
+    $items[$id] = array_values($items[$id]);
   }
   $files = file_load_multiple($fids);
 
@@ -205,22 +210,6 @@ function file_field_load($entity_type, $entities, $field, $instances, $langcode,
         $items[$id][$delta] = array_merge($item, (array) $files[$item['fid']]);
       }
     }
-  }
-}
-
-/**
- * Implements hook_field_prepare_view().
- */
-function file_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
-  // Remove files specified to not be displayed.
-  foreach ($entities as $id => $entity) {
-    foreach ($items[$id] as $delta => $item) {
-      if (!file_field_displayed($item, $field)) {
-        unset($items[$id][$delta]);
-      }
-    }
-    // Ensure consecutive deltas.
-    $items[$id] = array_values($items[$id]);
   }
 }
 

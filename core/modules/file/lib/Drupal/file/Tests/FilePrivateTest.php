@@ -40,7 +40,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $test_file = $this->getTestFile('text');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name, TRUE, array('private' => TRUE));
     $node = node_load($nid, NULL, TRUE);
-    $node_file = (object) $node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0];
+    $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     // Ensure the file can be downloaded.
     $this->drupalGet(file_create_url($node_file->uri));
     $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));

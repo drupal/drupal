@@ -180,16 +180,11 @@ function _image_field_resolution_validate($element, &$form_state) {
 }
 
 /**
- * Implements hook_field_load().
- */
-function image_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
-  file_field_load($entity_type, $entities, $field, $instances, $langcode, $items, $age);
-}
-
-/**
  * Implements hook_field_prepare_view().
  */
 function image_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
+  // Load the images.
+  file_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, $items);
   // If there are no files specified at all, use the default.
   foreach ($entities as $id => $entity) {
     if (empty($items[$id])) {
