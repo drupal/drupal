@@ -1,52 +1,52 @@
 
 Drupal 7.15, xxxx-xx-xx (development version)
 -----------------------
-- Fixed notice: Undefined index: default_image in image_field_prepare_view()
-- Fixed data loss issue due to field_has_data() returning inconsistent results.
-  The fix adds an optional DANGEROUS_ACCESS_CHECK_OPT_OUT tag to entity field
-  queries which field storage engines can respond to (API addition:
-  http://drupal.org/node/1597378).
-- Fixed issue where field form structure was incomplete if field_access()
-  returned FALSE. Instead of being incomplete, the form structure now has
-  #access set to FALSE and field form validation is skipped (data structure
-  change: http://drupal.org/node/1663020).
-- Added EntityFieldQuery support for taxonomy bundles.
-- Introduced generic entity language support. Entities may now declare their
-  language property in hook_entity_info(), and modules working with entities
-  may access the language using entity_language() (API change:
-  http://drupal.org/node/1626346).
-- Fixed regression: The first plural index on a page was not calculated
-  correctly.
-- Fixed bug: Language detection by domain only worked on port 80.
-- Fixed bug which prevented image styles from being deleted on PHP 5.4.
-- Made Ajax alert dialogs respect error reporting settings.
-- Fixed bug which prevented the jQuery UI Datepicker from being localized.
-- Fixed bug which prevented sub-themes from inheriting the default values of
-  theme settings defined by the base theme.
-- Fixed bug which prevented notifications from being sent when core, module, and
-  theme updates are available.
-- Performance improvement: Removed needless call to system_rebuild_module_data()
-  in field_sync_field_status(), greatly speeding up bulk module enable/disable.
-- Renamed the "Field" column on the Manage Fields screen to "Field type", since
-  the former was confusing and inaccurate (UI change).
-- Fixed bug which made it impossible to search for strings that have not been
-  translated into a particular language.
-- Reorganized the testing framework to split setUp() into specific sub-methods
-  and fix several regressions in the process.
-- Fixed regression: Optional radio buttons with an empty, non-NULL default
-  value led to an illegal choice error when none were selected.
-- Fixed regression: Non-node entities couldn't be accessed with
-  EntityFieldQuery.
+- Introduced a 'user_password_reset_timeout' variable to allow the 24-hour
+  expiration for user password reset links to be adjusted (API addition).
+- Fixed database errors due to ambiguous column names that occurred when
+  EntityFieldQuery was used in certain situations.
+- Changed the drupal_array_get_nested_value() function to return a reference
+  (API addition).
 - Changed the System module's hook_block_info() implementation to assign the
   "Main page content" and "System help" blocks to appropriate regions by
   default and prevent error messages on the block administration page (data
   structure change).
-- Changed the drupal_array_get_nested_value() function to return a reference
-  (API addition).
-- Fixed database errors due to ambiguous column names that occurred when
-  EntityFieldQuery was used in certain situations.
-- Introduced a 'user_password_reset_timeout' variable to allow the 24-hour
-  expiration for user password reset links to be adjusted (API addition).
+- Fixed regression: Non-node entities couldn't be accessed with
+  EntityFieldQuery.
+- Fixed regression: Optional radio buttons with an empty, non-NULL default
+  value led to an illegal choice error when none were selected.
+- Reorganized the testing framework to split setUp() into specific sub-methods
+  and fix several regressions in the process.
+- Fixed bug which made it impossible to search for strings that have not been
+  translated into a particular language.
+- Renamed the "Field" column on the Manage Fields screen to "Field type", since
+  the former was confusing and inaccurate (UI change).
+- Performance improvement: Removed needless call to system_rebuild_module_data()
+  in field_sync_field_status(), greatly speeding up bulk module enable/disable.
+- Fixed bug which prevented notifications from being sent when core, module, and
+  theme updates are available.
+- Fixed bug which prevented sub-themes from inheriting the default values of
+  theme settings defined by the base theme.
+- Fixed bug which prevented the jQuery UI Datepicker from being localized.
+- Made Ajax alert dialogs respect error reporting settings.
+- Fixed bug which prevented image styles from being deleted on PHP 5.4.
+- Fixed bug: Language detection by domain only worked on port 80.
+- Fixed regression: The first plural index on a page was not calculated
+  correctly.
+- Introduced generic entity language support. Entities may now declare their
+  language property in hook_entity_info(), and modules working with entities
+  may access the language using entity_language() (API change:
+  http://drupal.org/node/1626346).
+- Added EntityFieldQuery support for taxonomy bundles.
+- Fixed issue where field form structure was incomplete if field_access()
+  returned FALSE. Instead of being incomplete, the form structure now has
+  #access set to FALSE and field form validation is skipped (data structure
+  change: http://drupal.org/node/1663020).
+- Fixed data loss issue due to field_has_data() returning inconsistent results.
+  The fix adds an optional DANGEROUS_ACCESS_CHECK_OPT_OUT tag to entity field
+  queries which field storage engines can respond to (API addition:
+  http://drupal.org/node/1597378).
+- Fixed notice: Undefined index: default_image in image_field_prepare_view()
 
 Drupal 7.14 2012-05-02
 ----------------------
