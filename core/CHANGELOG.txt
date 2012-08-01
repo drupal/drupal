@@ -74,6 +74,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
         Drupal.formatPlural() in JavaScript.
       * Removed textgroups support from interface translation in favor of
         native configuration language support.
+      * Reworked Gettext PO support to use pluggable read/write handlers.
 
 Drupal 7.0, 2011-01-05
 ----------------------

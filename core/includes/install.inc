@@ -380,7 +380,7 @@ function drupal_install_system() {
 
   // Clear out module list and hook implementation statics before calling
   // system_rebuild_theme_data().
-  drupal_static_reset('system_list');
+  system_list_reset();
   module_list_reset();
   module_implements_reset();
 

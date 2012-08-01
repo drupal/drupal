@@ -34,7 +34,7 @@ class SearchMatchTest extends SearchTestBase {
    * Set up a small index of items to test against.
    */
   function _setup() {
-    variable_set('minimum_word_size', 3);
+    config('search.settings')->set('index.minimum_word_size', 3)->save();
 
     for ($i = 1; $i <= 7; ++$i) {
       search_index($i, SEARCH_TYPE, $this->getText($i));

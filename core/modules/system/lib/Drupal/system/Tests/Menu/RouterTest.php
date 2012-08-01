@@ -123,7 +123,7 @@ class RouterTest extends WebTestBase {
    * Test the theme callback when the site is in maintenance mode.
    */
   function testThemeCallbackMaintenanceMode() {
-    variable_set('maintenance_mode', TRUE);
+    config('system.maintenance')->set('enabled', 1)->save();
 
     // For a regular user, the fact that the site is in maintenance mode means
     // we expect the theme callback system to be bypassed entirely.
@@ -136,6 +136,8 @@ class RouterTest extends WebTestBase {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     $this->assertText('Custom theme: seven. Actual theme: seven.', t('The theme callback system is correctly triggered for an administrator when the site is in maintenance mode.'));
     $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
+
+    config('system.maintenance')->set('enabled', 0)->save();
   }
 
   /**
@@ -144,13 +146,15 @@ class RouterTest extends WebTestBase {
    * @see hook_menu_site_status_alter().
    */
   function testMaintenanceModeLoginPaths() {
-    variable_set('maintenance_mode', TRUE);
+    config('system.maintenance')->set('enabled', 1)->save();
 
     $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => config('system.site')->get('name')));
     $this->drupalGet('node');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');
     $this->assertText('This is menu_login_callback().', t('Maintenance mode can be bypassed through hook_menu_site_status_alter().'));
+
+    config('system.maintenance')->set('enabled', 0)->save();
   }
 
   /**

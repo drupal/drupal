@@ -30,8 +30,10 @@ class SearchTokenizerTest extends SearchTestBase {
   function testTokenizer() {
     // Set the minimum word size to 1 (to split all CJK characters) and make
     // sure CJK tokenizing is turned on.
-    variable_set('minimum_word_size', 1);
-    variable_set('overlap_cjk', TRUE);
+    config('search.settings')
+      ->set('index.minimum_word_size', 1)
+      ->set('index.overlap_cjk', TRUE)
+      ->save();
     $this->refreshVariables();
 
     // Create a string of CJK characters from various character ranges in
@@ -116,8 +118,10 @@ class SearchTokenizerTest extends SearchTestBase {
   function testNoTokenizer() {
     // Set the minimum word size to 1 (to split all CJK characters) and make
     // sure CJK tokenizing is turned on.
-    variable_set('minimum_word_size', 1);
-    variable_set('overlap_cjk', TRUE);
+    config('search.settings')
+      ->set('minimum_word_size', 1)
+      ->set('overlap_cjk', TRUE)
+      ->save();
     $this->refreshVariables();
 
     $letters = 'abcdefghijklmnopqrstuvwxyz';

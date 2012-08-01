@@ -91,13 +91,13 @@ function config_sync_get_changes(StorageInterface $source_storage, StorageInterf
   foreach (array_intersect($source_names, $target_names) as $name) {
     $source_config_data = $source_storage->read($name);
     $target_config_data = $target_storage->read($name);
-    if ($source_config_data != $target_config_data) {
+    if ($source_config_data !== $target_config_data) {
       $config_changes['change'][] = $name;
     }
   }
 
   // Do not trigger subsequent synchronization operations if there are no
-  // changes in either category.
+  // changes in any category.
   if (empty($config_changes['create']) && empty($config_changes['change']) && empty($config_changes['delete'])) {
     return FALSE;
   }
@@ -126,6 +126,48 @@ function config_sync_changes(array $config_changes, StorageInterface $source_sto
       }
     }
   }
+}
+
+/**
+ * Imports configuration from FileStorage to DatabaseStorage.
+ *
+ * @return bool|null
+ *   TRUE if configuration was imported successfully, FALSE in case of a
+ *   synchronization error, or NULL if there are no changes to synchronize.
+ */
+function config_import() {
+  // Retrieve a list of differences between FileStorage and DatabaseStorage.
+  // @todo Leverage DI + config.storage.info.
+  $source_storage = new FileStorage();
+  $target_storage = new DatabaseStorage();
+
+  $config_changes = config_sync_get_changes($source_storage, $target_storage);
+  if (empty($config_changes)) {
+    return;
+  }
+
+  if (!lock_acquire(__FUNCTION__)) {
+    // Another request is synchronizing configuration.
+    // Return a negative result for UI purposes. We do not differentiate between
+    // an actual synchronization error and a failed lock, because concurrent
+    // synchronizations are an edge-case happening only when multiple developers
+    // or site builders attempt to do it without coordinating.
+    return FALSE;
+  }
+
+  $success = TRUE;
+  try {
+    $remaining_changes = config_import_invoke_owner($config_changes, $source_storage, $target_storage);
+    config_sync_changes($remaining_changes, $source_storage, $target_storage);
+    // Flush all caches and reset static variables after a successful import.
+    drupal_flush_all_caches();
+  }
+  catch (ConfigException $e) {
+    watchdog_exception('config_import', $e);
+    $success = FALSE;
+  }
+  lock_release(__FUNCTION__);
+  return $success;
 }
 
 /**
@@ -175,4 +217,21 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
     }
   }
   return $config_changes;
+}
+
+/**
+ * Exports configuration from DatabaseStorage to FileStorage.
+ */
+function config_export() {
+  // Retrieve a list of differences between DatabaseStorage and FileStorage.
+  // @todo Leverage DI + config.storage.info.
+  $source_storage = new DatabaseStorage();
+  $target_storage = new FileStorage();
+
+  $config_changes = config_sync_get_changes($source_storage, $target_storage);
+  if (empty($config_changes)) {
+    return;
+  }
+  config_sync_changes($config_changes, $source_storage, $target_storage);
+  return TRUE;
 }

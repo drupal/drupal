@@ -29,6 +29,7 @@ class ErrorHandlerTest extends WebTestBase {
    * Test the error handler.
    */
   function testErrorHandler() {
+    $config = config('system.logging');
     $error_notice = array(
       '%type' => 'Notice',
       '!message' => 'Undefined variable: bananas',
@@ -49,7 +50,7 @@ class ErrorHandlerTest extends WebTestBase {
     );
 
     // Set error reporting to collect notices.
-    variable_set('error_level', ERROR_REPORTING_DISPLAY_ALL);
+    $config->set('error_level', ERROR_REPORTING_DISPLAY_ALL)->save();
     $this->drupalGet('error-test/generate-warnings');
     $this->assertResponse(200, t('Received expected HTTP status code.'));
     $this->assertErrorMessage($error_notice);
@@ -57,7 +58,7 @@ class ErrorHandlerTest extends WebTestBase {
     $this->assertErrorMessage($error_user_notice);
 
     // Set error reporting to not collect notices.
-    variable_set('error_level', ERROR_REPORTING_DISPLAY_SOME);
+    $config->set('error_level', ERROR_REPORTING_DISPLAY_SOME)->save();
     $this->drupalGet('error-test/generate-warnings');
     $this->assertResponse(200, t('Received expected HTTP status code.'));
     $this->assertNoErrorMessage($error_notice);
@@ -65,7 +66,7 @@ class ErrorHandlerTest extends WebTestBase {
     $this->assertErrorMessage($error_user_notice);
 
     // Set error reporting to not show any errors.
-    variable_set('error_level', ERROR_REPORTING_HIDE);
+    $config->set('error_level', ERROR_REPORTING_HIDE)->save();
     $this->drupalGet('error-test/generate-warnings');
     $this->assertResponse(200, t('Received expected HTTP status code.'));
     $this->assertNoErrorMessage($error_notice);

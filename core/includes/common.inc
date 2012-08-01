@@ -6142,18 +6142,17 @@ function element_info_property($type, $property_name, $default = NULL) {
 }
 
 /**
- * Sorts a structured array by 'weight' key (no # prefix).
+ * Sorts a structured array by the 'weight' element.
  *
- * Callback for uasort() within:
- * - _field_ui_reduce_order()
- * - update_resolve_dependencies()
- * - archiver_get_info()
- * - drupal_get_updaters()
- * - drupal_get_filetransfer_info()
+ * Note that the sorting is by the 'weight' array element, not by the render
+ * element property '#weight'.
+ *
+ * Callback for uasort() used in various functions.
  *
  * @param $a
  *   First item for comparison. The compared items should be associative arrays
- *   that optionally include a 'weight' key.
+ *   that optionally include a 'weight' element. For items without a 'weight'
+ *   element, a default value of 0 will be used.
  * @param $b
  *   Second item for comparison.
  */

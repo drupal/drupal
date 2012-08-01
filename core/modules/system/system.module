@@ -1181,7 +1181,7 @@ function system_cron_access($key) {
     watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
     return FALSE;
   }
-  elseif (variable_get('maintenance_mode', 0)) {
+  elseif (config('system.maintenance')->get('enabled')) {
     watchdog('cron', 'Cron could not run because the site is in maintenance mode.', array(), WATCHDOG_NOTICE);
     return FALSE;
   }

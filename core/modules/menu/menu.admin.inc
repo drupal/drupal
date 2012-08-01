@@ -61,6 +61,7 @@ function menu_overview_form($form, &$form_state, $menu) {
   foreach ($result as $item) {
     $links[] = $item;
   }
+  $delta = max(count($links), 50);
   $tree = menu_tree_data($links);
   $node_links = array();
   menu_tree_collect_node_links($tree, $node_links);
@@ -69,7 +70,7 @@ function menu_overview_form($form, &$form_state, $menu) {
   menu_tree_check_access($tree, $node_links);
   $menu_admin = FALSE;
 
-  $form = array_merge($form, _menu_overview_tree_form($tree));
+  $form = array_merge($form, _menu_overview_tree_form($tree, $delta));
   $form['#menu'] =  $menu;
 
   if (element_children($form)) {
@@ -90,8 +91,10 @@ function menu_overview_form($form, &$form_state, $menu) {
  *
  * @param $tree
  *   The menu_tree retrieved by menu_tree_data.
+ * @param $delta
+ *   The default number of menu items used in the menu weight selector is 50.
  */
-function _menu_overview_tree_form($tree) {
+function _menu_overview_tree_form($tree, $delta = 50) {
   $form = &drupal_static(__FUNCTION__, array('#tree' => TRUE));
   foreach ($tree as $data) {
     $title = '';
@@ -110,7 +113,7 @@ function _menu_overview_tree_form($tree) {
       );
       $form[$mlid]['weight'] = array(
         '#type' => 'weight',
-        '#delta' => 50,
+        '#delta' => $delta,
         '#default_value' => $item['weight'],
         '#title_display' => 'invisible',
         '#title' => t('Weight for @title', array('@title' => $item['title'])),
@@ -138,7 +141,7 @@ function _menu_overview_tree_form($tree) {
     }
 
     if ($data['below']) {
-      _menu_overview_tree_form($data['below']);
+      _menu_overview_tree_form($data['below'], $delta);
     }
   }
   return $form;
@@ -352,10 +355,23 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
     '#description' => t('The maximum depth for a link and all its children is fixed at !maxdepth. Some menu links may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
     '#attributes' => array('class' => array('menu-title-select')),
   );
+
+  // Get number of items in menu so the weight selector is sized appropriately.
+  $sql = "SELECT COUNT(*) FROM {menu_links} WHERE menu_name = :menu";
+  $result = db_query($sql, array(':menu' => $item['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
+  foreach ($result as $row) {
+    foreach ($row as $menu_item_count) {
+      $delta = $menu_item_count;
+    }
+  }
+  if ($delta < 50) {
+    // Old hardcoded value.
+    $delta = 50;
+  }
   $form['weight'] = array(
     '#type' => 'weight',
     '#title' => t('Weight'),
-    '#delta' => 50,
+    '#delta' => $delta,
     '#default_value' => $item['weight'],
     '#description' => t('Optional. In the menu, the heavier links will sink and the lighter links will be positioned nearer the top.'),
   );

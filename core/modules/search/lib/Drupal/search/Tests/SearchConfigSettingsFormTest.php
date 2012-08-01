@@ -112,9 +112,9 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
       $info = $module_info[$module];
       $edit = array();
       foreach ($modules as $other) {
-        $edit['search_active_modules[' . $other . ']'] = (($other == $module) ? $module : FALSE);
+        $edit['active_modules[' . $other . ']'] = (($other == $module) ? $module : FALSE);
       }
-      $edit['search_default_module'] = $module;
+      $edit['default_module'] = $module;
       $this->drupalPost('admin/config/search/settings', $edit, t('Save configuration'));
 
       // Run a search from the correct search URL.
@@ -151,9 +151,9 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     // page or run search, all modules should be shown.
     $edit = array();
     foreach ($modules as $module) {
-      $edit['search_active_modules[' . $module . ']'] = $module;
+      $edit['active_modules[' . $module . ']'] = $module;
     }
-    $edit['search_default_module'] = 'node';
+    $edit['default_module'] = 'node';
 
     $this->drupalPost('admin/config/search/settings', $edit, t('Save configuration'));
 

@@ -65,11 +65,8 @@ class DBLogTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Check row limit variable.
-    $current_limit = variable_get('dblog_row_limit', 1000);
+    $current_limit = config('dblog.settings')->get('row_limit');
     $this->assertTrue($current_limit == $row_limit, t('[Cache] Row limit variable of @count equals row limit of @limit', array('@count' => $current_limit, '@limit' => $row_limit)));
-    // Verify dblog row limit equals specified row limit.
-    $current_limit = unserialize(db_query("SELECT value FROM {variable} WHERE name = :dblog_limit", array(':dblog_limit' => 'dblog_row_limit'))->fetchField());
-    $this->assertTrue($current_limit == $row_limit, t('[Variable table] Row limit variable of @count equals row limit of @limit', array('@count' => $current_limit, '@limit' => $row_limit)));
   }
 
   /**

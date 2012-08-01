@@ -6,15 +6,6 @@
  */
 
 /**
- * Implements hook_uninstall().
- */
-function search_uninstall() {
-  variable_del('minimum_word_size');
-  variable_del('overlap_cjk');
-  variable_del('search_cron_limit');
-}
-
-/**
  * Implements hook_schema().
  */
 function search_schema() {
@@ -152,4 +143,21 @@ function search_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Update search module to use the configuration system.
+ *
+ * @ingroup config_upgrade
+ */
+function search_update_8000() {
+  update_variables_to_config('search.settings', array(
+   'minimum_word_size' => 'index.minimum_word_size',
+   'overlap_cjk' => 'index.overlap_cjk',
+   'search_cron_limit' => 'index.cron_limit',
+   'search_tag_weights' => 'index.tag_weights',
+   'search_active_modules' => 'active_modules',
+   'search_and_or_limit' => 'and_or_limit',
+   'search_default_module' => 'default_module',
+  ));
 }
