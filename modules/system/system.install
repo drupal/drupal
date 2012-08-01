@@ -3016,24 +3016,12 @@ function system_update_7073() {
 }
 
 /**
- * Convert menu_links query strings to arrays.
+ * This update has been removed and will not run.
  */
 function system_update_7074() {
-  $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC))
-    ->fields('ml', array('mlid', 'options'))
-    ->condition('options', '%query%', 'LIKE');
-  foreach ($query->execute() as $menu_link) {
-    $menu_link['options'] = unserialize($menu_link['options']);
-    if (isset($menu_link['options']['query']) && is_string($menu_link['options']['query'])) {
-      $menu_link['options']['query'] = drupal_get_query_array($menu_link['options']['query']);
-      db_update('menu_links')
-        ->fields(array(
-          'options' => serialize($menu_link['options']),
-        ))
-        ->condition('mlid', $menu_link['mlid'], '=')
-        ->execute();
-    }
-  }
+  // This update function previously converted menu_links query strings to
+  // arrays. It has been removed for now due to incompatibility with
+  // PostgreSQL.
 }
 
 /**
