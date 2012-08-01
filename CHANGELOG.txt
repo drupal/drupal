@@ -47,6 +47,8 @@ Drupal 7.15, xxxx-xx-xx (development version)
   queries which field storage engines can respond to (API addition:
   http://drupal.org/node/1597378).
 - Fixed notice: Undefined index: default_image in image_field_prepare_view()
+- Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.14 2012-05-02
 ----------------------
