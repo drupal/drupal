@@ -1,4 +1,7 @@
 
+Drupal 7.16, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.15, 2012-08-01
 -----------------------
 - Introduced a 'user_password_reset_timeout' variable to allow the 24-hour
