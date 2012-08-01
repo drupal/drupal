@@ -9,7 +9,7 @@ Drupal 7.15, xxxx-xx-xx (development version)
 - Fixed issue where field form structure was incomplete if field_access()
   returned FALSE. Instead of being incomplete, the form structure now has
   #access set to FALSE and field form validation is skipped (data structure
-  change).
+  change: http://drupal.org/node/1663020).
 - Added EntityFieldQuery support for taxonomy bundles.
 - Introduced generic entity language support. Entities may now declare their
   language property in hook_entity_info(), and modules working with entities
