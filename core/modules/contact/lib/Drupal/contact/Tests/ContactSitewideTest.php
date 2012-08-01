@@ -34,8 +34,10 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     $flood_limit = 3;
-    variable_set('contact_threshold_limit', $flood_limit);
-    variable_set('contact_threshold_window', 600);
+    config('contact.settings')
+      ->set('flood.limit', $flood_limit)
+      ->set('flood.interval', 600)
+      ->save();
 
     // Set settings.
     $edit = array();
@@ -158,7 +160,7 @@ class ContactSitewideTest extends WebTestBase {
     // Submit contact form one over limit.
     $this->drupalGet('contact');
     $this->assertResponse(403, t('Access denied to anonymous user after reaching message treshold.'));
-    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => variable_get('contact_threshold_limit', 3), '@interval' => format_interval(600))), t('Message threshold reached.'));
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => config('contact.settings')->get('flood.limit'), '@interval' => format_interval(600))), t('Message threshold reached.'));
 
     // Delete created categories.
     $this->drupalLogin($admin_user);

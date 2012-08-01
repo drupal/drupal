@@ -84,10 +84,14 @@ function contact_install() {
 }
 
 /**
- * Implements hook_uninstall().
+ * Moves contact setting from variable to config.
+ *
+ * @ingroup config_upgrade
  */
-function contact_uninstall() {
-  variable_del('contact_default_status');
-  variable_del('contact_threshold_limit');
-  variable_del('contact_threshold_window');
+function contact_update_8000() {
+  update_variables_to_config('contact.settings', array(
+    'contact_default_status' => 'user_default_enabled',
+    'contact_threshold_limit' => 'flood.limit',
+    'contact_threshold_window' => 'flood.interval',
+  ));
 }
