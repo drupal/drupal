@@ -81,7 +81,7 @@ class ViewsUiBaseViewsWizard implements ViewsWizardInterface {
   function build_form($form, &$form_state) {
     $style_options = views_fetch_plugin_names('style', 'normal', array($this->base_table));
     $feed_row_options = views_fetch_plugin_names('row', 'feed', array($this->base_table));
-    $path_prefix = url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=');
+    $path_prefix = url(NULL, array('absolute' => TRUE));
 
     // Add filters and sorts which apply to the view as a whole.
     $this->build_filters($form, $form_state);

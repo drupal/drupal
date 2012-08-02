@@ -109,6 +109,9 @@ class views_handler_filter extends views_handler {
         'required' => array('default' => FALSE, 'bool' => TRUE),
         'remember' => array('default' => FALSE, 'bool' => TRUE),
         'multiple' => array('default' => FALSE, 'bool' => TRUE),
+        'remember_roles' => array('default' => array(
+          DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID,
+        )),
       ),
     );
 
@@ -387,6 +390,20 @@ class views_handler_filter extends views_handler {
       '#default_value' => $this->options['expose']['remember'],
     );
 
+    $role_options = array_map('check_plain', user_roles());
+    $form['expose']['remember_roles'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('User roles'),
+      '#description' => t('Remember exposed selection only for the selected user role(s). If you select no roles, the exposed data will never be stored.'),
+      '#default_value' => $this->options['expose']['remember_roles'],
+      '#options' => $role_options,
+      '#states' => array(
+        'invisible' => array(
+          ':input[name="options[expose][remember]"]' => array('checked' => FALSE),
+        ),
+      ),
+    );
+
     $form['expose']['identifier'] = array(
       '#type' => 'textfield',
       '#default_value' => $this->options['expose']['identifier'],
@@ -623,6 +640,14 @@ class views_handler_filter extends views_handler {
     }
 
     if (empty($this->options['expose']['remember'])) {
+      return;
+    }
+
+    // Check if we store exposed value for current user.
+    global $user;
+    $allowed_rids = empty($this->options['expose']['remember_roles']) ? array() : array_filter($this->options['expose']['remember_roles']);
+    $intersect_rids = array_intersect_key($allowed_rids, $user->roles);
+    if (empty($intersect_rids)) {
       return;
     }
 

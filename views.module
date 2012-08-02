@@ -1980,13 +1980,6 @@ function views_exposed_form($form, &$form_state) {
 
   $form['#info'] = array();
 
-  if (!variable_get('clean_url', FALSE)) {
-    $form['q'] = array(
-      '#type' => 'hidden',
-      '#value' => $view->get_url(),
-    );
-  }
-
   // Go through each handler and let it generate its exposed widget.
   foreach ($view->display_handler->handlers as $type => $value) {
     foreach ($view->$type as $id => $handler) {
@@ -2066,7 +2059,7 @@ function views_exposed_form_submit(&$form, &$form_state) {
   $form_state['view']->exposed_raw_input = array();
 
 
-  $exclude = array('q', 'submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', '', 'reset');
+  $exclude = array('submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', '', 'reset');
   $exposed_form_plugin = $form_state['exposed_form_plugin'];
   $exposed_form_plugin->exposed_form_submit($form, $form_state, $exclude);
 
