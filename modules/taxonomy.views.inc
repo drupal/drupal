@@ -360,6 +360,10 @@ function taxonomy_views_data() {
       'field' => 'parent',
       'label' => t('Parent'),
     ),
+    'filter' => array(
+      'help' => t('Filter the results of "Taxonomy: Term" by the parent pid.'),
+      'handler' => 'views_handler_filter_numeric',
+    ),
     'argument' => array(
       'help' => t('The parent term of the term.'),
       'handler' => 'views_handler_argument_taxonomy',
