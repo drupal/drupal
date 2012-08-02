@@ -33,7 +33,7 @@ use Drupal\Core\Database\Query\PagerSelectExtender;
  * an EntityFieldQueryException will be raised if an unsupported condition is
  * specified or if the query has field conditions or sorts that are stored in
  * different field storage engines. However, this logic can be overridden in
- * hook_entity_query().
+ * hook_entity_query_alter().
  *
  * Also note that this query does not automatically respect entity access
  * restrictions. Node access control is performed by the SQL storage engine but
