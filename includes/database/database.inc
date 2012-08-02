@@ -2769,7 +2769,7 @@ function _db_create_keys_sql($spec) {
  * Renames a table.
  *
  * @param $table
- *   The table to be renamed.
+ *   The current name of the table to be renamed.
  * @param $new_name
  *   The new name for the table.
  */
