@@ -91,6 +91,36 @@ abstract class TestBase {
   protected $setupEnvironment = FALSE;
 
   /**
+   * TRUE if verbose debugging is enabled.
+   *
+   * @var boolean
+   */
+  protected $verbose = FALSE;
+
+  /**
+   * Incrementing identifier for verbose output filenames.
+   *
+   * @var integer
+   */
+  protected $verboseId = 0;
+
+  /**
+   * Safe class name for use in verbose output filenames.
+   *
+   * Namespaces separator (\) replaced with _.
+   *
+   * @var string
+   */
+  protected $verboseClassName;
+
+  /**
+   * Directory where verbose output files are put.
+   *
+   * @var string
+   */
+  protected $verboseDirectory;
+
+  /**
    * Constructor for Test.
    *
    * @param $test_id
@@ -457,11 +487,21 @@ abstract class TestBase {
    * @see simpletest_verbose()
    */
   protected function verbose($message) {
-    if ($id = simpletest_verbose($message)) {
-      $class = str_replace('\\', '_', get_class($this));
-      $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . $class . '-' . $id . '.html');
-      $this->error(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'User notice');
+    // Do nothing if verbose debugging is disabled.
+    if (!$this->verbose) {
+      return;
     }
+
+    $message = '<hr />ID #' . $this->verboseId . ' (<a href="' . $this->verboseClassName . '-' . ($this->verboseId - 1) . '.html">Previous</a> | <a href="' . $this->verboseClassName . '-' . ($this->verboseId + 1) . '.html">Next</a>)<hr />' . $message;
+    $verbose_filename = $this->verboseDirectory . '/' . $this->verboseClassName . '-' . $this->verboseId . '.html';
+    if (file_put_contents($verbose_filename, $message, FILE_APPEND)) {
+      $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . $this->verboseClassName . '-' . $this->verboseId . '.html');
+      // Not using l() to avoid invoking the theme system, so that unit tests
+      // can use verbose() as well.
+      $url = '<a href="' . $url . '" target="_blank">' . t('Verbose message') . '</a>';
+      $this->error($url, 'User notice');
+    }
+    $this->verboseId++;
   }
 
   /**
@@ -477,10 +517,16 @@ abstract class TestBase {
    *   methods during debugging.
    */
   public function run(array $methods = array()) {
-    // Initialize verbose debugging.
     $class = get_class($this);
-    simpletest_verbose(NULL, variable_get('file_public_path', conf_path() . '/files'), str_replace('\\', '_', $class));
-
+    if (variable_get('simpletest_verbose', TRUE)) {
+      // Initialize verbose debugging.
+      $this->verbose = TRUE;
+      $this->verboseDirectory = variable_get('file_public_path', conf_path() . '/files') . '/simpletest/verbose';
+      if (file_prepare_directory($this->verboseDirectory, FILE_CREATE_DIRECTORY) && !file_exists($this->verboseDirectory . '/.htaccess')) {
+        file_put_contents($this->verboseDirectory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
+      }
+      $this->verboseClassName = str_replace("\\", "_", $class);
+    }
     // HTTP auth settings (<username>:<password>) for the simpletest browser
     // when sending requests to the test site.
     $this->httpauth_method = variable_get('simpletest_httpauth_method', CURLAUTH_BASIC);

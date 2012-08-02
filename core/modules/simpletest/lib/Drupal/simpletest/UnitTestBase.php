@@ -55,12 +55,6 @@ abstract class UnitTestBase extends TestBase {
     // Enforce an empty module list.
     module_list(NULL, array());
 
-    // Re-implant theme registry.
-    // Required for l() and other functions to work correctly and not trigger
-    // database lookups.
-    $theme_get_registry = &drupal_static('theme_get_registry');
-    $theme_get_registry[FALSE] = $this->originalThemeRegistry;
-
     $conf['file_public_path'] = $this->public_files_directory;
 
     // Change the database prefix.
