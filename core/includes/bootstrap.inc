@@ -2091,14 +2091,26 @@ function drupal_anonymous_user() {
 /**
  * Ensures Drupal is bootstrapped to the specified phase.
  *
- * The bootstrap phase is an integer constant identifying a phase of Drupal
- * to load. Each phase adds to the previous one, so invoking a later phase
- * automatically runs the earlier phases as well. To access the Drupal
- * database from a script without loading anything else, include bootstrap.inc
- * and call drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE).
+ * In order to bootstrap Drupal from another PHP script, you can use this code:
+ * @code
+ *   define('DRUPAL_ROOT', '/path/to/drupal');
+ *   require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+ *   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+ * @endcode
  *
  * @param $phase
- *   A constant. Allowed values are the DRUPAL_BOOTSTRAP_* constants.
+ *   A constant telling which phase to bootstrap to. When you bootstrap to a
+ *   particular phase, all earlier phases are run automatically. Possible
+ *   values:
+ *   - DRUPAL_BOOTSTRAP_CONFIGURATION: Initializes configuration.
+ *   - DRUPAL_BOOTSTRAP_PAGE_CACHE: Tries to serve a cached page.
+ *   - DRUPAL_BOOTSTRAP_DATABASE: Initializes the database layer.
+ *   - DRUPAL_BOOTSTRAP_VARIABLES: Initializes the variable system.
+ *   - DRUPAL_BOOTSTRAP_SESSION: Initializes session handling.
+ *   - DRUPAL_BOOTSTRAP_PAGE_HEADER: Sets up the page header.
+ *   - DRUPAL_BOOTSTRAP_CODE: Loads code for subsystems and modules.
+ *   - DRUPAL_BOOTSTRAP_FULL: Fully loads Drupal. Validates and fixes input
+ *     data.
  * @param $new_phase
  *   A boolean, set to FALSE if calling drupal_bootstrap from inside a
  *   function called from drupal_bootstrap (recursion).
