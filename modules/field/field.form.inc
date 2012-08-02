@@ -6,7 +6,38 @@
  */
 
 /**
- * Create a separate form element for each field.
+ * Creates a form element for a field and can populate it with a default value.
+ *
+ * If the form element is not associated with an entity (i.e., $entity is NULL)
+ * field_get_default_value will be called to supply the default value for the
+ * field. Also allows other modules to alter the form element by implementing
+ * their own hooks.
+ *
+ * @param $entity_type
+ *   The type of entity (for example 'node' or 'user') that the field belongs
+ *   to.
+ * @param $entity
+ *   The entity object that the field belongs to. This may be NULL if creating a
+ *   form element with a default value.
+ * @param $field
+ *   An array representing the field whose editing element is being created.
+ * @param $instance
+ *   An array representing the structure for $field in its current context.
+ * @param $langcode
+ *   The language associated with the field.
+ * @param $items
+ *   An array of the field values. When creating a new entity this may be NULL
+ *   or an empty array to use default values.
+ * @param $form
+ *   An array representing the form that the editing element will be attached
+ *   to. 
+ * @param $form_state
+ *   An array containing the current state of the form.
+ * @param $get_delta
+ *   Used to get only a specific delta value of a multiple value field.
+ *
+ * @return
+ *  The form element array created for this field.
  */
 function field_default_form($entity_type, $entity, $field, $instance, $langcode, $items, &$form, &$form_state, $get_delta = NULL) {
   // This could be called with no entity, as when a UI module creates a
