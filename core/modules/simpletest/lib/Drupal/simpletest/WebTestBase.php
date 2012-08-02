@@ -636,11 +636,18 @@ abstract class WebTestBase extends TestBase {
 
     // Install modules needed for this test. This could have been passed in as
     // either a single array argument or a variable number of string arguments.
-    // @todo Remove this compatibility layer in Drupal 8, and only accept
-    // $modules as a single array argument.
+    // @todo Remove this after fully converting to static $modules property.
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {
       $modules = $modules[0];
+    }
+    // Collect modules to install.
+    $class = get_class($this);
+    while ($class) {
+      if (property_exists($class, 'modules')) {
+        $modules = array_merge($modules, $class::$modules);
+      }
+      $class = get_parent_class($class);
     }
     if ($modules) {
       $success = module_enable($modules, TRUE);

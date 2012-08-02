@@ -13,6 +13,7 @@ use Drupal\simpletest\WebTestBase;
  * Provides common functionality for the Field UI test classes.
  */
 class FieldUiTestBase extends WebTestBase {
+  public static $modules = array('node', 'field_ui', 'field_test', 'taxonomy');
 
   function setUp() {
     // Since this is a base class for many test cases, support the same
@@ -23,10 +24,6 @@ class FieldUiTestBase extends WebTestBase {
     if (isset($modules[0]) && is_array($modules[0])) {
       $modules = $modules[0];
     }
-    $modules[] = 'node';
-    $modules[] = 'field_ui';
-    $modules[] = 'field_test';
-    $modules[] = 'taxonomy';
     parent::setUp($modules);
 
     // Create test user.
