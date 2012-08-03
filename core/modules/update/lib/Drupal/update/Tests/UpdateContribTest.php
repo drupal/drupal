@@ -40,7 +40,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    variable_set('update_test_system_info', $system_info);
+    config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(array('drupal' => '0', 'aaa_update_test' => 'no-releases'));
     $this->drupalGet('admin/reports/updates');
     // Cannot use $this->standardTests() because we need to check for the
@@ -68,7 +68,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    variable_set('update_test_system_info', $system_info);
+    config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(
       array(
         'drupal' => '0',
@@ -127,7 +127,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    variable_set('update_test_system_info', $system_info);
+    config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(array('drupal' => '0', '#all' => '1_0'));
     $this->standardTests();
     // We're expecting the report to say all projects are up to date.
@@ -184,7 +184,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    variable_set('update_test_system_info', $system_info);
+    config('update_test.settings')->set('system_info', $system_info)->save();
     $xml_mapping = array(
       'drupal' => '0',
       'update_test_subtheme' => '1_0',
@@ -199,6 +199,7 @@ class UpdateContribTest extends UpdateTestBase {
    * Tests that disabled themes are only shown when desired.
    */
   function testUpdateShowDisabledThemes() {
+    $update_settings = config('update.settings');
     // Make sure all the update_test_* themes are disabled.
     db_update('system')
       ->fields(array('status' => 0))
@@ -229,8 +230,8 @@ class UpdateContribTest extends UpdateTestBase {
     // total number of attempts made in the test may exceed the default value
     // of update_max_fetch_attempts. Therefore this variable is set very high
     // to avoid test failures in those cases.
-    variable_set('update_max_fetch_attempts', 99999);
-    variable_set('update_test_system_info', $system_info);
+    $update_settings->set('fetch.max_attempts', 99999)->save();
+    config('update_test.settings')->set('system_info', $system_info)->save();
     $xml_mapping = array(
       'drupal' => '0',
       'update_test_subtheme' => '1_0',
@@ -239,7 +240,7 @@ class UpdateContribTest extends UpdateTestBase {
     $base_theme_project_link = l(t('Update test base theme'), 'http://example.com/project/update_test_basetheme');
     $sub_theme_project_link = l(t('Update test subtheme'), 'http://example.com/project/update_test_subtheme');
     foreach (array(TRUE, FALSE) as $check_disabled) {
-      variable_set('update_check_disabled', $check_disabled);
+      $update_settings->set('check.disabled_extensions', $check_disabled)->save();
       $this->refreshUpdateStatus($xml_mapping);
       // In neither case should we see the "Themes" heading for enabled themes.
       $this->assertNoText(t('Themes'));
@@ -280,7 +281,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    variable_set('update_test_system_info', $system_info);
+    config('update_test.settings')->set('system_info', $system_info)->save();
 
     $xml_mapping = array(
       'drupal' => '0',
@@ -322,6 +323,7 @@ class UpdateContribTest extends UpdateTestBase {
    */
   function testHookUpdateStatusAlter() {
     variable_set('allow_authorize_operations', TRUE);
+    $update_test_config = config('update_test.settings');
     $update_admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer software updates'));
     $this->drupalLogin($update_admin_user);
 
@@ -335,13 +337,13 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    variable_set('update_test_system_info', $system_info);
+    $update_test_config->set('system_info', $system_info)->save();
     $update_status = array(
       'aaa_update_test' => array(
         'status' => UPDATE_NOT_SECURE,
       ),
     );
-    variable_set('update_test_update_status', $update_status);
+    $update_test_config->set('update_status', $update_status)->save();
     $this->refreshUpdateStatus(
       array(
         'drupal' => '0',
@@ -355,19 +357,19 @@ class UpdateContribTest extends UpdateTestBase {
 
     // Visit the reports page again without the altering and make sure the
     // status is back to normal.
-    variable_set('update_test_update_status', array());
+    $update_test_config->set('update_status', array())->save();
     $this->drupalGet('admin/reports/updates');
     $this->assertRaw('<h3>' . t('Modules') . '</h3>');
     $this->assertNoText(t('Security update required!'));
     $this->assertRaw(l(t('AAA Update test'), 'http://example.com/project/aaa_update_test'), t('Link to aaa_update_test project appears.'));
 
     // Turn the altering back on and visit the Update manager UI.
-    variable_set('update_test_update_status', $update_status);
+    $update_test_config->set('update_status', $update_status)->save();
     $this->drupalGet('admin/modules/update');
     $this->assertText(t('Security update'));
 
     // Turn the altering back off and visit the Update manager UI.
-    variable_set('update_test_update_status', array());
+    $update_test_config->set('update_status', array())->save();
     $this->drupalGet('admin/modules/update');
     $this->assertNoText(t('Security update'));
   }

@@ -65,6 +65,7 @@ class UpdateScriptTest extends WebTestBase {
    * Tests that requirements warnings and errors are correctly displayed.
    */
   function testRequirements() {
+    $update_script_test_config = config('update_script_test.settings');
     $this->drupalLogin($this->update_user);
 
     // If there are no requirements warnings or errors, we expect to be able to
@@ -81,7 +82,7 @@ class UpdateScriptTest extends WebTestBase {
 
     // First, run this test with pending updates to make sure they can be run
     // successfully.
-    variable_set('update_script_test_requirement_type', REQUIREMENT_WARNING);
+    $update_script_test_config->set('requirement_type', REQUIREMENT_WARNING)->save();
     drupal_set_installed_schema_version('update_script_test', drupal_get_installed_schema_version('update_script_test') - 1);
     $this->drupalGet($this->update_url, array('external' => TRUE));
     $this->assertText('This is a requirements warning provided by the update_script_test module.');
@@ -106,7 +107,7 @@ class UpdateScriptTest extends WebTestBase {
     // If there is a requirements error, it should be displayed even after
     // clicking the link to proceed (since the problem that triggered the error
     // has not been fixed).
-    variable_set('update_script_test_requirement_type', REQUIREMENT_ERROR);
+    $update_script_test_config->set('requirement_type', REQUIREMENT_ERROR)->save();
     $this->drupalGet($this->update_url, array('external' => TRUE));
     $this->assertText('This is a requirements error provided by the update_script_test module.');
     $this->clickLink('try again');

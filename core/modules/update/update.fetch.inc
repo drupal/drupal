@@ -107,7 +107,7 @@ function update_fetch_data_finished($success, $results) {
  */
 function _update_fetch_data() {
   $queue = queue('update_fetch_tasks');
-  $end = time() + variable_get('update_max_fetch_time', UPDATE_MAX_FETCH_TIME);
+  $end = time() + config('update.settings')->get('fetch.timeout');
   while (time() < $end && ($item = $queue->claimItem())) {
     _update_process_fetch_task($item->data);
     $queue->deleteItem($item);
@@ -128,6 +128,7 @@ function _update_fetch_data() {
  */
 function _update_process_fetch_task($project) {
   global $base_url;
+  $update_config = config('update.settings');
   $fail = &drupal_static(__FUNCTION__, array());
   // This can be in the middle of a long-running batch, so REQUEST_TIME won't
   // necessarily be valid.
@@ -140,7 +141,7 @@ function _update_process_fetch_task($project) {
     }
   }
 
-  $max_fetch_attempts = variable_get('update_max_fetch_attempts', UPDATE_MAX_FETCH_ATTEMPTS);
+  $max_fetch_attempts = $update_config->get('fetch.max_attempts');
 
   $success = FALSE;
   $available = array();
@@ -177,7 +178,7 @@ function _update_process_fetch_task($project) {
     }
   }
 
-  $frequency = variable_get('update_check_frequency', 1);
+  $frequency = $update_config->get('check.interval_days');
   $cid = 'available_releases::' . $project_name;
   _update_cache_set($cid, $available, $now + (60 * 60 * 24 * $frequency));
 
@@ -328,7 +329,16 @@ function _update_build_fetch_url($project, $site_key = '') {
  * @see _update_build_fetch_url()
  */
 function _update_get_fetch_url_base($project) {
-  return isset($project['info']['project status url']) ? $project['info']['project status url'] : variable_get('update_fetch_url', UPDATE_DEFAULT_URL);
+  if (isset($project['info']['project status url'])) {
+    $url = $project['info']['project status url'];
+  }
+  else {
+    $url = config('update.settings')->get('fetch.url');
+    if (empty($url)) {
+      $url = UPDATE_DEFAULT_URL;
+    }
+  }
+  return $url;
 }
 
 /**
@@ -341,10 +351,11 @@ function _update_get_fetch_url_base($project) {
  * @see update_requirements()
  */
 function _update_cron_notify() {
+  $update_config = config('update.settings');
   module_load_install('update');
   $status = update_requirements('runtime');
   $params = array();
-  $notify_all = (variable_get('update_notification_threshold', 'all') == 'all');
+  $notify_all = ($update_config->get('notification.threshold') == 'all');
   foreach (array('core', 'contrib') as $report_type) {
     $type = 'update_' . $report_type;
     if (isset($status[$type]['severity'])
@@ -353,7 +364,7 @@ function _update_cron_notify() {
     }
   }
   if (!empty($params)) {
-    $notify_list = variable_get('update_notify_emails', '');
+    $notify_list = $update_config->get('notification.emails');
     if (!empty($notify_list)) {
       $default_language = language_default();
       foreach ($notify_list as $target) {

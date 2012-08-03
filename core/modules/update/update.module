@@ -64,16 +64,6 @@ const UPDATE_NOT_FETCHED = -3;
 const UPDATE_FETCH_PENDING = -4;
 
 /**
- * Maximum number of attempts to fetch available update data from a given host.
- */
-const UPDATE_MAX_FETCH_ATTEMPTS = 2;
-
-/**
- * Maximum number of seconds to try fetching available update data at a time.
- */
-const UPDATE_MAX_FETCH_TIME = 5;
-
-/**
  * Implements hook_help().
  */
 function update_help($path, $arg) {
@@ -292,7 +282,8 @@ function update_theme() {
  * Implements hook_cron().
  */
 function update_cron() {
-  $frequency = variable_get('update_check_frequency', 1);
+  $update_config = config('update.settings');
+  $frequency = $update_config->get('check.interval_days');
   $interval = 60 * 60 * 24 * $frequency;
   if ((REQUEST_TIME - variable_get('update_last_check', 0)) > $interval) {
     // If the configured update interval has elapsed, we want to invalidate
@@ -530,7 +521,7 @@ function update_mail($key, &$message, $params) {
     $message['body'][] = t('You can automatically install your missing updates using the Update manager:', array(), array('langcode' => $langcode)) . "\n" . url('admin/reports/updates/update', array('absolute' => TRUE, 'language' => $language));
   }
   $settings_url = url('admin/reports/updates/settings', array('absolute' => TRUE));
-  if (variable_get('update_notification_threshold', 'all') == 'all') {
+  if (config('update.settings')->get('notification.threshold') == 'all') {
     $message['body'][] = t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, !url.', array('!url' => $settings_url));
   }
   else {

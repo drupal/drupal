@@ -83,7 +83,7 @@ class UpdateCoreTest extends UpdateTestBase {
         'datestamp' => '1000000000',
       ),
     );
-    variable_set('update_test_system_info', $system_info);
+    config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(array('drupal' => 'dev'));
     $this->assertNoText(t('2001-Sep-'));
     $this->assertText(t('Up to date'));
@@ -96,8 +96,8 @@ class UpdateCoreTest extends UpdateTestBase {
    */
   function testModulePageRunCron() {
     $this->setSystemInfo7_0();
-    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
-    variable_set('update_test_xml_map', array('drupal' => '0'));
+    config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    config('update_test.settings')->set('xml_map', array('drupal' => '0'))->save();
 
     $this->cronRun();
     $this->drupalGet('admin/modules');
@@ -110,8 +110,8 @@ class UpdateCoreTest extends UpdateTestBase {
   function testModulePageUpToDate() {
     $this->setSystemInfo7_0();
     // Instead of using refreshUpdateStatus(), set these manually.
-    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
-    variable_set('update_test_xml_map', array('drupal' => '0'));
+    config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    config('update_test.settings')->set('xml_map', array('drupal' => '0'))->save();
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
@@ -127,8 +127,8 @@ class UpdateCoreTest extends UpdateTestBase {
   function testModulePageRegularUpdate() {
     $this->setSystemInfo7_0();
     // Instead of using refreshUpdateStatus(), set these manually.
-    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
-    variable_set('update_test_xml_map', array('drupal' => '1'));
+    config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    config('update_test.settings')->set('xml_map', array('drupal' => '1'))->save();
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
@@ -144,8 +144,8 @@ class UpdateCoreTest extends UpdateTestBase {
   function testModulePageSecurityUpdate() {
     $this->setSystemInfo7_0();
     // Instead of using refreshUpdateStatus(), set these manually.
-    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
-    variable_set('update_test_xml_map', array('drupal' => '2-sec'));
+    config('update.settings')->set('fetch.url', url('update-test', array('absolute' => TRUE)))->save();
+    config('update_test.settings')->set('xml_map', array('drupal' => '2-sec'))->save();
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
@@ -219,6 +219,6 @@ class UpdateCoreTest extends UpdateTestBase {
         'version' => '7.0',
       ),
     );
-    variable_set('update_test_system_info', $setting);
+    config('update_test.settings')->set('system_info', $setting)->save();
   }
 }

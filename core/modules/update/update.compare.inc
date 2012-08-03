@@ -64,7 +64,7 @@ function update_get_projects() {
       $theme_data = system_rebuild_theme_data();
       update_process_info_list($projects, $module_data, 'module', TRUE);
       update_process_info_list($projects, $theme_data, 'theme', TRUE);
-      if (variable_get('update_check_disabled', FALSE)) {
+      if (config('update.settings')->get('check.disabled_extensions')) {
         update_process_info_list($projects, $module_data, 'module', FALSE);
         update_process_info_list($projects, $theme_data, 'theme', FALSE);
       }

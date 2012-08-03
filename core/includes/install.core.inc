@@ -1902,7 +1902,7 @@ function install_configure_form_submit($form, &$form_state) {
     // Add the site maintenance account's email address to the list of
     // addresses to be notified when updates are available, if selected.
     if ($form_state['values']['update_status_module'][2]) {
-      variable_set('update_notify_emails', array($form_state['values']['account']['mail']));
+      config('update.settings')->set('notification.emails', array($form_state['values']['account']['mail']))->save();
     }
   }
 

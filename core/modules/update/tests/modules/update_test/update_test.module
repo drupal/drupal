@@ -42,16 +42,16 @@ function update_test_menu() {
 /**
  * Implements hook_system_info_alter().
  *
- * Checks the 'update_test_system_info' variable and sees if we need to alter
- * the system info for the given $file based on the setting. The setting is
- * expected to be a nested associative array. If the key '#all' is defined, its
- * subarray will include .info keys and values for all modules and themes on the
- * system. Otherwise, the settings array is keyed by the module or theme short
- * name ($file->name) and the subarrays contain settings just for that module or
- * theme.
+ * Checks the 'update_test.settings:system_info' configuration and sees if we
+ * need to alter the system info for the given $file based on the setting. The
+ * setting is expected to be a nested associative array. If the key '#all' is
+ * defined, its subarray will include .info keys and values for all modules and
+ * themes on the system. Otherwise, the settings array is keyed by the module or
+ * theme short name ($file->name) and the subarrays contain settings just for
+ * that module or theme.
  */
 function update_test_system_info_alter(&$info, $file) {
-  $setting = variable_get('update_test_system_info', array());
+  $setting = config('update_test.settings')->get('system_info');
   foreach (array('#all', $file->name) as $id) {
     if (!empty($setting[$id])) {
       foreach ($setting[$id] as $key => $value) {
@@ -64,15 +64,16 @@ function update_test_system_info_alter(&$info, $file) {
 /**
  * Implements hook_update_status_alter().
  *
- * Checks the 'update_test_update_status' variable and sees if we need to alter
- * the update status for the given project based on the setting. The setting is
- * expected to be a nested associative array. If the key '#all' is defined, its
- * subarray will include .info keys and values for all modules and themes on the
- * system. Otherwise, the settings array is keyed by the module or theme short
- * name and the subarrays contain settings just for that module or theme.
+ * Checks the 'update_test.settings:update_status' configuration and sees if we
+ * need to alter the update status for the given project based on the setting.
+ * The setting is expected to be a nested associative array. If the key '#all'
+ * is defined, its subarray will include .info keys and values for all modules
+ * and themes on the system. Otherwise, the settings array is keyed by the
+ * module or theme short name and the subarrays contain settings just for that
+ * module or theme.
  */
 function update_test_update_status_alter(&$projects) {
-  $setting = variable_get('update_test_update_status', array());
+  $setting = config('update_test.settings')->get('update_status');
   if (!empty($setting)) {
     foreach ($projects as $project_name => &$project) {
       foreach (array('#all', $project_name) as $id) {
@@ -108,7 +109,7 @@ function update_test_update_status_alter(&$projects) {
  * @see update_test_menu()
  */
 function update_test_mock_page($project_name) {
-  $xml_map = variable_get('update_test_xml_map', FALSE);
+  $xml_map = config('update_test.settings')->get('xml_map');
   if (isset($xml_map[$project_name])) {
     $availability_scenario = $xml_map[$project_name];
   }

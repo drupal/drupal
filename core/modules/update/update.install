@@ -77,20 +77,10 @@ function update_install() {
  * Implements hook_uninstall().
  */
 function update_uninstall() {
-  // Clear any variables that might be in use
-  $variables = array(
-    'update_check_frequency',
-    'update_fetch_url',
-    'update_last_check',
-    'update_last_email_notification',
-    'update_notification_threshold',
-    'update_notify_emails',
-    'update_max_fetch_attempts',
-    'update_max_fetch_time',
-  );
-  foreach ($variables as $variable) {
-    variable_del($variable);
-  }
+  // @todo D8: Convert to new state storage.
+  variable_del('update_last_check');
+  variable_del('update_last_email_notification');
+
   $queue = queue('update_fetch_tasks');
   $queue->deleteQueue();
 }
@@ -156,4 +146,19 @@ function _update_requirement_check($project, $type) {
   }
   $requirement['value'] = l($requirement_label, update_manager_access() ? 'admin/reports/updates/update' : 'admin/reports/updates');
   return $requirement;
+}
+
+/**
+ * Moves update settings from variables to config.
+ */
+function update_update_8000() {
+  update_variables_to_config('update.settings', array(
+    'update_check_disabled' => 'check.disabled_extensions',
+    'update_check_frequency' => 'check.interval_days',
+    'update_fetch_url' => 'fetch.url',
+    'update_max_fetch_attempts' => 'fetch.max_attempts',
+    'update_max_fetch_time' => 'fetch.timeout',
+    'update_notify_emails' => 'notification.emails',
+    'update_notification_threshold' => 'notification.threshold',
+  ));
 }

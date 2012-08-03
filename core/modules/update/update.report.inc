@@ -44,7 +44,7 @@ function theme_update_report($variables) {
   $header = array();
   $rows = array();
 
-  $notification_level = variable_get('update_notification_threshold', 'all');
+  $notification_level = config('update.settings')->get('notification.threshold');
 
   // Create an array of status values keyed by module or theme name, since
   // we'll need this while generating the report if we have to cross reference
