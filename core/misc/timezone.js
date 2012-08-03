@@ -7,7 +7,8 @@
  */
 Drupal.behaviors.setTimezone = {
   attach: function (context, settings) {
-    $(context).find('select.timezone-detect').once('timezone', function () {
+    var $timezone = $(context).find('.timezone-detect').once('timezone');
+    if ($timezone.length) {
       var dateString = Date();
       // In some client environments, date strings include a time zone
       // abbreviation, between 3 and 5 letters enclosed in parentheses,
@@ -49,7 +50,6 @@ Drupal.behaviors.setTimezone = {
       // for debugging purposes. Submit a synchronous request to avoid database
       // errors associated with concurrent requests during install.
       var path = 'system/timezone/' + abbreviation + '/' + offsetNow + '/' + isDaylightSavingTime;
-      var element = this;
       $.ajax({
         async: false,
         url: Drupal.url(path),
@@ -57,11 +57,11 @@ Drupal.behaviors.setTimezone = {
         dataType: 'json',
         success: function (data) {
           if (data) {
-            $(element).val(data);
+            $timezone.val(data);
           }
         }
       });
-    });
+    }
   }
 };
 
