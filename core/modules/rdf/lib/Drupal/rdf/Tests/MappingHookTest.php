@@ -26,7 +26,7 @@ class MappingHookTest extends WebTestBase {
   }
 
   /**
-   * Test that hook_rdf_mapping() correctly returns and processes mapping.
+   * Tests that hook_rdf_mapping() correctly returns and processes mapping.
    */
   function testMapping() {
     // Test that the mapping is returned correctly by the hook.

@@ -26,7 +26,7 @@ class CrudTest extends WebTestBase {
   }
 
   /**
-   * Test inserting, loading, updating, and deleting RDF mappings.
+   * Tests inserting, loading, updating, and deleting RDF mappings.
    */
   function testCRUD() {
     // Verify loading of a default mapping.

@@ -10,7 +10,7 @@ namespace Drupal\rdf\Tests;
 use Drupal\taxonomy\Tests\TaxonomyTestBase;
 
 /**
- * Test the RDF mapping definition functionality.
+ * Tests the RDF mapping definition functionality.
  */
 class MappingDefinitionTest extends TaxonomyTestBase {
   protected $profile = 'standard';

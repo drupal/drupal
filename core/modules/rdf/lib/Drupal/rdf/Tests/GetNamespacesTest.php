@@ -26,7 +26,7 @@ class GetNamespacesTest extends WebTestBase {
   }
 
   /**
-   * Test RDF namespaces.
+   * Tests RDF namespaces.
    */
   function testGetRdfNamespaces() {
     // Fetches the front page and extracts RDFa 1.1 prefixes.

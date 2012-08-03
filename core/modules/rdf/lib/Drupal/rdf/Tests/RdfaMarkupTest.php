@@ -28,7 +28,7 @@ class RdfaMarkupTest extends WebTestBase {
   }
 
   /**
-   * Test rdf_rdfa_attributes().
+   * Tests rdf_rdfa_attributes().
    */
   function testDrupalRdfaAttributes() {
     // Same value as the one in the HTML tag (no callback function).

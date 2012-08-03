@@ -124,7 +124,7 @@ class CommentAttributesTest extends CommentTestBase {
   }
 
   /**
-   * Test RDF comment replies.
+   * Tests RDF comment replies.
    */
   public function testCommentReplyOfRdfaMarkup() {
     // Posts comment #1 as a registered user.

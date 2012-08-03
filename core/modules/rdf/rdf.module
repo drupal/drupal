@@ -91,8 +91,10 @@ function rdf_rdf_namespaces() {
 }
 
 /**
- * Returns an array of RDF namespaces defined in modules that implement
- * hook_rdf_namespaces().
+ * Retrieves RDF namespaces.
+ *
+ * Invokes hook_rdf_namespaces() and collects RDF namespaces from modules that
+ * implement it.
  */
 function rdf_get_namespaces() {
   $rdf_namespaces = module_invoke_all('rdf_namespaces');
@@ -148,7 +150,7 @@ function rdf_mapping_load($type, $bundle = RDF_DEFAULT_BUNDLE) {
  */
 
 /**
- * Helper function to get the default RDF mapping for a given entity type.
+ * Gets the default RDF mapping for a given entity type.
  *
  * @param $type
  *   An entity type, e.g. 'node' or 'comment'.
@@ -179,7 +181,7 @@ function _rdf_get_default_mapping($type) {
 }
 
 /**
- * Helper function to retrieve an RDF mapping from the database.
+ * Retrieves an RDF mapping from the database.
  *
  * @param $type
  *   The entity type the mapping refers to.
@@ -217,10 +219,10 @@ function _rdf_mapping_load($type, $bundle) {
  * keys.
  *
  * @param $mapping
- *   The RDF mapping to save, as an array.
+ *   The RDF mapping to save.
  *
  * @return
- *   Status flag indicating the outcome of the operation.
+ *   MergeQuery object that indicates the outcome of the operation.
  */
 function rdf_mapping_save($mapping) {
   // In the case where a field has a mapping defined in the default entity
@@ -252,7 +254,7 @@ function rdf_mapping_save($mapping) {
  *   The bundle the mapping refers to.
  *
  * @return
- *   Return boolean TRUE if mapping deleted, FALSE if not.
+ *   TRUE if the mapping is deleted, FALSE if not.
  */
 function rdf_mapping_delete($type, $bundle) {
   $num_rows = db_delete('rdf_mapping')
@@ -264,12 +266,12 @@ function rdf_mapping_delete($type, $bundle) {
 }
 
 /**
- * Builds an array of RDFa attributes for a given mapping. This array will
- * typically be passed through drupal_attributes() to create the attributes
- * variables that are available to template files. These include $attributes,
- * $title_attributes, $content_attributes and the field-specific
- * $item_attributes variables. For more information, see
- * theme_rdf_template_variable_wrapper().
+ * Builds an array of RDFa attributes for a given mapping.
+ *
+ * This array will typically be passed through drupal_attributes() to create
+ * the attributes variables that are available to template files. These include
+ * $attributes, $title_attributes, $content_attributes and the field-specific
+ * $item_attributes variables.
  *
  * @param $mapping
  *   An array containing a mandatory 'predicates' key and optional 'datatype',
@@ -283,10 +285,13 @@ function rdf_mapping_delete($type, $bundle) {
  *     );
  *   @endcode
  * @param $data
- *   A value that needs to be converted by the provided callback function.
+ *   (optional) A value that needs to be converted by the provided callback
+ *   function.
  *
  * @return
- *   An array containing RDFa attributes suitable for drupal_attributes().
+ *   RDFa attributes suitable for drupal_attributes().
+ *
+ * @see theme_rdf_template_variable_wrapper()
  */
 function rdf_rdfa_attributes($mapping, $data = NULL) {
   // The type of mapping defaults to 'property'.
@@ -360,10 +365,11 @@ function rdf_modules_uninstalled($modules) {
  * Adds the proper RDF mapping to each entity type/bundle pair.
  *
  * @todo May need to move the comment below to another place.
- * This hook should not be used by modules to alter the bundle mappings.
- * The UI should always be authoritative. UI mappings are stored in the
- * database and if hook_entity_info_alter was used to override module defined
- * mappings, it would override the user defined mapping as well.
+ * This hook should not be used by modules to alter the bundle mappings. The UI
+ * should always be authoritative. UI mappings are stored in the database and
+ * if hook_entity_info_alter() was used to override module defined mappings, it
+ * would override the user defined mapping as well.
+ *
  */
 function rdf_entity_info_alter(&$entity_info) {
   // Loop through each entity type and its bundles.
@@ -425,6 +431,8 @@ function rdf_theme() {
 }
 
 /**
+ * Implements MODULE_process().
+ *
  * Template process function for adding extra tags to hold RDFa attributes.
  *
  * Since template files already have built-in support for $attributes,
@@ -434,9 +442,9 @@ function rdf_theme() {
  * with those here.
  */
 function rdf_process(&$variables, $hook) {
-  // Handles attributes needed for content not covered by title, content,
-  // and field items. It does this by adjusting the variable sent to the
-  // template so that the template doesn't have to worry about it. See
+  // Handles attributes needed for content not covered by title, content, and
+  // field items. It does this by adjusting the variable sent to the template
+  // so that the template doesn't have to worry about it. See
   // theme_rdf_template_variable_wrapper().
   if (!empty($variables['rdf_template_variable_attributes'])) {
     foreach ($variables['rdf_template_variable_attributes'] as $variable_name => $attributes) {
