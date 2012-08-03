@@ -438,8 +438,8 @@ function rdf_process(&$variables, $hook) {
   // and field items. It does this by adjusting the variable sent to the
   // template so that the template doesn't have to worry about it. See
   // theme_rdf_template_variable_wrapper().
-  if (!empty($variables['rdf_template_variable_attributes_array'])) {
-    foreach ($variables['rdf_template_variable_attributes_array'] as $variable_name => $attributes) {
+  if (!empty($variables['rdf_template_variable_attributes'])) {
+    foreach ($variables['rdf_template_variable_attributes'] as $variable_name => $attributes) {
       $context = array(
         'hook' => $hook,
         'variable_name' => $variable_name,
@@ -452,11 +452,11 @@ function rdf_process(&$variables, $hook) {
   // reasons, can't be placed into that template's $attributes variable. This
   // is "meta" information that is related to particular content, so render it
   // close to that content.
-  if (!empty($variables['rdf_metadata_attributes_array'])) {
+  if (!empty($variables['rdf_metadata_attributes'])) {
     if (!isset($variables['content']['#prefix'])) {
       $variables['content']['#prefix'] = '';
     }
-    $variables['content']['#prefix'] = theme('rdf_metadata', array('metadata' => $variables['rdf_metadata_attributes_array'])) . $variables['content']['#prefix'];
+    $variables['content']['#prefix'] = theme('rdf_metadata', array('metadata' => $variables['rdf_metadata_attributes'])) . $variables['content']['#prefix'];
   }
 }
 
@@ -467,8 +467,11 @@ function rdf_preprocess_html(&$variables) {
   // Adds RDF namespace prefix bindings in the form of an RDFa 1.1 prefix
   // attribute inside the html element.
   $prefixes = array();
+  if (!isset($variables['html_attributes']['prefix'])) {
+    $variables['html_attributes']['prefix'] = array();
+  }
   foreach(rdf_get_namespaces() as $prefix => $uri) {
-    $variables['html_attributes_array']['prefix'][] = $prefix . ': ' . $uri . "\n";
+    $variables['html_attributes']['prefix'][] = $prefix . ': ' . $uri . "\n";
   }
 }
 
@@ -480,15 +483,15 @@ function rdf_preprocess_node(&$variables) {
   // URI of the resource described within the HTML element, while the @typeof
   // attribute indicates its RDF type (e.g., foaf:Document, sioc:Person, and so
   // on.)
-  $variables['attributes_array']['about'] = empty($variables['node_url']) ? NULL: $variables['node_url'];
-  $variables['attributes_array']['typeof'] = empty($variables['node']->rdf_mapping['rdftype']) ? NULL : $variables['node']->rdf_mapping['rdftype'];
+  $variables['attributes']['about'] = empty($variables['node_url']) ? NULL: $variables['node_url'];
+  $variables['attributes']['typeof'] = empty($variables['node']->rdf_mapping['rdftype']) ? NULL : $variables['node']->rdf_mapping['rdftype'];
 
   // Adds RDFa markup to the title of the node. Because the RDFa markup is
   // added to the <h2> tag which might contain HTML code, we specify an empty
   // datatype to ensure the value of the title read by the RDFa parsers is a
   // literal.
-  $variables['title_attributes_array']['property'] = empty($variables['node']->rdf_mapping['title']['predicates']) ? NULL : $variables['node']->rdf_mapping['title']['predicates'];
-  $variables['title_attributes_array']['datatype'] = '';
+  $variables['title_attributes']['property'] = empty($variables['node']->rdf_mapping['title']['predicates']) ? NULL : $variables['node']->rdf_mapping['title']['predicates'];
+  $variables['title_attributes']['datatype'] = '';
 
   // In full node mode, the title is not displayed by node.tpl.php so it is
   // added in the <head> tag of the HTML page.
@@ -508,17 +511,17 @@ function rdf_preprocess_node(&$variables) {
 
   // Adds RDFa markup for the date.
   if (!empty($variables['rdf_mapping']['created'])) {
-    $date_attributes_array = rdf_rdfa_attributes($variables['rdf_mapping']['created'], $variables['created']);
-    $variables['rdf_template_variable_attributes_array']['date'] = $date_attributes_array;
+    $date_attributes = rdf_rdfa_attributes($variables['rdf_mapping']['created'], $variables['created']);
+    $variables['rdf_template_variable_attributes']['date'] = $date_attributes;
     if ($variables['submitted']) {
-      $variables['rdf_template_variable_attributes_array']['submitted'] = $date_attributes_array;
+      $variables['rdf_template_variable_attributes']['submitted'] = $date_attributes;
     }
   }
   // Adds RDFa markup for the relation between the node and its author.
   if (!empty($variables['rdf_mapping']['uid'])) {
-    $variables['rdf_template_variable_attributes_array']['name']['rel'] = $variables['rdf_mapping']['uid']['predicates'];
+    $variables['rdf_template_variable_attributes']['name']['rel'] = $variables['rdf_mapping']['uid']['predicates'];
     if ($variables['submitted']) {
-      $variables['rdf_template_variable_attributes_array']['submitted']['rel'] = $variables['rdf_mapping']['uid']['predicates'];
+      $variables['rdf_template_variable_attributes']['submitted']['rel'] = $variables['rdf_mapping']['uid']['predicates'];
     }
   }
 
@@ -565,7 +568,7 @@ function rdf_preprocess_field(&$variables) {
 
   if (!empty($mapping) && !empty($mapping[$field_name])) {
     foreach ($element['#items'] as $delta => $item) {
-      $variables['item_attributes_array'][$delta] = rdf_rdfa_attributes($mapping[$field_name], $item);
+      $variables['item_attributes'][$delta] = rdf_rdfa_attributes($mapping[$field_name], $item);
       // If this field is an image, RDFa will not output correctly when the
       // image is in a containing <a> tag. If the field is a file, RDFa will
       // not output correctly if the filetype icon comes before the link to the
@@ -573,10 +576,10 @@ function rdf_preprocess_field(&$variables) {
       // this field has a URI.
       if (isset($item['uri'])) {
         if (!empty($element[$delta]['#image_style'])) {
-          $variables['item_attributes_array'][$delta]['resource'] = image_style_url($element[$delta]['#image_style'], $item['uri']);
+          $variables['item_attributes'][$delta]['resource'] = image_style_url($element[$delta]['#image_style'], $item['uri']);
         }
         else {
-          $variables['item_attributes_array'][$delta]['resource'] = file_create_url($item['uri']);
+          $variables['item_attributes'][$delta]['resource'] = file_create_url($item['uri']);
         }
       }
     }
@@ -593,8 +596,8 @@ function rdf_preprocess_user_profile(&$variables) {
   // Adds RDFa markup to the user profile page. Fields displayed in this page
   // will automatically describe the user.
   if (!empty($account->rdf_mapping['rdftype'])) {
-    $variables['attributes_array']['typeof'] = $account->rdf_mapping['rdftype'];
-    $variables['attributes_array']['about'] = url($uri['path'], $uri['options']);
+    $variables['attributes']['typeof'] = $account->rdf_mapping['rdftype'];
+    $variables['attributes']['about'] = url($uri['path'], $uri['options']);
   }
   // Adds the relationship between the sioc:UserAccount and the foaf:Person who
   // holds the account.
@@ -629,8 +632,8 @@ function rdf_preprocess_username(&$variables) {
   // might not be transliterated to the same language that the content is in,
   // we do not want it to inherit the language attribute, so we set the
   // attribute to an empty string.
-  if (empty($variables['attributes_array']['lang'])) {
-    $variables['attributes_array']['lang'] = '';
+  if (empty($variables['attributes']['lang'])) {
+    $variables['attributes']['lang'] = '';
   }
 
   // $variables['account'] is a pseudo account object, and as such, does not
@@ -649,7 +652,7 @@ function rdf_preprocess_username(&$variables) {
   // a user profile URI for it (only a homepage which cannot be used as user
   // profile in RDF.)
   if ($variables['uid'] > 0) {
-    $variables['attributes_array']['about'] = url('user/' . $variables['uid']);
+    $variables['attributes']['about'] = url('user/' . $variables['uid']);
   }
 
   $attributes = array();
@@ -672,7 +675,7 @@ function rdf_preprocess_username(&$variables) {
   // (see http://www.w3.org/TR/rdfa-syntax/#rdfa-attributes).
   // Therefore, merge rather than override so as not to clobber values set by
   // earlier preprocess functions.
-  $variables['attributes_array'] = array_merge_recursive($variables['attributes_array'], $attributes);
+  $variables['attributes'] = array_merge_recursive($variables['attributes'], $attributes);
 }
 
 /**
@@ -686,30 +689,30 @@ function rdf_preprocess_comment(&$variables) {
     // typeof attribute indicates its RDF type (e.g., sioc:Post, foaf:Document,
     // and so on.)
     $uri = entity_uri('comment', $comment);
-    $variables['attributes_array']['about'] = url($uri['path'], $uri['options']);
-    $variables['attributes_array']['typeof'] = $comment->rdf_mapping['rdftype'];
+    $variables['attributes']['about'] = url($uri['path'], $uri['options']);
+    $variables['attributes']['typeof'] = $comment->rdf_mapping['rdftype'];
   }
 
   // Adds RDFa markup for the date of the comment.
   if (!empty($comment->rdf_mapping['created'])) {
     // The comment date is precomputed as part of the rdf_data so that it can be
     // cached as part of the entity.
-    $date_attributes_array = $comment->rdf_data['date'];
-    $variables['rdf_template_variable_attributes_array']['created'] = $date_attributes_array;
-    $variables['rdf_template_variable_attributes_array']['submitted'] = $date_attributes_array;
+    $date_attributes = $comment->rdf_data['date'];
+    $variables['rdf_template_variable_attributes']['created'] = $date_attributes;
+    $variables['rdf_template_variable_attributes']['submitted'] = $date_attributes;
   }
   // Adds RDFa markup for the relation between the comment and its author.
   if (!empty($comment->rdf_mapping['uid'])) {
-    $variables['rdf_template_variable_attributes_array']['author']['rel'] = $comment->rdf_mapping['uid']['predicates'];
-    $variables['rdf_template_variable_attributes_array']['submitted']['rel'] = $comment->rdf_mapping['uid']['predicates'];
+    $variables['rdf_template_variable_attributes']['author']['rel'] = $comment->rdf_mapping['uid']['predicates'];
+    $variables['rdf_template_variable_attributes']['submitted']['rel'] = $comment->rdf_mapping['uid']['predicates'];
   }
   if (!empty($comment->rdf_mapping['title'])) {
     // Adds RDFa markup to the subject of the comment. Because the RDFa markup
     // is added to an <h3> tag which might contain HTML code, we specify an
     // empty datatype to ensure the value of the title read by the RDFa parsers
     // is a literal.
-    $variables['title_attributes_array']['property'] = $comment->rdf_mapping['title']['predicates'];
-    $variables['title_attributes_array']['datatype'] = '';
+    $variables['title_attributes']['property'] = $comment->rdf_mapping['title']['predicates'];
+    $variables['title_attributes']['datatype'] = '';
   }
 
   // Annotates the parent relationship between the current comment and the node
@@ -720,7 +723,7 @@ function rdf_preprocess_comment(&$variables) {
     // The parent node URI is precomputed as part of the rdf_data so that it can
     // be cached as part of the entity.
     $parent_node_attributes['resource'] = $comment->rdf_data['nid_uri'];
-    $variables['rdf_metadata_attributes_array'][] = $parent_node_attributes;
+    $variables['rdf_metadata_attributes'][] = $parent_node_attributes;
 
     // Adds the relation to parent comment, if it exists.
     if ($comment->pid != 0) {
@@ -728,7 +731,7 @@ function rdf_preprocess_comment(&$variables) {
       // The parent comment URI is precomputed as part of the rdf_data so that
       // it can be cached as part of the entity.
       $parent_comment_attributes['resource'] = $comment->rdf_data['pid_uri'];
-      $variables['rdf_metadata_attributes_array'][] = $parent_comment_attributes;
+      $variables['rdf_metadata_attributes'][] = $parent_comment_attributes;
     }
   }
 }
@@ -805,7 +808,7 @@ function rdf_preprocess_image(&$variables) {
  * an extra wrapper element, you can override this function to not wrap that
  * variable and instead print the following inside your template file:
  * @code
- *   drupal_attributes($rdf_template_variable_attributes_array[$variable_name])
+ *   drupal_attributes($rdf_template_variable_attributes[$variable_name])
  * @endcode
  *
  * @param $variables
@@ -828,7 +831,7 @@ function rdf_preprocess_image(&$variables) {
  *     therefore can be validly wrapped by a <span> tag. FALSE if the content
  *     might contain block level HTML elements and therefore cannot be validly
  *     wrapped by a <span> tag. Modules implementing preprocess functions that
- *     set 'rdf_template_variable_attributes_array' for a particular template
+ *     set 'rdf_template_variable_attributes' for a particular template
  *     variable that might contain block level HTML must also implement
  *     hook_preprocess_HOOK() for theme_rdf_template_variable_wrapper() and set
  *     'inline' to FALSE for that context. Themes that render normally inline

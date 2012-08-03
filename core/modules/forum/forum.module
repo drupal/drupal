@@ -1035,7 +1035,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
  */
 function forum_preprocess_block(&$variables) {
   if ($variables['block']->module == 'forum') {
-    $variables['attributes_array']['role'] = 'navigation';
+    $variables['attributes']['role'] = 'navigation';
   }
 }
 

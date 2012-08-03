@@ -453,6 +453,6 @@ function statistics_update_index() {
  */
 function statistics_preprocess_block(&$variables) {
   if ($variables['block']->module == 'statistics') {
-    $variables['attributes_array']['role'] = 'navigation';
+    $variables['attributes']['role'] = 'navigation';
   }
 }

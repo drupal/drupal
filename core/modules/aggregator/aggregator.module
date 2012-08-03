@@ -818,6 +818,6 @@ function aggregator_aggregator_fetch_info() {
  */
 function aggregator_preprocess_block(&$variables) {
   if ($variables['block']->module == 'aggregator') {
-    $variables['attributes_array']['role'] = 'complementary';
+    $variables['attributes']['role'] = 'complementary';
   }
 }

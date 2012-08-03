@@ -12,20 +12,20 @@
  */
 function bartik_preprocess_html(&$variables) {
   if (!empty($variables['page']['featured'])) {
-    $variables['classes_array'][] = 'featured';
+    $variables['attributes']['class'][] = 'featured';
   }
 
   if (!empty($variables['page']['triptych_first'])
     || !empty($variables['page']['triptych_middle'])
     || !empty($variables['page']['triptych_last'])) {
-    $variables['classes_array'][] = 'triptych';
+    $variables['attributes']['class'][] = 'triptych';
   }
 
   if (!empty($variables['page']['footer_firstcolumn'])
     || !empty($variables['page']['footer_secondcolumn'])
     || !empty($variables['page']['footer_thirdcolumn'])
     || !empty($variables['page']['footer_fourthcolumn'])) {
-    $variables['classes_array'][] = 'footer-columns';
+    $variables['attributes']['class'][] = 'footer-columns';
   }
 }
 
@@ -116,7 +116,7 @@ function bartik_process_maintenance_page(&$variables) {
 function bartik_preprocess_block(&$variables) {
   // In the header region visually hide block titles.
   if ($variables['block']->region == 'header') {
-    $variables['title_attributes_array']['class'][] = 'element-invisible';
+    $variables['title_attributes']['class'][] = 'element-invisible';
   }
 }
 
@@ -146,7 +146,8 @@ function bartik_field__taxonomy_term_reference($variables) {
   $output .= '</ul>';
 
   // Render the top-level DIV.
-  $output = '<div class="' . $variables['classes'] . (!in_array('clearfix', $variables['classes_array']) ? ' clearfix' : '') . '"' . $variables['attributes'] .'>' . $output . '</div>';
+  $variables['attributes']['class'][] = 'clearfix';
+  $output = '<div ' . $variables['attributes'] . '>' . $output . '</div>';
 
   return $output;
 }

@@ -2312,7 +2312,7 @@ function _theme_table_cell($cell, $header = FALSE) {
  */
 function template_preprocess(&$variables, $hook) {
   global $user;
-  static $count = array();
+  static $count = array(), $default_attributes;
 
   // Track run count for each hook to provide zebra striping.
   // See "template_preprocess_block()" which provides the same feature specific to blocks.
@@ -2322,9 +2322,6 @@ function template_preprocess(&$variables, $hook) {
 
   // Tell all templates where they are located.
   $variables['directory'] = path_to_theme();
-
-  // Initialize html class attribute for the current hook.
-  $variables['classes_array'] = array(drupal_html_class($hook));
 
   // Merge in variables that don't depend on hook and don't change during a
   // single page request.
@@ -2340,7 +2337,17 @@ function template_preprocess(&$variables, $hook) {
   if (!isset($default_variables) || ($user !== $default_variables['user'])) {
     $default_variables = _template_preprocess_default_variables();
   }
-  $variables += $default_variables;
+  if (!isset($default_attributes)) {
+    $default_attributes = drupal_attributes(array('class' => array()));
+  }
+  $variables += $default_variables + array(
+    'attributes' => clone $default_attributes,
+    'title_attributes' => clone $default_attributes,
+    'content_attributes' => clone $default_attributes,
+  );
+
+  // Initialize html class attribute for the current hook.
+  $variables['attributes']['class'][] = drupal_html_class($hook);
 }
 
 /**
@@ -2351,9 +2358,6 @@ function _template_preprocess_default_variables() {
 
   // Variables that don't depend on a database connection.
   $variables = array(
-    'attributes_array' => array(),
-    'title_attributes_array' => array(),
-    'content_attributes_array' => array(),
     'title_prefix' => array(),
     'title_suffix' => array(),
     'user' => $user,
@@ -2385,34 +2389,6 @@ function _template_preprocess_default_variables() {
 }
 
 /**
- * Adds helper variables derived from variables defined during preprocessing.
- *
- * When preparing variables for a theme hook implementation, all 'preprocess'
- * functions run first, then all 'process' functions (see theme() for details
- * about the full sequence).
- *
- * This function serializes array variables manipulated during the preprocessing
- * phase into strings for convenient use by templates. As with
- * template_preprocess(), this function does not get called for theme hooks
- * implemented as functions.
- *
- * @see theme()
- * @see template_preprocess()
- */
-function template_process(&$variables, $hook) {
-  // Flatten out classes.
-  $variables['classes'] = implode(' ', $variables['classes_array']);
-
-  // Flatten out attributes, title_attributes, and content_attributes.
-  // Because this function can be called very often, and often with empty
-  // attributes, optimize performance by only calling drupal_attributes() if
-  // necessary.
-  $variables['attributes'] = $variables['attributes_array'] ? drupal_attributes($variables['attributes_array']) : '';
-  $variables['title_attributes'] = $variables['title_attributes_array'] ? drupal_attributes($variables['title_attributes_array']) : '';
-  $variables['content_attributes'] = $variables['content_attributes_array'] ? drupal_attributes($variables['content_attributes_array']) : '';
-}
-
-/**
  * Preprocess variables for html.tpl.php
  *
  * @see system_elements()
@@ -2424,22 +2400,24 @@ function template_preprocess_html(&$variables) {
   // Compile a list of classes that are going to be applied to the body element.
   // This allows advanced theming based on context (home page, node of certain type, etc.).
   // Add a class that tells us whether we're on the front page or not.
-  $variables['classes_array'][] = $variables['is_front'] ? 'front' : 'not-front';
+  $variables['attributes']['class'][] = $variables['is_front'] ? 'front' : 'not-front';
   // Add a class that tells us whether the page is viewed by an authenticated user or not.
-  $variables['classes_array'][] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
+  $variables['attributes']['class'][] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
 
   // Add information about the number of sidebars.
   if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
-    $variables['classes_array'][] = 'two-sidebars';
+    $variables['attributes']['class'][] = 'two-sidebars';
   }
   elseif (!empty($variables['page']['sidebar_first'])) {
-    $variables['classes_array'][] = 'one-sidebar sidebar-first';
+    $variables['attributes']['class'][] = 'one-sidebar';
+    $variables['attributes']['class'][] = 'sidebar-first';
   }
   elseif (!empty($variables['page']['sidebar_second'])) {
-    $variables['classes_array'][] = 'one-sidebar sidebar-second';
+    $variables['attributes']['class'][] = 'one-sidebar';
+    $variables['attributes']['class'][] = 'sidebar-second';
   }
   else {
-    $variables['classes_array'][] = 'no-sidebars';
+    $variables['attributes']['class'][] = 'no-sidebars';
   }
 
   // Populate the body classes.
@@ -2449,23 +2427,22 @@ function template_preprocess_html(&$variables) {
         // Add current suggestion to page classes to make it possible to theme
         // the page depending on the current page type (e.g. node, admin, user,
         // etc.) as well as more specific data like node-12 or node-edit.
-        $variables['classes_array'][] = drupal_html_class($suggestion);
+        $variables['attributes']['class'][] = drupal_html_class($suggestion);
       }
     }
   }
 
   // If on an individual node page, add the node type to body classes.
   if ($node = menu_get_object()) {
-    $variables['classes_array'][] = drupal_html_class('node-type-' . $node->type);
+    $variables['attributes']['class'][] = drupal_html_class('node-type-' . $node->type);
   }
 
   // Initializes attributes which are specific to the html and body elements.
-  $variables['html_attributes_array'] = array();
-  $variables['body_attributes_array'] = array();
+  $variables['html_attributes'] = drupal_attributes();
 
   // HTML element attributes.
-  $variables['html_attributes_array']['lang'] = $language_interface->langcode;
-  $variables['html_attributes_array']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
+  $variables['html_attributes']['lang'] = $language_interface->langcode;
+  $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
 
   // Add favicon.
   if (theme_get_setting('toggle_favicon')) {
@@ -2633,10 +2610,6 @@ function template_process_page(&$variables) {
  * @see html.tpl.php
  */
 function template_process_html(&$variables) {
-  // Flatten out html_attributes and body_attributes.
-  $variables['html_attributes'] = drupal_attributes($variables['html_attributes_array']);
-  $variables['body_attributes'] = drupal_attributes($variables['body_attributes_array']);
-
   // Render page_top and page_bottom into top level variables.
   $variables['page_top'] = drupal_render($variables['page']['page_top']);
   $variables['page_bottom'] = drupal_render($variables['page']['page_bottom']);
@@ -2654,8 +2627,8 @@ function template_process_html(&$variables) {
  * Generate an array of suggestions from path arguments.
  *
  * This is typically called for adding to the 'theme_hook_suggestions' or
- * 'classes_array' variables from within preprocess functions, when wanting to
- * base the additional suggestions on the path of the current page.
+ * 'attributes' class key variables from within preprocess functions, when
+ * wanting to base the additional suggestions on the path of the current page.
  *
  * @param $args
  *   An array of path arguments, such as from function arg().
@@ -2670,7 +2643,7 @@ function template_process_html(&$variables) {
  * @return
  *   An array of suggestions, suitable for adding to
  *   $variables['theme_hook_suggestions'] within a preprocess function or to
- *   $variables['classes_array'] if the suggestions represent extra CSS classes.
+ *   $variables['attributes']['class'] if the suggestions represent extra CSS classes.
  */
 function theme_get_suggestions($args, $base, $delimiter = '__') {
 
@@ -2800,18 +2773,19 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['title']             = drupal_get_title();
 
   // Compile a list of classes that are going to be applied to the body element.
-  $variables['classes_array'][] = 'in-maintenance';
+  $variables['attributes']['class'][] = 'in-maintenance';
   if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
-    $variables['classes_array'][] = 'db-offline';
+    $variables['attributes']['class'][] = 'db-offline';
   }
   if ($variables['layout'] == 'both') {
-    $variables['classes_array'][] = 'two-sidebars';
+    $variables['attributes']['class'][] = 'two-sidebars';
   }
   elseif ($variables['layout'] == 'none') {
-    $variables['classes_array'][] = 'no-sidebars';
+    $variables['attributes']['class'][] = 'no-sidebars';
   }
   else {
-    $variables['classes_array'][] = 'one-sidebar sidebar-' . $variables['layout'];
+    $variables['attributes']['class'][] = 'one-sidebar';
+    $variables['attributes']['class'][] = 'sidebar-' . $variables['layout'];
   }
 
   // Dead databases will show error messages so supplying this template will
@@ -2849,6 +2823,6 @@ function template_preprocess_region(&$variables) {
   $variables['content'] = $variables['elements']['#children'];
   $variables['region'] = $variables['elements']['#region'];
 
-  $variables['classes_array'][] = drupal_region_class($variables['region']);
+  $variables['attributes']['class'][] = drupal_region_class($variables['region']);
   $variables['theme_hook_suggestions'][] = 'region__' . $variables['region'];
 }

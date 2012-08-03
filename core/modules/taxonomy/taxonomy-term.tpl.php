@@ -13,9 +13,9 @@
  *   given element.
  * - $term_url: Direct url of the current term.
  * - $term_name: Name of the current term.
- * - $classes: String of classes that can be used to style contextually through
- *   CSS. It can be manipulated through the variable $classes_array from
- *   preprocess functions. The default values can be one or more of the following:
+ * - $attributes: An instance of Attributes class that can be manipulated as an
+ *    array and printed as a string.
+ *    It includes the 'class' information, which includes:
  *   - taxonomy-term: The current template type, i.e., "theming hook".
  *   - vocabulary-[vocabulary-name]: The vocabulary to which the term belongs to.
  *     For example, if the term is a "Tag" it would result in "vocabulary-tag".
@@ -24,8 +24,6 @@
  * - $term: Full term object. Contains data that may not be safe.
  * - $view_mode: View mode, e.g. 'full', 'teaser'...
  * - $page: Flag for the full page state.
- * - $classes_array: Array of html class attribute values. It is flattened
- *   into a string within the variable $classes.
  * - $zebra: Outputs either "even" or "odd". Useful for zebra striping in
  *   teaser listings.
  * - $id: Position of the term. Increments each time it's output.
@@ -38,7 +36,7 @@
  * @see template_process()
  */
 ?>
-<div id="taxonomy-term-<?php print $term->tid; ?>" class="<?php print $classes; ?>">
+<div id="taxonomy-term-<?php print $term->tid; ?>"<?php print $attributes; ?>>
 
   <?php if (!$page): ?>
     <h2><a href="<?php print $term_url; ?>"><?php print $term_name; ?></a></h2>

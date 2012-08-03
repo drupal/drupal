@@ -498,7 +498,7 @@ function language_block_view($type) {
  */
 function language_preprocess_block(&$variables) {
   if ($variables['block']->module == 'language') {
-    $variables['attributes_array']['role'] = 'navigation';
+    $variables['attributes']['role'] = 'navigation';
   }
 }
 

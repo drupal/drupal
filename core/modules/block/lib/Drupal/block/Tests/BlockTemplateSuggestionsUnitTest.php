@@ -47,10 +47,10 @@ class BlockTemplateSuggestionsUnitTest extends UnitTestBase {
     $variables2['elements']['#block'] = $block2;
     $variables2['elements']['#children'] = '';
     // Test adding a class to the block content.
-    $variables2['content_attributes_array']['class'][] = 'test-class';
+    $variables2['content_attributes']['class'][] = 'test-class';
     template_preprocess_block($variables2);
     $this->assertEqual($variables2['theme_hook_suggestions'], array('block__footer', 'block__block', 'block__block__hyphen_test'), t('Hyphens (-) in block delta were replaced by underscore (_)'));
     // Test that the default class and added class are available.
-    $this->assertEqual($variables2['content_attributes_array']['class'], array('test-class', 'content'), t('Default .content class added to block content_attributes_array'));
+    $this->assertEqual($variables2['content_attributes']['class'], array('test-class', 'content'), t('Default .content class added to block content_attributes_array'));
   }
 }

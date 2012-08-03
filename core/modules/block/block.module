@@ -998,10 +998,10 @@ function template_preprocess_block(&$variables) {
   // Create the $content variable that templates expect.
   $variables['content'] = $variables['elements']['#children'];
 
-  $variables['classes_array'][] = drupal_html_class('block-' . $variables['block']->module);
+  $variables['attributes']['class'][] = drupal_html_class('block-' . $variables['block']->module);
 
   // Add default class for block content.
-  $variables['content_attributes_array']['class'][] = 'content';
+  $variables['content_attributes']['class'][] = 'content';
 
   $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->region;
   $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->module;

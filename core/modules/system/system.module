@@ -2350,17 +2350,17 @@ function system_preprocess_block(&$variables) {
 
     switch ($variables['block']->delta) {
       case 'powered-by':
-        $variables['attributes_array']['role'] = 'complementary';
+        $variables['attributes']['role'] = 'complementary';
         break;
       case 'help':
-        $variables['attributes_array']['role'] = 'complementary';
+        $variables['attributes']['role'] = 'complementary';
         break;
 
       // System menu blocks should get the same class as menu module blocks.
       default:
         if (in_array($variables['block']->delta, array_keys(menu_list_system_menus()))) {
-          $variables['attributes_array']['role'] = 'navigation';
-          $variables['classes_array'][] = 'block-menu';
+          $variables['attributes']['role'] = 'navigation';
+          $variables['attributes']['class'][] = 'block-menu';
         }
     }
   }

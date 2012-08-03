@@ -2111,7 +2111,7 @@ function comment_form_submit($form, &$form_state) {
  */
 function comment_preprocess_block(&$variables) {
   if ($variables['block']->module == 'comment') {
-    $variables['attributes_array']['role'] = 'navigation';
+    $variables['attributes']['role'] = 'navigation';
   }
 }
 
@@ -2159,20 +2159,20 @@ function template_preprocess_comment(&$variables) {
   // Gather comment classes.
   // 'published' class is not needed, it is either 'preview' or 'unpublished'.
   if ($variables['status'] != 'published') {
-    $variables['classes_array'][] = $variables['status'];
+    $variables['attributes']['class'][] = $variables['status'];
   }
   if ($variables['new']) {
-    $variables['classes_array'][] = 'new';
+    $variables['attributes']['class'][] = 'new';
   }
   if (!$comment->uid) {
-    $variables['classes_array'][] = 'by-anonymous';
+    $variables['attributes']['class'][] = 'by-anonymous';
   }
   else {
     if ($comment->uid == $variables['node']->uid) {
-      $variables['classes_array'][] = 'by-node-author';
+      $variables['attributes']['class'][] = 'by-node-author';
     }
     if ($comment->uid == $variables['user']->uid) {
-      $variables['classes_array'][] = 'by-viewer';
+      $variables['attributes']['class'][] = 'by-viewer';
     }
   }
 }

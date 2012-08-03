@@ -72,6 +72,6 @@ function help_help($path, $arg) {
  */
 function help_preprocess_block(&$variables) {
   if ($variables['block']->module == 'system' && $variables['block']->delta == 'help') {
-    $variables['attributes_array']['role'] = 'complementary';
+    $variables['attributes']['role'] = 'complementary';
   }
 }

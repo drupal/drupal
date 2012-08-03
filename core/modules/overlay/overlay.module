@@ -481,7 +481,7 @@ function overlay_system_info_alter(&$info, $file, $type) {
 function overlay_preprocess_html(&$variables) {
   if (overlay_get_mode() == 'child') {
     // Add overlay class, so themes can react to being displayed in the overlay.
-    $variables['classes_array'][] = 'overlay';
+    $variables['attributes']['class'][] = 'overlay';
   }
 }
 
@@ -504,7 +504,7 @@ function template_preprocess_overlay(&$variables) {
   $variables['tabs'] = menu_primary_local_tasks();
   $variables['title'] = drupal_get_title();
   $variables['disable_overlay'] = overlay_disable_message();
-  $variables['content_attributes_array']['class'][] = 'clearfix';
+  $variables['content_attributes']['class'][] = 'clearfix';
 }
 
 /**

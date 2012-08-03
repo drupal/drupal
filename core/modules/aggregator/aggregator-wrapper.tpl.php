@@ -14,7 +14,7 @@
  * @ingroup themeable
  */
 ?>
-<div class="<?php print $classes; ?>">
+<div class="<?php print $attributes['class']; ?>">
   <?php print $content; ?>
   <?php print $pager; ?>
 </div>

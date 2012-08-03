@@ -1068,7 +1068,7 @@ function _book_link_defaults($nid) {
  */
 function book_preprocess_block(&$variables) {
   if ($variables['block']-> module == 'book') {
-    $variables['attributes_array']['role'] = 'navigation';
+    $variables['attributes']['role'] = 'navigation';
   }
 }
 
@@ -1233,8 +1233,8 @@ function template_preprocess_book_export_html(&$variables) {
   $variables['head'] = drupal_get_html_head();
 
   // HTML element attributes.
-  $variables['html_attributes_array']['lang'] = $language_interface->langcode;
-  $variables['html_attributes_array']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
+  $variables['html_attributes']['lang'] = $language_interface->langcode;
+  $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
 }
 
 /**
@@ -1244,7 +1244,7 @@ function template_preprocess_book_export_html(&$variables) {
  */
 function template_process_book_export_html(&$variables) {
   // Flatten out html_attributes
-  $variables['html_attributes'] = drupal_attributes($variables['html_attributes_array']);
+  $variables['html_attributes'] = drupal_attributes($variables['html_attributes']);
 }
 
 /**

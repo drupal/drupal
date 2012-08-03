@@ -137,7 +137,7 @@ function hook_preprocess(&$variables, $hook) {
   if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
     $variables['title_suffix']['contextual_links'] = contextual_links_view($element);
     if (!empty($variables['title_suffix']['contextual_links'])) {
-      $variables['classes_array'][] = 'contextual-links-region';
+      $variables['attributes']['class'][] = 'contextual-links-region';
     }
   }
 }
@@ -178,8 +178,8 @@ function hook_preprocess_HOOK(&$variables) {
  */
 function hook_process(&$variables, $hook) {
   // Wraps variables in RDF wrappers.
-  if (!empty($variables['rdf_template_variable_attributes_array'])) {
-    foreach ($variables['rdf_template_variable_attributes_array'] as $variable_name => $attributes) {
+  if (!empty($variables['rdf_template_variable_attributes'])) {
+    foreach ($variables['rdf_template_variable_attributes'] as $variable_name => $attributes) {
       $context = array(
         'hook' => $hook,
         'variable_name' => $variable_name,

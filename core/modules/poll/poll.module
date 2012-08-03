@@ -777,7 +777,7 @@ function poll_vote($form, &$form_state) {
  */
 function poll_preprocess_block(&$variables) {
   if ($variables['block']->module == 'poll') {
-    $variables['attributes_array']['role'] = 'complementary';
+    $variables['attributes']['role'] = 'complementary';
   }
 }
 

@@ -814,6 +814,6 @@ function menu_get_menus($all = TRUE) {
  */
 function menu_preprocess_block(&$variables) {
   if ($variables['block']->module == 'menu') {
-    $variables['attributes_array']['role'] = 'navigation';
+    $variables['attributes']['role'] = 'navigation';
   }
 }

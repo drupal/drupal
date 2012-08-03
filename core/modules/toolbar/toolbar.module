@@ -146,9 +146,9 @@ function toolbar_pre_render($toolbar) {
  */
 function toolbar_preprocess_html(&$vars) {
   if (isset($vars['page']['page_top']['toolbar']) && user_access('access toolbar')) {
-    $vars['classes_array'][] = 'toolbar';
+    $vars['attributes']['class'][] = 'toolbar';
     if (!_toolbar_is_collapsed()) {
-      $vars['classes_array'][] = 'toolbar-drawer';
+      $vars['attributes']['class'][] = 'toolbar-drawer';
     }
   }
 }
@@ -160,7 +160,7 @@ function toolbar_preprocess_html(&$vars) {
  * down, so it appears below the toolbar.
  */
 function toolbar_preprocess_toolbar(&$variables) {
-  $variables['classes_array'][] = "overlay-displace-top";
+  $variables['attributes']['class'][] = "overlay-displace-top";
 }
 
 /**

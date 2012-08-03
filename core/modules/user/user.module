@@ -1190,13 +1190,13 @@ function user_preprocess_block(&$variables) {
   if ($variables['block']->module == 'user') {
     switch ($variables['block']->delta) {
       case 'login':
-        $variables['attributes_array']['role'] = 'form';
+        $variables['attributes']['role'] = 'form';
         break;
       case 'new':
-        $variables['attributes_array']['role'] = 'complementary';
+        $variables['attributes']['role'] = 'complementary';
         break;
       case 'online':
-        $variables['attributes_array']['role'] = 'complementary';
+        $variables['attributes']['role'] = 'complementary';
         break;
     }
   }
@@ -1327,7 +1327,7 @@ function template_preprocess_username(&$variables) {
   // We do not want the l() function to check_plain() a second time.
   $variables['link_options']['html'] = TRUE;
   // Set a default class.
-  $variables['attributes_array'] = array('class' => array('username'));
+  $variables['attributes'] = array('class' => array('username'));
 }
 
 /**
@@ -1340,14 +1340,14 @@ function template_process_username(&$variables) {
   // This is done in the process phase so that attributes may be added by
   // modules or the theme during the preprocess phase.
   if (isset($variables['link_path'])) {
-    // $variables['attributes_array'] contains attributes that should be applied
+    // $variables['attributes'] contains attributes that should be applied
     // regardless of whether a link is being rendered or not.
     // $variables['link_attributes'] contains attributes that should only be
     // applied if a link is being rendered. Preprocess functions are encouraged
     // to use the former unless they want to add attributes on the link only.
     // If a link is being rendered, these need to be merged. Some attributes are
     // themselves arrays, so the merging needs to be recursive.
-    $variables['link_options']['attributes'] = array_merge_recursive($variables['link_attributes'], $variables['attributes_array']);
+    $variables['link_options']['attributes'] = array_merge_recursive($variables['link_attributes'], $variables['attributes']);
   }
 }
 
@@ -1363,7 +1363,7 @@ function template_process_username(&$variables) {
  *     other desired page to link to for more information about the user.
  *   - link_options: An array of options to pass to the l() function's $options
  *     parameter if linking the user's name to the user's page.
- *   - attributes_array: An array of attributes to pass to the
+ *   - attributes: An array of attributes to pass to the
  *     drupal_attributes() function if not linking to the user's page.
  *
  * @see template_preprocess_username()
@@ -1379,8 +1379,8 @@ function theme_username($variables) {
   else {
     // Modules may have added important attributes so they must be included
     // in the output. Additional classes may be added as array elements like
-    // $variables['attributes_array']['class'][] = 'myclass';
-    $output = '<span' . drupal_attributes($variables['attributes_array']) . '>' . $variables['name'] . $variables['extra'] . '</span>';
+    // $variables['attributes']['class'][] = 'myclass';
+    $output = '<span' . drupal_attributes($variables['attributes']) . '>' . $variables['name'] . $variables['extra'] . '</span>';
   }
   return $output;
 }

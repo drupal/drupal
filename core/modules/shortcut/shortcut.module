@@ -644,7 +644,7 @@ function shortcut_renderable_links($shortcut_set = NULL) {
  */
 function shortcut_preprocess_block(&$variables) {
   if ($variables['block']->module == 'shortcut') {
-    $variables['attributes_array']['role'] = 'navigation';
+    $variables['attributes']['role'] = 'navigation';
   }
 }
 

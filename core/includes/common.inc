@@ -4,6 +4,7 @@ use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Template\Attribute;
 
 /**
  * @file
@@ -2271,11 +2272,7 @@ function drupal_http_header_attributes(array $attributes = array()) {
  * @ingroup sanitization
  */
 function drupal_attributes(array $attributes = array()) {
-  foreach ($attributes as $attribute => &$data) {
-    $data = implode(' ', (array) $data);
-    $data = $attribute . '="' . check_plain($data) . '"';
-  }
-  return $attributes ? ' ' . implode(' ', $attributes) : '';
+  return new Attribute($attributes);
 }
 
 /**

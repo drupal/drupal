@@ -25,10 +25,9 @@
  * - $status: Comment status. Possible values are:
  *   unpublished, published, or preview.
  * - $title: Linked title.
- * - $classes: String of classes that can be used to style contextually through
- *   CSS. It can be manipulated through the variable $classes_array from
- *   preprocess functions. The default values can be one or more of the
- *   following:
+ * - $attributes: An instance of Attributes class that can be manipulated as an
+ *    array and printed as a string.
+ *    It includes the 'class' information, which includes:
  *   - comment: The current template type; e.g., 'theming hook'.
  *   - by-anonymous: Comment by an unregistered user.
  *   - by-node-author: Comment by the author of the parent node.
@@ -48,10 +47,6 @@
  * - $comment: Full comment object.
  * - $node: Node entity the comments are attached to.
  *
- * Other variables:
- * - $classes_array: Array of html class attribute values. It is flattened
- *   into a string within the variable $classes.
- *
  * @see template_preprocess()
  * @see template_preprocess_comment()
  * @see template_process()
@@ -60,7 +55,7 @@
  * @ingroup themeable
  */
 ?>
-<div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
+<div class="<?php print $attributes['class']; ?> clearfix"<?php print $attributes; ?>>
 
   <div class="attribution">
 

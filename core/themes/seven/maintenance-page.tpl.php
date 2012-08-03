@@ -22,7 +22,7 @@
     <?php print $styles; ?>
     <?php print $scripts; ?>
   </head>
-  <body class="<?php print $classes; ?>">
+  <body class="<?php print $attributes['class']; ?>">
 
   <?php print $page_top; ?>
 

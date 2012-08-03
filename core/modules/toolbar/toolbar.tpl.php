@@ -5,23 +5,19 @@
  * Default template for admin toolbar.
  *
  * Available variables:
- * - $classes: String of classes that can be used to style contextually through
- *   CSS. It can be manipulated through the variable $classes_array from
- *   preprocess functions. The default value has the following:
+ * - $attributes: An instance of Attributes class that can be manipulated as an
+ *    array and printed as a string.
+ *    It includes the 'class' information, which includes:
  *   - toolbar: The current template type, i.e., "theming hook".
  * - $toolbar['toolbar_user']: User account / logout links.
  * - $toolbar['toolbar_menu']: Top level management menu links.
  * - $toolbar['toolbar_drawer']: A place for extended toolbar content.
  *
- * Other variables:
- * - $classes_array: Array of html class attribute values. It is flattened
- *   into a string within the variable $classes.
- *
  * @see template_preprocess()
  * @see template_preprocess_toolbar()
  */
 ?>
-<nav id="toolbar" role="navigation" class="<?php print $classes; ?> clearfix">
+<nav id="toolbar" role="navigation" class="<?php print $attributes['class']; ?> clearfix" <?php print $attributes; ?>>
   <div class="toolbar-menu clearfix">
     <?php print render($toolbar['toolbar_home']); ?>
     <?php print render($toolbar['toolbar_user']); ?>

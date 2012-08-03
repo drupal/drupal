@@ -33,11 +33,9 @@
  *   being the count. Depends on comment.module.
  *
  * Other variables:
- * - $classes_array: Array of HTML class attribute values. It is flattened
- *   into a string within the variable $classes.
- * - $title_attributes_array: Array of HTML attributes for the title. It is
+ * - $title_attributes: Array of HTML attributes for the title. It is
  *   flattened into a string within the variable $title_attributes.
- * - $content_attributes_array: Array of HTML attributes for the content. It is
+ * - $content_attributes: Array of HTML attributes for the content. It is
  *   flattened into a string within the variable $content_attributes.
  *
  * Since $info_split is keyed, a direct print of the item is possible.
@@ -62,7 +60,7 @@
  * @see template_process()
  */
 ?>
-<li class="<?php print $classes; ?>"<?php print $attributes; ?>>
+<li <?php print $attributes; ?>>
   <?php print render($title_prefix); ?>
   <h3 class="title"<?php print $title_attributes; ?>>
     <a href="<?php print $url; ?>"><?php print $title; ?></a>

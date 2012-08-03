@@ -21,7 +21,7 @@
   <?php print $styles; ?>
   <?php print $scripts; ?>
 </head>
-<body class="<?php print $classes; ?>">
+<body class="<?php print $attributes['class']; ?>">
   <div id="page">
     <div id="header">
       <div id="logo-title">

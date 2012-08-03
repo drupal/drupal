@@ -8,9 +8,9 @@
  * - $content: The array of content-related elements for the node. Use
  *   render($content) to print them all, or
  *   print a subset such as render($content['comment_form']).
- * - $classes: String of classes that can be used to style contextually through
- *   CSS. It can be manipulated through the variable $classes_array from
- *   preprocess functions. The default value has the following:
+ * - $attributes: An instance of Attributes class that can be manipulated as an
+ *    array and printed as a string.
+ *    It includes the 'class' information, which includes:
  *   - comment-wrapper: The current template type, i.e., "theming hook".
  * - $title_prefix (array): An array containing additional output populated by
  *   modules, intended to be displayed in front of the main title tag that
@@ -27,15 +27,11 @@
  *   - COMMENT_MODE_FLAT
  *   - COMMENT_MODE_THREADED
  *
- * Other variables:
- * - $classes_array: Array of html class attribute values. It is flattened
- *   into a string within the variable $classes.
- *
  * @see template_preprocess_comment_wrapper()
  * @see theme_comment_wrapper()
  */
 ?>
-<section id="comments" class="<?php print $classes; ?>"<?php print $attributes; ?>>
+<section id="comments" <?php print $attributes; ?>>
   <?php if ($content['comments'] && $node->type != 'forum'): ?>
     <?php print render($title_prefix); ?>
     <h2 class="title"><?php print t('Comments'); ?></h2>
