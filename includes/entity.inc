@@ -296,6 +296,7 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
 
   /**
    * Attaches data to entities upon loading.
+   *
    * This will attach fields, if the entity is fieldable. It calls
    * hook_entity_load() for modules which need to add data to all entities.
    * It also calls hook_TYPE_load() on the loaded entities. For example
@@ -422,6 +423,7 @@ class EntityFieldQueryException extends Exception {}
  * other storage engines might not do this.
  */
 class EntityFieldQuery {
+
   /**
    * Indicates that both deleted and non-deleted fields should be returned.
    *
@@ -958,7 +960,7 @@ class EntityFieldQuery {
   }
 
   /**
-   * Enable a pager for the query.
+   * Enables a pager for the query.
    *
    * @param $limit
    *   An integer specifying the number of elements per page.  If passed a false
@@ -986,10 +988,11 @@ class EntityFieldQuery {
   }
 
   /**
-   * Enable sortable tables for this query.
+   * Enables sortable tables for this query.
    *
    * @param $headers
-   *   An EFQ Header array based on which the order clause is added to the query.
+   *   An EFQ Header array based on which the order clause is added to the
+   *   query.
    *
    * @return EntityFieldQuery
    *   The called object.
@@ -1272,7 +1275,7 @@ class EntityFieldQuery {
   }
 
   /**
-   * Get the total number of results and initialize a pager for the query.
+   * Gets the total number of results and initializes a pager for the query.
    *
    * The pager can be disabled by either setting the pager limit to 0, or by
    * setting this query to be a count query.
@@ -1359,6 +1362,6 @@ class EntityFieldQuery {
 }
 
 /**
- * Exception thrown when a malformed entity is passed.
+ * Defines an exception thrown when a malformed entity is passed.
  */
 class EntityMalformedException extends Exception { }

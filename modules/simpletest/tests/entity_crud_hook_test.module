@@ -1,8 +1,9 @@
 <?php
 
-//
-// Presave hooks
-//
+/**
+ * @file
+ * Test module for the Entity CRUD API.
+ */
 
 /**
  * Implements hook_entity_presave().
@@ -53,10 +54,6 @@ function entity_crud_hook_test_user_presave() {
   $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
 }
 
-//
-// Insert hooks
-//
-
 /**
  * Implements hook_entity_insert().
  */
@@ -105,10 +102,6 @@ function entity_crud_hook_test_taxonomy_vocabulary_insert() {
 function entity_crud_hook_test_user_insert() {
   $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
 }
-
-//
-// Load hooks
-//
 
 /**
  * Implements hook_entity_load().
@@ -159,10 +152,6 @@ function entity_crud_hook_test_user_load() {
   $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
 }
 
-//
-// Update hooks
-//
-
 /**
  * Implements hook_entity_update().
  */
@@ -211,10 +200,6 @@ function entity_crud_hook_test_taxonomy_vocabulary_update() {
 function entity_crud_hook_test_user_update() {
   $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
 }
-
-//
-// Delete hooks
-//
 
 /**
  * Implements hook_entity_delete().
