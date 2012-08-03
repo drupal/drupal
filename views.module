@@ -917,9 +917,9 @@ function views_language_list($field = 'name', $all = FALSE) {
 }
 
 /**
- * Implements hook_flush_caches().
+ * Implements hook_cache_flush().
  */
-function views_flush_caches() {
+function views_cache_flush() {
   return array('cache_views', 'cache_views_data');
 }
 
