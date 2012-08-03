@@ -169,6 +169,11 @@ a.feed-icon {
   display: inline-block;
   padding: 15px 0 0 0;
 }
+img {
+  max-width: 100%;
+  height: auto;
+  border: 0;
+}
 
 /* ------------------ Table Styles ------------------ */
 
@@ -242,13 +247,33 @@ table ul.links li {
 .item-list .pager {
   font-size: 0.929em;
 }
+.item-list .pager li {
+  padding: 0;
+}
+.item-list .pager a {
+  display: inline-block;
+  padding: 10px 15px;
+}
+.item-list .pager .pager-first a {
+  padding: 10px 10px 10px 0;
+}
+.item-list .pager .pager-previous a {
+  padding: 10px 0;
+}
+.item-list .pager .pager-current {
+  padding: 0 10px;
+}
+.item-list .pager .pager-next a,
+.item-list .pager .pager-last a {
+  padding: 10px 0 10px 10px;
+}
 ul.menu li {
   margin: 0;
 }
 .region-content ul,
 .region-content ol {
   margin: 1em 0;
-  padding: 0 0 0.25em 2.5em; /* LTR */
+  padding: 0 0 0.25em 15px; /* LTR */
 }
 .item-list ul li {
   margin: 0;
@@ -288,15 +313,16 @@ ul.tips {
 }
 #logo {
   float: left; /* LTR */
-  padding: 15px 15px 15px 10px; /* LTR */
+  padding-left: 5px; /* LTR */
 }
+
 #name-and-slogan {
   float: left; /* LTR */
-  padding-top: 34px;
-  margin: 0 0 30px 15px; /* LTR */
+  margin: 0;
+  padding: 5px 10px 8px;
 }
 #site-name {
-  font-size: 1.821em;
+  font-size: 1.6em;
   color: #686868;
   line-height: 1;
 }
@@ -449,35 +475,34 @@ h1#site-name {
 }
 
 /* --------------- Main Menu ------------ */
-
 #main-menu {
   clear: both;
 }
 #main-menu-links {
   font-size: 0.929em;
-  margin: 0;
-  padding: 0 15px;
+  margin: 0 5px;
+  padding: 0;
+  text-align: left;
 }
 #main-menu-links li {
-  float: left; /* LTR */
+  float: none;
   list-style: none;
-  padding: 0 1px;
-  margin: 0 1px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 #main-menu-links a {
   color: #333;
   background: #ccc;
   background: rgba(255, 255, 255, 0.7);
-  float: left; /* LTR */
-  height: 2.4em;
-  line-height: 2.4em;
-  padding: 0 0.8em;
+  float: none;
+  display: block;
   text-decoration: none;
   text-shadow: 0 1px #eee;
-  -moz-border-radius-topleft: 8px;
-  -moz-border-radius-topright: 8px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  padding: 0.9em 0 0.9em 10px;
 }
 #main-menu-links a:hover,
 #main-menu-links a:focus {
@@ -491,18 +516,21 @@ h1#site-name {
 #main-menu-links li a.active {
   border-bottom: none;
 }
-.featured #main-menu-links li a:active,
-.featured #main-menu-links li a.active {
-  background: #f0f0f0;
-  background: rgba(240, 240, 240, 1.0);
-}
 
 /* --------------- Secondary Menu ------------ */
 
 #secondary-menu-links {
   float: right; /* LTR */
   font-size: 0.929em;
-  margin: 10px 10px 0;
+  margin: 0 10px;
+}
+#secondary-menu-links  li{
+  margin: 0;
+  padding: 0;
+}
+#secondary-menu-links  a {
+  display: inline-block;
+  padding:  0.8em;
 }
 #secondary-menu-links a:hover,
 #secondary-menu-links a:focus {
@@ -520,10 +548,10 @@ h1#site-name {
 
 #featured {
   text-align: center;
-  font-size: 1.643em;
+  font-size: 1.2em;
   font-weight: normal;
   line-height: 1.4;
-  padding: 20px 0 45px;
+  padding: 20px 10px 45px;
   margin: 0;
   background: #f0f0f0;
   background: rgba(30, 50, 10, 0.08);
@@ -531,7 +559,7 @@ h1#site-name {
   text-shadow: 1px 1px #fff;
 }
 #featured h2 {
-  font-size: 1.174em;
+  font-size: 1.2em;
   line-height: 1;
 }
 #featured p {
@@ -770,15 +798,15 @@ ul.links {
 }
 #triptych h2 {
   color: #000;
-  font-size: 1.714em;
-  margin-bottom: 0.8em;
+  font-size: 1.4em;
+  margin-bottom: 0.6em;
   text-shadow: 0 1px 0 #fff;
   text-align: center;
   line-height: 1;
 }
 #triptych .block {
-  margin-bottom: 2em;
-  padding-bottom: 2em;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
   border-bottom: 1px solid #dfdfdf;
   line-height: 1.3;
 }
@@ -1601,4 +1629,107 @@ div.admin-panel .description {
   border-bottom: 1px solid #d6d6d6;
   border-top: 1px solid #d6d6d6;
   margin: 0;
+}
+
+/* ----------- media queries ------------------------------- */
+
+@media all and (min-width: 461px) and (max-width: 900px) {
+ /* ------------ Header and Menus -------------------------- */
+
+ .region-header {
+    margin: .5em 5px .75em;
+  }
+  #logo {
+    padding: 5px 0 0 5px; /* LTR */
+  }
+  #name-and-slogan {
+    padding: 10px 10px 8px;
+  }
+  #main-menu-links {
+    margin: 0 5px;
+    padding: 0;
+    text-align: center;
+  }
+  #main-menu-links li {
+    float: left;
+    margin-right: 5px;
+    padding: 0;
+    display: inline-block;
+    width: 32.75%;
+  }
+  #main-menu-links li:nth-child(3n) {
+    margin-right: -5px;
+  }
+  #main-menu-links a {
+    float: none;
+    display: block;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    padding: 0.9em 5px;
+  }
+}
+
+@media all and (min-width: 901px) {
+
+  .region-header {
+    margin: 1em 5px 1.5em;
+  }
+  #logo {
+    padding: 15px 15px 15px 10px; /* LTR */
+  }
+  #name-and-slogan {
+    padding: 26px 0 0;
+    margin: 0 0 30px 15px; /* LTR */
+  }
+  #site-name {
+    font-size: 1.821em;
+  }
+  #main-menu-links {
+    font-size: 0.929em;
+    margin: 0;
+    padding: 0 15px;
+  }
+  #main-menu-links li {
+    float: left; /* LTR */
+    list-style: none;
+    padding: 0 1px;
+    margin: 0 1px;
+    width: auto;
+  }
+  #main-menu-links a {
+    float: left; /* LTR */
+    padding: 0.7em 0.8em;
+    margin-bottom: 0;
+    -moz-border-radius-bottomleft: 0;
+    -moz-border-radius-bottomright: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .featured #main-menu-links li a:active,
+  .featured #main-menu-links li a.active {
+  background: #f0f0f0;
+  background: rgba(240, 240, 240, 1.0);
+  }
+}
+
+@media all and (min-width: 520px) {
+
+  /* ----------------- Featured ----------------- */
+  #featured {
+    font-size: 1.643em;
+  }
+  #featured h2 {
+    font-size: 1.174em;
+  }
+
+  /* ------------------ Triptych ----------------- */
+  #triptych h2 {
+    font-size: 1.714em;
+    margin-bottom: 0.9em;
+  }
+  #triptych .block {
+    margin-bottom: 2em;
+    padding-bottom: 2em;
+  }
 }
