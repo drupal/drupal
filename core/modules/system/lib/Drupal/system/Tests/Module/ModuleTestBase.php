@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Helper class for module test cases.
  */
-class ModuleTestBase extends WebTestBase {
+abstract class ModuleTestBase extends WebTestBase {
   protected $admin_user;
 
   function setUp() {

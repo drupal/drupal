@@ -9,7 +9,7 @@ namespace Drupal\search\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
-class SearchTestBase extends WebTestBase {
+abstract class SearchTestBase extends WebTestBase {
   function setUp() {
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {

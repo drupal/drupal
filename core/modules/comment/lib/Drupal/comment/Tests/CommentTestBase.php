@@ -10,7 +10,7 @@ namespace Drupal\comment\Tests;
 use Drupal\comment\Comment;
 use Drupal\simpletest\WebTestBase;
 
-class CommentTestBase extends WebTestBase {
+abstract class CommentTestBase extends WebTestBase {
   protected $profile = 'standard';
 
   protected $admin_user;

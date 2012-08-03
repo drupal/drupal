@@ -9,7 +9,7 @@ namespace Drupal\poll\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
-class PollTestBase extends WebTestBase {
+abstract class PollTestBase extends WebTestBase {
   function setUp() {
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {

@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Tests;
 
-class FieldAttachTestBase extends FieldTestBase {
+abstract class FieldAttachTestBase extends FieldTestBase {
   function setUp() {
     // Since this is a base class for many test cases, support the same
     // flexibility that Drupal\simpletest\WebTestBase::setUp() has for the

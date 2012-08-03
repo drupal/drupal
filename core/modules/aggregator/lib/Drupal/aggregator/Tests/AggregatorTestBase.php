@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Defines a base class for testing aggregator.module.
  */
-class AggregatorTestBase extends WebTestBase {
+abstract class AggregatorTestBase extends WebTestBase {
   function setUp() {
     parent::setUp(array('node', 'block', 'aggregator', 'aggregator_test'));
 

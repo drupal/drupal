@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Provides helper methods for cache tests.
  */
-class CacheTestBase extends WebTestBase {
+abstract class CacheTestBase extends WebTestBase {
   protected $default_bin = 'page';
   protected $default_cid = 'test_temporary';
   protected $default_value = 'CacheTest';

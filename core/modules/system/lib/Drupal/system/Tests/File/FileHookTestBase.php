@@ -11,7 +11,7 @@ namespace Drupal\system\Tests\File;
  * Base class for file tests that use the file_test module to test uploads and
  * hooks.
  */
-class FileHookTestBase extends FileTestBase {
+abstract class FileHookTestBase extends FileTestBase {
   function setUp() {
     // Install file_test module
     parent::setUp('file_test');

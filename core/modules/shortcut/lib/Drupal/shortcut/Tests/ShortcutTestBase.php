@@ -13,7 +13,7 @@ use stdClass;
 /**
  * Defines base class for shortcut test cases.
  */
-class ShortcutTestBase extends WebTestBase {
+abstract class ShortcutTestBase extends WebTestBase {
 
   /**
    * User with permission to administer shortcuts.

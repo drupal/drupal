@@ -32,7 +32,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * This class provides methods specifically for testing Image's field handling.
  */
-class ImageFieldTestBase extends WebTestBase {
+abstract class ImageFieldTestBase extends WebTestBase {
   protected $admin_user;
 
   function setUp() {

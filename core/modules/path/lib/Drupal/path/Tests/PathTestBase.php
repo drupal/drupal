@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Provides a base class for testing the Path module.
  */
-class PathTestBase extends WebTestBase {
+abstract class PathTestBase extends WebTestBase {
   function setUp() {
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {

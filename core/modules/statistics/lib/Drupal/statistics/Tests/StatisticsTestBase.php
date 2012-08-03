@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Defines a base class for testing the Statistics module.
  */
-class StatisticsTestBase extends WebTestBase {
+abstract class StatisticsTestBase extends WebTestBase {
 
   function setUp() {
     parent::setUp(array('node', 'block', 'statistics'));

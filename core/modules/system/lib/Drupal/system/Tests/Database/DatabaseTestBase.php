@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
  * Because all database tests share the same test data, we can centralize that
  * here.
  */
-class DatabaseTestBase extends WebTestBase {
+abstract class DatabaseTestBase extends WebTestBase {
   function setUp() {
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {

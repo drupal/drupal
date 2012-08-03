@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Provides methods specifically for testing File module's field handling.
  */
-class FileFieldTestBase extends WebTestBase {
+abstract class FileFieldTestBase extends WebTestBase {
   protected $profile = 'standard';
 
   protected $admin_user;

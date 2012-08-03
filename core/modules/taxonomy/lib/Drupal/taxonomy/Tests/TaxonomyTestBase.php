@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Provides common helper methods for Taxonomy module tests.
  */
-class TaxonomyTestBase extends WebTestBase {
+abstract class TaxonomyTestBase extends WebTestBase {
 
   function setUp() {
     $modules = func_get_args();

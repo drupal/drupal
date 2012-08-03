@@ -14,7 +14,7 @@ use stdClass;
  * Base class for file tests that adds some additional file specific
  * assertions and helper functions.
  */
-class FileTestBase extends WebTestBase {
+abstract class FileTestBase extends WebTestBase {
 
   function setUp() {
     $modules = func_get_args();

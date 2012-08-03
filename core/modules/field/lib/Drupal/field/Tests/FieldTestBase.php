@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Parent class for Field API tests.
  */
-class FieldTestBase extends WebTestBase {
+abstract class FieldTestBase extends WebTestBase {
   var $default_storage = 'field_sql_storage';
 
   /**

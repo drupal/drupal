@@ -13,7 +13,7 @@ use stdClass;
 /**
  * Base class for image manipulation testing.
  */
-class ToolkitTestBase extends WebTestBase {
+abstract class ToolkitTestBase extends WebTestBase {
   protected $toolkit;
   protected $file;
   protected $image;

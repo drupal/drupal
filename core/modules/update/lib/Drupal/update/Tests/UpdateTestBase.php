@@ -26,7 +26,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Defines some shared functions used by all update tests.
  */
-class UpdateTestBase extends WebTestBase {
+abstract class UpdateTestBase extends WebTestBase {
 
   /**
    * Refreshes the update status based on the desired available update scenario.

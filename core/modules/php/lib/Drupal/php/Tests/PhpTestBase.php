@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Defines a base PHP test case class.
  */
-class PhpTestBase extends WebTestBase {
+abstract class PhpTestBase extends WebTestBase {
   protected $php_code_format;
 
   function setUp() {

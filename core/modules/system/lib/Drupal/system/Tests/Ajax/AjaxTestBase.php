@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Base test system for AJAX tests.
  */
-class AjaxTestBase extends WebTestBase {
+abstract class AjaxTestBase extends WebTestBase {
   function setUp() {
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {

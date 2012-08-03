@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Provides common functionality for the Field UI test classes.
  */
-class FieldUiTestBase extends WebTestBase {
+abstract class FieldUiTestBase extends WebTestBase {
   public static $modules = array('node', 'field_ui', 'field_test', 'taxonomy');
 
   function setUp() {

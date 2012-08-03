@@ -9,7 +9,7 @@ namespace Drupal\system\Tests\Menu;
 
 use Drupal\simpletest\WebTestBase;
 
-class MenuTestBase extends WebTestBase {
+abstract class MenuTestBase extends WebTestBase {
   function setUp() {
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {

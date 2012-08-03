@@ -9,7 +9,7 @@ namespace Drupal\node\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
-class NodeTestBase extends WebTestBase {
+abstract class NodeTestBase extends WebTestBase {
   function setUp() {
     $modules = func_get_args();
     if (isset($modules[0]) && is_array($modules[0])) {
