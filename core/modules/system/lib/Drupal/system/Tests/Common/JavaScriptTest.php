@@ -28,7 +28,7 @@ class JavaScriptTest extends WebTestBase {
 
   function setUp() {
     // Enable Language and SimpleTest in the test environment.
-    parent::setUp('language', 'simpletest', 'common_test');
+    parent::setUp('language', 'simpletest', 'common_test', 'path');
 
     // Disable preprocessing
     $config = config('system.performance');
@@ -74,9 +74,15 @@ class JavaScriptTest extends WebTestBase {
    * Test adding settings.
    */
   function testAddSetting() {
+    // Add a file in order to test default settings.
+    $javascript = drupal_add_js('core/misc/collapse.js');
+    $last_settings = end($javascript['settings']['data']);
+    $this->assertTrue($last_settings['currentPath'], 'The current path JavaScript setting is set correctly.');
+
     $javascript = drupal_add_js(array('drupal' => 'rocks', 'dries' => 280342800), 'setting');
-    $this->assertEqual(280342800, $javascript['settings']['data'][3]['dries'], t('JavaScript setting is set correctly.'));
-    $this->assertEqual('rocks', $javascript['settings']['data'][3]['drupal'], t('The other JavaScript setting is set correctly.'));
+    $last_settings = end($javascript['settings']['data']);
+    $this->assertEqual(280342800, $last_settings['dries'], 'JavaScript setting is set correctly.');
+    $this->assertEqual('rocks', $last_settings['drupal'], 'The other JavaScript setting is set correctly.');
   }
 
   /**
@@ -138,10 +144,11 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_js(array('commonTestArray' => array('key' => 'commonTestNewValue')), 'setting');
 
     $javascript = drupal_get_js('header');
-    $this->assertTrue(strpos($javascript, 'basePath') > 0, t('Rendered JavaScript header returns basePath setting.'));
-    $this->assertTrue(strpos($javascript, 'scriptPath') > 0, t('Rendered JavaScript header returns scriptPath setting.'));
-    $this->assertTrue(strpos($javascript, 'pathPrefix') > 0, t('Rendered JavaScript header returns pathPrefix setting.'));
-    $this->assertTrue(strpos($javascript, 'core/misc/jquery.js') > 0, t('Rendered JavaScript header includes jQuery.'));
+    $this->assertTrue(strpos($javascript, 'basePath') > 0, 'Rendered JavaScript header returns basePath setting.');
+    $this->assertTrue(strpos($javascript, 'scriptPath') > 0, 'Rendered JavaScript header returns scriptPath setting.');
+    $this->assertTrue(strpos($javascript, 'pathPrefix') > 0, 'Rendered JavaScript header returns pathPrefix setting.');
+    $this->assertTrue(strpos($javascript, 'currentPath') > 0, 'Rendered JavaScript header returns currentPath setting.');
+    $this->assertTrue(strpos($javascript, 'core/misc/jquery.js') > 0, 'Rendered JavaScript header includes jQuery.');
 
     // Test whether drupal_add_js can be used to override a previous setting.
     $this->assertTrue(strpos($javascript, 'commonTestShouldAppear') > 0, t('Rendered JavaScript header returns custom setting.'));
@@ -156,6 +163,13 @@ class JavaScriptTest extends WebTestBase {
     // existing key in an associative array.
     $associative_array_override = strpos($javascript, 'commonTestNewValue') > 0 && strpos($javascript, 'commonTestOldValue') === FALSE;
     $this->assertTrue($associative_array_override, t('drupal_add_js() correctly overrides settings within an associative array.'));
+    // Check in a rendered page.
+    $this->drupalGet('common-test/query-string');
+    $this->assertPattern('@<script type="text/javascript">.+Drupal\.settings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings');
+    $path = array('source' => 'common-test/query-string', 'alias' => 'common-test/currentpath-check');
+    path_save($path);
+    $this->drupalGet('common-test/currentpath-check');
+    $this->assertPattern('@<script type="text/javascript">.+Drupal\.settings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings for an aliased path');
   }
 
   /**

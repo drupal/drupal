@@ -3817,6 +3817,7 @@ function drupal_add_js($data = NULL, $options = NULL) {
             array('basePath' => base_path()),
             array('scriptPath' => $scriptPath),
             array('pathPrefix' => $pathPrefix),
+            array('currentPath' => current_path()),
           ),
           'type' => 'setting',
           'scope' => 'header',
