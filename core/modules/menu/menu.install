@@ -69,3 +69,14 @@ function menu_uninstall() {
   menu_router_rebuild();
 }
 
+/**
+ * Moves menu settings from variables to config.
+ *
+ * @ingroup config_upgrade
+ */
+function menu_update_8000() {
+  update_variables_to_config('menu.settings', array(
+    'menu_main_links_source' => 'main_links',
+    'menu_secondary_links_source' => 'secondary_links',
+  ));
+}
