@@ -6,7 +6,7 @@
  */
 
 use Drupal\views\Join;
-use Drupal\views\Plugins\views\argument\ArgumentPluginBase;
+use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 
 /**
  * Argument that accepts query keys for search.

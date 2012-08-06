@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Plugin\views\argument;
 
-use Drupal\views\Plugins\views\argument\Numeric;
+use Drupal\views\Plugin\views\argument\Numeric;
 use Drupal\Core\Annotation\Plugin;
 
 /**

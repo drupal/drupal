@@ -8,7 +8,7 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\Core\Annotation\Plugin;
-use Drupal\views\Plugins\views\field\FieldPluginBase;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
  * Field handler to display the depth of a comment.

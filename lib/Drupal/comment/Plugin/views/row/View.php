@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\row;
 
-use Drupal\views\Plugins\views\row\RowPluginBase;
+use Drupal\views\Plugin\views\row\RowPluginBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 

@@ -5,7 +5,7 @@
  * Definition of views_handler_argument_vocabulary_vid.
  */
 
-use Drupal\views\Plugins\views\argument\Numeric;
+use Drupal\views\Plugin\views\argument\Numeric;
 
 /**
  * Argument handler to accept a vocabulary id.

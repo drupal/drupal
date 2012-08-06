@@ -5,7 +5,7 @@
  * Definition of views_plugin_argument_validate_user.
  */
 
-use Drupal\views\Plugins\views\argument_validator\ArgumentValidatorPluginBase;
+use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
 /**
  * Validate whether an argument is a valid user.

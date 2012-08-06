@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\views\relationship;
 
 use Drupal\views\Join;
-use Drupal\views\Plugins\views\relationship\RelationshipPluginBase;
+use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**

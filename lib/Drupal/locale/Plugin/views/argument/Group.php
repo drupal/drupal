@@ -7,7 +7,7 @@
 
 namespace Drupal\locale\Plugin\views\argument;
 
-use Drupal\views\Plugins\views\argument\ArgumentPluginBase;
+use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**

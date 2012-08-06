@@ -5,7 +5,7 @@
  * Definition of views_handler_argument_users_roles_rid.
  */
 
-use Drupal\views\Plugins\views\argument\ManyToOne;
+use Drupal\views\Plugin\views\argument\ManyToOne;
 
 /**
  * Allow role ID(s) as argument.

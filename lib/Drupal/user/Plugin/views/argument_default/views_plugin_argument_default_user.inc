@@ -5,7 +5,7 @@
  * Contains the user from URL argument default plugin.
  */
 
-use Drupal\views\Plugins\views\argument_default\ArgumentDefaultPluginBase;
+use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 
 /**
  * Default argument plugin to extract a user via menu_get_object.

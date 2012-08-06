@@ -5,7 +5,7 @@
  * Definition of views_handler_filter_user_name.
  */
 
-use Drupal\views\Plugins\views\filter\InOperator;
+use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
  * Filter handler for usernames.

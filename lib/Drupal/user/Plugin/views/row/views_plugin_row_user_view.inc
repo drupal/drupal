@@ -5,7 +5,7 @@
  * Contains the user view row plugin.
  */
 
-use Drupal\views\Plugins\views\row\RowPluginBase;
+use Drupal\views\Plugin\views\row\RowPluginBase;
 
 /**
  * A row plugin which renders a user via user_view.

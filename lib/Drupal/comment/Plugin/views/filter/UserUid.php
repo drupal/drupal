@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\filter;
 
-use Drupal\views\Plugins\views\filter\FilterPluginBase;
+use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**

@@ -6,7 +6,7 @@
  */
 
 use Drupal\views\Join;
-use Drupal\views\Plugins\views\relationship\RelationshipPluginBase;
+use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
 
 /**
  * Relationship handler to return the taxonomy terms of nodes.

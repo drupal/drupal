@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
-use Drupal\views\Plugins\views\field\Entity;
+use Drupal\views\Plugin\views\field\Entity;
 
 /**
  * Base field handler to present a link.

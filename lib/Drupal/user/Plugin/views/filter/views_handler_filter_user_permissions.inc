@@ -5,7 +5,7 @@
  * Definition of views_handler_filter_user_permissions.
  */
 
-use Drupal\views\Plugins\views\filter\ManyToOne;
+use Drupal\views\Plugin\views\filter\ManyToOne;
 
 /**
  * Filter handler for user roles.

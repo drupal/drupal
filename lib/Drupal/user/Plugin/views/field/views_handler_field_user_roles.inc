@@ -5,7 +5,7 @@
  * Definition of views_handler_field_user_roles.
  */
 
-use Drupal\views\Plugins\views\field\PrerenderList;
+use Drupal\views\Plugin\views\field\PrerenderList;
 
 /**
  * Field handler to provide a list of roles.

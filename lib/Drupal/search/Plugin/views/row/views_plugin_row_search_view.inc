@@ -5,7 +5,7 @@
  * Definition of views_plugin_row_search_view.
  */
 
-use Drupal\views\Plugins\views\row\RowPluginBase;
+use Drupal\views\Plugin\views\row\RowPluginBase;
 
 /**
  * Plugin which performs a node_view on the resulting object.

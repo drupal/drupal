@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Plugin\views\filter;
 
-use Drupal\views\Plugins\views\filter\InOperator;
+use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
  * Filter by node type.

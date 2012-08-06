@@ -9,7 +9,7 @@ namespace Drupal\node\Plugin\views\argument_default;
 
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
-use Drupal\views\Plugins\views\argument_default\ArgumentDefaultPluginBase;
+use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 
 /**
  * Default argument plugin to extract a node via menu_get_object

@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Plugin\views\filter;
 
-use Drupal\views\Plugins\views\filter\InOperator;
+use Drupal\views\Plugin\views\filter\InOperator;
 use Drupal\Core\Annotation\Plugin;
 
 /**

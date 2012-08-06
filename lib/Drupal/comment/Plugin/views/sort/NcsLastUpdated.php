@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\sort;
 
-use Drupal\views\Plugins\views\sort\Date;
+use Drupal\views\Plugin\views\sort\Date;
 use Drupal\Core\Annotation\Plugin;
 
 /**

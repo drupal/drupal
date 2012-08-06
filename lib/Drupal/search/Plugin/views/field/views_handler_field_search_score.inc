@@ -5,7 +5,7 @@
  * Definition of views_handler_field_search_score.
  */
 
-use Drupal\views\Plugins\views\field\Numeric;
+use Drupal\views\Plugin\views\field\Numeric;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.

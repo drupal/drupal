@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Plugin\views\filter;
 
-use Drupal\views\Plugins\views\filter\FilterPluginBase;
+use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
  * Filter by node_access records.

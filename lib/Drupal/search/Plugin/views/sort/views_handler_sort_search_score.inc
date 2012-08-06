@@ -5,7 +5,7 @@
  * Definition of views_handler_sort_search_score.
  */
 
-use Drupal\views\Plugins\views\sort\SortPluginBase;
+use Drupal\views\Plugin\views\sort\SortPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**

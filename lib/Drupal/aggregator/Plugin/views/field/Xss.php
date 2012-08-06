@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator\Plugin\views\field;
 
-use Drupal\views\Plugins\views\field\FieldPluginBase;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**

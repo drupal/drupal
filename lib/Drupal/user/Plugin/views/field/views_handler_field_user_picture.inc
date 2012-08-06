@@ -5,7 +5,7 @@
  * Definition of views_handler_field_user_picture.
  */
 
-use Drupal\views\Plugins\views\field\FieldPluginBase;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
  * Field handler to provide simple renderer that allows using a themed user link.

@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
-use Drupal\views\Plugins\views\field\Numeric;
+use Drupal\views\Plugin\views\field\Numeric;
 use Drupal\Core\Annotation\Plugin;
 
 /**

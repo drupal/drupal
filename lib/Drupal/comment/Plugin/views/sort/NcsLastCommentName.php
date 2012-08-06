@@ -8,7 +8,7 @@
 namespace Drupal\comment\Plugin\views\sort;
 
 use Drupal\views\Join;
-use Drupal\views\Plugins\views\sort\SortPluginBase;
+use Drupal\views\Plugin\views\sort\SortPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**

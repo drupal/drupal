@@ -8,7 +8,7 @@
 namespace Drupal\locale\Plugin\views\filter;
 
 use Drupal\Core\Annotation\Plugin;
-use Drupal\views\Plugins\views\filter\InOperator;
+use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
  * Filter by locale group.

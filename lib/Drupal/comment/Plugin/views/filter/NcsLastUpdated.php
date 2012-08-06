@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\filter;
 
-use Drupal\views\Plugins\views\filter\Date;
+use Drupal\views\Plugin\views\filter\Date;
 use Drupal\Core\Annotation\Plugin;
 
 

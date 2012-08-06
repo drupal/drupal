@@ -5,7 +5,7 @@
  * Contains the current user argument default plugin.
  */
 
-use Drupal\views\Plugins\views\argument_default\ArgumentDefaultPluginBase;
+use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 
 /**
  * Default argument plugin to extract the global $user

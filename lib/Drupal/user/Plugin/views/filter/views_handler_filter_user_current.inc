@@ -5,7 +5,7 @@
  * Definition of views_handler_filter_user_current.
  */
 
-use Drupal\views\Plugins\views\filter\BooleanOperator;
+use Drupal\views\Plugin\views\filter\BooleanOperator;
 
 /**
  * Filter handler for the current user.

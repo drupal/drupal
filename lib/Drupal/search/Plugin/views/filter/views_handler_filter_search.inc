@@ -7,7 +7,7 @@
 
 use Drupal\views\Join;
 use Drupal\search\SearchQuery;
-use Drupal\views\Plugins\views\filter\FilterPluginBase;
+use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.

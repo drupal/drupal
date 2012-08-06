@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
-use Drupal\views\Plugins\views\field\Date;
+use Drupal\views\Plugin\views\field\Date;
 use Drupal\Core\Annotation\Plugin;
 
 /**

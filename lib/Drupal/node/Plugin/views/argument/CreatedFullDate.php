@@ -3,7 +3,7 @@
 namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\Core\Annotation\Plugin;
-use Drupal\views\Plugins\views\argument\Date;
+use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * Argument handler for a full date (CCYYMMDD)

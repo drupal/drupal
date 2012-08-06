@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Plugin\views\argument;
 
-use Drupal\views\Plugins\views\argument\String;
+use Drupal\views\Plugin\views\argument\String;
 use Drupal\Core\Annotation\Plugin;
 
 /**

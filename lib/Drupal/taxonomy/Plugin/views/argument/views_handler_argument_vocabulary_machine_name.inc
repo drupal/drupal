@@ -5,7 +5,7 @@
  * Definition of views_handler_argument_vocabulary_machine_name.
  */
 
-use Drupal\views\Plugins\views\argument\String;
+use Drupal\views\Plugin\views\argument\String;
 
 /**
  * Argument handler to accept a vocabulary machine name.
