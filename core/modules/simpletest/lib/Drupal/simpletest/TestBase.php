@@ -184,15 +184,7 @@ abstract class TestBase {
     );
 
     // Store assertion for display after the test has completed.
-    try {
-      $connection = Database::getConnection('default', 'simpletest_original_default');
-    }
-    catch (ConnectionNotDefinedException $e) {
-      // If the test was not set up, the simpletest_original_default
-      // connection does not exist.
-      $connection = Database::getConnection('default', 'default');
-    }
-    $connection
+    self::getDatabaseConnection()
       ->insert('simpletest')
       ->fields($assertion)
       ->execute();
@@ -246,7 +238,8 @@ abstract class TestBase {
       'file' => $caller['file'],
     );
 
-    return db_insert('simpletest')
+    return self::getDatabaseConnection()
+      ->insert('simpletest')
       ->fields($assertion)
       ->execute();
   }
@@ -262,9 +255,28 @@ abstract class TestBase {
    * @see Drupal\simpletest\TestBase::insertAssert()
    */
   public static function deleteAssert($message_id) {
-    return (bool) db_delete('simpletest')
+    return (bool) self::getDatabaseConnection()
+      ->delete('simpletest')
       ->condition('message_id', $message_id)
       ->execute();
+  }
+
+  /**
+   * Returns the database connection to the site running Simpletest.
+   *
+   * @return Drupal\Core\Database\Connection
+   *   The database connection to use for inserting assertions.
+   */
+  public static function getDatabaseConnection() {
+    try {
+      $connection = Database::getConnection('default', 'simpletest_original_default');
+    }
+    catch (ConnectionNotDefinedException $e) {
+      // If the test was not set up, the simpletest_original_default
+      // connection does not exist.
+      $connection = Database::getConnection('default', 'default');
+    }
+    return $connection;
   }
 
   /**
