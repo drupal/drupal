@@ -156,10 +156,14 @@ function system_themes_page() {
      // content has a common place in all themes.
       $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']));
       $theme->incompatible_php = version_compare(phpversion(), $theme->info['php']) < 0;
+      // Confirmed that the base theme is available.
+      $theme->incompatible_base = (isset($theme->info['base theme']) && !isset($themes[$theme->info['base theme']]));
+      // Confirm that the theme engine is available.
+      $theme->incompatible_engine = (isset($theme->info['engine']) && !isset($theme->owner));
     }
     $query['token'] = drupal_get_token('system-theme-operation-link');
     $theme->operations = array();
-    if (!empty($theme->status) || !$theme->incompatible_core && !$theme->incompatible_php) {
+    if (!empty($theme->status) || !$theme->incompatible_core && !$theme->incompatible_php && !$theme->incompatible_base && !$theme->incompatible_engine) {
       // Create the operations links.
       $query['theme'] = $theme->name;
       if (drupal_theme_access($theme)) {
@@ -2724,6 +2728,12 @@ function theme_system_themes_page($variables) {
           $theme->info['php'] .= '.*';
         }
         $output .= '<div class="incompatible">' . t('This theme requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $theme->info['php'], '!php_version' => phpversion())) . '</div>';
+      }
+      elseif (!empty($theme->incompatible_base)) {
+        $output .= '<div class="incompatible">' . t('This theme requires the base theme @base_theme to operate correctly.', array('@base_theme' => $theme->info['base theme'])) . '</div>';
+      }
+      elseif (!empty($theme->incompatible_engine)) {
+        $output .= '<div class="incompatible">' . t('This theme requires the theme engine @theme_engine to operate correctly.', array('@theme_engine' => $theme->info['engine'])) . '</div>';
       }
       else {
         $output .= theme('links', array('links' => $theme->operations, 'attributes' => array('class' => array('operations', 'clearfix'))));

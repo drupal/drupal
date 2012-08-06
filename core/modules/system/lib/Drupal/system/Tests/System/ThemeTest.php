@@ -231,4 +231,14 @@ class ThemeTest extends WebTestBase {
     $this->drupalGet('admin/structure/block');
     $this->assertText('Stark(' . t('active tab') . ')', t('Default local task on blocks admin page has changed.'));
   }
+
+  /**
+   * Test that themes can't be enabled when the base theme or engine is missing.
+   */
+  function testInvalidTheme() {
+    module_enable(array('theme_page_test'));
+    $this->drupalGet('admin/appearance');
+    $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', array('@base_theme' => 'not_real_test_basetheme')), 'Invalid base theme check succeeded.');
+    $this->assertText(t('This theme requires the theme engine @theme_engine to operate correctly.', array('@theme_engine' => 'not_real_engine')), 'Invalid theme engine check succeeded.');
+  }
 }
