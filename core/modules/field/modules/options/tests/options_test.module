@@ -8,7 +8,7 @@
 /**
  * Allowed values callback.
  */
-function options_test_allowed_values_callback($field) {
+function options_test_allowed_values_callback($field, $instance, $entity_type, $entity) {
   $values = array(
     'Group 1' => array(
       0 => 'Zero',
