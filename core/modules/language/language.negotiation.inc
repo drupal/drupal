@@ -200,7 +200,7 @@ function language_from_session($languages) {
  * @return
  *   A valid language code on success, FALSE otherwise.
  */
-function language_from_url($languages, $args = array()) {
+function language_from_url($languages, $request = NULL) {
   $language_url = FALSE;
 
   if (!language_negotiation_method_enabled(LANGUAGE_NEGOTIATION_URL)) {
@@ -212,9 +212,7 @@ function language_from_url($languages, $args = array()) {
       // Language negotiation happens before the public function current_path()
       // is available.
       // @todo Refactor with Symfony's Request object.
-      if (isset($args['request'])) {
-        $request = $args['request'];
-
+      if ($request) {
         $current_path = $request->attributes->get('system_path');
         if (!isset($current_path)) {
           $current_path = trim($request->getPathInfo(), '/');
@@ -285,6 +283,10 @@ function language_from_url($languages, $args = array()) {
  *   (optional) An array of valid language objects. This is passed by
  *   language_negotiation_method_invoke() to every language method callback,
  *   but it is not actually needed here. Defaults to NULL.
+ *
+ * @param $request
+ *   (optional) The HttpRequest object representing the current request.
+ *
  * @param $language_type
  *   (optional) The language type to fall back to. Defaults to the interface
  *   language.
@@ -292,7 +294,7 @@ function language_from_url($languages, $args = array()) {
  * @return
  *   A valid language code.
  */
-function language_url_fallback($language = NULL, $args = array(), $language_type = LANGUAGE_TYPE_INTERFACE) {
+function language_url_fallback($language = NULL, $request = NULL, $language_type = LANGUAGE_TYPE_INTERFACE) {
   $default = language_default();
   $prefix = (variable_get('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX) == LANGUAGE_NEGOTIATION_URL_PREFIX);
 

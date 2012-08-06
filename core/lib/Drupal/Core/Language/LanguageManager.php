@@ -33,7 +33,7 @@ class LanguageManager {
 
     // @todo Objectify the language system so that we don't have to do this.
     include_once DRUPAL_ROOT . '/core/includes/language.inc';
-    $this->languages[$type] = language_types_initialize($type, array('request' => $this->request));
+    $this->languages[$type] = language_types_initialize($type, $this->request);
     return $this->languages[$type];
   }
 
