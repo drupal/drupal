@@ -197,10 +197,13 @@ function language_from_session($languages) {
  * @param $languages
  *   An array of valid language objects.
  *
+ * @param $request
+ *   The HttpRequest object representing the current request.
+ *
  * @return
  *   A valid language code on success, FALSE otherwise.
  */
-function language_from_url($languages, $request = NULL) {
+function language_from_url($languages, $request) {
   $language_url = FALSE;
 
   if (!language_negotiation_method_enabled(LANGUAGE_NEGOTIATION_URL)) {
@@ -209,23 +212,17 @@ function language_from_url($languages, $request = NULL) {
 
   switch (variable_get('language_negotiation_url_part', LANGUAGE_NEGOTIATION_URL_PREFIX)) {
     case LANGUAGE_NEGOTIATION_URL_PREFIX:
-      // Language negotiation happens before the public function current_path()
-      // is available.
-      // @todo Refactor with Symfony's Request object.
-      if ($request) {
-        $current_path = $request->attributes->get('system_path');
-        if (!isset($current_path)) {
-          $current_path = trim($request->getPathInfo(), '/');
-        }
-      }
-      else {
-        $current_path = _current_path();
+
+      $current_path = $request->attributes->get('system_path');
+      if (!isset($current_path)) {
+        $current_path = trim($request->getPathInfo(), '/');
       }
 
       list($language, $path) = language_url_split_prefix($current_path, $languages);
-      if ($request) {
-        $request->attributes->set('system_path', $path);
-      }
+      // Store the correct system path, i.e. minus the path prefix, in the
+      // request.
+      $request->attributes->set('system_path', $path);
+
       if ($language !== FALSE) {
         $language_url = $language->langcode;
       }
