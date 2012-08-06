@@ -1973,12 +1973,16 @@ function system_update_8013() {
 
 /**
  * Moves system logging settings from variables to config.
+ *
+ * @ingroup config_upgrade
  */
 function system_update_8014() {
-  $error_level = db_query("SELECT value FROM {variable} WHERE name = 'error_level'")->fetchField();
+  // Not using update_variables_to_config(), since the only value is
+  // 'error_level', which needs to be mapped to a new value.
   $config = config('system.logging');
-  // Only do the conversion if we have a value and it is numeric.
-  if ($error_level && is_numeric($error_level)) {
+  $error_level = db_query("SELECT value FROM {variable} WHERE name = 'error_level'")->fetchField();
+  if ($error_level !== FALSE) {
+    $error_level = unserialize($error_level);
     $map = array(
       '0' => 'hide',
       '1' => 'some',
@@ -1991,7 +1995,7 @@ function system_update_8014() {
     db_delete('variable')->condition('name', 'error_level')->execute();
   }
   else {
-    // Update error_level to the default value.
+    // Set error_level to the default value.
     $config->set('error_level', 'all');
   }
   $config->save();
