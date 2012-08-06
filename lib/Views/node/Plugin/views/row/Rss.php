@@ -179,7 +179,7 @@ class Rss extends RowPluginBase {
 
     $item = new stdClass();
     $item->description = $item_text;
-    $item->title = $node->title;
+    $item->title = $node->label();
     $item->link = $node->link;
     $item->elements = $node->rss_elements;
     $item->nid = $node->nid;
