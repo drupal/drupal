@@ -15,20 +15,30 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 /**
  * The DrupalKernel class is the core of Drupal itself.
+ *
+ * This class is responsible for building the Dependency Injection Container and
+ * also deals with the registration of bundles. It allows registered bundles to
+ * add their services to the container. Core provides the CoreBundle, which adds
+ * the services required for all core subsystems. Each module can then add its
+ * own bundle, i.e. a subclass of Symfony\Component\HttpKernel\Bundle, to
+ * register services to the container.
  */
 class DrupalKernel extends Kernel {
 
+  /**
+   * Returns an array of available bundles.
+   */
   public function registerBundles() {
     $bundles = array(
       new CoreBundle(),
     );
 
-    // TODO: Remove the necessity of calling system_list() to find out which
+    // @todo Remove the necessity of calling system_list() to find out which
     // bundles exist. See http://drupal.org/node/1331486
     $modules = array_keys(system_list('module_enabled'));
     foreach ($modules as $module) {
       $camelized = ContainerBuilder::camelize($module);
-      $class = "\Drupal\\{$module}\\{$camelized}Bundle";
+      $class = "Drupal\\{$module}\\{$camelized}Bundle";
       if (class_exists($class)) {
         $bundles[] = new $class();
       }
@@ -42,8 +52,8 @@ class DrupalKernel extends Kernel {
    */
   protected function initializeContainer() {
     // @todo We should be compiling the container and dumping to php so we don't
-    // have to recompile every time. There is a separate issue for this, see
-    // http://drupal.org/node/1668892.
+    //   have to recompile every time. There is a separate issue for this, see
+    //   http://drupal.org/node/1668892.
     $this->container = $this->buildContainer();
     $this->container->set('kernel', $this);
     drupal_container($this->container);

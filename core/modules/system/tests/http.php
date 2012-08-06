@@ -37,6 +37,5 @@ $request = Request::createFromGlobals();
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
 $kernel = new DrupalKernel('prod', FALSE);
-$kernel->boot();
 $response = $kernel->handle($request)->prepare($request)->send();
 $kernel->terminate($request, $response);

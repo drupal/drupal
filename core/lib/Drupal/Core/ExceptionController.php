@@ -36,8 +36,8 @@ class ExceptionController extends ContainerAware {
    * and the name of the method to call, we can't just register it to the DIC
    * the regular way.
    *
-   * @todo: This probably doesn't belong here, but I'm not sure where would be a better
-   * place to put it... in a class of its own?
+   * @todo This probably doesn't belong here, but I'm not sure where would be a
+   *   better place to put it... in a class of its own?
    */
   public static function getExceptionListener(Container $container) {
     $negotiation = $container->get('content_negotiation');

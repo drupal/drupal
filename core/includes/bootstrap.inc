@@ -2632,6 +2632,10 @@ function drupal_language_initialize() {
  * directly.
  *
  * @see Drupal\Core\Language\LanguageManager
+ *
+ * @param $type
+ *   The type of language object needed, e.g. LANGUAGE_TYPE_INTERFACE. Passing
+ *   NULL invokes a reset of the statically stored language type objects.
  */
 function language_manager($type = NULL) {
   // Keep track of whether we are in a multilingual environment.
