@@ -32,23 +32,11 @@ function node_views_data() {
   );
   $data['node']['table']['entity type'] = 'node';
 
-
-  // For other base tables, explain how we join
-  $data['node']['table']['join'] = array(
-    // this explains how the 'node' table (named in the line above)
-    // links toward the node_revision table.
+  $data['node']['table']['default_relationship'] = array(
     'node_revision' => array(
-      'handler' => 'Drupal\views\Join', // this is actually optional
-      'left_table' => 'node_revision', // Because this is a direct link it could be left out.
-      'left_field' => 'nid',
-      'field' => 'nid',
-      // also supported:
-      // 'type' => 'INNER',
-      // 'extra' => array(array('field' => 'fieldname', 'value' => 'value', 'operator' => '='))
-      //   Unfortunately, you can't specify other tables here, but you can construct
-      //   alternative joins in the handlers that can do that.
-      // 'table' => 'the actual name of this table in the database',
-     ),
+      'table' => 'node_revision',
+      'field' => 'vid',
+    ),
   );
 
   // ----------------------------------------------------------------
@@ -446,6 +434,13 @@ function node_views_data() {
     // Directly links to node table.
     'node' => array(
       'left_field' => 'vid',
+      'field' => 'vid',
+    ),
+  );
+
+  $data['node_revision']['table']['default_relationship'] = array(
+    'node' => array(
+      'table' => 'node',
       'field' => 'vid',
     ),
   );
