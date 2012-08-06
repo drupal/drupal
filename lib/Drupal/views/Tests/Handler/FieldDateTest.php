@@ -42,25 +42,50 @@ class FieldDateTest extends ViewsSqlTest {
     ));
     $time = gmmktime(0, 0, 0, 1, 1, 2000);
 
-    $maps = array(
-      'small' => format_date($time, 'small'),
-      'medium' => format_date($time, 'medium'),
-      'large' => format_date($time, 'large'),
-      'custom' => format_date($time, 'custom', 'c'),
+    $this->executeView($view);
+
+    $timezones = array(
+      NULL,
+      'UTC',
+      'America/New_York',
+    );
+    foreach ($timezones as $timezone) {
+      $dates = array(
+        'small' => format_date($time, 'small', '', $timezone),
+        'medium' => format_date($time, 'medium', '', $timezone),
+        'large' => format_date($time, 'large', '', $timezone),
+        'custom' => format_date($time, 'custom', 'c', $timezone),
+      );
+      $this->assertRenderedDatesEqual($view, $dates, $timezone);
+    }
+
+    $intervals = array(
       'raw time ago' => format_interval(REQUEST_TIME - $time, 2),
       'time ago' => t('%time ago', array('%time' => format_interval(REQUEST_TIME - $time, 2))),
       // TODO write tests for them
 //       'raw time span' => format_interval(REQUEST_TIME - $time, 2),
 //       'time span' => t('%time hence', array('%time' => format_interval(REQUEST_TIME - $time, 2))),
     );
+    $this->assertRenderedDatesEqual($view, $intervals);
+  }
 
-    $this->executeView($view);
-
-    foreach ($maps as $date_format => $expected_result) {
+  protected function assertRenderedDatesEqual($view, $map, $timezone = NULL) {
+    foreach ($map as $date_format => $expected_result) {
       $view->field['created']->options['date_format'] = $date_format;
-      $this->assertEqual($expected_result, $view->field['created']->advanced_render($view->result[0]));
-      debug($view->field['created']->advanced_render($view->result[0]));
+      $t_args = array(
+        '%value' => $expected_result,
+        '%format' => $date_format,
+      );
+      if (isset($timezone)) {
+        $t_args['%timezone'] = $timezone;
+        $message = t('Value %value in %format format for timezone %timezone matches.', $t_args);
+        $view->field['created']->options['timezone'] = $timezone;
+      }
+      else {
+        $message = t('Value %value in %format format matches.', $t_args);
+      }
+      $actual_result = $view->field['created']->advanced_render($view->result[0]);
+      $this->assertEqual($expected_result, $actual_result, $message);
     }
-    debug($view->result);
   }
 }
