@@ -26,6 +26,7 @@ class Date extends FieldPluginBase {
 
     $options['date_format'] = array('default' => 'small');
     $options['custom_date_format'] = array('default' => '');
+    $options['timezone'] = array('default' => '');
 
     return $options;
   }
@@ -65,6 +66,18 @@ class Date extends FieldPluginBase {
         ':input[name="options[date_format]"]' => array('value' => $custom_date_possible),
       );
     }
+    $form['timezone'] = array(
+      '#type' => 'select',
+      '#title' => t('Timezone'),
+      '#description' => t('Timezone to be used for date output.'),
+      '#options' => array('' => t('- Default site/user timezone -')) + system_time_zones(FALSE),
+      '#default_value' => $this->options['timezone'],
+    );
+    foreach (array_merge(array('custom'), array_keys($date_formats)) as $timezone_date_formats) {
+      $form['timezone']['#states']['visible'][] = array(
+        ':input[name="options[date_format]"]' => array('value' => $timezone_date_formats),
+      );
+    }
 
     parent::options_form($form, $form_state);
   }
@@ -77,6 +90,7 @@ class Date extends FieldPluginBase {
     }
 
     if ($value) {
+      $timezone = !empty($this->options['timezone']) ? $this->options['timezone'] : NULL;
       $time_diff = REQUEST_TIME - $value; // will be positive for a datetime in the past (ago), and negative for a datetime in the future (hence)
       switch ($format) {
         case 'raw time ago':
@@ -95,11 +109,11 @@ class Date extends FieldPluginBase {
           return t(($time_diff < 0 ? '%time hence' : '%time ago'), array('%time' => format_interval(abs($time_diff), is_numeric($custom_format) ? $custom_format : 2)));
         case 'custom':
           if ($custom_format == 'r') {
-            return format_date($value, $format, $custom_format, null, 'en');
+            return format_date($value, $format, $custom_format, $timezone, 'en');
           }
-          return format_date($value, $format, $custom_format);
+          return format_date($value, $format, $custom_format, $timezone);
         default:
-          return format_date($value, $format);
+          return format_date($value, $format, '', $timezone);
       }
     }
   }
