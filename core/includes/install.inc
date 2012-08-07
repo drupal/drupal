@@ -387,7 +387,7 @@ function drupal_install_system() {
   system_rebuild_module_data();
   system_rebuild_theme_data();
 
-  config_install_default_config('system');
+  config_install_default_config('module', 'system');
 
   module_invoke('system', 'install');
 }

@@ -12,22 +12,24 @@ use Drupal\Core\Config\StorageInterface;
  */
 
 /**
- * Installs the default configuration of a given module.
+ * Installs the default configuration of a given extension.
  *
- * @param
- *   The name of the module we are installing.
+ * @param string $type
+ *   The extension type; e.g., 'module' or 'theme'.
+ * @param string $name
+ *   The name of the module or theme to install default configuration for.
  *
  * @todo Make this acknowledge other storage engines rather than having
  *   SQL be hardcoded.
  */
-function config_install_default_config($module) {
-  $module_config_dir = drupal_get_path('module', $module) . '/config';
-  if (is_dir($module_config_dir)) {
-    $source_storage = new FileStorage(array('directory' => $module_config_dir));
+function config_install_default_config($type, $name) {
+  $config_dir = drupal_get_path($type, $name) . '/config';
+  if (is_dir($config_dir)) {
+    $source_storage = new FileStorage(array('directory' => $config_dir));
     $target_storage = new DatabaseStorage();
     $null_storage = new NullStorage();
 
-    // Upon module installation, only new config objects need to be created.
+    // Upon installation, only new config objects need to be created.
     // config_sync_get_changes() would potentially perform a diff of hundreds or
     // even thousands of config objects that happen to be contained in the
     // active store. We leverage the NullStorage to avoid that needless

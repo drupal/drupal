@@ -462,7 +462,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         $version = $versions ? max($versions) : SCHEMA_INSTALLED;
 
         // Install default configuration of the module.
-        config_install_default_config($module);
+        config_install_default_config('module', $module);
 
         // If the module has no current updates, but has some that were
         // previously removed, set the version to the value of

@@ -1417,6 +1417,9 @@ function theme_enable($theme_list) {
       ->condition('type', 'theme')
       ->condition('name', $key)
       ->execute();
+
+    // Install default configuration of the theme.
+    config_install_default_config('theme', $key);
   }
 
   list_themes(TRUE);
