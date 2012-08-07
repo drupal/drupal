@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function bundle_test_menu() {
+  $items['bundle_test'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => t('Bundle test callback'),
+    'page callback' => 'bundle_test_callback',
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Simple callback for testing that the bundle_test_class service exists in the
+ * DIC.
+ */
+function bundle_test_callback() {
+  if (drupal_container()->has('bundle_test_class')) {
+    return t('The service with id bundle_test_class is available in the DIC');
+  }
+  return t('Service not found');
+}
+

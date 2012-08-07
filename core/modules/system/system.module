@@ -2068,7 +2068,7 @@ function system_filetransfer_info() {
 function system_init() {
   global $conf;
 
-  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
   // For each date type (e.g. long, short), get the localized date format
   // for the user's current language and override the default setting for it
   // in $conf. This should happen on all pages except the date and time formats
@@ -2199,7 +2199,8 @@ function system_add_module_assets() {
  * Implements hook_custom_theme().
  */
 function system_custom_theme() {
-  if ($request = request()) {
+  if (drupal_container()->has('request')) {
+    $request = drupal_container()->get('request');
     $path = $request->attributes->get('system_path');
     if (user_access('view the administration theme') && path_is_admin($path)) {
       return variable_get('admin_theme');

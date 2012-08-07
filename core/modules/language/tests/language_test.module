@@ -22,8 +22,8 @@ function language_test_boot() {
  */
 function language_test_init() {
   language_test_store_language_negotiation();
-  if (isset(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode) && isset(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->method_id)) {
-    drupal_set_message(t('Language negotiation method: @name', array('@name' => drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->method_id)));
+  if (isset(language_manager(LANGUAGE_TYPE_INTERFACE)->langcode) && isset(language_manager(LANGUAGE_TYPE_INTERFACE)->method_id)) {
+    drupal_set_message(t('Language negotiation method: @name', array('@name' => language_manager(LANGUAGE_TYPE_INTERFACE)->method_id)));
   }
 }
 
@@ -95,7 +95,7 @@ function language_test_language_negotiation_info_alter(array &$negotiation_info)
 function language_test_store_language_negotiation() {
   $last = array();
   foreach (language_types_get_all() as $type) {
-    $last[$type] = drupal_container()->get($type)->langcode;
+    $last[$type] = language_manager($type)->langcode;
   }
   variable_set('language_test_language_negotiation_last', $last);
 }

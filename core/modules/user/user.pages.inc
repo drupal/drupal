@@ -77,7 +77,7 @@ function user_pass_validate($form, &$form_state) {
 }
 
 function user_pass_submit($form, &$form_state) {
-  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
 
   $account = $form_state['values']['account'];
   // Mail one time login URL and instructions using current language.
@@ -498,9 +498,9 @@ function user_page() {
   global $user;
   if ($user->uid) {
     // @todo: Cleaner sub request handling.
-    $subrequest = Request::create('/user/' . $user->uid, 'GET', request()->query->all(), request()->cookies->all(), array(), request()->server->all());
-    request($subrequest);
-    return drupal_container()->get('httpkernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
+    $request = drupal_container()->get('request');
+    $subrequest = Request::create('/user/' . $user->uid, 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
+    return drupal_container()->get('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
   }
   else {
     return drupal_get_form('user_login');

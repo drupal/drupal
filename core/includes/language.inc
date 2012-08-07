@@ -107,10 +107,13 @@ const LANGUAGE_NEGOTIATION_DEFAULT = 'language-default';
  * @param $type
  *   The language type key to find the language for.
  *
+ * @param $request
+ *   The HttpReqeust object representing the current request.
+ *
  * @return
  *   The negotiated language object.
  */
-function language_types_initialize($type) {
+function language_types_initialize($type, $request = NULL) {
   // Execute the language negotiation methods in the order they were set up and
   // return the first valid language found.
   $negotiation = variable_get("language_negotiation_$type", array());
@@ -120,7 +123,7 @@ function language_types_initialize($type) {
     if (isset($method['types']) && !in_array($type, $method['types'])) {
       continue;
     }
-    $language = language_negotiation_method_invoke($method_id, $method);
+    $language = language_negotiation_method_invoke($method_id, $method, $request);
     if ($language) {
       // Remember the method ID used to detect the language.
       $language->method_id = $method_id;
@@ -428,10 +431,13 @@ function language_negotiation_info() {
  *   invoked (see hook_language_negotiation_info() for details). If not passed
  *   in, it will be loaded through language_negotiation_info().
  *
+ * @param $request
+ *   (optional) The HttpRequest object representing the current request.
+ *
  * @return
  *   A language object representing the language chosen by the method.
  */
-function language_negotiation_method_invoke($method_id, $method = NULL) {
+function language_negotiation_method_invoke($method_id, $method = NULL, $request = NULL) {
   $results = &drupal_static(__FUNCTION__);
 
   if (!isset($results[$method_id])) {
@@ -447,12 +453,11 @@ function language_negotiation_method_invoke($method_id, $method = NULL) {
     if (isset($method['file'])) {
       require_once DRUPAL_ROOT . '/' . $method['file'];
     }
-
     // If the language negotiation method has no cache preference or this is
     // satisfied we can execute the callback.
     $cache = !isset($method['cache']) || $user->uid || $method['cache'] == variable_get('cache', 0);
     $callback = isset($method['callbacks']['negotiation']) ? $method['callbacks']['negotiation'] : FALSE;
-    $langcode = $cache && function_exists($callback) ? $callback($languages) : FALSE;
+    $langcode = $cache && function_exists($callback) ? $callback($languages, $request) : FALSE;
     $results[$method_id] = isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
   }
 

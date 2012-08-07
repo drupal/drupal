@@ -247,8 +247,10 @@ function update_prepare_d8_language() {
 
     // Update the 'language_default' system variable, if configured.
     $language_default = variable_get('language_default');
-    if (!empty($language_default) && isset($language_default->language)) {
-      $language_default->langcode = $language_default->language;
+    if (!empty($language_default) && (isset($language_default->langcode) || isset($language_default->language))) {
+      if (!isset($language_default->langcode)) {
+        $language_default->langcode = $language_default->language;
+      }
       unset($language_default->language);
       // In D8, the 'language_default' is not anymore an object, but an array,
       // so make sure that the new value that is saved into this variable is an

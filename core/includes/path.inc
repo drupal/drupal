@@ -82,7 +82,7 @@ function drupal_lookup_path($action, $path = '', $langcode = NULL) {
   // language. If we used a language different from the one conveyed by the
   // requested URL, we might end up being unable to check if there is a path
   // alias matching the URL path.
-  $langcode = $langcode ? $langcode : drupal_container()->get(LANGUAGE_TYPE_URL)->langcode;
+  $langcode = $langcode ? $langcode : language_manager(LANGUAGE_TYPE_URL)->langcode;
 
   if ($action == 'wipe') {
     $cache = array();
@@ -213,8 +213,17 @@ function drupal_cache_system_paths() {
   // request to avoid writing to cache on every request.
   $cache = &drupal_static('drupal_lookup_path', array());
   if (empty($cache['system_paths']) && !empty($cache['map'])) {
+
+    // @todo Because we are not within the request scope at this time, we cannot
+    //   use current_path(), which would give us the system path to use as the
+    //   key. Instead we call _current_path(), which may give us the alias
+    //   instead. However, at lookup time the system path will be used as the
+    //   key, because it uses current_path(), and so it will be a cache miss.
+    //   There is a critical issue for fixing the path alias logic here:
+    //   http://drupal.org/node/1269742
+
     // Generate a cache ID (cid) specifically for this page.
-    $cid = current_path();
+    $cid = _current_path();
     // The static $map array used by drupal_lookup_path() includes all
     // system paths for the page request.
     if ($paths = current($cache['map'])) {
@@ -358,6 +367,14 @@ function drupal_match_path($path, $patterns) {
  * @see request_path()
  */
 function current_path() {
+  // @todo Remove the check for whether the request service exists and the
+  // fallback code below, once the path alias logic has been figured out in
+  // http://drupal.org/node/1269742.
+  if (drupal_container()->has('request')) {
+    return drupal_container()->get('request')->attributes->get('system_path');
+  }
+  // If we are outside the request scope, fall back to using the path stored in
+  // _current_path().
   return _current_path();
 }
 

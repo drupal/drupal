@@ -672,7 +672,7 @@ function node_field_extra_fields() {
 function node_type_get_default_langcode($node_type) {
   $default_value = variable_get('node_type_language_default_' . $node_type, 'site_default');
 
-  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
 
   if ($default_value == LANGUAGE_NOT_SPECIFIED) {
     return LANGUAGE_NOT_SPECIFIED;
@@ -762,7 +762,7 @@ function node_type_update_nodes($old_type, $type) {
  *   type object by $type->disabled being set to TRUE.
  */
 function _node_types_build($rebuild = FALSE) {
-  $cid = 'node_types:' . drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
+  $cid = 'node_types:' . language_manager(LANGUAGE_TYPE_INTERFACE)->langcode;
 
   if (!$rebuild) {
     $_node_types = &drupal_static(__FUNCTION__);
@@ -1205,7 +1205,7 @@ function node_revision_delete($revision_id) {
  */
 function node_view(Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
+    $langcode = language_manager(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Populate $node->content with a render() array.
@@ -1266,7 +1266,7 @@ function node_view(Node $node, $view_mode = 'full', $langcode = NULL) {
  */
 function node_build_content(Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode;
+    $langcode = language_manager(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Remove previously built content, if exists.
@@ -2469,7 +2469,7 @@ function node_block_list_alter(&$blocks) {
  */
 function node_feed($nids = FALSE, $channel = array()) {
   global $base_url;
-  $language_content = drupal_container()->get(LANGUAGE_TYPE_CONTENT);
+  $language_content = language_manager(LANGUAGE_TYPE_CONTENT);
   $rss_config = config('system.rss');
 
   if ($nids === FALSE) {

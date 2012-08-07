@@ -69,9 +69,6 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
    *   The Event to process.
    */
   public function onKernelRequestLanguageResolve(GetResponseEvent $event) {
-    $request = $event->getRequest();
-    $path = $this->extractPath($request);
-
     // drupal_language_initialize() combines:
     // - Determination of language from $request information (e.g., path).
     // - Determination of language from other information (e.g., site default).
@@ -80,11 +77,7 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
     // @todo Decouple the above, but for now, invoke it and update the path
     //   prior to front page and alias resolution. When above is decoupled, also
     //   add 'langcode' (determined from $request only) to $request->attributes.
-    _current_path($path);
     drupal_language_initialize();
-    $path = _current_path();
-
-    $this->setPath($request, $path);
   }
 
   /**

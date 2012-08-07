@@ -23,7 +23,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
    * Creates a node, then tests the tokens generated from it.
    */
   function testNodeTokenReplacement() {
-    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
       'language' => $language_interface,

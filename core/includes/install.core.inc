@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\TaskException;
 
@@ -253,11 +254,6 @@ function install_begin_request(&$install_state) {
 
   // A request object from the HTTPFoundation to tell us about the request.
   $request = Request::createFromGlobals();
-
-  // Set the global $request object.  This is a temporary measure to
-  // keep legacy utility functions working.  It should be moved to a dependency
-  // injection container at some point.
-  request($request);
 
   // This must go after drupal_bootstrap(), which unsets globals!
   global $conf;
@@ -1416,6 +1412,12 @@ function install_bootstrap_full(&$install_state) {
   // Clear the module list that was overriden earlier in the process.
   // This will allow all freshly installed modules to be loaded.
   module_list_reset();
+  // @todo The constructor parameters for the Kernel class are for environment,
+  // e.g. 'prod', 'dev', and a boolean indicating whether it is in debug mode.
+  // Drupal does not currently make use of either of these, though that may
+  // change with http://drupal.org/node/1537198.
+  $kernel = new DrupalKernel('prod', FALSE);
+  $kernel->boot();
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 }
 

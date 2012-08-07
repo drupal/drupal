@@ -1069,7 +1069,7 @@ function menu_tree_output($tree) {
  */
 function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
   $tree = &drupal_static(__FUNCTION__, array());
-  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
 
   // Use $mlid as a flag for whether the data being loaded is for the whole tree.
   $mlid = isset($link['mlid']) ? $link['mlid'] : 0;
@@ -1180,7 +1180,7 @@ function menu_tree_get_path($menu_name) {
 function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail = FALSE) {
   $tree = &drupal_static(__FUNCTION__, array());
 
-  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
 
   // Check if the active trail has been overridden for this menu tree.
   $active_path = menu_tree_get_path($menu_name);
@@ -1336,7 +1336,7 @@ function menu_build_tree($menu_name, array $parameters = array()) {
 function _menu_build_tree($menu_name, array $parameters = array()) {
   // Static cache of already built menu trees.
   $trees = &drupal_static(__FUNCTION__, array());
-  $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
 
   // Build the cache id; sort parents to prevent duplicate storage and remove
   // default parameter values.

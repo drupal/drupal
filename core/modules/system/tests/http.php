@@ -5,6 +5,7 @@
  * Fake an HTTP request, for use during testing.
  */
 
+use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 
 // Set a global variable to indicate a mock HTTP request.
@@ -32,10 +33,9 @@ if (!drupal_valid_test_ua()) {
 
 // Continue with normal request handling.
 $request = Request::createFromGlobals();
-request($request);
 
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
-$kernel = drupal_container()->get('httpkernel');
+$kernel = new DrupalKernel('prod', FALSE);
 $response = $kernel->handle($request)->prepare($request)->send();
 $kernel->terminate($request, $response);

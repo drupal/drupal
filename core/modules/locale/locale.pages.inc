@@ -103,7 +103,7 @@ function locale_translate_filters() {
   }
 
   // Pick the current interface language code for the filter.
-  $default_langcode = drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
+  $default_langcode = language_manager(LANGUAGE_TYPE_INTERFACE)->langcode;
   if (!isset($language_options[$default_langcode])) {
     $available_langcodes = array_keys($language_options);
     $default_langcode = array_shift($available_langcodes);

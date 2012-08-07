@@ -4,7 +4,9 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Database;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Language\Language;
 
@@ -1455,7 +1457,7 @@ function t($string, array $args = array(), array $options = array()) {
 
   // Merge in default.
   if (empty($options['langcode'])) {
-    $options['langcode'] = drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $options['langcode'] = language_manager(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
   if (empty($options['context'])) {
     $options['context'] = '';
@@ -1607,29 +1609,6 @@ function request_uri($omit_query_string = FALSE) {
   $uri = '/' . ltrim($uri, '/');
 
   return $omit_query_string ? strtok($uri, '?') : $uri;
-}
-
-/**
- * Returns the current global request object.
- *
- * @todo Replace this function with a proper dependency injection container.
- *
- * @staticvar Symfony\Component\HttpFoundation\Request $request
- *
- * @param Symfony\Component\HttpFoundation\Request $new_request
- *   Optional. The new request object to store. This parameter should only be
- *   used by index.php.
- *
- * @return Symfony\Component\HttpFoundation\Request
- *   The current request object.
- */
-function request(Request $new_request = NULL) {
-  static $request;
-
-  if ($new_request) {
-    $request = $new_request;
-  }
-  return $request;
 }
 
 /**
@@ -2428,28 +2407,23 @@ function drupal_get_bootstrap_phase() {
 /**
  * Retrieves the Drupal Container to standardize object construction.
  *
- * Example:
- * @code
- * // Register the LANGUAGE_TYPE_INTERFACE definition. Registered definitions
- * // do not necessarily need to be named by a constant.
- * // See 
- * // http://symfony.com/doc/current/components/dependency_injection/introduction.html
- * // for usage examples of adding object initialization code after register().
- * $container = drupal_container();
- * $container->register(LANGUAGE_TYPE_INTERFACE, 'Drupal\\Core\\Language\\Language');
+ * On a normal page request the container is built by the kernel and passed in
+ * to this function which stores it statically. Any full bootstrap outside of
+ * the context of a page request will require a container with a minimal set of
+ * services. If this function is called without the $reset parameter, and no
+ * container object has been statically cached, it builds this minimal container,
+ * registering the services that are required.
  *
- * // Retrieve the LANGUAGE_TYPE_INTERFACE object.
- * $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
- * @endcode
+ * @see Drupal\Core\DrupalKernel
  *
  * @param $reset
  *   A new container instance to reset the Drupal container to.
  *
- * @return Drupal\Component\DependencyInjection\ContainerBuilder
- *   The instance of the Drupal Container used to set up and maintain object
+ * @return Symfony\Component\DependencyInjection\Container
+ *   The instance of the Container used to set up and maintain object
  *   instances.
  */
-function drupal_container(ContainerBuilder $reset = NULL) {
+function drupal_container(Container $reset = NULL) {
   // We do not use drupal_static() here because we do not have a mechanism by
   // which to reinitialize the stored objects, so a drupal_static_reset() call
   // would leave Drupal in a nonfunctional state.
@@ -2458,7 +2432,31 @@ function drupal_container(ContainerBuilder $reset = NULL) {
     $container = $reset;
   }
   elseif (!isset($container)) {
+    // Return a ContainerBuilder instance with the bare essentials needed for any
+    // full bootstrap regardless of whether there will be a DrupalKernel involved.
+    // This will get merged with the full Kernel-built Container on normal page
+    // requests.
     $container = new ContainerBuilder();
+    // Register configuration storage dispatcher.
+    $container->setParameter('config.storage.info', array(
+      'Drupal\Core\Config\DatabaseStorage' => array(
+        'connection' => 'default',
+        'target' => 'default',
+        'read' => TRUE,
+        'write' => TRUE,
+      ),
+      'Drupal\Core\Config\FileStorage' => array(
+        'directory' => config_get_config_directory(),
+        'read' => TRUE,
+        'write' => FALSE,
+      ),
+    ));
+    $container->register('config.storage.dispatcher', 'Drupal\Core\Config\StorageDispatcher')
+      ->addArgument('%config.storage.info%');
+
+    // Register configuration object factory.
+    $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
+      ->addArgument(new Reference('config.storage.dispatcher'));
   }
   return $container;
 }
@@ -2606,34 +2604,71 @@ function get_t() {
 /**
  * Initializes all the defined language types.
  *
- * @see Drupal\Core\Language\Language
+ * @see language_manager()
  */
 function drupal_language_initialize() {
-  $types = language_types_get_all();
-  $container = drupal_container();
-
-  // Ensure a language object is registered for each language type, whether the
-  // site is multilingual or not.
   if (language_multilingual()) {
-    include_once DRUPAL_ROOT . '/core/includes/language.inc';
+    $types = language_types_get_all();
     foreach ($types as $type) {
-      $language = language_types_initialize($type);
-      $container->set($type, NULL);
-      $container->register($type, 'Drupal\\Core\\Language\\Language')
-        ->addMethodCall('extend', array($language));
+      language_manager($type);
     }
     // Allow modules to react on language system initialization in multilingual
     // environments.
     bootstrap_invoke_all('language_init');
   }
-  else {
-    $default = language_default();
-    foreach ($types as $type) {
-      $container->set($type, NULL);
-      $container->register($type, 'Drupal\\Core\\Language\\Language')
-        ->addMethodCall('extend', array($default));
+}
+
+/**
+ * Initializes the passed in language type.
+ *
+ * The 'language_manager' service is only available within the scope of a kernel
+ * request. When it's not available, we return a default language object,
+ * regardless of the type passed in.
+ *
+ * Note that this function is provided for legacy code that needs to get e.g.
+ * the interface language outside the scope of a request. Code that runs within
+ * the scope of a request should call
+ * drupal_container()->get('language_manager')->getLanguage($type)
+ * directly.
+ *
+ * @see Drupal\Core\Language\LanguageManager
+ *
+ * @param $type
+ *   The type of language object needed, e.g. LANGUAGE_TYPE_INTERFACE. Passing
+ *   NULL invokes a reset of the statically stored language type objects.
+ */
+function language_manager($type = NULL) {
+  // Keep track of whether we are in a multilingual environment.
+  static $multilingual = FALSE;
+  // Keep track of whether the language_manager service is available.
+  static $language_manager_service = FALSE;
+  if ($multilingual && $language_manager_service) {
+    if (!$type) {
+      drupal_container()->get('language_manager')->reset();
+      return;
+    }
+    return drupal_container()->get('language_manager')->getLanguage($type);
+  }
+  if (language_multilingual()) {
+    $multilingual = TRUE;
+    if (drupal_container()->has('language_manager')) {
+      $language_manager_service = TRUE;
+      return drupal_container()->get('language_manager')->getLanguage($type);
     }
   }
+  // We can't use drupal_static() here because resetting is not a simple case of
+  // drupal_static_reset().
+  static $languages;
+  // If no type was passed in, reset the languages array.
+  if (!$type) {
+    $languages = array();
+  }
+  // If this is not a multilingual environment or we have not yet entered the
+  // request scope, just use the default language regardless of $type.
+  if (!isset($languages[$type])) {
+    $languages[$type] = language_default();
+  }
+  return $languages[$type];
 }
 
 /**

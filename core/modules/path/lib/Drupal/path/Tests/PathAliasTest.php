@@ -49,7 +49,9 @@ class PathAliasTest extends PathTestBase {
     // Visit the alias for the node and confirm a cache entry is created.
     cache('path')->flush();
     $this->drupalGet($edit['alias']);
-    $this->assertTrue(cache('path')->get($edit['source']), t('Cache entry was created.'));
+    // @todo The alias should actually have been cached with the system path as
+    // the key, see the todo in drupal_cache_system_paths() in path.inc.
+    $this->assertTrue(cache('path')->get($edit['alias']), t('Cache entry was created.'));
   }
 
   /**

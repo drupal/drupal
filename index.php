@@ -11,31 +11,27 @@
  * See COPYRIGHT.txt and LICENSE.txt files in the "core" directory.
  */
 
+use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Root directory of Drupal installation.
  */
 define('DRUPAL_ROOT', getcwd());
-// Bootstrap the lowest level of what we need.
-require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
-drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
-
-// Create a request object from the HTTPFoundation.
-$request = Request::createFromGlobals();
-
-// Set the global $request object. This is a temporary measure to keep legacy
-// utility functions working. It should be moved to a dependency injection
-// container at some point.
-request($request);
 
 // Bootstrap all of Drupal's subsystems, but do not initialize anything that
 // depends on the fully resolved Drupal path, because path resolution happens
 // during the REQUEST event of the kernel.
 // @see Drupal\Core\EventSubscriber\PathSubscriber;
 // @see Drupal\Core\EventSubscriber\LegacyRequestSubscriber;
+require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
-$kernel = drupal_container()->get('httpkernel');
+// @todo Figure out how best to handle the Kernel constructor parameters.
+$kernel = new DrupalKernel('prod', FALSE);
+
+// Create a request object from the HTTPFoundation.
+$request = Request::createFromGlobals();
 $response = $kernel->handle($request)->prepare($request)->send();
+
 $kernel->terminate($request, $response);

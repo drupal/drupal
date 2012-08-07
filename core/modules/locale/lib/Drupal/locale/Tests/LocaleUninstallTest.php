@@ -46,10 +46,12 @@ class LocaleUninstallTest extends WebTestBase {
       'default' => $this->langcode == 'fr',
     );
     language_save($language);
-
+    // Reset the language_manager so that the language interface object gets
+    // freshly initialized.
+    language_manager();
     // Check the UI language.
     drupal_language_initialize();
-    $this->assertEqual(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode, $this->langcode, t('Current language: %lang', array('%lang' => drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode)));
+    $this->assertEqual(language_manager(LANGUAGE_TYPE_INTERFACE)->langcode, $this->langcode, t('Current language: %lang', array('%lang' => language_manager(LANGUAGE_TYPE_INTERFACE)->langcode)));
 
     // Enable multilingual workflow option for articles.
     variable_set('node_type_language_hidden_article',FALSE);
@@ -91,10 +93,12 @@ class LocaleUninstallTest extends WebTestBase {
 
     // Visit the front page.
     $this->drupalGet('');
-
+    // Reset the language_manager so that the language interface object gets
+    // freshly initialized.
+    language_manager();
     // Check the init language logic.
     drupal_language_initialize();
-    $this->assertEqual(drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => drupal_container()->get(LANGUAGE_TYPE_INTERFACE)->langcode)));
+    $this->assertEqual(language_manager(LANGUAGE_TYPE_INTERFACE)->langcode, 'en', t('Language after uninstall: %lang', array('%lang' => language_manager(LANGUAGE_TYPE_INTERFACE)->langcode)));
 
     // Check JavaScript files deletion.
     $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
