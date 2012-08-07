@@ -4742,71 +4742,47 @@ function views_ui_admin_settings_basic() {
     '#default_value' => $config->get('views_ui_always_live_preview'),
   );
 
-//  $form['live_preview']['views_ui_always_live_preview_button'] = array(
-//    '#type' => 'checkbox',
-//    '#title' => t('Always show the preview button, even when the automatically update option is checked'),
-//    '#default_value' => $config->get('views_ui_always_live_preview_button'),
-//  );
-
   $form['live_preview']['views_ui_show_preview_information'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show information and statistics about the view during live preview'),
     '#default_value' => $config->get('views_ui_show_preview_information'),
   );
 
-  $form['live_preview']['views_ui_show_sql_query_where'] = array(
+  $form['live_preview']['options'] = array(
+    '#type' => 'container',
+    '#states' => array(
+      'visible' => array(
+        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  $form['live_preview']['options']['views_ui_show_sql_query_where'] = array(
     '#type' => 'radios',
     '#options' => array(
       'above' => t('Above the preview'),
       'below' => t('Below the preview'),
     ),
-//    '#id' => 'edit-show-sql',
     '#default_value' => $config->get('views_ui_show_sql_query_where'),
-    // @todo: try to fix this states behavior.
-//    '#dependency' => array('edit-views-ui-show-preview-information' => array(TRUE)),
-//    '#states' => array(
-//      'visible' => array(
-//        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
-//      ),
-//    ),
-//    '#prefix' => '<div id="edit-show-sql-wrapper" class="views-dependent">',
-//    '#suffix' => '</div>',
   );
 
-  $form['live_preview']['views_ui_show_sql_query'] = array(
+  $form['live_preview']['options']['views_ui_show_sql_query'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show the SQL query'),
     '#default_value' => $config->get('views_ui_show_sql_query'),
-//    '#states' => array(
-//      'visible' => array(
-//        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
-//      ),
-//    ),
   );
-  $form['live_preview']['views_ui_show_performance_statistics'] = array(
+  $form['live_preview']['options']['views_ui_show_performance_statistics'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show performance statistics'),
     '#default_value' => $config->get('views_ui_show_performance_statistics'),
-//    '#states' => array(
-//      'visible' => array(
-//        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
-//      ),
-//    ),
   );
 
-  $form['live_preview']['views_show_additional_queries'] = array(
+  $form['live_preview']['options']['views_show_additional_queries'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show other queries run during render during live preview'),
     '#description' => t("Drupal has the potential to run many queries while a view is being rendered. Checking this box will display every query run during view render as part of the live preview."),
     '#default_value' => $config->get('views_show_additional_queries'),
-//    '#states' => array(
-//      'visible' => array(
-//        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
-//      ),
-//    ),
   );
-
-//  $form['live_preview']['views_ui_show_performance_statistics_where'] = array(
 
   $form['actions']['#type'] = 'actions';
   $form['actions']['submit'] = array(
