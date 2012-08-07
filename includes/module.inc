@@ -181,6 +181,7 @@ function system_list($type) {
       foreach ($lists['theme'] as $key => $theme) {
         if (!empty($theme->info['base theme'])) {
           // Make a list of the theme's base themes.
+          require_once DRUPAL_ROOT . '/includes/theme.inc';
           $lists['theme'][$key]->base_themes = drupal_find_base_themes($lists['theme'], $key);
           // Don't proceed if there was a problem with the root base theme.
           if (!current($lists['theme'][$key]->base_themes)) {
