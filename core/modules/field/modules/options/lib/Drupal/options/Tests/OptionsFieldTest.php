@@ -54,7 +54,7 @@ class OptionsFieldTest extends FieldTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // All three options appear.
-    $entity = field_test_create_stub_entity();
+    $entity = field_test_create_entity();
     $form = drupal_get_form('field_test_entity_form', $entity);
     $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
     $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
@@ -62,7 +62,7 @@ class OptionsFieldTest extends FieldTestBase {
 
     // Use one of the values in an actual entity, and check that this value
     // cannot be removed from the list.
-    $entity = field_test_create_stub_entity();
+    $entity = field_test_create_entity();
     $entity->{$this->field_name}[$langcode][0] = array('value' => 1);
     field_test_entity_save($entity);
     $this->field['settings']['allowed_values'] = array(2 => 'Two');
@@ -80,7 +80,7 @@ class OptionsFieldTest extends FieldTestBase {
     // Removed options do not appear.
     $this->field['settings']['allowed_values'] = array(2 => 'Two');
     field_update_field($this->field);
-    $entity = field_test_create_stub_entity();
+    $entity = field_test_create_entity();
     $form = drupal_get_form('field_test_entity_form', $entity);
     $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
     $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
@@ -110,7 +110,7 @@ class OptionsFieldTest extends FieldTestBase {
       ),
     );
     $this->instance = field_create_instance($this->instance);
-    $entity = field_test_create_stub_entity();
+    $entity = field_test_create_entity();
     $form = drupal_get_form('field_test_entity_form', $entity);
     $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
     $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));

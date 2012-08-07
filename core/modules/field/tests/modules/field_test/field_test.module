@@ -199,7 +199,7 @@ function field_test_dummy_field_storage_query(EntityFieldQuery $query) {
   // Return dummy values that will be checked by the test.
   return array(
     'user' => array(
-      1 => entity_create_stub_entity('user', array(1, NULL, NULL)),
+      1 => (object) array('entity_id' => 1, 'revision_id' => NULL, 'bundle' => NULL),
     ),
   );
 }

@@ -65,7 +65,7 @@ class TextFieldTest extends WebTestBase {
     );
     field_create_instance($this->instance);
     // Test valid and invalid values with field_attach_validate().
-    $entity = field_test_create_stub_entity();
+    $entity = field_test_create_entity();
     $langcode = LANGUAGE_NOT_SPECIFIED;
     for ($i = 0; $i <= $max_length + 2; $i++) {
       $entity->{$this->field['field_name']}[$langcode][0]['value'] = str_repeat('x', $i);

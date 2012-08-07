@@ -75,7 +75,7 @@ class FieldSqlStorageTest extends WebTestBase {
     $query->execute();
 
     // Load the "most current revision"
-    $entity = field_test_create_stub_entity($eid, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity($eid, 0, $this->instance['bundle']);
     field_attach_load($entity_type, array($eid => $entity));
     foreach ($values[0] as $delta => $value) {
       if ($delta < $this->field['cardinality']) {
@@ -88,7 +88,7 @@ class FieldSqlStorageTest extends WebTestBase {
 
     // Load every revision
     for ($evid = 0; $evid < 4; ++$evid) {
-      $entity = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
+      $entity = field_test_create_entity($eid, $evid, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array($eid => $entity));
       foreach ($values[$evid] as $delta => $value) {
         if ($delta < $this->field['cardinality']) {
@@ -104,7 +104,7 @@ class FieldSqlStorageTest extends WebTestBase {
     // loaded.
     $eid = $evid = 1;
     $unavailable_langcode = 'xx';
-    $entity = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
+    $entity = field_test_create_entity($eid, $evid, $this->instance['bundle']);
     $values = array($entity_type, $eid, $evid, 0, $unavailable_langcode, mt_rand(1, 127));
     db_insert($this->table)->fields($columns)->values($values)->execute();
     db_insert($this->revision_table)->fields($columns)->values($values)->execute();
@@ -118,7 +118,7 @@ class FieldSqlStorageTest extends WebTestBase {
    */
   function testFieldAttachInsertAndUpdate() {
     $entity_type = 'test_entity';
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Test insert.
@@ -142,7 +142,7 @@ class FieldSqlStorageTest extends WebTestBase {
     }
 
     // Test update.
-    $entity = field_test_create_stub_entity(0, 1, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 1, $this->instance['bundle']);
     $values = array();
     // Note: we try to update one extra value ('<=' instead of '<').
     for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
@@ -199,7 +199,7 @@ class FieldSqlStorageTest extends WebTestBase {
    */
   function testFieldAttachSaveMissingData() {
     $entity_type = 'test_entity';
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Insert: Field is missing
@@ -298,7 +298,7 @@ class FieldSqlStorageTest extends WebTestBase {
     $field = field_create_field($field);
     $instance = array('field_name' => 'decimal52', 'entity_type' => 'test_entity', 'bundle' => 'test_bundle');
     $instance = field_create_instance($instance);
-    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $instance['bundle']);
     $entity->decimal52[LANGUAGE_NOT_SPECIFIED][0]['value'] = '1.235';
     field_attach_insert('test_entity', $entity);
 
@@ -358,7 +358,7 @@ class FieldSqlStorageTest extends WebTestBase {
     }
 
     // Add data so the table cannot be dropped.
-    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $instance['bundle']);
     $entity->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['value'] = 'field data';
     field_attach_insert('test_entity', $entity);
 
@@ -378,7 +378,7 @@ class FieldSqlStorageTest extends WebTestBase {
     }
 
     // Verify that the tables were not dropped.
-    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $instance['bundle']);
     field_attach_load('test_entity', array(0 => $entity));
     $this->assertEqual($entity->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
   }

@@ -33,10 +33,14 @@ class EntityPropertiesTest extends FieldTestBase {
       'test_entity_label_callback',
     );
 
-    $entity = field_test_create_stub_entity();
+    // @todo Remove once test_entity entity has been merged with entity_test.
+    $values = array(
+      'ftlabel' => $this->randomName(),
+    );
 
     foreach ($entity_types as $entity_type) {
-      $label = entity_create($entity_type, (array) $entity)->label();
+      $entity = entity_create($entity_type, $values);
+      $label = $entity->label();
 
       switch ($entity_type) {
         case 'test_entity_no_label':

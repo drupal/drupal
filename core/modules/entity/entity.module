@@ -165,36 +165,6 @@ function entity_extract_ids($entity_type, $entity) {
 }
 
 /**
- * Assembles an object structure with initial IDs.
- *
- * This function can be seen as reciprocal to entity_extract_ids().
- *
- * @param $entity_type
- *   The entity type; e.g. 'node' or 'user'.
- * @param $ids
- *   A numerically indexed array, as returned by entity_extract_ids(),
- *   containing these elements:
- *   - 0: Primary ID of the entity.
- *   - 1: Revision ID of the entity, or NULL if $entity_type is not versioned.
- *   - 2: Bundle name of the entity, or NULL if $entity_type has no bundles.
- *
- * @return
- *   An entity object, initialized with the IDs provided.
- */
-function entity_create_stub_entity($entity_type, $ids) {
-  $entity = new stdClass();
-  $info = entity_get_info($entity_type);
-  $entity->{$info['entity keys']['id']} = $ids[0];
-  if (!empty($info['entity keys']['revision']) && isset($ids[1])) {
-    $entity->{$info['entity keys']['revision']} = $ids[1];
-  }
-  if (!empty($info['entity keys']['bundle']) && isset($ids[2])) {
-    $entity->{$info['entity keys']['bundle']} = $ids[2];
-  }
-  return $entity;
-}
-
-/**
  * Loads an entity from the database.
  *
  * @param string $entity_type

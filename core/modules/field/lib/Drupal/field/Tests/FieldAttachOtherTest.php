@@ -26,7 +26,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
    */
   function testFieldAttachView() {
     $entity_type = 'test_entity';
-    $entity_init = field_test_create_stub_entity();
+    $entity_init = field_test_create_entity();
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Populate values to be displayed.
@@ -172,11 +172,11 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     field_create_instance($this->instance2);
 
     // Create one entity in each bundle.
-    $entity1_init = field_test_create_stub_entity(1, 1, 'test_bundle');
+    $entity1_init = field_test_create_entity(1, 1, 'test_bundle');
     $values1 = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity1_init->{$this->field_name}[$langcode] = $values1;
 
-    $entity2_init = field_test_create_stub_entity(2, 2, 'test_bundle_2');
+    $entity2_init = field_test_create_entity(2, 2, 'test_bundle_2');
     $values2 = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity2_init->{$this->field_name}[$langcode] = $values2;
 
@@ -200,7 +200,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
    */
   function testFieldAttachCache() {
     // Initialize random values and a test entity.
-    $entity_init = field_test_create_stub_entity(1, 1, $this->instance['bundle']);
+    $entity_init = field_test_create_entity(1, 1, $this->instance['bundle']);
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
 
@@ -265,7 +265,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
     $this->assertEqual($cache->data[$this->field_name][$langcode], $values, t('Cached: correct cache entry on load'));
 
     // Create a new revision, and check that the cache entry is wiped.
-    $entity_init = field_test_create_stub_entity(1, 2, $this->instance['bundle']);
+    $entity_init = field_test_create_entity(1, 2, $this->instance['bundle']);
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity = clone($entity_init);
     $entity->{$this->field_name}[$langcode] = $values;
@@ -292,7 +292,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
    */
   function testFieldAttachValidate() {
     $entity_type = 'test_entity';
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Set up values to generate errors
@@ -343,7 +343,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
    */
   function testFieldAttachForm() {
     $entity_type = 'test_entity';
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
 
     $form = array();
     $form_state = form_state_defaults();
@@ -362,7 +362,7 @@ class FieldAttachOtherTest extends FieldAttachTestBase {
    */
   function testFieldAttachSubmit() {
     $entity_type = 'test_entity';
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
 
     // Build the form.
     $form = array();

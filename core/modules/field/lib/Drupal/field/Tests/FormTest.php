@@ -337,7 +337,7 @@ class FormTest extends FieldTestBase {
     $id = $match[1];
 
     // Check that the values were saved.
-    $entity_init = field_test_create_stub_entity($id);
+    $entity_init = field_test_create_entity($id);
     $this->assertFieldValues($entity_init, $this->field_name, $langcode, array(1, 2, 3));
 
     // Display the form, check that the values are correctly filled in.
@@ -384,7 +384,7 @@ class FormTest extends FieldTestBase {
     // Test that the form structure includes full information for each delta
     // apart from #access.
     $entity_type = 'test_entity';
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
 
     $form = array();
     $form_state = form_state_defaults();
@@ -438,13 +438,13 @@ class FormTest extends FieldTestBase {
     field_create_instance($this->instance);
 
     // Create two entities.
-    $entity_1 = field_test_create_stub_entity(1, 1);
+    $entity_1 = field_test_create_entity(1, 1);
     $entity_1->is_new = TRUE;
     $entity_1->field_single[LANGUAGE_NOT_SPECIFIED][] = array('value' => 0);
     $entity_1->field_unlimited[LANGUAGE_NOT_SPECIFIED][] = array('value' => 1);
     field_test_entity_save($entity_1);
 
-    $entity_2 = field_test_create_stub_entity(2, 2);
+    $entity_2 = field_test_create_entity(2, 2);
     $entity_2->is_new = TRUE;
     $entity_2->field_single[LANGUAGE_NOT_SPECIFIED][] = array('value' => 10);
     $entity_2->field_unlimited[LANGUAGE_NOT_SPECIFIED][] = array('value' => 11);
@@ -468,8 +468,8 @@ class FormTest extends FieldTestBase {
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     field_cache_clear();
-    $entity_1 = field_test_create_stub_entity(1);
-    $entity_2 = field_test_create_stub_entity(2);
+    $entity_1 = field_test_create_entity(1);
+    $entity_2 = field_test_create_entity(2);
     $this->assertFieldValues($entity_1, 'field_single', LANGUAGE_NOT_SPECIFIED, array(1));
     $this->assertFieldValues($entity_1, 'field_unlimited', LANGUAGE_NOT_SPECIFIED, array(2, 3));
     $this->assertFieldValues($entity_2, 'field_single', LANGUAGE_NOT_SPECIFIED, array(11));

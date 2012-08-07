@@ -325,7 +325,7 @@ function field_test_field_storage_query($field_id, $conditions, $count, &$cursor
           $id = ($load_current || empty($entity_type['entity keys']['revision'])) ? $row->entity_id : $row->revision_id;
 
           if (!isset($return[$row->type][$id])) {
-            $return[$row->type][$id] = entity_create_stub_entity($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
+            $return[$row->type][$id] = (object) array('entity_id' => $row->entity_id, 'revision_id' => $row->revision_id, 'bundle' => $row->bundle);
             $entity_count++;
           }
         }
