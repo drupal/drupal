@@ -144,32 +144,6 @@ class FunctionsTest extends WebTestBase {
   }
 
   /**
-   * Asserts themed output.
-   *
-   * @param $callback
-   *   The name of the theme function to invoke; e.g. 'links' for theme_links().
-   * @param $variables
-   *   An array of variables to pass to the theme function.
-   * @param $expected
-   *   The expected themed output string.
-   * @param $message
-   *   (optional) An assertion message.
-   */
-  protected function assertThemeOutput($callback, array $variables = array(), $expected, $message = '') {
-    $output = theme($callback, $variables);
-    $this->verbose('Variables:' . '<pre>' .  check_plain(var_export($variables, TRUE)) . '</pre>'
-      . '<hr />' . 'Result:' . '<pre>' .  check_plain(var_export($output, TRUE)) . '</pre>'
-      . '<hr />' . 'Expected:' . '<pre>' .  check_plain(var_export($expected, TRUE)) . '</pre>'
-      . '<hr />' . $output
-    );
-    if (!$message) {
-      $message = '%callback rendered correctly.';
-    }
-    $message = t($message, array('%callback' => 'theme_' . $callback . '()'));
-    $this->assertIdentical($output, $expected, $message);
-  }
-
-  /**
    * Test the use of drupal_pre_render_links() on a nested array of links.
    */
   function testDrupalPreRenderLinks() {
