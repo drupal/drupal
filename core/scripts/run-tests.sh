@@ -549,13 +549,6 @@ function simpletest_script_get_test_list() {
     }
   }
 
-  // Filter out abstract classes.
-  foreach ($test_list as $i => $test_class) {
-    $class_info = new \ReflectionClass($test_class);
-    if ($class_info->isAbstract()) {
-      unset($test_list[$i]);
-    }
-  }
   if (empty($test_list)) {
     simpletest_script_print_error('No valid tests were specified.');
     exit;
