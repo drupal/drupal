@@ -27,7 +27,7 @@
  * @ingroup views_templates
  */
 ?>
-<div class="<?php print $classes; ?>">
+<div <?php print $attributes; ?>>
   <?php if ($header): ?>
     <div class="view-header">
       <?php print $header; ?>
