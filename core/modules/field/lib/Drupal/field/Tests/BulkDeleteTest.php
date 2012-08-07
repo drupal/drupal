@@ -24,33 +24,29 @@ class BulkDeleteTest extends FieldTestBase {
   }
 
   /**
-   * Convenience function for Field API tests.
+   * Converts the passed entities to partially created ones.
    *
-   * Given an array of potentially fully-populated entities and an
-   * optional field name, generate an array of stub entities of the
-   * same fieldable type which contains the data for the field name
-   * (if given).
+   * This replicates the partial entities created in field_purge_data_batch(),
+   * which only have the ids and the to be deleted field defined.
    *
-   * @param $entity_type
-   *   The entity type of $entities.
    * @param $entities
-   *   An array of entities of type $entity_type.
+   *   An array of entities of type test_entity.
    * @param $field_name
-   *   Optional; a field name whose data should be copied from
-   *   $entities into the returned stub entities.
+   *   A field name whose data should be copied from $entities into the returned
+   *   partial entities.
    * @return
-   *   An array of stub entities corresponding to $entities.
+   *   An array of partial entities corresponding to $entities.
    */
-  function _generateStubEntities($entity_type, $entities, $field_name = NULL) {
-    $stubs = array();
+  protected function convertToPartialEntities($entities, $field_name) {
+    $partial_entities = array();
     foreach ($entities as $id => $entity) {
-      $stub = entity_create_stub_entity($entity_type, entity_extract_ids($entity_type, $entity));
-      if (isset($field_name)) {
-        $stub->{$field_name} = $entity->{$field_name};
-      }
-      $stubs[$id] = $stub;
+      // Re-create the entity with only the required keys, remove label as that
+      // is not present when using _field_create_entity_from_ids().
+      $partial_entities[$id] = field_test_create_entity($entity->ftid, $entity->ftvid, $entity->fttype, $entity->ftlabel);
+      unset($partial_entities[$id]->ftlabel);
+      $partial_entities[$id]->$field_name = $entity->$field_name;
     }
-    return $stubs;
+    return $partial_entities;
   }
 
   /**
@@ -122,7 +118,7 @@ class BulkDeleteTest extends FieldTestBase {
       }
 
       for ($i = 0; $i < 10; $i++) {
-        $entity = field_test_create_stub_entity($id, $id, $bundle);
+        $entity = field_test_create_entity($id, $id, $bundle);
         foreach ($this->fields as $field) {
           $entity->{$field['field_name']}[LANGUAGE_NOT_SPECIFIED] = $this->_generateTestFieldValues($field['cardinality']);
         }
@@ -182,9 +178,13 @@ class BulkDeleteTest extends FieldTestBase {
       ->entityCondition('bundle', $bundle)
       ->deleted(TRUE)
       ->execute();
-    field_attach_load($this->entity_type, $found[$this->entity_type], FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
+    $entities = array();
+    foreach ($found[$this->entity_type] as $ids) {
+      $entities[$ids->entity_id] = _field_create_entity_from_ids($ids);
+    }
+    field_attach_load($this->entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
     $this->assertEqual(count($found['test_entity']), 10, 'Correct number of entities found after deleting');
-    foreach ($found['test_entity'] as $id => $entity) {
+    foreach ($entities as $id => $entity) {
       $this->assertEqual($this->entities[$id]->{$field['field_name']}, $entity->{$field['field_name']}, "Entity $id with deleted data loaded correctly");
     }
   }
@@ -230,12 +230,12 @@ class BulkDeleteTest extends FieldTestBase {
     // bundle.
     $actual_hooks = field_test_memorize();
     $hooks = array();
-    $stubs = $this->_generateStubEntities($this->entity_type, $this->entities_by_bundles[$bundle], $field['field_name']);
-    foreach (array_chunk($stubs, $batch_size, TRUE) as $chunk) {
-      $hooks['field_test_field_load'][] = $chunk;
+    $entities = $this->convertToPartialEntities($this->entities_by_bundles[$bundle], $field['field_name']);
+    foreach (array_chunk($entities, $batch_size, TRUE) as $chunk_entity) {
+      $hooks['field_test_field_load'][] = $chunk_entity;
     }
-    foreach ($stubs as $stub) {
-      $hooks['field_test_field_delete'][] = $stub;
+    foreach ($entities as $entity) {
+      $hooks['field_test_field_delete'][] = $entity;
     }
     $this->checkHooksInvocations($hooks, $actual_hooks);
 
@@ -284,11 +284,9 @@ class BulkDeleteTest extends FieldTestBase {
     // bundle.
     $actual_hooks = field_test_memorize();
     $hooks = array();
-    $stubs = $this->_generateStubEntities($this->entity_type, $this->entities_by_bundles[$bundle], $field['field_name']);
-    $hooks['field_test_field_load'][] = $stubs;
-    foreach ($stubs as $stub) {
-      $hooks['field_test_field_delete'][] = $stub;
-    }
+    $entities = $this->convertToPartialEntities($this->entities_by_bundles[$bundle], $field['field_name']);
+    $hooks['field_test_field_load'][] = $entities;
+    $hooks['field_test_field_delete'] = $entities;
     $this->checkHooksInvocations($hooks, $actual_hooks);
 
     // Purge again to purge the instance.
@@ -313,11 +311,9 @@ class BulkDeleteTest extends FieldTestBase {
     // Check hooks invocations (same as above, for the 2nd bundle).
     $actual_hooks = field_test_memorize();
     $hooks = array();
-    $stubs = $this->_generateStubEntities($this->entity_type, $this->entities_by_bundles[$bundle], $field['field_name']);
-    $hooks['field_test_field_load'][] = $stubs;
-    foreach ($stubs as $stub) {
-      $hooks['field_test_field_delete'][] = $stub;
-    }
+    $entities = $this->convertToPartialEntities($this->entities_by_bundles[$bundle], $field['field_name']);
+    $hooks['field_test_field_load'][] = $entities;
+    $hooks['field_test_field_delete'] = $entities;
     $this->checkHooksInvocations($hooks, $actual_hooks);
 
     // The field still exists, deleted.

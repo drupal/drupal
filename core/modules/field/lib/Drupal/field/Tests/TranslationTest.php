@@ -94,7 +94,7 @@ class TranslationTest extends FieldTestBase {
     field_test_entity_info_translatable('test_entity', TRUE);
 
     $entity_type = 'test_entity';
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
 
     // Populate some extra languages to check if _field_invoke() correctly uses
     // the result of field_available_languages().
@@ -139,7 +139,7 @@ class TranslationTest extends FieldTestBase {
     $available_langcodes = field_available_languages($this->entity_type, $this->field);
 
     for ($id = 1; $id <= $entity_count; ++$id) {
-      $entity = field_test_create_stub_entity($id, $id, $this->instance['bundle']);
+      $entity = field_test_create_entity($id, $id, $this->instance['bundle']);
       $langcodes = $available_langcodes;
 
       // Populate some extra languages to check whether _field_invoke()
@@ -210,7 +210,7 @@ class TranslationTest extends FieldTestBase {
     field_test_entity_info_translatable('test_entity', TRUE);
     $eid = $evid = 1;
     $entity_type = 'test_entity';
-    $entity = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
+    $entity = field_test_create_entity($eid, $evid, $this->instance['bundle']);
     $field_translations = array();
     $available_langcodes = field_available_languages($entity_type, $this->field);
     $this->assertTrue(count($available_langcodes) > 1, t('Field is translatable.'));
@@ -258,7 +258,7 @@ class TranslationTest extends FieldTestBase {
     );
     field_create_instance($instance);
 
-    $entity = field_test_create_stub_entity(1, 1, $this->instance['bundle']);
+    $entity = field_test_create_entity(1, 1, $this->instance['bundle']);
     $instances = field_info_instances($entity_type, $this->instance['bundle']);
 
     $enabled_langcodes = field_content_languages();
@@ -337,7 +337,7 @@ class TranslationTest extends FieldTestBase {
     // Prepare the field translations.
     field_test_entity_info_translatable($this->entity_type, TRUE);
     $eid = 1;
-    $entity = field_test_create_stub_entity($eid, $eid, $this->instance['bundle']);
+    $entity = field_test_create_entity($eid, $eid, $this->instance['bundle']);
     $available_langcodes = array_flip(field_available_languages($this->entity_type, $this->field));
     unset($available_langcodes[LANGUAGE_NOT_SPECIFIED]);
     $field_name = $this->field['field_name'];

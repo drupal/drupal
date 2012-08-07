@@ -82,7 +82,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
-    $entity_init = field_test_create_stub_entity();
+    $entity_init = field_test_create_entity();
     $entity = clone $entity_init;
     $entity->is_new = TRUE;
     field_test_entity_save($entity);
@@ -136,7 +136,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
-    $entity_init = field_test_create_stub_entity();
+    $entity_init = field_test_create_entity();
     $entity = clone $entity_init;
     $entity->is_new = TRUE;
     field_test_entity_save($entity);
@@ -224,7 +224,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
-    $entity_init = field_test_create_stub_entity();
+    $entity_init = field_test_create_entity();
     $entity = clone $entity_init;
     $entity->is_new = TRUE;
     field_test_entity_save($entity);
@@ -320,7 +320,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
-    $entity_init = field_test_create_stub_entity();
+    $entity_init = field_test_create_entity();
     $entity = clone $entity_init;
     $entity->is_new = TRUE;
     field_test_entity_save($entity);
@@ -437,7 +437,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Create an entity.
-    $entity_init = field_test_create_stub_entity();
+    $entity_init = field_test_create_entity();
     $entity = clone $entity_init;
     $entity->is_new = TRUE;
     field_test_entity_save($entity);

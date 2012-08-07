@@ -42,7 +42,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
 
     // Preparation: create three revisions and store them in $revision array.
     for ($revision_id = 0; $revision_id < 3; $revision_id++) {
-      $revision[$revision_id] = field_test_create_stub_entity(0, $revision_id, $this->instance['bundle']);
+      $revision[$revision_id] = field_test_create_entity(0, $revision_id, $this->instance['bundle']);
       // Note: we try to insert one extra value.
       $values[$revision_id] = $this->_generateTestFieldValues($this->field['cardinality'] + 1);
       $current_revision = $revision_id;
@@ -59,7 +59,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     }
 
     // Confirm current revision loads the correct data.
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $entity));
     // Number of values per field loaded equals the field cardinality.
     $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], t('Current revision: expected number of values'));
@@ -72,7 +72,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
 
     // Confirm each revision loads the correct data.
     foreach (array_keys($revision) as $revision_id) {
-      $entity = field_test_create_stub_entity(0, $revision_id, $this->instance['bundle']);
+      $entity = field_test_create_entity(0, $revision_id, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array(0 => $entity));
       // Number of values per field loaded equals the field cardinality.
       $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], t('Revision %revision_id: expected number of values.', array('%revision_id' => $revision_id)));
@@ -130,7 +130,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
 
     // Create one test entity per bundle, with random values.
     foreach ($bundles as $index => $bundle) {
-      $entities[$index] = field_test_create_stub_entity($index, $index, $bundle);
+      $entities[$index] = field_test_create_entity($index, $index, $bundle);
       $entity = clone($entities[$index]);
       $instances = field_info_instances('test_entity', $bundle);
       foreach ($instances as $field_name => $instance) {
@@ -153,7 +153,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     }
 
     // Check that the single-field load option works.
-    $entity = field_test_create_stub_entity(1, 1, $bundles[1]);
+    $entity = field_test_create_entity(1, 1, $bundles[1]);
     field_attach_load($entity_type, array(1 => $entity), FIELD_LOAD_CURRENT, array('field_id' => $field_ids[1]));
     $this->assertEqual($entity->{$field_names[1]}[$langcode][0]['value'], $values[1][$field_names[1]], t('Entity %index: expected value was found.', array('%index' => 1)));
     $this->assertEqual($entity->{$field_names[1]}[$langcode][0]['additional_key'], 'additional_value', t('Entity %index: extra information was found', array('%index' => 1)));
@@ -193,7 +193,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
       field_create_instance($instance);
     }
 
-    $entity_init = field_test_create_stub_entity();
+    $entity_init = field_test_create_entity();
 
     // Create entity and insert random values.
     $entity = clone($entity_init);
@@ -259,7 +259,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
    */
   function testFieldAttachSaveMissingData() {
     $entity_type = 'test_entity';
-    $entity_init = field_test_create_stub_entity();
+    $entity_init = field_test_create_entity();
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Insert: Field is missing.
@@ -341,7 +341,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     field_update_instance($this->instance);
 
     $entity_type = 'test_entity';
-    $entity_init = field_test_create_stub_entity();
+    $entity_init = field_test_create_entity();
     $langcode = LANGUAGE_NOT_SPECIFIED;
 
     // Insert: Field is NULL.
@@ -370,7 +370,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
   function testFieldAttachDelete() {
     $entity_type = 'test_entity';
     $langcode = LANGUAGE_NOT_SPECIFIED;
-    $rev[0] = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $rev[0] = field_test_create_entity(0, 0, $this->instance['bundle']);
 
     // Create revision 0
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
@@ -378,18 +378,18 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     field_attach_insert($entity_type, $rev[0]);
 
     // Create revision 1
-    $rev[1] = field_test_create_stub_entity(0, 1, $this->instance['bundle']);
+    $rev[1] = field_test_create_entity(0, 1, $this->instance['bundle']);
     $rev[1]->{$this->field_name}[$langcode] = $values;
     field_attach_update($entity_type, $rev[1]);
 
     // Create revision 2
-    $rev[2] = field_test_create_stub_entity(0, 2, $this->instance['bundle']);
+    $rev[2] = field_test_create_entity(0, 2, $this->instance['bundle']);
     $rev[2]->{$this->field_name}[$langcode] = $values;
     field_attach_update($entity_type, $rev[2]);
 
     // Confirm each revision loads
     foreach (array_keys($rev) as $vid) {
-      $read = field_test_create_stub_entity(0, $vid, $this->instance['bundle']);
+      $read = field_test_create_entity(0, $vid, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array(0 => $read));
       $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test entity revision $vid has {$this->field['cardinality']} values.");
     }
@@ -397,24 +397,24 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     // Delete revision 1, confirm the other two still load.
     field_attach_delete_revision($entity_type, $rev[1]);
     foreach (array(0, 2) as $vid) {
-      $read = field_test_create_stub_entity(0, $vid, $this->instance['bundle']);
+      $read = field_test_create_entity(0, $vid, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array(0 => $read));
       $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test entity revision $vid has {$this->field['cardinality']} values.");
     }
 
     // Confirm the current revision still loads
-    $read = field_test_create_stub_entity(0, 2, $this->instance['bundle']);
+    $read = field_test_create_entity(0, 2, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $read));
     $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test entity current revision has {$this->field['cardinality']} values.");
 
     // Delete all field data, confirm nothing loads
     field_attach_delete($entity_type, $rev[2]);
     foreach (array(0, 1, 2) as $vid) {
-      $read = field_test_create_stub_entity(0, $vid, $this->instance['bundle']);
+      $read = field_test_create_entity(0, $vid, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array(0 => $read));
       $this->assertIdentical($read->{$this->field_name}, array(), "The test entity revision $vid is deleted.");
     }
-    $read = field_test_create_stub_entity(0, 2, $this->instance['bundle']);
+    $read = field_test_create_entity(0, 2, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $read));
     $this->assertIdentical($read->{$this->field_name}, array(), t('The test entity current revision is deleted.'));
   }
@@ -433,7 +433,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     field_create_instance($this->instance);
 
     // Save an entity with data in the field.
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity->{$this->field_name}[$langcode] = $values;
@@ -441,7 +441,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     field_attach_insert($entity_type, $entity);
 
     // Verify the field data is present on load.
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $entity));
     $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], "Data is retrieved for the new bundle");
 
@@ -455,7 +455,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     $this->assertIdentical($this->instance['bundle'], $new_bundle, "Bundle name has been updated in the instance.");
 
     // Verify the field data is present on load.
-    $entity = field_test_create_stub_entity(0, 0, $new_bundle);
+    $entity = field_test_create_entity(0, 0, $new_bundle);
     field_attach_load($entity_type, array(0 => $entity));
     $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], "Bundle name has been updated in the field storage");
   }
@@ -492,7 +492,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     field_create_instance($instance);
 
     // Save an entity with data for both fields
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity->{$this->field_name}[$langcode] = $values;
@@ -500,7 +500,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     field_attach_insert('test_entity', $entity);
 
     // Verify the fields are present on load
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
     field_attach_load('test_entity', array(0 => $entity));
     $this->assertEqual(count($entity->{$this->field_name}[$langcode]), 4, 'First field got loaded');
     $this->assertEqual(count($entity->{$field_name}[$langcode]), 1, 'Second field got loaded');
@@ -510,7 +510,7 @@ class FieldAttachStorageTest extends FieldAttachTestBase {
     field_test_delete_bundle($this->instance['bundle']);
 
     // Verify no data gets loaded
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
     field_attach_load('test_entity', array(0 => $entity));
     $this->assertFalse(isset($entity->{$this->field_name}[$langcode]), 'No data for first field');
     $this->assertFalse(isset($entity->{$field_name}[$langcode]), 'No data for second field');

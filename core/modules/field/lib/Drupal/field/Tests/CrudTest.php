@@ -297,7 +297,7 @@ class CrudTest extends FieldTestBase {
     $this->assertTrue(!empty($instance) && empty($instance['deleted']), t('A new instance for a previously used field name is created.'));
 
     // Save an entity with data for the field
-    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+    $entity = field_test_create_entity(0, 0, $instance['bundle']);
     $langcode = LANGUAGE_NOT_SPECIFIED;
     $values[0]['value'] = mt_rand(1, 127);
     $entity->{$field['field_name']}[$langcode] = $values;
@@ -305,7 +305,7 @@ class CrudTest extends FieldTestBase {
     field_attach_insert('test_entity', $entity);
 
     // Verify the field is present on load
-    $entity = field_test_create_stub_entity(0, 0, $this->instance_definition['bundle']);
+    $entity = field_test_create_entity(0, 0, $this->instance_definition['bundle']);
     field_attach_load($entity_type, array(0 => $entity));
     $this->assertIdentical(count($entity->{$field['field_name']}[$langcode]), count($values), "Data in previously deleted field saves and loads correctly");
     foreach ($values as $delta => $value) {
@@ -362,7 +362,7 @@ class CrudTest extends FieldTestBase {
     do {
       // We need a unique ID for our entity. $cardinality will do.
       $id = $cardinality;
-      $entity = field_test_create_stub_entity($id, $id, $instance['bundle']);
+      $entity = field_test_create_entity($id, $id, $instance['bundle']);
       // Fill in the entity with more values than $cardinality.
       for ($i = 0; $i < 20; $i++) {
         $entity->field_update[LANGUAGE_NOT_SPECIFIED][$i]['value'] = $i;
@@ -370,7 +370,7 @@ class CrudTest extends FieldTestBase {
       // Save the entity.
       field_attach_insert('test_entity', $entity);
       // Load back and assert there are $cardinality number of values.
-      $entity = field_test_create_stub_entity($id, $id, $instance['bundle']);
+      $entity = field_test_create_entity($id, $id, $instance['bundle']);
       field_attach_load('test_entity', array($id => $entity));
       $this->assertEqual(count($entity->field_update[LANGUAGE_NOT_SPECIFIED]), $field_definition['cardinality'], 'Cardinality is kept');
       // Now check the values themselves.

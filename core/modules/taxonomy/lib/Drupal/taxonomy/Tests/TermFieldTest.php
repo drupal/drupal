@@ -69,7 +69,7 @@ class TermFieldTest extends TaxonomyTestBase {
   function testTaxonomyTermFieldValidation() {
     // Test valid and invalid values with field_attach_validate().
     $langcode = LANGUAGE_NOT_SPECIFIED;
-    $entity = field_test_create_stub_entity();
+    $entity = field_test_create_entity();
     $term = $this->createTerm($this->vocabulary);
     $entity->{$this->field_name}[$langcode][0]['tid'] = $term->tid;
     try {
@@ -80,7 +80,7 @@ class TermFieldTest extends TaxonomyTestBase {
       $this->fail('Correct term does not cause validation error.');
     }
 
-    $entity = field_test_create_stub_entity();
+    $entity = field_test_create_entity();
     $bad_term = $this->createTerm($this->createVocabulary());
     $entity->{$this->field_name}[$langcode][0]['tid'] = $bad_term->tid;
     try {

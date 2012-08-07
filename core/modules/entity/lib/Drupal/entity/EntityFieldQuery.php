@@ -710,20 +710,21 @@ class EntityFieldQuery {
    * Executes the query.
    *
    * After executing the query, $this->orderedResults will contain a list of
-   * the same stub entities in the order returned by the query. This is only
+   * the same entity ids in the order returned by the query. This is only
    * relevant if there are multiple entity types in the returned value and
    * a field ordering was requested. In every other case, the returned value
    * contains everything necessary for processing.
    *
    * @return
    *   Either a number if count() was called or an array of associative arrays
-   *   of stub entities. The outer array keys are entity types, and the inner
+   *   of the entity ids. The outer array keys are entity types, and the inner
    *   array keys are the relevant ID. (In most cases this will be the entity
    *   ID. The only exception is when age=FIELD_LOAD_REVISION is used and field
    *   conditions or sorts are present -- in this case, the key will be the
    *   revision ID.) The entity type will only exist in the outer array if
-   *   results were found. The inner array values are always stub entities, as
-   *   returned by entity_create_stub_entity(). To traverse the returned array:
+   *   results were found. The inner array values consist of an object with the
+   *   entity_id, revision_id and bundle properties. To traverse the returned
+   *   array:
    *   @code
    *     foreach ($query->execute() as $entity_type => $entities) {
    *       foreach ($entities as $entity_id => $entity) {
@@ -922,11 +923,12 @@ class EntityFieldQuery {
       return $select_query->countQuery()->execute()->fetchField();
     }
     $return = array();
-    foreach ($select_query->execute() as $partial_entity) {
-      $bundle = isset($partial_entity->bundle) ? $partial_entity->bundle : NULL;
-      $entity = entity_create_stub_entity($partial_entity->entity_type, array($partial_entity->entity_id, $partial_entity->revision_id, $bundle));
-      $return[$partial_entity->entity_type][$partial_entity->$id_key] = $entity;
-      $this->ordered_results[] = $partial_entity;
+    foreach ($select_query->execute() as $ids) {
+      if (!isset($ids->bundle)) {
+        $ids->bundle = NULL;
+      }
+      $return[$ids->entity_type][$ids->$id_key] = $ids;
+      $this->ordered_results[] = $ids;
     }
     return $return;
   }

@@ -45,6 +45,6 @@ class OptionsDynamicValuesTest extends FieldTestBase {
       'bundle' => 'test_bundle',
       'label' => $this->randomName(),
     );
-    $this->entity = call_user_func_array('field_test_create_stub_entity', $this->test);
+    $this->entity = call_user_func_array('field_test_create_entity', $this->test);
   }
 }
