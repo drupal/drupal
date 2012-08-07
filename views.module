@@ -594,12 +594,12 @@ function views_preprocess_html(&$variables) {
   // prefer a smaller region to be chosen. The region we prefer differs from
   // theme to theme and depends on the details of the theme's markup in
   // page.tpl.php, so we can only find it using JavaScript. We therefore remove
-  // the "contextual-links-region" class from the <body> tag here and add
+  // the "contextual-region" class from the <body> tag here and add
   // JavaScript that will insert it back in the correct place.
   if (!empty($variables['page']['#views_contextual_links_info'])) {
-    $key = array_search('contextual-links-region', $variables['classes_array']);
+    $key = array_search('contextual-region', $variables['attributes']['class']->value());
     if ($key !== FALSE) {
-      unset($variables['classes_array'][$key]);
+      unset($variables['attributes']['class'][$key]);
       // Add the JavaScript, with a group and weight such that it will run
       // before modules/contextual/contextual.js.
       drupal_add_js(drupal_get_path('module', 'views') . '/js/views-contextual.js', array('group' => JS_LIBRARY, 'weight' => -1));

@@ -5,7 +5,7 @@
  * Template for each "box" on the display query edit screen.
  */
 ?>
-<div class="<?php print $classes; ?>" <?php print $attributes; ?>>
+<div <?php print $attributes; ?>>
   <?php print $item_help_icon; ?>
   <?php if(!empty($actions)) : ?>
     <?php print $actions; ?>

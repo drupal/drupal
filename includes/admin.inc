@@ -1801,14 +1801,11 @@ function template_preprocess_views_ui_display_tab_setting(&$variables) {
   array_unshift($variables['settings_links'], $variables['link']);
   $variables['settings_links'] = implode('<span class="label">&nbsp;|&nbsp;</span>', $variables['settings_links']);
 
-  // Add classes associated with this display tab to the overall list.
-  $variables['classes_array'] = array_merge($variables['classes_array'], $variables['class']);
-
   if (!empty($variables['defaulted'])) {
-    $variables['classes_array'][] = 'defaulted';
+    $variables['attributes']['class'][] = 'defaulted';
   }
   if (!empty($variables['overridden'])) {
-    $variables['classes_array'][] = 'overridden';
+    $variables['attributes']['class'][] = 'overridden';
     $variables['attributes_array']['title'][] = t('Overridden');
   }
 
@@ -1826,10 +1823,10 @@ function template_preprocess_views_ui_display_tab_bucket(&$variables) {
     $variables['item_help_icon'] = render($element['#item_help_icon']);
   }
   if (!empty($element['#name'])) {
-    $variables['classes_array'][] = drupal_clean_css_identifier(strtolower($element['#name']));
+    $variables['attributes']['class'][] = drupal_html_class($element['#name']);
   }
   if (!empty($element['#overridden'])) {
-    $variables['classes_array'][] = 'overridden';
+    $variables['attributes']['class'][] = 'overridden';
     $variables['attributes_array']['title'][] = t('Overridden');
   }
 

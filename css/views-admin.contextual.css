@@ -5,16 +5,16 @@
 
 /* @group Wrapper */
 
-#views-live-preview .contextual-links-region-active {
+#views-live-preview .contextual-region-active {
   outline: medium none;
 }
 
-#views-live-preview div.contextual-links-wrapper {
+#views-live-preview div.contextual {
   right: auto;
   top: auto;
 }
 
-html.js #views-live-preview div.contextual-links-wrapper {
+html.js #views-live-preview div.contextual {
   display: inline;
 }
 
@@ -30,7 +30,7 @@ html.js #views-live-preview div.contextual-links-wrapper {
 
 /* @group List */
 
-div.contextual-links-wrapper ul.contextual-links {
+div.contextual ul.contextual-links {
   -moz-border-radius: 0 4px 4px 4px;
   -webkit-border-radius: 0 4px 4px 4px;
   border-radius: 0 4px 4px 4px;

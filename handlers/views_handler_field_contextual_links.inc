@@ -45,7 +45,7 @@ class views_handler_field_contextual_links extends views_handler_field {
 
   function pre_render(&$values) {
     // Add a row plugin css class for the contextual link.
-    $class = 'contextual-links-region';
+    $class = 'contextual-region';
     if (!empty($this->view->style_plugin->options['row_class'])) {
       $this->view->style_plugin->options['row_class'] .= " $class";
     }
@@ -85,7 +85,7 @@ class views_handler_field_contextual_links extends views_handler_field {
 
     if (!empty($links)) {
       $build = array(
-        '#prefix' => '<div class="contextual-links-wrapper">',
+        '#prefix' => '<div class="contextual">',
         '#suffix' => '</div>',
         '#theme' => 'links__contextual',
         '#links' => $links,

@@ -372,7 +372,7 @@ function views_ui_preprocess_views_view(&$vars) {
           '#section' => $section,
           '#content' => is_array($vars[$section]) ? drupal_render($vars[$section]) : $vars[$section],
           '#theme_wrappers' => array('views_container'),
-          '#attributes' => array('class' => 'contextual-links-region'),
+          '#attributes' => array('class' => 'contextual-region'),
         );
         $vars[$section] = drupal_render($vars[$section]);
       }
@@ -434,7 +434,7 @@ function template_preprocess_views_ui_view_preview_section(&$vars) {
 
   if (isset($links)) {
     $build = array(
-      '#prefix' => '<div class="contextual-links-wrapper">',
+      '#prefix' => '<div class="contextual">',
       '#suffix' => '</div>',
       '#theme' => 'links__contextual',
       '#links' => $links,

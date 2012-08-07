@@ -55,16 +55,16 @@ function template_preprocess_views_view(&$vars) {
   // Basic classes
   $vars['css_class'] = '';
 
-  $vars['classes_array'] = array();
-  $vars['classes_array'][] = 'view';
-  $vars['classes_array'][] = 'view-' . drupal_clean_css_identifier($vars['name']);
-  $vars['classes_array'][] = 'view-id-' . $vars['name'];
-  $vars['classes_array'][] = 'view-display-id-' . $vars['display_id'];
+  $vars['attributes']['class'] = array();
+  $vars['attributes']['class'][] = 'view';
+  $vars['attributes']['class'][] = 'view-' . drupal_clean_css_identifier($vars['name']);
+  $vars['attributes']['class'][] = 'view-id-' . $vars['name'];
+  $vars['attributes']['class'][] = 'view-display-id-' . $vars['display_id'];
 
   $css_class = $view->display_handler->get_option('css_class');
   if (!empty($css_class)) {
     $vars['css_class'] = preg_replace('/[^a-zA-Z0-9- ]/', '-', $css_class);
-    $vars['classes_array'][] = $vars['css_class'];
+    $vars['attributes']['class'][] = $vars['css_class'];
   }
 
   $empty = empty($vars['rows']);
@@ -114,7 +114,7 @@ function template_preprocess_views_view(&$vars) {
     // each view. This identifier is written to both Drupal.settings and the DIV
     // wrapper.
     $vars['dom_id'] = $view->dom_id;
-    $vars['classes_array'][] = 'view-dom-id-' . $vars['dom_id'];
+    $vars['attributes']['class'][] = 'view-dom-id-' . $vars['dom_id'];
   }
 
   // If using AJAX, send identifying data about this view.
@@ -169,9 +169,6 @@ function template_process_views_view(&$vars) {
   if (is_array($vars['rows'])) {
     $vars['rows'] = drupal_render($vars['rows']);
   }
-
-  // Flatten the classes to a string for the template file.
-  $vars['classes'] = implode(' ', $vars['classes_array']);
 }
 
 /**
@@ -634,7 +631,7 @@ function template_preprocess_views_view_table(&$vars) {
     $vars['row_classes'][count($vars['row_classes']) - 1][] = 'views-row-last';
   }
 
-  $vars['classes_array'] = array('views-table');
+  $vars['attributes']['class'] = array('views-table');
   if (empty($vars['rows']) && !empty($options['empty_table'])) {
     $vars['rows'][0][0] = $view->display_handler->render_area('empty');
     // Calculate the amounts of rows with output.
@@ -645,9 +642,9 @@ function template_preprocess_views_view_table(&$vars) {
 
   if (!empty($options['sticky'])) {
     drupal_add_js('misc/tableheader.js');
-    $vars['classes_array'][] = "sticky-enabled";
+    $vars['attributes']['class'][] = "sticky-enabled";
   }
-  $vars['classes_array'][] = 'cols-'. count($vars['header']);
+  $vars['attributes']['class'][] = 'cols-'. count($vars['header']);
 
   if (!empty($handler->options['summary'])) {
     $vars['attributes_array'] = array('summary' => $handler->options['summary']);
@@ -666,6 +663,7 @@ function template_preprocess_views_view_grid(&$vars) {
   $row_class_special = isset($options['row_class_special']) ? $options['row_class_special'] : TRUE;
 
   $columns  = $options['columns'];
+  $vars['attributes']['class'][] = 'views-view-grid cols-' . $columns;
 
   $rows = array();
   $row_indexes = array();
@@ -761,7 +759,6 @@ function template_preprocess_views_view_grid(&$vars) {
     }
   }
   $vars['rows'] = $rows;
-  $vars['class'] = 'views-view-grid cols-' . $columns;
   if (!empty($handler->options['summary'])) {
     $vars['attributes_array'] = array('summary' => $handler->options['summary']);
   }
@@ -776,7 +773,7 @@ function template_preprocess_views_view_unformatted(&$vars) {
   $style = $view->style_plugin;
   $options = $style->options;
 
-  $vars['classes_array'] = array();
+  $vars['row_classes'] = array();
   $vars['classes'] = array();
   $default_row_class = isset($options['default_row_class']) ? $options['default_row_class'] : FALSE;
   $row_class_special = isset($options['row_class_special']) ? $options['row_class_special'] : FALSE;
@@ -804,7 +801,7 @@ function template_preprocess_views_view_unformatted(&$vars) {
     }
 
     // Flatten the classes to a string for each row for the template file.
-    $vars['classes_array'][$id] = isset($vars['classes'][$id]) ? implode(' ', $vars['classes'][$id]) : '';
+    $vars['row_classes'][$id] = isset($vars['classes'][$id]) ? implode(' ', $vars['classes'][$id]) : '';
   }
 }
 
