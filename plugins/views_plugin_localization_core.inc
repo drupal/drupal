@@ -39,7 +39,7 @@ class views_plugin_localization_core extends views_plugin_localization {
    *   The input format of the string. This is optional.
    */
   function save_string($string, $keys = array(), $format = '') {
-    $language_interface = drupal_container()->get(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
 
     // If the current language is 'en', we need to reset the language
     // in order to trigger an update.
@@ -50,14 +50,16 @@ class views_plugin_localization_core extends views_plugin_localization {
       $cached_language = $language_interface;
       unset($languages['en']);
       if (!empty($languages)) {
-        drupal_container()->set(LANGUAGE_TYPE_INTERFACE, current($languages));
+        // @todo Rewrite this code.
+        //drupal_container()->set(LANGUAGE_TYPE_INTERFACE, current($languages));
       }
     }
 
     t($string);
 
     if (isset($cached_language)) {
-      drupal_container()->set(LANGUAGE_TYPE_INTERFACE, $cached_language);
+      // @todo Rewrite this code.
+      //drupal_container()->set(LANGUAGE_TYPE_INTERFACE, $cached_language);
     }
     return TRUE;
   }
