@@ -76,7 +76,7 @@ class SimpleTestTest extends WebTestBase {
         'name' => $user->name,
         'pass' => $user->pass_raw
       );
-      variable_set('simpletest_maximum_redirects', 1);
+      $this->maximumRedirects = 1;
       $this->drupalPost('user', $edit, t('Log in'), array(
         'query' => array('destination' => 'user/logout'),
       ));

@@ -1,0 +1,8 @@
+clear_results: '1'
+httpauth:
+    method: '1'
+    password: ''
+    username: ''
+maximum_redirects: '5'
+parent_profile: ''
+verbose: '1'
