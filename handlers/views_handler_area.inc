@@ -18,6 +18,20 @@
  * @ingroup views_area_handlers
  */
 class views_handler_area extends views_handler {
+
+  /**
+   * Overrides views_handler::init().
+   *
+   * Make sure that no result area handlers are set to be shown when the result
+   * is empty.
+   */
+  function init(&$view, &$options) {
+    parent::init($view, $options);
+    if ($this->handler_type == 'empty') {
+      $this->options['empty'] = TRUE;
+    }
+  }
+
   /**
    * Get this field's label.
    */
@@ -34,7 +48,7 @@ class views_handler_area extends views_handler {
     $this->definition['field'] = !empty($this->definition['field']) ? $this->definition['field'] : '';
     $label = !empty($this->definition['label']) ? $this->definition['label'] : $this->definition['field'];
     $options['label'] = array('default' => $label, 'translatable' => TRUE);
-    $options['empty'] = array('default' => 0, 'bool' => TRUE);
+    $options['empty'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
