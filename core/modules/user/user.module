@@ -154,6 +154,7 @@ function user_entity_info() {
       'entity class' => 'Drupal\user\User',
       'entity keys' => array(
         'id' => 'uid',
+        'uuid' => 'uuid',
       ),
       'bundles' => array(
         'user' => array(

@@ -76,6 +76,9 @@
  *       'subject' should be specified here. If complex logic is required to
  *       build the label, a 'label callback' should be defined instead (see
  *       the 'label callback' section above for details).
+ *     - uuid (optional): The name of the property that contains the universally
+ *       unique identifier of the entity, which is used to distinctly identify
+ *       an entity across different systems.
  *   - bundle keys: An array describing how the Field API can extract the
  *     information it needs from the bundle objects for this type (e.g
  *     $vocabulary objects for terms; not applicable for nodes). This entry can
@@ -147,6 +150,7 @@ function hook_entity_info() {
         'id' => 'nid',
         'revision' => 'vid',
         'bundle' => 'type',
+        'uuid' => 'uuid',
       ),
       'bundle keys' => array(
         'bundle' => 'type',

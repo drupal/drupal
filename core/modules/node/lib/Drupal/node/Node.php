@@ -29,6 +29,13 @@ class Node extends Entity {
   public $vid;
 
   /**
+   * The node UUID.
+   *
+   * @var string
+   */
+  public $uuid;
+
+  /**
    * The node content type (bundle).
    *
    * @var string

@@ -132,6 +132,12 @@ function user_schema() {
         'description' => 'Primary Key: Unique user ID.',
         'default' => 0,
       ),
+      'uuid' => array(
+        'description' => 'Unique Key: Universally unique identifier for this entity.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ),
       'name' => array(
         'type' => 'varchar',
         'length' => 60,
@@ -246,6 +252,7 @@ function user_schema() {
       'picture' => array('picture'),
     ),
     'unique keys' => array(
+      'uuid' => array('uuid'),
       'name' => array('name'),
     ),
     'primary key' => array('uid'),
@@ -439,6 +446,32 @@ function user_update_8002() {
     ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
     ->condition('rid', 2)
     ->execute();
+}
+
+/**
+ * Create a UUID column for users.
+ *
+ * @todo UUID upgrade path: http://drupal.org/node/1642526
+ */
+function user_update_8003() {
+  $spec = array(
+    'description' => 'Unique Key: Universally unique identifier for this entity.',
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => FALSE,
+  );
+  $keys = array(
+    'unique keys' => array(
+      'uuid' => array('uuid'),
+    ),
+  );
+  // Account for sites having the contributed UUID module installed.
+  if (db_field_exists('users', 'uuid')) {
+    db_change_field('users', 'uuid', 'uuid', $spec, $keys);
+  }
+  else {
+    db_add_field('users', 'uuid', $spec, $keys);
+  }
 }
 
 /**

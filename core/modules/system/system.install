@@ -852,6 +852,12 @@ function system_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
+      'uuid' => array(
+        'description' => 'Unique Key: Universally unique identifier for this entity.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ),
       'uid' => array(
         'description' => 'The {users}.uid of the user who is associated with the file.',
         'type' => 'int',
@@ -917,6 +923,7 @@ function system_schema() {
       'timestamp' => array('timestamp'),
     ),
     'unique keys' => array(
+      'uuid' => array('uuid'),
       'uri' => array('uri'),
     ),
     'primary key' => array('fid'),
@@ -1999,6 +2006,32 @@ function system_update_8014() {
     $config->set('error_level', 'all');
   }
   $config->save();
+}
+
+/**
+ * Create a UUID column for managed files.
+ *
+ * @todo UUID upgrade path: http://drupal.org/node/1642526
+ */
+function system_update_8015() {
+  $spec = array(
+    'description' => 'Unique Key: Universally unique identifier for this entity.',
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => FALSE,
+  );
+  $keys = array(
+    'unique keys' => array(
+      'uuid' => array('uuid'),
+    ),
+  );
+  // Account for sites having the contributed UUID module installed.
+  if (db_field_exists('file_managed', 'uuid')) {
+    db_change_field('file_managed', 'uuid', 'uuid', $spec, $keys);
+  }
+  else {
+    db_add_field('file_managed', 'uuid', $spec, $keys);
+  }
 }
 
 /**

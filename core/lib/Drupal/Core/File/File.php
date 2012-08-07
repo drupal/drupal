@@ -22,6 +22,13 @@ class File extends Entity {
   public $fid;
 
   /**
+   * The file UUID.
+   *
+   * @var string
+   */
+  public $uuid;
+
+  /**
    * The file language code.
    *
    * @var string

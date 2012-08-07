@@ -5,7 +5,9 @@
  * Entity API for handling entities like nodes or users.
  */
 
+use Drupal\entity\EntityFieldQuery;
 use Drupal\entity\EntityMalformedException;
+use Drupal\entity\EntityStorageException;
 use Drupal\entity\EntityInterface;
 
 /**
@@ -213,6 +215,57 @@ function entity_create_stub_entity($entity_type, $ids) {
  */
 function entity_load($entity_type, $id, $reset = FALSE) {
   $entities = entity_load_multiple($entity_type, array($id), array(), $reset);
+  return isset($entities[$id]) ? $entities[$id] : FALSE;
+}
+
+/**
+ * Loads an entity by UUID.
+ *
+ * Note that some entity types may not support UUIDs.
+ *
+ * @param string $entity_type
+ *   The entity type to load; e.g., 'node' or 'user'.
+ * @param string $uuid
+ *   The UUID of the entity to load.
+ * @param bool $reset
+ *   Whether to reset the internal cache for the requested entity type.
+ *
+ * @return EntityInterface|FALSE
+ *   The entity object, or FALSE if there is no entity with the given UUID.
+ *
+ * @throws Drupal\entity\EntityStorageException
+ *   Thrown in case the requested entity type does not support UUIDs.
+ *
+ * @see hook_entity_info()
+ *
+ * @todo D8: Make it easier to query entities by property; e.g., enhance
+ *   EntityStorageControllerInterface with a ::loadByProperty() method.
+ */
+function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
+  $entity_info = entity_get_info($entity_type);
+  if (empty($entity_info['entity keys']['uuid'])) {
+    throw new EntityStorageException("Entity type $entity_type does not support UUIDs.");
+  }
+  $uuid_key = $entity_info['entity keys']['uuid'];
+
+  // Look up the entity ID for the given UUID.
+  $entity_query = new EntityFieldQuery();
+  $result = $entity_query
+    ->entityCondition('entity_type', $entity_type)
+    ->propertyCondition($uuid_key, $uuid)
+    ->range(0, 1)
+    ->execute();
+
+  if (empty($result[$entity_type])) {
+    return FALSE;
+  }
+
+  $controller = entity_get_controller($entity_type);
+  if ($reset) {
+    $controller->resetCache();
+  }
+  $id = key($result[$entity_type]);
+  $entities = $controller->load(array($id));
   return isset($entities[$id]) ? $entities[$id] : FALSE;
 }
 

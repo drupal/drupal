@@ -22,6 +22,13 @@ class Comment extends Entity {
   public $cid;
 
   /**
+   * The comment UUID.
+   *
+   * @var string
+   */
+  public $uuid;
+
+  /**
    * The parent comment ID if this is a reply to a comment.
    *
    * @var integer

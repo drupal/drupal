@@ -17,6 +17,7 @@ function entity_test_entity_info() {
     'fieldable' => TRUE,
     'entity keys' => array(
       'id' => 'id',
+      'uuid' => 'uuid',
     ),
   );
   // Optionally specify a translation handler for testing translations.

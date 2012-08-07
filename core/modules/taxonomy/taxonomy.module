@@ -120,6 +120,7 @@ function taxonomy_entity_info() {
         'id' => 'tid',
         'bundle' => 'vocabulary_machine_name',
         'label' => 'name',
+        'uuid' => 'uuid',
       ),
       'bundle keys' => array(
         'bundle' => 'machine_name',

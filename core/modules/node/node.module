@@ -204,6 +204,7 @@ function node_entity_info() {
         'revision' => 'vid',
         'bundle' => 'type',
         'label' => 'title',
+        'uuid' => 'uuid',
       ),
       'bundle keys' => array(
         'bundle' => 'type',

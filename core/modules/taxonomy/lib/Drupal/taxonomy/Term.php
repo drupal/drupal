@@ -22,6 +22,13 @@ class Term extends Entity {
   public $tid;
 
   /**
+   * The term UUID.
+   *
+   * @var string
+   */
+  public $uuid;
+
+  /**
    * The taxonomy vocabulary ID this term belongs to.
    *
    * @var integer

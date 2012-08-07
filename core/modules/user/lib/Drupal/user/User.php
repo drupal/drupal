@@ -22,6 +22,13 @@ class User extends Entity {
   public $uid;
 
   /**
+   * The user UUID.
+   *
+   * @var string
+   */
+  public $uuid;
+
+  /**
    * The unique user name.
    *
    * @var string

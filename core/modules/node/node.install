@@ -18,6 +18,12 @@ function node_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
+      'uuid' => array(
+        'description' => 'Unique Key: Universally unique identifier for this entity.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ),
       // Defaults to NULL in order to avoid a brief period of potential
       // deadlocks on the index.
       'vid' => array(
@@ -117,6 +123,7 @@ function node_schema() {
     ),
     'unique keys' => array(
       'vid' => array('vid'),
+      'uuid' => array('uuid'),
     ),
     'foreign keys' => array(
       'node_revision' => array(
@@ -564,6 +571,32 @@ function node_update_8003() {
       variable_set('node_type_language_translation_enabled_' . $type, TRUE);
     }
     variable_del('node_type_language_' . $type);
+  }
+}
+
+/**
+ * Create a UUID column for nodes.
+ *
+ * @todo UUID upgrade path: http://drupal.org/node/1642526
+ */
+function node_update_8004() {
+  $spec = array(
+    'description' => 'Unique Key: Universally unique identifier for this entity.',
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => FALSE,
+  );
+  $keys = array(
+    'unique keys' => array(
+      'uuid' => array('uuid'),
+    ),
+  );
+  // Account for sites having the contributed UUID module installed.
+  if (db_field_exists('node', 'uuid')) {
+    db_change_field('node', 'uuid', 'uuid', $spec, $keys);
+  }
+  else {
+    db_add_field('node', 'uuid', $spec, $keys);
   }
 }
 

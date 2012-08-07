@@ -91,6 +91,12 @@ function comment_schema() {
         'not null' => TRUE,
         'description' => 'Primary Key: Unique comment ID.',
       ),
+      'uuid' => array(
+        'description' => 'Unique Key: Universally unique identifier for this entity.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ),
       'pid' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -183,6 +189,9 @@ function comment_schema() {
       'comment_created' => array('created'),
     ),
     'primary key' => array('cid'),
+    'unique keys' => array(
+      'uuid' => array('uuid'),
+    ),
     'foreign keys' => array(
       'comment_node' => array(
         'table' => 'node',
@@ -279,6 +288,32 @@ function comment_update_8000() {
   );
   db_change_field('comment', 'language', 'langcode', $langcode_spec);
   db_add_index('comment', 'comment_nid_langcode', array('nid', 'langcode'));
+}
+
+/**
+ * Create a UUID column for comments.
+ *
+ * @todo UUID upgrade path: http://drupal.org/node/1642526
+ */
+function comment_update_8001() {
+  $spec = array(
+    'description' => 'Unique Key: Universally unique identifier for this entity.',
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => FALSE,
+  );
+  $keys = array(
+    'unique keys' => array(
+      'uuid' => array('uuid'),
+    ),
+  );
+  // Account for sites having the contributed UUID module installed.
+  if (db_field_exists('comment', 'uuid')) {
+    db_change_field('comment', 'uuid', 'uuid', $spec, $keys);
+  }
+  else {
+    db_add_field('comment', 'uuid', $spec, $keys);
+  }
 }
 
 /**
