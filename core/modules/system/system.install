@@ -2039,7 +2039,7 @@ function system_update_8015() {
  *
  * @ingroup config_upgrade
  */
-function system_update_8015() {
+function system_update_8016() {
   update_variables_to_config('system.maintenance', array(
     'maintenance_mode' => 'enabled',
     'maintenance_mode_message' => 'message',
