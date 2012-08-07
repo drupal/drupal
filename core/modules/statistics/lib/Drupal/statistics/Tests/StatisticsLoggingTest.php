@@ -44,8 +44,10 @@ class StatisticsLoggingTest extends WebTestBase {
     $config->save();
 
     // Enable access logging.
-    variable_set('statistics_enable_access_log', 1);
-    variable_set('statistics_count_content_views', 1);
+    config('statistics.settings')
+      ->set('access_log.enabled', 1)
+      ->set('count_content_views', 1)
+      ->save();
 
     // Clear the logs.
     db_truncate('accesslog');

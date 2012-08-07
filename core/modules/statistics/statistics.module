@@ -54,11 +54,11 @@ function statistics_exit() {
   // When serving cached pages with the 'page_cache_without_database'
   // configuration, system variables need to be loaded. This is a major
   // performance decrease for non-database page caches, but with Statistics
-  // module, it is likely to also have 'statistics_enable_access_log' enabled,
-  // in which case we need to bootstrap to the session phase anyway.
+  // module, it is likely to also have 'statistics.settings:access_log.enabled'
+  // enabled, in which case we need to bootstrap to the session phase anyway.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
 
-  if (variable_get('statistics_enable_access_log', 0)) {
+  if (config('statistics.settings')->get('access_log.enabled')) {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
 
     // For anonymous users unicode.inc will not have been loaded.
@@ -240,10 +240,11 @@ function statistics_cron() {
     variable_set('statistics_day_timestamp', REQUEST_TIME);
   }
 
-  // Clean up expired access logs (if applicable).
-  if (variable_get('statistics_flush_accesslog_timer', 259200) > 0) {
+  // Delete access logs (if applicable).
+  $max_lifetime = config('statistics.settings')->get('access_log.max_lifetime');
+  if ($max_lifetime > 0) {
     db_delete('accesslog')
-      ->condition('timestamp', REQUEST_TIME - variable_get('statistics_flush_accesslog_timer', 259200), '<')
+      ->condition('timestamp', REQUEST_TIME - $max_lifetime, '<')
       ->execute();
   }
 }
@@ -312,7 +313,8 @@ function statistics_get($nid) {
 function statistics_block_info() {
   $blocks = array();
 
-  if (variable_get('statistics_count_content_views', 0)) {
+  $statistics_count_content_views = config('statistics.settings')->get('count_content_views');
+  if (!empty($statistics_count_content_views)) {
     $blocks['popular']['info'] = t('Popular content');
     // Too dynamic to cache.
     $blocks['popular']['cache'] = DRUPAL_NO_CACHE;
@@ -324,11 +326,12 @@ function statistics_block_info() {
  * Implements hook_block_configure().
  */
 function statistics_block_configure($delta = '') {
+  $config = config('statistics.settings');
   // Popular content block settings
   $numbers = array('0' => t('Disabled')) + drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40));
-  $form['statistics_block_top_day_num'] = array('#type' => 'select', '#title' => t("Number of day's top views to display"), '#default_value' => variable_get('statistics_block_top_day_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "day" list.'));
-  $form['statistics_block_top_all_num'] = array('#type' => 'select', '#title' => t('Number of all time views to display'), '#default_value' => variable_get('statistics_block_top_all_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "all time" list.'));
-  $form['statistics_block_top_last_num'] = array('#type' => 'select', '#title' => t('Number of most recent views to display'), '#default_value' => variable_get('statistics_block_top_last_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "recently viewed" list.'));
+  $form['statistics_block_popular_top_day_limit'] = array('#type' => 'select', '#title' => t("Number of day's top views to display"), '#default_value' => $config->get('block.popular.top_day_limit'), '#options' => $numbers, '#description' => t('How many content items to display in "day" list.'));
+  $form['statistics_block_popular_top_all_limit'] = array('#type' => 'select', '#title' => t('Number of all time views to display'), '#default_value' => $config->get('block.popular.top_all_limit'), '#options' => $numbers, '#description' => t('How many content items to display in "all time" list.'));
+  $form['statistics_block_popular_top_recent_limit'] = array('#type' => 'select', '#title' => t('Number of most recent views to display'), '#default_value' => $config->get('block.popular.top_recent_limit'), '#options' => $numbers, '#description' => t('How many content items to display in "recently viewed" list.'));
   return $form;
 }
 
@@ -336,9 +339,11 @@ function statistics_block_configure($delta = '') {
  * Implements hook_block_save().
  */
 function statistics_block_save($delta = '', $edit = array()) {
-  variable_set('statistics_block_top_day_num', $edit['statistics_block_top_day_num']);
-  variable_set('statistics_block_top_all_num', $edit['statistics_block_top_all_num']);
-  variable_set('statistics_block_top_last_num', $edit['statistics_block_top_last_num']);
+  config('statistics.settings')
+    ->set('block.popular.top_day_limit', $edit['statistics_block_popular_top_day_limit'])
+    ->set('block.popular.top_all_limit', $edit['statistics_block_popular_top_all_limit'])
+    ->set('block.popular.top_recent_limit', $edit['statistics_block_popular_top_recent_limit'])
+    ->save();
 }
 
 /**
@@ -348,19 +353,20 @@ function statistics_block_view($delta = '') {
   if (user_access('access content')) {
     $content = array();
 
-    $daytop = variable_get('statistics_block_top_day_num', 0);
+    $config = config('statistics.settings');
+    $daytop = $config->get('block.popular.top_day_limit');
     if ($daytop && ($result = statistics_title_list('daycount', $daytop)) && ($node_title_list = node_title_list($result, t("Today's:")))) {
       $content['top_day'] = $node_title_list;
       $content['top_day']['#suffix'] = '<br />';
     }
 
-    $alltimetop = variable_get('statistics_block_top_all_num', 0);
+    $alltimetop = $config->get('block.popular.top_all_limit');
     if ($alltimetop && ($result = statistics_title_list('totalcount', $alltimetop)) && ($node_title_list = node_title_list($result, t('All time:')))) {
       $content['top_all'] = $node_title_list;
       $content['top_all']['#suffix'] = '<br />';
     }
 
-    $lasttop = variable_get('statistics_block_top_last_num', 0);
+    $lasttop = $config->get('block.popular.top_recent_limit');
     if ($lasttop && ($result = statistics_title_list('timestamp', $lasttop)) && ($node_title_list = node_title_list($result, t('Last viewed:')))) {
       $content['top_last'] = $node_title_list;
       $content['top_last']['#suffix'] = '<br />';
@@ -423,7 +429,7 @@ function statistics_node_predelete(Node $node) {
  * Implements hook_ranking().
  */
 function statistics_ranking() {
-  if (variable_get('statistics_count_content_views', 0)) {
+  if (config('statistics.settings')->get('count_content_views')) {
     return array(
       'views' => array(
         'title' => t('Number of views'),

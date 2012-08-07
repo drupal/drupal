@@ -54,8 +54,9 @@ class StatisticsAdminTest extends WebTestBase {
    * Verifies that the statistics settings page works.
    */
   function testStatisticsSettings() {
-    $this->assertFalse(variable_get('statistics_enable_access_log', 0), t('Access log is disabled by default.'));
-    $this->assertFalse(variable_get('statistics_count_content_views', 0), t('Count content view log is disabled by default.'));
+    $config = config('statistics.settings');
+    $this->assertFalse($config->get('access_log.enabled'), t('Access log is disabled by default.'));
+    $this->assertFalse($config->get('count_content_views'), t('Count content view log is disabled by default.'));
 
     $this->drupalGet('admin/reports/pages');
     $this->assertRaw(t('No statistics available.'), t('Verifying text shown when no statistics is available.'));
@@ -64,8 +65,9 @@ class StatisticsAdminTest extends WebTestBase {
     $edit['statistics_enable_access_log'] = 1;
     $edit['statistics_count_content_views'] = 1;
     $this->drupalPost('admin/config/system/statistics', $edit, t('Save configuration'));
-    $this->assertTrue(variable_get('statistics_enable_access_log'), t('Access log is enabled.'));
-    $this->assertTrue(variable_get('statistics_count_content_views'), t('Count content view log is enabled.'));
+    $config = config('statistics.settings');
+    $this->assertTrue($config->get('access_log.enabled'), t('Access log is enabled.'));
+    $this->assertTrue($config->get('count_content_views'), t('Count content view log is enabled.'));
 
     // Hit the node.
     $this->drupalGet('node/' . $this->test_node->nid);
@@ -95,7 +97,7 @@ class StatisticsAdminTest extends WebTestBase {
    * Tests that when a node is deleted, the node counter is deleted too.
    */
   function testDeleteNode() {
-    variable_set('statistics_count_content_views', 1);
+    config('statistics.settings')->set('count_content_views', 1)->save();
 
     $this->drupalGet('node/' . $this->test_node->nid);
     // Manually calling statistics.php, simulating ajax behavior.
@@ -127,7 +129,7 @@ class StatisticsAdminTest extends WebTestBase {
    * Tests that accesslog reflects when a user is deleted.
    */
   function testDeleteUser() {
-    variable_set('statistics_enable_access_log', 1);
+    config('statistics.settings')->set('access_log.enabled', 1)->save();
 
     variable_set('user_cancel_method', 'user_cancel_delete');
     $this->drupalLogout($this->privileged_user);
@@ -158,10 +160,12 @@ class StatisticsAdminTest extends WebTestBase {
    * Tests that cron clears day counts and expired access logs.
    */
   function testExpiredLogs() {
-    variable_set('statistics_enable_access_log', 1);
-    variable_set('statistics_count_content_views', 1);
+    config('statistics.settings')
+      ->set('access_log.enabled', 1)
+      ->set('count_content_views', 1)
+      ->set('access_log.max_lifetime', 1)
+      ->save();
     variable_set('statistics_day_timestamp', 8640000);
-    variable_set('statistics_flush_accesslog_timer', 1);
 
     $this->drupalGet('node/' . $this->test_node->nid);
     // Manually calling statistics.php, simulating ajax behavior.
@@ -178,9 +182,10 @@ class StatisticsAdminTest extends WebTestBase {
     $this->drupalGet('admin/reports/pages');
     $this->assertText('node/' . $this->test_node->nid, t('Hit URL found.'));
 
-    // statistics_cron will subtract the statistics_flush_accesslog_timer
-    // variable from REQUEST_TIME in the delete query, so wait two secs here to
-    // make sure the access log will be flushed for the node just hit.
+    // statistics_cron() will subtract
+    // statistics.settings:accesslog.max_lifetime config from REQUEST_TIME in
+    // the delete query, so wait two secs here to make sure the access log will
+    // be flushed for the node just hit.
     sleep(2);
     $this->cronRun();
 

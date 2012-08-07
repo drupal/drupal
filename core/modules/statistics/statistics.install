@@ -2,22 +2,8 @@
 
 /**
  * @file
- * Install, update, and uninstall functions for the Statistics module.
+ * Install and update functions for the Statistics module.
  */
-
-/**
- * Implements hook_uninstall().
- */
-function statistics_uninstall() {
-  // Remove variables.
-  variable_del('statistics_count_content_views');
-  variable_del('statistics_enable_access_log');
-  variable_del('statistics_flush_accesslog_timer');
-  variable_del('statistics_day_timestamp');
-  variable_del('statistics_block_top_day_num');
-  variable_del('statistics_block_top_all_num');
-  variable_del('statistics_block_top_last_num');
-}
 
 /**
  * Implements hook_schema().
@@ -133,4 +119,20 @@ function statistics_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Moves statistics settings from variables to config.
+ *
+ * @ingroup config_upgrade
+ */
+function statistics_update_8000() {
+  update_variables_to_config('statistics.settings', array(
+    'statistics_count_content_views' => 'count_content_views',
+    'statistics_enable_access_log' => 'access_log.enabled',
+    'statistics_flush_accesslog_timer' => 'access_log.max_lifetime',
+    'statistics_block_top_day_num' => 'block.popular.top_day_limit',
+    'statistics_block_top_all_num' => 'block.popular.top_all_limit',
+    'statistics_block_top_last_num' => 'block.popular.top_recent_limit',
+  ));
 }

@@ -35,9 +35,10 @@ abstract class StatisticsTestBase extends WebTestBase {
     $this->drupalLogin($this->blocking_user);
 
     // Enable access logging.
-    variable_set('statistics_enable_access_log', 1);
-    variable_set('statistics_count_content_views', 1);
-
+    config('statistics.settings')
+      ->set('access_log.enabled', 1)
+      ->set('count_content_views', 1)
+      ->save();
     // Insert dummy access by anonymous user into access log.
     db_insert('accesslog')
       ->fields(array(

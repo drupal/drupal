@@ -89,7 +89,7 @@ class StatisticsReportsTest extends StatisticsTestBase {
     $block->region = 'sidebar_first';
     $block->cache = -1;
     $block->visibility = 0;
-    $edit = array('statistics_block_top_day_num' => 3, 'statistics_block_top_all_num' => 3, 'statistics_block_top_last_num' => 3);
+    $edit = array('statistics_block_popular_top_day_limit' => 3, 'statistics_block_popular_top_all_limit' => 3, 'statistics_block_popular_top_recent_limit' => 3);
     module_invoke('statistics', 'block_save', 'popular', $edit);
     drupal_write_record('block', $block);
 

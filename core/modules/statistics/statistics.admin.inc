@@ -99,7 +99,7 @@ function statistics_top_pages() {
     $rows[] = array($page->hits, _statistics_format_item($page->title, $page->path), t('%time ms', array('%time' => round($page->average_time))), format_interval(round($page->total_time / 1000)));
   }
 
-  drupal_set_title(t('Top pages in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
+  drupal_set_title(t('Top pages in the past %interval', array('%interval' => format_interval(config('statistics.settings')->get('access_log.max_lifetime')))), PASS_THROUGH);
   $build['statistics_top_pages_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
@@ -161,7 +161,7 @@ function statistics_top_visitors() {
     $rows[] = array($account->hits, ($account->uid ? theme('username', array('account' => $account)) : $account->hostname), format_interval(round($account->total / 1000)), (user_access('block IP addresses') && !$account->uid) ? $ban_link : '');
   }
 
-  drupal_set_title(t('Top visitors in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
+  drupal_set_title(t('Top visitors in the past %interval', array('%interval' => format_interval(config('statistics.settings')->get('access_log.max_lifetime')))), PASS_THROUGH);
   $build['statistics_top_visitors_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
@@ -183,7 +183,7 @@ function statistics_top_visitors() {
  *   A render array containing the top referrers information.
  */
 function statistics_top_referrers() {
-  drupal_set_title(t('Top referrers in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
+  drupal_set_title(t('Top referrers in the past %interval', array('%interval' => format_interval(config('statistics.settings')->get('access_log.max_lifetime')))), PASS_THROUGH);
 
   $header = array(
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
@@ -282,9 +282,10 @@ function statistics_access_log($aid) {
  * Form constructor for the statistics administration form.
  *
  * @ingroup forms
- * @see system_settings_form()
+ * @see statistics_settings_form_submit().
  */
-function statistics_settings_form() {
+function statistics_settings_form($form, &$form_state) {
+  $config = config('statistics.settings');
   // Access log settings.
   $form['access'] = array(
     '#type' => 'fieldset',
@@ -293,13 +294,13 @@ function statistics_settings_form() {
   $form['access']['statistics_enable_access_log'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable access log'),
-    '#default_value' => variable_get('statistics_enable_access_log', 0),
+    '#default_value' => $config->get('access_log.enabled'),
     '#description' => t('Log each page access. Required for referrer statistics.'),
   );
   $form['access']['statistics_flush_accesslog_timer'] = array(
     '#type' => 'select',
     '#title' => t('Discard access logs older than'),
-    '#default_value' => variable_get('statistics_flush_accesslog_timer', 259200),
+    '#default_value' => $config->get('access_log.max_lifetime'),
     '#options' => array(0 => t('Never')) + drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval'),
     '#description' => t('Older access log entries (including referrer statistics) will be automatically discarded. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
   );
@@ -312,9 +313,20 @@ function statistics_settings_form() {
   $form['content']['statistics_count_content_views'] = array(
     '#type' => 'checkbox',
     '#title' => t('Count content views'),
-    '#default_value' => variable_get('statistics_count_content_views', 0),
+    '#default_value' => $config->get('count_content_views'),
     '#description' => t('Increment a counter each time content is viewed.'),
   );
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Form submission handler for statistics_settings_form().
+ */
+function statistics_settings_form_submit($form, &$form_state) {
+  config('statistics.settings')
+    ->set('access_log.enabled', $form_state['values']['statistics_enable_access_log'])
+    ->set('access_log.max_lifetime', $form_state['values']['statistics_flush_accesslog_timer'])
+    ->set('count_content_views', $form_state['values']['statistics_count_content_views'])
+    ->save();
 }
