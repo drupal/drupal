@@ -43,9 +43,9 @@ class ExceptionHandler
     /**
      * Register the exception handler.
      *
-     * @return The registered exception handler
+     * @return ExceptionHandler The registered exception handler
      */
-    static public function register($debug = true)
+    public static function register($debug = true)
     {
         $handler = new static($debug);
 
@@ -100,7 +100,7 @@ class ExceptionHandler
             }
         }
 
-        return new Response($this->decorate($content, $title), $exception->getStatusCode());
+        return new Response($this->decorate($content, $title), $exception->getStatusCode(), $exception->getHeaders());
     }
 
     private function getContent($exception)

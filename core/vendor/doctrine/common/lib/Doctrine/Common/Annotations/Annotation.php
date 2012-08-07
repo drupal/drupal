@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -52,6 +52,8 @@ class Annotation
      * Error handler for unknown property accessor in Annotation class.
      *
      * @param string $name Unknown property name
+     *
+     * @throws \BadMethodCallException
      */
     public function __get($name)
     {
@@ -65,6 +67,8 @@ class Annotation
      *
      * @param string $name Unkown property name
      * @param mixed $value Property value
+     *
+     * @throws \BadMethodCallException
      */
     public function __set($name, $value)
     {

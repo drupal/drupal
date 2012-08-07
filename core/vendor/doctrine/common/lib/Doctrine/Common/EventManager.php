@@ -15,7 +15,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -127,10 +127,21 @@ class EventManager
      * Adds an EventSubscriber. The subscriber is asked for all the events he is
      * interested in and added as a listener for these events.
      *
-     * @param Doctrine\Common\EventSubscriber $subscriber The subscriber.
+     * @param \Doctrine\Common\EventSubscriber $subscriber The subscriber.
      */
     public function addEventSubscriber(EventSubscriber $subscriber)
     {
         $this->addEventListener($subscriber->getSubscribedEvents(), $subscriber);
     }
+	
+    /**
+     * Removes an EventSubscriber. The subscriber is asked for all the events it is
+     * interested in and removed as a listener for these events.
+     *
+     * @param \Doctrine\Common\EventSubscriber $subscriber The subscriber.
+     */
+    public function removeEventSubscriber(EventSubscriber $subscriber)
+    {
+        $this->removeEventListener($subscriber->getSubscribedEvents(), $subscriber);
+    } 	
 }

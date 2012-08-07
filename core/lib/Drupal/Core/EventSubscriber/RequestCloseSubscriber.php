@@ -28,32 +28,7 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onTerminate(PostResponseEvent $event) {
-    global $user;
-
     module_invoke_all('exit');
-
-    // Commit the user session, if needed.
-    drupal_session_commit();
-    $response = $event->getResponse();
-    $config = config('system.performance');
-
-    if ($config->get('cache') && ($cache = drupal_page_set_cache())) {
-      drupal_serve_page_from_cache($cache);
-    }
-    else {
-      // This listener will be run in all cases, including when sending an HTTP
-      // redirect code. In this particular case, PHP output buffer has not been
-      // initialized yet and won't be, calling the ob_end_flush() method would
-      // throw PHP warnings.
-      // See http://www.php.net/manual/en/function.ob-end-flush.php#42979
-      while (ob_get_level() > 0) {
-        // Using ob_end_flush() instead of ob_flush() will close the output
-        // buffer. This means that potential later errors won't get to the user
-        // and the HTTPd might release the connection sooner.
-        ob_end_flush();
-      }
-    }
-
     _registry_check_code(REGISTRY_WRITE_LOOKUP_CACHE);
     drupal_cache_system_paths();
     module_implements_write_cache();

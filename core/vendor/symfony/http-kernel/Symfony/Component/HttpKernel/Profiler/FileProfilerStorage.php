@@ -129,10 +129,13 @@ class FileProfilerStorage implements ProfilerStorageInterface
     {
         $file = $this->getFilename($profile->getToken());
 
-        // Create directory
-        $dir = dirname($file);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
+        $profileIndexed = is_file($file);
+        if (!$profileIndexed) {
+            // Create directory
+            $dir = dirname($file);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0777, true);
+            }
         }
 
         // Store profile
@@ -151,20 +154,22 @@ class FileProfilerStorage implements ProfilerStorageInterface
             return false;
         }
 
-        // Add to index
-        if (false === $file = fopen($this->getIndexFilename(), 'a')) {
-            return false;
-        }
+        if (!$profileIndexed) {
+            // Add to index
+            if (false === $file = fopen($this->getIndexFilename(), 'a')) {
+                return false;
+            }
 
-        fputcsv($file, array(
-            $profile->getToken(),
-            $profile->getIp(),
-            $profile->getMethod(),
-            $profile->getUrl(),
-            $profile->getTime(),
-            $profile->getParentToken(),
-        ));
-        fclose($file);
+            fputcsv($file, array(
+                $profile->getToken(),
+                $profile->getIp(),
+                $profile->getMethod(),
+                $profile->getUrl(),
+                $profile->getTime(),
+                $profile->getParentToken(),
+            ));
+            fclose($file);
+        }
 
         return true;
     }
@@ -200,7 +205,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
      *
      * @param resource $file The file resource, with the pointer placed at the end of the line to read
      *
-     * @return mixed A string representating the line or FALSE if beginning of file is reached
+     * @return mixed A string representing the line or FALSE if beginning of file is reached
      */
     protected function readLineFromFile($file)
     {

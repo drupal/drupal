@@ -61,7 +61,7 @@ class Response
      *
      * @var array
      */
-    static public $statusTexts = array(
+    public static $statusTexts = array(
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',            // RFC2518
@@ -158,7 +158,7 @@ class Response
      *
      * @return Response
      */
-    static public function create($content = '', $status = 200, $headers = array())
+    public static function create($content = '', $status = 200, $headers = array())
     {
         return new static($content, $status, $headers);
     }
@@ -299,6 +299,18 @@ class Response
 
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
+        } elseif ('cli' !== PHP_SAPI) {
+            // ob_get_level() never returns 0 on some Windows configurations, so if
+            // the level is the same two times in a row, the loop should be stopped.
+            $previous = null;
+            $obStatus = ob_get_status(1);
+            while (($level = ob_get_level()) > 0 && $level !== $previous) {
+                $previous = $level;
+                if ($obStatus[$level - 1] && isset($obStatus[$level - 1]['del']) && $obStatus[$level - 1]['del']) {
+                    ob_end_flush();
+                }
+            }
+            flush();
         }
 
         return $this;
@@ -370,7 +382,10 @@ class Response
      * Sets the response status code.
      *
      * @param integer $code HTTP status code
-     * @param string  $text HTTP status text
+     * @param mixed   $text HTTP status text
+     *
+     * If the status text is null it will be automatically populated for the known
+     * status codes and left empty otherwise.
      *
      * @return Response
      *
@@ -380,12 +395,24 @@ class Response
      */
     public function setStatusCode($code, $text = null)
     {
-        $this->statusCode = (int) $code;
+        $this->statusCode = $code = (int) $code;
         if ($this->isInvalid()) {
             throw new \InvalidArgumentException(sprintf('The HTTP status code "%s" is not valid.', $code));
         }
 
-        $this->statusText = false === $text ? '' : (null === $text ? self::$statusTexts[$this->statusCode] : $text);
+        if (null === $text) {
+            $this->statusText = isset(self::$statusTexts[$code]) ? self::$statusTexts[$code] : '';
+
+            return $this;
+        }
+
+        if (false === $text) {
+            $this->statusText = '';
+
+            return $this;
+        }
+
+        $this->statusText = $text;
 
         return $this;
     }
@@ -706,7 +733,7 @@ class Response
      * When the responses TTL is <= 0, the response may not be served from cache without first
      * revalidating with the origin.
      *
-     * @return integer The TTL in seconds
+     * @return integer|null The TTL in seconds
      *
      * @api
      */
@@ -965,6 +992,10 @@ class Response
      */
     public function isNotModified(Request $request)
     {
+        if (!$request->isMethodSafe()) {
+            return false;
+        }
+
         $lastModified = $request->headers->get('If-Modified-Since');
         $notModified = false;
         if ($etags = $request->getEtags()) {

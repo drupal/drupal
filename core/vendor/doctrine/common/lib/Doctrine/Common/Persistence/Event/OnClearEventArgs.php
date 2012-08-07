@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -31,7 +31,7 @@ namespace Doctrine\Common\Persistence\Event;
 class OnClearEventArgs extends \Doctrine\Common\EventArgs
 {
     /**
-     * @var ObjectManager
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
     private $objectManager;
 
@@ -43,7 +43,7 @@ class OnClearEventArgs extends \Doctrine\Common\EventArgs
     /**
      * Constructor.
      *
-     * @param ObjectManager $objectManager
+     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
      * @param string $entityClass Optional entity class
      */
     public function __construct($objectManager, $entityClass = null)
@@ -55,7 +55,7 @@ class OnClearEventArgs extends \Doctrine\Common\EventArgs
     /**
      * Retrieve associated ObjectManager.
      *
-     * @return ObjectManager
+     * @return \Doctrine\Common\Persistence\ObjectManager
      */
     public function getObjectManager()
     {

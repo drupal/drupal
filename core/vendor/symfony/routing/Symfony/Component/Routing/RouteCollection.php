@@ -24,7 +24,7 @@ use Symfony\Component\Config\Resource\ResourceInterface;
  *
  * @api
  */
-class RouteCollection implements \IteratorAggregate
+class RouteCollection implements \IteratorAggregate, \Countable
 {
     private $routes;
     private $resources;
@@ -86,6 +86,21 @@ class RouteCollection implements \IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->routes);
+    }
+
+    /**
+     * Gets the number of Routes in this collection.
+     *
+     * @return int The number of routes in this collection, including nested collections
+     */
+    public function count()
+    {
+        $count = 0;
+        foreach ($this->routes as $route) {
+            $count += $route instanceof RouteCollection ? count($route) : 1;
+        }
+
+        return $count;
     }
 
     /**
@@ -293,7 +308,7 @@ class RouteCollection implements \IteratorAggregate
     {
         // It is ensured by the adders (->add and ->addCollection) that there can
         // only be one route per name in all connected collections. So we can stop
-        // interating recursively on the first hit.
+        // iterating recursively on the first hit.
         if (isset($this->routes[$name])) {
             unset($this->routes[$name]);
 

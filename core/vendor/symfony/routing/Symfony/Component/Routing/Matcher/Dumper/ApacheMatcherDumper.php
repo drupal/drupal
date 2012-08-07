@@ -11,7 +11,6 @@
 
 namespace Symfony\Component\Routing\Matcher\Dumper;
 
-
 /**
  * Dumps a set of Apache mod_rewrite rules.
  *
@@ -75,7 +74,7 @@ class ApacheMatcherDumper extends MatcherDumper
                 $variables[] = 'E=_ROUTING_'.$variable.':%'.($i + 1);
             }
             foreach ($route->getDefaults() as $key => $value) {
-                $variables[] = 'E=_ROUTING_'.$key.':'.strtr($value, array(
+                $variables[] = 'E=_ROUTING_DEFAULTS_'.$key.':'.strtr($value, array(
                     ':'  => '\\:',
                     '='  => '\\=',
                     '\\' => '\\\\',
@@ -140,7 +139,7 @@ class ApacheMatcherDumper extends MatcherDumper
      *
      * @return string The escaped string
      */
-    static private function escape($string, $char, $with)
+    private static function escape($string, $char, $with)
     {
         $escaped = false;
         $output = '';

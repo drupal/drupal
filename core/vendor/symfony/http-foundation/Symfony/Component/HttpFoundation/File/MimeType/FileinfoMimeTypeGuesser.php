@@ -26,15 +26,13 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @return Boolean
      */
-    static public function isSupported()
+    public static function isSupported()
     {
         return function_exists('finfo_open');
     }
 
     /**
-     * Guesses the mime type of the file with the given path
-     *
-     * @see MimeTypeGuesserInterface::guess()
+     * {@inheritdoc}
      */
     public function guess($path)
     {

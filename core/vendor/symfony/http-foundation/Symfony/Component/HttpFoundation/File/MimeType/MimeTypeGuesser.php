@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\HttpFoundation\File\MimeType;
 
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
@@ -34,12 +35,14 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface
 {
     /**
      * The singleton instance
+     *
      * @var MimeTypeGuesser
      */
-    static private $instance = null;
+    private static $instance = null;
 
     /**
      * All registered MimeTypeGuesserInterface instances
+     *
      * @var array
      */
     protected $guessers = array();
@@ -49,7 +52,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @return MimeTypeGuesser
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         if (null === self::$instance) {
             self::$instance = new self();

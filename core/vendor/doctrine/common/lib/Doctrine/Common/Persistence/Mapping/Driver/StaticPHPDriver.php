@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -50,11 +50,21 @@ class StaticPHPDriver implements MappingDriver
      */
     private $classNames;
 
+    /**
+     * Constructor
+     *
+     * @param array|string $paths
+     */
     public function __construct($paths)
     {
         $this->addPaths((array) $paths);
     }
 
+    /**
+     * Add paths
+     *
+     * @param array $paths
+     */
     public function addPaths(array $paths)
     {
         $this->paths = array_unique(array_merge($this->paths, $paths));

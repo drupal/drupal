@@ -41,6 +41,8 @@ class PageCacheTest extends WebTestBase {
 
     // Fill the cache.
     $this->drupalGet('');
+    // Verify the page is not printed twice when the cache is cold.
+    $this->assertNoPattern('#<html.*<html#');
 
     $this->drupalHead('');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
@@ -57,6 +59,8 @@ class PageCacheTest extends WebTestBase {
     $this->assertResponse(304, t('Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.'));
 
     $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified));
+    // Verify the page is not printed twice when the cache is warm.
+    $this->assertNoPattern('#<html.*<html#');
     $this->assertResponse(200, t('Conditional request without If-None-Match returned 200 OK.'));
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
 

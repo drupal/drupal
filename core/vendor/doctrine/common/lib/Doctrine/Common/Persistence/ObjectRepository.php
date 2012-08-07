@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -33,7 +33,7 @@ interface ObjectRepository
     /**
      * Finds an object by its primary key / identifier.
      *
-     * @param $id The identifier.
+     * @param int $id The identifier.
      * @return object The object.
      */
     function find($id);
@@ -52,7 +52,7 @@ interface ObjectRepository
      * an UnexpectedValueException if certain values of the sorting or limiting details are
      * not supported.
      *
-     * @throws UnexpectedValueException
+     * @throws \UnexpectedValueException
      * @param array $criteria
      * @param array|null $orderBy
      * @param int|null $limit

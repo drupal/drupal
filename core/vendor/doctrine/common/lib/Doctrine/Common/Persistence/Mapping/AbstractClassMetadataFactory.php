@@ -13,13 +13,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
 namespace Doctrine\Common\Persistence\Mapping;
 
-use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\Cache,
+    Doctrine\Common\Util\ClassUtils;
 
 /**
  * The ClassMetadataFactory is used to create ClassMetadata objects that contain all the
@@ -134,7 +135,7 @@ abstract class AbstractClassMetadataFactory implements ClassMetadataFactory
     /**
      * Return the mapping driver implementation.
      *
-     * @return MappingDriver
+     * @return \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
      */
     abstract protected function getDriver();
 
@@ -151,54 +152,69 @@ abstract class AbstractClassMetadataFactory implements ClassMetadataFactory
      * Initialize Reflection after ClassMetadata was constructed.
      *
      * @param ClassMetadata $class
-     * @param ReflectionSErvice $reflService
+     * @param ReflectionService $reflService
      * @return void
      */
     abstract protected function initializeReflection(ClassMetadata $class, ReflectionService $reflService);
 
     /**
+     * Checks whether the class metadata is an entity.
+     *
+     * This method should false for mapped superclasses or
+     * embedded classes.
+     *
+     * @param ClassMetadata $class
+     * @return boolean
+     */
+    abstract protected function isEntity(ClassMetadata $class);
+
+    /**
      * Gets the class metadata descriptor for a class.
      *
      * @param string $className The name of the class.
-     * @return Doctrine\Common\Persistence\Mapping\ClassMetadata
+     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata
      */
     public function getMetadataFor($className)
     {
-        if ( ! isset($this->loadedMetadata[$className])) {
-            $realClassName = $className;
+        if (isset($this->loadedMetadata[$className])) {
+            return $this->loadedMetadata[$className];
+        }
 
-            // Check for namespace alias
-            if (strpos($className, ':') !== false) {
-                list($namespaceAlias, $simpleClassName) = explode(':', $className);
-                $realClassName = $this->getFqcnFromAlias($namespaceAlias, $simpleClassName);
+        $realClassName = $className;
 
-                if (isset($this->loadedMetadata[$realClassName])) {
-                    // We do not have the alias name in the map, include it
-                    $this->loadedMetadata[$className] = $this->loadedMetadata[$realClassName];
+        // Check for namespace alias
+        if (strpos($className, ':') !== false) {
+            list($namespaceAlias, $simpleClassName) = explode(':', $className);
+            $realClassName = $this->getFqcnFromAlias($namespaceAlias, $simpleClassName);
+        } else {
+            $realClassName = ClassUtils::getRealClass($realClassName);
+        }
 
-                    return $this->loadedMetadata[$realClassName];
-                }
-            }
+        if (isset($this->loadedMetadata[$realClassName])) {
+            // We do not have the alias name in the map, include it
+            $this->loadedMetadata[$className] = $this->loadedMetadata[$realClassName];
 
-            if ($this->cacheDriver) {
-                if (($cached = $this->cacheDriver->fetch($realClassName . $this->cacheSalt)) !== false) {
-                    $this->loadedMetadata[$realClassName] = $cached;
-                    $this->wakeupReflection($cached, $this->getReflectionService());
-                } else {
-                    foreach ($this->loadMetadata($realClassName) as $loadedClassName) {
-                        $this->cacheDriver->save(
-                            $loadedClassName . $this->cacheSalt, $this->loadedMetadata[$loadedClassName], null
-                        );
-                    }
-                }
+            return $this->loadedMetadata[$realClassName];
+        }
+
+        if ($this->cacheDriver) {
+            if (($cached = $this->cacheDriver->fetch($realClassName . $this->cacheSalt)) !== false) {
+                $this->loadedMetadata[$realClassName] = $cached;
+                $this->wakeupReflection($cached, $this->getReflectionService());
             } else {
-                $this->loadMetadata($realClassName);
+                foreach ($this->loadMetadata($realClassName) as $loadedClassName) {
+                    $this->cacheDriver->save(
+                        $loadedClassName . $this->cacheSalt, $this->loadedMetadata[$loadedClassName], null
+                    );
+                }
             }
+        } else {
+            $this->loadMetadata($realClassName);
+        }
 
-            if ($className != $realClassName) {
-                // We do not have the alias name in the map, include it
-                $this->loadedMetadata[$className] = $this->loadedMetadata[$realClassName];
-            }
+        if ($className != $realClassName) {
+            // We do not have the alias name in the map, include it
+            $this->loadedMetadata[$className] = $this->loadedMetadata[$realClassName];
         }
 
         return $this->loadedMetadata[$className];
@@ -251,7 +267,8 @@ abstract class AbstractClassMetadataFactory implements ClassMetadataFactory
      * is still not loaded.
      *
      * @param string $name The name of the class for which the metadata should get loaded.
-     * @param array  $tables The metadata collection to which the loaded metadata is added.
+     *
+     * @return array
      */
     protected function loadMetadata($name)
     {
@@ -272,7 +289,7 @@ abstract class AbstractClassMetadataFactory implements ClassMetadataFactory
         foreach ($parentClasses as $className) {
             if (isset($this->loadedMetadata[$className])) {
                 $parent = $this->loadedMetadata[$className];
-                if (isset($parent->isMappedSuperclass) && $parent->isMappedSuperclass === false) {
+                if ($this->isEntity($parent)) {
                     $rootEntityFound = true;
                     array_unshift($visited, $className);
                 }
@@ -282,13 +299,13 @@ abstract class AbstractClassMetadataFactory implements ClassMetadataFactory
             $class = $this->newClassMetadataInstance($className);
             $this->initializeReflection($class, $reflService);
 
-            $this->doLoadMetadata($class, $parent, $rootEntityFound);
+            $this->doLoadMetadata($class, $parent, $rootEntityFound, $visited);
 
             $this->loadedMetadata[$className] = $class;
 
             $parent = $class;
 
-            if (isset($parent->isMappedSuperclass) && $class->isMappedSuperclass === false) {
+            if ($this->isEntity($class)) {
                 $rootEntityFound = true;
                 array_unshift($visited, $className);
             }
@@ -305,11 +322,12 @@ abstract class AbstractClassMetadataFactory implements ClassMetadataFactory
      * Actually load the metadata from the underlying metadata
      *
      * @param ClassMetadata $class
-     * @param ClassMetadata $parent
+     * @param ClassMetadata|null $parent
      * @param bool $rootEntityFound
+     * @param array $nonSuperclassParents classnames all parent classes that are not marked as mapped superclasses
      * @return void
      */
-    abstract protected function doLoadMetadata($class, $parent, $rootEntityFound);
+    abstract protected function doLoadMetadata($class, $parent, $rootEntityFound, array $nonSuperclassParents);
 
     /**
      * Creates a new ClassMetadata instance for the given class name.
@@ -329,6 +347,12 @@ abstract class AbstractClassMetadataFactory implements ClassMetadataFactory
     {
         if ( ! $this->initialized) {
             $this->initialize();
+        }
+
+        // Check for namespace alias
+        if (strpos($class, ':') !== false) {
+            list($namespaceAlias, $simpleClassName) = explode(':', $class);
+            $class = $this->getFqcnFromAlias($namespaceAlias, $simpleClassName);
         }
 
         return $this->getDriver()->isTransient($class);

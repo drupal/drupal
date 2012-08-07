@@ -43,15 +43,13 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @return Boolean
      */
-    static public function isSupported()
+    public static function isSupported()
     {
         return !defined('PHP_WINDOWS_VERSION_BUILD');
     }
 
     /**
-     * Guesses the mime type of the file with the given path
-     *
-     * @see MimeTypeGuesserInterface::guess()
+     * {@inheritdoc}
      */
     public function guess($path)
     {

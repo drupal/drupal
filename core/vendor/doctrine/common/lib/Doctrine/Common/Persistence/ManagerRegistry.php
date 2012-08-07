@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -50,7 +50,7 @@ interface ManagerRegistry extends ConnectionRegistry
     /**
      * Gets an array of all registered object managers
      *
-     * @return array An array of ObjectManager instances
+     * @return \Doctrine\Common\Persistence\ObjectManager[] An array of ObjectManager instances
      */
     function getManagers();
 

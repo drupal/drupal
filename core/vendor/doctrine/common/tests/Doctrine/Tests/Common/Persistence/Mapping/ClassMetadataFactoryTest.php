@@ -90,7 +90,7 @@ class TestClassMetadataFactory extends AbstractClassMetadataFactory
         $this->metadata = $metadata;
     }
 
-    protected function doLoadMetadata($class, $parent, $rootEntityFound)
+    protected function doLoadMetadata($class, $parent, $rootEntityFound, array $nonSuperclassParents)
     {
 
     }
@@ -120,6 +120,11 @@ class TestClassMetadataFactory extends AbstractClassMetadataFactory
 
     protected function initializeReflection(ClassMetadata $class, ReflectionService $reflService)
     {
+    }
+
+    protected function isEntity(ClassMetadata $class)
+    {
+        return true;
     }
 }
 

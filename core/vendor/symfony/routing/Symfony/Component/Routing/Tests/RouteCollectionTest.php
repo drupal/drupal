@@ -37,7 +37,7 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase
         $collection->add('f o o', $route);
     }
 
-    public function testOverridenRoute()
+    public function testOverriddenRoute()
     {
         $collection = new RouteCollection();
         $collection->add('foo', new Route('/foo'));
@@ -46,7 +46,7 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/foo1', $collection->get('foo')->getPattern());
     }
 
-    public function testDeepOverridenRoute()
+    public function testDeepOverriddenRoute()
     {
         $collection = new RouteCollection();
         $collection->add('foo', new Route('/foo'));
@@ -64,7 +64,7 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/foo2', $collection->get('foo')->getPattern());
     }
 
-    public function testIteratorWithOverridenRoutes()
+    public function testIteratorWithOverriddenRoutes()
     {
         $collection = new RouteCollection();
         $collection->add('foo', new Route('/foo'));
@@ -74,6 +74,18 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase
         $collection1->add('foo', new Route('/foo1'));
 
         $this->assertEquals('/foo1', $this->getFirstNamedRoute($collection, 'foo')->getPattern());
+    }
+
+    public function testCount()
+    {
+        $collection = new RouteCollection();
+        $collection->add('foo', new Route('/foo'));
+
+        $collection1 = new RouteCollection();
+        $collection->addCollection($collection1);
+        $collection1->add('foo1', new Route('/foo1'));
+
+        $this->assertCount(2, $collection);
     }
 
     protected function getFirstNamedRoute(RouteCollection $routeCollection, $name)

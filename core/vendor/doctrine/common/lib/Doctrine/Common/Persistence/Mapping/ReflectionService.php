@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -55,7 +55,7 @@ interface ReflectionService
      * Return a reflection class instance or null
      *
      * @param string $class
-     * @return ReflectionClass|null
+     * @return \ReflectionClass|null
      */
     function getClass($class);
 
@@ -64,7 +64,7 @@ interface ReflectionService
      *
      * @param string $class
      * @param string $property
-     * @return ReflectionProperty|null
+     * @return \ReflectionProperty|null
      */
     function getAccessibleProperty($class, $property);
 

@@ -345,7 +345,7 @@ EOF
         ;
 
         $current = libxml_use_internal_errors(true);
-        $valid = $dom->schemaValidateSource($source);
+        $valid = @$dom->schemaValidateSource($source);
         foreach ($tmpfiles as $tmpfile) {
             @unlink($tmpfile);
         }
@@ -448,7 +448,7 @@ EOF
      *
      * @return array A PHP array
      */
-    static public function convertDomElementToArray(\DomElement $element)
+    public static function convertDomElementToArray(\DomElement $element)
     {
         $empty = true;
         $config = array();

@@ -18,7 +18,7 @@ namespace Symfony\Component\Routing;
  *
  * @api
  */
-class Route
+class Route implements \Serializable
 {
     private $pattern;
     private $defaults;
@@ -26,7 +26,7 @@ class Route
     private $options;
     private $compiled;
 
-    static private $compilers = array();
+    private static $compilers = array();
 
     /**
      * Constructor.
@@ -53,6 +53,25 @@ class Route
     public function __clone()
     {
         $this->compiled = null;
+    }
+
+    public function serialize()
+    {
+        return serialize(array(
+            'pattern' => $this->pattern,
+            'defaults' => $this->defaults,
+            'requirements' => $this->requirements,
+            'options' => $this->options,
+        ));
+    }
+
+    public function unserialize($data)
+    {
+        $data = unserialize($data);
+        $this->pattern = $data['pattern'];
+        $this->defaults = $data['defaults'];
+        $this->requirements = $data['requirements'];
+        $this->options = $data['options'];
     }
 
     /**

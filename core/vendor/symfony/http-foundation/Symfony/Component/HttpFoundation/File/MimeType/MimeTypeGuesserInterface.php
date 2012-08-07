@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\HttpFoundation\File\MimeType;
 
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+
 /**
  * Guesses the mime type of a file
  *
@@ -28,5 +31,5 @@ interface MimeTypeGuesserInterface
      * @throws FileNotFoundException  If the file does not exist
      * @throws AccessDeniedException  If the file could not be read
      */
-    function guess($path);
+    public function guess($path);
 }

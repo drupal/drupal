@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Tests\Fixtures\KernelForTest;
+use Symfony\Component\HttpKernel\Tests\Fixtures\KernelForOverrideName;
 use Symfony\Component\HttpKernel\Tests\Fixtures\FooBarBundle;
 
 class KernelTest extends \PHPUnit_Framework_TestCase
@@ -292,7 +293,15 @@ EOF;
     {
         $kernel = new KernelForTest('test', true);
 
-        $this->assertEquals(__DIR__.DIRECTORY_SEPARATOR.'Fixtures', $kernel->getRootDir());
+        $rootDir = __DIR__.DIRECTORY_SEPARATOR.'Fixtures';
+
+        // getRootDir() returns path with slashes
+        // without conversion test fails on Windows
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            $rootDir = strtr($rootDir, '\\', '/');
+        }
+
+        $this->assertEquals($rootDir, $kernel->getRootDir());
     }
 
     public function testGetName()
@@ -300,6 +309,13 @@ EOF;
         $kernel = new KernelForTest('test', true);
 
         $this->assertEquals('Fixtures', $kernel->getName());
+    }
+
+    public function testOverrideGetName()
+    {
+        $kernel = new KernelForOverrideName('test', true);
+
+        $this->assertEquals('overridden', $kernel->getName());
     }
 
     public function testSerialize()

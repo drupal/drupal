@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -33,11 +33,12 @@ use Doctrine\Common\Lexer;
 final class DocLexer extends Lexer
 {
     const T_NONE                = 1;
-    const T_IDENTIFIER          = 2;
-    const T_INTEGER             = 3;
-    const T_STRING              = 4;
-    const T_FLOAT               = 5;
+    const T_INTEGER             = 2;
+    const T_STRING              = 3;
+    const T_FLOAT               = 4;
 
+    // All tokens that are also identifiers should be >= 100
+    const T_IDENTIFIER          = 100;
     const T_AT                  = 101;
     const T_CLOSE_CURLY_BRACES  = 102;
     const T_CLOSE_PARENTHESIS   = 103;
@@ -52,19 +53,19 @@ final class DocLexer extends Lexer
     const T_COLON               = 112;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getCatchablePatterns()
     {
         return array(
-            '[a-z_][a-z0-9_:]*',
+            '[a-z_\\\][a-z0-9_\:\\\]*[a-z]{1}',
             '(?:[+-]?[0-9]+(?:[\.][0-9]+)*)(?:[eE][+-]?[0-9]+)?',
             '"(?:[^"]|"")*"',
         );
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getNonCatchablePatterns()
     {
@@ -72,7 +73,11 @@ final class DocLexer extends Lexer
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
+     * @param string $value
+     *
+     * @return int
      */
     protected function getType(&$value)
     {
@@ -127,7 +132,7 @@ final class DocLexer extends Lexer
                     return self::T_COLON;
 
                 default:
-                    if (ctype_alpha($value[0]) || $value[0] === '_') {
+                    if (ctype_alpha($value[0]) || $value[0] === '_' || $value[0] === '\\') {
                         return self::T_IDENTIFIER;
                     }
 

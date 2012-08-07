@@ -25,6 +25,15 @@ abstract class CacheTest extends \Doctrine\Tests\DoctrineTestCase
         $this->assertFalse($cache->contains('test_key2'));
     }
 
+    public function testObjects()
+    {
+        $cache = $this->_getCacheDriver();
+
+        // Fetch/save test with objects (Is cache driver serializes/unserializes objects correctly ?)
+        $cache->save('test_object_key', new \ArrayObject());
+        $this->assertTrue($cache->fetch('test_object_key') instanceof \ArrayObject);
+    }
+
     public function testDeleteAll()
     {
         $cache = $this->_getCacheDriver();
@@ -65,13 +74,8 @@ abstract class CacheTest extends \Doctrine\Tests\DoctrineTestCase
      */
     public function testGetStats()
     {
-        if ($this instanceof ArrayCacheTest || $this instanceof ZendDataCacheTest ) {
-            $this->markTestSkipped("Statistics are not available for this driver");
-        }
-
         $cache = $this->_getCacheDriver();
         $stats = $cache->getStats();
-
 
         $this->assertArrayHasKey(Cache::STATS_HITS,   $stats);
         $this->assertArrayHasKey(Cache::STATS_MISSES, $stats);

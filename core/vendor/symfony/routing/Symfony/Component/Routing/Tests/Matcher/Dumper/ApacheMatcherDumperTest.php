@@ -17,9 +17,9 @@ use Symfony\Component\Routing\Matcher\Dumper\ApacheMatcherDumper;
 
 class ApacheMatcherDumperTest extends \PHPUnit_Framework_TestCase
 {
-    static protected $fixturesPath;
+    protected static $fixturesPath;
 
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
         self::$fixturesPath = realpath(__DIR__.'/../../Fixtures/');
     }
@@ -69,6 +69,11 @@ class ApacheMatcherDumperTest extends \PHPUnit_Framework_TestCase
             '/foo/{bar}',
             array('def' => 'test'),
             array('bar' => 'baz|symfony')
+        ));
+        // defaults parameters in pattern
+        $collection->add('foobar', new Route(
+            '/foo/{bar}',
+            array('bar' => 'toto')
         ));
         // method requirement
         $collection->add('bar', new Route(

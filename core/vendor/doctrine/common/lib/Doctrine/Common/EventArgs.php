@@ -15,7 +15,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -40,7 +40,6 @@ class EventArgs
 {
     /**
      * @var EventArgs Single instance of EventArgs
-     * @static
      */
     private static $_emptyEventArgsInstance;
 
@@ -55,7 +54,6 @@ class EventArgs
      *
      * @see EventManager::dispatchEvent
      * @link http://msdn.microsoft.com/en-us/library/system.eventargs.aspx
-     * @static
      * @return EventArgs
      */
     public static function getEmptyInstance()

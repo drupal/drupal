@@ -117,9 +117,13 @@ class ProfilerListener implements EventSubscriberInterface
             array_pop($this->requests);
 
             $parent = end($this->requests);
-            $profiles = isset($this->children[$parent]) ? $this->children[$parent] : array();
-            $profiles[] = $profile;
-            $this->children[$parent] = $profiles;
+
+            // when simulating requests, we might not have the parent
+            if ($parent) {
+                $profiles = isset($this->children[$parent]) ? $this->children[$parent] : array();
+                $profiles[] = $profile;
+                $this->children[$parent] = $profiles;
+            }
         }
 
         if (isset($this->children[$request])) {
@@ -134,7 +138,7 @@ class ProfilerListener implements EventSubscriberInterface
         }
     }
 
-    static public function getSubscribedEvents()
+    public static function getSubscribedEvents()
     {
         return array(
             // kernel.request must be registered as early as possible to not break

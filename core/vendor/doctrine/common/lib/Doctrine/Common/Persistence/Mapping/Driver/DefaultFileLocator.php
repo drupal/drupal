@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
 */
 
@@ -51,6 +51,7 @@ class DefaultFileLocator implements FileLocator
      * documents and operates in the specified operating mode.
      *
      * @param string|array $paths One or multiple paths where mapping documents can be found.
+     * @param string|null $fileExtension
      */
     public function __construct($paths, $fileExtension = null)
     {
@@ -81,7 +82,7 @@ class DefaultFileLocator implements FileLocator
     /**
      * Get the file extension used to look for mapping files under
      *
-     * @return void
+     * @return string
      */
     public function getFileExtension()
     {

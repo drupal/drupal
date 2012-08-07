@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
 */
 
@@ -53,18 +53,34 @@ class SymfonyFileLocator implements FileLocator
      */
     protected $fileExtension;
 
+    /**
+     * Constructor
+     *
+     * @param array $prefixes
+     * @param string|null $fileExtension
+     */
     public function __construct(array $prefixes, $fileExtension = null)
     {
         $this->addNamespacePrefixes($prefixes);
         $this->fileExtension = $fileExtension;
     }
 
+    /**
+     * Add Namespace Prefixes
+     *
+     * @param array $prefixes
+     */
     public function addNamespacePrefixes(array $prefixes)
     {
         $this->prefixes = array_merge($this->prefixes, $prefixes);
         $this->paths = array_merge($this->paths, array_keys($prefixes));
     }
 
+    /**
+     * Get Namespace Prefixes
+     *
+     * @return array
+     */
     public function getNamespacePrefixes()
     {
         return $this->prefixes;

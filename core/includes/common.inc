@@ -4962,9 +4962,14 @@ function _drupal_bootstrap_full($skip = FALSE) {
  * Page compression requires the PHP zlib extension
  * (http://php.net/manual/ref.zlib.php).
  *
+ * @param $body
+ *   The response body.
+ * @return
+ *   The cached object or NULL if the page cache was not set.
+ *
  * @see drupal_page_header()
  */
-function drupal_page_set_cache() {
+function drupal_page_set_cache($body) {
   global $base_root;
 
   if (drupal_page_is_cacheable()) {
@@ -4972,7 +4977,7 @@ function drupal_page_set_cache() {
       'cid' => $base_root . request_uri(),
       'data' => array(
         'path' => current_path(),
-        'body' => ob_get_clean(),
+        'body' => $body,
         'title' => drupal_get_title(),
         'headers' => array(),
       ),

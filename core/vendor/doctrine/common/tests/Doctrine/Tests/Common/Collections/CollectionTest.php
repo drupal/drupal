@@ -3,6 +3,7 @@
 namespace Doctrine\Tests\Common\Collections;
 
 use Doctrine\Tests;
+use Doctrine\Common\Collections\Criteria;
 
 class CollectionTest extends \Doctrine\Tests\DoctrineTestCase
 {
@@ -191,5 +192,60 @@ class CollectionTest extends \Doctrine\Tests\DoctrineTestCase
 
         $slice = $this->_coll->slice(1, 1);
         $this->assertEquals(array(1 => 'two'), $slice);
+    }
+
+    public function fillMatchingFixture()
+    {
+        $std1 = new \stdClass();
+        $std1->foo = "bar";
+        $this->_coll[] = $std1;
+
+        $std2 = new \stdClass();
+        $std2->foo = "baz";
+        $this->_coll[] = $std2;
+    }
+
+    /**
+     * @group DDC-1637
+     */
+    public function testMatching()
+    {
+        $this->fillMatchingFixture();
+
+        $col = $this->_coll->matching(new Criteria($this->_coll->expr()->eq("foo", "bar")));
+        $this->assertInstanceOf('Doctrine\Common\Collections\Collection', $col);
+        $this->assertNotSame($col, $this->_coll);
+        $this->assertEquals(1, count($col));
+    }
+
+    /**
+     * @group DDC-1637
+     */
+    public function testMatchingOrdering()
+    {
+        $this->fillMatchingFixture();
+
+        $col = $this->_coll->matching(new Criteria(null, array('foo' => 'DESC')));
+
+        $this->assertInstanceOf('Doctrine\Common\Collections\Collection', $col);
+        $this->assertNotSame($col, $this->_coll);
+        $this->assertEquals(2, count($col));
+        $this->assertEquals('baz', $col[0]->foo);
+        $this->assertEquals('bar', $col[1]->foo);
+    }
+
+    /**
+     * @group DDC-1637
+     */
+    public function testMatchingSlice()
+    {
+        $this->fillMatchingFixture();
+
+        $col = $this->_coll->matching(new Criteria(null, null, 1, 1));
+
+        $this->assertInstanceOf('Doctrine\Common\Collections\Collection', $col);
+        $this->assertNotSame($col, $this->_coll);
+        $this->assertEquals(1, count($col));
+        $this->assertEquals('baz', $col[0]->foo);
     }
 }

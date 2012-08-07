@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL. For more information, see
+ * and is licensed under the MIT license. For more information, see
  * <http://www.doctrine-project.org>.
  */
 
@@ -63,6 +63,8 @@ class PreUpdateEventArgs extends LifecycleEventArgs
 
     /**
      * Check if field has a changeset.
+     *
+     * @param string $field
      *
      * @return boolean
      */
@@ -114,6 +116,8 @@ class PreUpdateEventArgs extends LifecycleEventArgs
      * Assert the field exists in changeset.
      *
      * @param string $field
+     *
+     * @throws \InvalidArgumentException
      */
     private function assertValidField($field)
     {

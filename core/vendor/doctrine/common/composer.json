@@ -1,10 +1,10 @@
 {
     "name": "doctrine/common",
-    "type": "library","version":"2.2.2",
+    "type": "library","version":"2.3.0-RC1",
     "description": "Common Library for Doctrine projects",
     "keywords": ["collections", "spl", "eventmanager", "annotations", "persistence"],
     "homepage": "http://www.doctrine-project.org",
-    "license": "LGPL",
+    "license": "MIT",
     "authors": [
         {"name": "Guilherme Blanco", "email": "guilhermeblanco@gmail.com"},
         {"name": "Roman Borschel", "email": "roman@code-factory.org"},
@@ -17,5 +17,10 @@
     },
     "autoload": {
         "psr-0": { "Doctrine\\Common": "lib/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.3.x-dev"
+        }
     }
 }
