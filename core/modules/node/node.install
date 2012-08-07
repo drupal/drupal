@@ -529,11 +529,11 @@ function _update_7000_node_get_types() {
 function node_update_8001() {
   $types = db_query('SELECT type FROM {node_type}')->fetchCol();
   foreach ($types as $type) {
-    $node_type_language = variable_get('language_content_type_' . $type);
+    $node_type_language = update_variable_get('language_content_type_' . $type);
     if (isset($node_type_language)) {
-      variable_set('node_type_language_' . $type, $node_type_language);
+      update_variable_set('node_type_language_' . $type, $node_type_language);
     }
-    variable_del('language_content_type_' . $type);
+    update_variable_del('language_content_type_' . $type);
   }
 }
 
@@ -557,20 +557,20 @@ function node_update_8002() {
 function node_update_8003() {
   $types = db_query('SELECT type FROM {node_type}')->fetchCol();
   foreach ($types as $type) {
-    variable_set('node_type_language_default_' . $type, LANGUAGE_NOT_SPECIFIED);
-    $node_type_language = variable_get('node_type_language_' . $type, 0);
+    update_variable_set('node_type_language_default_' . $type, LANGUAGE_NOT_SPECIFIED);
+    $node_type_language = update_variable_get('node_type_language_' . $type, 0);
     if ($node_type_language == 0) {
-      variable_set('node_type_language_hidden_' . $type, TRUE);
+      update_variable_set('node_type_language_hidden_' . $type, TRUE);
     }
     if ($node_type_language == 2) {
       // Translation was enabled, so enable it again and
       // unhide the language selector. Because if language is
       // LANGUAGE_NOT_SPECIFIED and the selector hidden, translation
       // cannot be enabled.
-      variable_set('node_type_language_hidden_' . $type, FALSE);
-      variable_set('node_type_language_translation_enabled_' . $type, TRUE);
+      update_variable_set('node_type_language_hidden_' . $type, FALSE);
+      update_variable_set('node_type_language_translation_enabled_' . $type, TRUE);
     }
-    variable_del('node_type_language_' . $type);
+    update_variable_del('node_type_language_' . $type);
   }
 }
 

@@ -245,7 +245,7 @@ function block_update_dependencies() {
  * @ingroup config_upgrade
  */
 function block_update_8000() {
-  variable_del('block_cache');
+  update_variable_del('block_cache');
 }
 
 /**

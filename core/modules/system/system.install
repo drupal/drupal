@@ -1727,8 +1727,8 @@ function system_update_8000() {
 function system_update_8001() {
   $themes = array('theme_default', 'maintenance_theme', 'admin_theme');
   foreach ($themes as $theme) {
-    if (variable_get($theme) == 'garland') {
-      variable_set($theme, 'bartik');
+    if (update_variable_get($theme) == 'garland') {
+      update_variable_set($theme, 'bartik');
     }
   }
 }
@@ -1755,13 +1755,13 @@ function system_update_8001() {
  * @ingroup config_upgrade
  */
 function system_update_8002() {
-  $front_page = variable_get('site_frontpage');
+  $front_page = update_variable_get('site_frontpage');
   if (!isset($front_page)) {
-    variable_set('site_frontpage', 'node');
+    update_variable_set('site_frontpage', 'node');
   }
-  $theme = variable_get('theme_default');
+  $theme = update_variable_get('theme_default');
   if (!isset($theme)) {
-    variable_set('theme_default', 'bartik');
+    update_variable_set('theme_default', 'bartik');
   }
 }
 
@@ -1893,7 +1893,7 @@ function system_update_8007() {
  * Remove the 'clean_url' configuration variable.
  */
 function system_update_8008() {
-  variable_del('clean_url');
+  update_variable_del('clean_url');
 }
 
 /**

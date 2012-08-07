@@ -347,9 +347,9 @@ function update_module_add_to_system($modules = array()) {
 function update_fix_d8_requirements() {
   global $conf;
 
-  if (drupal_get_installed_schema_version('system') < 8000 && !variable_get('update_d8_requirements', FALSE)) {
+  if (drupal_get_installed_schema_version('system') < 8000 && !update_variable_get('update_d8_requirements', FALSE)) {
     // @todo: Make critical, first-run changes to the database here.
-    variable_set('update_d8_requirements', TRUE);
+    update_variable_set('update_d8_requirements', TRUE);
   }
 }
 
@@ -957,6 +957,75 @@ function update_retrieve_dependencies() {
   }
 
   return $return;
+}
+
+/**
+ * Gets the value of a variable directly from the database during the 7.x-8.x upgrade path.
+ *
+ * Use this during the 7.x-8.x upgrade path instead of variable_get().
+ *
+ * @param string $name
+ *   The name of the variable.
+ * @param mixed $default
+ *   The default value of the variable.
+ *
+ * @return mixed
+ *   The value of the variable in the database unserialized, or NULL if not set.
+ *
+ * @see update_variable_set()
+ * @see update_variable_del()
+ * @ingroup config_upgrade
+ */
+function update_variable_get($name, $default = NULL) {
+  $result = db_query('SELECT value FROM {variable} WHERE name = :name', array(':name' => $name))->fetchField();
+  if ($result !== FALSE) {
+    return unserialize($result);
+  }
+  return $default;
+}
+
+/**
+ * Sets a persistent variable during the 7.x-8.x upgrade path.
+ *
+ * Use this during the 7.x-8.x upgrade path instead of variable_set().
+ *
+ * @param string $name
+ *   The name of the variable to set.
+ * @param mixed $value
+ *   The value to set. This can be any PHP data type; these functions take care
+ *   of serialization as necessary.
+ *
+ * @see update_variable_get()
+ * @see update_variable_del()
+ * @ingroup config_upgrade
+ */
+function update_variable_set($name, $value) {
+  db_merge('variable')
+    ->key(array(
+      'name' => $name,
+    ))
+    ->fields(array(
+      'value' => serialize($value),
+    ))
+    ->execute();
+}
+
+/**
+ * Delete a variable from the database during the 7.x-8.x upgrade path.
+ *
+ * Use this during the 7.x-8.x upgrade path instead of variable_del().
+ *
+ * @param string $name
+ *   The name of the variable to delete.
+ *
+ * @see update_variable_get()
+ * @see update_variable_set()
+ * @ingroup config_upgrade
+ */
+function update_variable_del($name) {
+  db_delete('variable')
+    ->condition('name', $name)
+    ->execute();
 }
 
 /**

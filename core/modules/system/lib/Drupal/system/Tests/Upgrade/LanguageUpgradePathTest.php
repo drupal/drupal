@@ -110,7 +110,7 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     );
     // Check that locale_language_providers_weight_language is correctly
     // renamed.
-    $current_weights = variable_get('language_negotiation_methods_weight_language_interface', array());
+    $current_weights = update_variable_get('language_negotiation_methods_weight_language_interface', array());
     $this->assertTrue(serialize($expected_weights) == serialize($current_weights), t('Language negotiation method weights upgraded.'));
 
     // Look up migrated plural string.
@@ -137,7 +137,7 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
   public function testLanguageUrlUpgrade() {
     $language_domain = 'ca.example.com';
     db_update('languages')->fields(array('domain' => 'http://' . $language_domain . ':8888'))->condition('language', 'ca')->execute();
-    variable_set('locale_language_negotiation_url_part', 1);
+    $this->variable_set('locale_language_negotiation_url_part', 1);
 
     $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
 

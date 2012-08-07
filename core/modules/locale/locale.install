@@ -195,27 +195,27 @@ function locale_update_8000() {
 function locale_update_8001() {
   // Only change language_types if we had this setting saved. Keep order
   // of types because that is significant for value dependency.
-  $types = variable_get('language_types', NULL);
+  $types = update_variable_get('language_types', NULL);
   if (!empty($types) && isset($types['language'])) {
     $new_types = array();
     foreach ($types as $key => $type) {
       $new_types[$key == 'language' ? 'language_interface' : $key] = $type;
     }
-    variable_set('language_types', $new_types);
+    update_variable_set('language_types', $new_types);
   }
 
   // Rename language_negotiation_language setting if exists.
-  $setting = variable_get('language_negotiation_language', NULL);
+  $setting = update_variable_get('language_negotiation_language', NULL);
   if ($setting !== NULL) {
-    variable_set('language_negotiation_language_interface', $setting);
-    variable_del('language_negotiation_language');
+    update_variable_set('language_negotiation_language_interface', $setting);
+    update_variable_del('language_negotiation_language');
   }
 
   // Rename locale_language_providers_weight_language setting if exists.
-  $weight = variable_get('locale_language_providers_weight_language', NULL);
+  $weight = update_variable_get('locale_language_providers_weight_language', NULL);
   if ($weight !== NULL) {
-    variable_set('locale_language_providers_weight_language_interface', $weight);
-    variable_del('locale_language_providers_weight_language');
+    update_variable_set('locale_language_providers_weight_language_interface', $weight);
+    update_variable_del('locale_language_providers_weight_language');
   }
 
   // Update block data in all core block related tables. Contributed modules
@@ -281,7 +281,7 @@ function locale_update_8002() {
  */
 function locale_update_8003() {
   $message = '';
-  $domains = variable_get('locale_language_negotiation_url_domains', array());
+  $domains = update_variable_get('locale_language_negotiation_url_domains', array());
   // $used_domains keeps track of the domain names in use.
   $used_domains = array();
   foreach ($domains as $langcode => $domain) {
@@ -301,7 +301,7 @@ function locale_update_8003() {
       }
     }
   }
-  variable_set('locale_language_negotiation_url_domains', $domains);
+  update_variable_set('locale_language_negotiation_url_domains', $domains);
 
   if (!empty($message)) {
     return $message;
@@ -314,11 +314,11 @@ function locale_update_8003() {
  * @ingroup config_upgrade
  */
 function locale_update_8004() {
-  $types = variable_get('language_types', NULL);
+  $types = update_variable_get('language_types', NULL);
   if (!empty($types)) {
     foreach ($types as $type => $configurable) {
       // Rename the negotiation and language switch callback keys.
-      $negotiation = variable_get('language_negotiation_' . $type, NULL);
+      $negotiation = update_variable_get('language_negotiation_' . $type, NULL);
       if (!empty($negotiation)) {
         foreach ($negotiation as $method_id => &$method) {
           $method['callbacks']['negotiation'] = $method['callbacks']['language'];
@@ -328,14 +328,14 @@ function locale_update_8004() {
             unset($method['callbacks']['switcher']);
           }
         }
-        variable_set('language_negotiation_' . $type, $negotiation);
+        update_variable_set('language_negotiation_' . $type, $negotiation);
       }
 
       // Rename the language negotiation methods weight variable.
-      $weight = variable_get('locale_language_providers_weight_' . $type , NULL);
+      $weight = update_variable_get('locale_language_providers_weight_' . $type , NULL);
       if ($weight !== NULL) {
-        variable_set('language_negotiation_methods_weight_' . $type , $weight);
-        variable_del('locale_language_providers_weight_' . $type);
+        update_variable_set('language_negotiation_methods_weight_' . $type , $weight);
+        update_variable_del('locale_language_providers_weight_' . $type);
       }
     }
   }
@@ -486,7 +486,7 @@ function locale_update_8007() {
   );
   // Add all language type weight variables. As the function language_types()
   // is not available its functionality is rebuild.
-  $language_types = variable_get('language_types', array(
+  $language_types = update_variable_get('language_types', array(
     LANGUAGE_TYPE_INTERFACE => TRUE,
     LANGUAGE_TYPE_CONTENT => FALSE,
     LANGUAGE_TYPE_URL => FALSE,
@@ -515,7 +515,7 @@ function locale_update_8007() {
     'locale-session' => 'language-session',
   );
   foreach ($variable_names as $variable_name) {
-    $value = variable_get($variable_name);
+    $value = update_variable_get($variable_name);
     // Skip processing if the variable is not stored in the db.
     if ($value === NULL) {
       continue;
@@ -544,7 +544,7 @@ function locale_update_8007() {
     if (stristr($variable_name, 'language_negotiation_methods_weight_') !== FALSE) {
       asort($new_value);
     }
-    variable_set($variable_name, $new_value);
+    update_variable_set($variable_name, $new_value);
   }
 }
 
@@ -562,10 +562,10 @@ function locale_update_8008() {
   );
   foreach ($variable_name_map as $deprecated_variable_name => $new_variable_name) {
     // Check if this variable is stored in the db and if so rename it.
-    $value = variable_get($deprecated_variable_name);
+    $value = update_variable_get($deprecated_variable_name);
     if ($value !== NULL) {
-      variable_set($new_variable_name, $value);
-      variable_del($deprecated_variable_name);
+      update_variable_set($new_variable_name, $value);
+      update_variable_del($deprecated_variable_name);
     }
   }
 }
