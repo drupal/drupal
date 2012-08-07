@@ -26,8 +26,12 @@ class CoreBundle extends Bundle
 {
   public function build(ContainerBuilder $container) {
 
-    // Add a 'request' scope for services that depend on the Request object.
+    // The 'request' scope and service enable services to depend on the Request
+    // object and get reconstructed when the request object changes (e.g.,
+    // during a subrequest).
     $container->addScope(new Scope('request'));
+    $container->register('request', 'Symfony\Component\HttpFoundation\Request')
+      ->setSynthetic(TRUE);
 
     $container->register('dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
       ->addArgument(new Reference('service_container'));
@@ -36,6 +40,27 @@ class CoreBundle extends Bundle
       ->addArgument(new Reference('dispatcher'))
       ->addArgument(new Reference('service_container'))
       ->addArgument(new Reference('resolver'));
+    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
+      ->addArgument(new Reference('request'))
+      ->setScope('request');
+
+    // @todo Replace below lines with the commented out block below it when it's
+    //   performant to do so: http://drupal.org/node/1706064.
+    $dispatcher = $container->get('dispatcher');
+    $matcher = new \Drupal\Core\LegacyUrlMatcher();
+    $content_negotation = new \Drupal\Core\ContentNegotiation();
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\RouterListener($matcher));
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\ViewSubscriber($content_negotation));
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\AccessSubscriber());
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\MaintenanceModeSubscriber());
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\PathSubscriber());
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\LegacyRequestSubscriber());
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\LegacyControllerSubscriber());
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\FinishResponseSubscriber());
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\RequestCloseSubscriber());
+    $container->set('content_negotiation', $content_negotation);
+    $dispatcher->addSubscriber(\Drupal\Core\ExceptionController::getExceptionListener($container));
+    /*
     $container->register('matcher', 'Drupal\Core\LegacyUrlMatcher');
     $container->register('router_listener', 'Drupal\Core\EventSubscriber\RouterListener')
       ->addArgument(new Reference('matcher'))
@@ -73,13 +98,9 @@ class CoreBundle extends Bundle
       ->addArgument(new Reference('service_container'))
       ->setFactoryClass('Drupal\Core\ExceptionController')
       ->setFactoryMethod('getExceptionListener');
-    $container->register('request', 'Symfony\Component\HttpFoundation\Request')
-      ->setSynthetic(TRUE);
-    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
-      ->addArgument(new Reference('request'))
-      ->setScope('request');
 
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
+    */
   }
 }

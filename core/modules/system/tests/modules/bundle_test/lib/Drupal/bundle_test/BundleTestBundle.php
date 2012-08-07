@@ -20,5 +20,9 @@ class BundleTestBundle extends Bundle
   public function build(ContainerBuilder $container) {
     $container->register('bundle_test_class', 'Drupal\bundle_test\TestClass')
       ->addTag('kernel.event_subscriber');
+
+    // @todo Remove when the 'kernel.event_subscriber' tag above is made to
+    //   work: http://drupal.org/node/1706064.
+    $container->get('dispatcher')->addSubscriber($container->get('bundle_test_class'));
   }
 }

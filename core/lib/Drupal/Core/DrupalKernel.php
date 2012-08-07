@@ -74,7 +74,10 @@ class DrupalKernel extends Kernel {
     foreach ($this->bundles as $bundle) {
       $bundle->build($container);
     }
-    $container->compile();
+
+    // @todo Compile the container: http://drupal.org/node/1706064.
+    //$container->compile();
+
     return $container;
   }
 
