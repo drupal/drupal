@@ -567,14 +567,15 @@ function hook_views_data_alter(&$data) {
  *       attached to this display type.
  *     - contextual links locations: An array with places where contextual links
  *       should be added. Can for example be 'page' or 'block'. If you don't
- *       specify it there will be contextual links around the rendered view.
+ *       specify it there will be contextual links around the rendered view. If
+ *       this is not set or regions have been specified, views will display an
+ *       option to 'hide contextual links'. Use an empty array if you do not want
+ *       this.
  *     - uses hook menu: Set to TRUE to have the display included by
  *       views_menu_alter(). views_menu_alter executes then execute_hook_menu
  *       on the display object.
  *     - uses hook block: Set to TRUE to have the display included by
  *       views_block_info().
- *     - contextual links locations: An array with places where contextual links
- *       should be added. Can for example be 'page' or 'block'.
  *     - theme: The name of a theme suggestion to use for the display.
  *     - js: An array with paths to js files that should be included for the
  *       display. Note that the path should be relative Drupal root, not module
