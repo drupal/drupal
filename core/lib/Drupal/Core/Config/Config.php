@@ -36,21 +36,21 @@ class Config {
   protected $data = array();
 
   /**
-   * The injected storage dispatcher object.
+   * The storage used for reading and writing.
    *
-   * @var Drupal\Core\Config\StorageDispatcher
+   * @var Drupal\Core\Config\StorageInterface
    */
-  protected $storageDispatcher;
+  protected $storage;
 
   /**
    * Constructs a configuration object.
    *
-   * @param Drupal\Core\Config\StorageDispatcher $storageDispatcher
-   *   A storage dispatcher object to use for reading and writing the
+   * @param Drupal\Core\Config\StorageInterface $storage
+   *   A storage controller object to use for reading and writing the
    *   configuration data.
    */
-  public function __construct(StorageDispatcher $storageDispatcher) {
-    $this->storageDispatcher = $storageDispatcher;
+  public function __construct(StorageInterface $storage) {
+    $this->storage = $storage;
   }
 
   /**
@@ -224,7 +224,7 @@ class Config {
    * Loads configuration data into this object.
    */
   public function load() {
-    $data = $this->storageDispatcher->selectStorage('read', $this->name)->read($this->name);
+    $data = $this->storage->read($this->name);
     if ($data === FALSE) {
       $this->isNew = TRUE;
       $this->setData(array());
@@ -241,7 +241,7 @@ class Config {
    */
   public function save() {
     $this->sortByKey($this->data);
-    $this->storageDispatcher->selectStorage('write', $this->name)->write($this->name, $this->data);
+    $this->storage->write($this->name, $this->data);
     $this->isNew = FALSE;
     return $this;
   }
@@ -271,7 +271,7 @@ class Config {
    */
   public function delete() {
     $this->data = array();
-    $this->storageDispatcher->selectStorage('write', $this->name)->delete($this->name);
+    $this->storage->delete($this->name);
     $this->isNew = TRUE;
     return $this;
   }

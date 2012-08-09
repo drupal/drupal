@@ -15,29 +15,29 @@ namespace Drupal\Core\Config;
  *
  * @see Drupal\Core\Config\Config
  *
- * Each configuration object gets a storage dispatcher object injected, which
- * determines the storage controller to use for reading and writing the
- * configuration data.
+ * Each configuration object gets a storage controller object injected, which
+ * is used for reading and writing the configuration data.
  *
- * @see Drupal\Core\Config\StorageDispatcher
+ * @see Drupal\Core\Config\StorageInterface
  */
 class ConfigFactory {
+
   /**
-   * A storage dispatcher instance to use for reading and writing configuration data.
+   * A storage controller instance for reading and writing configuration data.
    *
-   * @var Drupal\Core\Config\StorageDispatcher
+   * @var Drupal\Core\Config\StorageInterface
    */
-  protected $storageDispatcher;
+  protected $storage;
 
   /**
    * Constructs the Config factory.
    *
-   * @param Drupal\Core\Config\StorageDispatcher $storage_dispatcher
-   *   The storage dispatcher object to use for reading and writing
+   * @param Drupal\Core\Config\StorageInterface $storage
+   *   The storage controller object to use for reading and writing
    *   configuration data.
    */
-  public function __construct(StorageDispatcher $storage_dispatcher) {
-    $this->storageDispatcher = $storage_dispatcher;
+  public function __construct(StorageInterface $storage) {
+    $this->storage = $storage;
   }
 
   /**
@@ -68,7 +68,8 @@ class ConfigFactory {
     // @todo The decrease of CPU time is interesting, since that means that
     //   ContainerBuilder involves plenty of function calls (which are known to
     //   be slow in PHP).
-    $config = new Config($this->storageDispatcher);
+    $config = new Config($this->storage);
     return $config->setName($name);
   }
+
 }

@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Core\Config\Config;
-use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\Config\StorageInterface;
@@ -26,7 +25,7 @@ function config_install_default_config($type, $name) {
   $config_dir = drupal_get_path($type, $name) . '/config';
   if (is_dir($config_dir)) {
     $source_storage = new FileStorage(array('directory' => $config_dir));
-    $target_storage = new DatabaseStorage();
+    $target_storage = drupal_container()->get('config.storage');
     $null_storage = new NullStorage();
 
     // Upon installation, only new config objects need to be created.
@@ -47,8 +46,7 @@ function config_install_default_config($type, $name) {
  * @todo Modules need a way to access the active store, whatever it is.
  */
 function config_get_storage_names_with_prefix($prefix = '') {
-  $storage = new DatabaseStorage();
-  return $storage->listAll($prefix);
+  return drupal_container()->get('config.storage')->listAll($prefix);
 }
 
 /**
@@ -131,17 +129,16 @@ function config_sync_changes(array $config_changes, StorageInterface $source_sto
 }
 
 /**
- * Imports configuration from FileStorage to DatabaseStorage.
+ * Imports configuration from FileStorage to the active store.
  *
  * @return bool|null
  *   TRUE if configuration was imported successfully, FALSE in case of a
  *   synchronization error, or NULL if there are no changes to synchronize.
  */
 function config_import() {
-  // Retrieve a list of differences between FileStorage and DatabaseStorage.
-  // @todo Leverage DI + config.storage.info.
+  // Retrieve a list of differences between FileStorage and the active store.
   $source_storage = new FileStorage();
-  $target_storage = new DatabaseStorage();
+  $target_storage = drupal_container()->get('config.storage');
 
   $config_changes = config_sync_get_changes($source_storage, $target_storage);
   if (empty($config_changes)) {
@@ -185,8 +182,6 @@ function config_import() {
  * @todo Add support for other extension types; e.g., themes etc.
  */
 function config_import_invoke_owner(array $config_changes, StorageInterface $source_storage, StorageInterface $target_storage) {
-  $storage_dispatcher = drupal_container()->get('config.storage.dispatcher');
-
   // Allow modules to take over configuration change operations for
   // higher-level configuration data.
   // First pass deleted, then new, and lastly changed configuration, in order to
@@ -199,13 +194,13 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
       // handle the configuration change.
       $handled_by_module = FALSE;
       if (module_hook($module, 'config_import_' . $op)) {
-        $old_config = new Config($storage_dispatcher);
+        $old_config = new Config($target_storage);
         $old_config
           ->setName($name)
           ->load();
 
         $data = $source_storage->read($name);
-        $new_config = new Config($storage_dispatcher);
+        $new_config = new Config($target_storage);
         $new_config->setName($name);
         if ($data !== FALSE) {
           $new_config->setData($data);
@@ -222,12 +217,11 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
 }
 
 /**
- * Exports configuration from DatabaseStorage to FileStorage.
+ * Exports configuration from the active store to FileStorage.
  */
 function config_export() {
-  // Retrieve a list of differences between DatabaseStorage and FileStorage.
-  // @todo Leverage DI + config.storage.info.
-  $source_storage = new DatabaseStorage();
+  // Retrieve a list of differences between the active store and FileStorage.
+  $source_storage = drupal_container()->get('config.storage');
   $target_storage = new FileStorage();
 
   $config_changes = config_sync_get_changes($source_storage, $target_storage);

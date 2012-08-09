@@ -56,8 +56,8 @@ class DatabaseStorage implements StorageInterface {
     // read without actually having the database available. In this case,
     // catch the exception and just return an empty array so the caller can
     // handle it if need be.
-    // @todo Remove this and use appropriate StorageDispatcher configuration in
-    //   the installer instead.
+    // @todo Remove this and use appropriate config.storage service definition
+    //   in the installer instead.
     try {
       $raw = $this->getConnection()->query('SELECT data FROM {config} WHERE name = :name', array(':name' => $name), $this->options)->fetchField();
       if ($raw !== FALSE) {

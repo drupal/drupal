@@ -2437,26 +2437,22 @@ function drupal_container(Container $reset = NULL) {
     // This will get merged with the full Kernel-built Container on normal page
     // requests.
     $container = new ContainerBuilder();
-    // Register configuration storage dispatcher.
-    $container->setParameter('config.storage.info', array(
-      'Drupal\Core\Config\DatabaseStorage' => array(
-        'connection' => 'default',
-        'target' => 'default',
-        'read' => TRUE,
-        'write' => TRUE,
-      ),
-      'Drupal\Core\Config\FileStorage' => array(
-        'directory' => config_get_config_directory(),
-        'read' => TRUE,
-        'write' => FALSE,
-      ),
+
+    // Register configuration storage class and options.
+    // @todo The active store and its options need to be configurable.
+    //   Use either global $conf (recursion warning) or global $config, or a
+    //   bootstrap configuration *file* to allow to set/override this very
+    //   lowest of low level configuration.
+    $container->setParameter('config.storage.options', array(
+      'connection' => 'default',
+      'target' => 'default',
     ));
-    $container->register('config.storage.dispatcher', 'Drupal\Core\Config\StorageDispatcher')
-      ->addArgument('%config.storage.info%');
+    $container->register('config.storage', 'Drupal\Core\Config\DatabaseStorage')
+      ->addArgument('%config.storage.options%');
 
     // Register configuration object factory.
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
-      ->addArgument(new Reference('config.storage.dispatcher'));
+      ->addArgument(new Reference('config.storage'));
   }
   return $container;
 }
