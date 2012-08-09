@@ -33,7 +33,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // @todo Receive the LanguageManager object as a constructor argument when
     //   the dependency injection container allows for it performantly:
     //   http://drupal.org/node/1706064.
-    $response->headers->set('Content-language', language_manager(LANGUAGE_TYPE_INTERFACE)->langcode);
+    $response->headers->set('Content-language', language(LANGUAGE_TYPE_INTERFACE)->langcode);
 
     // Because pages are highly dynamic, set the last-modified time to now
     // since the page is in fact being regenerated right now.

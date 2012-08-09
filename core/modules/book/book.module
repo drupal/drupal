@@ -1224,7 +1224,7 @@ function book_toc($bid, $depth_limit, $exclude = array()) {
  */
 function template_preprocess_book_export_html(&$variables) {
   global $base_url;
-  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
   $variables['title'] = check_plain($variables['title']);
   $variables['base_url'] = $base_url;

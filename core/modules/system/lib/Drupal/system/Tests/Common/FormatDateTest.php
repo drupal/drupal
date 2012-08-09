@@ -72,7 +72,7 @@ class FormatDateTest extends WebTestBase {
   function testFormatDate() {
     global $user;
 
-    $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
     $timestamp = strtotime('2007-03-26T00:00:00+00:00');
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', t('Test all parameters.'));

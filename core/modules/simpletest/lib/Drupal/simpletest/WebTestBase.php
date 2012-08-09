@@ -579,7 +579,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function setUp() {
     global $user, $conf;
-    $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
     // Create the database prefix for this test.
     $this->prepareDatabasePrefix();

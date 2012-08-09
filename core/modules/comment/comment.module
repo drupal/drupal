@@ -959,7 +959,7 @@ function comment_prepare_thread(&$comments) {
  */
 function comment_view(Comment $comment, Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = language_manager(LANGUAGE_TYPE_CONTENT)->langcode;
+    $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Populate $comment->content with a render() array.
@@ -1025,7 +1025,7 @@ function comment_view(Comment $comment, Node $node, $view_mode = 'full', $langco
  */
 function comment_build_content(Comment $comment, Node $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = language_manager(LANGUAGE_TYPE_CONTENT)->langcode;
+    $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Remove previously built content, if exists.
@@ -1683,7 +1683,7 @@ function comment_forms() {
  */
 function comment_form($form, &$form_state, Comment $comment) {
   global $user;
-  $language_content = language_manager(LANGUAGE_TYPE_CONTENT);
+  $language_content = language(LANGUAGE_TYPE_CONTENT);
 
   // During initial form build, add the comment entity to the form state for
   // use during form building and processing. During a rebuild, use what is in

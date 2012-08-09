@@ -222,7 +222,7 @@ class CascadingStylesheetsTest extends WebTestBase {
    */
   function testAlter() {
     // Switch the language to a right to left language and add system.base.css.
-    $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
     $language_interface->direction = LANGUAGE_RTL;
     $path = drupal_get_path('module', 'system');
     drupal_add_css($path . '/system.base.css');

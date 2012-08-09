@@ -258,7 +258,7 @@ function field_valid_language($langcode, $default = TRUE) {
   if (in_array($langcode, $languages)) {
     return $langcode;
   }
-  return $default ? language_default()->langcode : language_manager(LANGUAGE_TYPE_CONTENT)->langcode;
+  return $default ? language_default()->langcode : language(LANGUAGE_TYPE_CONTENT)->langcode;
 }
 
 /**

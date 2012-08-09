@@ -52,7 +52,7 @@ const LANGUAGE_NEGOTIATION_URL_DOMAIN = 1;
  *   The current interface language code.
  */
 function language_from_interface() {
-  return language_manager(LANGUAGE_TYPE_INTERFACE)->langcode;
+  return language(LANGUAGE_TYPE_INTERFACE)->langcode;
 }
 
 /**
@@ -304,7 +304,7 @@ function language_url_fallback($language = NULL, $request = NULL, $language_type
     return $default->langcode;
   }
   else {
-    $langcode = language_manager($language_type)->langcode;
+    $langcode = language($language_type)->langcode;
     return $langcode;
   }
 }
@@ -335,7 +335,7 @@ function language_switcher_url($type, $path) {
  */
 function language_switcher_session($type, $path) {
   $param = variable_get('language_negotiation_session_param', 'language');
-  $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : language_manager($type)->langcode;
+  $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : language($type)->langcode;
 
   $languages = language_list();
   $links = array();
@@ -378,7 +378,7 @@ function language_url_rewrite_url(&$path, &$options) {
 
   // Language can be passed as an option, or we go for current URL language.
   if (!isset($options['language'])) {
-    $language_url = language_manager(LANGUAGE_TYPE_URL);
+    $language_url = language(LANGUAGE_TYPE_URL);
     $options['language'] = $language_url;
   }
   // We allow only enabled languages here.

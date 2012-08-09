@@ -1896,7 +1896,7 @@ function hook_custom_theme() {
  */
 function hook_watchdog(array $log_entry) {
   global $base_url;
-  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
   $severity_list = array(
     WATCHDOG_EMERGENCY     => t('Emergency'),

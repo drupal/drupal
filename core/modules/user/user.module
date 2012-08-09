@@ -710,7 +710,7 @@ function user_user_view($account) {
  */
 function user_account_form(&$form, &$form_state) {
   global $user;
-  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
   $account = $form['#user'];
   $register = ($form['#user']->uid > 0 ? FALSE : TRUE);
@@ -2374,7 +2374,7 @@ function user_view_page($account) {
  */
 function user_view($account, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = language_manager(LANGUAGE_TYPE_CONTENT)->langcode;
+    $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Retrieve all profile fields and attach to $account->content.
@@ -2410,7 +2410,7 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
  */
 function user_build_content($account, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = language_manager(LANGUAGE_TYPE_CONTENT)->langcode;
+    $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   // Remove previously built content, if exists.

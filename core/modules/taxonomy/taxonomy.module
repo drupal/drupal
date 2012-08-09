@@ -579,7 +579,7 @@ function taxonomy_term_delete_multiple(array $tids) {
  */
 function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = language_manager(LANGUAGE_TYPE_CONTENT)->langcode;
+    $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
   }
 
   field_attach_prepare_view('taxonomy_term', array($term->tid => $term), $view_mode, $langcode);

@@ -62,7 +62,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
    * Creates some terms and a node, then tests the tokens generated from them.
    */
   function testTaxonomyTokenReplacement() {
-    $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
     // Create two taxonomy terms.
     $term1 = $this->createTerm($this->vocabulary);

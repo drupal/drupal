@@ -26,7 +26,7 @@
 function hook_language_init() {
   global $conf;
 
-  switch (language_manager(LANGUAGE_TYPE_INTERFACE)->langcode) {
+  switch (language(LANGUAGE_TYPE_INTERFACE)->langcode) {
     case 'it':
       $conf['system.site']['name'] = 'Il mio sito Drupal';
       break;
@@ -52,7 +52,7 @@ function hook_language_init() {
  *   The current path.
  */
 function hook_language_switch_links_alter(array &$links, $type, $path) {
-  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
   if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language_interface->langcode])) {
     foreach ($links[$language_interface->langcode] as $link) {

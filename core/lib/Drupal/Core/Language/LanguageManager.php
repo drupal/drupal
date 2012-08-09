@@ -14,8 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * This service is dependent on the 'request' service and can therefore pass the
  * Request object to the code that deals with each particular language type.
- * This means the Request can be used directly for things like url-based language
- * negotiation.
+ * This means the Request can be used directly for things like url-based
+ * language negotiation.
  */
 class LanguageManager {
 
@@ -32,12 +32,22 @@ class LanguageManager {
     }
 
     // @todo Objectify the language system so that we don't have to do this.
-    include_once DRUPAL_ROOT . '/core/includes/language.inc';
-    $this->languages[$type] = language_types_initialize($type, $this->request);
+    if (language_multilingual()) {
+      include_once DRUPAL_ROOT . '/core/includes/language.inc';
+      $this->languages[$type] = language_types_initialize($type, $this->request);
+    }
+    else {
+      $this->languages[$type] = language_default();
+    }
     return $this->languages[$type];
   }
 
-  function reset() {
-    $this->languages = array();
+  public function reset($type = NULL) {
+    if (!isset($type)) {
+      $this->languages = array();
+    }
+    elseif (isset($this->languages[$type])) {
+      unset($this->languages[$type]);
+    }
   }
 }

@@ -82,7 +82,7 @@ function drupal_lookup_path($action, $path = '', $langcode = NULL) {
   // language. If we used a language different from the one conveyed by the
   // requested URL, we might end up being unable to check if there is a path
   // alias matching the URL path.
-  $langcode = $langcode ? $langcode : language_manager(LANGUAGE_TYPE_URL)->langcode;
+  $langcode = $langcode ? $langcode : language(LANGUAGE_TYPE_URL)->langcode;
 
   if ($action == 'wipe') {
     $cache = array();

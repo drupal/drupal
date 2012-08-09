@@ -150,7 +150,7 @@ function contact_site_form_validate($form, &$form_state) {
  */
 function contact_site_form_submit($form, &$form_state) {
   global $user;
-  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
   $values = $form_state['values'];
   $values['sender'] = $user;
@@ -292,7 +292,7 @@ function contact_personal_form($form, &$form_state, $recipient) {
  */
 function contact_personal_form_submit($form, &$form_state) {
   global $user;
-  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
   $values = $form_state['values'];
   $values['sender'] = $user;

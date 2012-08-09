@@ -104,7 +104,7 @@ function template_preprocess_search_results(&$variables) {
  * @see search-result.tpl.php
  */
 function template_preprocess_search_result(&$variables) {
-  $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
   $result = $variables['result'];
   $variables['url'] = check_url($result['link']);
