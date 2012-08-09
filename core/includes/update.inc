@@ -960,7 +960,7 @@ function update_retrieve_dependencies() {
 }
 
 /**
- * Gets the value of a variable directly from the database during the 7.x-8.x upgrade path.
+ * Gets the value of a variable from the database during 7.x-8.x upgrades.
  *
  * Use this during the 7.x-8.x upgrade path instead of variable_get().
  *
