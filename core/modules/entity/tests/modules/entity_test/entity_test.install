@@ -49,6 +49,41 @@ function entity_test_schema() {
         'length' => 128,
         'not null' => FALSE,
       ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of the original variant of this test entity.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'uuid' => array('uuid'),
+    ),
+  );
+  $schema['entity_test_property_data'] = array(
+    'description' => 'Stores entity_test item properties.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The {entity_test}.id of the test entity.',
+      ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this variant of this test entity.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'default_langcode' => array(
+        'description' => 'Boolean indicating whether the current variant is in the original entity language.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
       'name' => array(
         'description' => 'The name of the test entity.',
         'type' => 'varchar',
@@ -63,24 +98,15 @@ function entity_test_schema() {
         'default' => NULL,
         'description' => "The {users}.uid of the associated user.",
       ),
-      'langcode' => array(
-        'description' => 'The {language}.langcode of the test entity.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
     ),
     'indexes' => array(
       'uid' => array('uid'),
     ),
     'foreign keys' => array(
       'uid' => array('users' => 'uid'),
+      'id' => array('entity_test' => 'id'),
     ),
-    'primary key' => array('id'),
-    'unique keys' => array(
-      'uuid' => array('uuid'),
-    ),
+    'primary key' => array('id', 'langcode'),
   );
   return $schema;
 }
