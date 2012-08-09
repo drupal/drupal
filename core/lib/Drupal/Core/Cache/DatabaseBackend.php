@@ -53,9 +53,6 @@ class DatabaseBackend implements CacheBackendInterface {
    */
   function getMultiple(&$cids) {
     try {
-      // Garbage collection necessary when enforcing a minimum cache lifetime.
-      $this->garbageCollection($this->bin);
-
       // When serving cached pages, the overhead of using db_select() was found
       // to add around 30% overhead to the request. Since $this->bin is a
       // variable, this means the call to db_query() here uses a concatenated
@@ -109,8 +106,7 @@ class DatabaseBackend implements CacheBackendInterface {
       }
     }
 
-    // If the data is permanent or not subject to a minimum cache lifetime,
-    // unserialize and return the cached data.
+    // Unserialize and return the cached data.
     if ($cache->serialized) {
       $cache->data = unserialize($cache->data);
     }
