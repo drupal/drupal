@@ -17,8 +17,8 @@ include_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
 
 if (config('statistics.settings')->get('count_content_views')) {
-  $nid = $_POST['nid'];
-  if (is_numeric($nid)) {
+  $nid = filter_input(INPUT_POST, 'nid', FILTER_VALIDATE_INT);
+  if ($nid) {
     db_merge('node_counter')
       ->key(array('nid' => $nid))
       ->fields(array(
