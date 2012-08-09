@@ -17,10 +17,6 @@ function book_install() {
  * Implements hook_uninstall().
  */
 function book_uninstall() {
-  variable_del('book_allowed_types');
-  variable_del('book_child_type');
-  variable_del('book_block_mode');
-
   // Delete menu links.
   db_delete('menu_links')
     ->condition('module', 'book')
@@ -48,9 +44,6 @@ function _book_install_type_create() {
   node_add_body_field($book_node_type);
   // Default to not promoted.
   variable_set('node_options_book', array('status'));
-  // Use this default type for adding content to books.
-  variable_set('book_allowed_types', array('book'));
-  variable_set('book_child_type', 'book');
 }
 
 /**
@@ -92,4 +85,17 @@ function book_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Move book settings from variables to config.
+ *
+ * @ingroup config_upgrade
+ */
+function book_update_8000() {
+  update_variables_to_config('book.settings', array(
+    'book_allowed_types' => 'allowed_types',
+    'book_child_type' => 'child_type',
+    'book_block_mode' => 'block.navigation.mode',
+  ));
 }
