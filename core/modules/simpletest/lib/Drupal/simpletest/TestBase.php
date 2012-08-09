@@ -529,10 +529,8 @@ abstract class TestBase {
    *   methods during debugging.
    */
   public function run(array $methods = array()) {
-    $simpletest_config = config('simpletest.settings');
-
     $class = get_class($this);
-    if ($simpletest_config->get('verbose')) {
+    if (variable_get('simpletest_verbose', TRUE)) {
       // Initialize verbose debugging.
       $this->verbose = TRUE;
       $this->verboseDirectory = variable_get('file_public_path', conf_path() . '/files') . '/simpletest/verbose';
@@ -543,15 +541,12 @@ abstract class TestBase {
     }
     // HTTP auth settings (<username>:<password>) for the simpletest browser
     // when sending requests to the test site.
-    $this->httpauth_method = (int) $simpletest_config->get('httpauth.method');
-    $username = $simpletest_config->get('httpauth.username');
-    $password = $simpletest_config->get('httpauth.password');
-    if (!empty($username) && !empty($password)) {
+    $this->httpauth_method = variable_get('simpletest_httpauth_method', CURLAUTH_BASIC);
+    $username = variable_get('simpletest_httpauth_username', NULL);
+    $password = variable_get('simpletest_httpauth_password', NULL);
+    if ($username && $password) {
       $this->httpauth_credentials = $username . ':' . $password;
     }
-
-    // Maximum redirects setting for the simpletest browser.
-    $this->maximumRedirects = $simpletest_config->get('maximum_redirects');
 
     set_error_handler(array($this, 'errorHandler'));
     // Iterate through all the methods in this class, unless a specific list of

@@ -213,9 +213,7 @@ class EntityFieldQuery {
    *
    * 'bundle', 'revision_id' and 'entity_id' have no such restrictions.
    *
-   * Note: The "comment" and "taxonomy_term" entity types don't support bundle
-   * conditions. For "taxonomy_term", propertyCondition('vid') can be used
-   * instead.
+   * Note: The "comment" entity type does not support bundle conditions.
    *
    * @param $name
    *   'entity_type', 'bundle', 'revision_id' or 'entity_id'.

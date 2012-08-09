@@ -63,6 +63,17 @@ class VocabularyTest extends TaxonomyTestBase {
     $edit['machine_name'] = '!&^%';
     $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
     $this->assertText(t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+
+    // Ensure that vocabulary titles are escaped properly.
+    $edit = array();
+    $edit['name'] = 'Don\'t Panic';
+    $edit['description'] = $this->randomName();
+    $edit['machine_name'] = 'don_t_panic';
+    $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
+
+    $site_name = config('system.site')->get('name');
+    $this->assertTitle(t('Don\'t Panic | @site-name', array('@site-name' => $site_name)));
+    $this->assertNoTitle(t('Don&#039;t Panic | @site-name', array('@site-name' => $site_name)));
   }
 
   /**

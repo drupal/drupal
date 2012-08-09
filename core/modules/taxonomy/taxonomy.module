@@ -356,7 +356,7 @@ function taxonomy_menu() {
   );
 
   $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name'] = array(
-    'title callback' => 'taxonomy_admin_vocabulary_title_callback',
+    'title callback' => 'entity_page_label',
     'title arguments' => array(3),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_overview_terms', 3),
@@ -425,13 +425,6 @@ function taxonomy_term_access($op, $term) {
   }
 
   return user_access("$op terms in $term->vid") || user_access('administer taxonomy');
-}
-
-/**
- * Return the vocabulary name given the vocabulary object.
- */
-function taxonomy_admin_vocabulary_title_callback(Vocabulary $vocabulary) {
-  return $vocabulary->name;
 }
 
 /**
@@ -1680,7 +1673,7 @@ function taxonomy_taxonomy_term_delete(Term $term) {
  * Converts EntityFieldQuery instances on taxonomy terms that have an entity
  * condition on term bundles (vocabulary machine names). Since the vocabulary
  * machine name is not present in the {taxonomy_term_data} table itself, we have
- * to convert the bundle condition into a proprety condition of vocabulary IDs
+ * to convert the bundle condition into a property condition of vocabulary IDs
  * to match against {taxonomy_term_data}.vid.
  */
 function taxonomy_entity_query_alter($query) {
