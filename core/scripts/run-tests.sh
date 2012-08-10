@@ -82,7 +82,9 @@ if ($args['xml']) {
 }
 
 // Clean up all test results.
-simpletest_clean_results_table();
+if (!$args['keep-results']) {
+  simpletest_clean_results_table();
+}
 
 // Test complete, exit.
 exit;
@@ -348,7 +350,9 @@ function simpletest_script_execute_batch($test_classes) {
           echo 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').' . "\n";
         }
         // Free-up space by removing any potentially created resources.
-        simpletest_script_cleanup($child['test_id'], $child['class'], $status['exitcode']);
+        if (!$args['keep-results']) {
+          simpletest_script_cleanup($child['test_id'], $child['class'], $status['exitcode']);
+        }
 
         // Remove this child.
         unset($children[$cid]);
