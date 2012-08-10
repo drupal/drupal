@@ -39,7 +39,7 @@ class views_plugin_localization_core extends views_plugin_localization {
    *   The input format of the string. This is optional.
    */
   function save_string($string, $keys = array(), $format = '') {
-    $language_interface = language_manager(LANGUAGE_TYPE_INTERFACE);
+    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
     // If the current language is 'en', we need to reset the language
     // in order to trigger an update.

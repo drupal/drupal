@@ -283,7 +283,7 @@ class views_plugin_cache extends views_plugin {
         'build_info' => $build_info,
         'roles' => array_keys($user->roles),
         'super-user' => $user->uid == 1, // special caching for super user.
-        'language' => language_manager(LANGUAGE_TYPE_INTERFACE)->langcode,
+        'language' => language(LANGUAGE_TYPE_INTERFACE)->langcode,
         'base_url' => $GLOBALS['base_url'],
       );
       foreach (array('exposed_info', 'page', 'sort', 'order', 'items_per_page', 'offset') as $key) {
@@ -306,7 +306,7 @@ class views_plugin_cache extends views_plugin {
         'roles' => array_keys($user->roles),
         'super-user' => $user->uid == 1, // special caching for super user.
         'theme' => $GLOBALS['theme'],
-        'language' => language_manager(LANGUAGE_TYPE_INTERFACE)->langcode,
+        'language' => language(LANGUAGE_TYPE_INTERFACE)->langcode,
         'base_url' => $GLOBALS['base_url'],
       );
 

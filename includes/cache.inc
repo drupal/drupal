@@ -132,7 +132,7 @@ function views_cache_set($cid, $data, $use_language = FALSE) {
     return;
   }
   if ($use_language) {
-    $cid .= ':' . language_manager(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $cid .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
 
   cache('cache_views')->set($cid, $data);
@@ -156,7 +156,7 @@ function views_cache_get($cid, $use_language = FALSE) {
     return FALSE;
   }
   if ($use_language) {
-    $cid .= ':' . language_manager(LANGUAGE_TYPE_INTERFACE)->langcode;
+    $cid .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
 
   return cache('cache_views')->get($cid);

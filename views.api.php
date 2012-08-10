@@ -790,7 +790,7 @@ function hook_views_query_substitutions($view) {
   return array(
     '***CURRENT_VERSION***' => VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
-    '***CURRENT_LANGUAGE***' => language_manager(LANGUAGE_TYPE_CONTENT)->langcode,
+    '***CURRENT_LANGUAGE***' => language(LANGUAGE_TYPE_CONTENT)->langcode,
     '***DEFAULT_LANGUAGE***' => language_default()->langcode,
   );
 }
