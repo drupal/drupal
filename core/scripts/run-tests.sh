@@ -139,6 +139,11 @@ All arguments are long options.
 
   --verbose   Output detailed assertion messages in addition to summary.
 
+  --keep-results
+
+              Keeps detailed assertion results (in the database) after tests
+              have completed. By default, assertion results are cleared.
+
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
@@ -182,6 +187,7 @@ function simpletest_script_parse_args() {
     'file' => FALSE,
     'color' => FALSE,
     'verbose' => FALSE,
+    'keep-results' => FALSE,
     'test_names' => array(),
     // Used internally.
     'test-id' => 0,
@@ -355,11 +361,17 @@ function simpletest_script_execute_batch($test_classes) {
  * Bootstrap Drupal and run a single test.
  */
 function simpletest_script_run_one_test($test_id, $test_class) {
+  global $args, $conf;
+
   try {
     // Bootstrap Drupal.
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
     simpletest_classloader_register();
+
+    // Override configuration according to command line parameters.
+    $conf['simpletest.settings']['verbose'] = $args['verbose'];
+    $conf['simpletest.settings']['clear_results'] = !$args['keep-results'];
 
     $test = new $test_class($test_id);
     $test->run();
@@ -392,11 +404,17 @@ function simpletest_script_run_one_test($test_id, $test_class) {
 function simpletest_script_command($test_id, $test_class) {
   global $args, $php;
 
-  $command = escapeshellarg($php) . ' ' . escapeshellarg('./core/scripts/' . $args['script']) . ' --url ' . escapeshellarg($args['url']);
-  if ($args['color']) {
-    $command .= ' --color';
+  $command = escapeshellarg($php) . ' ' . escapeshellarg('./core/scripts/' . $args['script']);
+  $command .= ' --url ' . escapeshellarg($args['url']);
+  $command .= ' --php ' . escapeshellarg($php);
+  $command .= " --test-id $test_id";
+  foreach (array('verbose', 'keep-results', 'color') as $arg) {
+    if ($args[$arg]) {
+      $command .= ' --' . $arg;
+    }
   }
-  $command .= " --php " . escapeshellarg($php) . " --test-id $test_id --execute-test " . escapeshellarg($test_class);
+  // --execute-test and class name needs to come last.
+  $command .= ' --execute-test ' . escapeshellarg($test_class);
   return $command;
 }
 
