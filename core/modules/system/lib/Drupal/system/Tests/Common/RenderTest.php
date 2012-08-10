@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests drupal_render().
  */
 class RenderTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('common_test');
+
   public static function getInfo() {
     return array(
       'name' => 'drupal_render()',
       'description' => 'Performs functional tests on drupal_render().',
       'group' => 'Common',
     );
-  }
-
-  function setUp() {
-    parent::setUp('common_test');
   }
 
   /**

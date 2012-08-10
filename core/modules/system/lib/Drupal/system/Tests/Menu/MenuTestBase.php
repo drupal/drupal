@@ -10,14 +10,6 @@ namespace Drupal\system\Tests\Menu;
 use Drupal\simpletest\WebTestBase;
 
 abstract class MenuTestBase extends WebTestBase {
-  function setUp() {
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    parent::setUp($modules);
-  }
-
   /**
    * Assert that a given path shows certain breadcrumb links.
    *

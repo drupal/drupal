@@ -11,6 +11,14 @@ namespace Drupal\search\Tests;
  * Test node search with multiple languages.
  */
 class SearchLanguageTest extends SearchTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language');
+
   public static function getInfo() {
     return array(
       'name' => 'Search language selection',
@@ -20,7 +28,7 @@ class SearchLanguageTest extends SearchTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('language'));
+    parent::setUp();
 
     // Create and login user.
     $test_user = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search', 'administer nodes', 'administer languages', 'access administration pages'));

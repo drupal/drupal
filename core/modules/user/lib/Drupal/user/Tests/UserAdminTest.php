@@ -10,16 +10,20 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 class UserAdminTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('taxonomy');
+
   public static function getInfo() {
     return array(
       'name' => 'User administration',
       'description' => 'Test user administration page functionality.',
       'group' => 'User'
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('taxonomy'));
   }
 
   /**

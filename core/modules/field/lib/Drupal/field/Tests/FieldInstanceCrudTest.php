@@ -10,6 +10,14 @@ namespace Drupal\field\Tests;
 use Drupal\field\FieldException;
 
 class FieldInstanceCrudTest extends FieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_test');
+
   protected $field;
 
   public static function getInfo() {
@@ -21,7 +29,7 @@ class FieldInstanceCrudTest extends FieldTestBase {
   }
 
   function setUp() {
-    parent::setUp('field_test');
+    parent::setUp();
 
     $this->field = array(
       'field_name' => drupal_strtolower($this->randomName()),

@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class NodeAccessPagerTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node_access_test', 'comment', 'forum');
+
   public static function getInfo() {
     return array(
       'name' => 'Node access pagination',
@@ -23,7 +30,8 @@ class NodeAccessPagerTest extends WebTestBase {
   }
 
   public function setUp() {
-    parent::setUp('node_access_test', 'comment', 'forum');
+    parent::setUp();
+
     node_access_rebuild();
     $this->web_user = $this->drupalCreateUser(array('access content', 'access comments', 'node test view'));
   }

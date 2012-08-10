@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Test blocks correctly initialized when picking a new default theme.
  */
 class NewDefaultThemeBlocksTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
   public static function getInfo() {
     return array(
       'name' => 'New default theme blocks',
       'description' => 'Checks that the new default theme gets blocks.',
       'group' => 'Block',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('block'));
   }
 
   /**

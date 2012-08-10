@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests custom access denied functionality.
  */
 class AccessDeniedTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
   protected $admin_user;
 
   public static function getInfo() {
@@ -24,7 +32,7 @@ class AccessDeniedTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block'));
+    parent::setUp();
 
     // Create an administrative user.
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration', 'administer blocks'));

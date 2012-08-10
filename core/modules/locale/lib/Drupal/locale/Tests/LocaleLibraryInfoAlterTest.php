@@ -14,16 +14,20 @@ use Drupal\simpletest\WebTestBase;
  * Currently, only the jQuery datepicker is localized using Drupal translations.
  */
 class LocaleLibraryInfoAlterTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('locale');
+
   public static function getInfo() {
     return array(
       'name' => 'Javascript library localisation',
       'description' => 'Tests localization of the JavaScript libraries.',
       'group' => 'Locale',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('locale'));
   }
 
   /**

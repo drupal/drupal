@@ -12,6 +12,13 @@ namespace Drupal\node\Tests;
  */
 class NodeAccessFieldTest extends NodeTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node_access_test', 'field_ui');
+
   public static function getInfo() {
     return array(
       'name' => 'Node access and fields',
@@ -21,7 +28,8 @@ class NodeAccessFieldTest extends NodeTestBase {
   }
 
   public function setUp() {
-    parent::setUp('node_access_test', 'field_ui');
+    parent::setUp();
+
     node_access_rebuild();
 
     // Create some users.

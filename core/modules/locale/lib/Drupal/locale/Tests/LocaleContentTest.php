@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Functional tests for multilingual support on nodes.
  */
 class LocaleContentTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('locale');
+
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -21,10 +29,6 @@ class LocaleContentTest extends WebTestBase {
       'description' => 'Checks you can enable multilingual support on content types and configure a language for a node.',
       'group' => 'Locale',
     );
-  }
-
-  function setUp() {
-    parent::setUp('locale');
   }
 
   /**

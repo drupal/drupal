@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Functional tests for language configuration's effect on negotiation setup.
  */
 class LanguageConfigurationTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language');
+
   public static function getInfo() {
     return array(
       'name' => 'Language negotiation autoconfiguration',
       'description' => 'Adds and configures languages to check negotiation changes.',
       'group' => 'Language',
     );
-  }
-
-  function setUp() {
-    parent::setUp('language');
   }
 
   /**

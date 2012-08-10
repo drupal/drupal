@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class UserValidateCurrentPassCustomFormTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('user_form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'User validate current pass custom form',
@@ -33,7 +40,8 @@ class UserValidateCurrentPassCustomFormTest extends WebTestBase {
   protected $adminUser;
 
   function setUp() {
-    parent::setUp('user_form_test');
+    parent::setUp();
+
     // Create two users
     $this->accessUser = $this->drupalCreateUser(array('access content'));
     $this->adminUser = $this->drupalCreateUser(array('administer users'));

@@ -11,19 +11,20 @@ namespace Drupal\node\Tests;
  * Test case to verify hook_node_access_records functionality.
  */
 class NodeAccessRecordsTest extends NodeTestBase {
+
+  /**
+   * Enable a module that implements node access API hooks and alter hook.
+   *
+   * @var array
+   */
+  public static $modules = array('node_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Node access records',
       'description' => 'Test hook_node_access_records when acquiring grants.',
       'group' => 'Node',
     );
-  }
-
-  function setUp() {
-    // Enable dummy module that implements hook_node_grants(),
-    // hook_node_access_records(), hook_node_grants_alter() and
-    // hook_node_access_records_alter().
-    parent::setUp('node_test');
   }
 
   /**

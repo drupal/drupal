@@ -16,10 +16,18 @@ use Drupal\simpletest\WebTestBase;
  * Helper class for module test cases.
  */
 abstract class ModuleTestBase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system_test');
+
   protected $admin_user;
 
   function setUp() {
-    parent::setUp('system_test');
+    parent::setUp();
 
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->drupalLogin($this->admin_user);

@@ -9,13 +9,19 @@ namespace Drupal\entity\Tests;
 
 use Exception;
 use InvalidArgumentException;
-
 use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests entity translation.
  */
 class EntityTranslationTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('entity_test', 'locale');
 
   protected $langcodes;
 
@@ -28,7 +34,7 @@ class EntityTranslationTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('entity_test', 'locale');
+    parent::setUp();
     // Enable translations for the test entity type.
     variable_set('entity_test_translation', TRUE);
 

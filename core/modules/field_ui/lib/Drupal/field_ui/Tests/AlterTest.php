@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests custom widget hooks and callbacks on the field administration pages.
  */
 class AlterTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_ui', 'field_test', 'text', 'options');
+
   public static function getInfo() {
     return array(
       'name' => 'Widget customization',
@@ -22,7 +30,7 @@ class AlterTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('field_ui', 'field_test', 'text', 'options'));
+    parent::setUp();
 
     // Create Article node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));

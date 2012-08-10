@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Functional test for initialization of the theme system in hook_init().
  */
 class HookInitTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('theme_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Theme initialization in hook_init()',
       'description' => 'Tests that the theme system can be correctly initialized in hook_init().',
       'group' => 'Theme',
     );
-  }
-
-  function setUp() {
-    parent::setUp('theme_test');
   }
 
   /**

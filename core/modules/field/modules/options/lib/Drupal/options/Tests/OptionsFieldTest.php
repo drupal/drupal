@@ -14,6 +14,14 @@ use Drupal\field\Tests\FieldTestBase;
  * Tests for the 'Options' field types.
  */
 class OptionsFieldTest extends FieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('options', 'field_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Options field',
@@ -23,7 +31,7 @@ class OptionsFieldTest extends FieldTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('options', 'field_test'));
+    parent::setUp();
 
     $this->field_name = 'test_options';
     $this->field = array(

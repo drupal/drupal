@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests for the update system functionality.
  */
 class UpdateScriptTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('update_script_test', 'dblog');
+
   private $update_url;
   private $update_user;
 
@@ -25,7 +33,7 @@ class UpdateScriptTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('update_script_test', 'dblog'));
+    parent::setUp();
     $this->update_url = $GLOBALS['base_url'] . '/core/update.php';
     $this->update_user = $this->drupalCreateUser(array('administer software updates'));
   }

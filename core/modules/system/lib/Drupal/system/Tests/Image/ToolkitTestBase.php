@@ -14,12 +14,20 @@ use stdClass;
  * Base class for image manipulation testing.
  */
 abstract class ToolkitTestBase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('image_test');
+
   protected $toolkit;
   protected $file;
   protected $image;
 
   function setUp() {
-    parent::setUp('image_test');
+    parent::setUp();
 
     // Use the image_test.module's test toolkit.
     $this->toolkit = 'test';

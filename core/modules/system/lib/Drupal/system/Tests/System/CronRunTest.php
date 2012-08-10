@@ -10,16 +10,20 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 class CronRunTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('common_test', 'common_test_cron_helper');
+
   public static function getInfo() {
     return array(
       'name' => 'Cron run',
       'description' => 'Test cron run.',
       'group' => 'System',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('common_test', 'common_test_cron_helper'));
   }
 
   /**

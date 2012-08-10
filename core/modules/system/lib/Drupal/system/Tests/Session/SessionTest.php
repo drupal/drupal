@@ -10,16 +10,20 @@ namespace Drupal\system\Tests\Session;
 use Drupal\simpletest\WebTestBase;
 
 class SessionTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('session_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Session tests',
       'description' => 'Drupal session handling tests.',
       'group' => 'Session'
     );
-  }
-
-  function setUp() {
-    parent::setUp('session_test');
   }
 
   /**

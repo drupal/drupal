@@ -13,6 +13,14 @@ use Drupal\field\Tests\FieldTestBase;
  * Options module UI tests.
  */
 class OptionsFieldUITest extends FieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('options', 'field_test', 'taxonomy', 'field_ui');
+
   public static function getInfo() {
     return array(
       'name' => 'Options field UI',
@@ -22,7 +30,7 @@ class OptionsFieldUITest extends FieldTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('options', 'field_test', 'taxonomy', 'field_ui'));
+    parent::setUp();
 
     // Create test user.
     $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));

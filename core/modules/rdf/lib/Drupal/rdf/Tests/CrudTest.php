@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests the RDF mapping CRUD functions.
  */
 class CrudTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('rdf', 'rdf_test');
+
   public static function getInfo() {
     return array(
       'name' => 'RDF mapping CRUD functions',
       'description' => 'Test the RDF mapping CRUD functions.',
       'group' => 'RDF',
     );
-  }
-
-  function setUp() {
-    parent::setUp('rdf', 'rdf_test');
   }
 
   /**

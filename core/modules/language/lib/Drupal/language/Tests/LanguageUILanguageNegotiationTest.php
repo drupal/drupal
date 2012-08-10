@@ -36,6 +36,18 @@ use Drupal\simpletest\WebTestBase;
  *          UI language in Chinese
  */
 class LanguageUILanguageNegotiationTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * We marginally use interface translation functionality here, so need to use
+   * the locale module instead of language only, but the 90% of the test is
+   * about the negotiation process which is solely in language module.
+   *
+   * @var array
+   */
+  public static $modules = array('locale', 'language_test', 'block');
+
   public static function getInfo() {
     return array(
       'name' => 'UI language negotiation',
@@ -45,10 +57,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   }
 
   function setUp() {
-    // We marginally use interface translation functionality here, so need to
-    // use the locale module instead of language only, but the 90% of the test
-    // is about the negotiation process which is solely in language module.
-    parent::setUp(array('locale', 'language_test', 'block'));
+    parent::setUp();
     require_once DRUPAL_ROOT . '/core/includes/language.inc';
     $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages', 'administer blocks'));
     $this->drupalLogin($admin_user);

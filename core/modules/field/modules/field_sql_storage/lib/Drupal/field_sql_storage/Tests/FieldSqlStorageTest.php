@@ -19,6 +19,14 @@ use PDO;
  * for the Field Strage API.
  */
 class FieldSqlStorageTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_sql_storage', 'field', 'field_test', 'text', 'number');
+
   public static function getInfo() {
     return array(
       'name'  => 'Field SQL Storage tests',
@@ -28,7 +36,8 @@ class FieldSqlStorageTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('field_sql_storage', 'field', 'field_test', 'text', 'number');
+    parent::setUp();
+
     $this->field_name = strtolower($this->randomName());
     $this->field = array('field_name' => $this->field_name, 'type' => 'test_field', 'cardinality' => 4);
     $this->field = field_create_field($this->field);

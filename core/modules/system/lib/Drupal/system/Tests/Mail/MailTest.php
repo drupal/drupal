@@ -14,6 +14,14 @@ use Drupal\simpletest\WebTestBase;
  * Defines a mail class used for testing.
  */
 class MailTest extends WebTestBase implements MailInterface {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('simpletest');
+
   /**
    * The most recent message that was sent through the test case.
    *
@@ -31,7 +39,7 @@ class MailTest extends WebTestBase implements MailInterface {
   }
 
   function setUp() {
-    parent::setUp(array('simpletest'));
+    parent::setUp();
 
     // Set MailTestCase (i.e. this class) as the SMTP library
     variable_set('mail_system', array('default-system' => 'Drupal\system\Tests\Mail\MailTest'));

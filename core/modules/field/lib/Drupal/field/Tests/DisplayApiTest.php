@@ -8,6 +8,14 @@
 namespace Drupal\field\Tests;
 
 class DisplayApiTest extends FieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Field Display API tests',
@@ -17,7 +25,7 @@ class DisplayApiTest extends FieldTestBase {
   }
 
   function setUp() {
-    parent::setUp('field_test');
+    parent::setUp();
 
     // Create a field and instance.
     $this->field_name = 'test_field';

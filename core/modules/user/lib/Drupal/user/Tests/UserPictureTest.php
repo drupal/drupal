@@ -10,6 +10,14 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 class UserPictureTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('image');
+
   protected $user;
   protected $_directory_test;
 
@@ -22,7 +30,8 @@ class UserPictureTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('image'));
+    parent::setUp();
+
     // Enable user pictures.
     variable_set('user_pictures', 1);
 

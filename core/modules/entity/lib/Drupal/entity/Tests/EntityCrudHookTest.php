@@ -23,6 +23,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class EntityCrudHookTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('entity_crud_hook_test', 'taxonomy', 'comment');
+
   protected $ids = array();
 
   public static function getInfo() {
@@ -31,10 +38,6 @@ class EntityCrudHookTest extends WebTestBase {
       'description' => 'Tests the invocation of hooks when inserting, loading, updating or deleting an entity.',
       'group' => 'Entity API',
     );
-  }
-
-  public function setUp() {
-    parent::setUp('entity_crud_hook_test', 'taxonomy', 'comment');
   }
 
   /**

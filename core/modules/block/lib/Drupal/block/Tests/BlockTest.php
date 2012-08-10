@@ -10,6 +10,14 @@ namespace Drupal\block\Tests;
 use Drupal\simpletest\WebTestBase;
 
 class BlockTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
   protected $regions;
   protected $admin_user;
 
@@ -22,7 +30,7 @@ class BlockTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block'));
+    parent::setUp();
 
     // Create Full HTML text format.
     $full_html_format = array(

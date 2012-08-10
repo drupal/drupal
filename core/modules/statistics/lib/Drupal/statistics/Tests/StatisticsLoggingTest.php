@@ -17,6 +17,14 @@ use PDO;
  * want to test requests from an anonymous user.
  */
 class StatisticsLoggingTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('statistics', 'block');
+
   public static function getInfo() {
     return array(
       'name' => 'Statistics logging tests',
@@ -26,7 +34,7 @@ class StatisticsLoggingTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('statistics', 'block'));
+    parent::setUp();
 
     // Create Basic page node type.
     if ($this->profile != 'standard') {

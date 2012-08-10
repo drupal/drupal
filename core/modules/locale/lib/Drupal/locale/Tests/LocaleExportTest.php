@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests for the export of translation files.
  */
 class LocaleExportTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('locale');
+
   public static function getInfo() {
     return array(
       'name' => 'Translation export',
@@ -27,7 +35,7 @@ class LocaleExportTest extends WebTestBase {
   protected $admin_user = NULL;
 
   function setUp() {
-    parent::setUp('locale');
+    parent::setUp();
 
     $this->admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
     $this->drupalLogin($this->admin_user);

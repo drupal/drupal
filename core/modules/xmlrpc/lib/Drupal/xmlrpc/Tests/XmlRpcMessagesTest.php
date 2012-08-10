@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * XML-RPC message and alteration tests.
  */
 class XmlRpcMessagesTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('xmlrpc', 'xmlrpc_test');
+
   public static function getInfo() {
     return array(
       'name'  => 'XML-RPC message and alteration',
       'description' => 'Test large messages and method alterations.',
       'group' => 'XML-RPC',
     );
-  }
-
-  function setUp() {
-    parent::setUp('xmlrpc', 'xmlrpc_test');
   }
 
   /**

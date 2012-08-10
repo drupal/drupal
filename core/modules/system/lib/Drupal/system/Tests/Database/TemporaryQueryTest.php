@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Temporary query tests.
  */
 class TemporaryQueryTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('database_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Temporary query test',
       'description' => 'Test the temporary query functionality.',
       'group' => 'Database',
     );
-  }
-
-  function setUp() {
-    parent::setUp('database_test');
   }
 
   /**

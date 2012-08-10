@@ -634,15 +634,9 @@ abstract class WebTestBase extends TestBase {
     // Install the modules specified by the testing profile.
     module_enable($profile_details['dependencies'], FALSE);
 
-    // Install modules needed for this test. This could have been passed in as
-    // either a single array argument or a variable number of string arguments.
-    // @todo Remove this after fully converting to static $modules property.
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
     // Collect modules to install.
     $class = get_class($this);
+    $modules = array();
     while ($class) {
       if (property_exists($class, 'modules')) {
         $modules = array_merge($modules, $class::$modules);

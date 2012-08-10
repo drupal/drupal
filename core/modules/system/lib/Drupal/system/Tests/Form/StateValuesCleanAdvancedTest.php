@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests $form_state clearance with form elements having buttons.
  */
 class StateValuesCleanAdvancedTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('file', 'form_test');
+
   /**
    * An image file path for uploading.
    */
@@ -24,10 +32,6 @@ class StateValuesCleanAdvancedTest extends WebTestBase {
       'description' => 'Test proper removal of submitted form values using form_state_values_clean() when having forms with elements containing buttons like "managed_file".',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('file', 'form_test'));
   }
 
   /**

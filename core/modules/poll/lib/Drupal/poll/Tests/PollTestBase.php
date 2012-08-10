@@ -10,15 +10,13 @@ namespace Drupal\poll\Tests;
 use Drupal\simpletest\WebTestBase;
 
 abstract class PollTestBase extends WebTestBase {
-  function setUp() {
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    $modules[] = 'node';
-    $modules[] = 'poll';
-    parent::setUp($modules);
-  }
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'poll');
 
   /**
    * Creates a poll.

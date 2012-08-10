@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests error and exception handlers.
  */
 class ErrorHandlerTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('error_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Error handlers',
       'description' => 'Performs tests on the Drupal error and exception handler.',
       'group' => 'System',
     );
-  }
-
-  function setUp() {
-    parent::setUp('error_test');
   }
 
   /**

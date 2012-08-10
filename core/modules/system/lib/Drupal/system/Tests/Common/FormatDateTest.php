@@ -15,6 +15,13 @@ use Drupal\simpletest\WebTestBase;
 class FormatDateTest extends WebTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language');
+
+  /**
    * Arbitrary langcode for a custom language.
    */
   const LANGCODE = 'xx';
@@ -28,7 +35,7 @@ class FormatDateTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('language');
+    parent::setUp();
     variable_set('configurable_timezones', 1);
     variable_set('date_format_long', 'l, j. F Y - G:i');
     variable_set('date_format_medium', 'j. F Y - G:i');

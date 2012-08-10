@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class PageCacheTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'system_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Page cache test',
@@ -23,7 +30,7 @@ class PageCacheTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'system_test'));
+    parent::setUp();
 
     config('system.site')
       ->set('name', 'Drupal')

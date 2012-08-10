@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests that a block assigned to an invalid region triggers the warning.
  */
 class BlockInvalidRegionTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'block_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Blocks in invalid regions',
@@ -22,7 +30,7 @@ class BlockInvalidRegionTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block', 'block_test'));
+    parent::setUp();
     // Create an admin user.
     $admin_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages'));
     $this->drupalLogin($admin_user);

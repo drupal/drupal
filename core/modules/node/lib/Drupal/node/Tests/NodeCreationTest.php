@@ -11,6 +11,16 @@ use Drupal\Core\Database\Database;
 use Exception;
 
 class NodeCreationTest extends NodeTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * Enable dummy module that implements hook_node_insert() for exceptions.
+   *
+   * @var array
+   */
+  public static $modules = array('node_test_exception', 'dblog');
+
   public static function getInfo() {
     return array(
       'name' => 'Node creation',
@@ -20,8 +30,7 @@ class NodeCreationTest extends NodeTestBase {
   }
 
   function setUp() {
-    // Enable dummy module that implements hook_node_insert for exceptions.
-    parent::setUp(array('node_test_exception', 'dblog'));
+    parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content'));
     $this->drupalLogin($web_user);

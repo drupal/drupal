@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Test user entity callbacks.
  */
 class UserEntityCallbacksTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('user');
+
   public static function getInfo() {
     return array(
       'name' => 'User entity callback tests',
@@ -22,7 +30,7 @@ class UserEntityCallbacksTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('user');
+    parent::setUp();
 
     $this->account = $this->drupalCreateUser();
     $this->anonymous = entity_create('user', (array) drupal_anonymous_user());

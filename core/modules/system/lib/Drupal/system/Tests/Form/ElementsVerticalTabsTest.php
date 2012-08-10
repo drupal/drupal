@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class ElementsVerticalTabsTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Vertical tabs form element type test',
       'description' => 'Test the vertical_tabs element for expected behavior',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('form_test');
   }
 
   /**

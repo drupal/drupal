@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests plural format handling functionality.
  */
 class LocalePluralFormatTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('locale');
+
   public static function getInfo() {
     return array(
       'name' => 'Plural handling',
@@ -22,7 +30,7 @@ class LocalePluralFormatTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('locale');
+    parent::setUp();
 
     $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
     $this->drupalLogin($admin_user);

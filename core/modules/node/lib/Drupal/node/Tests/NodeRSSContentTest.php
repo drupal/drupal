@@ -15,6 +15,14 @@ namespace Drupal\node\Tests;
  * sitewide RSS feed at rss.xml.
  */
 class NodeRSSContentTest extends NodeTestBase {
+
+  /**
+   * Enable a module that implements hook_node_view().
+   *
+   * @var array
+   */
+  public static $modules = array('node_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Node RSS Content',
@@ -24,8 +32,7 @@ class NodeRSSContentTest extends NodeTestBase {
   }
 
   function setUp() {
-    // Enable dummy module that implements hook_node_view.
-    parent::setUp('node_test');
+    parent::setUp();
 
     // Use bypass node access permission here, because the test class uses
     // hook_grants_alter() to deny access to everyone on node_access

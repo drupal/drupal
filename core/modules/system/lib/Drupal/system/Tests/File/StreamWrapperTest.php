@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class StreamWrapperTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('file_test');
+
   protected $scheme = 'dummy';
   protected $classname = 'Drupal\file_test\DummyStreamWrapper';
 
@@ -26,7 +33,7 @@ class StreamWrapperTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('file_test');
+    parent::setUp();
     drupal_static_reset('file_get_stream_wrappers');
   }
 

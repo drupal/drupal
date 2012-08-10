@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests for the Batch API Progress page.
  */
 class PageTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('batch_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Batch progress page',
       'description' => 'Test the content of the progress page.',
       'group' => 'Batch API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('batch_test');
   }
 
   /**

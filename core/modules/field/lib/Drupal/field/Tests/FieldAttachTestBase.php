@@ -8,19 +8,16 @@
 namespace Drupal\field\Tests;
 
 abstract class FieldAttachTestBase extends FieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_test');
+
   function setUp() {
-    // Since this is a base class for many test cases, support the same
-    // flexibility that Drupal\simpletest\WebTestBase::setUp() has for the
-    // modules to be passed in as either an array or a variable number of string
-    // arguments.
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    if (!in_array('field_test', $modules)) {
-      $modules[] = 'field_test';
-    }
-    parent::setUp($modules);
+    parent::setUp();
 
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
     $this->field = array('field_name' => $this->field_name, 'type' => 'test_field', 'cardinality' => 4);

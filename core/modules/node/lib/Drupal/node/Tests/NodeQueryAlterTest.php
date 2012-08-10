@@ -14,6 +14,13 @@ use Exception;
  */
 class NodeQueryAlterTest extends NodeTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node_access_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Node query alter',
@@ -33,7 +40,8 @@ class NodeQueryAlterTest extends NodeTestBase {
   protected $noAccessUser;
 
   function setUp() {
-    parent::setUp('node_access_test');
+    parent::setUp();
+
     node_access_rebuild();
 
     // Create some content.

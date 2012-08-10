@@ -11,6 +11,14 @@ namespace Drupal\node\Tests;
  * Tests for Node Access with a non-node base table.
  */
 class NodeAccessBaseTableTest extends NodeTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node_access_test');
+
   // Requires tags taxonomy field.
   protected $profile = 'standard';
 
@@ -26,7 +34,8 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    * Enable modules and create user with specific permissions.
    */
   public function setUp() {
-    parent::setUp('node_access_test');
+    parent::setUp();
+
     node_access_rebuild();
     variable_set('node_access_test_private', TRUE);
   }

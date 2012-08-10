@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests hook_url_alter functions.
  */
 class UrlAlterFunctionalTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('path', 'forum', 'url_alter_test');
+
   public static function getInfo() {
     return array(
       'name' => t('URL altering'),
       'description' => t('Tests hook_url_inbound_alter() and hook_url_outbound_alter().'),
       'group' => t('Path API'),
     );
-  }
-
-  function setUp() {
-    parent::setUp('path', 'forum', 'url_alter_test');
   }
 
   /**

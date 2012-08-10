@@ -15,6 +15,13 @@ use Drupal\simpletest\WebTestBase;
 class SimpleTestErrorCollectorTest extends WebTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system_test', 'error_test');
+
+  /**
    * Errors triggered during the test.
    *
    * Errors are intercepted by the overriden implementation
@@ -30,10 +37,6 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
       'description' => 'Performs tests on the Simpletest error and exception collector.',
       'group' => 'Common',
     );
-  }
-
-  function setUp() {
-    parent::setUp('system_test', 'error_test');
   }
 
   /**

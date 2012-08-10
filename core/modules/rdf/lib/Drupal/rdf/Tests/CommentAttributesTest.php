@@ -14,6 +14,13 @@ use Drupal\comment\Tests\CommentTestBase;
  */
 class CommentAttributesTest extends CommentTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('comment', 'rdf', 'rdf_test');
+
   public static function getInfo() {
     return array(
       'name' => 'RDF comment mapping',
@@ -23,7 +30,7 @@ class CommentAttributesTest extends CommentTestBase {
   }
 
   public function setUp() {
-    parent::setUp('comment', 'rdf', 'rdf_test');
+    parent::setUp();
 
     $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer permissions', 'administer blocks'));
     $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'access user profiles'));

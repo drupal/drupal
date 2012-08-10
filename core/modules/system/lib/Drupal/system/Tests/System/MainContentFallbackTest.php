@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Test main content rendering fallback provided by system module.
  */
 class MainContentFallbackTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'system_test');
+
   protected $admin_user;
   protected $web_user;
 
@@ -25,7 +33,7 @@ class MainContentFallbackTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block', 'system_test'));
+    parent::setUp();
 
     // Create and login admin user.
     $this->admin_user = $this->drupalCreateUser(array(

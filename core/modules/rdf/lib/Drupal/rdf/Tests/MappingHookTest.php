@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests the RDF mapping hook.
  */
 class MappingHookTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('rdf', 'rdf_test', 'field_test');
+
   public static function getInfo() {
     return array(
       'name' => 'RDF mapping hook',
       'description' => 'Test hook_rdf_mapping().',
       'group' => 'RDF',
     );
-  }
-
-  function setUp() {
-    parent::setUp('rdf', 'rdf_test', 'field_test');
   }
 
   /**

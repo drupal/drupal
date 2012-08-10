@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class PollJsAddChoiceTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('poll');
+
   public static function getInfo() {
     return array(
       'name' => 'Poll add choice',
       'description' => 'Submits a POST request for an additional poll choice.',
       'group' => 'Poll'
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('poll'));
   }
 
   /**

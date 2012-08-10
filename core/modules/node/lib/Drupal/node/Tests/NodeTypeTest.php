@@ -11,16 +11,20 @@ namespace Drupal\node\Tests;
  * Tests related to node types.
  */
 class NodeTypeTest extends NodeTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_ui');
+
   public static function getInfo() {
     return array(
       'name' => 'Node types',
       'description' => 'Ensures that node type functions work correctly.',
       'group' => 'Node',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('field_ui'));
   }
 
   /**

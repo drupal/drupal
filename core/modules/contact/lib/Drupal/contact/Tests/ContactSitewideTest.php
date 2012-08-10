@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests the site-wide contact form.
  */
 class ContactSitewideTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('contact');
+
   public static function getInfo() {
     return array(
       'name' => 'Site-wide contact form',
       'description' => 'Tests site-wide contact form functionality.',
       'group' => 'Contact',
     );
-  }
-
-  function setUp() {
-    parent::setUp('contact');
   }
 
   /**

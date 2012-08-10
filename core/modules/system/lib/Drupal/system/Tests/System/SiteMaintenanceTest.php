@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests site maintenance functionality.
  */
 class SiteMaintenanceTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
   protected $admin_user;
 
   public static function getInfo() {
@@ -24,7 +32,7 @@ class SiteMaintenanceTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node'));
+    parent::setUp();
 
     // Configure 'node' as front page.
     config('system.site')->set('page.front', 'node')->save();

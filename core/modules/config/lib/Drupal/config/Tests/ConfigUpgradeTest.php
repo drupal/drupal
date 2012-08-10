@@ -14,6 +14,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests migration of variables into configuration objects.
  */
 class ConfigUpgradeTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('config_upgrade');
+
   protected $testContent = 'Olá, Sao Paulo!';
 
   public static function getInfo() {
@@ -25,7 +33,7 @@ class ConfigUpgradeTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('config_upgrade');
+    parent::setUp();
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
   }
 

@@ -12,9 +12,17 @@ namespace Drupal\system\Tests\File;
  * hooks.
  */
 abstract class FileHookTestBase extends FileTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('file_test');
+
   function setUp() {
     // Install file_test module
-    parent::setUp('file_test');
+    parent::setUp();
     // Clear out any hook calls.
     file_test_reset();
   }

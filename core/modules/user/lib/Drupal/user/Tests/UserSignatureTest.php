@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Test case for user signatures.
  */
 class UserSignatureTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('comment');
+
   public static function getInfo() {
     return array(
       'name' => 'User signatures',
@@ -22,7 +30,7 @@ class UserSignatureTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('comment');
+    parent::setUp();
 
     // Enable user signatures.
     variable_set('user_signatures', 1);

@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Range query tests.
  */
 class RangeQueryTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('database_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Range query test',
       'description' => 'Test the Range query functionality.',
       'group' => 'Database',
     );
-  }
-
-  function setUp() {
-    parent::setUp('database_test');
   }
 
   /**

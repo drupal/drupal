@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Test block caching.
  */
 class BlockCacheTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'block_test');
+
   protected $admin_user;
   protected $normal_user;
   protected $normal_user_alt;
@@ -26,7 +34,7 @@ class BlockCacheTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block', 'block_test'));
+    parent::setUp();
 
     // Create an admin user, log in and enable test blocks.
     $this->admin_user = $this->drupalCreateUser(array('administer blocks', 'access administration pages'));

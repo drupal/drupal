@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Test form validation handlers.
  */
 class ValidationTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Form validation handlers',
       'description' => 'Tests form processing and alteration via form validation handlers.',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('form_test');
   }
 
   /**

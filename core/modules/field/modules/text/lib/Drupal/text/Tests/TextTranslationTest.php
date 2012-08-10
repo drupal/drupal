@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests text field translation.
  */
 class TextTranslationTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('translation');
+
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -24,7 +32,7 @@ class TextTranslationTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('translation');
+    parent::setUp();
 
     $full_html_format = filter_format_load('full_html');
     $this->format = $full_html_format->format;

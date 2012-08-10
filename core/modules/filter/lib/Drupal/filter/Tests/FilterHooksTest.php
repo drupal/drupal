@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests for filter hook invocation.
  */
 class FilterHooksTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'filter_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Filter format hooks',
@@ -22,7 +30,7 @@ class FilterHooksTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('block', 'filter_test');
+    parent::setUp();
     $admin_user = $this->drupalCreateUser(array('administer filters', 'administer blocks'));
     $this->drupalLogin($admin_user);
   }

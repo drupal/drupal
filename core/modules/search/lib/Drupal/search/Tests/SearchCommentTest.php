@@ -11,6 +11,14 @@ namespace Drupal\search\Tests;
  * Test integration searching comments.
  */
 class SearchCommentTest extends SearchTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('comment');
+
   protected $profile = 'standard';
 
   protected $admin_user;
@@ -24,7 +32,7 @@ class SearchCommentTest extends SearchTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('comment'));
+    parent::setUp();
 
     // Create and log in an administrative user having access to the Full HTML
     // text format.

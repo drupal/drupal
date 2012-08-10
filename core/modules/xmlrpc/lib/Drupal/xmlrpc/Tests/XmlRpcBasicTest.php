@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class XmlRpcBasicTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('xmlrpc');
+
   public static function getInfo() {
     return array(
       'name'  => 'XML-RPC basic',
       'description'  => 'Perform basic XML-RPC tests that do not require additional callbacks.',
       'group' => 'XML-RPC',
     );
-  }
-
-  public function setUp() {
-    parent::setUp('xmlrpc');
   }
 
   /**

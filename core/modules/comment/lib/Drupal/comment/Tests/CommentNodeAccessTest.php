@@ -17,6 +17,14 @@ use Drupal\simpletest\WebTestBase;
  * access module is in use.
  */
 class CommentNodeAccessTest extends CommentTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node_access_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Comment node access',
@@ -26,13 +34,12 @@ class CommentNodeAccessTest extends CommentTestBase {
   }
 
   function setUp() {
-    WebTestBase::setUp('comment', 'search', 'node_access_test');
+    parent::setUp();
+
     node_access_rebuild();
 
-    // Create users and test node.
-    $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer blocks'));
+    // Re-create user.
     $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'edit own comments', 'node test view'));
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
   }
 
   /**

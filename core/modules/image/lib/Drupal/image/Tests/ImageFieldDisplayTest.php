@@ -11,16 +11,20 @@ namespace Drupal\image\Tests;
  * Test class to check that formatters and display settings are working.
  */
 class ImageFieldDisplayTest extends ImageFieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_ui');
+
   public static function getInfo() {
     return array(
       'name' => 'Image field display tests',
       'description' => 'Test the display of image fields.',
       'group' => 'Image',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('field_ui'));
   }
 
   /**

@@ -11,16 +11,20 @@ namespace Drupal\node\Tests;
  * Tests for the hooks invoked during node_load().
  */
 class NodeLoadHooksTest extends NodeTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Node load hooks',
       'description' => 'Test the hooks invoked when a node is being loaded.',
       'group' => 'Node',
     );
-  }
-
-  function setUp() {
-    parent::setUp('node_test');
   }
 
   /**

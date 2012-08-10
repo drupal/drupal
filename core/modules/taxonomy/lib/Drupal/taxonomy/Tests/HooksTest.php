@@ -12,6 +12,13 @@ namespace Drupal\taxonomy\Tests;
  */
 class HooksTest extends TaxonomyTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('taxonomy_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Taxonomy term hooks',
@@ -21,7 +28,8 @@ class HooksTest extends TaxonomyTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('taxonomy_test'));
+    parent::setUp();
+
     $taxonomy_admin = $this->drupalCreateUser(array('administer taxonomy'));
     $this->drupalLogin($taxonomy_admin);
   }

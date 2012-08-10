@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Test cancelling a user.
  */
 class UserCancelTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('comment');
+
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -21,10 +29,6 @@ class UserCancelTest extends WebTestBase {
       'description' => 'Ensure that account cancellation methods work as expected.',
       'group' => 'User',
     );
-  }
-
-  function setUp() {
-    parent::setUp('comment');
   }
 
   /**

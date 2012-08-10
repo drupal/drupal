@@ -11,6 +11,14 @@ namespace Drupal\system\Tests\File;
  * Deletion related tests on remote filesystems.
  */
 class RemoteFileUnmanagedDeleteRecursiveTest extends UnmanagedDeleteRecursiveTest {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('file_test');
+
   public static function getInfo() {
     $info = parent::getInfo();
     $info['group'] = 'File API (remote)';
@@ -18,7 +26,7 @@ class RemoteFileUnmanagedDeleteRecursiveTest extends UnmanagedDeleteRecursiveTes
   }
 
   function setUp() {
-    parent::setUp('file_test');
+    parent::setUp();
     variable_set('file_default_scheme', 'dummy-remote');
   }
 }

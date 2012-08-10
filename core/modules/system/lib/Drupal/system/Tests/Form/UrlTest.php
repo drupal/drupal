@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests url element.
  */
 class UrlTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   protected $profile = 'testing';
 
   public static function getInfo() {
@@ -21,10 +29,6 @@ class UrlTest extends WebTestBase {
       'description' => 'Tests the form API url element.',
       'group' => 'Form API',
     );
-  }
-
-  public function setUp() {
-    parent::setUp('form_test');
   }
 
   /**

@@ -13,13 +13,13 @@ use Drupal\simpletest\WebTestBase;
  * Base test system for AJAX tests.
  */
 abstract class AjaxTestBase extends WebTestBase {
-  function setUp() {
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    parent::setUp(array_unique(array_merge(array('ajax_test', 'ajax_forms_test'), $modules)));
-  }
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('ajax_test', 'ajax_forms_test');
 
   /**
    * Assert that a command with the required properties exists within the array of Ajax commands returned by the server.

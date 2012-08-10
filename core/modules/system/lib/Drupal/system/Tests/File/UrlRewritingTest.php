@@ -11,16 +11,20 @@ namespace Drupal\system\Tests\File;
  * Tests for file URL rewriting.
  */
 class UrlRewritingTest extends FileTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('file_test');
+
   public static function getInfo() {
     return array(
       'name' => 'File URL rewriting',
       'description' => 'Tests for file URL rewriting.',
       'group' => 'File',
     );
-  }
-
-  function setUp() {
-    parent::setUp('file_test');
   }
 
   /**

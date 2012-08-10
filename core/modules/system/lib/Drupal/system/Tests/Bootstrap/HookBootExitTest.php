@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class HookBootExitTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system_test', 'dblog');
+
   public static function getInfo() {
     return array(
       'name' => 'Boot and exit hook invocation',
       'description' => 'Test that hook_boot() and hook_exit() are called correctly.',
       'group' => 'Bootstrap',
     );
-  }
-
-  function setUp() {
-    parent::setUp('system_test', 'dblog');
   }
 
   /**

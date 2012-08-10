@@ -13,10 +13,18 @@ use Drupal\simpletest\WebTestBase;
  * Defines a base PHP test case class.
  */
 abstract class PhpTestBase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('php');
+
   protected $php_code_format;
 
   function setUp() {
-    parent::setUp('php');
+    parent::setUp();
 
     // Create Basic page node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));

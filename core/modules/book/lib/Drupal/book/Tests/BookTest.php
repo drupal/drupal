@@ -11,6 +11,14 @@ use Drupal\node\Node;
 use Drupal\simpletest\WebTestBase;
 
 class BookTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('book', 'block', 'node_access_test');
+
   protected $book;
   // $book_author is a user with permission to create and edit books.
   protected $book_author;
@@ -29,7 +37,7 @@ class BookTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('book', 'block', 'node_access_test'));
+    parent::setUp();
 
     // node_access_test requires a node_access_rebuild().
     node_access_rebuild();

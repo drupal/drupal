@@ -14,6 +14,14 @@ use Drupal\system\Tests\Image\ToolkitTestBase;
  * properly passing parameters to the image toolkit.
  */
 class ImageEffectsTest extends ToolkitTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('image_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Image effects',
@@ -23,7 +31,8 @@ class ImageEffectsTest extends ToolkitTestBase {
   }
 
   function setUp() {
-    parent::setUp('image_test');
+    parent::setUp();
+
     module_load_include('inc', 'image', 'image.effects');
   }
 

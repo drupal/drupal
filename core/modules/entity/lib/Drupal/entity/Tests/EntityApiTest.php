@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class EntityApiTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('entity', 'entity_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Entity CRUD',
       'description' => 'Tests basic CRUD functionality.',
       'group' => 'Entity API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('entity', 'entity_test');
   }
 
   /**

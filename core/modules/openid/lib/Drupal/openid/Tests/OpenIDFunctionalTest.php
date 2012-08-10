@@ -13,6 +13,14 @@ use stdClass;
  * Test discovery and login using OpenID
  */
 class OpenIDFunctionalTest extends OpenIDTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('openid_test');
+
   protected $web_user;
 
   public static function getInfo() {
@@ -24,7 +32,7 @@ class OpenIDFunctionalTest extends OpenIDTestBase {
   }
 
   function setUp() {
-    parent::setUp('openid', 'openid_test');
+    parent::setUp();
 
     // User doesn't need special permissions; only the ability to log in.
     $this->web_user = $this->drupalCreateUser(array());

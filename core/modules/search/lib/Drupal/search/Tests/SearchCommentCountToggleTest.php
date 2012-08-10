@@ -18,6 +18,14 @@ namespace Drupal\search\Tests;
  * - Nodes with comment status set to Hidden should never show comment counts
  */
 class SearchCommentCountToggleTest extends SearchTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('comment');
+
   // Requires node types, comment config, filter formats.
   protected $profile = 'standard';
 
@@ -33,7 +41,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('comment'));
+    parent::setUp();
 
     // Create searching user.
     $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));

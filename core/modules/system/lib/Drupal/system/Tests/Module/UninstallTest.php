@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Unit tests for module uninstallation and related hooks.
  */
 class UninstallTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('module_test', 'user');
+
   public static function getInfo() {
     return array(
       'name' => 'Module uninstallation',
       'description' => 'Tests the uninstallation of modules.',
       'group' => 'Module',
     );
-  }
-
-  function setUp() {
-    parent::setUp('module_test', 'user');
   }
 
   /**

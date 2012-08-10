@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests for the update dependency ordering system.
  */
 class DependencyOrderingTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('update_test_1', 'update_test_2', 'update_test_3');
+
   public static function getInfo() {
     return array(
       'name' => 'Update dependency ordering',
@@ -22,7 +30,7 @@ class DependencyOrderingTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('update_test_1', 'update_test_2', 'update_test_3');
+    parent::setUp();
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
   }
 

@@ -11,6 +11,14 @@ use Drupal\comment\Comment;
 use Drupal\simpletest\WebTestBase;
 
 abstract class CommentTestBase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('comment', 'search');
+
   protected $profile = 'standard';
 
   protected $admin_user;
@@ -18,7 +26,8 @@ abstract class CommentTestBase extends WebTestBase {
   protected $node;
 
   function setUp() {
-    parent::setUp('comment', 'search');
+    parent::setUp();
+
     // Create users and test node.
     $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer blocks'));
     $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'edit own comments'));

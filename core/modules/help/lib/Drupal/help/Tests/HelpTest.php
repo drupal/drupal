@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests help display and user access for all modules implementing help.
  */
 class HelpTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array.
+   */
+  public static $modules = array('poll');
+
   // Tests help implementations of many arbitrary core modules.
   protected $profile = 'standard';
 
@@ -35,7 +43,7 @@ class HelpTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('poll');
+    parent::setUp();
 
     $this->getModuleList();
 
@@ -68,7 +76,7 @@ class HelpTest extends WebTestBase {
     $this->assertRaw('<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>', t('Help topics text correctly appears.'));
 
     // Make sure links are properly added for modules implementing hook_help().
-    foreach ($this->modules as $module => $name) {
+    foreach ($this->getModuleList() as $module => $name) {
       $this->assertLink($name, 0, t('Link properly added to @name (admin/help/@module)', array('@module' => $module, '@name' => $name)));
     }
   }
@@ -80,7 +88,7 @@ class HelpTest extends WebTestBase {
    *   An HTTP response code.
    */
   protected function verifyHelp($response = 200) {
-    foreach ($this->modules as $module => $name) {
+    foreach ($this->getModuleList() as $module => $name) {
       // View module help node.
       $this->drupalGet('admin/help/' . $module);
       $this->assertResponse($response);
@@ -98,13 +106,14 @@ class HelpTest extends WebTestBase {
    *   A list of enabled modules.
    */
   protected function getModuleList() {
-    $this->modules = array();
+    $modules = array();
     $result = db_query("SELECT name, filename, info FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
     foreach ($result as $module) {
       if (file_exists($module->filename) && function_exists($module->name . '_help')) {
         $fullname = unserialize($module->info);
-        $this->modules[$module->name] = $fullname['name'];
+        $modules[$module->name] = $fullname['name'];
       }
     }
+    return $modules;
   }
 }

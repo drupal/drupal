@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests the Syslog module functionality.
  */
 class SyslogTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('syslog');
+
   public static function getInfo() {
     return array(
       'name' => 'Syslog functionality',
       'description' => 'Test syslog settings.',
       'group' => 'Syslog'
     );
-  }
-
-  function setUp() {
-    parent::setUp('syslog');
   }
 
   /**

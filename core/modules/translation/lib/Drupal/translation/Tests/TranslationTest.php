@@ -14,6 +14,14 @@ use Drupal\simpletest\WebTestBase;
  * Functional tests for the Translation module.
  */
 class TranslationTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('translation', 'translation_test');
+
   protected $profile = 'standard';
 
   protected $book;
@@ -27,7 +35,7 @@ class TranslationTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('translation', 'translation_test');
+    parent::setUp();
 
     // Setup users.
     $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages', 'translate content'));

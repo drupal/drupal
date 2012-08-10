@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests for missing update dependencies.
  */
 class DependencyMissingTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('update_test_2');
+
   public static function getInfo() {
     return array(
       'name' => 'Missing update dependencies',
@@ -24,7 +32,7 @@ class DependencyMissingTest extends WebTestBase {
   function setUp() {
     // Only install update_test_2.module, even though its updates have a
     // dependency on update_test_3.module.
-    parent::setUp('update_test_2');
+    parent::setUp();
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
   }
 

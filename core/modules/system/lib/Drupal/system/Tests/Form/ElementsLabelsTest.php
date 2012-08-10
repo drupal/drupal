@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class ElementsLabelsTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Form element and label output test',
       'description' => 'Test form element labels, required markers and associated output.',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('form_test');
   }
 
   /**

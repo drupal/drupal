@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests the functions for generating paths and URLs for image styles.
  */
 class ImageStylesPathAndUrlTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('image', 'image_module_test');
+
   protected $style_name;
   protected $image_info;
   protected $image_filepath;
@@ -26,7 +34,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('image', 'image_module_test'));
+    parent::setUp();
 
     $this->style_name = 'style_foo';
     image_style_save(array('name' => $this->style_name));

@@ -13,6 +13,14 @@ use Drupal\entity\EntityFieldQuery;
  * Unit test class for field bulk delete and batch purge functionality.
  */
 class BulkDeleteTest extends FieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_test');
+
   protected $field;
 
   public static function getInfo() {
@@ -81,7 +89,7 @@ class BulkDeleteTest extends FieldTestBase {
   }
 
   function setUp() {
-    parent::setUp('field_test');
+    parent::setUp();
 
     $this->fields = array();
     $this->instances = array();

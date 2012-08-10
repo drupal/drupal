@@ -11,6 +11,14 @@ namespace Drupal\system\Tests\File;
  * Tests for download/file transfer functions.
  */
 class DownloadTest extends FileTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('file_test');
+
   public static function getInfo() {
     return array(
       'name' => 'File download',
@@ -20,7 +28,7 @@ class DownloadTest extends FileTestBase {
   }
 
   function setUp() {
-    parent::setUp('file_test');
+    parent::setUp();
     // Clear out any hook calls.
     file_test_reset();
   }

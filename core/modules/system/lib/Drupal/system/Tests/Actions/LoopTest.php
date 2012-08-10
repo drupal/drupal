@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Test actions executing in a potential loop, and make sure they abort properly.
  */
 class LoopTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('dblog', 'actions_loop_test');
+
   protected $aid;
 
   public static function getInfo() {
@@ -21,10 +29,6 @@ class LoopTest extends WebTestBase {
       'description' => 'Tests actions executing in a loop, and makes sure they abort properly.',
       'group' => 'Actions',
     );
-  }
-
-  function setUp() {
-    parent::setUp('dblog', 'actions_loop_test');
   }
 
   /**

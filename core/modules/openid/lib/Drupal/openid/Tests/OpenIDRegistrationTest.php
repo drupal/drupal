@@ -11,6 +11,16 @@ namespace Drupal\openid\Tests;
  * Test account registration using Simple Registration and Attribute Exchange.
  */
 class OpenIDRegistrationTest extends OpenIDTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * Add language module to test with some non-built-in languages.
+   *
+   * @var array
+   */
+  public static $modules = array('openid_test', 'language');
+
   public static function getInfo() {
     return array(
       'name' => 'OpenID account registration',
@@ -20,8 +30,7 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
   }
 
   function setUp() {
-    // Add language module too to test with some non-built-in languages.
-    parent::setUp('openid', 'openid_test', 'language');
+    parent::setUp();
     variable_set('user_register', USER_REGISTER_VISITORS);
   }
 

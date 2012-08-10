@@ -11,6 +11,14 @@ namespace Drupal\system\Tests\File;
  * Tests the file_scan_directory() function.
  */
 class ScanDirectoryTest extends FileTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('file_test');
+
   public static function getInfo() {
     return array(
       'name' => 'File scan directory',
@@ -20,7 +28,7 @@ class ScanDirectoryTest extends FileTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('file_test'));
+    parent::setUp();
     $this->path = drupal_get_path('module', 'simpletest') . '/files';
   }
 

@@ -14,16 +14,20 @@ use stdClass;
  * Tests for text format and filter CRUD operations.
  */
 class FilterCrudTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('filter_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Filter CRUD operations',
       'description' => 'Test creation, loading, updating, deleting of text formats and filters.',
       'group' => 'Filter',
     );
-  }
-
-  function setUp() {
-    parent::setUp('filter_test');
   }
 
   /**

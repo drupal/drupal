@@ -17,6 +17,12 @@ use stdClass;
  */
 class EntityFieldQueryTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'field_test', 'entity_query_access_test', 'node_access_test');
 
   public static function getInfo() {
     return array(
@@ -27,7 +33,7 @@ class EntityFieldQueryTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'field_test', 'entity_query_access_test', 'node_access_test'));
+    parent::setUp();
 
     field_test_create_bundle('bundle1');
     field_test_create_bundle('bundle2');

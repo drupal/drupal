@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class UserLanguageCreationTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('user', 'language');
+
   public static function getInfo() {
     return array(
       'name' => 'User language creation',
@@ -23,7 +30,8 @@ class UserLanguageCreationTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('user', 'language'));
+    parent::setUp();
+
     variable_set('user_register', USER_REGISTER_VISITORS);
   }
 

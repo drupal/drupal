@@ -14,6 +14,14 @@ use stdClass;
  * Test internal helper functions.
  */
 class OpenIDTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('openid');
+
   public static function getInfo() {
     return array(
       'name' => 'OpenID helper functions',
@@ -23,7 +31,7 @@ class OpenIDTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('openid');
+    parent::setUp();
     module_load_include('inc', 'openid');
   }
 

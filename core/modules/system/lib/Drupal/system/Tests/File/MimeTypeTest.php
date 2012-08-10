@@ -13,9 +13,13 @@ use Drupal\simpletest\WebTestBase;
  * Tests for file_get_mimetype().
  */
 class MimeTypeTest extends WebTestBase {
-  function setUp() {
-    parent::setUp('file_test');
-  }
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('file_test');
 
   public static function getInfo() {
     return array(

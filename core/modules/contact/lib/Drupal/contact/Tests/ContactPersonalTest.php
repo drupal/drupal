@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests the personal contact form.
  */
 class ContactPersonalTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('contact');
+
   private $admin_user;
   private $web_user;
   private $contact_user;
@@ -26,7 +34,7 @@ class ContactPersonalTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('contact');
+    parent::setUp();
 
     // Create an admin user.
     $this->admin_user = $this->drupalCreateUser(array('administer contact forms', 'administer users'));

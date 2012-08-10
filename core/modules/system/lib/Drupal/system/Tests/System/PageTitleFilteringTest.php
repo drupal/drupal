@@ -10,6 +10,14 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 class PageTitleFilteringTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
   protected $content_user;
   protected $saved_title;
 
@@ -28,7 +36,7 @@ class PageTitleFilteringTest extends WebTestBase {
    * Implement setUp().
    */
   function setUp() {
-    parent::setUp(array('node'));
+    parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 

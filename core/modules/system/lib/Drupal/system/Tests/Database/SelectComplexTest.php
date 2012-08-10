@@ -12,16 +12,19 @@ namespace Drupal\system\Tests\Database;
  */
 class SelectComplexTest extends DatabaseTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node_access_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Select tests, complex',
       'description' => 'Test the Select query builder with more complex queries.',
       'group' => 'Database',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('node_access_test'));
   }
 
   /**

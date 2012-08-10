@@ -15,6 +15,14 @@ use Drupal\simpletest\WebTestBase;
  * @todo Add tests for other aspects of form rebuilding.
  */
 class RebuildTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Form rebuilding',
@@ -24,7 +32,7 @@ class RebuildTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('form_test');
+    parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 

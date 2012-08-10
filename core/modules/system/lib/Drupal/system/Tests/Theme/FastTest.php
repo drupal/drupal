@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests autocompletion not loading registry.
  */
 class FastTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('theme_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Theme fast initialization',
@@ -22,7 +30,7 @@ class FastTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('theme_test');
+    parent::setUp();
     $this->account = $this->drupalCreateUser(array('access user profiles'));
   }
 

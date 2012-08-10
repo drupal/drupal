@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Functional test for multilingual fields.
  */
 class NodeFieldMultilingualTestCase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'language');
+
   public static function getInfo() {
     return array(
       'name' => 'Multilingual fields',
@@ -22,7 +30,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'language'));
+    parent::setUp();
 
     // Create Basic page node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));

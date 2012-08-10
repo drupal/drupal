@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class LanguageNegotiationInfoTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language');
+
   public static function getInfo() {
     return array(
       'name' => 'Language negotiation info',
@@ -23,7 +30,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('language');
+    parent::setUp();
     require_once DRUPAL_ROOT .'/core/includes/language.inc';
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'view the administration theme'));
     $this->drupalLogin($admin_user);

@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Test bundle registration to the DIC.
  */
 class BundleTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('bundle_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Bundle Registration',
       'description' => 'Tests bundle registration to the DIC.',
       'group' => 'Bundle',
     );
-  }
-
-  function setUp() {
-    parent::setUp('bundle_test');
   }
 
   /**

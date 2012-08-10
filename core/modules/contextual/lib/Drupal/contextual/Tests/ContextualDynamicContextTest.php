@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests accessible links after inaccessible links on dynamic context.
  */
 class ContextualDynamicContextTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('contextual', 'node');
+
   public static function getInfo() {
     return array(
       'name' => 'Contextual links on node lists',
@@ -22,7 +30,7 @@ class ContextualDynamicContextTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('contextual', 'node'));
+    parent::setUp();
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
     $web_user = $this->drupalCreateUser(array('access content', 'access contextual links', 'edit any article content'));

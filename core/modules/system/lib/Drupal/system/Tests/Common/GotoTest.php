@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests drupal_goto() and hook_drupal_goto_alter().
  */
 class GotoTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('common_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Redirect functionality',
       'description' => 'Tests the drupal_goto() and hook_drupal_goto_alter() functionality.',
       'group' => 'Common',
     );
-  }
-
-  function setUp() {
-    parent::setUp('common_test');
   }
 
   /**

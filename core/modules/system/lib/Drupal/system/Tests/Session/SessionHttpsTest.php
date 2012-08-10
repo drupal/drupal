@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class SessionHttpsTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('session_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Session https handling',
       'description' => 'Ensure that when running under https two session cookies are generated.',
       'group' => 'Session'
     );
-  }
-
-  public function setUp() {
-    parent::setUp('session_test');
   }
 
   protected function testHttpsSession() {

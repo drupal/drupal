@@ -12,16 +12,19 @@ namespace Drupal\image\Tests;
  */
 class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_ui');
+
   public static function getInfo() {
     return array(
       'name' => 'Image field default images tests',
       'description' => 'Tests setting up default images both to the field and field instance.',
       'group' => 'Image',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('field_ui'));
   }
 
   /**

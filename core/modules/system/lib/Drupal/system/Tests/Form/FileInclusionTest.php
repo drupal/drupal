@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class FileInclusionTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Form API file inclusion',
       'description' => 'Tests form API file inclusion.',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('form_test');
   }
 
   /**

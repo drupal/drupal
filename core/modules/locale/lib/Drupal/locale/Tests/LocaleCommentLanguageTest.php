@@ -13,6 +13,18 @@ use Drupal\simpletest\WebTestBase;
  * Functional tests for comment language.
  */
 class LocaleCommentLanguageTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * We also use the language_test module here to be able to turn on content
+   * language negotiation. Drupal core does not provide a way in itself to do
+   * that.
+   *
+   * @var array
+   */
+  public static $modules = array('locale', 'language_test');
+
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -24,10 +36,7 @@ class LocaleCommentLanguageTest extends WebTestBase {
   }
 
   function setUp() {
-    // We also use language_test module here to be able to turn on content
-    // language negotiation. Drupal core does not provide a way in itself
-    // to do that.
-    parent::setUp('locale', 'language_test');
+    parent::setUp();
 
     // Create and login user.
     $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'create article content'));

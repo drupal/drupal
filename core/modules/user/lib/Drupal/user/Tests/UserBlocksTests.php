@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Test user blocks.
  */
 class UserBlocksTests extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
   public static function getInfo() {
     return array(
       'name' => 'User blocks',
@@ -22,7 +30,7 @@ class UserBlocksTests extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block'));
+    parent::setUp();
 
     // Enable user login block.
     db_merge('block')

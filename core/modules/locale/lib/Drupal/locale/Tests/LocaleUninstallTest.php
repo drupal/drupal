@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Locale uninstall with English UI functional test.
  */
 class LocaleUninstallTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'locale');
+
   public static function getInfo() {
     return array(
       'name' => 'Locale uninstall (EN)',
@@ -27,7 +35,8 @@ class LocaleUninstallTest extends WebTestBase {
   protected $language;
 
   function setUp() {
-    parent::setUp(array('node', 'locale'));
+    parent::setUp();
+
     $this->langcode = 'en';
 
     // Create Article node type.

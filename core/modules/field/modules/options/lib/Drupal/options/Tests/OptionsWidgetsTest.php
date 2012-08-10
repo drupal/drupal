@@ -13,6 +13,14 @@ use Drupal\field\Tests\FieldTestBase;
  * Test the Options widgets.
  */
 class OptionsWidgetsTest extends FieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('options', 'field_test', 'options_test', 'taxonomy', 'field_ui');
+
   public static function getInfo() {
     return array(
       'name'  => 'Options widgets',
@@ -22,7 +30,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('options', 'field_test', 'options_test', 'taxonomy', 'field_ui'));
+    parent::setUp();
 
     // Field with cardinality 1.
     $this->card_1 = array(

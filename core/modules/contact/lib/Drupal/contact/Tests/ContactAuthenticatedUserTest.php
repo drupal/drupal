@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class ContactAuthenticatedUserTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('contact');
+
   public static function getInfo() {
     return array(
       'name' => 'Contact form textfields',
       'description' => 'Tests contact form textfields are present if authenticated.',
       'group' => 'Contact',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('contact'));
   }
 
   /**

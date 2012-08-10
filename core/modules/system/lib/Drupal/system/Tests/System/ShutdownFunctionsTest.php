@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Functional tests shutdown functions.
  */
 class ShutdownFunctionsTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Shutdown functions',
       'description' => 'Functional tests for shutdown functions',
       'group' => 'System',
     );
-  }
-
-  function setUp() {
-    parent::setUp('system_test');
   }
 
   /**

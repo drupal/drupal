@@ -17,10 +17,7 @@ use stdClass;
 abstract class FileTestBase extends WebTestBase {
 
   function setUp() {
-    $modules = func_get_args();
-    $modules = (isset($modules[0]) && is_array($modules[0]) ? $modules[0] : $modules);
-    parent::setUp($modules);
-
+    parent::setUp();
     // Make sure that custom stream wrappers are registered.
     // @todo This has the potential to be a major bug deeply buried in File API;
     //   file_unmanaged_*() API functions and test functions are invoking native

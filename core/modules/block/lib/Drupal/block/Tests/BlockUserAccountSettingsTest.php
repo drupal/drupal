@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests personalized block settings for user accounts.
  */
 class BlockUserAccountSettingsTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'field_ui');
+
   public static function getInfo() {
     return array(
       'name' => 'Personalized block settings',
@@ -22,7 +30,7 @@ class BlockUserAccountSettingsTest extends WebTestBase {
   }
 
   public function setUp() {
-    parent::setUp(array('block', 'field_ui'));
+    parent::setUp();
     $admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($admin_user);
   }

@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Test menu settings for nodes.
  */
 class MenuNodeTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('menu');
+
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -24,7 +32,7 @@ class MenuNodeTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('menu');
+    parent::setUp();
 
     $this->admin_user = $this->drupalCreateUser(array(
       'access administration pages',

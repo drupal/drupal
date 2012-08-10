@@ -13,16 +13,20 @@ use Drupal\node\Node;
  * Tests the functionality of the 'Manage display' screens.
  */
 class ManageDisplayTest extends FieldUiTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('search');
+
   public static function getInfo() {
     return array(
       'name' => 'Manage display',
       'description' => 'Test the Field UI "Manage display" screens.',
       'group' => 'Field UI',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('search'));
   }
 
   /**

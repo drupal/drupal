@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Security tests for missing/vanished text formats or filters.
  */
 class FilterSecurityTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'php', 'filter_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Security',
@@ -22,7 +30,7 @@ class FilterSecurityTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'php', 'filter_test'));
+    parent::setUp();
 
     // Create Basic page node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));

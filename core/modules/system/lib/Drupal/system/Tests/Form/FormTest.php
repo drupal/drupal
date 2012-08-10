@@ -11,6 +11,13 @@ use Drupal\simpletest\WebTestBase;
 
 class FormTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test', 'file');
+
   public static function getInfo() {
     return array(
       'name' => 'Form element validation',
@@ -20,7 +27,7 @@ class FormTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('form_test', 'file'));
+    parent::setUp();
 
     $filtered_html_format = array(
       'format' => 'filtered_html',

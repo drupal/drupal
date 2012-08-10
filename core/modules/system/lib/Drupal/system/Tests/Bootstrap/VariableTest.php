@@ -14,9 +14,12 @@ use Drupal\simpletest\WebTestBase;
  */
 class VariableTest extends WebTestBase {
 
-  function setUp() {
-    parent::setUp('system_test');
-  }
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system_test');
 
   public static function getInfo() {
     return array(

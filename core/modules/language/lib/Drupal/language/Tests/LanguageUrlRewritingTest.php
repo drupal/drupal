@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Test that URL rewriting works as expected.
  */
 class LanguageUrlRewritingTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language');
+
   public static function getInfo() {
     return array(
       'name' => 'URL rewriting',
@@ -22,7 +30,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('language');
+    parent::setUp();
 
     // Create and login user.
     $this->web_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));

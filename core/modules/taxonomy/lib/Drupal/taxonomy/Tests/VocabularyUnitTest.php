@@ -12,6 +12,13 @@ namespace Drupal\taxonomy\Tests;
  */
 class VocabularyUnitTest extends TaxonomyTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Taxonomy vocabularies',
@@ -21,7 +28,8 @@ class VocabularyUnitTest extends TaxonomyTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('field_test'));
+    parent::setUp();
+
     $admin_user = $this->drupalCreateUser(array('create article content', 'administer taxonomy'));
     $this->drupalLogin($admin_user);
     $this->vocabulary = $this->createVocabulary();

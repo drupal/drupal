@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Functional tests for the language list configuration forms.
  */
 class BlockLanguageTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language', 'block');
+
   public static function getInfo() {
     return array(
       'name' => 'Language block visibility',
       'description' => 'Tests if a block can be configure to be only visibile on a particular language.',
       'group' => 'Block',
     );
-  }
-
-  function setUp() {
-    parent::setUp('language', 'block');
   }
 
   /**

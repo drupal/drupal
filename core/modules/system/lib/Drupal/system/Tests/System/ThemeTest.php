@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests for the theme interface functionality.
  */
 class ThemeTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'block');
+
   public static function getInfo() {
     return array(
       'name' => 'Theme interface functionality',
@@ -22,7 +30,7 @@ class ThemeTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'block'));
+    parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 

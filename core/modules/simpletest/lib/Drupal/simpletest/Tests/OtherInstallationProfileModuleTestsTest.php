@@ -15,6 +15,14 @@ use Drupal\simpletest\WebTestBase;
  * @see SimpleTestInstallationProfileModuleTestsTestCase
  */
 class OtherInstallationProfileModuleTestsTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('simpletest');
+
   /**
    * Use the Minimal profile.
    *
@@ -35,7 +43,7 @@ class OtherInstallationProfileModuleTestsTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('simpletest'));
+    parent::setUp();
 
     $this->admin_user = $this->drupalCreateUser(array('administer unit tests'));
     $this->drupalLogin($this->admin_user);

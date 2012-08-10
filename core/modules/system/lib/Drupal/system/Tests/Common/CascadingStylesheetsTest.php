@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests the Drupal CSS system.
  */
 class CascadingStylesheetsTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language', 'common_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Cascading stylesheets',
@@ -22,7 +30,7 @@ class CascadingStylesheetsTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('language', 'common_test'));
+    parent::setUp();
     // Reset drupal_add_css() before each test.
     drupal_static_reset('drupal_add_css');
   }

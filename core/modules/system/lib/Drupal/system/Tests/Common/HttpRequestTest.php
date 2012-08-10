@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests drupal_http_request().
  */
 class HttpRequestTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system_test', 'language');
+
   public static function getInfo() {
     return array(
       'name' => 'Drupal HTTP request',
       'description' => "Performs tests on Drupal's HTTP request mechanism.",
       'group' => 'Common',
     );
-  }
-
-  function setUp() {
-    parent::setUp('system_test', 'language');
   }
 
   function testDrupalHTTPRequest() {

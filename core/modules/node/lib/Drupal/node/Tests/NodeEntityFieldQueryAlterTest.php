@@ -12,6 +12,13 @@ namespace Drupal\node\Tests;
  */
 class NodeEntityFieldQueryAlterTest extends NodeTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node_access_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Node entity query alter',
@@ -31,7 +38,7 @@ class NodeEntityFieldQueryAlterTest extends NodeTestBase {
   protected $noAccessUser;
 
   function setUp() {
-    parent::setUp('node_access_test');
+    parent::setUp();
     node_access_rebuild();
 
     // Creating 4 nodes with an entity field so we can test that sort of query

@@ -8,6 +8,14 @@
 namespace Drupal\field\Tests;
 
 class FormTest extends FieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'field_test', 'options');
+
   public static function getInfo() {
     return array(
       'name' => 'Field form tests',
@@ -17,7 +25,7 @@ class FormTest extends FieldTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'field_test', 'options'));
+    parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
     $this->drupalLogin($web_user);

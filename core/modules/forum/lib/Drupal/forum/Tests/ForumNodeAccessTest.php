@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests forum block view for private node access.
  */
 class ForumNodeAccessTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'comment', 'forum', 'taxonomy', 'tracker', 'node_access_test', 'block');
+
   protected $access_user;
   protected $admin_user;
   protected $no_access_user;
@@ -26,7 +34,7 @@ class ForumNodeAccessTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'comment', 'forum', 'taxonomy', 'tracker', 'node_access_test', 'block'));
+    parent::setUp();
     node_access_rebuild();
     variable_set('node_access_test_private', TRUE);
   }

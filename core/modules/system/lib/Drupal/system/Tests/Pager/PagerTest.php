@@ -14,6 +14,14 @@ use SimpleXMLElement;
  * Tests pager functionality.
  */
 class PagerTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('dblog');
+
   protected $profile = 'testing';
 
   public static function getInfo() {
@@ -25,7 +33,7 @@ class PagerTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('dblog'));
+    parent::setUp();
 
     // Insert 300 log messages.
     for ($i = 0; $i < 300; $i++) {

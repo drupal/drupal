@@ -15,6 +15,13 @@ use Drupal\simpletest\WebTestBase;
 class TrackerTest extends WebTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('comment', 'tracker');
+
+  /**
    * The main user for testing.
    *
    * @var object
@@ -37,7 +44,7 @@ class TrackerTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('comment', 'tracker');
+    parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 

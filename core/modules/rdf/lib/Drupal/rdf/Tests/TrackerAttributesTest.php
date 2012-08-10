@@ -14,6 +14,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests the RDF tracker page mapping.
  */
 class TrackerAttributesTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('rdf', 'rdf_test', 'tracker');
+
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -25,7 +33,8 @@ class TrackerAttributesTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('rdf', 'rdf_test', 'tracker');
+    parent::setUp();
+
     // Enable anonymous posting of content.
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'create article content' => TRUE,

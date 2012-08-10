@@ -12,6 +12,13 @@ namespace Drupal\update\Tests;
  */
 class UpdateCoreTest extends UpdateTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('update_test', 'update');
+
   public static function getInfo() {
     return array(
       'name' => 'Update core functionality',
@@ -21,7 +28,7 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   function setUp() {
-    parent::setUp('update_test', 'update');
+    parent::setUp();
     $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer modules'));
     $this->drupalLogin($admin_user);
   }

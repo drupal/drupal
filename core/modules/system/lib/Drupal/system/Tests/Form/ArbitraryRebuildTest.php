@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests rebuilding of arbitrary forms by altering them.
  */
 class ArbitraryRebuildTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Rebuild arbitrary forms',
@@ -22,7 +30,8 @@ class ArbitraryRebuildTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('form_test');
+    parent::setUp();
+
     // Auto-create a field for testing.
     $field = array(
       'field_name' => 'test_multiple',

@@ -11,16 +11,20 @@ namespace Drupal\poll\Tests;
  * Tests poll translation logic.
  */
 class PollTranslateTest extends PollTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('translation');
+
   public static function getInfo() {
     return array(
       'name' => 'Poll translation',
       'description' => 'Test the poll translation logic.',
       'group' => 'Poll',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('translation'));
   }
 
   /**

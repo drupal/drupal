@@ -12,6 +12,13 @@ namespace Drupal\taxonomy\Tests;
  */
 class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_test');
+
   protected $instance;
   protected $vocabulary1;
   protected $vocabulary2;
@@ -25,7 +32,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
   }
 
   function setUp() {
-    parent::setUp('field_test');
+    parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content', 'administer taxonomy'));
     $this->drupalLogin($web_user);

@@ -11,16 +11,20 @@ namespace Drupal\field\Tests;
  * Tests entity properties.
  */
 class EntityPropertiesTest extends FieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Entity properties',
       'description' => 'Tests entity properties.',
       'group' => 'Entity API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('field_test');
   }
 
   /**

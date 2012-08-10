@@ -11,6 +11,14 @@ namespace Drupal\node\Tests;
  * Test node title.
  */
 class NodeTitleTest extends NodeTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('comment');
+
   protected $admin_user;
 
   public static function getInfo() {
@@ -22,7 +30,8 @@ class NodeTitleTest extends NodeTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('comment'));
+    parent::setUp();
+
     $this->admin_user = $this->drupalCreateUser(array('administer nodes', 'create article content', 'create page content', 'post comments'));
     $this->drupalLogin($this->admin_user);
   }

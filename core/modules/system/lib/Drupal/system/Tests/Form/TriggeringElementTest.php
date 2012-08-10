@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class TriggeringElementTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Form triggering element determination',
       'description' => 'Test the determination of $form_state[\'triggering_element\'].',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('form_test');
   }
 
   /**

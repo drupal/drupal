@@ -8,16 +8,20 @@
 namespace Drupal\search\Tests;
 
 class SearchRankingTest extends SearchTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('statistics', 'comment');
+
   public static function getInfo() {
     return array(
       'name' => 'Search engine ranking',
       'description' => 'Indexes content and tests ranking factors.',
       'group' => 'Search',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('statistics', 'comment'));
   }
 
   function testRankings() {

@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Functional tests for the import of translation files.
  */
 class LocaleImportFunctionalTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('locale', 'dblog');
+
   public static function getInfo() {
     return array(
       'name' => 'Translation import',
@@ -27,8 +35,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
   protected $admin_user = NULL;
 
   function setUp() {
-    parent::setUp(array('locale', 'dblog'));
-
+    parent::setUp();
     // Set the translation file directory.
     variable_set('locale_translate_file_directory', drupal_get_path('module', 'locale') . '/tests');
 

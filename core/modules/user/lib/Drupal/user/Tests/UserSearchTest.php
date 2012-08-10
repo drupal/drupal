@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Test user search.
  */
 class UserSearchTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('search');
+
   public static function getInfo() {
     return array(
       'name' => 'User search',
       'description' => 'Testing that only user with the right permission can see the email address in the user search.',
       'group' => 'User',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('search'));
   }
 
   function testUserSearch() {

@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Functional test for attributes of html.tpl.php.
  */
 class HtmlTplPhpAttributesTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('theme_test');
+
   public static function getInfo() {
     return array(
       'name' => 'html.tpl.php html and body attributes',
       'description' => 'Tests attributes inserted in the html and body elements of html.tpl.php.',
       'group' => 'Theme',
     );
-  }
-
-  function setUp() {
-    parent::setUp('theme_test');
   }
 
   /**

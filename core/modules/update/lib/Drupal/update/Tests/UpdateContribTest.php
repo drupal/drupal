@@ -12,6 +12,13 @@ namespace Drupal\update\Tests;
  */
 class UpdateContribTest extends UpdateTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('update_test', 'update', 'aaa_update_test', 'bbb_update_test', 'ccc_update_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Update contrib functionality',
@@ -21,7 +28,7 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   function setUp() {
-    parent::setUp('update_test', 'update', 'aaa_update_test', 'bbb_update_test', 'ccc_update_test');
+    parent::setUp();
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($admin_user);
   }

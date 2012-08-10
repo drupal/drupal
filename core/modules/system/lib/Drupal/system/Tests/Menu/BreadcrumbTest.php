@@ -11,6 +11,14 @@ namespace Drupal\system\Tests\Menu;
  * Menu breadcrumbs related tests.
  */
 class BreadcrumbTest extends MenuTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('menu_test');
+
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -22,7 +30,7 @@ class BreadcrumbTest extends MenuTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('menu_test'));
+    parent::setUp();
 
     $perms = array_keys(module_invoke_all('permission'));
     $this->admin_user = $this->drupalCreateUser($perms);

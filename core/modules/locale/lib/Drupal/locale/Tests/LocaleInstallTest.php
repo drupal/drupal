@@ -14,6 +14,14 @@ use ReflectionFunction;
  * Tests for the st() function.
  */
 class LocaleInstallTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('locale');
+
   public static function getInfo() {
     return array(
       'name' => 'String translation using st()',
@@ -23,8 +31,7 @@ class LocaleInstallTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('locale');
-
+    parent::setUp();
     // st() lives in install.inc, so ensure that it is loaded for all tests.
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
   }

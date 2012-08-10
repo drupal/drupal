@@ -12,6 +12,17 @@ use Drupal\simpletest\WebTestBase;
  * Helper to verify tests in installation profile modules.
  */
 class SystemListingCompatibleTest extends WebTestBase {
+
+  /**
+   * Attempt to enable a module from the Testing profile.
+   *
+   * This test uses the Minimal profile, but enables a module from the Testing
+   * profile to confirm that a different profile can be used for running tests.
+   *
+   * @var array
+   */
+  public static $modules = array('drupal_system_listing_compatible_test');
+
   /**
    * Use the Minimal profile.
    *
@@ -28,12 +39,6 @@ class SystemListingCompatibleTest extends WebTestBase {
       'description' => 'Verifies that tests in installation profile modules are found and may use another profile for running tests.',
       'group' => 'Installation profile',
     );
-  }
-
-  function setUp() {
-    // Attempt to install a module in Testing profile, while this test runs with
-    // a different profile.
-    parent::setUp(array('drupal_system_listing_compatible_test'));
   }
 
   /**

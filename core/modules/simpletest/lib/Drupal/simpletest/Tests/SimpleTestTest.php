@@ -11,6 +11,14 @@ use Drupal\simpletest\WebTestBase;
 use SimpleXMLElement;
 
 class SimpleTestTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('simpletest');
+
   /**
    * The results array that has been parsed by getTestResults().
    */
@@ -32,14 +40,14 @@ class SimpleTestTest extends WebTestBase {
 
   function setUp() {
     if (!$this->inCURL()) {
-      parent::setUp('simpletest');
-
+      parent::setUp();
       // Create and login user
       $admin_user = $this->drupalCreateUser(array('administer unit tests'));
       $this->drupalLogin($admin_user);
     }
     else {
-      parent::setUp('non_existent_module');
+      self::$modules = array('non_existent_module');
+      parent::setUp();
     }
   }
 

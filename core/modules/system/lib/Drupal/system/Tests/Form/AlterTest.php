@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Test form alter hooks.
  */
 class AlterTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Form alter hooks',
       'description' => 'Tests hook_form_alter() and hook_form_FORM_ID_alter().',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('block', 'form_test'));
   }
 
   /**

@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests that paths are not prefixed on a monolingual site.
  */
 class LanguagePathMonolingualTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language', 'path');
+
   public static function getInfo() {
     return array(
       'name' => 'Paths on non-English monolingual sites',
@@ -22,7 +30,7 @@ class LanguagePathMonolingualTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('path', 'language');
+    parent::setUp();
 
     // Create and login user.
     $web_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));

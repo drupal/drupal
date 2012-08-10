@@ -8,6 +8,14 @@
 namespace Drupal\poll\Tests;
 
 class PollBlockTest extends PollTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
   public static function getInfo() {
     return array(
       'name' => 'Block availability',
@@ -17,7 +25,7 @@ class PollBlockTest extends PollTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block'));
+    parent::setUp();
 
     // Create and login user
     $admin_user = $this->drupalCreateUser(array('administer blocks'));

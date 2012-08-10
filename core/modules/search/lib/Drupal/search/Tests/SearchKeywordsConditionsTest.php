@@ -11,6 +11,14 @@ namespace Drupal\search\Tests;
  * Tests keywords and conditions.
  */
 class SearchKeywordsConditionsTest extends SearchTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('comment', 'search_extra_type');
+
   public static function getInfo() {
     return array(
       'name' => 'Keywords and conditions',
@@ -20,7 +28,8 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('comment', 'search_extra_type'));
+    parent::setUp();
+
     // Create searching user.
     $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
     // Login with sufficient privileges.

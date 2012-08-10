@@ -11,6 +11,14 @@ namespace Drupal\search\Tests;
  * Test config page.
  */
 class SearchConfigSettingsFormTest extends SearchTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'search_extra_type');
+
   public $search_user;
   public $search_node;
 
@@ -23,7 +31,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block', 'search_extra_type'));
+    parent::setUp();
 
     // Login as a user that can create and search content.
     $this->search_user = $this->drupalCreateUser(array('search content', 'administer search', 'administer nodes', 'bypass node access', 'access user profiles', 'administer users', 'administer blocks'));

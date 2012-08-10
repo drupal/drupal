@@ -13,18 +13,16 @@ use Drupal\simpletest\WebTestBase;
  * Provides common functionality for the Field UI test classes.
  */
 abstract class FieldUiTestBase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
   public static $modules = array('node', 'field_ui', 'field_test', 'taxonomy');
 
   function setUp() {
-    // Since this is a base class for many test cases, support the same
-    // flexibility that Drupal\simpletest\WebTestBase::setUp() has for the
-    // modules to be passed in as either an array or a variable number of string
-    // arguments.
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    parent::setUp($modules);
+    parent::setUp();
 
     // Create test user.
     $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));

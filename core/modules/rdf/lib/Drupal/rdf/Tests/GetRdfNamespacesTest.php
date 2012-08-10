@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests for RDF namespaces declaration with hook_rdf_namespaces().
  */
 class GetRdfNamespacesTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('rdf', 'rdf_test');
+
   public static function getInfo() {
     return array(
       'name' => 'RDF namespaces',
       'description' => 'Test hook_rdf_namespaces() and ensure only "safe" namespaces are returned.',
       'group' => 'RDF',
     );
-  }
-
-  function setUp() {
-    parent::setUp('rdf', 'rdf_test');
   }
 
   /**

@@ -14,6 +14,14 @@ use Drupal\Core\Utility\ThemeRegistry;
  * Tests for the ThemeRegistry class.
  */
 class RegistryTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('theme_test');
+
   protected $profile = 'testing';
   public static function getInfo() {
     return array(
@@ -21,9 +29,6 @@ class RegistryTest extends WebTestBase {
       'description' => 'Tests the behavior of the ThemeRegistry class',
       'group' => 'Theme',
     );
-  }
-  function setUp() {
-    parent::setUp('theme_test');
   }
 
   /**

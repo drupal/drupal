@@ -12,6 +12,13 @@ namespace Drupal\update\Tests;
  */
 class UpdateUploadTest extends UpdateTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('update', 'update_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Upload and extract module functionality',
@@ -21,7 +28,7 @@ class UpdateUploadTest extends UpdateTestBase {
   }
 
   public function setUp() {
-    parent::setUp('update', 'update_test');
+    parent::setUp();
     variable_set('allow_authorize_operations', TRUE);
     $admin_user = $this->drupalCreateUser(array('administer software updates', 'administer site configuration'));
     $this->drupalLogin($admin_user);

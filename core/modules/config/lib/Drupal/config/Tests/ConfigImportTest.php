@@ -15,16 +15,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests importing configuration from files into active store.
  */
 class ConfigImportTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('config_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Import configuration',
       'description' => 'Tests importing configuration from files into active store.',
       'group' => 'Configuration',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('config_test'));
   }
 
   /**

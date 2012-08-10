@@ -11,6 +11,14 @@ namespace Drupal\system\Tests\Ajax;
  * Tests that Ajax-enabled forms work when multiple instances of the same form are on a page.
  */
 class MultiFormTest extends AjaxTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -22,7 +30,7 @@ class MultiFormTest extends AjaxTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('form_test'));
+    parent::setUp();
 
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';

@@ -11,6 +11,14 @@ namespace Drupal\node\Tests;
  * Test case to verify node_access functionality for multiple languages.
  */
 class NodeAccessLanguageTest extends NodeTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language', 'node_access_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Node access language',
@@ -30,7 +38,8 @@ class NodeAccessLanguageTest extends NodeTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('language', 'node_access_test'));
+    parent::setUp();
+
     // Clear permissions for authenticated users.
     db_delete('role_permission')
       ->condition('rid', DRUPAL_AUTHENTICATED_RID)

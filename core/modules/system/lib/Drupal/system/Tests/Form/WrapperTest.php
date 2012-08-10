@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Test wrapper form callbacks.
  */
 class WrapperTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Form wrapper callback',
       'description' => 'Tests form wrapper callbacks to pass a prebuilt form to form builder functions.',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('form_test');
   }
 
   /**

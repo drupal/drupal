@@ -16,6 +16,13 @@ use stdClass;
 abstract class ShortcutTestBase extends WebTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('toolbar', 'shortcut');
+
+  /**
    * User with permission to administer shortcuts.
    */
   protected $admin_user;
@@ -36,7 +43,7 @@ abstract class ShortcutTestBase extends WebTestBase {
   protected $set;
 
   function setUp() {
-    parent::setUp('toolbar', 'shortcut');
+    parent::setUp();
 
     // Create Basic page and Article node types.
     if ($this->profile != 'standard') {

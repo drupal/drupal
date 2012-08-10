@@ -11,6 +11,14 @@ namespace Drupal\path\Tests;
  * Tests path alias functionality.
  */
 class PathAliasTest extends PathTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('path');
+
   public static function getInfo() {
     return array(
       'name' => 'Path alias functionality',
@@ -20,7 +28,7 @@ class PathAliasTest extends PathTestBase {
   }
 
   function setUp() {
-    parent::setUp('path');
+    parent::setUp();
 
     // Create test user and login.
     $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content', 'administer url aliases', 'create url aliases'));

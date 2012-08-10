@@ -13,6 +13,14 @@ use Drupal\taxonomy\Tests\TaxonomyTestBase;
  * Tests the RDF mapping definition functionality.
  */
 class MappingDefinitionTest extends TaxonomyTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('rdf', 'rdf_test');
+
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -21,10 +29,6 @@ class MappingDefinitionTest extends TaxonomyTestBase {
       'description' => 'Test the different types of RDF mappings and ensure the proper RDFa markup in included in nodes and user profile pages.',
       'group' => 'RDF',
     );
-  }
-
-  function setUp() {
-    parent::setUp('rdf', 'rdf_test');
   }
 
   /**

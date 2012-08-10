@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Functional tests for configuring a different path alias per language.
  */
 class LocalePathTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'locale', 'path');
+
   public static function getInfo() {
     return array(
       'name' => 'Path language settings',
@@ -22,7 +30,7 @@ class LocalePathTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'locale', 'path'));
+    parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     config('system.site')->set('page.front', 'node')->save();

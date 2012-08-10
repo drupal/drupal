@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests RDFa markup generation.
  */
 class RdfaMarkupTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('rdf', 'field_test', 'rdf_test');
+
   protected $profile = 'standard';
 
   public static function getInfo() {
@@ -21,10 +29,6 @@ class RdfaMarkupTest extends WebTestBase {
       'description' => 'Test RDFa markup generation.',
       'group' => 'RDF',
     );
-  }
-
-  function setUp() {
-    parent::setUp('rdf', 'field_test', 'rdf_test');
   }
 
   /**

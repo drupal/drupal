@@ -19,15 +19,8 @@ abstract class FieldTestBase extends WebTestBase {
    * Set the default field storage backend for fields created during tests.
    */
   function setUp() {
-    // Since this is a base class for many test cases, support the same
-    // flexibility that Drupal\simpletest\WebTestBase::setUp() has for the
-    // modules to be passed in as either an array or a variable number of string
-    // arguments.
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    parent::setUp($modules);
+    parent::setUp();
+
     // Set default storage backend.
     variable_set('field_storage_default', $this->default_storage);
   }

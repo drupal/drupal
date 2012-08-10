@@ -11,6 +11,14 @@ namespace Drupal\search\Tests;
  * Tests node search with node access control.
  */
 class SearchNodeAccessTest extends SearchTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node_access_test');
+
   public $test_user;
 
   public static function getInfo() {
@@ -22,7 +30,7 @@ class SearchNodeAccessTest extends SearchTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node_access_test'));
+    parent::setUp();
     node_access_rebuild();
 
     // Create a test user and log in.

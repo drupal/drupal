@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class ProgrammaticTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Programmatic form submissions',
       'description' => 'Test the programmatic form submission behavior.',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('form_test');
   }
 
   /**

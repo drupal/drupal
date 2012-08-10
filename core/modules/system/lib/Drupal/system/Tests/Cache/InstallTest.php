@@ -14,6 +14,14 @@ use Drupal\Core\Cache\InstallBackend;
  * Tests the behavior of the cache backend used for installing Drupal.
  */
 class InstallTest extends CacheTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('cache_test');
+
   protected $profile = 'testing';
 
   public static function getInfo() {
@@ -22,10 +30,6 @@ class InstallTest extends CacheTestBase {
       'description' => 'Confirm that the cache backend used for installing Drupal works correctly.',
       'group' => 'Cache',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('cache_test'));
   }
 
   /**

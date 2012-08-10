@@ -14,16 +14,20 @@ use Drupal\Core\Language\Language;
  * Functional tests for the language list configuration forms.
  */
 class LanguageListTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language');
+
   public static function getInfo() {
     return array(
       'name' => 'Language list configuration',
       'description' => 'Adds a new language and tests changing its status and the default language.',
       'group' => 'Language',
     );
-  }
-
-  function setUp() {
-    parent::setUp('language');
   }
 
   /**

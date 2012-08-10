@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Functional test for string translation and validation.
  */
 class LocaleTranslationTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('locale');
+
   public static function getInfo() {
     return array(
       'name' => 'String translate, search and validate',
       'description' => 'Adds a new locale and translates its name. Checks the validation of translation strings and search results.',
       'group' => 'Locale',
     );
-  }
-
-  function setUp() {
-    parent::setUp('locale');
   }
 
   /**

@@ -13,8 +13,16 @@ use Drupal\field\Tests\FieldTestBase;
  * Sets up a Options field for testing allowed values functions.
  */
 class OptionsDynamicValuesTest extends FieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('options', 'field_test', 'options_test');
+
   function setUp() {
-    parent::setUp(array('options', 'field_test', 'options_test'));
+    parent::setUp();
 
     $this->field_name = 'test_options';
     $this->field = array(

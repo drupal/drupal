@@ -13,6 +13,16 @@ use Drupal\simpletest\WebTestBase;
  * Tests a module without help to verify it is not listed in the help page.
  */
 class NoHelpTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * Use one of the test modules that do not implement hook_help().
+   *
+   * @var array.
+   */
+  public static $modules = array('menu_test');
+
   /**
    * The user who will be created.
    */
@@ -27,8 +37,7 @@ class NoHelpTest extends WebTestBase {
   }
 
   function setUp() {
-    // Use one of the test modules that do not implement hook_help().
-    parent::setUp('menu_test');
+    parent::setUp();
     $this->big_user = $this->drupalCreateUser(array('access administration pages'));
   }
 

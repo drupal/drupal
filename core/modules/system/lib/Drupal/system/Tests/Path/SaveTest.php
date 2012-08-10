@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests the path_save() function.
  */
 class SaveTest extends WebTestBase {
+
+  /**
+   * Enable a helper module that implements hook_path_update().
+   *
+   * @var array
+   */
+  public static $modules = array('path_test');
+
   public static function getInfo() {
     return array(
       'name' => t('Path save'),
@@ -22,8 +30,7 @@ class SaveTest extends WebTestBase {
   }
 
   function setUp() {
-    // Enable a helper module that implements hook_path_update().
-    parent::setUp('path_test');
+    parent::setUp();
     path_test_reset();
   }
 

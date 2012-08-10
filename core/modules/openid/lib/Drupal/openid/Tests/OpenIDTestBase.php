@@ -13,14 +13,16 @@ use Drupal\simpletest\WebTestBase;
  * Base class for OpenID tests.
  */
 abstract class OpenIDTestBase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'openid');
+
   function setUp() {
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    $modules[] = 'block';
-    $modules[] = 'openid';
-    parent::setUp($modules);
+    parent::setUp();
 
     // Enable user login block.
     db_merge('block')

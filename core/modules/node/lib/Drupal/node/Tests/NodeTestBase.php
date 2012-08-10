@@ -10,13 +10,16 @@ namespace Drupal\node\Tests;
 use Drupal\simpletest\WebTestBase;
 
 abstract class NodeTestBase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
   function setUp() {
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    $modules[] = 'node';
-    parent::setUp($modules);
+    parent::setUp();
 
     // Create Basic page and Article node types.
     if ($this->profile != 'standard') {

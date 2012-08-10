@@ -10,15 +10,16 @@ namespace Drupal\search\Tests;
 use Drupal\simpletest\WebTestBase;
 
 abstract class SearchTestBase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'search', 'dblog');
+
   function setUp() {
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    $modules[] = 'node';
-    $modules[] = 'search';
-    $modules[] = 'dblog';
-    parent::setUp($modules);
+    parent::setUp();
 
     // Create Basic page and Article node types.
     if ($this->profile != 'standard') {

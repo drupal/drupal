@@ -15,6 +15,13 @@ use Drupal\simpletest\WebTestBase;
 class StatisticsAdminTest extends WebTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'statistics');
+
+  /**
    * A user that has permission to administer and access statistics.
    *
    * @var object|FALSE
@@ -39,7 +46,7 @@ class StatisticsAdminTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'statistics'));
+    parent::setUp();
 
     // Create Basic page node type.
     if ($this->profile != 'standard') {

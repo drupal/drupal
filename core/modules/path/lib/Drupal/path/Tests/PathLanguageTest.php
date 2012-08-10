@@ -11,6 +11,14 @@ namespace Drupal\path\Tests;
  * Tests URL aliases for translated nodes.
  */
 class PathLanguageTest extends PathTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('path', 'locale', 'translation');
+
   public static function getInfo() {
     return array(
       'name' => 'Path aliases with translated nodes',
@@ -20,7 +28,7 @@ class PathLanguageTest extends PathTestBase {
   }
 
   function setUp() {
-    parent::setUp('path', 'locale', 'translation');
+    parent::setUp();
 
     // Create and login user.
     $this->web_user = $this->drupalCreateUser(array('edit any page content', 'create page content', 'administer url aliases', 'create url aliases', 'administer languages', 'translate content', 'access administration pages'));

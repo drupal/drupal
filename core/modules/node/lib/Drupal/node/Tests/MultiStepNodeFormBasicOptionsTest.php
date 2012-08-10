@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Test multistep node forms basic options.
  */
 class MultiStepNodeFormBasicOptionsTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('poll');
+
   public static function getInfo() {
     return array(
       'name' => 'Multistep node form basic options',
@@ -22,7 +30,8 @@ class MultiStepNodeFormBasicOptionsTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('poll');
+    parent::setUp();
+
     $web_user = $this->drupalCreateUser(array('administer nodes', 'create poll content'));
     $this->drupalLogin($web_user);
   }

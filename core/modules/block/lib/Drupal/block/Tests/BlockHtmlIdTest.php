@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class BlockHtmlIdTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'block_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Block HTML id',
@@ -23,7 +30,7 @@ class BlockHtmlIdTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block', 'block_test'));
+    parent::setUp();
 
     // Create an admin user, log in and enable test blocks.
     $this->admin_user = $this->drupalCreateUser(array('administer blocks', 'access administration pages'));

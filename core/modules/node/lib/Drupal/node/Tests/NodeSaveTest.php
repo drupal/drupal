@@ -12,6 +12,13 @@ namespace Drupal\node\Tests;
  */
 class NodeSaveTest extends NodeTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Node save',
@@ -21,7 +28,8 @@ class NodeSaveTest extends NodeTestBase {
   }
 
   function setUp() {
-    parent::setUp('node_test');
+    parent::setUp();
+
     // Create a user that is allowed to post; we'll use this to test the submission.
     $web_user = $this->drupalCreateUser(array('create article content'));
     $this->drupalLogin($web_user);

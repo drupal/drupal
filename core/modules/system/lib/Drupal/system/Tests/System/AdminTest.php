@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests administrative overview pages.
  */
 class AdminTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('locale');
+
   public static function getInfo() {
     return array(
       'name' => 'Administrative pages',
@@ -23,7 +31,7 @@ class AdminTest extends WebTestBase {
 
   function setUp() {
     // testAdminPages() requires Locale module.
-    parent::setUp(array('locale'));
+    parent::setUp();
 
     // Create an administrator with all permissions, as well as a regular user
     // who can only access administration pages and perform some Locale module

@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class ImageThemeFunctionTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('image');
+
   public static function getInfo() {
     return array(
       'name' => 'Image theme functions',
       'description' => 'Tests the image theme functions.',
       'group' => 'Image',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('image'));
   }
 
   /**

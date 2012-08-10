@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class FrontPageTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'system_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Front page',
@@ -23,7 +30,7 @@ class FrontPageTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'system_test'));
+    parent::setUp();
 
     // Create admin user, log in admin user, and create one node.
     $this->admin_user = $this->drupalCreateUser(array('access content', 'administer site configuration'));

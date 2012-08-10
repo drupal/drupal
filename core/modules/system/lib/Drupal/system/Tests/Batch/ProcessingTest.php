@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests for the Batch API.
  */
 class ProcessingTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('batch_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Batch processing',
       'description' => 'Test batch processing in form and non-form workflow.',
       'group' => 'Batch API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('batch_test');
   }
 
   /**

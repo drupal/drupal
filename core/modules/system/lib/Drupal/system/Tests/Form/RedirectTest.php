@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class RedirectTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Form redirecting',
       'description' => 'Tests functionality of drupal_redirect_form().',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('form_test'));
   }
 
   /**

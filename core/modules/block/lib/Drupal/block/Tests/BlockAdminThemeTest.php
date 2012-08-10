@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Test the block system with admin themes.
  */
 class BlockAdminThemeTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
   public static function getInfo() {
     return array(
       'name' => 'Admin theme block admin accessibility',
       'description' => "Check whether the block administer page for a disabled theme accessible if and only if it's the admin theme.",
       'group' => 'Block',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('block'));
   }
 
   /**

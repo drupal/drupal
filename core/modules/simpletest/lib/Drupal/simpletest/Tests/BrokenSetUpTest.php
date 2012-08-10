@@ -20,6 +20,14 @@ use Drupal\simpletest\WebTestBase;
  * @see Drupal\simpletest\WebTestBase
  */
 class BrokenSetUpTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('simpletest');
+
   public static function getInfo() {
     return array(
       'name' => 'Broken SimpleTest method',
@@ -31,7 +39,7 @@ class BrokenSetUpTest extends WebTestBase {
   function setUp() {
     // If the test is being run from the main site, set up normally.
     if (!drupal_valid_test_ua()) {
-      parent::setUp('simpletest');
+      parent::setUp();
       // Create and log in user.
       $admin_user = $this->drupalCreateUser(array('administer unit tests'));
       $this->drupalLogin($admin_user);

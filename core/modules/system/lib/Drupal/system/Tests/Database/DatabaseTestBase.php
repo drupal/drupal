@@ -16,13 +16,16 @@ use Drupal\simpletest\WebTestBase;
  * here.
  */
 abstract class DatabaseTestBase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('database_test');
+
   function setUp() {
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    $modules[] = 'database_test';
-    parent::setUp($modules);
+    parent::setUp();
 
     $schema['test'] = drupal_get_schema('test');
     $schema['test_people'] = drupal_get_schema('test_people');

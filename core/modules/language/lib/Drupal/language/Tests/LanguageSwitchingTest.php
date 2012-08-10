@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class LanguageSwitchingTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language', 'block');
+
   public static function getInfo() {
     return array(
       'name' => 'Language switching',
@@ -23,7 +30,7 @@ class LanguageSwitchingTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('language', 'block'));
+    parent::setUp();
 
     // Create and login user.
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer languages', 'access administration pages'));

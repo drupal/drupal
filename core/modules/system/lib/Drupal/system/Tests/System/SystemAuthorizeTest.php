@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests authorize.php and related hooks.
  */
 class SystemAuthorizeTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Authorize API',
@@ -22,7 +30,7 @@ class SystemAuthorizeTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('system_test'));
+    parent::setUp();
 
     variable_set('allow_authorize_operations', TRUE);
 

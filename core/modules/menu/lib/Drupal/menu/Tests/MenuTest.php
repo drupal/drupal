@@ -10,6 +10,14 @@ namespace Drupal\menu\Tests;
 use Drupal\simpletest\WebTestBase;
 
 class MenuTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('menu');
+
   protected $profile = 'standard';
 
   protected $big_user;
@@ -26,7 +34,8 @@ class MenuTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('menu');
+    parent::setUp();
+
     // Create users.
     $this->big_user = $this->drupalCreateUser(array('access administration pages', 'administer blocks', 'administer menu', 'create article content'));
     $this->std_user = $this->drupalCreateUser(array());

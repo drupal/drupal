@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests the JavaScript system.
  */
 class JavaScriptTest extends WebTestBase {
+
+  /**
+   * Enable Language and SimpleTest in the test environment.
+   *
+   * @var array
+   */
+  public static $modules = array('language', 'simpletest', 'common_test', 'path');
+
   /**
    * Store configured value for JavaScript preprocessing.
    */
@@ -27,8 +35,7 @@ class JavaScriptTest extends WebTestBase {
   }
 
   function setUp() {
-    // Enable Language and SimpleTest in the test environment.
-    parent::setUp('language', 'simpletest', 'common_test', 'path');
+    parent::setUp();
 
     // Disable preprocessing
     $config = config('system.performance');

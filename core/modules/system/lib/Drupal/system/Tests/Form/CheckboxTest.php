@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class CheckboxTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Form API checkbox',
       'description' => 'Tests form API checkbox handling of various combinations of #default_value and #return_value.',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('form_test');
   }
 
   function testFormCheckbox() {

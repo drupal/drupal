@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * XML-RPC validator1 specification.
  */
 class XmlRpcValidatorTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('xmlrpc', 'xmlrpc_test');
+
   public static function getInfo() {
     return array(
       'name' => 'XML-RPC validator',
       'description' => 'See <a href="http://www.xmlrpc.com/validator1Docs">the xmlrpc validator1 specification</a>.',
       'group' => 'XML-RPC',
     );
-  }
-
-  function setUp() {
-    parent::setUp('xmlrpc', 'xmlrpc_test');
   }
 
   /**

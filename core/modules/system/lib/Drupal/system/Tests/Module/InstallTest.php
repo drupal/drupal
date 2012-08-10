@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Unit tests for module installation.
  */
 class InstallTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('module_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Module installation',
       'description' => 'Tests the installation of modules.',
       'group' => 'Module',
     );
-  }
-
-  function setUp() {
-    parent::setUp('module_test');
   }
 
   /**

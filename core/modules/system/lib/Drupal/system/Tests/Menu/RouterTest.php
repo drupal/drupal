@@ -14,6 +14,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests menu router and hook_menu() functionality.
  */
 class RouterTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'menu_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Menu router',
@@ -24,7 +32,7 @@ class RouterTest extends WebTestBase {
 
   function setUp() {
     // Enable dummy module that implements hook_menu.
-    parent::setUp(array('block', 'menu_test'));
+    parent::setUp();
 
     // Make the tests below more robust by explicitly setting the default theme
     // and administrative theme that they expect.

@@ -12,6 +12,13 @@ namespace Drupal\taxonomy\Tests;
  */
 class RssTest extends TaxonomyTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'field_ui');
+
   public static function getInfo() {
     return array(
       'name' => 'Taxonomy RSS Content.',
@@ -21,7 +28,8 @@ class RssTest extends TaxonomyTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'field_ui'));
+    parent::setUp();
+
     $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access', 'administer content types'));
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();

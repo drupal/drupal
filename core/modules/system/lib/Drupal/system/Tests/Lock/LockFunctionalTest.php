@@ -14,16 +14,19 @@ use Drupal\simpletest\WebTestBase;
  */
 class LockFunctionalTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Locking framework tests',
       'description' => 'Confirm locking works between two separate requests.',
       'group' => 'Lock',
     );
-  }
-
-  function setUp() {
-    parent::setUp('system_test');
   }
 
   /**

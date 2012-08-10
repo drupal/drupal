@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class DateFormatsLanguageTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'language');
+
   public static function getInfo() {
     return array(
       'name' => 'Localize date formats',
@@ -23,7 +30,7 @@ class DateFormatsLanguageTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'language'));
+    parent::setUp();
 
     // Create Article node type.
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));

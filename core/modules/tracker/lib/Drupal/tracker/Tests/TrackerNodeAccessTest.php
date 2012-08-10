@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests for private node access on /tracker.
  */
 class TrackerNodeAccessTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'comment', 'tracker', 'node_access_test');
+
   protected $access_user;
   protected $no_access_user;
 
@@ -25,7 +33,7 @@ class TrackerNodeAccessTest extends WebTestBase {
   }
 
   public function setUp() {
-    parent::setUp(array('node', 'comment', 'tracker', 'node_access_test'));
+    parent::setUp();
     node_access_rebuild();
     variable_set('node_access_test_private', TRUE);
   }

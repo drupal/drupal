@@ -14,6 +14,13 @@ use Drupal\simpletest\UnitTestBase;
  */
 class UpdateCoreUnitTest extends UnitTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('update');
+
   public static function getInfo() {
     return array(
       'name' => "Unit tests",
@@ -23,7 +30,7 @@ class UpdateCoreUnitTest extends UnitTestBase {
   }
 
   function setUp() {
-    parent::setUp('update');
+    parent::setUp();
     module_load_include('inc', 'update', 'update.fetch');
   }
 

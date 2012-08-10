@@ -9,16 +9,19 @@ namespace Drupal\field\Tests;
 
 class FieldInfoTest extends FieldTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Field info tests',
       'description' => 'Get information about existing fields, instances and bundles.',
       'group' => 'Field API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('field_test');
   }
 
   /**

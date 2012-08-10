@@ -14,16 +14,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests creation, saving, and loading of entity UUIDs.
  */
 class EntityUUIDTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('entity_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Entity UUIDs',
       'description' => 'Tests creation, saving, and loading of entity UUIDs.',
       'group' => 'Entity API',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('entity_test'));
   }
 
   /**

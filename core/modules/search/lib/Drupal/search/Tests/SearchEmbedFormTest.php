@@ -11,6 +11,14 @@ namespace Drupal\search\Tests;
  * Tests that we can embed a form in search results and submit it.
  */
 class SearchEmbedFormTest extends SearchTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('search_embedded_form');
+
   /**
    * Node used for testing.
    */
@@ -30,7 +38,7 @@ class SearchEmbedFormTest extends SearchTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('search_embedded_form'));
+    parent::setUp();
 
     // Create a user and a node, and update the search index.
     $test_user = $this->drupalCreateUser(array('access content', 'search content', 'administer nodes'));

@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class ForumIndexTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('taxonomy', 'comment', 'forum');
+
   public static function getInfo() {
     return array(
       'name' => 'Forum index',
@@ -23,7 +30,7 @@ class ForumIndexTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('taxonomy', 'comment', 'forum');
+    parent::setUp();
 
     // Create a test user.
     $web_user = $this->drupalCreateUser(array('create forum content', 'edit own forum content', 'edit any forum content', 'administer nodes'));

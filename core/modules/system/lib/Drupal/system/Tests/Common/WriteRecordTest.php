@@ -14,16 +14,20 @@ use stdClass;
  * Tests writing of data records with drupal_write_record().
  */
 class WriteRecordTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('database_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Data record write functionality',
       'description' => 'Tests writing of data records with drupal_write_record().',
       'group' => 'Common',
     );
-  }
-
-  function setUp() {
-    parent::setUp('database_test');
   }
 
   /**

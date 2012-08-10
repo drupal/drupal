@@ -10,16 +10,20 @@ namespace Drupal\block\Tests;
 use Drupal\simpletest\WebTestBase;
 
 class NonDefaultBlockAdminTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
   public static function getInfo() {
     return array(
       'name' => 'Non default theme admin',
       'description' => 'Check the administer page for non default theme.',
       'group' => 'Block',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('block'));
   }
 
   /**

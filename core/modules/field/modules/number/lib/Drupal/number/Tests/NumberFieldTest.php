@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests for number field types.
  */
 class NumberFieldTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'field_test', 'number', 'field_ui');
+
   protected $field;
   protected $instance;
   protected $web_user;
@@ -26,7 +34,8 @@ class NumberFieldTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('node', 'field_test', 'number', 'field_ui'));
+    parent::setUp();
+
     $this->web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content', 'administer content types'));
     $this->drupalLogin($this->web_user);
   }

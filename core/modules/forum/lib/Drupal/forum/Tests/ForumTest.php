@@ -16,6 +16,13 @@ use Drupal\simpletest\WebTestBase;
 class ForumTest extends WebTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('taxonomy', 'comment', 'forum', 'node', 'block', 'menu', 'help');
+
+  /**
    * A user with various administrative privileges.
    */
   protected $admin_user;
@@ -64,7 +71,8 @@ class ForumTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('taxonomy', 'comment', 'forum', 'node', 'block', 'menu', 'help'));
+    parent::setUp();
+
     // Create users.
     $this->admin_user = $this->drupalCreateUser(array(
       'access administration pages',

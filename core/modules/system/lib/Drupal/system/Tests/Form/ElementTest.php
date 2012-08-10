@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests building and processing of core form elements.
  */
 class ElementTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Element processing',
       'description' => 'Tests building and processing of core form elements.',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('form_test'));
   }
 
   /**

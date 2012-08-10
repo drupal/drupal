@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests generic date and time handling capabilities of Drupal.
  */
 class DateTimeTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language');
+
   public static function getInfo() {
     return array(
       'name' => 'Date and time',
@@ -22,7 +30,7 @@ class DateTimeTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('language'));
+    parent::setUp();
 
     // Create admin user and log in admin user.
     $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));

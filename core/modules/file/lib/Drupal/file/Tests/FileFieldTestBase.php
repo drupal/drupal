@@ -13,22 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Provides methods specifically for testing File module's field handling.
  */
 abstract class FileFieldTestBase extends WebTestBase {
+
+  /**
+  * Modules to enable.
+  *
+  * @var array
+  */
+  public static $modules = array('file', 'file_module_test');
+
   protected $profile = 'standard';
 
   protected $admin_user;
 
   function setUp() {
-    // Since this is a base class for many test cases, support the same
-    // flexibility that Drupal\simpletest\WebTestBase::setUp() has for the
-    // modules to be passed in as either an array or a variable number of string
-    // arguments.
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    $modules[] = 'file';
-    $modules[] = 'file_module_test';
-    parent::setUp($modules);
+    parent::setUp();
     $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer permissions', 'administer content types', 'administer nodes', 'bypass node access'));
     $this->drupalLogin($this->admin_user);
   }

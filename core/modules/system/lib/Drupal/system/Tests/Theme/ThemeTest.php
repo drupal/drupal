@@ -14,6 +14,14 @@ use Drupal\test_theme\ThemeClass;
  * Tests low-level theme functions.
  */
 class ThemeTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('theme_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Theme API',
@@ -23,7 +31,7 @@ class ThemeTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('theme_test');
+    parent::setUp();
     theme_enable(array('test_theme'));
   }
 

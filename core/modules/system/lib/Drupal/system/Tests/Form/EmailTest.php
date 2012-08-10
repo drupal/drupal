@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests email element.
  */
 class EmailTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   protected $profile = 'testing';
 
   public static function getInfo() {
@@ -21,10 +29,6 @@ class EmailTest extends WebTestBase {
       'description' => 'Tests the form API email element.',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('form_test');
   }
 
   /**

@@ -20,6 +20,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class StorageTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name'  => 'Multistep form using form storage',
@@ -29,7 +36,7 @@ class StorageTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('form_test');
+    parent::setUp();
 
     $this->web_user = $this->drupalCreateUser(array('access content'));
     $this->drupalLogin($this->web_user);

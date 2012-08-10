@@ -10,16 +10,20 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 class UserRegistrationTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_test');
+
   public static function getInfo() {
     return array(
       'name' => 'User registration',
       'description' => 'Test registration of user under different configurations.',
       'group' => 'User'
     );
-  }
-
-  function setUp() {
-    parent::setUp('field_test');
   }
 
   function testRegistrationWithEmailVerification() {

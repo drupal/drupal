@@ -13,8 +13,16 @@ use Drupal\simpletest\WebTestBase;
  * Defines a base class for testing aggregator.module.
  */
 abstract class AggregatorTestBase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'block', 'aggregator', 'aggregator_test');
+
   function setUp() {
-    parent::setUp(array('node', 'block', 'aggregator', 'aggregator_test'));
+    parent::setUp();
 
     // Create an Article node type.
     if ($this->profile != 'standard') {

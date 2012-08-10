@@ -11,6 +11,14 @@ namespace Drupal\path\Tests;
  * Tests the user interface for creating path aliases, with languages.
  */
 class PathLanguageUiTest extends PathTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('path', 'locale');
+
   public static function getInfo() {
     return array(
       'name' => 'Path aliases with languages',
@@ -20,7 +28,7 @@ class PathLanguageUiTest extends PathTestBase {
   }
 
   function setUp() {
-    parent::setUp('path', 'locale');
+    parent::setUp();
 
     // Create and login user.
     $web_user = $this->drupalCreateUser(array('edit any page content', 'create page content', 'administer url aliases', 'create url aliases', 'administer languages', 'access administration pages'));

@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Test $form_state clearance.
  */
 class StateValuesCleanTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Form state values clearance',
       'description' => 'Test proper removal of submitted form values using form_state_values_clean().',
       'group' => 'Form API',
     );
-  }
-
-  function setUp() {
-    parent::setUp('form_test');
   }
 
   /**

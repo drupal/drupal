@@ -15,6 +15,14 @@ use Drupal\simpletest\WebTestBase;
  * Test for dependency injected language object.
  */
 class LanguageDependencyInjectionTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language');
+
   public static function getInfo() {
     return array(
         'name' => 'Language dependency injection',
@@ -24,7 +32,7 @@ class LanguageDependencyInjectionTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('language');
+    parent::setUp();
 
     // Ensure we are building a new Language object for each test.
     language(NULL, TRUE);

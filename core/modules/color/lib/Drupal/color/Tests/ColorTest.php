@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests the Color module functionality.
  */
 class ColorTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('color');
+
   protected $big_user;
   protected $themes;
   protected $colorTests;
@@ -26,7 +34,7 @@ class ColorTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('color');
+    parent::setUp();
 
     // Create users.
     $this->big_user = $this->drupalCreateUser(array('administer themes'));

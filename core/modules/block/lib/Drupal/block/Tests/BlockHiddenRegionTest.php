@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests that hidden regions do not inherit blocks when a theme is enabled.
  */
 class BlockHiddenRegionTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'block_test', 'search');
+
   public static function getInfo() {
     return array(
       'name' => 'Blocks not in hidden region',
@@ -22,7 +30,7 @@ class BlockHiddenRegionTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block', 'block_test', 'search'));
+    parent::setUp();
 
     // Enable Search block in default theme.
     db_merge('block')

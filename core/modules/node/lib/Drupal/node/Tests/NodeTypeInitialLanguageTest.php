@@ -11,6 +11,14 @@ namespace Drupal\node\Tests;
  * Tests related to node type initial language.
  */
 class NodeTypeInitialLanguageTest extends NodeTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language');
+
   public static function getInfo() {
     return array(
       'name' => 'Node type initial language',
@@ -20,7 +28,8 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('language'));
+    parent::setUp();
+
     $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types', 'administer languages'));
     $this->drupalLogin($web_user);
   }

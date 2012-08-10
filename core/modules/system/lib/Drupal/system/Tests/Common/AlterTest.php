@@ -14,16 +14,20 @@ use stdClass;
  * Tests alteration of arguments passed to drupal_alter().
  */
 class AlterTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'common_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Alter hook functionality',
       'description' => 'Tests alteration of arguments passed to drupal_alter().',
       'group' => 'Common',
     );
-  }
-
-  function setUp() {
-    parent::setUp(array('block', 'common_test'));
   }
 
   function testDrupalAlter() {

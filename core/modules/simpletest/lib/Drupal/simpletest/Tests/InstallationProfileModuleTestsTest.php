@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Verifies that tests bundled with installation profile modules are found.
  */
 class InstallationProfileModuleTestsTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('simpletest');
+
   /**
    * Use the Testing profile.
    *
@@ -36,7 +44,7 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('simpletest'));
+    parent::setUp();
 
     $this->admin_user = $this->drupalCreateUser(array('administer unit tests'));
     $this->drupalLogin($this->admin_user);

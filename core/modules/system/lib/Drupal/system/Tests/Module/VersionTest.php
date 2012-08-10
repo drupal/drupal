@@ -11,16 +11,20 @@ namespace Drupal\system\Tests\Module;
  * Test module dependency on specific versions.
  */
 class VersionTest extends ModuleTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('module_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Module versions',
       'description' => 'Check module version dependencies.',
       'group' => 'Module',
     );
-  }
-
-  function setUp() {
-    parent::setUp('module_test');
   }
 
   /**

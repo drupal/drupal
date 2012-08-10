@@ -11,6 +11,14 @@ namespace Drupal\node\Tests;
  * Functional tests for the node module blocks.
  */
 class NodeBlockFunctionalTest extends NodeTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
   public static function getInfo() {
     return array(
       'name' => 'Node blocks',
@@ -20,7 +28,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block'));
+    parent::setUp();
 
     // Create users and test node.
     $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer nodes', 'administer blocks'));

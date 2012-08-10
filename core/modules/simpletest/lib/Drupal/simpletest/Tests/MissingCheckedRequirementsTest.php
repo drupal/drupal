@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests missing requirements to run test.
  */
 class MissingCheckedRequirementsTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('simpletest');
+
   public static function getInfo() {
     return array(
       'name' => 'Broken requirements test',
@@ -22,7 +30,7 @@ class MissingCheckedRequirementsTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('simpletest');
+    parent::setUp();
     $admin_user = $this->drupalCreateUser(array('administer unit tests'));
     $this->drupalLogin($admin_user);
   }

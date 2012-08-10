@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class ElementsTableSelectTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('form_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Tableselect form element type test',
@@ -21,11 +28,6 @@ class ElementsTableSelectTest extends WebTestBase {
       'group' => 'Form API',
     );
   }
-
-  function setUp() {
-    parent::setUp('form_test');
-  }
-
 
   /**
    * Test the display of checkboxes when #multiple is TRUE.

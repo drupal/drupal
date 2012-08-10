@@ -14,6 +14,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests the creation of text fields.
  */
 class TextFieldTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_test');
+
   protected $instance;
   protected $admin_user;
   protected $web_user;
@@ -27,7 +35,7 @@ class TextFieldTest extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('field_test');
+    parent::setUp();
 
     $this->admin_user = $this->drupalCreateUser(array('administer filters'));
     $this->web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));

@@ -11,6 +11,14 @@ namespace Drupal\system\Tests\Menu;
  * Tests active menu trails.
  */
 class TrailTest extends MenuTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block', 'menu_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Active trail',
@@ -20,7 +28,8 @@ class TrailTest extends MenuTestBase {
   }
 
   function setUp() {
-    parent::setUp(array('block', 'menu_test'));
+    parent::setUp();
+
     $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages'));
     $this->drupalLogin($this->admin_user);
 

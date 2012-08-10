@@ -11,17 +11,20 @@ use Drupal\field\FieldException;
 use Exception;
 
 class CrudTest extends FieldTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field_test', 'number');
+
   public static function getInfo() {
     return array(
       'name' => 'Field CRUD tests',
       'description' => 'Test field create, read, update, and delete.',
       'group' => 'Field API',
     );
-  }
-
-  function setUp() {
-    // field_update_field() tests use number.module
-    parent::setUp('field_test', 'number');
   }
 
   // TODO : test creation with

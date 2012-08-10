@@ -11,6 +11,14 @@ use Drupal\simpletest\WebTestBase;
 use SimpleXMLElement;
 
 class DBLogTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('dblog', 'poll');
+
   protected $profile = 'standard';
 
   protected $big_user;
@@ -24,12 +32,10 @@ class DBLogTest extends WebTestBase {
     );
   }
 
-  /**
-   * Enable modules and create users with specific permissions.
-   */
   function setUp() {
-    parent::setUp('dblog', 'poll');
-    // Create users.
+    parent::setUp();
+
+    // Create users with specific permissions.
     $this->big_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'access site reports', 'administer users'));
     $this->any_user = $this->drupalCreateUser(array());
   }

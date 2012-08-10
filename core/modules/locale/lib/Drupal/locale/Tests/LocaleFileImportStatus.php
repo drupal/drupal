@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Functional tests for the import of translation files.
  */
 class LocaleFileImportStatus extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('locale');
+
   public static function getInfo() {
     return array(
       'name' => 'Translation file import status',
@@ -22,8 +30,7 @@ class LocaleFileImportStatus extends WebTestBase {
   }
 
   function setUp() {
-    parent::setUp('locale');
-
+    parent::setUp();
     // Create and login user.
     $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages'));
     $this->drupalLogin($admin_user);

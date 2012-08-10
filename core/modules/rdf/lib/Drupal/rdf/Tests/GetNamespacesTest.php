@@ -13,16 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests for RDF namespaces XML serialization.
  */
 class GetNamespacesTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('rdf', 'rdf_test');
+
   public static function getInfo() {
     return array(
       'name' => 'RDF namespaces serialization test',
       'description' => 'Confirm that the serialization of RDF namespaces in present in the HTML markup.',
       'group' => 'RDF',
     );
-  }
-
-  function setUp() {
-    parent::setUp('rdf', 'rdf_test');
   }
 
   /**

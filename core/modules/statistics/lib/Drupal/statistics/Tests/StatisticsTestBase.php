@@ -14,8 +14,15 @@ use Drupal\simpletest\WebTestBase;
  */
 abstract class StatisticsTestBase extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'block', 'statistics');
+
   function setUp() {
-    parent::setUp(array('node', 'block', 'statistics'));
+    parent::setUp();
 
     // Create Basic page node type.
     if ($this->profile != 'standard') {
