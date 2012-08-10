@@ -847,10 +847,11 @@ function drupal_get_filename($type, $name, $filename = NULL) {
   // drupal_static().
   static $files = array(), $dirs = array();
 
-  // Profiles are a special case: they have a fixed location and naming.
+  // Profiles are converted into modules in system_rebuild_module_data().
+  // @todo Remove false-exposure of profiles as modules.
+  $original_type = $type;
   if ($type == 'profile') {
-    $profile_filename = "profiles/$name/$name.profile";
-    $files[$type][$name] = file_exists($profile_filename) ? $profile_filename : FALSE;
+    $type = 'module';
   }
   if (!isset($files[$type])) {
     $files[$type] = array();
@@ -870,7 +871,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     try {
       if (function_exists('db_query')) {
         $file = db_query("SELECT filename FROM {system} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type))->fetchField();
-        if (file_exists(DRUPAL_ROOT . '/' . $file)) {
+        if ($file && file_exists(DRUPAL_ROOT . '/' . $file)) {
           $files[$type][$name] = $file;
         }
       }
@@ -891,6 +892,12 @@ function drupal_get_filename($type, $name, $filename = NULL) {
       }
       elseif ($type == 'theme') {
         $extension = 'info';
+      }
+      // Profiles are converted into modules in system_rebuild_module_data().
+      // @todo Remove false-exposure of profiles as modules.
+      elseif ($original_type == 'profile') {
+        $dir = 'profiles';
+        $extension = 'profile';
       }
       else {
         $extension = $type;

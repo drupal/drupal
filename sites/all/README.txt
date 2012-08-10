@@ -1,7 +1,7 @@
 
-This directory should be used to place downloaded and custom modules
-and themes which are common to all sites. Keeping contributed and
-custom modules and themes in the sites directory will aid in upgrading
-Drupal core files. Place contributed and custom modules and themes in
-the sites/all/modules and sites/all/themes directories respectively.
-
+This directory should be used to place downloaded and custom modules, themes
+and profiles which are common to all sites. Keeping contributed and custom
+modules, themes, and profiles in the sites directory will aid in upgrading
+Drupal core files. Place contributed and custom modules, themes, and profiles
+in the sites/all/modules, sites/all/themes, and sites/all/profiles directories
+respectively.

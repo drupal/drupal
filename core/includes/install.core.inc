@@ -342,7 +342,7 @@ function install_begin_request(&$install_state) {
   $install_state['database_tables_exist'] = !empty($task);
 
   // Add the list of available profiles to the installation state.
-  $install_state['profiles'] += install_find_profiles();
+  $install_state['profiles'] += drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.profile$/', 'profiles');
 }
 
 /**
@@ -619,7 +619,8 @@ function install_tasks($install_state) {
   if (!empty($install_state['parameters']['profile'])) {
     // Load the profile install file, because it is not always loaded when
     // hook_install_tasks() is invoked (e.g. batch processing).
-    $profile_install_file = DRUPAL_ROOT . '/profiles/' . $install_state['parameters']['profile'] . '/' . $install_state['parameters']['profile'] . '.install';
+    $profile = $install_state['parameters']['profile'];
+    $profile_install_file = dirname($install_state['profiles'][$profile]->uri) . '/' . $profile . '.install';
     if (file_exists($profile_install_file)) {
       include_once $profile_install_file;
     }
@@ -647,7 +648,8 @@ function install_tasks($install_state) {
 
   // Allow the installation profile to modify the full list of tasks.
   if (!empty($install_state['parameters']['profile'])) {
-    $profile_file = DRUPAL_ROOT . '/profiles/' . $install_state['parameters']['profile'] . '/' . $install_state['parameters']['profile'] . '.profile';
+    $profile = $install_state['parameters']['profile'];
+    $profile_file = $install_state['profiles'][$profile]->uri;
     if (file_exists($profile_file)) {
       include_once $profile_file;
       $function = $install_state['parameters']['profile'] . '_install_tasks_alter';
@@ -1058,13 +1060,6 @@ function install_settings_form_submit($form, &$form_state) {
 }
 
 /**
- * Finds all .profile files.
- */
-function install_find_profiles() {
-  return file_scan_directory('./profiles', '/\.profile$/', array('key' => 'name'));
-}
-
-/**
  * Installation task; select which profile to install.
  *
  * @param $install_state
@@ -1090,7 +1085,7 @@ function install_select_profile(&$install_state) {
       if ($install_state['interactive']) {
         include_once DRUPAL_ROOT . '/core/includes/form.inc';
         drupal_set_title(st('Select an installation profile'));
-        $form = drupal_get_form('install_select_profile_form', $install_state['profiles']);
+        $form = drupal_get_form('install_select_profile_form', $install_state);
         return drupal_render($form);
       }
       else {
@@ -1108,41 +1103,27 @@ function install_select_profile(&$install_state) {
  * list or from a selection passed in via $_POST.
  */
 function _install_select_profile($profiles) {
-  if (sizeof($profiles) == 0) {
-    throw new Exception(install_no_profile_error());
-  }
   // Don't need to choose profile if only one available.
-  if (sizeof($profiles) == 1) {
+  if (count($profiles) == 1) {
     $profile = array_pop($profiles);
-    // TODO: is this right?
-    require_once DRUPAL_ROOT . '/' . $profile->uri;
     return $profile->name;
   }
-  else {
-    foreach ($profiles as $profile) {
-      if (!empty($_POST['profile']) && ($_POST['profile'] == $profile->name)) {
-        return $profile->name;
-      }
-    }
+  elseif (!empty($_POST['profile']) && isset($profiles[$_POST['profile']])) {
+    return $profiles[$_POST['profile']]->name;
   }
 }
 
 /**
  * Form API array definition for the profile selection form.
  *
- * @param $form_state
- *   Array of metadata about state of form processing.
- * @param $profile_files
- *   Array of .profile files, as returned from file_scan_directory().
+ * @param array $install_state
+ *   An array of information about the current installation state.
  */
-function install_select_profile_form($form, &$form_state, $profile_files) {
+function install_select_profile_form($form, &$form_state, $install_state) {
   $profiles = array();
   $names = array();
 
-  foreach ($profile_files as $profile) {
-    // TODO: is this right?
-    include_once DRUPAL_ROOT . '/' . $profile->uri;
-
+  foreach ($install_state['profiles'] as $profile) {
     $details = install_profile_info($profile->name);
     // Don't show hidden profiles. This is used by to hide the testing profile,
     // which only exists to speed up test runs.
@@ -1392,7 +1373,8 @@ function install_already_done_error() {
  *   the profile cannot be loaded.
  */
 function install_load_profile(&$install_state) {
-  $profile_file = DRUPAL_ROOT . '/profiles/' . $install_state['parameters']['profile'] . '/' . $install_state['parameters']['profile'] . '.profile';
+  $profile = $install_state['parameters']['profile'];
+  $profile_file = $install_state['profiles'][$profile]->uri;
   if (file_exists($profile_file)) {
     include_once $profile_file;
     $install_state['profile_info'] = install_profile_info($install_state['parameters']['profile'], $install_state['parameters']['langcode']);
@@ -1652,7 +1634,7 @@ function install_check_requirements($install_state) {
   $profile = $install_state['parameters']['profile'];
 
   // Check the profile requirements.
-  $requirements = drupal_check_profile($profile);
+  $requirements = drupal_check_profile($profile, $install_state);
 
   // If Drupal is not set up already, we need to create a settings file.
   if (!$install_state['settings_verified']) {

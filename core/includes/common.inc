@@ -5168,7 +5168,6 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   // themes as provided by a distribution. It is pristine in the same way that
   // the 'core/modules' directory is pristine for core; users should avoid
   // any modification by using the sites/all or sites/<domain> directories.
-  $profiles = array();
   $profile = drupal_get_profile();
   // For SimpleTest to be able to test modules packaged together with a
   // distribution we need to include the profile of the parent site (in which
@@ -5176,17 +5175,16 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   if (drupal_valid_test_ua()) {
     $testing_profile = variable_get('simpletest_parent_profile', FALSE);
     if ($testing_profile && $testing_profile != $profile) {
-      $profiles[] = $testing_profile;
+      $searchdir[] = drupal_get_path('profile', $testing_profile) . '/' . $directory;
     }
   }
   // In case both profile directories contain the same extension, the actual
   // profile always has precedence.
-  $profiles[] = $profile;
-  foreach ($profiles as $profile) {
-    if (file_exists("profiles/$profile/$directory")) {
-      $searchdir[] = "profiles/$profile/$directory";
-    }
-  }
+  $searchdir[] = drupal_get_path('profile', $profile) . '/' . $directory;
+
+  // For the case of searching for profiles, scan top-level directories.
+  // @todo Replace entire sites/all/$directory with this.
+  $searchdir[] = $directory;
 
   // Always search sites/all/* as well as the global directories.
   $searchdir[] = 'sites/all/' . $directory;

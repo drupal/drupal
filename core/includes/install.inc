@@ -309,12 +309,11 @@ function install_ensure_config_directory() {
  *   The list of modules to install.
  */
 function drupal_verify_profile($install_state) {
-  $profile = $install_state['parameters']['profile'];
-
   include_once DRUPAL_ROOT . '/core/includes/file.inc';
   include_once DRUPAL_ROOT . '/core/includes/common.inc';
 
-  $profile_file = DRUPAL_ROOT . "/profiles/$profile/$profile.profile";
+  $profile = $install_state['parameters']['profile'];
+  $profile_file = $install_state['profiles'][$profile]->uri;
 
   if (!isset($profile) || !file_exists($profile_file)) {
     throw new Exception(install_no_profile_error());
@@ -729,15 +728,18 @@ function st($string, array $args = array(), array $options = array()) {
 /**
  * Check an install profile's requirements.
  *
- * @param $profile
+ * @param string $profile
  *   Name of install profile to check.
- * @return
+ * @param array $install_state
+ *   The current state in the install process.
+ *
+ * @return array
  *   Array of the install profile's requirements.
  */
-function drupal_check_profile($profile) {
+function drupal_check_profile($profile, array $install_state) {
   include_once DRUPAL_ROOT . '/core/includes/file.inc';
 
-  $profile_file = DRUPAL_ROOT . "/profiles/$profile/$profile.profile";
+  $profile_file = $install_state['profiles'][$profile]->uri;
 
   if (!isset($profile) || !file_exists($profile_file)) {
     throw new Exception(install_no_profile_error());
@@ -854,7 +856,9 @@ function install_profile_info($profile, $langcode = 'en') {
       'hidden' => FALSE,
       'php' => DRUPAL_MINIMUM_PHP,
     );
-    $info = drupal_parse_info_file("profiles/$profile/$profile.info") + $defaults;
+    $profile_file = drupal_get_path('profile', $profile) . "/$profile.info";
+    $info = drupal_parse_info_file($profile_file);
+    $info += $defaults;
     $info['dependencies'] = array_unique(array_merge(
       drupal_required_modules(),
       $info['dependencies'],

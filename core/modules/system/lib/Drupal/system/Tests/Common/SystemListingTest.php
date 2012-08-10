@@ -33,12 +33,12 @@ class SystemListingTest extends WebTestBase {
       // precedence.
       'drupal_system_listing_incompatible_test' => array(
         'core/modules/system/tests/modules',
-        'profiles/testing/modules',
+        'core/profiles/testing/modules',
       ),
       // When both copies of the module are compatible with Drupal core, the
       // copy in the profile directory takes precedence.
       'drupal_system_listing_compatible_test' => array(
-        'profiles/testing/modules',
+        'core/profiles/testing/modules',
         'core/modules/system/tests/modules',
       ),
     );

@@ -2648,11 +2648,12 @@ function _system_rebuild_module_data() {
   // Find modules
   $modules = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules', 'name', 0);
 
+  // Find installation profiles.
+  $profiles = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.profile$/', 'profiles', 'name', 0);
+
   // Include the install profile in modules that are loaded.
   $profile = drupal_get_profile();
-  $modules[$profile] = new stdClass();
-  $modules[$profile]->name = $profile;
-  $modules[$profile]->uri = 'profiles/' . $profile . '/' . $profile . '.profile';
+  $modules[$profile] = $profiles[$profile];
 
   // Install profile hooks are always executed last.
   $modules[$profile]->weight = 1000;
