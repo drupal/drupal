@@ -3,10 +3,12 @@
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-function router_test_router_info() {
+function router_test_route_info() {
   $collection = new RouteCollection();
 
-  $route = new Route('router_test/test1');
+  $route = new Route('router_test/test1', array(
+    '_controller' => '\Drupal\router_test\TestControllers::test1'
+  ));
   $collection->add('router_test_1', $route);
 
   return $collection;
