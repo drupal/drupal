@@ -57,7 +57,8 @@ class CoreBundle extends Bundle
     // @todo Replace below lines with the commented out block below it when it's
     //   performant to do so: http://drupal.org/node/1706064.
     $dispatcher = $container->get('dispatcher');
-    $matcher = new \Drupal\Core\LegacyUrlMatcher();
+    $matcher = new \Drupal\Core\Routing\ChainMatcher();
+    $matcher->add(new \Drupal\Core\LegacyUrlMatcher());
     $content_negotation = new \Drupal\Core\ContentNegotiation();
     $dispatcher->addSubscriber(new \Symfony\Component\HttpKernel\EventListener\RouterListener($matcher));
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\ViewSubscriber($content_negotation));

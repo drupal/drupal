@@ -7,11 +7,16 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Routing\RequestContextAwareInterface;
+use Symfony\Component\Routing\RequestContext;
 
 /**
- * Description of ChainMatcher
+ * Aggregates multiple matchers together in series.
+ *
+ * The RequestContext is entirely unused. It's included only to satisfy the
+ * interface needed for RouterListener.  Hopefully we can remove it later.
  */
-class ChainMatcher implements RequestMatcherInterface {
+class ChainMatcher implements RequestMatcherInterface, RequestContextAwareInterface {
 
   /**
    * Array of RequestMatcherInterface objects to be checked in order.
@@ -25,6 +30,54 @@ class ChainMatcher implements RequestMatcherInterface {
    * @var type
    */
   protected $sortedMatchers = array();
+
+  /**
+   * The request context for this matcher.
+   *
+   * This is unused.  It's just to satisfy the interface.
+   *
+   * @var Symfony\Component\Routing\RequestContext
+   */
+  protected $context;
+
+  /**
+   * Constructor.
+   */
+  public function __construct() {
+    // We will not actually use this object, but it's needed to conform to
+    // the interface.
+    $this->context = new RequestContext();
+  }
+
+  /**
+   * Sets the request context.
+   *
+   * This method is just to satisfy the interface, and is largely vestigial.
+   * The request context object does not contain the information we need, so
+   * we will use the original request object.
+   *
+   * @param Symfony\Component\Routing\RequestContext $context
+   *   The context.
+   *
+   * @api
+   */
+  public function setContext(RequestContext $context) {
+    $this->context = $context;
+  }
+
+  /**
+   * Gets the request context.
+   *
+   * This method is just to satisfy the interface, and is largely vestigial.
+   * The request context object does not contain the information we need, so
+   * we will use the original request object.
+   *
+   * @return Symfony\Component\Routing\RequestContext
+   *   The context.
+   */
+  public function getContext() {
+    return $this->context;
+  }
 
   /**
    * Matches a request against all queued matchers.
