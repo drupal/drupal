@@ -59,7 +59,7 @@ class CoreBundle extends Bundle
     $dispatcher = $container->get('dispatcher');
     $matcher = new \Drupal\Core\LegacyUrlMatcher();
     $content_negotation = new \Drupal\Core\ContentNegotiation();
-    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\RouterListener($matcher));
+    $dispatcher->addSubscriber(new \Symfony\Component\HttpKernel\EventListener\RouterListener($matcher));
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\ViewSubscriber($content_negotation));
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\AccessSubscriber());
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\MaintenanceModeSubscriber());

@@ -9,13 +9,14 @@ namespace Drupal\Core;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Routing\RequestContextAwareInterface;
 use Symfony\Component\Routing\RequestContext;
 
 /**
  * UrlMatcher matches URL based on a set of routes.
  */
-class LegacyUrlMatcher implements UrlMatcherInterface {
+class LegacyUrlMatcher implements RequestMatcherInterface, RequestContextAwareInterface {
 
   /**
    * The request context for this matcher.
@@ -98,8 +99,8 @@ class LegacyUrlMatcher implements UrlMatcherInterface {
    *
    * @api
    */
-  public function match($pathinfo) {
-    if ($router_item = $this->matchDrupalItem($pathinfo)) {
+  public function matchRequest(Request $request) {
+    if ($router_item = $this->matchDrupalItem($request->attributes->get('system_path'))) {
       $ret = $this->convertDrupalItem($router_item);
       // Stash the router item in the attributes while we're transitioning.
       $ret['drupal_menu_item'] = $router_item;
