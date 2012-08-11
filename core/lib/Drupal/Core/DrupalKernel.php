@@ -26,6 +26,16 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 class DrupalKernel extends Kernel {
 
   /**
+   * Overrides Kernel::init().
+   */
+  public function init() {
+    // Intentionally empty. The sole purpose is to not execute Kernel::init(),
+    // since that overrides/breaks Drupal's current error handling.
+    // @todo Investigate whether it is possible to migrate Drupal's error
+    //   handling to the one of Kernel without losing functionality.
+  }
+
+  /**
    * Returns an array of available bundles.
    */
   public function registerBundles() {
