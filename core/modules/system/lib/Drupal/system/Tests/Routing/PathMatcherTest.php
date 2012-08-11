@@ -67,11 +67,11 @@ class PathMatcherTest extends UnitTestBase {
 
     $candidates = array_flip($candidates);
 
-    $this->assertTrue(count($candidates) == 4, t('Correct number of candidates found'));
-    $this->assertTrue(array_key_exists('/node/5/edit', $candidates), t('First candidate found.'));
-    $this->assertTrue(array_key_exists('/node/5/%', $candidates), t('Second candidate found.'));
-    $this->assertTrue(array_key_exists('/node/%/edit', $candidates), t('Third candidate found.'));
-    $this->assertTrue(array_key_exists('/node/%/%', $candidates), t('Fourth candidate found.'));
+    $this->assertTrue(count($candidates) == 4, 'Correct number of candidates found');
+    $this->assertTrue(array_key_exists('/node/5/edit', $candidates), 'First candidate found.');
+    $this->assertTrue(array_key_exists('/node/5/%', $candidates), 'Second candidate found.');
+    $this->assertTrue(array_key_exists('/node/%/edit', $candidates), 'Third candidate found.');
+    $this->assertTrue(array_key_exists('/node/%/%', $candidates), 'Fourth candidate found.');
   }
 
   /**
@@ -94,7 +94,7 @@ class PathMatcherTest extends UnitTestBase {
     $routes = $matcher->matchRequestPartial($request);
 
     foreach ($routes as $route) {
-      $this->assertEqual($route->getPattern(), $path, t('Found path has correct pattern'));
+      $this->assertEqual($route->getPattern(), $path, 'Found path has correct pattern');
     }
   }
 
@@ -119,12 +119,12 @@ class PathMatcherTest extends UnitTestBase {
 
     // All of the matching paths have the correct pattern.
     foreach ($routes as $route) {
-      $this->assertEqual($route->compile()->getPatternOutline(), '/path/%/one', t('Found path has correct pattern'));
+      $this->assertEqual($route->compile()->getPatternOutline(), '/path/%/one', 'Found path has correct pattern');
     }
 
-    $this->assertEqual(count($routes->all()), 2, t('The correct number of routes was found.'));
-    $this->assertNotNull($routes->get('route_a'), t('The first matching route was found.'));
-    $this->assertNotNull($routes->get('route_b'), t('The second matching route was not found.'));
+    $this->assertEqual(count($routes->all()), 2, 'The correct number of routes was found.');
+    $this->assertNotNull($routes->get('route_a'), 'The first matching route was found.');
+    $this->assertNotNull($routes->get('route_b'), 'The second matching route was not found.');
   }
 
   /**
@@ -149,7 +149,7 @@ class PathMatcherTest extends UnitTestBase {
       $this->fail(t('No exception was thrown.'));
     }
     catch (Exception $e) {
-      $this->assertTrue($e instanceof ResourceNotFoundException, t('The correct exception was thrown.'));
+      $this->assertTrue($e instanceof ResourceNotFoundException, 'The correct exception was thrown.');
     }
 
   }

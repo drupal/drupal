@@ -63,7 +63,7 @@ class NestedMatcherTest extends UnitTestBase {
 
     $attributes = $matcher->matchRequest($request);
 
-    $this->assertEqual($attributes['_route'], 'route_a', t('The correct matching route was found.'));
+    $this->assertEqual($attributes['_route'], 'route_a', 'The correct matching route was found.');
   }
 }
 

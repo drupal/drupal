@@ -58,12 +58,12 @@ class HttpMethodMatcherTest extends UnitTestBase {
 
     $routes = $matcher->matchRequestPartial(Request::create('path/one', 'GET'));
 
-    $this->assertEqual(count($routes->all()), 4, t('The correct number of routes was found.'));
-    $this->assertNotNull($routes->get('route_a'), t('The first matching route was found.'));
-    $this->assertNull($routes->get('route_b'), t('The non-matching route was not found.'));
-    $this->assertNotNull($routes->get('route_c'), t('The second matching route was found.'));
-    $this->assertNotNull($routes->get('route_d'), t('The all-matching route was found.'));
-    $this->assertNotNull($routes->get('route_e'), t('The multi-matching route was found.'));
+    $this->assertEqual(count($routes->all()), 4, 'The correct number of routes was found.');
+    $this->assertNotNull($routes->get('route_a'), 'The first matching route was found.');
+    $this->assertNull($routes->get('route_b'), 'The non-matching route was not found.');
+    $this->assertNotNull($routes->get('route_c'), 'The second matching route was found.');
+    $this->assertNotNull($routes->get('route_d'), 'The all-matching route was found.');
+    $this->assertNotNull($routes->get('route_e'), 'The multi-matching route was found.');
   }
 
   /**
@@ -81,7 +81,7 @@ class HttpMethodMatcherTest extends UnitTestBase {
 
     $attributes = $matcher->matchRequest($request);
 
-    $this->assertEqual($attributes['_route'], 'route_a', t('The correct matching route was found.'));
+    $this->assertEqual($attributes['_route'], 'route_a', 'The correct matching route was found.');
   }
 
   /**
@@ -101,7 +101,7 @@ class HttpMethodMatcherTest extends UnitTestBase {
       $this->fail(t('No exception was thrown.'));
     }
     catch (Exception $e) {
-      $this->assertTrue($e instanceof MethodNotAllowedException, t('The correct exception was thrown.'));
+      $this->assertTrue($e instanceof MethodNotAllowedException, 'The correct exception was thrown.');
     }
 
   }

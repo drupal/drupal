@@ -52,7 +52,7 @@ class MatcherDumperTest extends UnitTestBase {
     $dumper= new MatcherDumper($connection);
 
     $class_name = 'Drupal\Core\Routing\MatcherDumper';
-    $this->assertTrue($dumper instanceof $class_name, t('Dumper created successfully'));
+    $this->assertTrue($dumper instanceof $class_name, 'Dumper created successfully');
   }
 
   /**
@@ -72,7 +72,7 @@ class MatcherDumperTest extends UnitTestBase {
     $collection_routes = $collection->all();
 
     foreach ($dumper_routes as $name => $route) {
-      $this->assertEqual($route->getPattern(), $collection_routes[$name]->getPattern(), t('Routes match'));
+      $this->assertEqual($route->getPattern(), $collection_routes[$name]->getPattern(), 'Routes match');
     }
   }
 
@@ -134,11 +134,11 @@ class MatcherDumperTest extends UnitTestBase {
 
     $loaded_route = unserialize($record->route);
 
-    $this->assertEqual($record->name, 'test_route', t('Dumped route has correct name.'));
-    $this->assertEqual($record->pattern, '/test/{my}/path', t('Dumped route has correct pattern.'));
-    $this->assertEqual($record->pattern_outline, '/test/%/path', t('Dumped route has correct pattern outline.'));
-    $this->assertEqual($record->fit, 5 /* 101 in binary */, t('Dumped route has correct fit.'));
-    $this->assertTrue($loaded_route instanceof Route, t('Route object retrieved successfully.'));
+    $this->assertEqual($record->name, 'test_route', 'Dumped route has correct name.');
+    $this->assertEqual($record->pattern, '/test/{my}/path', 'Dumped route has correct pattern.');
+    $this->assertEqual($record->pattern_outline, '/test/%/path', 'Dumped route has correct pattern outline.');
+    $this->assertEqual($record->fit, 5 /* 101 in binary */, 'Dumped route has correct fit.');
+    $this->assertTrue($loaded_route instanceof Route, 'Route object retrieved successfully.');
 
   }
 }

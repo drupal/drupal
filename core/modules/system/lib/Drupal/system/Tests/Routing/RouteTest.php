@@ -33,9 +33,9 @@ class RouteTest extends UnitTestBase {
     $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');
     $compiled = $route->compile();
 
-    $this->assertEqual($route, $compiled->getRoute(), t('Compiled route has the correct route object.'));
-    $this->assertEqual($compiled->getFit(), 5 /* That's 101 binary*/, t('The fit was correct.'));
-    $this->assertEqual($compiled->getPatternOutline(), '/test/%/more', t('The pattern outline was correct.'));
+    $this->assertEqual($route, $compiled->getRoute(), 'Compiled route has the correct route object.');
+    $this->assertEqual($compiled->getFit(), 5 /* That's 101 binary*/, 'The fit was correct.');
+    $this->assertEqual($compiled->getPatternOutline(), '/test/%/more', 'The pattern outline was correct.');
   }
 
 }
