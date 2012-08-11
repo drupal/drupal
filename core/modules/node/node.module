@@ -3533,7 +3533,8 @@ function node_access_rebuild($batch_mode = FALSE) {
       // Try to allocate enough time to rebuild node grants
       drupal_set_time_limit(240);
 
-      $nids = db_query("SELECT nid FROM {node}")->fetchCol();
+      // Rebuild newest nodes first so that recent content becomes available quickly.
+      $nids = db_query("SELECT nid FROM {node} ORDER BY nid DESC")->fetchCol();
       foreach ($nids as $nid) {
         $node = node_load($nid, NULL, TRUE);
         // To preserve database integrity, only acquire grants if the node
