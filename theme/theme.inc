@@ -846,14 +846,16 @@ function template_preprocess_views_view_rss(&$vars) {
 
   $style    = &$view->style_plugin;
 
+  $config = config('system.site');
+
   // The RSS 2.0 "spec" doesn't indicate HTML can be used in the description.
   // We strip all HTML tags, but need to prevent double encoding from properly
   // escaped source data (such as &amp becoming &amp;amp;).
   $vars['description'] = check_plain(decode_entities(strip_tags($style->get_description())));
 
   if ($view->display_handler->get_option('sitename_title')) {
-    $title = variable_get('site_name', 'Drupal');
-    if ($slogan = variable_get('site_slogan', '')) {
+    $title = $config->get('name');
+    if ($slogan = $config->get('slogan')) {
       $title .= ' - ' . $slogan;
     }
   }
@@ -877,7 +879,7 @@ function template_preprocess_views_view_rss(&$vars) {
     }
 
     // Compare the link to the default home page; if it's the default home page, just use $base_url.
-    if ($path == variable_get('site_frontpage', 'user')) {
+    if ($path == $config->get('page.front')) {
       $path = '';
     }
 

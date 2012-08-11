@@ -96,7 +96,7 @@ class views_plugin_row_node_rss extends views_plugin_row {
 
     $display_mode = $this->options['item_length'];
     if ($display_mode == 'default') {
-      $display_mode = variable_get('feed_item_length', 'teaser');
+      $display_mode = config('system.rss')->get('items.view_mode');
     }
 
     // Load the specified node:
