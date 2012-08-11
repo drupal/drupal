@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "mini",
+ *   id = "mini",
  *   title = @Translation("Paged output, mini pager"),
  *   short_title = @Translation("Mini"),
  *   help = @Translation("Use the mini pager output."),

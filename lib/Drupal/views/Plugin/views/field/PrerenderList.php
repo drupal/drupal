@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "prerender_list"
+ *   id = "prerender_list"
  * )
  */
 class PrerenderList extends FieldPluginBase {

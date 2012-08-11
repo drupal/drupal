@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
  * @Plugin(
- *   plugin_id = "file_extension"
+ *   id = "file_extension"
  * )
  */
 class Extension extends FieldPluginBase {

@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "html_list",
+ *   id = "html_list",
  *   title = @Translation("HTML List"),
  *   help = @Translation("Displays rows as HTML list."),
  *   theme = "views_view_list",

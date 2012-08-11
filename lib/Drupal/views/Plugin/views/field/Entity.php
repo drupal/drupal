@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "entity"
+ *   id = "entity"
  * )
  */
 class Entity extends FieldPluginBase {

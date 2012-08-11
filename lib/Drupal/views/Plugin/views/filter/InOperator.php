@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "in_operator"
+ *   id = "in_operator"
  * )
  */
 class InOperator extends FilterPluginBase {

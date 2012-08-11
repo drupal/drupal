@@ -26,27 +26,27 @@ function translation_views_data_alter(&$data) {
     'title' => t('Translation set node ID'),
     'help' => t('The ID of the translation set the content belongs to.'),
     'field' => array(
-      'plugin_id' => 'node',
+      'id' => 'node',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'argument' => array(
-      'plugin_id' => 'node_tnid',
+      'id' => 'node_tnid',
       'name field' => 'title', // the field to display in the summary.
       'numeric' => TRUE,
       'validate type' => 'tnid',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'relationship' => array(
       'title' => t('Source translation'),
       'help' => t('The source that this content was translated from.'),
       'base' => 'node',
       'base field' => 'nid',
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'label' => t('Source translation'),
     ),
   );
@@ -63,7 +63,7 @@ function translation_views_data_alter(&$data) {
       'base field' => 'tnid',
       'relationship table' => 'node',
       'relationship field' => 'nid',
-      'plugin_id' => 'translation',
+      'id' => 'translation',
       'label' => t('Translations'),
     ),
   );
@@ -74,7 +74,7 @@ function translation_views_data_alter(&$data) {
     'title' => t('Source translation'),
     'help' => t('Content that is either untranslated or is the original version of a translation set.'),
     'filter' => array(
-      'plugin_id' => 'node_tnid',
+      'id' => 'node_tnid',
     ),
   );
 
@@ -84,7 +84,7 @@ function translation_views_data_alter(&$data) {
     'title' => t('Child translation'),
     'help' => t('Content that is a translation of a source translation.'),
     'filter' => array(
-      'plugin_id' => 'node_tnid_child',
+      'id' => 'node_tnid_child',
     ),
   );
 
@@ -94,16 +94,16 @@ function translation_views_data_alter(&$data) {
     'title' => t('Translation status'),
     'help' => t('The translation status of the content - whether or not the translation needs to be updated.'),
     'field' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'label' => t('Outdated'),
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -113,7 +113,7 @@ function translation_views_data_alter(&$data) {
     'title' => t('Translate link'),
     'help' => t('Provide a simple link to translate the node.'),
     'field' => array(
-      'plugin_id' => 'node_link_translate',
+      'id' => 'node_link_translate',
     ),
   );
 

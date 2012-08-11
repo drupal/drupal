@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
  */
 /**
  * @Plugin(
- *   plugin_id = "user",
+ *   id = "user",
  *   title = @Translation("User"),
  *   help = @Translation("Display the user with standard user view."),
  *   base = {"users"},

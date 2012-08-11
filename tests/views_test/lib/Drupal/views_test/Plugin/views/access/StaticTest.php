@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\access\AccessPluginBase;
  * Tests a static access plugin.
  *
  * @Plugin(
- *   plugin_id = "test_static",
+ *   id = "test_static",
  *   title = @Translation("Static test access plugin"),
  *   help = @Translation("Provides a static test access plugin.")
  * )

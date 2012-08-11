@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  * Plugin which loads an aggregator item and formats it as an RSS item.
  *
  * @Plugin(
- *   plugin_id = "aggregator_rss",
+ *   id = "aggregator_rss",
  *   theme = "views_view_row_rss",
  *   title = @Translation("Aggregator item"),
  *   help = @Translation("Display the aggregator item using the data from the original source."),

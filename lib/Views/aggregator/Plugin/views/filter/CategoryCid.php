@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "aggregator_category_cid"
+ *   id = "aggregator_category_cid"
  * )
  */
 class CategoryCid extends InOperator {

@@ -63,14 +63,14 @@ function search_views_data() {
     'title' => t('Score'),
     'help' => t('The score of the search item. This will not be used if the search filter is not also present.'),
     'field' => array(
-      'plugin_id' => 'search_score',
+      'id' => 'search_score',
       'click sortable' => TRUE,
       'float' => TRUE,
       'no group by' => TRUE,
     ),
     // Information for sorting on a search score.
     'sort' => array(
-      'plugin_id' => 'search_score',
+      'id' => 'search_score',
       'no group by' => TRUE,
     ),
   );
@@ -86,10 +86,10 @@ function search_views_data() {
     'title' => t('Links from'),
     'help' => t('Other nodes that are linked from the node.'),
     'argument' => array(
-      'plugin_id' => 'node_nid',
+      'id' => 'node_nid',
     ),
     'filter' => array(
-      'plugin_id' => 'equality',
+      'id' => 'equality',
     ),
   );
 
@@ -104,10 +104,10 @@ function search_views_data() {
     'title' => t('Links to'),
     'help' => t('Other nodes that link to the node.'),
     'argument' => array(
-      'plugin_id' => 'node_nid',
+      'id' => 'node_nid',
     ),
     'filter' => array(
-      'plugin_id' => 'equality',
+      'id' => 'equality',
     ),
   );
 
@@ -117,11 +117,11 @@ function search_views_data() {
     'help' => t('The terms to search for.'), // The help that appears on the UI,
     // Information for searching terms using the full search syntax
     'filter' => array(
-      'plugin_id' => 'search',
+      'id' => 'search',
       'no group by' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'search',
+      'id' => 'search',
       'no group by' => TRUE,
     ),
   );

@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "permission",
+ *   id = "permission",
  *   title = @Translation("Permission"),
  *   help = @Translation("Access will be granted to users with the specified permission string."),
  *   help_topic = "access-perm",

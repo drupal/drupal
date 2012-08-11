@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "time_interval"
+ *   id = "time_interval"
  * )
  */
 class TimeInterval extends FieldPluginBase {

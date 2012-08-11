@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "aggregator_category"
+ *   id = "aggregator_category"
  * )
  */
 class Category extends FieldPluginBase {

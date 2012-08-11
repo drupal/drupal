@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "embed",
+ *   id = "embed",
  *   title = @Translation("Embed"),
  *   help = @Translation("Provide a display which can be embedded using the views api."),
  *   theme = "views_view",

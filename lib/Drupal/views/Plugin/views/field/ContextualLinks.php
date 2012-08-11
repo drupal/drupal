@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "contextual_links"
+ *   id = "contextual_links"
  * )
  */
 class ContextualLinks extends FieldPluginBase {

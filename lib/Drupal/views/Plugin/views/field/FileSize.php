@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "file_size"
+ *   id = "file_size"
  * )
  */
 class FileSize extends FieldPluginBase {

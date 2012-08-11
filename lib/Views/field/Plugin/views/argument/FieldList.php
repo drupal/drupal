@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "field_list"
+ *   id = "field_list"
  * )
  */
 class FieldList extends Numeric {

@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "filter_format_name"
+ *   id = "filter_format_name"
  * )
  */
 class FormatName extends FieldPluginBase {

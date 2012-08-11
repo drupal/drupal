@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "page",
+ *   id = "page",
  *   title = @Translation("Page"),
  *   help = @Translation("Display the view as a page, with a URL and menu links."),
  *   uses_hook_menu = TRUE,

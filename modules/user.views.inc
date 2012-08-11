@@ -47,24 +47,24 @@ function user_views_data() {
     'title' => t('Uid'),
     'help' => t('The user ID'), // The help that appears on the UI,
     'field' => array(
-      'plugin_id' => 'user',
+      'id' => 'user',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'user_uid',
+      'id' => 'user_uid',
       'name field' => 'name', // display this field in the summary
     ),
     'filter' => array(
       'title' => t('Name'),
-      'plugin_id' => 'user_name',
+      'id' => 'user_name',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'relationship' => array(
       'title' => t('Content authored'),
       'help' => t('Relate content to the user who created it. This relationship will create one record for each content item created by the user.'),
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'base' => 'node',
       'base field' => 'uid',
       'field' => 'uid',
@@ -78,7 +78,7 @@ function user_views_data() {
     'real field' => 'uid',
     'filter' => array(
       'title' => t('The user ID'),
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -88,7 +88,7 @@ function user_views_data() {
       'title' => t('Representative node'),
       'label'  => t('Representative node'),
       'help' => t('Obtains a single representative node for each user, according to a chosen sort criterion.'),
-      'plugin_id' => 'groupwise_max',
+      'id' => 'groupwise_max',
       'relationship field' => 'uid',
       'outer field' => 'users.uid',
       'argument table' => 'users',
@@ -104,7 +104,7 @@ function user_views_data() {
     'title' => t('Current'),
     'help' => t('Filter the view to the currently logged in user.'),
     'filter' => array(
-      'plugin_id' => 'user_current',
+      'id' => 'user_current',
       'type' => 'yes-no',
     ),
   );
@@ -114,17 +114,17 @@ function user_views_data() {
     'title' => t('Name'), // The item it appears as on the UI,
     'help' => t('The user or author name.'), // The help that appears on the UI,
     'field' => array(
-      'plugin_id' => 'user_name',
+      'id' => 'user_name',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
       'title' => t('Name (raw)'),
       'help' => t('The user or author name. This filter does not check if the user exists and allows partial matching. Does not utilize autocomplete.')
     ),
@@ -136,17 +136,17 @@ function user_views_data() {
     'title' => t('E-mail'), // The item it appears as on the UI,
     'help' => t('Email address for a given user. This field is normally not shown to users, so be cautious when using it.'), // The help that appears on the UI,
     'field' => array(
-      'plugin_id' => 'user_mail',
+      'id' => 'user_mail',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -155,17 +155,17 @@ function user_views_data() {
     'title' => t('Language'), // The item it appears as on the UI,
     'help' => t('Language of the user'),
     'field' => array(
-      'plugin_id' => 'user_language',
+      'id' => 'user_language',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'node_language',
+      'id' => 'node_language',
     ),
     'argument' => array(
-      'plugin_id' => 'node_language',
+      'id' => 'node_language',
     ),
   );
 
@@ -176,14 +176,14 @@ function user_views_data() {
     'help' => t("The user's picture, if allowed."), // The help that appears on the UI,
     // Information for displaying the uid
     'field' => array(
-      'plugin_id' => 'user_picture',
+      'id' => 'user_picture',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'label' => t('Has Avatar'),
       'type' => 'yes-no',
     ),
@@ -194,7 +194,7 @@ function user_views_data() {
     'field' => array(
       'title' => t('Link'),
       'help' => t('Provide a simple link to the user.'),
-      'plugin_id' => 'user_link',
+      'id' => 'user_link',
     ),
   );
 
@@ -203,14 +203,14 @@ function user_views_data() {
     'title' => t('Created date'), // The item it appears as on the UI,
     'help' => t('The date the user was created.'), // The help that appears on the UI,
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'date'
+      'id' => 'date'
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -219,7 +219,7 @@ function user_views_data() {
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_fulldate',
+      'id' => 'node_created_fulldate',
     ),
   );
 
@@ -228,7 +228,7 @@ function user_views_data() {
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_year_month',
+      'id' => 'node_created_year_month',
     ),
   );
 
@@ -238,7 +238,7 @@ function user_views_data() {
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_year',
+      'id' => 'node_created_year',
     ),
   );
 
@@ -247,7 +247,7 @@ function user_views_data() {
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_month',
+      'id' => 'node_created_month',
     ),
   );
 
@@ -256,7 +256,7 @@ function user_views_data() {
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_day',
+      'id' => 'node_created_day',
     ),
   );
 
@@ -265,7 +265,7 @@ function user_views_data() {
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_week',
+      'id' => 'node_created_week',
     ),
   );
 
@@ -274,14 +274,14 @@ function user_views_data() {
     'title' => t('Last access'), // The item it appears as on the UI,
     'help' => t("The user's last access date."), // The help that appears on the UI,
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'date'
+      'id' => 'date'
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -290,14 +290,14 @@ function user_views_data() {
     'title' => t('Last login'), // The item it appears as on the UI,
     'help' => t("The user's last login date."), // The help that appears on the UI,
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'date'
+      'id' => 'date'
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -307,19 +307,19 @@ function user_views_data() {
     'help' => t('Whether a user is active or blocked.'), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'active-blocked' => array(t('Active'), t('Blocked')),
       ),
     ),
     'filter' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'label' => t('Active'),
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -329,11 +329,11 @@ function user_views_data() {
     'help' => t("The user's signature."), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'markup',
+      'id' => 'markup',
       'format' => filter_fallback_format(),
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -341,7 +341,7 @@ function user_views_data() {
     'field' => array(
       'title' => t('Edit link'),
       'help' => t('Provide a simple link to edit the user.'),
-      'plugin_id' => 'user_link_edit',
+      'id' => 'user_link_edit',
     ),
   );
 
@@ -349,7 +349,7 @@ function user_views_data() {
     'field' => array(
       'title' => t('Cancel link'),
       'help' => t('Provide a simple link to cancel the user.'),
-      'plugin_id' => 'user_link_cancel',
+      'id' => 'user_link_cancel',
     ),
   );
 
@@ -357,7 +357,7 @@ function user_views_data() {
     'title' => t('Data'),
     'help' => t('Provide serialized data of the user'),
     'field' => array(
-      'plugin_id' => 'serialized',
+      'id' => 'serialized',
     ),
   );
 
@@ -390,15 +390,15 @@ function user_views_data() {
     'title' => t('Roles'),
     'help' => t('Roles that a user belongs to.'),
     'field' => array(
-      'plugin_id' => 'user_roles',
+      'id' => 'user_roles',
       'no group by' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'user_roles',
+      'id' => 'user_roles',
       'allow empty' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'users_roles_rid',
+      'id' => 'users_roles_rid',
       'name table' => 'role',
       'name field' => 'name',
       'empty field name' => t('No role'),
@@ -450,11 +450,11 @@ function user_views_data() {
     'title' => t('Permission'),
     'help' => t('The user permissions.'),
     'field' => array(
-      'plugin_id' => 'user_permissions',
+      'id' => 'user_permissions',
       'no group by' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'user_permissions',
+      'id' => 'user_permissions',
     ),
   );
 
@@ -485,14 +485,14 @@ function user_views_data() {
     'title' => t('Authmap ID'),
     'help' => t('The Authmap ID.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'numeric' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'numeric' => TRUE,
     ),
   );
@@ -500,26 +500,26 @@ function user_views_data() {
     'title' => t('Authentication name'),
     'help' => t('The unique authentication name.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
   );
   $data['authmap']['module'] = array(
     'title' => t('Authentication module'),
     'help' => t('The name of the module managing the authentication entry.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 

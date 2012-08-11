@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "entity_reverse"
+ *   id = "entity_reverse"
  * )
  */
 class EntityReverse extends RelationshipPluginBase  {

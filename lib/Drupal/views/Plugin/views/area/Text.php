@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "text"
+ *   id = "text"
  * )
  */
 class Text extends AreaPluginBase {

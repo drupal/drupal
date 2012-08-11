@@ -35,19 +35,19 @@ function system_views_data() {
     'title' => t('File ID'),
     'help' => t('The ID of the file.'),
     'field' => array(
-      'plugin_id' => 'file',
+      'id' => 'file',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'file_fid',
+      'id' => 'file_fid',
       'name field' => 'filename', // the field to display in the summary.
       'numeric' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -56,17 +56,17 @@ function system_views_data() {
     'title' => t('Name'),
     'help' => t('The name of the file.'),
     'field' => array(
-      'plugin_id' => 'file',
+      'id' => 'file',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -75,17 +75,17 @@ function system_views_data() {
     'title' => t('Path'),
     'help' => t('The path of the file.'),
     'field' => array(
-      'plugin_id' => 'file_uri',
+      'id' => 'file_uri',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -94,17 +94,17 @@ function system_views_data() {
     'title' => t('Mime type'),
     'help' => t('The mime type of the file.'),
     'field' => array(
-      'plugin_id' => 'file_filemime',
+      'id' => 'file_filemime',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -114,7 +114,7 @@ function system_views_data() {
     'help' => t('The extension of the file.'),
     'real field' => 'filename',
     'field' => array(
-      'plugin_id' => 'field_file_extension',
+      'id' => 'field_file_extension',
       'click sortable' => FALSE,
      ),
   );
@@ -124,14 +124,14 @@ function system_views_data() {
     'title' => t('Size'),
     'help' => t('The size of the file.'),
     'field' => array(
-      'plugin_id' => 'field_file_size',
+      'id' => 'field_file_size',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -140,14 +140,14 @@ function system_views_data() {
     'title' => t('Status'),
     'help' => t('The status of the file.'),
     'field' => array(
-      'plugin_id' => 'field_file_status',
+      'id' => 'field_file_status',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'filter_file_status',
+      'id' => 'filter_file_status',
     ),
   );
 
@@ -156,14 +156,14 @@ function system_views_data() {
     'title' => t('Upload date'),
     'help' => t('The date the file was uploaded.'),
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'date'
+      'id' => 'date'
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -391,65 +391,65 @@ function system_views_data() {
     'title' => t('Module'),
     'help' => t('The module managing this file relationship.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
   $data['file_usage']['type'] = array(
     'title' => t('Entity type'),
     'help' => t('The type of entity that is related to the file.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
   $data['file_usage']['id'] = array(
     'title' => t('Entity ID'),
     'help' => t('The ID of the entity that is related to the file.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
   $data['file_usage']['count'] = array(
     'title' => t('Use count'),
     'help' => t('The number of times the file is used by this entity.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -470,18 +470,18 @@ function system_views_data() {
     'title' => t('Module/Theme/Theme engine filename'),
     'help' => t('The path of the primary file for this item, relative to the Drupal root; e.g. modules/node/node.module.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
       'name field' => 'filename', // the field to display in the summary.
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
   // - name
@@ -489,18 +489,18 @@ function system_views_data() {
     'title' => t('Module/Theme/Theme engine name'),
     'help' => t('The name of the item; e.g. node.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
       'name field' => 'name', // the field to display in the summary.
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
   // - type
@@ -508,18 +508,18 @@ function system_views_data() {
     'title' => t('Type'),
     'help' => t('The type of the item, either module, theme, or theme_engine.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
       'name field' => 'type', // the field to display in the summary.
     ),
     'filter' => array(
-      'plugin_id' => 'filter_system_type',
+      'id' => 'filter_system_type',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
   // - status
@@ -527,18 +527,18 @@ function system_views_data() {
     'title' => t('Status'),
     'help' => t('Boolean indicating whether or not this item is enabled.'),
     'field' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'name field' => 'status', // the field to display in the summary.
     ),
     'filter' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
   // - schema version
@@ -546,18 +546,18 @@ function system_views_data() {
     'title' => t('Schema version'),
     'help' => t("The module's database schema version number. -1 if the module is not installed (its tables do not exist); 0 or the largest N of the module's hook_update_N() function that has either been run or existed when the module was first installed."),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'name field' => 'schema_version', // the field to display in the summary.
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 

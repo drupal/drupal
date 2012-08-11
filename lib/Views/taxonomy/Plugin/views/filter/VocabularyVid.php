@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
  * @Plugin(
- *   plugin_id = "vocabulary_vid"
+ *   id = "vocabulary_vid"
  * )
  */
 class VocabularyVid extends InOperator {

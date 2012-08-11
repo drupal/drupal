@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "formula"
+ *   id = "formula"
  * )
  */
 class Formula extends ArgumentPluginBase {

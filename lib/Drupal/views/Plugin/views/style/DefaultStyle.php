@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "default",
+ *   id = "default",
  *   title = @Translation("Unformatted list"),
  *   help = @Translation("Displays rows one after another."),
  *   theme = "views_view_unformatted",

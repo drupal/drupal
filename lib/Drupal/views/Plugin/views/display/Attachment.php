@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "attachment",
+ *   id = "attachment",
  *   title = @Translation("Attachment"),
  *   help = @Translation("Attachments added to other displays to achieve multiple views in the same view."),
  *   theme = "views_view",

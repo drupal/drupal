@@ -27,7 +27,7 @@ function book_views_data() {
     'help' => t('The book the node is in.'),
     'relationship' => array(
       'base' => 'node',
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'label' => t('Book'),
     ),
     // There is no argument here; if you need an argument, add the relationship
@@ -52,11 +52,11 @@ function book_views_data() {
     'title' => t('Weight'),
     'help' => t('The weight of the book page.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -64,17 +64,17 @@ function book_views_data() {
     'title' => t('Depth'),
     'help' => t('The depth of the book page in the hierarchy; top level books have a depth of 1.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'argument' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -82,7 +82,7 @@ function book_views_data() {
     'title' => t('Hierarchy'),
     'help' => t('The order of pages in the book hierarchy.'),
     'sort' => array(
-      'plugin_id' => 'menu_hierarchy',
+      'id' => 'menu_hierarchy',
     ),
   );
 
@@ -107,7 +107,7 @@ function book_views_data() {
     'relationship' => array(
       'base' => 'node',
       'base field' => 'nid',
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'label' => t('Book parent'),
     ),
   );

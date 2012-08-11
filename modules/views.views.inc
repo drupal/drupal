@@ -21,7 +21,7 @@
     'title' => t('Random'),
     'help' => t('Randomize the display order.'),
     'sort' => array(
-      'plugin_id' => 'random',
+      'id' => 'random',
       ),
     );
 
@@ -29,7 +29,7 @@
     'title' => t('Null'),
     'help' => t('Allow a contextual filter value to be ignored. The query will not be altered by this contextual filter value. Can be used when contextual filter values come from the URL, and a part of the URL needs to be ignored.'),
     'argument' => array(
-      'plugin_id' => 'null',
+      'id' => 'null',
     ),
   );
 
@@ -37,7 +37,7 @@
     'title' => t('Custom text'),
     'help' => t('Provide custom text or link.'),
     'field' => array(
-      'plugin_id' => 'custom',
+      'id' => 'custom',
     ),
   );
 
@@ -45,7 +45,7 @@
     'title' => t('View result counter'),
     'help' => t('Displays the actual position of the view result'),
     'field' => array(
-      'plugin_id' => 'counter',
+      'id' => 'counter',
     ),
   );
 
@@ -53,7 +53,7 @@
     'title' => t('Text area'),
     'help' => t('Provide markup text for the area.'),
     'area' => array(
-      'plugin_id' => 'text',
+      'id' => 'text',
     ),
   );
 
@@ -61,7 +61,7 @@
     'title' => t('Unfiltered text'),
     'help' => t('Add unrestricted, custom text or markup. This is similar to the custom text field.'),
     'area' => array(
-      'plugin_id' => 'text_custom',
+      'id' => 'text_custom',
     ),
   );
 
@@ -69,7 +69,7 @@
     'title' => t('View area'),
     'help' => t('Insert a view inside an area.'),
     'area' => array(
-      'plugin_id' => 'view',
+      'id' => 'view',
     ),
   );
 
@@ -77,7 +77,7 @@
     'title' => t('Result summary'),
     'help' => t('Shows result summary, for example the items per page.'),
     'area' => array(
-      'plugin_id' => 'result',
+      'id' => 'result',
     ),
   );
 
@@ -86,7 +86,7 @@
       'title' => t('Contextual Links'),
       'help' => t('Display fields in a contextual links menu.'),
       'field' => array(
-        'plugin_id' => 'contextual_links',
+        'id' => 'contextual_links',
       ),
     );
   }
@@ -95,7 +95,7 @@
    'title' => t('Combine fields filter'),
     'help' => t('Combine two fields together and search by them.'),
     'filter' => array(
-      'plugin_id' => 'combine',
+      'id' => 'combine',
     ),
   );
 
@@ -104,7 +104,7 @@
       'title' => t('Math expression'),
       'help' => t('Evaluates a mathematical expression and displays it.'),
       'field' => array(
-        'plugin_id' => 'math',
+        'id' => 'math',
         'float' => TRUE,
       ),
     );

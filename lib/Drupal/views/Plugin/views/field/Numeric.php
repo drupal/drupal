@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "numeric"
+ *   id = "numeric"
  * )
  */
 class Numeric extends FieldPluginBase {

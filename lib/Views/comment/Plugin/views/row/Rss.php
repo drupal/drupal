@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  * Plugin which formats the comments as RSS items.
  *
  * @Plugin(
- *   plugin_id = "comment_rss",
+ *   id = "comment_rss",
  *   title = @Translation("Comment"),
  *   help = @Translation("Display the comment as RSS."),
  *   theme = "views_view_row_rss",

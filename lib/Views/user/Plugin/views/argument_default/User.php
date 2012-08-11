@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  * Default argument plugin to extract a user via menu_get_object.
  *
  * @Plugin(
- *   plugin_id = "user",
+ *   id = "user",
  *   title = @Translation("User ID from URL")
  * )
  */

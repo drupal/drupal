@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  * Plugin which performs a comment_view on the resulting object.
  *
  * @Plugin(
- *   plugin_id = "comment_view",
+ *   id = "comment_view",
  *   title = @Translation("Comment"),
  *   help = @Translation("Display the comment with standard comment view."),
  *   theme = "views_view_row_comment",

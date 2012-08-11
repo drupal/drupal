@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "broken"
+ *   id = "broken"
  * )
  */
 class Broken extends RelationshipPluginBase {

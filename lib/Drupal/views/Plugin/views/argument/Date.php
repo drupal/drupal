@@ -30,7 +30,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "date"
+ *   id = "date"
  * )
  */
 class Date extends ArgumentPluginBase {

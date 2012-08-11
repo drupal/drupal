@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\filter\ManyToOne;
 
 /**
  * @Plugin(
- *   plugin_id = "user_roles"
+ *   id = "user_roles"
  * )
  */
 class Roles extends ManyToOne {

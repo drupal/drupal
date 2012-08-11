@@ -48,23 +48,23 @@ function node_views_data() {
     'help' => t('The node ID.'), // The help that appears on the UI,
     // Information for displaying the nid
     'field' => array(
-      'plugin_id' => 'node',
+      'id' => 'node',
       'click sortable' => TRUE,
     ),
     // Information for accepting a nid as an argument
     'argument' => array(
-      'plugin_id' => 'node_nid',
+      'id' => 'node_nid',
       'name field' => 'title', // the field to display in the summary.
       'numeric' => TRUE,
       'validate type' => 'nid',
     ),
     // Information for accepting a nid as a filter
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     // Information for sorting on a nid.
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -77,19 +77,19 @@ function node_views_data() {
     'field' => array(
       'field' => 'title', // the real field. This could be left out since it is the same.
       'group' => t('Content'), // The group it appears in on the UI. Could be left out.
-      'plugin_id' => 'node',
+      'id' => 'node',
       'click sortable' => TRUE,
       'link_to_node default' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -98,14 +98,14 @@ function node_views_data() {
     'title' => t('Post date'), // The item it appears as on the UI,
     'help' => t('The date the content was posted.'), // The help that appears on the UI,
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'date'
+      'id' => 'date'
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -114,14 +114,14 @@ function node_views_data() {
     'title' => t('Updated date'), // The item it appears as on the UI,
     'help' => t('The date the content was last updated.'), // The help that appears on the UI,
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'date'
+      'id' => 'date'
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -130,17 +130,17 @@ function node_views_data() {
     'title' => t('Type'), // The item it appears as on the UI,
     'help' => t('The content type (for example, "blog entry", "forum post", "story", etc).'), // The help that appears on the UI,
     'field' => array(
-      'plugin_id' => 'node_type',
+      'id' => 'node_type',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'node_type',
+      'id' => 'node_type',
     ),
     'argument' => array(
-      'plugin_id' => 'node_type',
+      'id' => 'node_type',
     ),
   );
 
@@ -149,20 +149,20 @@ function node_views_data() {
     'title' => t('Published'),
     'help' => t('Whether or not the content is published.'),
     'field' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'published-notpublished' => array(t('Published'), t('Not published')),
       ),
     ),
     'filter' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'label' => t('Published'),
       'type' => 'yes-no',
       'use equal' => TRUE, // Use status = 1 instead of status <> 0 in WHERE statment
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -172,7 +172,7 @@ function node_views_data() {
     'help' => t('Filters out unpublished content if the current user cannot view it.'),
     'filter' => array(
       'field' => 'status',
-      'plugin_id' => 'node_status',
+      'id' => 'node_status',
       'label' => t('Published or admin'),
     ),
   );
@@ -182,19 +182,19 @@ function node_views_data() {
     'title' => t('Promoted to front page'),
     'help' => t('Whether or not the content is promoted to the front page.'),
     'field' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'promoted-notpromoted' => array(t('Promoted'), t('Not promoted')),
       ),
     ),
     'filter' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'label' => t('Promoted to front page'),
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -204,19 +204,19 @@ function node_views_data() {
     'help' => t('Whether or not the content is sticky.'), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'sticky' => array(t('Sticky'), t('Not sticky')),
       ),
     ),
     'filter' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'label' => t('Sticky'),
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'help' => t('Whether or not the content is sticky. To list sticky content first, set this to descending.'),
     ),
   );
@@ -232,7 +232,7 @@ function node_views_data() {
     'field' => array(
       'title' => t('Link'),
       'help' => t('Provide a simple link to the content.'),
-      'plugin_id' => 'node_link',
+      'id' => 'node_link',
     ),
   );
 
@@ -241,7 +241,7 @@ function node_views_data() {
     'field' => array(
       'title' => t('Edit link'),
       'help' => t('Provide a simple link to edit the content.'),
-      'plugin_id' => 'node_link_edit',
+      'id' => 'node_link_edit',
     ),
   );
 
@@ -250,7 +250,7 @@ function node_views_data() {
     'field' => array(
       'title' => t('Delete link'),
       'help' => t('Provide a simple link to delete the content.'),
-      'plugin_id' => 'node_link_delete',
+      'id' => 'node_link_delete',
     ),
   );
 
@@ -258,7 +258,7 @@ function node_views_data() {
     'field' => array(
       'title' => t('Path'),
       'help' => t('The aliased path to this content.'),
-      'plugin_id' => 'node_path',
+      'id' => 'node_path',
     ),
   );
 
@@ -270,7 +270,7 @@ function node_views_data() {
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_fulldate',
+      'id' => 'node_created_fulldate',
     ),
   );
 
@@ -279,7 +279,7 @@ function node_views_data() {
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_year_month',
+      'id' => 'node_created_year_month',
     ),
   );
 
@@ -288,7 +288,7 @@ function node_views_data() {
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_year',
+      'id' => 'node_created_year',
     ),
   );
 
@@ -297,7 +297,7 @@ function node_views_data() {
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_month',
+      'id' => 'node_created_month',
     ),
   );
 
@@ -306,7 +306,7 @@ function node_views_data() {
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_day',
+      'id' => 'node_created_day',
     ),
   );
 
@@ -315,7 +315,7 @@ function node_views_data() {
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
       'field' => 'created',
-      'plugin_id' => 'node_created_week',
+      'id' => 'node_created_week',
     ),
   );
 
@@ -324,7 +324,7 @@ function node_views_data() {
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_fulldate',
+      'id' => 'node_created_fulldate',
     ),
   );
 
@@ -333,7 +333,7 @@ function node_views_data() {
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_year_month',
+      'id' => 'node_created_year_month',
     ),
   );
 
@@ -342,7 +342,7 @@ function node_views_data() {
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_year',
+      'id' => 'node_created_year',
     ),
   );
 
@@ -351,7 +351,7 @@ function node_views_data() {
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_month',
+      'id' => 'node_created_month',
     ),
   );
 
@@ -360,7 +360,7 @@ function node_views_data() {
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_day',
+      'id' => 'node_created_day',
     ),
   );
 
@@ -369,7 +369,7 @@ function node_views_data() {
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_week',
+      'id' => 'node_created_week',
     ),
   );
 
@@ -380,19 +380,19 @@ function node_views_data() {
     'relationship' => array(
       'title' => t('Author'),
       'help' => t('Relate content to the user who created it.'),
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'base' => 'users',
       'field' => 'uid',
       'label' => t('author'),
     ),
     'filter' => array(
-      'plugin_id' => 'user_name',
+      'id' => 'user_name',
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'field' => array(
-      'plugin_id' => 'user',
+      'id' => 'user',
     ),
   );
 
@@ -401,10 +401,10 @@ function node_views_data() {
     'help' => t('All nodes where a certain user has a revision'),
     'real field' => 'nid',
     'filter' => array(
-      'plugin_id' => 'node_uid_revision',
+      'id' => 'node_uid_revision',
     ),
     'argument' => array(
-      'plugin_id' => 'node_uid_revision',
+      'id' => 'node_uid_revision',
     ),
   );
 
@@ -450,7 +450,7 @@ function node_views_data() {
     'title' => t('User'),
     'help' => t('Relate a content revision to the user who created the revision.'),
     'relationship' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'base' => 'users',
       'base field' => 'uid',
       'label' => t('revision user'),
@@ -467,20 +467,20 @@ function node_views_data() {
     ),
     // Information for accepting a nid as an argument
     'argument' => array(
-      'plugin_id' => 'node_vid',
+      'id' => 'node_vid',
       'click sortable' => TRUE,
       'numeric' => TRUE,
     ),
     // Information for accepting a nid as a filter
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     // Information for sorting on a nid.
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'relationship' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'base' => 'node',
       'base field' => 'vid',
       'title' => t('Content'),
@@ -495,17 +495,17 @@ function node_views_data() {
      // Information for displaying a title as a field
     'field' => array(
       'field' => 'title', // the real field
-      'plugin_id' => 'node_revision',
+      'id' => 'node_revision',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -515,10 +515,10 @@ function node_views_data() {
     'help' => t('The log message entered when the revision was created.'), // The help that appears on the UI,
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'xss',
+      'id' => 'xss',
      ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -528,14 +528,14 @@ function node_views_data() {
     'title' => t('Updated date'), // The item it appears as on the UI,
     'help' => t('The date the node was last updated.'), // The help that appears on the UI,
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'date'
+      'id' => 'date'
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -543,7 +543,7 @@ function node_views_data() {
     'field' => array(
       'title' => t('Link'),
       'help' => t('Provide a simple link to the revision.'),
-      'plugin_id' => 'node_revision_link',
+      'id' => 'node_revision_link',
     ),
   );
 
@@ -551,7 +551,7 @@ function node_views_data() {
     'field' => array(
       'title' => t('Revert link'),
       'help' => t('Provide a simple link to revert to the revision.'),
-      'plugin_id' => 'node_revision_link_revert',
+      'id' => 'node_revision_link_revert',
     ),
   );
 
@@ -559,7 +559,7 @@ function node_views_data() {
     'field' => array(
       'title' => t('Delete link'),
       'help' => t('Provide a simple link to delete the content revision.'),
-      'plugin_id' => 'node_revision_link_delete',
+      'id' => 'node_revision_link_delete',
     ),
   );
 
@@ -583,7 +583,7 @@ function node_views_data() {
     'title' => t('Access'),
     'help' => t('Filter by access.'),
     'filter' => array(
-      'plugin_id' => 'node_access',
+      'id' => 'node_access',
       'help' => t('Filter for content by view access. <strong>Not necessary if you are using node as your base table.</strong>'),
     ),
   );
@@ -613,12 +613,12 @@ function node_views_data() {
   $data['history']['timestamp'] = array(
     'title' => t('Has new content'),
     'field' => array(
-      'plugin_id' => 'node_history_user_timestamp',
+      'id' => 'node_history_user_timestamp',
       'help' => t('Show a marker if the content is new or updated.'),
     ),
     'filter' => array(
       'help' => t('Show only content that is new or updated.'),
-      'plugin_id' => 'node_history_user_timestamp',
+      'id' => 'node_history_user_timestamp',
     ),
   );
   return $data;

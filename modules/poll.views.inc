@@ -30,16 +30,16 @@ function poll_views_data() {
     'title' => t('Active'),
     'help' => t('Whether the poll is open for voting.'),
     'field' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'label' => t('Active'),
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 

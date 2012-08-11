@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "default_summary",
+ *   id = "default_summary",
  *   title = @Translation("List"),
  *   help = @Translation("Displays the default summary as a list."),
  *   theme = "views_view_summary",

@@ -27,16 +27,16 @@ function language_views_data() {
     'title' => t('Language code'),
     'help' => t("Language code, e.g. 'de' or 'en-US'."),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string'
+      'id' => 'string'
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -44,16 +44,16 @@ function language_views_data() {
     'title' => t('Language name'),
     'help' => t("Language name, e.g. 'German' or 'English'."),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string'
+      'id' => 'string'
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -61,16 +61,16 @@ function language_views_data() {
     'title' => t('Direction'),
     'help' => t('Direction of language (Left-to-Right = 0, Right-to-Left = 1).'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'filter' => array(
-      'plugin_id' => 'numeric'
+      'id' => 'numeric'
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -78,16 +78,16 @@ function language_views_data() {
     'title' => t('Weight'),
     'help' => t('Weight, used in lists of languages.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'filter' => array(
-      'plugin_id' => 'numeric'
+      'id' => 'numeric'
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 

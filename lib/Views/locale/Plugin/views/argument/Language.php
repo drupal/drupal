@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "locale_language"
+ *   id = "locale_language"
  * )
  */
 class Language extends ArgumentPluginBase {

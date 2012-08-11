@@ -44,7 +44,7 @@ class ViewsDiscovery extends AnnotatedClassDiscovery {
       }
 
       // merge the new data in
-      $definitions[$definition['plugin_id']] = $definition;
+      $definitions[$definition['id']] = $definition;
     }
 
     return $definitions;

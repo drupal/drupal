@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "basic",
+ *   id = "basic",
  *   title = @Translation("Basic"),
  *   help = @Translation("Basic exposed form"),
  *   uses_options = TRUE,

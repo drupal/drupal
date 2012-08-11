@@ -11,7 +11,7 @@ use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * @Plugin(
- *   plugin_id = "node_created_week"
+ *   id = "node_created_week"
  * )
  */
 class CreatedWeek extends Date {

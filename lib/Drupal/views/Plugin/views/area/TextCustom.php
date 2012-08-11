@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "text_custom"
+ *   id = "text_custom"
  * )
  */
 class TextCustom extends AreaPluginBase {

@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "rss",
+ *   id = "rss",
  *   title = @Translation("RSS Feed"),
  *   help = @Translation("Generates an RSS feed from a view."),
  *   theme = "views_view_rss",

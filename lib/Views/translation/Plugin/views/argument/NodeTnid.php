@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "node_tnid"
+ *   id = "node_tnid"
  * )
  */
 class NodeTnid extends Numeric {

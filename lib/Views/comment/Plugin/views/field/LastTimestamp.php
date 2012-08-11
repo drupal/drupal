@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "comment_last_timestamp"
+ *   id = "comment_last_timestamp"
  * )
  */
 class LastTimestamp extends Date {

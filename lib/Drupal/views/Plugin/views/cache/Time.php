@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "time",
+ *   id = "time",
  *   title = @Translation("Time-based"),
  *   help = @Translation("Simple time-based caching of data."),
  *   help_topic = "cache-time",

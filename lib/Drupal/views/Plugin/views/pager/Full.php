@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "full",
+ *   id = "full",
  *   title = @Translation("Paged output, full pager"),
  *   short_title = @Translation("Full"),
  *   help = @Translation("Paged output, full Drupal style"),

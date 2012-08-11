@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "groupby_numeric"
+ *   id = "groupby_numeric"
  * )
  */
 class GroupByNumeric extends Numeric {

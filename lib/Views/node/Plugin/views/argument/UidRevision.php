@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "node_uid_revision"
+ *   id = "node_uid_revision"
  * )
  */
 class UidRevision extends Uid {

@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "feed",
+ *   id = "feed",
  *   title = @Translation("Feed"),
  *   help = @Translation("Display the view as a feed, such as an RSS feed."),
  *   uses_hook_menu = TRUE,

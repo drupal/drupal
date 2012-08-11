@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "table",
+ *   id = "table",
  *   title = @Translation("Table"),
  *   help = @Translation("Displays rows in a table."),
  *   theme = "views_view_table",

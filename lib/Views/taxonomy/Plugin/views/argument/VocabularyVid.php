@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\argument\Numeric;
 
 /**
  * @Plugin(
- *   plugin_id = "vocabulary_vid"
+ *   id = "vocabulary_vid"
  * )
  */
 class VocabularyVid extends Numeric {

@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "node"
+ *   id = "node"
  * )
  */
 class Node extends FieldPluginBase {

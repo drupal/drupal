@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "locale_group"
+ *   id = "locale_group"
  * )
  */
 class Group extends ArgumentPluginBase {

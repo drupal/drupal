@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "grid",
+ *   id = "grid",
  *   title = @Translation("Grid"),
  *   help = @Translation("Displays rows in a grid."),
  *   theme = "views_view_grid",

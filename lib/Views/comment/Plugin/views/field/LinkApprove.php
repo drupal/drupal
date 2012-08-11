@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "comment_link_approve"
+ *   id = "comment_link_approve"
  * )
  */
 class LinkApprove extends Link {

@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "comment_link_delete"
+ *   id = "comment_link_delete"
  * )
  */
 class LinkDelete extends Link {

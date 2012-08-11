@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "string"
+ *   id = "string"
  * )
  */
 class String extends ArgumentPluginBase {

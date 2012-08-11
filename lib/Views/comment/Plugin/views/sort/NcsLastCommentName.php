@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "ncs_last_comment_name"
+ *   id = "ncs_last_comment_name"
  * )
  */
 class NcsLastCommentName extends SortPluginBase {

@@ -13,7 +13,7 @@ use Drupal\Core\Annotation\Plugin;
  * Handle a random sort.
  *
  * @Plugin(
- *   plugin_id = "random"
+ *   id = "random"
  * )
  */
 class Random extends SortPluginBase {

@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  * Tests creating user views with the wizard.
  *
  * @Plugin(
- *   plugin_id = "users",
+ *   id = "users",
  *   base_table = "users",
  *   created_column = "created",
  *   title = @Translation("Users"),

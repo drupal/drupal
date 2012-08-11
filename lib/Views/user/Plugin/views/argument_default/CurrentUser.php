@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  * This plugin actually has no options so it odes not need to do a great deal.
  *
  * @Plugin(
- *   plugin_id = "current_user",
+ *   id = "current_user",
  *   title = @Translation("User ID from logged in user")
  * )
  */

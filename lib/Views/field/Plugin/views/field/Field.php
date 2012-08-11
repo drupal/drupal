@@ -45,7 +45,7 @@ function _field_view_formatter_options($field_type = NULL) {
 
 /**
  * @Plugin(
- *   plugin_id = "field"
+ *   id = "field"
  * )
  */
 class Field extends FieldPluginBase {

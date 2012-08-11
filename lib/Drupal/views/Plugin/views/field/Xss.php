@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "xss"
+ *   id = "xss"
  * )
  */
 class Xss extends FieldPluginBase {

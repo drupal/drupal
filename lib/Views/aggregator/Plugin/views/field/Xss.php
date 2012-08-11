@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "aggregator_xss"
+ *   id = "aggregator_xss"
  * )
  */
 class Xss extends FieldPluginBase {

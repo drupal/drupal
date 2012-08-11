@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Plugin;
  * equivalent based upon nearness.
  *
  * @Plugin(
- *   plugin_id = "date"
+ *   id = "date"
  * )
  *
  */

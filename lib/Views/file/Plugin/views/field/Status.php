@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
  * @Plugin(
- *   plugin_id = "file_status"
+ *   id = "file_status"
  * )
  */
 class Status extends FieldPluginBase {

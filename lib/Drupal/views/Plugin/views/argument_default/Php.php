@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "php",
+ *   id = "php",
  *   title = @Translation("PHP Code")
  * )
  */

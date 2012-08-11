@@ -34,22 +34,22 @@ function aggregator_views_data() {
     'help' => t('The unique ID of the aggregator item.'), // The help that appears on the UI,
     // Information for displaying the iid
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     // Information for accepting a iid as an argument
     'argument' => array(
-      'plugin_id' => 'aggregator_iid',
+      'id' => 'aggregator_iid',
       'name field' => 'title', // the field to display in the summary.
       'numeric' => TRUE,
     ),
     // Information for accepting a nid as a filter
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     // Information for sorting on a nid.
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -59,16 +59,16 @@ function aggregator_views_data() {
     'help' => t('The title of the aggregator item.'),
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'aggregator_title_link',
+      'id' => 'aggregator_title_link',
       'extra' => array('link'),
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -77,15 +77,15 @@ function aggregator_views_data() {
     'title' => t('Link'), // The item it appears as on the UI,
     'help' => t('The link to the original source URL of the item.'),
     'field' => array(
-      'plugin_id' => 'url',
+      'id' => 'url',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -95,18 +95,18 @@ function aggregator_views_data() {
     'help' => t('The author of the original imported item.'),
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'aggregator_xss',
+      'id' => 'aggregator_xss',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -116,18 +116,18 @@ function aggregator_views_data() {
     'help' => t('The guid of the original imported item.'),
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'xss',
+      'id' => 'xss',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -137,12 +137,12 @@ function aggregator_views_data() {
     'help' => t('The actual content of the imported item.'),
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'aggregator_xss',
+      'id' => 'aggregator_xss',
       'click sortable' => FALSE,
      ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -152,18 +152,18 @@ function aggregator_views_data() {
     'help' => t('The date the original feed item was posted. (With some feeds, this will be the date it was imported.)'),
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
     'argument' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -187,22 +187,22 @@ function aggregator_views_data() {
     'help' => t('The unique ID of the aggregator feed.'), // The help that appears on the UI,
     // Information for displaying the fid
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     // Information for accepting a fid as an argument
     'argument' => array(
-      'plugin_id' => 'aggregator_fid',
+      'id' => 'aggregator_fid',
       'name field' => 'title', // the field to display in the summary.
       'numeric' => TRUE,
     ),
     // Information for accepting a nid as a filter
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     // Information for sorting on a fid.
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -212,19 +212,19 @@ function aggregator_views_data() {
     'help' => t('The title of the aggregator feed.'),
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'aggregator_title_link',
+      'id' => 'aggregator_title_link',
       'extra' => array('link'),
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -234,14 +234,14 @@ function aggregator_views_data() {
     'help' => t('The link to the source URL of the feed.'),
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'url',
+      'id' => 'url',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -251,17 +251,17 @@ function aggregator_views_data() {
     'help' => t('The date the feed was last checked for new content.'),
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
     'argument' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -271,11 +271,11 @@ function aggregator_views_data() {
     'help' => t('The description of the aggregator feed.'),
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'xss',
+      'id' => 'xss',
       'click sortable' => FALSE,
      ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -285,18 +285,18 @@ function aggregator_views_data() {
     'help' => t('The date of the most recent new content on the feed.'),
      // Information for displaying a title as a field
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
     // Information for accepting a title as a filter
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
     'argument' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -328,19 +328,19 @@ function aggregator_views_data() {
     'title' => t('Category ID'),
     'help' => t('The unique ID of the aggregator category.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'aggregator_category_cid',
+      'id' => 'aggregator_category_cid',
       'name field' => 'title',
       'numeric' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'aggregator_category_cid',
+      'id' => 'aggregator_category_cid',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -349,14 +349,14 @@ function aggregator_views_data() {
     'title' => t('Category'),
     'help' => t('The title of the aggregator category.'),
     'field' => array(
-      'plugin_id' => 'aggregator_category',
+      'id' => 'aggregator_category',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 

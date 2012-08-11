@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "equality"
+ *   id = "equality"
  * )
  */
 class Equality extends FilterPluginBase {

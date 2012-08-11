@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "numeric"
+ *   id = "numeric"
  * )
  */
 class Numeric extends ArgumentPluginBase {

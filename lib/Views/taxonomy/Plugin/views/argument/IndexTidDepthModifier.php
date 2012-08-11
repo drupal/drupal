@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "taxonomy_index_tid_depth_modifier"
+ *   id = "taxonomy_index_tid_depth_modifier"
  * )
  */
 class IndexTidDepthModifier extends ArgumentPluginBase {

@@ -16,11 +16,11 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
  */
 function _views_create_plugin($type, $definition) {
   $manager = new ViewsPluginManager($type);
-  $instance = $manager->createInstance($definition['plugin_id']);
+  $instance = $manager->createInstance($definition['id']);
 
   $instance->is_plugin = TRUE;
   $instance->plugin_type = $type;
-  $instance->plugin_name = $definition['plugin_id'];
+  $instance->plugin_name = $definition['id'];
 
   $instance->set_definition($definition);
 
@@ -35,7 +35,7 @@ function _views_create_plugin($type, $definition) {
  */
 function _views_create_handler($type, $definition) {
   $manager = new ViewsPluginManager($type);
-  $instance = $manager->createInstance($definition['plugin_id']);
+  $instance = $manager->createInstance($definition['id']);
 
   $instance->is_handler = TRUE;
   $instance->handler_type = $type;

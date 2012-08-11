@@ -374,7 +374,7 @@ function hook_views_data() {
     'relationship' => array(
       'base' => 'node', // The name of the table to join with
       'field' => 'nid', // The name of the field to join with
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'label' => t('Example node'),
     ),
   );
@@ -384,17 +384,17 @@ function hook_views_data() {
     'title' => t('Plain text field'),
     'help' => t('Just a plain text field.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE, // This is use by the table display plugin.
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -403,14 +403,14 @@ function hook_views_data() {
     'title' => t('Numeric field'),
     'help' => t('Just a numeric field.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -419,11 +419,11 @@ function hook_views_data() {
     'title' => t('Boolean field'),
     'help' => t('Just an on/off field.'),
     'field' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       // Note that you can override the field-wide label:
       'label' => t('Published'),
       // This setting is used by the boolean filter handler, as possible option.
@@ -432,7 +432,7 @@ function hook_views_data() {
       'use equal' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -441,14 +441,14 @@ function hook_views_data() {
     'title' => t('Timestamp field'),
     'help' => t('Just a timestamp field.'),
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -498,7 +498,7 @@ function hook_views_data_alter(&$data) {
       'base' => 'example_table', // Table we're joining to.
       'base field' => 'eid', // Field on the joined table.
       'field' => 'fid', // Real field name on the 'foo' table.
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'label' => t('Default label for relationship'),
       'title' => t('Title seen when adding relationship'),
       'help' => t('More information about relationship.'),

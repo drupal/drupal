@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "user_link"
+ *   id = "user_link"
  * )
  */
 class Link extends FieldPluginBase {

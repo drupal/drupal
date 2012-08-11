@@ -20,7 +20,7 @@ function image_field_views_data($field) {
   foreach ($data as $table_name => $table_data) {
     // Add the relationship only on the fid field.
     $data[$table_name][$field['field_name'] . '_fid']['relationship'] = array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'base' => 'file_managed',
       'base field' => 'fid',
       'label' => t('image from !field_name', array('!field_name' => $field['field_name'])),
@@ -49,7 +49,7 @@ function image_field_views_data_views_data_alter(&$data, $field) {
     $data['file_managed'][$pseudo_field_name]['relationship'] = array(
       'title' => t('@entity using @field', array('@entity' => $entity, '@field' => $label)),
       'help' => t('Relate each @entity with a @field set to the image.', array('@entity' => $entity, '@field' => $label)),
-      'plugin_id' => 'entity_reverse',
+      'id' => 'entity_reverse',
       'field_name' => $field['field_name'],
       'field table' => _field_sql_storage_tablename($field),
       'field field' => $field['field_name'] . '_fid',

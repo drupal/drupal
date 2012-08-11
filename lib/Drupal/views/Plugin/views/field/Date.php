@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "date"
+ *   id = "date"
  * )
  */
 class Date extends FieldPluginBase {

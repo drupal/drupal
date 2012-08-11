@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "none",
+ *   id = "none",
  *   title = @Translation("Display all items"),
  *   help = @Translation("Display all items that this view might find."),
  *   help_topic = "pager-none",

@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  * Tests creating managed files views with the wizard.
  *
  * @Plugin(
- *   plugin_id = "file_managed",
+ *   id = "file_managed",
  *   base_table = "file_managed",
  *   created_column = "timestamp",
  *   title = @Translation("Files"),

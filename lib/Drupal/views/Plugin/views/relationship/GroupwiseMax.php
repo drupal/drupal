@@ -63,7 +63,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "groupwise_max"
+ *   id = "groupwise_max"
  * )
  */
 class GroupwiseMax extends RelationshipPluginBase {

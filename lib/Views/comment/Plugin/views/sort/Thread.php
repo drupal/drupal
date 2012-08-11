@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "comment_thread"
+ *   id = "comment_thread"
  * )
  */
 class Thread extends SortPluginBase {

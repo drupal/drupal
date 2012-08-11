@@ -43,17 +43,17 @@ function comment_views_data() {
     'title' => t('Title'),
     'help' => t('The title of the comment.'),
     'field' => array(
-      'plugin_id' => 'comment',
+      'id' => 'comment',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -62,17 +62,17 @@ function comment_views_data() {
     'title' => t('ID'),
     'help' => t('The comment ID of the field'),
     'field' => array(
-      'plugin_id' => 'comment',
+      'id' => 'comment',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -81,17 +81,17 @@ function comment_views_data() {
     'title' => t('Author'),
     'help' => t("The name of the comment's author. Can be rendered as a link to the author's homepage."),
     'field' => array(
-      'plugin_id' => 'comment_username',
+      'id' => 'comment_username',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -100,17 +100,17 @@ function comment_views_data() {
     'title' => t("Author's website"),
     'help' => t("The website address of the comment's author. Can be rendered as a link. Will be empty if the author is a registered user."),
     'field' => array(
-      'plugin_id' => 'url',
+      'id' => 'url',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -119,17 +119,17 @@ function comment_views_data() {
     'title' => t('Hostname'),
     'help' => t('Hostname of user that posted the comment.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -138,17 +138,17 @@ function comment_views_data() {
     'title' => t('Mail'),
     'help' => t('Email of user that posted the comment. Will be empty if the author is a registered user.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -157,14 +157,14 @@ function comment_views_data() {
     'title' => t('Post date'),
     'help' => t('Date and time of when the comment was created.'),
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -175,17 +175,17 @@ function comment_views_data() {
       'title' => t('Language'),
       'help' => t('The language the comment is in.'),
       'field' => array(
-        'plugin_id' => 'locale_language',
+        'id' => 'locale_language',
         'click sortable' => TRUE,
       ),
       'filter' => array(
-        'plugin_id' => 'locale_language',
+        'id' => 'locale_language',
       ),
       'argument' => array(
-        'plugin_id' => 'locale_language',
+        'id' => 'locale_language',
       ),
       'sort' => array(
-        'plugin_id' => 'standard',
+        'id' => 'standard',
       ),
     );
   }
@@ -196,14 +196,14 @@ function comment_views_data() {
     'title' => t('Updated date'),
     'help' => t('Date and time of when the comment was last updated.'),
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -213,7 +213,7 @@ function comment_views_data() {
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_fulldate',
+      'id' => 'node_created_fulldate',
     ),
   );
 
@@ -223,7 +223,7 @@ function comment_views_data() {
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_year_month',
+      'id' => 'node_created_year_month',
     ),
   );
 
@@ -233,7 +233,7 @@ function comment_views_data() {
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_year',
+      'id' => 'node_created_year',
     ),
   );
 
@@ -243,7 +243,7 @@ function comment_views_data() {
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_month',
+      'id' => 'node_created_month',
     ),
   );
 
@@ -253,7 +253,7 @@ function comment_views_data() {
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_day',
+      'id' => 'node_created_day',
     ),
   );
 
@@ -263,7 +263,7 @@ function comment_views_data() {
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
       'field' => 'changed',
-      'plugin_id' => 'node_created_week',
+      'id' => 'node_created_week',
     ),
   );
 
@@ -272,19 +272,19 @@ function comment_views_data() {
     'title' => t('Approved'),
     'help' => t('Whether the comment is approved (or still in the moderation queue).'),
     'field' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
       'output formats' => array(
         'approved-not-approved' => array(t('Approved'), t('Not Approved')),
       ),
     ),
     'filter' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'label' => t('Approved comment'),
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -293,7 +293,7 @@ function comment_views_data() {
     'field' => array(
       'title' => t('View link'),
       'help' => t('Provide a simple link to view the comment.'),
-      'plugin_id' => 'comment_link',
+      'id' => 'comment_link',
     ),
   );
 
@@ -302,7 +302,7 @@ function comment_views_data() {
     'field' => array(
       'title' => t('Edit link'),
       'help' => t('Provide a simple link to edit the comment.'),
-      'plugin_id' => 'comment_link_edit',
+      'id' => 'comment_link_edit',
     ),
   );
 
@@ -311,7 +311,7 @@ function comment_views_data() {
     'field' => array(
       'title' => t('Delete link'),
       'help' => t('Provide a simple link to delete the comment.'),
-      'plugin_id' => 'comment_link_delete',
+      'id' => 'comment_link_delete',
     ),
   );
 
@@ -321,7 +321,7 @@ function comment_views_data() {
     'field' => array(
       'title' => t('Approve link'),
       'help' => t('Provide a simple link to approve the comment.'),
-      'plugin_id' => 'comment_link_approve',
+      'id' => 'comment_link_approve',
     ),
   );
 
@@ -330,7 +330,7 @@ function comment_views_data() {
     'field' => array(
       'title' => t('Reply-to link'),
       'help' => t('Provide a simple link to reply to the comment.'),
-      'plugin_id' => 'comment_link_reply',
+      'id' => 'comment_link_reply',
     ),
   );
 
@@ -338,12 +338,12 @@ function comment_views_data() {
     'field' => array(
       'title' => t('Depth'),
       'help' => t('Display the depth of the comment if it is threaded.'),
-      'plugin_id' => 'comment_depth',
+      'id' => 'comment_depth',
     ),
     'sort' => array(
       'title' => t('Thread'),
       'help' => t('Sort by the threaded order. This will keep child comments together with their parents.'),
-      'plugin_id' => 'comment_thread',
+      'id' => 'comment_thread',
     ),
   );
 
@@ -355,17 +355,17 @@ function comment_views_data() {
       'help' => t('The content to which the comment is a reply to.'),
       'base' => 'node',
       'base field' => 'nid',
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'label' => t('Content'),
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -377,17 +377,17 @@ function comment_views_data() {
       'help' => t("The User ID of the comment's author."),
       'base' => 'users',
       'base field' => 'uid',
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'label' => t('author'),
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'field' => array(
-      'plugin_id' => 'user',
+      'id' => 'user',
     ),
   );
 
@@ -395,14 +395,14 @@ function comment_views_data() {
     'title' => t('Parent CID'),
     'help' => t('The Comment ID of the parent comment.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'relationship' => array(
       'title' => t('Parent comment'),
       'help' => t('The parent comment.'),
       'base' => 'comment',
       'base field' => 'cid',
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'label' => t('Parent comment'),
     ),
   );
@@ -428,14 +428,14 @@ function comment_views_data() {
     'title' => t('Last comment time'),
     'help' => t('Date and time of when the last comment was posted.'),
     'field' => array(
-      'plugin_id' => 'comment_last_timestamp',
+      'id' => 'comment_last_timestamp',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 
@@ -444,12 +444,12 @@ function comment_views_data() {
     'title' => t("Last comment author"),
     'help' => t('The name of the author of the last posted comment.'),
     'field' => array(
-      'plugin_id' => 'comment_ncs_last_comment_name',
+      'id' => 'comment_ncs_last_comment_name',
       'click sortable' => TRUE,
       'no group by' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'comment_ncs_last_comment_name',
+      'id' => 'comment_ncs_last_comment_name',
       'no group by' => TRUE,
     ),
   );
@@ -459,17 +459,17 @@ function comment_views_data() {
     'title' => t('Comment count'),
     'help' => t('The number of comments a node has.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'argument' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -478,16 +478,16 @@ function comment_views_data() {
     'title' => t('Updated/commented date'),
     'help' => t('The most recent of last comment posted or node updated time.'),
     'field' => array(
-      'plugin_id' => 'comment_ncs_last_updated',
+      'id' => 'comment_ncs_last_updated',
       'click sortable' => TRUE,
       'no group by' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'comment_ncs_last_updated',
+      'id' => 'comment_ncs_last_updated',
       'no group by' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'comment_ncs_last_updated',
+      'id' => 'comment_ncs_last_updated',
     ),
   );
 
@@ -500,7 +500,7 @@ function comment_views_data() {
       'group' => t('Comment'),
       'base' => 'comment',
       'base field' => 'cid',
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'label' => t('Last Comment'),
     ),
   );
@@ -513,17 +513,17 @@ function comment_views_data() {
       'title' => t('Last comment author'),
       'base' => 'users',
       'base field' => 'uid',
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'label' => t('Last comment author'),
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -540,7 +540,7 @@ function comment_views_data_alter(&$data) {
     'title' => t('New comments'),
     'help' => t('The number of new comments on the node.'),
     'field' => array(
-      'plugin_id' => 'node_new_comments',
+      'id' => 'node_new_comments',
       'no group by' => TRUE,
     ),
   );
@@ -549,7 +549,7 @@ function comment_views_data_alter(&$data) {
     'field' => array(
       'title' => t('Add comment link'),
       'help' => t('Display the standard add comment link used on regular nodes, which will only display if the viewing user has access to add a comment.'),
-      'plugin_id' => 'comment_node_link',
+      'id' => 'comment_node_link',
     ),
   );
 
@@ -558,14 +558,14 @@ function comment_views_data_alter(&$data) {
     'title' => t('Comment status'),
     'help' => t('Whether comments are enabled or disabled on the node.'),
     'field' => array(
-      'plugin_id' => 'node_comment',
+      'id' => 'node_comment',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'node_comment',
+      'id' => 'node_comment',
     ),
   );
 
@@ -576,14 +576,14 @@ function comment_views_data_alter(&$data) {
       'field' => 'uid',
       'name table' => 'users',
       'name field' => 'name',
-      'plugin_id' => 'argument_comment_user_uid',
+      'id' => 'argument_comment_user_uid',
       'no group by' => TRUE,
     ),
     'filter' => array(
       'field' => 'uid',
       'name table' => 'users',
       'name field' => 'name',
-      'plugin_id' => 'comment_user_uid',
+      'id' => 'comment_user_uid',
     ),
   );
 
@@ -596,7 +596,7 @@ function comment_views_data_alter(&$data) {
       'base' => 'comment',
       'base field' => 'nid',
       'relationship field' => 'nid',
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 

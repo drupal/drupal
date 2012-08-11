@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "raw",
+ *   id = "raw",
  *   title = @Translation("Raw value from URL")
  * )
  */

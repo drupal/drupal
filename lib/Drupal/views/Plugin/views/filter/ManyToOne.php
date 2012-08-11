@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "many_to_one"
+ *   id = "many_to_one"
  * )
  */
 class ManyToOne extends InOperator {

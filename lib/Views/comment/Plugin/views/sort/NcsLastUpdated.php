@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "ncs_last_updated"
+ *   id = "ncs_last_updated"
  * )
  */
 class NcsLastUpdated extends Date {

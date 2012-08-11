@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "counter"
+ *   id = "counter"
  * )
  */
 class Counter extends FieldPluginBase {

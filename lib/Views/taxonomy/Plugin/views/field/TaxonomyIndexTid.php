@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "taxonomy_index_tid"
+ *   id = "taxonomy_index_tid"
  * )
  */
 class TaxonomyIndexTid extends PrerenderList {

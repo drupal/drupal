@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "aggregator_title_link"
+ *   id = "aggregator_title_link"
  * )
  */
 class TitleLink extends FieldPluginBase {

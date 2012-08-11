@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\filter\BooleanOperator;
 
 /**
  * @Plugin(
- *   plugin_id = "user_current"
+ *   id = "user_current"
  * )
  */
 class Current extends BooleanOperator {

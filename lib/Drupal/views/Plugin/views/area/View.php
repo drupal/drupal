@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "view"
+ *   id = "view"
  * )
  */
 class View extends AreaPluginBase {

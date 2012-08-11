@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "node_vid"
+ *   id = "node_vid"
  * )
  */
 class Vid extends Numeric {

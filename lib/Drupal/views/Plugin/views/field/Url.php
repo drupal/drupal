@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "url"
+ *   id = "url"
  * )
  */
 class Url extends FieldPluginBase {

@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "user_link_cancel"
+ *   id = "user_link_cancel"
  * )
  */
 class LinkCancel extends Link {

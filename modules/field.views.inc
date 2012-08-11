@@ -234,7 +234,7 @@ function field_views_field_default_views_data($field) {
     $real_field = reset($keys);
     $data[$table][$column]['field'] = array(
       'table' => $table,
-      'plugin_id' => 'field',
+      'id' => 'field',
       'click sortable' => TRUE,
       'field_name' => $field['field_name'],
       // Provide a real field for group by.
@@ -335,7 +335,7 @@ function field_views_field_default_views_data($field) {
       $data[$table][$column_real_name]['argument'] = array(
         'field' => $column_real_name,
         'table' => $table,
-        'plugin_id' => $argument,
+        'id' => $argument,
         'additional fields' => $additional_fields,
         'field_name' => $field['field_name'],
         'empty field name' => t('- No value -'),
@@ -343,7 +343,7 @@ function field_views_field_default_views_data($field) {
       $data[$table][$column_real_name]['filter'] = array(
         'field' => $column_real_name,
         'table' => $table,
-        'plugin_id' => $filter,
+        'id' => $filter,
         'additional fields' => $additional_fields,
         'field_name' => $field['field_name'],
         'allow empty' => TRUE,
@@ -352,7 +352,7 @@ function field_views_field_default_views_data($field) {
         $data[$table][$column_real_name]['sort'] = array(
           'field' => $column_real_name,
           'table' => $table,
-          'plugin_id' => $sort,
+          'id' => $sort,
           'additional fields' => $additional_fields,
           'field_name' => $field['field_name'],
         );
@@ -370,12 +370,12 @@ function field_views_field_default_views_data($field) {
           'help' => t('Delta - Appears in: @bundles.', array('@bundles' => implode(', ', $bundles_names))),
         );
         $data[$table]['delta']['field'] = array(
-          'plugin_id' => 'numeric',
+          'id' => 'numeric',
         );
         $data[$table]['delta']['argument'] = array(
           'field' => 'delta',
           'table' => $table,
-          'plugin_id' => 'numeric',
+          'id' => 'numeric',
           'additional fields' => $additional_fields,
           'empty field name' => t('- No value -'),
           'field_name' => $field['field_name'],
@@ -383,7 +383,7 @@ function field_views_field_default_views_data($field) {
         $data[$table]['delta']['filter'] = array(
           'field' => 'delta',
           'table' => $table,
-          'plugin_id' => 'numeric',
+          'id' => 'numeric',
           'additional fields' => $additional_fields,
           'field_name' => $field['field_name'],
           'allow empty' => TRUE,
@@ -391,7 +391,7 @@ function field_views_field_default_views_data($field) {
         $data[$table]['delta']['sort'] = array(
           'field' => 'delta',
           'table' => $table,
-          'plugin_id' => 'standard',
+          'id' => 'standard',
           'additional fields' => $additional_fields,
           'field_name' => $field['field_name'],
         );
@@ -410,14 +410,14 @@ function list_field_views_data($field) {
   foreach ($data as $table_name => $table_data) {
     foreach ($table_data as $field_name => $field_data) {
       if (isset($field_data['filter']) && $field_name != 'delta') {
-        $data[$table_name][$field_name]['filter']['plugin_id'] = 'field_list';
+        $data[$table_name][$field_name]['filter']['id'] = 'field_list';
       }
       if (isset($field_data['argument']) && $field_name != 'delta') {
         if ($field['type'] == 'list_text') {
-          $data[$table_name][$field_name]['argument']['plugin_id'] = 'field_list_string';
+          $data[$table_name][$field_name]['argument']['id'] = 'field_list_string';
         }
         else {
-          $data[$table_name][$field_name]['argument']['plugin_id'] = 'field_list';
+          $data[$table_name][$field_name]['argument']['id'] = 'field_list';
         }
       }
     }

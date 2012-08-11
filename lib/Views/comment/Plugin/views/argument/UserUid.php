@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "argument_comment_user_uid"
+ *   id = "argument_comment_user_uid"
  * )
  */
 class UserUid extends ArgumentPluginBase {

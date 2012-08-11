@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "node_comment"
+ *   id = "node_comment"
  * )
  */
 class NodeComment extends InOperator {

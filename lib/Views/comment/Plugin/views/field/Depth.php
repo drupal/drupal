@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
  * @Plugin(
- *   plugin_id = "comment_depth"
+ *   id = "comment_depth"
  * )
  */
 class Depth extends FieldPluginBase {

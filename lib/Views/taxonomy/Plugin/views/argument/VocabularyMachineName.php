@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "vocabulary_machine_name"
+ *   id = "vocabulary_machine_name"
  * )
  */
 class VocabularyMachineName extends String {

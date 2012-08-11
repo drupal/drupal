@@ -27,7 +27,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "boolean"
+ *   id = "boolean"
  * )
  */
 class Boolean extends FieldPluginBase {

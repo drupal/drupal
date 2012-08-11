@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  * Plugin which performs a node_view on the resulting object.
  *
  * @Plugin(
- *   plugin_id = "search_view",
+ *   id = "search_view",
  *   title = @Translation("Search"),
  *   no_uid = TRUE
  * )

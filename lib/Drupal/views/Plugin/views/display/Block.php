@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "block",
+ *   id = "block",
  *   title = @Translation("Block"),
  *   help = @Translation("Display the view as a block."),
  *   theme = "views_view",

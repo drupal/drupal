@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Translation;
  */
 /**
  * @Plugin(
- *   plugin_id = "jump_menu_summary",
+ *   id = "jump_menu_summary",
  *   title = @Translation("Jump menu"),
  *   help = @Translation("Puts all of the results into a select box and allows the user to go to a different page based upon the results."),
  *   theme = "views_view_summary_jump_menu",

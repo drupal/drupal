@@ -11,9 +11,9 @@ use Drupal\views\ViewsObject;
 use Drupal\Component\Plugin\PluginBase;
 
 abstract class Plugin extends PluginBase {
-  public function __construct(array $configuration, $plugin_id) {
+  public function __construct(array $configuration, $id) {
     $this->configuration = $configuration;
-    $this->plugin_id = $plugin_id;
+    $this->id = $id;
   }
 
   /**

@@ -11,7 +11,7 @@ use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * @Plugin(
- *   plugin_id = "node_created_fulldate"
+ *   id = "node_created_fulldate"
  * )
  */
 class CreatedFullDate extends Date {

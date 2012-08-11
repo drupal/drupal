@@ -19,7 +19,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  * argument's title to the username.
  *
  * @Plugin(
- *   plugin_id = "user",
+ *   id = "user",
  *   title = @Translation("User")
  * )
  */

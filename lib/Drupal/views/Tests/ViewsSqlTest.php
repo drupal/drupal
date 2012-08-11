@@ -121,85 +121,85 @@ abstract class ViewsSqlTest extends ViewsTestBase {
       'title' => t('ID'),
       'help' => t('The test data ID'),
       'field' => array(
-        'plugin_id' => 'numeric',
+        'id' => 'numeric',
         'click sortable' => TRUE,
       ),
       'argument' => array(
-        'plugin_id' => 'numeric',
+        'id' => 'numeric',
       ),
       'filter' => array(
-        'plugin_id' => 'numeric',
+        'id' => 'numeric',
       ),
       'sort' => array(
-        'plugin_id' => 'standard',
+        'id' => 'standard',
       ),
     );
     $data['views_test']['name'] = array(
       'title' => t('Name'),
       'help' => t('The name of the person'),
       'field' => array(
-        'plugin_id' => 'standard',
+        'id' => 'standard',
         'click sortable' => TRUE,
       ),
       'argument' => array(
-        'plugin_id' => 'string',
+        'id' => 'string',
       ),
       'filter' => array(
-        'plugin_id' => 'string',
+        'id' => 'string',
       ),
       'sort' => array(
-        'plugin_id' => 'standard',
+        'id' => 'standard',
       ),
     );
     $data['views_test']['age'] = array(
       'title' => t('Age'),
       'help' => t('The age of the person'),
       'field' => array(
-        'plugin_id' => 'numeric',
+        'id' => 'numeric',
         'click sortable' => TRUE,
       ),
       'argument' => array(
-        'plugin_id' => 'numeric',
+        'id' => 'numeric',
       ),
       'filter' => array(
-        'plugin_id' => 'numeric',
+        'id' => 'numeric',
       ),
       'sort' => array(
-        'plugin_id' => 'standard',
+        'id' => 'standard',
       ),
     );
     $data['views_test']['job'] = array(
       'title' => t('Job'),
       'help' => t('The job of the person'),
       'field' => array(
-        'plugin_id' => 'standard',
+        'id' => 'standard',
         'click sortable' => TRUE,
       ),
       'argument' => array(
-        'plugin_id' => 'string',
+        'id' => 'string',
       ),
       'filter' => array(
-        'plugin_id' => 'string',
+        'id' => 'string',
       ),
       'sort' => array(
-        'plugin_id' => 'standard',
+        'id' => 'standard',
       ),
     );
     $data['views_test']['created'] = array(
       'title' => t('Created'),
       'help' => t('The creation date of this record'),
       'field' => array(
-        'plugin_id' => 'date',
+        'id' => 'date',
         'click sortable' => TRUE,
       ),
       'argument' => array(
-        'plugin_id' => 'date',
+        'id' => 'date',
       ),
       'filter' => array(
-        'plugin_id' => 'date',
+        'id' => 'date',
       ),
       'sort' => array(
-        'plugin_id' => 'date',
+        'id' => 'date',
       ),
     );
     return $data;

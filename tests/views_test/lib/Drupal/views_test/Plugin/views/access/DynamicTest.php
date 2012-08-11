@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\access\AccessPluginBase;
  * Tests a dynamic access plugin.
  *
  * @Plugin(
- *   plugin_id = "test_dynamic",
+ *   id = "test_dynamic",
  *   title = @Translation("Dynamic test access plugin."),
  *   help = @Translation("Provides a dynamic test access plugin.")
  * )

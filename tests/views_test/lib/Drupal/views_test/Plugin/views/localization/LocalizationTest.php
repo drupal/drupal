@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\localization\LocalizationPluginBase;
  * A stump localisation plugin which has static variables to cache the input.
  *
  * @Plugin(
- *   plugin_id = "test_localization",
+ *   id = "test_localization",
  *   title = @Translation("Test."),
  *   help = @Translation("This is a test description."),
  *   no_uid = TRUE

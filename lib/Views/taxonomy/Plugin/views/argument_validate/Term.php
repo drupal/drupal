@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  * Validate whether an argument is an acceptable node.
  *
  * @Plugin(
- *   plugin_id = "taxonomy_term",
+ *   id = "taxonomy_term",
  *   title = @Translation("Taxonomy term")
  */
 class Term extends ArgumentValidatorPluginBase {

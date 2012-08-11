@@ -73,14 +73,14 @@ function node_example_views_data()  {
     'title' => t('Quantity'),
     'help' => t('Quantity of items.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -90,17 +90,17 @@ function node_example_views_data()  {
     'help' => t('Color of item.'),
 
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
      ),
      'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
      ),
      'argument' => array(
-       'plugin_id' => 'string',
+       'id' => 'string',
      ),
      'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
      ),
   );
 

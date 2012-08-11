@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "taxonomy"
+ *   id = "taxonomy"
  * )
  */
 class Taxonomy extends Numeric {

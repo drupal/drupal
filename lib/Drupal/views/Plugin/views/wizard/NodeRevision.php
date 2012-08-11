@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  * Tests creating node revision views with the wizard.
  *
  * @Plugin(
- *   plugin_id = "node_revision",
+ *   id = "node_revision",
  *   base_table = "node_revision",
  *   created_column = "timestamp",
  *   title = @Translation("Content revisions"),

@@ -13,7 +13,7 @@ use Drupal\Core\Annotation\Plugin;
  * Handler for GROUP BY on simple numeric fields.
  *
  * @Plugin(
- *   plugin_id = "groupby_numeric"
+ *   id = "groupby_numeric"
  * )
  */
 class GroupByNumeric extends SortPluginBase {

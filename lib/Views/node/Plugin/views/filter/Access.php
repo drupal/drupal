@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "node_access"
+ *   id = "node_access"
  * )
  */
 class Access extends FilterPluginBase {

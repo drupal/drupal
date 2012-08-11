@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
  * @Plugin(
- *   plugin_id = "node_language"
+ *   id = "node_language"
  * )
  */
 class NodeLanguage extends InOperator {

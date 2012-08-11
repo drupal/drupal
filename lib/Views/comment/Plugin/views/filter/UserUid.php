@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "comment_user_uid"
+ *   id = "comment_user_uid"
  * )
  */
 class UserUid extends FilterPluginBase {

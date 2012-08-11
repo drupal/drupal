@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "numeric",
+ *   id = "numeric",
  *   title = @Translation("Numeric")
  * )
  */

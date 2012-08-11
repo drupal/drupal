@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "custom"
+ *   id = "custom"
  * )
  */
 class Custom extends FieldPluginBase {

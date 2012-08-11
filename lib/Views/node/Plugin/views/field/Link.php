@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "node_link"
+ *   id = "node_link"
  * )
  */
 class Link extends Entity {

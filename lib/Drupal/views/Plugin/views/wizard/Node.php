@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  * Tests creating node views with the wizard.
  *
  * @Plugin(
- *   plugin_id = "node",
+ *   id = "node",
  *   base_table = "node",
  *   created_column = "created",
  *   title = @Translation("Content"),

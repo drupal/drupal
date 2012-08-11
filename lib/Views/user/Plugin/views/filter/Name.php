@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "user_name"
+ *   id = "user_name"
  * )
  */
 class Name extends InOperator {

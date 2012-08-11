@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\filter\ManyToOne;
 
 /**
  * @Plugin(
- *   plugin_id = "taxonomy_index_tid"
+ *   id = "taxonomy_index_tid"
  * )
  */
 class TaxonomyIndexTid extends ManyToOne {

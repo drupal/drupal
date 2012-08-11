@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  * Tests creating taxonomy views with the wizard.
  *
  * @Plugin(
- *   plugin_id = "taxonomy_term",
+ *   id = "taxonomy_term",
  *   base_table = "taxonomy_term_data",
  *   title = @Translation("Taxonomy terms"),
  *   path_field = {

@@ -32,14 +32,14 @@ function statistics_views_data() {
     'help' => t('The total number of times the node has been viewed.'),
 
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -49,14 +49,14 @@ function statistics_views_data() {
     'help' => t('The total number of times the node has been viewed today.'),
 
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -66,14 +66,14 @@ function statistics_views_data() {
     'help' => t('The most recent time the node has been viewed.'),
 
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -104,19 +104,19 @@ function statistics_views_data() {
     'title' => t('Aid'),
     'help' => t('Unique access event ID.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'name field' => 'wid',
       'numeric' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -126,17 +126,17 @@ function statistics_views_data() {
     'help' => t('Browser session ID of user that visited page.'),
 
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
      ),
      'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
      ),
      'argument' => array(
-       'plugin_id' => 'string',
+       'id' => 'string',
      ),
      'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
      ),
   );
 
@@ -146,17 +146,17 @@ function statistics_views_data() {
     'help' => t('Title of page visited.'),
 
     'field' => array(
-      'plugin_id' => 'statistics_accesslog_path',
+      'id' => 'statistics_accesslog_path',
       'click sortable' => TRUE,
      ),
      'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
      ),
      'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
      ),
      'argument' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
      ),
   );
 
@@ -166,14 +166,14 @@ function statistics_views_data() {
     'help' => t('Internal path to page visited (relative to Drupal root.)'),
 
     'field' => array(
-      'plugin_id' => 'statistics_accesslog_path',
+      'id' => 'statistics_accesslog_path',
       'click sortable' => TRUE,
      ),
      'filter' => array(
-       'plugin_id' => 'string',
+       'id' => 'string',
      ),
      'sort' => array(
-       'plugin_id' => 'standard',
+       'id' => 'standard',
      ),
      //No argument here.  Can't send forward slashes as arguments.
      //Can be worked around by node ID.
@@ -185,14 +185,14 @@ function statistics_views_data() {
     'title' => t('Referrer'),
     'help' => t('Referrer URI.'),
     'field' => array(
-      'plugin_id' => 'url',
+      'id' => 'url',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -201,17 +201,17 @@ function statistics_views_data() {
     'title' => t('Hostname'),
     'help' => t('Hostname of user that visited the page.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
      ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -220,7 +220,7 @@ function statistics_views_data() {
     'title' => t('User'),
     'help' => t('The user who visited the site.'),
     'relationship' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'base' => 'users',
       'base field' => 'uid',
      ),
@@ -231,14 +231,14 @@ function statistics_views_data() {
     'title' => t('Timer'),
     'help' => t('Time in milliseconds that the page took to load.'),
     'field' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -247,14 +247,14 @@ function statistics_views_data() {
     'title' => t('Timestamp'),
     'help' => t('Timestamp of when the page was visited.'),
     'field' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'date',
+      'id' => 'date',
     ),
   );
 

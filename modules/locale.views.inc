@@ -28,19 +28,19 @@ function locale_views_data() {
     'title' => t('LID'),
     'help' => t('The ID of the source string.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'argument' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
       'numeric' => TRUE,
       'validate type' => 'lid',
     ),
     'filter' => array(
-      'plugin_id' => 'numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -50,17 +50,17 @@ function locale_views_data() {
     'title' => t('Location'),
     'help' => t('A description of the location or context of the string.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
      ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -70,14 +70,14 @@ function locale_views_data() {
     'title' => t('Group'),
     'help' => t('The group the translation is in.'),
     'field' => array(
-      'plugin_id' => 'locale_group',
+      'id' => 'locale_group',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'locale_group',
+      'id' => 'locale_group',
     ),
     'argument' => array(
-      'plugin_id' => 'locale_group',
+      'id' => 'locale_group',
     ),
   );
 
@@ -87,10 +87,10 @@ function locale_views_data() {
     'title' => t('Source'),
     'help' => t('The full original string.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -100,14 +100,14 @@ function locale_views_data() {
     'title' => t('Version'),
     'help' => t('The version of Drupal core that this string is for.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'locale_version',
+      'id' => 'locale_version',
     ),
     'argument' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -116,7 +116,7 @@ function locale_views_data() {
     'field' => array(
       'title' => t('Edit link'),
       'help' => t('Provide a simple link to edit the translations.'),
-      'plugin_id' => 'locale_link_edit',
+      'id' => 'locale_link_edit',
     ),
   );
 
@@ -141,10 +141,10 @@ function locale_views_data() {
     'title' => t('Translation'),
     'help' => t('The full translation string.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'plugin_id' => 'string',
+      'id' => 'string',
     ),
   );
 
@@ -154,14 +154,14 @@ function locale_views_data() {
     'title' => t('Language'),
     'help' => t('The language this translation is in.'),
     'field' => array(
-      'plugin_id' => 'locale_language',
+      'id' => 'locale_language',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'locale_language',
+      'id' => 'locale_language',
     ),
     'argument' => array(
-      'plugin_id' => 'locale_language',
+      'id' => 'locale_language',
     ),
   );
 
@@ -170,7 +170,7 @@ function locale_views_data() {
     'title' => t('Singular LID'),
     'help' => t('The ID of the parent translation.'),
     'field' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -180,16 +180,16 @@ function locale_views_data() {
     'title' => t('Plural'),
     'help' => t('Whether or not the translation is plural.'),
     'field' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'boolean',
+      'id' => 'boolean',
       'label' => t('Plural'),
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 
@@ -205,17 +205,17 @@ function locale_views_data_alter(&$data) {
     'title' => t('Language'),
     'help' => t('The language the content is in.'),
     'field' => array(
-      'plugin_id' => 'node_language',
+      'id' => 'node_language',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'plugin_id' => 'node_language',
+      'id' => 'node_language',
     ),
     'argument' => array(
-      'plugin_id' => 'node_language',
+      'id' => 'node_language',
     ),
     'sort' => array(
-      'plugin_id' => 'standard',
+      'id' => 'standard',
     ),
   );
 }

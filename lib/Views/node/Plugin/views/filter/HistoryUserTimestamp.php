@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "node_history_user_timestamp"
+ *   id = "node_history_user_timestamp"
  * )
  */
 class HistoryUserTimestamp extends FilterPluginBase {

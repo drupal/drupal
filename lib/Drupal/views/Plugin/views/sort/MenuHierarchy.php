@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Plugin;
  * This is only really useful for the {menu_links} table.
  *
  * @Plugin(
- *   plugin_id = "menu_hierarchy"
+ *   id = "menu_hierarchy"
  * )
  */
 class MenuHierarchy extends SortPluginBase {

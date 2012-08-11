@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "comment_node_link"
+ *   id = "comment_node_link"
  * )
  */
 class NodeLink extends Entity {

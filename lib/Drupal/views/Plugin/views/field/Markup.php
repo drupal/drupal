@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @plugin(
- *   plugin_id = "markup"
+ *   id = "markup"
  * )
  */
 class Markup extends FieldPluginBase {

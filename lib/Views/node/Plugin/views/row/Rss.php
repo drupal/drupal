@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
 
 /**
  * @Plugin(
- *   plugin_id = "node_rss",
+ *   id = "node_rss",
  *   title = @Translation("Content"),
  *   help = @Translation("Display the content with standard node view."),
  *   theme = "views_view_row_rss",

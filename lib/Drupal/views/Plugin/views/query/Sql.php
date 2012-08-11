@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "views_query",
+ *   id = "views_query",
  *   title = @Translation("SQL Query"),
  *   help = @Translation("Query will be generated and run using the Drupal database API.")
  * )

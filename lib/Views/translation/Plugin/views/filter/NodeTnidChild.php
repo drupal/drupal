@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "node_tnid_child"
+ *   id = "node_tnid_child"
  * )
  */
 class NodeTnidChild extends FilterPluginBase {

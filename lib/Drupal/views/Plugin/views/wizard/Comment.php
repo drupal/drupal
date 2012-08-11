@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  * Tests creating comment views with the wizard.
  *
  * @Plugin(
- *   plugin_id = "comment",
+ *   id = "comment",
  *   base_table = "comment",
  *   created_column = "created",
  *   title = @Translation("Comments"),

@@ -706,9 +706,9 @@ function views_ui_nojs_submit($form, &$form_state) {
 function views_ui_wizard_form_validate($form, &$form_state) {
   $wizard = views_ui_get_wizard($form_state['values']['show']['wizard_key']);
   $manager = new ViewsPluginManager('wizard');
-  $definition = $manager->getDefinition($wizard['plugin_id']);
+  $definition = $manager->getDefinition($wizard['id']);
   $form_state['wizard'] = $wizard;
-  $form_state['wizard_instance'] = $manager->createInstance($wizard['plugin_id'], $definition);
+  $form_state['wizard_instance'] = $manager->createInstance($wizard['id'], $definition);
   $errors = $form_state['wizard_instance']->validate($form, $form_state);
   foreach ($errors as $name => $message) {
     form_set_error($name, $message);

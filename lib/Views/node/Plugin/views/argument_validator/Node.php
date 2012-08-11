@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
 /**
  * @Plugin(
- *   plugin_id = "node",
+ *   id = "node",
  *   title = @Translation("Content")
  * )
  */

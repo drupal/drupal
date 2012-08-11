@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "node_link_edit"
+ *   id = "node_link_edit"
  * )
  */
 class LinkEdit extends Link {

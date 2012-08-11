@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "aggregator_iid"
+ *   id = "aggregator_iid"
  * )
  */
 class Iid extends Numeric {

@@ -1270,9 +1270,9 @@ function views_get_handler($table, $field, $key, $override = NULL) {
     }
 
     // @fixme: temporary.
-    // Set up a default handler, if both handler and plugin_id is not specified.
-    if (empty($data[$field][$key]['handler']) && empty($data[$field][$key]['plugin_id'])) {
-      $data[$field][$key]['plugin_id'] = 'standard';
+    // Set up a default handler, if both handler and id is not specified.
+    if (empty($data[$field][$key]['handler']) && empty($data[$field][$key]['id'])) {
+      $data[$field][$key]['id'] = 'standard';
     }
 
     $handler = _views_prepare_handler($data[$field][$key], $data, $field, $key);
@@ -1286,7 +1286,7 @@ function views_get_handler($table, $field, $key, $override = NULL) {
   vpr("Missing handler: @table @field @key", array('@table' => $table, '@field' => $field, '@key' => $key));
   $broken = array(
     'title' => t('Broken handler @table.@field', array('@table' => $table, '@field' => $field)),
-    'plugin_id' => 'broken',
+    'id' => 'broken',
     'table' => $table,
     'field' => $field,
   );
@@ -1307,9 +1307,9 @@ function views_fetch_data($table = NULL, $move = TRUE, $reset = FALSE) {
 /**
  * Fetch the plugin data from cache.
  */
-function views_fetch_plugin_data($type = NULL, $plugin_id = NULL, $reset = FALSE) {
+function views_fetch_plugin_data($type = NULL, $id = NULL, $reset = FALSE) {
   views_include('cache');
-  return _views_fetch_plugin_data($type, $plugin_id, $reset);
+  return _views_fetch_plugin_data($type, $id, $reset);
 }
 
 /**
@@ -1331,14 +1331,14 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
   $definitions = $manager->getDefinitions();
   $plugins = array();
 
-  foreach ($definitions as $plugin_id => $plugin) {
+  foreach ($definitions as $id => $plugin) {
     // Skip plugins that don't conform to our key.
     if ($key && (empty($plugin['type']) || $plugin['type'] != $key)) {
       continue;
     }
 
     if (empty($plugin['no ui']) && (empty($base) || empty($plugin['base']) || array_intersect($base, $plugin['base']))) {
-      $plugins[$plugin_id] = $plugin['title'];
+      $plugins[$id] = $plugin['title'];
     }
   }
 
@@ -1356,18 +1356,18 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
  *
  * @param string $type
  *   The plugin type like access or display.
- * @param string $plugin_id
+ * @param string $id
  *   The name of the plugin like standard.
  *
  * @return views_plugin
  *
  * The created plugin object.
  */
-function views_get_plugin($type, $plugin_id, $reset = FALSE) {
+function views_get_plugin($type, $id, $reset = FALSE) {
   views_include('handlers');
 
   $manager = new ViewsPluginManager($type);
-  $definition = $manager->getDefinition($plugin_id);
+  $definition = $manager->getDefinition($id);
   if (!empty($definition)) {
     return _views_create_plugin($type, $definition);
   }

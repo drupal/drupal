@@ -39,7 +39,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "standard"
+ *   id = "standard"
  * )
  */
 class FilterPluginBase extends Handler {

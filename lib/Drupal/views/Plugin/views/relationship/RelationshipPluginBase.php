@@ -44,7 +44,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "standard"
+ *   id = "standard"
  * )
  */
 class RelationshipPluginBase extends Handler {

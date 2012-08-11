@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * @Plugin(
- *   plugin_id = "fields",
+ *   id = "fields",
  *   title = @Translation("Fields"),
  *   help = @Translation("Displays the fields with an optional template."),
  *   theme = "views_view_fields",

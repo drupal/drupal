@@ -50,7 +50,7 @@ define('VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY', 2);
 
 /**
  * @plugin(
- *   plugin_id = "standard"
+ *   id = "standard"
  * )
  */
 class FieldPluginBase extends Handler {

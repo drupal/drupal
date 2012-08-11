@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "contact_link"
+ *   id = "contact_link"
  * )
  */
 class ContactLink extends Link {

@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   plugin_id = "boolean_string"
+ *   id = "boolean_string"
  * )
  */
 class BooleanOperatorString extends BooleanOperator {
