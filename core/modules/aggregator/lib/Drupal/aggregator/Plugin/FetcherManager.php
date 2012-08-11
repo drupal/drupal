@@ -8,8 +8,8 @@
 namespace Drupal\aggregator\Plugin;
 
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Core\Plugin\Discovery\HookDiscovery;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 
 /**
  * Manages aggregator fetcher plugins.
@@ -17,7 +17,7 @@ use Drupal\Component\Plugin\Factory\DefaultFactory;
 class FetcherManager extends PluginManagerBase {
 
   public function __construct() {
-    $this->discovery = new HookDiscovery('aggregator_fetch_info');
+    $this->discovery = new AnnotatedClassDiscovery('aggregator', 'fetcher');
     $this->factory = new DefaultFactory($this->discovery);
   }
 }

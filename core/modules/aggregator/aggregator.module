@@ -801,19 +801,6 @@ function _aggregator_items($count) {
 }
 
 /**
- * Implements hook_aggregator_fetch_info().
- */
-function aggregator_aggregator_fetch_info() {
-  return array(
-    'aggregator' => array(
-      'class' => 'Drupal\aggregator\Plugin\aggregator\fetcher\DefaultFetcher',
-      'title' => t('Default fetcher'),
-      'description' => t('Downloads data from a URL using Drupal\'s HTTP request handler.'),
-    ),
-  );
-}
-
-/**
  * Implements hook_preprocess_HOOK() for block.tpl.php.
  */
 function aggregator_preprocess_block(&$variables) {

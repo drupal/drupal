@@ -8,11 +8,19 @@
 namespace Drupal\aggregator\Plugin\aggregator\fetcher;
 
 use Drupal\aggregator\Plugin\FetcherInterface;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a default fetcher implementation.
  *
  * Uses drupal_http_request() to download the feed.
+ *
+ * @Plugin(
+ *   id = "aggregator",
+ *   title = @Translation("Default fetcher"),
+ *   description = @Translation("Downloads data from a URL using Drupal's HTTP request handler.")
+ * )
  */
 class DefaultFetcher implements FetcherInterface {
 
