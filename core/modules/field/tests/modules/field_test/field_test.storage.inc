@@ -119,7 +119,9 @@ function field_test_field_storage_load($entity_type, $entities, $age, $fields, $
 function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
   $data = _field_test_storage_data();
 
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+  $id = $entity->id();
+  $vid = $entity->getRevisionId();
+  $bundle = $entity->bundle();
 
   foreach ($fields as $field_id) {
     $field = field_info_field_by_id($field_id);
@@ -187,11 +189,9 @@ function field_test_field_storage_write($entity_type, $entity, $op, $fields) {
  * Implements hook_field_storage_delete().
  */
 function field_test_field_storage_delete($entity_type, $entity, $fields) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-
   // Note: reusing field_test_storage_purge(), like field_sql_storage.module
   // does, is highly inefficient in our case...
-  foreach (field_info_instances($bundle) as $instance) {
+  foreach (field_info_instances($entity->bundle()) as $instance) {
     if (isset($fields[$instance['field_id']])) {
       $field = field_info_field_by_id($instance['field_id']);
       field_test_field_storage_purge($entity_type, $entity, $field, $instance);
@@ -205,12 +205,10 @@ function field_test_field_storage_delete($entity_type, $entity, $fields) {
 function field_test_field_storage_purge($entity_type, $entity, $field, $instance) {
   $data = _field_test_storage_data();
 
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-
   $field_data = &$data[$field['id']];
   foreach (array('current', 'revisions') as $sub_table) {
     foreach ($field_data[$sub_table] as $key => $row) {
-      if ($row->type == $entity_type && $row->entity_id == $id) {
+      if ($row->type == $entity_type && $row->entity_id == $entity->id()) {
         unset($field_data[$sub_table][$key]);
       }
     }
@@ -225,12 +223,11 @@ function field_test_field_storage_purge($entity_type, $entity, $field, $instance
 function field_test_field_storage_delete_revision($entity_type, $entity, $fields) {
   $data = _field_test_storage_data();
 
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
   foreach ($fields as $field_id) {
     $field_data = &$data[$field_id];
     foreach (array('current', 'revisions') as $sub_table) {
       foreach ($field_data[$sub_table] as $key => $row) {
-        if ($row->type == $entity_type && $row->entity_id == $id && $row->revision_id == $vid) {
+        if ($row->type == $entity_type && $row->entity_id == $entity->id() && $row->revision_id == $entity->getRevisionId()) {
           unset($field_data[$sub_table][$key]);
         }
       }

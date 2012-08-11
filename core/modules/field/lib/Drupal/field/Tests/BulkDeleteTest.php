@@ -51,7 +51,10 @@ class BulkDeleteTest extends FieldTestBase {
       // Re-create the entity with only the required keys, remove label as that
       // is not present when using _field_create_entity_from_ids().
       $partial_entities[$id] = field_test_create_entity($entity->ftid, $entity->ftvid, $entity->fttype, $entity->ftlabel);
+      // Remove the label and set enforceIsNew to NULL to make sure that the
+      // entity classes match the actual arguments.
       unset($partial_entities[$id]->ftlabel);
+      $partial_entities[$id]->enforceIsNew(NULL);
       $partial_entities[$id]->$field_name = $entity->$field_name;
     }
     return $partial_entities;

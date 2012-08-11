@@ -378,7 +378,9 @@ function field_sql_storage_field_storage_load($entity_type, $entities, $age, $fi
  * Implements hook_field_storage_write().
  */
 function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fields) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+  $vid = $entity->getRevisionId();
+  $id = $entity->id();
+  $bundle = $entity->bundle();
   if (!isset($vid)) {
     $vid = $id;
   }
@@ -463,9 +465,7 @@ function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fiel
  * This function deletes data for all fields for an entity from the database.
  */
 function field_sql_storage_field_storage_delete($entity_type, $entity, $fields) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-
-  foreach (field_info_instances($entity_type, $bundle) as $instance) {
+  foreach (field_info_instances($entity_type, $entity->bundle()) as $instance) {
     if (isset($fields[$instance['field_id']])) {
       $field = field_info_field_by_id($instance['field_id']);
       field_sql_storage_field_storage_purge($entity_type, $entity, $field, $instance);
@@ -480,17 +480,15 @@ function field_sql_storage_field_storage_delete($entity_type, $entity, $fields) 
  * an entity.
  */
 function field_sql_storage_field_storage_purge($entity_type, $entity, $field, $instance) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-
   $table_name = _field_sql_storage_tablename($field);
   $revision_name = _field_sql_storage_revision_tablename($field);
   db_delete($table_name)
     ->condition('entity_type', $entity_type)
-    ->condition('entity_id', $id)
+    ->condition('entity_id', $entity->id())
     ->execute();
   db_delete($revision_name)
     ->condition('entity_type', $entity_type)
-    ->condition('entity_id', $id)
+    ->condition('entity_id', $entity->id())
     ->execute();
 }
 
@@ -655,15 +653,14 @@ function _field_sql_storage_query_field_conditions(EntityFieldQuery $query, Sele
  * This function actually deletes the data from the database.
  */
 function field_sql_storage_field_storage_delete_revision($entity_type, $entity, $fields) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-
+  $vid = $entity->getRevisionId();
   if (isset($vid)) {
     foreach ($fields as $field_id) {
       $field = field_info_field_by_id($field_id);
       $revision_name = _field_sql_storage_revision_tablename($field);
       db_delete($revision_name)
         ->condition('entity_type', $entity_type)
-        ->condition('entity_id', $id)
+        ->condition('entity_id', $entity->id())
         ->condition('revision_id', $vid)
         ->execute();
     }

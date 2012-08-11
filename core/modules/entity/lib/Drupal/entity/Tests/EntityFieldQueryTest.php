@@ -114,24 +114,23 @@ class EntityFieldQueryTest extends WebTestBase {
 
     // Create entities which have a 'bundle key' defined.
     for ($i = 1; $i < 7; $i++) {
-      $entity = new stdClass();
+      $entity = entity_create('test_entity_bundle_key', array());
       $entity->ftid = $i;
+      $entity->ftvid = $i;
       $entity->fttype = ($i < 5) ? 'bundle1' : 'bundle2';
 
       $entity->{$this->field_names[0]}[LANGUAGE_NOT_SPECIFIED][0]['value'] = $i;
-      drupal_write_record('test_entity_bundle_key', $entity);
-      field_attach_insert('test_entity_bundle_key', $entity);
+      $entity->enforceIsNew();
+      $entity->save();
     }
 
-    $entity = new stdClass();
-    $entity->ftid = 5;
-    $entity->fttype = 'test_entity_bundle';
+    $entity = entity_create('test_entity_bundle', array('ftid' => 5));
     $entity->{$this->field_names[1]}[LANGUAGE_NOT_SPECIFIED][0]['shape'] = 'square';
     $entity->{$this->field_names[1]}[LANGUAGE_NOT_SPECIFIED][0]['color'] = 'red';
     $entity->{$this->field_names[1]}[LANGUAGE_NOT_SPECIFIED][1]['shape'] = 'circle';
     $entity->{$this->field_names[1]}[LANGUAGE_NOT_SPECIFIED][1]['color'] = 'blue';
-    drupal_write_record('test_entity_bundle', $entity);
-    field_attach_insert('test_entity_bundle', $entity);
+    $entity->enforceIsNew();
+    $entity->save();
 
     $instances[2] = $instance;
     $instances[2]['bundle'] = 'test_bundle';
@@ -141,23 +140,15 @@ class EntityFieldQueryTest extends WebTestBase {
 
     // Create entities with support for revisions.
     for ($i = 1; $i < 5; $i++) {
-      $entity = new stdClass();
-      $entity->ftid = $i;
-      $entity->ftvid = $i;
-      $entity->fttype = 'test_bundle';
+      $entity = field_test_create_entity($i, $i);
       $entity->{$this->field_names[0]}[LANGUAGE_NOT_SPECIFIED][0]['value'] = $i;
-
-      drupal_write_record('test_entity', $entity);
-      field_attach_insert('test_entity', $entity);
-      drupal_write_record('test_entity_revision', $entity);
+      $entity->save();
     }
 
     // Add two revisions to an entity.
     for ($i = 100; $i < 102; $i++) {
-      $entity = new stdClass();
-      $entity->ftid = 4;
+      $entity = field_test_create_entity(4);
       $entity->ftvid = $i;
-      $entity->fttype = 'test_bundle';
       $entity->{$this->field_names[0]}[LANGUAGE_NOT_SPECIFIED][0]['value'] = $i;
 
       drupal_write_record('test_entity', $entity, 'ftid');
@@ -992,12 +983,10 @@ class EntityFieldQueryTest extends WebTestBase {
     ), t('Test offset on a field.'), TRUE);
 
     for ($i = 6; $i < 10; $i++) {
-      $entity = new stdClass();
-      $entity->ftid = $i;
-      $entity->fttype = 'test_entity_bundle';
+      $entity = entity_create('test_entity_bundle', array('ftid' => $i));
       $entity->{$this->field_names[0]}[LANGUAGE_NOT_SPECIFIED][0]['value'] = $i - 5;
-      drupal_write_record('test_entity_bundle', $entity);
-      field_attach_insert('test_entity_bundle', $entity);
+      $entity->enforceIsNew();
+      $entity->save();
     }
 
     $query = new EntityFieldQuery();
@@ -1074,10 +1063,7 @@ class EntityFieldQueryTest extends WebTestBase {
     field_test_entity_info_translatable('test_entity', TRUE);
 
     // Create more items with different languages.
-    $entity = new stdClass();
-    $entity->ftid = 1;
-    $entity->ftvid = 1;
-    $entity->fttype = 'test_bundle';
+    $entity = entity_load('test_entity', 1);
 
     // Set fields in two languages with one field value.
     foreach (array(LANGUAGE_NOT_SPECIFIED, 'en') as $langcode) {
@@ -1111,10 +1097,7 @@ class EntityFieldQueryTest extends WebTestBase {
     field_test_entity_info_translatable('test_entity', TRUE);
 
     // Create more items with different languages.
-    $entity = new stdClass();
-    $entity->ftid = 1;
-    $entity->ftvid = 1;
-    $entity->fttype = 'test_bundle';
+    $entity = entity_load('test_entity', 1);
     $j = 0;
 
     foreach (array(LANGUAGE_NOT_SPECIFIED, 'en') as $langcode) {

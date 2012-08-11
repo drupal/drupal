@@ -248,6 +248,7 @@ class TextFieldTest extends WebTestBase {
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), t('Entity was updated'));
 
     // Display the entity.
+    entity_get_controller('test_entity')->resetCache(array($id));
     $entity = field_test_entity_test_load($id);
     $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);

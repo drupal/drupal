@@ -351,7 +351,7 @@ class TranslationTest extends FieldTestBase {
     $field_name = $this->field['field_name'];
 
     // Store the field translations.
-    $entity->is_new = TRUE;
+    $entity->enforceIsNew();
     foreach ($available_langcodes as $langcode => $value) {
       $entity->{$field_name}[$langcode][0]['value'] = $value + 1;
     }

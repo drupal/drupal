@@ -584,15 +584,14 @@ function hook_field_storage_update_field($field, $prior_field, $has_data) {
  * @see hook_field_update()
  */
 function hook_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
   foreach ($items as $delta => $item) {
     // For hook_file_references(), remember that this is being deleted.
     $item['file_field_name'] = $field['field_name'];
     // Pass in the ID of the object that is being removed so all references can
     // be counted in hook_file_references().
     $item['file_field_type'] = $entity_type;
-    $item['file_field_id'] = $id;
-    file_field_delete_file($item, $field, $entity_type, $id);
+    $item['file_field_id'] = $entity->id();
+    file_field_delete_file($item, $field, $entity_type, $entity->id());
   }
 }
 
@@ -617,11 +616,10 @@ function hook_field_delete($entity_type, $entity, $field, $instance, $langcode, 
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  */
 function hook_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
   foreach ($items as $delta => $item) {
     // For hook_file_references, remember that this file is being deleted.
     $item['file_field_name'] = $field['field_name'];
-    if (file_field_delete_file($item, $field, $entity_type, $id)) {
+    if (file_field_delete_file($item, $field, $entity_type, $entity->id())) {
       $items[$delta] = NULL;
     }
   }
@@ -1794,7 +1792,9 @@ function hook_field_storage_load($entity_type, $entities, $age, $fields, $option
  *   array are field IDs.
  */
 function hook_field_storage_write($entity_type, $entity, $op, $fields) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+  $id = $entity->id();
+  $vid = $entity->getRevisionId();
+  $bundle = $entity->bundle();
   if (!isset($vid)) {
     $vid = $id;
   }
@@ -1888,9 +1888,7 @@ function hook_field_storage_write($entity_type, $entity, $op, $fields) {
  *   array are field IDs.
  */
 function hook_field_storage_delete($entity_type, $entity, $fields) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-
-  foreach (field_info_instances($entity_type, $bundle) as $instance) {
+  foreach (field_info_instances($entity_type, $entity->bundle()) as $instance) {
     if (isset($fields[$instance['field_id']])) {
       $field = field_info_field_by_id($instance['field_id']);
       field_sql_storage_field_storage_purge($entity_type, $entity, $field, $instance);
@@ -1918,15 +1916,14 @@ function hook_field_storage_delete($entity_type, $entity, $fields) {
  *   array are field IDs.
  */
 function hook_field_storage_delete_revision($entity_type, $entity, $fields) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-
+  $vid = $entity->getRevisionId();
   if (isset($vid)) {
     foreach ($fields as $field_id) {
       $field = field_info_field_by_id($field_id);
       $revision_name = _field_sql_storage_revision_tablename($field);
       db_delete($revision_name)
         ->condition('entity_type', $entity_type)
-        ->condition('entity_id', $id)
+        ->condition('entity_id', $entity->id())
         ->condition('revision_id', $vid)
         ->execute();
     }
@@ -2631,17 +2628,15 @@ function hook_field_storage_purge_field_instance($instance) {
  *   The deleted field instance whose data is being purged.
  */
 function hook_field_storage_purge($entity_type, $entity, $field, $instance) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-
   $table_name = _field_sql_storage_tablename($field);
   $revision_name = _field_sql_storage_revision_tablename($field);
   db_delete($table_name)
     ->condition('entity_type', $entity_type)
-    ->condition('entity_id', $id)
+    ->condition('entity_id', $entity->id())
     ->execute();
   db_delete($revision_name)
     ->condition('entity_type', $entity_type)
-    ->condition('entity_id', $id)
+    ->condition('entity_id', $entity->id())
     ->execute();
 }
 

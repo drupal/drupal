@@ -93,6 +93,7 @@ class FormTest extends FieldTestBase {
     $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
+    entity_get_controller('test_entity')->resetCache(array($id));
     $entity = field_test_entity_test_load($id);
     $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], $value, 'Field value was updated');
 
@@ -101,6 +102,7 @@ class FormTest extends FieldTestBase {
     $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost('test-entity/manage/' . $id . '/edit', $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
+    entity_get_controller('test_entity')->resetCache(array($id));
     $entity = field_test_entity_test_load($id);
     $this->assertIdentical($entity->{$this->field_name}, array(), 'Field was emptied');
 
@@ -421,6 +423,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPost('test-entity/manage/' . $id . '/edit', $edit, t('Save'));
 
     // Check that the new revision has the expected values.
+    entity_get_controller('test_entity')->resetCache(array($id));
     $entity = field_test_entity_test_load($id);
     $this->assertEqual($entity->{$field_name_no_access}[$langcode][0]['value'], 99, t('New revision has the expected value for the field with no edit access.'));
     $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], 2, t('New revision has the expected value for the field with edit access.'));

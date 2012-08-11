@@ -5,6 +5,8 @@
  * Defines an entity type.
  */
 
+use Drupal\entity\EntityInterface;
+
 /**
  * Implements hook_entity_info().
  */
@@ -24,6 +26,8 @@ function field_test_entity_info() {
   return array(
     'test_entity' => array(
       'name' => t('Test Entity'),
+      'entity class' => 'Drupal\field_test\TestEntity',
+      'controller class' => 'Drupal\field_test\TestEntityController',
       'fieldable' => TRUE,
       'field cache' => FALSE,
       'base table' => 'test_entity',
@@ -39,6 +43,8 @@ function field_test_entity_info() {
     // This entity type doesn't get form handling for now...
     'test_cacheable_entity' => array(
       'name' => t('Test Entity, cacheable'),
+      'entity class' => 'Drupal\field_test\TestEntity',
+      'controller class' => 'Drupal\field_test\TestEntityController',
       'fieldable' => TRUE,
       'field cache' => TRUE,
       'entity keys' => array(
@@ -50,6 +56,8 @@ function field_test_entity_info() {
       'view modes' => $test_entity_modes,
     ),
     'test_entity_bundle_key' => array(
+      'entity class' => 'Drupal\field_test\TestEntity',
+      'controller class' => 'Drupal\field_test\TestEntityController',
       'name' => t('Test Entity with a bundle key.'),
       'base table' => 'test_entity_bundle_key',
       'fieldable' => TRUE,
@@ -64,9 +72,10 @@ function field_test_entity_info() {
     // In this case, the bundle key is not stored in the database.
     'test_entity_bundle' => array(
       'name' => t('Test Entity with a specified bundle.'),
+      'entity class' => 'Drupal\field_test\TestEntity',
+      'controller class' => 'Drupal\field_test\TestEntityController',
       'base table' => 'test_entity_bundle',
       'fieldable' => TRUE,
-      'controller class' => 'Drupal\field_test\TestEntityBundleController',
       'field cache' => FALSE,
       'entity keys' => array(
         'id' => 'ftid',
@@ -78,6 +87,8 @@ function field_test_entity_info() {
     // @see EntityPropertiesTestCase::testEntityLabel()
     'test_entity_no_label' => array(
       'name' => t('Test entity without label'),
+      'entity class' => 'Drupal\field_test\TestEntity',
+      'controller class' => 'Drupal\field_test\TestEntityController',
       'fieldable' => TRUE,
       'field cache' => FALSE,
       'base table' => 'test_entity',
@@ -92,6 +103,8 @@ function field_test_entity_info() {
     ),
     'test_entity_label' => array(
       'name' => t('Test entity label'),
+      'entity class' => 'Drupal\field_test\TestEntity',
+      'controller class' => 'Drupal\field_test\TestEntityController',
       'fieldable' => TRUE,
       'field cache' => FALSE,
       'base table' => 'test_entity',
@@ -107,6 +120,8 @@ function field_test_entity_info() {
     ),
     'test_entity_label_callback' => array(
       'name' => t('Test entity label callback'),
+      'entity class' => 'Drupal\field_test\TestEntity',
+      'controller class' => 'Drupal\field_test\TestEntityController',
       'fieldable' => TRUE,
       'field cache' => FALSE,
       'base table' => 'test_entity',
@@ -223,7 +238,8 @@ function field_test_create_entity($id = 1, $vid = 1, $bundle = 'test_bundle', $l
 
   $label = !empty($label) ? $label : $bundle . ' label';
   $entity->ftlabel = $label;
-
+  // Make sure the entity will saved even if a primary key is provided.
+  $entity->enforceIsNew();
   return $entity;
 }
 
@@ -239,82 +255,20 @@ function field_test_create_entity($id = 1, $vid = 1, $bundle = 'test_bundle', $l
  *   The loaded entity.
  */
 function field_test_entity_test_load($ftid, $ftvid = NULL) {
-  // Load basic strucure.
-  $query = db_select('test_entity', 'fte', array())
-    ->condition('fte.ftid', $ftid);
-
-  if ($ftvid) {
-    $query->join('test_entity_revision', 'fter', 'fte.ftid = fter.ftid');
-    $query->addField('fte', 'ftid');
-    $query->addField('fte', 'fttype');
-    $query->addField('fter', 'ftvid');
-    $query->condition('fter.ftvid', $ftvid);
-  }
-  else {
-    $query->fields('fte');
-  }
-
-  $entities = $query->execute()->fetchAllAssoc('ftid');
-
-  // Attach fields.
-  if ($ftvid) {
-    field_attach_load_revision('test_entity', $entities);
-  }
-  else {
-    field_attach_load('test_entity', $entities);
-  }
-
-  return $entities[$ftid];
+  $ids = (isset($ftid) ? array($ftid) : array());
+  $conditions = (isset($ftvid) ? array('ftvid' => $ftvid) : array());
+  $test_entity = entity_load_multiple('test_entity', $ids, $conditions);
+  return $test_entity ? reset($test_entity) : FALSE;
 }
 
 /**
  * Saves a test_entity.
  *
- * A new entity is created if $entity->ftid and $entity->is_new are both empty.
- * A new revision is created if $entity->revision is not empty.
- *
  * @param $entity
  *   The entity to save.
  */
-function field_test_entity_save(&$entity) {
-  field_attach_presave('test_entity', $entity);
-
-  if (!isset($entity->is_new)) {
-    $entity->is_new = empty($entity->ftid);
-  }
-
-  if (!$entity->is_new && !empty($entity->revision)) {
-    $entity->old_ftvid = $entity->ftvid;
-    unset($entity->ftvid);
-  }
-
-  $update_entity = TRUE;
-  if ($entity->is_new) {
-    drupal_write_record('test_entity', $entity);
-    drupal_write_record('test_entity_revision', $entity);
-    $op = 'insert';
-  }
-  else {
-    drupal_write_record('test_entity', $entity, 'ftid');
-    if (!empty($entity->revision)) {
-      drupal_write_record('test_entity_revision', $entity);
-    }
-    else {
-      drupal_write_record('test_entity_revision', $entity, 'ftvid');
-      $update_entity = FALSE;
-    }
-    $op = 'update';
-  }
-  if ($update_entity) {
-    db_update('test_entity')
-      ->fields(array('ftvid' => $entity->ftvid))
-      ->condition('ftid', $entity->ftid)
-      ->execute();
-  }
-
-  // Save fields.
-  $function = "field_attach_$op";
-  $function('test_entity', $entity);
+function field_test_entity_save(EntityInterface $entity) {
+  $entity->save();
 }
 
 /**
@@ -322,7 +276,7 @@ function field_test_entity_save(&$entity) {
  */
 function field_test_entity_add($fttype) {
   $fttype = str_replace('-', '_', $fttype);
-  $entity = (object)array('fttype' => $fttype);
+  $entity = field_test_create_entity(NULL, NULL, $fttype);
   drupal_set_title(t('Create test_entity @bundle', array('@bundle' => $fttype)), PASS_THROUGH);
   return drupal_get_form('field_test_entity_form', $entity, TRUE);
 }
@@ -456,10 +410,10 @@ function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2
  * Validate handler for field_test_entity_nested_form().
  */
 function field_test_entity_nested_form_validate($form, &$form_state) {
-  $entity_1 = (object) $form_state['values'];
+  $entity_1 = entity_create('test_entity', $form_state['values']);
   field_attach_form_validate('test_entity', $entity_1, $form, $form_state);
 
-  $entity_2 = (object) $form_state['values']['entity_2'];
+  $entity_2 = entity_create('test_entity', $form_state['values']['entity_2']);
   field_attach_form_validate('test_entity', $entity_2, $form['entity_2'], $form_state);
 }
 
@@ -467,11 +421,11 @@ function field_test_entity_nested_form_validate($form, &$form_state) {
  * Submit handler for field_test_entity_nested_form().
  */
 function field_test_entity_nested_form_submit($form, &$form_state) {
-  $entity_1 = (object) $form_state['values'];
+  $entity_1 = entity_create('test_entity', $form_state['values']);
   field_attach_submit('test_entity', $entity_1, $form, $form_state);
   field_test_entity_save($entity_1);
 
-  $entity_2 = (object) $form_state['values']['entity_2'];
+  $entity_2 = entity_create('test_entity', $form_state['values']['entity_2']);
   field_attach_submit('test_entity', $entity_2, $form['entity_2'], $form_state);
   field_test_entity_save($entity_2);
 

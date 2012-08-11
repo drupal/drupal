@@ -30,7 +30,7 @@
  *   or an empty array to use default values.
  * @param $form
  *   An array representing the form that the editing element will be attached
- *   to. 
+ *   to.
  * @param $form_state
  *   An array containing the current state of the form.
  * @param $get_delta
@@ -43,7 +43,7 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
   // This could be called with no entity, as when a UI module creates a
   // dummy form to set default values.
   if ($entity) {
-    list($id, , ) = entity_extract_ids($entity_type, $entity);
+    $id = $entity->id();
   }
 
   $parents = $form['#parents'];

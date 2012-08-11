@@ -28,5 +28,5 @@ function options_test_allowed_values_callback($field, $instance, $entity_type, $
 function options_test_dynamic_values_callback($field, $instance, $entity_type, $entity, &$cacheable) {
   $cacheable = FALSE;
   // We need the values of the entity as keys.
-  return drupal_map_assoc(array_merge(array($entity->ftlabel), entity_extract_ids($entity_type, $entity)));
+  return drupal_map_assoc(array_merge(array($entity->ftlabel), array($entity->id(), $entity->getRevisionId(), $entity->bundle())));
 }

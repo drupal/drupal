@@ -910,7 +910,7 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
 
     // Invoke prepare_view steps if needed.
     if (empty($entity->_field_view_prepared)) {
-      list($id) = entity_extract_ids($entity_type, $entity);
+      $id = $entity->id();
 
       // First let the field types do their preparation.
       _field_invoke_multiple('prepare_view', $entity_type, array($id => $entity), $display, $null, $options);

@@ -127,44 +127,6 @@ function entity_info_cache_clear() {
 }
 
 /**
- * Extracts ID, revision ID, and bundle name from an entity.
- *
- * @param $entity_type
- *   The entity type; e.g. 'node' or 'user'.
- * @param $entity
- *   The entity from which to extract values.
- *
- * @return
- *   A numerically indexed array (not a hash table) containing these
- *   elements:
- *   - 0: Primary ID of the entity.
- *   - 1: Revision ID of the entity, or NULL if $entity_type is not versioned.
- *   - 2: Bundle name of the entity.
- */
-function entity_extract_ids($entity_type, $entity) {
-  $info = entity_get_info($entity_type);
-
-  // Objects being created might not have id/vid yet.
-  $id = isset($entity->{$info['entity keys']['id']}) ? $entity->{$info['entity keys']['id']} : NULL;
-  $vid = ($info['entity keys']['revision'] && isset($entity->{$info['entity keys']['revision']})) ? $entity->{$info['entity keys']['revision']} : NULL;
-
-  if (!empty($info['entity keys']['bundle'])) {
-    // Explicitly fail for malformed entities missing the bundle property.
-    if (!isset($entity->{$info['entity keys']['bundle']}) || $entity->{$info['entity keys']['bundle']} === '') {
-      throw new EntityMalformedException(t('Missing bundle property on entity of type @entity_type.', array('@entity_type' => $entity_type)));
-    }
-    $bundle = $entity->{$info['entity keys']['bundle']};
-  }
-  else {
-    // The entity type provides no bundle key: assume a single bundle, named
-    // after the entity type.
-    $bundle = $entity_type;
-  }
-
-  return array($id, $vid, $bundle);
-}
-
-/**
  * Loads an entity from the database.
  *
  * @param string $entity_type
@@ -409,12 +371,11 @@ function entity_prepare_view($entity_type, $entities) {
  */
 function entity_uri($entity_type, $entity) {
   $info = entity_get_info($entity_type);
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
 
   // A bundle-specific callback takes precedence over the generic one for the
   // entity type.
-  if (isset($info['bundles'][$bundle]['uri callback'])) {
-    $uri_callback = $info['bundles'][$bundle]['uri callback'];
+  if (isset($info['bundles'][$entity->bundle()]['uri callback'])) {
+    $uri_callback = $info['bundles'][$entity->bundle()]['uri callback'];
   }
   elseif (isset($info['uri callback'])) {
     $uri_callback = $info['uri callback'];
@@ -465,7 +426,7 @@ function entity_form_field_validate($entity_type, $form, &$form_state) {
   // prior to processing the current form submission, and we must not update it
   // until we have fully validated the submitted input. Therefore, for
   // validation, act on a pseudo entity created out of the form values.
-  $pseudo_entity = (object) $form_state['values'];
+  $pseudo_entity = entity_create($entity_type, $form_state['values']);
   field_attach_form_validate($entity_type, $pseudo_entity, $form, $form_state);
 }
 
@@ -492,12 +453,11 @@ function entity_form_field_validate($entity_type, $form, &$form_state) {
  */
 function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_state) {
   $info = entity_get_info($entity_type);
-  list(, , $bundle) = entity_extract_ids($entity_type, $entity);
 
   // Copy top-level form values that are not for fields to entity properties,
   // without changing existing entity properties that are not being edited by
   // this form. Copying field values must be done using field_attach_submit().
-  $values_excluding_fields = $info['fieldable'] ? array_diff_key($form_state['values'], field_info_instances($entity_type, $bundle)) : $form_state['values'];
+  $values_excluding_fields = $info['fieldable'] ? array_diff_key($form_state['values'], field_info_instances($entity_type, $entity->bundle())) : $form_state['values'];
   foreach ($values_excluding_fields as $key => $value) {
     $entity->$key = $value;
   }

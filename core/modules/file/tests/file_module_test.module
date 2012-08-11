@@ -73,8 +73,7 @@ function file_module_test_form_submit($form, &$form_state) {
  * Implements hook_file_download_access().
  */
 function file_module_test_file_download_access($field, $entity_type, $entity) {
-  list(,, $bundle) = entity_extract_ids($entity_type, $entity);
-  $instance = field_info_instance($entity_type, $field['field_name'], $bundle);
+  $instance = field_info_instance($entity_type, $field['field_name'], $entity->bundle());
   // Allow the file to be downloaded only if the given arguments are correct.
   // If any are wrong, $instance will be NULL.
   if (empty($instance)) {

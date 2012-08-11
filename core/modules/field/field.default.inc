@@ -189,8 +189,6 @@ function field_default_prepare_view($entity_type, $entities, $field, $instances,
  *     of $instance definitions.
  */
 function field_default_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-
   $addition = array();
 
   // Prepare incoming display specifications.
@@ -222,7 +220,7 @@ function field_default_view($entity_type, $entity, $field, $instance, $langcode,
           '#field_type' => $field['type'],
           '#field_translatable' => $field['translatable'],
           '#entity_type' => $entity_type,
-          '#bundle' => $bundle,
+          '#bundle' => $entity->bundle(),
           '#object' => $entity,
           '#items' => $items,
           '#formatter' => $display['type']
