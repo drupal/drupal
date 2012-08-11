@@ -120,6 +120,10 @@ class MatcherDumper implements MatcherDumperInterface {
 
     $insert->execute();
 
+    // We want to reuse the dumper for multiple route sets, so on dump, flush
+    // the queued routes.
+    $this->routes = NULL;
+
     // Transaction ends here.
   }
 
