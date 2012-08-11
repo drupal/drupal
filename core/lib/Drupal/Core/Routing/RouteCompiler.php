@@ -31,7 +31,7 @@ class RouteCompiler implements RouteCompilerInterface {
 
     $pattern_outline = $this->getPatternOutline($route->getPattern());
 
-    $num_parts = count(explode('/', $pattern_outline));
+    $num_parts = count(explode('/', trim($pattern_outline, '/')));
 
     return new CompiledRoute($route, $fit, $pattern_outline, $num_parts);
 
