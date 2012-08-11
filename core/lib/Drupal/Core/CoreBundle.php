@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Bundle class for mandatory core services.
  *
@@ -59,6 +61,13 @@ class CoreBundle extends Bundle
     $dispatcher = $container->get('dispatcher');
     $matcher = new \Drupal\Core\Routing\ChainMatcher();
     $matcher->add(new \Drupal\Core\LegacyUrlMatcher());
+
+    $nested = new \Drupal\Core\Routing\NestedMatcher();
+    $nested->setInitialMatcher(new \Drupal\Core\Routing\PathMatcher(Database::getConnection()));
+    $nested->addPartialMatcher(new \Drupal\Core\Routing\HttpMethodMatcher());
+    $nested->setFinalMatcher(new \Drupal\Core\Routing\FirstEntryFinalMatcher());
+    $matcher->add($nested, 5);
+
     $content_negotation = new \Drupal\Core\ContentNegotiation();
     $dispatcher->addSubscriber(new \Symfony\Component\HttpKernel\EventListener\RouterListener($matcher));
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\ViewSubscriber($content_negotation));
