@@ -19,6 +19,9 @@ abstract class ViewsSqlTest extends ViewsTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // @todo Remove this hack or move it to child classes.
+    views_init();
+
     // Define the schema and views data variable before enabling the test module.
     variable_set('views_test_schema', $this->schemaDefinition());
     variable_set('views_test_views_data', $this->viewsData());
