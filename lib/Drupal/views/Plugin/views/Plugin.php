@@ -13,27 +13,38 @@ abstract class Plugin extends PluginBase {
 
   /**
    * Except for displays, options for the object will be held here.
+   *
+   * @var array
    */
-  var $options = array();
+  public $options = array();
 
   /**
    * The top object of a view.
    *
-   * @var view
+   * @var Drupal\views\View
    */
-  var $view = NULL;
+  public $view = NULL;
 
   /**
-   * Handler's definition
+   * Plugins's definition
    *
    * @var array
    */
-  var $definition;
+  public $definition;
 
   /**
    * The plugin type of this plugin, for example style or query.
    */
-  var $plugin_type = NULL;
+  public $plugin_type = NULL;
+
+  /**
+   * An array which identifies the instance in the views plugin hierarchy.
+   *
+   * For handlers this is for example display_id, type, table, id.
+   *
+   * @var array
+   */
+  public $localization_keys;
 
   /**
    * Constructs a Plugin object.

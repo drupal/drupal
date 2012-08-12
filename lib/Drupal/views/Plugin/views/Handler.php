@@ -11,10 +11,68 @@ use Drupal\views\View;
 
 class Handler extends Plugin {
   /**
-   * init the handler with necessary data.
-   * @param $view
+   * Where the $query object will reside:
+   *
+   * @var Drupal\views\Plugin\views\query\QueryPluginBase
+   */
+  public $query = NULL;
+
+  /**
+   * The table this handler is attached to.
+   *
+   * @var string
+   */
+  public $table;
+
+  /**
+   * The alias of the table of this handler which is used in the query.
+   *
+   * @var string
+   */
+  public $table_alias;
+
+  /**
+   * When a table has been moved this property is set.
+   *
+   * @var string
+   */
+  public $actual_table;
+
+  /**
+   * The actual field in the database table, maybe different
+   * on other kind of query plugins/special handlers.
+   *
+   * @var string
+   */
+  public $real_field;
+
+  /**
+   * With field you can override the real_field if the real field is not set.
+   *
+   * @var string
+   */
+  public $field;
+
+  /**
+   * When a field has been moved this property is set.
+   *
+   * @var string
+   */
+  public $actual_field;
+
+  /**
+   * The relationship used for this field.
+   *
+   * @var string
+   */
+  public $relationship = NULL;
+
+  /**
+   * Init the handler with necessary data.
+   *
+   * @param Drupal\views\View $view
    *   The $view object this handler is attached to.
-   * @param $options
+   * @param array $options
    *   The item from the database; the actual contents of this will vary
    *   based upon the type of handler.
    */
