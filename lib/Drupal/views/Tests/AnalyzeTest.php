@@ -11,6 +11,7 @@ namespace Drupal\views\Tests;
  * Tests the views analyze system.
  */
 class AnalyzeTest extends ViewsSqlTest {
+
   public static function getInfo() {
     return array(
       'name' => 'Views Analyze',
@@ -20,7 +21,7 @@ class AnalyzeTest extends ViewsSqlTest {
   }
 
   public function setUp() {
-    parent::setUp('views_ui');
+    parent::setUp();
 
     // Add an admin user will full rights;
     $this->admin = $this->drupalCreateUser(array('administer views'));

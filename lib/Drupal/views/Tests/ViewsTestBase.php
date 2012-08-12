@@ -12,6 +12,14 @@ use Drupal\views\View;
    * Abstract class for views testing.
    */
 abstract class ViewsTestBase extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('views');
+
   /**
    * Helper function: verify a result set returned by view.
    *

@@ -13,6 +13,7 @@ use Drupal\views\View;
  * Basic test for pluggable argument default.
  */
 class ArgumentDefaultTest extends ViewsSqlTest {
+
   public static function getInfo() {
     return array(
       'name' => 'Argument default',
@@ -22,7 +23,7 @@ class ArgumentDefaultTest extends ViewsSqlTest {
   }
 
   public function setUp() {
-    parent::setUp('views');
+    parent::setUp();
 
     $this->random = $this->randomString();
   }
@@ -31,7 +32,7 @@ class ArgumentDefaultTest extends ViewsSqlTest {
    * Tests the use of a default argument plugin that provides no options.
    */
   function testArgumentDefaultNoOptions() {
-    module_enable(array('views_ui', 'views_test'));
+    module_enable(array('views_test'));
     $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
     $this->drupalLogin($admin_user);
 

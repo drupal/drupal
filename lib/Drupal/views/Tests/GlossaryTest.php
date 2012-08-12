@@ -11,16 +11,13 @@ namespace Drupal\views\Tests;
  * Tests glossary view ( summary of arguments ).
  */
 class GlossaryTest extends ViewsSqlTest {
+
   public static function getInfo() {
     return array(
       'name' => 'Glossary Test',
       'description' => 'Tests glossary functionality of views.',
       'group' => 'Views',
     );
-  }
-
-  public function setUp() {
-    parent::setUp('views');
   }
 
   /**

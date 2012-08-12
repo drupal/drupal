@@ -11,6 +11,7 @@ namespace Drupal\views\Tests;
  * Tests exposed forms.
  */
 class ExposedFormTest extends ViewsSqlTest {
+
   public static function getInfo() {
     return array(
       'name' => 'Exposed forms',
@@ -20,8 +21,8 @@ class ExposedFormTest extends ViewsSqlTest {
   }
 
   public function setUp() {
-    parent::setUp('views_ui');
-    module_enable(array('views_ui'));
+    parent::setUp();
+
     // @TODO Figure out why it's required to clear the cache here.
     views_module_include('views_default', TRUE);
     views_get_all_views(TRUE);

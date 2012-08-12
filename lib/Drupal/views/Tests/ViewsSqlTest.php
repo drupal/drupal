@@ -9,8 +9,15 @@ use Drupal\views\View;
 
 abstract class ViewsSqlTest extends ViewsTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('views_ui');
+
   protected function setUp() {
-    parent::setUp('views', 'views_ui');
+    parent::setUp();
 
     // Define the schema and views data variable before enabling the test module.
     variable_set('views_test_schema', $this->schemaDefinition());

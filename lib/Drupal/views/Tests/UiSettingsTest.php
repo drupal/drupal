@@ -15,6 +15,13 @@ use Drupal\simpletest\WebTestBase;
 class UiSettingsTest extends WebTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('views_ui');
+
+  /**
    * Stores an admin user used by the different tests.
    *
    * @var Drupal\user\User
@@ -30,7 +37,8 @@ class UiSettingsTest extends WebTestBase {
   }
 
   protected function setUp() {
-    parent::setUp('views', 'views_ui');
+    parent::setUp();
+
     $this->adminUser = $this->drupalCreateUser(array('administer views'));
   }
 

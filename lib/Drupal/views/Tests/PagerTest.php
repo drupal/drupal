@@ -13,16 +13,13 @@ use Drupal\views\View;
  * Tests the pluggable pager system.
  */
 class PagerTest extends ViewsSqlTest {
+
   public static function getInfo() {
     return array(
       'name' => 'Pager',
       'description' => 'Test the pluggable pager system',
       'group' => 'Views Plugins',
     );
-  }
-
-  public function setUp() {
-    parent::setUp('views', 'views_ui', 'views_test');
   }
 
   /**

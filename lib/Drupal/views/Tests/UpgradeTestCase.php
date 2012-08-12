@@ -15,6 +15,17 @@ use Drupal\views\View;
  * You can find all conversions by searching for "moved to".
  */
 class UpgradeTestCase extends ViewsSqlTest {
+
+  /**
+   * Modules to enable.
+   *
+   * To import a view the user needs use PHP for settings rights, so enable php
+   * module.
+   *
+   * @var array
+   */
+  public static $modules = array('php');
+
   public static function getInfo() {
     return array(
       'name' => 'Views Upgrade test',
@@ -24,10 +35,7 @@ class UpgradeTestCase extends ViewsSqlTest {
   }
 
   protected function setUp() {
-//     // To import a view the user needs use PHP for settings rights, so enable php module.
     parent::setUp();
-
-    module_enable(array('php'));
     $this->resetAll();
   }
 

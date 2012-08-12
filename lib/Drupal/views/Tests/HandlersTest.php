@@ -11,17 +11,13 @@ namespace Drupal\views\Tests;
  * Tests abstract handlers of views.
  */
 class HandlersTest extends ViewsSqlTest {
+
   public static function getInfo() {
     return array(
       'name' => 'Handlers test',
       'description' => 'test abstract handler definitions',
       'group' => 'Views',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp('views', 'views_ui');
-    module_enable(array('views_ui'));
   }
 
   function testFilterInOperatorUi() {

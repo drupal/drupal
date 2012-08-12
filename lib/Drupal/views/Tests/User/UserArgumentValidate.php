@@ -14,6 +14,7 @@ use Drupal\views\Tests\ViewsSqlTest;
  * Tests views user argument argument handler.
  */
 class UserArgumentValidate extends ViewsSqlTest {
+
   public static function getInfo() {
     return array(
       'name' => 'Tests user argument validator',
@@ -23,7 +24,8 @@ class UserArgumentValidate extends ViewsSqlTest {
   }
 
   function setUp() {
-    parent::setUp('views');
+    parent::setUp();
+
     $this->account = $this->drupalCreateUser();
   }
 
