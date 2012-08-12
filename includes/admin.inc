@@ -410,22 +410,6 @@ function views_ui_add_form($form, &$form_state) {
 }
 
 /**
- * Helper form element validator: integer.
- *
- * The problem with this is that the function is private so it's not guaranteed
- * that it might not be renamed/changed. In the future field.module or something else
- * should provide a public validate function.
- *
- * @see _element_validate_integer_positive()
- */
-function views_element_validate_integer($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value)) {
-    form_error($element, t('%name must be a positive integer.', array('%name' => $element['#title'])));
-  }
-}
-
-/**
  * Gets the current value of a #select element, from within a form constructor function.
  *
  * This function is intended for use in highly dynamic forms (in particular the

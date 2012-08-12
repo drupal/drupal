@@ -116,10 +116,9 @@ abstract class WizardPluginBase implements WizardInterface {
     $this->build_form_style($form, $form_state, 'page');
     $form['displays']['page']['options']['items_per_page'] = array(
       '#title' => t('Items to display'),
-      '#type' => 'textfield',
-      '#default_value' => '10',
-      '#size' => 5,
-      '#element_validate' => array('views_element_validate_integer'),
+      '#type' => 'number',
+      '#default_value' => 10,
+      '#min' => 0,
     );
     $form['displays']['page']['options']['pager'] = array(
       '#title' => t('Use a pager'),
@@ -253,10 +252,9 @@ abstract class WizardPluginBase implements WizardInterface {
     $this->build_form_style($form, $form_state, 'block');
     $form['displays']['block']['options']['items_per_page'] = array(
       '#title' => t('Items per page'),
-      '#type' => 'textfield',
-      '#default_value' => '5',
-      '#size' => 5,
-      '#element_validate' => array('views_element_validate_integer'),
+      '#type' => 'number',
+      '#default_value' => 5,
+      '#min' => 0,
     );
     $form['displays']['block']['options']['pager'] = array(
       '#title' => t('Use a pager'),
