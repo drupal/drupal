@@ -111,7 +111,7 @@ class ModuleTest extends ViewsSqlTest {
     $types = array('field', 'area', 'filter');
     foreach ($types as $type) {
       $handler = views_get_handler($this->randomName(), $this->randomName(), $type);
-      $this->assertEqual('views_handler_' . $type . '_broken', get_class($handler), t('Make sure that a broken handler of type: @type are created', array('@type' => $type)));
+      $this->assertEqual('Drupal\views\Plugin\views\\' . $type . '\Broken', get_class($handler), t('Make sure that a broken handler of type: @type are created', array('@type' => $type)));
     }
 
     $views_data = $this->viewsData();
@@ -160,6 +160,6 @@ class ModuleTest extends ViewsSqlTest {
     $table_data = views_fetch_data($table);
     $field_data = $table_data[$field][$id];
 
-    $this->assertEqual($field_data['handler'], get_class($handler));
+    $this->assertEqual($field_data['id'], $handler->getPluginId());
   }
 }

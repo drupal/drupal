@@ -11,10 +11,6 @@ use Drupal\views\ViewsObject;
 use Drupal\Component\Plugin\PluginBase;
 
 abstract class Plugin extends PluginBase {
-  public function __construct(array $configuration, $id) {
-    $this->configuration = $configuration;
-    $this->id = $id;
-  }
 
   /**
    * Except for displays, options for the object will be held here.
@@ -34,6 +30,19 @@ abstract class Plugin extends PluginBase {
    * @var array
    */
   var $definition;
+
+  /**
+   * The plugin type of this plugin, for example style or query.
+   */
+  var $plugin_type = NULL;
+
+  /**
+   * Constructs a Plugin object.
+   */
+  public function __construct(array $configuration, $plugin_id) {
+    $this->configuration = $configuration;
+    $this->plugin_id = $plugin_id;
+  }
 
   /**
    * Information about options for all kinds of purposes will be held here.
@@ -185,8 +194,11 @@ abstract class Plugin extends PluginBase {
   /**
    * Let the handler know what its full definition is.
    */
-  function set_definition($definition) {
+  function setDefinition($definition) {
     $this->definition = $definition;
+    if (isset($definition['id'])) {
+      $this->plugin_id = $definition['id'];
+    }
     if (isset($definition['field'])) {
       $this->real_field = $definition['field'];
     }
@@ -351,16 +363,6 @@ abstract class Plugin extends PluginBase {
       );
     }
   }
-
-  /**
-   * The plugin type of this plugin, for example style or query.
-   */
-  var $plugin_type = NULL;
-
-  /**
-   * The plugin name of this plugin, for example table or full.
-   */
-  var $plugin_name = NULL;
 
   /**
    * Init will be called after construct, when the plugin is attached to a

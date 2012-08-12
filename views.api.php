@@ -50,7 +50,7 @@
  *   - Create the initial handler; at this time it is not yet attached to a
  *     view. It is here that you can set basic defaults if needed, but there
  *     will be no knowledge of the environment yet.
- * - handler->set_definition()
+ * - handler->setDefinition()
  *   - Set the data from hook_views_data() relevant to the handler.
  * - handler->init()
  *   - Attach the handler to a view, and usually provides the options from the

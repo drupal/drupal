@@ -35,9 +35,9 @@ class Handler extends Plugin {
     }
 
     $types = View::views_object_types();
-    $plural = $this->handler_type;
-    if (isset($types[$this->handler_type]['plural'])) {
-      $plural = $types[$this->handler_type]['plural'];
+    $plural = $this->plugin_type;
+    if (isset($types[$this->plugin_type]['plural'])) {
+      $plural = $types[$this->plugin_type]['plural'];
     }
     if ($this->view->display_handler->is_defaulted($plural)) {
       $display_id = 'default';
@@ -45,7 +45,7 @@ class Handler extends Plugin {
 
     $this->localization_keys = array(
       $display_id,
-      $this->handler_type,
+      $this->plugin_type,
       $options['table'],
       $options['id']
     );

@@ -20,9 +20,7 @@ function _views_create_plugin($type, $definition) {
 
   $instance->is_plugin = TRUE;
   $instance->plugin_type = $type;
-  $instance->plugin_name = $definition['id'];
-
-  $instance->set_definition($definition);
+  $instance->setDefinition($definition);
 
   // Let the handler have something like a constructor.
   $instance->construct();
@@ -38,9 +36,9 @@ function _views_create_handler($type, $definition) {
   $instance = $manager->createInstance($definition['id']);
 
   $instance->is_handler = TRUE;
-  $instance->handler_type = $type;
+  $instance->plugin_type = $type;
 
-  $instance->set_definition($definition);
+  $instance->setDefinition($definition);
 
   // let the handler have something like a constructor.
   $instance->construct();
