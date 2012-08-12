@@ -45,7 +45,7 @@ function views_ui_get_admin_css() {
           'group' => CSS_THEME,
         );
       }
-      else if (file_exists($theme_path . "/views-admin.$theme_key.css")) {
+      elseif (file_exists($theme_path . "/views-admin.$theme_key.css")) {
         $list[$theme_path . "/views-admin.$theme_key.css"] = array(
           'group' => CSS_THEME,
         );
@@ -95,7 +95,7 @@ function views_ui_check_advanced_help() {
     $filename = db_query_range("SELECT filename FROM {system} WHERE type = 'module' AND name = 'advanced_help'", 0, 1)
       ->fetchField();
     if ($filename && file_exists($filename)) {
-      drupal_set_message(t('If you <a href="@modules">enable the advanced help module</a>, Views will provide more and better help. <a href="@hide">Hide this message.</a>', array('@modules' => url('admin/modules'),'@hide' => url('admin/structure/views/settings'))));
+      drupal_set_message(t('If you <a href="@modules">enable the advanced help module</a>, Views will provide more and better help. <a href="@hide">Hide this message.</a>', array('@modules' => url('admin/modules'), '@hide' => url('admin/structure/views/settings'))));
     }
     else {
       drupal_set_message(t('If you install the advanced help module from !href, Views will provide more and better help. <a href="@hide">Hide this message.</a>', array('!href' => l('http://drupal.org/project/advanced_help', 'http://drupal.org/project/advanced_help'), '@hide' => url('admin/structure/views/settings'))));
@@ -589,7 +589,7 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
     $wrapping_element[$button_key]['#value'] = t('Update "@title" choice (@number)', array(
       '@title' => $button_title,
       '@number' => ++$seen_buttons[$button_title],
-   ));
+    ));
   }
 
   // Attach custom data to the triggering element and submit button, so we can
@@ -848,7 +848,7 @@ function theme_views_ui_view_info($variables) {
   $output .= '<div class="views-ui-view-title">' . $title . "</div>\n";
   $output .= '<div class="views-ui-view-displays">' . $displays . "</div>\n";
   $output .= '<div class="views-ui-view-storage">' . $type . "</div>\n";
-  $output .= '<div class="views-ui-view-base">' . t('Type') . ': ' . $variables['base']. "</div>\n";
+  $output .= '<div class="views-ui-view-base">' . t('Type') . ': ' . $variables['base'] . "</div>\n";
   return $output;
 }
 
@@ -1187,7 +1187,7 @@ function views_ui_preview_form($form, &$form_state, $view, $display_id = 'defaul
   $form_state['no_cache'] = TRUE;
   $form_state['view'] = $view;
 
-  $form['#attributes'] = array('class' => array('clearfix',));
+  $form['#attributes'] = array('class' => array('clearfix'));
 
   // Add a checkbox controlling whether or not this display auto-previews.
   $form['live_preview'] = array(
@@ -1555,29 +1555,29 @@ function views_ui_get_display_tab_details($view, $display) {
   $display_title = views_ui_get_display_label($view, $display->id, FALSE);
   $build = array(
     '#theme_wrappers' => array('container'),
-    '#attributes' => array('id' => 'edit-display-settings-details',),
+    '#attributes' => array('id' => 'edit-display-settings-details'),
   );
 
   $plugin = views_fetch_plugin_data('display', $view->display[$display->id]->display_plugin);
   // The following is for display purposes only. We need to determine if there is more than one button and wrap
   // the buttons in a .ctools-dropbutton class if more than one is present.  Otherwise, we'll just wrap the
   // actions in the .ctools-button class.
-  $isDisplayDeleted = !empty($display->deleted);
-  $isDeletable = empty($plugin['no remove']);
+  $is_display_deleted = !empty($display->deleted);
+  $is_deletable = empty($plugin['no remove']);
   // The master display cannot be cloned.
-  $isDefault = $display->id == 'default';
+  $is_default = $display->id == 'default';
   // @todo: Figure out why get_option doesn't work here.
-  $isEnabled = $display->handler->get_option('enabled');
+  $is_enabled = $display->handler->get_option('enabled');
 
-  if (!$isDisplayDeleted && $isDeletable && !$isDefault) {
+  if (!$is_display_deleted && $is_deletable && !$is_default) {
     $prefix = '<div class="ctools-no-js ctools-button ctools-dropbutton"><div class="ctools-link"><a href="#" class="ctools-twisty ctools-text">open</a></div><div class="ctools-content"><ul class="horizontal right actions">';
     $suffix = '</ul></div></div>';
-    $itemElement = 'li';
+    $item_element = 'li';
   }
   else {
     $prefix = '<div class="ctools-button"><div class="ctools-content"><ul class="horizontal right actions">';
     $suffix = '</ul></div></div>';
-    $itemElement = 'li';
+    $item_element = 'li';
   }
 
   if ($display->id != 'default') {
@@ -1591,15 +1591,15 @@ function views_ui_get_display_tab_details($view, $display) {
       '#suffix' => $suffix,
     );
 
-    if (!$isDisplayDeleted) {
-      if (!$isEnabled) {
+    if (!$is_display_deleted) {
+      if (!$is_enabled) {
         $build['top']['actions']['enable'] = array(
           '#type' => 'submit',
           '#value' => t('enable @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array('views_ui_edit_form_submit_enable_display', 'views_ui_edit_form_submit_delay_destination'),
-          '#prefix' => '<' . $itemElement . ' class="enable">',
-          "#suffix" => '</' . $itemElement . '>',
+          '#prefix' => '<' . $item_element . ' class="enable">',
+          "#suffix" => '</' . $item_element . '>',
         );
       }
       // Add a link to view the page.
@@ -1611,39 +1611,39 @@ function views_ui_get_display_tab_details($view, $display) {
             '#title' => t('view @display', array('@display' => $display->display_title)),
             '#options' => array('alt' => array(t("Go to the real page for this display"))),
             '#href' => $path,
-            '#prefix' => '<' . $itemElement . ' class="view">',
-            "#suffix" => '</' . $itemElement . '>',
+            '#prefix' => '<' . $item_element . ' class="view">',
+            "#suffix" => '</' . $item_element . '>',
           );
         }
       }
-      if (!$isDefault) {
+      if (!$is_default) {
         $build['top']['actions']['duplicate'] = array(
           '#type' => 'submit',
           '#value' => t('clone @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array('views_ui_edit_form_submit_duplicate_display', 'views_ui_edit_form_submit_delay_destination'),
-          '#prefix' => '<' . $itemElement . ' class="duplicate">',
-          "#suffix" => '</' . $itemElement . '>',
+          '#prefix' => '<' . $item_element . ' class="duplicate">',
+          "#suffix" => '</' . $item_element . '>',
         );
       }
-      if ($isDeletable) {
+      if ($is_deletable) {
         $build['top']['actions']['delete'] = array(
           '#type' => 'submit',
           '#value' => t('delete @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array('views_ui_edit_form_submit_delete_display', 'views_ui_edit_form_submit_delay_destination'),
-          '#prefix' => '<' . $itemElement . ' class="delete">',
-          "#suffix" => '</' . $itemElement . '>',
+          '#prefix' => '<' . $item_element . ' class="delete">',
+          "#suffix" => '</' . $item_element . '>',
         );
       }
-      if ($isEnabled) {
+      if ($is_enabled) {
         $build['top']['actions']['disable'] = array(
           '#type' => 'submit',
           '#value' => t('disable @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array('views_ui_edit_form_submit_disable_display', 'views_ui_edit_form_submit_delay_destination'),
-          '#prefix' => '<' . $itemElement . ' class="disable">',
-          "#suffix" => '</' . $itemElement . '>',
+          '#prefix' => '<' . $item_element . ' class="disable">',
+          "#suffix" => '</' . $item_element . '>',
         );
       }
     }
@@ -1653,8 +1653,8 @@ function views_ui_get_display_tab_details($view, $display) {
         '#value' => t('undo delete of @display_title', array('@display_title' => $display_title)),
         '#limit_validation_errors' => array(),
         '#submit' => array('views_ui_edit_form_submit_undo_delete_display', 'views_ui_edit_form_submit_delay_destination'),
-        '#prefix' => '<' . $itemElement . ' class="undo-delete">',
-        "#suffix" => '</' . $itemElement . '>',
+        '#prefix' => '<' . $item_element . ' class="undo-delete">',
+        "#suffix" => '</' . $item_element . '>',
       );
     }
 
@@ -1668,7 +1668,7 @@ function views_ui_get_display_tab_details($view, $display) {
 
   $build['columns'] = array();
   $build['columns']['#theme_wrappers'] = array('container');
-  $build['columns']['#attributes'] = array('id' => 'edit-display-settings-main', 'class' => array('clearfix', 'views-display-columns'),);
+  $build['columns']['#attributes'] = array('id' => 'edit-display-settings-main', 'class' => array('clearfix', 'views-display-columns'));
 
   $build['columns']['first']['#theme_wrappers'] = array('container');
   $build['columns']['first']['#attributes'] = array('class' => array('views-display-column', 'first'));
@@ -1693,9 +1693,9 @@ function views_ui_get_display_tab_details($view, $display) {
   if (!config('views.settings')->get('views_ui_show_advanced_column')) {
     $build['columns']['third']['#attributes']['class'][] = 'ctools-collapsed';
   }
-  $build['columns']['third']['advanced'] = array('#markup' => '<h3 class="ctools-collapsible-handle"><a href="">' . t('Advanced') . '</a></h3>',);
+  $build['columns']['third']['advanced'] = array('#markup' => '<h3 class="ctools-collapsible-handle"><a href="">' . t('Advanced') . '</a></h3>');
   $build['columns']['third']['collapse']['#theme_wrappers'] = array('container');
-  $build['columns']['third']['collapse']['#attributes'] = array('class' => array('ctools-collapsible-content',),);
+  $build['columns']['third']['collapse']['#attributes'] = array('class' => array('ctools-collapsible-content'));
 
   // Each option (e.g. title, access, display as grid/table/list) fits into one
   // of several "buckets," or boxes (Format, Fields, Sort, and so on).
@@ -2248,7 +2248,7 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
   $actions['add'] = array(
     'title' => t('Add'),
     'href' => "admin/structure/views/nojs/add-item/$view->name/$display->id/$type",
-    'attributes'=> array('class' => array('icon compact add', 'views-ajax-link'), 'title' => t('Add'), 'id' => 'views-add-' . $type),
+    'attributes' => array('class' => array('icon compact add', 'views-ajax-link'), 'title' => t('Add'), 'id' => 'views-add-' . $type),
     'html' => TRUE,
   );
   if ($count_handlers > 0) {
@@ -2347,11 +2347,11 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
     }
 
     if ($display->handler->use_group_by() && $handler->use_group_by()) {
-      $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/$view->name/$display->id/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => t('Aggregation settings')), 'html' => true));
+      $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/$view->name/$display->id/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => t('Aggregation settings')), 'html' => TRUE));
     }
 
     if ($handler->has_extra_options()) {
-      $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Settings') . '</span>', "admin/structure/views/nojs/config-item-extra/$view->name/$display->id/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => t('Settings')), 'html' => true));
+      $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Settings') . '</span>', "admin/structure/views/nojs/config-item-extra/$view->name/$display->id/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => t('Settings')), 'html' => TRUE));
     }
 
     if ($grouping) {
@@ -3106,7 +3106,7 @@ function _views_position_sort($display1, $display2) {
  * Submit handler for rearranging display form
  */
 function views_ui_reorder_displays_form_submit($form, &$form_state) {
-  foreach($form_state['input'] as $display => $info) {
+  foreach ($form_state['input'] as $display => $info) {
     // add each value that is a field with a weight to our list, but only if
     // it has had its 'removed' checkbox checked.
     if (is_array($info) && isset($info['weight']) && empty($info['removed'])) {
@@ -3120,13 +3120,13 @@ function views_ui_reorder_displays_form_submit($form, &$form_state) {
   // Fixing up positions
   $position = 2;
 
-  foreach(array_keys($order) as $display) {
+  foreach (array_keys($order) as $display) {
     $order[$display] = $position++;
   }
 
   // Setting up position and removing deleted displays
   $displays = $form_state['view']->display;
-  foreach($displays as $display_id => $display) {
+  foreach ($displays as $display_id => $display) {
     // Don't touch the default !!!
     if ($display_id === 'default') {
       continue;
@@ -3632,7 +3632,7 @@ function views_ui_rearrange_filter_form($form, &$form_state) {
   $form['filter_groups']['#tree'] = TRUE;
   $form['filter_groups']['operator'] = array(
     '#type' => 'select',
-    '#options' => array (
+    '#options' => array(
       'AND' => t('And'),
       'OR' => t('Or'),
     ),
@@ -3801,7 +3801,7 @@ function theme_views_ui_rearrange_filter_form(&$vars) {
         $form['filters'][$id]['group']['#attributes']['class'] = array('views-group-select views-group-select-' . $group_id);
         $row[] = drupal_render($form['filters'][$id]['group']);
         $form['filters'][$id]['removed']['#attributes']['class'][] = 'js-hide';
-        $row[] = drupal_render($form['filters'][$id]['removed']) . l('<span>' . t('Remove') . '</span>', 'javascript:void()', array('attributes' => array('id' => 'views-remove-link-' . $id, 'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item')), 'html' => true));
+        $row[] = drupal_render($form['filters'][$id]['removed']) . l('<span>' . t('Remove') . '</span>', 'javascript:void()', array('attributes' => array('id' => 'views-remove-link-' . $id, 'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item')), 'html' => TRUE));
 
         $row = array('data' => $row, 'class' => array('draggable'), 'id' => 'views-row-' . $id);
         if ($group_id !== 'ungroupable') {

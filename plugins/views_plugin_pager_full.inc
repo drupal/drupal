@@ -90,7 +90,7 @@ class views_plugin_pager_full extends views_plugin_pager {
       '#default_value' => $this->options['quantity'],
     );
 
-    $form['tags'] = array (
+    $form['tags'] = array(
       '#type' => 'fieldset',
       '#collapsible' => FALSE,
       '#collapsed' => FALSE,
@@ -128,7 +128,7 @@ class views_plugin_pager_full extends views_plugin_pager {
       '#default_value' => $this->options['tags']['last'],
     );
 
-    $form['expose'] = array (
+    $form['expose'] = array(
       '#type' => 'fieldset',
       '#collapsible' => FALSE,
       '#collapsed' => FALSE,
@@ -219,7 +219,7 @@ class views_plugin_pager_full extends views_plugin_pager {
     if (strpos($exposed_options, '.') !== FALSE) {
       $error = TRUE;
     }
-    $options = explode(',',$exposed_options);
+    $options = explode(',', $exposed_options);
     if (!$error && is_array($options)) {
       foreach ($options as $option) {
         if (!is_numeric($option) || intval($option) == 0) {
@@ -366,7 +366,7 @@ class views_plugin_pager_full extends views_plugin_pager {
       if ($this->current_page < 0) {
         $this->current_page = 0;
       }
-      else if ($this->current_page >= $pager_total[$this->options['id']]) {
+      elseif ($this->current_page >= $pager_total[$this->options['id']]) {
         // Pages are numbered from 0 so if there are 10 pages, the last page is 9.
         $this->current_page = $pager_total[$this->options['id']] - 1;
       }

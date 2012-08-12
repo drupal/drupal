@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementation of hook_views_default_views()
+ * Implements of hook_views_default_views().
  */
 function statistics_views_default_views() {
   $views = array();

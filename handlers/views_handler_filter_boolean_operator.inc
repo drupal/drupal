@@ -37,7 +37,7 @@ class views_handler_filter_boolean_operator extends views_handler_filter {
     if (isset($this->definition['accept null'])) {
       $this->accept_null = (bool) $this->definition['accept null'];
     }
-    else if (isset($this->definition['accept_null'])) {
+    elseif (isset($this->definition['accept_null'])) {
       $this->accept_null = (bool) $this->definition['accept_null'];
     }
     $this->value_options = NULL;

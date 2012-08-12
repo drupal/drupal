@@ -80,7 +80,7 @@ class views_plugin_cache extends views_plugin {
    * @param $type
    *   The cache type, either 'query', 'result' or 'output'.
    */
-   function cache_expire($type) { }
+  function cache_expire($type) { }
 
    /**
     * Determine expiration time in the cache table of the cache type
@@ -270,7 +270,7 @@ class views_plugin_cache extends views_plugin {
 
       $query_plugin = $this->view->display_handler->get_plugin('query');
 
-      foreach (array('query','count_query') as $index) {
+      foreach (array('query', 'count_query') as $index) {
         // If the default query back-end is used generate SQL query strings from
         // the query objects.
         if ($build_info[$index] instanceof Drupal\Core\Database\Query\Select) {

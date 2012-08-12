@@ -30,7 +30,7 @@ class views_plugin_display_page extends views_plugin_display {
         'weight' => array('default' => 0),
         'name' => array('default' => variable_get('menu_default_node_menu', 'navigation')),
         'context' => array('default' => ''),
-       ),
+      ),
     );
     $options['tab_options'] = array(
       'contains' => array(
@@ -40,7 +40,7 @@ class views_plugin_display_page extends views_plugin_display {
         'description' => array('default' => '', 'translatable' => FALSE),
         'weight' => array('default' => 0),
         'name' => array('default' => 'navigation'),
-       ),
+      ),
     );
 
     return $options;
@@ -266,7 +266,7 @@ class views_plugin_display_page extends views_plugin_display {
     if (!is_array($menu)) {
       $menu = array('type' => 'none');
     }
-    switch($menu['type']) {
+    switch ($menu['type']) {
       case 'none':
       default:
         $menu_str = t('No menu');
@@ -311,7 +311,7 @@ class views_plugin_display_page extends views_plugin_display {
           '#default_value' => $this->get_option('path'),
           '#field_prefix' => '<span dir="ltr">' . url(NULL, array('absolute' => TRUE)),
           '#field_suffix' => '</span>&lrm;',
-          '#attributes' => array('dir'=>'ltr'),
+          '#attributes' => array('dir' => 'ltr'),
         );
         break;
       case 'menu':

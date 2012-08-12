@@ -89,17 +89,17 @@ class views_plugin_query_default extends views_plugin_query {
    *
    * @var views_plugin_pager
    */
-   var $pager = NULL;
+  var $pager = NULL;
 
    /**
     * An array mapping table aliases and field names to field aliases.
     */
-   var $field_aliases = array();
+  var $field_aliases = array();
 
    /**
     * Query tags which will be passed over to the dbtng query object.
     */
-   var $tags = array();
+  var $tags = array();
 
   /**
    * Is the view marked as not distinct.
@@ -1044,8 +1044,8 @@ class views_plugin_query_default extends views_plugin_query {
       'direction' => strtoupper($order)
     );
 
-	/**
- 	 * -- removing, this should be taken care of by field adding now.
+    /**
+     * -- removing, this should be taken care of by field adding now.
      * -- leaving commented because I am unsure.
       // If grouping, all items in the order by must also be in the
       // group by clause. Check $table to ensure that this is not a
@@ -1053,7 +1053,7 @@ class views_plugin_query_default extends views_plugin_query {
       if ($this->groupby && $table) {
         $this->add_groupby($as);
       }
-    */
+     */
   }
 
   /**
@@ -1243,7 +1243,7 @@ class views_plugin_query_default extends views_plugin_query {
   function query($get_count = FALSE) {
     // Check query distinct value.
     if (empty($this->no_distinct) && $this->distinct && !empty($this->fields)) {
-      if ($this->pure_distinct === FALSE){
+      if ($this->pure_distinct === FALSE) {
         $base_field_alias = $this->add_field($this->base_table, $this->base_field);
         $this->add_groupby($base_field_alias);
       }

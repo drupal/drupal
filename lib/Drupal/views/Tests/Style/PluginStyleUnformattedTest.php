@@ -67,7 +67,7 @@ class PluginStyleUnformattedTest extends ViewsSqlTest {
       if ($count == 1) {
         $this->assertTrue(strpos($class, "views-row-first") !== FALSE, 'Take sure that the first class is set right.');
       }
-      else if ($count == $count_result) {
+      elseif ($count == $count_result) {
         $this->assertTrue(strpos($class, "views-row-last") !== FALSE, 'Take sure that the last class is set right.');
 
       }

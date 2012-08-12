@@ -1708,7 +1708,7 @@ function views_debug($message, $placeholders = array()) {
       $output = $message;
       watchdog('views_logging', $output, $placeholders);
     }
-    else if ($devel_region == 'drupal_debug') {
+    elseif ($devel_region == 'drupal_debug') {
       $output = empty($output) ? t($message, $placeholders) : $output;
       dd($output);
     }

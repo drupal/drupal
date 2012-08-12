@@ -146,7 +146,7 @@ function views_revert_views() {
         drush_set_error(dt("The view specified '@viewname' is not overridden.", array('@viewname' => $viewname)));
       }
       // If the view is overriden, revert it.
-      elseif ($is_overridden){
+      elseif ($is_overridden) {
         views_revert_view($views[$viewname]);
         $i++;
       }
@@ -317,7 +317,7 @@ function drush_views_list() {
   );
 
   // setup a row for each view
-  foreach($views as $id => $view){
+  foreach ($views as $id => $view) {
     // if options were specified, check that first
     // mismatch push the loop to the next view
     if ($with_tags && !in_array($view->tag, $tags)) {
@@ -343,7 +343,7 @@ function drush_views_list() {
 
     // place the row in the appropiate array,
     // so we can have disabled views at the bottom
-    if($view->disabled) {
+    if ($view->disabled) {
       $disabled_views[] = $row;
       }
     else{
@@ -352,7 +352,7 @@ function drush_views_list() {
     unset($row);
 
     // gather some statistics
-    switch($view->type) {
+    switch ($view->type) {
       case dt('Normal'):
         $indb++;
         break;

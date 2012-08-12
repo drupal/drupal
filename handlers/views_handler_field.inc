@@ -1255,7 +1255,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
 
     if (!empty($alter['make_link']) && !empty($alter['path'])) {
       if (!isset($tokens)) {
-       $tokens = $this->get_render_tokens($alter);
+        $tokens = $this->get_render_tokens($alter);
       }
       $value = $this->render_as_link($alter, $value, $tokens);
     }
@@ -1341,7 +1341,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
     // If no scheme is provided in the $path, assign the default 'http://'.
     // This allows a url of 'www.example.com' to be converted to 'http://www.example.com'.
     // Only do this on for external URLs.
-    if ($alter['external']){
+    if ($alter['external']) {
       if (!isset($url['scheme'])) {
         // There is no scheme, add the default 'http://' to the $path.
         $path = "http://$path";
@@ -1386,7 +1386,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       $options['attributes']['rel'] = $rel;
     }
 
-    $target = check_plain(trim(strtr($alter['target'],$tokens)));
+    $target = check_plain(trim(strtr($alter['target'], $tokens)));
     if (!empty($target)) {
       $options['attributes']['target'] = $target;
     }
@@ -1530,13 +1530,14 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
 
     foreach ($array as $param => $val) {
       if (is_array($val)) {
-         // Copy parent_keys array, so we don't afect other elements of this iteration.
-         $child_parent_keys = $parent_keys;
-         $child_parent_keys[] = $param;
-         // Get the child tokens.
-         $child_tokens = $this->get_token_values_recursive($val, $child_parent_keys);
-         // Add them to the current tokens array.
-         $tokens += $child_tokens;
+        // Copy parent_keys array, so we don't affect other elements of this
+        // iteration.
+        $child_parent_keys = $parent_keys;
+        $child_parent_keys[] = $param;
+        // Get the child tokens.
+        $child_tokens = $this->get_token_values_recursive($val, $child_parent_keys);
+        // Add them to the current tokens array.
+        $tokens += $child_tokens;
       }
       else {
         // Create a token key based on array element structure.

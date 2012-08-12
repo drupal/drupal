@@ -55,7 +55,7 @@ class views_handler_field_term_node_tid extends views_handler_field_prerender_li
     $form['limit'] = array(
       '#type' => 'checkbox',
       '#title' => t('Limit terms by vocabulary'),
-      '#default_value'=> $this->options['limit'],
+      '#default_value' => $this->options['limit'],
     );
 
     $options = array();
@@ -140,9 +140,9 @@ class views_handler_field_term_node_tid extends views_handler_field_prerender_li
   }
 
   function add_self_tokens(&$tokens, $item) {
-    foreach(array('tid', 'name', 'vocabulary_machine_name', 'vocabulary') as $token) {
+    foreach (array('tid', 'name', 'vocabulary_machine_name', 'vocabulary') as $token) {
       // Replace _ with - for the vocabulary machine name.
-      $tokens['[' . $this->options['id'] . '-' . str_replace('_', '-', $token). ']'] = isset($item[$token]) ? $item[$token] : '';
+      $tokens['[' . $this->options['id'] . '-' . str_replace('_', '-', $token) . ']'] = isset($item[$token]) ? $item[$token] : '';
     }
   }
 }

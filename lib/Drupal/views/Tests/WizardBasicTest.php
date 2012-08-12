@@ -34,7 +34,7 @@ class WizardBasicTest extends WizardTestBase {
     $this->assertText(t('Your view was saved. You may edit it from the list below.'));
     $this->assertText($view1['human_name']);
     $this->assertText($view1['description']);
-    foreach(array('delete', 'clone', 'edit') as $operation) {
+    foreach (array('delete', 'clone', 'edit') as $operation) {
       $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['name'] . '/' . $operation));
     }
 

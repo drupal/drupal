@@ -169,7 +169,7 @@ class View extends ViewsDbObject {
    *
    * @var views_plugin_style
    */
-   var $style_plugin;
+  var $style_plugin;
 
   /**
    * Stored the changed options of the style plugin.
@@ -988,7 +988,7 @@ class View extends ViewsDbObject {
       $filter_groups = $this->display_handler->get_option('filter_groups');
       if ($filter_groups) {
         $this->query->set_group_operator($filter_groups['operator']);
-        foreach($filter_groups['groups'] as $id => $operator) {
+        foreach ($filter_groups['groups'] as $id => $operator) {
           $this->query->set_where_group($operator, $id);
         }
       }
@@ -1138,7 +1138,7 @@ class View extends ViewsDbObject {
       $cache = $this->display_handler->get_plugin('cache');
     }
     if ($cache && $cache->cache_get('results')) {
-      if($this->query->pager->use_pager()) {
+      if ($this->query->pager->use_pager()) {
         $this->query->pager->total_items = $this->total_rows;
         $this->query->pager->update_page_info();
       }
@@ -1554,9 +1554,9 @@ class View extends ViewsDbObject {
    * The tokens in the title get's replaced before rendering.
    */
   function set_title($title) {
-     $this->build_info['title'] = $title;
-     return TRUE;
-   }
+    $this->build_info['title'] = $title;
+    return TRUE;
+  }
 
   /**
    * Return the human readable name for a view.

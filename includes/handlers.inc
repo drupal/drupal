@@ -48,12 +48,12 @@ function _views_create_handler($definition, $type = 'handler', $handler_type = N
     return;
   }
 
-   if (!empty($definition['override handler'])) {
-     $handler = new $definition['override handler'];
-   }
-   else {
-     $handler = new $definition['handler'];
-   }
+  if (!empty($definition['override handler'])) {
+    $handler = new $definition['override handler'];
+  }
+  else {
+    $handler = new $definition['handler'];
+  }
 
   $handler->set_definition($definition);
   if ($type == 'handler') {
@@ -1185,7 +1185,7 @@ function views_get_timezone() {
         db_query("SET @@session.time_zone = '$offset'");
       }
 
-      $already_set = true;
+      $already_set = TRUE;
     }
   }
 
@@ -1357,44 +1357,46 @@ function views_date_sql_extract($extract_type, $field, $field_type = 'int', $set
   // Note there is no space after FROM to avoid db_rewrite problems
   // see http://drupal.org/node/79904.
   switch ($extract_type) {
-  case('DATE'):
-    return $field;
-  case('YEAR'):
-    return "EXTRACT(YEAR FROM($field))";
-  case('MONTH'):
-    return "EXTRACT(MONTH FROM($field))";
-  case('DAY'):
-    return "EXTRACT(DAY FROM($field))";
-  case('HOUR'):
-    return "EXTRACT(HOUR FROM($field))";
-  case('MINUTE'):
-    return "EXTRACT(MINUTE FROM($field))";
-  case('SECOND'):
-    return "EXTRACT(SECOND FROM($field))";
-  case('WEEK'):  // ISO week number for date
-    switch ($db_type) {
-      case('mysql'):
-        // WEEK using arg 3 in mysql should return the same value as postgres EXTRACT
-        return "WEEK($field, 3)";
-      case('pgsql'):
-        return "EXTRACT(WEEK FROM($field))";
-    }
-  case('DOW'):
-    switch ($db_type) {
-      case('mysql'):
-        // mysql returns 1 for Sunday through 7 for Saturday
-        // php date functions and postgres use 0 for Sunday and 6 for Saturday
-        return "INTEGER(DAYOFWEEK($field) - 1)";
-      case('pgsql'):
-        return "EXTRACT(DOW FROM($field))";
-    }
-  case('DOY'):
-    switch ($db_type) {
-      case('mysql'):
-        return "DAYOFYEAR($field)";
-      case('pgsql'):
-        return "EXTRACT(DOY FROM($field))";
-    }
+    case 'DATE':
+      return $field;
+    case 'YEAR':
+      return "EXTRACT(YEAR FROM($field))";
+    case 'MONTH':
+      return "EXTRACT(MONTH FROM($field))";
+    case 'DAY':
+      return "EXTRACT(DAY FROM($field))";
+    case 'HOUR':
+      return "EXTRACT(HOUR FROM($field))";
+    case 'MINUTE':
+      return "EXTRACT(MINUTE FROM($field))";
+    case 'SECOND':
+      return "EXTRACT(SECOND FROM($field))";
+    // ISO week number for date
+    case 'WEEK':
+      switch ($db_type) {
+        case 'mysql':
+          // WEEK using arg 3 in mysql should return the same value as postgres
+          // EXTRACT.
+          return "WEEK($field, 3)";
+        case 'pgsql':
+          return "EXTRACT(WEEK FROM($field))";
+      }
+    case 'DOW':
+      switch ($db_type) {
+        case 'mysql':
+          // mysql returns 1 for Sunday through 7 for Saturday php date
+          // functions and postgres use 0 for Sunday and 6 for Saturday.
+          return "INTEGER(DAYOFWEEK($field) - 1)";
+        case 'pgsql':
+          return "EXTRACT(DOW FROM($field))";
+      }
+    case 'DOY':
+      switch ($db_type) {
+        case 'mysql':
+          return "DAYOFYEAR($field)";
+        case 'pgsql':
+          return "EXTRACT(DOY FROM($field))";
+      }
   }
 }
 

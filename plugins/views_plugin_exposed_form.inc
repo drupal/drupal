@@ -58,7 +58,7 @@ class views_plugin_exposed_form extends views_plugin {
       '#required' => TRUE,
     );
 
-    $form['reset_button'] = array (
+    $form['reset_button'] = array(
       '#type' => 'checkbox',
       '#title' => t('Include reset button'),
       '#description' => t('If checked the exposed form will provide a button to reset all the applied exposed filters'),
@@ -176,7 +176,7 @@ class views_plugin_exposed_form extends views_plugin {
           if (!$sort->is_exposed()) {
             $sort->query();
           }
-          else if ($key == $sort_by) {
+          elseif ($key == $sort_by) {
             if (isset($exposed_data['sort_order']) && in_array($exposed_data['sort_order'], array('ASC', 'DESC'))) {
               $sort->options['order'] = $exposed_data['sort_order'];
             }
@@ -225,7 +225,8 @@ class views_plugin_exposed_form extends views_plugin {
       );
       if (isset($form_state['input']['sort_by']) && isset($this->view->sort[$form_state['input']['sort_by']])) {
         $default_sort_order = $this->view->sort[$form_state['input']['sort_by']]->options['order'];
-      } else {
+      }
+      else {
         $first_sort = reset($this->view->sort);
         $default_sort_order = $first_sort->options['order'];
       }

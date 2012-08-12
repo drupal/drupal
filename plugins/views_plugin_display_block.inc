@@ -235,7 +235,7 @@ class views_plugin_display_block extends views_plugin_display {
         ->fields(array(
         'cache' => $cache_setting,
         ))
-        ->condition('module','views')
+        ->condition('module', 'views')
         ->condition('delta', $delta)
         ->execute();
     }

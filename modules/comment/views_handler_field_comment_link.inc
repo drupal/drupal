@@ -60,7 +60,7 @@ class views_handler_field_comment_link extends views_handler_field_entity {
       $this->options['alter']['fragment'] = "comment-" . $cid;
     }
     // If there is no comment link to the node.
-    else if ($this->options['link_to_node']) {
+    elseif ($this->options['link_to_node']) {
       $this->options['alter']['path'] = "node/" . $nid;
     }
 

@@ -119,7 +119,7 @@ class ViewsObject {
         $localization_keys = $this->localization_keys;
       }
       // but plugins don't because there isn't a common init() these days.
-      else if (!empty($this->is_plugin)) {
+      elseif (!empty($this->is_plugin)) {
         if ($this->plugin_type != 'display') {
           $localization_keys = array($this->view->current_display);
           $localization_keys[] = $this->plugin_type;
@@ -150,7 +150,7 @@ class ViewsObject {
       }
       // Don't localize strings during editing. When editing, we need to work with
       // the original data, not the translated version.
-      else if (empty($this->view->editing) && !empty($definition[$key]['translatable']) && !empty($value) || !empty($definition['contains'][$key]['translatable']) && !empty($value)) {
+      elseif (empty($this->view->editing) && !empty($definition[$key]['translatable']) && !empty($value) || !empty($definition['contains'][$key]['translatable']) && !empty($value)) {
         if (!empty($this->view) && $this->view->is_translatable()) {
           // Allow other modules to make changes to the string before it's
           // sent for translation.
@@ -172,7 +172,7 @@ class ViewsObject {
           $storage[$key] = t($value);
         }
       }
-      else if ($all || !empty($definition[$key])) {
+      elseif ($all || !empty($definition[$key])) {
         $storage[$key] = $value;
       }
     }
@@ -330,7 +330,7 @@ class ViewsObject {
         if (is_array($value)) {
           $this->unpack_translatable($translatable, $options, $key, $definition, $parents, $translation_keys);
         }
-        else if (!empty($definition[$key]['translatable']) && !empty($value)) {
+        elseif (!empty($definition[$key]['translatable']) && !empty($value)) {
           // Build source data and add to the array
           $format = NULL;
           if (isset($definition['format_key']) && isset($options[$definition['format_key']])) {
@@ -344,7 +344,7 @@ class ViewsObject {
         }
       }
     }
-    else if (!empty($definition['translatable']) && !empty($options)) {
+    elseif (!empty($definition['translatable']) && !empty($options)) {
       $value = $options;
       // Build source data and add to the array
       $format = NULL;
