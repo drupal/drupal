@@ -1881,7 +1881,7 @@ function blocked_ip_load($iid) {
 }
 
 /**
- * Menu item access callback - only admin or enabled themes can be accessed.
+ * Menu item access callback - only enabled themes can be accessed.
  */
 function _system_themes_access($theme) {
   return user_access('administer themes') && drupal_theme_access($theme);

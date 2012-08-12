@@ -177,7 +177,7 @@ function block_menu() {
 }
 
 /**
- * Access callback: Only admin or enabled themes can be accessed.
+ * Access callback: Only enabled themes can be accessed.
  *
  * Path:
  * - admin/structure/block/list/% (for each theme)

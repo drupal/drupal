@@ -93,6 +93,7 @@ class RouterTest extends WebTestBase {
    * Test the theme callback when it is set to use an administrative theme.
    */
   function testThemeCallbackAdministrative() {
+    theme_enable(array('seven'));
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     $this->assertText('Custom theme: seven. Actual theme: seven.', t('The administrative theme can be correctly set in a theme callback.'));
     $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
@@ -102,6 +103,7 @@ class RouterTest extends WebTestBase {
    * Test that the theme callback is properly inherited.
    */
   function testThemeCallbackInheritance() {
+    theme_enable(array('seven'));
     $this->drupalGet('menu-test/theme-callback/use-admin-theme/inheritance');
     $this->assertText('Custom theme: seven. Actual theme: seven. Theme callback inheritance is being tested.', t('Theme callback inheritance correctly uses the administrative theme.'));
     $this->assertRaw('seven/style.css', t("The administrative theme's CSS appears on the page."));
@@ -132,6 +134,7 @@ class RouterTest extends WebTestBase {
    */
   function testThemeCallbackMaintenanceMode() {
     config('system.maintenance')->set('enabled', 1)->save();
+    theme_enable(array('seven'));
 
     // For a regular user, the fact that the site is in maintenance mode means
     // we expect the theme callback system to be bypassed entirely.
@@ -223,7 +226,7 @@ class RouterTest extends WebTestBase {
     // Trigger hook_custom_theme() to dynamically request the Stark theme for
     // the requested page.
     variable_set('menu_test_hook_custom_theme_name', 'stark');
-    theme_enable(array('stark'));
+    theme_enable(array('stark', 'seven'));
 
     // Visit a page that does not implement a theme callback. The above request
     // should be honored.
@@ -239,7 +242,7 @@ class RouterTest extends WebTestBase {
     // Trigger hook_custom_theme() to dynamically request the Stark theme for
     // the requested page.
     variable_set('menu_test_hook_custom_theme_name', 'stark');
-    theme_enable(array('stark'));
+    theme_enable(array('stark', 'seven'));
 
     // The menu "theme callback" should take precedence over a value set in
     // hook_custom_theme().

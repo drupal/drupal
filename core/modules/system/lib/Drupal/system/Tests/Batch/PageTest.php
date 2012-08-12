@@ -36,6 +36,7 @@ class PageTest extends WebTestBase {
     // Make sure that the page which starts the batch (an administrative page)
     // is using a different theme than would normally be used by the batch API.
     variable_set('theme_default', 'bartik');
+    theme_enable(array('seven'));
     variable_set('admin_theme', 'seven');
     // Log in as an administrator who can see the administrative theme.
     $admin_user = $this->drupalCreateUser(array('view the administration theme'));

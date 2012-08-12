@@ -26,6 +26,7 @@ class ThemeTest extends TaxonomyTestBase {
     // Make sure we are using distinct default and administrative themes for
     // the duration of these tests.
     variable_set('theme_default', 'bartik');
+    theme_enable(array('seven'));
     variable_set('admin_theme', 'seven');
 
     // Create and log in as a user who has permission to add and edit taxonomy

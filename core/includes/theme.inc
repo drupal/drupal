@@ -48,22 +48,12 @@ const MARK_UPDATED = 2;
  */
 function drupal_theme_access($theme) {
   if (is_object($theme)) {
-    return _drupal_theme_access($theme);
+    return !empty($theme->status);
   }
   else {
     $themes = list_themes();
-    return isset($themes[$theme]) && _drupal_theme_access($themes[$theme]);
+    return !empty($themes[$theme]->status);
   }
-}
-
-/**
- * Helper function for determining access to a theme.
- *
- * @see drupal_theme_access()
- */
-function _drupal_theme_access($theme) {
-  $admin_theme = variable_get('admin_theme');
-  return !empty($theme->status) || ($admin_theme && $theme->name == $admin_theme);
 }
 
 /**
