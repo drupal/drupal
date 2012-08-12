@@ -4,6 +4,7 @@ use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Template\Attribute;
 
@@ -6846,13 +6847,15 @@ function router_rebuild() {
   // a given item came from.
   $callbacks = array();
 
-  $dumper = drupal_container()->get('router.dumper');
+  $dumper = drupal_container()->get('router.dumper', Container::NULL_ON_INVALID_REFERENCE);
 
-  foreach (module_implements('route_info') as $module) {
-    $routes = call_user_func($module . '_route_info');
-    drupal_alter('router_info', $routes);
-    $dumper->addRoutes($routes);
-    $dumper->dump(array('route_set' => $module));
+  if ($dumper) {
+    foreach (module_implements('route_info') as $module) {
+      $routes = call_user_func($module . '_route_info');
+      drupal_alter('router_info', $routes);
+      $dumper->addRoutes($routes);
+      $dumper->dump(array('route_set' => $module));
+    }
   }
 }
 
