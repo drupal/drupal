@@ -617,7 +617,7 @@ abstract class WizardPluginBase implements WizardInterface {
     }
     else {
       foreach ($data as $field => $field_data) {
-        if (isset($field_data['field']['handler'])) {
+        if (isset($field_data['field']['id'])) {
           break;
         }
       }
