@@ -33,7 +33,7 @@ use Drupal\Core\Annotation\Plugin;
  *   id = "date"
  * )
  */
-class Date extends ArgumentPluginBase {
+class Date extends Formula {
 
   var $option_name = 'default_argument_date';
   var $arg_format = 'Y-m-d';
