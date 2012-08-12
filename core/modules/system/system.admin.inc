@@ -691,10 +691,12 @@ function _system_theme_settings_validate_path($path) {
 function system_theme_settings_submit($form, &$form_state) {
   // Exclude unnecessary elements before saving.
   form_state_values_clean($form_state);
-  $key = $form_state['values']['var'];
-  unset($form_state['values']['var']);
-
   $values = $form_state['values'];
+
+  // Extract the name of the theme from the submitted form values, then
+  // remove it from the array so that it is not saved as part of the variable.
+  $key = $values['var'];
+  unset($values['var']);
 
   // If the user uploaded a new logo or favicon, save it to a permanent location
   // and use it in place of the default theme-provided file.
