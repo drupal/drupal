@@ -603,7 +603,7 @@ function hook_views_plugins() {
       'path' => drupal_get_path('module', 'views') . '/modules/taxonomy',
     ),
   );
-  
+
   return array(
     'module' => 'views', // This just tells our themes are elsewhere.
     'argument validator' => array(
@@ -1079,6 +1079,18 @@ function hook_views_ajax_data_alter(&$commands, $view) {
       $command['method'] .= 'myScrollTop';
     }
   }
+}
+
+/**
+ * Allow modules to respond to the Views cache being invalidated.
+ *
+ * This hook should fire whenever a view is enabled, disabled, created,
+ * updated, or deleted.
+ *
+ * @see views_invalidate_cache()
+ */
+function hook_views_invalidate_cache() {
+  cache('mymodule')->deletePrefix('views:*');
 }
 
 /**

@@ -722,9 +722,7 @@ function views_ui_add_form_save_submit($form, &$form_state) {
     $form_state['redirect'] = 'admin/structure/views';
   }
   $view->save();
-  menu_router_rebuild();
-  cache('cache_views')->flush();
-  cache_invalidate(array('content' => TRUE));
+
   $form_state['redirect'] = 'admin/structure/views';
   if (!empty($view->display['page'])) {
     $display = $view->display['page'];
@@ -2172,15 +2170,6 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
 
   $form_state['view']->save();
   drupal_set_message(t('The view %name has been saved.', array('%name' => $form_state['view']->get_human_name())));
-
-  // Make sure menu items get rebuilt as neces
-  menu_router_rebuild();
-
-  // Clear the views cache.
-  cache('cache_views')->flush();
-
-  // Clear the page cache.
-  cache_invalidate(array('content' => TRUE));
 
   // Remove this view from cache so we can edit it properly.
   ctools_object_cache_clear('view', $form_state['view']->name);

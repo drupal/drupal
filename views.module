@@ -951,7 +951,17 @@ function views_field_delete_instance($instance) {
  * Invalidate the views cache, forcing a rebuild on the next grab of table data.
  */
 function views_invalidate_cache() {
+  // Clear the views cache.
   cache('cache_views')->flush();
+
+  // Clear the page and block cache.
+  cache_invalidate(array('content' => TRUE));
+
+  // Set the menu as needed to be rebuilt.
+  variable_set('menu_rebuild_needed', TRUE);
+
+  // Allow modules to respond to the Views cache being cleared.
+  module_invoke_all('views_invalidate_cache');
 }
 
 /**
@@ -1675,8 +1685,6 @@ function views_export_view(&$view, $indent = '') {
 function views_export_status($view, $status) {
   ctools_export_set_object_status($view, $status);
   views_invalidate_cache();
-  // Set the menu to be rebuilt.
-  variable_set('menu_rebuild_needed', TRUE);
 }
 
 // ------------------------------------------------------------------

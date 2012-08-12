@@ -490,8 +490,7 @@ function _views_drush_changestatus($viewnames = array(), $status = NULL) {
       variable_set('views_defaults', $views_status);
       views_invalidate_cache();
       drush_log(dt("Views cache was cleared"), 'ok');
-      menu_router_rebuild();
-      drush_log(dt("Menu cache was cleared"), 'ok');
+      drush_log(dt("Menu cache is set to be rebuilt on the next request."), 'ok');
     }
   }
 }
