@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views;
 
-use Drupal\views\ViewsObject;
 use Drupal\Component\Plugin\PluginBase;
 
 abstract class Plugin extends PluginBase {
@@ -64,8 +63,8 @@ abstract class Plugin extends PluginBase {
    * @return array
    *   Returns the options of this handler/plugin.
    *
-   * @see Drupal\views\ViewsObject::export_option()
-   * @see Drupal\views\ViewsObject::unpack_translatable()
+   * @see Drupal\views\Plugin\views\Plugin::export_option()
+   * @see Drupal\views\Plugin\views\Plugin::unpack_translatable()
    */
   function option_definition() { return array(); }
 

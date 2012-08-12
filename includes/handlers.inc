@@ -8,7 +8,6 @@
 use Drupal\Core\Database\Database;
 use Drupal\views\View;
 use Drupal\views\Join;
-use Drupal\views\ViewsObject;
 use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
