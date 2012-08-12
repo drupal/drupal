@@ -368,7 +368,7 @@ class ArgumentPluginBase extends Handler {
     );
 
     $validate_types = array('none' => t('- Basic validation -'));
-    $plugins = views_fetch_plugin_data('argument validator');
+    $plugins = views_fetch_plugin_data('argument_validator');
     foreach ($plugins as $id => $info) {
       if (!empty($info['no_ui'])) {
         continue;
@@ -390,7 +390,7 @@ class ArgumentPluginBase extends Handler {
 
       // If we decide this validator is ok, add it to the list.
       if ($valid) {
-        $plugin = $this->get_plugin('argument validator', $id);
+        $plugin = $this->get_plugin('argument_validator', $id);
         if ($plugin) {
           if ($plugin->access() || $this->options['validate']['type'] == $id) {
             $form['validate']['options'][$id] = array(
@@ -438,7 +438,7 @@ class ArgumentPluginBase extends Handler {
 
     // Let the plugins do validation.
     $default_id = $form_state['values']['options']['default_argument_type'];
-    $plugin = $this->get_plugin('argument default', $default_id);
+    $plugin = $this->get_plugin('argument_default', $default_id);
     if ($plugin) {
       $plugin->options_validate($form['argument_default'][$default_id], $form_state, $form_state['values']['options']['argument_default'][$default_id]);
     }
@@ -451,7 +451,7 @@ class ArgumentPluginBase extends Handler {
     }
 
     $validate_id = $form_state['values']['options']['validate']['type'];
-    $plugin = $this->get_plugin('argument validator', $validate_id);
+    $plugin = $this->get_plugin('argument_validator', $validate_id);
     if ($plugin) {
       $plugin->options_validate($form['validate']['options'][$default_id], $form_state, $form_state['values']['options']['validate']['options'][$validate_id]);
     }
@@ -465,7 +465,7 @@ class ArgumentPluginBase extends Handler {
 
     // Let the plugins make submit modifications if necessary.
     $default_id = $form_state['values']['options']['default_argument_type'];
-    $plugin = $this->get_plugin('argument default', $default_id);
+    $plugin = $this->get_plugin('argument_default', $default_id);
     if ($plugin) {
       $options = &$form_state['values']['options']['argument_default'][$default_id];
       $plugin->options_submit($form['argument_default'][$default_id], $form_state, $options);
@@ -484,7 +484,7 @@ class ArgumentPluginBase extends Handler {
     }
 
     $validate_id = $form_state['values']['options']['validate']['type'];
-    $plugin = $this->get_plugin('argument validator', $validate_id);
+    $plugin = $this->get_plugin('argument_validator', $validate_id);
     if ($plugin) {
       $options = &$form_state['values']['options']['validate']['options'][$validate_id];
       $plugin->options_submit($form['validate']['options'][$validate_id], $form_state, $options);
@@ -563,7 +563,7 @@ class ArgumentPluginBase extends Handler {
    * default action is set to provide default argument.
    */
   function default_argument_form(&$form, &$form_state) {
-    $plugins = views_fetch_plugin_data('argument default');
+    $plugins = views_fetch_plugin_data('argument_default');
     $options = array();
 
     $form['default_argument_skip_url'] = array(
@@ -594,7 +594,7 @@ class ArgumentPluginBase extends Handler {
       if (!empty($info['no_ui'])) {
         continue;
       }
-      $plugin = $this->get_plugin('argument default', $id);
+      $plugin = $this->get_plugin('argument_default', $id);
       if ($plugin) {
         if ($plugin->access() || $this->options['default_argument_type'] == $id) {
           $form['argument_default']['#argument_option'] = 'default';
@@ -805,7 +805,7 @@ class ArgumentPluginBase extends Handler {
    * Get a default argument, if available.
    */
   function get_default_argument() {
-    $plugin = $this->get_plugin('argument default');
+    $plugin = $this->get_plugin('argument_default');
     if ($plugin) {
       return $plugin->get_argument();
     }
@@ -819,7 +819,7 @@ class ArgumentPluginBase extends Handler {
    */
   function process_summary_arguments(&$args) {
     if ($this->options['validate']['type'] != 'none') {
-      if (isset($this->validator) || $this->validator = $this->get_plugin('argument validator')) {
+      if (isset($this->validator) || $this->validator = $this->get_plugin('argument_validator')) {
         $this->validator->process_summary_arguments($args);
       }
     }
@@ -1016,7 +1016,7 @@ class ArgumentPluginBase extends Handler {
       return $this->argument_validated = $this->validate_argument_basic($arg);
     }
 
-    $plugin = $this->get_plugin('argument validator');
+    $plugin = $this->get_plugin('argument_validator');
     if ($plugin) {
       return $this->argument_validated = $plugin->validate_argument($arg);
     }
@@ -1154,7 +1154,7 @@ class ArgumentPluginBase extends Handler {
     $name = $this->options['validate'][$option];
     $options = $this->options['validate_options'];
 
-    $plugin = views_get_plugin('argument validator', $name);
+    $plugin = views_get_plugin('argument_validator', $name);
     if ($plugin) {
       $plugin->init($this->view, $this->display, $options);
       // Write which plugin to use.
@@ -1176,7 +1176,7 @@ class ArgumentPluginBase extends Handler {
   function export_plugin($indent, $prefix, $storage, $option, $definition, $parents) {
     $output = '';
     if ($option == 'default_argument_type') {
-      $type = 'argument default';
+      $type = 'argument_default';
       $option_name = 'default_argument_options';
     }
 
@@ -1197,14 +1197,14 @@ class ArgumentPluginBase extends Handler {
   /**
    * Get the display or row plugin, if it exists.
    */
-  function get_plugin($type = 'argument default', $name = NULL) {
+  function get_plugin($type = 'argument_default', $name = NULL) {
     $options = array();
     switch ($type) {
-      case 'argument default':
+      case 'argument_default':
         $plugin_name = $this->options['default_argument_type'];
         $options_name = 'default_argument_options';
         break;
-      case 'argument validator':
+      case 'argument_validator':
         $plugin_name = $this->options['validate']['type'];
         $options_name = 'validate_options';
         break;
