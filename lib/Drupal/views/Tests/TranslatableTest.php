@@ -40,7 +40,7 @@ class TranslatableTest extends ViewsSqlTest {
     $view = $this->view_unpack_translatable();
     $view->init_localization();
 
-    $this->assertEqual('LocalizationTest', get_class($view->localization_plugin), 'Make sure that init_localization initializes the right translation plugin');
+    $this->assertEqual('Drupal\views_test\Plugin\views\localization\LocalizationTest', get_class($view->localization_plugin), 'Make sure that init_localization initializes the right translation plugin');
 
     $view->export_locale_strings();
 
