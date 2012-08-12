@@ -25,7 +25,7 @@ use Drupal\Core\Annotation\Plugin;
  *   id = "math"
  * )
  */
-class Math extends FieldPluginBase {
+class Math extends Numeric {
   function option_definition() {
     $options = parent::option_definition();
     $options['expression'] = array('default' => '');
