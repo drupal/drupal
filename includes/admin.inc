@@ -1472,7 +1472,7 @@ function views_ui_edit_form_submit_delay_destination($form, &$form_state) {
  * having them as secondary local tasks isn't desired. The caller is responsible
  * for setting the active tab's #active property to TRUE.
  *
- * @param $view
+ * @param view $view
  *    The view which will be edited.
  * @param $display_id
  *    The display_id which is edited on the current request.
@@ -1501,6 +1501,18 @@ function views_ui_edit_page_display_tabs($view, $display_id = NULL) {
   // If the default display isn't supposed to be shown, don't display its tab, unless it's the only display.
   if ((!views_ui_show_default_display($view) && $display_id != 'default') && count($tabs) > 1) {
     $tabs['default']['#access'] = FALSE;
+  }
+
+  // Mark the display tab as red to show validation errors.
+  $view->validate();
+  foreach ($view->display as $id => $display) {
+    if (!empty($view->display_errors[$id])) {
+      // Always show the tab.
+      $tabs[$id]['#access'] = TRUE;
+      // Add a class to mark the error and a title to make a hover tip.
+      $tabs[$id]['#link']['localized_options']['attributes']['class'][] = 'error';
+      $tabs[$id]['#link']['localized_options']['attributes']['title'] = t('This display has one or more validation errors; please review it.');
+    }
   }
 
   return $tabs;

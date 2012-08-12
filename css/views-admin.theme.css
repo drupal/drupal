@@ -464,6 +464,15 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   padding: 3px 7px;
 }
 
+/**
+ * Display a red border if the display doesn't validate.
+ */
+.views-displays ul.secondary li.active a.active.error,
+.views-displays .secondary a.error {
+  border: 2px solid #ED541D;
+  padding: 1px 6px;
+}
+
 .views-displays .secondary a:focus {
   outline: none;
 }
