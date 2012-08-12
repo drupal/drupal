@@ -671,7 +671,7 @@ abstract class WizardPluginBase implements WizardInterface {
       // Check whether the bundle key filter handler is or an child of it in_operator
       // If it's not just use a single value instead of an array.
       $handler = $table_data[$bundle_key]['filter']['id'];
-      if ($handler == 'in_operator' || is_subclass_of($handler, 'in_operator')) {
+      if ($handler == 'in_operator' || is_subclass_of($handler, 'Drupal\views\Plugin\views\filter\InOperator')) {
         $value = drupal_map_assoc(array($form_state['values']['show']['type']));
       }
       else {
