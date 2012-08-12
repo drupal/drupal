@@ -70,6 +70,10 @@ class WizardJumpMenuTest extends WizardTestBase {
       // The urls are built with :: to be able to have a unique path all the time,
       // so try to find out the real path of $edit.
       $view_object = views_get_view($view['name']);
+      if (!$view_object) {
+        $this->fail('The view could not be loaded.');
+        return;
+      }
       $view_object->preview('page');
       $form = $view_object->style_plugin->render();
       $jump_options = $form['jump']['#options'];
@@ -169,4 +173,3 @@ class WizardJumpMenuTest extends WizardTestBase {
     return 'node/' . $node->nid . '/revisions/' . $node->vid . '/view';
   }
 }
-
