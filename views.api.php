@@ -261,8 +261,8 @@
  *      'help' => t('Display the view as a feed, such as an RSS feed.'),
  *      'handler' => 'views_plugin_display_feed',
  *      'uses_hook_menu' => TRUE,
- *      'use ajax' => FALSE,
- *      'use pager' => FALSE,
+ *      'use_ajax' => FALSE,
+ *      'use_pager' => FALSE,
  *      'accept_attachments' => FALSE,
  *      'admin' => t('Feed'),
  *      'help topic' => 'display-feed',
@@ -429,7 +429,7 @@ function hook_views_data() {
       // This setting is used by the boolean filter handler, as possible option.
       'type' => 'yes-no',
       // use boolean_field = 1 instead of boolean_field <> 0 in WHERE statment.
-      'use equal' => TRUE,
+      'use_equal' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -556,10 +556,10 @@ function hook_views_data_alter(&$data) {
  *       t().
  *     - no remove: Set to TRUE to make the display non-removable. (Basically
  *       only used for the master/default display.)
- *     - use ajax: Set to TRUE to allow AJAX loads in the display. If it's
+ *     - use_ajax: Set to TRUE to allow AJAX loads in the display. If it's
  *       disabled there will be no ajax option in the ui.
- *     - use pager: Set to TRUE to allow paging in the display.
- *     - use more: Set to TRUE to allow the 'use more' setting in the display.
+ *     - use_pager: Set to TRUE to allow paging in the display.
+ *     - use_more: Set to TRUE to allow the 'use_more' setting in the display.
  *     - accept_attachments: Set to TRUE to allow attachment displays to be
  *       attached to this display type.
  *     - contextual_links_locations: An array with places where contextual links

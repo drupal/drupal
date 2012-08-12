@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Plugin;
  *    - on-off: On/Off
  *    - enabled-disabled: Enabled/Disabled
  * - accept null: Treat a NULL value as false.
- * - use equal: If you use this flag the query will use = 1 instead of <> 0.
+ * - use_equal: If you use this flag the query will use = 1 instead of <> 0.
  *   This might be helpful for performance reasons.
  *
  * @ingroup views_filter_handlers
@@ -176,7 +176,7 @@ class BooleanOperator extends FilterPluginBase {
       }
     }
     else {
-      if (!empty($this->definition['use equal'])) {
+      if (!empty($this->definition['use_equal'])) {
         $this->query->add_where($this->options['group'], $field, 1, '=');
       }
       else {

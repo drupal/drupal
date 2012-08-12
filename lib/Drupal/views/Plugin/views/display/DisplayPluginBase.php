@@ -336,7 +336,7 @@ abstract class DisplayPluginBase extends Plugin {
    * Does the display use AJAX?
    */
   function use_ajax() {
-    if (!empty($this->definition['use ajax'])) {
+    if (!empty($this->definition['use_ajax'])) {
       return $this->get_option('use_ajax');
     }
     return FALSE;
@@ -356,7 +356,7 @@ abstract class DisplayPluginBase extends Plugin {
    * Does the display have a more link enabled?
    */
   function use_more() {
-    if (!empty($this->definition['use more'])) {
+    if (!empty($this->definition['use_more'])) {
       return $this->get_option('use_more');
     }
     return FALSE;
@@ -373,7 +373,7 @@ abstract class DisplayPluginBase extends Plugin {
    * Should the enabled display more link be shown when no more items?
    */
   function use_more_always() {
-    if (!empty($this->definition['use more'])) {
+    if (!empty($this->definition['use_more'])) {
       return $this->get_option('use_more_always');
     }
     return FALSE;
@@ -383,7 +383,7 @@ abstract class DisplayPluginBase extends Plugin {
    * Does the display have custom link text?
    */
   function use_more_text() {
-    if (!empty($this->definition['use more'])) {
+    if (!empty($this->definition['use_more'])) {
       return $this->get_option('use_more_text');
     }
     return FALSE;
@@ -458,7 +458,7 @@ abstract class DisplayPluginBase extends Plugin {
     );
 
     // If the display cannot use a pager, then we cannot default it.
-    if (empty($this->definition['use pager'])) {
+    if (empty($this->definition['use_pager'])) {
       unset($sections['pager']);
       unset($sections['items_per_page']);
     }
@@ -713,7 +713,7 @@ abstract class DisplayPluginBase extends Plugin {
       ),
     );
 
-    if (empty($this->definition['use pager'])) {
+    if (empty($this->definition['use_pager'])) {
       $options['defaults']['default']['use_pager'] = FALSE;
       $options['defaults']['default']['items_per_page'] = FALSE;
       $options['defaults']['default']['offset'] = FALSE;
@@ -1231,7 +1231,7 @@ abstract class DisplayPluginBase extends Plugin {
         $options['row_plugin']['links']['row_options'] = t('Change settings for this style');
       }
     }
-    if (!empty($this->definition['use ajax'])) {
+    if (!empty($this->definition['use_ajax'])) {
       $options['use_ajax'] = array(
         'category' => 'other',
         'title' => t('Use AJAX'),
@@ -1273,7 +1273,7 @@ abstract class DisplayPluginBase extends Plugin {
     );
 
     // If pagers aren't allowed, change the text of the item:
-    if (empty($this->definition['use pager'])) {
+    if (empty($this->definition['use_pager'])) {
       $options['pager']['title'] = t('Items to display');
     }
 
@@ -1281,7 +1281,7 @@ abstract class DisplayPluginBase extends Plugin {
       $options['pager']['links']['pager_options'] = t('Change settings for this pager type.');
     }
 
-    if (!empty($this->definition['use more'])) {
+    if (!empty($this->definition['use_more'])) {
       $options['use_more'] = array(
         'category' => 'pager',
         'title' => t('More link'),
@@ -2168,7 +2168,7 @@ abstract class DisplayPluginBase extends Plugin {
         $pager = $this->get_option('pager');
         $form['pager']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('pager', empty($this->definition['use pager']) ? 'basic' : NULL, array($this->view->base_table)),
+          '#options' => views_fetch_plugin_names('pager', empty($this->definition['use_pager']) ? 'basic' : NULL, array($this->view->base_table)),
           '#default_value' => $pager['type'],
         );
 

@@ -159,7 +159,7 @@ function node_views_data() {
       'id' => 'boolean',
       'label' => t('Published'),
       'type' => 'yes-no',
-      'use equal' => TRUE, // Use status = 1 instead of status <> 0 in WHERE statment
+      'use_equal' => TRUE, // Use status = 1 instead of status <> 0 in WHERE statment
     ),
     'sort' => array(
       'id' => 'standard',
