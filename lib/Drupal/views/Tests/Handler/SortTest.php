@@ -10,13 +10,13 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests for core views_handler_sort handler.
+ * Tests for core Drupal\views\Plugin\views\sort\SortPluginBase handler.
  */
 class SortTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Sort: generic',
-      'description' => 'Test the core views_handler_sort handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\sort\SortPluginBase handler.',
       'group' => 'Views Handlers',
     );
   }

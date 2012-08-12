@@ -10,13 +10,13 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests the core views_handler_filter_equality handler.
+ * Tests the core Drupal\views\Plugin\views\filter\Equality handler.
  */
 class FilterEqualityTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Filter: Equality',
-      'description' => 'Test the core views_handler_filter_equality handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\filter\Equality handler.',
       'group' => 'Views Handlers',
     );
   }
@@ -30,7 +30,7 @@ class FilterEqualityTest extends ViewsSqlTest {
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['name']['filter']['handler'] = 'views_handler_filter_equality';
+    $data['views_test']['name']['filter']['id'] = 'equality';
 
     return $data;
   }

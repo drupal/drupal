@@ -10,7 +10,7 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests the core views_handler_filter_string handler.
+ * Tests the core Drupal\views\Plugin\views\filter\String handler.
  */
 class FilterStringTest extends ViewsSqlTest {
   var $column_map = array();
@@ -18,7 +18,7 @@ class FilterStringTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Filter: String',
-      'description' => 'Tests the core views_handler_filter_string handler.',
+      'description' => 'Tests the core Drupal\views\Plugin\views\filter\String handler.',
       'group' => 'Views Handlers',
     );
   }

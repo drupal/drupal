@@ -10,7 +10,7 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests the core views_handler_field_file_size handler.
+ * Tests the core Drupal\views\Plugin\views\field\FileSize handler.
  *
  * @see CommonXssUnitTest
  */
@@ -18,7 +18,7 @@ class FieldFileSizeTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: file_size',
-      'description' => 'Test the core views_handler_field_file_size handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\field\FileSize handler.',
       'group' => 'Views Handlers',
     );
   }
@@ -35,7 +35,7 @@ class FieldFileSizeTest extends ViewsSqlTest {
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['age']['field']['handler'] = 'views_handler_field_file_size';
+    $data['views_test']['age']['field']['id'] = 'file_size';
 
     return $data;
   }

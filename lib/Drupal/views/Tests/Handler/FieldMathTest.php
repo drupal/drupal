@@ -10,13 +10,13 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests the core views_handler_field_math handler.
+ * Tests the core Drupal\views\Plugin\views\field\Math handler.
  */
 class FieldMathTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: Math',
-      'description' => 'Test the core views_handler_field_math handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\field\Math handler.',
       'group' => 'Views Handlers',
     );
   }

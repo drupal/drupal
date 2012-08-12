@@ -10,13 +10,13 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests for core views_handler_sort_date handler.
+ * Tests for core Drupal\views\Plugin\views\sort\Date handler.
  */
 class SortDateTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Sort: date',
-      'description' => 'Test the core views_handler_sort_date handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\sort\Date handler.',
       'group' => 'Views Handlers',
     );
   }

@@ -10,13 +10,13 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests for core views_handler_sort_random handler.
+ * Tests for core Drupal\views\Plugin\views\sort\Random handler.
  */
 class SortRandomTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Sort: random',
-      'description' => 'Test the core views_handler_sort_random handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\sort\Random handler.',
       'group' => 'Views Handlers',
     );
   }

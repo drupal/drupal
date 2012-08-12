@@ -10,20 +10,20 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests the core views_handler_field_custom handler.
+ * Tests the core Drupal\views\Plugin\views\field\Custom handler.
  */
 class FieldCustomTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: Custom',
-      'description' => 'Test the core views_handler_field_custom handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\field\Custom handler.',
       'group' => 'Views Handlers',
     );
   }
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['name']['field']['handler'] = 'views_handler_field_custom';
+    $data['views_test']['name']['field']['id'] = 'custom';
     return $data;
   }
 

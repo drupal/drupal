@@ -9,20 +9,20 @@ namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewsSqlTest;
 /**
- * Tests the core views_handler_field_url handler.
+ * Tests the core Drupal\views\Plugin\views\field\Url handler.
  */
 class FieldUrlTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: Url',
-      'description' => 'Test the core views_handler_field_url handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\field\Url handler.',
       'group' => 'Views Handlers',
     );
   }
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['name']['field']['handler'] = 'views_handler_field_url';
+    $data['views_test']['name']['field']['id'] = 'url';
     return $data;
   }
 

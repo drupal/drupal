@@ -11,13 +11,13 @@ use Drupal\views\Tests\ViewsSqlTest;
 use Drupal\views\View;
 
 /**
- * Tests the core views_handler_argument_string handler.
+ * Tests the core Drupal\views\Plugin\views\argument\String handler.
  */
 class ArgumentStringTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Argument: String',
-      'description' => 'Test the core views_handler_argument_string handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\argument\String handler.',
       'group' => 'Views Handlers',
     );
   }

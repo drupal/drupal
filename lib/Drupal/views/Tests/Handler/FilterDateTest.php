@@ -11,13 +11,13 @@ use Drupal\views\Tests\ViewsSqlTest;
 use Drupal\views\View;
 
 /**
- * Tests the core views_handler_filter_date handler.
+ * Tests the core Drupal\views\Plugin\views\filter\Date handler.
  */
 class FilterDateTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Filter: Date',
-      'description' => 'Test the core views_handler_filter_date handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\filter\Date handler.',
       'group' => 'Views Handlers',
     );
   }
@@ -38,7 +38,7 @@ class FilterDateTest extends ViewsSqlTest {
   }
 
   /**
-  /* Test the general offset functionality.
+   * Test the general offset functionality.
    */
   function testOffset() {
     $view = $this->views_test_offset();

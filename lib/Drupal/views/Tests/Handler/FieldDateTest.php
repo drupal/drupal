@@ -10,20 +10,20 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests the core views_handler_field_date handler.
+ * Tests the core Drupal\views\Plugin\views\field\Date handler.
  */
 class FieldDateTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: Date',
-      'description' => 'Test the core views_handler_field_date handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\field\Date handler.',
       'group' => 'Views Handlers',
     );
   }
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['created']['field']['handler'] = 'views_handler_field_date';
+    $data['views_test']['created']['field']['id'] = 'date';
     return $data;
   }
 

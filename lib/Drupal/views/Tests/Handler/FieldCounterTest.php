@@ -10,13 +10,13 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests the views_handler_field_counter handler.
+ * Tests the Drupal\views\Plugin\views\field\Counter handler.
  */
 class FieldCounterTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Field: Counter',
-      'description' => 'Tests the views_handler_field_counter handler.',
+      'description' => 'Tests the Drupal\views\Plugin\views\field\Counter handler.',
       'group' => 'Views Handlers',
     );
   }

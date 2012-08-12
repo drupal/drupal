@@ -10,20 +10,20 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**
- * Tests the core views_handler_argument_null handler.
+ * Tests the core Drupal\views\Plugin\views\argument\Null handler.
  */
 class ArgumentNullTest extends ViewsSqlTest {
   public static function getInfo() {
     return array(
       'name' => 'Argument: Null',
-      'description' => 'Test the core views_handler_argument_null handler.',
+      'description' => 'Test the core Drupal\views\Plugin\views\argument\Null handler.',
       'group' => 'Views Handlers',
     );
   }
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['id']['argument']['handler'] = 'views_handler_argument_null';
+    $data['views_test']['id']['argument']['id'] = 'null';
 
     return $data;
   }
