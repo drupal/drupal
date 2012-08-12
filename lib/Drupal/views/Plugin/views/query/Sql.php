@@ -1209,8 +1209,8 @@ class Sql extends QueryPluginBase {
 
       if (!empty($field['function'])) {
         $info = $this->get_aggregation_info();
-        if (!empty($info[$field['function']]['method']) && function_exists($info[$field['function']]['method'])) {
-          $string = $info[$field['function']]['method']($field['function'], $string);
+        if (!empty($info[$field['function']]['method']) && is_callable(array($this, $info[$field['function']]['method']))) {
+          $string = $this::$info[$field['function']]['method']($field['function'], $string);
           $placeholders = !empty($field['placeholders']) ? $field['placeholders'] : array();
           $query->addExpression($string, $fieldname, $placeholders);
         }
@@ -1537,7 +1537,7 @@ class Sql extends QueryPluginBase {
       ),
       'count' => array(
         'title' => t('Count'),
-        'method' => 'views_query_default_aggregation_method_simple',
+        'method' => 'aggregation_method_simple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'groupby_numeric',
@@ -1547,7 +1547,7 @@ class Sql extends QueryPluginBase {
       ),
       'count_distinct' => array(
         'title' => t('Count DISTINCT'),
-        'method' => 'views_query_default_aggregation_method_distinct',
+        'method' => 'aggregation_method_distinct',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'groupby_numeric',
@@ -1557,7 +1557,7 @@ class Sql extends QueryPluginBase {
       ),
       'sum' => array(
         'title' => t('Sum'),
-        'method' => 'views_query_default_aggregation_method_simple',
+        'method' => 'aggregation_method_simple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'groupby_numeric',
@@ -1567,7 +1567,7 @@ class Sql extends QueryPluginBase {
       ),
       'avg' => array(
         'title' => t('Average'),
-        'method' => 'views_query_default_aggregation_method_simple',
+        'method' => 'aggregation_method_simple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'groupby_numeric',
@@ -1577,7 +1577,7 @@ class Sql extends QueryPluginBase {
       ),
       'min' => array(
         'title' => t('Minimum'),
-        'method' => 'views_query_default_aggregation_method_simple',
+        'method' => 'aggregation_method_simple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'groupby_numeric',
@@ -1587,7 +1587,7 @@ class Sql extends QueryPluginBase {
       ),
       'max' => array(
         'title' => t('Maximum'),
-        'method' => 'views_query_default_aggregation_method_simple',
+        'method' => 'aggregation_method_simple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'groupby_numeric',
@@ -1597,7 +1597,7 @@ class Sql extends QueryPluginBase {
       ),
       'stddev_pop' => array(
         'title' => t('Standard derivation'),
-        'method' => 'views_query_default_aggregation_method_simple',
+        'method' => 'aggregation_method_simple',
         'handler' => array(
           'argument' => 'groupby_numeric',
           'field' => 'groupby_numeric',
@@ -1651,27 +1651,14 @@ class Sql extends QueryPluginBase {
     }
     return array($entity_type, $result);
   }
-}
 
-function views_query_default_aggregation_method_simple($group_type, $field) {
-  return strtoupper($group_type) . '(' . $field . ')';
-}
-
-function views_query_default_aggregation_method_distinct($group_type, $field) {
-  $group_type = str_replace('_distinct', '', $group_type);
-  return strtoupper($group_type) . '(DISTINCT ' . $field . ')';
-}
-
-/**
- * Validation callback for query tags.
- */
-function views_element_validate_tags($element, &$form_state) {
-  $values = array_map('trim', explode(',', $element['#value']));
-  foreach ($values as $value) {
-    if (preg_match("/[^a-z_]/", $value)) {
-      form_error($element, t('The query tags may only contain lower-case alphabetical characters and underscores.'));
-      return;
-    }
+  function aggregation_method_simple($group_type, $field) {
+    return strtoupper($group_type) . '(' . $field . ')';
   }
-}
 
+  function aggregation_method_distinct($group_type, $field) {
+    $group_type = str_replace('_distinct', '', $group_type);
+    return strtoupper($group_type) . '(DISTINCT ' . $field . ')';
+  }
+
+}

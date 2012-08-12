@@ -2436,6 +2436,58 @@ function views_process_check_options($element, &$form_state) {
 }
 
 /**
+ * Validation callback for query tags.
+ */
+function views_element_validate_tags($element, &$form_state) {
+  $values = array_map('trim', explode(',', $element['#value']));
+  foreach ($values as $value) {
+    if (preg_match("/[^a-z_]/", $value)) {
+      form_error($element, t('The query tags may only contain lower-case alphabetical characters and underscores.'));
+      return;
+    }
+  }
+}
+
+/**
+ * Prerender function to move the textarea to the top.
+ */
+function views_handler_field_custom_pre_render_move_text($form) {
+  $form['text'] = $form['alter']['text'];
+  $form['help'] = $form['alter']['help'];
+  unset($form['alter']['text']);
+  unset($form['alter']['help']);
+
+  return $form;
+}
+
+/**
+ * Helper function: Return an array of formatter options for a field type.
+ *
+ * Borrowed from field_ui.
+ */
+function _field_view_formatter_options($field_type = NULL) {
+  $options = &drupal_static(__FUNCTION__);
+
+  if (!isset($options)) {
+    $field_types = field_info_field_types();
+    $options = array();
+    foreach (field_info_formatter_types() as $name => $formatter) {
+      foreach ($formatter['field types'] as $formatter_field_type) {
+        // Check that the field type exists.
+        if (isset($field_types[$formatter_field_type])) {
+          $options[$formatter_field_type][$name] = $formatter['label'];
+        }
+      }
+    }
+  }
+
+  if ($field_type) {
+    return !empty($options[$field_type]) ? $options[$field_type] : array();
+  }
+  return $options;
+}
+
+/**
  * Trim the field down to the specified length.
  *
  * @param $alter

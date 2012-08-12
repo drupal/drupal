@@ -11,33 +11,6 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**
- * Helper function: Return an array of formatter options for a field type.
- *
- * Borrowed from field_ui.
- */
-function _field_view_formatter_options($field_type = NULL) {
-  $options = &drupal_static(__FUNCTION__);
-
-  if (!isset($options)) {
-    $field_types = field_info_field_types();
-    $options = array();
-    foreach (field_info_formatter_types() as $name => $formatter) {
-      foreach ($formatter['field types'] as $formatter_field_type) {
-        // Check that the field type exists.
-        if (isset($field_types[$formatter_field_type])) {
-          $options[$formatter_field_type][$name] = $formatter['label'];
-        }
-      }
-    }
-  }
-
-  if ($field_type) {
-    return !empty($options[$field_type]) ? $options[$field_type] : array();
-  }
-  return $options;
-}
-
-/**
  * A field that displays fieldapi fields.
  *
  * @ingroup views_field_handlers

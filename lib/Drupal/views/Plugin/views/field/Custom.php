@@ -49,15 +49,3 @@ class Custom extends FieldPluginBase {
     return $this->options['alter']['text'];
   }
 }
-
-/**
- * Prerender function to move the textarea to the top.
- */
-function views_handler_field_custom_pre_render_move_text($form) {
-  $form['text'] = $form['alter']['text'];
-  $form['help'] = $form['alter']['help'];
-  unset($form['alter']['text']);
-  unset($form['alter']['help']);
-
-  return $form;
-}
