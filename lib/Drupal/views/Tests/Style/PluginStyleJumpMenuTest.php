@@ -31,7 +31,7 @@ class PluginStyleJumpMenuTest extends ViewsSqlTest {
     $this->nodes['story'][] = $this->drupalCreateNode(array('type' => 'story'));
     $this->nodes['story'][] = $this->drupalCreateNode(array('type' => 'story'));
 
-    $this->nodeTitles = array($this->nodes['page'][0]->title, $this->nodes['page'][1]->title, $this->nodes['story'][0]->title, $this->nodes['story'][1]->title);
+    $this->nodeTitles = array($this->nodes['page'][0]->label(), $this->nodes['page'][1]->label(), $this->nodes['story'][0]->label(), $this->nodes['story'][1]->label());
   }
 
 

@@ -62,8 +62,8 @@ class WizardBasicTest extends WizardTestBase {
     // it.
     $this->assertUrl($view2['page[path]']);
     $this->assertText($view2['page[title]']);
-    $this->assertText($node1->title);
-    $this->assertText($node2->title);
+    $this->assertText($node1->label());
+    $this->assertText($node2->label());
 
     // Check if we have the feed.
     $this->assertLinkByHref(url($view2['page[feed_properties][path]']));
@@ -72,9 +72,9 @@ class WizardBasicTest extends WizardTestBase {
     // The feed should have the same title and nodes as the page.
     $this->assertText($view2['page[title]']);
     $this->assertRaw(url('node/' . $node1->nid, array('absolute' => TRUE)));
-    $this->assertText($node1->title);
+    $this->assertText($node1->label());
     $this->assertRaw(url('node/' . $node2->nid, array('absolute' => TRUE)));
-    $this->assertText($node2->title);
+    $this->assertText($node2->label());
 
     // Go back to the views page and check if this view is there.
     $this->drupalGet('admin/structure/views');
@@ -103,8 +103,8 @@ class WizardBasicTest extends WizardTestBase {
     // Make sure the view only displays the node we expect.
     $this->assertUrl($view3['page[path]']);
     $this->assertText($view3['page[title]']);
-    $this->assertText($node1->title);
-    $this->assertNoText($node2->title);
+    $this->assertText($node1->label());
+    $this->assertNoText($node2->label());
 
     // Go back to the views page and check if this view is there.
     $this->drupalGet('admin/structure/views');
@@ -122,8 +122,8 @@ class WizardBasicTest extends WizardTestBase {
     // Visit a random page (not the one that displays the view itself) and look
     // for the expected node title in the block.
     $this->drupalGet('user');
-    $this->assertText($node1->title);
-    $this->assertNoText($node2->title);
+    $this->assertText($node1->label());
+    $this->assertNoText($node2->label());
 
     // Check if the export screen works.
     $this->drupalGet('admin/structure/views/view/' . $view3['name'] . '/export');

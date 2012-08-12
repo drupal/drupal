@@ -182,7 +182,7 @@ function template_preprocess_views_view_row_search(&$vars) {
   $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update index');
 
   $vars['url'] = url('node/' . $nid);
-  $vars['title'] = check_plain($node->title);
+  $vars['title'] = check_plain($node->label());
 
   $info = array();
   $info['type'] = node_type_get_name($node);

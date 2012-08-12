@@ -44,12 +44,12 @@ class WizardSortingTest extends WizardTestBase {
     $this->assertUrl($view1['page[path]']);
     $this->assertText($view1['page[title]']);
     $content = $this->drupalGetContent();
-    $this->assertText($node1->title);
-    $this->assertText($node2->title);
-    $this->assertText($node3->title);
-    $pos1 = strpos($content, $node1->title);
-    $pos2 = strpos($content, $node2->title);
-    $pos3 = strpos($content, $node3->title);
+    $this->assertText($node1->label());
+    $this->assertText($node2->label());
+    $this->assertText($node3->label());
+    $pos1 = strpos($content, $node1->label());
+    $pos2 = strpos($content, $node2->label());
+    $pos3 = strpos($content, $node3->label());
     $this->assertTrue($pos1 < $pos2 && $pos2 < $pos3, t('The nodes appear in the expected order in a view that sorts by oldest first.'));
 
     // Create a view that sorts newest first.
@@ -67,12 +67,12 @@ class WizardSortingTest extends WizardTestBase {
     $this->assertUrl($view2['page[path]']);
     $this->assertText($view2['page[title]']);
     $content = $this->drupalGetContent();
-    $this->assertText($node3->title);
-    $this->assertText($node2->title);
-    $this->assertText($node1->title);
-    $pos3 = strpos($content, $node3->title);
-    $pos2 = strpos($content, $node2->title);
-    $pos1 = strpos($content, $node1->title);
+    $this->assertText($node3->label());
+    $this->assertText($node2->label());
+    $this->assertText($node1->label());
+    $pos3 = strpos($content, $node3->label());
+    $pos2 = strpos($content, $node2->label());
+    $pos1 = strpos($content, $node1->label());
     $this->assertTrue($pos3 < $pos2 && $pos2 < $pos1, t('The nodes appear in the expected order in a view that sorts by newest first.'));
   }
 }

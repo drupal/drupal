@@ -57,16 +57,16 @@ class WizardItemsPerPageTest extends WizardTestBase {
     $this->assertUrl($view['page[path]']);
     $this->assertText($view['page[title]']);
     $content = $this->drupalGetContent();
-    $this->assertText($node5->title);
-    $this->assertText($node4->title);
-    $this->assertText($node3->title);
-    $this->assertText($node2->title);
-    $this->assertNoText($node1->title);
-    $this->assertNoText($page_node->title);
-    $pos5 = strpos($content, $node5->title);
-    $pos4 = strpos($content, $node4->title);
-    $pos3 = strpos($content, $node3->title);
-    $pos2 = strpos($content, $node2->title);
+    $this->assertText($node5->label());
+    $this->assertText($node4->label());
+    $this->assertText($node3->label());
+    $this->assertText($node2->label());
+    $this->assertNoText($node1->label());
+    $this->assertNoText($page_node->label());
+    $pos5 = strpos($content, $node5->label());
+    $pos4 = strpos($content, $node4->label());
+    $pos3 = strpos($content, $node3->label());
+    $pos2 = strpos($content, $node2->label());
     $this->assertTrue($pos5 < $pos4 && $pos4 < $pos3 && $pos3 < $pos2, t('The nodes appear in the expected order in the page display.'));
 
     // Put the block into the first sidebar region, visit a page that displays
@@ -79,15 +79,15 @@ class WizardItemsPerPageTest extends WizardTestBase {
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->drupalGet('user');
     $content = $this->drupalGetContent();
-    $this->assertText($node5->title);
-    $this->assertText($node4->title);
-    $this->assertText($node3->title);
-    $this->assertNoText($node2->title);
-    $this->assertNoText($node1->title);
-    $this->assertNoText($page_node->title);
-    $pos5 = strpos($content, $node5->title);
-    $pos4 = strpos($content, $node4->title);
-    $pos3 = strpos($content, $node3->title);
+    $this->assertText($node5->label());
+    $this->assertText($node4->label());
+    $this->assertText($node3->label());
+    $this->assertNoText($node2->label());
+    $this->assertNoText($node1->label());
+    $this->assertNoText($page_node->label());
+    $pos5 = strpos($content, $node5->label());
+    $pos4 = strpos($content, $node4->label());
+    $pos3 = strpos($content, $node3->label());
     $this->assertTrue($pos5 < $pos4 && $pos4 < $pos3, t('The nodes appear in the expected order in the block display.'));
   }
 }

@@ -24,9 +24,9 @@ class views_handler_argument_user_uid extends views_handler_argument_numeric {
 
     $titles = array();
 
-    $result = db_query("SELECT u.name FROM {users} u WHERE u.uid IN (:uids)", array(':uids' => $this->value));
-    foreach ($result as $term) {
-      $titles[] = check_plain($term->name);
+    $users = user_load_multiple($this->value);
+    foreach ($users as $account) {
+      $titles[] = check_plain($account->label());
     }
     return $titles;
   }

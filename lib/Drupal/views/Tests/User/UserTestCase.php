@@ -48,7 +48,7 @@ class UserTestCase extends ViewsSqlTest {
     $expected = array();
     for ($i = 0; $i <= 1; $i++) {
       $expected[$i] = array(
-        'node_title' => $this->nodes[$i]->title,
+        'node_title' => $this->nodes[$i]->label(),
         'users_uid' => $this->nodes[$i]->uid,
         'users_name' => $this->users[$i]->name,
       );

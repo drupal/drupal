@@ -96,7 +96,7 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
         }
 
         // Save the title() handlers some work.
-        $this->argument->validated_title = check_plain($node->title);
+        $this->argument->validated_title = check_plain($node->label());
 
         if (empty($types)) {
           return TRUE;
@@ -115,8 +115,8 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
         $test = drupal_map_assoc($nids->value);
         $titles = array();
 
-        $result = db_query("SELECT * FROM {node} WHERE nid IN (:nids)", array(':nids' =>  $nids->value));
-        foreach ($result as $node) {
+        $nodes = node_load_multiple($nids->value);
+        foreach ($nodes as $node) {
           if ($types && empty($types[$node->type])) {
             return FALSE;
           }
@@ -127,7 +127,7 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
             }
           }
 
-          $titles[] = check_plain($node->title);
+          $titles[] = check_plain($node->label());
           unset($test[$node->nid]);
         }
 
