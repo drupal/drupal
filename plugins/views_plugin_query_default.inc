@@ -859,7 +859,19 @@ class views_plugin_query_default extends views_plugin_query {
    *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
    *   = otherwise. If $field is a string you have to use 'formula' here.
    *
-   * @see QueryConditionInterface::condition()
+   * The $field, $value and $operator arguments can also be passed in with a
+   * single DatabaseCondition object, like this:
+   * @code
+   *   $this->query->add_where(
+   *     $this->options['group'],
+   *     db_or()
+   *       ->condition($field, $value, 'NOT IN')
+   *       ->condition($field, $value, 'IS NULL')
+   *   );
+   * @endcode
+   *
+   * @see Drupal\Core\Database\Query\ConditionInterface::condition()
+   * @see Drupal\Core\Database\Query\Condition
    */
   function add_where($group, $field, $value = NULL, $operator = NULL) {
     // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
