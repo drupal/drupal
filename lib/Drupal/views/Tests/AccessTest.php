@@ -178,7 +178,7 @@ class AccessTest extends ViewsSqlTest {
 
     /* Display: Master */
     $handler = $view->new_display('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'perm';
+    $handler->display->display_options['access']['type'] = 'permission';
     $handler->display->display_options['access']['perm'] = 'views_test test permission';
     $handler->display->display_options['cache']['type'] = 'none';
     $handler->display->display_options['exposed_form']['type'] = 'basic';
