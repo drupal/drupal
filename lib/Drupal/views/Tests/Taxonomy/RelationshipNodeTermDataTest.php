@@ -15,13 +15,6 @@ use Drupal\views\View;
  */
 class RelationshipNodeTermDataTest extends ViewsSqlTest {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('views_test');
-
   protected $profile = 'standard';
 
   public static function getInfo() {

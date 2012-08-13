@@ -13,13 +13,6 @@ namespace Drupal\views\Tests;
 class UiSettingsTest extends ViewsSqlTest {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('views_ui');
-
-  /**
    * Stores an admin user used by the different tests.
    *
    * @var Drupal\user\User

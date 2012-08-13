@@ -12,13 +12,6 @@ namespace Drupal\views\Tests;
  */
 class UiGroupByTest extends ViewsSqlTest {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('views_ui', 'views_test');
-
   protected $profile = 'standard';
 
   function setUp() {
