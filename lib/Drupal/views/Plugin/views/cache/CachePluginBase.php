@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\cache;
 
 use Drupal\views\Plugin\views\Plugin;
+use Drupal\Core\Database\Query\Select;
 
 /**
  * @defgroup views_cache_plugins Views cache plugins
@@ -29,7 +30,7 @@ abstract class CachePluginBase extends Plugin {
   /**
    * What table to store data in.
    */
-  var $table = 'cache_views_data';
+  var $table = 'views_data';
 
   /**
    * Stores the cache id used for the results cache, once get_results_key() got
@@ -277,7 +278,7 @@ abstract class CachePluginBase extends Plugin {
       foreach (array('query', 'count_query') as $index) {
         // If the default query back-end is used generate SQL query strings from
         // the query objects.
-        if ($build_info[$index] instanceof Drupal\Core\Database\Query\Select) {
+        if ($build_info[$index] instanceof Select) {
           $query = clone $build_info[$index];
           $query->preExecute();
           $build_info[$index] = (string)$query;
