@@ -183,7 +183,7 @@ pre {
   position: relative;
   background-color: #e0e0d8;
 }
-#branding div.breadcrumb {
+#branding .breadcrumb {
   font-size: 0.846em;
   padding-bottom: 5px;
 }
@@ -901,7 +901,7 @@ ol.task-list li.done {
   margin: 0;
   padding: 0 20px;
 }
-.overlay #branding div.breadcrumb {
+.overlay #branding .breadcrumb {
   float: left; /* LTR */
   position: relative;
   z-index: 10;

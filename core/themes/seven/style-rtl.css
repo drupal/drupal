@@ -205,7 +205,7 @@ ol.task-list li.active {
 }
 
 /* Overlay theming */
-.overlay #branding div.breadcrumb {
+.overlay #branding .breadcrumb {
   float: right;
 }
 .overlay ul.secondary {
