@@ -67,7 +67,7 @@ abstract class StylePluginBase extends ViewsPlugin {
     );
 
     $this->definition += array(
-      'uses grouping' => TRUE,
+      'uses_grouping' => TRUE,
     );
   }
 
@@ -191,7 +191,7 @@ abstract class StylePluginBase extends ViewsPlugin {
     // themselves from being groupable by setting their "use grouping" definiton
     // key to FALSE.
     // @TODO: Document "uses grouping" in docs.php when docs.php is written.
-    if ($this->uses_fields() && $this->definition['uses grouping']) {
+    if ($this->uses_fields() && $this->definition['uses_grouping']) {
       $options = array('' => t('- None -'));
       $field_labels = $this->display->handler->get_field_labels(TRUE);
       $options += $field_labels;

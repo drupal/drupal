@@ -681,7 +681,7 @@ class ArgumentPluginBase extends Handler {
     );
 
     foreach ($summary_plugins as $id => $info) {
-      if (empty($info['uses options'])) {
+      if (empty($info['uses_options'])) {
         continue;
       }
       $plugin = $this->get_plugin('style', $id);
