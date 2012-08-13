@@ -1224,7 +1224,7 @@ function views_include_handlers($reset = FALSE) {
  * @return views_handler
  *   An instance of a handler object. May be views_handler_broken.
  */
-function views_get_handler($table, $field, $key, $override = NULL) {
+function views_get_handler($table, $field, $key) {
   static $recursion_protection = array();
 
   $data = views_fetch_data($table, FALSE);
@@ -1255,7 +1255,7 @@ function views_get_handler($table, $field, $key, $override = NULL) {
       }
 
       $recursion_protection[$moved_table][$moved_field] = TRUE;
-      $handler = views_get_handler($moved_table, $moved_field, $key, $override);
+      $handler = views_get_handler($moved_table, $moved_field, $key);
       $recursion_protection = array();
       if ($handler) {
         // store these values so we know what we were originally called.

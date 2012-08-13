@@ -147,10 +147,6 @@ class ModuleTest extends ViewsSqlTest {
     $this->assertInstanceHandler($handler, 'views_test', 'name', 'field');
     $handler = views_get_handler('views_test_previous', 'name_previous', 'argument');
     $this->assertInstanceHandler($handler, 'views_test', 'name', 'argument');
-
-    // Test the override handler feature.
-    $handler = views_get_handler('views_test', 'job', 'filter', 'views_handler_filter');
-    $this->assertEqual('views_handler_filter', get_class($handler));
   }
 
   /**
