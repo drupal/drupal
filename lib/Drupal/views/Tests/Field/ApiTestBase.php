@@ -18,7 +18,6 @@
 
 namespace Drupal\views\Tests\Field;
 
-use Drupal\simpletest\WebTestBase;
 use Drupal\views\Tests\ViewsSqlTest;
 
 /**

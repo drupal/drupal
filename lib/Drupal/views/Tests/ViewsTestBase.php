@@ -18,7 +18,17 @@ abstract class ViewsTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('views');
+  public static $modules = array('views', 'views_ui');
+
+  protected function setUp() {
+    parent::setUp();
+
+    // @todo Remove this hack or move it to child classes.
+    views_init();
+    views_module_include('views_default', TRUE);
+    views_get_all_views(TRUE);
+    menu_router_rebuild();
+  }
 
   /**
    * Helper function: verify a result set returned by view.

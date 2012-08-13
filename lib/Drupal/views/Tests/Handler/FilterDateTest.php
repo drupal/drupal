@@ -34,7 +34,6 @@ class FilterDateTest extends ViewsSqlTest {
     $this->map = array(
       'nid' => 'nid',
     );
-    $this->enableViewsUi();
   }
 
   /**

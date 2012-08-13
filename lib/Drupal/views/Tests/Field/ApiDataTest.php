@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Field;
 
-use Drupal\simpletest\WebTestBase;
-
 /**
  * Test the produced views_data.
  */

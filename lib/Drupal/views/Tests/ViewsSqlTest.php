@@ -41,20 +41,6 @@ abstract class ViewsSqlTest extends ViewsTestBase {
   }
 
   /**
-   * This function allows to enable views ui from a higher class which can't change the setup function anymore.
-   *
-   * @TODO
-   *   Convert existing setUp functions.
-   */
-  function enableViewsUi() {
-    module_enable(array('views_ui'));
-    // @TODO Figure out why it's required to clear the cache here.
-    views_module_include('views_default', TRUE);
-    views_get_all_views(TRUE);
-    menu_router_rebuild();
-  }
-
-  /**
    * The schema definition.
    */
   protected function schemaDefinition() {

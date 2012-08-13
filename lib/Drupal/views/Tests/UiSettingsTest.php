@@ -7,12 +7,10 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\simpletest\WebTestBase;
-
 /**
  * Tests the various settings in the views ui.
  */
-class UiSettingsTest extends WebTestBase {
+class UiSettingsTest extends ViewsTestBase {
 
   /**
    * Modules to enable.

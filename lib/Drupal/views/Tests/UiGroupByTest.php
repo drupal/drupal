@@ -7,12 +7,10 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\simpletest\WebTestBase;
-
 /**
  * Tests UI of aggregate functionality..
  */
-class UiGroupByTest extends WebTestBase {
+class UiGroupByTest extends ViewsTestBase {
 
   /**
    * Modules to enable.

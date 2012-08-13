@@ -30,7 +30,6 @@ class TranslatableTest extends ViewsSqlTest {
     // Reset the plugin data.
     views_fetch_plugin_data(NULL, NULL, TRUE);
     $this->strings = array('Master1', 'Apply1', 'Sort By1', 'Asc1', 'Desc1', 'more1', 'Reset1', 'Offset1', 'Master1', 'title1', 'Items per page1', 'fieldlabel1', 'filterlabel1');
-    $this->enableViewsUi();
   }
 
   /**
