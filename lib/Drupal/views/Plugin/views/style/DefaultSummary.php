@@ -74,7 +74,7 @@ class DefaultSummary extends StylePluginBase {
       '#default_value' => $this->options['items_per_page'],
       '#states' => array(
         'visible' => array(
-          ':input[name="options[summary][options][' . $this->definition['name'] . '][override]"]' => array('checked' => TRUE),
+          ':input[name="options[summary][options][' . $this->definition['id'] . '][override]"]' => array('checked' => TRUE),
         ),
       ),
     );
