@@ -10,7 +10,7 @@ namespace Drupal\views\Tests;
 /**
  * Tests UI of aggregate functionality..
  */
-class UiGroupByTest extends ViewsTestBase {
+class UiGroupByTest extends ViewsSqlTest {
 
   /**
    * Modules to enable.

@@ -10,7 +10,7 @@ namespace Drupal\views\Tests;
 /**
  * Tests the various settings in the views ui.
  */
-class UiSettingsTest extends ViewsTestBase {
+class UiSettingsTest extends ViewsSqlTest {
 
   /**
    * Modules to enable.
