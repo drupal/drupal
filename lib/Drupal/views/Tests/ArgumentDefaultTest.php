@@ -14,6 +14,8 @@ use Drupal\views\View;
  */
 class ArgumentDefaultTest extends ViewsSqlTest {
 
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Argument default',
@@ -80,16 +82,12 @@ class ArgumentDefaultTest extends ViewsSqlTest {
   /**
    * @todo Test php default argument.
    */
-  function testArgumentDefaultPhp() {
-
-  }
+  //function testArgumentDefaultPhp() {}
 
   /**
    * @todo Test node default argument.
    */
-  function testArgumentDefaultNode() {
-
-  }
+  //function testArgumentDefaultNode() {}
 
   function view_argument_default_fixed() {
     $view = new View();
