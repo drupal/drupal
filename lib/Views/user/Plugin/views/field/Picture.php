@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
  * @Plugin(
- *   id = "user_picture"
+ *   id = "user_picture",
+ *   module = "user"
  * )
  */
 class Picture extends FieldPluginBase {

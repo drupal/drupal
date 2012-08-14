@@ -20,7 +20,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "search"
+ *   id = "search",
+ *   module = "search"
  * )
  */
 class Search extends FilterPluginBase {

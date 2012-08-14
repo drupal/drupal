@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\argument\ManyToOne;
 
 /**
  * @Plugin(
- *   id = "users_roles_rid"
+ *   id = "users_roles_rid",
+ *   module = "user"
  * )
  */
 class RolesRid extends ManyToOne {

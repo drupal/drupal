@@ -16,6 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "aggregator_rss",
+ *   module = "aggregator",
  *   theme = "views_view_row_rss",
  *   title = @Translation("Aggregator item"),
  *   help = @Translation("Display the aggregator item using the data from the original source."),

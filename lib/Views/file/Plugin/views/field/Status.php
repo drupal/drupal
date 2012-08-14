@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
  * @Plugin(
- *   id = "file_status"
+ *   id = "file_status",
+ *   module = "file"
  * )
  */
 class Status extends FieldPluginBase {

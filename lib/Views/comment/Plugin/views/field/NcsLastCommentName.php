@@ -19,7 +19,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "comment_ncs_last_comment_name"
+ *   id = "comment_ncs_last_comment_name",
+ *   module = "comment"
  * )
  */
 class NcsLastCommentName extends FieldPluginBase {

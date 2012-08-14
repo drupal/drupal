@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_tnid_child"
+ *   id = "node_tnid_child",
+ *   module = "translation"
  * )
  */
 class NodeTnidChild extends FilterPluginBase {

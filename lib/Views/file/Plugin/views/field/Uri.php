@@ -13,7 +13,8 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to add rendering file paths as file URLs instead of as internal file URIs.
  *
  * @Plugin(
- *   id = "file_uri"
+ *   id = "file_uri",
+ *   module = "file"
  * )
  */
 class Uri extends File {

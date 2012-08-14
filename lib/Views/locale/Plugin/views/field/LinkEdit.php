@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "locale_link_edit"
+ *   id = "locale_link_edit",
+ *   module = "locale"
  * )
  */
 class LinkEdit extends FieldPluginBase {

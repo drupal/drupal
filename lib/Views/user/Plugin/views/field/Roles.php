@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\field\PrerenderList;
 
 /**
  * @Plugin(
- *   id = "user_roles"
+ *   id = "user_roles",
+ *   module = "user"
  * )
  */
 class Roles extends PrerenderList {

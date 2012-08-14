@@ -17,6 +17,7 @@ use Drupal\Core\Annotation\Translation;
 /**
  * @Plugin(
  *   id = "book_root",
+ *   module = "book",
  *   title = @Translation("Book root from current node")
  * )
  */

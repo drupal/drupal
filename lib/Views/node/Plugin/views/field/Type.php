@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_type"
+ *   id = "node_type",
+ *   module = "node"
  * )
  */
 class Type extends Node {

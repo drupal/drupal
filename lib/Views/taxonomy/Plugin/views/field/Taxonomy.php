@@ -20,7 +20,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "taxonomy"
+ *   id = "taxonomy",
+ *   module = "taxonomy"
  * )
  */
 class Taxonomy extends FieldPluginBase {

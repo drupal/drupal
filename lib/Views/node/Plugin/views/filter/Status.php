@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_status"
+ *   id = "node_status",
+ *   module = "node"
  * )
  */
 class Status extends FilterPluginBase {

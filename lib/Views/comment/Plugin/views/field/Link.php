@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "comment_link"
+ *   id = "comment_link",
+ *   module = "comment"
  * )
  */
 class Link extends Entity {

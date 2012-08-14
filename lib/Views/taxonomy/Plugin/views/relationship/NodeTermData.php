@@ -19,7 +19,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_term_data"
+ *   id = "node_term_data",
+ *   module = "taxonomy"
  * )
  */
 class NodeTermData extends RelationshipPluginBase  {

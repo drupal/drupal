@@ -20,7 +20,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "field_list_string"
+ *   id = "field_list_string",
+ *   module = "field"
  * )
  */
 class ListString extends String {

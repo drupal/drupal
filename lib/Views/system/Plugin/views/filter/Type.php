@@ -14,7 +14,8 @@ use Drupal\Core\Annotation\Plugin;
  * Filter by system type.
  *
  * @Plugin(
- *   id = "system_type"
+ *   id = "system_type",
+ *   module = "system"
  * )
  */
 class Type extends InOperator {

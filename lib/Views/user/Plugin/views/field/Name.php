@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "user_name"
+ *   id = "user_name",
+ *   module = "user"
  * )
  */
 class Name extends User {

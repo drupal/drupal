@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_path"
+ *   id = "node_path",
+ *   module = "node"
  * )
  */
 class Path extends FieldPluginBase {

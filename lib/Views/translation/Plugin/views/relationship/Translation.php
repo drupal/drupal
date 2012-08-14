@@ -20,7 +20,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "translation"
+ *   id = "translation",
+ *   module = "translation"
  * )
  */
 class Translation extends RelationshipPluginBase {

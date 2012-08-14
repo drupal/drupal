@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
  * @Plugin(
- *   id = "vocabulary_machine_name"
+ *   id = "vocabulary_machine_name",
+ *   module = "taxonomy"
  * )
  */
 class VocabularyMachineName extends InOperator {

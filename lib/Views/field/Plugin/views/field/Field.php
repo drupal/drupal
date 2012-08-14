@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "field"
+ *   id = "field",
+ *   module = "field"
  * )
  */
 class Field extends FieldPluginBase {

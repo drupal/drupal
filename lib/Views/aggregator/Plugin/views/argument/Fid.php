@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "aggregator_fid"
+ *   id = "aggregator_fid",
+ *   module = "aggregator"
  * )
  */
 class Fid extends Numeric {

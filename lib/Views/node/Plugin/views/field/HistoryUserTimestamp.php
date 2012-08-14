@@ -21,7 +21,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_history_user_timestamp"
+ *   id = "node_history_user_timestamp",
+ *   module = "node"
  * )
  */
 class HistoryUserTimestamp extends Node {

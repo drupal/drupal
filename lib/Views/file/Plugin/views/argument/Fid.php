@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\argument\Numeric;
 
 /**
  * @Plugin(
- *   id = "file_fid"
+ *   id = "file_fid",
+ *   module = "file"
  * )
  */
 class Fid extends Numeric {

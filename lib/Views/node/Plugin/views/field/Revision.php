@@ -22,7 +22,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_revision"
+ *   id = "node_revision",
+ *   module = "node"
  * )
  */
 class Revision extends Node {

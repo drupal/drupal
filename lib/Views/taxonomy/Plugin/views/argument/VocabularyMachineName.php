@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "vocabulary_machine_name"
+ *   id = "vocabulary_machine_name",
+ *   module = "taxonomy"
  * )
  */
 class VocabularyMachineName extends String {

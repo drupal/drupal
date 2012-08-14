@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "statistics_accesslog_path"
+ *   id = "statistics_accesslog_path",
+ *   module = "statistics"
  * )
  */
 class AccesslogPath extends FieldPluginBase {

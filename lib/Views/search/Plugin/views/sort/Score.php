@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "search_score"
+ *   id = "search_score",
+ *   module = "search"
  * )
  */
 class Score extends SortPluginBase {

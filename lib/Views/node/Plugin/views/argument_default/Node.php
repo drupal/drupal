@@ -20,6 +20,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 /**
  * @Plugin(
  *   id = "node",
+ *   module = "node",
  *   title = @Translation("Content ID from URL")
  * )
  */

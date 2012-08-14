@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\field\PrerenderList;
 
 /**
  * @Plugin(
- *   id = "user_permissions"
+ *   id = "user_permissions",
+ *   module = "user"
  * )
  */
 class Permissions extends PrerenderList {

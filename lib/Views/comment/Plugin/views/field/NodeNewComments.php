@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_new_comments"
+ *   id = "node_new_comments",
+ *   module = "comment"
  * )
  */
 class NodeNewComments extends Numeric {

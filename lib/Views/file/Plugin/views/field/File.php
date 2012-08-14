@@ -19,7 +19,8 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
  * @Plugin(
- *   id = "file"
+ *   id = "file",
+ *   module = "file"
  * )
  */
 class File extends FieldPluginBase {

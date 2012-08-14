@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\argument\Numeric;
 
 /**
  * @Plugin(
- *   id = "user_uid"
+ *   id = "user_uid",
+ *   module = "user"
  * )
  */
 class Uid extends Numeric {

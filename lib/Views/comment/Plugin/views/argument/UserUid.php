@@ -19,7 +19,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "argument_comment_user_uid"
+ *   id = "argument_comment_user_uid",
+ *   module = "comment"
  * )
  */
 class UserUid extends ArgumentPluginBase {

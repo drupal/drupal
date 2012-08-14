@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "aggregator_category_cid"
+ *   id = "aggregator_category_cid",
+ *   module = "aggregator"
  * )
  */
 class CategoryCid extends Numeric {

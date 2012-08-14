@@ -22,6 +22,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
 /**
  * @Plugin(
  *   id = "node",
+ *   module = "node",
  *   title = @Translation("Content"),
  *   help = @Translation("Display the content with standard node view."),
  *   base = {"node"},

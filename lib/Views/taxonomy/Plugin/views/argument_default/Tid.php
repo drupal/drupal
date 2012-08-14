@@ -16,6 +16,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  *
  * @Plugin(
  *   id = "taxonomy_tid",
+ *   module = "taxonomy",
  *   title = @Translation("Taxonomy term ID from URL")
  * )
  */

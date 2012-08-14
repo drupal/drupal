@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_revision_link"
+ *   id = "node_revision_link",
+ *   module = "node"
  * )
  */
 class RevisionLink extends Link {

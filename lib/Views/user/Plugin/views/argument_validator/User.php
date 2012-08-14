@@ -20,6 +20,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  *
  * @Plugin(
  *   id = "user",
+ *   module = "user",
  *   title = @Translation("User")
  * )
  */

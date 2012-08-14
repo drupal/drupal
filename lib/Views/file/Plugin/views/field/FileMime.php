@@ -17,7 +17,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "file_filemime"
+ *   id = "file_filemime",
+ *   module = "file"
  * )
  */
 class FileMime extends File {

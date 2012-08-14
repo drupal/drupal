@@ -16,6 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "comment_rss",
+ *   module = "comment",
  *   title = @Translation("Comment"),
  *   help = @Translation("Display the comment as RSS."),
  *   theme = "views_view_row_rss",

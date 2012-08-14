@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_uid_revision"
+ *   id = "node_uid_revision",
+ *   module = "node"
  * )
  */
 class UidRevision extends Name {

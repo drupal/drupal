@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_comment"
+ *   id = "node_comment",
+ *   module = "comment"
  * )
  */
 class NodeComment extends FieldPluginBase {

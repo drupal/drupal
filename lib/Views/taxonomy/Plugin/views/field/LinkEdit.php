@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "term_link_edit"
+ *   id = "term_link_edit",
+ *   module = "taxonomy"
  * )
  */
 class LinkEdit extends FieldPluginBase {

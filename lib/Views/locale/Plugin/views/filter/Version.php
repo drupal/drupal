@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
  * @Plugin(
- *   id = "locale_version"
+ *   id = "locale_version",
+ *   module = "locale"
  * )
  */
 class Version extends InOperator {

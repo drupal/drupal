@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_revision_link_delete"
+ *   id = "node_revision_link_delete",
+ *   module = "node"
  * )
  */
 class RevisionLinkDelete extends RevisionLink {

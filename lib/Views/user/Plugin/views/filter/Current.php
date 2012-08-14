@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\filter\BooleanOperator;
 
 /**
  * @Plugin(
- *   id = "user_current"
+ *   id = "user_current",
+ *   module = "user"
  * )
  */
 class Current extends BooleanOperator {

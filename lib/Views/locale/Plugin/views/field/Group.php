@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "locale_group"
+ *   id = "locale_group",
+ *   module = "locale"
  * )
  */
 class Group extends FieldPluginBase {

@@ -16,6 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "search_view",
+ *   module = "search",
  *   title = @Translation("Search"),
  *   no_uid = TRUE
  * )

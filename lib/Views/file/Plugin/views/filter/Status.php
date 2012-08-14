@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
  * @Plugin(
- *   id = "file_status"
+ *   id = "file_status",
+ *   module = "file"
  * )
  */
 class Status extends InOperator {

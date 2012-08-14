@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_link_translate"
+ *   id = "node_link_translate",
+ *   module = "translation"
  * )
  */
 class NodeLinkTranslate extends Link {

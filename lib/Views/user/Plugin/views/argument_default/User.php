@@ -16,6 +16,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  *
  * @Plugin(
  *   id = "user",
+ *   module = "user",
  *   title = @Translation("User ID from URL")
  * )
  */

@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "node_link_delete"
+ *   id = "node_link_delete",
+ *   module = "node"
  * )
  */
 class LinkDelete extends Link {

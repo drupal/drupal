@@ -18,7 +18,8 @@ use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
  * @Plugin(
- *   id = "locale_group"
+ *   id = "locale_group",
+ *   module = "locale"
  * )
  */
 class Group extends InOperator {

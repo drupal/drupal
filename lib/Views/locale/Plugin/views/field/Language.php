@@ -18,7 +18,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "locale_language"
+ *   id = "locale_language",
+ *   module = "locale"
  * )
  */
 class Language extends FieldPluginBase {

@@ -17,7 +17,8 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * @Plugin(
- *   id = "comment_link_reply"
+ *   id = "comment_link_reply",
+ *   module = "comment"
  * )
  */
 class LinkReply extends Link {

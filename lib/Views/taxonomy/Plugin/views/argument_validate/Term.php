@@ -18,6 +18,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  *
  * @Plugin(
  *   id = "taxonomy_term",
+ *   module = "taxonomy",
  *   title = @Translation("Taxonomy term")
  */
 class Term extends ArgumentValidatorPluginBase {
