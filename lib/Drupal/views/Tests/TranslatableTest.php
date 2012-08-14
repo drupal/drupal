@@ -13,7 +13,12 @@ use Drupal\views\View;
  * Tests Views pluggable translations.
  */
 class TranslatableTest extends ViewsSqlTest {
-  var $strings;
+  /**
+   * Stores the strings, which are tested by this test.
+   *
+   * @var array
+   */
+  protected $strings;
 
   public static function getInfo() {
     return array(
@@ -23,7 +28,7 @@ class TranslatableTest extends ViewsSqlTest {
     );
   }
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     config('views.settings')->set('views_localization_plugin', 'test_localization')->save();
@@ -73,7 +78,9 @@ class TranslatableTest extends ViewsSqlTest {
     foreach ($this->strings as $string) {
       $expected_strings[] = $string .= '-translated';
     }
-    $this->assertEqual(sort($expected_strings), sort($view->localization_plugin->translated_strings), 'Make sure that every string got loaded translated');
+    sort($expected_strings);
+    sort($view->localization_plugin->translated_strings);
+    $this->assertEqual($expected_strings, $view->localization_plugin->translated_strings, 'Make sure that every string got loaded translated');
   }
 
   /**

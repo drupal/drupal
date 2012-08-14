@@ -23,13 +23,14 @@ class WizardJumpMenuTest extends WizardTestBase {
    * Tests the jump menu style plugin.
    */
   function testJumpMenus() {
+    views_invalidate_cache();
     // We'll run this test for several different base tables that appear in the
     // wizard.
     $base_table_methods = array(
       'node' => 'createNodeAndGetPath',
       'users' => 'createUserAndGetPath',
       'comment' => 'createCommentAndGetPath',
-      'taxonomy_term' => 'createTaxonomyTermAndGetPath',
+      'taxonomy_term_data' => 'createTaxonomyTermAndGetPath',
       'file_managed' => 'createFileAndGetPath',
       'node_revision' => 'createNodeRevisionAndGetPath',
     );
