@@ -71,8 +71,8 @@ class NodeTermData extends RelationshipPluginBase  {
     $def['table'] = 'taxonomy_term_data';
 
     if (!array_filter($this->options['vocabularies'])) {
-      $term_node = $this->query->add_table('taxonomy_index', $this->relationship);
-      $def['left_table'] = 'taxonomy_index';
+      $taxonomy_index = $this->query->add_table('taxonomy_index', $this->relationship);
+      $def['left_table'] = $taxonomy_index;
       $def['left_field'] = 'tid';
       $def['field'] = 'tid';
       $def['type'] = empty($this->options['required']) ? 'LEFT' : 'INNER';
