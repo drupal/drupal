@@ -27,7 +27,7 @@ function views_api_version() {
  *
  */
 function views_init() {
-  $core_modules = array('aggregator', 'book', 'comment', 'contact', 'field', 'filter', 'locale', 'node', 'search', 'statistics', 'system', 'taxonomy', 'translation', 'user');
+  $core_modules = array('aggregator', 'book', 'comment', 'contact', 'field', 'filter', 'file', 'locale', 'node', 'search', 'statistics', 'system', 'taxonomy', 'translation', 'user');
   $path = drupal_get_path('module', 'views');
   $loader = drupal_classloader();
   foreach ($core_modules as $module) {

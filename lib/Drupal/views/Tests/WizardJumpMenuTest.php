@@ -30,7 +30,7 @@ class WizardJumpMenuTest extends WizardTestBase {
       'node' => 'createNodeAndGetPath',
       'users' => 'createUserAndGetPath',
       'comment' => 'createCommentAndGetPath',
-      'taxonomy_term_data' => 'createTaxonomyTermAndGetPath',
+      'taxonomy_term' => 'createTaxonomyTermAndGetPath',
       'file_managed' => 'createFileAndGetPath',
       'node_revision' => 'createNodeRevisionAndGetPath',
     );
