@@ -74,9 +74,21 @@ class views_handler_filter_user_name extends views_handler_filter_in_operator {
     }
 
     $identifier = $this->options['expose']['identifier'];
-    $values = drupal_explode_tags($form_state['values'][$identifier]);
+    $input = $form_state['values'][$identifier];
 
-    $uids = $this->validate_user_strings($form[$identifier], $values);
+    if ($this->options['is_grouped'] && isset($this->options['group_info']['group_items'][$input])) {
+      $this->operator = $this->options['group_info']['group_items'][$input]['operator'];
+      $input = $this->options['group_info']['group_items'][$input]['value'];
+    }
+
+    $values = drupal_explode_tags($input);
+
+    if (!$this->options['is_grouped'] || ($this->options['is_grouped'] && ($input != 'All'))) {
+      $uids = $this->validate_user_strings($form[$identifier], $values);
+    }
+    else {
+      $uids = FALSE;
+    }
 
     if ($uids) {
       $this->validated_exposed_input = $uids;
