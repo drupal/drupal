@@ -362,7 +362,7 @@ function taxonomy_views_data() {
     ),
     'filter' => array(
       'help' => t('Filter the results of "Taxonomy: Term" by the parent pid.'),
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
     'argument' => array(
       'help' => t('The parent term of the term.'),
