@@ -1866,6 +1866,10 @@ class View extends ViewsDbObject {
 
     // Clear caches.
     views_invalidate_cache();
+
+    // @todo Remove this.
+    // Explicitly rebuild the menu.
+    menu_router_rebuild();
   }
 
   /**
