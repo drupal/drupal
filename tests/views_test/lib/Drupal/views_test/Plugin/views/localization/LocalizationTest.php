@@ -25,7 +25,7 @@ class LocalizationTest extends LocalizationPluginBase {
   /**
    * Store the strings which was translated.
    */
-  var $translated_strings;
+  var $translated_strings = array();
   /**
    * Return the string and take sure that the test can find out whether the
    * string got translated.
