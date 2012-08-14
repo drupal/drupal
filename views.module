@@ -1336,6 +1336,11 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
     if ($key && (empty($plugin['type']) || $plugin['type'] != $key)) {
       continue;
     }
+    // @todo While Views is providing on behalf of core modules, check to see
+    //   if they are enabled or not.
+    if (isset($plugin['module']) && !module_exists($plugin['module'])) {
+      continue;
+    }
 
     if (empty($plugin['no ui']) && (empty($base) || empty($plugin['base']) || array_intersect($base, $plugin['base']))) {
       $plugins[$id] = $plugin['title'];

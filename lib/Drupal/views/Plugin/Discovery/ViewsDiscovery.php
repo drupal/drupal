@@ -29,7 +29,9 @@ class ViewsDiscovery extends AnnotatedClassDiscovery {
         $theme_file = "$module.views.inc";
       }
 
-      $definition['module'] = $module_dir;
+      if (!isset($definition['module'])) {
+        $definition['module'] = $module_dir;
+      }
       if (!isset($definition['theme path'])) {
         $definition['theme path'] = $theme_path;
       }
