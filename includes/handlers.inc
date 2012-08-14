@@ -9,6 +9,7 @@ use Drupal\Core\Database\Database;
 use Drupal\views\View;
 use Drupal\views\Join;
 use Drupal\views\Plugin\Type\ViewsPluginManager;
+use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
  * Instantiate and construct a new plugin.
@@ -32,7 +33,14 @@ function _views_create_plugin($type, $definition) {
  */
 function _views_create_handler($type, $definition) {
   $manager = new ViewsPluginManager($type);
-  $instance = $manager->createInstance($definition['id']);
+  // @todo This is crazy. Find a way to remove the override functionality.
+  $id = !empty($definition['override handler']) ? $definition['override handler'] : $definition['id'];
+  try {
+    $instance = $manager->createInstance($id);
+  }
+  catch (PluginException $e) {
+    $instance = $manager->createInstance($definition['id']);
+  }
 
   $instance->is_handler = TRUE;
   $instance->plugin_type = $type;
