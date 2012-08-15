@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use ctools_math_expr;
+use Drupal\ctools\MathExpression;
 use Drupal\Core\Annotation\Plugin;
 
 /**
