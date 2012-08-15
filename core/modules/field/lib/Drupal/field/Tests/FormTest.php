@@ -67,6 +67,11 @@ class FormTest extends FieldTestBase {
     $this->assertNoField("{$this->field_name}[$langcode][1][value]", 'No extraneous widget is displayed');
     // TODO : check that the widget is populated with default value ?
 
+    // Check that neither hook_field_widget_properties_alter nor
+    // hook_field_widget_form_alter() believe this is the default value form.
+    $this->assertNoText('From hook_field_widget_properties_alter(): Default form is true.', 'Not default value form in hook_field_widget_properties_alter().');
+    $this->assertNoText('From hook_field_widget_form_alter(): Default form is true.', 'Not default value form in hook_field_widget_form_alter().');
+
     // Submit with invalid value (field-level validation).
     $edit = array("{$this->field_name}[$langcode][0][value]" => -1);
     $this->drupalPost(NULL, $edit, t('Save'));

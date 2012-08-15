@@ -888,6 +888,8 @@ function hook_field_widget_form(&$form, &$form_state, $field, $instance, $langco
  *   - langcode: The language associated with $items.
  *   - items: Array of default values for this field.
  *   - delta: The order of this item in the array of subelements (0, 1, 2, etc).
+ *   - default: A boolean indicating whether the form is being shown as a dummy
+ *     form to set default values.
  *
  * @see hook_field_widget_form()
  * @see hook_field_widget_WIDGET_TYPE_form_alter()
@@ -922,6 +924,8 @@ function hook_field_widget_form_alter(&$element, &$form_state, $context) {
  *   - "items": Array of default values for this field.
  *   - "delta": The order of this item in the array of subelements (0, 1, 2,
  *     etc).
+ *   - default: A boolean indicating whether the form is being shown as a dummy
+ *     form to set default values.
  *
  * @see hook_field_widget_form()
  * @see hook_field_widget_form_alter()
@@ -953,6 +957,8 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $cont
  *   - entity: The entity object.
  *   - field: The field that the widget belongs to.
  *   - instance: The instance of the field.
+ *   - default: A boolean indicating whether the form is being shown as a dummy
+ *     form to set default values.
  *
  * @see hook_field_widget_properties_ENTITY_TYPE_alter()
  */
@@ -2376,6 +2382,8 @@ function hook_field_extra_fields_display_alter(&$displays, $context) {
  *   - entity: The entity object.
  *   - field: The field that the widget belongs to.
  *   - instance: The instance of the field.
+ *   - default: A boolean indicating whether the form is being shown as a dummy
+ *     form to set default values.
  *
  * @see hook_field_widget_properties_alter()
  */

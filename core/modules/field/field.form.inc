@@ -63,6 +63,7 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
     'entity' => $entity,
     'field' => $field,
     'instance' => $instance,
+    'default' => !$entity,
   );
   drupal_alter(array('field_widget_properties', 'field_widget_properties_' . $entity_type), $instance['widget'], $context);
 
@@ -118,6 +119,7 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
           'langcode' => $langcode,
           'items' => $items,
           'delta' => $delta,
+          'default' => !$entity,
         );
         drupal_alter(array('field_widget_form', 'field_widget_' . $instance['widget']['type'] . '_form'), $element, $form_state, $context);
 
@@ -245,6 +247,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
           'langcode' => $langcode,
           'items' => $items,
           'delta' => $delta,
+          'default' => FALSE,
         );
         drupal_alter(array('field_widget_form', 'field_widget_' . $instance['widget']['type'] . '_form'), $element, $form_state, $context);
 

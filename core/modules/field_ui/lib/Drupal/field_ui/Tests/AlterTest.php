@@ -69,6 +69,11 @@ class AlterTest extends WebTestBase {
     // size when the form is displayed.
     $this->drupalGet('admin/structure/types/manage/article/fields/alter_test_text');
     $this->assertText('Field size: 42', 'Altered field size is found in hook_field_widget_form_alter().');
+    // Test that hook_field_widget_properties_alter() and
+    // hook_field_widget_form_alter() registers this is the default value form
+    // and sets a message.
+    $this->assertText('From hook_field_widget_properties_alter(): Default form is true.', 'Default value form detected in hook_field_widget_properties_alter().');
+    $this->assertText('From hook_field_widget_form_alter(): Default form is true.', 'Default value form detected in hook_field_widget_form_alter().');
 
     // Create the alter_test_options field.
     field_create_field(array(
