@@ -31,7 +31,7 @@ class LocalizationTest extends LocalizationPluginBase {
    * string got translated.
    */
   function translate_string($string, $keys = array(), $format = '') {
-    $this->translated_strings[] = $string;
+    $this->translated_strings[] = $string . "-translated";
     return $string . "-translated";
   }
 

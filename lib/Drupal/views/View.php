@@ -2103,7 +2103,7 @@ class View extends ViewsDbObject {
   function init_localization() {
     // @todo The check for the view was added to ensure that
     //   $this->localization_plugin->init() is run.
-    if (isset($this->localization_plugin) && is_object($this->localization_plugin) && isset($this->view)) {
+    if (isset($this->localization_plugin) && is_object($this->localization_plugin) && isset($this->localization_plugin->view)) {
       return TRUE;
     }
 
@@ -2111,6 +2111,7 @@ class View extends ViewsDbObject {
 
     if (empty($this->localization_plugin)) {
       $this->localization_plugin = views_get_plugin('localization', 'none');
+      $this->localization_plugin->init($this);
       return FALSE;
     }
 
