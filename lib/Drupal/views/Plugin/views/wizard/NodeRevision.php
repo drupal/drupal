@@ -41,11 +41,13 @@ use Drupal\Core\Annotation\Translation;
  *     }
  *   },
  *   path_fields_supplemental = {
- *     "id" = "id",
- *     "table" = "node",
- *     "field" = "nid",
- *     "exclude" = TRUE,
- *     "link_to_node" = FALSE
+ *     {
+ *       "id" = "nid",
+ *       "table" = "node",
+ *       "field" = "nid",
+ *       "exclude" = TRUE,
+ *       "link_to_node" = FALSE
+ *     }
  *   }
  * )
  */
