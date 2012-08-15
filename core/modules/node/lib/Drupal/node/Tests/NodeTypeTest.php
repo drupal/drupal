@@ -167,4 +167,46 @@ class NodeTypeTest extends NodeTestBase {
       $this->assertTrue(isset($types[$type]->disabled) && empty($types[$type]->disabled), t('%type type is enabled.', array('%type' => $type)));
     }
   }
+
+  /**
+   * Tests deleting a content type that still has content.
+   */
+  function testNodeTypeDeletion() {
+    // Create a content type programmatically.
+    $type = $this->drupalCreateContentType();
+
+    // Log in a test user.
+    $web_user = $this->drupalCreateUser(array(
+      'bypass node access',
+      'administer content types',
+    ));
+    $this->drupalLogin($web_user);
+
+    // Add a new node of this type.
+    $node = $this->drupalCreateNode(array('type' => $type->type));
+    // Attempt to delete the content type, which should not be allowed.
+    $this->drupalGet('admin/structure/types/manage/' . $type->name . '/delete');
+    $this->assertRaw(
+      t(
+        '%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.',
+        array('%type' => $type->name)
+      ),
+      'The content type will not be deleted until all nodes of that type are removed.'
+    );
+    $this->assertNoText(t('This action cannot be undone.'), 'The node type deletion confirmation form is not available.');
+
+    // Delete the node.
+    $node->delete();
+    // Attempt to delete the content type, which should now be allowed.
+    $this->drupalGet('admin/structure/types/manage/' . $type->name . '/delete');
+    $this->assertRaw(
+      t(
+        'Are you sure you want to delete the content type %type?',
+        array('%type' => $type->name)
+      ),
+      'The content type is available for deletion.'
+    );
+    $this->assertText(t('This action cannot be undone.'), 'The node type deletion confirmation form is available.');
+  }
+
 }
