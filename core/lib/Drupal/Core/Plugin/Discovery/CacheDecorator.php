@@ -54,7 +54,7 @@ class CacheDecorator implements DiscoveryInterface {
    * @param string $cache_bin
    *   The cache bin used for storage and retrieval of the definition list.
    */
-  public function __construct(DiscoveryInterface $decorated, $cache_key, $cache_bin = 'default') {
+  public function __construct(DiscoveryInterface $decorated, $cache_key, $cache_bin = 'cache') {
     $this->decorated = $decorated;
     $this->cacheKey = $cache_key;
     $this->cacheBin = $cache_bin;
@@ -64,14 +64,8 @@ class CacheDecorator implements DiscoveryInterface {
    * Implements Drupal\Component\Plugin\Discovery\DicoveryInterface::getDefinition().
    */
   public function getDefinition($plugin_id) {
-    $definitions = $this->getCachedDefinitions();
-    if (isset($definitions)) {
-      $definition = isset($definitions[$plugin_id]) ? $definitions[$plugin_id] : NULL;
-    }
-    else {
-      $definition = $this->decorated->getDefinition($plugin_id);
-    }
-    return $definition;
+    $definitions = $this->getDefinitions();
+    return isset($definitions[$plugin_id]) ? $definitions[$plugin_id] : array();
   }
 
   /**
