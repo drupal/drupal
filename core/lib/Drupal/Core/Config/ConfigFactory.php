@@ -50,6 +50,8 @@ class ConfigFactory {
    *   A configuration object with the given $name.
    */
   public function get($name) {
+    global $conf;
+
     // @todo Caching the instantiated objects per name might cut off a fair
     //   amount of CPU time and memory. Only the data within the configuration
     //   object changes, so the additional cost of instantiating duplicate
@@ -68,8 +70,13 @@ class ConfigFactory {
     // @todo The decrease of CPU time is interesting, since that means that
     //   ContainerBuilder involves plenty of function calls (which are known to
     //   be slow in PHP).
-    $config = new Config($this->storage);
-    return $config->setName($name);
+    $config = new Config($name, $this->storage);
+
+    // Set overridden values from global $conf, if any.
+    if (isset($conf[$name])) {
+      $config->setOverride($conf[$name]);
+    }
+    return $config;
   }
 
 }

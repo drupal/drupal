@@ -33,7 +33,21 @@ class Config {
    *
    * @var array
    */
-  protected $data = array();
+  protected $data;
+
+  /**
+   * The overridden data of the configuration object.
+   *
+   * @var array
+   */
+  protected $overrides;
+
+  /**
+   * The current runtime data ($data + $overrides).
+   *
+   * @var array
+   */
+  protected $overriddenData;
 
   /**
    * The storage used for reading and writing.
@@ -45,11 +59,14 @@ class Config {
   /**
    * Constructs a configuration object.
    *
+   * @param string $name
+   *   The name of the configuration object being constructed.
    * @param Drupal\Core\Config\StorageInterface $storage
    *   A storage controller object to use for reading and writing the
    *   configuration data.
    */
-  public function __construct(StorageInterface $storage) {
+  public function __construct($name, StorageInterface $storage) {
+    $this->name = $name;
     $this->storage = $storage;
   }
 
@@ -103,27 +120,19 @@ class Config {
    *   The data that was requested.
    */
   public function get($key = '') {
-    global $conf;
-
-    $name = $this->getName();
-    if (isset($conf[$name])) {
-      $merged_data = NestedArray::mergeDeepArray(array($this->data, $conf[$name]));
+    if (!isset($this->overriddenData)) {
+      $this->setOverriddenData();
     }
-    else {
-      $merged_data = $this->data;
-    }
-
     if (empty($key)) {
-      return $merged_data;
+      return $this->overriddenData;
     }
     else {
       $parts = explode('.', $key);
       if (count($parts) == 1) {
-        return isset($merged_data[$key]) ? $merged_data[$key] : NULL;
+        return isset($this->overriddenData[$key]) ? $this->overriddenData[$key] : NULL;
       }
       else {
-        $key_exists = NULL;
-        $value = NestedArray::getValue($merged_data, $parts, $key_exists);
+        $value = NestedArray::getValue($this->overriddenData, $parts, $key_exists);
         return $key_exists ? $value : NULL;
       }
     }
@@ -137,6 +146,45 @@ class Config {
    */
   public function setData(array $data) {
     $this->data = $data;
+    $this->resetOverriddenData();
+    return $this;
+  }
+
+  /**
+   * Sets overridden data for this configuration object.
+   *
+   * The overridden data only applies to this configuration object.
+   *
+   * @param array $data
+   *   The overridden values of the configuration data.
+   */
+  public function setOverride(array $data) {
+    $this->overrides = $data;
+    $this->resetOverriddenData();
+    return $this;
+  }
+
+  /**
+   * Sets the current data for this configuration object.
+   *
+   * Merges overridden configuration data into the original data.
+   */
+  protected function setOverriddenData() {
+    $this->overriddenData = $this->data;
+    if (!empty($this->overrides)) {
+      $this->overriddenData = NestedArray::mergeDeepArray(array($this->overriddenData, $this->overrides));
+    }
+    return $this;
+  }
+
+  /**
+   * Resets the current data, so overrides are re-applied.
+   *
+   * This method should be called after the original data or the overridden data
+   * has been changed.
+   */
+  protected function resetOverriddenData() {
+    unset($this->overriddenData);
     return $this;
   }
 
@@ -161,6 +209,7 @@ class Config {
     else {
       NestedArray::setValue($this->data, $parts, $value);
     }
+    $this->resetOverriddenData();
     return $this;
   }
 
@@ -217,6 +266,7 @@ class Config {
     else {
       NestedArray::unsetValue($this->data, $parts);
     }
+    $this->resetOverriddenData();
     return $this;
   }
 
@@ -273,6 +323,7 @@ class Config {
     $this->data = array();
     $this->storage->delete($this->name);
     $this->isNew = TRUE;
+    $this->resetOverriddenData();
     return $this;
   }
 }

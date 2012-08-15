@@ -194,14 +194,11 @@ function config_import_invoke_owner(array $config_changes, StorageInterface $sou
       // handle the configuration change.
       $handled_by_module = FALSE;
       if (module_hook($module, 'config_import_' . $op)) {
-        $old_config = new Config($target_storage);
-        $old_config
-          ->setName($name)
-          ->load();
+        $old_config = new Config($name, $target_storage);
+        $old_config->load();
 
         $data = $source_storage->read($name);
-        $new_config = new Config($target_storage);
-        $new_config->setName($name);
+        $new_config = new Config($name, $target_storage);
         if ($data !== FALSE) {
           $new_config->setData($data);
         }
