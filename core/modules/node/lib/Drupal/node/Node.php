@@ -169,8 +169,7 @@ class Node extends Entity {
    * Overrides Drupal\entity\Entity::createDuplicate().
    */
   public function createDuplicate() {
-    $duplicate = clone $this;
-    $duplicate->nid = NULL;
+    $duplicate = parent::createDuplicate();
     $duplicate->vid = NULL;
     return $duplicate;
   }

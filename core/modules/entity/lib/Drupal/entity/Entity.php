@@ -7,6 +7,8 @@
 
 namespace Drupal\entity;
 
+use Drupal\Component\Uuid\Uuid;
+
 /**
  * Defines a base entity class.
  *
@@ -245,7 +247,14 @@ class Entity implements EntityInterface {
    */
   public function createDuplicate() {
     $duplicate = clone $this;
-    $duplicate->id = NULL;
+    $entity_info = $this->entityInfo();
+    $this->{$entity_info['entity keys']['id']} = NULL;
+
+    // Check if the entity type supports UUIDs and generate a new one if so.
+    if (!empty($entity_info['entity keys']['uuid'])) {
+      $uuid = new Uuid();
+      $duplicate->{$entity_info['entity keys']['uuid']} = $uuid->generate();
+    }
     return $duplicate;
   }
 
