@@ -19,6 +19,12 @@ function search_schema() {
         'default' => 0,
         'description' => 'Search item ID, e.g. node ID for nodes.',
       ),
+      'langcode' => array(
+        'type' => 'varchar',
+        'length' => '12',
+        'not null' => TRUE,
+        'description' => 'The {languages}.langcode of the item variant.',
+      ),
       'type' => array(
         'type' => 'varchar',
         'length' => 16,
@@ -39,7 +45,7 @@ function search_schema() {
         'description' => 'Set to force node reindexing.',
       ),
     ),
-    'primary key' => array('sid', 'type'),
+    'primary key' => array('sid', 'langcode', 'type'),
   );
 
   $schema['search_index'] = array(
@@ -59,6 +65,12 @@ function search_schema() {
         'default' => 0,
         'description' => 'The {search_dataset}.sid of the searchable item to which the word belongs.',
       ),
+      'langcode' => array(
+        'type' => 'varchar',
+        'length' => '12',
+        'not null' => TRUE,
+        'description' => 'The {languages}.langcode of the item variant.',
+      ),
       'type' => array(
         'type' => 'varchar',
         'length' => 16,
@@ -72,7 +84,7 @@ function search_schema() {
       ),
     ),
     'indexes' => array(
-      'sid_type' => array('sid', 'type'),
+      'sid_type' => array('sid', 'langcode', 'type'),
     ),
     'foreign keys' => array(
       'search_dataset' => array(
@@ -83,7 +95,7 @@ function search_schema() {
         ),
       ),
     ),
-    'primary key' => array('word', 'sid', 'type'),
+    'primary key' => array('word', 'sid', 'langcode', 'type'),
   );
 
   $schema['search_total'] = array(

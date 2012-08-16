@@ -658,6 +658,8 @@ function hook_node_prepare(Drupal\node\Node $node) {
  *
  * @param Drupal\node\Node $node
  *   The node being displayed in a search result.
+ * @param $langcode
+ *   Language code of result being displayed.
  *
  * @return array
  *   Extra information to be displayed with search result. This information
@@ -670,7 +672,7 @@ function hook_node_prepare(Drupal\node\Node $node) {
  *
  * @ingroup node_api_hooks
  */
-function hook_node_search_result(Drupal\node\Node $node) {
+function hook_node_search_result(Drupal\node\Node $node, $langcode) {
   $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
   return array('comment' => format_plural($comments, '1 comment', '@count comments'));
 }
@@ -722,13 +724,15 @@ function hook_node_update(Drupal\node\Node $node) {
  *
  * @param Drupal\node\Node $node
  *   The node being indexed.
+ * @param $langcode
+ *   Language code of the variant of the node being indexed.
  *
  * @return string
  *   Additional node information to be indexed.
  *
  * @ingroup node_api_hooks
  */
-function hook_node_update_index(Drupal\node\Node $node) {
+function hook_node_update_index(Drupal\node\Node $node, $langcode) {
   $text = '';
   $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $node->nid, ':status' => COMMENT_PUBLISHED));
   foreach ($comments as $comment) {

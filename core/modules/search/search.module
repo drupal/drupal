@@ -315,20 +315,33 @@ function _search_menu_access($name) {
  * @param $module
  *   (optional) The machine-readable name of the module for the item to remove
  *   from the search index.
+ * @param $reindex
+ *   (optional) Boolean to specify whether reindexing happens.
+ * @param $langcode
+ *   (optional) Language code for the operation. If not provided, all
+ *   index records for the $sid will be deleted.
  */
-function search_reindex($sid = NULL, $module = NULL, $reindex = FALSE) {
+function search_reindex($sid = NULL, $module = NULL, $reindex = FALSE, $langcode = NULL) {
   if ($module == NULL && $sid == NULL) {
     module_invoke_all('search_reset');
   }
   else {
-    db_delete('search_dataset')
+    $query = db_delete('search_dataset')
       ->condition('sid', $sid)
-      ->condition('type', $module)
-      ->execute();
-    db_delete('search_index')
+      ->condition('type', $module);
+    if (!empty($langcode)) {
+      $query->condition('langcode', $langcode);
+    }
+    $query->execute();
+
+    $query = db_delete('search_index')
       ->condition('sid', $sid)
-      ->condition('type', $module)
-      ->execute();
+      ->condition('type', $module);
+    if (!empty($langcode)) {
+      $query->condition('langcode', $langcode);
+    }
+    $query->execute();
+
     // Don't remove links if re-indexing.
     if (!$reindex) {
       db_delete('search_node_links')
@@ -557,10 +570,12 @@ function search_invoke_preprocess(&$text) {
  *   that implements hook_search_info()).
  * @param $text
  *   The content of this item. Must be a piece of HTML or plain text.
+ * @param $langcode
+ *   Language code for text being indexed.
  *
  * @ingroup search
  */
-function search_index($sid, $module, $text) {
+function search_index($sid, $module, $text, $langcode) {
   $minimum_word_size = config('search.settings')->get('index.minimum_word_size');
 
   // Link matching
@@ -690,12 +705,13 @@ function search_index($sid, $module, $text) {
     $tag = !$tag;
   }
 
-  search_reindex($sid, $module, TRUE);
+  search_reindex($sid, $module, TRUE, $langcode);
 
   // Insert cleaned up data into dataset
   db_insert('search_dataset')
     ->fields(array(
       'sid' => $sid,
+      'langcode' => $langcode,
       'type' => $module,
       'data' => $accum,
       'reindex' => 0,
@@ -711,6 +727,7 @@ function search_index($sid, $module, $text) {
       ->key(array(
         'word' => $word,
         'sid' => $sid,
+        'langcode' => $langcode,
         'type' => $module,
       ))
       ->fields(array('score' => $score))

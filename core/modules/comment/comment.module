@@ -1375,7 +1375,7 @@ function comment_node_predelete(Node $node) {
 /**
  * Implements hook_node_update_index().
  */
-function comment_node_update_index(Node $node) {
+function comment_node_update_index(Node $node, $langcode) {
   $index_comments = &drupal_static(__FUNCTION__);
 
   if ($index_comments === NULL) {
@@ -1403,7 +1403,7 @@ function comment_node_update_index(Node $node) {
     if ($node->comment && $cids = comment_get_thread($node, $mode, $comments_per_page)) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
-      $build = comment_view_multiple($comments, $node);
+      $build = comment_view_multiple($comments, $node, $langcode);
       return drupal_render($build);
     }
   }

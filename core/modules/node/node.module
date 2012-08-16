@@ -1548,28 +1548,32 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
 
   // Load results.
   $find = $query
+    // Add the language code of the indexed item to the result of the query,
+    // since the node will be rendered using the respective language.
+    ->fields('i', array('langcode'))
     ->limit(10)
     ->execute();
   $results = array();
   foreach ($find as $item) {
     // Render the node.
     $node = node_load($item->sid);
-    $build = node_view($node, 'search_result');
+    $build = node_view($node, 'search_result', $item->langcode);
     unset($build['#theme']);
     $node->rendered = drupal_render($build);
 
     // Fetch comments for snippet.
-    $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node);
+    $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node, $item->langcode);
 
-    $extra = module_invoke_all('node_search_result', $node);
+    $extra = module_invoke_all('node_search_result', $node, $item->langcode);
 
+    $language = language_load($item->langcode);
     $uri = entity_uri('node', $node);
     $results[] = array(
-      'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE))),
+      'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),
       'type' => check_plain(node_type_get_name($node)),
-      'title' => $node->label(),
+      'title' => $node->label($item->langcode),
       'user' => theme('username', array('account' => $node)),
-      'date' => $node->changed,
+      'date' => $node->get('changed', $item->langcode),
       'node' => $node,
       'extra' => $extra,
       'score' => $item->calculated_score,
@@ -2582,7 +2586,15 @@ function node_update_index() {
     return;
   }
 
+  // The indexing throttle should be aware of the number of language variants
+  // of a node.
+  $counter = 0;
   foreach (node_load_multiple($nids) as $node) {
+    // Determine when the maximum number of indexable items is reached.
+    $counter += 1 + count($node->translations());
+    if ($counter > $limit) {
+      break;
+    }
     _node_index_node($node);
   }
 }
@@ -2599,21 +2611,26 @@ function _node_index_node(Node $node) {
   // results half-life calculation.
   variable_set('node_cron_last', $node->changed);
 
-  // Render the node.
-  $build = node_view($node, 'search_index');
-  unset($build['#theme']);
-  $node->rendered = drupal_render($build);
+  $languages = array_merge(array(language_load($node->langcode)), $node->translations());
 
-  $text = '<h1>' . check_plain($node->label()) . '</h1>' . $node->rendered;
+  foreach ($languages as $language) {
+    // Render the node.
+    $build = node_view($node, 'search_index', $language->langcode);
 
-  // Fetch extra data normally not visible
-  $extra = module_invoke_all('node_update_index', $node);
-  foreach ($extra as $t) {
-    $text .= $t;
+    unset($build['#theme']);
+    $node->rendered = drupal_render($build);
+
+    $text = '<h1>' . check_plain($node->label($language->langcode)) . '</h1>' . $node->rendered;
+
+    // Fetch extra data normally not visible.
+    $extra = module_invoke_all('node_update_index', $node, $language->langcode);
+    foreach ($extra as $t) {
+      $text .= $t;
+    }
+
+    // Update index.
+    search_index($node->nid, 'node', $text, $language->langcode);
   }
-
-  // Update index
-  search_index($node->nid, 'node', $text);
 }
 
 /**

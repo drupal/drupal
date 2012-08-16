@@ -206,7 +206,7 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
 
   // Insert special keywords.
   $query->setOption('type', 'n.type');
-  $query->setOption('language', 'n.language');
+  $query->setOption('langcode', 'n.langcode');
   if ($query->setOption('term', 'ti.tid')) {
     $query->join('taxonomy_index', 'ti', 'n.nid = ti.nid');
   }
@@ -224,28 +224,30 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
     ->execute();
   $results = array();
   foreach ($find as $item) {
-    // Build the node body.
+    // Render the node.
     $node = node_load($item->sid);
-    node_build_content($node, 'search_result');
-    $node->body = drupal_render($node->content);
+    $build = node_view($node, 'search_result', $item->langcode);
+    unset($build['#theme']);
+    $node->rendered = drupal_render($build);
 
     // Fetch comments for snippet.
-    $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node);
-    // Fetch terms for snippet.
-    $node->rendered .= ' ' . module_invoke('taxonomy', 'node_update_index', $node);
+    $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node, $item->langcode);
 
-    $extra = module_invoke_all('node_search_result', $node);
+    $extra = module_invoke_all('node_search_result', $node, $item->langcode);
 
+    $language = language_load($item->langcode);
+    $uri = entity_uri('node', $node);
     $results[] = array(
-      'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
+      'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),
       'type' => check_plain(node_type_get_name($node)),
-      'title' => $node->label(),
+      'title' => $node->label($item->langcode),
       'user' => theme('username', array('account' => $node)),
-      'date' => $node->changed,
+      'date' => $node->get('changed', $item->langcode),
       'node' => $node,
       'extra' => $extra,
       'score' => $item->calculated_score,
-      'snippet' => search_excerpt($keys, $node->body),
+      'snippet' => search_excerpt($keys, $node->rendered),
+      'langcode' => $node->langcode,
     );
   }
   return $results;
