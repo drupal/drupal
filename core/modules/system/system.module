@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Utility\ModuleInfo;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -2254,7 +2255,7 @@ function system_user_login(&$edit, $account) {
 function system_user_timezone(&$form, &$form_state) {
   global $user;
 
-  $account = $form['#user'];
+  $account = $form_state['controller']->getEntity($form_state);
   $form['timezone'] = array(
     '#type' => 'fieldset',
     '#title' => t('Locale settings'),

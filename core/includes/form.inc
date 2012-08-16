@@ -159,6 +159,8 @@ function drupal_get_form($form_id) {
  *   - build_info: Internal. An associative array of information stored by Form
  *     API that is necessary to build and rebuild the form from cache when the
  *     original context may no longer be available:
+ *     - callback: The actual callback to be used to retrieve the form array. If
+ *       none is provided $form_id is used instead. Can be any callable type.
  *     - args: A list of arguments to pass to the form constructor.
  *     - files: An optional array defining include files that need to be loaded
  *       for building the form. Each array entry may be the path to a file or
@@ -266,11 +268,11 @@ function drupal_get_form($form_id) {
  *     ones used by Form API internals) for this kind of storage. The
  *     recommended way to ensure that the chosen key doesn't conflict with ones
  *     used by the Form API or other modules is to use the module name as the
- *     key name or a prefix for the key name. For example, the Node module uses
- *     $form_state['node'] in node editing forms to store information about the
- *     node being edited, and this information stays available across successive
- *     clicks of the "Preview" button as well as when the "Save" button is
- *     finally clicked.
+ *     key name or a prefix for the key name. For example, the entity form
+ *     controller classes use $form_state['entity'] in entity forms to store
+ *     information about the entity being edited, and this information stays
+ *     available across successive clicks of the "Preview" button (if available)
+ *     as well as when the "Save" button is finally clicked.
  *   - buttons: A list containing copies of all submit and button elements in
  *     the form.
  *   - complete_form: A reference to the $form variable containing the complete
@@ -747,9 +749,13 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // the constructor function itself.
   $args = $form_state['build_info']['args'];
 
-  // We first check to see if there's a function named after the $form_id.
+  // If an explicit form builder callback is defined we just use it, otherwise
+  // we look for a function named after the $form_id.
+  $callback = !empty($form_state['build_info']['callback']) ? $form_state['build_info']['callback'] : $form_id;
+
+  // We first check to see if there is a valid form builder callback defined.
   // If there is, we simply pass the arguments on to it to get the form.
-  if (!function_exists($form_id)) {
+  if (!is_callable($callback)) {
     // In cases where many form_ids need to share a central constructor function,
     // such as the node editing form, modules can implement hook_forms(). It
     // maps one or more form_ids to the correct constructor functions.
@@ -808,7 +814,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
 
   // If $callback was returned by a hook_forms() implementation, call it.
   // Otherwise, call the function named after the form id.
-  $form = call_user_func_array(isset($callback) ? $callback : $form_id, $args);
+  $form = call_user_func_array($callback, $args);
   $form['#form_id'] = $form_id;
 
   return $form;
@@ -1469,7 +1475,7 @@ function form_execute_handlers($type, &$form, &$form_state) {
       $batch['has_form_submits'] = TRUE;
     }
     else {
-      $function($form, $form_state);
+      call_user_func_array($function, array(&$form, &$form_state));
     }
     $return = TRUE;
   }
@@ -1812,7 +1818,7 @@ function form_builder($form_id, &$element, &$form_state) {
   // checkboxes and files.
   if (isset($element['#process']) && !$element['#processed']) {
     foreach ($element['#process'] as $process) {
-      $element = $process($element, $form_state, $form_state['complete_form']);
+      $element = call_user_func_array($process, array(&$element, &$form_state, &$form_state['complete_form']));
     }
     $element['#processed'] = TRUE;
   }

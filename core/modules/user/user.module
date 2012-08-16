@@ -147,6 +147,10 @@ function user_entity_info() {
     'user' => array(
       'label' => t('User'),
       'controller class' => 'Drupal\user\UserStorageController',
+      'form controller class' => array(
+        'profile' => 'Drupal\user\ProfileFormController',
+        'register' => 'Drupal\user\RegisterFormController',
+      ),
       'base table' => 'users',
       'uri callback' => 'user_uri',
       'label callback' => 'user_label',
@@ -399,7 +403,7 @@ function user_validate_name($name) {
 /**
  * Validates an image uploaded by a user.
  *
- * @see user_account_form()
+ * @see AccountFormController::form()
  */
 function user_validate_picture(&$form, &$form_state) {
   // If required, validate the uploaded picture.
@@ -701,242 +705,6 @@ function user_user_view($account) {
 }
 
 /**
- * Helper function to add default user account fields to user registration and edit form.
- *
- * @see user_account_form_validate()
- * @see user_validate_current_pass()
- * @see user_validate_picture()
- * @see user_validate_mail()
- */
-function user_account_form(&$form, &$form_state) {
-  global $user;
-  $language_interface = language(LANGUAGE_TYPE_INTERFACE);
-
-  $account = $form['#user'];
-  $register = ($form['#user']->uid > 0 ? FALSE : TRUE);
-
-  $admin = user_access('administer users');
-
-  $form['#validate'][] = 'user_account_form_validate';
-
-  // Account information.
-  $form['account'] = array(
-    '#type'   => 'container',
-    '#weight' => -10,
-  );
-  // Only show name field on registration form or user can change own username.
-  $form['account']['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Username'),
-    '#maxlength' => USERNAME_MAX_LENGTH,
-    '#description' => t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.'),
-    '#required' => TRUE,
-    '#attributes' => array('class' => array('username'), 'autocomplete' => 'off'),
-    '#default_value' => (!$register ? $account->name : ''),
-    '#access' => ($register || ($user->uid == $account->uid && user_access('change own username')) || $admin),
-    '#weight' => -10,
-  );
-
-  // The mail field is NOT required if account originally had no mail set
-  // and the user performing the edit has 'administer users' permission.
-  // This allows users without e-mail address to be edited and deleted.
-  $form['account']['mail'] = array(
-    '#type' => 'email',
-    '#title' => t('E-mail address'),
-    '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
-    '#required' => !(empty($account->mail) && user_access('administer users')),
-    '#default_value' => (!$register ? $account->mail : ''),
-    '#attributes' => array('autocomplete' => 'off'),
-  );
-
-  // Display password field only for existing users or when user is allowed to
-  // assign a password during registration.
-  if (!$register) {
-    $form['account']['pass'] = array(
-      '#type' => 'password_confirm',
-      '#size' => 25,
-      '#description' => t('To change the current user password, enter the new password in both fields.'),
-    );
-    // To skip the current password field, the user must have logged in via a
-    // one-time link and have the token in the URL.
-    $pass_reset = isset($_SESSION['pass_reset_' . $account->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $account->uid]);
-    $protected_values = array();
-    $current_pass_description = '';
-    // The user may only change their own password without their current
-    // password if they logged in via a one-time login link.
-    if (!$pass_reset) {
-      $protected_values['mail'] = $form['account']['mail']['#title'];
-      $protected_values['pass'] = t('Password');
-      $request_new = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
-      $current_pass_description = t('Required if you want to change the %mail or %pass below. !request_new.', array('%mail' => $protected_values['mail'], '%pass' => $protected_values['pass'], '!request_new' => $request_new));
-    }
-    // The user must enter their current password to change to a new one.
-    if ($user->uid == $account->uid) {
-      $form['account']['current_pass_required_values'] = array(
-        '#type' => 'value',
-        '#value' => $protected_values,
-      );
-      $form['account']['current_pass'] = array(
-        '#type' => 'password',
-        '#title' => t('Current password'),
-        '#size' => 25,
-        '#access' => !empty($protected_values),
-        '#description' => $current_pass_description,
-        '#weight' => -5,
-        '#attributes' => array('autocomplete' => 'off'),
-      );
-      $form['#validate'][] = 'user_validate_current_pass';
-    }
-  }
-  elseif (!variable_get('user_email_verification', TRUE) || $admin) {
-    $form['account']['pass'] = array(
-      '#type' => 'password_confirm',
-      '#size' => 25,
-      '#description' => t('Provide a password for the new account in both fields.'),
-      '#required' => TRUE,
-    );
-  }
-
-  if ($admin) {
-    $status = isset($account->status) ? $account->status : 1;
-  }
-  else {
-    $status = $register ? variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_VISITORS : $account->status;
-  }
-  $form['account']['status'] = array(
-    '#type' => 'radios',
-    '#title' => t('Status'),
-    '#default_value' => $status,
-    '#options' => array(t('Blocked'), t('Active')),
-    '#access' => $admin,
-  );
-
-  $roles = array_map('check_plain', user_roles(TRUE));
-  // The disabled checkbox subelement for the 'authenticated user' role
-  // must be generated separately and added to the checkboxes element,
-  // because of a limitation in Form API not supporting a single disabled
-  // checkbox within a set of checkboxes.
-  // @todo This should be solved more elegantly. See issue #119038.
-  $checkbox_authenticated = array(
-    '#type' => 'checkbox',
-    '#title' => $roles[DRUPAL_AUTHENTICATED_RID],
-    '#default_value' => TRUE,
-    '#disabled' => TRUE,
-  );
-  unset($roles[DRUPAL_AUTHENTICATED_RID]);
-  $form['account']['roles'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Roles'),
-    '#default_value' => (!$register && isset($account->roles) ? array_keys($account->roles) : array()),
-    '#options' => $roles,
-    '#access' => $roles && user_access('administer permissions'),
-    DRUPAL_AUTHENTICATED_RID => $checkbox_authenticated,
-  );
-
-  $form['account']['notify'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Notify user of new account'),
-    '#access' => $register && $admin,
-  );
-
-  // Signature.
-  $form['signature_settings'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Signature settings'),
-    '#weight' => 1,
-    '#access' => (!$register && variable_get('user_signatures', 0)),
-  );
-
-  $form['signature_settings']['signature'] = array(
-    '#type' => 'text_format',
-    '#title' => t('Signature'),
-    '#default_value' => isset($account->signature) ? $account->signature : '',
-    '#description' => t('Your signature will be publicly displayed at the end of your comments.'),
-    '#format' => isset($account->signature_format) ? $account->signature_format : NULL,
-  );
-
-  // Picture/avatar.
-  $form['picture'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Picture'),
-    '#weight' => 1,
-    '#access' => (!$register && variable_get('user_pictures', 0)),
-  );
-  $form['picture']['picture'] = array(
-    '#type' => 'value',
-    '#value' => isset($account->picture) ? $account->picture : NULL,
-  );
-  $form['picture']['picture_current'] = array(
-    '#markup' => theme('user_picture', array('account' => $account)),
-  );
-  $form['picture']['picture_delete'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Delete picture'),
-    '#access' => !empty($account->picture->fid),
-    '#description' => t('Check this box to delete your current picture.'),
-  );
-  $form['picture']['picture_upload'] = array(
-    '#type' => 'file',
-    '#title' => t('Upload picture'),
-    '#size' => 48,
-    '#description' => t('Your virtual face or picture. Pictures larger than @dimensions pixels will be scaled down.', array('@dimensions' => variable_get('user_picture_dimensions', '85x85'))) . ' ' . filter_xss_admin(variable_get('user_picture_guidelines', '')),
-  );
-  $form['#validate'][] = 'user_validate_picture';
-
-  if (module_exists('language') && language_multilingual()) {
-    $languages = language_list();
-
-    // If the user is being created, we set the user language to the page language.
-    $user_preferred_language = $register ? $language_interface : user_preferred_language($account);
-
-    $names = array();
-    foreach ($languages as $langcode => $item) {
-      $names[$langcode] = $item->name;
-    }
-    // Is default the interface language?
-    $interface_language_is_default = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
-    $form['language'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Language settings'),
-      // Display language selector when either creating a user on the admin
-      // interface or editing a user account.
-      '#access' => !$register || user_access('administer users'),
-    );
-    $form['language']['preferred_langcode'] = array(
-      '#type' => (count($names) <= 5 ? 'radios' : 'select'),
-      '#title' => t('Language'),
-      '#default_value' => $user_preferred_language->langcode,
-      '#options' => $names,
-      '#description' => $interface_language_is_default ? t("This account's preferred language for e-mails and site presentation.") : t("This account's preferred language for e-mails."),
-    );
-  }
-  else {
-    $form['language'] = array(
-      '#type' => 'container',
-    );
-    $form['language']['preferred_langcode'] = array(
-      '#type' => 'value',
-      '#value' => language_default()->langcode,
-    );
-  }
-
-  // User entities contain both a langcode property (for identifying the
-  // language of the entity data) and a preferred_langcode property (see above).
-  // Rather than provide a UI forcing the user to choose both separately,
-  // assume that the user profile data is in the user's preferred language. This
-  // element provides that synchronization. For use-cases where this
-  // synchronization is not desired, a module can alter or remove this element.
-  $form['language']['langcode'] = array(
-    '#type' => 'value',
-    '#value_callback' => '_user_language_selector_langcode_value',
-    // For the synchronization to work, this element must have a larger weight
-    // than the preferred_langcode element. Set a large weight here in case
-    // a module alters the weight of the other element.
-    '#weight' => 100,
-  );
-}
-
-/**
  * Sets the value of the user register and profile forms' langcode element.
  */
 function _user_language_selector_langcode_value($element, $input, &$form_state) {
@@ -948,12 +716,12 @@ function _user_language_selector_langcode_value($element, $input, &$form_state) 
 }
 
 /**
- * Form validation handler for the current password on the user_account_form().
+ * Form validation handler for the current password on the user account form.
  *
- * @see user_account_form()
+ * @see AccountFormController::form()
  */
 function user_validate_current_pass(&$form, &$form_state) {
-  $account = $form['#user'];
+  $account = $form_state['user'];
   foreach ($form_state['values']['current_pass_required_values'] as $key => $name) {
     // This validation only works for required textfields (like mail) or
     // form values like password_confirm that have their own validation
@@ -967,72 +735,6 @@ function user_validate_current_pass(&$form, &$form_state) {
       }
       // We only need to check the password once.
       break;
-    }
-  }
-}
-
-/**
- * Form validation handler for user_account_form().
- *
- * @see user_account_form()
- */
-function user_account_form_validate($form, &$form_state) {
-  $account = $form['#user'];
-  // Validate new or changing username.
-  if (isset($form_state['values']['name'])) {
-    if ($error = user_validate_name($form_state['values']['name'])) {
-      form_set_error('name', $error);
-    }
-    // Cast the user ID as an integer. It might have been set to NULL, which
-    // could lead to unexpected results.
-    else {
-      $name_taken = (bool) db_select('users')
-        ->fields('users', array('uid'))
-        ->condition('uid', (int) $account->uid, '<>')
-        ->condition('name', db_like($form_state['values']['name']), 'LIKE')
-        ->range(0, 1)
-        ->execute()
-        ->fetchField();
-
-      if ($name_taken) {
-        form_set_error('name', t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
-      }
-    }
-  }
-
-  $mail = $form_state['values']['mail'];
-
-  if (!empty($mail)) {
-    $mail_taken = (bool) db_select('users')
-      ->fields('users', array('uid'))
-      ->condition('uid', (int) $account->uid, '<>')
-      ->condition('mail', db_like($mail), 'LIKE')
-      ->range(0, 1)
-      ->execute()
-      ->fetchField();
-
-    if ($mail_taken) {
-      // Format error message dependent on whether the user is logged in or not.
-      if ($GLOBALS['user']->uid) {
-        form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $mail)));
-      }
-      else {
-        form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $mail, '@password' => url('user/password'))));
-      }
-    }
-  }
-
-  // Make sure the signature isn't longer than the size of the database field.
-  // Signatures are disabled by default, so make sure it exists first.
-  if (isset($form_state['values']['signature'])) {
-    // Move text format for user signature into 'signature_format'.
-    $form_state['values']['signature_format'] = $form_state['values']['signature']['format'];
-    // Move text value for user signature into 'signature'.
-    $form_state['values']['signature'] = $form_state['values']['signature']['value'];
-
-    $user_schema = drupal_get_schema('users');
-    if (drupal_strlen($form_state['values']['signature']) > $user_schema['fields']['signature']['length']) {
-      form_set_error('signature', t('The signature is too long: it must be %max characters or less.', array('%max' => $user_schema['fields']['signature']['length'])));
     }
   }
 }
@@ -1419,6 +1121,11 @@ function user_is_logged_in() {
   return (bool) $GLOBALS['user']->uid;
 }
 
+function user_register() {
+  $account = entity_create('user', array());
+  return entity_get_form($account, 'register');
+}
+
 function user_register_access() {
   return user_is_anonymous() && variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
 }
@@ -1498,8 +1205,7 @@ function user_menu() {
 
   $items['user/register'] = array(
     'title' => 'Create new account',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_register_form'),
+    'page callback' => 'user_register',
     'access callback' => 'user_register_access',
     'type' => MENU_LOCAL_TASK,
   );
@@ -1652,8 +1358,8 @@ function user_menu() {
 
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_profile_form', 1),
+    'page callback' => 'entity_get_form',
+    'page arguments' => array(1, 'profile'),
     'access callback' => 'user_edit_access',
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
@@ -3492,157 +3198,6 @@ function user_form_field_ui_field_edit_form_submit($form, &$form_state) {
 
   if (!empty($instance['required'])) {
     form_set_value($form['instance']['settings']['user_register_form'], 1, $form_state);
-  }
-}
-
-/**
- * Form builder; the user registration form.
- *
- * @ingroup forms
- * @see user_account_form()
- * @see user_account_form_validate()
- * @see user_register_submit()
- */
-function user_register_form($form, &$form_state) {
-  global $user;
-
-  $admin = user_access('administer users');
-
-  // Pass access information to the submit handler. Running an access check
-  // inside the submit function interferes with form processing and breaks
-  // hook_form_alter().
-  $form['administer_users'] = array(
-     '#type' => 'value',
-     '#value' => $admin,
-  );
-
-  // If we aren't admin but already logged on, go to the user page instead.
-  if (!$admin && $user->uid) {
-    drupal_goto('user/' . $user->uid);
-  }
-
-  $form['#user'] = entity_create('user', array());
-
-  $form['#attached']['library'][] = array('system', 'jquery.cookie');
-  $form['#attributes']['class'][] = 'user-info-from-cookie';
-
-  // Start with the default user account fields.
-  user_account_form($form, $form_state);
-
-  // Attach field widgets, and hide the ones where the 'user_register_form'
-  // setting is not on.
-  field_attach_form('user', $form['#user'], $form, $form_state);
-  foreach (field_info_instances('user', 'user') as $field_name => $instance) {
-    if (empty($instance['settings']['user_register_form'])) {
-      $form[$field_name]['#access'] = FALSE;
-    }
-  }
-
-  if ($admin) {
-    // Redirect back to page which initiated the create request;
-    // usually admin/people/create.
-    $form_state['redirect'] = current_path();
-  }
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Create new account'),
-  );
-
-  $form['#validate'][] = 'user_register_validate';
-  // Add the final user registration form submit handler.
-  $form['#submit'][] = 'user_register_submit';
-
-  return $form;
-}
-
-/**
- * Validation function for the user registration form.
- */
-function user_register_validate($form, &$form_state) {
-  entity_form_field_validate('user', $form, $form_state);
-}
-
-/**
- * Submit handler for the user registration form.
- *
- * This function is shared by the installation form and the normal registration form,
- * which is why it can't be in the user.pages.inc file.
- *
- * @see user_register_form()
- */
-function user_register_submit($form, &$form_state) {
-  $admin = $form_state['values']['administer_users'];
-
-  if (!variable_get('user_email_verification', TRUE) || $admin) {
-    $pass = $form_state['values']['pass'];
-  }
-  else {
-    $pass = user_password();
-  }
-  $notify = !empty($form_state['values']['notify']);
-
-  // Remove unneeded values.
-  form_state_values_clean($form_state);
-
-  $form_state['values']['pass'] = $pass;
-  $form_state['values']['init'] = $form_state['values']['mail'];
-
-  $account = $form['#user'];
-
-  entity_form_submit_build_entity('user', $account, $form, $form_state);
-  $status = $account->save();
-
-  // Terminate if an error occurred while saving the account.
-  if ($status =! SAVED_NEW) {
-    drupal_set_message(t("Error saving user account."), 'error');
-    $form_state['redirect'] = '';
-    return;
-  }
-  $form_state['user'] = $account;
-  $form_state['values']['uid'] = $account->uid;
-
-  watchdog('user', 'New user: %name (%email).', array('%name' => $form_state['values']['name'], '%email' => $form_state['values']['mail']), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
-
-  // Add plain text password into user account to generate mail tokens.
-  $account->password = $pass;
-
-  // New administrative account without notification.
-  $uri = entity_uri('user', $account);
-  if ($admin && !$notify) {
-    drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
-  }
-  // No e-mail verification required; log in user immediately.
-  elseif (!$admin && !variable_get('user_email_verification', TRUE) && $account->status) {
-    _user_mail_notify('register_no_approval_required', $account);
-    $form_state['uid'] = $account->uid;
-    user_login_submit(array(), $form_state);
-    drupal_set_message(t('Registration successful. You are now logged in.'));
-    $form_state['redirect'] = '';
-  }
-  // No administrator approval required.
-  elseif ($account->status || $notify) {
-    if (empty($account->mail) && $notify) {
-      drupal_set_message(t('The new user <a href="@url">%name</a> was created without an email address, so no welcome message was sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
-    }
-    else {
-      $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
-      _user_mail_notify($op, $account);
-      if ($notify) {
-        drupal_set_message(t('A welcome message with further instructions has been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
-      }
-      else {
-        drupal_set_message(t('A welcome message with further instructions has been sent to your e-mail address.'));
-        $form_state['redirect'] = '';
-      }
-    }
-  }
-  // Administrator approval required.
-  else {
-    _user_mail_notify('register_pending_approval', $account);
-    drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your e-mail address.'));
-    $form_state['redirect'] = '';
   }
 }
 

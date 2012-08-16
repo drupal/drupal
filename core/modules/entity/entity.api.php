@@ -27,6 +27,13 @@
  *     The class has to implement the
  *     Drupal\entity\EntityStorageControllerInterface interface. Leave blank
  *     to use the Drupal\entity\DatabaseStorageController implementation.
+ *   - form controller class: An associative array where the keys are the names
+ *     of the different form operations (such as creation, editing or deletion)
+ *     and the values are the names of the controller classes. To facilitate
+ *     supporting the case where an entity form varies only slightly between
+ *     different operations, the name of the operation is passed also to the
+ *     constructor of the form controller class. This way, one class can be used
+ *     for multiple entity forms.
  *   - base table: (used by Drupal\entity\DatabaseStorageController) The
  *     name of the entity type's base table.
  *   - static cache: (used by Drupal\entity\DatabaseStorageController)
@@ -139,6 +146,9 @@ function hook_entity_info() {
       'label' => t('Node'),
       'entity class' => 'Drupal\node\Node',
       'controller class' => 'Drupal\node\NodeStorageController',
+      'form controller class' => array(
+        'default' => 'Drupal\node\NodeFormController',
+      ),
       'base table' => 'node',
       'revision table' => 'node_revision',
       'uri callback' => 'node_uri',

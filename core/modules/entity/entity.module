@@ -5,6 +5,8 @@
  * Entity API for handling entities like nodes or users.
  */
 
+use \InvalidArgumentException;
+
 use Drupal\entity\EntityFieldQuery;
 use Drupal\entity\EntityMalformedException;
 use Drupal\entity\EntityStorageException;
@@ -73,6 +75,9 @@ function entity_get_info($entity_type = NULL) {
           'fieldable' => FALSE,
           'entity class' => 'Drupal\entity\Entity',
           'controller class' => 'Drupal\entity\DatabaseStorageController',
+          'form controller class' => array(
+            'default' => 'Drupal\entity\EntityFormController',
+          ),
           'static cache' => TRUE,
           'field cache' => TRUE,
           'bundles' => array(),
@@ -418,16 +423,123 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
 }
 
 /**
- * Attaches field API validation to entity forms.
+ * Returns an entity form controller for the given operation.
+ *
+ * Since there might be different scenarios in which an entity is edited,
+ * multiple form controllers suitable to the different operations may be defined.
+ * If no controller is found for the default operation, the base class will be
+ * used. If a non-existing non-default operation is specified an exception will
+ * be thrown.
+ *
+ * @see hook_entity_info()
+ *
+ * @param $entity_type
+ *   The type of the entity.
+ * @param $operation
+ *   (optional) The name of an operation, such as creation, editing or deletion,
+ *   identifying the controlled form. Defaults to 'default' which is the usual
+ *   create/edit form.
+ *
+ * @return Drupal\entity\EntityFormControllerInterface
+ *   An entity form controller instance.
  */
-function entity_form_field_validate($entity_type, $form, &$form_state) {
-  // All field attach API functions act on an entity object, but during form
-  // validation, we don't have one. $form_state contains the entity as it was
-  // prior to processing the current form submission, and we must not update it
-  // until we have fully validated the submitted input. Therefore, for
-  // validation, act on a pseudo entity created out of the form values.
-  $pseudo_entity = entity_create($entity_type, $form_state['values']);
-  field_attach_form_validate($entity_type, $pseudo_entity, $form, $form_state);
+function entity_form_controller($entity_type, $operation = 'default') {
+  $info = entity_get_info($entity_type);
+
+  // Check whether there is a form controller class for the specified operation.
+  if (!empty($info['form controller class'][$operation])) {
+    $class = $info['form controller class'][$operation];
+  }
+  // If no controller is specified default to the base implementation.
+  elseif (empty($info['form controller class']) && $operation == 'default') {
+    $class = 'Drupal\entity\EntityFormController';
+  }
+  // If a non-existing operation has been specified stop.
+  else {
+    throw new InvalidArgumentException("Missing form controller for '$entity_type', operation '$operation'");
+  }
+
+  return new $class($operation);
+}
+
+/**
+ * Returns the form id for the given entity and operation.
+ *
+ * @param EntityInterface $entity
+ *   The entity to be created or edited.
+ * @param $operation
+ *   (optional) The operation for the form to be processed.
+ *
+ * @return
+ *   A string representing the entity form id.
+ */
+function entity_form_id(EntityInterface $entity, $operation = 'default') {
+  $entity_type = $entity->entityType();
+  $bundle = $entity->bundle();
+  $form_id = $entity_type;
+  if ($bundle != $entity_type) {
+    $form_id = $bundle . '_' . $form_id;
+  }
+  if ($operation != 'default') {
+    $form_id = $form_id . '_' . $operation;
+  }
+  return $form_id . '_form';
+}
+
+/**
+ * Returns the default form state for the given entity and operation.
+ *
+ * @param EntityInterface $entity
+ *   The entity to be created or edited.
+ * @param $operation
+ *   (optional) The operation identifying the form to be processed.
+ *
+ * @return
+ *   A $form_state array already filled the entity form controller.
+ */
+function entity_form_state_defaults(EntityInterface $entity, $operation = 'default') {
+  $form_state = array();
+  $controller = entity_form_controller($entity->entityType(), $operation);
+  $form_state['build_info']['callback'] = array($controller, 'build');
+  $form_state['build_info']['base_form_id'] = $entity->entityType() . '_form';
+  $form_state['build_info']['args'] = array($entity);
+  return $form_state;
+}
+
+/**
+ * Retrieves, populates, and processes an entity form.
+ *
+ * @param EntityInterface $entity
+ *   The entity to be created or edited.
+ * @param $operation
+ *   (optional) The operation identifying the form to be submitted.
+ * @param $form_state
+ *   (optional) A keyed array containing the current state of the form.
+ *
+ * @return
+ *   A $form_state array already filled with the entity form controller.
+ */
+function entity_form_submit(EntityInterface $entity, $operation = 'default', &$form_state = array()) {
+  $form_state += entity_form_state_defaults($entity, $operation);
+  $form_id = entity_form_id($entity, $operation);
+  drupal_form_submit($form_id, $form_state);
+}
+
+/**
+ * Returns the built and processed entity form for the given entity.
+ *
+ * @param EntityInterface $entity
+ *   The entity to be created or edited.
+ * @param $operation
+ *   (optional) The operation identifying the form variation to be returned.
+ *
+ * @return
+ *   The processed form for the given entity and operation.
+ */
+function entity_get_form(EntityInterface $entity, $operation = 'default') {
+  $form_state = entity_form_state_defaults($entity, $operation);
+  $form_id = entity_form_id($entity, $operation);
+  return drupal_build_form($form_id, $form_state);
 }
 
 /**

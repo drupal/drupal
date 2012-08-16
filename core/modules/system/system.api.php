@@ -1184,7 +1184,8 @@ function hook_page_alter(&$page) {
  * Perform alterations before a form is rendered.
  *
  * One popular use of this hook is to add form elements to the node form. When
- * altering a node form, the node entity can be accessed at $form['#node'].
+ * altering a node form, the node entity can be retrieved by invoking
+ * $form_state['controller']->getEntity($form_state).
  *
  * In addition to hook_form_alter(), which is called for all forms, there are
  * two more specific form hooks available. The first,

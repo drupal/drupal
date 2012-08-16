@@ -636,8 +636,8 @@ function hook_node_access($node, $op, $account, $langcode) {
 /**
  * Act on a node object about to be shown on the add/edit form.
  *
- * This hook is invoked from node_object_prepare() after the type-specific
- * hook_prepare() is invoked.
+ * This hook is invoked from NodeFormController::prepareEntity() after the
+ * type-specific hook_prepare() is invoked.
  *
  * @param Drupal\node\Node $node
  *   The node that is about to be shown on the add/edit form.
@@ -740,10 +740,10 @@ function hook_node_update_index(Drupal\node\Node $node) {
 /**
  * Perform node validation before a node is created or updated.
  *
- * This hook is invoked from node_validate(), after a user has has finished
- * editing the node and is previewing or submitting it. It is invoked at the
- * end of all the standard validation steps, and after the type-specific
- * hook_validate() is invoked.
+ * This hook is invoked from NodeFormController::validate(), after a user has
+ * has finished editing the node and is previewing or submitting it. It is
+ * invoked at the end of all the standard validation steps, and after the
+ * type-specific hook_validate() is invoked.
  *
  * To indicate a validation error, use form_set_error().
  *
@@ -1052,8 +1052,8 @@ function hook_delete(Drupal\node\Node $node) {
  * This hook is invoked only on the module that defines the node's content type
  * (use hook_node_prepare() to act on all node preparations).
  *
- * This hook is invoked from node_object_prepare() before the general
- * hook_node_prepare() is invoked.
+ * This hook is invoked from NodeFormController::prepareEntity() before the
+ * general hook_node_prepare() is invoked.
  *
  * @param Drupal\node\Node $node
  *   The node that is about to be shown on the add/edit form.
@@ -1219,10 +1219,10 @@ function hook_update(Drupal\node\Node $node) {
  * This hook is invoked only on the module that defines the node's content type
  * (use hook_node_validate() to act on all node validations).
  *
- * This hook is invoked from node_validate(), after a user has finished
- * editing the node and is previewing or submitting it. It is invoked at the end
- * of all the standard validation steps, and before hook_node_validate() is
- * invoked.
+ * This hook is invoked from NodeFormController::validate(), after a user has
+ * finished editing the node and is previewing or submitting it. It is invoked
+ * at the end of all the standard validation steps, and before
+ * hook_node_validate() is invoked.
  *
  * To indicate a validation error, use form_set_error().
  *

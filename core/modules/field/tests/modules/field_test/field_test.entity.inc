@@ -335,7 +335,8 @@ function field_test_entity_form($form, &$form_state, $entity, $add = FALSE) {
  * Validate handler for field_test_entity_form().
  */
 function field_test_entity_form_validate($form, &$form_state) {
-  entity_form_field_validate('test_entity', $form, $form_state);
+  $pseudo_entity = entity_create('test_entity', $form_state['values']);
+  field_attach_form_validate('test_entity', $pseudo_entity, $form, $form_state);
 }
 
 /**

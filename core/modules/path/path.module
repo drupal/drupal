@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Node;
+
 use Drupal\taxonomy\Term;
 
 /**
@@ -99,11 +100,12 @@ function path_menu() {
  * @see path_form_element_validate()
  */
 function path_form_node_form_alter(&$form, $form_state) {
+  $node = $form_state['controller']->getEntity($form_state);
   $path = array();
-  if (!empty($form['#node']->nid)) {
-    $conditions = array('source' => 'node/' . $form['#node']->nid);
-    if ($form['#node']->langcode != LANGUAGE_NOT_SPECIFIED) {
-      $conditions['langcode'] = $form['#node']->langcode;
+  if (!empty($node->nid)) {
+    $conditions = array('source' => 'node/' . $node->nid);
+    if ($node->langcode != LANGUAGE_NOT_SPECIFIED) {
+      $conditions['langcode'] = $node->langcode;
     }
     $path = path_load($conditions);
     if ($path === FALSE) {
@@ -112,9 +114,9 @@ function path_form_node_form_alter(&$form, $form_state) {
   }
   $path += array(
     'pid' => NULL,
-    'source' => isset($form['#node']->nid) ? 'node/' . $form['#node']->nid : NULL,
+    'source' => isset($node->nid) ? 'node/' . $node->nid : NULL,
     'alias' => '',
-    'langcode' => isset($form['#node']->langcode) ? $form['#node']->langcode : LANGUAGE_NOT_SPECIFIED,
+    'langcode' => isset($node->langcode) ? $node->langcode : LANGUAGE_NOT_SPECIFIED,
   );
 
   $form['path'] = array(
@@ -232,18 +234,19 @@ function path_node_predelete(Node $node) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for taxonomy_form_term().
+ * Implements hook_form_FORM_ID_alter() for taxonomy_term_form().
  */
-function path_form_taxonomy_form_term_alter(&$form, $form_state) {
+function path_form_taxonomy_term_form_alter(&$form, $form_state) {
   // Make sure this does not show up on the delete confirmation form.
   if (empty($form_state['confirm_delete'])) {
-    $path = (isset($form['#term']['tid']) ? path_load('taxonomy/term/' . $form['#term']['tid']) : array());
+    $term = $form_state['controller']->getEntity($form_state);
+    $path = (isset($term->tid) ? path_load('taxonomy/term/' . $term->tid) : array());
     if ($path === FALSE) {
       $path = array();
     }
     $path += array(
       'pid' => NULL,
-      'source' => isset($form['#term']['tid']) ? 'taxonomy/term/' . $form['#term']['tid'] : NULL,
+      'source' => isset($term->tid) ? 'taxonomy/term/' . $term->tid : NULL,
       'alias' => '',
       'langcode' => LANGUAGE_NOT_SPECIFIED,
     );

@@ -153,9 +153,8 @@ function translation_node_type_language_translation_enabled_validate($element, &
  * @see node_form()
  */
 function translation_form_node_form_alter(&$form, &$form_state) {
-  if (translation_supported_type($form['#node']->type)) {
-    $node = $form['#node'];
-
+  $node = $form_state['controller']->getEntity($form_state);
+  if (translation_supported_type($node->type)) {
     if (!empty($node->translation_source)) {
       // We are creating a translation. Add values and lock language field.
       $form['translation_source'] = array('#type' => 'value', '#value' => $node->translation_source);
@@ -379,10 +378,11 @@ function translation_node_update(Node $node) {
  *
  * Ensures that duplicate translations can't be created for the same source.
  */
-function translation_node_validate(Node $node, $form) {
+function translation_node_validate(Node $node, $form, &$form_state) {
   // Only act on translatable nodes with a tnid or translation_source.
-  if (translation_supported_type($node->type) && (!empty($node->tnid) || !empty($form['#node']->translation_source->nid))) {
-    $tnid = !empty($node->tnid) ? $node->tnid : $form['#node']->translation_source->nid;
+  $form_node = $form_state['controller']->getEntity($form_state);
+  if (translation_supported_type($node->type) && (!empty($node->tnid) || !empty($form_node->translation_source->nid))) {
+    $tnid = !empty($node->tnid) ? $node->tnid : $form_node->translation_source->nid;
     $translations = translation_node_get_translations($tnid);
     if (isset($translations[$node->langcode]) && $translations[$node->langcode]->nid != $node->nid) {
       form_set_error('langcode', t('There is already a translation in this language.'));

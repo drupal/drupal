@@ -113,6 +113,9 @@ function taxonomy_entity_info() {
       'label' => t('Taxonomy term'),
       'entity class' => 'Drupal\taxonomy\Term',
       'controller class' => 'Drupal\taxonomy\TermStorageController',
+      'form controller class' => array(
+        'default' => 'Drupal\taxonomy\TermFormController',
+      ),
       'base table' => 'taxonomy_term_data',
       'uri callback' => 'taxonomy_term_uri',
       'fieldable' => TRUE,
@@ -150,6 +153,9 @@ function taxonomy_entity_info() {
     'label' => t('Taxonomy vocabulary'),
     'entity class' => 'Drupal\taxonomy\Vocabulary',
     'controller class' => 'Drupal\taxonomy\VocabularyStorageController',
+    'form controller class' => array(
+      'default' => 'Drupal\taxonomy\VocabularyFormController',
+    ),
     'base table' => 'taxonomy_vocabulary',
     'entity keys' => array(
       'id' => 'vid',
@@ -295,8 +301,7 @@ function taxonomy_menu() {
   );
   $items['admin/structure/taxonomy/add'] = array(
     'title' => 'Add vocabulary',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_form_vocabulary'),
+    'page callback' => 'taxonomy_vocabulary_add',
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'taxonomy.admin.inc',
@@ -317,10 +322,10 @@ function taxonomy_menu() {
   );
   $items['taxonomy/term/%taxonomy_term/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'entity_get_form',
     // Pass a NULL argument to ensure that additional path components are not
-    // passed to taxonomy_form_term() as the vocabulary machine name argument.
-    'page arguments' => array('taxonomy_form_term', 2, NULL),
+    // passed to taxonomy_term_form() as the vocabulary machine name argument.
+    'page arguments' => array(2),
     'access callback' => 'taxonomy_term_access',
     'access arguments' => array('edit', 2),
     'type' => MENU_LOCAL_TASK,
@@ -370,8 +375,8 @@ function taxonomy_menu() {
   );
   $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_form_vocabulary', 3),
+    'page callback' => 'entity_get_form',
+    'page arguments' => array(3),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_TASK,
     'weight' => -10,
@@ -380,8 +385,8 @@ function taxonomy_menu() {
 
   $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/add'] = array(
     'title' => 'Add term',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_form_term', NULL, 3),
+    'page callback' => 'taxonomy_term_add',
+    'page arguments' => array(3),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'taxonomy.admin.inc',

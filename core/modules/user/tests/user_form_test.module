@@ -27,7 +27,7 @@ function user_form_test_menu() {
  */
 function user_form_test_current_password($form, &$form_state, $account) {
   $account->user_form_test_field = '';
-  $form['#user'] = $account;
+  $form_state['user'] = $account;
 
   $form['user_form_test_field'] = array(
     '#type' => 'textfield',
@@ -35,7 +35,7 @@ function user_form_test_current_password($form, &$form_state, $account) {
     '#description' => t('A field that would require a correct password to change.'),
     '#required' => TRUE,
   );
-  
+
   $form['current_pass'] = array(
     '#type' => 'password',
     '#title' => t('Current password'),

@@ -10,6 +10,7 @@
  */
 
 use Drupal\node\Node;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -106,6 +107,9 @@ function comment_entity_info() {
       'uri callback' => 'comment_uri',
       'fieldable' => TRUE,
       'controller class' => 'Drupal\comment\CommentStorageController',
+      'form controller class' => array(
+        'default' => 'Drupal\comment\CommentFormController',
+      ),
       'entity class' => 'Drupal\comment\Comment',
       'entity keys' => array(
         'id' => 'cid',
@@ -771,8 +775,7 @@ function comment_node_page_additions(Node $node) {
 
   // Append comment form if needed.
   if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW)) {
-    $comment = entity_create('comment', array('nid' => $node->nid));
-    $additions['comment_form'] = drupal_get_form("comment_node_{$node->type}_form", $comment);
+    $additions['comment_form'] = comment_add($node);
   }
 
   if ($additions) {
@@ -785,6 +788,21 @@ function comment_node_page_additions(Node $node) {
   }
 
   return $additions;
+}
+
+/**
+ * Returns a rendered form to comment the given node.
+ *
+ * @param Drupal\node\Node $node
+ *   The node entity to be commented.
+ *
+ * @return array
+ *   The renderable array for the comment addition form.
+ */
+function comment_add(Node $node, $pid = NULL) {
+  $values = array('nid' => $node->nid, 'pid' => $pid, 'node_type' => 'comment_node_' . $node->type);
+  $comment = entity_create('comment', $values);
+  return entity_get_form($comment);
 }
 
 /**
@@ -1231,7 +1249,7 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function comment_form_node_form_alter(&$form, $form_state) {
-  $node = $form['#node'];
+  $node = $form_state['controller']->getEntity($form_state);
   $form['comment_settings'] = array(
     '#type' => 'fieldset',
     '#access' => user_access('administer comments'),
@@ -1658,247 +1676,17 @@ function comment_get_display_page($cid, $node_type) {
  */
 function comment_edit_page(Comment $comment) {
   drupal_set_title(t('Edit comment %comment', array('%comment' => $comment->subject)), PASS_THROUGH);
-  $node = node_load($comment->nid);
-  return drupal_get_form("comment_node_{$node->type}_form", $comment);
-}
-
-/**
- * Implements hook_forms().
- */
-function comment_forms() {
-  $forms = array();
-  foreach (node_type_get_types() as $type) {
-    $forms["comment_node_{$type->type}_form"]['callback'] = 'comment_form';
-  }
-  return $forms;
-}
-
-/**
- * Form constructor for the basic commenting form.
- *
- * @see comment_form_validate()
- * @see comment_form_submit()
- * @see comment_form_build_preview()
- * @ingroup forms
- */
-function comment_form($form, &$form_state, Comment $comment) {
-  global $user;
-  $language_content = language(LANGUAGE_TYPE_CONTENT);
-
-  // During initial form build, add the comment entity to the form state for
-  // use during form building and processing. During a rebuild, use what is in
-  // the form state.
-  if (!isset($form_state['comment'])) {
-    $form_state['comment'] = $comment;
-  }
-  else {
-    $comment = $form_state['comment'];
-  }
-
-  $node = node_load($comment->nid);
-  $form['#node'] = $node;
-
-  // Use #comment-form as unique jump target, regardless of node type.
-  $form['#id'] = drupal_html_id('comment_form');
-  $form['#theme'] = array('comment_form__node_' . $node->type, 'comment_form');
-
-  $anonymous_contact = variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT);
-  $is_admin = (!empty($comment->cid) && user_access('administer comments'));
-
-  if (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
-    $form['#attached']['library'][] = array('system', 'jquery.cookie');
-    $form['#attributes']['class'][] = 'user-info-from-cookie';
-  }
-
-  // If not replying to a comment, use our dedicated page callback for new
-  // comments on nodes.
-  if (empty($comment->cid) && empty($comment->pid)) {
-    $form['#action'] = url('comment/reply/' . $comment->nid);
-  }
-
-  if (isset($form_state['comment_preview'])) {
-    $form += $form_state['comment_preview'];
-  }
-
-  $form['author'] = array(
-    '#weight' => 10,
-  );
-  // Display author information in a fieldset for comment moderators.
-  if ($is_admin) {
-    $form['author'] += array(
-      '#type' => 'fieldset',
-      '#title' => t('Administration'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-    );
-  }
-
-  // Prepare default values for form elements.
-  if ($is_admin) {
-    $author = (!$comment->uid && $comment->name ? $comment->name : $comment->registered_name);
-    $status = (isset($comment->status) ? $comment->status : COMMENT_NOT_PUBLISHED);
-    $date = (!empty($comment->date) ? $comment->date : format_date($comment->created, 'custom', 'Y-m-d H:i O'));
-  }
-  else {
-    if ($user->uid) {
-      $author = $user->name;
-    }
-    else {
-      $author = ($comment->name ? $comment->name : '');
-    }
-    $status = (user_access('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED);
-    $date = '';
-  }
-
-  // Add the author name field depending on the current user.
-  if ($is_admin) {
-    $form['author']['name'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Authored by'),
-      '#default_value' => $author,
-      '#maxlength' => 60,
-      '#size' => 30,
-      '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', t('Anonymous')))),
-      '#autocomplete_path' => 'user/autocomplete',
-    );
-  }
-  elseif ($user->uid) {
-    $form['author']['_author'] = array(
-      '#type' => 'item',
-      '#title' => t('Your name'),
-      '#markup' => theme('username', array('account' => $user)),
-    );
-    $form['author']['name'] = array(
-      '#type' => 'value',
-      '#value' => $author,
-    );
-  }
-  else {
-    $form['author']['name'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Your name'),
-      '#default_value' => $author,
-      '#required' => (!$user->uid && $anonymous_contact == COMMENT_ANONYMOUS_MUST_CONTACT),
-      '#maxlength' => 60,
-      '#size' => 30,
-    );
-  }
-
-  // Add author e-mail and homepage fields depending on the current user.
-  $form['author']['mail'] = array(
-    '#type' => 'email',
-    '#title' => t('E-mail'),
-    '#default_value' => $comment->mail,
-    '#required' => (!$user->uid && $anonymous_contact == COMMENT_ANONYMOUS_MUST_CONTACT),
-    '#maxlength' => 64,
-    '#size' => 30,
-    '#description' => t('The content of this field is kept private and will not be shown publicly.'),
-    '#access' => $is_admin || (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT),
-  );
-  $form['author']['homepage'] = array(
-    '#type' => 'url',
-    '#title' => t('Homepage'),
-    '#default_value' => $comment->homepage,
-    '#maxlength' => 255,
-    '#size' => 30,
-    '#access' => $is_admin || (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT),
-  );
-
-  // Add administrative comment publishing options.
-  $form['author']['date'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Authored on'),
-    '#default_value' => $date,
-    '#maxlength' => 25,
-    '#size' => 20,
-    '#access' => $is_admin,
-  );
-  $form['author']['status'] = array(
-    '#type' => 'radios',
-    '#title' => t('Status'),
-    '#default_value' => $status,
-    '#options' => array(
-      COMMENT_PUBLISHED => t('Published'),
-      COMMENT_NOT_PUBLISHED => t('Not published'),
-    ),
-    '#access' => $is_admin,
-  );
-
-  $form['subject'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Subject'),
-    '#maxlength' => 64,
-    '#default_value' => $comment->subject,
-    '#access' => variable_get('comment_subject_field_' . $node->type, 1) == 1,
-  );
-
-  // Used for conditional validation of author fields.
-  $form['is_anonymous'] = array(
-    '#type' => 'value',
-    '#value' => ($comment->cid ? !$comment->uid : !$user->uid),
-  );
-
-  // Add internal comment properties.
-  foreach (array('cid', 'pid', 'nid', 'uid') as $key) {
-    $form[$key] = array('#type' => 'value', '#value' => $comment->$key);
-  }
-  $form['node_type'] = array('#type' => 'value', '#value' => 'comment_node_' . $node->type);
-
-  // Make the comment inherit the node language unless specifically set.
-  $comment_langcode = $comment->langcode;
-  if ($comment_langcode == LANGUAGE_NOT_SPECIFIED) {
-    $comment_langcode = $language_content->langcode;
-  }
-
-  // Uses the language of the content as comment language.
-  $form['langcode'] = array(
-    '#type' => 'value',
-    '#value' => $comment_langcode,
-  );
-
-  // Only show the save button if comment previews are optional or if we are
-  // already previewing the submission.
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-    '#access' => ($comment->cid && user_access('administer comments')) || variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || isset($form_state['comment_preview']),
-  );
-  $form['actions']['preview'] = array(
-    '#type' => 'submit',
-    '#value' => t('Preview'),
-    '#access' => (variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_DISABLED),
-    '#submit' => array('comment_form_build_preview'),
-  );
-
-  // Attach fields.
-  $comment->node_type = 'comment_node_' . $node->type;
-  field_attach_form('comment', $comment, $form, $form_state);
-
-  return $form;
-}
-
-/**
- * Form submission handler for the 'preview' button in comment_form().
- */
-function comment_form_build_preview($form, &$form_state) {
-  $comment = comment_form_submit_build_comment($form, $form_state);
-  $form_state['comment_preview'] = comment_preview($comment);
-  $form_state['rebuild'] = TRUE;
+  return entity_get_form($comment);
 }
 
 /**
  * Generates a comment preview.
  *
  * @param Drupal\comment\Comment $comment
- *
- * @see comment_form_build_preview()
  */
 function comment_preview(Comment $comment) {
   global $user;
-
-  drupal_set_title(t('Preview comment'), PASS_THROUGH);
-
+  $preview_build = array();
   $node = node_load($comment->nid);
 
   if (!form_get_errors()) {
@@ -1928,7 +1716,7 @@ function comment_preview(Comment $comment) {
     $comment_build = comment_view($comment, $node);
     $comment_build['#weight'] = -100;
 
-    $form['comment_preview'] = $comment_build;
+    $preview_build['comment_preview'] = $comment_build;
   }
 
   if ($comment->pid) {
@@ -1942,169 +1730,10 @@ function comment_preview(Comment $comment) {
     $build = node_view($node);
   }
 
-  $form['comment_output_below'] = $build;
-  $form['comment_output_below']['#weight'] = 100;
+  $preview_build['comment_output_below'] = $build;
+  $preview_build['comment_output_below']['#weight'] = 100;
 
-  return $form;
-}
-
-/**
- * Form validation handler for comment_form().
- *
- * @see comment_form_submit()
- */
-function comment_form_validate($form, &$form_state) {
-  global $user;
-
-  entity_form_field_validate('comment', $form, $form_state);
-
-  if (!empty($form_state['values']['cid'])) {
-    // Verify the name in case it is being changed from being anonymous.
-    $account = user_load_by_name($form_state['values']['name']);
-    $form_state['values']['uid'] = $account ? $account->uid : 0;
-
-    if ($form_state['values']['date'] && strtotime($form_state['values']['date']) === FALSE) {
-      form_set_error('date', t('You have to specify a valid date.'));
-    }
-    if ($form_state['values']['name'] && !$form_state['values']['is_anonymous'] && !$account) {
-      form_set_error('name', t('You have to specify a valid author.'));
-    }
-  }
-  elseif ($form_state['values']['is_anonymous']) {
-    // Validate anonymous comment author fields (if given). If the (original)
-    // author of this comment was an anonymous user, verify that no registered
-    // user with this name exists.
-    if ($form_state['values']['name']) {
-      $query = db_select('users', 'u');
-      $query->addField('u', 'uid', 'uid');
-      $taken = $query
-        ->condition('name', db_like($form_state['values']['name']), 'LIKE')
-        ->countQuery()
-        ->execute()
-        ->fetchField();
-      if ($taken) {
-        form_set_error('name', t('The name you used belongs to a registered user.'));
-      }
-    }
-  }
-}
-
-/**
- * Prepare a comment for submission.
- *
- * @param Drupal\comment\Comment $comment
- *
- */
-function comment_submit(Comment $comment) {
-  if (empty($comment->date)) {
-    $comment->date = 'now';
-  }
-  $comment->created = strtotime($comment->date);
-  $comment->changed = REQUEST_TIME;
-
-  // If the comment was posted by a registered user, assign the author's ID.
-  // @todo Too fragile. Should be prepared and stored in comment_form() already.
-  if (!$comment->is_anonymous && !empty($comment->name) && ($account = user_load_by_name($comment->name))) {
-    $comment->uid = $account->uid;
-  }
-  // If the comment was posted by an anonymous user and no author name was
-  // required, use "Anonymous" by default.
-  if ($comment->is_anonymous && (!isset($comment->name) || $comment->name === '')) {
-    $comment->name = variable_get('anonymous', t('Anonymous'));
-  }
-
-  // Validate the comment's subject. If not specified, extract from comment body.
-  if (trim($comment->subject) == '') {
-    // The body may be in any format, so:
-    // 1) Filter it into HTML
-    // 2) Strip out all HTML tags
-    // 3) Convert entities back to plain-text.
-    $comment_body = $comment->comment_body[LANGUAGE_NOT_SPECIFIED][0];
-    if (isset($comment_body['format'])) {
-      $comment_text = check_markup($comment_body['value'], $comment_body['format']);
-    }
-    else {
-      $comment_text = check_plain($comment_body['value']);
-    }
-    $comment->subject = truncate_utf8(trim(decode_entities(strip_tags($comment_text))), 29, TRUE);
-    // Edge cases where the comment body is populated only by HTML tags will
-    // require a default subject.
-    if ($comment->subject == '') {
-      $comment->subject = t('(No subject)');
-    }
-  }
-  return $comment;
-}
-
-/**
- * Updates the comment entity by processing the submission's values.
- *
- * This is the default builder function for the comment form. It is called
- * during the "Save" and "Preview" submit handlers to retrieve the entity to
- * save or preview. This function can also be called by a "Next" button of a
- * wizard to update the form state's entity with the current step's values
- * before proceeding to the next step.
- *
- * @see comment_form()
- * @see comment_form_preview()
- * @see comment_form_submit()
- */
-function comment_form_submit_build_comment($form, &$form_state) {
-  $comment = $form_state['comment'];
-  entity_form_submit_build_entity('comment', $comment, $form, $form_state);
-  comment_submit($comment);
-  return $comment;
-}
-
-/**
- * Form submission handler for comment_form().
- *
- * @see comment_form_validate()
- * @see comment_form_submit_build_comment()
- */
-function comment_form_submit($form, &$form_state) {
-  $node = node_load($form_state['values']['nid']);
-  $comment = comment_form_submit_build_comment($form, $form_state);
-  if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_OPEN)) {
-    // Save the anonymous user information to a cookie for reuse.
-    if (user_is_anonymous()) {
-      user_cookie_save(array_intersect_key($form_state['values'], array_flip(array('name', 'mail', 'homepage'))));
-    }
-
-    comment_save($comment);
-    $form_state['values']['cid'] = $comment->cid;
-
-    // Add an entry to the watchdog log.
-    watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
-
-    // Explain the approval queue if necessary.
-    if ($comment->status == COMMENT_NOT_PUBLISHED) {
-      if (!user_access('administer comments')) {
-        drupal_set_message(t('Your comment has been queued for review by site administrators and will be published after approval.'));
-      }
-    }
-    else {
-      drupal_set_message(t('Your comment has been posted.'));
-    }
-    $query = array();
-    // Find the current display page for this comment.
-    $page = comment_get_display_page($comment->cid, $node->type);
-    if ($page > 0) {
-      $query['page'] = $page;
-    }
-    // Redirect to the newly posted comment.
-    $redirect = array('node/' . $node->nid, array('query' => $query, 'fragment' => 'comment-' . $comment->cid));
-  }
-  else {
-    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject), WATCHDOG_WARNING);
-    drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject)), 'error');
-    // Redirect the user to the node they are commenting on.
-    $redirect = 'node/' . $node->nid;
-  }
-  $form_state['redirect'] = $redirect;
-  // Clear the block and page caches so that anonymous users see the comment
-  // they have posted.
-  cache_invalidate(array('content' => TRUE));
+  return $preview_build;
 }
 
 /**

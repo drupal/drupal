@@ -278,7 +278,7 @@ function comment_confirm_delete_page($cid) {
  * @see confirm_form()
  */
 function comment_confirm_delete($form, &$form_state, Comment $comment) {
-  $form['#comment'] = $comment;
+  $form_state['comment'] = $comment;
   // Always provide entity id in the same form key as in the entity edit form.
   $form['cid'] = array('#type' => 'value', '#value' => $comment->cid);
   return confirm_form(
@@ -295,7 +295,7 @@ function comment_confirm_delete($form, &$form_state, Comment $comment) {
  * Form submission handler for comment_confirm_delete().
  */
 function comment_confirm_delete_submit($form, &$form_state) {
-  $comment = $form['#comment'];
+  $comment = $form_state['comment'];
   // Delete the comment and its replies.
   comment_delete($comment->cid);
   drupal_set_message(t('The comment and all its replies have been deleted.'));

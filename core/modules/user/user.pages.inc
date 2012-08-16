@@ -204,86 +204,6 @@ function template_preprocess_user_profile(&$variables) {
 }
 
 /**
- * Form builder; edit a user account.
- *
- * @ingroup forms
- * @see user_account_form()
- * @see user_account_form_validate()
- * @see user_profile_form_validate()
- * @see user_profile_form_submit()
- * @see user_cancel_confirm_form_submit()
- */
-function user_profile_form($form, &$form_state, $account) {
-  global $user;
-
-  // During initial form build, add the entity to the form state for use during
-  // form building and processing. During a rebuild, use what is in the form
-  // state.
-  if (!isset($form_state['user'])) {
-    $form_state['user'] = $account;
-  }
-  else {
-    $account = $form_state['user'];
-  }
-
-  // @todo Legacy support. Modules are encouraged to access the entity using
-  //   $form_state. Remove in Drupal 8.
-  $form['#user'] = $account;
-
-
-  user_account_form($form, $form_state);
-  // Attach field widgets.
-  field_attach_form('user', $account, $form, $form_state);
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-  );
-  $form['actions']['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => t('Cancel account'),
-    '#submit' => array('user_edit_cancel_submit'),
-    '#access' => $account->uid > 1 && (($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users')),
-  );
-
-  $form['#validate'][] = 'user_profile_form_validate';
-  // Add the final user profile form submit handler.
-  $form['#submit'][] = 'user_profile_form_submit';
-
-  return $form;
-}
-
-/**
- * Validation function for the user account and profile editing form.
- */
-function user_profile_form_validate($form, &$form_state) {
-  entity_form_field_validate('user', $form, $form_state);
-}
-
-/**
- * Submit function for the user account and profile editing form.
- */
-function user_profile_form_submit($form, &$form_state) {
-  $account = $form_state['user'];
-  // Remove unneeded values.
-  form_state_values_clean($form_state);
-
-  entity_form_submit_build_entity('user', $account, $form, $form_state);
-  $account->save();
-  $form_state['values']['uid'] = $account->uid;
-
-  if (!empty($edit['pass'])) {
-    // Remove the password reset tag since a new password was saved.
-    unset($_SESSION['pass_reset_'. $account->uid]);
-  }
-  // Clear the page cache because pages can contain usernames and/or profile information:
-  cache_invalidate(array('content' => TRUE));
-
-  drupal_set_message(t('The changes have been saved.'));
-}
-
-/**
  * Submit function for the 'Cancel account' button on the user edit form.
  */
 function user_edit_cancel_submit($form, &$form_state) {
@@ -293,7 +213,8 @@ function user_edit_cancel_submit($form, &$form_state) {
     unset($_GET['destination']);
   }
   // Note: We redirect from user/uid/edit to user/uid/cancel to make the tabs disappear.
-  $form_state['redirect'] = array("user/" . $form['#user']->uid . "/cancel", array('query' => $destination));
+  $account = $form_state['controller']->getEntity($form_state);
+  $form_state['redirect'] = array("user/" . $account->uid . "/cancel", array('query' => $destination));
 }
 
 /**

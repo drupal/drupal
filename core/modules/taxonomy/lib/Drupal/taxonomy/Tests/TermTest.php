@@ -278,7 +278,7 @@ class TermTest extends TaxonomyTestBase {
       'description[value]' => $this->randomName(100),
     );
     // Explicitly set the parents field to 'root', to ensure that
-    // taxonomy_form_term_submit() handles the invalid term ID correctly.
+    // TermFormController::save() handles the invalid term ID correctly.
     $edit['parent[]'] = array(0);
 
     // Create the term to edit.
@@ -329,7 +329,7 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalGet('taxonomy/term/' . $term->tid . '/feed');
 
     // Check that the term edit page does not try to interpret additional path
-    // components as arguments for taxonomy_form_term().
+    // components as arguments for taxonomy_term_form().
     $this->drupalGet('taxonomy/term/' . $term->tid . '/edit/' . $this->randomName());
 
     // Delete the term.

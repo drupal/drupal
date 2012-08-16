@@ -591,9 +591,9 @@ function forum_field_storage_pre_update($entity_type, $entity, &$skip_fields) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for taxonomy_form_vocabulary().
+ * Implements hook_form_BASE_FORM_ID_alter().
  */
-function forum_form_taxonomy_form_vocabulary_alter(&$form, &$form_state, $form_id) {
+function forum_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $form_id) {
   $vid = config('forum.settings')->get('vocabulary');
   if (isset($form['vid']['#value']) && $form['vid']['#value'] == $vid) {
     $form['help_forum_vocab'] = array(
@@ -610,9 +610,9 @@ function forum_form_taxonomy_form_vocabulary_alter(&$form, &$form_state, $form_i
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for taxonomy_form_term().
+ * Implements hook_form_FORM_ID_alter() for taxonomy_term_form().
  */
-function forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
+function forum_form_taxonomy_term_form_alter(&$form, &$form_state, $form_id) {
   $vid = config('forum.settings')->get('vocabulary');
   if (isset($form['vid']['#value']) && $form['vid']['#value'] == $vid) {
     // Hide multiple parents select from forum terms.

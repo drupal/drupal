@@ -12,6 +12,7 @@
  */
 
 use Drupal\node\Node;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -629,8 +630,9 @@ function _menu_parent_depth_limit($item) {
 function menu_form_node_form_alter(&$form, $form_state) {
   // Generate a list of possible parents (not including this link or descendants).
   // @todo This must be handled in a #process handler.
-  $link = $form['#node']->menu;
-  $type = $form['#node']->type;
+  $node = $form_state['controller']->getEntity($form_state);
+  $link = $node->menu;
+  $type = $node->type;
   // menu_parent_options() is goofy and can actually handle either a menu link
   // or a node type both as second argument. Pick based on whether there is
   // a link already (menu_node_prepare() sets mlid default to 0).

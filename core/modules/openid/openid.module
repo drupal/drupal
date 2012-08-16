@@ -231,7 +231,8 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
       $timezone = current($ax_timezone_values);
     }
     if (in_array($timezone, timezone_identifiers_list())) {
-      $form['#user']->timezone = $timezone;
+      $account = $form_state['controller']->getEntity($form_state);
+      $account->timezone = $timezone;
     }
 
     $language = FALSE;
@@ -732,7 +733,8 @@ function openid_authentication($response) {
 
     $form_state['values'] = array();
     $form_state['values']['op'] = t('Create new account');
-    drupal_form_submit('user_register_form', $form_state);
+    $account = entity_create('user', array());
+    entity_form_submit($account, 'register', $form_state);
 
     if (empty($form_state['user'])) {
       module_invoke_all('openid_response', $response, NULL);

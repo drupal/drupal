@@ -221,7 +221,7 @@ function contact_form_user_profile_form_alter(&$form, &$form_state) {
     '#weight' => 5,
     '#collapsible' => TRUE,
   );
-  $account = $form['#user'];
+  $account = $form_state['controller']->getEntity($form_state);
   $form['contact']['contact'] = array(
     '#type' => 'checkbox',
     '#title' => t('Personal contact form'),

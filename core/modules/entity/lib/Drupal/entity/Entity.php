@@ -278,5 +278,4 @@ class Entity implements EntityInterface {
   public function isCurrentRevision() {
     return $this->isCurrentRevision;
   }
-
 }
