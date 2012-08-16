@@ -16,19 +16,12 @@ use Drupal\Core\Annotation\Plugin;
  * Handlers to tell Views how to sort queries.
  */
 
-
 /**
  * Base sort handler that has no options and performs a simple sort.
  *
  * @ingroup views_sort_handlers
  */
-
-/**
- * @Plugin(
- *   id = "standard"
- * )
- */
-class SortPluginBase extends Handler {
+abstract class SortPluginBase extends Handler {
 
   /**
    * Determine if a sort can be exposed.
@@ -220,6 +213,7 @@ class SortPluginBase extends Handler {
       'label' => $this->definition['title'],
     );
   }
+
 }
 
 /**

@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * Filter handler which allows to search on multiple fields.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "combine"
  * )
  */
 class Combine extends String {
+
   /**
    * @var views_plugin_query_default
    */
@@ -144,4 +143,5 @@ class Combine extends String {
 
     $this->query->add_where_expression($this->options['group'], "$field $operator");
   }
+
 }

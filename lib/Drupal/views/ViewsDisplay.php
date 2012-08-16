@@ -14,6 +14,7 @@ namespace Drupal\views;
  * to the behavior of the display at all.
  */
 class ViewsDisplay extends ViewsDbObject {
+
   /**
    * The display handler itself, which has all the methods.
    *
@@ -39,4 +40,5 @@ class ViewsDisplay extends ViewsDbObject {
     $this->id = $id;
     $this->display_title = $title;
   }
+
 }

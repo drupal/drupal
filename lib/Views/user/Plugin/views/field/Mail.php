@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to provide acess control for the email field.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_mail",
  *   module = "user"
  * )
  */
 class Mail extends User {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['link_to_user'] = array('default' => 'mailto');
@@ -53,4 +52,5 @@ class Mail extends User {
 
     return $data;
   }
+
 }

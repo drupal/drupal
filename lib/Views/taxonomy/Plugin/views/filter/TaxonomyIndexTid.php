@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\filter\ManyToOne;
  * Filter by term id.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "taxonomy_index_tid",
  *   module = "taxonomy"
  * )
  */
 class TaxonomyIndexTid extends ManyToOne {
+
   // Stores the exposed input for this filter.
   var $validated_exposed_input = NULL;
 
@@ -373,4 +372,5 @@ class TaxonomyIndexTid extends ManyToOne {
     }
     return parent::admin_summary();
   }
+
 }

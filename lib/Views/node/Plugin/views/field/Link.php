@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link to the node.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_link",
  *   module = "node"
@@ -57,4 +55,5 @@ class Link extends Entity {
       return $text;
     }
   }
+
 }

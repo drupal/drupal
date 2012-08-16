@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * Provides a handler that adds contextual links.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "contextual_links"
  * )
  */
 class ContextualLinks extends FieldPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -113,4 +112,5 @@ class ContextualLinks extends FieldPluginBase {
   }
 
   function query() { }
+
 }

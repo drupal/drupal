@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to show a counter of the current row.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "counter"
  * )
  */
 class Counter extends FieldPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['counter_start'] = array('default' => 1);
@@ -57,4 +56,5 @@ class Counter extends FieldPluginBase {
 
     return $count;
   }
+
 }

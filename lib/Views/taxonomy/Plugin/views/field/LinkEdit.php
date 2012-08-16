@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a term edit link.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "term_link_edit",
  *   module = "taxonomy"
  * )
  */
 class LinkEdit extends FieldPluginBase {
+
   function construct() {
     parent::construct();
     $this->additional_fields['tid'] = 'tid';
@@ -69,4 +68,5 @@ class LinkEdit extends FieldPluginBase {
       return l($text, 'taxonomy/term/'. $tid . '/edit', array('query' => drupal_get_destination()));
     }
   }
+
 }

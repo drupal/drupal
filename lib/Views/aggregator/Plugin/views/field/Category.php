@@ -15,15 +15,14 @@ use Drupal\Core\Annotation\Plugin;
  * category.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "aggregator_category",
  *   module = "aggregator"
  * )
  */
 class Category extends FieldPluginBase {
+
   /**
    * Constructor to provide additional field to add.
    */
@@ -69,4 +68,5 @@ class Category extends FieldPluginBase {
     $value = $this->get_value($values);
     return $this->render_link($this->sanitize_value($value), $values);
   }
+
 }

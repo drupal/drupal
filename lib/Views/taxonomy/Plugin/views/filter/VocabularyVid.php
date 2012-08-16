@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\filter\InOperator;
  * Filter by vocabulary id.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "vocabulary_vid",
  *   module = "taxonomy"
  * )
  */
 class VocabularyVid extends InOperator {
+
   function get_value_options() {
     if (isset($this->value_options)) {
       return;
@@ -34,4 +33,5 @@ class VocabularyVid extends InOperator {
       $this->value_options[$voc->vid] = $voc->name;
     }
   }
+
 }

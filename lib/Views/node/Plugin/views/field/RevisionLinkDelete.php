@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present link to delete a node revision.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_revision_link_delete",
  *   module = "node"
@@ -45,4 +43,5 @@ class RevisionLinkDelete extends RevisionLink {
 
     return !empty($this->options['text']) ? $this->options['text'] : t('delete');
   }
+
 }

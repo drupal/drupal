@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Filter handler for usernames.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_name",
  *   module = "user"
  * )
  */
 class Name extends InOperator {
+
   var $always_multiple = TRUE;
 
   function value_form(&$form, &$form_state) {
@@ -171,4 +170,5 @@ class Name extends InOperator {
 
     return parent::admin_summary();
   }
+
 }

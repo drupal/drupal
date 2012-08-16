@@ -15,15 +15,14 @@ use Drupal\Core\Annotation\Plugin;
  * commented on.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment_user_uid",
  *   module = "comment"
  * )
  */
 class UserUid extends FilterPluginBase {
+
   function query() {
     $this->ensure_my_table();
 
@@ -38,4 +37,5 @@ class UserUid extends FilterPluginBase {
 
     $this->query->add_where($this->options['group'], $condition);
   }
+
 }

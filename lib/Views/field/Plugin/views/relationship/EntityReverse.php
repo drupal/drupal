@@ -15,15 +15,14 @@ use Drupal\Core\Annotation\Plugin;
  * A relationship handlers which reverse entity references.
  *
  * @ingroup views_relationship_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "entity_reverse",
  *   module = "field"
  * )
  */
 class EntityReverse extends RelationshipPluginBase  {
+
   function init(&$view, &$options) {
     parent::init($view, $options);
 
@@ -94,4 +93,5 @@ class EntityReverse extends RelationshipPluginBase  {
 
     $this->alias = $this->query->add_relationship($alias, $second_join, $this->definition['base'], $this->relationship);
   }
+
 }

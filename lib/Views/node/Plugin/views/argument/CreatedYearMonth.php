@@ -7,15 +7,14 @@ use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * Argument handler for a year plus month (CCYYMM)
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_created_year_month",
  *   module = "node"
  * )
  */
 class CreatedYearMonth extends Date {
+
   /**
    * Constructor implementation
    */
@@ -40,4 +39,5 @@ class CreatedYearMonth extends Date {
   function title() {
     return format_date(strtotime($this->argument . "15" . " 00:00:00 UTC"), 'custom', $this->format, 'UTC');
   }
+
 }

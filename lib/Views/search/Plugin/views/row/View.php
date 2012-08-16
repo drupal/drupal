@@ -22,6 +22,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class View extends RowPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -49,4 +50,5 @@ class View extends RowPluginBase {
         'row' => $row
       ));
   }
+
 }

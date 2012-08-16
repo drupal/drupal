@@ -16,15 +16,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to provide simple renderer that allows linking to a node.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "search",
  *   module = "search"
  * )
  */
 class Search extends FilterPluginBase {
+
   var $always_multiple = TRUE;
 
   /**
@@ -187,4 +186,5 @@ class Search extends FilterPluginBase {
     // Set to NULL to prevent PDO exception when views object is cached.
     $this->search_query = NULL;
   }
+
 }

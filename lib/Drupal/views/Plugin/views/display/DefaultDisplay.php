@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * A plugin to handle defaults on a view.
  *
  * @ingroup views_display_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "default",
  *   title = @Translation("Master"),
@@ -32,6 +30,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class DefaultDisplay extends DisplayPluginBase {
+
   /**
    * Determine if this display is the 'default' display which contains
    * fallback settings
@@ -75,4 +74,5 @@ class DefaultDisplay extends DisplayPluginBase {
   function execute() {
     return $this->view->render($this->display->id);
   }
+
 }

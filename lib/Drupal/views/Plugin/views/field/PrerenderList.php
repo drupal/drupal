@@ -18,14 +18,13 @@ use Drupal\Core\Annotation\Plugin;
  * Items to render should be in a list in $this->items
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "prerender_list"
  * )
  */
 class PrerenderList extends FieldPluginBase {
+
   /**
    * Stores all items which are used to render the items.
    * It should be keyed first by the id of the base table, for example nid.
@@ -169,4 +168,5 @@ class PrerenderList extends FieldPluginBase {
     // this method to determine if it needs to render items as a list.
     return method_exists($this, 'render_item');
   }
+
 }

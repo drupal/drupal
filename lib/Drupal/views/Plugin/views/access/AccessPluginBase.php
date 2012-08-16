@@ -21,6 +21,7 @@ use Drupal\views\Plugin\views\Plugin;
  * The base plugin to handle access control.
  */
 abstract class AccessPluginBase extends Plugin {
+
   /**
    * Initialize the plugin.
    *
@@ -93,6 +94,7 @@ abstract class AccessPluginBase extends Plugin {
     // default to no access control.
     return TRUE;
   }
+
 }
 
 /**

@@ -15,9 +15,7 @@ use Drupal\Core\Annotation\Translation;
  * decorations.
  *
  * @ingroup views_style_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "default",
  *   title = @Translation("Unformatted list"),
@@ -32,6 +30,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class DefaultStyle extends StylePluginBase {
+
   /**
    * Set default options
    */
@@ -42,4 +41,5 @@ class DefaultStyle extends StylePluginBase {
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
   }
+
 }

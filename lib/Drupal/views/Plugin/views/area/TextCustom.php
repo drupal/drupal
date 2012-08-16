@@ -13,9 +13,7 @@ use Drupal\Core\Annotation\Plugin;
  * Views area text handler.
  *
  * @ingroup views_area_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "text_custom"
  * )

@@ -25,6 +25,7 @@ use Drupal\Core\Annotation\Plugin;
  * )
  */
 class MenuHierarchy extends SortPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['sort_within_level'] = array('default' => FALSE);
@@ -59,4 +60,5 @@ class MenuHierarchy extends SortPluginBase {
       $this->query->add_orderby($this->table_alias, $this->field . $i, $this->options['order']);
     }
   }
+
 }

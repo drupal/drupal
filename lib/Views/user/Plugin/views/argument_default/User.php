@@ -21,6 +21,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  * )
  */
 class User extends ArgumentDefaultPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['user'] = array('default' => '', 'bool' => TRUE, 'translatable' => FALSE);
@@ -86,4 +87,5 @@ class User extends ArgumentDefaultPluginBase {
       return $view->argument['uid']->argument;
     }
   }
+
 }

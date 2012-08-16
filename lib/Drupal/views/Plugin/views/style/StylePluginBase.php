@@ -29,6 +29,7 @@ use Drupal\Core\Annotation\Translation;
  * Base class to define a style plugin handler.
  */
 abstract class StylePluginBase extends ViewsPlugin {
+
   /**
    * Store all available tokens row rows.
    */
@@ -601,6 +602,7 @@ abstract class StylePluginBase extends ViewsPlugin {
       $this->row_plugin->query();
     }
   }
+
 }
 
 /**

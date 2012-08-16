@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Access plugin that provides permission-based access control.
  *
  * @ingroup views_access_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "perm",
  *   title = @Translation("Permission"),
@@ -26,6 +24,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Permission extends AccessPluginBase {
+
   function access($account) {
     return views_check_perm($this->options['perm'], $account);
   }
@@ -74,4 +73,5 @@ class Permission extends AccessPluginBase {
       '#description' => t('Only users with the selected permission flag will be able to access this display. Note that users with "access all views" can see any view, regardless of other permissions.'),
     );
   }
+
 }

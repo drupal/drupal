@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Plugin for views without pagers.
  *
  * @ingroup views_pager_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "some",
  *   title = @Translation("Display a specified number of items"),
@@ -27,6 +25,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Some extends PagerPluginBase {
+
   function summary_title() {
     if (!empty($this->options['offset'])) {
       return format_plural($this->options['items_per_page'], '@count item, skip @skip', '@count items, skip @skip', array('@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']));
@@ -75,4 +74,5 @@ class Some extends PagerPluginBase {
     $this->view->query->set_limit($this->options['items_per_page']);
     $this->view->query->set_offset($this->options['offset']);
   }
+
 }

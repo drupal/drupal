@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Default style plugin to render an RSS feed.
  *
  * @ingroup views_style_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "rss",
  *   title = @Translation("RSS Feed"),
@@ -29,6 +27,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Rss extends StylePluginBase {
+
   function attach_to($display_id, $path, $title) {
     $display = $this->view->display[$display_id]->handler;
     $url_options = array();
@@ -138,4 +137,5 @@ class Rss extends StylePluginBase {
     unset($this->view->row_index);
     return $output;
   }
+
 }

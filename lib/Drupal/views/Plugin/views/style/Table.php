@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Style plugin to render each item as a row in a table.
  *
  * @ingroup views_style_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "table",
  *   title = @Translation("Table"),
@@ -337,4 +335,5 @@ class Table extends StylePluginBase {
   function even_empty() {
     return parent::even_empty() || !empty($this->options['empty_table']);
   }
+
 }

@@ -16,14 +16,13 @@ use Drupal\Core\Annotation\Plugin;
  * Definition items:
  * - options callback: The function to call in order to generate the value options. If omitted, the options 'Yes' and 'No' will be used.
  * - options arguments: An array of arguments to pass to the options callback.
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "machine_name"
  * )
  */
 class MachineName extends FieldPluginBase {
+
   /**
    * @var array Stores the available options.
    */
@@ -80,4 +79,5 @@ class MachineName extends FieldPluginBase {
 
     return $result;
   }
+
 }

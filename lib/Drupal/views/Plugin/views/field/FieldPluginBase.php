@@ -47,13 +47,7 @@ define('VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY', 2);
  *
  * @ingroup views_field_handlers
  */
-
-/**
- * @plugin(
- *   id = "standard"
- * )
- */
-class FieldPluginBase extends Handler {
+abstract class FieldPluginBase extends Handler {
 
   var $field_alias = 'unknown';
   var $aliases = array();

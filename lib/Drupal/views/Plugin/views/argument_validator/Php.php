@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Translation;
  * Provide PHP code to validate whether or not an argument is ok.
  *
  * @ingroup views_argument_validate_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "php",
  *   title = @Translation("PHP Code")
  * )
  */
 class Php extends ArgumentValidatorPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['code'] = array('default' => '');
@@ -66,4 +65,5 @@ class Php extends ArgumentValidatorPluginBase {
     ob_end_clean();
     return $result;
   }
+
 }

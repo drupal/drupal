@@ -13,9 +13,7 @@ use Drupal\Core\Annotation\Plugin;
  * Views field handler for user language.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_language",
  *   module = "user"
@@ -47,4 +45,5 @@ class Language extends User {
     $value = $this->get_value($values);
     return $this->render_link($this->sanitize_value($value), $values);
   }
+
 }

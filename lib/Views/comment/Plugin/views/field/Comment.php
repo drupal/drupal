@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to allow linking to a comment.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment",
  *   module = "comment"
  * )
  */
 class Comment extends FieldPluginBase {
+
   /**
    * Override init function to provide generic option to link to comment.
    */
@@ -82,4 +81,5 @@ class Comment extends FieldPluginBase {
     $value = $this->get_value($values);
     return $this->render_link($this->sanitize_value($value), $values);
   }
+
 }

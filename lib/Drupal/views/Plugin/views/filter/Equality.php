@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * Simple filter to handle equal to / not equal to filters
  *
  * @ingroup views_filter_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "equality"
  * )
  */
 class Equality extends FilterPluginBase {
+
   // exposed filter options
   var $always_multiple = TRUE;
 
@@ -52,4 +51,5 @@ class Equality extends FilterPluginBase {
       }
     }
   }
+
 }

@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to provide simple renderer that allows linking to a user.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user",
  *   module = "user"
  * )
  */
 class User extends FieldPluginBase {
+
   /**
    * Override init function to provide generic option to link to user.
    */
@@ -64,4 +63,5 @@ class User extends FieldPluginBase {
     $value = $this->get_value($values);
     return $this->render_link($this->sanitize_value($value), $values);
   }
+
 }

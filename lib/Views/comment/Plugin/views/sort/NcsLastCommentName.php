@@ -16,15 +16,14 @@ use Drupal\Core\Annotation\Plugin;
  * fields.
  *
  * @ingroup views_sort_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "ncs_last_comment_name",
  *   module = "comment"
  * )
  */
 class NcsLastCommentName extends SortPluginBase {
+
   function query() {
     $this->ensure_my_table();
     $join = new Join();
@@ -40,4 +39,5 @@ class NcsLastCommentName extends SortPluginBase {
     // Add the field.
     $this->query->add_orderby(NULL, "LOWER(COALESCE($this->user_table.name, $this->table_alias.$this->field))", $this->options['order'], $this->table_alias . '_' . $this->field);
   }
+
 }

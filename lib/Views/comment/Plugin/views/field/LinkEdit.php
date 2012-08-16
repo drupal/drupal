@@ -13,15 +13,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link node edit.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment_link_edit",
  *   module = "comment"
  * )
  */
 class LinkEdit extends Link {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['destination'] = array('default' => FALSE, 'bool' => TRUE);
@@ -60,4 +59,5 @@ class LinkEdit extends Link {
 
     return $text;
   }
+
 }

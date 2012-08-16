@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\filter\ManyToOne;
  * Filter handler for user roles.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_permissions",
  *   module = "user"
  * )
  */
 class Permissions extends ManyToOne {
+
   function get_value_options() {
     $module_info = system_get_info('module');
 
@@ -44,4 +43,5 @@ class Permissions extends ManyToOne {
       }
     }
   }
+
 }

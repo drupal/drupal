@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Translation;
  * Default argument plugin to use the raw value from the URL.
  *
  * @ingroup views_argument_default_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "raw",
  *   title = @Translation("Raw value from URL")
  * )
  */
 class Raw extends ArgumentDefaultPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['index'] = array('default' => '');
@@ -59,4 +58,5 @@ class Raw extends ArgumentDefaultPluginBase {
       return $arg;
     }
   }
+
 }

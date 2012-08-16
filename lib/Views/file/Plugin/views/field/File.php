@@ -15,15 +15,14 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  * Field handler to provide simple renderer that allows linking to a file.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "file",
  *   module = "file"
  * )
  */
 class File extends FieldPluginBase {
+
   /**
    * Constructor to provide additional field to add.
    */
@@ -71,4 +70,5 @@ class File extends FieldPluginBase {
     $value = $this->get_value($values);
     return $this->render_link($this->sanitize_value($value), $values);
   }
+
 }

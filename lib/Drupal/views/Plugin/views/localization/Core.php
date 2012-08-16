@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Localization plugin to pass translatable strings through t().
  *
  * @ingroup views_localization_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "core",
  *   title = @Translation("Core"),
@@ -122,4 +120,5 @@ class Core extends LocalizationPluginBase {
     }
     return $output;
   }
+
 }

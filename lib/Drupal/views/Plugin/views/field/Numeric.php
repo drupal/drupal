@@ -17,14 +17,13 @@ use Drupal\Core\Annotation\Plugin;
  *          will be assumed to be integer.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "numeric"
  * )
  */
 class Numeric extends FieldPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -156,4 +155,5 @@ class Numeric extends FieldPluginBase {
       . $this->sanitize_value($value)
       . $this->sanitize_value($this->options['suffix'], 'xss');
   }
+
 }

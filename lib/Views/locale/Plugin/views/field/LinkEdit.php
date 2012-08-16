@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link to edit a translation.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "locale_link_edit",
  *   module = "locale"
  * )
  */
 class LinkEdit extends FieldPluginBase {
+
   function construct() {
     parent::construct();
     $this->additional_fields['lid'] = 'lid';
@@ -69,4 +68,5 @@ class LinkEdit extends FieldPluginBase {
 
     return $text;
   }
+
 }

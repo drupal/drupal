@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * A handler to provide a field that is completely custom by the administrator.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "custom"
  * )
  */
 class Custom extends FieldPluginBase {
+
   function query() {
     // do nothing -- to override the parent query.
   }
@@ -48,4 +47,5 @@ class Custom extends FieldPluginBase {
     // Return the text, so the code never thinks the value is empty.
     return $this->options['alter']['text'];
   }
+
 }

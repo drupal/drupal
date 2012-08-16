@@ -323,6 +323,7 @@ abstract class ExposedFormPluginBase extends Plugin {
 
     $form_state['values'] = array();
   }
+
 }
 
 /**

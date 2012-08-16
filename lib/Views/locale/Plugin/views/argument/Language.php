@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Argument handler to accept a language.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "locale_language",
  *   module = "locale"
  * )
  */
 class Language extends ArgumentPluginBase {
+
   function construct() {
     parent::construct('language');
   }
@@ -47,4 +46,5 @@ class Language extends ArgumentPluginBase {
     $languages = views_language_list();
     return isset($languages[$langcode]) ? $languages[$langcode] : t('Unknown language');
   }
+
 }

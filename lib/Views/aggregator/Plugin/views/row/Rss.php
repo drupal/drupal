@@ -26,6 +26,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Rss extends RowPluginBase {
+
   var $base_table = 'aggregator_item';
   var $base_field = 'iid';
 
@@ -88,4 +89,5 @@ class Rss extends RowPluginBase {
       'row' => $item
     ));
   }
+
 }

@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Access plugin that provides role-based access control.
  *
  * @ingroup views_access_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "role",
  *   title = @Translation("Role"),
@@ -26,6 +24,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Role extends AccessPluginBase {
+
   function access($account) {
     return views_check_roles(array_filter($this->options['role']), $account);
   }
@@ -78,4 +77,5 @@ class Role extends AccessPluginBase {
     // I hate checkboxes.
     $form_state['values']['access_options']['role'] = array_filter($form_state['values']['access_options']['role']);
   }
+
 }

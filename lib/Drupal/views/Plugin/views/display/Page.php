@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * The plugin that handles a full page.
  *
  * @ingroup views_display_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "page",
  *   title = @Translation("Page"),
@@ -33,6 +31,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Page extends DisplayPluginBase {
+
   /**
    * The page display has a path.
    */
@@ -650,4 +649,5 @@ class Page extends DisplayPluginBase {
       'items per page description' => t('The number of items to display per page. Enter 0 for no limit.')
     );
   }
+
 }

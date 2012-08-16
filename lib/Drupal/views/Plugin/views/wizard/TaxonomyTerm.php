@@ -60,4 +60,5 @@ class TaxonomyTerm extends WizardPluginBase {
 
     return $display_options;
   }
+
 }

@@ -14,15 +14,15 @@ use Drupal\Core\Annotation\Plugin;
  * Simple filter to handle greater than/less than filters
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "numeric"
  * )
  */
 class Numeric extends FilterPluginBase {
+
   var $always_multiple = TRUE;
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -339,4 +339,5 @@ class Numeric extends FilterPluginBase {
 
     return $rc;
   }
+
 }

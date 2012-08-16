@@ -13,10 +13,8 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to show data of serialized fields.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "serialized"
  * )
  */
@@ -76,4 +74,5 @@ class Serialized extends FieldPluginBase {
 
     return $value;
   }
+
 }

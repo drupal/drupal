@@ -9,7 +9,8 @@ namespace Drupal\views\Plugin\views;
 use Drupal\views\Plugin\views\Plugin;
 use Drupal\views\View;
 
-class Handler extends Plugin {
+abstract class Handler extends Plugin {
+
   /**
    * Where the $query object will reside:
    *
@@ -603,4 +604,5 @@ class Handler extends Plugin {
    * a placeholder used when a handler can't be found.
    */
   function broken() { }
+
 }

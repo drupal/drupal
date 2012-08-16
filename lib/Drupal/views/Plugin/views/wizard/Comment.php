@@ -145,4 +145,5 @@ class Comment extends WizardPluginBase {
 
     return $display_options;
   }
+
 }

@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to display all taxonomy terms of a node.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "taxonomy_index_tid",
  *   module = "taxonomy"
  * )
  */
 class TaxonomyIndexTid extends PrerenderList {
+
   function init(&$view, &$options) {
     parent::init($view, $options);
     // @todo: Wouldn't it be possible to use $this->base_table and no if here?
@@ -157,4 +156,5 @@ class TaxonomyIndexTid extends PrerenderList {
       $tokens['[' . $this->options['id'] . '-' . str_replace('_', '-', $token) . ']'] = isset($item[$token]) ? $item[$token] : '';
     }
   }
+
 }

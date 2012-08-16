@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Style plugin to render each item in an ordered or unordered list.
  *
  * @ingroup views_style_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "html_list",
  *   title = @Translation("HTML List"),
@@ -30,6 +28,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class HtmlList extends StylePluginBase {
+
   /**
    * Set default options
    */
@@ -69,4 +68,5 @@ class HtmlList extends StylePluginBase {
       '#default_value' => $this->options['class'],
     );
   }
+
 }

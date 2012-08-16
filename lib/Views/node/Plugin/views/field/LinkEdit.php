@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link node edit.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_link_edit",
  *   module = "node"
@@ -40,4 +38,5 @@ class LinkEdit extends Link {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
     return $text;
   }
+
 }

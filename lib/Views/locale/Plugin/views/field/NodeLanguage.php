@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to translate a language into its readable form.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_language",
  *   module = "locale"
  * )
  */
 class NodeLanguage extends Node {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['native_language'] = array('default' => FALSE, 'bool' => TRUE);
@@ -46,4 +45,5 @@ class NodeLanguage extends Node {
     $value = isset($languages[$value]) ? $languages[$value] : '';
     return $this->render_link($value, $values);
   }
+
 }

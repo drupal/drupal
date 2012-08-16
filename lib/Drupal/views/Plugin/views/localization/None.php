@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Localization plugin for no localization.
  *
  * @ingroup views_localization_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "none",
  *   title = @Translation("None"),
@@ -25,6 +23,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class None extends LocalizationPluginBase {
+
   var $translate = FALSE;
 
   /**
@@ -47,4 +46,5 @@ class None extends LocalizationPluginBase {
   function delete($source) {
     return FALSE;
   }
+
 }

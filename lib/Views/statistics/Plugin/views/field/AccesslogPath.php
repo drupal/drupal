@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to provide simple renderer that turns a URL into a clickable link.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "statistics_accesslog_path",
  *   module = "statistics"
  * )
  */
 class AccesslogPath extends FieldPluginBase {
+
   /**
    * Override init function to provide generic option to link to node.
    */
@@ -67,4 +66,5 @@ class AccesslogPath extends FieldPluginBase {
 
     return $data;
   }
+
 }

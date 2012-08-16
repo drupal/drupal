@@ -13,9 +13,7 @@ use Drupal\Core\Annotation\Plugin;
  * Views area handlers. Insert a view inside of an area.
  *
  * @ingroup views_area_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "view"
  * )
@@ -90,4 +88,5 @@ class View extends AreaPluginBase {
     }
     return '';
   }
+
 }

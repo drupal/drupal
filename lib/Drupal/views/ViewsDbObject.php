@@ -11,6 +11,7 @@ namespace Drupal\views;
  * Base class for views' database objects.
  */
 class ViewsDbObject {
+
   public $db_table;
 
   /**
@@ -407,4 +408,5 @@ class ViewsDbObject {
     $item[$option] = $value;
     $this->set_item($display_id, $type, $id, $item);
   }
+
 }

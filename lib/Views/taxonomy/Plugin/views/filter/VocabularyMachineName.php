@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\filter\InOperator;
  * Filter by vocabulary machine name.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "vocabulary_machine_name",
  *   module = "taxonomy"
  * )
  */
 class VocabularyMachineName extends InOperator {
+
   function get_value_options() {
     if (isset($this->value_options)) {
       return;
@@ -34,4 +33,5 @@ class VocabularyMachineName extends InOperator {
       $this->value_options[$voc->machine_name] = $voc->name;
     }
   }
+
 }

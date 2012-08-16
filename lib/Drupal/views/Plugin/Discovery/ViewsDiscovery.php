@@ -13,6 +13,7 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
  * Discovery interface which supports the hook_views_plugins mechanism.
  */
 class ViewsDiscovery extends AnnotatedClassDiscovery {
+
   public function getDefinitions() {
     $definitions = parent::getDefinitions();
     foreach ($definitions as $definition) {
@@ -51,4 +52,5 @@ class ViewsDiscovery extends AnnotatedClassDiscovery {
 
     return $definitions;
   }
+
 }

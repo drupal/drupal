@@ -11,22 +11,17 @@ use Views\node\Plugin\views\field\Node;
 use Drupal\Core\Annotation\Plugin;
 
 /**
- * Contains the basic 'node_revision' field handler.
- */
-
-/**
  * A basic node_revision handler.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_revision",
  *   module = "node"
  * )
  */
 class Revision extends Node {
+
   function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($this->options['link_to_node_revision'])) {
@@ -80,4 +75,5 @@ class Revision extends Node {
     }
     return $data;
   }
+
 }

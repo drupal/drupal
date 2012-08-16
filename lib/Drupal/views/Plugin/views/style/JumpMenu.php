@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Style plugin to render each item as a row in a table.
  *
  * @ingroup views_style_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "jump_menu",
  *   title = @Translation("Jump menu"),
@@ -30,6 +28,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class JumpMenu extends StylePluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -166,4 +165,5 @@ class JumpMenu extends StylePluginBase {
     $options = array();
     $fields = $this->rendered_fields;
   }
+
 }

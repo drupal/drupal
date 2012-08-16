@@ -25,6 +25,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  * )
  */
 class User extends ArgumentValidatorPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['type'] = array('default' => 'uid');
@@ -149,4 +150,5 @@ class User extends ArgumentValidatorPluginBase {
       }
     }
   }
+
 }

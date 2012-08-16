@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Caching plugin that provides no caching at all.
  *
  * @ingroup views_cache_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "none",
  *   title = @Translation("None"),
@@ -25,6 +23,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class None extends CachePluginBase {
+
   function cache_start() { /* do nothing */ }
 
   function summary_title() {
@@ -36,4 +35,5 @@ class None extends CachePluginBase {
   }
 
   function cache_set($type) { }
+
 }

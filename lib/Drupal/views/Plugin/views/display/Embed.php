@@ -17,9 +17,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @todo: Wait until annotations/plugins support access mehtods.
  * no ui => !config('views.settings')->get('ui.show.display_embed'),
- */
-
-/**
+ *
  * @Plugin(
  *   id = "embed",
  *   title = @Translation("Embed"),
@@ -33,5 +31,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Embed extends DisplayPluginBase {
+
   // This display plugin does nothing apart from exist.
+
 }

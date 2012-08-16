@@ -18,15 +18,15 @@ use Drupal\Core\Annotation\Plugin;
  * - formula: The formula to use for this handler.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "formula"
  * )
  */
 class Formula extends ArgumentPluginBase {
+
   var $formula = NULL;
+
   /**
    * Constructor
    */
@@ -70,4 +70,5 @@ class Formula extends ArgumentPluginBase {
     );
     $this->query->add_where(0, $formula, $placeholders, 'formula');
   }
+
 }

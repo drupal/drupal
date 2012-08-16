@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link to the node.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_translation_link",
  *   module = "translation"
  * )
  */
 class NodeTranslationLink extends FieldPluginBase {
+
   function construct() {
     parent::construct();
     $this->additional_fields['nid'] = 'nid';
@@ -58,4 +57,5 @@ class NodeTranslationLink extends FieldPluginBase {
     $this->options['alter']['path'] = "node/" . $this->get_value($values, 'nid');
     return $this->get_value($values, 'title');
   }
+
 }

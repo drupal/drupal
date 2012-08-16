@@ -22,14 +22,13 @@ use Drupal\views\ManyToOneHelper;
  *   a default argument can be provided or a summary can be shown.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "many_to_one"
  * )
  */
 class ManyToOne extends ArgumentPluginBase {
+
   function init(&$view, &$options) {
     parent::init($view, $options);
     $this->helper = new ManyToOneHelper($this);
@@ -193,4 +192,5 @@ class ManyToOne extends ArgumentPluginBase {
   function title_query() {
     return $this->value;
   }
+
 }

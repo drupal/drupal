@@ -18,9 +18,7 @@ use Drupal\Core\Annotation\Translation;
  * the same view. They can share some information.
  *
  * @ingroup views_display_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "attachment",
  *   title = @Translation("Attachment"),
@@ -35,6 +33,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Attachment extends DisplayPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -299,4 +298,5 @@ class Attachment extends DisplayPluginBase {
   function render_pager() {
     return !empty($this->use_pager) && $this->get_option('render_pager');
   }
+
 }

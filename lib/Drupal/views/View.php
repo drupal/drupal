@@ -22,8 +22,11 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
  * functions to build the view query, execute the query and render the output.
  */
 class View extends ViewsDbObject {
+
   var $db_table = 'views_view';
+
   var $base_table = 'node';
+
   var $base_field = 'nid';
 
   /**
@@ -2239,4 +2242,5 @@ class View extends ViewsDbObject {
 
     return $retval;
   }
+
 }

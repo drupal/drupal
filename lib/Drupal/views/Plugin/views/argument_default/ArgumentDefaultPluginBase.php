@@ -21,6 +21,7 @@ use Drupal\views\Plugin\views\Plugin;
  * The fixed argument default handler; also used as the base.
  */
 abstract class ArgumentDefaultPluginBase extends Plugin {
+
   /**
    * Return the default argument.
    *
@@ -91,6 +92,7 @@ abstract class ArgumentDefaultPluginBase extends Plugin {
    * views_plugin_argument_default_fixed for a good example of this method.
    */
   function convert_options(&$options) { }
+
 }
 
 /**

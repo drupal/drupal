@@ -5,24 +5,23 @@
  * Definition of views_handler_argument_term_node_tid.
  */
 
-/**
- * Allow taxonomy term ID(s) as argument.
- *
- * @ingroup views_argument_handlers
- */
-
 namespace Views\taxonomy\Plugin\views\argument;
 
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\argument\ManyToOne;
 
 /**
+ * Allow taxonomy term ID(s) as argument.
+ *
+ * @ingroup views_argument_handlers
+ *
  * @Plugin(
  *   id = "taxonomy_index_tid",
  *   module = "taxonomy"
  * )
  */
 class IndexTid extends ManyToOne {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['set_breadcrumb'] = array('default' => FALSE, 'bool' => TRUE);
@@ -58,4 +57,5 @@ class IndexTid extends ManyToOne {
     }
     return $titles;
   }
+
 }

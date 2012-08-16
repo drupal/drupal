@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Translation;
  * The fixed argument default handler.
  *
  * @ingroup views_argument_default_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "fixed",
  *   title = @Translation("Fixed")
  * )
  */
 class Fixed extends ArgumentDefaultPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['argument'] = array('default' => '');
@@ -51,8 +50,5 @@ class Fixed extends ArgumentDefaultPluginBase {
       $options['argument'] = $this->argument->options['default_argument_fixed'];
     }
   }
-}
 
-/**
- * @}
- */
+}

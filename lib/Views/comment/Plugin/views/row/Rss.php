@@ -27,6 +27,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Rss extends RowPluginBase {
+
    var $base_table = 'comment';
    var $base_field = 'cid';
 
@@ -167,4 +168,5 @@ class Rss extends RowPluginBase {
       'row' => $item
     ));
   }
+
 }

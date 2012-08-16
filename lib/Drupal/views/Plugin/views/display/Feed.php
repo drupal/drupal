@@ -17,9 +17,7 @@ use Drupal\Core\Annotation\Translation;
  * For the most part, feeds are page displays but with some subtle differences.
  *
  * @ingroup views_display_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "feed",
  *   title = @Translation("Feed"),
@@ -33,6 +31,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Feed extends Page {
+
   function init(&$view, &$display, $options = NULL) {
     parent::init($view, $display, $options);
 
@@ -247,4 +246,5 @@ class Feed extends Page {
   function uses_link_display() {
     return TRUE;
   }
+
 }

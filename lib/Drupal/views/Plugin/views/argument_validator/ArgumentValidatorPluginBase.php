@@ -96,6 +96,7 @@ abstract class ArgumentValidatorPluginBase extends Plugin {
    * the old value again, for example the summary.
    */
   function process_summary_arguments(&$args) { }
+
 }
 
 /**

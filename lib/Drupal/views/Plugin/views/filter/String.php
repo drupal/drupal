@@ -15,9 +15,7 @@ use Drupal\Core\Annotation\Plugin;
  * including equality, like, not like, etc.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "string"
  * )

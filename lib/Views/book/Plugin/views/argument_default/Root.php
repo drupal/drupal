@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains the book root from current node argument default plugin.
@@ -12,9 +13,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * Default argument plugin to get the current node's book root.
- */
-
-/**
+ *
  * @Plugin(
  *   id = "book_root",
  *   module = "book",
@@ -22,6 +21,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Root extends Node {
+
   function get_argument() {
     // Use the argument_default_node plugin to get the nid argument.
     $nid = parent::get_argument();
@@ -32,4 +32,5 @@ class Root extends Node {
       }
     }
   }
+
 }

@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * The plugin to handle full pager.
  *
  * @ingroup views_pager_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "mini",
  *   title = @Translation("Paged output, mini pager"),
@@ -27,6 +25,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Mini extends PagerPluginBase {
+
   function summary_title() {
     if (!empty($this->options['offset'])) {
       return format_plural($this->options['items_per_page'], 'Mini pager, @count item, skip @skip', 'Mini pager, @count items, skip @skip', array('@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']));
@@ -39,4 +38,5 @@ class Mini extends PagerPluginBase {
     return theme($pager_theme, array(
       'parameters' => $input, 'element' => $this->options['id']));
   }
+
 }

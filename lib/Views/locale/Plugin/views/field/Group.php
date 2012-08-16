@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to translate a group into its readable form.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "locale_group",
  *   module = "locale"
  * )
  */
 class Group extends FieldPluginBase {
+
   function render($values) {
     $groups = module_invoke_all('locale', 'groups');
     // Sort the list.
@@ -30,4 +29,5 @@ class Group extends FieldPluginBase {
     $value = $this->get_value($values);
     return isset($groups[$value]) ? $groups[$value] : '';
   }
+
 }

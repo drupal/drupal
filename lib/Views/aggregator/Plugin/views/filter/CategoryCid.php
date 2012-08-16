@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Filter by aggregator category cid
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "aggregator_category_cid",
  *   module = "aggregator"
  * )
  */
 class CategoryCid extends InOperator {
+
   function get_value_options() {
     if (isset($this->value_options)) {
       return;
@@ -35,4 +34,5 @@ class CategoryCid extends InOperator {
       $this->value_options[$category->cid] = $category->title;
     }
   }
+
 }

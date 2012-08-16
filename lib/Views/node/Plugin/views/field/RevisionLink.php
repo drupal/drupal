@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link to a node revision.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_revision_link",
  *   module = "node"
@@ -75,4 +73,5 @@ class RevisionLink extends Link {
     }
     return array($node, $vid);
   }
+
 }

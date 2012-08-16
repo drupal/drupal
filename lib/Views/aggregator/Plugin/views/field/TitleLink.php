@@ -15,15 +15,14 @@ use Drupal\Core\Annotation\Plugin;
  * source article.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "aggregator_title_link",
  *   module = "aggregator"
  * )
  */
 class TitleLink extends FieldPluginBase {
+
   function construct() {
     parent::construct();
     $this->additional_fields['link'] = 'link';
@@ -64,4 +63,5 @@ class TitleLink extends FieldPluginBase {
 
     return $data;
   }
+
 }

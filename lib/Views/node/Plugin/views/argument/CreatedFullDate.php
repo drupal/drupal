@@ -7,15 +7,14 @@ use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * Argument handler for a full date (CCYYMMDD)
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_created_fulldate",
  *   module = "node"
  * )
  */
 class CreatedFullDate extends Date {
+
   /**
    * Constructor implementation
    */
@@ -40,4 +39,5 @@ class CreatedFullDate extends Date {
   function title() {
     return format_date(strtotime($this->argument . " 00:00:00 UTC"), 'custom', $this->format, 'UTC');
   }
+
 }

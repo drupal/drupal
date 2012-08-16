@@ -14,14 +14,13 @@ use Drupal\Core\Annotation\Plugin;
  * break_phrase.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "numeric"
  * )
  */
 class Numeric extends ArgumentPluginBase {
+
   /**
    * The operator used for the query: or|and.
    * @var string
@@ -123,4 +122,5 @@ class Numeric extends ArgumentPluginBase {
   function get_sort_name() {
     return t('Numerical', array(), array('context' => 'Sort order'));
   }
+
 }

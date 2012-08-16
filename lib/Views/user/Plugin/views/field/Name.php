@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to provide simple renderer that allows using a themed user link.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_name",
  *   module = "user"
  * )
  */
 class Name extends User {
+
   /**
    * Add uid in the query so we can test for anonymous if needed.
    */
@@ -94,4 +93,5 @@ class Name extends User {
     // Otherwise, there's no special handling, so return the data directly.
     return $data;
   }
+
 }

@@ -18,6 +18,7 @@ use Drupal\Core\Annotation\Plugin;
  * )
  */
 class Uri extends File {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['file_download_path'] = array('default' => FALSE, 'bool' => TRUE);
@@ -41,4 +42,5 @@ class Uri extends File {
     }
     return $this->render_link($data, $values);
   }
+
 }

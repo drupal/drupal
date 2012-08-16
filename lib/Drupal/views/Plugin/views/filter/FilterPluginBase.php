@@ -36,13 +36,8 @@ use Drupal\Core\Annotation\Plugin;
  *
  * @ingroup views_filter_handlers
  */
+abstract class FilterPluginBase extends Handler {
 
-/**
- * @Plugin(
- *   id = "standard"
- * )
- */
-class FilterPluginBase extends Handler {
   /**
    * Contains the actual value of the field,either configured in the views ui
    * or entered in the exposed filters.
@@ -722,6 +717,7 @@ class FilterPluginBase extends Handler {
    function can_group() {
      return TRUE;
    }
+
 }
 
 /**

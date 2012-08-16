@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Handler for showing comment module's node link.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment_node_link",
  *   module = "comment"
  * )
  */
 class NodeLink extends Entity {
+
   function construct() {
     parent::construct();
 
@@ -73,4 +72,5 @@ class NodeLink extends Entity {
     // Only render the links, if they are defined.
     return !empty($node->content['links']['comment']) ? drupal_render($node->content['links']['comment']) : '';
   }
+
 }

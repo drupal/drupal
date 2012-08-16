@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to allow linking to a user account or homepage.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment_username",
  *   module = "comment"
  * )
  */
 class Username extends FieldPluginBase {
+
   /**
    * Override init function to add uid and homepage fields.
    */
@@ -67,4 +66,5 @@ class Username extends FieldPluginBase {
     $value = $this->get_value($values);
     return $this->render_link($this->sanitize_value($value), $values);
   }
+
 }

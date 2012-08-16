@@ -15,14 +15,13 @@ use Drupal\Core\Annotation\Plugin;
  * limits.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "string"
  * )
  */
 class String extends ArgumentPluginBase {
+
   function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($this->definition['many to one'])) {

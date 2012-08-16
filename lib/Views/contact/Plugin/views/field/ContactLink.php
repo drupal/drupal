@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Plugin;
  * A field that links to the user contact page, if access is permitted.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "contact_link",
  *   module = "contact"
@@ -66,4 +64,5 @@ class ContactLink extends Link {
 
     return $text;
   }
+
 }

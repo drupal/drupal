@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Argument handler to accept an aggregator item id.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "aggregator_iid",
  *   module = "aggregator"
  * )
  */
 class Iid extends Numeric {
+
   /**
    * Override the behavior of title(). Get the title of the category.
    */
@@ -39,4 +38,5 @@ class Iid extends Numeric {
     }
     return $titles;
   }
+
 }

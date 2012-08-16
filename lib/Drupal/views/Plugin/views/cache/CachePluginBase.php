@@ -22,6 +22,7 @@ use Drupal\Core\Database\Query\Select;
  * The base plugin to handle caching.
  */
 abstract class CachePluginBase extends Plugin {
+
   /**
    * Contains all data that should be written/read from cache.
    */
@@ -320,6 +321,7 @@ abstract class CachePluginBase extends Plugin {
 
     return $this->_output_key;
   }
+
 }
 
 /**

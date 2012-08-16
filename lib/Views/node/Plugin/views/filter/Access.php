@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Filter by node_access records.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_access",
  *   module = "node"
  * )
  */
 class Access extends FilterPluginBase {
+
   function admin_summary() { }
   function operator_form(&$form, &$form_state) { }
   function can_expose() {
@@ -49,4 +48,5 @@ class Access extends FilterPluginBase {
       $this->query->add_where('AND', $table . '.grant_view', 1, '>=');
     }
   }
+
 }

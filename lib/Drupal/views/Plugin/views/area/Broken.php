@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * A special handler to take the place of missing or broken handlers.
  *
  * @ingroup views_area_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "broken"
  * )
  */
 class Broken extends AreaPluginBase {
+
   function ui_name($short = FALSE) {
     return t('Broken/missing handler');
   }
@@ -37,5 +36,8 @@ class Broken extends AreaPluginBase {
   /**
    * Determine if the handler is considered 'broken'
    */
-  function broken() { return TRUE; }
+  function broken() {
+    return TRUE;
+  }
+
 }

@@ -14,8 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * The default style plugin for summaries.
  *
  * @ingroup views_style_plugins
- */
-/**
+ *
  * @Plugin(
  *   id = "jump_menu_summary",
  *   title = @Translation("Jump menu"),
@@ -26,8 +25,8 @@ use Drupal\Core\Annotation\Translation;
  *   help_topic = "style-summary-jump-menu"
  * )
  */
-
 class JumpMenuSummary extends DefaultSummary {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -143,4 +142,5 @@ class JumpMenuSummary extends DefaultSummary {
     $form = drupal_get_form('ctools_jump_menu', $options, $settings);
     return drupal_render($form);
   }
+
 }

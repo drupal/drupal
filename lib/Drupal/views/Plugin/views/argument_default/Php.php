@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Translation;
  * Default argument plugin to provide a PHP code block.
  *
  * @ingroup views_argument_default_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "php",
  *   title = @Translation("PHP Code")
  * )
  */
 class Php extends ArgumentDefaultPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['code'] = array('default' => '');
@@ -66,4 +65,5 @@ class Php extends ArgumentDefaultPluginBase {
     ob_end_clean();
     return $result;
   }
+
 }

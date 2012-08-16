@@ -16,11 +16,17 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
  * Provides the interface and base class for Views Wizard plugins.
  */
 abstract class WizardPluginBase implements WizardInterface {
+
   protected $base_table;
+
   protected $entity_type;
+
   protected $entity_info = array();
+
   protected $validated_views = array();
+
   protected $plugin = array();
+
   protected $filter_defaults = array(
     'id' => NULL,
     'expose' => array('operator' => FALSE),

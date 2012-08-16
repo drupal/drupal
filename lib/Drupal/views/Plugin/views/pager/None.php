@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Plugin for views without pagers.
  *
  * @ingroup views_pager_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "none",
  *   title = @Translation("Display all items"),
@@ -88,4 +86,5 @@ class None extends PagerPluginBase {
       $this->view->query->set_offset($this->options['offset']);
     }
   }
+
 }

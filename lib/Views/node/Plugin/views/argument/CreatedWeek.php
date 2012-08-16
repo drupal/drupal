@@ -7,15 +7,14 @@ use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * Argument handler for a week.
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_created_week",
  *   module = "node"
  * )
  */
 class CreatedWeek extends Date {
+
   /**
    * Constructor implementation
    */
@@ -32,4 +31,5 @@ class CreatedWeek extends Date {
     $created = $data->{$this->name_alias};
     return t('Week @week', array('@week' => $created));
   }
+
 }

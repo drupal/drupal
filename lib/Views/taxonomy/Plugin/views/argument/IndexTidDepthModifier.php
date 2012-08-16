@@ -17,17 +17,18 @@ use Drupal\Core\Annotation\Plugin;
  * because it uses a subquery to find nodes with.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "taxonomy_index_tid_depth_modifier",
  *   module = "taxonomy"
  * )
  */
 class IndexTidDepthModifier extends ArgumentPluginBase {
+
   function options_form(&$form, &$form_state) { }
+
   function query($group_by = FALSE) { }
+
   function pre_query() {
     // We don't know our argument yet, but it's based upon our position:
     $argument = isset($this->view->args[$this->position]) ? $this->view->args[$this->position] : NULL;
@@ -73,4 +74,5 @@ class IndexTidDepthModifier extends ArgumentPluginBase {
       $handler->options['depth'] = $argument;
     }
   }
+
 }

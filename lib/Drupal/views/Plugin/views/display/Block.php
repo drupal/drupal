@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * The plugin that handles a block.
  *
  * @ingroup views_display_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "block",
  *   title = @Translation("Block"),
@@ -33,6 +31,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Block extends DisplayPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -262,4 +261,5 @@ class Block extends DisplayPluginBase {
         ->execute();
     }
   }
+
 }

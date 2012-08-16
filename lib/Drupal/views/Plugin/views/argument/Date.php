@@ -26,9 +26,7 @@ use Drupal\Core\Annotation\Plugin;
  * @see Drupal\views\ManyTonOneHelper
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "date"
  * )

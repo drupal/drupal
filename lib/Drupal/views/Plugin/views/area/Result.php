@@ -13,9 +13,7 @@ use Drupal\Core\Annotation\Plugin;
  * Views area handler to display some configurable result summary.
  *
  * @ingroup views_area_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "result"
  * )
@@ -103,4 +101,5 @@ class Result extends AreaPluginBase {
     }
     return $output;
   }
+
 }

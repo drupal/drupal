@@ -108,4 +108,5 @@ class NodeRevision extends WizardPluginBase {
 
     return $display_options;
   }
+
 }

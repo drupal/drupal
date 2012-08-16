@@ -13,15 +13,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to add rendering MIME type images as an option on the filemime field.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "file_filemime",
  *   module = "file"
  * )
  */
 class FileMime extends File {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['filemime_image'] = array('default' => FALSE, 'bool' => TRUE);
@@ -46,4 +45,5 @@ class FileMime extends File {
 
     return $this->render_link($data, $values);
   }
+
 }

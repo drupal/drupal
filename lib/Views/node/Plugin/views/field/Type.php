@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to translate a node type into its readable form.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_type",
  *   module = "node"
  * )
  */
 class Type extends Node {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['machine_name'] = array('default' => FALSE, 'bool' => TRUE);
@@ -58,4 +57,5 @@ class Type extends Node {
     $value = $this->get_value($values);
     return $this->render_link($this->render_name($value, $values), $values);
   }
+
 }

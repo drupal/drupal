@@ -15,9 +15,7 @@ use Drupal\Core\Annotation\Plugin;
  * Argument that accepts query keys for search.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "search",
  *   module = "search"
@@ -110,4 +108,5 @@ class Search extends ArgumentPluginBase {
       $this->query->add_having_expression(0, "COUNT(*) >= $placeholder", array($placeholder => $matches));
     }
   }
+
 }

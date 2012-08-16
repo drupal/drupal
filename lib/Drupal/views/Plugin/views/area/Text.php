@@ -13,9 +13,7 @@ use Drupal\Core\Annotation\Plugin;
  * Views area text handler.
  *
  * @ingroup views_area_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "text"
  * )
@@ -117,4 +115,5 @@ class Text extends AreaPluginBase {
       return check_markup($value, $format, '', FALSE);
     }
   }
+
 }

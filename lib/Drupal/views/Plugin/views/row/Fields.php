@@ -17,9 +17,7 @@ use Drupal\Core\Annotation\Translation;
  * or not.
  *
  * @ingroup views_row_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "fields",
  *   title = @Translation("Fields"),
@@ -32,6 +30,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Fields extends RowPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -102,4 +101,5 @@ class Fields extends RowPluginBase {
   function options_submit(&$form, &$form_state) {
     $form_state['values']['row_options']['inline'] = array_filter($form_state['values']['row_options']['inline']);
   }
+
 }

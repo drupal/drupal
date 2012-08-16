@@ -19,10 +19,8 @@ use Drupal\Core\Annotation\Plugin;
  * @code views_entity_{ENTITY_TYPE} @endcode.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "entity"
  * )
  */
@@ -111,4 +109,5 @@ class Entity extends FieldPluginBase {
     }
     return FALSE;
   }
+
 }

@@ -13,15 +13,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link to user edit.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_link_edit",
  *   module = "user"
  * )
  */
 class LinkEdit extends Link {
+
   function render_link($data, $values) {
     // Build a pseudo account object to be able to check the access.
     $account = entity_create('user', array());
@@ -38,4 +37,5 @@ class LinkEdit extends Link {
       return $text;
     }
   }
+
 }

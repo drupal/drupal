@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * The plugin to handle full pager.
  *
  * @ingroup views_pager_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "full",
  *   title = @Translation("Paged output, full pager"),
@@ -27,6 +25,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Full extends PagerPluginBase {
+
   function summary_title() {
     if (!empty($this->options['offset'])) {
       return format_plural($this->options['items_per_page'], '@count item, skip @skip', 'Paged, @count items, skip @skip', array('@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']));
@@ -443,4 +442,5 @@ class Full extends PagerPluginBase {
       }
     }
   }
+
 }

@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Simple caching of query results for Views displays.
  *
  * @ingroup views_cache_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "time",
  *   title = @Translation("Time-based"),
@@ -26,6 +24,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Time extends CachePluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['results_lifespan'] = array('default' => 3600);
@@ -124,4 +123,5 @@ class Time extends CachePluginBase {
       return CACHE_PERMANENT;
     }
   }
+
 }

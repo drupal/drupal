@@ -24,10 +24,8 @@ use Drupal\Core\Annotation\Plugin;
  *   This might be helpful for performance reasons.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "boolean"
  * )
  */

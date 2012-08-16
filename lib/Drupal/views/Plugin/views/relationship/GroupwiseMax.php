@@ -59,10 +59,8 @@ use Drupal\Core\Annotation\Plugin;
  * in the same way as node_comment_statistics.
  *
  * @ingroup views_relationship_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "groupwise_max"
  * )
  */
@@ -391,4 +389,5 @@ class GroupwiseMax extends RelationshipPluginBase {
 
     $this->alias = $this->query->add_relationship($alias, $join, $this->definition['base'], $this->relationship);
   }
+
 }

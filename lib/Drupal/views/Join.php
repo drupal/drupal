@@ -59,14 +59,20 @@ namespace Drupal\views;
  *   - - numeric: If true, the value will not be surrounded in quotes.
  *   - - extra type: How all the extras will be combined. Either AND or OR. Defaults to AND.
  */
-
 class Join {
+
   var $table = NULL;
+
   var $left_table = NULL;
+
   var $left_field = NULL;
+
   var $field = NULL;
+
   var $extra = NULL;
+
   var $type = NULL;
+
   var $definition = array();
 
   /**
@@ -204,6 +210,7 @@ class Join {
 
     $select_query->addJoin($this->type, $right_table, $table['alias'], $condition, $arguments);
   }
+
 }
 
 /**

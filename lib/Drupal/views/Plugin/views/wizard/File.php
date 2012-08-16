@@ -29,6 +29,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class File extends WizardPluginBase {
+
   protected function default_display_options($form, $form_state) {
     $display_options = parent::default_display_options($form, $form_state);
 
@@ -57,4 +58,5 @@ class File extends WizardPluginBase {
 
     return $display_options;
   }
+
 }

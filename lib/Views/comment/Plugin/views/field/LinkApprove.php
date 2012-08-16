@@ -13,15 +13,14 @@ use Drupal\Core\Annotation\Plugin;
  * Provides a comment approve link.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment_link_approve",
  *   module = "comment"
  * )
  */
 class LinkApprove extends Link {
+
   function access() {
     //needs permission to administer comments in general
     return user_access('administer comments');
@@ -44,4 +43,5 @@ class LinkApprove extends Link {
 
     return $text;
   }
+
 }

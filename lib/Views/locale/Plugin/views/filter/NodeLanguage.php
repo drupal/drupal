@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\filter\InOperator;
  * Filter by language.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_language",
  *   module = "locale"
  * )
  */
 class NodeLanguage extends InOperator {
+
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Language');
@@ -35,4 +34,5 @@ class NodeLanguage extends InOperator {
       $this->value_options = $languages;
     }
   }
+
 }

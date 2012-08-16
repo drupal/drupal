@@ -12,16 +12,16 @@ use Drupal\Core\Annotation\Plugin;
  * A handler to run a field through simple XSS filtering.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "xss"
  * )
  */
 class Xss extends FieldPluginBase {
+
   function render($values) {
     $value = $this->get_value($values);
     return $this->sanitize_value($value, 'xss');
   }
+
 }

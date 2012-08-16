@@ -19,6 +19,7 @@ use Drupal\views\Join;
  *   - left_query: The subquery to use in the left side of the join clause.
  */
 class JoinSubquery extends Join {
+
   function construct($table = NULL, $left_table = NULL, $left_field = NULL, $field = NULL, $extra = array(), $type = 'LEFT') {
     parent::construct($table, $left_table, $left_field, $field, $extra, $type);
     $this->left_query = $this->definition['left_query'];
@@ -99,4 +100,5 @@ class JoinSubquery extends Join {
 
     $select_query->addJoin($this->type, $right_table, $table['alias'], $condition, $arguments);
   }
+
 }

@@ -13,6 +13,7 @@ use Drupal\views\Plugin\Discovery\ViewsDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 
 class ViewsPluginManager extends PluginManagerBase {
+
   /**
    * The handler type of this plugin manager, for example filter or field.
    *
@@ -26,4 +27,5 @@ class ViewsPluginManager extends PluginManagerBase {
     $this->discovery = new CacheDecorator(new ViewsDiscovery('views', $this->type), 'views:' . $this->type, 'cache');
     $this->factory = new DefaultFactory($this->discovery);
   }
+
 }

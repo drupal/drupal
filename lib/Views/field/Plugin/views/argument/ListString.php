@@ -16,15 +16,14 @@ use Drupal\Core\Annotation\Plugin;
  * summary.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "field_list_string",
  *   module = "field"
  * )
  */
 class ListString extends String {
+
   /**
    * Stores the allowed values of this field.
    *
@@ -73,4 +72,5 @@ class ListString extends String {
       return $this->case_transform(check_plain($value), $this->options['case']);
     }
   }
+
 }

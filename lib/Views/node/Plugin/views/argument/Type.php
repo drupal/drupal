@@ -12,15 +12,14 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * Argument handler to accept a node type.
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_type",
  *   module = "node"
  * )
  */
 class Type extends String {
+
   function construct() {
     parent::construct('type');
   }
@@ -48,4 +47,5 @@ class Type extends String {
     }
     return check_plain($output);
   }
+
 }

@@ -15,15 +15,14 @@ use Drupal\Core\Annotation\Plugin;
  * user posted or commented on.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "argument_comment_user_uid",
  *   module = "comment"
  * )
  */
 class UserUid extends ArgumentPluginBase {
+
   function title() {
     if (!$this->argument) {
       $title = variable_get('anonymous', t('Anonymous'));
@@ -70,4 +69,5 @@ class UserUid extends ArgumentPluginBase {
   function get_sort_name() {
     return t('Numerical', array(), array('context' => 'Sort order'));
   }
+
 }

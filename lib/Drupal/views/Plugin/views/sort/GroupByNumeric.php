@@ -17,6 +17,7 @@ use Drupal\Core\Annotation\Plugin;
  * )
  */
 class GroupByNumeric extends SortPluginBase {
+
   function init(&$view, &$options) {
     parent::init($view, $options);
 
@@ -41,4 +42,5 @@ class GroupByNumeric extends SortPluginBase {
   function ui_name($short = FALSE) {
     return $this->get_field(parent::ui_name($short));
   }
+
 }

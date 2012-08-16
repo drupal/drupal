@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Filter by node type.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_type",
  *   module = "node"
  * )
  */
 class Type extends InOperator {
+
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Content types');
@@ -35,4 +34,5 @@ class Type extends InOperator {
       $this->value_options = $options;
     }
   }
+
 }

@@ -451,4 +451,5 @@ abstract class Plugin extends PluginBase {
     }
     return check_plain($this->definition['title']);
   }
+
 }

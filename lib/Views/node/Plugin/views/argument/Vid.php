@@ -12,15 +12,14 @@ use Drupal\Core\Annotation\Plugin;
 
 /**
  * Argument handler to accept a node revision id.
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_vid",
  *   module = "node"
  * )
  */
 class Vid extends Numeric {
+
   // No constructor is necessary.
 
   /**
@@ -45,4 +44,5 @@ class Vid extends Numeric {
 
     return $titles;
   }
+
 }

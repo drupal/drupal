@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * A field that displays fieldapi fields.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "field",
  *   module = "field"
  * )
  */
 class Field extends FieldPluginBase {
+
   /**
    * An array to store field renderable arrays for use by render_items.
    * @var array
@@ -919,4 +918,5 @@ class Field extends FieldPluginBase {
       return LANGUAGE_NOT_SPECIFIED;
     }
   }
+
 }

@@ -27,6 +27,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class View extends RowPluginBase {
+
   var $base_field = 'cid';
   var $base_table = 'comment';
 
@@ -112,4 +113,5 @@ class View extends RowPluginBase {
       $this->nodes[$node->nid] = $node;
     }
   }
+
 }

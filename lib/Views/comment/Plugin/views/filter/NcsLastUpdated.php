@@ -15,15 +15,14 @@ use Drupal\Core\Annotation\Plugin;
  * Filter handler for the newer of last comment / node updated.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "ncs_last_updated",
  *   module = "comment"
  * )
  */
 class NcsLastUpdated extends Date {
+
   function query() {
     $this->ensure_my_table();
     $this->node_table = $this->query->ensure_table('node', $this->relationship);
@@ -35,4 +34,5 @@ class NcsLastUpdated extends Date {
       $this->{$info[$this->operator]['method']}($field);
     }
   }
+
 }

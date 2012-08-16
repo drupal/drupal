@@ -17,9 +17,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  * Most of the code on this object is in the theme function.
  *
  * @ingroup views_row_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node",
  *   module = "node",
@@ -32,8 +30,10 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  * )
  */
 class View extends RowPluginBase {
+
   // Basic properties that let the row style follow relationships.
   var $base_table = 'node';
+
   var $base_field = 'nid';
 
   // Stores the nodes loaded with pre_render.
@@ -124,4 +124,5 @@ class View extends RowPluginBase {
 
     return drupal_render($build);
   }
+
 }

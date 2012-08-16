@@ -15,15 +15,14 @@ use Drupal\Core\Annotation\Plugin;
  * summary.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "field_list",
  *   module = "field"
  * )
  */
 class FieldList extends Numeric {
+
   /**
    * Stores the allowed values of this field.
    *
@@ -71,4 +70,5 @@ class FieldList extends Numeric {
       return check_plain($value);
     }
   }
+
 }

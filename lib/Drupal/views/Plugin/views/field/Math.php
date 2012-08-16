@@ -18,14 +18,13 @@ use Drupal\Core\Annotation\Plugin;
  *   will be assumed to be integer.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "math"
  * )
  */
 class Math extends Numeric {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['expression'] = array('default' => '');
@@ -91,4 +90,5 @@ class Math extends Numeric {
   }
 
   function query() { }
+
 }

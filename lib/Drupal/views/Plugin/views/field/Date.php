@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * A handler to provide proper displays for dates.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "date"
  * )
  */
 class Date extends FieldPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -117,4 +116,5 @@ class Date extends FieldPluginBase {
       }
     }
   }
+
 }

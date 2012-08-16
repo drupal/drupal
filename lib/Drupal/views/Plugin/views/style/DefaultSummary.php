@@ -15,9 +15,7 @@ use Drupal\Core\Annotation\Translation;
  * The default style plugin for summaries.
  *
  * @ingroup views_style_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "default_summary",
  *   title = @Translation("List"),
@@ -29,6 +27,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class DefaultSummary extends StylePluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -93,4 +92,5 @@ class DefaultSummary extends StylePluginBase {
       'rows' => $rows
     ));
   }
+
 }

@@ -11,14 +11,13 @@ use Drupal\Core\Annotation\Plugin;
  * Render a numeric value as a size.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "file_size"
  * )
  */
 class FileSize extends FieldPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -54,4 +53,5 @@ class FileSize extends FieldPluginBase {
       return '';
     }
   }
+
 }

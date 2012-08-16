@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to provide simple renderer that turns a URL into a clickable link.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "url"
  * )
  */
 class Url extends FieldPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -50,4 +49,5 @@ class Url extends FieldPluginBase {
       return $this->sanitize_value($value, 'url');
     }
   }
+
 }

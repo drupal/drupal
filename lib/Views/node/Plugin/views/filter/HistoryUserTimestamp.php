@@ -17,15 +17,14 @@ use Drupal\Core\Annotation\Plugin;
  * is history.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_history_user_timestamp",
  *   module = "node"
  * )
  */
 class HistoryUserTimestamp extends FilterPluginBase {
+
   // Don't display empty space where the operator would be.
   var $no_operator = TRUE;
 
@@ -96,4 +95,5 @@ class HistoryUserTimestamp extends FilterPluginBase {
       return t('exposed');
     }
   }
+
 }

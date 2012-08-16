@@ -17,6 +17,7 @@ use Drupal\Core\Annotation\Plugin;
  * )
  */
 class Random extends SortPluginBase {
+
   function query() {
     $this->query->add_orderby('rand');
   }
@@ -25,4 +26,5 @@ class Random extends SortPluginBase {
     parent::options_form($form, $form_state);
     $form['order']['#access'] = FALSE;
   }
+
 }

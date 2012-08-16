@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Base field handler to present a link.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment_link",
  *   module = "comment"
  * )
  */
 class Link extends Entity {
+
   function construct() {
     parent::construct();
   }
@@ -78,4 +77,5 @@ class Link extends Entity {
 
     return $text;
   }
+
 }

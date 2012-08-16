@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\filter\BooleanOperator;
  * Filter handler for the current user.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_current",
  *   module = "user"
  * )
  */
 class Current extends BooleanOperator {
+
   function construct() {
     parent::construct();
     $this->value_value = t('Is the logged in user');
@@ -45,4 +44,5 @@ class Current extends BooleanOperator {
     }
     $this->query->add_where($this->options['group'], $or);
   }
+
 }

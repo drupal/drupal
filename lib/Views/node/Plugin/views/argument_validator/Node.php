@@ -13,9 +13,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
 /**
  * Validate whether an argument is an acceptable node.
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node",
  *   module = "node",
@@ -23,6 +21,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  * )
  */
 class Node extends ArgumentValidatorPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['types'] = array('default' => array());
@@ -117,7 +116,7 @@ class Node extends ArgumentValidatorPluginBase {
         }
 
         return isset($types[$node->type]);
-      break;
+
       case 'nids':
         $nids = new stdClass();
         $nids->value = array($argument);
@@ -150,4 +149,5 @@ class Node extends ArgumentValidatorPluginBase {
         return empty($test);
     }
   }
+
 }

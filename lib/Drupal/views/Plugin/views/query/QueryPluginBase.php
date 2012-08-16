@@ -8,7 +8,11 @@ namespace Drupal\views\Plugin\views\query;
 
 use Drupal\views\Plugin\views\Plugin;
 
+/**
+ * @todo.
+ */
 abstract class QueryPluginBase extends Plugin implements QueryInterface {
+
   /**
    * A pager plugin that should be provided by the display.
    *
@@ -170,4 +174,5 @@ abstract class QueryPluginBase extends Plugin implements QueryInterface {
   function get_result_entities($results, $relationship = NULL) {
     return FALSE;
   }
+
 }

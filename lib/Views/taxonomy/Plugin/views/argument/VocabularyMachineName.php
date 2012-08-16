@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Argument handler to accept a vocabulary machine name.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "vocabulary_machine_name",
  *   module = "taxonomy"
  * )
  */
 class VocabularyMachineName extends String {
+
   /**
    * Override the behavior of title(). Get the name of the vocabulary..
    */
@@ -35,4 +34,5 @@ class VocabularyMachineName extends String {
 
     return check_plain($title);
   }
+
 }

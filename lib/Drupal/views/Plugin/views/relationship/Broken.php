@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Plugin;
  * A special handler to take the place of missing or broken handlers.
  *
  * @ingroup views_relationship_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "broken"
  * )

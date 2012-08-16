@@ -17,15 +17,14 @@ use Drupal\Core\Annotation\Plugin;
  * because it uses a subquery to find nodes with.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "taxonomy_index_tid_depth",
  *   module = "taxonomy"
  * )
  */
 class IndexTidDepth extends ArgumentPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -158,4 +157,5 @@ class IndexTidDepth extends ArgumentPluginBase {
     // TODO review text
     return t('No name');
   }
+
 }

@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Exposed form plugin that provides a basic exposed form.
  *
  * @ingroup views_exposed_form_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "basic",
  *   title = @Translation("Basic"),
@@ -25,4 +23,6 @@ use Drupal\Core\Annotation\Translation;
  *   help_topic = "exposed-form-basic"
  * )
  */
-class Basic extends ExposedFormPluginBase { }
+class Basic extends ExposedFormPluginBase {
+
+}

@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * Simple filter to handle greater than/less than filters
  *
  * @ingroup views_filter_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "groupby_numeric"
  * )
  */
 class GroupByNumeric extends Numeric {
+
   function query() {
     $this->ensure_my_table();
     $field = $this->get_field();
@@ -63,4 +62,5 @@ class GroupByNumeric extends Numeric {
   }
 
   function can_group() { return FALSE; }
+
 }

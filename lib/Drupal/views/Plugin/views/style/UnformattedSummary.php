@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * The default style plugin for summaries.
  *
  * @ingroup views_style_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "unformatted_summary",
  *   title = @Translation("Unformatted"),
@@ -28,6 +26,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class UnformattedSummary extends DefaultSummary {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['inline'] = array('default' => FALSE, 'bool' => TRUE);
@@ -48,4 +47,5 @@ class UnformattedSummary extends DefaultSummary {
       '#default_value' => $this->options['separator'],
     );
   }
+
 }

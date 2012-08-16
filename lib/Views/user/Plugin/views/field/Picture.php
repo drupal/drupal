@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  * Field handler to provide simple renderer that allows using a themed user link.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_picture",
  *   module = "user"
  * )
  */
 class Picture extends FieldPluginBase {
+
   function construct() {
     parent::construct();
     $this->additional_fields['uid'] = 'uid';
@@ -123,4 +122,5 @@ class Picture extends FieldPluginBase {
 
     return $output;
   }
+
 }

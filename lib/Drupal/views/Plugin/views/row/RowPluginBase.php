@@ -25,6 +25,7 @@ use Drupal\views\Plugin\views\Plugin;
  * a theme function.
  */
 abstract class RowPluginBase extends Plugin {
+
   /**
    * Initialize the row plugin.
    */
@@ -149,6 +150,7 @@ abstract class RowPluginBase extends Plugin {
         'field_alias' => isset($this->field_alias) ? $this->field_alias : '',
       ));
   }
+
 }
 
 /**

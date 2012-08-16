@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Sort handler for ordering by thread.
  *
  * @ingroup views_sort_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment_thread",
  *   module = "comment"
  * )
  */
 class Thread extends SortPluginBase {
+
   function query() {
     $this->ensure_my_table();
 
@@ -37,4 +36,5 @@ class Thread extends SortPluginBase {
       $this->query->add_orderby(NULL, "SUBSTRING({$this->table_alias}.{$this->real_field}, 1, (LENGTH({$this->table_alias}.{$this->real_field}) - 1))", $this->options['order'], $alias);
     }
   }
+
 }

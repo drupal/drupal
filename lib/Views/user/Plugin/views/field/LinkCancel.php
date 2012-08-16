@@ -13,9 +13,7 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link to user cancel.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_link_cancel",
  *   module = "user"
@@ -41,4 +39,5 @@ class LinkCancel extends Link {
       return $text;
     }
   }
+
 }

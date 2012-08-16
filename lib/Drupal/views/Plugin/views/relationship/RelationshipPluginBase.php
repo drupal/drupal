@@ -41,13 +41,8 @@ use Drupal\Core\Annotation\Plugin;
  *
  * @ingroup views_relationship_handlers
  */
+abstract class RelationshipPluginBase extends Handler {
 
-/**
- * @Plugin(
- *   id = "standard"
- * )
- */
-class RelationshipPluginBase extends Handler {
   /**
    * Init handler to let relationships live on tables other than
    * the table they operate on.
@@ -167,6 +162,7 @@ class RelationshipPluginBase extends Handler {
   function use_group_by() {
     return FALSE;
   }
+
 }
 
 /**

@@ -15,15 +15,14 @@ use Drupal\Core\Annotation\Plugin;
  * Relationship handler to return the taxonomy terms of nodes.
  *
  * @ingroup views_relationship_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_term_data",
  *   module = "taxonomy"
  * )
  */
 class NodeTermData extends RelationshipPluginBase  {
+
   function init(&$view, &$options) {
     parent::init($view, $options);
 
@@ -105,4 +104,5 @@ class NodeTermData extends RelationshipPluginBase  {
 
     $this->alias = $this->query->add_relationship($alias, $join, 'taxonomy_term_data', $this->relationship);
   }
+
 }

@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to output the name of an input format.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "filter_format_name",
  *   module = "filter"
  * )
  */
 class FormatName extends FieldPluginBase {
+
   function construct() {
     parent::construct();
     // Be explicit about the table we are using.
@@ -45,4 +44,5 @@ class FormatName extends FieldPluginBase {
     }
     return $this->sanitize_value($format_name);
   }
+
 }

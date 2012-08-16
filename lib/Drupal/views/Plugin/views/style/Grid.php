@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Style plugin to render each item in a grid cell.
  *
  * @ingroup views_style_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "grid",
  *   title = @Translation("Grid"),
@@ -31,6 +29,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Grid extends StylePluginBase {
+
   /**
    * Set default options
    */
@@ -79,4 +78,5 @@ class Grid extends StylePluginBase {
       '#default_value' => $this->options['summary'],
     );
   }
+
 }

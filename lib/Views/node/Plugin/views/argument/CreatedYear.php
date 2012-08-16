@@ -7,15 +7,14 @@ use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * Argument handler for a year (CCYY)
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_created_year",
  *   module = "node"
  * )
  */
 class CreatedYear extends Date {
+
   /**
    * Constructor implementation
    */
@@ -24,4 +23,5 @@ class CreatedYear extends Date {
     $this->arg_format = 'Y';
     $this->formula = views_date_sql_extract('YEAR', "***table***.$this->real_field");
   }
+
 }

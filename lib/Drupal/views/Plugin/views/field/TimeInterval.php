@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * A handler to provide proper displays for time intervals.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "time_interval"
  * )
  */
 class TimeInterval extends FieldPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -44,4 +43,5 @@ class TimeInterval extends FieldPluginBase {
     $value = $values->{$this->field_alias};
     return format_interval($value, isset($this->options['granularity']) ? $this->options['granularity'] : 2);
   }
+
 }

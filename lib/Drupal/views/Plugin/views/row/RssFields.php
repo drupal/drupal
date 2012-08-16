@@ -12,9 +12,7 @@ use Drupal\Core\Annotation\Translation;
 
 /**
  * Renders an RSS item based on fields.
- */
-
-/**
+ *
  * @Plugin(
  *   id = "rss_fields",
  *   title = @Translation("Fields"),
@@ -27,6 +25,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class RssFields extends RowPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['title_field'] = array('default' => '');

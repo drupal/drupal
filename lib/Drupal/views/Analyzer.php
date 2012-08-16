@@ -137,4 +137,5 @@ class Analyzer {
   static function formatMessage($message, $type = 'error') {
     return array('message' => $message, 'type' => $type);
   }
+
 }

@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to display the timestamp of a comment with the count of comments.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment_last_timestamp",
  *   module = "comment"
  * )
  */
 class LastTimestamp extends Date {
+
   function construct() {
     parent::construct();
     $this->additional_fields['comment_count'] = 'comment_count';
@@ -37,4 +36,5 @@ class LastTimestamp extends Date {
       return NULL;
     }
   }
+
 }

@@ -15,8 +15,7 @@ use Drupal\Core\Annotation\Translation;
  * A row plugin which renders a user via user_view.
  *
  * @ingroup views_row_plugins
- */
-/**
+ *
  * @Plugin(
  *   id = "user",
  *   module = "user",
@@ -29,6 +28,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class View extends RowPluginBase {
+
   var $base_table = 'users';
   var $base_field = 'uid';
 
@@ -96,4 +96,5 @@ class View extends RowPluginBase {
 
     return drupal_render($build);
   }
+
 }

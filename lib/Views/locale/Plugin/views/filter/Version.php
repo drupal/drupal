@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\filter\InOperator;
  * Filter by version.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "locale_version",
  *   module = "locale"
  * )
  */
 class Version extends InOperator {
+
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Version');
@@ -37,4 +36,5 @@ class Version extends InOperator {
       $this->value_options = $versions;
     }
   }
+
 }

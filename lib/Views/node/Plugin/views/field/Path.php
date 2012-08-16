@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present the path to the node.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_path",
  *   module = "node"
@@ -56,4 +54,5 @@ class Path extends FieldPluginBase {
     $nid = $this->get_value($values, 'nid');
     return url("node/$nid", array('absolute' => $this->options['absolute']));
   }
+
 }

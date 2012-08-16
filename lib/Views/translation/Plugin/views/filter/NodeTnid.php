@@ -14,16 +14,16 @@ use Drupal\Core\Annotation\Plugin;
  * Filter by whether the node is the original translation.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_tnid",
  *   module = "translation"
  * )
  */
 class NodeTnid extends FilterPluginBase {
+
   function admin_summary() { }
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -54,4 +54,5 @@ class NodeTnid extends FilterPluginBase {
     // Select for source translations (tnid = nid). Conditionally, also accept either untranslated nodes (tnid = 0).
     $this->query->add_where_expression($this->options['group'], "$table.tnid = $table.nid" . ($this->operator ? " OR $table.tnid = 0" : ''));
   }
+
 }

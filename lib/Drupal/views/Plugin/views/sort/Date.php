@@ -18,9 +18,9 @@ use Drupal\Core\Annotation\Plugin;
  * @Plugin(
  *   id = "date"
  * )
- *
  */
 class Date extends SortPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -78,4 +78,5 @@ class Date extends SortPluginBase {
     // Add the field.
     $this->query->add_orderby(NULL, $formula, $this->options['order'], $this->table_alias . '_' . $this->field . '_' . $this->options['granularity']);
   }
+
 }

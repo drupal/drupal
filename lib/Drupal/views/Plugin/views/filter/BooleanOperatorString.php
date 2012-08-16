@@ -19,14 +19,13 @@ use Drupal\Core\Annotation\Plugin;
  * - label: (REQUIRED) The label for the checkbox.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "boolean_string"
  * )
  */
 class BooleanOperatorString extends BooleanOperator {
+
   function query() {
     $this->ensure_my_table();
     $where = "$this->table_alias.$this->real_field ";
@@ -42,4 +41,5 @@ class BooleanOperatorString extends BooleanOperator {
     }
     $this->query->add_where($this->options['group'], $where);
   }
+
 }

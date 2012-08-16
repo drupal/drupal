@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * Simple handler for arguments using group by.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "groupby_numeric"
  * )
  */
-class GroupByNumeric extends ArgumentPluginBase  {
+class GroupByNumeric extends ArgumentPluginBase {
+
   function query($group_by = FALSE) {
     $this->ensure_my_table();
     $field = $this->get_field();
@@ -36,4 +35,5 @@ class GroupByNumeric extends ArgumentPluginBase  {
   function get_sort_name() {
     return t('Numerical', array(), array('context' => 'Sort order'));
   }
+
 }

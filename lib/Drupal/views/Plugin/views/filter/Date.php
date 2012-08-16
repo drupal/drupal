@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * Filter to handle dates stored as a timestamp.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "date"
  * )
  */
 class Date extends Numeric {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -162,4 +161,5 @@ class Date extends Numeric {
     // It is necessary to do it this way because $value is a formula when using an offset.
     $this->query->add_where_expression($this->options['group'], "$field $this->operator $value");
   }
+
 }

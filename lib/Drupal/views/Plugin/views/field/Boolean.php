@@ -23,14 +23,13 @@ use Drupal\Core\Annotation\Plugin;
  *      @endcode
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "boolean"
  * )
  */
 class Boolean extends FieldPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['type'] = array('default' => 'yes-no');
@@ -86,4 +85,5 @@ class Boolean extends FieldPluginBase {
       return $value ? $this->formats['yes-no'][0] : $this->formats['yes-no'][1];
     }
   }
+
 }

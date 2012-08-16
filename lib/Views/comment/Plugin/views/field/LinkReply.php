@@ -13,15 +13,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link to delete a node.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment_link_reply",
  *   module = "comment"
  * )
  */
 class LinkReply extends Link {
+
   function access() {
     //check for permission to reply to comments
     return user_access('post comments');
@@ -37,4 +36,5 @@ class LinkReply extends Link {
 
     return $text;
   }
+
 }

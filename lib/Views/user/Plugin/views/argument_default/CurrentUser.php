@@ -23,8 +23,10 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  * )
  */
 class CurrentUser extends ArgumentDefaultPluginBase {
+
   function get_argument() {
     global $user;
     return $user->uid;
   }
+
 }

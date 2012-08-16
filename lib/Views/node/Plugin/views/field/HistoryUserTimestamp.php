@@ -17,15 +17,14 @@ use Drupal\Core\Annotation\Plugin;
  * is history.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_history_user_timestamp",
  *   module = "node"
  * )
  */
 class HistoryUserTimestamp extends Node {
+
   function init(&$view, &$options) {
     parent::init($view, $options);
     global $user;
@@ -92,4 +91,5 @@ class HistoryUserTimestamp extends Node {
       return $this->render_link(theme('mark', array('type' => $mark)), $values);
     }
   }
+
 }

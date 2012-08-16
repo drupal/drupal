@@ -19,14 +19,13 @@ use Drupal\Core\Annotation\Plugin;
  * to provide something that isn't just a select list.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "many_to_one"
  * )
  */
 class ManyToOne extends InOperator {
+
   /**
    * @var Drupal\views\ManyToOneHelper
    *
@@ -133,4 +132,5 @@ class ManyToOne extends InOperator {
     }
     $this->helper->add_filter();
   }
+
 }

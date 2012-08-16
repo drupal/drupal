@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Argument handler to accept a node translation id.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_tnid",
  *   module = "translation"
  * )
  */
 class NodeTnid extends Numeric {
+
   /**
    * Override the behavior of title(). Get the title of the node.
    */
@@ -35,4 +34,5 @@ class NodeTnid extends Numeric {
     }
     return $titles;
   }
+
 }

@@ -12,7 +12,6 @@ use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
-
 /**
  * Validate whether an argument is an acceptable node.
  *
@@ -22,6 +21,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  *   title = @Translation("Taxonomy term")
  */
 class Term extends ArgumentValidatorPluginBase {
+
   function init(&$view, &$argument, $options) {
     parent::init($view, $argument, $options);
 
@@ -232,4 +232,5 @@ class Term extends ArgumentValidatorPluginBase {
       }
     }
   }
+
 }

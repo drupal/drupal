@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link to revert a node to a revision.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_revision_link_revert",
  *   module = "node"
@@ -45,4 +43,5 @@ class RevisionLinkRevert extends RevisionLink {
 
     return !empty($this->options['text']) ? $this->options['text'] : t('revert');
   }
+
 }

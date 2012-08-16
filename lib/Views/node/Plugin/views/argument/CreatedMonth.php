@@ -7,15 +7,14 @@ use Drupal\views\Plugin\views\argument\Date;
 
 /**
  * Argument handler for a month (MM)
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_created_month",
  *   module = "node"
  * )
  */
 class CreatedMonth extends Date {
+
   /**
    * Constructor implementation
    */
@@ -46,4 +45,5 @@ class CreatedMonth extends Date {
     // Make sure the argument contains leading zeroes.
     return str_pad($data->{$this->base_alias}, 2, '0', STR_PAD_LEFT);
   }
+
 }

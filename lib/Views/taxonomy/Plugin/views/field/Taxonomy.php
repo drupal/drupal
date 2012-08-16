@@ -16,15 +16,14 @@ use Drupal\Core\Annotation\Plugin;
  * term.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "taxonomy",
  *   module = "taxonomy"
  * )
  */
 class Taxonomy extends FieldPluginBase {
+
   /**
    * Constructor to provide additional field to add.
    *
@@ -96,4 +95,5 @@ class Taxonomy extends FieldPluginBase {
     $value = $this->get_value($values);
     return $this->render_link($this->sanitize_value($value), $values);
   }
+
 }

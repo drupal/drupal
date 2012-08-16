@@ -13,14 +13,13 @@ use Drupal\Core\Annotation\Plugin;
  * Argument handler that ignores the argument.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "null"
  * )
  */
 class Null extends ArgumentPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['must_not_be'] = array('default' => FALSE, 'bool' => TRUE);
@@ -74,4 +73,5 @@ class Null extends ArgumentPluginBase {
    * from being changed in any way.
    */
   function query($group_by = FALSE) {}
+
 }

@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Argument handler to accept an aggregator feed id.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "aggregator_fid",
  *   module = "aggregator"
  * )
  */
 class Fid extends Numeric {
+
   /**
    * Override the behavior of title(). Get the title of the feed.
    */
@@ -35,4 +34,5 @@ class Fid extends Numeric {
     }
     return $titles;
   }
+
 }

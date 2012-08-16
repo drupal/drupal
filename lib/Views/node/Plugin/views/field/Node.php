@@ -16,9 +16,7 @@ use Drupal\Core\Annotation\Plugin;
  * - link_to_node default: Should this field have the checkbox "link to node" enabled by default.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node",
  *   module = "node"
@@ -89,4 +87,5 @@ class Node extends FieldPluginBase {
     $value = $this->get_value($values);
     return $this->render_link($this->sanitize_value($value), $values);
   }
+
 }

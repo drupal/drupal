@@ -17,15 +17,14 @@ use Drupal\Core\Annotation\Plugin;
  * because it uses a subquery to find nodes with.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "taxonomy_index_tid_depth",
  *   module = "taxonomy"
  * )
  */
 class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
+
   function operator_options($which = 'title') {
     return array(
       'or' => t('Is one of'),
@@ -109,4 +108,5 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
     $subquery->condition($where);
     $this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field", $subquery, 'IN');
   }
+
 }

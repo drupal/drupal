@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\argument\Numeric;
  * Argument handler to accept a vocabulary id.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "vocabulary_vid",
  *   module = "taxonomy"
  * )
  */
 class VocabularyVid extends Numeric {
+
   /**
    * Override the behavior of title(). Get the name of the vocabulary.
    */
@@ -35,4 +34,5 @@ class VocabularyVid extends Numeric {
 
     return check_plain($title);
   }
+
 }

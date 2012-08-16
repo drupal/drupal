@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Translation;
  * Exposed form plugin that provides an exposed form with required input.
  *
  * @ingroup views_exposed_form_plugins
- */
-
-/**
+ *
  * @Plugin(
  *   id = "input_required",
  *   title = @Translation("Input required"),

@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link node translate.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_link_translate",
  *   module = "translation"
  * )
  */
 class NodeLinkTranslate extends Link {
+
   function render_link($data, $values) {
     // ensure user has access to edit this node.
     $node = $this->get_value($values);
@@ -38,4 +37,5 @@ class NodeLinkTranslate extends Link {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('translate');
     return $text;
   }
+
 }

@@ -15,9 +15,7 @@ use stdClass;
 /**
  * Plugin which performs a node_view on the resulting object
  * and formats it as an RSS item.
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_rss",
  *   title = @Translation("Content"),
@@ -31,8 +29,10 @@ use stdClass;
  * )
  */
 class Rss extends RowPluginBase {
+
   // Basic properties that let the row style follow relationships.
   var $base_table = 'node';
+
   var $base_field = 'nid';
 
   // Stores the nodes loaded with pre_render.
@@ -192,4 +192,5 @@ class Rss extends RowPluginBase {
       'row' => $item
     ));
   }
+
 }

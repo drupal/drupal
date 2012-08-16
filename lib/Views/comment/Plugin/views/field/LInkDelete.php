@@ -13,15 +13,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link to delete a node.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment_link_delete",
  *   module = "comment"
  * )
  */
 class LinkDelete extends Link {
+
   function access() {
     //needs permission to administer comments in general
     return user_access('administer comments');
@@ -37,4 +36,5 @@ class LinkDelete extends Link {
 
     return $text;
   }
+
 }

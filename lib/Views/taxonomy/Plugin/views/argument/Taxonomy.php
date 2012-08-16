@@ -14,10 +14,8 @@ use Drupal\Core\Annotation\Plugin;
  * Argument handler for basic taxonomy tid.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "taxonomy",
  *   module = "taxonomy"
  * )
@@ -38,4 +36,5 @@ class Taxonomy extends Numeric {
     // TODO review text
     return t('No name');
   }
+
 }

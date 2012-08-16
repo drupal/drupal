@@ -29,6 +29,7 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
  * basic mechanisms for different output methods.
  */
 abstract class DisplayPluginBase extends Plugin {
+
   /**
    * The top object of a view.
    *
@@ -3092,8 +3093,8 @@ abstract class DisplayPluginBase extends Plugin {
       'items per page description' => t('The number of items to display. Enter 0 for no limit.')
     );
   }
-}
 
+}
 
 /**
  * @}

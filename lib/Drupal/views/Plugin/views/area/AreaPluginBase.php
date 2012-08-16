@@ -22,10 +22,7 @@ use Drupal\views\Plugin\views\Handler;
  *
  * @ingroup views_area_handlers
  */
-
-/**
- */
-class AreaPluginBase extends Handler {
+abstract class AreaPluginBase extends Handler {
 
   /**
    * Overrides Handler::init().
@@ -108,6 +105,7 @@ class AreaPluginBase extends Handler {
   function use_group_by() {
     return FALSE;
   }
+
 }
 
 /**

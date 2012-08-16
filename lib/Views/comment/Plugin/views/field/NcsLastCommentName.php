@@ -15,15 +15,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present the name of the last comment poster.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "comment_ncs_last_comment_name",
  *   module = "comment"
  * )
  */
 class NcsLastCommentName extends FieldPluginBase {
+
   function query() {
     // last_comment_name only contains data if the user is anonymous. So we
     // have to join in a specially related user table.
@@ -64,4 +63,5 @@ class NcsLastCommentName extends FieldPluginBase {
       return $this->sanitize_value($this->get_value($values));
     }
   }
+
 }

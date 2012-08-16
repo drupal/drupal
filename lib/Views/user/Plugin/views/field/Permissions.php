@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\field\PrerenderList;
  * Field handler to provide a list of permissions.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_permissions",
  *   module = "user"
  * )
  */
 class Permissions extends PrerenderList {
+
   function construct() {
     parent::construct();
     $this->additional_fields['uid'] = array('table' => 'users', 'field' => 'uid');
@@ -77,4 +76,5 @@ class Permissions extends PrerenderList {
     $tokens['[' . $this->options['id'] . '-rid' . ']'] = $item['rid'];
   }
   */
+
 }

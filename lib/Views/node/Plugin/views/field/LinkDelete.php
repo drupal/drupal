@@ -14,9 +14,7 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link to delete a node.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_link_delete",
  *   module = "node"
@@ -40,4 +38,5 @@ class LinkDelete extends Link {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
     return $text;
   }
+
 }

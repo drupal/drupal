@@ -16,15 +16,14 @@ use Drupal\Core\Annotation\Plugin;
  * options.
  *
  * @ingroup views_relationship_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "translation",
  *   module = "translation"
  * )
  */
 class Translation extends RelationshipPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['language'] = array('default' => 'current');
@@ -113,4 +112,5 @@ class Translation extends RelationshipPluginBase {
 
     $this->alias = $this->query->add_relationship($alias, $join, $this->definition['base'], $this->relationship);
   }
+
 }

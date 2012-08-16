@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to display the number of new comments.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "node_new_comments",
  *   module = "comment"
  * )
  */
 class NodeNewComments extends Numeric {
+
   function init(&$view, &$options) {
     parent::init($view, $options);
 
@@ -125,4 +124,5 @@ class NodeNewComments extends Numeric {
       $this->options['alter']['make_link'] = FALSE;
     }
   }
+
 }

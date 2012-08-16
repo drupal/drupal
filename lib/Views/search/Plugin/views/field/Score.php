@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to provide simple renderer that allows linking to a node.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "search_score",
  *   module = "search"
  * )
  */
 class Score extends Numeric {
+
   function option_definition() {
     $options = parent::option_definition();
 
@@ -90,4 +89,5 @@ class Score extends Numeric {
       return parent::render($values);
     }
   }
+
 }

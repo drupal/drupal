@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to present a link to the user.
  *
  * @ingroup views_field_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_link",
  *   module = "user"
  * )
  */
 class Link extends FieldPluginBase {
+
   function construct() {
     parent::construct();
     $this->additional_fields['uid'] = 'uid';

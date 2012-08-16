@@ -15,15 +15,12 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_display_plugins
  */
-
-/**
- */
 abstract class DisplayExtenderPluginBase extends Plugin {
+
   function init(&$view, &$display) {
     $this->view = $view;
     $this->display = $display;
   }
-
 
   /**
    * Provide a form to edit options for this plugin.
@@ -67,4 +64,5 @@ abstract class DisplayExtenderPluginBase extends Plugin {
    * and what items each section contains.
    */
   function defaultable_sections(&$sections, $section = NULL) { }
+
 }

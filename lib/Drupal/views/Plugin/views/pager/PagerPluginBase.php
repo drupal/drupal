@@ -21,7 +21,9 @@ use Drupal\views\Plugin\views\Plugin;
  * The base plugin to handle pager.
  */
 abstract class PagerPluginBase extends Plugin {
+
   var $current_page = NULL;
+
   var $total_items = 0;
 
   /**
@@ -233,6 +235,7 @@ abstract class PagerPluginBase extends Plugin {
   function offset_exposed() {
     return FALSE;
   }
+
 }
 
 /**

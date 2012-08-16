@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\argument\Numeric;
  * Argument handler to accept a user id.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "user_uid",
  *   module = "user"
  * )
  */
 class Uid extends Numeric {
+
   /**
    * Override the behavior of title(). Get the name of the user.
    *
@@ -42,4 +41,5 @@ class Uid extends Numeric {
     }
     return $titles;
   }
+
 }

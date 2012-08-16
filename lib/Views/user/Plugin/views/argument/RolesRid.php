@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\argument\ManyToOne;
  * Allow role ID(s) as argument.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "users_roles_rid",
  *   module = "user"
  * )
  */
 class RolesRid extends ManyToOne {
+
   function title_query() {
     $titles = array();
 
@@ -32,4 +31,5 @@ class RolesRid extends ManyToOne {
     }
     return $titles;
   }
+
 }

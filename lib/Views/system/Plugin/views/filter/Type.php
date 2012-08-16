@@ -19,6 +19,7 @@ use Drupal\Core\Annotation\Plugin;
  * )
  */
 class Type extends InOperator {
+
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Type');
@@ -28,4 +29,5 @@ class Type extends InOperator {
       $this->value_options = $types;
     }
   }
+
 }

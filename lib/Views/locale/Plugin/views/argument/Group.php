@@ -14,15 +14,14 @@ use Drupal\Core\Annotation\Plugin;
  * Argument handler to accept a language.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "locale_group",
  *   module = "locale"
  * )
  */
 class Group extends ArgumentPluginBase {
+
   function construct() {
     parent::construct('group');
   }
@@ -49,4 +48,5 @@ class Group extends ArgumentPluginBase {
     asort($groups);
     return isset($groups[$group]) ? $groups[$group] : t('Unknown group');
   }
+
 }

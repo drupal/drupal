@@ -19,14 +19,13 @@ use Drupal\Core\Annotation\Plugin;
  *           which goes with the 'body' field.
  *
  * @ingroup views_field_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "markup"
  * )
  */
 class Markup extends FieldPluginBase {
+
   /**
    * Constructor; calls to base object constructor.
    */
@@ -66,4 +65,5 @@ class Markup extends FieldPluginBase {
 
     return 'div';
   }
+
 }

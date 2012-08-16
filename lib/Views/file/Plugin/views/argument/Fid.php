@@ -14,15 +14,14 @@ use Drupal\views\Plugin\views\argument\Numeric;
  * Argument handler to accept multiple file ids.
  *
  * @ingroup views_argument_handlers
- */
-
-/**
+ *
  * @Plugin(
  *   id = "file_fid",
  *   module = "file"
  * )
  */
 class Fid extends Numeric {
+
   /**
    * Override the behavior of title_query(). Get the filenames.
    */
@@ -37,4 +36,5 @@ class Fid extends Numeric {
     }
     return $titles;
   }
+
 }

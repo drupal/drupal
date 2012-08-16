@@ -17,14 +17,13 @@ use Drupal\Core\Annotation\Plugin;
  * - options arguments: An array of arguments to pass to the options callback.
  *
  * @ingroup views_filter_handlers
- */
-
-/**
- * @plugin(
+ *
+ * @Plugin(
  *   id = "in_operator"
  * )
  */
 class InOperator extends FilterPluginBase {
+
   var $value_form_type = 'checkboxes';
 
   /**
@@ -435,4 +434,5 @@ class InOperator extends FilterPluginBase {
     }
     return $errors;
   }
+
 }
