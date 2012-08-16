@@ -31,7 +31,7 @@ class TranslatableTest extends ViewsSqlTest {
   protected function setUp() {
     parent::setUp();
 
-    config('views.settings')->set('views_localization_plugin', 'test_localization')->save();
+    config('views.settings')->set('localization_plugin', 'test_localization')->save();
     // Reset the plugin data.
     views_fetch_plugin_data(NULL, NULL, TRUE);
     $this->strings = array(

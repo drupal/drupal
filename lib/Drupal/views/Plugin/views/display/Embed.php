@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  * @ingroup views_display_plugins
  *
  * @todo: Wait until annotations/plugins support access mehtods.
- * no ui => !config('views.settings')->get('views_ui_display_embed'),
+ * no ui => !config('views.settings')->get('ui.show.display_embed'),
  */
 
 /**

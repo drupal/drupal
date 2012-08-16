@@ -237,18 +237,19 @@ function views_revert_view($view) {
  */
 function views_development_settings() {
   config('views.settings')
-    ->set('views_ui_show_listing_filters', TRUE)
-    ->set('views_ui_show_master_display', TRUE)
-    ->set('views_ui_show_advanced_column', TRUE)
-    ->set('views_ui_always_live_preview', FALSE)
-    ->set('views_ui_always_live_preview_button', TRUE)
-    ->set('views_ui_show_preview_information', TRUE)
-    ->set('views_ui_show_sql_query', TRUE)
-    ->set('views_ui_show_performance_statistics', TRUE)
-    ->set('views_show_additional_queries', TRUE)
-    ->set('views_devel_output', TRUE)
-    ->set('views_devel_region', 'message')
-    ->set('views_ui_display_embed', TRUE)
+    ->set('ui.show.listing_filters', TRUE)
+    ->set('ui.show.master_display', TRUE)
+    ->set('ui.show.advanced_column', TRUE)
+    ->set('ui.always_live_preview', FALSE)
+    ->set('ui.always_live_preview_button', TRUE)
+    ->set('ui.show.preview_information', TRUE)
+    ->set('ui.show.sql_query.enabled', TRUE)
+    ->set('ui.show.sql_query.where', 'above')
+    ->set('ui.show.performance_statistics', TRUE)
+    ->set('ui.show.additional_queries', TRUE)
+    ->set('debug.output', TRUE)
+    ->set('debug.region', 'message')
+    ->set('ui.show.display_embed', TRUE)
     ->save();
 
   $message = dt('Setup the new views settings.');

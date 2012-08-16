@@ -69,7 +69,7 @@ class views_ui extends ctools_export_ui {
 
   function list_form(&$form, &$form_state) {
     $row_class = 'container-inline';
-    if (!config('views.settings')->get('views_ui_show_listing_filters')) {
+    if (!config('views.settings')->get('ui.show.listing_filters')) {
       $row_class .= " element-invisible";
     }
 

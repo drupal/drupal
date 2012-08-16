@@ -1046,7 +1046,7 @@ class View extends ViewsDbObject {
       $exposed_form->query();
     }
 
-    if (config('views.settings')->get('views_sql_signature')) {
+    if (config('views.settings')->get('sql_signature')) {
       $this->query->add_signature($this);
     }
 
@@ -1196,7 +1196,7 @@ class View extends ViewsDbObject {
     $this->response = new Response('', 200);
 
     $start = microtime(TRUE);
-    if (!empty($this->live_preview) && $config->get('views_show_additional_queries')) {
+    if (!empty($this->live_preview) && $config->get('ui.show.additional_queries')) {
       $this->start_query_capture();
     }
 
@@ -1285,7 +1285,7 @@ class View extends ViewsDbObject {
       $function($this, $this->display_handler->output, $cache);
     }
 
-    if (!empty($this->live_preview) && $config->get('views_show_additional_queries')) {
+    if (!empty($this->live_preview) && $config->get('ui.show.additional_queries')) {
       $this->end_query_capture();
     }
     $this->render_time = microtime(TRUE) - $start;

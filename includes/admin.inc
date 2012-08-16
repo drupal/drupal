@@ -88,7 +88,7 @@ function views_ui_add_admin_css() {
  * be useful.
  */
 function views_ui_check_advanced_help() {
-  if (!config('views.settings')->get('views_ui_show_advanced_help_warning')) {
+  if (!config('views.settings')->get('ui.show.advanced_help_warning')) {
     return;
   }
 
@@ -119,13 +119,13 @@ function views_ui_preview($view, $display_id, $args = array()) {
 
   // Determine where the query and performance statistics should be output.
   $config = config('views.settings');
-  $show_query = $config->get('views_ui_show_sql_query');
-  $show_info = $config->get('views_ui_show_preview_information');
-  $show_location = $config->get('views_ui_show_sql_query_where');
+  $show_query = $config->get('ui.show.sql_query.enabled');
+  $show_info = $config->get('ui.show.preview_information');
+  $show_location = $config->get('ui.show.sql_query.where');
 
-  $show_stats = $config->get('views_ui_show_performance_statistics');
+  $show_stats = $config->get('ui.show.performance_statistics');
   if ($show_stats) {
-    $show_stats = $config->get('views_ui_show_sql_query_where');
+    $show_stats = $config->get('ui.show.sql_query.where');
   }
 
   $combined = $show_query && $show_stats;
@@ -1181,7 +1181,7 @@ function views_ui_preview_form($form, &$form_state, $view, $display_id = 'defaul
     '#type' => 'checkbox',
     '#id' => 'edit-displays-live-preview',
     '#title' => t('Auto preview'),
-    '#default_value' => config('views.settings')->get('views_ui_always_live_preview'),
+    '#default_value' => config('views.settings')->get('ui.always_live_preview'),
   );
 
   // Add the arguments textfield
@@ -1510,7 +1510,7 @@ function views_ui_edit_page_display_tabs($view, $display_id = NULL) {
  */
 function views_ui_show_default_display($view) {
   // Always show the default display for advanced users who prefer that mode.
-  $advanced_mode = config('views.settings')->get('views_ui_show_master_display');
+  $advanced_mode = config('views.settings')->get('ui.show.master_display');
   // For other users, show the default display only if there are no others, and
   // hide it if there's at least one "real" display.
   $additional_displays = (count($view->display) == 1);
@@ -1689,7 +1689,7 @@ function views_ui_get_display_tab_details($view, $display) {
   // recollapse the column.
   $build['columns']['third']['#attributes']['id'] = 'views-ui-advanced-column-' . $view->name;
   // Collapse the div by default.
-  if (!config('views.settings')->get('views_ui_show_advanced_column')) {
+  if (!config('views.settings')->get('ui.show.advanced_column')) {
     $build['columns']['third']['#attributes']['class'][] = 'ctools-collapsed';
   }
   $build['columns']['third']['advanced'] = array('#markup' => '<h3 class="ctools-collapsible-handle"><a href="">' . t('Advanced') . '</a></h3>');
@@ -4657,7 +4657,7 @@ function views_ui_get_roles() {
 /**
  * Form builder for the admin display defaults page.
  */
-function views_ui_admin_settings_basic() {
+function views_ui_admin_settings_basic($form, &$form_state) {
   $form = array();
   $form['#attached']['css'] = views_ui_get_admin_css();
 
@@ -4674,51 +4674,51 @@ function views_ui_admin_settings_basic() {
   // so this will make it easier to change if we do.
   $form['basic'] = array();
 
-  $form['basic']['views_ui_show_listing_filters'] = array(
+  $form['basic']['ui_show_listing_filters'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show filters on the list of views'),
-    '#default_value' => $config->get('views_ui_show_listing_filters'),
+    '#default_value' => $config->get('ui.show.listing_filters'),
   );
-  $form['basic']['views_ui_show_advanced_help_warning'] = array(
+  $form['basic']['ui_show_advanced_help_warning'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show advanced help warning'),
-    '#default_value' => $config->get('views_ui_show_advanced_help_warning'),
+    '#default_value' => $config->get('ui.show.advanced_help_warning'),
   );
 
-  $form['basic']['views_ui_show_master_display'] = array(
+  $form['basic']['ui_show_master_display'] = array(
     '#type' => 'checkbox',
     '#title' => t('Always show the master display'),
     '#description' => t('Advanced users of views may choose to see the master (i.e. default) display.'),
-    '#default_value' => $config->get('views_ui_show_master_display'),
+    '#default_value' => $config->get('ui.show.master_display'),
   );
 
-  $form['basic']['views_ui_show_advanced_column'] = array(
+  $form['basic']['ui_show_advanced_column'] = array(
     '#type' => 'checkbox',
     '#title' => t('Always show advanced display settings'),
     '#description' => t('Default to showing advanced display settings, such as relationships and contextual filters.'),
-    '#default_value' => $config->get('views_ui_show_advanced_column'),
+    '#default_value' => $config->get('ui.show.advanced_column'),
   );
 
-  $form['basic']['views_ui_display_embed'] = array(
+  $form['basic']['ui_show_display_embed'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show the embed display in the ui.'),
     '#description' => t('Allow advanced user to use the embed view display. The plugin itself works if it\'s not visible in the ui'),
-    '#default_value' => $config->get('views_ui_display_embed'),
+    '#default_value' => $config->get('ui.show.display_embed'),
   );
 
-  $form['basic']['views_ui_custom_theme'] = array(
+  $form['basic']['ui_custom_theme'] = array(
     '#type' => 'select',
     '#title' => t('Custom admin theme for the Views UI'),
     '#options' => array('_default' => t('- Use default -')) + $options,
-    '#default_value' => $config->get('views_ui_custom_theme'),
+    '#default_value' => $config->get('ui.custom_theme'),
     '#description' => t('In some cases you might want to select a different admin theme for the Views UI.')
   );
 
-  $form['basic']['views_exposed_filter_any_label'] = array(
+  $form['basic']['ui_exposed_filter_any_label'] = array(
     '#type' => 'select',
     '#title' => t('Label for "Any" value on non-required single-select exposed filters'),
     '#options' => array('old_any' => '<Any>', 'new_any' => t('- Any -')),
-    '#default_value' => $config->get('views_exposed_filter_any_label'),
+    '#default_value' => $config->get('ui.exposed_filter_any_label'),
   );
 
   $form['live_preview'] = array(
@@ -4726,62 +4726,55 @@ function views_ui_admin_settings_basic() {
     '#title' => t('Live preview settings'),
   );
 
-  $form['live_preview']['views_ui_always_live_preview'] = array(
+  $form['live_preview']['ui_always_live_preview'] = array(
     '#type' => 'checkbox',
     '#title' => t('Automatically update preview on changes'),
-    '#default_value' => $config->get('views_ui_always_live_preview'),
+    '#default_value' => $config->get('ui.always_live_preview'),
   );
 
-  $form['live_preview']['views_ui_show_preview_information'] = array(
+  $form['live_preview']['ui_show_preview_information'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show information and statistics about the view during live preview'),
-    '#default_value' => $config->get('views_ui_show_preview_information'),
+    '#default_value' => $config->get('ui.show.preview_information'),
   );
 
   $form['live_preview']['options'] = array(
     '#type' => 'container',
     '#states' => array(
       'visible' => array(
-        ':input[name="views_ui_show_preview_information"]' => array('checked' => TRUE),
+        ':input[name="ui.show.preview_information"]' => array('checked' => TRUE),
       ),
     ),
   );
 
-  $form['live_preview']['options']['views_ui_show_sql_query_where'] = array(
+  $form['live_preview']['options']['ui_show_sql_query_where'] = array(
     '#type' => 'radios',
     '#options' => array(
       'above' => t('Above the preview'),
       'below' => t('Below the preview'),
     ),
-    '#default_value' => $config->get('views_ui_show_sql_query_where'),
+    '#default_value' => $config->get('ui.show.sql_query.where'),
   );
 
-  $form['live_preview']['options']['views_ui_show_sql_query'] = array(
+  $form['live_preview']['options']['ui_show_sql_query_enabled'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show the SQL query'),
-    '#default_value' => $config->get('views_ui_show_sql_query'),
+    '#default_value' => $config->get('ui.show.sql_query.enabled'),
   );
-  $form['live_preview']['options']['views_ui_show_performance_statistics'] = array(
+  $form['live_preview']['options']['ui_show_performance_statistics'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show performance statistics'),
-    '#default_value' => $config->get('views_ui_show_performance_statistics'),
+    '#default_value' => $config->get('ui.show.performance_statistics'),
   );
 
-  $form['live_preview']['options']['views_show_additional_queries'] = array(
+  $form['live_preview']['options']['ui_show_additional_queries'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show other queries run during render during live preview'),
     '#description' => t("Drupal has the potential to run many queries while a view is being rendered. Checking this box will display every query run during view render as part of the live preview."),
-    '#default_value' => $config->get('views_show_additional_queries'),
+    '#default_value' => $config->get('ui.show.additional_queries'),
   );
 
-  $form['actions']['#type'] = 'actions';
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save configuration'),
-  );
-  $form['#submit'][] = 'views_ui_admin_settings_basic_submit';
-
-  return $form;
+  return system_config_form($form, $form_state);
 }
 
 /**
@@ -4791,19 +4784,19 @@ function views_ui_admin_settings_basic() {
  */
 function views_ui_admin_settings_basic_submit(&$form, &$form_state) {
   config('views.settings')
-    ->set('views_ui_show_listing_filters', $form_state['values']['views_ui_show_listing_filters'])
-    ->set('views_ui_show_advanced_help_warning', $form_state['values']['views_ui_show_advanced_help_warning'])
-    ->set('views_ui_show_master_display', $form_state['values']['views_ui_show_master_display'])
-    ->set('views_ui_show_advanced_column', $form_state['values']['views_ui_show_advanced_column'])
-    ->set('views_ui_display_embed', $form_state['values']['views_ui_display_embed'])
-    ->set('views_ui_custom_theme', $form_state['values']['views_ui_custom_theme'])
-    ->set('views_exposed_filter_any_label', $form_state['values']['views_exposed_filter_any_label'])
-    ->set('views_ui_always_live_preview', $form_state['values']['views_ui_always_live_preview'])
-    ->set('views_ui_show_preview_information', $form_state['values']['views_ui_show_preview_information'])
-    ->set('views_ui_show_sql_query_where', $form_state['values']['views_ui_show_sql_query_where'])
-    ->set('views_ui_show_sql_query', $form_state['values']['views_ui_show_sql_query'])
-    ->set('views_ui_show_performance_statistics', $form_state['values']['views_ui_show_performance_statistics'])
-    ->set('views_show_additional_queries', $form_state['values']['views_show_additional_queries'])
+    ->set('ui.show.listing_filters', $form_state['values']['ui_show_listing_filters'])
+    ->set('ui.show.advanced_help_warning', $form_state['values']['ui_show_advanced_help_warning'])
+    ->set('ui.show.master_display', $form_state['values']['ui_show_master_display'])
+    ->set('ui.show.advanced_column', $form_state['values']['ui_show_advanced_column'])
+    ->set('ui.show.display_embed', $form_state['values']['ui_show_display_embed'])
+    ->set('ui.custom_theme', $form_state['values']['ui_custom_theme'])
+    ->set('ui.exposed_filter_any_label', $form_state['values']['ui_exposed_filter_any_label'])
+    ->set('ui.always_live_preview', $form_state['values']['ui_always_live_preview'])
+    ->set('ui.show.preview_information', $form_state['values']['ui_show_preview_information'])
+    ->set('ui.show.sql_query.where', $form_state['values']['ui_show_sql_query_where'])
+    ->set('ui.show.sql_query.enabled', $form_state['values']['ui_show_sql_query_enabled'])
+    ->set('ui.show.performance_statistics', $form_state['values']['ui_show_performance_statistics'])
+    ->set('ui.show.additional_queries', $form_state['values']['ui_show_additional_queries'])
     ->save();
 }
 
@@ -4821,11 +4814,11 @@ function views_ui_admin_settings_advanced() {
     '#title' => t('Caching'),
   );
 
-  $form['cache']['views_skip_cache'] = array(
+  $form['cache']['skip_cache'] = array(
     '#type' => 'checkbox',
     '#title' => t('Disable views data caching'),
     '#description' => t("Views caches data about tables, modules and views available, to increase performance. By checking this box, Views will skip this cache and always rebuild this data when needed. This can have a serious performance impact on your site."),
-    '#default_value' => $config->get('views_skip_cache'),
+    '#default_value' => $config->get('skip_cache'),
   );
 
   $form['cache']['clear_cache'] = array(
@@ -4839,26 +4832,26 @@ function views_ui_admin_settings_advanced() {
     '#title' => t('Debugging'),
   );
 
-  $form['debug']['views_sql_signature'] = array(
+  $form['debug']['sql_signature'] = array(
     '#type' => 'checkbox',
     '#title' => t('Add Views signature to all SQL queries'),
     '#description' => t("All Views-generated queries will include the name of the views and display 'view-name:display-name' as a string  at the end of the SELECT clause. This makes identifying Views queries in database server logs simpler, but should only be used when troubleshooting."),
 
-    '#default_value' => $config->get('views_sql_signature'),
+    '#default_value' => $config->get('sql_signature'),
   );
 
-  $form['debug']['views_no_javascript'] = array(
+  $form['debug']['no_javascript'] = array(
     '#type' => 'checkbox',
     '#title' => t('Disable JavaScript with Views'),
     '#description' => t("If you are having problems with the JavaScript, you can disable it here. The Views UI should degrade and still be usable without javascript; it's just not as good."),
-    '#default_value' => $config->get('views_no_javascript'),
+    '#default_value' => $config->get('no_javascript'),
   );
 
-  $form['debug']['views_devel_output'] = array(
+  $form['debug']['debug_output'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable views performance statistics/debug messages via the Devel module'),
     '#description' => t("Check this to enable some Views query and performance statistics/debug messages <em>if Devel is installed</em>."),
-    '#default_value' => $config->get('views_devel_output'),
+    '#default_value' => $config->get('debug.output'),
   );
 
   $form['locale'] = array(
@@ -4866,7 +4859,7 @@ function views_ui_admin_settings_advanced() {
     '#title' => t('Localization'),
   );
 
-  $form['locale']['views_localization_plugin'] =  array(
+  $form['locale']['localization_plugin'] =  array(
     '#type' => 'radios',
     '#title' => t('Translation method'),
     '#options' => views_fetch_plugin_names('localization', NULL, array()),
@@ -4881,10 +4874,10 @@ function views_ui_admin_settings_advanced() {
     $regions['drupal_debug'] = t('Devel logging (tmp://drupal_debug.txt)');
   }
 
-  $form['debug']['views_devel_region'] = array(
+  $form['debug']['debug_region'] = array(
     '#type' => 'select',
     '#title' => t('Page region to output performance statistics/debug messages'),
-    '#default_value' => $config->get('views_devel_region'),
+    '#default_value' => $config->get('debug.region'),
     '#options' => $regions,
     '#states' => array(
       'visible' => array(
@@ -4899,7 +4892,7 @@ function views_ui_admin_settings_advanced() {
       '#type' => 'fieldset',
     );
     ;
-    $form['extenders']['views_display_extenders'] = array(
+    $form['extenders']['display_extenders'] = array(
       '#title' => t('Display extenders'),
       '#default_value' => views_get_enabled_display_extenders(),
       '#options' => $options,
@@ -4926,13 +4919,13 @@ function views_ui_admin_settings_advanced() {
  */
 function views_ui_admin_settings_advanced_submit(&$form, &$form_state) {
   config('views.settings')
-    ->set('views_skip_cache', $form_state['values']['views_skip_cache'])
-    ->set('views_sql_signature', $form_state['values']['views_sql_signature'])
-    ->set('views_no_javascript', $form_state['values']['views_no_javascript'])
-    ->set('views_devel_output', $form_state['values']['views_devel_output'])
-    ->set('views_localization_plugin', $form_state['values']['views_localization_plugin'])
-    ->set('views_devel_region', $form_state['values']['views_devel_region'])
-    ->set('views_display_extenders', isset($form_state['values']['views_display_extenders']) ? $form_state['values']['views_display_extenders'] : array())
+    ->set('skip_cache', $form_state['values']['skip_cache'])
+    ->set('sql_signature', $form_state['values']['sql_signature'])
+    ->set('no_javascript', $form_state['values']['no_javascript'])
+    ->set('debug.output', $form_state['values']['debug_output'])
+    ->set('localization_plugin', $form_state['values']['localization_plugin'])
+    ->set('debug.region', $form_state['values']['debug_region'])
+    ->set('display_extenders', isset($form_state['values']['display_extenders']) ? $form_state['values']['display_extenders'] : array())
     ->save();
 }
 

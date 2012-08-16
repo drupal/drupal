@@ -1172,7 +1172,7 @@ function views_add_css($file) {
  */
 function views_add_js($file) {
   // If javascript has been disabled by the user, never add js files.
-  if (config('views.settings')->get('views_no_javascript')) {
+  if (config('views.settings')->get('no_javascript')) {
     return;
   }
   static $base = TRUE, $ajax = TRUE;
@@ -1388,7 +1388,7 @@ function views_get_plugin($type, $id, $reset = FALSE) {
  * @return The name of the localization plugin.
  */
 function views_get_localization_plugin() {
-  $plugin = config('views.settings')->get('views_localization_plugin');
+  $plugin = config('views.settings')->get('localization_plugin');
   // Provide sane default values for the localization plugin.
   if (empty($plugin)) {
     if (module_exists('locale')) {
@@ -1406,7 +1406,7 @@ function views_get_localization_plugin() {
  * Get enabled display extenders.
  */
 function views_get_enabled_display_extenders() {
-  $enabled = array_filter((array) config('views.settings')->get('views_display_extenders'));
+  $enabled = array_filter((array) config('views.settings')->get('display_extenders'));
   $options = views_fetch_plugin_names('display_extender');
   foreach ($options as $name => $plugin) {
     $enabled[$name] = $name;
@@ -1767,8 +1767,8 @@ function views_debug($message, $placeholders = array()) {
     $output = '<pre>' . var_export($message, TRUE) . '</pre>';
   }
   $config = config('views.settings');
-  if (module_exists('devel') && $config->get('views_devel_output') && user_access('access devel information')) {
-    $devel_region = $config->get('views_devel_region');
+  if (module_exists('devel') && $config->get('debug.output') && user_access('access devel information')) {
+    $devel_region = $config->get('debug.region');
     if ($devel_region == 'watchdog') {
       $output = $message;
       watchdog('views_logging', $output, $placeholders);

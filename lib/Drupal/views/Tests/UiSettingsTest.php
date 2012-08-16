@@ -42,7 +42,7 @@ class UiSettingsTest extends ViewsSqlTest {
 
     // Configure to hide listing filters.
     $edit = array(
-      'views_ui_show_listing_filters' => FALSE,
+      'ui_show_listing_filters' => FALSE,
     );
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
     $this->drupalGet('admin/structure/views');
@@ -51,7 +51,7 @@ class UiSettingsTest extends ViewsSqlTest {
 
     // Configure to show listing filters.
     $edit = array(
-      'views_ui_show_listing_filters' => TRUE,
+      'ui_show_listing_filters' => TRUE,
     );
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
     $this->drupalGet('admin/structure/views');
@@ -67,7 +67,7 @@ class UiSettingsTest extends ViewsSqlTest {
 
     // Configure to hide the advanced help message.
     $edit = array(
-      'views_ui_show_advanced_help_warning' => FALSE,
+      'ui_show_advanced_help_warning' => FALSE,
     );
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
     $this->drupalGet('admin/structure/views');
@@ -76,7 +76,7 @@ class UiSettingsTest extends ViewsSqlTest {
 
     // Configure to show the advanced help message.
     $edit = array(
-      'views_ui_show_advanced_help_warning' => TRUE,
+      'ui_show_advanced_help_warning' => TRUE,
     );
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
     $this->drupalGet('admin/structure/views');
@@ -92,7 +92,7 @@ class UiSettingsTest extends ViewsSqlTest {
 
     // Configure to always show the master display.
     $edit = array(
-      'views_ui_show_master_display' => TRUE,
+      'ui_show_master_display' => TRUE,
     );
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
 
@@ -111,7 +111,7 @@ class UiSettingsTest extends ViewsSqlTest {
     // If you have a view without a page or block the master display should be
     // still shown.
     $edit = array(
-      'views_ui_show_master_display' => FALSE,
+      'ui_show_master_display' => FALSE,
     );
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
 
@@ -131,14 +131,14 @@ class UiSettingsTest extends ViewsSqlTest {
 
     // Configure to show the embedable display.
     $edit = array(
-      'views_ui_display_embed' => TRUE,
+      'ui_show_display_embed' => TRUE,
     );
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
     $this->drupalPost('admin/structure/views/add', $view, t('Continue & edit'));
     $this->assertFieldById('edit-displays-top-add-display-embed');
 
     $edit = array(
-      'views_ui_display_embed' => FALSE,
+      'ui_show_display_embed' => FALSE,
     );
     $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
     views_invalidate_cache();
