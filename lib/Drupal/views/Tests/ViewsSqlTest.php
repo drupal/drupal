@@ -9,8 +9,8 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\views\View;
 
 /**
-   * Abstract class for views testing.
-   */
+ * Abstract class for views testing.
+ */
 abstract class ViewsSqlTest extends WebTestBase {
 
   /**
@@ -158,6 +158,22 @@ abstract class ViewsSqlTest extends WebTestBase {
     $view->pre_execute($args);
     $view->execute();
     $this->verbose('<pre>Executed view: ' . ((string) $view->build_info['query']) . '</pre>');
+  }
+
+  /**
+   * Build and return a Page view of the views_test table.
+   *
+   * @return view
+   */
+  protected function getBasicPageView() {
+    $view = $this->getBasicView();
+
+    // In order to test exposed filters, we have to disable
+    // the exposed forms cache.
+    drupal_static_reset('views_exposed_form_cache');
+
+    $display = $view->new_display('page', 'Page', 'page_1');
+    return $view;
   }
 
   /**

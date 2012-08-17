@@ -2789,8 +2789,15 @@ abstract class DisplayPluginBase extends Plugin {
     foreach (View::views_object_types() as $type => $info) {
       foreach ($this->get_handlers($type) as $key => $handler) {
         if ($handler->can_expose() && $handler->is_exposed()) {
-          if ($id != $key && $identifier == $handler->options['expose']['identifier']) {
-            return FALSE;
+          if ($handler->is_a_group()) {
+            if ($id != $key && $identifier == $handler->options['group_info']['identifier']) {
+              return FALSE;
+            }
+          }
+          else {
+            if ($id != $key && $identifier == $handler->options['expose']['identifier']) {
+              return FALSE;
+            }
           }
         }
       }

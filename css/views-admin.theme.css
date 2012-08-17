@@ -380,6 +380,7 @@ td.group-title {
   text-transform: uppercase;
 }
 
+.grouped-description,
 .exposed-description {
   float: left;
   padding-top: 3px;

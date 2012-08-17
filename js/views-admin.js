@@ -827,7 +827,7 @@ Drupal.behaviors.viewsRemoveIconClass.attach = function (context, settings) {
     $('.icon', $this).removeClass('icon');
     $('.horizontal', $this).removeClass('horizontal');
   });
-}
+};
 
 /**
  * Change "Expose filter" buttons into checkboxes.
@@ -835,12 +835,39 @@ Drupal.behaviors.viewsRemoveIconClass.attach = function (context, settings) {
 Drupal.behaviors.viewsUiCheckboxify = {};
 Drupal.behaviors.viewsUiCheckboxify.attach = function (context, settings) {
   var $ = jQuery;
-  var $buttons = $('#edit-options-expose-button-button').once('views-ui-checkboxify');
+  var $buttons = $('#edit-options-expose-button-button, #edit-options-group-button-button').once('views-ui-checkboxify');
   var length = $buttons.length;
   var i;
   for (i = 0; i < length; i++) {
     new Drupal.viewsUi.Checkboxifier($buttons[i]);
   }
+};
+
+/**
+ * Change the default widget to select the default group according to the
+ * selected widget for the exposed group.
+ */
+Drupal.behaviors.viewsUiChangeDefaultWidget = {};
+Drupal.behaviors.viewsUiChangeDefaultWidget.attach = function (context, settings) {
+  var $ = jQuery;
+  function change_default_widget(multiple) {
+    if (multiple) {
+      $('input.default-radios').hide();
+      $('td.any-default-radios-row').parent().hide();
+      $('input.default-checkboxes').show();
+    }
+    else {
+      $('input.default-checkboxes').hide();
+      $('td.any-default-radios-row').parent().show();
+      $('input.default-radios').show();
+    }
+  }
+  // Update on widget change.
+  $('input[name="options[group_info][multiple]"]').change(function() {
+    change_default_widget($(this).attr("checked"));
+  });
+  // Update the first time the form is rendered.
+  $('input[name="options[group_info][multiple]"]').trigger('change');
 };
 
 /**
@@ -852,13 +879,14 @@ Drupal.behaviors.viewsUiCheckboxify.attach = function (context, settings) {
 Drupal.viewsUi.Checkboxifier = function (button) {
   var $ = jQuery;
   this.$button = $(button);
-  this.$parent = this.$button.parent('div.views-expose');
-  this.$checkbox = this.$parent.find('input:checkbox');
+  this.$parent = this.$button.parent('div.views-expose, div.views-grouped');
+  this.$input = this.$parent.find('input:checkbox, input:radio');
   // Hide the button and its description.
   this.$button.hide();
-  this.$parent.find('.exposed-description').hide();
+  this.$parent.find('.exposed-description, .grouped-description').hide();
 
-  this.$checkbox.click($.proxy(this, 'clickHandler'));
+  this.$input.click($.proxy(this, 'clickHandler'));
+
 };
 
 /**

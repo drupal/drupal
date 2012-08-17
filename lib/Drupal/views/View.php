@@ -1087,17 +1087,32 @@ class View extends ViewsDbObject {
   function _build($key) {
     $handlers = &$this->$key;
     foreach ($handlers as $id => $data) {
+
       if (!empty($handlers[$id]) && is_object($handlers[$id])) {
-        // Give this handler access to the exposed filter input.
-        if (!empty($this->exposed_data)) {
-          $rc = $handlers[$id]->accept_exposed_input($this->exposed_data);
-          $handlers[$id]->store_exposed_input($this->exposed_data, $rc);
-          if (!$rc) {
-            continue;
-          }
+        $multiple_exposed_input = array(0 => NULL);
+        if ($handlers[$id]->multiple_exposed_input()) {
+          $multiple_exposed_input = $handlers[$id]->group_multiple_exposed_input($this->exposed_data);
         }
-        $handlers[$id]->set_relationship();
-        $handlers[$id]->query($this->display_handler->use_group_by());
+        foreach ($multiple_exposed_input as $group_id) {
+          // Give this handler access to the exposed filter input.
+          if (!empty($this->exposed_data)) {
+            $converted = FALSE;
+            if ($handlers[$id]->is_a_group()) {
+              $converted = $handlers[$id]->convert_exposed_input($this->exposed_data, $group_id);
+              $handlers[$id]->store_group_input($this->exposed_data, $converted);
+              if (!$converted) {
+                continue;
+              }
+            }
+            $rc = $handlers[$id]->accept_exposed_input($this->exposed_data);
+            $handlers[$id]->store_exposed_input($this->exposed_data, $rc);
+            if (!$rc) {
+              continue;
+            }
+          }
+          $handlers[$id]->set_relationship();
+          $handlers[$id]->query($this->display_handler->use_group_by());
+        }
       }
     }
   }

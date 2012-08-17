@@ -104,6 +104,34 @@ class Date extends Numeric {
     }
   }
 
+  /**
+   * Validate the build group options form.
+   */
+  function build_group_validate($form, &$form_state) {
+    // Special case to validate grouped date filters, this is because the
+    // $group['value'] array contains the type of filter (date or offset)
+    // and therefore the number of items the comparission has to be done
+    // against 'one' instead of 'zero'.
+    foreach ($form_state['values']['options']['group_info']['group_items'] as $id => $group) {
+      if (empty($group['remove'])) {
+        // Check if the title is defined but value wasn't defined.
+        if (!empty($group['title'])) {
+          if ((!is_array($group['value']) && empty($group['value'])) || (is_array($group['value']) && count(array_filter($group['value'])) == 1)) {
+            form_error($form['group_info']['group_items'][$id]['value'], t('The value is required if title for this item is defined.'));
+          }
+        }
+
+        // Check if the value is defined but title wasn't defined.
+        if ((!is_array($group['value']) && !empty($group['value'])) || (is_array($group['value']) && count(array_filter($group['value'])) > 1)) {
+          if (empty($group['title'])) {
+            form_error($form['group_info']['group_items'][$id]['title'], t('The title is required if value for this item is defined.'));
+          }
+        }
+      }
+    }
+  }
+
+
   function accept_exposed_input($input) {
     if (empty($this->options['exposed'])) {
       return TRUE;

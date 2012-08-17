@@ -67,7 +67,6 @@ function views_ui_get_admin_css() {
     }
   }
 
-
   return $list;
 }
 
@@ -151,7 +150,6 @@ function views_ui_preview($view, $display_id, $args = array()) {
     }
 
     $view->set_exposed_input($exposed_input);
-
 
     if (!$view->set_display($display_id)) {
       return t('Invalid display id @display', array('@display' => $display_id));
@@ -2716,7 +2714,6 @@ function views_ui_get_form_progress($view) {
   return $progress;
 }
 
-
 // --------------------------------------------------------------------------
 // Various subforms for editing the pieces of a view.
 
@@ -3506,6 +3503,7 @@ function theme_views_ui_expose_filter_form($variables) {
 
   $output = drupal_render($form['form_description']);
   $output .= drupal_render($form['expose_button']);
+  $output .= drupal_render($form['group_button']);
   if (isset($form['required'])) {
     $output .= drupal_render($form['required']);
   }
@@ -3536,7 +3534,76 @@ function theme_views_ui_expose_filter_form($variables) {
 }
 
 /**
- * Submit handler for rearranging form
+ * Theme the build group filter form.
+ */
+function theme_views_ui_build_group_filter_form($variables) {
+  $form = $variables['form'];
+  $more = drupal_render($form['more']);
+
+  $output = drupal_render($form['form_description']);
+  $output .= drupal_render($form['expose_button']);
+  $output .= drupal_render($form['group_button']);
+  if (isset($form['required'])) {
+    $output .= drupal_render($form['required']);
+  }
+
+  $output .= drupal_render($form['operator']);
+  $output .= drupal_render($form['value']);
+
+  $output .= '<div class="views-left-40">';
+  $output .= drupal_render($form['optional']);
+  $output .= drupal_render($form['remember']);
+  $output .= '</div>';
+
+  $output .= '<div class="views-right-60">';
+  $output .= drupal_render($form['widget']);
+  $output .= drupal_render($form['label']);
+  $output .= '</div>';
+
+  $header = array(
+    t('Default'),
+    t('Weight'),
+    t('Label'),
+    t('Operator'),
+    t('Value'),
+    t('Operations'),
+  );
+
+  $form['default_group'] = form_process_radios($form['default_group']);
+  $form['default_group_multiple'] = form_process_checkboxes($form['default_group_multiple']);
+  $form['default_group']['All']['#title'] = '';
+
+  hide($form['default_group_multiple']['All']);
+  $rows[] = array(
+    drupal_render($form['default_group']['All']),
+    '',
+    array(
+      'data' => variable_get('views_exposed_filter_any_label', 'new_any') == 'old_any' ? t('&lt;Any&gt;') : t('- Any -'),
+      'colspan' => 4,
+      'class' => array('class' => 'any-default-radios-row'),
+    ),
+  );
+
+  foreach (element_children($form['group_items']) as $group_id) {
+    $form['group_items'][$group_id]['value']['#title'] = '';
+    $data = array(
+      'default' => drupal_render($form['default_group'][$group_id]) . drupal_render($form['default_group_multiple'][$group_id]),
+      'weight' => drupal_render($form['group_items'][$group_id]['weight']),
+      'title' => drupal_render($form['group_items'][$group_id]['title']),
+      'operator' => drupal_render($form['group_items'][$group_id]['operator']),
+      'value' => drupal_render($form['group_items'][$group_id]['value']),
+      'remove' => drupal_render($form['group_items'][$group_id]['remove']) . l('<span>' . t('Remove') . '</span>', 'javascript:void()', array('attributes' => array('id' => 'views-remove-link-' . $group_id, 'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item')), 'html' => true)),
+    );
+    $rows[] = array('data' => $data, 'id' => 'views-row-' . $group_id, 'class' => array('draggable'));
+  }
+  $table = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('class' => array('views-filter-groups'), 'id' => 'views-filter-groups'))) . drupal_render($form['add_group']);
+  drupal_add_tabledrag('views-filter-groups', 'order', 'sibling', 'weight');
+  $render_form = drupal_render_children($form);
+  return $output . $render_form . $table . $more;
+}
+
+/**
+ * Submit handler for rearranging form.
  */
 function views_ui_rearrange_form_submit($form, &$form_state) {
   $types = View::views_object_types();
@@ -3977,7 +4044,6 @@ function views_ui_add_item_form($form, &$form_state) {
   $form['#title'] = t('Add @type', array('@type' => $ltitle));
   $form['#section'] = $display_id . 'add-item';
 
-
   // Add the display override dropdown.
   views_ui_standard_display_dropdown($form, $form_state, $section);
 
@@ -4144,6 +4210,45 @@ function views_ui_add_item_form_submit($form, &$form_state) {
   views_ui_cache_set($form_state['view']);
 }
 
+/**
+ * Override handler for views_ui_edit_display_form
+ */
+function views_ui_config_item_form_build_group($form, &$form_state) {
+  $item = &$form_state['handler']->options;
+  // flip. If the filter was a group, set back to a standard filter.
+  $item['is_grouped'] = empty($item['is_grouped']);
+
+  // If necessary, set new defaults:
+  if ($item['is_grouped']) {
+    $form_state['handler']->build_group_options();
+  }
+
+  $form_state['view']->set_item($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+
+  views_ui_add_form_to_stack($form_state['form_key'], $form_state['view'], $form_state['display_id'], array($form_state['type'], $form_state['id']), TRUE, TRUE);
+
+  views_ui_cache_set($form_state['view']);
+  $form_state['rerender'] = TRUE;
+  $form_state['rebuild'] = TRUE;
+  $form_state['force_build_group_options'] = TRUE;
+}
+
+/**
+ * Add a new group to the exposed filter groups.
+ */
+function views_ui_config_item_form_add_group($form, &$form_state) {
+  $item =& $form_state['handler']->options;
+
+  // Add a new row.
+  $item['group_info']['group_items'][] = array();
+
+  $form_state['view']->set_item($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+
+  views_ui_cache_set($form_state['view']);
+  $form_state['rerender'] = TRUE;
+  $form_state['rebuild'] = TRUE;
+  $form_state['force_build_group_options'] = TRUE;
+}
 
 /**
  * Form to config_item items in the views UI.
@@ -4317,7 +4422,6 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   $handler = views_get_handler($item['table'], $item['field'], $handler_type, $override);
   $handler->init($form_state['view'], $item);
 
-
   // Add the incoming options to existing options because items using
   // the extra form may not have everything in the form here.
   $options = $form_state['values']['options'] + $form_state['handler']->options;
@@ -4371,7 +4475,6 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   // can use that for storage.
   $handler = views_get_handler($item['table'], $item['field'], $handler_type, $override);
   $handler->init($form_state['view'], $item);
-
 
   // Add the incoming options to existing options because items using
   // the extra form may not have everything in the form here.
@@ -4901,7 +5004,6 @@ function views_ui_admin_settings_advanced() {
     );
   }
 
-
   $form['actions']['#type'] = 'actions';
   $form['actions']['submit'] = array(
     '#type' => 'submit',
@@ -5163,7 +5265,6 @@ function views_fetch_fields($base, $type, $grouping = FALSE) {
   }
   return array();
 }
-
 
 /**
  * Theme the form for the table style plugin

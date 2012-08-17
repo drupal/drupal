@@ -212,6 +212,12 @@ function views_ui_theme() {
       'file' => "includes/admin.inc",
     ),
 
+    // Group of filters.
+    'views_ui_build_group_filter_form' => array(
+      'render element' => 'form',
+      'file' => 'includes/admin.inc',
+    ),
+
     // tab themes
     'views_tabset' => array(
       'variables' => array('tabs' => NULL),

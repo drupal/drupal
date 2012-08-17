@@ -158,6 +158,9 @@ class String extends FilterPluginBase {
   }
 
   function admin_summary() {
+    if ($this->is_a_group()) {
+      return t('grouped');
+    }
     if (!empty($this->options['exposed'])) {
       return t('exposed');
     }
