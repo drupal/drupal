@@ -7,7 +7,7 @@
 
 namespace Views\field\Plugin\views\filter;
 
-use Drupal\views\Plugin\views\filter\InOperator;
+use Drupal\views\Plugin\views\filter\ManyToOne;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Plugin;
  *   module = "field"
  * )
  */
-class FieldList extends InOperator {
+class FieldList extends ManyToOne {
 
   function get_value_options() {
     $field = field_info_field($this->definition['field_name']);
