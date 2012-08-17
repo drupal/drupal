@@ -11,13 +11,13 @@ Drupal.behaviors.ViewsAjaxView = {};
 Drupal.behaviors.ViewsAjaxView.attach = function() {
   if (Drupal.settings && Drupal.settings.views && Drupal.settings.views.ajaxViews) {
     $.each(Drupal.settings.views.ajaxViews, function(i, settings) {
-      // @todo: Figure out where to store the object.
-      new Drupal.views.ajaxView(settings);
+      Drupal.views.instances[i] = new Drupal.views.ajaxView(settings);
     });
   }
 };
 
 Drupal.views = {};
+Drupal.views.instances = {};
 
 /**
  * Javascript object for a certain view.
