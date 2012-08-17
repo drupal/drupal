@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_node_language.
+ * Definition of Views\locale\Plugin\views\filter\NodeLanguage.
  */
 
 namespace Views\locale\Plugin\views\filter;

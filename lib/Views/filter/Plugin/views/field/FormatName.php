@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_filter_format_name.
+ * Definition of Views\filter\Plugin\views\field\FormatName.
  */
 
 namespace Views\filter\Plugin\views\field;

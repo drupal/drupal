@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_history_user_timestamp.
+ * Definition of Views\node\Plugin\views\filter\HistoryUserTimestamp.
  */
 
 namespace Views\node\Plugin\views\filter;

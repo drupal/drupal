@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_term_node_tid_depth_modifier.
+ * Definition of Views\taxonomy\Plugin\views\argument\IndexTidDepthModifier.
  */
 
 namespace Views\taxonomy\Plugin\views\argument;

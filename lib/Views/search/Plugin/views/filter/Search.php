@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains a search filter handler.
+ * Defintion of Views\search\Plugin\views\filter\Search.
  */
 
 namespace Views\search\Plugin\views\filter;

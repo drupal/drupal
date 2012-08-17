@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_node_revision_link_revert.
+ * Definition of Views\node\Plugin\views\field\RevisionLinkRevert.
  */
 
 namespace Views\node\Plugin\views\field;

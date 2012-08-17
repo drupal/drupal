@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_node_link_delete.
+ * Definition of Views\node\Plugin\views\field\LinkDelete.
  */
 
 namespace Views\node\Plugin\views\field;

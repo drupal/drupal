@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provide node nid argument handler.
+ * Definition of Views\node\Plugin\views\argument\Nid.
  */
 
 namespace Views\node\Plugin\views\argument;

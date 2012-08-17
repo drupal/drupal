@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_comment_link_edit.
+ * Definition of Views\comment\Plugin\views\field\LinkEdit.
  */
 
 namespace Views\comment\Plugin\views\field;

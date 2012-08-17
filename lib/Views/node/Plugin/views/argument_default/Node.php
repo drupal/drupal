@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the node from URL argument default plugin.
+ * Definition of Views\node\Plugin\views\argument_default\Node.
  */
 
 namespace Views\node\Plugin\views\argument_default;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_argument_validate_user.
+ * Definition of Views\user\Plugin\views\argument_validator\User.
  */
 
 namespace Views\user\Plugin\views\argument_validator;

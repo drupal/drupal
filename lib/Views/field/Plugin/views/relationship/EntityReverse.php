@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_relationship_entity_reverse.
+ * Definition of Views\field\Plugin\views\relationship\EntityReverse.
  */
 
 namespace Views\field\Plugin\views\relationship;

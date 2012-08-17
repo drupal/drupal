@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the book root from current node argument default plugin.
+ * Definition of Views\book\Plugin\views\argument_default\Root.
  */
 
 namespace Views\book\Plugin\views\argument_default;

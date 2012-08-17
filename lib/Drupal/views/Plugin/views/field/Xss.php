@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @file
  * Definition of Drupal\views\Plugin\views\field\Xss
  */
+
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;

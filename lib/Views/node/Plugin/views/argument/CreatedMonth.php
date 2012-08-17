@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Views\node\Plugin\views\argument\CreatedMonth.
+ */
+
 namespace Views\node\Plugin\views\argument;
 
 use Drupal\Core\Annotation\Plugin;

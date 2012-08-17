@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_node_language.
+ * Definition of Views\node\Plugin\views\argument\Language.
  */
 
 namespace Views\node\Plugin\views\argument;

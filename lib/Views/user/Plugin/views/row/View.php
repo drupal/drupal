@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the user view row plugin.
+ * Defintion of Views\user\Plugin\views\row\View
  */
 
 namespace Views\user\Plugin\views\row;

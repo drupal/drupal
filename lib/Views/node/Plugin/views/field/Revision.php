@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_node_revision.
+ * Definition of Views\node\Plugin\views\field\Revision.
  */
 
 namespace Views\node\Plugin\views\field;

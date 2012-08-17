@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_term_node_tid.
+ * Definition of Views\taxonomy\Plugin\views\argument\IndexTid.
  */
 
 namespace Views\taxonomy\Plugin\views\argument;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_user_permissions.
+ * Definition of Views\user\Plugin\views\filter\Permissions.
  */
 
 namespace Views\user\Plugin\views\filter;

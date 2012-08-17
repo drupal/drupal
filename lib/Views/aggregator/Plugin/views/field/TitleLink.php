@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_aggregator_title_link.
+ * Definition of Views\aggregator\Plugin\views\field\TitleLink.
  */
 
 namespace Views\aggregator\Plugin\views\field;

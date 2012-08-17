@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\area\result.
+ * Definition of Drupal\views\Plugin\views\area\Result.
  */
 
 namespace Drupal\views\Plugin\views\area;

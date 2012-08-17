@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Defintion of views_handler_argument_node_uid_revision.
+ * Defintion of Views\node\Plugin\views\argument\UidRevision.
  */
 
 namespace Views\node\Plugin\views\argument;

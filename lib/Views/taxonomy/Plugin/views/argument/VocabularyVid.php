@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_vocabulary_vid.
+ * Definition of Views\taxonomy\Plugin\views\argument\VocabularyVid.
  */
 
 namespace Views\taxonomy\Plugin\views\argument;

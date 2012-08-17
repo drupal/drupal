@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the 'taxonomy term' argument validator plugin.
+ * Defintion of Views\taxonomy\Plugin\views\argument_validate\Term.
  */
 
 

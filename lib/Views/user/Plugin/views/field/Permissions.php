@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_user_permissions.
+ * Definition of Views\user\Plugin\views\field\Permissions.
  */
 
 namespace Views\user\Plugin\views\field;

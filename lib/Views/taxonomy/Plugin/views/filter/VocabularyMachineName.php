@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_vocabulary_machine_name.
+ * Definition of Views\taxonomy\Plugin\views\filter\VocabularyMachineName.
  */
 
 namespace Views\taxonomy\Plugin\views\filter;

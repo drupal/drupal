@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Plugins\views\filter\Status
+ * Definition of Views\node\Plugins\views\filter\Status.
  */
 
 namespace Views\node\Plugin\views\filter;

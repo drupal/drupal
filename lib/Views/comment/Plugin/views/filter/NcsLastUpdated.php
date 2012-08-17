@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_ncs_last_updated.
+ * Definition of Views\comment\Plugin\views\filter\NcsLastUpdated.
  */
 
 namespace Views\comment\Plugin\views\filter;

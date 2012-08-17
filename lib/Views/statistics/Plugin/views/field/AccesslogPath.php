@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_accesslog_path.
+ * Definition of Views\statistics\Plugin\views\field\AccesslogPath.
  */
 
 namespace Views\statistics\Plugin\views\field;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_ncs_last_comment_name.
+ * Definition of Views\comment\Plugin\views\field\NcsLastCommentName.
  */
 
 namespace Views\comment\Plugin\views\field;

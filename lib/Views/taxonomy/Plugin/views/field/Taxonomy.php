@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_taxonomy.
+ * Definition of Views\taxonomy\Plugin\views\field\Taxonomy.
  */
 
 

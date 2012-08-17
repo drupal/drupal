@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_aggregator_iid.
+ * Definition of Views\aggregator\Plugin\views\argument\Iid.
  */
 
 namespace Views\aggregator\Plugin\views\argument;

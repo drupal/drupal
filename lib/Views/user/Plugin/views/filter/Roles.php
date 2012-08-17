@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_user_roles.
+ * Definition of Views\user\Plugin\views\filter\Roles.
  */
 
 namespace Views\user\Plugin\views\filter;

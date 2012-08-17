@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_aggregator_category_cid.
+ * Definition of Views\aggregator\Plugin\views\argument\CategoryCid.
  */
 
 namespace Views\aggregator\Plugin\views\argument;

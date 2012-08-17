@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_relationship_node_term_data.
+ * Definition of Views\taxonomy\Plugin\views\relationship\NodeTermData.
  */
 
 namespace Views\taxonomy\Plugin\views\relationship;

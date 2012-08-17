@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_file_filemime.
+ * Definition of Views\file\Plugin\views\field\FileMime.
  */
 
 namespace Views\file\Plugin\views\field;

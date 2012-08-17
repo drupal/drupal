@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_locale_version.
+ * Definition of Views\locale\Plugin\views\filter\Version.
  */
 
 namespace Views\locale\Plugin\views\filter;

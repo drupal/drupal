@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_comment_link_reply.
+ * Definition of Views\comment\Plugin\views\field\LinkReply.
  */
 
 namespace Views\comment\Plugin\views\field;

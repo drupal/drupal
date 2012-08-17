@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the 'node' argument validator plugin.
+ * Definition of Views\node\Plugin\views\argument_validator\Node.
  */
 
 namespace Views\node\Plugin\views\argument_validator;

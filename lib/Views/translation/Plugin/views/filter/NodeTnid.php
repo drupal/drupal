@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_node_tnid.
+ * Definition of Views\translation\Plugin\views\filter\NodeTnid.
  */
 
 namespace Views\translation\Plugin\views\filter;

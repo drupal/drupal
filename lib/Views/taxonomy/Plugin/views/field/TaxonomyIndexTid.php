@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_term_node_tid.
+ * Definition of Views\taxonomy\Plugin\views\field\TaxonomyIndexTid.
  */
 
 namespace Views\taxonomy\Plugin\views\field;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_node_type.
+ * Definition of Views\node\Plugin\views\filter\Type.
  */
 
 namespace Views\node\Plugin\views\filter;

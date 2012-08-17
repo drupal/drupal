@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_aggregator_fid.
+ * Definition of Views\aggregator\Plugin\views\argument\Fid.
  */
 
 namespace Views\aggregator\Plugin\views\argument;

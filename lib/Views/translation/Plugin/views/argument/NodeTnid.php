@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provide node tnid argument handler.
+ * Definition of Views\translation\Plugin\views\argument\NodeTnid.
  */
 
 namespace Views\translation\Plugin\views\argument;

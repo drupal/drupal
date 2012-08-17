@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_sort_comment_thread.
+ * Definition of Views\comment\Plugin\views\sort\Thread.
  */
 
 namespace Views\comment\Plugin\views\sort;

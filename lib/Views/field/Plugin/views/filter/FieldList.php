@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_field_list.
+ * Definition of Views\field\Plugin\views\filter\FieldList.
  */
 
 namespace Views\field\Plugin\views\filter;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_file_uri.
+ * Definition of Views\file\Plugin\views\field\Uri.
  */
 
 namespace Views\file\Plugin\views\field;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\filter\Broken
+ * Definition of Drupal\views\Plugin\views\filter\Broken.
  */
 
 namespace Drupal\views\Plugin\views\filter;

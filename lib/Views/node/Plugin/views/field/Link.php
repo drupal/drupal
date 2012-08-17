@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_node_link.
+ * Definition of Views\node\Plugin\views\field\Link.
  */
 
 namespace Views\node\Plugin\views\field;

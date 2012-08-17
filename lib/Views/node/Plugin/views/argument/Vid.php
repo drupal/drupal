@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provide node vid argument handler.
+ * Definition of Views\node\Plugin\views\argument\Vid.
  */
 
 namespace Views\node\Plugin\views\argument;

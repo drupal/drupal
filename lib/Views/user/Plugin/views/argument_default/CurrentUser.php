@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the current user argument default plugin.
+ * Definition of Views\user\Plugin\views\argument_default\CurrentUser.
  */
 
 namespace Views\user\Plugin\views\argument_default;

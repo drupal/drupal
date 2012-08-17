@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the user from URL argument default plugin.
+ * Definition of Views\user\Plugin\views\argument_default\User.
  */
 
 namespace Views\user\Plugin\views\argument_default;

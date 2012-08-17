@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the node view row style plugin.
+ * Definition of Views\node\Plugin\views\row\View.
  */
 
 namespace Views\node\Plugin\views\row;

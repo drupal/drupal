@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_node_type.
+ * Definition of Views\node\Plugin\views\field\Type.
  */
 
 namespace Views\node\Plugin\views\field;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_locale_language.
+ * Definition of Views\locale\Plugin\views\field\Language.
  */
 
 namespace Views\locale\Plugin\views\field;

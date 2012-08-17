@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_locale_link_edit.
+ * Definition of Views\locale\Plugin\views\field\LinkEdit.
  */
 
 namespace Views\locale\Plugin\views\field;

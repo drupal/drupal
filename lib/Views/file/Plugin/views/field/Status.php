@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_file_status.
+ * Definition of Views\file\Plugin\views\field\Status.
  */
 
 namespace Views\file\Plugin\views\field;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_argument_default_taxonomy_tid.
+ * Definition of Views\taxonomy\Plugin\views\argument_default\Tid.
  */
 
 namespace Views\taxonomy\Plugin\views\argument_default;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_aggregator_category.
+ * Definition of Views\aggregator\Plugin\views\field\Category.
  */
 
 namespace Views\aggregator\Plugin\views\field;

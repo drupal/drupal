@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the comment RSS row style plugin.
+ * Definition of Views\comment\Plugin\views\row\Rss.
  */
 
 namespace Views\comment\Plugin\views\row;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_node_type.
+ * Definition of Views\node\Plugin\views\argument\Type.
  */
 
 namespace Views\node\Plugin\views\argument;

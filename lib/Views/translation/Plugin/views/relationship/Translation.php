@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_relationship_translation.
+ * Definition of Views\translation\Plugin\views\relationship\Translation.
  */
 
 namespace Views\translation\Plugin\views\relationship;

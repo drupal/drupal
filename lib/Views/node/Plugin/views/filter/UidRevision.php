@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_node_uid_revision.
+ * Definition of Views\node\Plugin\views\filter\UidRevision.
  */
 
 namespace Views\node\Plugin\views\filter;

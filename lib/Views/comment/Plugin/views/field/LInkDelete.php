@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_comment_link_delete.
+ * Definition of Views\comment\Plugin\views\field\LinkDelete.
  */
 
 namespace Views\comment\Plugin\views\field;

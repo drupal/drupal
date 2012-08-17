@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_search.
+ * Definition of Views\search\Plugin\views\argument\Search.
  */
 
 namespace Views\search\Plugin\views\argument;

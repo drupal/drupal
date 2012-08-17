@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_last_comment_timestamp.
+ * Definition of Views\comment\Plugin\views\field\LastTimestamp.
  */
 
 namespace Views\comment\Plugin\views\field;

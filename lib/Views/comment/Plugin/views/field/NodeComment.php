@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_node_comment.
+ * Definition of Views\comment\Plugin\views\field\NodeComment.
  */
 
 namespace Views\comment\Plugin\views\field;

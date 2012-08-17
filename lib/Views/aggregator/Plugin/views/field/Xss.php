@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_aggregator_xss.
+ * Definition of Views\aggregator\Plugin\views\field\Xss.
  */
 
 namespace Views\aggregator\Plugin\views\field;

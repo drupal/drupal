@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_contact_link.
+ * Definition of Views\contact\Plugin\views\field\ContactLink.
  */
 
 namespace Views\contact\Plugin\views\field;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_file_fid.
+ * Definition of Views\file\Plugin\views\argument\Fid.
  */
 
 namespace Views\file\Plugin\views\argument;

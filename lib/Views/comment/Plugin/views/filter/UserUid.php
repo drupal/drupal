@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_comment_user_uid.
+ * Definition of Views\comment\Plugin\views\filter\UserUid.
  */
 
 namespace Views\comment\Plugin\views\filter;

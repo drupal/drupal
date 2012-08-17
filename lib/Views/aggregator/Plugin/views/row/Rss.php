@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the Aggregator Item RSS row style plugin.
+ * Definition of Views\aggregator\Plugin\views\row\Rss.
  */
 
 namespace Views\aggregator\Plugin\views\row;

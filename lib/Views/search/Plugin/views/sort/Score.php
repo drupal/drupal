@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_sort_search_score.
+ * Definition of Views\search\Plugin\views\sort\Score.
  */
 
 namespace Views\search\Plugin\views\sort;

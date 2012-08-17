@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_term_node_tid_depth.
+ * Definition of Views\taxonomy\Plugin\views\filter\TaxonomyIndexTidDepth.
  */
 
 

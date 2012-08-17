@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_taxonomy.
+ * Definition of Views\taxonomy\Plugin\views\argument\Taxonomy.
  */
 
 namespace Views\taxonomy\Plugin\views\argument;

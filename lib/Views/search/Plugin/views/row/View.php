@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_row_search_view.
+ * Definition of Views\search\Plugin\views\row\View.
  */
 
 namespace Views\search\Plugin\views\row;

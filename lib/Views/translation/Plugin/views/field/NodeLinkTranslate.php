@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_node_link_translate.
+ * Definition of Views\translation\Plugin\views\field\NodeLinkTranslate.
  */
 
 namespace Views\translation\Plugin\views\field;

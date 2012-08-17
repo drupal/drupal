@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_vocabulary_vid.
+ * Definition of Views\taxonomy\Plugin\views\filter\VocabularyVid.
  */
 
 namespace Views\taxonomy\Plugin\views\filter;

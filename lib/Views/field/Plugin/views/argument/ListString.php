@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_field_list_text.
+ * Definition of Views\field\Plugin\views\argument\ListString.
  */
 
 namespace Views\field\Plugin\views\argument;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_sort_ncs_last_updated.
+ * Definition of Views\comment\Plugin\views\sort\NcsLastUpdated.
  */
 
 namespace Views\comment\Plugin\views\sort;

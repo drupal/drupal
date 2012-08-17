@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the basic 'node' field handler.
+ * Definition of Views\node\Plugin\views\field\Node.
  */
 
 namespace Views\node\Plugin\views\field;

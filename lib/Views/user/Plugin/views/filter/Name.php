@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_filter_user_name.
+ * Definition of Views\user\Plugin\views\filter\Name.
  */
 
 namespace Views\user\Plugin\views\filter;

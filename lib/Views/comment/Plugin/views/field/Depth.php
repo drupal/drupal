@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_field_comment_depth.
+ * Definition of Views\comment\Plugin\views\field\Depth.
  */
 
 namespace Views\comment\Plugin\views\field;
