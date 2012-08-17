@@ -750,12 +750,19 @@ abstract class WizardPluginBase implements WizardInterface {
         $column = $column[0];
       }
 
-      $sorts[$column] = array(
-        'id' => $column,
-        'table' => $table,
-        'field' => $column,
-        'order' => $sort,
-      );
+      // If the input is invalid, for example when the #default_value contains
+      // created from node, but the wizard type is another base table, make
+      // sure it is not added. This usually don't happen if you have js
+      // enabled.
+      $data = views_fetch_data($table);
+      if (isset($data[$column]['sort'])) {
+        $sorts[$column] = array(
+          'id' => $column,
+          'table' => $table,
+          'field' => $column,
+          'order' => $sort,
+       );
+      }
     }
 
     return $sorts;
