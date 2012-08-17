@@ -405,7 +405,7 @@ abstract class FieldPluginBase extends Handler {
         'alter_text' => array('default' => FALSE, 'bool' => TRUE),
         'text' => array('default' => '', 'translatable' => TRUE),
         'make_link' => array('default' => FALSE, 'bool' => TRUE),
-        'path' => array('default' => '', 'translatable' => TRUE),
+        'path' => array('default' => ''),
         'absolute' => array('default' => FALSE, 'bool' => TRUE),
         'external' => array('default' => FALSE, 'bool' => TRUE),
         'replace_spaces' => array('default' => FALSE, 'bool' => TRUE),
