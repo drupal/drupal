@@ -65,12 +65,25 @@ class ExposedFormTest extends ViewsSqlTest {
     // Be sure that the button is called exposed.
     $this->helperButtonHasLabel('edit-options-expose-button-button', t('Expose filter'));
 
+    // The first time the filter UI is displayed, the operator and the
+    // value forms should be shown.
+    $this->assertFieldById('edit-options-operator-in', '', 'Operator In exists');
+    $this->assertFieldById('edit-options-operator-not-in', '', 'Operator Not In exists');
+    $this->assertFieldById('edit-options-value-page', '', 'Checkbox for Page exists');
+    $this->assertFieldById('edit-options-value-article', '', 'Checkbox for Article exists');
+
     // Click the Expose filter button.
     $this->drupalPost('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/filter/type', $edit, t('Expose filter'));
     // Check the label of the expose button.
     $this->helperButtonHasLabel('edit-options-expose-button-button', t('Hide filter'));
     // Check the label of the grouped exposed button
     $this->helperButtonHasLabel('edit-options-group-button-button', t('Grouped filters'));
+
+    // After exposing the filter, Operator and Value should be still here.
+    $this->assertFieldById('edit-options-operator-in', '', 'Operator In exists');
+    $this->assertFieldById('edit-options-operator-not-in', '', 'Operator Not In exists');
+    $this->assertFieldById('edit-options-value-page', '', 'Checkbox for Page exists');
+    $this->assertFieldById('edit-options-value-article', '', 'Checkbox for Article exists');
 
     // Check the validations of the filter handler.
     $edit = array();
@@ -91,6 +104,14 @@ class ExposedFormTest extends ViewsSqlTest {
     // Click the Grouped Filters button.
     $this->drupalGet('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/filter/type');
     $this->drupalPost(NULL, array(), t('Grouped filters'));
+
+    // After click on 'Grouped Filters', the standard operator and value should
+    // not be displayed.
+    $this->assertNoFieldById('edit-options-operator-in', '', 'Operator In not exists');
+    $this->assertNoFieldById('edit-options-operator-not-in', '', 'Operator Not In not exists');
+    $this->assertNoFieldById('edit-options-value-page', '', 'Checkbox for Page not exists');
+    $this->assertNoFieldById('edit-options-value-article', '', 'Checkbox for Article not exists');
+
     // Check that after click on 'Grouped Filters', a new button is shown to
     // add more items to the list.
     $this->helperButtonHasLabel('edit-options-group-info-add-group', t('Add another item'));
@@ -124,6 +145,16 @@ class ExposedFormTest extends ViewsSqlTest {
     $edit["options[group_info][group_items][3][value][page]"] = TRUE;
     $this->drupalPost(NULL, $edit, t('Apply'));
     $this->assertRaw(t('The title is required if value for this item is defined.'), t('Group items should have a title'));
+
+    // Un-expose the filter.
+    $this->drupalGet('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/filter/type');
+    $this->drupalPost(NULL, array(), t('Hide filter'));
+
+    // After Un-exposing the filter, Operator and Value should be shown again.
+    $this->assertFieldById('edit-options-operator-in', '', 'Operator In exists after hide filter');
+    $this->assertFieldById('edit-options-operator-not-in', '', 'Operator Not In exists after hide filter');
+    $this->assertFieldById('edit-options-value-page', '', 'Checkbox for Page exists after hide filter');
+    $this->assertFieldById('edit-options-value-article', '', 'Checkbox for Article exists after hide filter');
 
     // Click the Expose sort button.
     $edit = array();
