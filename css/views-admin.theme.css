@@ -933,7 +933,8 @@ ul#views-display-menu-tabs li.add ul.action-list li{
 /* @group Expose filter form items */
 
 .form-item-options-expose-required,
-.form-item-options-expose-label {
+.form-item-options-expose-label,
+.form-item-options-expose-description {
   margin-bottom: 6px;
   margin-left: 18px;
   margin-top: 6px;

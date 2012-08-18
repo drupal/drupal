@@ -3508,6 +3508,7 @@ function theme_views_ui_expose_filter_form($variables) {
     $output .= drupal_render($form['required']);
   }
   $output .= drupal_render($form['label']);
+  $output .= drupal_render($form['description']);
 
   $output .= drupal_render($form['operator']);
   $output .= drupal_render($form['value']);
@@ -3558,6 +3559,7 @@ function theme_views_ui_build_group_filter_form($variables) {
   $output .= '<div class="views-right-60">';
   $output .= drupal_render($form['widget']);
   $output .= drupal_render($form['label']);
+  $output .= drupal_render($form['description']);
   $output .= '</div>';
 
   $header = array(

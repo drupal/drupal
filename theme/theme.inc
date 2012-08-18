@@ -934,16 +934,23 @@ function template_preprocess_views_exposed_form(&$vars) {
     }
     $widget = new stdClass;
     // set up defaults so that there's always something there.
-    $widget->label = $widget->operator = $widget->widget = NULL;
+    $widget->label = $widget->operator = $widget->widget = $widget->description = NULL;
 
     $widget->id = isset($form[$info['value']]['#id']) ? $form[$info['value']]['#id'] : '';
+
     if (!empty($info['label'])) {
       $widget->label = check_plain($info['label']);
     }
     if (!empty($info['operator'])) {
       $widget->operator = drupal_render($form[$info['operator']]);
     }
+
     $widget->widget = drupal_render($form[$info['value']]);
+
+    if (!empty($info['description'])) {
+      $widget->description = check_plain($info['description']);
+    }
+
     $vars['widgets'][$id] = $widget;
   }
 

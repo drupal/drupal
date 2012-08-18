@@ -127,7 +127,8 @@ fieldset.fieldset-no-legend {
 .dependent-options,
 .dependent-options.form-item,
 .form-item-options-expose-required,
-.form-item-options-expose-label {
+.form-item-options-expose-label,
+.form-item-options-expose-description {
   margin-left: 1.5em;
 }
 
@@ -139,7 +140,8 @@ fieldset.fieldset-no-legend {
 .views-admin-dependent .dependent-options .form-type-select,
 .views-admin-dependent .dependent-options .form-type-textfield,
 .form-item-options-expose-required,
-.form-item-options-expose-label {
+.form-item-options-expose-label,
+.form-item-options-expose-description {
   margin-bottom: 6px;
   margin-top: 6px;
 }
