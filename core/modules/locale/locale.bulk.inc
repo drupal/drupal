@@ -141,8 +141,8 @@ function locale_translate_import_form_submit($form, &$form_state) {
       drupal_set_message(t('The translation import of %filename is done.', $variables));
       watchdog('locale', 'The translation import of %filename is done.', $variables);
 
-    } catch (Exception $exc) {
-      drupal_set_message(print_r($exc, TRUE));
+    }
+    catch (Exception $exception) {
       $variables = array('%filename' => $file->filename);
       drupal_set_message(t('The translation import of %filename failed.', $variables), 'error');
       watchdog('locale', 'The translation import of %filename failed.', $variables, WATCHDOG_ERROR);
@@ -412,7 +412,8 @@ function locale_translate_batch_import($filepath, &$context) {
       locale_translate_update_file_history($file);
       $context['results']['files'][$filepath] = $filepath;
       $context['results']['stats'][$filepath] = $report;
-    } catch (Exception $exception) {
+    }
+    catch (Exception $exception) {
       $context['results']['files'][$filepath] = $filepath;
       $context['results']['failed_files'][$filepath] = $filepath;
     }
