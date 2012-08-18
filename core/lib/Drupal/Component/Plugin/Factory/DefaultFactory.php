@@ -57,13 +57,13 @@ class DefaultFactory implements FactoryInterface {
   protected function getPluginClass($plugin_id) {
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
     if (empty($plugin_definition['class'])) {
-      throw new PluginException('The plugin did not specify an instance class.');
+      throw new PluginException(sprintf('The plugin (%s) did not specify an instance class.', $plugin_id));
     }
 
     $class = $plugin_definition['class'];
 
     if (!class_exists($class)) {
-      throw new PluginException(sprintf('Plugin instance class "%s" does not exist.', $class));
+      throw new PluginException(sprintf('Plugin (%s) instance class "%s" does not exist.', $plugin_id, $class));
     }
 
     return $class;
