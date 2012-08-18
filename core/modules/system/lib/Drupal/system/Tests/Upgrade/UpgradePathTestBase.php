@@ -33,11 +33,6 @@ abstract class UpgradePathTestBase extends WebTestBase {
   var $upgradeErrors = array();
 
   /**
-   * Array of modules loaded when the test starts.
-   */
-  var $loadedModules = array();
-
-  /**
    * Flag to indicate whether there are pending updates or not.
    */
   var $pendingUpdates = TRUE;
@@ -85,8 +80,6 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Reset flags.
     $this->upgradedSite = FALSE;
     $this->upgradeErrors = array();
-
-    $this->loadedModules = module_list();
 
     // Create the database prefix for this test.
     $this->prepareDatabasePrefix();
@@ -254,8 +247,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Reload module list. For modules that are enabled in the test database,
     // but not on the test client, we need to load the code here.
     system_list_reset();
-    $new_modules = array_diff(module_list(), $this->loadedModules);
-    foreach ($new_modules as $module) {
+    foreach (module_list() as $module) {
       drupal_load('module', $module);
     }
 
