@@ -163,7 +163,7 @@ Drupal installation as the webserver user (differs per configuration), or root:
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
   --url http://example.com/ --all
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
-  --url http://example.com/ --class BlockTestCase
+  --url http://example.com/ --class "Drupal\block\Tests\BlockTest"
 \n
 EOF;
 }
