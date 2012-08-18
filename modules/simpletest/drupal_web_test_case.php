@@ -632,7 +632,7 @@ abstract class DrupalTestCase {
    *   'one' => array(0, 1),
    *   'two' => array(2, 3),
    * );
-   * $permutations = $this->permute($parameters);
+   * $permutations = DrupalTestCase::generatePermutations($parameters)
    * // Result:
    * $permutations == array(
    *   array('one' => 0, 'two' => 2),
