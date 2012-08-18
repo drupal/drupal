@@ -50,7 +50,7 @@ Drupal.behaviors.shortcutDrag = {
             // the tableDrag system. However, the row that swapped with it
             // has moved to the "disabled" section, so we need to force its
             // status to be disabled and mark it also as changed.
-            var changedRowObject = new tableDrag.row(changedRow, 'mouse', self.indentEnabled, self.maxDepth, true);
+            var changedRowObject = new tableDrag.row(changedRow, 'mouse', false, 0, true);
             changedRowObject.markChanged();
             tableDrag.rowStatusChange(changedRowObject);
           }
