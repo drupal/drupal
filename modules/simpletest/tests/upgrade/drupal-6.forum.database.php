@@ -258,3 +258,17 @@ db_insert('vocabulary_node_types')->fields(array(
 ))
 ->execute();
 
+// Provide all users with the ability to create forum topics.
+$results = db_select('permission', 'p')
+  ->fields('p')
+  ->execute();
+
+foreach ($results as $result) {
+  $permissions = $result->perm . ', create forum topics';
+  db_update('permission')
+    ->fields(array(
+      'perm' => $permissions,
+    ))
+    ->condition('rid', $result->rid)
+    ->execute();
+}

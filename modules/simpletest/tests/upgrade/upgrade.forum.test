@@ -56,5 +56,9 @@ class ForumUpgradePathTestCase extends UpgradePathTestCase {
 
     $this->drupalGet("forum/$tid");
     $this->assertText('Bananas');
-    }
+    $this->drupalLogout();
+
+    $this->drupalGet("node/add/forum/$tid");
+    $this->assertResponse(200, t('User can access forum creation page.'));
+  }
 }

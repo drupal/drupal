@@ -1711,17 +1711,18 @@ function system_update_dependencies() {
 function system_update_7000() {
   $result = db_query("SELECT rid, perm FROM {permission} ORDER BY rid");
   foreach ($result as $role) {
-    $renamed_permission = preg_replace('/(?<=^|,\ )create\ blog\ entries(?=,|$)/', 'create blog content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ blog\ entries(?=,|$)/', 'edit own blog content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ any\ blog\ entry(?=,|$)/', 'edit any blog content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ own\ blog\ entries(?=,|$)/', 'delete own blog content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ any\ blog\ entry(?=,|$)/', 'delete any blog content', $role->perm);
+    $renamed_permission = $role->perm;
+    $renamed_permission = preg_replace('/(?<=^|,\ )create\ blog\ entries(?=,|$)/', 'create blog content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ blog\ entries(?=,|$)/', 'edit own blog content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ any\ blog\ entry(?=,|$)/', 'edit any blog content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ own\ blog\ entries(?=,|$)/', 'delete own blog content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ any\ blog\ entry(?=,|$)/', 'delete any blog content', $renamed_permission);
 
-    $renamed_permission = preg_replace('/(?<=^|,\ )create\ forum\ topics(?=,|$)/', 'create forum content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ any\ forum\ topic(?=,|$)/', 'delete any forum content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ own\ forum\ topics(?=,|$)/', 'delete own forum content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ any\ forum\ topic(?=,|$)/', 'edit any forum content', $role->perm);
-    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ forum\ topics(?=,|$)/', 'edit own forum content', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )create\ forum\ topics(?=,|$)/', 'create forum content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ any\ forum\ topic(?=,|$)/', 'delete any forum content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ own\ forum\ topics(?=,|$)/', 'delete own forum content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ any\ forum\ topic(?=,|$)/', 'edit any forum content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ forum\ topics(?=,|$)/', 'edit own forum content', $renamed_permission);
 
     if ($renamed_permission != $role->perm) {
       db_update('permission')
@@ -3022,6 +3023,32 @@ function system_update_7074() {
   // This update function previously converted menu_links query strings to
   // arrays. It has been removed for now due to incompatibility with
   // PostgreSQL.
+}
+
+/**
+ * Fix renamed queries from system_update_7000().
+ */
+function system_update_7075() {
+  $permission_changes = array(
+    'create blog entries' => 'create blog content',
+    'edit own blog entries' => 'edit own blog content',
+    'edit any blog entry' => 'edit any blog content',
+    'delete own blog entries' => 'delete own blog content',
+    'delete any blog entry' => 'delete any blog content',
+
+    'create forum topics' => 'create forum content',
+    'edit own forum topics' => 'edit own forum content',
+    'edit any forum topic' => 'edit any forum content',
+    'delete own forum topics' => 'delete own forum content',
+    'delete any forum topic' => 'delete any forum content',
+  );
+
+  foreach ($permission_changes as $permission_key => $permission_change) {
+    db_update('role_permission')
+      ->fields(array('permission' => $permission_change))
+      ->condition('permission', $permission_key)
+      ->execute();
+  }
 }
 
 /**
