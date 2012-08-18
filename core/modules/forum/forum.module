@@ -1364,7 +1364,7 @@ function _forum_get_topic_order($sortby) {
  *   The ID of the node to update.
  */
 function _forum_update_forum_index($nid) {
-  $count = db_query('SELECT COUNT(cid) FROM {comment} c INNER JOIN {forum_index} i ON c.nid=i.nid WHERE c.nid = :nid AND c.status = :status', array(
+  $count = db_query('SELECT COUNT(cid) FROM {comment} c INNER JOIN {forum_index} i ON c.nid = i.nid WHERE c.nid = :nid AND c.status = :status', array(
     ':nid' => $nid,
     ':status' => COMMENT_PUBLISHED,
   ))->fetchField();
