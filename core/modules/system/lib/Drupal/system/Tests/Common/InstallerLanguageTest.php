@@ -36,9 +36,9 @@ class InstallerLanguageTest extends WebTestBase {
     // Different translation files would be found depending on which language
     // we are looking for.
     $expected_translation_files = array(
-      NULL => array('install.hu.po', 'install.de.po'),
-      'de' => array('install.de.po'),
-      'hu' => array('install.hu.po'),
+      NULL => array('drupal-8.0.hu.po', 'drupal-8.0.de.po'),
+      'de' => array('drupal-8.0.de.po'),
+      'hu' => array('drupal-8.0.hu.po'),
       'it' => array(),
     );
 

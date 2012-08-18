@@ -694,10 +694,10 @@ function st($string, array $args = array(), array $options = array()) {
   if (!isset($strings)) {
     $strings = array();
     if (isset($install_state['parameters']['langcode'])) {
-      // If the given langcode was selected, there should be at least one .po file
-      // with its name ending in install.{$install_state['parameters']['langcode']}.po
+      // If the given langcode was selected, there should be at least one .po
+      // file with its name in the pattern drupal-$version.$langcode.po.
       // This might or might not be the entire filename. It is also possible
-      // that multiple files end with the same extension, even if unlikely.
+      // that multiple files end with the same suffix, even if unlikely.
       $files = install_find_translation_files($install_state['parameters']['langcode']);
       if (!empty($files)) {
         // Register locale classes with the classloader. Locale module is not
