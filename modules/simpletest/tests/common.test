@@ -2587,3 +2587,30 @@ class DrupalAddFeedTestCase extends DrupalWebTestCase {
     return $generated_pattern;
   }
 }
+
+/**
+ * Test for theme_feed_icon().
+ */
+class FeedIconTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Feed icon',
+      'description' => 'Check escaping of theme_feed_icon()',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Check that special characters are correctly escaped. Test for issue #1211668.
+   */
+  function testFeedIconEscaping() {
+    $variables = array();
+    $variables['url'] = 'node';
+    $variables['title'] = '<>&"\'';
+    $text = theme_feed_icon($variables);
+    preg_match('/title="(.*?)"/', $text, $matches);
+    $this->assertEqual($matches[1], 'Subscribe to &amp;&quot;&#039;', 'theme_feed_icon() escapes reserved HTML characters.');
+  }
+
+}
