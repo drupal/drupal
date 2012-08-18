@@ -34,11 +34,12 @@ class PoMemoryWriter implements PoWriterInterface {
    * Implements Drupal\Component\Gettext\PoWriterInterface::writeItem().
    */
   public function writeItem(PoItem $item) {
-    if (is_array($item->source)) {
-      $item->source = implode(LOCALE_PLURAL_DELIMITER, $item->source);
-      $item->translation = implode(LOCALE_PLURAL_DELIMITER, $item->translation);
+    if (is_array($item->getSource())) {
+      $item->setSource(implode(LOCALE_PLURAL_DELIMITER, $item->getSource()));
+      $item->setTranslation(implode(LOCALE_PLURAL_DELIMITER, $item->getTranslation()));
     }
-    $this->_items[isset($item->context) ? $item->context : ''][$item->source] = $item->translation;
+    $context = $item->getContext();
+    $this->_items[$context != NULL ? $context : ''][$item->getSource()] = $item->getTranslation();
   }
 
   /**

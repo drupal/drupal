@@ -700,6 +700,9 @@ function st($string, array $args = array(), array $options = array()) {
       // that multiple files end with the same extension, even if unlikely.
       $files = install_find_translation_files($install_state['parameters']['langcode']);
       if (!empty($files)) {
+        // Register locale classes with the classloader. Locale module is not
+        // yet enabled at this stage, so this is not happening automatically.
+        drupal_classloader_register('locale', drupal_get_path('module', 'locale'));
         $strings = Gettext::filesToArray($install_state['parameters']['langcode'], $files);
       }
     }
