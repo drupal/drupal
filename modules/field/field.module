@@ -376,7 +376,7 @@ function field_system_info_alter(&$info, $file, $type) {
       }
       if ($non_deleted) {
         if (module_exists('field_ui')) {
-          $explanation = t('Field type(s) in use - see !link', array('!link' => l(t('Field list'), 'admin/reports/fields')));
+          $explanation = t('Field type(s) in use - see <a href="@fields-page">Field list</a>', array('@fields-page' => url('admin/reports/fields')));
         }
         else {
           $explanation = t('Fields type(s) in use');
