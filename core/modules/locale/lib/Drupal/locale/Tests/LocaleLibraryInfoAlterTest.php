@@ -24,7 +24,7 @@ class LocaleLibraryInfoAlterTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Javascript library localisation',
+      'name' => 'Javascript library localization',
       'description' => 'Tests localization of the JavaScript libraries.',
       'group' => 'Locale',
     );
