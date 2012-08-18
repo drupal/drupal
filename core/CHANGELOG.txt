@@ -58,6 +58,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Made it possible to assign language to taxonomy terms, vocabularies
         and files.
       * Node type specific default language assignment is much more versatile.
+      * Added entity language variance support to search module.
     * Better language based configuration
       * Added language options to block visibility.
     * Much improved language APIs for developers:
