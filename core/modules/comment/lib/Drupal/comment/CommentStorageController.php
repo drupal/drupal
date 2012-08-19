@@ -9,6 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\entity\EntityInterface;
 use Drupal\entity\DatabaseStorageController;
+use LogicException;
 
 /**
  * Defines the controller class for comments.
@@ -17,6 +18,11 @@ use Drupal\entity\DatabaseStorageController;
  * required special handling for comment entities.
  */
 class CommentStorageController extends DatabaseStorageController {
+  /**
+   * The thread for which a lock was acquired.
+   */
+  protected $threadLock = '';
+
 
   /**
    * Overrides Drupal\entity\DatabaseStorageController::buildQuery().
@@ -50,7 +56,7 @@ class CommentStorageController extends DatabaseStorageController {
    * Overrides Drupal\entity\DatabaseStorageController::preSave().
    *
    * @see comment_int_to_alphadecimal()
-   * @see comment_increment_alphadecimal()
+   * @see comment_alphadecimal_to_int()
    */
   protected function preSave(EntityInterface $comment) {
     global $user;
@@ -70,46 +76,60 @@ class CommentStorageController extends DatabaseStorageController {
         // Allow calling code to set thread itself.
         $thread = $comment->thread;
       }
-      elseif ($comment->pid == 0) {
-        // This is a comment with no parent comment (depth 0): we start
-        // by retrieving the maximum thread level.
-        $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment->nid))->fetchField();
-        // Strip the "/" from the end of the thread.
-        $max = rtrim($max, '/');
-        // We need to get the value at the correct depth.
-        $parts = explode('.', $max);
-        $firstsegment = $parts[0];
-        // Finally, build the thread field for this new comment.
-        $thread = comment_increment_alphadecimal($firstsegment) .'/';
-      }
       else {
-        // This is a comment with a parent comment, so increase the part of
-        // the thread value at the proper depth.
-
-        // Get the parent comment:
-        $parent = comment_load($comment->pid);
-        // Strip the "/" from the end of the parent thread.
-        $parent->thread = (string) rtrim((string) $parent->thread, '/');
-        // Get the max value in *this* thread.
-        $max = db_query("SELECT MAX(thread) FROM {comment} WHERE thread LIKE :thread AND nid = :nid", array(
-          ':thread' => $parent->thread . '.%',
-          ':nid' => $comment->nid,
-        ))->fetchField();
-
-        if ($max == '') {
-          // First child of this parent.
-          $thread = $parent->thread . '.' . comment_int_to_alphadecimal(0) . '/';
+        if ($this->threadLock) {
+          // As preSave() is protected, this can only happen when this class
+          // is extended in a faulty manner.
+          throw new LogicException('preSave is called again without calling postSave() or releaseThreadLock()');
+        }
+        if ($comment->pid == 0) {
+          // This is a comment with no parent comment (depth 0): we start
+          // by retrieving the maximum thread level.
+          $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment->nid))->fetchField();
+          // Strip the "/" from the end of the thread.
+          $max = rtrim($max, '/');
+          // We need to get the value at the correct depth.
+          $parts = explode('.', $max);
+          $n = comment_alphadecimal_to_int($parts[0]);
+          $prefix = '';
         }
         else {
-          // Strip the "/" at the end of the thread.
-          $max = rtrim($max, '/');
-          // Get the value at the correct depth.
-          $parts = explode('.', $max);
-          $parent_depth = count(explode('.', $parent->thread));
-          $last = $parts[$parent_depth];
-          // Finally, build the thread field for this new comment.
-          $thread = $parent->thread . '.' . comment_increment_alphadecimal($last) . '/';
+          // This is a comment with a parent comment, so increase the part of
+          // the thread value at the proper depth.
+
+          // Get the parent comment:
+          $parent = comment_load($comment->pid);
+          // Strip the "/" from the end of the parent thread.
+          $parent->thread = (string) rtrim((string) $parent->thread, '/');
+          $prefix = $parent->thread . '.';
+          // Get the max value in *this* thread.
+          $max = db_query("SELECT MAX(thread) FROM {comment} WHERE thread LIKE :thread AND nid = :nid", array(
+            ':thread' => $parent->thread . '.%',
+            ':nid' => $comment->nid,
+          ))->fetchField();
+
+          if ($max == '') {
+            // First child of this parent. As the other two cases do an
+            // increment of the thread number before creating the thread
+            // string set this to -1 so it requires an increment too.
+            $n = -1;
+          }
+          else {
+            // Strip the "/" at the end of the thread.
+            $max = rtrim($max, '/');
+            // Get the value at the correct depth.
+            $parts = explode('.', $max);
+            $parent_depth = count(explode('.', $parent->thread));
+            $n = comment_alphadecimal_to_int($parts[$parent_depth]);
+          }
         }
+        // Finally, build the thread field for this new comment. To avoid
+        // race conditions, get a lock on the thread. If aother process already
+        // has the lock, just move to the next integer.
+        do {
+          $thread = $prefix . comment_int_to_alphadecimal(++$n) . '/';
+        } while (!lock_acquire("comment:$comment->nid:$thread"));
+        $this->threadLock = $thread;
       }
       if (empty($comment->created)) {
         $comment->created = REQUEST_TIME;
@@ -132,6 +152,7 @@ class CommentStorageController extends DatabaseStorageController {
    * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
   protected function postSave(EntityInterface $comment, $update) {
+    $this->releaseThreadLock();
     // Update the {node_comment_statistics} table prior to executing the hook.
     $this->updateNodeStatistics($comment->nid);
     if ($comment->status == COMMENT_PUBLISHED) {
@@ -213,6 +234,16 @@ class CommentStorageController extends DatabaseStorageController {
         ))
         ->condition('nid', $nid)
         ->execute();
+    }
+  }
+
+  /**
+   * Release the lock acquired for the thread in preSave().
+   */
+  protected function releaseThreadLock() {
+    if ($this->threadLock) {
+      lock_release($this->threadLock);
+      $this->threadLock = '';
     }
   }
 }

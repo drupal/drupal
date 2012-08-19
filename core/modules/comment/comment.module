@@ -1918,15 +1918,6 @@ function comment_alphadecimal_to_int($c = '00') {
 }
 
 /**
- * Increments a sorting code to the next value.
- *
- * @see comment_int_to_alphadecimal()
- */
-function comment_increment_alphadecimal($c = '00') {
-  return comment_int_to_alphadecimal(comment_alphadecimal_to_int($c) + 1);
-}
-
-/**
  * Implements hook_action_info().
  */
 function comment_action_info() {
