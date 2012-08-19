@@ -23,7 +23,7 @@ Drupal.behaviors.batch = {
         $('#wait').hide();
       };
 
-      var progress = new Drupal.progressBar('updateprogress', updateCallback, 'POST', errorCallback);
+      var progress = new Drupal.ProgressBar('updateprogress', updateCallback, 'POST', errorCallback);
       progress.setProgress(-1, settings.batch.initMessage);
       holder.append(progress.element);
       progress.startMonitoring(settings.batch.uri + '&op=do', 10);
