@@ -41,7 +41,7 @@ abstract class ExposedFormPluginBase extends Plugin {
 
   function option_definition() {
     $options = parent::option_definition();
-    $options['submit_button'] = array('default' => t('Apply'), 'translatable' => TRUE);
+    $options['submit_button'] = array('default' => 'Apply', 'translatable' => TRUE);
     $options['reset_button'] = array('default' => FALSE, 'bool' => TRUE);
     $options['reset_button_label'] = array('default' => 'Reset', 'translatable' => TRUE);
     $options['exposed_sorts_label'] = array('default' => 'Sort by', 'translatable' => TRUE);
