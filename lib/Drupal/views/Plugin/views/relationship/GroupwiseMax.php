@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\relationship;
 
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\View;
-use Drupal\views\JoinSubquery;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -373,12 +372,13 @@ class GroupwiseMax extends RelationshipPluginBase {
       }
     }
 
-    if (!empty($def['join_handler']) && class_exists($def['join_handler'])) {
-      $join = new $def['join_handler'];
+    if (!empty($def['join_id'])) {
+      $id = $def['join_id'];
     }
     else {
-      $join = new JoinSubquery();
+      $id = 'subquery';
     }
+    $join = views_get_join($id);
 
     $join->definition = $def;
     $join->construct();

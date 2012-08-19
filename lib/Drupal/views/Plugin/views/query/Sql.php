@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\query;
 
 use Drupal\Core\Database\Database;
-use Drupal\views\Join;
+use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Exception;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
@@ -326,7 +326,7 @@ class Sql extends QueryPluginBase {
    * @param $alias
    *   What this relationship will be called, and is also the alias
    *   for the table.
-   * @param Drupal\views\Join $join
+   * @param Drupal\views\Plugin\views\join\JoinPluginBase $join
    *   A Join object (or derived object) to join the alias in.
    * @param $base
    *   The name of the 'base' table this relationship represents; this
@@ -338,7 +338,7 @@ class Sql extends QueryPluginBase {
    *   might have a relationship to an 'album' node, which might
    *   have a relationship to an 'artist' node.
    */
-  function add_relationship($alias, Join $join, $base, $link_point = NULL) {
+  function add_relationship($alias, JoinPluginBase $join, $base, $link_point = NULL) {
     if (empty($link_point)) {
       $link_point = $this->base_table;
     }
@@ -398,7 +398,7 @@ class Sql extends QueryPluginBase {
    *   tables exist and are properly aliased. If set to NULL the path to
    *   the primary table will be ensured. If the path cannot be made, the
    *   table will NOT be added.
-   * @param Drupal\views\Join $join
+   * @param Drupal\views\Plugin\views\join\JoinPluginBase $join
    *   In some join configurations this table may actually join back through
    *   a different method; this is most likely to be used when tracing
    *   a hierarchy path. (node->parent->parent2->parent3). This parameter
@@ -412,7 +412,7 @@ class Sql extends QueryPluginBase {
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  function add_table($table, $relationship = NULL, Join $join = NULL, $alias = NULL) {
+  function add_table($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
     if (!$this->ensure_path($table, $relationship, $join)) {
       return FALSE;
     }
@@ -437,7 +437,7 @@ class Sql extends QueryPluginBase {
    * @param $relationship
    *   The primary table alias this table is related to. If not set, the
    *   primary table will be used.
-   * @param Drupal\views\Join $join
+   * @param Drupal\views\Plugin\views\join\JoinPluginBase $join
    *   In some join configurations this table may actually join back through
    *   a different method; this is most likely to be used when tracing
    *   a hierarchy path. (node->parent->parent2->parent3). This parameter
@@ -451,7 +451,7 @@ class Sql extends QueryPluginBase {
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  function queue_table($table, $relationship = NULL, Join $join = NULL, $alias = NULL) {
+  function queue_table($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
     // If the alias is set, make sure it doesn't already exist.
     if (isset($this->table_queue[$alias])) {
       return $alias;
@@ -549,14 +549,14 @@ class Sql extends QueryPluginBase {
    *   The relationship to ensure the table links to. Each relationship will
    *   get a unique instance of the table being added. If not specified,
    *   will be the primary table.
-   * @param Drupal\views\Join $join
+   * @param Drupal\views\Plugin\views\join\JoinPluginBase $join
    *   A Join object (or derived object) to join the alias in.
    *
    * @return
    *   The alias used to refer to this specific table, or NULL if the table
    *   cannot be ensured.
    */
-  function ensure_table($table, $relationship = NULL, Join $join = NULL) {
+  function ensure_table($table, $relationship = NULL, JoinPluginBase $join = NULL) {
     // ensure a relationship
     if (empty($relationship)) {
       $relationship = $this->base_table;
@@ -737,7 +737,7 @@ class Sql extends QueryPluginBase {
    * @param $base_table
    *   The path we're following to get this join.
    *
-   * @return Drupal\views\Join
+   * @return Drupal\views\Plugin\views\join\JoinPluginBase
    *   A Join object or child object, if one exists.
    */
   function get_join_data($table, $base_table) {

@@ -132,12 +132,13 @@ abstract class RelationshipPluginBase extends Handler {
       $def['extra'] = $this->definition['extra'];
     }
 
-    if (!empty($def['join_handler']) && class_exists($def['join_handler'])) {
-      $join = new $def['join_handler'];
+    if (!empty($def['join_id'])) {
+      $id = $def['join_id'];
     }
     else {
-      $join = new Join();
+      $id = 'standard';
     }
+    $join = views_get_join($id);
 
     $join->definition = $def;
     $join->options = $this->options;

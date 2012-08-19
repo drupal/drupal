@@ -7,7 +7,6 @@
 
 namespace Views\taxonomy\Plugin\views\relationship;
 
-use Drupal\views\Join;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -93,7 +92,7 @@ class NodeTermData extends RelationshipPluginBase  {
       $def['table formula'] = $query;
     }
 
-    $join = new Join();
+    $join = views_get_join('standard');
 
     $join->definition = $def;
     $join->construct();

@@ -7,7 +7,6 @@
 
 namespace Views\comment\Plugin\views\field;
 
-use Drupal\views\Join;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -28,7 +27,7 @@ class NcsLastCommentName extends FieldPluginBase {
     // have to join in a specially related user table.
     $this->ensure_my_table();
     // join 'users' to this table via vid
-    $join = new Join();
+    $join = views_get_join();
     $join->construct('users', $this->table_alias, 'last_comment_uid', 'uid');
     $join->extra = array(array('field' => 'uid', 'operator' => '!=', 'value' => '0'));
 

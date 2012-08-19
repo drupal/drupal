@@ -1383,6 +1383,19 @@ function views_get_plugin($type, $id, $reset = FALSE) {
 }
 
 /**
+ * Get a join plugin instance.
+ *
+ * @param string $plugin_id
+ *   The name of the join for example standard.
+ *
+ * @return Drupal\views\Plugin\views\join\JoinPluginBase
+ */
+function views_get_join($plugin_id = 'standard') {
+  $manager = new ViewsPluginManager('join');
+  return $manager->createInstance($plugin_id);
+}
+
+/**
  * Load the current enabled localization plugin.
  *
  * @return The name of the localization plugin.

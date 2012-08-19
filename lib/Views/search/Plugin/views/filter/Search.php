@@ -7,7 +7,6 @@
 
 namespace Views\search\Plugin\views\filter;
 
-use Drupal\views\Join;
 use Drupal\search\SearchQuery;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\Core\Annotation\Plugin;
@@ -140,7 +139,7 @@ class Search extends FilterPluginBase {
       $search_condition = db_and();
 
       // Create a new join to relate the 'serach_total' table to our current 'search_index' table.
-      $join = new Join();
+      $join = views_get_join();
       $join->construct('search_total', $search_index, 'word', 'word');
       $search_total = $this->query->add_relationship('search_total', $join, $search_index);
 

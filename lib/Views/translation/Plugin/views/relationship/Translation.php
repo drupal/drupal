@@ -7,7 +7,6 @@
 
 namespace Views\translation\Plugin\views\relationship;
 
-use Drupal\views\Join;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -96,12 +95,13 @@ class Translation extends RelationshipPluginBase {
       }
     }
 
-    if (!empty($def['join_handler']) && class_exists($def['join_handler'])) {
-      $join = new $def['join_handler'];
+    if (!empty($def['join_id'])) {
+      $id = $def['join_id'];
     }
     else {
-      $join = new Join();
+      $id = 'standard';
     }
+    $join = views_get_join($id);
 
     $join->definition = $def;
     $join->construct();

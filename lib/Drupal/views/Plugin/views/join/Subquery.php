@@ -2,12 +2,11 @@
 
 /**
  * @file
- * Definition of Drupal\views\JoinSubquery.
+ * Definition of Drupal\views\Plugin\views\join\Subquery.
  */
 
-namespace Drupal\views;
-
-use Drupal\views\Join;
+namespace Drupal\views\Plugin\views\join;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Join handler for relationships that join with a subquery as the left field.
@@ -17,8 +16,12 @@ use Drupal\views\Join;
  * join definition
  *   same as Join class above, except:
  *   - left_query: The subquery to use in the left side of the join clause.
+ *
+ * @Plugin(
+ *   id = "subquery"
+ * )
  */
-class JoinSubquery extends Join {
+class Subquery extends JoinPluginBase {
 
   function construct($table = NULL, $left_table = NULL, $left_field = NULL, $field = NULL, $extra = array(), $type = 'LEFT') {
     parent::construct($table, $left_table, $left_field, $field, $extra, $type);

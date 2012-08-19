@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Join
+ * Definition of Drupal\views\Plugin\views\join\JoinPluginBase.
  */
 
-namespace Drupal\views;
+namespace Drupal\views\Plugin\views\join;
 
 /**
  * @defgroup views_join_handlers Views join handlers
@@ -59,7 +59,7 @@ namespace Drupal\views;
  *   - - numeric: If true, the value will not be surrounded in quotes.
  *   - - extra type: How all the extras will be combined. Either AND or OR. Defaults to AND.
  */
-class Join {
+class JoinPluginBase {
 
   var $table = NULL;
 

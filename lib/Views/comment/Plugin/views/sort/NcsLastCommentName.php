@@ -7,7 +7,6 @@
 
 namespace Views\comment\Plugin\views\sort;
 
-use Drupal\views\Join;
 use Drupal\views\Plugin\views\sort\SortPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -27,6 +26,7 @@ class NcsLastCommentName extends SortPluginBase {
   function query() {
     $this->ensure_my_table();
     $join = new Join();
+    $join = views_get_join();
     $join->construct('users', $this->table_alias, 'last_comment_uid', 'uid');
 
     // @todo this might be safer if we had an ensure_relationship rather than guessing

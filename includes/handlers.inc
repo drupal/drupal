@@ -7,7 +7,7 @@
 
 use Drupal\Core\Database\Database;
 use Drupal\views\View;
-use Drupal\views\Join;
+use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Plugin\Type\ViewsPluginManager;
 use Drupal\Component\Plugin\Exception\PluginException;
 
@@ -80,12 +80,13 @@ function views_get_table_join($table, $base_table) {
   $data = views_fetch_data($table);
   if (isset($data['table']['join'][$base_table])) {
     $h = $data['table']['join'][$base_table];
-    if (!empty($h['handler']) && class_exists($h['handler'])) {
-      $handler = new $h['handler'];
+    if (!empty($h['join_id']) && class_exists($h['handler'])) {
+      $id = $h['join_id'];
     }
     else {
-      $handler = new Join();
+      $id = 'standard';
     }
+    $handler = views_get_join($id);
 
     // Fill in some easy defaults
     $handler->definition = $h;

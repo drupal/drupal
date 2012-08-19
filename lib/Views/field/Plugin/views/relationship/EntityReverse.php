@@ -7,7 +7,6 @@
 
 namespace Views\field\Plugin\views\relationship;
 
-use Drupal\views\Join;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -53,12 +52,14 @@ class EntityReverse extends RelationshipPluginBase  {
       $first['extra'] = $this->definition['join_extra'];
     }
 
-    if (!empty($this->definition['join_handler']) && class_exists($this->definition['join_handler'])) {
-      $first_join = new $this->definition['join_handler'];
+    if (!empty($def['join_id'])) {
+      $id = $def['join_id'];
     }
     else {
-      $first_join = new Join();
+      $id = 'standard';
     }
+    $first_join = views_get_join($id);
+
     $first_join->definition = $first;
     $first_join->construct();
     $first_join->adjusted = TRUE;
@@ -78,12 +79,13 @@ class EntityReverse extends RelationshipPluginBase  {
       $second['type'] = 'INNER';
     }
 
-    if (!empty($this->definition['join_handler']) && class_exists($this->definition['join_handler'])) {
-      $second_join = new $this->definition['join_handler'];
+    if (!empty($def['join_id'])) {
+      $id = $def['join_id'];
     }
     else {
-      $second_join = new Join();
+      $id = 'standard';
     }
+    $second_join = views_get_join($id);
     $second_join->definition = $second;
     $second_join->construct();
     $second_join->adjusted = TRUE;

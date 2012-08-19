@@ -7,7 +7,6 @@
 
 namespace Views\search\Plugin\views\argument;
 
-use Drupal\views\Join;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
@@ -63,7 +62,7 @@ class Search extends ArgumentPluginBase {
       $search_condition = db_and();
 
       // Create a new join to relate the 'search_total' table to our current 'search_index' table.
-      $join = new Join();
+      $join = views_get_join();
       $join->construct('search_total', $search_index, 'word', 'word');
       $search_total = $this->query->add_relationship('search_total', $join, $search_index);
 
