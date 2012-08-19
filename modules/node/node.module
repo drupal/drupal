@@ -2578,10 +2578,10 @@ function node_view_multiple($nodes, $view_mode = 'teaser', $weight = 0, $langcod
 function node_page_default() {
   $select = db_select('node', 'n')
     ->fields('n', array('nid', 'sticky', 'created'))
-    ->condition('promote', 1)
-    ->condition('status', 1)
-    ->orderBy('sticky', 'DESC')
-    ->orderBy('created', 'DESC')
+    ->condition('n.promote', 1)
+    ->condition('n.status', 1)
+    ->orderBy('n.sticky', 'DESC')
+    ->orderBy('n.created', 'DESC')
     ->extend('PagerDefault')
     ->limit(variable_get('default_nodes_main', 10))
     ->addTag('node_access');
