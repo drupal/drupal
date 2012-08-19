@@ -39,7 +39,7 @@ define('IMAGE_STORAGE_MODULE', IMAGE_STORAGE_OVERRIDE | IMAGE_STORAGE_DEFAULT);
 require_once DRUPAL_ROOT . '/core/modules/image/image.field.inc';
 
 /**
- * Implement of hook_help().
+ * Implements hook_help().
  */
 function image_help($path, $arg) {
   switch ($path) {
