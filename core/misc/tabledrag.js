@@ -1189,16 +1189,16 @@ Drupal.tableDrag.prototype.row.prototype.onSwap = function (swappedRow) {
   return null;
 };
 
-Drupal.theme.prototype.tableDragChangedMarker = function () {
-  return '<abbr class="warning tabledrag-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
-};
-
-Drupal.theme.prototype.tableDragIndentation = function () {
-  return '<div class="indentation">&nbsp;</div>';
-};
-
-Drupal.theme.prototype.tableDragChangedWarning = function () {
-  return '<div class="tabledrag-changed-warning messages warning">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('Changes made in this table will not be saved until the form is submitted.') + '</div>';
-};
+$.extend(Drupal.theme, {
+  tableDragChangedMarker: function () {
+    return '<abbr class="warning tabledrag-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
+  },
+  tableDragIndentation: function () {
+    return '<div class="indentation">&nbsp;</div>';
+  },
+  tableDragChangedWarning: function () {
+    return '<div class="tabledrag-changed-warning messages warning">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('Changes made in this table will not be saved until the form is submitted.') + '</div>';
+  }
+});
 
 })(jQuery);

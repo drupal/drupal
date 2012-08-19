@@ -185,7 +185,7 @@ Drupal.verticalTab.prototype = {
  *       (jQuery version)
  *   - summary: The jQuery element that contains the tab summary
  */
-Drupal.theme.prototype.verticalTab = function (settings) {
+Drupal.theme.verticalTab = function (settings) {
   var tab = {};
   tab.item = $('<li class="vertical-tab-button" tabindex="-1"></li>')
     .append(tab.link = $('<a href="#"></a>')

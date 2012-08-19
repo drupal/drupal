@@ -40,12 +40,13 @@ Drupal.behaviors.localeTranslateDirty = {
   }
 };
 
-Drupal.theme.prototype.localeTranslateChangedMarker = function () {
-  return '<abbr class="warning ajax-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
-};
-
-Drupal.theme.prototype.localeTranslateChangedWarning = function () {
-  return '<div class="localetranslate-changed-warning messages warning">' + Drupal.theme('localeTranslateChangedMarker') + ' ' + Drupal.t('Changes made in this table will not be saved until the form is submitted.') + '</div>';
-};
+$.extend(Drupal.theme, {
+  localeTranslateChangedMarker: function () {
+    return '<abbr class="warning ajax-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
+  },
+  localeTranslateChangedWarning: function () {
+    return '<div class="localetranslate-changed-warning messages warning">' + Drupal.theme('localeTranslateChangedMarker') + ' ' + Drupal.t('Changes made in this table will not be saved until the form is submitted.') + '</div>';
+  }
+});
 
 })(jQuery);
