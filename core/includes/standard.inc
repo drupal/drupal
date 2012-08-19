@@ -391,7 +391,7 @@ function standard_language_list() {
     'th' => array('Thai', 'ภาษาไทย'),
     'ti' => array('Tigrinya', 'ትግርኛ'),
     'tr' => array('Turkish', 'Türkçe'),
-    'ug' => array('Uighur', 'Уйғур'),
+    'ug' => array('Uyghur', 'Уйғур'),
     'uk' => array('Ukrainian', 'Українська'),
     'ur' => array('Urdu', /* Left-to-right marker "‭" */ 'اردو', LANGUAGE_RTL),
     'vi' => array('Vietnamese', 'Tiếng Việt'),
