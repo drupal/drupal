@@ -107,46 +107,13 @@ function locale_translate_import_form_submit($form, &$form_state) {
       $language = language_save($language);
       drupal_set_message(t('The language %language has been created.', array('%language' => t($language->name))));
     }
-    $customized = $form_state['values']['customized'] ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED;
-
-    // Now import strings into the language
-    try {
-      // Try to allocate enough time to parse and import the data.
-      drupal_set_time_limit(240);
-
-      $report = GetText::fileToDatabase($file, $language->langcode, $form_state['values']['overwrite_options'], $customized);
-      $additions = $report['additions'];
-      $updates = $report['updates'];
-      $deletes = $report['deletes'];
-      $skips = $report['skips'];
-
-      menu_router_rebuild();
-      // Clear cache and force refresh of JavaScript translations.
-      _locale_invalidate_js($language->langcode);
-      cache()->deletePrefix('locale:');
-
-      drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)));
-      watchdog('locale', 'Imported %file into %locale: %number new strings added, %update updated and %delete removed.', array('%file' => $file->filename, '%locale' => $language->langcode, '%number' => $additions, '%update' => $updates, '%delete' => $deletes));
-      if ($skips) {
-        if (module_exists('dblog')) {
-          $skip_message = format_plural($skips, 'A translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
-        }
-        else {
-          $skip_message = format_plural($skips, 'A translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
-        }
-        drupal_set_message($skip_message, 'error');
-        watchdog('locale', '@count disallowed HTML string(s) in %file', array('@count' => $skips, '%file' => $file->uri), WATCHDOG_WARNING);
-      }
-      $variables = array('%filename' => $file->filename);
-      drupal_set_message(t('The translation import of %filename is done.', $variables));
-      watchdog('locale', 'The translation import of %filename is done.', $variables);
-
-    }
-    catch (Exception $exception) {
-      $variables = array('%filename' => $file->filename);
-      drupal_set_message(t('The translation import of %filename failed.', $variables), 'error');
-      watchdog('locale', 'The translation import of %filename failed.', $variables, WATCHDOG_ERROR);
-    }
+    $options = array(
+      'langcode' => $form_state['values']['langcode'],
+      'overwrite_options' => $form_state['values']['overwrite_options'],
+      'customized' => $form_state['values']['customized'] ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED,
+    );
+    $batch = locale_translate_batch_build(array($file->uri => $file), $options);
+    batch_set($batch);
   }
   else {
     drupal_set_message(t('File to import not found.'), 'error');
@@ -283,12 +250,29 @@ function locale_translate_export_form_submit($form, &$form_state) {
 }
 
 /**
- * Set a batch for newly added language.
+ * Sets a batch for a newly added language.
+ *
+ * @param array $options
+ *   An array with options that can have the following elements:
+ *   - 'langcode': The language code, required.
+ *   - 'overwrite_options': Overwrite options array as defined in
+ *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
+ *   - 'customized': Flag indicating whether the strings imported from $file
+ *     are customized translations or come from a community source. Use
+ *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
+ *     LOCALE_NOT_CUSTOMIZED.
+ *   - 'finish_feedback': Whether or not to give feedback to the user when the
+ *     batch is finished. Optional, defaults to TRUE.
  */
-function locale_translate_add_language_set_batch($langcode) {
+function locale_translate_add_language_set_batch($options) {
+  $options += array(
+    'overwrite_options' => array(),
+    'customized' => LOCALE_NOT_CUSTOMIZED,
+    'finish_feedback' => TRUE,
+  );
   // See if we have language files to import for the newly added language,
   // collect and import them.
-  if ($batch = locale_translate_batch_import_files($langcode, TRUE)) {
+  if ($batch = locale_translate_batch_import_files($options)) {
     batch_set($batch);
   }
 }
@@ -296,10 +280,19 @@ function locale_translate_add_language_set_batch($langcode) {
 /**
  * Prepare a batch to import all translations.
  *
- * @param $langcode
- *   (optional) Language code to limit files being imported.
- * @param $finish_feedback
- *   (optional) Whether to give feedback to the user when finished.
+ * @param array $options
+ *   An array with options that can have the following elements:
+ *   - 'langcode': The language code. Optional, defaults to NULL, which means
+ *     that the language will be detected from the name of the files.
+ *   - 'overwrite_options': Overwrite options array as defined in
+ *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
+ *   - 'customized': Flag indicating whether the strings imported from $file
+ *     are customized translations or come from a community source. Use
+ *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
+ *     LOCALE_NOT_CUSTOMIZED.
+ *   - 'finish_feedback': Whether or not to give feedback to the user when the
+ *     batch is finished. Optional, defaults to TRUE.
+ *
  * @param $force
  *   (optional) Import all available files, even if they were imported before.
  *
@@ -308,10 +301,15 @@ function locale_translate_add_language_set_batch($langcode) {
  *   l10n_update functionality to feed in translation files alike.
  *   See http://drupal.org/node/1191488.
  */
-function locale_translate_batch_import_files($langcode = NULL, $finish_feedback = FALSE, $force = FALSE) {
+function locale_translate_batch_import_files($options, $force = FALSE) {
+  $options += array(
+    'overwrite_options' => array(),
+    'customized' => LOCALE_NOT_CUSTOMIZED,
+    'finish_feedback' => TRUE,
+  );
   $files = array();
-  if (!empty($langcode)) {
-    $langcodes = array($langcode);
+  if (!empty($options['langcode'])) {
+    $langcodes = array($options['langcode']);
   }
   else {
     // If langcode was not provided, make sure to only import files for the
@@ -335,7 +333,7 @@ function locale_translate_batch_import_files($langcode = NULL, $finish_feedback 
       }
     }
   }
-  return locale_translate_batch_build($files, $finish_feedback);
+  return locale_translate_batch_build($files, $options);
 }
 
 /**
@@ -358,19 +356,35 @@ function locale_translate_get_interface_translation_files($langcode = NULL) {
  *
  * @param $files
  *   Array of file objects to import.
- * @param $finish_feedback
- *   (optional) Whether to give feedback to the user when finished.
+ *
+ * @param array $options
+ *   An array with options that can have the following elements:
+ *   - 'langcode': The language code. Optional, defaults to NULL, which means
+ *     that the language will be detected from the name of the files.
+ *   - 'overwrite_options': Overwrite options array as defined in
+ *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
+ *   - 'customized': Flag indicating whether the strings imported from $file
+ *     are customized translations or come from a community source. Use
+ *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
+ *     LOCALE_NOT_CUSTOMIZED.
+ *   - 'finish_feedback': Whether or not to give feedback to the user when the
+ *     batch is finished. Optional, defaults to TRUE.
  *
  * @return
  *   A batch structure or FALSE if $files was empty.
  */
-function locale_translate_batch_build($files, $finish_feedback = FALSE) {
+function locale_translate_batch_build($files, $options) {
+  $options += array(
+    'overwrite_options' => array(),
+    'customized' => LOCALE_NOT_CUSTOMIZED,
+    'finish_feedback' => TRUE,
+  );
   $t = get_t();
   if (count($files)) {
     $operations = array();
     foreach ($files as $file) {
       // We call locale_translate_batch_import for every batch operation.
-      $operations[] = array('locale_translate_batch_import', array($file->uri));
+      $operations[] = array('locale_translate_batch_import', array($file->uri, $options));
     }
     $batch = array(
       'operations'    => $operations,
@@ -379,7 +393,7 @@ function locale_translate_batch_build($files, $finish_feedback = FALSE) {
       'error_message' => $t('Error importing interface translations'),
       'file'          => drupal_get_path('module', 'locale') . '/locale.bulk.inc',
     );
-    if ($finish_feedback) {
+    if ($options['finish_feedback']) {
       $batch['finished'] = 'locale_translate_batch_finished';
     }
     return $batch;
@@ -395,23 +409,78 @@ function locale_translate_batch_build($files, $finish_feedback = FALSE) {
  *
  * @param $filepath
  *   Path to a file to import.
+ *
+ * @param array $options
+ *   An array with options that can have the following elements:
+ *   - 'langcode': The language code, required.
+ *   - 'overwrite_options': Overwrite options array as defined in
+ *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
+ *   - 'customized': Flag indicating whether the strings imported from $file
+ *     are customized translations or come from a community source. Use
+ *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
+ *     LOCALE_NOT_CUSTOMIZED.
+ *
  * @param $context
  *   Contains a list of files imported.
  */
-function locale_translate_batch_import($filepath, &$context) {
+function locale_translate_batch_import($filepath, $options, &$context) {
+  // Merge the default values in the $options array.
+  $options += array(
+    'overwrite_options' => array(),
+    'customized' => LOCALE_NOT_CUSTOMIZED,
+  );
   // The filename is either {langcode}.po or {prefix}.{langcode}.po, so
   // we can extract the language code to use for the import from the end.
-  if (preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $langcode)) {
+  if ($options['langcode'] || preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $matches)) {
     $file = entity_create('file', array('filename' => drupal_basename($filepath), 'uri' => $filepath));
-    // We need only the last match
-    $langcode = array_pop($langcode);
+    // We need only the last match, but only if the langcode is not explicitly
+    // specified in the $options array.
+    if (!$options['langcode'] && is_array($matches)) {
+      $options['langcode'] = array_pop($matches);
+    }
     try {
-      $report = GetText::fileToDatabase($file, $langcode, array(), LOCALE_NOT_CUSTOMIZED);
-      $file->langcode = $langcode;
-      $file->timestamp = filemtime($file->uri);
-      locale_translate_update_file_history($file);
-      $context['results']['files'][$filepath] = $filepath;
-      $context['results']['stats'][$filepath] = $report;
+      if (empty($context['sandbox'])) {
+        $context['sandbox']['parse_state'] = array(
+          'filesize' => filesize($file->uri),
+          'chunk_size' => 200,
+          'seek' => 0,
+        );
+      }
+      // Update the seek and the number of items in the $options array().
+      $options['seek'] = $context['sandbox']['parse_state']['seek'];
+      $options['items'] = $context['sandbox']['parse_state']['chunk_size'];
+      $report = GetText::fileToDatabase($file, $options);
+      // If not yet finished with reading, mark progress based on size and
+      // position.
+      if ($report['seek'] < filesize($file->uri)) {
+        $context['sandbox']['parse_state']['seek'] = $report['seek'];
+        // Maximize the progress bar at 95% before completion, the batch API
+        // could trigger the end of the operation before file reading is done,
+        // because of floating point inaccuracies. See
+        // http://drupal.org/node/1089472
+        $context['finished'] = min(0.95, $report['seek'] / filesize($file->uri));
+        $context['message'] = t('Importing file: %filename (@percent%)', array('%filename' => $file->filename, '@percent' => (int) ($context['finished'] * 100)));
+      }
+      else {
+        // We are finished here.
+        $context['finished'] = 1;
+        $file->langcode = $options['langcode'];
+        $file->timestamp = filemtime($file->uri);
+        locale_translate_update_file_history($file);
+        $context['results']['files'][$filepath] = $filepath;
+      }
+      // Add the values from the report to the stats for this file.
+      if (!isset($context['results']['stats']) || !isset($context['results']['stats'][$filepath])) {
+        $context['results']['stats'][$filepath] = array();
+      }
+      foreach ($report as $key => $value) {
+        if (is_numeric($report[$key])) {
+          if (!isset($context['results']['stats'][$filepath][$key])) {
+            $context['results']['stats'][$filepath][$key] = 0;
+          }
+          $context['results']['stats'][$filepath][$key] += $report[$key];
+        }
+      }
     }
     catch (Exception $exception) {
       $context['results']['files'][$filepath] = $filepath;
@@ -449,6 +518,10 @@ function locale_translate_batch_finished($success, $results) {
       drupal_set_message($skip_message, 'error');
       watchdog('locale', '@count disallowed HTML string(s) in files: @files.', array('@count' => $skips, '@files' => implode(',', $skipped_files)), WATCHDOG_WARNING);
     }
+
+    // Clear cache and force refresh of JavaScript translations.
+    _locale_invalidate_js();
+    cache()->deletePrefix('locale:');
   }
 }
 

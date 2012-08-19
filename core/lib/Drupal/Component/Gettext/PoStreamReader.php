@@ -205,6 +205,23 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   }
 
   /**
+   * Sets the seek position for the current PO stream.
+   *
+   * @param int $seek
+   *   The new seek position to set.
+   */
+  public function setSeek($seek) {
+    fseek($this->_fd, $seek);
+  }
+
+  /**
+   * Returns the pointer position of the current PO stream.
+   */
+  public function getSeek() {
+    return ftell($this->_fd);
+  }
+
+  /**
    * Read the header from the PO stream.
    *
    * The header is a special case PoItem, using the empty string as source and

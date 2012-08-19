@@ -52,24 +52,37 @@ class Gettext {
    *
    * @param stdClass $file
    *   File object with an uri property pointing at the file's path.
-   * @param string $langcode
-   *   Language code string.
-   * @param array $overwrite_options
-   *   Overwrite options array as defined in Drupal\locale\PoDatabaseWriter.
-   * @param boolean $customized
-   *   Flag indicating whether the string imported from $file are customized
-   *   translations or come from a community source. Use LOCALE_CUSTOMIZED or
-   *   LOCALE_NOT_CUSTOMIZED.
+   *
+   * @param array $options
+   *   An array with options that can have the following elements:
+   *   - 'langcode': The language code, required.
+   *   - 'overwrite_options': Overwrite options array as defined in
+   *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
+   *   - 'customized': Flag indicating whether the strings imported from $file
+   *     are customized translations or come from a community source. Use
+   *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
+   *     LOCALE_NOT_CUSTOMIZED.
+   *   - 'seek': Specifies from which position in the file should the reader
+   *     start reading the next items. Optional, defaults to 0.
+   *   - 'items': Specifies the number of items to read. Optional, defaults to
+   *     -1, which means that all the items from the stream will be read.
    *
    * @return array
    *   Report array as defined in Drupal\locale\PoDatabaseWriter.
    *
    * @see Drupal\locale\PoDatabaseWriter
    */
-  static function fileToDatabase($file, $langcode, $overwrite_options, $customized = LOCALE_NOT_CUSTOMIZED) {
+  static function fileToDatabase($file, $options) {
+    // Add the default values to the options array.
+    $options += array(
+      'overwrite_options' => array(),
+      'customized' => LOCALE_NOT_CUSTOMIZED,
+      'items' => -1,
+      'seek' => 0,
+    );
     // Instantiate and initialize the stream reader for this file.
     $reader = new PoStreamReader();
-    $reader->setLangcode($langcode);
+    $reader->setLangcode($options['langcode']);
     $reader->setURI($file->uri);
 
     try {
@@ -86,23 +99,31 @@ class Gettext {
 
     // Initialize the database writer.
     $writer = new PoDatabaseWriter();
-    $writer->setLangcode($langcode);
-    $options = array(
-      'overwrite_options' => $overwrite_options,
-      'customized' => $customized,
+    $writer->setLangcode($options['langcode']);
+    $writer_options = array(
+      'overwrite_options' => $options['overwrite_options'],
+      'customized' => $options['customized'],
     );
-    $writer->setOptions($options);
+    $writer->setOptions($writer_options);
     $writer->setHeader($header);
 
     // Attempt to pipe all items from the file to the database.
     try {
-      $writer->writeItems($reader, -1);
+      if ($options['seek']) {
+        $reader->setSeek($options['seek']);
+      }
+      $writer->writeItems($reader, $options['items']);
     }
     catch (Exception $exception) {
       throw $exception;
     }
 
     // Report back with an array of status information.
-    return $writer->getReport();
+    $report = $writer->getReport();
+
+    // Add the seek position to the report. This is useful for the batch
+    // operation.
+    $report['seek'] = $reader->getSeek();
+    return $report;
   }
 }

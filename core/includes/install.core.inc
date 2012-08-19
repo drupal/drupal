@@ -1491,7 +1491,7 @@ function install_import_translations(&$install_state) {
   }
 
   // Collect files to import for this language.
-  $batch = locale_translate_batch_import_files($langcode);
+  $batch = locale_translate_batch_import_files(array('langcode' => $langcode));
   if (!empty($batch)) {
     return $batch;
   }
@@ -1563,7 +1563,7 @@ function install_configure_form($form, &$form_state, &$install_state) {
  */
 function install_import_translations_remaining(&$install_state) {
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
-  return locale_translate_batch_import_files($install_state['parameters']['langcode']);
+  return locale_translate_batch_import_files(array('langcode' => $install_state['parameters']['langcode']));
 }
 
 /**

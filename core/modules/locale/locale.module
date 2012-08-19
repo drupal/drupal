@@ -352,7 +352,7 @@ function locale_themes_enabled($themes) {
  */
 function locale_system_update($components) {
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
-  if ($batch = locale_translate_batch_import_files(NULL, TRUE)) {
+  if ($batch = locale_translate_batch_import_files(array(), TRUE)) {
     batch_set($batch);
   }
 }
@@ -516,7 +516,7 @@ function locale_form_language_admin_add_form_alter_submit($form, $form_state) {
   }
 
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
-  locale_translate_add_language_set_batch($langcode);
+  locale_translate_add_language_set_batch(array('langcode' => $langcode));
 }
 
 /**
