@@ -212,9 +212,9 @@ function forum_confirm_delete($form, &$form_state, $tid) {
   $term = taxonomy_term_load($tid);
 
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
-  $form['name'] = array('#type' => 'value', '#value' => $term->name);
+  $form['name'] = array('#type' => 'value', '#value' => $term->label());
 
-  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/structure/forum', t('Deleting a forum or container will also delete its sub-forums, if any. To delete posts in this forum, visit <a href="@content">content administration</a> first. This action cannot be undone.', array('@content' => url('admin/content'))), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the forum %label?', array('%label' => $term->label())), 'admin/structure/forum', t('Deleting a forum or container will also delete its sub-forums, if any. To delete posts in this forum, visit <a href="@content">content administration</a> first. This action cannot be undone.', array('@content' => url('admin/content'))), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -342,7 +342,7 @@ function _forum_parent_select($tid, $title, $child_type) {
   }
 
   $vid = config('forum.settings')->get('vocabulary');
-  $children = taxonomy_get_tree($vid, $tid);
+  $children = taxonomy_get_tree($vid, $tid, NULL, TRUE);
 
   // A term can't be the child of itself, nor of its children.
   foreach ($children as $child) {
@@ -350,12 +350,12 @@ function _forum_parent_select($tid, $title, $child_type) {
   }
   $exclude[] = $tid;
 
-  $tree = taxonomy_get_tree($vid);
+  $tree = taxonomy_get_tree($vid, 0, NULL, TRUE);
   $options[0] = '<' . t('root') . '>';
   if ($tree) {
     foreach ($tree as $term) {
       if (!in_array($term->tid, $exclude)) {
-        $options[$term->tid] = str_repeat(' -- ', $term->depth) . $term->name;
+        $options[$term->tid] = str_repeat(' -- ', $term->depth) . $term->label();
       }
     }
   }

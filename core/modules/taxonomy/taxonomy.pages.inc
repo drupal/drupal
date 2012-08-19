@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 function taxonomy_term_page(Term $term) {
   // Assign the term name as the page title.
-  drupal_set_title($term->name);
+  drupal_set_title($term->label());
 
   // Build breadcrumb based on the hierarchy of the term.
   $current = (object) array(
@@ -28,12 +28,12 @@ function taxonomy_term_page(Term $term) {
   $breadcrumb = array();
   while ($parents = taxonomy_term_load_parents($current->tid)) {
     $current = array_shift($parents);
-    $breadcrumb[] = l($current->name, 'taxonomy/term/' . $current->tid);
+    $breadcrumb[] = l($current->label(), 'taxonomy/term/' . $current->tid);
   }
   $breadcrumb[] = l(t('Home'), NULL);
   $breadcrumb = array_reverse($breadcrumb);
   drupal_set_breadcrumb($breadcrumb);
-  drupal_add_feed('taxonomy/term/' . $term->tid . '/feed', 'RSS - ' . $term->name);
+  drupal_add_feed('taxonomy/term/' . $term->tid . '/feed', 'RSS - ' . $term->label());
 
   $build = array();
 
@@ -69,7 +69,7 @@ function taxonomy_term_page(Term $term) {
  */
 function taxonomy_term_feed(Term $term) {
   $channel['link'] = url('taxonomy/term/' . $term->tid, array('absolute' => TRUE));
-  $channel['title'] = config('system.site')->get('name') . ' - ' . $term->name;
+  $channel['title'] = config('system.site')->get('name') . ' - ' . $term->label();
   // Only display the description if we have a single term, to avoid clutter and confusion.
   // HTML will be removed from feed description.
   $channel['description'] = check_markup($term->description, $term->format, '', TRUE);

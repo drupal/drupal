@@ -1052,13 +1052,13 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
     // Extract terms belonging to the vocabulary in question.
     if (!isset($vid) || $tag->vid == $vid) {
       // Make sure we have a completed loaded taxonomy term.
-      if (isset($tag->name)) {
+      if ($tag instanceof EntityInterface && $label = $tag->label()) {
         // Commas and quotes in tag names are special cases, so encode 'em.
-        if (strpos($tag->name, ',') !== FALSE || strpos($tag->name, '"') !== FALSE) {
-          $typed_tags[] = '"' . str_replace('"', '""', $tag->name) . '"';
+        if (strpos($label, ',') !== FALSE || strpos($label, '"') !== FALSE) {
+          $typed_tags[] = '"' . str_replace('"', '""', $label) . '"';
         }
         else {
-          $typed_tags[] = $tag->name;
+          $typed_tags[] = $label;
         }
       }
     }
@@ -1243,7 +1243,7 @@ function taxonomy_field_formatter_view($entity_type, $entity, $field, $instance,
           $uri = entity_uri('taxonomy_term', $term);
           $element[$delta] = array(
             '#type' => 'link',
-            '#title' => $term->name,
+            '#title' => $term->label(),
             '#href' => $uri['path'],
             '#options' => $uri['options'],
           );
@@ -1253,7 +1253,7 @@ function taxonomy_field_formatter_view($entity_type, $entity, $field, $instance,
 
     case 'taxonomy_term_reference_plain':
       foreach ($items as $delta => $item) {
-        $name = ($item['tid'] != 'autocreate' ? $item['taxonomy_term']->name : $item['name']);
+        $name = ($item['tid'] != 'autocreate' ? $item['taxonomy_term']->label() : $item['name']);
         $element[$delta] = array(
           '#markup' => check_plain($name),
         );
@@ -1264,7 +1264,7 @@ function taxonomy_field_formatter_view($entity_type, $entity, $field, $instance,
       foreach ($items as $delta => $item) {
         $entity->rss_elements[] = array(
           'key' => 'category',
-          'value' => $item['tid'] != 'autocreate' ? $item['taxonomy_term']->name : $item['name'],
+          'value' => $item['tid'] != 'autocreate' ? $item['taxonomy_term']->label() : $item['name'],
           'attributes' => array(
             'domain' => $item['tid'] != 'autocreate' ? url('taxonomy/term/' . $item['tid'], array('absolute' => TRUE)) : '',
           ),
@@ -1298,9 +1298,9 @@ function taxonomy_allowed_values($field, $instance, $entity_type, $entity) {
   $options = array();
   foreach ($field['settings']['allowed_values'] as $tree) {
     if ($vocabulary = taxonomy_vocabulary_machine_name_load($tree['vocabulary'])) {
-      if ($terms = taxonomy_get_tree($vocabulary->vid, $tree['parent'])) {
+      if ($terms = taxonomy_get_tree($vocabulary->vid, $tree['parent'], NULL, TRUE)) {
         foreach ($terms as $term) {
-          $options[$term->tid] = str_repeat('-', $term->depth) . $term->name;
+          $options[$term->tid] = str_repeat('-', $term->depth) . $term->label();
         }
       }
     }
@@ -1368,7 +1368,7 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
  *   The term name to be used as the page title.
  */
 function taxonomy_term_title(Term $term) {
-  return $term->name;
+  return $term->label();
 }
 
 /**

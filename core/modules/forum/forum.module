@@ -274,7 +274,7 @@ function forum_node_view(Node $node, $view_mode) {
       if ($parents = taxonomy_term_load_parents_all($node->forum_tid)) {
         $parents = array_reverse($parents);
         foreach ($parents as $parent) {
-          $breadcrumb[] = l($parent->name, 'forum/' . $parent->tid);
+          $breadcrumb[] = l($parent->label(), 'forum/' . $parent->tid);
         }
       }
       drupal_set_breadcrumb($breadcrumb);
@@ -313,7 +313,7 @@ function forum_node_validate(Node $node, $form) {
           ':vid' => $term->vid,
         ))->fetchField();
         if ($used && in_array($term->tid, $containers)) {
-          form_set_error('taxonomy_forums', t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->name)));
+          form_set_error('taxonomy_forums', t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->label())));
         }
       }
     }
@@ -802,7 +802,7 @@ function forum_forum_load($tid = NULL) {
 
   // Load the tree below.
   $forums = array();
-  $_forums = taxonomy_get_tree($vid, $tid);
+  $_forums = taxonomy_get_tree($vid, $tid, NULL, TRUE);
 
   if (count($_forums)) {
     $query = db_select('node', 'n');
@@ -1081,10 +1081,10 @@ function template_preprocess_forums(&$variables) {
     $variables['parents'] = array_reverse($variables['parents']);
     foreach ($variables['parents'] as $p) {
       if ($p->tid == $variables['tid']) {
-        $title = $p->name;
+        $title = $p->label();
       }
       else {
-        $breadcrumb[] = l($p->name, 'forum/' . $p->tid);
+        $breadcrumb[] = l($p->label(), 'forum/' . $p->tid);
       }
     }
   }
@@ -1152,7 +1152,7 @@ function template_preprocess_forum_list(&$variables) {
   foreach ($variables['forums'] as $id => $forum) {
     $variables['forums'][$id]->description = !empty($forum->description) ? filter_xss_admin($forum->description) : '';
     $variables['forums'][$id]->link = url("forum/$forum->tid");
-    $variables['forums'][$id]->name = check_plain($forum->name);
+    $variables['forums'][$id]->name = check_plain($forum->label());
     $variables['forums'][$id]->is_container = !empty($forum->container);
     $variables['forums'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
     $row++;

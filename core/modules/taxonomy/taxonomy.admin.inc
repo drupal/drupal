@@ -157,7 +157,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
 
   $delta = 0;
   $term_deltas = array();
-  $tree = taxonomy_get_tree($vocabulary->vid);
+  $tree = taxonomy_get_tree($vocabulary->vid, 0, NULL, TRUE);
   $term = current($tree);
   do {
     // In case this tree is completely empty.
@@ -248,7 +248,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
       unset($form[$key]['#term']['parents'], $term->parents);
     }
 
-    $form[$key]['view'] = array('#type' => 'link', '#title' => $term->name, '#href' => "taxonomy/term/$term->tid");
+    $form[$key]['view'] = array('#type' => 'link', '#title' => $term->label(), '#href' => "taxonomy/term/$term->tid");
     if ($vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
       $form['#parent_fields'] = TRUE;
       $form[$key]['tid'] = array(
@@ -532,7 +532,7 @@ function taxonomy_term_add($vocabulary) {
  * @ingroup forms
  * @see taxonomy_term_confirm_delete_submit()
  */
-function taxonomy_term_confirm_delete($form, &$form_state, $term) {
+function taxonomy_term_confirm_delete($form, &$form_state, Term $term) {
   // Always provide entity id in the same form key as in the entity edit form.
   $form['tid'] = array('#type' => 'value', '#value' => $term->tid);
 
@@ -543,7 +543,7 @@ function taxonomy_term_confirm_delete($form, &$form_state, $term) {
   $form['delete'] = array('#type' => 'value', '#value' => TRUE);
   return confirm_form($form,
     t('Are you sure you want to delete the term %title?',
-    array('%title' => $term->name)),
+    array('%title' => $term->label())),
     'admin/structure/taxonomy',
     t('Deleting a term will delete all its children if there are any. This action cannot be undone.'),
     t('Delete'),

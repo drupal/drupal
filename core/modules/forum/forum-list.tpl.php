@@ -54,7 +54,7 @@
           <div class="icon forum-status-<?php print $forum->icon_class; ?>" title="<?php print $forum->icon_title; ?>">
             <span class="element-invisible"><?php print $forum->icon_title; ?></span>
           </div>
-          <div class="name"><a href="<?php print $forum->link; ?>"><?php print $forum->name; ?></a></div>
+          <div class="name"><a href="<?php print $forum->link; ?>"><?php print $forum->label(); ?></a></div>
           <?php if ($forum->description): ?>
             <div class="description"><?php print $forum->description; ?></div>
           <?php endif; ?>

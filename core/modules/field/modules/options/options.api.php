@@ -61,10 +61,10 @@ function hook_options_list($field, $instance, $entity_type, $entity) {
   // on properties of the field. Example from taxonomy.module:
   $options = array();
   foreach ($field['settings']['allowed_values'] as $tree) {
-    $terms = taxonomy_get_tree($tree['vid'], $tree['parent']);
+    $terms = taxonomy_get_tree($tree['vid'], $tree['parent'], NULL, TRUE);
     if ($terms) {
       foreach ($terms as $term) {
-        $options[$term->tid] = str_repeat('-', $term->depth) . $term->name;
+        $options[$term->tid] = str_repeat('-', $term->depth) . $term->label();
       }
     }
   }
