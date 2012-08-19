@@ -1390,7 +1390,7 @@ function comment_node_update_index(Node $node, $langcode) {
     // not view comments.
     $index_comments = TRUE;
     foreach ($perms['search content'] as $rid) {
-      if (!isset($perms['access comments'][$rid]) && ($rid <= DRUPAL_AUTHENTICATED_RID || !isset($perms['access comments'][DRUPAL_AUTHENTICATED_RID]))) {
+      if (!isset($perms['access comments'][$rid]) && (($rid == DRUPAL_AUTHENTICATED_RID || $rid == DRUPAL_ANONYMOUS_RID) || !isset($perms['access comments'][DRUPAL_AUTHENTICATED_RID]))) {
         $index_comments = FALSE;
         break;
       }
