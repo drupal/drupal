@@ -390,9 +390,6 @@ Drupal.ajaxError = function (xmlhttp, uri) {
 // Class indicating that JS is enabled; used for styling purpose.
 $('html').addClass('js');
 
-// 'js enabled' cookie.
-document.cookie = 'has_js=1; path=/';
-
 //Attach all behaviors.
 $(function () {
   Drupal.attachBehaviors(document, Drupal.settings);
