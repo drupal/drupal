@@ -52,9 +52,9 @@ class NodeQueryAlterTest extends NodeTestBase {
 
     // Create user with simple node access permission. The 'node test view'
     // permission is implemented and granted by the node_access_test module.
-    $this->accessUser = $this->drupalCreateUser(array('access content', 'node test view'));
-    $this->noAccessUser = $this->drupalCreateUser(array('access content'));
-    $this->noAccessUser2 = $this->drupalCreateUser(array('access content'));
+    $this->accessUser = $this->drupalCreateUser(array('access content overview', 'access content', 'node test view'));
+    $this->noAccessUser = $this->drupalCreateUser(array('access content overview', 'access content'));
+    $this->noAccessUser2 = $this->drupalCreateUser(array('access content overview', 'access content'));
   }
 
   /**
@@ -67,11 +67,19 @@ class NodeQueryAlterTest extends NodeTestBase {
     $this->assertText('Yes, 4 nodes', "4 nodes were found for access user");
     $this->assertNoText('Exception', "No database exception");
 
+    // Test the content overview page.
+    $this->drupalGet('admin/content');
+    $table_rows = $this->xpath('//tbody/tr');
+    $this->assertEqual(4, count($table_rows), "4 nodes were found for access user");
+
     // Verify that a user with no access permission cannot see nodes.
     $this->drupalLogin($this->noAccessUser);
     $this->drupalGet('node_access_test_page');
     $this->assertText('No nodes', "No nodes were found for no access user");
     $this->assertNoText('Exception', "No database exception");
+
+    $this->drupalGet('admin/content');
+    $this->assertText(t('No content available.'));
   }
 
   /**
