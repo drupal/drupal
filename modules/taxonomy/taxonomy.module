@@ -1000,8 +1000,8 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
   $parents = &drupal_static(__FUNCTION__ . ':parents', array());
   $terms = &drupal_static(__FUNCTION__ . ':terms', array());
 
-  // We cache trees, so it's not CPU-intensive to call get_tree() on a term
-  // and its children, too.
+  // We cache trees, so it's not CPU-intensive to call taxonomy_get_tree() on a
+  // term and its children, too.
   if (!isset($children[$vid])) {
     $children[$vid] = array();
     $parents[$vid] = array();
