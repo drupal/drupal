@@ -434,10 +434,10 @@ class Field extends FieldPluginBase {
     // Provide an instance array for hook_field_formatter_settings_form().
     // @todo Remove this: http://drupal.org/node/1741128.
     ctools_include('fields');
-    $instance = ctools_fields_fake_field_instance($this->definition['field_name'], '_dummy', $formatter, $settings);
+    $instance = ctools_fields_fake_field_instance($this->definition['field_name'], '_custom', $formatter, $settings);
 
-    // Store the settings in a '_dummy' view mode.
-    $instance['display']['_dummy'] = array(
+    // Store the settings in a '_custom' view mode.
+    $instance['display']['_custom'] = array(
       'type' => $format,
       'settings' => $settings,
     );
@@ -446,7 +446,7 @@ class Field extends FieldPluginBase {
     $settings_form = array('#value' => array());
     $function = $formatter['module'] . '_field_formatter_settings_form';
     if (function_exists($function)) {
-      $settings_form = $function($field, $instance, '_dummy', $form, $form_state);
+      $settings_form = $function($field, $instance, '_custom', $form, $form_state);
     }
     $form['settings'] = $settings_form;
   }
