@@ -99,16 +99,5 @@ function views_views_data() {
     ),
   );
 
-  if (module_invoke('ctools', 'api_version', '1.7.1')) {
-    $data['views']['expression'] = array(
-      'title' => t('Math expression'),
-      'help' => t('Evaluates a mathematical expression and displays it.'),
-      'field' => array(
-        'id' => 'math',
-        'float' => TRUE,
-      ),
-    );
-  }
-
   return $data;
 }
