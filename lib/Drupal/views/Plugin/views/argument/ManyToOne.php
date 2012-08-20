@@ -63,15 +63,13 @@ class ManyToOne extends ArgumentPluginBase {
     parent::options_form($form, $form_state);
 
     // allow + for or, , for and
-    if (!empty($this->definition['numeric'])) {
-      $form['break_phrase'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Allow multiple values'),
-        '#description' => t('If selected, users can enter multiple values in the form of 1+2+3 (for OR) or 1,2,3 (for AND).'),
-        '#default_value' => !empty($this->options['break_phrase']),
-        '#fieldset' => 'more',
-      );
-    }
+    $form['break_phrase'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Allow multiple values'),
+      '#description' => t('If selected, users can enter multiple values in the form of 1+2+3 (for OR) or 1,2,3 (for AND).'),
+      '#default_value' => !empty($this->options['break_phrase']),
+      '#fieldset' => 'more',
+    );
 
     $form['add_table'] = array(
       '#type' => 'checkbox',
@@ -118,7 +116,12 @@ class ManyToOne extends ArgumentPluginBase {
     }
 
     if (!empty($this->options['break_phrase'])) {
-      views_break_phrase($this->argument, $this);
+      if (!empty($this->definition['nummeric'])) {
+        views_break_phrase($this->argument, $this);
+      }
+      else {
+        views_break_phrase_string($this->argument, $this);
+      }
     }
     else {
       $this->value = array($this->argument);
