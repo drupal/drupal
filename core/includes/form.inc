@@ -1195,18 +1195,23 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
 /**
  * Redirects the user to a URL after a form has been processed.
  *
- * After a form was executed, the data in $form_state controls whether the form
- * is redirected. By default, we redirect to a new destination page. The path
- * of the destination page can be set in $form_state['redirect'], as either a
- * string containing the destination or an array of arguments compatible with
- * drupal_goto(). If that is not set, the user is redirected to the current
- * page to display a fresh, unpopulated copy of the form.
+ * After a form is submitted and processed, normally the user should be
+ * redirected to a new destination page. This function figures out what that
+ * destination should be, based on the $form_state array and the 'destination'
+ * query string in the request URL, and redirects the user there.
  *
- * For example, to redirect to 'node':
+ * Usually (for exceptions, see below) $form_state['redirect'] determines where
+ * to redirect the user. This can be set either to a string (the path to
+ * redirect to), or an array of arguments for drupal_goto(). If
+ * $form_state['redirect'] is missing, the user is usually (again, see below for
+ * exceptions) redirected back to the page they came from, where they should see
+ * a fresh, unpopulated copy of the form.
+ *
+ * Here is an example of how to set up a form to redirect to the path 'node':
  * @code
  * $form_state['redirect'] = 'node';
  * @endcode
- * Or to redirect to 'node/123?foo=bar#baz':
+ * And here is an example of how to redirect to 'node/123?foo=bar#baz':
  * @code
  * $form_state['redirect'] = array(
  *   'node/123',
@@ -1219,29 +1224,27 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
  * );
  * @endcode
  *
- * There are several triggers that may prevent a redirection though:
- * - If $form_state['redirect'] is FALSE, a form builder function or form
- *   validation/submit handler does not want a user to be redirected, which
- *   means that drupal_goto() is not invoked. For most forms, the redirection
- *   logic will be the same regardless of whether $form_state['redirect'] is
- *   undefined or FALSE. However, in case it was not defined and the current
- *   request contains a 'destination' query string, drupal_goto() will redirect
- *   to that given destination instead. Only setting $form_state['redirect'] to
- *   FALSE will prevent any redirection.
- * - If $form_state['no_redirect'] is TRUE, then the callback that originally
- *   built the form explicitly disallows any redirection, regardless of the
- *   redirection value in $form_state['redirect']. For example, ajax_get_form()
- *   defines $form_state['no_redirect'] when building a form in an Ajax
- *   callback to prevent any redirection. $form_state['no_redirect'] should NOT
- *   be altered by form builder functions or form validation/submit handlers.
+ * There are several exceptions to the "usual" behavior described above:
  * - If $form_state['programmed'] is TRUE, the form submission was usually
  *   invoked via drupal_form_submit(), so any redirection would break the script
- *   that invoked drupal_form_submit().
- * - If $form_state['rebuild'] is TRUE, the form needs to be rebuilt without
- *   redirection.
+ *   that invoked drupal_form_submit() and no redirection is done.
+ * - If $form_state['rebuild'] is TRUE, the form is being rebuilt, and no
+ *   redirection is done.
+ * - If $form_state['no_redirect'] is TRUE, redirection is disabled. This is
+ *   set, for instance, by ajax_get_form() to prevent redirection in Ajax
+ *   callbacks. $form_state['no_redirect'] should never be set or altered by
+ *   form builder functions or form validation/submit handlers.
+ * - If $form_state['redirect'] is set to FALSE, redirection is disabled.
+ * - If none of the above conditions has prevented redirection, then the
+ *   redirect is accomplished by calling drupal_goto(), passing in the value of
+ *   $form_state['redirect'] if it is set, or the current path if it is
+ *   not. drupal_goto() preferentially uses the value of $_GET['destination']
+ *   (the 'destination' URL query string) if it is present, so this will
+ *   override any values set by $form_state['redirect']. Note that during
+ *   installation, install_goto() is called in place of drupal_goto().
  *
  * @param $form_state
- *   A keyed array containing the current state of the form.
+ *   An associative array containing the current state of the form.
  *
  * @see drupal_process_form()
  * @see drupal_build_form()
