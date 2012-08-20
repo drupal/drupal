@@ -944,6 +944,8 @@ abstract class FilterPluginBase extends Handler {
       $row['operator']['#title'] = '';
       $this->value_form($row, $form_state);
 
+      // @todo: Convert this to #states.
+      ctools_include('dependent');
       // Fix the dependencies to update value forms when operators
       // changes. This is needed because forms are inside a new form and
       // their ids changes. Dependencies are used when operator changes

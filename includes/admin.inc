@@ -303,7 +303,6 @@ function views_ui_add_page() {
  * Form builder for the "add new view" page.
  */
 function views_ui_add_form($form, &$form_state) {
-  ctools_include('dependent');
   $form['#attached']['js'][] = drupal_get_path('module', 'views_ui') . '/js/views-admin.js';
   $form['#attributes']['class'] = array('views-admin');
 
@@ -971,8 +970,7 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
   //   - Change $form_state['view'] to $form_state['temporary']['view'].
   //   - Add a #process function to initialize $form_state['temporary']['view']
   //     on cached form submissions.
-  //   - Update ctools_include() to support cached forms, or else use
-  //     form_load_include().
+  //   - Use form_load_include().
   $form_state['no_cache'] = TRUE;
 
   if ($display_id) {
@@ -984,8 +982,6 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
     $view->fix_missing_relationships();
   }
 
-  ctools_include('dependent');
-  $form['#attached']['js'][] = ctools_attach_js('dependent');
   $form['#attached']['js'][] = ctools_attach_js('collapsible-div');
 
   $form['#tree'] = TRUE;
@@ -1196,7 +1192,6 @@ function views_ui_preview_form($form, &$form_state, $view, $display_id = 'defaul
     '#type' => 'submit',
     '#value' => t('Update preview'),
     '#attributes' => array('class' => array('arguments-preview', 'ctools-auto-submit-click')),
-    '#pre_render' => array('ctools_dependent_pre_render'),
     '#prefix' => '<div id="preview-submit-wrapper">',
     '#suffix' => '</div>',
     '#id' => 'preview-submit',
@@ -4028,8 +4023,6 @@ function views_ui_add_item_form($form, &$form_state) {
     ),
   );
 
-  ctools_add_js('dependent');
-
   if (!$view->set_display($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
@@ -4137,7 +4130,6 @@ function views_ui_add_item_form($form, &$form_state) {
     '#theme_wrappers' => array('form_element', 'views_container'),
     '#attributes' => array('class' => array('container-inline', 'views-add-form-selected')),
   );
-  ctools_include('dependent');
   views_ui_standard_form_buttons($form, $form_state, 'views_ui_add_item_form', t('Add and configure @types', array('@types' => $ltitle)));
 
   // Remove the default submit function.

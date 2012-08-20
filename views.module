@@ -103,7 +103,7 @@ function views_api_minimum_version() {
  */
 function views_theme($existing, $type, $theme, $path) {
   $path = drupal_get_path('module', 'views');
-  ctools_include('theme', 'views', 'theme');
+  module_load_include('inc', 'views', 'theme/theme');
 
   // Some quasi clever array merging here.
   $base = array(
@@ -1125,7 +1125,7 @@ function &views_get_current_view() {
  * Include views .inc files as necessary.
  */
 function views_include($file) {
-  ctools_include($file, 'views');
+  module_load_include('inc', 'views', 'includes/' . $file);
 }
 
 /**
@@ -1138,6 +1138,8 @@ function views_module_include($api, $reset = FALSE) {
       unset($cache['views']['views']);
     }
   }
+
+  // @todo replace with http://drupal.org/node/1741154.
   ctools_include('plugins');
   return ctools_plugin_api_include('views', $api, views_api_minimum_version(), views_api_version());
 }
@@ -1152,6 +1154,8 @@ function views_get_module_apis($api = 'views', $reset = FALSE) {
       unset($cache['views']['views']);
     }
   }
+
+  // @todo replace with http://drupal.org/node/1741154.
   ctools_include('plugins');
   return ctools_plugin_api_info('views', $api, views_api_minimum_version(), views_api_version());
 }
@@ -1175,9 +1179,10 @@ function views_add_js($file) {
   if (config('views.settings')->get('no_javascript')) {
     return;
   }
+  $path = drupal_get_path('module', 'views');
   static $base = TRUE, $ajax = TRUE;
   if ($base) {
-    drupal_add_js(drupal_get_path('module', 'views') . "/js/base.js");
+    drupal_add_js($path . "/js/base.js");
     $base = FALSE;
   }
   if ($ajax && in_array($file, array('ajax', 'ajax_view'))) {
@@ -1185,7 +1190,7 @@ function views_add_js($file) {
     drupal_add_library('system', 'jquery.form');
     $ajax = FALSE;
   }
-  ctools_add_js($file, 'views');
+  drupal_add_js($path . "/js/$file.js");
 }
 
 /**
@@ -1528,6 +1533,7 @@ function views_get_applicable_views($type) {
  *   If TRUE, reset the static cache forcing views to be reloaded.
  */
 function views_get_all_views($reset = FALSE) {
+  // @todo replace with http://drupal.org/node/1741154.
   ctools_include('export');
   return ctools_export_crud_load_all('views_view', $reset);
 }
@@ -1663,6 +1669,7 @@ function views_get_view($name, $reset = FALSE) {
     }
   }
 
+  // @todo replace with http://drupal.org/node/1741154.
   ctools_include('export');
   $view = ctools_export_crud_load('views_view', $name);
   if ($view) {
@@ -2097,7 +2104,6 @@ function views_exposed_form($form, &$form_state) {
   if ($view->use_ajax) {
     drupal_add_library('system', 'jquery.form');
   }
-  ctools_include('dependent');
 
   $exposed_form_plugin = $form_state['exposed_form_plugin'];
   $exposed_form_plugin->exposed_form_alter($form, $form_state);
@@ -2193,7 +2199,7 @@ function views_exposed_form_cache($views_name, $display_name, $form_output = NUL
  * Build a list of theme function names for use most everywhere.
  */
 function views_theme_functions($hook, $view, $display = NULL) {
-  require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'views') . "/theme/theme.inc";
+  module_load_include('inc', 'views', 'theme/theme');
   return _views_theme_functions($hook, $view, $display);
 }
 

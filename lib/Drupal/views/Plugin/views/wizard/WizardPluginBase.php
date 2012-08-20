@@ -87,7 +87,6 @@ abstract class WizardPluginBase implements WizardInterface {
           ':input[name="page[create]"]' => array('checked' => TRUE),
         ),
       ),
-      '#pre_render' => array('ctools_dependent_pre_render'),
       '#prefix' => '<div><div id="edit-page-wrapper">',
       '#suffix' => '</div></div>',
       '#parents' => array('page'),
@@ -200,7 +199,6 @@ abstract class WizardPluginBase implements WizardInterface {
             ':input[name="page[feed]"]' => array('checked' => TRUE),
           ),
         ),
-        '#pre_render' => array('ctools_dependent_pre_render'),
         '#prefix' => '<div id="edit-page-feed-properties-row-plugin-wrapper">',
         '#suffix' => '</div>',
       );
@@ -228,7 +226,6 @@ abstract class WizardPluginBase implements WizardInterface {
           ':input[name="block[create]"]' => array('checked' => TRUE),
         ),
       ),
-      '#pre_render' => array('ctools_dependent_pre_render'),
       '#prefix' => '<div id="edit-block-wrapper">',
       '#suffix' => '</div>',
       '#parents' => array('block'),

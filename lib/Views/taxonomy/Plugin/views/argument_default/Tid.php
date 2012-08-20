@@ -94,7 +94,6 @@ class Tid extends ArgumentDefaultPluginBase {
       '#type' => 'radios',
       '#title' => t('Multiple-value handling'),
       '#default_value' => $this->options['anyall'],
-      '#process' => array('form_process_radios', 'ctools_dependent_process'),
       '#options' => array(
         ',' => t('Filter to items that share all terms'),
         '+' => t('Filter to items that share any term'),

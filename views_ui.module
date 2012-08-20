@@ -290,6 +290,7 @@ function views_ui_edit_page_title($view) {
  *   someone else is already editing the view.
  */
 function views_ui_cache_load($name) {
+  // @todo Convert this: http://drupal.org/node/1658068.
   ctools_include('object-cache');
   $view = ctools_object_cache_get('view', $name);
   $original_view = views_get_view($name);
@@ -330,6 +331,7 @@ function views_ui_cache_set(&$view) {
     drupal_set_message(t('Changes cannot be made to a locked view.'), 'error');
     return;
   }
+  // @todo Convert this: http://drupal.org/node/1658068.
   ctools_include('object-cache');
   $view->changed = TRUE; // let any future object know that this view has changed.
 
@@ -556,7 +558,6 @@ function views_ui_ctools_plugin_directory($module, $plugin) {
  *   An array with information about the requested wizard type.
  */
 function views_ui_get_wizard($wizard_type) {
-  ctools_include('plugins');
   $manager = new ViewsPluginManager('wizard');
   $wizard = $manager->getDefinition($wizard_type);
   // @todo - handle this via an alter hook instead.
@@ -567,10 +568,6 @@ function views_ui_get_wizard($wizard_type) {
       $wizard = views_ui_views_wizard_defaults();
       $wizard['base_table'] = $wizard_type;
       $wizard['title'] = $base_tables[$wizard_type]['title'];
-    }
-    // The plugin is neither a base table nor an existing wizard.
-    else {
-      vpr('Views Wizard: @wizard does not exist. Be sure to implement hook_ctools_plugin_directory.', array('@wizard' => $wizard_type));
     }
   }
   return $wizard;

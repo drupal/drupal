@@ -432,6 +432,7 @@ class Field extends FieldPluginBase {
     $settings = $this->options['settings'] + field_info_formatter_settings($format);
 
     // Provide an instance array for hook_field_formatter_settings_form().
+    // @todo Remove this: http://drupal.org/node/1741128.
     ctools_include('fields');
     $instance = ctools_fields_fake_field_instance($this->definition['field_name'], '_dummy', $formatter, $settings);
 

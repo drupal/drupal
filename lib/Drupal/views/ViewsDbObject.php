@@ -127,6 +127,7 @@ class ViewsDbObject {
    *   An optional indentation for prettifying nested code.
    */
   function export_row($identifier = NULL, $indent = '') {
+    // @todo replace with http://drupal.org/node/1741154.
     ctools_include('export');
 
     if (!$identifier) {
