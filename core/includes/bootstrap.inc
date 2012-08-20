@@ -371,56 +371,12 @@ function timer_stop($name) {
 }
 
 /**
- * Finds the appropriate configuration directory.
+ * Returns the appropriate configuration directory.
  *
- * Finds a matching configuration directory by stripping the website's
- * hostname from left to right and pathname from right to left. The first
- * configuration file found will be used and the remaining ones will be ignored.
- * If no configuration file is found, return a default value '$confdir/default'.
- *
- * With a site located at http://www.example.com:8080/mysite/test/, the file,
- * settings.php, is searched for in the following directories:
- *
- * - $confdir/8080.www.example.com.mysite.test
- * - $confdir/www.example.com.mysite.test
- * - $confdir/example.com.mysite.test
- * - $confdir/com.mysite.test
- *
- * - $confdir/8080.www.example.com.mysite
- * - $confdir/www.example.com.mysite
- * - $confdir/example.com.mysite
- * - $confdir/com.mysite
- *
- * - $confdir/8080.www.example.com
- * - $confdir/www.example.com
- * - $confdir/example.com
- * - $confdir/com
- *
- * - $confdir/default
- *
- * If a file named sites.php is present in the $confdir, it will be loaded
- * prior to scanning for directories. It should define an associative array
- * named $sites, which maps domains to directories. It should be in the form
- * of:
- * @code
- * $sites = array(
- *   'The url to alias' => 'A directory within the sites directory'
- * );
- * @endcode
- * For example:
- * @code
- * $sites = array(
- *   'devexample.com' => 'example.com',
- *   'localhost.example' => 'example.com',
- * );
- * @endcode
- * The above array will cause Drupal to look for a directory named
- * "example.com" in the sites directory whenever a request comes from
- * "example.com", "devexample.com", or "localhost/example". That is useful
- * on development servers, where the domain name may not be the same as the
- * domain of the live server. Since Drupal stores file paths into the database
- * (files, system table, etc.) this will ensure the paths are correct while
- * accessed on development servers.
+ * Returns the configuration path based on the site's hostname, port, and
+ * pathname. Uses find_conf_path() to find the current configuration directory.
+ * See default.settings.php for examples on how the URL is converted to a
+ * directory.
  *
  * @param bool $require_settings
  *   Only configuration directories with an existing settings.php file
@@ -433,6 +389,8 @@ function timer_stop($name) {
  *
  * @return
  *   The path of the matching directory.
+ *
+ * @see default.settings.php
  */
 function conf_path($require_settings = TRUE, $reset = FALSE) {
   $conf = &drupal_static(__FUNCTION__, '');
@@ -453,15 +411,41 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
 /**
  * Finds the appropriate configuration directory for a given host and path.
  *
+ * Finds a matching configuration directory file by stripping the website's
+ * hostname from left to right and pathname from right to left. By default,
+ * the directory must contain a 'settings.php' file for it to match. If the
+ * parameter $require_settings is set to FALSE, then a directory without a
+ * 'settings.php' file will match as well. The first configuration
+ * file found will be used and the remaining ones will be ignored. If no
+ * configuration file is found, returns a default value '$confdir/default'. See
+ * default.settings.php for examples on how the URL is converted to a directory.
+ *
+ * If a file named sites.php is present in the $confdir, it will be loaded
+ * prior to scanning for directories. That file can define aliases in an
+ * associative array named $sites. The array is written in the format
+ * '<port>.<domain>.<path>' => 'directory'. As an example, to create a
+ * directory alias for http://www.drupal.org:8080/mysite/test whose configuration
+ * file is in sites/example.com, the array should be defined as:
+ * @code
+ * $sites = array(
+ *   '8080.www.drupal.org.mysite.test' => 'example.com',
+ * );
+ * @endcode
+ *
  * @param $http_host
  *   The hostname and optional port number, e.g. "www.example.com" or
  *   "www.example.com:8080".
  * @param $script_name
  *   The part of the url following the hostname, including the leading slash.
+ * @param $require_settings
+ *   Defaults to TRUE. If TRUE, then only match directories with a
+ *   'settings.php' file. Otherwise match any directory.
  *
  * @return
  *   The path of the matching configuration directory.
  *
+ * @see default.settings.php
+ * @see example.sites.php
  * @see conf_path()
  */
 function find_conf_path($http_host, $script_name, $require_settings = TRUE) {
@@ -697,7 +681,7 @@ function unicode_check() {
 function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root, $script_path;
 
-  // Export the following settings.php variables to the global namespace
+  // Export these settings.php variables to the global namespace.
   global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directory_name;
   $conf = array();
 
