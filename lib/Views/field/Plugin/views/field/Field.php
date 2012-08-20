@@ -24,12 +24,14 @@ class Field extends FieldPluginBase {
 
   /**
    * An array to store field renderable arrays for use by render_items.
+   *
    * @var array
    */
   public $items = array();
 
   /**
    * Store the field information.
+   *
    * @var array
    */
   public $field_info = array();
@@ -37,21 +39,31 @@ class Field extends FieldPluginBase {
 
   /**
    * Does the field supports multiple field values.
+   *
    * @var bool
    */
   public $multiple;
 
   /**
    * Does the rendered fields get limited.
+   *
    * @var bool
    */
   public $limit_values;
 
   /**
    * A shortcut for $view->base_table.
+   *
    * @var string
    */
   public $base_table;
+
+  /**
+   * Store the field instance.
+   *
+   * @var array
+   */
+  public $instance;
 
   function init(&$view, &$options) {
     parent::init($view, $options);
@@ -434,10 +446,10 @@ class Field extends FieldPluginBase {
     // Provide an instance array for hook_field_formatter_settings_form().
     // @todo Remove this: http://drupal.org/node/1741128.
     ctools_include('fields');
-    $instance = ctools_fields_fake_field_instance($this->definition['field_name'], '_custom', $formatter, $settings);
+    $this->instance = ctools_fields_fake_field_instance($this->definition['field_name'], '_custom', $formatter, $settings);
 
     // Store the settings in a '_custom' view mode.
-    $instance['display']['_custom'] = array(
+    $this->instance['display']['_custom'] = array(
       'type' => $format,
       'settings' => $settings,
     );
@@ -446,7 +458,7 @@ class Field extends FieldPluginBase {
     $settings_form = array('#value' => array());
     $function = $formatter['module'] . '_field_formatter_settings_form';
     if (function_exists($function)) {
-      $settings_form = $function($field, $instance, '_custom', $form, $form_state);
+      $settings_form = $function($field, $this->instance, '_custom', $form, $form_state);
     }
     $form['settings'] = $settings_form;
   }
