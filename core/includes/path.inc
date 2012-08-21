@@ -370,7 +370,7 @@ function current_path() {
   // @todo Remove the check for whether the request service exists and the
   // fallback code below, once the path alias logic has been figured out in
   // http://drupal.org/node/1269742.
-  if (drupal_container()->has('request')) {
+  if (drupal_container()->isScopeActive('request')) {
     return drupal_container()->get('request')->attributes->get('system_path');
   }
   // If we are outside the request scope, fall back to using the path stored in

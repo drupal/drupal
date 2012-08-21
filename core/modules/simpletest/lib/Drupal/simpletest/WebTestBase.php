@@ -7,6 +7,7 @@
 
 namespace Drupal\simpletest;
 
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use PDO;
@@ -142,6 +143,11 @@ abstract class WebTestBase extends TestBase {
    * The number of redirects followed during the handling of a request.
    */
   protected $redirect_count;
+
+  /**
+   * The kernel used in this test.
+   */
+  protected $kernel;
 
   /**
    * Constructor for Drupal\simpletest\WebTestBase.
@@ -659,6 +665,18 @@ abstract class WebTestBase extends TestBase {
       module_enable(array($this->profile), FALSE);
     }
 
+    // Create a new DrupalKernel for testing purposes, now that all required
+    // modules have been enabled. This also stores a new dependency injection
+    // container in drupal_container(). Drupal\simpletest\TestBase::tearDown()
+    // restores the original container.
+    // @see Drupal\Core\DrupalKernel::initializeContainer()
+    $this->kernel = new DrupalKernel('testing', FALSE);
+    // Booting the kernel is necessary to initialize the new DIC. While
+    // normally the kernel gets booted on demand in
+    // Symfony\Component\HttpKernel\handle(), this kernel needs manual booting
+    // as it is not used to handle a request.
+    $this->kernel->boot();
+
     // Reset/rebuild all data structures after enabling the modules.
     $this->resetAll();
 
@@ -768,6 +786,10 @@ abstract class WebTestBase extends TestBase {
     // entire parent site otherwise.
     if (!$this->setupDatabasePrefix) {
       return FALSE;
+    }
+    // Destroy the testing kernel.
+    if (isset($this->kernel)) {
+      $this->kernel->shutdown();
     }
     // Remove all prefixed tables.
     $connection_info = Database::getConnectionInfo('default');

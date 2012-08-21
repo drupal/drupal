@@ -2205,7 +2205,7 @@ function system_add_module_assets() {
  * Implements hook_custom_theme().
  */
 function system_custom_theme() {
-  if (drupal_container()->has('request')) {
+  if (drupal_container()->isScopeActive('request')) {
     $request = drupal_container()->get('request');
     $path = $request->attributes->get('system_path');
     if (user_access('view the administration theme') && path_is_admin($path)) {

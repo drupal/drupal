@@ -2632,7 +2632,7 @@ function language($type, $reset = FALSE) {
 
   // Reset the language manager's cache and our own.
   if ($reset) {
-    if (drupal_container()->has('language_manager')) {
+    if (drupal_container()->isScopeActive('request')) {
       drupal_container()->get('language_manager')->reset($type);
     }
     if (!isset($type)) {
