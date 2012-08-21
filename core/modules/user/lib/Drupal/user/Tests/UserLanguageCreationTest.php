@@ -62,7 +62,7 @@ class UserLanguageCreationTest extends WebTestBase {
     // Check if the language selector is available on admin/people/create and
     // set to the currently active language.
     $this->drupalGet($langcode . '/admin/people/create');
-    $this->assertFieldChecked("edit-preferred-langcode-$langcode", t('Global language set in the language selector.'));
+    $this->assertOptionSelected("edit-preferred-langcode", $langcode, t('Global language set in the language selector.'));
 
     // Create a user with the admin/people/create form and check if the correct
     // language is set.
@@ -104,7 +104,7 @@ class UserLanguageCreationTest extends WebTestBase {
 
     $this->drupalLogin($admin_user);
     $this->drupalGet($user_edit);
-    $this->assertFieldChecked("edit-preferred-langcode-$langcode", t('Language selector is accessible and correct language is selected.'));
+    $this->assertOptionSelected("edit-preferred-langcode", $langcode, t('Language selector is accessible and correct language is selected.'));
 
     // Set pass_raw so we can login the new user.
     $user->pass_raw = $this->randomName(10);
@@ -117,6 +117,6 @@ class UserLanguageCreationTest extends WebTestBase {
 
     $this->drupalLogin($user);
     $this->drupalGet($user_edit);
-    $this->assertFieldChecked("edit-preferred-langcode-$langcode", t('Language selector is accessible and correct language is selected.'));
+    $this->assertOptionSelected("edit-preferred-langcode", $langcode, t('Language selector is accessible and correct language is selected.'));
   }
 }

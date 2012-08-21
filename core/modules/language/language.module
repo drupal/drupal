@@ -158,6 +158,48 @@ function language_theme() {
 }
 
 /**
+ * Implements hook_element_info_alter().
+ */
+function language_element_info_alter(&$type) {
+  // Alter the language_select element so that it will be rendered like a select
+  // field.
+  if (isset($type['language_select'])) {
+    if (!isset($type['language_select']['#process'])) {
+      $type['language_select']['#process'] = array();
+    }
+    if (!isset($type['language_select']['#theme_wrappers'])) {
+      $type['language_select']['#theme_wrappers'] = array();
+    }
+    $type['language_select']['#process'] = array_merge($type['language_select']['#process'], array('language_process_language_select', 'form_process_select', 'ajax_process_form'));
+    $type['language_select']['#theme'] = 'select';
+    $type['language_select']['#theme_wrappers'] = array_merge($type['language_select']['#theme_wrappers'], array('form_element'));
+    $type['language_select']['#languages'] = LANGUAGE_CONFIGURABLE;
+    $type['language_select']['#multiple'] = FALSE;
+  }
+}
+
+/**
+ * Processes a language select list form element.
+ *
+ * @param array $element
+ *   The form element to process.
+ *
+ * @return array $element
+ *   The processed form element.
+ */
+function language_process_language_select($element) {
+  // Don't set the options if another module(translation for example) already
+  // set the options.
+  if (!isset($element['#options'])) {
+    $element['#options'] = array();
+    foreach (language_list($element['#languages']) as $langcode => $language) {
+      $element['#options'][$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
+    }
+  }
+  return $element;
+}
+
+/**
  * API function to add or update a language.
  *
  * @param $language
@@ -197,12 +239,23 @@ function language_save($language) {
   }
 
   // Update language count based on unlocked language count.
-  variable_set('language_count', db_query('SELECT COUNT(langcode) FROM {language} WHERE locked = 0')->fetchField());
+  language_update_count();
 
   // Kill the static cache in language_list().
   drupal_static_reset('language_list');
 
   return $language;
+}
+
+/**
+ * Updates the language_count variable.
+ *
+ * This is used to check if a site is multilingual or not.
+ *
+ * @see language_multilingual()
+ */
+function language_update_count() {
+  variable_set('language_count', db_query('SELECT COUNT(langcode) FROM {language} WHERE locked = 0')->fetchField());
 }
 
 /**
@@ -225,7 +278,7 @@ function language_delete($langcode) {
       ->condition('langcode', $language->langcode)
       ->execute();
 
-    variable_set('language_count', variable_get('language_count', 1) - 1);
+    language_update_count();
 
     drupal_static_reset('language_list');
 

@@ -42,6 +42,13 @@ class TermFormController extends EntityFormController {
       '#weight' => 0,
     );
 
+    $form['langcode'] = array(
+      '#type' => 'language_select',
+      '#title' => t('Language'),
+      '#languages' => LANGUAGE_ALL,
+      '#default_value' => $term->langcode,
+    );
+
     $form['vocabulary_machine_name'] = array(
       '#type' => 'value',
       '#value' => isset($term->vocabulary_machine_name) ? $term->vocabulary_machine_name : $vocabulary->name,

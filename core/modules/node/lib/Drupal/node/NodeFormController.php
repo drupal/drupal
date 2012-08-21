@@ -97,28 +97,13 @@ class NodeFormController extends EntityFormController {
       $form['title']['#weight'] = -5;
     }
 
-    if (module_exists('language')) {
-      $languages = language_list(LANGUAGE_ALL);
-      $language_options = array();
-      foreach ($languages as $langcode => $language) {
-        // Make locked languages appear special in the list.
-        $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
-      }
-
-      $form['langcode'] = array(
-        '#type' => 'select',
-        '#title' => t('Language'),
-        '#default_value' => $node->langcode,
-        '#options' => $language_options,
-        '#access' => !variable_get('node_type_language_hidden_' . $node->type, TRUE),
-      );
-    }
-    else {
-      $form['langcode'] = array(
-        '#type' => 'value',
-        '#value' => $node->langcode,
-      );
-    }
+    $form['langcode'] = array(
+      '#title' => t('Language'),
+      '#type' => 'language_select',
+      '#default_value' => $node->langcode,
+      '#languages' => LANGUAGE_ALL,
+      '#access' => !variable_get('node_type_language_hidden_' . $node->type, TRUE),
+    );
 
     $form['additional_settings'] = array(
       '#type' => 'vertical_tabs',

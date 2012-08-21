@@ -133,6 +133,12 @@ function form_test_menu() {
     'page arguments' => array('form_test_select'),
     'access callback' => TRUE,
   );
+  $items['form-test/language_select'] = array(
+    'title' => t('Language Select'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_language_select'),
+    'access callback' => TRUE,
+  );
   $items['form-test/placeholder-text'] = array(
     'title' => 'Placeholder',
     'page callback' => 'drupal_get_form',
@@ -1217,6 +1223,42 @@ function form_test_select($form, &$form_state) {
     '#title' => '#multiple, #required, no #default_value',
     '#required' => TRUE,
     '#multiple' => TRUE,
+  );
+
+  $form['submit'] = array('#type' => 'submit', '#value' => 'Submit');
+  return $form;
+}
+
+/**
+ * Builds a form to test the language select form element.
+ */
+function form_test_language_select() {
+  $form['#submit'] = array('_form_test_submit_values_json');
+
+  $form['languages_all'] = array(
+    '#type' => 'language_select',
+    '#languages' => LANGUAGE_ALL,
+    '#default_value' => 'xx',
+  );
+  $form['languages_configurable'] = array(
+    '#type' => 'language_select',
+    '#languages' => LANGUAGE_CONFIGURABLE,
+    '#default_value' => 'en',
+  );
+  $form['languages_locked'] = array(
+    '#type' => 'language_select',
+    '#languages' => LANGUAGE_LOCKED,
+  );
+  $form['languages_config_and_locked'] = array(
+    '#type' => 'language_select',
+    '#languages' => LANGUAGE_CONFIGURABLE | LANGUAGE_LOCKED,
+    '#default_value' => 'dummy_value',
+  );
+  $form['language_custom_options'] = array(
+    '#type' => 'language_select',
+    '#languages' => LANGUAGE_CONFIGURABLE | LANGUAGE_LOCKED,
+    '#options' => array('opt1' => 'First option', 'opt2' => 'Second option', 'opt3' => 'Third option'),
+    '#default_value' => 'opt2',
   );
 
   $form['submit'] = array('#type' => 'submit', '#value' => 'Submit');

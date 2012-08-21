@@ -203,45 +203,26 @@ abstract class AccountFormController extends EntityFormController {
 
     $form['#validate'][] = 'user_validate_picture';
 
-    if (module_exists('language') && language_multilingual()) {
-      $languages = language_list();
+    $user_preferred_language = $register ? $language_interface : user_preferred_language($account);
 
-      // If the user is being created, we set the user language to the page language.
-      $user_preferred_language = $register ? $language_interface : user_preferred_language($account);
+    // Is default the interface language?
+    include_once DRUPAL_ROOT . '/core/includes/language.inc';
+    $interface_language_is_default = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
+    $form['language'] = array(
+      '#type' => language_multilingual() ? 'fieldset' : 'container',
+      '#title' => t('Language settings'),
+      // Display language selector when either creating a user on the admin
+      // interface or editing a user account.
+      '#access' => !$register || user_access('administer users'),
+    );
 
-      $names = array();
-      foreach ($languages as $langcode => $item) {
-        $names[$langcode] = $item->name;
-      }
-
-      // Is default the interface language?
-      $interface_language_is_default = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
-      $form['language'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Language settings'),
-        // Display language selector when either creating a user on the admin
-        // interface or editing a user account.
-        '#access' => !$register || user_access('administer users'),
-      );
-
-      $form['language']['preferred_langcode'] = array(
-        '#type' => (count($names) <= 5 ? 'radios' : 'select'),
-        '#title' => t('Language'),
-        '#default_value' => $user_preferred_language->langcode,
-        '#options' => $names,
-        '#description' => $interface_language_is_default ? t("This account's preferred language for e-mails and site presentation.") : t("This account's preferred language for e-mails."),
-      );
-    }
-    else {
-      $form['language'] = array(
-        '#type' => 'container',
-      );
-
-      $form['language']['preferred_langcode'] = array(
-        '#type' => 'value',
-        '#value' => language_default()->langcode,
-      );
-    }
+    $form['language']['preferred_langcode'] = array(
+      '#type' => 'language_select',
+      '#title' => t('Language'),
+      '#languages' => LANGUAGE_CONFIGURABLE,
+      '#default_value' => $user_preferred_language->langcode,
+      '#description' => $interface_language_is_default ? t("This account's preferred language for e-mails and site presentation.") : t("This account's preferred language for e-mails."),
+    );
 
     // User entities contain both a langcode property (for identifying the
     // language of the entity data) and a preferred_langcode property (see

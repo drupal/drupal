@@ -504,6 +504,10 @@ function system_element_info() {
     '#theme' => 'select',
     '#theme_wrappers' => array('form_element'),
   );
+  $types['language_select'] = array(
+    '#input' => TRUE,
+    '#default_value' => LANGUAGE_NOT_SPECIFIED,
+  );
   $types['weight'] = array(
     '#input' => TRUE,
     '#delta' => 10,

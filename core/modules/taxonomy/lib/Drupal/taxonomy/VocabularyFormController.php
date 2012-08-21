@@ -44,6 +44,12 @@ class VocabularyFormController extends EntityFormController {
       '#title' => t('Description'),
       '#default_value' => $vocabulary->description,
     );
+    $form['langcode'] = array(
+      '#type' => 'language_select',
+      '#title' => t('Language'),
+      '#languages' => LANGUAGE_ALL,
+      '#default_value' => $vocabulary->langcode,
+    );
     // Set the hierarchy to "multiple parents" by default. This simplifies the
     // vocabulary form and standardizes the term form.
     $form['hierarchy'] = array(
