@@ -8,6 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Defines the default configuration object.
@@ -40,7 +41,7 @@ class Config {
    *
    * @var array
    */
-  protected $overrides;
+  protected $overrides = array();
 
   /**
    * The current runtime data ($data + $overrides).
@@ -50,11 +51,18 @@ class Config {
   protected $overriddenData;
 
   /**
-   * The storage used for reading and writing.
+   * The storage used to load and save this configuration object.
    *
    * @var Drupal\Core\Config\StorageInterface
    */
   protected $storage;
+
+  /**
+   * The event dispatcher used to notify subscribers.
+   *
+   * @var Symfony\Component\EventDispatcher\EventDispatcher
+   */
+  protected $eventDispatcher;
 
   /**
    * Constructs a configuration object.
@@ -64,10 +72,21 @@ class Config {
    * @param Drupal\Core\Config\StorageInterface $storage
    *   A storage controller object to use for reading and writing the
    *   configuration data.
+   * @param Symfony\Component\EventDispatcher\EventDispatcher $event_dispatcher
+   *   The event dispatcher used to notify subscribers.
    */
-  public function __construct($name, StorageInterface $storage) {
+  public function __construct($name, StorageInterface $storage, EventDispatcher $event_dispatcher = NULL) {
     $this->name = $name;
     $this->storage = $storage;
+    $this->eventDispatcher = $event_dispatcher ? $event_dispatcher : drupal_container()->get('dispatcher');
+  }
+
+  /**
+   * Initializes a configuration object.
+   */
+  public function init() {
+    $this->notify('init');
+    return $this;
   }
 
   /**
@@ -159,7 +178,7 @@ class Config {
    *   The overridden values of the configuration data.
    */
   public function setOverride(array $data) {
-    $this->overrides = $data;
+    $this->overrides = NestedArray::mergeDeepArray(array($this->overrides, $data));
     $this->resetOverriddenData();
     return $this;
   }
@@ -283,6 +302,7 @@ class Config {
       $this->isNew = FALSE;
       $this->setData($data);
     }
+    $this->notify('load');
     return $this;
   }
 
@@ -293,6 +313,7 @@ class Config {
     $this->sortByKey($this->data);
     $this->storage->write($this->name, $this->data);
     $this->isNew = FALSE;
+    $this->notify('save');
     return $this;
   }
 
@@ -324,6 +345,21 @@ class Config {
     $this->storage->delete($this->name);
     $this->isNew = TRUE;
     $this->resetOverriddenData();
+    $this->notify('delete');
     return $this;
+  }
+
+  /**
+   * Retrieve the storage used to load and save this configuration object.
+   */
+  public function getStorage() {
+    return $this->storage;
+  }
+
+  /**
+   * Dispatch a config event.
+   */
+  protected function notify($config_event_name) {
+    $this->eventDispatcher->dispatch('config.' . $config_event_name, new ConfigEvent($this));
   }
 }

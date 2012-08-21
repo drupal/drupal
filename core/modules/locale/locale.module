@@ -12,6 +12,7 @@
  */
 
 use Drupal\locale\LocaleLookup;
+use Drupal\locale\LocaleConfigSubscriber;
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
@@ -878,4 +879,12 @@ function _locale_rebuild_js($langcode = NULL) {
       // No operation needed.
       return TRUE;
   }
+}
+
+/**
+ * Implements hook_language_init().
+ */
+function locale_language_init() {
+  // Add locale helper to configuration subscribers.
+  drupal_container()->get('dispatcher')->addSubscriber(new LocaleConfigSubscriber());
 }

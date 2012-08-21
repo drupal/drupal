@@ -58,6 +58,7 @@ class CoreBundle extends Bundle
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\LegacyControllerSubscriber());
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\FinishResponseSubscriber());
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\RequestCloseSubscriber());
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber());
     $container->set('content_negotiation', $content_negotation);
     $dispatcher->addSubscriber(\Drupal\Core\ExceptionController::getExceptionListener($container));
     /*
@@ -85,6 +86,7 @@ class CoreBundle extends Bundle
       ->addTag('kernel.event_subscriber');
     $container->register('request_close_subscriber', 'Drupal\Core\EventSubscriber\RequestCloseSubscriber')
       ->addTag('kernel.event_subscriber');
+    $container->register('config_global_override_subscriber', '\Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber');
     $container->register('database', 'Drupal\Core\Database\Connection')
       ->setFactoryClass('Drupal\Core\Database\Database')
       ->setFactoryMethod('getConnection')

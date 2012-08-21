@@ -2442,9 +2442,13 @@ function drupal_container(Container $reset = NULL) {
     $container->register('config.storage', 'Drupal\Core\Config\DatabaseStorage')
       ->addArgument('%config.storage.options%');
 
+    $container->register('config.subscriber.globalconf', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber');
+    $container->register('dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher')
+      ->addMethodCall('addSubscriber', array(new Reference('config.subscriber.globalconf')));
     // Register configuration object factory.
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
-      ->addArgument(new Reference('config.storage'));
+      ->addArgument(new Reference('config.storage'))
+      ->addArgument(new Reference('dispatcher'));
   }
   return $container;
 }

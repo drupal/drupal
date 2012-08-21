@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Config;
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 /**
  * Defines the configuration object factory.
  *
@@ -30,14 +32,24 @@ class ConfigFactory {
   protected $storage;
 
   /**
+   * An event dispatcher instance to use for configuration events.
+   *
+   * @var Symfony\Component\EventDispatcher\EventDispatcher
+   */
+  protected $eventDispatcher;
+
+  /**
    * Constructs the Config factory.
    *
    * @param Drupal\Core\Config\StorageInterface $storage
    *   The storage controller object to use for reading and writing
    *   configuration data.
+   * @param Symfony\Component\EventDispatcher\EventDispatcher
+   *   An event dispatcher instance to use for configuration events.
    */
-  public function __construct(StorageInterface $storage) {
+  public function __construct(StorageInterface $storage, EventDispatcher $event_dispatcher) {
     $this->storage = $storage;
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -70,13 +82,8 @@ class ConfigFactory {
     // @todo The decrease of CPU time is interesting, since that means that
     //   ContainerBuilder involves plenty of function calls (which are known to
     //   be slow in PHP).
-    $config = new Config($name, $this->storage);
-
-    // Set overridden values from global $conf, if any.
-    if (isset($conf[$name])) {
-      $config->setOverride($conf[$name]);
-    }
-    return $config;
+    $config = new Config($name, $this->storage, $this->eventDispatcher);
+    return $config->init();
   }
 
 }
