@@ -17,7 +17,7 @@ class FilePrivateTest extends FileFieldTestBase {
   *
   * @var array
   */
-  public static $modules = array('node_access_test');
+  public static $modules = array('node_access_test', 'field_test');
 
   public static function getInfo() {
     return array(
@@ -45,6 +45,10 @@ class FilePrivateTest extends FileFieldTestBase {
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, $type_name, array('uri_scheme' => 'private'));
 
+    // Create a field with no view access - see field_test_field_access().
+    $no_access_field_name = 'field_no_view_access';
+    $this->createFileField($no_access_field_name, $type_name, array('uri_scheme' => 'private'));
+
     $test_file = $this->getTestFile('text');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name, TRUE, array('private' => TRUE));
     $node = node_load($nid, NULL, TRUE);
@@ -55,5 +59,14 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalLogOut();
     $this->drupalGet(file_create_url($node_file->uri));
     $this->assertResponse(403, t('Confirmed that access is denied for the file without the needed permission.'));
+
+    // Test with the field that should deny access through field access.
+    $this->drupalLogin($this->admin_user);
+    $nid = $this->uploadNodeFile($test_file, $no_access_field_name, $type_name, TRUE, array('private' => TRUE));
+    $node = node_load($nid, NULL, TRUE);
+    $node_file = file_load($node->{$no_access_field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
+    // Ensure the file cannot be downloaded.
+    $this->drupalGet(file_create_url($node_file->uri));
+    $this->assertResponse(403, t('Confirmed that access is denied for the file without view field access permission.'));
   }
 }

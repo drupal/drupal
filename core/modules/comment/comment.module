@@ -10,7 +10,8 @@
  */
 
 use Drupal\node\Node;
-
+use Drupal\Core\File\File;
+use Drupal\entity\EntityInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -2136,8 +2137,8 @@ function comment_rdf_mapping() {
 /**
  * Implements hook_file_download_access().
  */
-function comment_file_download_access($field, $entity_type, $entity) {
-  if ($entity_type == 'comment') {
+function comment_file_download_access($field, EntityInterface $entity, File $file) {
+  if ($entity->entityType() == 'comment') {
     if (user_access('access comments') && $entity->status == COMMENT_PUBLISHED || user_access('administer comments')) {
       $node = node_load($entity->nid);
       return node_access('view', $node);

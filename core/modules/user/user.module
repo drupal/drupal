@@ -2,6 +2,7 @@
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\File\File;
+use Drupal\entity\EntityInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -3291,8 +3292,8 @@ function user_rdf_mapping() {
 /**
  * Implements hook_file_download_access().
  */
-function user_file_download_access($field, $entity_type, $entity) {
-  if ($entity_type == 'user') {
+function user_file_download_access($field, EntityInterface $entity, File $file) {
+  if ($entity->entityType() == 'user') {
     return user_view_access($entity);
   }
 }
