@@ -42,7 +42,7 @@ class UserRegistrationTest extends WebTestBase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPost('user/register', $edit, t('Create new account'));
     $this->assertText(t('A welcome message with further instructions has been sent to your e-mail address.'), t('User registered successfully.'));
-    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
     $this->assertTrue($new_user->status, t('New account is active after registration.'));
 
@@ -52,7 +52,8 @@ class UserRegistrationTest extends WebTestBase {
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPost('user/register', $edit, t('Create new account'));
-    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    entity_get_controller('user')->resetCache();
+    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
     $this->assertFalse($new_user->status, t('New account is blocked until approved by an administrator.'));
   }
@@ -77,7 +78,8 @@ class UserRegistrationTest extends WebTestBase {
     $edit['pass[pass1]'] = $new_pass = $this->randomName();
     $edit['pass[pass2]'] = $new_pass;
     $this->drupalPost('user/register', $edit, t('Create new account'));
-    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    entity_get_controller('user')->resetCache();
+    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
     $this->assertText(t('Registration successful. You are now logged in.'), t('Users are logged in after registering.'));
     $this->drupalLogout();
@@ -101,7 +103,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertText(t('The username @name has not been activated or is blocked.', array('@name' => $name)), t('User cannot login yet.'));
 
     // Activate the new account.
-    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
     $admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($admin_user);
@@ -165,7 +167,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->drupalPost(NULL, $edit, t('Create new account'));
 
     // Check user fields.
-    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
     $this->assertEqual($new_user->name, $name, t('Username matches.'));
     $this->assertEqual($new_user->mail, $mail, t('E-mail address matches.'));
@@ -229,7 +231,7 @@ class UserRegistrationTest extends WebTestBase {
     $edit['test_user_field[und][0][value]'] = $value;
     $this->drupalPost(NULL, $edit, t('Create new account'));
     // Check user fields.
-    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
     $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][0]['value'], $value, t('The field value was correclty saved.'));
 
@@ -257,7 +259,7 @@ class UserRegistrationTest extends WebTestBase {
       $edit['mail'] = $mail = $edit['name'] . '@example.com';
       $this->drupalPost(NULL, $edit, t('Create new account'));
       // Check user fields.
-      $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+      $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
       $new_user = reset($accounts);
       $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][0]['value'], $value, t('@js : The field value was correclty saved.', array('@js' => $js)));
       $this->assertEqual($new_user->test_user_field[LANGUAGE_NOT_SPECIFIED][1]['value'], $value + 1, t('@js : The field value was correclty saved.', array('@js' => $js)));

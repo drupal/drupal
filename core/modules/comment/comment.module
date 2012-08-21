@@ -1443,7 +1443,7 @@ function comment_node_search_result(Node $node) {
 function comment_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
-      $comments = comment_load_multiple(array(), array('uid' => $account->uid));
+      $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->uid));
       foreach ($comments as $comment) {
         $comment->status = 0;
         comment_save($comment);
@@ -1451,7 +1451,7 @@ function comment_user_cancel($edit, $account, $method) {
       break;
 
     case 'user_cancel_reassign':
-      $comments = comment_load_multiple(array(), array('uid' => $account->uid));
+      $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->uid));
       foreach ($comments as $comment) {
         $comment->uid = 0;
         comment_save($comment);
@@ -1526,16 +1526,10 @@ function comment_delete_multiple($cids) {
 }
 
 /**
- * Loads comments from the database.
+ * Loads comment entities from the database.
  *
- * @param array|bool $cids
- *   An array of comment IDs, or FALSE to load all comments.
- * @param array $conditions
- *   (deprecated) An associative array of conditions on the {comments}
- *   table, where the keys are the database fields and the values are the
- *   values those fields must have. Instead, it is preferable to use
- *   Drupal\entity\EntityFieldQuery to retrieve a list of entity IDs
- *   loadable by this function.
+ * @param array $cids
+ *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  * @param bool $reset
  *   Whether to reset the internal static entity cache. Note that the static
  *   cache is disabled in comment_entity_info() by default.
@@ -1543,13 +1537,11 @@ function comment_delete_multiple($cids) {
  * @return array
  *   An array of comment objects, indexed by comment ID.
  *
- * @todo Remove $conditions in Drupal 8.
- *
  * @see entity_load()
  * @see Drupal\entity\EntityFieldQuery
  */
-function comment_load_multiple($cids = array(), array $conditions = array(), $reset = FALSE) {
-  return entity_load_multiple('comment', $cids, $conditions, $reset);
+function comment_load_multiple(array $cids = NULL, $reset = FALSE) {
+  return entity_load_multiple('comment', $cids, $reset);
 }
 
 /**
@@ -1722,9 +1714,9 @@ function comment_preview(Comment $comment) {
 
   if ($comment->pid) {
     $build = array();
-    if ($comments = comment_load_multiple(array($comment->pid), array('status' => COMMENT_PUBLISHED))) {
-      $parent_comment = $comments[$comment->pid];
-      $build = comment_view($parent_comment, $node);
+    $comment = comment_load($comment->pid);
+    if ($comment && $comment->status == COMMENT_PUBLISHED) {
+      $build = comment_view($comment, $node);
     }
   }
   else {

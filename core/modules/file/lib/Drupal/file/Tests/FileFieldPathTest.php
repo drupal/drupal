@@ -32,7 +32,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded to the file root.
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
     $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $this->assertPathMatch('public://' . $test_file->filename, $node_file->uri, t('The file %file was uploaded to the correct path.', array('%file' => $node_file->uri)));
 
@@ -43,7 +43,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded into the subdirectory.
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
     $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $this->assertPathMatch('public://foo/bar/baz/' . $test_file->filename, $node_file->uri, t('The file %file was uploaded to the correct path.', array('%file' => $node_file->uri)));
 
@@ -55,7 +55,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded into the subdirectory.
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
     $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     // Do token replacement using the same user which uploaded the file, not
     // the user running the test case.

@@ -21,22 +21,12 @@ use Drupal\entity\DatabaseStorageController;
 class EntityTestStorageController extends DatabaseStorageController {
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::buildQuery().
+   * Overrides Drupal\entity\DatabaseStorageController::loadByProperties().
    */
-  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
-    $query = parent::buildQuery($ids, $conditions, $revision_id);
-
-    if ($conditions) {
-      // Reset conditions as the default storage controller applies them to the
-      // base table.
-      $query_conditions = &$query->conditions();
-      $query_conditions = array('#conjunction' => 'AND');
-
-      // Restore id conditions.
-      if ($ids) {
-        $query->condition("base.{$this->idKey}", $ids, 'IN');
-      }
-
+  public function loadByProperties(array $values) {
+    $query = db_select($this->entityInfo['base table'], 'base');
+    $query->addTag($this->entityType . '_load_multiple');
+    if ($values) {
       // Conditions need to be applied the property data table.
       $query->addJoin('inner', 'entity_test_property_data', 'data', "base.{$this->idKey} = data.{$this->idKey}");
       $query->distinct(TRUE);
@@ -46,27 +36,31 @@ class EntityTestStorageController extends DatabaseStorageController {
       // separate parameter during the following API refactoring.
       // Default to the original entity language if not explicitly specified
       // otherwise.
-      if (!array_key_exists('default_langcode', $conditions)) {
-        $conditions['default_langcode'] = 1;
+      if (!array_key_exists('default_langcode', $values)) {
+        $values['default_langcode'] = 1;
       }
       // If the 'default_langcode' flag is esplicitly not set, we do not care
       // whether the queried values are in the original entity language or not.
-      elseif ($conditions['default_langcode'] === NULL) {
-        unset($conditions['default_langcode']);
+      elseif ($values['default_langcode'] === NULL) {
+        unset($values['default_langcode']);
       }
 
-      foreach ($conditions as $field => $value) {
-        $query->condition('data.' . $field, $value);
+      $data_schema = drupal_get_schema('entity_test_property_data');
+      $query->addField('data', $this->idKey);
+      foreach ($values as $field => $value) {
+        // Check on which table the condition needs to be added.
+        $table = isset($data_schema['fields'][$field]) ? 'data' : 'base';
+        $query->condition($table . '.' . $field, $value);
       }
     }
-
-    return $query;
+    $ids = $query->execute()->fetchCol();
+    return $ids ? $this->load($ids) : array();
   }
 
   /**
    * Overrides Drupal\entity\DatabaseStorageController::attachLoad().
    */
-  protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
+  protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
     $data = db_select('entity_test_property_data', 'data', array('fetch' => PDO::FETCH_ASSOC))
       ->fields('data')
       ->condition('id', array_keys($queried_entities))
@@ -84,7 +78,7 @@ class EntityTestStorageController extends DatabaseStorageController {
       $entity->setProperties($values, $langcode);
     }
 
-    parent::attachLoad($queried_entities, $revision_id);
+    parent::attachLoad($queried_entities, $load_revision);
   }
 
   /**

@@ -94,7 +94,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
       'langcode' => 'it'
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    $node = $this->drupalGetNodeByTitle($edit[$title_key]);
+    $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE);
     $this->assertTrue($node, t('Node found in database.'));
 
     $assert = isset($node->body['it']) && !isset($node->body['en']) && $node->body['it'][0]['value'] == $body_value;

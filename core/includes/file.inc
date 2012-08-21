@@ -580,27 +580,19 @@ function file_save_htaccess($directory, $private = TRUE) {
 /**
  * Loads file entities from the database.
  *
- * @param array|bool $fids
- *   An array of file IDs, or FALSE to load all files.
- * @param array $conditions
- *   (deprecated) An associative array of conditions on the {file_managed}
- *   table, where the keys are the database fields and the values are the
- *   values those fields must have. Instead, it is preferable to use
- *   Drupal\entity\EntityFieldQuery to retrieve a list of entity IDs
- *   loadable by this function.
+ * @param array $fids
+ *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  *
  * @return array
  *   An array of file entities, indexed by fid.
- *
- * @todo Remove $conditions in Drupal 8.
  *
  * @see hook_file_load()
  * @see file_load()
  * @see entity_load()
  * @see Drupal\entity\EntityFieldQuery
  */
-function file_load_multiple($fids = array(), array $conditions = array()) {
-  return entity_load_multiple('file', $fids, $conditions);
+function file_load_multiple(array $fids = NULL) {
+  return entity_load_multiple('file', $fids);
 }
 
 /**
@@ -616,7 +608,7 @@ function file_load_multiple($fids = array(), array $conditions = array()) {
  * @see file_load_multiple()
  */
 function file_load($fid) {
-  $files = file_load_multiple(array($fid), array());
+  $files = file_load_multiple(array($fid));
   return reset($files);
 }
 
@@ -803,7 +795,7 @@ function file_copy(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
     $file->filename = drupal_basename($uri);
     // If we are replacing an existing file re-use its database record.
     if ($replace == FILE_EXISTS_REPLACE) {
-      $existing_files = file_load_multiple(array(), array('uri' => $uri));
+      $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
       if (count($existing_files)) {
         $existing = reset($existing_files);
         $file->fid = $existing->fid;
@@ -1052,7 +1044,7 @@ function file_move(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
     $file->uri = $uri;
     // If we are replacing an existing file re-use its database record.
     if ($replace == FILE_EXISTS_REPLACE) {
-      $existing_files = file_load_multiple(array(), array('uri' => $uri));
+      $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
       if (count($existing_files)) {
         $existing = reset($existing_files);
         $delete_source = TRUE;
@@ -1565,7 +1557,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
 
   // If we are replacing an existing file re-use its database record.
   if ($replace == FILE_EXISTS_REPLACE) {
-    $existing_files = file_load_multiple(array(), array('uri' => $file->uri));
+    $existing_files = entity_load_multiple_by_properties('file', array('uri' => $file->uri));
     if (count($existing_files)) {
       $existing = reset($existing_files);
       $file->fid = $existing->fid;
@@ -1858,7 +1850,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
     ));
     // If we are replacing an existing file re-use its database record.
     if ($replace == FILE_EXISTS_REPLACE) {
-      $existing_files = file_load_multiple(array(), array('uri' => $uri));
+      $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
       if (count($existing_files)) {
         $existing = reset($existing_files);
         $file->fid = $existing->fid;

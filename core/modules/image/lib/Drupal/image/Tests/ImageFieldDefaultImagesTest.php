@@ -144,8 +144,8 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Reload the nodes and confirm the field instance defaults are used.
-    $article_built = node_view($article = node_load($article->nid, NULL, $reset = TRUE));
-    $page_built = node_view($page = node_load($page->nid, NULL, $reset = TRUE));
+    $article_built = node_view($article = node_load($article->nid, TRUE));
+    $page_built = node_view($page = node_load($page->nid, TRUE));
     $this->assertEqual(
       $article_built[$field_name]['#items'][0]['fid'],
       $default_images['instance']->fid,
@@ -180,8 +180,8 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Reload the nodes.
-    $article_built = node_view($article = node_load($article->nid, NULL, $reset = TRUE));
-    $page_built = node_view($page = node_load($page->nid, NULL, $reset = TRUE));
+    $article_built = node_view($article = node_load($article->nid,  TRUE));
+    $page_built = node_view($page = node_load($page->nid, TRUE));
 
     // Confirm the article uses the new default.
     $this->assertEqual(
@@ -215,8 +215,8 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Reload the nodes.
-    $article_built = node_view($article = node_load($article->nid, NULL, $reset = TRUE));
-    $page_built = node_view($page = node_load($page->nid, NULL, $reset = TRUE));
+    $article_built = node_view($article = node_load($article->nid, TRUE));
+    $page_built = node_view($page = node_load($page->nid, TRUE));
     // Confirm the article uses the new field (not instance) default.
     $this->assertEqual(
       $article_built[$field_name]['#items'][0]['fid'],

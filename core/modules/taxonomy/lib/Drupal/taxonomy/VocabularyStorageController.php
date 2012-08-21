@@ -18,8 +18,8 @@ class VocabularyStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::buildQuery().
    */
-  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
-    $query = parent::buildQuery($ids, $conditions, $revision_id);
+  protected function buildQuery($ids, $revision_id = FALSE) {
+    $query = parent::buildQuery($ids, $revision_id);
     $query->addTag('translatable');
     $query->orderBy('base.weight');
     $query->orderBy('base.name');

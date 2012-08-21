@@ -25,7 +25,7 @@ class TermUnitTest extends TaxonomyTestBase {
     $valid_term = $this->createTerm($vocabulary);
     // Delete a valid term.
     taxonomy_term_delete($valid_term->tid);
-    $terms = taxonomy_term_load_multiple(array(), array('vid' => $vocabulary->vid));
+    $terms = entity_load_multiple_by_properties('taxonomy_term', array('vid' => $vocabulary->vid));
     $this->assertTrue(empty($terms), 'Vocabulary is empty after deletion');
 
     // Delete an invalid term. Should not throw any notices.

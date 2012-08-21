@@ -58,7 +58,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertTrue($account->status == 1, t('User account was not canceled.'));
 
     // Confirm user's content has not been altered.
-    $test_node = node_load($node->nid, NULL, TRUE);
+    $test_node = node_load($node->nid, TRUE);
     $this->assertTrue(($test_node->uid == $account->uid && $test_node->status == 1), t('Node of the user has not been altered.'));
   }
 
@@ -135,11 +135,11 @@ class UserCancelTest extends WebTestBase {
     $bogus_timestamp = $timestamp - 86400 - 60;
     $this->drupalGet("user/$account->uid/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login));
     $this->assertText(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'), t('Expired cancel account request rejected.'));
-    $accounts = user_load_multiple(array($account->uid), array('status' => 1));
-    $this->assertTrue(reset($accounts), t('User account was not canceled.'));
+    $account = user_load($account->uid, TRUE);
+    $this->assertTrue($account->status, t('User account was not canceled.'));
 
     // Confirm user's content has not been altered.
-    $test_node = node_load($node->nid, NULL, TRUE);
+    $test_node = node_load($node->nid, TRUE);
     $this->assertTrue(($test_node->uid == $account->uid && $test_node->status == 1), t('Node of the user has not been altered.'));
   }
 
@@ -213,9 +213,9 @@ class UserCancelTest extends WebTestBase {
     $this->assertTrue($account->status == 0, t('User has been blocked.'));
 
     // Confirm user's content has been unpublished.
-    $test_node = node_load($node->nid, NULL, TRUE);
+    $test_node = node_load($node->nid, TRUE);
     $this->assertTrue($test_node->status == 0, t('Node of the user has been unpublished.'));
-    $test_node = node_load($node->nid, $node->vid, TRUE);
+    $test_node = node_revision_load($node->vid);
     $this->assertTrue($test_node->status == 0, t('Node revision of the user has been unpublished.'));
 
     // Confirm user is logged out.
@@ -262,11 +262,11 @@ class UserCancelTest extends WebTestBase {
     $this->assertFalse(user_load($account->uid, TRUE), t('User is not found in the database.'));
 
     // Confirm that user's content has been attributed to anonymous user.
-    $test_node = node_load($node->nid, NULL, TRUE);
+    $test_node = node_load($node->nid, TRUE);
     $this->assertTrue(($test_node->uid == 0 && $test_node->status == 1), t('Node of the user has been attributed to anonymous user.'));
-    $test_node = node_load($revision_node->nid, $revision, TRUE);
+    $test_node = node_revision_load($revision, TRUE);
     $this->assertTrue(($test_node->revision_uid == 0 && $test_node->status == 1), t('Node revision of the user has been attributed to anonymous user.'));
-    $test_node = node_load($revision_node->nid, NULL, TRUE);
+    $test_node = node_load($revision_node->nid, TRUE);
     $this->assertTrue(($test_node->uid != 0 && $test_node->status == 1), t("Current revision of the user's node was not attributed to anonymous user."));
 
     // Confirm that user is logged out.
@@ -297,7 +297,7 @@ class UserCancelTest extends WebTestBase {
     $this->drupalPost('comment/reply/' . $node->nid, $edit, t('Preview'));
     $this->drupalPost(NULL, array(), t('Save'));
     $this->assertText(t('Your comment has been posted.'));
-    $comments = comment_load_multiple(FALSE, array('subject' => $edit['subject']));
+    $comments = entity_load_multiple_by_properties('comment', array('subject' => $edit['subject']));
     $comment = reset($comments);
     $this->assertTrue($comment->cid, t('Comment found.'));
 
@@ -326,9 +326,9 @@ class UserCancelTest extends WebTestBase {
     $this->assertFalse(user_load($account->uid, TRUE), t('User is not found in the database.'));
 
     // Confirm that user's content has been deleted.
-    $this->assertFalse(node_load($node->nid, NULL, TRUE), t('Node of the user has been deleted.'));
-    $this->assertFalse(node_load($node->nid, $revision, TRUE), t('Node revision of the user has been deleted.'));
-    $this->assertTrue(node_load($revision_node->nid, NULL, TRUE), t("Current revision of the user's node was not deleted."));
+    $this->assertFalse(node_load($node->nid, TRUE), t('Node of the user has been deleted.'));
+    $this->assertFalse(node_revision_load($revision), t('Node revision of the user has been deleted.'));
+    $this->assertTrue(node_load($revision_node->nid, TRUE), t("Current revision of the user's node was not deleted."));
     $this->assertFalse(comment_load($comment->cid), t('Comment of the user has been deleted.'));
 
     // Confirm that user is logged out.

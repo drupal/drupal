@@ -52,7 +52,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Create a new node with an image attached.
     $test_image = current($this->drupalGetTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
 
     // Test that the default formatter is being used.
     $image_uri = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri;
@@ -156,7 +156,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertFieldByName($field_name . '[' . LANGUAGE_NOT_SPECIFIED . '][0][title]', '', t('Title field displayed on article form.'));
     // Verify that the attached image is being previewed using the 'medium'
     // style.
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
     $image_info = array(
       'uri' => image_style_url('medium', file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri),
       'width' => 220,
@@ -232,7 +232,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Create a node with an image attached and ensure that the default image
     // is not displayed.
     $nid = $this->uploadNodeImage($images[1], $field_name, 'article');
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
     $image_info = array(
       'uri' => file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri,
       'width' => 40,

@@ -113,9 +113,6 @@ class SaveUploadTest extends FileHookTestBase {
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
     $this->assertRaw(t('You WIN!'));
     $this->assertTrue(is_file('temporary://' . $dir . '/' . trim(drupal_basename($image3_realpath))));
-
-    // Check that file_load_multiple() with no arguments returns FALSE.
-    $this->assertFalse(file_load_multiple(), t('No files were loaded.'));
   }
 
   /**

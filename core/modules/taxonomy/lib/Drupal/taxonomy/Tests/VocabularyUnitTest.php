@@ -41,7 +41,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
    */
   function testTaxonomyVocabularyLoadReturnFalse() {
     // Load a vocabulary that doesn't exist.
-    $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
+    $vocabularies = taxonomy_vocabulary_load_multiple();
     $vid = count($vocabularies) + 1;
     $vocabulary = taxonomy_vocabulary_load($vid);
     // This should not return an object because no such vocabulary exists.
@@ -61,7 +61,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
    */
   function testTaxonomyVocabularyDeleteWithTerms() {
     // Delete any existing vocabularies.
-    foreach (taxonomy_vocabulary_load_multiple(FALSE) as $vocabulary) {
+    foreach (taxonomy_vocabulary_load_multiple() as $vocabulary) {
       taxonomy_vocabulary_delete($vocabulary->vid);
     }
 
@@ -111,7 +111,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
 
     // Delete the vocabulary.
     taxonomy_vocabulary_delete($this->vocabulary->vid);
-    $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
+    $vocabularies = taxonomy_vocabulary_load_multiple();
     $this->assertTrue(!isset($vocabularies[$this->vocabulary->vid]), 'The vocabulary was deleted.');
   }
 
@@ -121,7 +121,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
   function testTaxonomyVocabularyLoadMultiple() {
 
     // Delete any existing vocabularies.
-    foreach (taxonomy_vocabulary_load_multiple(FALSE) as $vocabulary) {
+    foreach (taxonomy_vocabulary_load_multiple() as $vocabulary) {
       taxonomy_vocabulary_delete($vocabulary->vid);
     }
 
@@ -141,9 +141,9 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     $names = taxonomy_vocabulary_get_names();
     $this->assertEqual($names[$vocabulary1->machine_name]->name, $vocabulary1->name, 'Vocabulary 1 name found.');
 
-    // Fetch all of the vocabularies using taxonomy_vocabulary_load_multiple(FALSE).
+    // Fetch all of the vocabularies using taxonomy_vocabulary_load_multiple().
     // Confirm that the vocabularies are ordered by weight.
-    $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
+    $vocabularies = taxonomy_vocabulary_load_multiple();
     $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary1->vid, 'Vocabulary was found in the vocabularies array.');
     $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary2->vid, 'Vocabulary was found in the vocabularies array.');
     $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary3->vid, 'Vocabulary was found in the vocabularies array.');
@@ -156,7 +156,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary1->vid, 'Vocabulary loaded successfully by ID.');
 
     // Fetch vocabulary 1 by name.
-    $vocabulary = current(taxonomy_vocabulary_load_multiple(array(), array('name' => $vocabulary1->name)));
+    $vocabulary = current(entity_load_multiple_by_properties('taxonomy_vocabulary', array('name' => $vocabulary1->name)));
     $this->assertEqual($vocabulary->vid, $vocabulary1->vid, 'Vocabulary loaded successfully by name.');
 
     // Fetch vocabulary 1 by name and ID.

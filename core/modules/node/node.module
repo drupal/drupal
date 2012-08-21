@@ -987,47 +987,47 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  * from the database. Nodes are loaded into memory and will not require
  * database access if loaded again during the same page request.
  *
- * @param array|bool $nids
- *   (optional) An array of node IDs, or FALSE to load all nodes.
- * @param array $conditions
- *   (deprecated) An associative array of conditions on the {node}
- *   table, where the keys are the database fields and the values are the
- *   values those fields must have. Instead, it is preferable to use
- *   Drupal\entity\EntityFieldQuery to retrieve a list of entity IDs
- *   loadable by this function.
+ * @param array $nids
+ *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  * @param bool $reset
  *   (optional) Whether to reset the internal node_load() cache.
  *
  * @return array
  *   An array of node entities indexed by nid.
  *
- * @todo Remove $conditions in Drupal 8.
- *
  * @see entity_load_multiple()
  * @see Drupal\entity\EntityFieldQuery
  */
-function node_load_multiple($nids = array(), array $conditions = array(), $reset = FALSE) {
-  return entity_load_multiple('node', $nids, $conditions, $reset);
+function node_load_multiple(array $nids = NULL, $reset = FALSE) {
+  return entity_load_multiple('node', $nids, $reset);
 }
 
 /**
  * Loads a node entity from the database.
  *
  * @param int $nid
- *   (optional) The node ID.
- * @param int $vid
- *   (optional) The revision ID.
+ *   The node ID.
  * @param bool $reset
  *   (optional) Whether to reset the node_load_multiple() cache.
  *
  * @return Drupal\node\Node|false
  *   A fully-populated node entity, or FALSE if the node is not found.
  */
-function node_load($nid = NULL, $vid = NULL, $reset = FALSE) {
-  $nids = (isset($nid) ? array($nid) : array());
-  $conditions = (isset($vid) ? array('vid' => $vid) : array());
-  $node = node_load_multiple($nids, $conditions, $reset);
-  return $node ? reset($node) : FALSE;
+function node_load($nid = NULL, $reset = FALSE) {
+  return entity_load('node', $nid, $reset);
+}
+
+/**
+ * Loads a node revision from the database.
+ *
+ * @param int $nid
+ *   The node revision id.
+ *
+ * @return Drupal\node\Node|false
+ *   A fully-populated node entity, or FALSE if the node is not found.
+ */
+function node_revision_load($vid = NULL) {
+  return entity_revision_load('node', $vid);
 }
 
 /**
@@ -1102,10 +1102,9 @@ function node_delete_multiple($nids) {
  *   TRUE if the revision deletion was successful.
  */
 function node_revision_delete($revision_id) {
-  if ($revision = node_load(NULL, $revision_id)) {
+  if ($revision = node_revision_load($revision_id)) {
     // Prevent deleting the current revision.
-    $node = node_load($revision->nid);
-    if ($revision_id == $node->vid) {
+    if ($revision->isCurrentRevision()) {
       return FALSE;
     }
 
@@ -1765,15 +1764,12 @@ function _node_revision_access(Node $node, $op = 'view', $account = NULL, $langc
       return $access[$cid] = FALSE;
     }
 
-    $node_current_revision = node_load($node->nid);
-    $is_current_revision = $node_current_revision->vid == $node->vid;
-
     // There should be at least two revisions. If the vid of the given node
     // and the vid of the current revision differ, then we already have two
     // different revisions so there is no need for a separate database check.
     // Also, if you try to revert to or delete the current revision, that's
     // not good.
-    if ($is_current_revision && (db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
+    if ($node->isCurrentRevision() && (db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
       $access[$cid] = FALSE;
     }
     elseif (user_access('administer nodes', $account)) {
@@ -1782,7 +1778,7 @@ function _node_revision_access(Node $node, $op = 'view', $account = NULL, $langc
     else {
       // First check the access to the current revision and finally, if the
       // node passed in is not the current revision then access to that, too.
-      $access[$cid] = node_access($op, $node_current_revision, $account, $langcode) && ($is_current_revision || node_access($op, $node, $account, $langcode));
+      $access[$cid] = node_access($op, node_load($node->nid), $account, $langcode) && ($node->isCurrentRevision() || node_access($op, $node, $account, $langcode));
     }
   }
 
@@ -1959,30 +1955,27 @@ function node_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'node.pages.inc',
   );
-  $items['node/%node/revisions/%/view'] = array(
+  $items['node/%node/revisions/%node_revision/view'] = array(
     'title' => 'Revisions',
-    'load arguments' => array(3),
     'page callback' => 'node_show',
-    'page arguments' => array(1, TRUE),
+    'page arguments' => array(3, TRUE),
     'access callback' => '_node_revision_access',
-    'access arguments' => array(1),
+    'access arguments' => array(3),
   );
-  $items['node/%node/revisions/%/revert'] = array(
+  $items['node/%node/revisions/%node_revision/revert'] = array(
     'title' => 'Revert to earlier revision',
-    'load arguments' => array(3),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_revision_revert_confirm', 1),
+    'page arguments' => array('node_revision_revert_confirm', 3),
     'access callback' => '_node_revision_access',
-    'access arguments' => array(1, 'update'),
+    'access arguments' => array(3, 'update'),
     'file' => 'node.pages.inc',
   );
-  $items['node/%node/revisions/%/delete'] = array(
+  $items['node/%node/revisions/%node_revision/delete'] = array(
     'title' => 'Delete earlier revision',
-    'load arguments' => array(3),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_revision_delete_confirm', 1),
+    'page arguments' => array('node_revision_delete_confirm', 3),
     'access callback' => '_node_revision_access',
-    'access arguments' => array(1, 'delete'),
+    'access arguments' => array(3, 'delete'),
     'file' => 'node.pages.inc',
   );
   return $items;
@@ -3483,7 +3476,7 @@ function node_access_rebuild($batch_mode = FALSE) {
       // Rebuild newest nodes first so that recent content becomes available quickly.
       $nids = db_query("SELECT nid FROM {node} ORDER BY nid DESC")->fetchCol();
       foreach ($nids as $nid) {
-        $node = node_load($nid, NULL, TRUE);
+        $node = node_load($nid, TRUE);
         // To preserve database integrity, only acquire grants if the node
         // loads successfully.
         if (!empty($node)) {
@@ -3531,7 +3524,7 @@ function _node_access_rebuild_batch_operation(&$context) {
   // Process the next 20 nodes.
   $limit = 20;
   $nids = db_query_range("SELECT nid FROM {node} WHERE nid > :nid ORDER BY nid ASC", 0, $limit, array(':nid' => $context['sandbox']['current_node']))->fetchCol();
-  $nodes = node_load_multiple($nids, array(), TRUE);
+  $nodes = node_load_multiple($nids, TRUE);
   foreach ($nodes as $nid => $node) {
     // To preserve database integrity, only acquire grants if the node
     // loads successfully.

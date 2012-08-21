@@ -141,7 +141,7 @@ function entity_info_cache_clear() {
  * @param bool $reset
  *   Whether to reset the internal cache for the requested entity type.
  *
- * @return object
+ * @return Drupal\entity\EntityInterface
  *   The entity object, or FALSE if there is no entity with the given id.
  *
  * @see hook_entity_info()
@@ -151,8 +151,28 @@ function entity_info_cache_clear() {
  * @see Drupal\entity\EntityFieldQuery
  */
 function entity_load($entity_type, $id, $reset = FALSE) {
-  $entities = entity_load_multiple($entity_type, array($id), array(), $reset);
+  $entities = entity_load_multiple($entity_type, array($id), $reset);
   return isset($entities[$id]) ? $entities[$id] : FALSE;
+}
+
+/**
+ * Loads an entity from the database.
+ *
+ * @param string $entity_type
+ *   The entity type to load, e.g. node or user.
+ * @param int $revision_id
+ *   The id of the entity to load.
+ *
+ * @return Drupal\entity\EntityInterface
+ *   The entity object, or FALSE if there is no entity with the given revision
+ *   id.
+ *
+ * @see hook_entity_info()
+ * @see Drupal\entity\EntityStorageControllerInterface
+ * @see Drupal\entity\DatabaseStorageController
+ */
+function entity_revision_load($entity_type, $revision_id) {
+  return entity_get_controller($entity_type)->loadRevision($revision_id);
 }
 
 /**
@@ -174,9 +194,6 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  *   Thrown in case the requested entity type does not support UUIDs.
  *
  * @see hook_entity_info()
- *
- * @todo D8: Make it easier to query entities by property; e.g., enhance
- *   EntityStorageControllerInterface with a ::loadByProperty() method.
  */
 function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
   $entity_info = entity_get_info($entity_type);
@@ -185,25 +202,12 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
   }
   $uuid_key = $entity_info['entity keys']['uuid'];
 
-  // Look up the entity ID for the given UUID.
-  $entity_query = new EntityFieldQuery();
-  $result = $entity_query
-    ->entityCondition('entity_type', $entity_type)
-    ->propertyCondition($uuid_key, $uuid)
-    ->range(0, 1)
-    ->execute();
-
-  if (empty($result[$entity_type])) {
-    return FALSE;
-  }
-
   $controller = entity_get_controller($entity_type);
   if ($reset) {
     $controller->resetCache();
   }
-  $id = key($result[$entity_type]);
-  $entities = $controller->load(array($id));
-  return isset($entities[$id]) ? $entities[$id] : FALSE;
+  $entities = $controller->loadByProperties(array($uuid_key => $uuid));
+  return reset($entities);
 }
 
 /**
@@ -225,31 +229,40 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  *
  * @param string $entity_type
  *   The entity type to load, e.g. node or user.
- * @param array|bool $ids
- *   An array of entity IDs, or FALSE to load all entities.
- * @param array $conditions
- *   (deprecated) An associative array of conditions on the base table, where
- *   the keys are the database fields and the values are the values those
- *   fields must have. Instead, it is preferable to use EntityFieldQuery to
- *   retrieve a list of entity IDs loadable by this function.
+ * @param array $ids
+ *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  * @param bool $reset
  *   Whether to reset the internal cache for the requested entity type.
  *
  * @return array
  *   An array of entity objects indexed by their ids.
  *
- * @todo Remove $conditions in Drupal 8.
- *
  * @see hook_entity_info()
  * @see Drupal\entity\EntityStorageControllerInterface
  * @see Drupal\entity\DatabaseStorageController
  * @see Drupal\entity\EntityFieldQuery
  */
-function entity_load_multiple($entity_type, $ids = FALSE, $conditions = array(), $reset = FALSE) {
+function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
   if ($reset) {
     entity_get_controller($entity_type)->resetCache();
   }
-  return entity_get_controller($entity_type)->load($ids, $conditions);
+  return entity_get_controller($entity_type)->load($ids);
+}
+
+/**
+ * Load entities by their property values.
+ *
+ * @param string $entity_type
+ *   The entity type to load, e.g. node or user.
+ * @param array $values
+ *   An associative array where the keys are the property names and the
+ *   values are the values those properties must have.
+ *
+ * @return array
+ *   An array of entity objects indexed by their ids.
+ */
+function entity_load_multiple_by_properties($entity_type, array $values) {
+  return entity_get_controller($entity_type)->loadByProperties($values);
 }
 
 /**

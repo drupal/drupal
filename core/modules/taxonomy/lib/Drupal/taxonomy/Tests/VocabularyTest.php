@@ -85,7 +85,7 @@ class VocabularyTest extends TaxonomyTestBase {
       $this->createVocabulary();
     }
     // Get all vocabularies and change their weights.
-    $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
+    $vocabularies = taxonomy_vocabulary_load_multiple();
     $edit = array();
     foreach ($vocabularies as $key => $vocabulary) {
       $vocabulary->weight = -$vocabulary->weight;
@@ -96,7 +96,7 @@ class VocabularyTest extends TaxonomyTestBase {
     $this->drupalPost('admin/structure/taxonomy', $edit, t('Save'));
 
     // Load the vocabularies from the database.
-    $new_vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
+    $new_vocabularies = taxonomy_vocabulary_load_multiple();
 
     // Check that the weights are saved in the database correctly.
     foreach ($vocabularies as $key => $vocabulary) {
@@ -109,12 +109,12 @@ class VocabularyTest extends TaxonomyTestBase {
    */
   function testTaxonomyAdminNoVocabularies() {
     // Delete all vocabularies.
-    $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
+    $vocabularies = taxonomy_vocabulary_load_multiple();
     foreach ($vocabularies as $key => $vocabulary) {
       taxonomy_vocabulary_delete($key);
     }
     // Confirm that no vocabularies are found in the database.
-    $this->assertFalse(taxonomy_vocabulary_load_multiple(FALSE), 'No vocabularies found in the database.');
+    $this->assertFalse(taxonomy_vocabulary_load_multiple(), 'No vocabularies found in the database.');
     $this->drupalGet('admin/structure/taxonomy');
     // Check the default message for no vocabularies.
     $this->assertText(t('No vocabularies available.'), 'No vocabularies were found.');
@@ -133,7 +133,7 @@ class VocabularyTest extends TaxonomyTestBase {
     $this->assertText(t('Created new vocabulary'), 'New vocabulary was created.');
 
     // Check the created vocabulary.
-    $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
+    $vocabularies = taxonomy_vocabulary_load_multiple();
     $vid = $vocabularies[count($vocabularies) - 1]->vid;
     entity_get_controller('taxonomy_vocabulary')->resetCache();
     $vocabulary = taxonomy_vocabulary_load($vid);

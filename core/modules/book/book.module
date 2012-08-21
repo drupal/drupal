@@ -1267,7 +1267,7 @@ function book_export_traverse($tree, $visit_func) {
 
   foreach ($tree as $data) {
     // Note- access checking is already performed when building the tree.
-    if ($node = node_load($data['link']['nid'], FALSE)) {
+    if ($node = node_load($data['link']['nid'])) {
       $children = '';
 
       if ($data['below']) {

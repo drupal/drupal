@@ -16,7 +16,7 @@ use Drupal\taxonomy\Vocabulary;
  * @see theme_taxonomy_overview_vocabularies()
  */
 function taxonomy_overview_vocabularies($form) {
-  $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
+  $vocabularies = taxonomy_vocabulary_load_multiple();
   $form['#tree'] = TRUE;
   foreach ($vocabularies as $vocabulary) {
     $form[$vocabulary->vid]['#vocabulary'] = $vocabulary;

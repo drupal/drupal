@@ -358,7 +358,7 @@ class BookTest extends WebTestBase {
      $this->drupalGet('node/' . $this->book->nid . '/outline/remove');
      $this->assertResponse('403', t('Deleting top-level book node properly forbidden.'));
      $this->drupalPost('node/' . $nodes[4]->nid . '/outline/remove', $edit, t('Remove'));
-     $node4 = node_load($nodes[4]->nid, NULL, TRUE);
+     $node4 = node_load($nodes[4]->nid, TRUE);
      $this->assertTrue(empty($node4->book), t('Deleting child book node properly allowed.'));
 
      // Delete all child book nodes and retest top-level node deletion.
@@ -367,7 +367,7 @@ class BookTest extends WebTestBase {
      }
      node_delete_multiple($nids);
      $this->drupalPost('node/' . $this->book->nid . '/outline/remove', $edit, t('Remove'));
-     $node = node_load($this->book->nid, NULL, TRUE);
+     $node = node_load($this->book->nid, TRUE);
      $this->assertTrue(empty($node->book), t('Deleting childless top-level book node properly allowed.'));
    }
 }

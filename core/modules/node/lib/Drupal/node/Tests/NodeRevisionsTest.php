@@ -87,7 +87,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertTrue(($nodes[1]->body[LANGUAGE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[LANGUAGE_NOT_SPECIFIED][0]['value']), t('Node reverted correctly.'));
 
     // Confirm that this is not the current version.
-    $node = node_load($node->nid, $node->vid);
+    $node = node_revision_load($node->vid);
     $this->assertFalse($node->isCurrentRevision(), 'Third node revision is not the current one.');
 
     // Confirm revisions delete properly.
@@ -136,7 +136,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $node->save();
     $this->drupalGet('node/' . $node->nid);
     $this->assertText($new_title, t('New node title appears on the page.'));
-    $node_revision = node_load($node->nid, NULL, TRUE);
+    $node_revision = node_load($node->nid, TRUE);
     $this->assertEqual($node_revision->log, $log, t('After an existing node revision is re-saved without a log message, the original log message is preserved.'));
 
     // Create another node with an initial log message.
@@ -154,7 +154,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $node->save();
     $this->drupalGet('node/' . $node->nid);
     $this->assertText($new_title, 'New node title appears on the page.');
-    $node_revision = node_load($node->nid, NULL, TRUE);
+    $node_revision = node_load($node->nid, TRUE);
     $this->assertTrue(empty($node_revision->log), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
   }
 }

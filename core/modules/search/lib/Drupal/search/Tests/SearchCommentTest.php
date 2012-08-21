@@ -89,7 +89,7 @@ class SearchCommentTest extends SearchTestBase {
       'search_block_form' => "'" . $edit_comment['subject'] . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
-    $node2 = node_load($node->nid, NULL, TRUE);
+    $node2 = node_load($node->nid, TRUE);
     $this->assertText($node2->label(), t('Node found in search results.'));
     $this->assertText($edit_comment['subject'], t('Comment subject found in search results.'));
 

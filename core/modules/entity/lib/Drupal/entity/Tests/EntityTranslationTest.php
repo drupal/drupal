@@ -211,23 +211,23 @@ class EntityTranslationTest extends WebTestBase {
     // original language is the same of one used for a translation.
     $langcode = $this->langcodes[1];
     entity_create('entity_test', array('uid' => $properties[$langcode]['uid']))->save();
-    $entities = entity_test_load_multiple(FALSE, array(), TRUE);
+    $entities = entity_test_load_multiple();
     $this->assertEqual(count($entities), 3, 'Three entities were created.');
-    $entities = entity_test_load_multiple(array($translated_id), array(), TRUE);
+    $entities = entity_test_load_multiple(array($translated_id));
     $this->assertEqual(count($entities), 1, 'One entity correctly loaded by id.');
-    $entities = entity_test_load_multiple(array(), array('name' => $name), TRUE);
+    $entities = entity_load_multiple_by_properties('entity_test', array('name' => $name));
     $this->assertEqual(count($entities), 2, 'Two entities correctly loaded by name.');
     // @todo The default language condition should go away in favor of an
     // explicit parameter.
-    $entities = entity_test_load_multiple(array(), array('name' => $properties[$langcode]['name'], 'default_langcode' => 0), TRUE);
+    $entities = entity_load_multiple_by_properties('entity_test', array('name' => $properties[$langcode]['name'], 'default_langcode' => 0));
     $this->assertEqual(count($entities), 1, 'One entity correctly loaded by name translation.');
-    $entities = entity_test_load_multiple(array(), array('langcode' => $default_langcode, 'name' => $name), TRUE);
+    $entities = entity_load_multiple_by_properties('entity_test', array('langcode' => $default_langcode, 'name' => $name));
     $this->assertEqual(count($entities), 1, 'One entity correctly loaded by name and language.');
-    $entities = entity_test_load_multiple(array(), array('langcode' => $langcode, 'name' => $properties[$langcode]['name']), TRUE);
+    $entities = entity_load_multiple_by_properties('entity_test', array('langcode' => $langcode, 'name' => $properties[$langcode]['name']));
     $this->assertEqual(count($entities), 0, 'No entity loaded by name translation specifying the translation language.');
-    $entities = entity_test_load_multiple(array(), array('langcode' => $langcode, 'name' => $properties[$langcode]['name'], 'default_langcode' => 0), TRUE);
+    $entities = entity_load_multiple_by_properties('entity_test', array('langcode' => $langcode, 'name' => $properties[$langcode]['name'], 'default_langcode' => 0));
     $this->assertEqual(count($entities), 1, 'One entity loaded by name translation and language specifying to look for translations.');
-    $entities = entity_test_load_multiple(array(), array('uid' => $properties[$langcode]['uid'], 'default_langcode' => NULL), TRUE);
+    $entities = entity_load_multiple_by_properties('entity_test', array('uid' => $properties[$langcode]['uid'], 'default_langcode' => NULL));
     $this->assertEqual(count($entities), 2, 'Two entities loaded by uid without caring about property translatability.');
   }
 }

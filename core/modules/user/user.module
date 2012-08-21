@@ -278,14 +278,8 @@ function user_external_load($authname) {
  * from the database. Users are loaded into memory and will not require
  * database access if loaded again during the same page request.
  *
- * @param array|bool $uids
- *   An array of user IDs, or FALSE to load all users.
- * @param array $conditions
- *   (deprecated) An associative array of conditions on the {users}
- *   table, where the keys are the database fields and the values are the
- *   values those fields must have. Instead, it is preferable to use
- *   Drupal\entity\EntityFieldQuery to retrieve a list of entity IDs
- *   loadable by this function.
+ * @param array $uids
+ *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  * @param bool $reset
  *   A boolean indicating that the internal cache should be reset. Use this if
  *   loading a user object which has been altered during the page request.
@@ -298,11 +292,9 @@ function user_external_load($authname) {
  * @see user_load_by_mail()
  * @see user_load_by_name()
  * @see Drupal\entity\EntityFieldQuery
- *
- * @todo Remove $conditions in Drupal 8.
  */
-function user_load_multiple($uids = array(), array $conditions = array(), $reset = FALSE) {
-  return entity_load_multiple('user', $uids, $conditions, $reset);
+function user_load_multiple(array $uids = NULL, $reset = FALSE) {
+  return entity_load_multiple('user', $uids, $reset);
 }
 
 /**
@@ -345,7 +337,7 @@ function user_load($uid, $reset = FALSE) {
  * @see user_load_multiple()
  */
 function user_load_by_mail($mail) {
-  $users = entity_load_multiple('user', FALSE, array('mail' => $mail));
+  $users = entity_load_multiple_by_properties('user', array('mail' => $mail));
   return reset($users);
 }
 
@@ -361,7 +353,7 @@ function user_load_by_mail($mail) {
  * @see user_load_multiple()
  */
 function user_load_by_name($name) {
-  $users = entity_load_multiple('user', FALSE, array('name' => $name));
+  $users = entity_load_multiple_by_properties('user', array('name' => $name));
   return reset($users);
 }
 
@@ -2005,7 +1997,7 @@ function user_delete($uid) {
  */
 function user_delete_multiple(array $uids) {
   if (!empty($uids)) {
-    $accounts = user_load_multiple($uids, array());
+    $accounts = user_load_multiple($uids);
 
     $transaction = db_transaction();
     try {

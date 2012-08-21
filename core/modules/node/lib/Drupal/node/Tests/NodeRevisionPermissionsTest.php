@@ -75,7 +75,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
    * Tests the _node_revision_access() function.
    */
   function testNodeRevisionAccess() {
-    $revision = $this->node_revisions[1];
+    $revision = node_revision_load($this->node_revisions[1]->vid);
 
     $parameters = array(
       'op' => array_keys($this->map),

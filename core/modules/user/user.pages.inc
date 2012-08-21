@@ -61,11 +61,11 @@ function user_pass() {
 function user_pass_validate($form, &$form_state) {
   $name = trim($form_state['values']['name']);
   // Try to load by email.
-  $users = user_load_multiple(array(), array('mail' => $name, 'status' => '1'));
+  $users = entity_load_multiple_by_properties('user', array('mail' => $name, 'status' => '1'));
   $account = reset($users);
   if (!$account) {
     // No success, try to load by name.
-    $users = user_load_multiple(array(), array('name' => $name, 'status' => '1'));
+    $users = entity_load_multiple_by_properties('user', array('name' => $name, 'status' => '1'));
     $account = reset($users);
   }
   if (isset($account->uid)) {
@@ -122,9 +122,9 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
     // 86400 seconds.
     $timeout = variable_get('user_password_reset_timeout', 86400);
     $current = REQUEST_TIME;
-    // Some redundant checks for extra security ?
-    $users = user_load_multiple(array($uid), array('status' => '1'));
-    if ($timestamp <= $current && $account = reset($users)) {
+    $account = user_load($uid);
+    // Verify that the user exists and is active.
+    if ($timestamp <= $current && $account && $account->status) {
       // No time out for first time login.
       if ($account->login && $current - $timestamp > $timeout) {
         drupal_set_message(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));

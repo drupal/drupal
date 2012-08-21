@@ -41,7 +41,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       // @todo This only tests a 'nojs' submission, because drupalPostAJAX()
       //   does not yet support file uploads.
       $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-      $node = node_load($nid, NULL, TRUE);
+      $node = node_load($nid, TRUE);
       $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
       $this->assertFileExists($node_file, t('New file saved to disk on node creation.'));
 
@@ -71,7 +71,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
       // Save the node and ensure it does not have the file.
       $this->drupalPost(NULL, array(), t('Save'));
-      $node = node_load($nid, NULL, TRUE);
+      $node = node_load($nid, TRUE);
       $this->assertTrue(empty($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']), t('File was successfully removed from the node.'));
     }
   }
@@ -192,7 +192,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $matches = array();
       preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
       $nid = $matches[1];
-      $node = node_load($nid, NULL, TRUE);
+      $node = node_load($nid, TRUE);
       $this->assertTrue(empty($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']), t('Node was successfully saved without any files.'));
     }
   }
@@ -217,7 +217,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $edit = array('field[settings][uri_scheme]' => 'private');
     $this->drupalPost("admin/structure/types/manage/$type_name/fields/$field_name", $edit, t('Save settings'));
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
     $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $this->assertFileExists($node_file, t('New file saved to disk on node creation.'));
 

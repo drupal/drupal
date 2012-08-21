@@ -43,7 +43,7 @@ class NodeLoadMultipleTest extends NodeTestBase {
     $this->assertNoText($node4->label(), t('Node title does not appear in the default listing.'));
 
     // Load nodes with only a condition. Nodes 3 and 4 will be loaded.
-    $nodes = node_load_multiple(FALSE, array('promote' => 0));
+    $nodes = entity_load_multiple_by_properties('node', array('promote' => 0));
     $this->assertEqual($node3->label(), $nodes[$node3->nid]->label(), t('Node was loaded.'));
     $this->assertEqual($node4->label(), $nodes[$node4->nid]->label(), t('Node was loaded.'));
     $count = count($nodes);
@@ -59,30 +59,5 @@ class NodeLoadMultipleTest extends NodeTestBase {
     foreach ($nodes as $node) {
       $this->assertTrue(is_object($node), t('Node is an object'));
     }
-
-    // Load nodes by nid, where type = article. Nodes 1, 2 and 3 will be loaded.
-    $nodes = node_load_multiple(array(1, 2, 3, 4), array('type' => 'article'));
-    $count = count($nodes);
-    $this->assertTrue($count == 3, t('@count nodes loaded', array('@count' => $count)));
-    $this->assertEqual($nodes[$node1->nid]->label(), $node1->label(), t('Node successfully loaded.'));
-    $this->assertEqual($nodes[$node2->nid]->label(), $node2->label(), t('Node successfully loaded.'));
-    $this->assertEqual($nodes[$node3->nid]->label(), $node3->label(), t('Node successfully loaded.'));
-    $this->assertFalse(isset($nodes[$node4->nid]));
-
-    // Now that all nodes have been loaded into the static cache, ensure that
-    // they are loaded correctly again when a condition is passed.
-    $nodes = node_load_multiple(array(1, 2, 3, 4), array('type' => 'article'));
-    $count = count($nodes);
-    $this->assertTrue($count == 3, t('@count nodes loaded.', array('@count' => $count)));
-    $this->assertEqual($nodes[$node1->nid]->label(), $node1->label(), t('Node successfully loaded'));
-    $this->assertEqual($nodes[$node2->nid]->label(), $node2->label(), t('Node successfully loaded'));
-    $this->assertEqual($nodes[$node3->nid]->label(), $node3->label(), t('Node successfully loaded'));
-    $this->assertFalse(isset($nodes[$node4->nid]), t('Node was not loaded'));
-
-    // Load nodes by nid, where type = article and promote = 0.
-    $nodes = node_load_multiple(array(1, 2, 3, 4), array('type' => 'article', 'promote' => 0));
-    $count = count($nodes);
-    $this->assertTrue($count == 1, t('@count node loaded', array('@count' => $count)));
-    $this->assertEqual($nodes[$node3->nid]->label(), $node3->label(), t('Node successfully loaded.'));
   }
 }

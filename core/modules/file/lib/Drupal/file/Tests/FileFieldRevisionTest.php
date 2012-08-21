@@ -46,7 +46,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file exists on disk and in the database.
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
     $node_file_r1 = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $node_vid_r1 = $node->vid;
     $this->assertFileExists($node_file_r1, t('New file saved to disk on node creation.'));
@@ -55,7 +55,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Upload another file to the same node in a new revision.
     $this->replaceNodeFile($test_file, $field_name, $nid);
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
     $node_file_r2 = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $node_vid_r2 = $node->vid;
     $this->assertFileExists($node_file_r2, t('Replacement file exists on disk after creating new revision.'));
@@ -63,7 +63,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $this->assertFileIsPermanent($node_file_r2, t('Replacement file is permanent.'));
 
     // Check that the original file is still in place on the first revision.
-    $node = node_load($nid, $node_vid_r1, TRUE);
+    $node = node_revision_load($node_vid_r1);
     $this->assertEqual($node_file_r1, file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']), t('Original file still in place after replacing file in new revision.'));
     $this->assertFileExists($node_file_r1, t('Original file still in place after replacing file in new revision.'));
     $this->assertFileEntryExists($node_file_r1, t('Original file entry still in place after replacing file in new revision'));
@@ -72,7 +72,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // Save a new version of the node without any changes.
     // Check that the file is still the same as the previous revision.
     $this->drupalPost('node/' . $nid . '/edit', array('revision' => '1'), t('Save'));
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
     $node_file_r3 = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $node_vid_r3 = $node->vid;
     $this->assertEqual($node_file_r2, $node_file_r3, t('Previous revision file still in place after creating a new revision without a new file.'));
@@ -80,7 +80,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Revert to the first revision and check that the original file is active.
     $this->drupalPost('node/' . $nid . '/revisions/' . $node_vid_r1 . '/revert', array(), t('Revert'));
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
     $node_file_r4 = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $node_vid_r4 = $node->vid;
     $this->assertEqual($node_file_r1, $node_file_r4, t('Original revision file still in place after reverting to the original revision.'));

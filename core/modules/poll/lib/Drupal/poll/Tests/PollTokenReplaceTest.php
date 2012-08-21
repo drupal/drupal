@@ -64,7 +64,7 @@ class PollTokenReplaceTest extends PollTestBase {
     $this->drupalPost('node/' . $poll_nid, $edit, t('Vote'));
     $this->drupalLogout();
 
-    $poll = node_load($poll_nid, NULL, TRUE);
+    $poll = node_load($poll_nid, TRUE);
 
     // Generate and test sanitized tokens.
     $tests = array();

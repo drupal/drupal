@@ -89,7 +89,7 @@ function taxonomy_permission() {
       'title' => t('Administer vocabularies and terms'),
     ),
   );
-  foreach (taxonomy_vocabulary_load_multiple(FALSE) as $vocabulary) {
+  foreach (taxonomy_vocabulary_load_multiple() as $vocabulary) {
     $permissions += array(
       'edit terms in ' . $vocabulary->vid => array(
         'title' => t('Edit terms in %vocabulary', array('%vocabulary' => $vocabulary->name)),
@@ -920,18 +920,18 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
  *   An array of matching term objects.
  */
 function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
-  $conditions = array('name' => trim($name));
+  $values = array('name' => trim($name));
   if (isset($vocabulary)) {
     $vocabularies = taxonomy_vocabulary_get_names();
     if (isset($vocabularies[$vocabulary])){
-      $conditions['vid'] = $vocabularies[$vocabulary]->vid;
+      $values['vid'] = $vocabularies[$vocabulary]->vid;
     }
     else {
       // Return an empty array when filtering by a non-existing vocabulary.
       return array();
     }
   }
-  return taxonomy_term_load_multiple(array(), $conditions);
+  return entity_load_multiple_by_properties('taxonomy_term', $values);
 }
 
 /**
@@ -944,23 +944,15 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
  * @see entity_load_multiple()
  * @see Drupal\entity\EntityFieldQuery
  *
- * @param array|bool $tids
- *   An array of taxonomy term IDs, or FALSE to load all terms.
- * @param array $conditions
- *   (deprecated) An associative array of conditions on the {taxonomy_term}
- *   table, where the keys are the database fields and the values are the
- *   values those fields must have. Instead, it is preferable to use
- *   Drupal\entity\EntityFieldQuery to retrieve a list of entity IDs
- *   loadable by this function.
+ * @param array $tids
+ *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  *
  * @return array
  *   An array of taxonomy term entities, indexed by tid. When no results are
  *   found, an empty array is returned.
- *
- * @todo Remove $conditions in Drupal 8.
  */
-function taxonomy_term_load_multiple($tids = array(), array $conditions = array()) {
-  return entity_load_multiple('taxonomy_term', $tids, $conditions);
+function taxonomy_term_load_multiple(array $tids = NULL) {
+  return entity_load_multiple('taxonomy_term', $tids);
 }
 
 /**
@@ -972,16 +964,14 @@ function taxonomy_term_load_multiple($tids = array(), array $conditions = array(
  *
  * @see entity_load_multiple()
  *
- * @param array|bool $vids
- *  An array of taxonomy vocabulary IDs, or FALSE to load all vocabularies.
- * @param array $conditions
- *  An array of conditions to add to the query.
+ * @param array $vids
+ *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  *
  * @return array
  *  An array of vocabulary objects, indexed by vid.
  */
-function taxonomy_vocabulary_load_multiple($vids = array(), array $conditions = array()) {
-  return entity_load_multiple('taxonomy_vocabulary', $vids, $conditions);
+function taxonomy_vocabulary_load_multiple(array $vids = NULL) {
+  return entity_load_multiple('taxonomy_vocabulary', $vids);
 }
 
 /**
@@ -1013,7 +1003,7 @@ function taxonomy_vocabulary_load($vid) {
  * @see taxonomy_vocabulary_load()
  */
 function taxonomy_vocabulary_machine_name_load($name) {
-  $result = entity_load_multiple('taxonomy_vocabulary', FALSE, array('machine_name' => $name));
+  $result = entity_load_multiple_by_properties('taxonomy_vocabulary', array('machine_name' => $name));
   return reset($result);
 }
 
@@ -1414,7 +1404,7 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
     foreach ($typed_terms as $typed_term) {
       // See if the term exists in the chosen vocabulary and return the tid;
       // otherwise, create a new 'autocreate' term for insert/update.
-      if ($possibilities = taxonomy_term_load_multiple(array(), array('name' => trim($typed_term), 'vid' => array_keys($vocabularies)))) {
+      if ($possibilities = entity_load_multiple_by_properties('taxonomy_term', array('name' => trim($typed_term), 'vid' => array_keys($vocabularies)))) {
         $term = array_pop($possibilities);
       }
       else {
@@ -1444,7 +1434,7 @@ function taxonomy_field_widget_error($element, $error, $form, &$form_state) {
  */
 function taxonomy_field_settings_form($field, $instance, $has_data) {
   // Get proper values for 'allowed_values_function', which is a core setting.
-  $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
+  $vocabularies = taxonomy_vocabulary_load_multiple();
   $options = array();
   foreach ($vocabularies as $vocabulary) {
     $options[$vocabulary->machine_name] = $vocabulary->name;

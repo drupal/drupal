@@ -308,7 +308,7 @@ class BreadcrumbTest extends MenuTestBase {
     // the breadcrumb based on taxonomy term hierarchy.
     $parent_tid = 0;
     foreach ($tags as $name => $null) {
-      $terms = taxonomy_term_load_multiple(FALSE, array('name' => $name));
+      $terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => $name));
       $term = reset($terms);
       $tags[$name]['term'] = $term;
       if ($parent_tid) {

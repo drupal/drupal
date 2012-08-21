@@ -42,13 +42,34 @@ interface EntityStorageControllerInterface {
    *
    * @param $ids
    *   An array of entity IDs, or FALSE to load all entities.
-   * @param $conditions
-   *   An array of conditions in the form 'field' => $value.
    *
    * @return
    *   An array of entity objects indexed by their ids.
    */
-  public function load($ids = array(), $conditions = array());
+  public function load(array $ids = NULL);
+
+  /**
+   * Load a specific entity revision.
+   *
+   * @param int $revision_id
+   *   The revision id.
+   *
+   * @return Drupal\entity\EntityInterface|false
+   *   The specified entity revision or FALSE if not found.
+   */
+  public function loadRevision($revision_id);
+
+  /**
+   * Load entities by their property values.
+   *
+   * @param array $values
+   *   An associative array where the keys are the property names and the
+   *   values are the values those properties must have.
+   *
+   * @return array
+   *   An array of entity objects indexed by their ids.
+   */
+  public function loadByProperties(array $values);
 
   /**
    * Constructs a new entity object, without permanently saving it.

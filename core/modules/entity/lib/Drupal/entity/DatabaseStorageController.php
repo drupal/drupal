@@ -144,18 +144,8 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   /**
    * Implements Drupal\entity\EntityStorageControllerInterface::load().
    */
-  public function load($ids = array(), $conditions = array()) {
+  public function load(array $ids = NULL) {
     $entities = array();
-
-    // Revisions are not statically cached, and require a different query to
-    // other conditions, so separate the revision id into its own variable.
-    if ($this->revisionKey && isset($conditions[$this->revisionKey])) {
-      $revision_id = $conditions[$this->revisionKey];
-      unset($conditions[$this->revisionKey]);
-    }
-    else {
-      $revision_id = FALSE;
-    }
 
     // Create a new variable which is either a prepared version of the $ids
     // array for later comparison with the entity cache, or FALSE if no $ids
@@ -165,8 +155,8 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     $passed_ids = !empty($ids) ? array_flip($ids) : FALSE;
     // Try to load entities from the static cache, if the entity type supports
     // static caching.
-    if ($this->cache && !$revision_id) {
-      $entities += $this->cacheGet($ids, $conditions);
+    if ($this->cache && $ids) {
+      $entities += $this->cacheGet($ids);
       // If any entities were loaded, remove them from the ids still to load.
       if ($passed_ids) {
         $ids = array_keys(array_diff_key($passed_ids, $entities));
@@ -174,11 +164,11 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     }
 
     // Load any remaining entities from the database. This is the case if $ids
-    // is set to FALSE (so we load all entities), if there are any ids left to
-    // load, if loading a revision, or if $conditions was passed without $ids.
-    if ($ids === FALSE || $ids || $revision_id || ($conditions && !$passed_ids)) {
+    // is set to NULL (so we load all entities) or if there are any ids left to
+    // load.
+    if ($ids === NULL || $ids) {
       // Build and execute the query.
-      $query_result = $this->buildQuery($ids, $conditions, $revision_id)->execute();
+      $query_result = $this->buildQuery($ids)->execute();
 
       if (!empty($this->entityInfo['entity class'])) {
         // We provide the necessary arguments for PDO to create objects of the
@@ -193,13 +183,13 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     // which attaches fields (if supported by the entity type) and calls the
     // entity type specific load callback, for example hook_node_load().
     if (!empty($queried_entities)) {
-      $this->attachLoad($queried_entities, $revision_id);
+      $this->attachLoad($queried_entities);
       $entities += $queried_entities;
     }
 
     if ($this->cache) {
-      // Add entities to the cache if we are not loading a revision.
-      if (!empty($queried_entities) && !$revision_id) {
+      // Add entities to the cache.
+      if (!empty($queried_entities)) {
         $this->cacheSet($queried_entities);
       }
     }
@@ -219,6 +209,62 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   }
 
   /**
+   * Implements Drupal\entity\EntityStorageControllerInterface::loadRevision().
+   */
+  public function loadRevision($revision_id) {
+    // Build and execute the query.
+    $query_result = $this->buildQuery(array(), $revision_id)->execute();
+
+    if (!empty($this->entityInfo['entity class'])) {
+      // We provide the necessary arguments for PDO to create objects of the
+      // specified entity class.
+      // @see Drupal\entity\EntityInterface::__construct()
+      $query_result->setFetchMode(PDO::FETCH_CLASS, $this->entityInfo['entity class'], array(array(), $this->entityType));
+    }
+    $queried_entities = $query_result->fetchAllAssoc($this->idKey);
+
+    // Pass the loaded entities from the database through $this->attachLoad(),
+    // which attaches fields (if supported by the entity type) and calls the
+    // entity type specific load callback, for example hook_node_load().
+    if (!empty($queried_entities)) {
+      $this->attachLoad($queried_entities, TRUE);
+    }
+    return reset($queried_entities);
+  }
+
+  /**
+   * Implements Drupal\entity\EntityStorageControllerInterface::loadByProperties().
+   */
+  public function loadByProperties(array $values = array()) {
+    // Build a query to fetch the entity IDs.
+    $entity_query = new EntityFieldQuery();
+    $entity_query->entityCondition('entity_type', $this->entityType);
+    $this->buildPropertyQuery($entity_query, $values);
+    $result = $entity_query->execute();
+
+    if (empty($result[$this->entityType])) {
+      return array();
+    }
+    // Load and return the found entities.
+    return $this->load(array_keys($result[$this->entityType]));
+  }
+
+  /**
+   * Builds an entity query.
+   *
+   * @param Drupal\entity\EntityFieldQuery $entity_query
+   *   EntityFieldQuery instance.
+   * @param array $values
+   *   An associative array of properties of the entity, where the keys are the
+   *   property names and the values are the values those properties must have.
+   */
+  protected function buildPropertyQuery(EntityFieldQuery $entity_query, array $values) {
+    foreach ($values as $name => $value) {
+      $entity_query->propertyCondition($name, $value);
+    }
+  }
+
+  /**
    * Builds the query to load the entity.
    *
    * This has full revision support. For entities requiring special queries,
@@ -230,10 +276,8 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    * See Drupal\comment\CommentStorageController::buildQuery() or
    * Drupal\taxonomy\TermStorageController::buildQuery() for examples.
    *
-   * @param $ids
-   *   An array of entity IDs, or FALSE to load all entities.
-   * @param $conditions
-   *   An array of conditions in the form 'field' => $value.
+   * @param array|null $ids
+   *   An array of entity IDs, or NULL to load all entities.
    * @param $revision_id
    *   The ID of the revision to load, or FALSE if this query is asking for the
    *   most current revision(s).
@@ -241,7 +285,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    * @return SelectQuery
    *   A SelectQuery object for loading the entity.
    */
-  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
+  protected function buildQuery($ids, $revision_id = FALSE) {
     $query = db_select($this->entityInfo['base table'], 'base');
 
     $query->addTag($this->entityType . '_load_multiple');
@@ -282,11 +326,6 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
     if ($ids) {
       $query->condition("base.{$this->idKey}", $ids, 'IN');
     }
-    if ($conditions) {
-      foreach ($conditions as $field => $value) {
-        $query->condition('base.' . $field, $value);
-      }
-    }
     return $query;
   }
 
@@ -303,14 +342,13 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    *
    * @param $queried_entities
    *   Associative array of query results, keyed on the entity ID.
-   * @param $revision_id
-   *   ID of the revision that was loaded, or FALSE if the most current revision
-   *   was loaded.
+   * @param $load_revision
+   *   (optional) TRUE if the revision should be loaded, defaults to FALSE.
    */
-  protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
+  protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
     // Attach fields.
     if ($this->entityInfo['fieldable']) {
-      if ($revision_id) {
+      if ($load_revision) {
         field_attach_load_revision($this->entityType, $queried_entities);
       }
       else {
@@ -337,35 +375,15 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    *
    * @param $ids
    *   If not empty, return entities that match these IDs.
-   * @param $conditions
-   *   If set, return entities that match all of these conditions.
    *
    * @return
    *   Array of entities from the entity cache.
    */
-  protected function cacheGet($ids, $conditions = array()) {
+  protected function cacheGet($ids) {
     $entities = array();
     // Load any available entities from the internal cache.
     if (!empty($this->entityCache)) {
-      if ($ids) {
-        $entities += array_intersect_key($this->entityCache, array_flip($ids));
-      }
-      // If loading entities only by conditions, fetch all available entities
-      // from the cache. Entities which don't match are removed later.
-      elseif ($conditions) {
-        $entities = $this->entityCache;
-      }
-    }
-
-    // Exclude any entities loaded from cache if they don't match $conditions.
-    // This ensures the same behavior whether loading from memory or database.
-    if ($conditions) {
-      foreach ($entities as $entity) {
-        $entity_values = (array) $entity;
-        if (array_diff_assoc($conditions, $entity_values)) {
-          unset($entities[$entity->{$this->idKey}]);
-        }
-      }
+      $entities += array_intersect_key($this->entityCache, array_flip($ids));
     }
     return $entities;
   }

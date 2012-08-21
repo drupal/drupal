@@ -27,8 +27,8 @@ class CommentStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::buildQuery().
    */
-  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
-    $query = parent::buildQuery($ids, $conditions, $revision_id);
+  protected function buildQuery($ids, $revision_id = FALSE) {
+    $query = parent::buildQuery($ids, $revision_id);
     // Specify additional fields from the user and node tables.
     $query->innerJoin('node', 'n', 'base.nid = n.nid');
     $query->addField('n', 'type', 'node_type');
@@ -41,7 +41,7 @@ class CommentStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::attachLoad().
    */
-  protected function attachLoad(&$comments, $revision_id = FALSE) {
+  protected function attachLoad(&$comments, $load_revision = FALSE) {
     // Set up standard comment properties.
     foreach ($comments as $key => $comment) {
       $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
@@ -49,7 +49,7 @@ class CommentStorageController extends DatabaseStorageController {
       $comment->node_type = 'comment_node_' . $comment->node_type;
       $comments[$key] = $comment;
     }
-    parent::attachLoad($comments, $revision_id);
+    parent::attachLoad($comments, $load_revision);
   }
 
   /**

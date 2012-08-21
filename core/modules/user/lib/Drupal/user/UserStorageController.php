@@ -22,7 +22,7 @@ class UserStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::attachLoad().
    */
-  function attachLoad(&$queried_users, $revision_id = FALSE) {
+  function attachLoad(&$queried_users, $load_revision = FALSE) {
     // Build an array of user picture IDs so that these can be fetched later.
     $picture_fids = array();
     foreach ($queried_users as $key => $record) {
@@ -56,7 +56,7 @@ class UserStorageController extends DatabaseStorageController {
     }
     // Call the default attachLoad() method. This will add fields and call
     // hook_user_load().
-    parent::attachLoad($queried_users, $revision_id);
+    parent::attachLoad($queried_users, $load_revision);
   }
 
   /**

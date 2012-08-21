@@ -43,20 +43,11 @@ class TermStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::buildQuery().
    */
-  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
-    $query = parent::buildQuery($ids, $conditions, $revision_id);
+  protected function buildQuery($ids, $revision_id = FALSE) {
+    $query = parent::buildQuery($ids, $revision_id);
     $query->addTag('translatable');
     $query->addTag('term_access');
-    // When name is passed as a condition use LIKE.
-    if (isset($conditions['name'])) {
-      $query_conditions = &$query->conditions();
-      foreach ($query_conditions as $key => $condition) {
-        if (is_array($condition) && $condition['field'] == 'base.name') {
-          $query_conditions[$key]['operator'] = 'LIKE';
-          $query_conditions[$key]['value'] = db_like($query_conditions[$key]['value']);
-        }
-      }
-    }
+
     // Add the machine name field from the {taxonomy_vocabulary} table.
     $query->innerJoin('taxonomy_vocabulary', 'v', 'base.vid = v.vid');
     $query->addField('v', 'machine_name', 'vocabulary_machine_name');
@@ -64,18 +55,14 @@ class TermStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::cacheGet().
+   * Overrides Drupal\entity\DatabaseStorageController::buildPropertyQuery().
    */
-  protected function cacheGet($ids, $conditions = array()) {
-    $terms = parent::cacheGet($ids, $conditions);
-    // Name matching is case insensitive, note that with some collations
-    // LOWER() and drupal_strtolower() may return different results.
-    foreach ($terms as $term) {
-      if (isset($conditions['name']) && drupal_strtolower($conditions['name'] != drupal_strtolower($term->name))) {
-        unset($terms[$term->tid]);
-      }
+  protected function buildPropertyQuery(\Drupal\entity\EntityFieldQuery $entity_query, array $values) {
+    if (isset($values['name'])) {
+      $entity_query->propertyCondition('name', $values['name'], 'LIKE');
+      unset($values['name']);
     }
-    return $terms;
+    parent::buildPropertyQuery($entity_query, $values);
   }
 
   /**

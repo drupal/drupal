@@ -157,7 +157,7 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::attachLoad().
    */
-  protected function attachLoad(&$nodes, $revision_id = FALSE) {
+  protected function attachLoad(&$nodes, $load_revision = FALSE) {
     // Create an array of nodes for each content type and pass this to the
     // object type specific callback.
     $typed_nodes = array();
@@ -176,16 +176,16 @@ class NodeStorageController extends DatabaseStorageController {
     // hook_node_load(), containing a list of node types that were loaded.
     $argument = array_keys($typed_nodes);
     $this->hookLoadArguments = array($argument);
-    parent::attachLoad($nodes, $revision_id);
+    parent::attachLoad($nodes, $load_revision);
   }
 
   /**
    * Overrides Drupal\entity\DatabaseStorageController::buildQuery().
    */
-  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
+  protected function buildQuery($ids, $revision_id = FALSE) {
     // Ensure that uid is taken from the {node} table,
     // alias timestamp to revision_timestamp and add revision_uid.
-    $query = parent::buildQuery($ids, $conditions, $revision_id);
+    $query = parent::buildQuery($ids, $revision_id);
     $fields =& $query->getFields();
     unset($fields['timestamp']);
     $query->addField('revision', 'timestamp', 'revision_timestamp');

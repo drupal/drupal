@@ -57,7 +57,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->drupalGet('node/' . $nid . '/edit');
 
     // Check that the default formatter is displaying with the file name.
-    $node = node_load($nid, NULL, TRUE);
+    $node = node_load($nid, TRUE);
     $node_file = file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid']);
     $default_output = theme('file_link', array('file' => $node_file));
     $this->assertRaw($default_output, t('Default formatter displaying correctly on full node view.'));
