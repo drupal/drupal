@@ -949,7 +949,7 @@ Drupal.overlay._restoreTabindex = function () {
   $element.attr('tabindex', tabindex);
 };
 
-$.extend({
+$.extend(Drupal.theme, {
   /**
    * Theme function to create the overlay iframe element.
    */
