@@ -118,11 +118,13 @@ class View extends RowPluginBase {
   }
 
   function render($row) {
-    $node = $this->nodes[$row->{$this->field_alias}];
-    $node->view = $this->view;
-    $build = node_view($node, $this->options['view_mode']);
+    if (isset($this->nodes[$row->{$this->field_alias}])) {
+      $node = $this->nodes[$row->{$this->field_alias}];
+      $node->view = $this->view;
+      $build = node_view($node, $this->options['view_mode']);
 
-    return drupal_render($build);
+      return drupal_render($build);
+    }
   }
 
 }
