@@ -2719,7 +2719,7 @@ function language_list($flags = LANGUAGE_CONFIGURABLE) {
     $default = language_default();
     if (language_multilingual() || module_exists('language')) {
       // Use language module configuration if available.
-      $languages = db_query('SELECT *, 0 as `default` FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode', PDO::FETCH_ASSOC);
+      $languages = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode', PDO::FETCH_ASSOC);
 
       // Initialize default property so callers have an easy reference and can
       // save the same object without data loss.
