@@ -8,14 +8,14 @@
 /**
  * Control download access to files.
  *
- * The hook is typically implemented to limit access based on the entity the
- * file is referenced, e.g., only users with access to a node should be allowed
- * to download files attached to that node.
+ * The hook is typically implemented to limit access based on the entity that
+ * references the file; for example, only users with access to a node should be
+ * allowed to download files attached to that node.
  *
  * @param $field
  *   The field to which the file belongs.
  * @param Drupal\entity\EntityInterface $entity
- *   The $entity to which $file is referenced.
+ *   The entity which references the file.
  * @param Drupal\Core\File\File $file
  *   The file entity that is being requested.
  *
@@ -47,8 +47,8 @@ function hook_file_download_access($field, Drupal\entity\EntityInterface $entity
  *   values are Boolean grant responses for each module.
  * @param array $context
  *   An associative array containing the following key-value pairs:
- *   - entity: The entity to which the field item is referenced.
- *   - field: The field info of the field the field_item belongs to.
+ *   - field: The field to which the file belongs.
+ *   - entity: The entity which references the file.
  *   - file: The file entity that is being requested.
  *
  * @return
