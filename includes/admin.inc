@@ -1473,7 +1473,7 @@ function views_ui_edit_page_display_tabs($view, $display_id = NULL) {
     if (!empty($display->deleted)) {
       $tabs[$id]['#link']['localized_options']['attributes']['class'][] = 'views-display-deleted-link';
     }
-    if (empty($display->options['enabled'])) {
+    if (isset($display->display_options['enabled']) && !$display->display_options['enabled']) {
       $tabs[$id]['#link']['localized_options']['attributes']['class'][] = 'views-display-disabled-link';
     }
   }
