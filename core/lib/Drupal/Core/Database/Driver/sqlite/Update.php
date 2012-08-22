@@ -34,11 +34,13 @@ class Update extends QueryUpdate {
    */
   protected function removeFieldsInCondition(&$fields, ConditionInterface $condition) {
     foreach ($condition->conditions() as $child_condition) {
-      if ($child_condition['field'] instanceof ConditionInterface) {
-        $this->removeFieldsInCondition($fields, $child_condition['field']);
-      }
-      else {
-        unset($fields[$child_condition['field']]);
+      if (isset($child_condition['field'])) {
+        if ($child_condition['field'] instanceof ConditionInterface) {
+          $this->removeFieldsInCondition($fields, $child_condition['field']);
+        }
+        else {
+          unset($fields[$child_condition['field']]);
+        }
       }
     }
   }
