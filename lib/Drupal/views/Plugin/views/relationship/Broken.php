@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\relationship;
 
-use Drupal\views\Plugin\views\Handler;
 use Drupal\Core\Annotation\Plugin;
 
 /**

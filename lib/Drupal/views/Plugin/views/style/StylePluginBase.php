@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\style;
 
-use Drupal\views\Plugin\views\Plugin as ViewsPlugin;
+use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -28,7 +28,7 @@ use Drupal\Core\Annotation\Translation;
 /**
  * Base class to define a style plugin handler.
  */
-abstract class StylePluginBase extends ViewsPlugin {
+abstract class StylePluginBase extends PluginBase {
 
   /**
    * Store all available tokens row rows.

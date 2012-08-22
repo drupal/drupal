@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\exposed_form;
 
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 
 /**
  * @defgroup views_exposed_form_plugins Views exposed form plugins
@@ -22,7 +22,7 @@ use Drupal\views\Plugin\views\Plugin;
 /**
  * The base plugin to handle exposed filter forms.
  */
-abstract class ExposedFormPluginBase extends Plugin {
+abstract class ExposedFormPluginBase extends PluginBase {
 
   /**
    * Initialize the plugin.

@@ -7,8 +7,8 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\views\Plugin\views\Plugin;
-use Drupal\views\Plugin\views\Handler;
+use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\Plugin\views\HandlerBase;
 
 /**
  * @defgroup views_area_handlers Views area handlers
@@ -22,10 +22,10 @@ use Drupal\views\Plugin\views\Handler;
  *
  * @ingroup views_area_handlers
  */
-abstract class AreaPluginBase extends Handler {
+abstract class AreaPluginBase extends HandlerBase {
 
   /**
-   * Overrides Handler::init().
+   * Overrides Drupal\views\Plugin\views\HandlerBase::init().
    *
    * Make sure that no result area handlers are set to be shown when the result
    * is empty.

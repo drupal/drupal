@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\row;
 
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 
 /**
  * @defgroup views_row_plugins Views row plugins
@@ -24,7 +24,7 @@ use Drupal\views\Plugin\views\Plugin;
  * Default plugin to view a single row of a table. This is really just a wrapper around
  * a theme function.
  */
-abstract class RowPluginBase extends Plugin {
+abstract class RowPluginBase extends PluginBase {
 
   /**
    * Initialize the row plugin.

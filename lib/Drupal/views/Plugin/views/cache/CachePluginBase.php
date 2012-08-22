@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Database\Query\Select;
 
 /**
@@ -21,7 +21,7 @@ use Drupal\Core\Database\Query\Select;
 /**
  * The base plugin to handle caching.
  */
-abstract class CachePluginBase extends Plugin {
+abstract class CachePluginBase extends PluginBase {
 
   /**
    * Contains all data that should be written/read from cache.

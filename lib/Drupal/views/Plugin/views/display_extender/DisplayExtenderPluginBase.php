@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display_extender;
 
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_display_plugins
  */
-abstract class DisplayExtenderPluginBase extends Plugin {
+abstract class DisplayExtenderPluginBase extends PluginBase {
 
   function init(&$view, &$display) {
     $this->view = $view;

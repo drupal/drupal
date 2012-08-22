@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument_default;
 
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 
 /**
  * @defgroup views_argument_default_plugins Views argument default plugins
@@ -20,7 +20,7 @@ use Drupal\views\Plugin\views\Plugin;
 /**
  * The fixed argument default handler; also used as the base.
  */
-abstract class ArgumentDefaultPluginBase extends Plugin {
+abstract class ArgumentDefaultPluginBase extends PluginBase {
 
   /**
    * Return the default argument.

@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\Plugin.
+ * Definition of Drupal\views\Plugin\views\PluginBase.
  */
 
 namespace Drupal\views\Plugin\views;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Component\Plugin\PluginBase as ComponentPluginBase;
 
-abstract class Plugin extends PluginBase {
+abstract class PluginBase extends ComponentPluginBase {
 
   /**
    * Except for displays, options for the object will be held here.
@@ -74,8 +74,8 @@ abstract class Plugin extends PluginBase {
    * @return array
    *   Returns the options of this handler/plugin.
    *
-   * @see Drupal\views\Plugin\views\Plugin::export_option()
-   * @see Drupal\views\Plugin\views\Plugin::unpack_translatable()
+   * @see Drupal\views\Plugin\views\PluginBase::export_option()
+   * @see Drupal\views\Plugin\views\PluginBase::unpack_translatable()
    */
   function option_definition() { return array(); }
 

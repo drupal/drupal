@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
-use Drupal\views\Plugin\views\Handler;
+use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -36,7 +36,7 @@ use Drupal\Core\Annotation\Plugin;
  *
  * @ingroup views_filter_handlers
  */
-abstract class FilterPluginBase extends Handler {
+abstract class FilterPluginBase extends HandlerBase {
 
   /**
    * Contains the actual value of the field,either configured in the views ui

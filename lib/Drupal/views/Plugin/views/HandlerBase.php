@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\Handler
+ * Definition of Drupal\views\Plugin\views\HandlerBase.
  */
 
 namespace Drupal\views\Plugin\views;
 
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\View;
 
-abstract class Handler extends Plugin {
+abstract class HandlerBase extends PluginBase {
 
   /**
    * Where the $query object will reside:

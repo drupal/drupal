@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
-use Drupal\views\Plugin\views\Handler;
+use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Plugin;
  *
  * @ingroup views_sort_handlers
  */
-abstract class SortPluginBase extends Handler {
+abstract class SortPluginBase extends HandlerBase {
 
   /**
    * Determine if a sort can be exposed.

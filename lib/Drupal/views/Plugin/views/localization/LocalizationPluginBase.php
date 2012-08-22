@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\localization;
 
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 
 /**
  * @defgroup views_localization_plugins Views localization plugins
@@ -20,7 +20,7 @@ use Drupal\views\Plugin\views\Plugin;
 /**
  * The base plugin to handle localization of Views strings.
  */
-abstract class LocalizationPluginBase extends Plugin {
+abstract class LocalizationPluginBase extends PluginBase {
 
   // Store for exported strings
   var $export_strings = array();

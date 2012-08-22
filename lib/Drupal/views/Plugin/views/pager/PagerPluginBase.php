@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\pager;
 
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 
 /**
  * @defgroup views_pager_plugins Views pager plugins
@@ -20,7 +20,7 @@ use Drupal\views\Plugin\views\Plugin;
 /**
  * The base plugin to handle pager.
  */
-abstract class PagerPluginBase extends Plugin {
+abstract class PagerPluginBase extends PluginBase {
 
   var $current_page = NULL;
 

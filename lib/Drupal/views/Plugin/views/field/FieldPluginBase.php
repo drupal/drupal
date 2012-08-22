@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\views\Plugin\views\Handler;
+use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -47,7 +47,7 @@ define('VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY', 2);
  *
  * @ingroup views_field_handlers
  */
-abstract class FieldPluginBase extends Handler {
+abstract class FieldPluginBase extends HandlerBase {
 
   var $field_alias = 'unknown';
   var $aliases = array();

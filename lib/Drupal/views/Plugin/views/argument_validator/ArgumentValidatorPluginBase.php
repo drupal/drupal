@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument_validator;
 
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 
 /**
  * @defgroup views_argument_validate_plugins Views argument validate plugins
@@ -20,7 +20,7 @@ use Drupal\views\Plugin\views\Plugin;
 /**
  * Base argument validator plugin to provide basic functionality.
  */
-abstract class ArgumentValidatorPluginBase extends Plugin {
+abstract class ArgumentValidatorPluginBase extends PluginBase {
 
   /**
    * Initialize this plugin with the view and the argument

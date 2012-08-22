@@ -6,12 +6,12 @@
 
 namespace Drupal\views\Plugin\views\query;
 
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 
 /**
  * @todo.
  */
-abstract class QueryPluginBase extends Plugin implements QueryInterface {
+abstract class QueryPluginBase extends PluginBase implements QueryInterface {
 
   /**
    * A pager plugin that should be provided by the display.

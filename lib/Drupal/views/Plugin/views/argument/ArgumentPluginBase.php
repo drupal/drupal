@@ -7,8 +7,8 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\views\Plugin\views\Plugin;
-use Drupal\views\Plugin\views\Handler;
+use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\Plugin\views\HandlerBase;
 
 /**
  * @defgroup views_argument_handlers Views argument handlers
@@ -40,7 +40,7 @@ use Drupal\views\Plugin\views\Handler;
  *
  * @ingroup views_argument_handlers
  */
-abstract class ArgumentPluginBase extends Handler {
+abstract class ArgumentPluginBase extends HandlerBase {
 
   var $validator = NULL;
   var $argument = NULL;

@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\views\View;
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
@@ -28,7 +28,7 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
  * The default display plugin handler. Display plugins handle options and
  * basic mechanisms for different output methods.
  */
-abstract class DisplayPluginBase extends Plugin {
+abstract class DisplayPluginBase extends PluginBase {
 
   /**
    * The top object of a view.

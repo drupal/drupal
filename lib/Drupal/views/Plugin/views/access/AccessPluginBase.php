@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\access;
 
-use Drupal\views\Plugin\views\Plugin;
+use Drupal\views\Plugin\views\PluginBase;
 
 /**
  * @defgroup views_access_plugins Views access plugins
@@ -20,7 +20,7 @@ use Drupal\views\Plugin\views\Plugin;
 /**
  * The base plugin to handle access control.
  */
-abstract class AccessPluginBase extends Plugin {
+abstract class AccessPluginBase extends PluginBase {
 
   /**
    * Initialize the plugin.
