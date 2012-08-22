@@ -66,6 +66,13 @@ class Entity implements EntityInterface {
   }
 
   /**
+   * Implements EntityInterface::uuid().
+   */
+  public function uuid() {
+    return isset($this->uuid) ? $this->uuid : NULL;
+  }
+
+  /**
    * Implements EntityInterface::isNew().
    */
   public function isNew() {

@@ -33,6 +33,17 @@ interface EntityInterface {
   public function id();
 
   /**
+   * Returns the entity UUID (Universally Unique Identifier).
+   *
+   * The UUID is guaranteed to be unique and can be used to identify an entity
+   * across multiple systems.
+   *
+   * @return string
+   *   The UUID of the entity, or NULL if the entity does not have one.
+   */
+  public function uuid();
+
+  /**
    * Returns whether the entity is new.
    *
    * Usually an entity is new if no ID exists for it yet. However, entities may
