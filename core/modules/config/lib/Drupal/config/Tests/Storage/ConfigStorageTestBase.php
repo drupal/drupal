@@ -68,6 +68,14 @@ abstract class ConfigStorageTestBase extends WebTestBase {
     $this->assertFalse(in_array('system.performance', $names));
     $this->assertTrue(in_array($name, $names));
 
+    // Rename the configuration storage object.
+    $new_name = 'config_test.storage_rename';
+    $this->storage->rename($name, $new_name);
+    $raw_data = $this->read($new_name);
+    $this->assertIdentical($raw_data, $data);
+    // Rename it back so further tests work.
+    $this->storage->rename($new_name, $name);
+
     // Deleting an existing name returns TRUE.
     $result = $this->storage->delete($name);
     $this->assertIdentical($result, TRUE);
@@ -109,6 +117,25 @@ abstract class ConfigStorageTestBase extends WebTestBase {
       $class = get_class($e);
       $this->pass($class . ' thrown upon listing from a non-existing storage bin.');
     }
+
+    // Test renaming an object that does not exist throws an exception.
+    try {
+      $this->storage->rename('config_test.storage_does_not_exist', 'config_test.storage_does_not_exist_rename');
+    }
+    catch (\Exception $e) {
+      $class = get_class($e);
+      $this->pass($class . ' thrown upon renaming a nonexistent storage bin.');
+    }
+
+    // Test renaming to an object that already exists throws an exception.
+    try {
+      $this->storage->rename('system.cron', 'system.performance');
+    }
+    catch (\Exception $e) {
+      $class = get_class($e);
+      $this->pass($class . ' thrown upon renaming a nonexistent storage bin.');
+    }
+
   }
 
   abstract protected function read($name);

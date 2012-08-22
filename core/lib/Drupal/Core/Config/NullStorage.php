@@ -50,6 +50,13 @@ class NullStorage implements StorageInterface {
   }
 
   /**
+   * Implements Drupal\Core\Config\StorageInterface::rename().
+   */
+  public function rename($name, $new_name) {
+    return FALSE;
+  }
+
+  /**
    * Implements Drupal\Core\Config\StorageInterface::encode().
    */
   public static function encode($data) {

@@ -61,6 +61,19 @@ interface StorageInterface {
   public function delete($name);
 
   /**
+   * Renames a configuration object in the storage.
+   *
+   * @param string $name
+   *   The name of a configuration object to rename.
+   * @param string $new_name
+   *   The new name of a configuration object.
+   *
+   * @return bool
+   *   TRUE on success, FALSE otherwise.
+   */
+  public function rename($name, $new_name);
+
+  /**
    * Encodes configuration data into the storage-specific format.
    *
    * @param array $data

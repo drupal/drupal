@@ -108,6 +108,17 @@ class FileStorage implements StorageInterface {
   }
 
   /**
+   * Implements Drupal\Core\Config\StorageInterface::delete().
+   */
+  public function rename($name, $new_name) {
+    $status = @rename($this->getFilePath($name), $this->getFilePath($new_name));
+    if ($status === FALSE) {
+      throw new StorageException('Failed to rename configuration file from: ' . $this->getFilePath($name) . ' to: ' . $this->getFilePath($new_name));
+    }
+    return TRUE;
+  }
+
+  /**
    * Implements Drupal\Core\Config\StorageInterface::encode().
    *
    * @throws Symfony\Component\Yaml\Exception\DumpException

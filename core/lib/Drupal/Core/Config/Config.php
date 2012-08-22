@@ -317,6 +317,19 @@ class Config {
     return $this;
   }
 
+  /*
+   * Renames the configuration object.
+   *
+   * @param $new_name
+   *   The new name of the configuration object being constructed.
+   */
+  public function rename($new_name) {
+    if ($this->storage->rename($this->name, $new_name)) {
+      $this->name = $new_name;
+    }
+    return $this;
+  }
+
   /**
    * Sorts all keys in configuration data.
    *

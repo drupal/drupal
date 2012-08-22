@@ -84,6 +84,13 @@ class ConfigCRUDTest extends WebTestBase {
     $new_config = config($name);
     $this->assertIdentical($new_config->get(), $config->get());
     $this->assertIdentical($config->isNew(), FALSE);
+
+    // Rename the configuration object.
+    $new_name = 'config_test.crud_rename';
+    $config->rename($new_name);
+    $renamed_config = config($new_name);
+    $this->assertIdentical($renamed_config->get(), $config->get());
+    $this->assertIdentical($renamed_config->isNew(), FALSE);
   }
 
   /**

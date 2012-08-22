@@ -99,6 +99,20 @@ class DatabaseStorage implements StorageInterface {
       ->execute();
   }
 
+
+  /**
+   * Implements Drupal\Core\Config\StorageInterface::rename().
+   *
+   * @throws PDOException
+   */
+  public function rename($name, $new_name) {
+    $options = array('return' => Database::RETURN_AFFECTED) + $this->options;
+    return (bool) $this->getConnection()->update('config', $options)
+      ->fields(array('name' => $new_name))
+      ->condition('name', $name)
+      ->execute();
+  }
+
   /**
    * Implements Drupal\Core\Config\StorageInterface::encode().
    */
