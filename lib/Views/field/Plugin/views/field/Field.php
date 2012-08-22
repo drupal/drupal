@@ -664,7 +664,7 @@ class Field extends FieldPluginBase {
           $keys = array();
           foreach ($entity_ids as $key => $combined) {
             list($entity_id, $revision_id) = $combined;
-            $entity = entity_load_multiple($entity_type, array($entity_id), array($entity_info['entity keys']['revision'] => $revision_id));
+            $entity = entity_revision_load($entity_type, $revision_id);
             if ($entity) {
               $entities[$revision_id] = array_shift($entity);
               $keys[$key] = $revision_id;

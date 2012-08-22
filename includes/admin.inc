@@ -785,7 +785,7 @@ function views_ui_taxonomy_autocomplete_validate($element, &$form_state) {
     // Store the term ID of each (valid) tag that the user typed.
     $typed_terms = drupal_explode_tags($tags);
     foreach ($typed_terms as $typed_term) {
-      if ($terms = taxonomy_term_load_multiple(array(), array('name' => trim($typed_term), 'vid' => array_keys($vocabularies)))) {
+      if ($terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => trim($typed_term), 'vid' => array_keys($vocabularies)))) {
         $term = array_pop($terms);
         $value['tids'][] = $term->tid;
       }
