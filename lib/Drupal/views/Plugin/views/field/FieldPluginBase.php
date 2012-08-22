@@ -500,7 +500,6 @@ abstract class FieldPluginBase extends Handler {
           ':input[name="options[custom_label]"]' => array('checked' => TRUE),
         ),
       ),
-
       '#weight' => -102,
     );
     $form['element_label_colon'] = array(
