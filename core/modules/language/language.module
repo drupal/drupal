@@ -188,7 +188,7 @@ function language_element_info_alter(&$type) {
  *   The processed form element.
  */
 function language_process_language_select($element) {
-  // Don't set the options if another module(translation for example) already
+  // Don't set the options if another module (translation for example) already
   // set the options.
   if (!isset($element['#options'])) {
     $element['#options'] = array();
