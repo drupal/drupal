@@ -713,6 +713,10 @@ function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
  *   The field name for the instance.
  * @param $bundle_name
  *   The bundle name for the instance.
+ *
+ * @return
+ *   An associative array of instance data for the specific field and bundle;
+ *   NULL if the instance does not exist.
  */
 function field_info_instance($entity_type, $field_name, $bundle_name) {
   $info = _field_info_collate_fields();
