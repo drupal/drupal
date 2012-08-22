@@ -100,7 +100,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
 
     // Create a working copy of the file.
     $files = $this->drupalGetTestFiles('image');
-    $file = reset($files);
+    $file = array_shift($files);
     $image_info = image_get_info($file->uri);
     $original_uri = file_unmanaged_copy($file->uri, $scheme . '://', FILE_EXISTS_RENAME);
     // Let the image_module_test module know about this file, so it can claim
@@ -126,7 +126,34 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('Content-Type'), $generated_image_info['mime_type'], t('Expected Content-Type was reported.'));
     $this->assertEqual($this->drupalGetHeader('Content-Length'), $generated_image_info['file_size'], t('Expected Content-Length was reported.'));
     if ($scheme == 'private') {
+      $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', t('Expires header was sent.'));
+      $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'no-cache, private', t('Cache-Control header was set to prevent caching.'));
       $this->assertEqual($this->drupalGetHeader('X-Image-Owned-By'), 'image_module_test', t('Expected custom header has been added.'));
+
+      // Make sure that a second request to the already existing derivate works
+      // too.
+      $this->drupalGet($generate_url);
+      $this->assertResponse(200, t('Image was generated at the URL.'));
+
+      // Repeat this with a different file that we do not have access to and
+      // make sure that access is denied.
+      $file_noaccess = array_shift($files);
+      $original_uri_noaccess = file_unmanaged_copy($file_noaccess->uri, $scheme . '://', FILE_EXISTS_RENAME);
+      $generated_uri_noaccess = $scheme . '://styles/' . $this->style_name . '/' . $scheme . '/'. drupal_basename($original_uri_noaccess);
+      $this->assertFalse(file_exists($generated_uri_noaccess), t('Generated file does not exist.'));
+      $generate_url_noaccess = image_style_url($this->style_name, $original_uri_noaccess);
+
+      $this->drupalGet($generate_url_noaccess);
+      $this->assertResponse(403, t('Confirmed that access is denied for the private image style.') );
+      // Verify that images are not appended to the response. Currently this test only uses PNG images.
+      if (strpos($generate_url, '.png') === FALSE ) {
+        $this->fail('Confirming that private image styles are not appended require PNG file.');
+      }
+      else {
+        // Check for PNG-Signature (cf. http://www.libpng.org/pub/png/book/chapter08.html#png.ch08.div.2) in the
+        // response body.
+        $this->assertNoRaw( chr(137) . chr(80) . chr(78) . chr(71) . chr(13) . chr(10) . chr(26) . chr(10), 'No PNG signature found in the response body.');
+      }
     }
 
     $GLOBALS['script_path'] = $script_path_original;
