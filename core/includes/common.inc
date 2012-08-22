@@ -2090,9 +2090,9 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  *     Defaults to empty string when clean URLs are in effect, and to
  *     'index.php/' when they are not.
  *   - 'entity_type': The entity type of the object that called url(). Only
- *     set if url() is invoked by entity_uri().
+ *     set if url() is invoked by Drupal\entity\Entity::uri().
  *   - 'entity': The entity object (such as a node) for which the URL is being
- *     generated. Only set if url() is invoked by entity_uri().
+ *     generated. Only set if url() is invoked by Drupal\entity\Entity::uri().
  *
  * @return
  *   A string containing a URL to the given path.

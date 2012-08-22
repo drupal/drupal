@@ -110,7 +110,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'url':
-          $uri = entity_uri('taxonomy_term', $term);
+          $uri = $term->uri();
           $replacements[$original] = url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE)));
           break;
 

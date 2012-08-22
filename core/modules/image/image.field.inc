@@ -546,7 +546,7 @@ function image_field_formatter_view($entity_type, $entity, $field, $instance, $l
 
   // Check if the formatter involves a link.
   if ($display['settings']['image_link'] == 'content') {
-    $uri = entity_uri($entity_type, $entity);
+    $uri = $entity->uri();
   }
   elseif ($display['settings']['image_link'] == 'file') {
     $link_file = TRUE;

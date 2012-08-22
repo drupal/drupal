@@ -598,7 +598,7 @@ function rdf_preprocess_field(&$variables) {
  */
 function rdf_preprocess_user_profile(&$variables) {
   $account = $variables['elements']['#account'];
-  $uri = entity_uri('user', $account);
+  $uri = $account->uri();
 
   // Adds RDFa markup to the user profile page. Fields displayed in this page
   // will automatically describe the user.
@@ -695,7 +695,7 @@ function rdf_preprocess_comment(&$variables) {
     // the URI of the resource described within the HTML element, while the
     // typeof attribute indicates its RDF type (e.g., sioc:Post, foaf:Document,
     // and so on.)
-    $uri = entity_uri('comment', $comment);
+    $uri = $comment->uri();
     $variables['attributes']['about'] = url($uri['path'], $uri['options']);
     $variables['attributes']['typeof'] = $comment->rdf_mapping['rdftype'];
   }

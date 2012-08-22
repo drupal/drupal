@@ -116,7 +116,7 @@ class RegisterFormController extends AccountFormController {
     $account->password = $pass;
 
     // New administrative account without notification.
-    $uri = entity_uri('user', $account);
+    $uri = $account->uri();
     if ($admin && !$notify) {
       drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
     }

@@ -6,7 +6,6 @@
  */
 
 use \InvalidArgumentException;
-
 use Drupal\entity\EntityFieldQuery;
 use Drupal\entity\EntityMalformedException;
 use Drupal\entity\EntityStorageException;
@@ -368,48 +367,6 @@ function entity_prepare_view($entity_type, $entities) {
 
   if (!empty($prepare)) {
     module_invoke_all('entity_prepare_view', $prepare, $entity_type);
-  }
-}
-
-/**
- * Returns the uri elements of an entity.
- *
- * @param $entity_type
- *   The entity type; e.g. 'node' or 'user'.
- * @param $entity
- *   The entity for which to generate a path.
- *
- * @return
- *   An array containing the 'path' and 'options' keys used to build the uri of
- *   the entity, and matching the signature of url(). NULL if the entity has no
- *   uri of its own.
- *
- * @todo
- *   Remove once all entity types are implementing the EntityInterface.
- */
-function entity_uri($entity_type, $entity) {
-  $info = entity_get_info($entity_type);
-
-  // A bundle-specific callback takes precedence over the generic one for the
-  // entity type.
-  if (isset($info['bundles'][$entity->bundle()]['uri callback'])) {
-    $uri_callback = $info['bundles'][$entity->bundle()]['uri callback'];
-  }
-  elseif (isset($info['uri callback'])) {
-    $uri_callback = $info['uri callback'];
-  }
-  else {
-    return NULL;
-  }
-
-  // Invoke the callback to get the URI. If there is no callback, return NULL.
-  if (isset($uri_callback)) {
-    $uri = $uri_callback($entity);
-    // Pass the entity data to url() so that alter functions do not need to
-    // lookup this entity again.
-    $uri['options']['entity_type'] = $entity_type;
-    $uri['options']['entity'] = $entity;
-    return $uri;
   }
 }
 

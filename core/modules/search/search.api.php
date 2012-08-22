@@ -236,7 +236,7 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
     $extra = module_invoke_all('node_search_result', $node, $item->langcode);
 
     $language = language_load($item->langcode);
-    $uri = entity_uri('node', $node);
+    $uri = $node->uri();
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),
       'type' => check_plain(node_type_get_name($node)),

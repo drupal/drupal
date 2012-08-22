@@ -117,8 +117,6 @@ class Entity implements EntityInterface {
 
   /**
    * Implements EntityInterface::uri().
-   *
-   * @see entity_uri()
    */
   public function uri() {
     $bundle = $this->bundle();

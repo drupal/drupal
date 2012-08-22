@@ -1330,7 +1330,7 @@ function template_preprocess_node(&$variables) {
     'link_attributes' => array('rel' => 'author'),
   ));
 
-  $uri = entity_uri('node', $node);
+  $uri = $node->uri();
   $variables['node_url']  = url($uri['path'], $uri['options']);
   $variables['title']     = check_plain($node->title);
   $variables['page']      = $variables['view_mode'] == 'full' && node_is_page($node);
@@ -1568,7 +1568,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
     $extra = module_invoke_all('node_search_result', $node, $item->langcode);
 
     $language = language_load($item->langcode);
-    $uri = entity_uri('node', $node);
+    $uri = $node->uri();
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),
       'type' => check_plain(node_type_get_name($node)),
@@ -2561,7 +2561,7 @@ function node_page_view(Node $node) {
   // of the active trail, and the link name becomes the page title.
   // Thus, we must explicitly set the page title to be the node title.
   drupal_set_title($node->label());
-  $uri = entity_uri('node', $node);
+  $uri = $node->uri();
   // Set the node path as the canonical URL to prevent duplicate content.
   drupal_add_html_head_link(array('rel' => 'canonical', 'href' => url($uri['path'], $uri['options'])), TRUE);
   // Set the non-aliased path as a default shortlink.
