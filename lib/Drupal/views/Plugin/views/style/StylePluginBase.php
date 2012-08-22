@@ -324,7 +324,7 @@ abstract class StylePluginBase extends PluginBase {
    */
   function render() {
     if ($this->uses_row_plugin() && empty($this->row_plugin)) {
-      debug('views_plugin_style_default: Missing row plugin');
+      vpr('Drupal\views\Plugin\views\style\StylePluginBase: Missing row plugin');
       return;
     }
 
