@@ -104,7 +104,7 @@ class Entity implements EntityInterface {
    * Implements EntityInterface::label().
    */
   public function label($langcode = NULL) {
-    $label = FALSE;
+    $label = NULL;
     $entity_info = $this->entityInfo();
     if (isset($entity_info['label callback']) && function_exists($entity_info['label callback'])) {
       $label = $entity_info['label callback']($this->entityType, $this, $langcode);
