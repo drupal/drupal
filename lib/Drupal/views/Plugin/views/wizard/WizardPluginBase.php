@@ -278,7 +278,7 @@ abstract class WizardPluginBase implements WizardInterface {
     // @fixme
 
     $style_plugin = views_get_plugin('style', $style);
-    if (isset($style_plugin) && $style_plugin->uses_row_plugin()) {
+    if (isset($style_plugin) && $style_plugin->usesRowPlugin()) {
       $options = $this->row_style_options($type);
       $style_form['row_plugin'] = array(
         '#type' => 'select',
@@ -300,7 +300,7 @@ abstract class WizardPluginBase implements WizardInterface {
         '#theme_wrappers' => array('container'),
       );
     }
-    elseif ($style_plugin->uses_fields()) {
+    elseif ($style_plugin->usesFields()) {
       $style_form['row_plugin'] = array('#markup' => '<span>' . t('of fields') . '</span>');
     }
   }

@@ -23,12 +23,18 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Fields"),
  *   help = @Translation("Displays the fields with an optional template."),
  *   theme = "views_view_fields",
- *   uses_fields = TRUE,
  *   type = "normal",
  *   help_topic = "style-row-fields"
  * )
  */
 class Fields extends RowPluginBase {
+
+  /**
+   * Does the row plugin support to add fields to it's output.
+   *
+   * @var bool
+   */
+  public $usesFields = TRUE;
 
   function option_definition() {
     $options = parent::option_definition();

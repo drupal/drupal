@@ -20,12 +20,18 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("RSS Feed"),
  *   help = @Translation("Generates an RSS feed from a view."),
  *   theme = "views_view_rss",
- *   uses_row_plugin = TRUE,
  *   type = "feed",
  *   help_topic = "style-rss"
  * )
  */
 class Rss extends StylePluginBase {
+
+  /**
+   * Does the style plugin for itself support to add fields to it's output.
+   *
+   * @var bool
+   */
+  public $usesRowPlugin = TRUE;
 
   function attach_to($display_id, $path, $title) {
     $display = $this->view->display[$display_id]->handler;

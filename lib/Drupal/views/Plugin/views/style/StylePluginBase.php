@@ -49,6 +49,30 @@ abstract class StylePluginBase extends PluginBase {
   var $row_plugin;
 
   /**
+   * Does the style plugin allows to use style plugins.
+   *
+   * @var bool
+   */
+  public $usesRowPlugin = FALSE;
+
+  /**
+   * Does the style plugin support custom css class for the rows.
+   *
+   * @var bool
+   */
+  public $usesRowClass = FALSE;
+
+  /**
+   * Does the style plugin for itself support to add fields to it's output.
+   *
+   * This option only makes sense on style plugins without row plugins, like
+   * for example table.
+   *
+   * @var bool
+   */
+  public $usesFields = FALSE;
+
+  /**
    * Initialize a style plugin.
    *
    * @param $view
@@ -64,7 +88,7 @@ abstract class StylePluginBase extends PluginBase {
     // Overlay incoming options on top of defaults
     $this->unpack_options($this->options, isset($options) ? $options : $display->handler->get_option('style_options'));
 
-    if ($this->uses_row_plugin() && $display->handler->get_option('row_plugin')) {
+    if ($this->usesRowPlugin() && $display->handler->get_option('row_plugin')) {
       $this->row_plugin = $display->handler->get_plugin('row');
     }
 
@@ -86,17 +110,22 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
-   * Return TRUE if this style also uses a row plugin.
+   * Returns the usesRowPlugin property.
+   *
+   * @return bool
    */
-  function uses_row_plugin() {
-    return !empty($this->definition['uses_row_plugin']);
+  function usesRowPlugin() {
+    return $this->usesRowPlugin;
+
   }
 
   /**
-   * Return TRUE if this style also uses a row plugin.
+   * Returns the usesRowClass property.
+   *
+   * @return bool
    */
-  function uses_row_class() {
-    return !empty($this->definition['uses_row_class']);
+  function usesRowClass() {
+    return $this->usesRowClass;
   }
 
   /**
@@ -104,15 +133,15 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @return bool
    */
-  function uses_fields() {
+  function usesFields() {
     // If we use a row plugin, ask the row plugin. Chances are, we don't
     // care, it does.
     $row_uses_fields = FALSE;
-    if ($this->uses_row_plugin() && !empty($this->row_plugin)) {
-      $row_uses_fields = $this->row_plugin->uses_fields();
+    if ($this->usesRowPlugin() && !empty($this->row_plugin)) {
+      $row_uses_fields = $this->row_plugin->usesFields();
     }
     // Otherwise, check the definition or the option.
-    return $row_uses_fields || !empty($this->definition['uses_fields']) || !empty($this->options['uses_fields']);
+    return $row_uses_fields || $this->usesFields || !empty($this->options['uses_fields']);
   }
 
   /**
@@ -121,7 +150,7 @@ abstract class StylePluginBase extends PluginBase {
    * Used to ensure we don't fetch tokens when not needed for performance.
    */
   function uses_tokens() {
-    if ($this->uses_row_class()) {
+    if ($this->usesRowClass()) {
       $class = $this->options['row_class'];
       if (strpos($class, '[') !== FALSE || strpos($class, '!') !== FALSE || strpos($class, '%') !== FALSE) {
         return TRUE;
@@ -133,9 +162,9 @@ abstract class StylePluginBase extends PluginBase {
    * Return the token replaced row class for the specified row.
    */
   function get_row_class($row_index) {
-    if ($this->uses_row_class()) {
+    if ($this->usesRowClass()) {
       $class = $this->options['row_class'];
-      if ($this->uses_fields() && $this->view->field) {
+      if ($this->usesFields() && $this->view->field) {
         $class = strip_tags($this->tokenize_value($class, $row_index));
       }
 
@@ -181,7 +210,7 @@ abstract class StylePluginBase extends PluginBase {
   function option_definition() {
     $options = parent::option_definition();
     $options['grouping'] = array('default' => array());
-    if ($this->uses_row_class()) {
+    if ($this->usesRowClass()) {
       $options['row_class'] = array('default' => '');
       $options['default_row_class'] = array('default' => TRUE, 'bool' => TRUE);
       $options['row_class_special'] = array('default' => TRUE, 'bool' => TRUE);
@@ -197,7 +226,7 @@ abstract class StylePluginBase extends PluginBase {
     // themselves from being groupable by setting their "use grouping" definiton
     // key to FALSE.
     // @TODO: Document "uses grouping" in docs.php when docs.php is written.
-    if ($this->uses_fields() && $this->definition['uses_grouping']) {
+    if ($this->usesFields() && $this->definition['uses_grouping']) {
       $options = array('' => t('- None -'));
       $field_labels = $this->display->handler->get_field_labels(TRUE);
       $options += $field_labels;
@@ -251,7 +280,7 @@ abstract class StylePluginBase extends PluginBase {
       }
     }
 
-    if ($this->uses_row_class()) {
+    if ($this->usesRowClass()) {
       $form['row_class'] = array(
         '#title' => t('Row class'),
         '#description' => t('The class to provide on each row.'),
@@ -259,7 +288,7 @@ abstract class StylePluginBase extends PluginBase {
         '#default_value' => $this->options['row_class'],
       );
 
-      if ($this->uses_fields()) {
+      if ($this->usesFields()) {
         $form['row_class']['#description'] .= ' ' . t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
       }
 
@@ -277,7 +306,7 @@ abstract class StylePluginBase extends PluginBase {
       );
     }
 
-    if (!$this->uses_fields() || !empty($this->options['uses_fields'])) {
+    if (!$this->usesFields() || !empty($this->options['uses_fields'])) {
       $form['uses_fields'] = array(
         '#type' => 'checkbox',
         '#title' => t('Force using fields'),
@@ -328,7 +357,7 @@ abstract class StylePluginBase extends PluginBase {
    * Render the display in this style.
    */
   function render() {
-    if ($this->uses_row_plugin() && empty($this->row_plugin)) {
+    if ($this->usesRowPlugin() && empty($this->row_plugin)) {
       vpr('Drupal\views\Plugin\views\style\StylePluginBase: Missing row plugin');
       return;
     }
@@ -374,7 +403,7 @@ abstract class StylePluginBase extends PluginBase {
       }
       // Render as a record set.
       else {
-        if ($this->uses_row_plugin()) {
+        if ($this->usesRowPlugin()) {
           foreach ($set['rows'] as $index => $row) {
             $this->view->row_index = $index;
             $set['rows'][$index] = $this->row_plugin->render($row);
@@ -523,7 +552,7 @@ abstract class StylePluginBase extends PluginBase {
    *   The result array from $view->result
    */
   function render_fields($result) {
-    if (!$this->uses_fields()) {
+    if (!$this->usesFields()) {
       return;
     }
 
@@ -586,7 +615,7 @@ abstract class StylePluginBase extends PluginBase {
   function validate() {
     $errors = parent::validate();
 
-    if ($this->uses_row_plugin()) {
+    if ($this->usesRowPlugin()) {
       $plugin = $this->display->handler->get_plugin('row');
       if (empty($plugin)) {
         $errors[] = t('Style @style requires a row style but the row plugin is invalid.', array('@style' => $this->definition['title']));

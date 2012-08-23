@@ -20,14 +20,25 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Grid"),
  *   help = @Translation("Displays rows in a grid."),
  *   theme = "views_view_grid",
- *   uses_fields = FALSE,
- *   uses_row_plugin = TRUE,
- *   uses_row_class = TRUE,
  *   type = "normal",
  *   help_topic = "style-grid"
  * )
  */
 class Grid extends StylePluginBase {
+
+  /**
+   * Does the style plugin allows to use style plugins.
+   *
+   * @var bool
+   */
+  public $usesRowPlugin = TRUE;
+
+  /**
+   * Does the style plugin support custom css class for the rows.
+   *
+   * @var bool
+   */
+  public $usesRowClass = TRUE;
 
   /**
    * Set default options

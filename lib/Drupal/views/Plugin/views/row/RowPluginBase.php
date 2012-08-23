@@ -32,6 +32,13 @@ abstract class RowPluginBase extends PluginBase {
   public $usesOptions = TRUE;
 
   /**
+   * Does the row plugin support to add fields to it's output.
+   *
+   * @var bool
+   */
+  public $usesFields = FALSE;
+
+  /**
    * Initialize the row plugin.
    */
   function init(&$view, &$display, $options = NULL) {
@@ -42,8 +49,13 @@ abstract class RowPluginBase extends PluginBase {
     $this->unpack_options($this->options, isset($options) ? $options : $display->handler->get_option('row_options'));
   }
 
-  function uses_fields() {
-    return !empty($this->definition['uses_fields']);
+  /**
+   * Returns the usesFields property.
+   *
+   * @return bool
+   */
+  function usesFields() {
+    return $this->usesFields;
   }
 
 

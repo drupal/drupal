@@ -20,13 +20,25 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("HTML List"),
  *   help = @Translation("Displays rows as HTML list."),
  *   theme = "views_view_list",
- *   uses_row_plugin = TRUE,
- *   uses_row_class = TRUE,
  *   type = "normal",
  *   help_topic = "style-list"
  * )
  */
 class HtmlList extends StylePluginBase {
+
+  /**
+   * Does the style plugin allows to use style plugins.
+   *
+   * @var bool
+   */
+  public $usesRowPlugin = TRUE;
+
+  /**
+   * Does the style plugin support custom css class for the rows.
+   *
+   * @var bool
+   */
+  public $usesRowClass = TRUE;
 
   /**
    * Set default options

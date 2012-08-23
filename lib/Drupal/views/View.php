@@ -1019,7 +1019,7 @@ class View extends ViewsDbObject {
       return FALSE;
     }
 
-    if ($this->style_plugin->uses_fields()) {
+    if ($this->style_plugin->usesFields()) {
       $this->_build('field');
     }
 
@@ -1245,7 +1245,7 @@ class View extends ViewsDbObject {
 
       // Give field handlers the opportunity to perform additional queries
       // using the entire resultset prior to rendering.
-      if ($this->style_plugin->uses_fields()) {
+      if ($this->style_plugin->usesFields()) {
         foreach ($this->field as $id => $handler) {
           if (!empty($this->field[$id])) {
             $this->field[$id]->pre_render($this->result);

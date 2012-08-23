@@ -843,11 +843,13 @@ abstract class DisplayPluginBase extends PluginBase {
 
   /**
    * Determine if the display's style uses fields.
+   *
+   * @return bool
    */
-  function uses_fields() {
-    $plugin = $this->get_plugin();
+  function usesFields() {
+    $plugin = $this->get_plugin('style');
     if ($plugin) {
-      return $plugin->uses_fields();
+      return $plugin->usesFields();
     }
   }
 
@@ -1218,7 +1220,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $options['style_plugin']['links']['style_options'] = t('Change settings for this format');
     }
 
-    if (!empty($style_plugin['uses_row_plugin'])) {
+    if ($style_plugin_instance->usesRowPlugin()) {
       $manager = new ViewsPluginManager('row');
       $row_plugin = $manager->getDefinition($this->get_option('row_plugin'));
       $row_plugin_instance = $this->get_plugin('row');
@@ -1947,7 +1949,7 @@ abstract class DisplayPluginBase extends PluginBase {
             }
           }
 
-          if ($plugin->uses_row_plugin()) {
+          if ($plugin->usesRowPlugin()) {
             $row_plugin = $this->get_plugin('row');
             if ($row_plugin) {
               $funcs[] = $this->option_link(t('Row style output'), 'analyze-theme-row') . ': ' . $this->format_themes($row_plugin->theme_functions());
@@ -1960,7 +1962,7 @@ abstract class DisplayPluginBase extends PluginBase {
             }
           }
 
-          if ($plugin->uses_fields()) {
+          if ($plugin->usesFields()) {
             foreach ($this->get_handlers('field') as $id => $handler) {
               $funcs[] = $this->option_link(t('Field @field (ID: @id)', array('@field' => $handler->ui_name(), '@id' => $id)), 'analyze-theme-field') . ': ' . $this->format_themes($handler->theme_functions());
             }
@@ -2729,7 +2731,7 @@ abstract class DisplayPluginBase extends PluginBase {
   function validate() {
     $errors = array();
     // Make sure displays that use fields HAVE fields.
-    if ($this->uses_fields()) {
+    if ($this->usesFields()) {
       $fields = FALSE;
       foreach ($this->get_handlers('field') as $field) {
         if (empty($field->options['exclude'])) {
@@ -2946,7 +2948,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $plugin = $style_plugin;
     }
     else {
-      if (!$style_plugin || !$style_plugin->uses_row_plugin()) {
+      if (!$style_plugin || !$style_plugin->usesRowPlugin()) {
         return;
       }
 
@@ -3007,7 +3009,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $plugin = $style_plugin;
     }
     else {
-      if (!$style_plugin || !$style_plugin->uses_row_plugin()) {
+      if (!$style_plugin || !$style_plugin->usesRowPlugin()) {
         return;
       }
 

@@ -20,14 +20,32 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Table"),
  *   help = @Translation("Displays rows in a table."),
  *   theme = "views_view_table",
- *   uses_row_plugin = FALSE,
- *   uses_row_class = TRUE,
- *   uses_fields = TRUE,
  *   type = "normal",
  *   help_topic = "style-table"
  * )
  */
 class Table extends StylePluginBase {
+
+  /**
+   * Does the style plugin for itself support to add fields to it's output.
+   *
+   * @var bool
+   */
+  public $usesFields = TRUE;
+
+  /**
+   * Does the style plugin allows to use style plugins.
+   *
+   * @var bool
+   */
+  public $usesRowPlugin = FALSE;
+
+  /**
+   * Does the style plugin support custom css class for the rows.
+   *
+   * @var bool
+   */
+  public $usesRowClass = TRUE;
 
   /**
    * Contains the current active sort column.

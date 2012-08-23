@@ -18,12 +18,18 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Fields"),
  *   help = @Translation("Display fields as RSS items."),
  *   theme = "views_view_row_rss",
- *   uses_fields = TRUE,
  *   type = "feed",
  *   help_topic = "style-row-fields"
  * )
  */
 class RssFields extends RowPluginBase {
+
+  /**
+   * Does the row plugin support to add fields to it's output.
+   *
+   * @var bool
+   */
+  public $usesFields = TRUE;
 
   function option_definition() {
     $options = parent::option_definition();

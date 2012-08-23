@@ -2054,7 +2054,7 @@ function views_ui_import_validate($form, &$form_state) {
         drupal_set_message(t('Style plugin @plugin is not available.', array('@plugin' => $display->handler->get_option('style_plugin'))), 'error');
         $broken = TRUE;
       }
-      elseif ($plugin->uses_row_plugin()) {
+      elseif ($plugin->usesRowPlugin()) {
         $plugin = views_get_plugin('row', $display->handler->get_option('row_plugin'));
         if (!$plugin) {
           drupal_set_message(t('Row plugin @plugin is not available.', array('@plugin' => $display->handler->get_option('row_plugin'))), 'error');
@@ -2210,7 +2210,7 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
     case 'field':
       // Fetch the style plugin info so we know whether to list fields or not.
       $style_plugin = $display->handler->get_plugin();
-      $uses_fields = $style_plugin && $style_plugin->uses_fields();
+      $uses_fields = $style_plugin && $style_plugin->usesFields();
       if (!$uses_fields) {
         $build['fields'][] = array(
           '#markup' => t('The selected style or row format does not utilize fields.'),
