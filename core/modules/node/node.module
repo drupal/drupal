@@ -1202,6 +1202,10 @@ function node_build_content(Node $node, $view_mode = 'full', $langcode = NULL) {
   // Remove previously built content, if exists.
   $node->content = array();
 
+  // Allow modules to change the view mode.
+  $context = array('langcode' => $langcode);
+  drupal_alter('entity_view_mode', $view_mode, $node, $context);
+
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
   if (node_hook($node, 'view')) {
