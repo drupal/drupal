@@ -51,7 +51,7 @@ abstract class PluginBase extends ComponentPluginBase {
    *
    * @var bool
    */
-  public $usesOptions = FALSE;
+  protected $usesOptions = FALSE;
 
   /**
    * Constructs a Plugin object.
@@ -462,7 +462,7 @@ abstract class PluginBase extends ComponentPluginBase {
   /**
    * Returns the usesOptions property.
    */
-  function usesOptions() {
+  public function usesOptions() {
     return $this->usesOptions;
   }
 

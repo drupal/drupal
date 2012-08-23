@@ -33,7 +33,7 @@ abstract class StylePluginBase extends PluginBase {
   /**
    * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
    */
-  public $usesOptions = TRUE;
+  protected $usesOptions = TRUE;
 
   /**
    * Store all available tokens row rows.
@@ -53,14 +53,14 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @var bool
    */
-  public $usesRowPlugin = FALSE;
+  protected $usesRowPlugin = FALSE;
 
   /**
    * Does the style plugin support custom css class for the rows.
    *
    * @var bool
    */
-  public $usesRowClass = FALSE;
+  protected $usesRowClass = FALSE;
 
   /**
    * Does the style plugin for itself support to add fields to it's output.
@@ -70,7 +70,7 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @var bool
    */
-  public $usesFields = FALSE;
+  protected $usesFields = FALSE;
 
   /**
    * Initialize a style plugin.

@@ -29,14 +29,14 @@ abstract class RowPluginBase extends PluginBase {
   /**
    * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
    */
-  public $usesOptions = TRUE;
+  protected $usesOptions = TRUE;
 
   /**
    * Does the row plugin support to add fields to it's output.
    *
    * @var bool
    */
-  public $usesFields = FALSE;
+  protected $usesFields = FALSE;
 
   /**
    * Initialize the row plugin.

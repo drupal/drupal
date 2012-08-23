@@ -27,7 +27,7 @@ class Permission extends AccessPluginBase {
   /**
    * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
    */
-  public $usesOptions = TRUE;
+  protected $usesOptions = TRUE;
 
   function access($account) {
     return views_check_perm($this->options['perm'], $account);

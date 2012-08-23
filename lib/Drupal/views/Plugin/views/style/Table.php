@@ -31,21 +31,21 @@ class Table extends StylePluginBase {
    *
    * @var bool
    */
-  public $usesFields = TRUE;
+  protected $usesFields = TRUE;
 
   /**
    * Does the style plugin allows to use style plugins.
    *
    * @var bool
    */
-  public $usesRowPlugin = FALSE;
+  protected $usesRowPlugin = FALSE;
 
   /**
    * Does the style plugin support custom css class for the rows.
    *
    * @var bool
    */
-  public $usesRowClass = TRUE;
+  protected $usesRowClass = TRUE;
 
   /**
    * Contains the current active sort column.

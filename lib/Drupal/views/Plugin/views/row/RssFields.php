@@ -29,7 +29,7 @@ class RssFields extends RowPluginBase {
    *
    * @var bool
    */
-  public $usesFields = TRUE;
+  protected $usesFields = TRUE;
 
   function option_definition() {
     $options = parent::option_definition();

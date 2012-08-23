@@ -31,7 +31,7 @@ class Rss extends StylePluginBase {
    *
    * @var bool
    */
-  public $usesRowPlugin = TRUE;
+  protected $usesRowPlugin = TRUE;
 
   function attach_to($display_id, $path, $title) {
     $display = $this->view->display[$display_id]->handler;

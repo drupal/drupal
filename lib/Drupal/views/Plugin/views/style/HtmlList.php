@@ -31,14 +31,14 @@ class HtmlList extends StylePluginBase {
    *
    * @var bool
    */
-  public $usesRowPlugin = TRUE;
+  protected $usesRowPlugin = TRUE;
 
   /**
    * Does the style plugin support custom css class for the rows.
    *
    * @var bool
    */
-  public $usesRowClass = TRUE;
+  protected $usesRowClass = TRUE;
 
   /**
    * Set default options

@@ -47,7 +47,7 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
    */
-  public $usesOptions = TRUE;
+  protected $usesOptions = TRUE;
 
   /**
    * Stores the rendered output of the display.

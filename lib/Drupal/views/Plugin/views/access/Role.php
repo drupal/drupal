@@ -27,7 +27,7 @@ class Role extends AccessPluginBase {
   /**
    * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
    */
-  public $usesOptions = TRUE;
+  protected $usesOptions = TRUE;
 
   function access($account) {
     return views_check_roles(array_filter($this->options['role']), $account);

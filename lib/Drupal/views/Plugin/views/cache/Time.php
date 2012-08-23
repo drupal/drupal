@@ -27,7 +27,7 @@ class Time extends CachePluginBase {
   /**
    * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
    */
-  public $usesOptions = TRUE;
+  protected $usesOptions = TRUE;
 
   function option_definition() {
     $options = parent::option_definition();
