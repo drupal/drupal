@@ -509,6 +509,12 @@ function drupal_http_build_query(array $query, $parent = '') {
  * previous request, that destination is returned. As such, a destination can
  * persist across multiple pages.
  *
+ * @return
+ *   An associative array containing the key:
+ *   - destination: The path provided via the destination query string or, if
+ *     not available, the current path.
+ *
+ * @see current_path()
  * @see drupal_goto()
  */
 function drupal_get_destination() {
