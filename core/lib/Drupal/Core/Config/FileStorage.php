@@ -108,7 +108,7 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::delete().
+   * Implements Drupal\Core\Config\StorageInterface::rename().
    */
   public function rename($name, $new_name) {
     $status = @rename($this->getFilePath($name), $this->getFilePath($new_name));
