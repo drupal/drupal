@@ -20,7 +20,6 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Display all items"),
  *   help = @Translation("Display all items that this view might find."),
  *   help_topic = "pager-none",
- *   uses_options = TRUE,
  *   type = "basic"
  * )
  */

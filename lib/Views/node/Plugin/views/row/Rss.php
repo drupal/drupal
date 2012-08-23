@@ -22,7 +22,6 @@ use stdClass;
  *   help = @Translation("Display the content with standard node view."),
  *   theme = "views_view_row_rss",
  *   base = {"node"},
- *   uses_options = TRUE,
  *   type = "feed",
  *   module = "node",
  *   help_topic = "style-node-rss"

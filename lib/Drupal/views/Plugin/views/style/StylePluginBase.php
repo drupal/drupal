@@ -31,6 +31,11 @@ use Drupal\Core\Annotation\Translation;
 abstract class StylePluginBase extends PluginBase {
 
   /**
+   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   */
+  public $usesOptions = TRUE;
+
+  /**
    * Store all available tokens row rows.
    */
   var $row_tokens = array();

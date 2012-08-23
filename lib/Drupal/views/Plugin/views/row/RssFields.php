@@ -19,7 +19,6 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Display fields as RSS items."),
  *   theme = "views_view_row_rss",
  *   uses_fields = TRUE,
- *   uses_options = TRUE,
  *   type = "feed",
  *   help_topic = "style-row-fields"
  * )

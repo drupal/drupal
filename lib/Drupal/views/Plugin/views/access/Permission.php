@@ -19,11 +19,15 @@ use Drupal\Core\Annotation\Translation;
  *   id = "perm",
  *   title = @Translation("Permission"),
  *   help = @Translation("Access will be granted to users with the specified permission string."),
- *   help_topic = "access-perm",
- *   uses_options = TRUE
+ *   help_topic = "access-perm"
  * )
  */
 class Permission extends AccessPluginBase {
+
+  /**
+   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   */
+  public $usesOptions = TRUE;
 
   function access($account) {
     return views_check_perm($this->options['perm'], $account);

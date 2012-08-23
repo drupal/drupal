@@ -19,7 +19,6 @@ use Drupal\Core\Annotation\Translation;
  *   id = "basic",
  *   title = @Translation("Basic"),
  *   help = @Translation("Basic exposed form"),
- *   uses_options = TRUE,
  *   help_topic = "exposed-form-basic"
  * )
  */

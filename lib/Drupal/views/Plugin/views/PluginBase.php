@@ -46,6 +46,13 @@ abstract class PluginBase extends ComponentPluginBase {
    */
   public $localization_keys;
 
+   /**
+   * Denotes whether the plugin has an additional options form.
+   *
+   * @var bool
+   */
+  public $usesOptions = FALSE;
+
   /**
    * Constructs a Plugin object.
    */
@@ -450,6 +457,13 @@ abstract class PluginBase extends ComponentPluginBase {
       return check_plain($this->definition['short_title']);
     }
     return check_plain($this->definition['title']);
+  }
+
+  /**
+   * Returns the usesOptions property.
+   */
+  function usesOptions() {
+    return $this->usesOptions;
   }
 
 }

@@ -678,10 +678,10 @@ abstract class ArgumentPluginBase extends HandlerBase {
     );
 
     foreach ($summary_plugins as $id => $info) {
-      if (empty($info['uses_options'])) {
+      $plugin = $this->get_plugin('style', $id);
+      if (!$plugin->usesOptions()) {
         continue;
       }
-      $plugin = $this->get_plugin('style', $id);
       if ($plugin) {
         $form['summary']['options'][$id] = array(
           '#prefix' => '<div id="edit-options-summary-options-' . $id . '-wrapper">',

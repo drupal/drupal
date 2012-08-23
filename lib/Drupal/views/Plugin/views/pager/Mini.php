@@ -20,8 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Paged output, mini pager"),
  *   short_title = @Translation("Mini"),
  *   help = @Translation("Use the mini pager output."),
- *   help_topic = "pager-mini",
- *   uses_options = TRUE
+ *   help_topic = "pager-mini"
  * )
  */
 class Mini extends PagerPluginBase {

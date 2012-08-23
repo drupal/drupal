@@ -27,6 +27,11 @@ use Drupal\views\Plugin\views\PluginBase;
 abstract class RowPluginBase extends PluginBase {
 
   /**
+   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   */
+  public $usesOptions = TRUE;
+
+  /**
    * Initialize the row plugin.
    */
   function init(&$view, &$display, $options = NULL) {

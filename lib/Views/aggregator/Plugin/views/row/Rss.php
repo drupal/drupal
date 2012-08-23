@@ -20,7 +20,6 @@ use Drupal\Core\Annotation\Translation;
  *   theme = "views_view_row_rss",
  *   title = @Translation("Aggregator item"),
  *   help = @Translation("Display the aggregator item using the data from the original source."),
- *   uses_options = TRUE,
  *   type = "feed",
  *   help_topic = "style-aggregator-rss"
  * )

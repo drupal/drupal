@@ -19,7 +19,6 @@ use Drupal\Core\Annotation\Translation;
  *   id = "input_required",
  *   title = @Translation("Input required"),
  *   help = @Translation("An exposed form that only renders a view if the form contains user input."),
- *   uses_options = TRUE,
  *   help_topic = "exposed-form-input-required"
  * )
  */

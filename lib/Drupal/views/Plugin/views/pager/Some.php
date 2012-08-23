@@ -20,7 +20,6 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Display a specified number of items"),
  *   help = @Translation("Display a limited number items that this view might find."),
  *   help_topic = "pager-some",
- *   uses_options = TRUE,
  *   type = "basic"
  * )
  */

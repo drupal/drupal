@@ -27,6 +27,11 @@ abstract class PagerPluginBase extends PluginBase {
   var $total_items = 0;
 
   /**
+   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   */
+  public $usesOptions = TRUE;
+
+  /**
    * Initialize the plugin.
    *
    * @param $view

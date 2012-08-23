@@ -45,6 +45,11 @@ abstract class DisplayPluginBase extends PluginBase {
   var $extender = array();
 
   /**
+   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   */
+  public $usesOptions = TRUE;
+
+  /**
    * Stores the rendered output of the display.
    *
    * @see View::render
@@ -1209,7 +1214,7 @@ abstract class DisplayPluginBase extends PluginBase {
     );
 
     // This adds a 'Settings' link to the style_options setting if the style has options.
-    if (!empty($style_plugin['uses_options'])) {
+    if ($style_plugin_instance->usesOptions()) {
       $options['style_plugin']['links']['style_options'] = t('Change settings for this format');
     }
 
@@ -1228,7 +1233,7 @@ abstract class DisplayPluginBase extends PluginBase {
         'desc' => t('Change the way each row in the view is styled.'),
       );
       // This adds a 'Settings' link to the row_options setting if the row style has options.
-      if (!empty($row_plugin['uses_options'])) {
+      if ($row_plugin_instance->usesOptions()) {
         $options['row_plugin']['links']['row_options'] = t('Change settings for this style');
       }
     }
@@ -1278,7 +1283,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $options['pager']['title'] = t('Items to display');
     }
 
-    if (!empty($pager_plugin->definition['uses_options'])) {
+    if ($pager_plugin->usesOptions()) {
       $options['pager']['links']['pager_options'] = t('Change settings for this pager type.');
     }
 
@@ -1340,7 +1345,7 @@ abstract class DisplayPluginBase extends PluginBase {
       'desc' => t('Specify access control type for this display.'),
     );
 
-    if (!empty($access_plugin->definition['uses_options'])) {
+    if ($access_plugin->usesOptions()) {
       $options['access']['links']['access_options'] = t('Change settings for this access type.');
     }
 
@@ -1360,11 +1365,11 @@ abstract class DisplayPluginBase extends PluginBase {
       'desc' => t('Specify caching type for this display.'),
     );
 
-    if (!empty($cache_plugin->definition['uses_options'])) {
+    if ($cache_plugin->usesOptions()) {
       $options['cache']['links']['cache_options'] = t('Change settings for this caching type.');
     }
 
-    if (!empty($access_plugin->definition['uses_options'])) {
+    if ($access_plugin->usesOptions()) {
       $options['access']['links']['access_options'] = t('Change settings for this access type.');
     }
 
@@ -1405,7 +1410,7 @@ abstract class DisplayPluginBase extends PluginBase {
       'desc' => t('Select the kind of exposed filter to use.'),
     );
 
-    if (!empty($exposed_form_plugin->definition['uses_options'])) {
+    if ($exposed_form_plugin->usesOptions()) {
       $options['exposed_form']['links']['exposed_form_options'] = t('Exposed form settings for this exposed form style.');
     }
 
@@ -1586,8 +1591,8 @@ abstract class DisplayPluginBase extends PluginBase {
           '#default_value' => $access['type'],
         );
 
-        $access_plugin = views_fetch_plugin_data('access', $access['type']);
-        if (!empty($access_plugin['uses_options'])) {
+        $access_plugin = $this->get_plugin('access');
+        if ($access_plugin->usesOptions()) {
           $form['markup'] = array(
             '#prefix' => '<div class="form-item description">',
             '#markup' => t('You may also adjust the !settings for the currently selected access restriction.', array('!settings' => $this->option_link(t('settings'), 'access_options'))),
@@ -1629,8 +1634,8 @@ abstract class DisplayPluginBase extends PluginBase {
           '#default_value' => $cache['type'],
         );
 
-        $cache_plugin = views_fetch_plugin_data('cache', $cache['type']);
-        if (!empty($cache_plugin['uses_options'])) {
+        $cache_plugin = $this->get_plugin('cache');
+        if ($cache_plugin->usesOptions()) {
           $form['markup'] = array(
             '#prefix' => '<div class="form-item description">',
             '#suffix' => '</div>',
@@ -1738,8 +1743,8 @@ abstract class DisplayPluginBase extends PluginBase {
           '#description' => t('If the style you choose has settings, be sure to click the settings button that will appear next to it in the View summary.'),
         );
 
-        $style_plugin = $manager->getDefinition($this->get_option('style_plugin'));
-        if (!empty($style_plugin['uses_options'])) {
+        $style_plugin = $this->get_plugin('style');
+        if ($style_plugin->usesOptions()) {
           $form['markup'] = array(
             '#markup' => '<div class="form-item description">' . t('You may also adjust the !settings for the currently selected style.', array('!settings' => $this->option_link(t('settings'), 'style_options'))) . '</div>',
           );
@@ -1782,8 +1787,8 @@ abstract class DisplayPluginBase extends PluginBase {
           '#default_value' => $this->get_option('row_plugin'),
         );
 
-        $row_plugin = views_fetch_plugin_data('row', $this->get_option('row_plugin'));
-        if (!empty($row_plugin['uses_options'])) {
+        $row_plugin = $this->get_plugin('row');
+        if ($row_plugin->usesOptions()) {
           $form['markup'] = array(
             '#markup' => '<div class="form-item description">' . t('You may also adjust the !settings for the currently selected row style.', array('!settings' => $this->option_link(t('settings'), 'row_options'))) . '</div>',
           );
@@ -2137,8 +2142,8 @@ abstract class DisplayPluginBase extends PluginBase {
           '#default_value' => $exposed_form['type'],
         );
 
-        $exposed_form_plugin = views_fetch_plugin_data('exposed_form', $exposed_form['type']);
-        if (!empty($exposed_form_plugin['uses_options'])) {
+        $exposed_form_plugin = $this->get_plugin('exposed_form');
+        if ($exposed_form_plugin->usesOptions()) {
           $form['markup'] = array(
             '#prefix' => '<div class="form-item description">',
             '#suffix' => '</div>',
@@ -2173,8 +2178,8 @@ abstract class DisplayPluginBase extends PluginBase {
           '#default_value' => $pager['type'],
         );
 
-        $pager_plugin = views_fetch_plugin_data('pager', $pager['type'], array($this->view->base_table));
-        if (!empty($pager_plugin['uses_options'])) {
+        $pager_plugin = $this->get_plugin('pager');
+        if ($pager_plugin->usesOptions()) {
           $form['markup'] = array(
             '#prefix' => '<div class="form-item description">',
             '#suffix' => '</div>',
@@ -2333,7 +2338,7 @@ abstract class DisplayPluginBase extends PluginBase {
           if ($plugin) {
             $access = array('type' => $form_state['values']['access']['type']);
             $this->set_option('access', $access);
-            if (!empty($plugin->definition['uses_options'])) {
+            if ($plugin->usesOptions()) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('access_options'));
             }
           }
@@ -2354,7 +2359,7 @@ abstract class DisplayPluginBase extends PluginBase {
           if ($plugin) {
             $cache = array('type' => $form_state['values']['cache']['type']);
             $this->set_option('cache', $cache);
-            if (!empty($plugin->definition['uses_options'])) {
+            if ($plugin->usesOptions()) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('cache_options'));
             }
           }
@@ -2412,7 +2417,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $this->set_option('row_options', array());
 
             // send ajax form to options page if we use it.
-            if (!empty($plugin->definition['uses_options'])) {
+            if ($plugin->usesOptions()) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('row_options'));
             }
           }
@@ -2427,7 +2432,7 @@ abstract class DisplayPluginBase extends PluginBase {
             $this->set_option($section, $form_state['values'][$section]);
             $this->set_option('style_options', array());
             // send ajax form to options page if we use it.
-            if (!empty($plugin->definition['uses_options'])) {
+            if ($plugin->usesOptions()) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('style_options'));
             }
           }
@@ -2453,7 +2458,7 @@ abstract class DisplayPluginBase extends PluginBase {
           if ($plugin) {
             $exposed_form = array('type' => $form_state['values']['exposed_form']['type'], 'options' => array());
             $this->set_option('exposed_form', $exposed_form);
-            if (!empty($plugin->definition['uses_options'])) {
+            if ($plugin->usesOptions()) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('exposed_form_options'));
             }
           }
@@ -2480,7 +2485,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
             $pager = array('type' => $form_state['values']['pager']['type'], 'options' => $plugin->options);
             $this->set_option('pager', $pager);
-            if (!empty($plugin->definition['uses_options'])) {
+            if ($plugin->usesOptions()) {
               views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('pager_options'));
             }
           }

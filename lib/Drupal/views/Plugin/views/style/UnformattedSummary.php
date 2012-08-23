@@ -21,7 +21,6 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Displays the summary unformatted, with option for one after another or inline."),
  *   theme = "views_view_summary_unformatted",
  *   type = "summary",
- *   uses_options = TRUE,
  *   help_topic = "style-summary-unformatted"
  * )
  */

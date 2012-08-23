@@ -22,7 +22,6 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("User"),
  *   help = @Translation("Display the user with standard user view."),
  *   base = {"users"},
- *   uses_options = TRUE,
  *   type = "normal",
  *   help_topic = "style-users"
  * )

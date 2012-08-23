@@ -22,7 +22,6 @@ use Drupal\Core\Annotation\Translation;
  *   theme = "views_view_list",
  *   uses_row_plugin = TRUE,
  *   uses_row_class = TRUE,
- *   uses_options = TRUE,
  *   type = "normal",
  *   help_topic = "style-list"
  * )

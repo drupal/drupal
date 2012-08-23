@@ -20,8 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Paged output, full pager"),
  *   short_title = @Translation("Full"),
  *   help = @Translation("Paged output, full Drupal style"),
- *   help_topic = "pager-full",
- *   uses_options = TRUE
+ *   help_topic = "pager-full"
  * )
  */
 class Full extends PagerPluginBase {

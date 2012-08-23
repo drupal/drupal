@@ -23,7 +23,6 @@ use Drupal\Core\Annotation\Translation;
  *   uses_row_plugin = FALSE,
  *   uses_row_class = TRUE,
  *   uses_fields = TRUE,
- *   uses_options = TRUE,
  *   type = "normal",
  *   help_topic = "style-table"
  * )

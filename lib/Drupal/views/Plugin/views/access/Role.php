@@ -19,11 +19,15 @@ use Drupal\Core\Annotation\Translation;
  *   id = "role",
  *   title = @Translation("Role"),
  *   help = @Translation("Access will be granted to users with any of the specified roles."),
- *   help_topic = "access-role",
- *   uses_options = TRUE
+ *   help_topic = "access-role"
  * )
  */
 class Role extends AccessPluginBase {
+
+  /**
+   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   */
+  public $usesOptions = TRUE;
 
   function access($account) {
     return views_check_roles(array_filter($this->options['role']), $account);

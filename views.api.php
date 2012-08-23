@@ -247,7 +247,6 @@
  *       'path' => drupal_get_path('module', 'views') . '/modules/node', // not necessary for most modules
  *       'theme' => 'views_view_row_node',
  *       'base' => array('node'), // only works with 'node' as base.
- *       'uses_options' => TRUE,
  *       'type' => 'normal',
  *     ),
  * @endcode
@@ -537,8 +536,6 @@ function hook_views_data_alter(&$data) {
  *       perspective.
  *     - no_ui: Set to TRUE to denote that the plugin doesn't appear to be
  *       selectable in the ui, though on the api side they still exists.
- *     - uses_options: Set to TRUE to denote that the plugin has an additional
- *       options form.
  *     - help: A short help text, wrapped in t() used as description on the plugin settings form.
  *     - help topic: The name of an entry by advanced help for the plugin.
  *     - theme: The name of a theme suggestion to use for the display.

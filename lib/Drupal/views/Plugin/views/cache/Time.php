@@ -19,11 +19,15 @@ use Drupal\Core\Annotation\Translation;
  *   id = "time",
  *   title = @Translation("Time-based"),
  *   help = @Translation("Simple time-based caching of data."),
- *   help_topic = "cache-time",
- *   uses_options = TRUE
+ *   help_topic = "cache-time"
  * )
  */
 class Time extends CachePluginBase {
+
+  /**
+   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   */
+  public $usesOptions = TRUE;
 
   function option_definition() {
     $options = parent::option_definition();

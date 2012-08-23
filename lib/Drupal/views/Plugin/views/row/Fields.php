@@ -24,7 +24,6 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Displays the fields with an optional template."),
  *   theme = "views_view_fields",
  *   uses_fields = TRUE,
- *   uses_options = TRUE,
  *   type = "normal",
  *   help_topic = "style-row-fields"
  * )

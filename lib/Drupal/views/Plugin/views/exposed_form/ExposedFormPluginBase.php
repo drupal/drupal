@@ -25,6 +25,11 @@ use Drupal\views\Plugin\views\PluginBase;
 abstract class ExposedFormPluginBase extends PluginBase {
 
   /**
+   * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   */
+  public $usesOptions = TRUE;
+
+  /**
    * Initialize the plugin.
    *
    * @param $view
