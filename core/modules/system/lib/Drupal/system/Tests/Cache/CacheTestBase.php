@@ -13,6 +13,7 @@ use Drupal\simpletest\WebTestBase;
  * Provides helper methods for cache tests.
  */
 abstract class CacheTestBase extends WebTestBase {
+
   protected $default_bin = 'page';
   protected $default_cid = 'test_temporary';
   protected $default_value = 'CacheTest';

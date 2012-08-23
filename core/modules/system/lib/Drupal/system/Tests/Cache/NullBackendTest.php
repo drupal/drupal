@@ -14,6 +14,7 @@ use Drupal\simpletest\UnitTestBase;
  * Tests the cache NullBackend.
  */
 class NullBackendTest extends UnitTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Cache NullBackend test',
