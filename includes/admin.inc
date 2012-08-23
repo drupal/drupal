@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\views\TempStore\UserTempStore;
 use Drupal\views\View;
 use Drupal\views\Analyzer;
 use Drupal\views\Plugin\Type\ViewsPluginManager;
@@ -853,7 +854,7 @@ function views_ui_break_lock_confirm($form, &$form_state, $view) {
     $cancel = $_REQUEST['cancel'];
   }
 
-  $account = user_load($view->locked->uid);
+  $account = user_load($view->locked->ownerId);
   return confirm_form($form,
                   t('Are you sure you want to break the lock on view %name?',
                   array('%name' => $view->name)),
@@ -867,7 +868,7 @@ function views_ui_break_lock_confirm($form, &$form_state, $view) {
  * Submit handler to break_lock a view.
  */
 function views_ui_break_lock_confirm_submit(&$form, &$form_state) {
-  ctools_object_cache_clear_all('view', $form_state['view']->name);
+  UserTempStore::clearAll('view', $form_state['view']->name);
   $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->name . '/edit';
   drupal_set_message(t('The lock has been broken and you may now edit this view.'));
 }
@@ -1027,7 +1028,7 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
     $form['locked'] = array(
       '#theme_wrappers' => array('container'),
       '#attributes' => array('class' => array('view-locked', 'messages', 'warning')),
-      '#markup' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', array('!user' => theme('username', array('account' => user_load($view->locked->uid))), '!age' => format_interval(REQUEST_TIME - $view->locked->updated), '!break' => url('admin/structure/views/view/' . $view->name . '/break-lock'))),
+      '#markup' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', array('!user' => theme('username', array('account' => user_load($view->locked->ownerId))), '!age' => format_interval(REQUEST_TIME - $view->locked->updated), '!break' => url('admin/structure/views/view/' . $view->name . '/break-lock'))),
     );
   }
   if (isset($view->vid) && $view->vid == 'new') {
@@ -2154,7 +2155,7 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
   drupal_set_message(t('The view %name has been saved.', array('%name' => $form_state['view']->get_human_name())));
 
   // Remove this view from cache so we can edit it properly.
-  ctools_object_cache_clear('view', $form_state['view']->name);
+  views_temp_store()->delete($form_state['view']->name);
 }
 
 /**
@@ -2162,7 +2163,7 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
  */
 function views_ui_edit_view_form_cancel($form, &$form_state) {
   // Remove this view from cache so edits will be lost.
-  ctools_object_cache_clear('view', $form_state['view']->name);
+  views_temp_store()->delete($form_state['view']->name);
   if (empty($form['view']->vid)) {
     // I seem to have to drupal_goto here because I can't get fapi to
     // honor the redirect target. Not sure what I screwed up here.

@@ -152,6 +152,45 @@ function views_schema() {
   $schema['cache_views_data']['description'] = 'Cache table for views to store pre-rendered queries, results, and display output.';
   $schema['cache_views_data']['fields']['serialized']['default'] = 1;
 
+  $schema['temp_store'] = array(
+    'description' => t('A temporary data store for objects that are being edited. Allows state to be saved in a stateless environment.'),
+    'fields' => array(
+      'owner_id' => array(
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+        'description' => 'The session ID this object belongs to.',
+      ),
+      'subsystem' => array(
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+        'description' => 'The owner (type of the object) for this data store. Allows multiple subsystems to use this data store.',
+      ),
+      'temp_key' => array(
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+        'description' => 'The key of the object this data store is attached to.',
+      ),
+      'updated' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The time this data store was created or updated.',
+      ),
+      'data' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'description' => 'Serialized data being stored.',
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('owner_id', 'subsystem', 'temp_key'),
+    'indexes' => array('updated' => array('updated')),
+  );
+
   return $schema;
 }
 

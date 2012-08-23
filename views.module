@@ -10,6 +10,7 @@
  */
 
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\views\TempStore\UserTempStore;
 use Drupal\views\View;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\views\Plugin\Type\ViewsPluginManager;
@@ -36,6 +37,16 @@ function views_init() {
       $loader->registerNamespace('Views\\' . $module, DRUPAL_ROOT . '/' . $path . '/lib');
     }
   }
+}
+
+/**
+ * Provides a TempStore for editing views.
+ *
+ * @return UserTempStore
+ *   A TempStore object for the 'view' type.
+ */
+function views_temp_store() {
+  return new UserTempStore('view');
 }
 
 /**

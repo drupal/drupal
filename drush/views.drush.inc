@@ -220,9 +220,7 @@ function views_revert_view($view) {
     // Revert the view.
     $view->delete();
     // Clear its cache.
-    // @todo Convert this: http://drupal.org/node/1658068.
-    ctools_include('object-cache');
-    ctools_object_cache_clear('view', $view->name);
+    views_temp_store()->delete($view->name);
     // Give feedback.
     $message = dt("Reverted the view '@viewname'", array('@viewname' => $view->name));
     drush_log($message, 'success');

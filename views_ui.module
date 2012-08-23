@@ -290,16 +290,15 @@ function views_ui_edit_page_title($view) {
  *   someone else is already editing the view.
  */
 function views_ui_cache_load($name) {
-  // @todo Convert this: http://drupal.org/node/1658068.
-  ctools_include('object-cache');
-  $view = ctools_object_cache_get('view', $name);
+  $views_temp_store = views_temp_store();
+  $view = $views_temp_store->get($name);
   $original_view = views_get_view($name);
 
   if (empty($view)) {
     $view = $original_view;
     if (!empty($view)) {
       // Check to see if someone else is already editing this view.
-      $view->locked = ctools_object_cache_test('view', $view->name);
+      $view->locked = $views_temp_store->isLocked($view->name);
       // Set a flag to indicate that this view is being edited.
       // This flag will be used e.g. to determine whether strings
       // should be localized.
@@ -331,8 +330,7 @@ function views_ui_cache_set(&$view) {
     drupal_set_message(t('Changes cannot be made to a locked view.'), 'error');
     return;
   }
-  // @todo Convert this: http://drupal.org/node/1658068.
-  ctools_include('object-cache');
+
   $view->changed = TRUE; // let any future object know that this view has changed.
 
   if (isset($view->current_display)) {
@@ -349,7 +347,7 @@ function views_ui_cache_set(&$view) {
     unset($view->display[$id]->handler);
     unset($view->display[$id]->default_display);
   }
-  ctools_object_cache_set('view', $view->name, $view);
+  views_temp_store()->set($view->name, $view);
 }
 
 
