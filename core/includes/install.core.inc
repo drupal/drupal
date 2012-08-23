@@ -250,6 +250,12 @@ function install_begin_request(&$install_state) {
     exit;
   }
 
+  // Initialize conf_path().
+  // This primes the site path to be used during installation. By not requiring
+  // settings.php, a bare site folder can be prepared in the /sites directory,
+  // which will be used for installing Drupal.
+  conf_path(FALSE);
+
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
   // A request object from the HTTPFoundation to tell us about the request.
