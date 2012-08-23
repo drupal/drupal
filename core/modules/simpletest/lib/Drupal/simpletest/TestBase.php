@@ -761,7 +761,7 @@ abstract class TestBase {
     }
 
     // Delete temporary files directory.
-    file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10));
+    file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10), array($this, 'filePreDeleteCallback'));
 
     // Restore original database connection.
     Database::removeConnection('default');
@@ -938,5 +938,15 @@ abstract class TestBase {
       $all_permutations = $new_permutations;
     }
     return $all_permutations;
+  }
+
+  /**
+   * Ensures test files are deletable within file_unmanaged_delete_recursive().
+   *
+   * Some tests chmod generated files to be read only. During tearDown() and
+   * other cleanup operations, these files need to get deleted too.
+   */
+  public static function filePreDeleteCallback($path) {
+    chmod($path, 0700);
   }
 }

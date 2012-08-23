@@ -3538,3 +3538,51 @@ function drupal_check_memory_limit($required, $memory_limit = NULL) {
   //   the operation.
   return ((!$memory_limit) || ($memory_limit == -1) || (parse_size($memory_limit) >= parse_size($required)));
 }
+
+/**
+ * Instantiates and statically caches a storage controller for generated PHP code.
+ *
+ * By default, this returns an instance of the
+ * Drupal\Component\PhpStorage\MTimeProtectedFileStorage class.
+ *
+ * Classes implementing
+ * Drupal\Component\PhpStorage\PhpStorageInterface can be registered for a
+ * specific bin or as a default implementation.
+ *
+ * @param $name
+ *   The name for which the storage controller should be returned. Defaults to
+ *   'default'. The name is also used as the storage bin if one is not
+ *   specified in the configuration.
+ *
+ * @return Drupal\Component\PhpStorage\PhpStorageInterface
+ *   An instantiated storage controller for the specified name.
+ *
+ * @see Drupal\Component\PhpStorage\PhpStorageInterface
+ */
+function drupal_php_storage($name = 'default') {
+  global $conf;
+  $storage_controllers = &drupal_static(__FUNCTION__);
+  if (!isset($storage_controllers[$name])) {
+    if (isset($conf['php_storage'][$name])) {
+      $configuration = $conf['php_storage'][$name];
+    }
+    elseif (isset($conf['php_storage']['default'])) {
+      $configuration = $conf['php_storage']['default'];
+    }
+    else {
+      $configuration = array(
+        'class' => 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage',
+        'secret' => $GLOBALS['drupal_hash_salt'],
+      );
+    }
+    $class = isset($configuration['class']) ? $configuration['class'] : 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage';
+    if (!isset($configuration['bin'])) {
+      $configuration['bin'] = $name;
+    }
+    if (!isset($configuration['directory'])) {
+      $configuration['directory'] = DRUPAL_ROOT . '/' . variable_get('file_public_path', conf_path() . '/files') . '/php';
+    }
+    $storage_controllers[$name] = new $class($configuration);
+  }
+  return $storage_controllers[$name];
+}

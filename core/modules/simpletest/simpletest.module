@@ -507,7 +507,7 @@ function simpletest_clean_temporary_directories() {
     foreach ($files as $file) {
       $path = 'public://simpletest/' . $file;
       if (is_dir($path) && (is_numeric($file) || strpos($file, 'config_simpletest') !== FALSE)) {
-        file_unmanaged_delete_recursive($path);
+        file_unmanaged_delete_recursive($path, array('Drupal\simpletest\TestBase', 'filePreDeleteCallback'));
         $count++;
       }
     }

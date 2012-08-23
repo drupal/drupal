@@ -1317,6 +1317,10 @@ function file_unmanaged_delete($path) {
  *
  * @param $path
  *   A string containing either an URI or a file or directory path.
+ * @param $callback
+ *   (optional) Callback function to run on each file prior to deleting it and
+ *   on each directory prior to traversing it. For example, can be used to
+ *   modify permissions.
  *
  * @return
  *   TRUE for success or if path does not exist, FALSE in the event of an
@@ -1324,7 +1328,10 @@ function file_unmanaged_delete($path) {
  *
  * @see file_unmanaged_delete()
  */
-function file_unmanaged_delete_recursive($path) {
+function file_unmanaged_delete_recursive($path, $callback = NULL) {
+  if (isset($callback)) {
+    call_user_func($callback, $path);
+  }
   if (is_dir($path)) {
     $dir = dir($path);
     while (($entry = $dir->read()) !== FALSE) {
@@ -1332,7 +1339,7 @@ function file_unmanaged_delete_recursive($path) {
         continue;
       }
       $entry_path = $path . '/' . $entry;
-      file_unmanaged_delete_recursive($entry_path);
+      file_unmanaged_delete_recursive($entry_path, $callback);
     }
     $dir->close();
 
