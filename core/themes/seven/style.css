@@ -187,30 +187,6 @@ pre {
   font-size: 0.846em;
   padding-bottom: 5px;
 }
-#branding div.block {
-  position: relative;
-  float: right; /* LTR */
-  width: 240px;
-  padding-left: 10px; /* LTR */
-  background: #333;
-}
-#branding div.block form label {
-  display: none;
-}
-#branding div.block form div.form-item {
-  float: left; /* LTR */
-  border: 0;
-  margin: 0;
-  padding: 0;
-}
-#branding div.block form input.form-text {
-  width: 140px;
-  margin-right: 10px; /* LTR */
-}
-#branding div.block form input.form-submit {
-  text-align: center;
-  width: 80px;
-}
 
 /**
  * Help.
@@ -348,34 +324,12 @@ ul.secondary li.active a.active {
   position: relative;
   color: #333;
 }
-#secondary-links ul.links li {
-  padding: 0 10px 10px 0; /* LTR */
-}
-#secondary-links ul.links li a {
-  font-size: 0.923em;
-  background: #777;
-  color: #fff;
-  text-align: center;
-  padding: 5px;
-  height: 55px;
-  width: 80px;
-  overflow: hidden;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-#secondary-links ul.links li a:hover {
-  background: #999;
-}
 ul.links li,
 ul.inline li {
   padding-right: 1em; /* LTR */
 }
 ul.inline li {
   display: inline;
-}
-#secondary-links ul.links li.active-trail a,
-#secondary-links ul.links li a.active {
-  background: #333;
 }
 ul.admin-list li {
   position: relative;

@@ -35,19 +35,6 @@ ol {
   padding: 20px 20px 0 20px;
 }
 
-#branding div.block {
-  float: left;
-  padding-left: 0;
-  padding-right: 10px;
-}
-#branding div.block form div.form-item {
-  float: right;
-}
-#branding div.block form input.form-text {
-  margin-left: 10px;
-  margin-right: 0;
-}
-
 /**
  * Help.
  */
@@ -88,9 +75,6 @@ ul.primary {
   padding: 20px 0 40px 0;
   margin-left: 40px;
   margin-right: 40px;
-}
-#secondary-links ul.links li {
-  padding: 0 0 10px 10px;
 }
 ul.links li,
 ul.inline li {
