@@ -433,6 +433,12 @@ Drupal.overlay.eventhandlerAlterDisplacedElements = function (event) {
   $(this.iframeWindow.document.body).css({
     marginTop: Drupal.overlay.getDisplacement('top'),
     marginBottom: Drupal.overlay.getDisplacement('bottom')
+  }).attr('data-offset-top', Drupal.overlay.getDisplacement('top'));
+
+  $(document).bind('offsettopchange', function () {
+    var iframeDocument = Drupal.overlay.iframeWindow.document;
+    $(iframeDocument.body).attr('data-offset-top', Drupal.overlay.getDisplacement('top'));
+    $(iframeDocument).trigger('offsettopchange');
   });
 
   var documentHeight = this.iframeWindow.document.body.clientHeight;

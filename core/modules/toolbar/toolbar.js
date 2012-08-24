@@ -8,18 +8,23 @@ Drupal.toolbar = Drupal.toolbar || {};
  * Attach toggling behavior and notify the overlay of the toolbar.
  */
 Drupal.behaviors.toolbar = {
-  attach: function(context) {
-    var $context = $(context);
-    // Set the initial state of the toolbar.
-    $context.find('#toolbar').once('toolbar', Drupal.toolbar.init);
+  attach: function(context, settings) {
+    var $toolbar = $('#toolbar').once('toolbar');
+    if ($toolbar.length) {
 
-    // Toggling toolbar drawer.
-    $context.find('#toolbar a.toggle').once('toolbar-toggle').click(function(e) {
-      Drupal.toolbar.toggle();
-      // Allow resize event handlers to recalculate sizes/positions.
-      $(window).triggerHandler('resize');
-      return false;
-    });
+      // Set the initial state of the toolbar.
+      Drupal.toolbar.init();
+
+      $(window).on('resize.toolbar', Drupal.toolbar.height);
+
+      // Toggling toolbar drawer.
+      $toolbar.find('a.toggle').once('toolbar-toggle').click(function(e) {
+        e.preventDefault();
+        Drupal.toolbar.toggle();
+        // Allow resize event handlers to recalculate sizes/positions.
+        $(window).triggerHandler('resize');
+      });
+    }
   }
 };
 
@@ -59,6 +64,8 @@ Drupal.toolbar.collapse = function() {
       expires: 36500
     }
   );
+  Drupal.toolbar.height();
+  $(document).trigger('offsettopchange');
 };
 
 /**
@@ -81,6 +88,8 @@ Drupal.toolbar.expand = function() {
       expires: 36500
     }
   );
+  Drupal.toolbar.height();
+  $(document).trigger('offsettopchange');
 };
 
 /**
@@ -96,8 +105,10 @@ Drupal.toolbar.toggle = function() {
 };
 
 Drupal.toolbar.height = function() {
+  // @TODO this needs to be cached outside this function.
   var $toolbar = $('#toolbar');
   var height = $toolbar.outerHeight();
+  $toolbar.attr('data-offset-top', height);
   return height;
 };
 

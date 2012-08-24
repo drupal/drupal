@@ -174,23 +174,11 @@ Drupal.overlayChild.behaviors.shortcutAddLink = function (context, settings) {
   });
 };
 
-/**
- * Use displacement from parent window.
- */
-Drupal.overlayChild.behaviors.alterTableHeaderOffset = function (context, settings) {
-  if (Drupal.settings.tableHeaderOffset) {
-    Drupal.overlayChild.prevTableHeaderOffset = Drupal.settings.tableHeaderOffset;
-  }
-  Drupal.settings.tableHeaderOffset = 'Drupal.overlayChild.tableHeaderOffset';
-};
-
-/**
- * Callback for Drupal.settings.tableHeaderOffset.
- */
-Drupal.overlayChild.tableHeaderOffset = function () {
-  var topOffset = Drupal.overlayChild.prevTableHeaderOffset ? eval(Drupal.overlayChild.prevTableHeaderOffset + '()') : 0;
-
-  return topOffset + parseInt($(document.body).css('marginTop'));
-};
+// Workaround because of the way jQuery events works.
+// jQuery from the parent frame needs to be used to catch this event.
+parent.jQuery(document).bind('offsettopchange', function () {
+  // Fires an event that the child iframe can listen to.
+  $(document).trigger('offsettopchange');
+});
 
 })(jQuery);
