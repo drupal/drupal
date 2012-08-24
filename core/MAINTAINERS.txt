@@ -181,9 +181,11 @@ Database Logging module
 Field module
 - Yves Chedemois 'yched' http://drupal.org/user/39567
 - Barry Jaspan 'bjaspan' http://drupal.org/user/46413
+- Kristof De Jaeger 'swentel' http://drupal.org/user/107403
 
 Field UI module
 - Yves Chedemois 'yched' http://drupal.org/user/39567
+- Kristof De Jaeger 'swentel' http://drupal.org/user/107403
 
 File module
 - Aaron Winborn 'aaron' http://drupal.org/user/33420
@@ -236,7 +238,6 @@ Search module
 
 Shortcut module
 - David Rothstein 'David_Rothstein' http://drupal.org/user/124982
-- Kristof De Jaeger 'swentel' http://drupal.org/user/107403
 
 Simpletest module
 - Jimmy Berry 'boombatower' http://drupal.org/user/214218
