@@ -1633,6 +1633,7 @@ function hook_page_alter(&$page) {
  *
  * @see hook_form_BASE_FORM_ID_alter()
  * @see hook_form_FORM_ID_alter()
+ * @see forms_api_reference.html
  */
 function hook_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
@@ -1669,6 +1670,7 @@ function hook_form_alter(&$form, &$form_state, $form_id) {
  * @see hook_form_alter()
  * @see hook_form_BASE_FORM_ID_alter()
  * @see drupal_prepare_form()
+ * @see forms_api_reference.html
  */
 function hook_form_FORM_ID_alter(&$form, &$form_state, $form_id) {
   // Modification for the form with the given form ID goes here. For example, if
