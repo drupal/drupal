@@ -386,8 +386,7 @@ function taxonomy_admin_vocabulary_title_callback($vocabulary) {
  *
  * @param $vocabulary
  *   A vocabulary object with the following properties:
- *   - vid: (optional) The ID of the vocabulary (omit if creating a new
- *     vocabulary; only use to update an existing vocabulary).
+ *   - vid: The ID of the vocabulary.
  *   - name: The human-readable name of the vocabulary.
  *   - machine_name: The machine name of the vocabulary.
  *   - description: (optional) The vocabulary's description.
@@ -402,7 +401,7 @@ function taxonomy_admin_vocabulary_title_callback($vocabulary) {
  *
  * @return
  *   Status constant indicating whether the vocabulary was inserted (SAVED_NEW)
- *   or updated (SAVED_UPDATED).
+ *   or updated(SAVED_UPDATED).
  */
 function taxonomy_vocabulary_save($vocabulary) {
   // Prevent leading and trailing spaces in vocabulary names.
