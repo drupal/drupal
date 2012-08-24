@@ -2959,8 +2959,9 @@ function system_update_7069() {
  */
 
 /**
- * @defgroup updates-7.x-extra Extra system updates for 7.x
+ * @defgroup updates-7.x-extra Extra updates for 7.x
  * @{
+ * Update functions between 7.x versions.
  */
 
 /**
