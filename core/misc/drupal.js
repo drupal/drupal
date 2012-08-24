@@ -10,6 +10,28 @@ jQuery.noConflict();
 "use strict";
 
 /**
+ * Custom error type thrown after attach/detach if one or more behaviors failed.
+ *
+ * @param list
+ *   An array of errors thrown during attach/detach.
+ * @param event
+ *   A string containing either 'attach' or 'detach'.
+ */
+function DrupalBehaviorError(list, event) {
+  this.name = 'DrupalBehaviorError';
+  this.event = event || 'attach';
+  this.list = list;
+  // Makes the list of errors readable.
+  var messageList = [];
+  messageList.push(this.event);
+  for (var i = 0, il = this.list.length; i < il; i++) {
+    messageList.push(this.list[i].behavior + ': ' + this.list[i].error.message);
+  }
+  this.message = messageList.join(' ; ');
+}
+DrupalBehaviorError.prototype = new Error();
+
+/**
  * Attach all registered behaviors to a page element.
  *
  * Behaviors are event-triggered actions that attach to page elements, enhancing
@@ -50,12 +72,22 @@ jQuery.noConflict();
 Drupal.attachBehaviors = function (context, settings) {
   context = context || document;
   settings = settings || Drupal.settings;
-  var i, behaviors = Drupal.behaviors;
+  var i, errors = [], behaviors = Drupal.behaviors;
   // Execute all of them.
   for (i in behaviors) {
     if (behaviors.hasOwnProperty(i) && typeof behaviors[i].attach === 'function') {
-      behaviors[i].attach(context, settings);
+      // Don't stop the execution of behaviors in case of an error.
+      try {
+        behaviors[i].attach(context, settings);
+      }
+      catch (e) {
+        errors.push({ behavior: i, error: e });
+      }
     }
+  }
+  // Once all behaviors have been processed, inform the user about errors.
+  if (errors.length) {
+    throw new DrupalBehaviorError(errors, 'attach');
   }
 };
 
@@ -103,12 +135,22 @@ Drupal.detachBehaviors = function (context, settings, trigger) {
   context = context || document;
   settings = settings || Drupal.settings;
   trigger = trigger || 'unload';
-  var i, behaviors = Drupal.behaviors;
+  var i, errors = [], behaviors = Drupal.behaviors;
   // Execute all of them.
   for (i in behaviors) {
     if (behaviors.hasOwnProperty(i) && typeof behaviors[i].detach === 'function' ) {
-      behaviors[i].detach(context, settings, trigger);
+      // Don't stop the execution of behaviors in case of an error.
+      try {
+        behaviors[i].detach(context, settings, trigger);
+      }
+      catch (e) {
+        errors.push({ behavior: i, error: e });
+      }
     }
+  }
+  // Once all behaviors have been processed, inform the user about errors.
+  if (errors.length) {
+    throw new DrupalBehaviorError(errors, 'detach:' + trigger);
   }
 };
 
