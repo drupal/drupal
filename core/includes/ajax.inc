@@ -1081,18 +1081,18 @@ function ajax_command_data($selector, $name, $value) {
  *   an #ajax form element then this value can be NULL.
  * @param $method
  *   The jQuery method to invoke.
- * @param $arguments
+ * @param $args
  *   (optional) A list of arguments to the jQuery $method, if any.
  *
  * @return
  *   An array suitable for use with the ajax_render() function.
  */
-function ajax_command_invoke($selector, $method, array $arguments = array()) {
+function ajax_command_invoke($selector, $method, array $args = array()) {
   return array(
     'command' => 'invoke',
     'selector' => $selector,
     'method' => $method,
-    'arguments' => $arguments,
+    'args' => $args,
   );
 }
 

@@ -104,7 +104,7 @@ class CommandsTest extends AjaxTestBase {
     $expected = array(
       'command' => 'invoke',
       'method' => 'addClass',
-      'arguments' => array('error'),
+      'args' => array('error'),
     );
     $this->assertCommand($commands, $expected, "'invoke' AJAX command issued with correct method and argument");
 
