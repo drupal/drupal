@@ -31,6 +31,33 @@ class ConfigImportTest extends WebTestBase {
     );
   }
 
+  function setUp() {
+    parent::setUp();
+
+    // Clear out any possibly existing hook invocation records.
+    unset($GLOBALS['hook_config_test']);
+  }
+
+  /**
+   * Tests omission of module APIs for bare configuration operations.
+   */
+  function testNoImport() {
+    $dynamic_name = 'config_test.dynamic.default';
+
+    // Verify the default configuration values exist.
+    $config = config($dynamic_name);
+    $this->assertIdentical($config->get('id'), 'default');
+
+    // Verify that a bare config() does not involve module APIs.
+    $this->assertFalse(isset($GLOBALS['hook_config_test']));
+
+    // Export.
+    config_export();
+
+    // Verify that config_export() does not involve module APIs.
+    $this->assertFalse(isset($GLOBALS['hook_config_test']));
+  }
+
   /**
    * Tests deletion of configuration during import.
    */
@@ -64,6 +91,14 @@ class ConfigImportTest extends WebTestBase {
     $this->assertIdentical($config->get('foo'), NULL);
     $config = config($dynamic_name);
     $this->assertIdentical($config->get('id'), NULL);
+
+    // Verify that appropriate module API hooks have been invoked.
+    $this->assertTrue(isset($GLOBALS['hook_config_test']['load']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['presave']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['insert']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['update']));
+    $this->assertTrue(isset($GLOBALS['hook_config_test']['predelete']));
+    $this->assertTrue(isset($GLOBALS['hook_config_test']['delete']));
   }
 
   /**
@@ -100,6 +135,14 @@ class ConfigImportTest extends WebTestBase {
     $this->assertIdentical($config->get('add_me'), 'new value');
     $config = config($dynamic_name);
     $this->assertIdentical($config->get('label'), 'New');
+
+    // Verify that appropriate module API hooks have been invoked.
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['load']));
+    $this->assertTrue(isset($GLOBALS['hook_config_test']['presave']));
+    $this->assertTrue(isset($GLOBALS['hook_config_test']['insert']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['update']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['predelete']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
   }
 
   /**
@@ -138,5 +181,14 @@ class ConfigImportTest extends WebTestBase {
     $this->assertIdentical($config->get('foo'), 'beer');
     $config = config($dynamic_name);
     $this->assertIdentical($config->get('label'), 'Updated');
+
+    // Verify that appropriate module API hooks have been invoked.
+    $this->assertTrue(isset($GLOBALS['hook_config_test']['load']));
+    $this->assertTrue(isset($GLOBALS['hook_config_test']['presave']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['insert']));
+    $this->assertTrue(isset($GLOBALS['hook_config_test']['update']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['predelete']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
   }
+
 }

@@ -30,13 +30,13 @@
  * @param Drupal\Core\Config\Config $old_config
  *   A configuration object containing the old configuration data.
  */
-function MODULE_config_import_create($name, $new_config, $old_config) {
-  // Only configurable thingies require custom handling. Any other module
+function hook_config_import_create($name, $new_config, $old_config) {
+  // Only configurable entities require custom handling. Any other module
   // settings can be synchronized directly.
   if (strpos($name, 'config_test.dynamic.') !== 0) {
     return FALSE;
   }
-  $config_test = new ConfigTest($new_config);
+  $config_test = entity_create('config_test', $new_config->get());
   $config_test->save();
   return TRUE;
 }
@@ -59,14 +59,28 @@ function MODULE_config_import_create($name, $new_config, $old_config) {
  * @param Drupal\Core\Config\Config $old_config
  *   A configuration object containing the old configuration data.
  */
-function MODULE_config_import_change($name, $new_config, $old_config) {
-  // Only configurable thingies require custom handling. Any other module
+function hook_config_import_change($name, $new_config, $old_config) {
+  // Only configurable entities require custom handling. Any other module
   // settings can be synchronized directly.
   if (strpos($name, 'config_test.dynamic.') !== 0) {
     return FALSE;
   }
-  $config_test = new ConfigTest($new_config);
-  $config_test->setOriginal($old_config);
+
+  // @todo Make this less ugly.
+  list($entity_type) = explode('.', $name);
+  $entity_info = entity_get_info($entity_type);
+  $id = substr($name, strlen($entity_info['config prefix']) + 1);
+  $config_test = entity_load('config_test', $id);
+
+  $config_test->original = clone $config_test;
+  foreach ($old_config->get() as $property => $value) {
+    $config_test->original->$property = $value;
+  }
+
+  foreach ($new_config->get() as $property => $value) {
+    $config_test->$property = $value;
+  }
+
   $config_test->save();
   return TRUE;
 }
@@ -89,8 +103,8 @@ function MODULE_config_import_change($name, $new_config, $old_config) {
  * @param Drupal\Core\Config\Config $old_config
  *   A configuration object containing the old configuration data.
  */
-function MODULE_config_import_delete($name, $new_config, $old_config) {
-  // Only configurable thingies require custom handling. Any other module
+function hook_config_import_delete($name, $new_config, $old_config) {
+  // Only configurable entities require custom handling. Any other module
   // settings can be synchronized directly.
   if (strpos($name, 'config_test.dynamic.') !== 0) {
     return FALSE;
@@ -100,8 +114,10 @@ function MODULE_config_import_delete($name, $new_config, $old_config) {
   //   But that is impossible currently, since the config system only knows
   //   about deleted and added changes. Introduce an 'old_ID' key within
   //   config objects as a standard?
-  $config_test = new ConfigTest($old_config);
-  $config_test->delete();
+  list($entity_type) = explode('.', $name);
+  $entity_info = entity_get_info($entity_type);
+  $id = substr($name, strlen($entity_info['config prefix']) + 1);
+  config_test_delete($id);
   return TRUE;
 }
 

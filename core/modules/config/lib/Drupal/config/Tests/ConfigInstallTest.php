@@ -26,12 +26,12 @@ class ConfigInstallTest extends WebTestBase {
    */
   function testModuleInstallation() {
     $default_config = 'config_test.system';
-    $default_thingie = 'config_test.dynamic.default';
+    $default_configurable = 'config_test.dynamic.default';
 
     // Verify that default module config does not exist before installation yet.
     $config = config($default_config);
     $this->assertIdentical($config->isNew(), TRUE);
-    $config = config($default_thingie);
+    $config = config($default_configurable);
     $this->assertIdentical($config->isNew(), TRUE);
 
     // Install the test module.
@@ -40,11 +40,20 @@ class ConfigInstallTest extends WebTestBase {
     // Verify that default module config exists.
     $config = config($default_config);
     $this->assertIdentical($config->isNew(), FALSE);
-    $config = config($default_thingie);
+    $config = config($default_configurable);
     $this->assertIdentical($config->isNew(), FALSE);
 
     // Verify that configuration import callback was invoked for the dynamic
-    // thingie.
+    // configurable entity.
     $this->assertTrue($GLOBALS['hook_config_import']);
+
+    // Verify that config_test API hooks were invoked for the dynamic default
+    // configurable entity.
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['load']));
+    $this->assertTrue(isset($GLOBALS['hook_config_test']['presave']));
+    $this->assertTrue(isset($GLOBALS['hook_config_test']['insert']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['update']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['predelete']));
+    $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
   }
 }

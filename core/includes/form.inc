@@ -3542,6 +3542,7 @@ function form_process_machine_name($element, &$form_state) {
   // 'source' only) would leave all other properties undefined, if the defaults
   // were defined in hook_element_info(). Therefore, we apply the defaults here.
   $element['#machine_name'] += array(
+    // @todo Use 'label' by default.
     'source' => array('name'),
     'target' => '#' . $element['#id'],
     'label' => t('Machine name'),

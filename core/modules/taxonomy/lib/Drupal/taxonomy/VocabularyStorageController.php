@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\entity\EntityInterface;
+use Drupal\entity\StorableInterface;
 use Drupal\entity\DatabaseStorageController;
 
 /**
@@ -29,7 +29,7 @@ class VocabularyStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
-  protected function postSave(EntityInterface $entity, $update) {
+  protected function postSave(StorableInterface $entity, $update) {
     if (!$update) {
       field_attach_create_bundle('taxonomy_term', $entity->machine_name);
     }

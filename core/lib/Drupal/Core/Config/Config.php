@@ -354,6 +354,7 @@ class Config {
    * Deletes the configuration object.
    */
   public function delete() {
+    // @todo Consider to remove the pruning of data for Config::delete().
     $this->data = array();
     $this->storage->delete($this->name);
     $this->isNew = TRUE;

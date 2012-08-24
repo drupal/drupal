@@ -8,7 +8,7 @@
 namespace Drupal\node;
 
 use Drupal\entity\DatabaseStorageController;
-use Drupal\entity\EntityInterface;
+use Drupal\entity\StorableInterface;
 use Drupal\entity\EntityStorageException;
 use Exception;
 
@@ -82,7 +82,7 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::save().
    */
-  public function save(EntityInterface $entity) {
+  public function save(StorableInterface $entity) {
     $transaction = db_transaction();
     try {
       // Load the stored entity, if any.
@@ -129,10 +129,10 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Saves a node revision.
    *
-   * @param Drupal\entity\EntityInterface $node
+   * @param Drupal\entity\StorableInterface $node
    *   The node entity.
    */
-  protected function saveRevision(EntityInterface $entity) {
+  protected function saveRevision(StorableInterface $entity) {
     $record = clone $entity;
     $record->uid = $entity->revision_uid;
     $record->timestamp = $entity->revision_timestamp;
@@ -151,7 +151,7 @@ class NodeStorageController extends DatabaseStorageController {
     $entity->{$this->revisionKey} = $record->{$this->revisionKey};
 
     // Mark this revision as the current one.
-    $entity->isCurrentRevision = TRUE;
+    $entity->isCurrentRevision(TRUE);
   }
 
   /**
@@ -197,7 +197,7 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::invokeHook().
    */
-  protected function invokeHook($hook, EntityInterface $node) {
+  protected function invokeHook($hook, StorableInterface $node) {
     if ($hook == 'insert' || $hook == 'update') {
       node_invoke($node, $hook);
     }
@@ -246,7 +246,7 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::preSave().
    */
-  protected function preSave(EntityInterface $node) {
+  protected function preSave(StorableInterface $node) {
     // Before saving the node, set changed and revision times.
     $node->changed = REQUEST_TIME;
 
@@ -262,7 +262,7 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
-  function postSave(EntityInterface $node, $update) {
+  function postSave(StorableInterface $node, $update) {
     node_access_acquire_grants($node, $update);
   }
 

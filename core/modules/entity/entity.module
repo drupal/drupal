@@ -145,7 +145,7 @@ function entity_info_cache_clear() {
  *
  * @see hook_entity_info()
  * @see entity_load_multiple()
- * @see Drupal\entity\EntityStorageControllerInterface
+ * @see Drupal\entity\StorageControllerInterface
  * @see Drupal\entity\DatabaseStorageController
  * @see Drupal\entity\EntityFieldQuery
  */
@@ -217,11 +217,11 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  * database access if loaded again during the same page request.
  *
  * The actual loading is done through a class that has to implement the
- * Drupal\entity\EntityStorageControllerInterface interface. By default,
+ * Drupal\entity\StorageControllerInterface interface. By default,
  * Drupal\entity\DatabaseStorageController is used. Entity types can
  * specify that a different class should be used by setting the
  * 'controller class' key in hook_entity_info(). These classes can either
- * implement the Drupal\entity\EntityStorageControllerInterface interface, or,
+ * implement the Drupal\entity\StorageControllerInterface interface, or,
  * most commonly, extend the Drupal\entity\DatabaseStorageController
  * class. See node_entity_info() and the NodeStorageController in node.module as
  * an example.
@@ -237,7 +237,7 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  *   An array of entity objects indexed by their ids.
  *
  * @see hook_entity_info()
- * @see Drupal\entity\EntityStorageControllerInterface
+ * @see Drupal\entity\StorageControllerInterface
  * @see Drupal\entity\DatabaseStorageController
  * @see Drupal\entity\EntityFieldQuery
  */
@@ -317,7 +317,7 @@ function entity_create($entity_type, array $values) {
 /**
  * Gets the entity controller class for an entity type.
  *
- * @return Drupal\entity\EntityStorageControllerInterface
+ * @return Drupal\entity\StorageControllerInterface
  */
 function entity_get_controller($entity_type) {
   $controllers = &drupal_static(__FUNCTION__, array());

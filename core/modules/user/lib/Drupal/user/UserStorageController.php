@@ -7,7 +7,7 @@
 
 namespace Drupal\user;
 
-use Drupal\entity\EntityInterface;
+use Drupal\entity\StorableInterface;
 use Drupal\entity\EntityMalformedException;
 use Drupal\entity\DatabaseStorageController;
 
@@ -75,7 +75,7 @@ class UserStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::save().
    */
-  public function save(EntityInterface $entity) {
+  public function save(StorableInterface $entity) {
     if (empty($entity->uid)) {
       $entity->uid = db_next_id(db_query('SELECT MAX(uid) FROM {users}')->fetchField());
       $entity->enforceIsNew();
@@ -86,7 +86,7 @@ class UserStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::preSave().
    */
-  protected function preSave(EntityInterface $entity) {
+  protected function preSave(StorableInterface $entity) {
     // Update the user password if it has changed.
     if ($entity->isNew() || (!empty($entity->pass) && $entity->pass != $entity->original->pass)) {
       // Allow alternate password hashing schemes.
@@ -160,7 +160,7 @@ class UserStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
-  protected function postSave(EntityInterface $entity, $update) {
+  protected function postSave(StorableInterface $entity, $update) {
 
     if ($update) {
       // If the password has been changed, delete all open sessions for the

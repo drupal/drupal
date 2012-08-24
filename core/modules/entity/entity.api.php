@@ -25,7 +25,7 @@
  *     Drupal\entity\Entity. The entity class must implement EntityInterface.
  *   - controller class: The name of the class that is used to load the objects.
  *     The class has to implement the
- *     Drupal\entity\EntityStorageControllerInterface interface. Leave blank
+ *     Drupal\entity\StorageControllerInterface interface. Leave blank
  *     to use the Drupal\entity\DatabaseStorageController implementation.
  *   - form controller class: An associative array where the keys are the names
  *     of the different form operations (such as creation, editing or deletion)
@@ -229,7 +229,7 @@ function hook_entity_info() {
  */
 function hook_entity_info_alter(&$entity_info) {
   // Set the controller class for nodes to an alternate implementation of the
-  // Drupal\entity\EntityStorageControllerInterface interface.
+  // Drupal\entity\StorageControllerInterface interface.
   $entity_info['node']['controller class'] = 'Drupal\mymodule\MyCustomNodeStorageController';
 }
 

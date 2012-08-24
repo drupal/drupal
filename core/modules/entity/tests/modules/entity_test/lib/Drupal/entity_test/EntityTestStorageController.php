@@ -9,7 +9,7 @@ namespace Drupal\entity_test;
 
 use PDO;
 
-use Drupal\entity\EntityInterface;
+use Drupal\entity\StorableInterface;
 use Drupal\entity\DatabaseStorageController;
 
 /**
@@ -84,7 +84,7 @@ class EntityTestStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
-  protected function postSave(EntityInterface $entity, $update) {
+  protected function postSave(StorableInterface $entity, $update) {
     $default_langcode = ($language = $entity->language()) ? $language->langcode : LANGUAGE_NOT_SPECIFIED;
     $langcodes = array_keys($entity->translations());
     $langcodes[] = $default_langcode;
