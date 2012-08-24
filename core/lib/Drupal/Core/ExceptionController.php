@@ -100,7 +100,7 @@ class ExceptionController extends ContainerAware {
    */
   public function on403Html(FlattenException $exception, Request $request) {
     $system_path = $request->attributes->get('system_path');
-    watchdog('access denied', $system_path, NULL, WATCHDOG_WARNING);
+    watchdog('access denied', $system_path, array(), WATCHDOG_WARNING);
 
     $path = drupal_get_normal_path(config('system.site')->get('page.403'));
     if ($path && $path != $system_path) {
@@ -155,7 +155,7 @@ class ExceptionController extends ContainerAware {
    *   The request object that triggered this exception.
    */
   public function on404Html(FlattenException $exception, Request $request) {
-    watchdog('page not found', check_plain($request->attributes->get('system_path')), NULL, WATCHDOG_WARNING);
+    watchdog('page not found', check_plain($request->attributes->get('system_path')), array(), WATCHDOG_WARNING);
 
     // Check for and return a fast 404 page if configured.
     // @todo Inline this rather than using a function.

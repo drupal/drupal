@@ -1657,9 +1657,8 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  *   the variables argument to declare the value of the placeholders.
  *   See t() for documentation on how $message and $variables interact.
  * @param $variables
- *   Array of variables to replace in the message on display or
- *   NULL if message is already translated or not possible to
- *   translate.
+ *   Array of variables to replace in the message on display or array() if
+ *   message is already translated or not possible to translate.
  * @param $severity
  *   The severity of the message; one of the following values as defined in
  *   @link http://www.faqs.org/rfcs/rfc3164.html RFC 3164: @endlink
@@ -1677,7 +1676,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  * @see watchdog_severity_levels()
  * @see hook_watchdog()
  */
-function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
+function watchdog($type, $message, array $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user, $base_root;
 
   static $in_error_state = FALSE;
