@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of Drupal\Core\EventSubscriber\ConfigGlobalOverridesubscriber.
+ * Definition of Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber.
  */
 
 namespace Drupal\Core\EventSubscriber;
@@ -13,7 +13,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Override configuration values with values in global $conf variable.
  */
-class ConfigGlobalOverridesubscriber implements EventSubscriberInterface {
+class ConfigGlobalOverrideSubscriber implements EventSubscriberInterface {
   /**
    * Override configuration values with global $conf.
    *

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of Drupal\locale\LocaleConfigsubscriber.
+ * Definition of Drupal\locale\LocaleConfigSubscriber.
  */
 
 namespace Drupal\locale;
@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * $config is always a DrupalConfig object.
  */
-class LocaleConfigsubscriber implements EventSubscriberInterface {
+class LocaleConfigSubscriber implements EventSubscriberInterface {
   /**
    * Override configuration values with localized data.
    *
