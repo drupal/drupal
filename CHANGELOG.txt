@@ -1,6 +1,8 @@
 
 Drupal 7.16, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a regression which caused a "call to undefined function
+  drupal_find_base_themes()" fatal error under rare circumstances.
 
 Drupal 7.15, 2012-08-01
 -----------------------
