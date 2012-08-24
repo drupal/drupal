@@ -745,6 +745,12 @@ function image_style_deliver($style, $scheme) {
     }
   }
 
+  // Don't try to generate file if source is missing.
+  if (!file_exists($image_uri)) {
+    watchdog('image', 'Unable to generate the derived image from image at %path.', array('%path' => $derivative_uri));
+    return new Response(t('Error generating image, missing source file.'), 404);
+  }
+
   // Don't start generating the image if the derivative already exists or if
   // generation is in progress in another thread.
   $lock_name = 'image_style_deliver:' . $style['name'] . ':' . drupal_hash_base64($image_uri);
