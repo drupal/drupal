@@ -2941,7 +2941,7 @@ function drupal_aggregate_css(&$css_groups) {
   }
   else {
     $config = config('system.performance');
-    $preprocess_css = $config->get('preprocess_css');
+    $preprocess_css = $config->get('preprocess.css');
   }
 
   // For each group that needs aggregation, aggregate its items.
@@ -4213,7 +4213,7 @@ function drupal_aggregate_js(&$js_groups) {
   }
   else {
     $config = config('system.performance');
-    $preprocess_js = $config->get('preprocess_js');
+    $preprocess_js = $config->get('preprocess.js');
   }
 
   if ($preprocess_js) {
@@ -5004,7 +5004,7 @@ function drupal_page_set_cache($body) {
     }
 
     if ($cache->data['body']) {
-      if (config('system.performance')->get('page_compression') && extension_loaded('zlib')) {
+      if (config('system.performance')->get('response.gzip') && extension_loaded('zlib')) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
       cache('page')->set($cache->cid, $cache->data, $cache->expire, $cache->tags);

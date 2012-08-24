@@ -35,7 +35,7 @@ class HookBootExitTest extends WebTestBase {
   function testHookBootExit() {
     // Test with cache disabled. Boot and exit should always fire.
     $config = config('system.performance');
-    $config->set('cache', 0);
+    $config->set('cache.page.enabled', 0);
     $config->save();
 
     $this->drupalGet('');
@@ -44,7 +44,7 @@ class HookBootExitTest extends WebTestBase {
     $this->assertEqual(db_query('SELECT COUNT(*) FROM {watchdog} WHERE type = :type AND message = :message', array(':type' => 'system_test', ':message' => 'hook_exit'))->fetchField(), $calls, t('hook_exit called with disabled cache.'));
 
     // Test with normal cache. Boot and exit should be called.
-    $config->set('cache', 1);
+    $config->set('cache.page.enabled', 1);
     $config->save();
     $this->drupalGet('');
     $calls++;

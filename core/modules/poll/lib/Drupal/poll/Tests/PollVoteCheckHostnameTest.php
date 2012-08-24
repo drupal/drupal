@@ -33,7 +33,7 @@ class PollVoteCheckHostnameTest extends PollTestBase {
     // Enable page cache to verify that the result page is not saved in the
     // cache when anonymous voting is allowed.
     $config = config('system.performance');
-    $config->set('cache', 1);
+    $config->set('cache.page.enabled', 1);
     $config->save();
 
     // Create poll.

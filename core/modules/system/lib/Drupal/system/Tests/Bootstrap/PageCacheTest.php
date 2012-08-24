@@ -43,7 +43,7 @@ class PageCacheTest extends WebTestBase {
    */
   function testConditionalRequests() {
     $config = config('system.performance');
-    $config->set('cache', 1);
+    $config->set('cache.page.enabled', 1);
     $config->save();
 
     // Fill the cache.
@@ -87,7 +87,7 @@ class PageCacheTest extends WebTestBase {
    */
   function testPageCache() {
     $config = config('system.performance');
-    $config->set('cache', 1);
+    $config->set('cache.page.enabled', 1);
     $config->save();
 
     // Fill the cache.
@@ -133,7 +133,7 @@ class PageCacheTest extends WebTestBase {
    */
   function testPageCompression() {
     $config = config('system.performance');
-    $config->set('cache', 1);
+    $config->set('cache.page.enabled', 1);
     $config->save();
 
     // Fill the cache and verify that output is compressed.

@@ -148,7 +148,7 @@ class SessionTest extends WebTestBase {
 
     // The same behavior is expected when caching is enabled.
     $config = config('system.performance');
-    $config->set('cache', 1);
+    $config->set('cache.page.enabled', 1);
     $config->save();
     $this->drupalGet('');
     $this->assertSessionCookie(FALSE);

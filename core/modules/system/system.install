@@ -2047,6 +2047,21 @@ function system_update_8016() {
 }
 
 /**
+ * Moves system performance settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8017() {
+  update_variables_to_config('system.site', array(
+    'cache' => 'cache.page.enabled',
+    'page_cache_maximum_age' => 'cache.page.max_age',
+    'page_compression' => 'response.gzip',
+    'preprocess_css' => 'preprocess.css',
+    'preprocess_js' => 'preprocess.js',
+  ));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

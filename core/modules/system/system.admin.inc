@@ -1718,7 +1718,7 @@ function system_performance_settings($form, &$form_state) {
   $form['caching']['cache'] = array(
     '#type' => 'checkbox',
     '#title' => t('Cache pages for anonymous users'),
-    '#default_value' => $config->get('cache'),
+    '#default_value' => $config->get('cache.page.enabled'),
     '#weight' => -2,
   );
 
@@ -1727,7 +1727,7 @@ function system_performance_settings($form, &$form_state) {
   $form['caching']['page_cache_maximum_age'] = array(
     '#type' => 'select',
     '#title' => t('Expiration of cached pages'),
-    '#default_value' => $config->get('page_cache_maximum_age'),
+    '#default_value' => $config->get('cache.page.max_age'),
     '#options' => $period,
     '#description' => t('The maximum time an external cache can use an old version of a page.'),
   );
@@ -1746,24 +1746,24 @@ function system_performance_settings($form, &$form_state) {
     '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
   );
 
-  $js_hide = $config->get('cache') ? '' : ' class="js-hide"';
+  $js_hide = $config->get('cache.page.enabled') ? '' : ' class="js-hide"';
   $form['bandwidth_optimization']['page_compression'] = array(
     '#type' => 'checkbox',
     '#title' => t('Compress cached pages.'),
-    '#default_value' => $config->get('page_compression'),
+    '#default_value' => $config->get('response.gzip'),
     '#prefix' => '<div id="page-compression-wrapper"' . $js_hide . '>',
     '#suffix' => '</div>',
   );
   $form['bandwidth_optimization']['preprocess_css'] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate and compress CSS files.'),
-    '#default_value' => $config->get('preprocess_css'),
+    '#default_value' => $config->get('preprocess.css'),
     '#disabled' => $disabled,
   );
   $form['bandwidth_optimization']['preprocess_js'] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate JavaScript files.'),
-    '#default_value' => $config->get('preprocess_js'),
+    '#default_value' => $config->get('preprocess.js'),
     '#disabled' => $disabled,
   );
 
@@ -1784,11 +1784,11 @@ function system_performance_settings($form, &$form_state) {
  */
 function system_performance_settings_submit($form, &$form_state) {
   $config = config('system.performance');
-  $config->set('cache', $form_state['values']['cache']);
-  $config->set('page_cache_maximum_age', $form_state['values']['page_cache_maximum_age']);
-  $config->set('page_compression', $form_state['values']['page_compression']);
-  $config->set('preprocess_css', $form_state['values']['preprocess_css']);
-  $config->set('preprocess_js', $form_state['values']['preprocess_js']);
+  $config->set('cache.page.enabled', $form_state['values']['cache']);
+  $config->set('cache.page.max_age', $form_state['values']['page_cache_maximum_age']);
+  $config->set('response.gzip', $form_state['values']['page_compression']);
+  $config->set('preprocess.css', $form_state['values']['preprocess_css']);
+  $config->set('preprocess.js', $form_state['values']['preprocess_js']);
   $config->save();
 }
 

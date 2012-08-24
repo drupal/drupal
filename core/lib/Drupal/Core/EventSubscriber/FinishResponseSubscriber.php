@@ -71,7 +71,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     //   use partial page caching more extensively.
     // Commit the user session, if needed.
     drupal_session_commit();
-    if (config('system.performance')->get('cache') && ($cache = drupal_page_set_cache($response->getContent()))) {
+    if (config('system.performance')->get('cache.page.enabled') && ($cache = drupal_page_set_cache($response->getContent()))) {
       drupal_serve_page_from_cache($cache);
       // drupal_serve_page_from_cache() already printed the response.
       $response->setContent('');
