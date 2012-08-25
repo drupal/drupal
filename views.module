@@ -23,15 +23,39 @@ function views_api_version() {
 }
 
 /**
+ * Returns a list of Drupal core modules.
+ *
+ * @return array
+ */
+function views_core_modules() {
+  return array(
+    'aggregator',
+    'book',
+    'comment',
+    'contact',
+    'field',
+    'filter',
+    'file',
+    'locale',
+    'node',
+    'search',
+    'statistics',
+    'system',
+    'taxonomy',
+    'translation',
+    'user'
+  );
+}
+
+/**
  * Implements hook_init().
  *
  *
  */
 function views_init() {
-  $core_modules = array('aggregator', 'book', 'comment', 'contact', 'field', 'filter', 'file', 'locale', 'node', 'search', 'statistics', 'system', 'taxonomy', 'translation', 'user');
   $path = drupal_get_path('module', 'views');
   $loader = drupal_classloader();
-  foreach ($core_modules as $module) {
+  foreach (views_core_modules() as $module) {
     $function = $module . '_views_api';
     if (function_exists($function)) {
       $loader->registerNamespace('Views\\' . $module, DRUPAL_ROOT . '/' . $path . '/lib');
