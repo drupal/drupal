@@ -75,25 +75,28 @@ function views_temp_store() {
 }
 
 /**
- * Implements hook_ctools_exportable_info().
+ * Implements hook_entity_info().
  */
-function views_ctools_exportable_info() {
-  return array(
+function views_entity_info() {
+  $return = array(
     'view' => array(
-      'controller class' => 'Drupal\ctools\DatabaseExportableController',
-      'key' => 'name',
-      'identifier' => 'view',
-      'default hook' => 'views_default_views',
-      'bulk export' => TRUE,
-      'api' => array(
-        'owner' => 'views',
-        'api' => 'views_default',
-        'minimum_version' => '2',
-        'current_version' => '3.0',
+      'label' => t('View'),
+      'entity class' => 'Drupal\views\View',
+      'controller class' => 'Drupal\views\ViewStorageController',
+      'form controller class' => array(
+        'default' => 'Drupal\node\NodeFormController',
       ),
-      'schema' => 'views_view',
+      'config prefix' => 'views.view',
+      'fieldable' => FALSE,
+      'entity keys' => array(
+        'id' => 'name',
+        'label' => 'human_name',
+        'uuid' => 'uuid',
+      ),
     ),
   );
+
+  return $return;
 }
 
 /**

@@ -4,6 +4,7 @@ package = Views
 core = 8.x
 php = 5.2
 dependencies[] = ctools
+dependencies[] = config
 
 ; Always available CSS
 stylesheets[all][] = css/views.base.css

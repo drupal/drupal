@@ -21,9 +21,7 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
  * An object to contain all of the data to generate a view, plus the member
  * functions to build the view query, execute the query and render the output.
  */
-class View extends ViewsDbObject {
-
-  var $db_table = 'views_view';
+class View extends ViewStorage {
 
   var $base_table = 'node';
 
@@ -35,13 +33,6 @@ class View extends ViewsDbObject {
    * @var string
    */
   var $name = "";
-
-  /**
-   * The id of the view, which is used only for views in the database.
-   *
-   * @var number
-   */
-  var $vid;
 
   /**
    * The description of the view, which is used only in the interface.
@@ -276,17 +267,6 @@ class View extends ViewsDbObject {
   protected $response = NULL;
 
   /**
-   * Constructor
-   */
-  function __construct() {
-    parent::init();
-    // Make sure all of our sub objects are arrays.
-    foreach ($this->db_objects() as $key => $object) {
-      $this->$key = array();
-    }
-  }
-
-  /**
    * Perform automatic updates when loading or importing a view.
    *
    * Over time, some things about Views or Drupal data has changed.
@@ -306,14 +286,6 @@ class View extends ViewsDbObject {
    */
   function display_objects() {
     return array('argument', 'field', 'sort', 'filter', 'relationship', 'header', 'footer', 'empty');
-  }
-
-  /**
-   * Returns the complete list of dependent objects in a view, for the purpose
-   * of initialization and loading/saving to/from the database.
-   */
-  static function db_objects() {
-    return array('display' => 'Display');
   }
 
   /**

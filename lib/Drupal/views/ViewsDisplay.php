@@ -13,32 +13,30 @@ namespace Drupal\views;
  * This is just the database storage mechanism, and isn't terribly important
  * to the behavior of the display at all.
  */
-class ViewsDisplay extends ViewsDbObject {
+class ViewsDisplay {
 
   /**
    * The display handler itself, which has all the methods.
    *
    * @var views_plugin_display
    */
-  var $handler;
+  public $handler;
 
   /**
    * Stores all options of the display, like fields, filters etc.
    *
    * @var array
    */
-  var $display_options;
+  public $display_options;
 
-  var $db_table = 'views_display';
+  function __construct(array $display_options = array()) {
+    $this->display_options = $display_options;
 
-  function __construct($init = TRUE) {
-    parent::init($init);
-  }
-
-  function options($type, $id, $title) {
-    $this->display_plugin = $type;
-    $this->id = $id;
-    $this->display_title = $title;
+    if (!empty($display_options)) {
+      $this->display_plugin = $display_options['display_plugin'];
+      $this->id = $display_options['id'];
+      $this->display_title = $display_options['display_title'];
+    }
   }
 
 }
