@@ -16,6 +16,13 @@ class ArgumentDefaultTest extends ViewsSqlTest {
 
   protected $profile = 'standard';
 
+  /**
+   * A random string used in the default views.
+   *
+   * @var string
+   */
+  protected $random;
+
   public static function getInfo() {
     return array(
       'name' => 'Argument default',
@@ -34,7 +41,6 @@ class ArgumentDefaultTest extends ViewsSqlTest {
    * Tests the use of a default argument plugin that provides no options.
    */
   function testArgumentDefaultNoOptions() {
-    module_enable(array('views_test'));
     $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
     $this->drupalLogin($admin_user);
 

@@ -207,7 +207,7 @@ class UpgradeTestCase extends ViewsSqlTest {
       $handler->display->display_options["exposed_form"]["type"] = "basic";
       $handler->display->display_options["pager"]["type"] = "some";
       $handler->display->display_options["pager"]["options"]["items_per_page"] = 5;
-      $handler->display->display_options["style_plugin"] = "list";
+      $handler->display->display_options["style_plugin"] = "html_list";
       $handler->display->display_options["row_plugin"] = "fields";
       /* Relationship: Comment: Node */
       $handler->display->display_options["relationships"]["nid"]["id"] = "nid";
@@ -242,7 +242,7 @@ class UpgradeTestCase extends ViewsSqlTest {
       $handler = $view->new_display("page", "Page", "page");
       $handler->display->display_options["defaults"]["items_per_page"] = FALSE;
       $handler->display->display_options["defaults"]["style_plugin"] = FALSE;
-      $handler->display->display_options["style_plugin"] = "list";
+      $handler->display->display_options["style_plugin"] = "html_list";
       $handler->display->display_options["defaults"]["style_options"] = FALSE;
       $handler->display->display_options["defaults"]["row_plugin"] = FALSE;
       $handler->display->display_options["row_plugin"] = "fields";
