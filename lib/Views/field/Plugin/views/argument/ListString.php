@@ -34,7 +34,7 @@ class ListString extends String {
   function init(&$view, &$options) {
     parent::init($view, $options);
     $field = field_info_field($this->definition['field_name']);
-    $this->allowed_values = list_allowed_values($field);
+    $this->allowed_values = options_allowed_values($field);
   }
 
   function option_definition() {
