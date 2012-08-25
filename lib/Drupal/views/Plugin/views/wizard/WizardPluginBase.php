@@ -55,6 +55,17 @@ abstract class WizardPluginBase implements WizardInterface {
     }
   }
 
+  /**
+   * Gets the active stored plugin information.
+   *
+   * @return array
+   *   The plugin information.
+   */
+  function getPlugin() {
+    return $this->plugin;
+  }
+
+
   function build_form($form, &$form_state) {
     $style_options = views_fetch_plugin_names('style', 'normal', array($this->base_table));
     $feed_row_options = views_fetch_plugin_names('row', 'feed', array($this->base_table));
@@ -303,6 +314,7 @@ abstract class WizardPluginBase implements WizardInterface {
     elseif ($style_plugin->usesFields()) {
       $style_form['row_plugin'] = array('#markup' => '<span>' . t('of fields') . '</span>');
     }
+    $style_plugin->wizard_form($form, $form_state, $type);
   }
 
   /**
@@ -513,49 +525,10 @@ abstract class WizardPluginBase implements WizardInterface {
    * Alter the full array of display options before they are added to the view.
    */
   protected function alter_display_options(&$display_options, $form, $form_state) {
-    // If any of the displays use jump menus, we want to add fields to the view
-    // that store the path that will be used in the jump menu. The fields to
-    // use for this are defined by the plugin.
-    if (isset($this->plugin['path_field'])) {
-      $path_field = $this->plugin['path_field'];
-      $path_fields_added = FALSE;
-      foreach ($display_options as $display_type => $options) {
-        if (!empty($options['style_plugin']) && $options['style_plugin'] == 'jump_menu') {
-          // Regardless of how many displays have jump menus, we only need to
-          // add a single set of path fields to the view.
-          if (!$path_fields_added) {
-            // The plugin might provide supplemental fields that it needs to
-            // generate the path (for example, node revisions need the node ID
-            // as well as the revision ID). We need to add these first so they
-            // are available as replacement patterns in the main path field.
-            $path_fields = !empty($this->plugin['path_fields_supplemental']) ? $this->plugin['path_fields_supplemental'] : array();
-            $path_fields[] = &$path_field;
-
-            // Generate a unique ID for each field so we don't overwrite
-            // existing ones.
-            foreach ($path_fields as &$field) {
-              $field['id'] = View::generate_item_id($field['id'], $display_options['default']['fields']);
-              $display_options['default']['fields'][$field['id']] = $field;
-            }
-
-            $path_fields_added = TRUE;
-          }
-
-          // Configure the style plugin to use the path field to generate the
-          // jump menu path.
-          $display_options[$display_type]['style_options']['path'] = $path_field['id'];
-        }
-      }
-    }
-
-    // If any of the displays use the table style, take sure that the fields
-    // always have a labels by unsetting the override.
-    foreach ($display_options as &$options) {
-      if ($options['style_plugin'] == 'table') {
-        foreach ($display_options['default']['fields'] as &$field) {
-          unset($field['label']);
-        }
-      }
+    foreach ($display_options as $display_type => $options) {
+      // Allow style plugins to hook in and provide some settings.
+      $style_plugin = views_get_plugin('style', $options['style_plugin']);
+      $style_plugin->wizard_submit($form, $form_state, $this, $display_options, $display_type);
     }
   }
 

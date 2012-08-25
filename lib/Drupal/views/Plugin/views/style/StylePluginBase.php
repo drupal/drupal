@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\Plugin\views\wizard\WizardInterface;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -326,6 +327,37 @@ abstract class StylePluginBase extends PluginBase {
         }
       }
     }
+  }
+
+  /**
+   * Provide a form in the views wizard if this style is selected.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param array $form_state
+   *   An associative array containing the current state of the form.
+   * @param string $type
+   *    The display type, either block or page.
+   */
+  function wizard_form(&$form, &$form_state, $type) {
+  }
+
+  /**
+   * Alter the options of a display before they are added to the view.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param array $form_state
+   *   An associative array containing the current state of the form.
+   * @param Drupal\views\Plugin\views\wizard\WizardInterface $wizard
+   *   The current used wizard.
+   * @param array $display_options
+   *   The options which will be used on the view. The style plugin should
+   *   alter this to its own needs.
+   * @param string $display_type
+   *   The display type, either block or page.
+   */
+  function wizard_submit(&$form, &$form_state, WizardInterface $wizard, &$display_options, $display_type) {
   }
 
   /**

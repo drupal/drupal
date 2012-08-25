@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\style;
 
+use Drupal\views\Plugin\views\wizard\WizardInterface;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -352,5 +353,14 @@ class Table extends StylePluginBase {
   function even_empty() {
     return parent::even_empty() || !empty($this->options['empty_table']);
   }
+
+  function wizard_submit(&$form, &$form_state, WizardInterface $wizard, &$display_options, $display_type) {
+    // If any of the displays use the table style, take sure that the fields
+    // always have a labels by unsetting the override.
+    foreach ($display_options['default']['fields'] as &$field) {
+      unset($field['label']);
+    }
+  }
+
 
 }
