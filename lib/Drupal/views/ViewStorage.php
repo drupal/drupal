@@ -2,172 +2,19 @@
 
 /**
  * @file
- * Definition of Drupal\views\ViewsDbObject.
+ * Definition of Drupal\views\ViewStorage.
  */
 
 namespace Drupal\views;
 
-/**
- * Base class for views' database objects.
- */
-class ViewsDbObject {
+use Drupal\config\ConfigurableBase;
 
+class ViewStorage extends ConfigurableBase {
+
+  /**
+   * @var string
+   */
   public $db_table;
-
-  /**
-   * Initialize this object, setting values from schema defaults.
-   *
-   * @param $init
-   *   If an array, this is a set of values from db_fetch_object to
-   *   load. Otherwse, if TRUE values will be filled in from schema
-   *   defaults.
-   */
-  function init($init = TRUE) {
-    if (is_array($init)) {
-      return $this->load_row($init);
-    }
-
-    if (!$init) {
-      return;
-    }
-
-    $schema = drupal_get_schema($this->db_table);
-
-    if (!$schema) {
-      return;
-    }
-
-    // Go through our schema and build correlations.
-    foreach ($schema['fields'] as $field => $info) {
-      if ($info['type'] == 'serial') {
-        $this->$field = NULL;
-      }
-      if (!isset($this->$field)) {
-        if (!empty($info['serialize']) && isset($info['serialized default'])) {
-          $this->$field = unserialize($info['serialized default']);
-        }
-        elseif (isset($info['default'])) {
-          $this->$field = $info['default'];
-        }
-        else {
-          $this->$field = '';
-        }
-      }
-    }
-  }
-
-  /**
-   * Write the row to the database.
-   *
-   * @param $update
-   *   If true this will be an UPDATE query. Otherwise it will be an INSERT.
-   */
-  function save_row($update = NULL) {
-    $fields = $defs = $values = $serials = array();
-    $schema = drupal_get_schema($this->db_table);
-
-    // Go through our schema and build correlations.
-    foreach ($schema['fields'] as $field => $info) {
-      // special case -- skip serial types if we are updating.
-      if ($info['type'] == 'serial') {
-        $serials[] = $field;
-        continue;
-      }
-      elseif ($info['type'] == 'int') {
-        $this->$field = (int) $this->$field;
-      }
-      $fields[$field] = empty($info['serialize']) ? $this->$field : serialize($this->$field);
-    }
-    if (!$update) {
-      $query = db_insert($this->db_table);
-    }
-    else {
-      $query = db_update($this->db_table)
-        ->condition($update, $this->$update);
-    }
-    $return = $query
-      ->fields($fields)
-      ->execute();
-
-    if ($serials && !$update) {
-      // get last insert ids and fill them in.
-      // Well, one ID.
-      foreach ($serials as $field) {
-        $this->$field = $return;
-      }
-    }
-  }
-
-  /**
-   * Load the object with a row from the database.
-   *
-   * This method is separate from the constructor in order to give us
-   * more flexibility in terms of how the view object is built in different
-   * contexts.
-   *
-   * @param $data
-   *   An object from db_fetch_object. It should contain all of the fields
-   *   that are in the schema.
-   */
-  function load_row($data) {
-    $schema = drupal_get_schema($this->db_table);
-
-    // Go through our schema and build correlations.
-    foreach ($schema['fields'] as $field => $info) {
-      $this->$field = empty($info['serialize']) ? $data->$field : unserialize($data->$field);
-    }
-  }
-
-  /**
-   * Export a loaded row, such as an argument, field or the view itself to PHP code.
-   *
-   * @param $identifier
-   *   The variable to assign the PHP code for this object to.
-   * @param $indent
-   *   An optional indentation for prettifying nested code.
-   */
-  function export_row($identifier = NULL, $indent = '') {
-    // @todo replace with http://drupal.org/node/1741154.
-    ctools_include('export');
-
-    if (!$identifier) {
-      $identifier = $this->db_table;
-    }
-    $schema = drupal_get_schema($this->db_table);
-
-    $output = $indent . '$' . $identifier . ' = new ' . get_class($this) . "();\n";
-    // Go through our schema and build correlations.
-    foreach ($schema['fields'] as $field => $info) {
-      if (!empty($info['no export'])) {
-        continue;
-      }
-      if (!isset($this->$field)) {
-        if (isset($info['default'])) {
-          $this->$field = $info['default'];
-        }
-        else {
-          $this->$field = '';
-        }
-
-        // serialized defaults must be set as serialized.
-        if (isset($info['serialize'])) {
-          $this->$field = unserialize($this->$field);
-        }
-      }
-      $value = $this->$field;
-      if ($info['type'] == 'int') {
-        if (isset($info['size']) && $info['size'] == 'tiny') {
-          $value = (bool) $value;
-        }
-        else {
-          $value = (int) $value;
-        }
-      }
-
-      $output .= $indent . '$' . $identifier . '->' . $field . ' = ' . ctools_var_export($value, $indent) . ";\n";
-    }
-    return $output;
-  }
 
   /**
    * Add a new display handler to the view, automatically creating an id.
@@ -213,9 +60,14 @@ class ViewsDbObject {
       }
     }
 
+    $display_options = array(
+      'type' => $type,
+      'id' => $id,
+      'display_title' => $title,
+    );
+
     // Create the new display object
-    $display = new ViewsDisplay();
-    $display->options($type, $id, $title);
+    $display = new ViewsDisplay($display_options);
 
     // Add the new display object to the view.
     $this->display[$id] = $display;
