@@ -750,8 +750,8 @@ function update_verify_update_archive($project, $archive_file, $directory) {
  *   The data to store.
  * @param $expire
  *   One of the following values:
- *   - CACHE_PERMANENT: Indicates that the item should never be removed except
- *     by explicitly using _update_cache_clear().
+ *   - CacheBackendInterface::CACHE_PERMANENT: Indicates that the item should
+ *     never be removed except by explicitly using _update_cache_clear().
  *   - A Unix timestamp: Indicates that the item should be kept at least until
  *     the given time, after which it will be invalidated.
  *

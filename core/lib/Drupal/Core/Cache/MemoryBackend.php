@@ -95,7 +95,7 @@ class MemoryBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
-  public function set($cid, $data, $expire = CACHE_PERMANENT, array $tags = array()) {
+  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
     $this->cache[$cid] = (object) array(
       'cid' => $cid,
       'data' => $data,

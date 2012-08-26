@@ -37,13 +37,6 @@ const DRUPAL_MINIMUM_PHP = '5.3.3';
 const DRUPAL_MINIMUM_PHP_MEMORY_LIMIT = '32M';
 
 /**
- * Indicates that the item should never be removed unless explicitly selected.
- *
- * The item may be removed using cache()->delete() with a cache ID.
- */
-const CACHE_PERMANENT = 0;
-
-/**
  * @defgroup logging_severity_levels Logging severity levels
  * @{
  * Logging severity levels as defined in RFC 3164.

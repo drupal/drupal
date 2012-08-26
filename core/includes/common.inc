@@ -3,6 +3,7 @@
 use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Template\Attribute;
 
@@ -4988,7 +4989,7 @@ function drupal_page_set_cache($body) {
         'headers' => array(),
       ),
       'tags' => array('content' => TRUE),
-      'expire' => CACHE_PERMANENT,
+      'expire' => CacheBackendInterface::CACHE_PERMANENT,
       'created' => REQUEST_TIME,
     );
 
@@ -5908,7 +5909,7 @@ function drupal_render_cache_set(&$markup, $elements) {
     $data['#attached'] = $attached;
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
-  $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : CACHE_PERMANENT;
+  $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : CacheBackendInterface::CACHE_PERMANENT;
   $tags = isset($elements['#cache']['tags']) ? $elements['#cache']['tags'] : array();
   cache($bin)->set($cid, $data, $expire, $tags);
 }
@@ -5983,7 +5984,7 @@ function drupal_render_collect_attached($elements, $return = FALSE) {
  *   - #pre_render: $function with a _pre_render suffix.
  *   - #cache: An associative array prepared for drupal_render_cache_set().
  */
-function drupal_render_cache_by_query($query, $function, $expire = CACHE_PERMANENT, $granularity = NULL) {
+function drupal_render_cache_by_query($query, $function, $expire = CacheBackendInterface::CACHE_PERMANENT, $granularity = NULL) {
   $cache_keys = array_merge(array($function), drupal_render_cid_parts($granularity));
   $query->preExecute();
   $cache_keys[] = hash('sha256', serialize(array((string) $query, $query->getArguments())));

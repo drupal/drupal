@@ -50,7 +50,7 @@ class InstallBackend extends DatabaseBackend {
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::set().
    */
-  function set($cid, $data, $expire = CACHE_PERMANENT, array $tags = array()) {}
+  function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {}
 
   /**
    * Overrides Drupal\Core\Cache\DatabaseBackend::delete().

@@ -377,7 +377,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
     $backend = $this->getCacheBackend();
 
     // Set both expiring and permanent keys.
-    $backend->set('test1', 1, CACHE_PERMANENT);
+    $backend->set('test1', 1, CacheBackendInterface::CACHE_PERMANENT);
     $backend->set('test2', 3, time() + 1000);
 
     $backend->flush();
@@ -411,8 +411,8 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
     $backend = $this->getCacheBackend();
 
     // Create two cache entries with the same tag and tag value.
-    $backend->set('test_cid_clear1', $this->defaultValue, CACHE_PERMANENT, array('test_tag' => array(1)));
-    $backend->set('test_cid_clear2', $this->defaultValue, CACHE_PERMANENT, array('test_tag' => array(1)));
+    $backend->set('test_cid_clear1', $this->defaultValue, CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => array(1)));
+    $backend->set('test_cid_clear2', $this->defaultValue, CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => array(1)));
     $this->assertTrue($this->checkCacheExists('test_cid_clear1')
                       && $this->checkCacheExists('test_cid_clear2'),
                       'Two cache items were created.');
@@ -423,9 +423,9 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
                       'Two caches removed after clearing a cache tag.');
 
     // Create three cache entries with a mix of tags and tag values.
-    $backend->set('test_cid_clear1', $this->defaultValue, CACHE_PERMANENT, array('test_tag' => array(1)));
-    $backend->set('test_cid_clear2', $this->defaultValue, CACHE_PERMANENT, array('test_tag' => array(2)));
-    $backend->set('test_cid_clear3', $this->defaultValue, CACHE_PERMANENT, array('test_tag_foo' => array(3)));
+    $backend->set('test_cid_clear1', $this->defaultValue, CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => array(1)));
+    $backend->set('test_cid_clear2', $this->defaultValue, CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => array(2)));
+    $backend->set('test_cid_clear3', $this->defaultValue, CacheBackendInterface::CACHE_PERMANENT, array('test_tag_foo' => array(3)));
     $this->assertTrue($this->checkCacheExists('test_cid_clear1')
                       && $this->checkCacheExists('test_cid_clear2')
                       && $this->checkCacheExists('test_cid_clear3'),
@@ -443,7 +443,7 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
     $tags = array('test_tag' => array(1, 2, 3));
     $bins = array('path', 'bootstrap', 'page');
     foreach ($bins as $bin) {
-      $this->getCacheBackend($bin)->set('test', $this->defaultValue, CACHE_PERMANENT, $tags);
+      $this->getCacheBackend($bin)->set('test', $this->defaultValue, CacheBackendInterface::CACHE_PERMANENT, $tags);
       $this->assertTrue($this->checkCacheExists('test', $bin), 'Cache item was set in bin.');
     }
 

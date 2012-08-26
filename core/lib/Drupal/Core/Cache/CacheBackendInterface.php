@@ -48,6 +48,13 @@ namespace Drupal\Core\Cache;
 interface CacheBackendInterface {
 
   /**
+   * Indicates that the item should never be removed unless explicitly selected.
+   *
+   * The item may be removed using cache()->delete() with a cache ID.
+   */
+  const CACHE_PERMANENT = 0;
+
+  /**
    * Constructs a new cache backend.
    *
    * @param $bin
@@ -93,8 +100,8 @@ interface CacheBackendInterface {
    *   Strings will be stored as plain text and not serialized.
    * @param $expire
    *   One of the following values:
-   *   - CACHE_PERMANENT: Indicates that the item should never be removed unless
-   *     explicitly told to using cache->delete($cid).
+   *   - CacheBackendInterface::CACHE_PERMANENT: Indicates that the item
+   *     should never be removed unless cache->delete($cid) is used explicitly.
    *   - A Unix timestamp: Indicates that the item should be kept at least until
    *     the given time.
    * @param array $tags
@@ -104,7 +111,7 @@ interface CacheBackendInterface {
    *   a node, both the node ID and the author's user ID might be passed in as
    *   tags. For example array('node' => array(123), 'user' => array(92)).
    */
-  function set($cid, $data, $expire = CACHE_PERMANENT, array $tags = array());
+  function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array());
 
   /**
    * Deletes an item from the cache.

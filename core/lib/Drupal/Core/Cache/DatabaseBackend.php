@@ -117,7 +117,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
-  function set($cid, $data, $expire = CACHE_PERMANENT, array $tags = array()) {
+  function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
     $fields = array(
       'serialized' => 0,
       'created' => REQUEST_TIME,
@@ -188,7 +188,7 @@ class DatabaseBackend implements CacheBackendInterface {
    */
   function expire() {
     db_delete($this->bin)
-      ->condition('expire', CACHE_PERMANENT, '<>')
+      ->condition('expire', CacheBackendInterface::CACHE_PERMANENT, '<>')
       ->condition('expire', REQUEST_TIME, '<')
       ->execute();
   }
