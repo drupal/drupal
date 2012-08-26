@@ -74,7 +74,7 @@
 .container-inline > * + *,
 .container-inline .fieldset-wrapper > * + * {
   padding-left: 0;
-  padding-right: 4pt;
+  padding-right: 4px;
 }
 
 .views-admin .form-type-checkbox + .form-wrapper {
@@ -164,7 +164,7 @@ div.form-item-displays-live-preview {
  */
 
 .views-display-setting .label {
-  margin-left: 3pt;
+  margin-left: 3px;
 }
 
 /* @end */

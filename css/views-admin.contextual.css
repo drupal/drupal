@@ -31,8 +31,6 @@ html.js #views-live-preview div.contextual {
 /* @group List */
 
 div.contextual ul.contextual-links {
-  -moz-border-radius: 0 4px 4px 4px;
-  -webkit-border-radius: 0 4px 4px 4px;
   border-radius: 0 4px 4px 4px;
   min-width: 10em;
   padding: 6px 6px 9px 6px;

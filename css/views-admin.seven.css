@@ -262,8 +262,6 @@ table th {
 
 .views-displays .secondary a {
   background-color: #f1f1f1;
-  -moz-border-radius: 7px;
-  -webkit-border-radius: 7px;
   border-radius: 7px;
   color: #008BCB;
 }
@@ -432,7 +430,7 @@ table th {
   background-image:
     -moz-linear-gradient(
       -90deg,
-      #ffffff 0px,
+      #ffffff 0,
       #f9f9f9 100%);
   background-image:
     -webkit-gradient(
@@ -445,23 +443,21 @@ table th {
   background-image:
     -webkit-linear-gradient(
       -90deg,
-      #ffffff 0px,
+      #ffffff 0,
       #f9f9f9 100%);
   background-image:
     linear-gradient(
       -90deg,
-      #ffffff 0px,
+      #ffffff 0,
       #f9f9f9 100%);
-  -moz-border-radius: 11px 11px 11px 11px;
-  -webkit-border-radius: 11px 11px 11px 11px;
-  border-radius: 11px 11px 11px 11px;
+  border-radius: 11px;
 }
 
 .ctools-button-processed:hover {
   background-image:
     -moz-linear-gradient(
       -90deg,
-      #ffffff 0px,
+      #ffffff 0,
       #f1f1f1 100%);
   background-image:
     -webkit-gradient(
@@ -474,12 +470,12 @@ table th {
   background-image:
     -webkit-linear-gradient(
       -90deg,
-      #ffffff 0px,
+      #ffffff 0,
       #f1f1f1 100%);
   background-image:
     linear-gradient(
       -90deg,
-      #ffffff 0px,
+      #ffffff 0,
       #f1f1f1 100%);
 }
 
@@ -487,7 +483,7 @@ table th {
   background-image:
     -moz-linear-gradient(
       -90deg,
-      #ffffff 0px,
+      #ffffff 0,
       #f9f9f9 100%);
   background-image:
     -webkit-gradient(
@@ -500,12 +496,12 @@ table th {
   background-image:
     -webkit-linear-gradient(
       -90deg,
-      #ffffff 0px,
+      #ffffff 0,
       #f9f9f9 100%);
   background-image:
     linear-gradient(
       -90deg,
-      #ffffff 0px,
+      #ffffff 0,
       #f9f9f9 100%);
 }
 

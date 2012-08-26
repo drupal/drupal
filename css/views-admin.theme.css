@@ -49,7 +49,7 @@
     url("../images/sprites.png"),
     -moz-linear-gradient(
       -90deg,
-      #ffffff 0px,
+      #ffffff 0,
       #e8e8e8 100%);
   background-image:
     url("../images/sprites.png"),
@@ -64,12 +64,10 @@
     url("../images/sprites.png"),
     -webkit-linear-gradient(
       -90deg,
-      #ffffff 0px,
+      #ffffff 0,
       #e8e8e8 100%);
   background-repeat: no-repeat, repeat-y;
   border: 1px solid #dddddd;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
   -moz-box-shadow: 0 0 0 rgba(0,0,0,0.3333) inset;
   -webkit-box-shadow: 0 0 0 rgba(0,0,0,0.3333) inset;
@@ -186,7 +184,7 @@ input.form-radio {
 
 .container-inline > * + *,
 .container-inline .fieldset-wrapper > * + * {
-  padding-left: 4pt; /* LTR */
+  padding-left: 4px; /* LTR */
 }
 
 .views-admin fieldset fieldset.container-inline {
@@ -698,7 +696,7 @@ ul#views-display-menu-tabs li.add ul.action-list li{
 }
 
 .views-display-setting .label {
-  margin-right: 3pt; /* LTR */
+  margin-right: 3px; /* LTR */
 }
 
 /* @end */
@@ -755,8 +753,6 @@ ul#views-display-menu-tabs li.add ul.action-list li{
 .views-ui-dialog .ui-dialog-titlebar-close {
   background: url("../images/close.png") no-repeat scroll 6px 3px #F3F4EE;
   border-color: #aaaaaa;
-  -moz-border-radius: 0 10px 12px 0;
-  -webkit-border-radius: 0 10px 12px 0;
   border-radius: 0 10px 12px 0;
   border-style: solid;
   border-width: 1px 1px 1px 0;
@@ -1061,11 +1057,9 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   background-image: url("../images/loading-small.gif");
   background-position: center center;
   background-repeat: no-repeat;
-  -moz-border-radius: 7px;
-  -webkit-border-radius: 7px;
   border-radius: 7px;
   height: 24px;
-  opacity: .9;
+  opacity: 0.9;
   padding: 4px;
   width: 24px;
 }

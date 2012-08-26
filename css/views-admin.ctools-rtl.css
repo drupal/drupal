@@ -75,7 +75,7 @@
 
 /* Override for filter button on the views list screen */
 #ctools-export-ui-list-form .form-submit {
-  margin-left: 0em;
+  margin-left: 0;
   margin-right: auto;
 }
 

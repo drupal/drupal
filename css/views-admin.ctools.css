@@ -214,8 +214,8 @@ h2.ctools-collapsible-handle {
 
 /* Override for filter button on the views list screen */
 #ctools-export-ui-list-form .form-submit {
-  margin-top: 0em !important;
-  margin-right: 0em;
+  margin-top: 0 !important;
+  margin-right: 0;
 }
 
 .ctools-export-ui-row + .ctools-export-ui-row {
