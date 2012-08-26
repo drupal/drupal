@@ -23,15 +23,6 @@ function views_ui_get_admin_css() {
   $module_path = drupal_get_path('module', 'views_ui');
   $list = array();
   $list[$module_path . '/css/views-admin.css'] = array();
-
-  $list[$module_path . '/css/ie/views-admin.ie7.css'] = array(
-    'browsers' => array(
-      'IE' => 'lte IE 7',
-      '!IE' => FALSE
-    ),
-    'preprocess' => FALSE,
-  );
-
   $list[$module_path . '/css/views-admin.theme.css'] = array();
 
   // Add in any theme specific CSS files we have
@@ -39,7 +30,7 @@ function views_ui_get_admin_css() {
   $theme_key = $GLOBALS['theme'];
   while ($theme_key) {
     // Try to find the admin css file for non-core themes.
-    if (!in_array($theme_key, array('garland', 'seven', 'bartik'))) {
+    if (!in_array($theme_key, array('seven', 'bartik'))) {
       $theme_path = drupal_get_path('theme', $theme_key);
       // First search in the css directory, then in the root folder of the theme.
       if (file_exists($theme_path . "/css/views-admin.$theme_key.css")) {
