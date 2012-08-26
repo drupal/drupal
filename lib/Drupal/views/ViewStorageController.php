@@ -51,9 +51,9 @@ class ViewStorageController extends ConfigStorageController {
     $this->preSave($entity);
     $this->invokeHook('presave', $entity);
 
-    // TODO: This temp measure will be removed once we have a better way or
+    // @todo: This temp measure will be removed once we have a better way or
     // separation of storage and the executed view.
-    $properties = array (
+    $config_properties = array (
       'disabled',
       'api_version',
       'name',
@@ -65,8 +65,17 @@ class ViewStorageController extends ConfigStorageController {
       'display',
     );
 
-    foreach ($properties as $property) {
-      $config->set($property, $entity->$property);
+    foreach ($config_properties as $property) {
+      if ($property == 'display') {
+        $displays = array();
+        foreach ($entity->display as $key => $display) {
+          $displays[$key] = $display->display_options;
+        }
+        $config->set('display', $displays);
+      }
+      else {
+        $config->set($property, $entity->$property);
+      }
     }
 
     if (!$config->isNew()) {
