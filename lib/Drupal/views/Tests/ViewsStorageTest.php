@@ -120,10 +120,37 @@ class ViewsStorageTest extends WebTestBase {
 
     $this->assertTrue($created instanceof View, 'Created object is a View.');
     // Check that the View contains all of the properties.
-    foreach ($this->config_properties as $property) {
-      $this->assertTrue(isset($view->{$property}), format_string('Property: @property created on View.', array('@property' => $property)));
+    $properties = $this->config_properties;
+    array_pop($properties);
+
+    // Test all properties except displays.
+    foreach ($properties as $property) {
+      $this->assertTrue(isset($created->{$property}), format_string('Property: @property created on View.', array('@property' => $property)));
       $this->assertIdentical($values[$property], $created->{$property}, format_string('Property value: @property matches configuration value.', array('@property' => $property)));
     }
+
+    // Test created displays.
+    foreach ($created->display as $key => $display) {
+      $this->assertTrue($display instanceof ViewsDisplay, format_string('Display @display is an instance of ViewsDisplay.', array('@display' => $key)));
+    }
+
+    // Save the newly created view, but modify the name.
+    // $created->set('name', 'archive_copy');
+    // $created->save();
+
+    // // Load the newly saved config.
+    // $config = config('views.view.archive_copy');
+    // $this->assertFalse($config->isNew(), 'Loaded configuration is not new.');
+
+    // Change a value and save.
+    $view->tag = 'changed';
+    $view->save();
+    debug($view->tag);
+
+    // Check value have been written to config.
+    $config = config('views.view.archive')->get();
+    debug($config['tag']);
+    $this->assertEqual($view->tag, $config['tag'], 'View property saved to config.');
   }
 
 }
