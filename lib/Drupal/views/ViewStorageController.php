@@ -108,7 +108,7 @@ class ViewStorageController extends ConfigStorageController {
    *
    * @param Drupal\entity\StorableInterface $entity
    */
-  protected function attachDisplays(&$entity) {
+  protected function attachDisplays($entity) {
     if (isset($entity->display) && is_array($entity->display)) {
       $displays = array();
       foreach ($entity->get('display') as $key => $options) {
