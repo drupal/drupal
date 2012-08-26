@@ -1547,13 +1547,12 @@ function views_ui_get_display_tab_details($view, $display) {
   // the buttons in a .ctools-dropbutton class if more than one is present.  Otherwise, we'll just wrap the
   // actions in the .ctools-button class.
   $is_display_deleted = !empty($display->deleted);
-  $is_deletable = empty($plugin['no remove']);
   // The master display cannot be cloned.
   $is_default = $display->id == 'default';
   // @todo: Figure out why get_option doesn't work here.
   $is_enabled = $display->handler->get_option('enabled');
 
-  if (!$is_display_deleted && $is_deletable && !$is_default) {
+  if (!$is_display_deleted && !$is_default) {
     $prefix = '<div class="ctools-no-js ctools-button ctools-dropbutton"><div class="ctools-link"><a href="#" class="ctools-twisty ctools-text">open</a></div><div class="ctools-content"><ul class="horizontal right actions">';
     $suffix = '</ul></div></div>';
     $item_element = 'li';
@@ -1610,16 +1609,15 @@ function views_ui_get_display_tab_details($view, $display) {
           "#suffix" => '</' . $item_element . '>',
         );
       }
-      if ($is_deletable) {
-        $build['top']['actions']['delete'] = array(
-          '#type' => 'submit',
-          '#value' => t('delete @display_title', array('@display_title' => $display_title)),
-          '#limit_validation_errors' => array(),
-          '#submit' => array('views_ui_edit_form_submit_delete_display', 'views_ui_edit_form_submit_delay_destination'),
-          '#prefix' => '<' . $item_element . ' class="delete">',
-          "#suffix" => '</' . $item_element . '>',
-        );
-      }
+      // Always allow a display to be deleted.
+      $build['top']['actions']['delete'] = array(
+        '#type' => 'submit',
+        '#value' => t('delete @display_title', array('@display_title' => $display_title)),
+        '#limit_validation_errors' => array(),
+        '#submit' => array('views_ui_edit_form_submit_delete_display', 'views_ui_edit_form_submit_delay_destination'),
+        '#prefix' => '<' . $item_element . ' class="delete">',
+        "#suffix" => '</' . $item_element . '>',
+      );
       if ($is_enabled) {
         $build['top']['actions']['disable'] = array(
           '#type' => 'submit',
