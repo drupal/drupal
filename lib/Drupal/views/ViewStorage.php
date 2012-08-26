@@ -16,6 +16,13 @@ class ViewStorage extends ConfigurableBase {
   }
 
   /**
+   * Overrides Drupal\entity\StorableInterface::id().
+   */
+  public function id() {
+    return $this->name;
+  }
+
+  /**
    * @var string
    */
   public $db_table;
