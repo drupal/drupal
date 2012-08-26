@@ -135,21 +135,22 @@ class ViewsStorageTest extends WebTestBase {
     }
 
     // Save the newly created view, but modify the name.
-    // $created->set('name', 'archive_copy');
-    // $created->save();
+    $created->set('name', 'archive_copy');
+    $created->set('tag', 'changed');
+    $created->save();
 
-    // // Load the newly saved config.
-    // $config = config('views.view.archive_copy');
-    // $this->assertFalse($config->isNew(), 'Loaded configuration is not new.');
+    // Load the newly saved config.
+    $config = config('views.view.archive_copy');
+    $this->assertFalse($config->isNew(), 'New config has been loaded.');
+
+    $this->assertEqual($created->tag, $config->get('tag'), 'A changed value has been saved.');
 
     // Change a value and save.
     $view->tag = 'changed';
     $view->save();
-    debug($view->tag);
 
     // Check value have been written to config.
     $config = config('views.view.archive')->get();
-    debug($config['tag']);
     $this->assertEqual($view->tag, $config['tag'], 'View property saved to config.');
   }
 
