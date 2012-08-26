@@ -1,4 +1,4 @@
-  <?php
+<?php
 
 /**
  * @file
@@ -11,7 +11,7 @@ use Drupal\config\ConfigurableBase;
 
 class ViewStorage extends ConfigurableBase {
 
-  public function __construct() {
+  public function __construct(array $values, $entity_type) {
     parent::__construct($values, 'view');
   }
 
