@@ -1,4 +1,4 @@
-<?php
+  <?php
 
 /**
  * @file
@@ -10,6 +10,10 @@ namespace Drupal\views;
 use Drupal\config\ConfigurableBase;
 
 class ViewStorage extends ConfigurableBase {
+
+  public function __construct() {
+    parent::__construct($values, 'view');
+  }
 
   /**
    * @var string
