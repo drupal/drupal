@@ -12,7 +12,7 @@ use Drupal\Component\Plugin\PluginBase as ComponentPluginBase;
 abstract class PluginBase extends ComponentPluginBase {
 
   /**
-   * Except for displays, options for the object will be held here.
+   * Options for this plugin will be held here.
    *
    * @var array
    */
