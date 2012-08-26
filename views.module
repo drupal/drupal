@@ -53,7 +53,9 @@ function views_core_modules() {
 function views_init() {
   $path = drupal_get_path('module', 'views');
   $loader = drupal_classloader();
-  foreach (views_core_modules() as $module) {
+  // Just register enabled modules.
+  $modules = array_intersect(views_core_modules(), module_list('module_enabled'));
+  foreach ($modules as $module) {
     $function = $module . '_views_api';
     if (function_exists($function)) {
       $loader->registerNamespace('Views\\' . $module, DRUPAL_ROOT . '/' . $path . '/lib');

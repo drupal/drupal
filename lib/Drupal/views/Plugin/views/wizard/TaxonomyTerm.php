@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\wizard\TaxonomyTerm.
+ * Definition of Views\taxonomy\Plugin\views\wizard\TaxonomyTerm.
  */
 
-namespace Drupal\views\Plugin\views\wizard;
+namespace Views\taxonomy\Plugin\views\wizard;
 
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Drupal\Core\Annotation\Plugin;
@@ -16,6 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "taxonomy_term",
+ *   module = "taxonomy",
  *   base_table = "taxonomy_term_data",
  *   title = @Translation("Taxonomy terms")
  * )

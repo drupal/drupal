@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\wizard\File.
+ * Definition of Views\file\Plugin\views\wizard\File.
  */
 
-namespace Drupal\views\Plugin\views\wizard;
+namespace Views\file\Plugin\views\wizard;
 
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Drupal\Core\Annotation\Plugin;
@@ -16,6 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "file_managed",
+ *   module = "file",
  *   base_table = "file_managed",
  *   title = @Translation("Files")
  * )

@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\wizard\Comment.
+ * Definition of Views\node\Plugin\views\wizard\Comment.
  */
 
-namespace Drupal\views\Plugin\views\wizard;
+namespace Views\comment\Plugin\views\wizard;
 
-use Drupal\views\Plugin\wizard;
+use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -20,6 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "comment",
+ *   module = "comment",
  *   base_table = "comment",
  *   title = @Translation("Comments")
  * )

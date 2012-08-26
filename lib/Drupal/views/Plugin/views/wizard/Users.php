@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\wizard\Users.
+ * Definition of Views\user\Plugin\views\wizard\Users.
  */
 
-namespace Drupal\views\Plugin\views\wizard;
+namespace Views\user\Plugin\views\wizard;
 
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Drupal\Core\Annotation\Plugin;
@@ -20,6 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "users",
+ *   module = "user",
  *   base_table = "users",
  *   title = @Translation("Users")
  * )

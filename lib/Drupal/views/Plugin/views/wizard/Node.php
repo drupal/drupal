@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\wizard\Node.
+ * Definition of Views\node\Plugin\views\wizard\Node.
  */
 
-namespace Drupal\views\Plugin\views\wizard;
+namespace Views\node\Plugin\views\wizard;
 
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Drupal\Core\Annotation\Plugin;
@@ -20,6 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "node",
+ *   module = "node",
  *   base_table = "node",
  *   title = @Translation("Content")
  * )

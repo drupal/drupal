@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\wizard\NodeRevision.
+ * Definition of Views\node\Plugin\views\wizard\NodeRevision.
  */
 
-namespace Drupal\views\Plugin\views\wizard;
+namespace Views\node\Plugin\views\wizard;
 
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Drupal\Core\Annotation\Plugin;
@@ -20,6 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "node_revision",
+ *   module = "node",
  *   base_table = "node_revision",
  *   title = @Translation("Content revisions")
  * )
