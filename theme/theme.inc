@@ -87,7 +87,7 @@ function template_preprocess_views_view(&$vars) {
 
   if ($view->display_handler->render_pager()) {
     $exposed_input = isset($view->exposed_raw_input) ? $view->exposed_raw_input : NULL;
-    $vars['pager']      = $view->query->render_pager($exposed_input);
+    $vars['pager'] = $view->render_pager($exposed_input);
   }
 
   $vars['attachment_before'] = !empty($view->attachment_before) ? $view->attachment_before : '';
@@ -134,7 +134,7 @@ function template_preprocess_views_view(&$vars) {
             'view_dom_id' => $vars['dom_id'],
             // To fit multiple views on a page, the programmer may have
             // overridden the display's pager_element.
-            'pager_element' => isset($view->query->pager) ? $view->query->pager->get_pager_id() : 0,
+            'pager_element' => isset($view->pager) ? $view->pager->get_pager_id() : 0,
           ),
         ),
       ),

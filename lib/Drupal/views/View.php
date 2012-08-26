@@ -154,7 +154,14 @@ class View extends ViewsDbObject {
    */
   var $query = NULL;
 
-   /**
+  /**
+   * The used pager plugin used by the current executed view.
+   *
+   * @var Drupal\views\Plugin\views\pager\PagerPluginBase
+   */
+  public $pager = NULL;
+
+  /**
    * The current used display plugin.
    *
    * @var views_plugin_display
@@ -324,10 +331,9 @@ class View extends ViewsDbObject {
     $this->current_page = $page;
 
     // If the pager is already initialized, pass it through to the pager.
-    if (!empty($this->query->pager)) {
-      return $this->query->pager->set_current_page($page);
+    if (!empty($this->pager)) {
+      return $this->pager->set_current_page($page);
     }
-
   }
 
   /**
@@ -335,8 +341,8 @@ class View extends ViewsDbObject {
    */
   function get_current_page() {
     // If the pager is already initialized, pass it through to the pager.
-    if (!empty($this->query->pager)) {
-      return $this->query->pager->get_current_page();
+    if (!empty($this->pager)) {
+      return $this->pager->get_current_page();
     }
 
     if (isset($this->current_page)) {
@@ -349,8 +355,8 @@ class View extends ViewsDbObject {
    */
   function get_items_per_page() {
     // If the pager is already initialized, pass it through to the pager.
-    if (!empty($this->query->pager)) {
-      return $this->query->pager->get_items_per_page();
+    if (!empty($this->pager)) {
+      return $this->pager->get_items_per_page();
     }
 
     if (isset($this->items_per_page)) {
@@ -365,8 +371,8 @@ class View extends ViewsDbObject {
     $this->items_per_page = $items_per_page;
 
     // If the pager is already initialized, pass it through to the pager.
-    if (!empty($this->query->pager)) {
-      $this->query->pager->set_items_per_page($items_per_page);
+    if (!empty($this->pager)) {
+      $this->pager->set_items_per_page($items_per_page);
     }
   }
 
@@ -375,8 +381,8 @@ class View extends ViewsDbObject {
    */
   function get_offset() {
     // If the pager is already initialized, pass it through to the pager.
-    if (!empty($this->query->pager)) {
-      return $this->query->pager->get_offset();
+    if (!empty($this->pager)) {
+      return $this->pager->get_offset();
     }
 
     if (isset($this->offset)) {
@@ -391,8 +397,8 @@ class View extends ViewsDbObject {
     $this->offset = $offset;
 
     // If the pager is already initialized, pass it through to the pager.
-    if (!empty($this->query->pager)) {
-      $this->query->pager->set_offset($offset);
+    if (!empty($this->pager)) {
+      $this->pager->set_offset($offset);
     }
   }
 
@@ -400,8 +406,8 @@ class View extends ViewsDbObject {
    * Determine if the pager actually uses a pager.
    */
   function use_pager() {
-    if (!empty($this->query->pager)) {
-      return $this->query->pager->use_pager();
+    if (!empty($this->pager)) {
+      return $this->pager->use_pager();
     }
   }
 
@@ -699,23 +705,34 @@ class View extends ViewsDbObject {
    * to allow for overrides.
    */
   function init_pager() {
-    if (empty($this->query->pager)) {
-      $this->query->pager = $this->display_handler->get_plugin('pager');
+    if (!isset($this->pager)) {
+      $this->pager = $this->display_handler->get_plugin('pager');
 
-      if ($this->query->pager->use_pager()) {
-        $this->query->pager->set_current_page($this->current_page);
+      if ($this->pager->use_pager()) {
+        $this->pager->set_current_page($this->current_page);
       }
 
       // These overrides may have been set earlier via $view->set_*
       // functions.
       if (isset($this->items_per_page)) {
-        $this->query->pager->set_items_per_page($this->items_per_page);
+        $this->pager->set_items_per_page($this->items_per_page);
       }
 
       if (isset($this->offset)) {
-        $this->query->pager->set_offset($this->offset);
+        $this->pager->set_offset($this->offset);
       }
     }
+  }
+
+  /**
+   * Render the pager, if necessary.
+   */
+  public function render_pager($exposed_input) {
+    if (!empty($this->pager) && $this->pager->use_pager()) {
+      return $this->pager->render($exposed_input);
+    }
+
+    return '';
   }
 
   /**
@@ -1158,9 +1175,9 @@ class View extends ViewsDbObject {
       $cache = $this->display_handler->get_plugin('cache');
     }
     if ($cache && $cache->cache_get('results')) {
-      if ($this->query->pager->use_pager()) {
-        $this->query->pager->total_items = $this->total_rows;
-        $this->query->pager->update_page_info();
+      if ($this->pager->use_pager()) {
+        $this->pager->total_items = $this->total_rows;
+        $this->pager->update_page_info();
       }
       vpr('Used cached results');
     }
@@ -1236,8 +1253,8 @@ class View extends ViewsDbObject {
       }
 
       // Run pre_render for the pager as it might change the result.
-      if (!empty($this->query->pager)) {
-        $this->query->pager->pre_render($this->result);
+      if (!empty($this->pager)) {
+        $this->pager->pre_render($this->result);
       }
 
       // Initialize the style plugin.

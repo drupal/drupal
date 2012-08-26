@@ -960,7 +960,7 @@ function hook_views_pre_render(&$view) {
 function hook_views_post_render(&$view, &$output, &$cache) {
   // When using full pager, disable any time-based caching if there are less
   // then 10 results.
-  if ($view->query->pager instanceof views_plugin_pager_full && $cache->options['type'] == 'time' && count($view->result) < 10) {
+  if ($view->pager instanceof Drupal\views\Plugin\views\pager\Full && $cache->options['type'] == 'time' && count($view->result) < 10) {
     $cache['options']['results_lifespan'] = 0;
     $cache['options']['output_lifespan'] = 0;
   }

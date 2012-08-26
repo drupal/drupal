@@ -117,17 +117,6 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
   }
 
   /**
-   * Render the pager, if necessary.
-   */
-  function render_pager($exposed_input) {
-    if (!empty($this->pager) && $this->pager->use_pager()) {
-      return $this->pager->render($exposed_input);
-    }
-
-    return '';
-  }
-
-  /**
    * Create a new grouping for the WHERE or HAVING clause.
    *
    * @param $type

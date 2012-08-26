@@ -149,9 +149,9 @@ class PagerTest extends ViewsSqlTest {
     $this->assertEqual(count($view->result), 8, 'Make sure that every item beside the first three is returned in the result');
 
     // Check some public functions.
-    $this->assertFalse($view->query->pager->use_pager());
-    $this->assertFalse($view->query->pager->use_count_query());
-    $this->assertEqual($view->query->pager->get_items_per_page(), 0);
+    $this->assertFalse($view->pager->use_pager());
+    $this->assertFalse($view->pager->use_count_query());
+    $this->assertEqual($view->pager->get_items_per_page(), 0);
   }
 
   public function viewsPagerNoLimit() {
@@ -226,8 +226,8 @@ class PagerTest extends ViewsSqlTest {
     $this->assertEqual(count($view->result), 3, 'Make sure that only a certain count of items is returned');
 
     // Check some public functions.
-    $this->assertFalse($view->query->pager->use_pager());
-    $this->assertFalse($view->query->pager->use_count_query());
+    $this->assertFalse($view->pager->use_pager());
+    $this->assertFalse($view->pager->use_count_query());
   }
 
   public function viewsPagerLimit() {
@@ -310,7 +310,7 @@ class PagerTest extends ViewsSqlTest {
 
     $view->display_handler->set_option('pager', $pager);
     $this->executeView($view);
-    $this->assertEqual($view->query->pager->get_items_per_page(), 0);
+    $this->assertEqual($view->pager->get_items_per_page(), 0);
     $this->assertEqual(count($view->result), 11);
   }
 
@@ -438,7 +438,7 @@ class PagerTest extends ViewsSqlTest {
     $view->set_display('default');
     $this->executeView($view);
     $view->use_ajax = TRUE; // force the value again here
-    $view->query->pager = NULL;
+    $view->pager = NULL;
     $output = $view->render();
     $this->assertEqual(preg_match('/<ul class="pager">/', $output), 0, t('The pager is not rendered.'));
   }
@@ -476,21 +476,21 @@ class PagerTest extends ViewsSqlTest {
     $rand_number = rand(1, 5);
     $view->set_items_per_page($rand_number);
     $rand_number = rand(6, 11);
-    $view->query->pager->set_items_per_page($rand_number);
+    $view->pager->set_items_per_page($rand_number);
     $this->assertEqual($view->get_items_per_page(), $rand_number, 'Make sure get_items_per_page uses the settings of set_items_per_page.');
 
     $this->assertEqual($view->get_offset(), 0, 'Per default a view has a 0 offset.');
     $rand_number = rand(1, 5);
     $view->set_offset($rand_number);
     $rand_number = rand(6, 11);
-    $view->query->pager->set_offset($rand_number);
+    $view->pager->set_offset($rand_number);
     $this->assertEqual($view->get_offset(), $rand_number, 'Make sure get_offset uses the settings of set_offset.');
 
     $this->assertEqual($view->get_current_page(), 0, 'Per default the current page is 0.');
     $rand_number = rand(1, 5);
     $view->set_current_page($rand_number);
     $rand_number = rand(6, 11);
-    $view->query->pager->set_current_page($rand_number);
+    $view->pager->set_current_page($rand_number);
     $this->assertEqual($view->get_current_page(), $rand_number, 'Make sure get_current_page uses the settings of set_current_page.');
 
   }

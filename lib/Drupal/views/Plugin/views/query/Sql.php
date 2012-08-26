@@ -93,13 +93,6 @@ class Sql extends QueryPluginBase {
   var $get_count_optimized = NULL;
 
   /**
-   * The current used pager plugin.
-   *
-   * @var views_plugin_pager
-   */
-  var $pager = NULL;
-
-  /**
    * An array mapping table aliases and field names to field aliases.
    */
   var $field_aliases = array();
@@ -1423,7 +1416,7 @@ class Sql extends QueryPluginBase {
     $view->init_pager();
 
     // Let the pager modify the query to add limits.
-    $this->pager->query();
+    $view->pager->query();
 
     $view->build_info['query'] = $this->query();
     $view->build_info['count_query'] = $this->query(TRUE);
@@ -1481,12 +1474,12 @@ class Sql extends QueryPluginBase {
 
 
       try {
-        if ($this->pager->use_count_query() || !empty($view->get_total_rows)) {
-          $this->pager->execute_count_query($count_query);
+        if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
+          $view->pager->execute_count_query($count_query);
         }
 
         // Let the pager modify the query to add limits.
-        $this->pager->pre_execute($query);
+        $view->pager->pre_execute($query);
 
         if (!empty($this->limit) || !empty($this->offset)) {
           // We can't have an offset without a limit, so provide a very large limit instead.
@@ -1502,10 +1495,10 @@ class Sql extends QueryPluginBase {
           $view->result[] = $item;
         }
 
-        $this->pager->post_execute($view->result);
+        $view->pager->post_execute($view->result);
 
-        if ($this->pager->use_count_query() || !empty($view->get_total_rows)) {
-          $view->total_rows = $this->pager->get_total_items();
+        if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
+          $view->total_rows = $view->pager->get_total_items();
         }
       }
       catch (Exception $e) {
