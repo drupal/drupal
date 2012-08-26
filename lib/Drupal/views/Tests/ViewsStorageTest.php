@@ -52,14 +52,16 @@ class ViewsStorageTest extends WebTestBase {
     // Test an info array has been returned.
     $this->assertTrue(!empty($info) && is_array($info), 'View entity info array loaded.');
 
-    // Test we have the correct controller class.
+    // Confirm we have the correct controller class.
     $this->assertTrue($controller instanceof ViewStorageController, 'Correct entity controller loaded.');
+
+    // Loading.
 
     //Load a single config entity.
     $load = $controller->load(array('archive'));
     $view = reset($load);
 
-    // Check it's a view.
+    // Confirm it's a view.
     $this->assertTrue($view instanceof View, 'Single View instance loaded.');
 
     // Check that the View contains all of the properties.
@@ -73,16 +75,22 @@ class ViewsStorageTest extends WebTestBase {
     $this->assertEqual(array_keys($view->display), $expected_displays, 'Correct display names present.');
 
     foreach ($view->display as $key => $display) {
+      // Confirm it's a ViewDisplay object.
       $this->assertTrue($display instanceof ViewsDisplay, t('Display: @display is instance of ViewsDisplay.', array('@display' => $key)));
+      // Check the display ID array key and object property match.
       $this->assertEqual($key, $display->id, 'The display has the correct ID.');
+      // Check display options array exists on the ViewsDisplay.
       $display_options = $display->display_options;
       $this->assertTrue(!empty($display_options) && is_array($display_options), 'Display options exist.');
     }
 
     // Load all config entities.
     $all_entities = $controller->load();
+    // Get a list of all existing default view config.
     $all_config = config_get_storage_names_with_prefix('views.view');
 
+    // Remove 'views.view.' prefix from config names for comparision with
+    // loaded config entities.
     $prefix_map = function ($value) {
       $parts = explode('.', $value);
       return end($parts);
@@ -91,6 +99,7 @@ class ViewsStorageTest extends WebTestBase {
     // Check correct number of entities have been loaded.
     $count = count($all_entities);
     $this->assertEqual($count, count($all_config), t('Array of all @count entities loaded.', array('@count' => $count)));
+    // Check all of these machine names match.
     $this->assertIdentical(array_keys($all_entities), array_map($prefix_map, $all_config), 'All loaded elements match.');
   }
 
