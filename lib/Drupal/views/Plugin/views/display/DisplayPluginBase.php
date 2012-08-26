@@ -57,6 +57,13 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   public $output = NULL;
 
+  /**
+   * Whether the display allows the use of AJAX or not.
+   *
+   * @var bool
+   */
+  protected $usesAJAX = TRUE;
+
   function init(&$view, &$display, $options = NULL) {
     $this->view = &$view;
     $this->display = &$display;
@@ -339,10 +346,21 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Does the display use AJAX?
+   * Whether the display allows the use of AJAX or not.
+   *
+   * @return bool
    */
-  function use_ajax() {
-    if (!empty($this->definition['use_ajax'])) {
+  function usesAJAX() {
+    return $this->usesAJAX;
+  }
+
+  /**
+   * Whether the display is actually using AJAX or not.
+   *
+   * @return bool
+   */
+  function isAJAXEnabled() {
+    if ($this->usesAJAX()) {
       return $this->get_option('use_ajax');
     }
     return FALSE;
@@ -1239,7 +1257,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $options['row_plugin']['links']['row_options'] = t('Change settings for this style');
       }
     }
-    if (!empty($this->definition['use_ajax'])) {
+    if ($this->usesAJAX()) {
       $options['use_ajax'] = array(
         'category' => 'other',
         'title' => t('Use AJAX'),
@@ -2683,7 +2701,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * overridden on an individual display.
    */
   function pre_execute() {
-    $this->view->set_use_ajax($this->use_ajax());
+    $this->view->set_use_ajax($this->isAJAXEnabled());
     if ($this->use_more() && !$this->use_more_always()) {
       $this->view->get_total_rows = TRUE;
     }

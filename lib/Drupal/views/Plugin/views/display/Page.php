@@ -22,7 +22,6 @@ use Drupal\Core\Annotation\Translation;
  *   uses_hook_menu = TRUE,
  *   contextual_links_locations = {"page"},
  *   theme = "views_view",
- *   use_ajax = TRUE,
  *   use_pager = TRUE,
  *   use_more = TRUE,
  *   accept_attachments = TRUE,

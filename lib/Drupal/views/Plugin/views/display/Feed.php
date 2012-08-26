@@ -23,7 +23,6 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Feed"),
  *   help = @Translation("Display the view as a feed, such as an RSS feed."),
  *   uses_hook_menu = TRUE,
- *   use_ajax = FALSE,
  *   use_pager = FALSE,
  *   accept_attachments = FALSE,
  *   admin = @Translation("Feed"),
@@ -31,6 +30,13 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Feed extends Page {
+
+  /**
+   * Whether the display allows the use of AJAX or not.
+   *
+   * @var bool
+   */
+  protected $usesAJAX = FALSE;
 
   function init(&$view, &$display, $options = NULL) {
     parent::init($view, $display, $options);

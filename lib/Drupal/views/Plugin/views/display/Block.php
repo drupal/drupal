@@ -22,7 +22,6 @@ use Drupal\Core\Annotation\Translation;
  *   theme = "views_view",
  *   uses_hook_block = TRUE,
  *   contextual_links_locations = {"block"},
- *   use_ajax = TRUE,
  *   use_pager = TRUE,
  *   use_more = TRUE,
  *   accept_attachments = TRUE,
@@ -204,7 +203,7 @@ class Block extends DisplayPluginBase {
    * Block views use exposed widgets only if AJAX is set.
    */
     function uses_exposed() {
-      if ($this->use_ajax()) {
+      if ($this->isAJAXEnabled()) {
         return parent::uses_exposed();
       }
       return FALSE;
