@@ -79,6 +79,7 @@ Drupal.file = Drupal.file || {
    * Client-side file input validation of file extensions.
    */
   validateExtension: function (event) {
+    event.preventDefault();
     // Remove any previous errors.
     $('.file-upload-js-error').remove();
 
@@ -100,7 +101,6 @@ Drupal.file = Drupal.file || {
         });
         $(this).closest('div.form-managed-file').prepend('<div class="messages error file-upload-js-error">' + error + '</div>');
         this.value = '';
-        return false;
       }
     }
   },
@@ -161,9 +161,9 @@ Drupal.file = Drupal.file || {
    * Open links to files within forms in a new window.
    */
   openInNewWindow: function (event) {
+    event.preventDefault();
     $(this).attr('target', '_blank');
     window.open(this.href, 'filePreview', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=500,height=550');
-    return false;
   }
 };
 

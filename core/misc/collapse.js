@@ -87,14 +87,14 @@ Drupal.behaviors.collapse = {
       var $link = $('<a class="fieldset-title" href="#"></a>')
         .prepend($legend.contents())
         .appendTo($legend)
-        .click(function () {
+        .click(function (e) {
+          e.preventDefault();
           var fieldset = $fieldset.get(0);
           // Don't animate multiple times.
           if (!fieldset.animating) {
             fieldset.animating = true;
             Drupal.toggleFieldset(fieldset);
           }
-          return false;
         });
 
       $legend.append(summary);

@@ -80,19 +80,19 @@ Drupal.verticalTab = function (settings) {
   var self = this;
   $.extend(this, settings, Drupal.theme('verticalTab', settings));
 
-  this.link.click(function () {
+  this.link.click(function (e) {
+    e.preventDefault();
     self.focus();
-    return false;
   });
 
   // Keyboard events added:
   // Pressing the Enter key will open the tab pane.
   this.link.keydown(function(event) {
+    event.preventDefault();
     if (event.keyCode === 13) {
       self.focus();
       // Set focus on the first input field of the visible fieldset/tab pane.
       $("fieldset.vertical-tabs-pane :input:visible:enabled:first").focus();
-      return false;
     }
   });
 

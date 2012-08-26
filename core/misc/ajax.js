@@ -214,8 +214,8 @@ Drupal.ajax.prototype.keypressResponse = function (element, event) {
   // spacebar activation causes inappropriate activation if #ajax['keypress'] is
   // TRUE. On a text-type widget a space should always be a space.
   if (event.which === 13 || (event.which === 32 && element.type !== 'text' && element.type !== 'textarea')) {
+    event.preventDefault();
     $(ajax.element_settings.element).trigger(ajax.element_settings.event);
-    return false;
   }
 };
 
@@ -228,12 +228,14 @@ Drupal.ajax.prototype.keypressResponse = function (element, event) {
  * ajax object.
  */
 Drupal.ajax.prototype.eventResponse = function (element, event) {
+  event.preventDefault();
+
   // Create a synonym for this to reduce code confusion.
   var ajax = this;
 
   // Do not perform another ajax command if one is already in progress.
   if (ajax.ajaxing) {
-    return false;
+    return;
   }
 
   try {
@@ -261,16 +263,6 @@ Drupal.ajax.prototype.eventResponse = function (element, event) {
     ajax.ajaxing = false;
     window.alert("An error occurred while attempting to process " + ajax.options.url + ": " + e.message);
   }
-
-  // For radio/checkbox, allow the default event. On IE, this means letting
-  // it actually check the box.
-  if (typeof element.type !== 'undefined' && (element.type === 'checkbox' || element.type === 'radio')) {
-    return true;
-  }
-  else {
-    return false;
-  }
-
 };
 
 /**

@@ -19,10 +19,10 @@ Drupal.behaviors.contextualLinks = {
       var $region = $wrapper.closest('.contextual-region');
       var $links = $wrapper.find('ul');
       var $trigger = $('<a class="trigger" href="#" />').text(Drupal.t('Configure')).click(
-        function () {
+        function (e) {
+          e.preventDefault();
           $links.stop(true, true).slideToggle(100);
           $wrapper.toggleClass('contextual-active');
-          return false;
         }
       );
       // Attach hover behavior to trigger and ul.contextual-links.

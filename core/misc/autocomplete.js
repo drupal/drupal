@@ -63,11 +63,13 @@ Drupal.jsAC.prototype.onkeydown = function (input, e) {
   }
   switch (e.keyCode) {
     case 40: // down arrow.
+      e.preventDefault();
       this.selectDown();
-      return false;
+      break;
     case 38: // up arrow.
+      e.preventDefault();
       this.selectUp();
-      return false;
+      break;
     default: // All other keys.
       return true;
   }

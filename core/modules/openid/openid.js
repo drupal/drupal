@@ -25,7 +25,8 @@ Drupal.behaviors.openid = {
 
     $context.find('li.openid-link')
       .once('openid')
-      .click(function () {
+      .click(function (e) {
+        e.preventDefault();
         loginElements.hide();
         openidElements.css('display', 'block');
         // Remove possible error message.
@@ -33,11 +34,11 @@ Drupal.behaviors.openid = {
         $('div.messages.error').hide();
         // Set focus on OpenID Identifier field.
         $('#edit-openid-identifier')[0].focus();
-        return false;
       });
     $context.find('li.user-link')
       .once('openid')
-      .click(function () {
+      .click(function (e) {
+        e.preventDefault();
         openidElements.hide();
         loginElements.css('display', 'block');
         // Clear OpenID Identifier field and remove possible error message.
@@ -45,7 +46,6 @@ Drupal.behaviors.openid = {
         $('div.messages.error').css('display', 'block');
         // Set focus on username field.
         $('#edit-name')[0].focus();
-        return false;
       });
   }
 };

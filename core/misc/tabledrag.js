@@ -295,6 +295,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
 
   // Add the mousedown action for the handle.
   handle.mousedown(function (event) {
+    event.preventDefault();
     // Create a new dragObject recording the event information.
     self.dragObject = {};
     self.dragObject.initMouseOffset = self.getMouseOffset(item, event);
@@ -331,12 +332,11 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
 
     // Call optional placeholder function.
     self.onDrag();
-    return false;
   });
 
   // Prevent the anchor tag from jumping us to the top of the page.
-  handle.click(function () {
-    return false;
+  handle.click(function (e) {
+    e.preventDefault();
   });
 
   // Similar to the hover event, add a class when the handle is focused.
