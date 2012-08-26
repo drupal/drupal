@@ -25,13 +25,18 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Attachments added to other displays to achieve multiple views in the same view."),
  *   theme = "views_view",
  *   contextual_links_locations = {""},
- *   use_pager = FALSE,
- *   use_more = TRUE,
  *   accept_attachments = FALSE,
  *   help_topic = "display-attachment"
  * )
  */
 class Attachment extends DisplayPluginBase {
+
+  /**
+   * Whether the display allows the use of a pager or not.
+   *
+   * @var bool
+   */
+  protected $usesPager = FALSE;
 
   function option_definition() {
     $options = parent::option_definition();
@@ -247,7 +252,7 @@ class Attachment extends DisplayPluginBase {
     $view->set_arguments($args);
     $view->set_display($this->display->id);
     if ($this->get_option('inherit_pager')) {
-      $view->display_handler->use_pager = $this->view->display[$display_id]->handler->use_pager();
+      $view->display_handler->usesPager = $this->view->display[$display_id]->handler->usesPager();
       $view->display_handler->set_option('pager', $this->view->display[$display_id]->handler->get_option('pager'));
     }
 
@@ -290,12 +295,8 @@ class Attachment extends DisplayPluginBase {
     return $this->options['inherit_exposed_filters'] ? FALSE : TRUE;
   }
 
-  function use_pager() {
-    return !empty($this->use_pager);
-  }
-
   function render_pager() {
-    return !empty($this->use_pager) && $this->get_option('render_pager');
+    return $this->usesPager() && $this->get_option('render_pager');
   }
 
 }

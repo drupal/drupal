@@ -21,8 +21,6 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Default settings for this view."),
  *   theme = "views_view",
  *   no_ui = TRUE,
- *   use_pager = TRUE,
- *   use_more = TRUE,
  *   accept_attachments = TRUE,
  *   help_topic = "display-default"
  * )

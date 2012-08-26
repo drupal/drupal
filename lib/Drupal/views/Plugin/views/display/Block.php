@@ -22,8 +22,6 @@ use Drupal\Core\Annotation\Translation;
  *   theme = "views_view",
  *   uses_hook_block = TRUE,
  *   contextual_links_locations = {"block"},
- *   use_pager = TRUE,
- *   use_more = TRUE,
  *   accept_attachments = TRUE,
  *   admin = @Translation("Block"),
  *   help_topic = "display-block"

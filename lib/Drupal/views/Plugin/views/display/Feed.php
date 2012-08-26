@@ -23,7 +23,6 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Feed"),
  *   help = @Translation("Display the view as a feed, such as an RSS feed."),
  *   uses_hook_menu = TRUE,
- *   use_pager = FALSE,
  *   accept_attachments = FALSE,
  *   admin = @Translation("Feed"),
  *   help_topic = "display-feed"
@@ -37,6 +36,13 @@ class Feed extends Page {
    * @var bool
    */
   protected $usesAJAX = FALSE;
+
+  /**
+   * Whether the display allows the use of a pager or not.
+   *
+   * @var bool
+   */
+  protected $usesPager = FALSE;
 
   function init(&$view, &$display, $options = NULL) {
     parent::init($view, $display, $options);

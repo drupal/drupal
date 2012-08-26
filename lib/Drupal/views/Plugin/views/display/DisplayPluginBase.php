@@ -64,6 +64,20 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   protected $usesAJAX = TRUE;
 
+  /**
+   * Whether the display allows the use of a pager or not.
+   *
+   * @var bool
+   */
+  protected $usesPager = TRUE;
+
+  /**
+   * Whether the display allows the use of a 'more' link or not.
+   *
+   * @var bool
+   */
+  protected $usesMore = TRUE;
+
   function init(&$view, &$display, $options = NULL) {
     $this->view = &$view;
     $this->display = &$display;
@@ -213,20 +227,46 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Does the display have a pager enabled?
+   * Whether the display allows the use of a pager or not.
+   *
+   * @return bool
    */
-  function use_pager() {
-    $pager = $this->get_plugin('pager');
-    if ($pager) {
-      return $pager->use_pager();
-    }
+
+  function usesPager() {
+    return $this->usesPager;
   }
 
   /**
-   * Does the display have a more link enabled?
+   * Whether the display is using a pager or not.
+   *
+   * @return bool
    */
-  function use_more() {
-    if (!empty($this->definition['use_more'])) {
+  function isPagerEnabled() {
+    if ($this->usesPager()) {
+      $pager = $this->get_plugin('pager');
+      if ($pager) {
+        return $pager->use_pager();
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Whether the display allows the use of a 'more' link or not.
+   *
+   * @return bool
+   */
+  function usesMore() {
+    return $this->usesMore;
+  }
+
+  /**
+   * Whether the display is using the 'more' link or not.
+   *
+   * @return bool
+   */
+  function isMoreEnabled() {
+    if ($this->usesMore()) {
       return $this->get_option('use_more');
     }
     return FALSE;
@@ -243,7 +283,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * Should the enabled display more link be shown when no more items?
    */
   function use_more_always() {
-    if (!empty($this->definition['use_more'])) {
+    if ($this->usesMore()) {
       return $this->get_option('use_more_always');
     }
     return FALSE;
@@ -253,7 +293,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * Does the display have custom link text?
    */
   function use_more_text() {
-    if (!empty($this->definition['use_more'])) {
+    if ($this->usesMore()) {
       return $this->get_option('use_more_text');
     }
     return FALSE;
@@ -328,7 +368,7 @@ abstract class DisplayPluginBase extends PluginBase {
     );
 
     // If the display cannot use a pager, then we cannot default it.
-    if (empty($this->definition['use_pager'])) {
+    if (!$this->usesPager()) {
       unset($sections['pager']);
       unset($sections['items_per_page']);
     }
@@ -569,7 +609,7 @@ abstract class DisplayPluginBase extends PluginBase {
       ),
     );
 
-    if (empty($this->definition['use_pager'])) {
+    if (!$this->usesPager()) {
       $options['defaults']['default']['use_pager'] = FALSE;
       $options['defaults']['default']['items_per_page'] = FALSE;
       $options['defaults']['default']['offset'] = FALSE;
@@ -1131,7 +1171,7 @@ abstract class DisplayPluginBase extends PluginBase {
     );
 
     // If pagers aren't allowed, change the text of the item:
-    if (empty($this->definition['use_pager'])) {
+    if (!$this->usesPager()) {
       $options['pager']['title'] = t('Items to display');
     }
 
@@ -1139,7 +1179,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $options['pager']['links']['pager_options'] = t('Change settings for this pager type.');
     }
 
-    if (!empty($this->definition['use_more'])) {
+    if ($this->usesMore()) {
       $options['use_more'] = array(
         'category' => 'pager',
         'title' => t('More link'),
@@ -2026,7 +2066,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $pager = $this->get_option('pager');
         $form['pager']['type'] =  array(
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('pager', empty($this->definition['use_pager']) ? 'basic' : NULL, array($this->view->base_table)),
+          '#options' => views_fetch_plugin_names('pager', !$this->usesPager() ? 'basic' : NULL, array($this->view->base_table)),
           '#default_value' => $pager['type'],
         );
 
@@ -2429,7 +2469,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * Render the 'more' link
    */
   function render_more_link() {
-    if ($this->use_more() && ($this->use_more_always() || (!empty($this->view->pager) && $this->view->pager->has_more_records()))) {
+    if ($this->usesMore() && ($this->use_more_always() || (!empty($this->view->pager) && $this->view->pager->has_more_records()))) {
       $path = $this->get_path();
 
       if ($this->get_option('link_display') == 'custom_url' && $override_path = $this->get_option('link_url')) {
@@ -2534,7 +2574,7 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   function pre_execute() {
     $this->view->set_use_ajax($this->isAJAXEnabled());
-    if ($this->use_more() && !$this->use_more_always()) {
+    if ($this->usesMore() && !$this->use_more_always()) {
       $this->view->get_total_rows = TRUE;
     }
     $this->view->init_handlers();
