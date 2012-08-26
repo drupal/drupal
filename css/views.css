@@ -1,10 +1,9 @@
 .views-exposed-form .views-exposed-widget {
   float: left; /* LTR */
-  padding: .5em 1em 0 0; /* LTR */
 }
 
 .views-exposed-form .views-exposed-widget .form-submit {
-  margin-top: 1.6em;
+  margin-top: 0.5em;
 }
 
 .views-exposed-form .form-item,
@@ -13,12 +12,8 @@
   margin-bottom: 0;
 }
 
-.views-exposed-form label {
-  font-weight: bold;
-}
-
 .views-exposed-widgets {
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 
 /* table style column align */
@@ -30,11 +25,6 @@
 }
 .views-align-center {
   text-align: center;
-}
-
-/* Remove the border on tbody that system puts in */
-.views-view-grid tbody {
-  border-top: none;
 }
 
 .view .progress-disabled {
