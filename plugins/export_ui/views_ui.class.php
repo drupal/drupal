@@ -254,7 +254,7 @@ class views_ui extends ctools_export_ui {
   function list_render(&$form_state) {
     views_include('admin');
     views_ui_add_admin_css();
-    if (empty($_REQUEST['js'])) {
+    if (!drupal_container()->get('request')->request->get('js')) {
       views_ui_check_advanced_help();
     }
     drupal_add_library('system', 'jquery.bbq');
@@ -263,7 +263,7 @@ class views_ui extends ctools_export_ui {
     $this->active = $form_state['values']['order'];
     $this->order = $form_state['values']['sort'];
 
-    $query    = tablesort_get_query_parameters();
+    $query = tablesort_get_query_parameters();
 
     $header = array(
       $this->tablesort_link(t('View name'), 'name', 'views-ui-name'),

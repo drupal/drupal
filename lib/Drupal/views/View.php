@@ -435,7 +435,7 @@ class View extends ViewsDbObject {
     // Fill our input either from $_GET or from something previously set on the
     // view.
     if (empty($this->exposed_input)) {
-      $this->exposed_input = $_GET;
+      $this->exposed_input = drupal_container()->get('request')->query->all();
       // unset items that are definitely not our input:
       foreach (array('page', 'q') as $key) {
         if (isset($this->exposed_input[$key])) {

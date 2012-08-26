@@ -2122,7 +2122,8 @@ function views_exposed_form($form, &$form_state) {
   }
 
   $form['submit'] = array(
-    '#name' => '', // prevent from showing up in $_GET.
+    // Prevent from showing up in $_GET.
+    '#name' => '',
     '#type' => 'submit',
     '#value' => t('Apply'),
     '#id' => drupal_html_id('edit-submit-' . $view->name),

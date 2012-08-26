@@ -1465,7 +1465,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
     }
 
     // Get flattened set of tokens for any array depth in $_GET parameters.
-    $tokens += $this->get_token_values_recursive($_GET);
+    $tokens += $this->get_token_values_recursive(drupal_container()->get('request')->query->all());
 
     // Now add replacements for our fields.
     foreach ($this->view->display_handler->get_handlers('field') as $field => $handler) {

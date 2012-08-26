@@ -134,7 +134,7 @@ function views_ui_preview($view, $display_id, $args = array()) {
     // be in GET. Copy stuff but remove ajax-framework specific keys.
     // If we're clicking on links in a preview, though, we could actually
     // still have some in $_GET, so we use $_REQUEST to ensure we get it all.
-    $exposed_input = $_REQUEST;
+    $exposed_input = drupal_container()->get('request')->request->all();
     foreach (array('view_name', 'view_display_id', 'view_args', 'view_path', 'view_dom_id', 'pager_element', 'view_base_path', 'ajax_html_ids', 'ajax_page_state', 'form_id', 'form_build_id', 'form_token') as $key) {
       if (isset($exposed_input[$key])) {
         unset($exposed_input[$key]);
@@ -731,10 +731,12 @@ function views_ui_add_form_store_edit_submit($form, &$form_state) {
 
   // If there is a destination query, ensure we still redirect the user to the
   // edit view page, and then redirect the user to the destination.
+  // @todo: Revisit this when http://drupal.org/node/1668866 is in.
   $destination = array();
-  if (isset($_GET['destination'])) {
+  $query = drupal_container()->get('request')->query;
+  if ($query->has('destination')) {
     $destination = drupal_get_destination();
-    unset($_GET['destination']);
+    $query->remove('destination');
   }
   $form_state['redirect'] = array('admin/structure/views/view/' . $view->name, array('query' => $destination));
 }
@@ -840,9 +842,9 @@ function views_ui_break_lock_confirm($form, &$form_state, $view) {
     return $form;
   }
 
-  $cancel = 'admin/structure/views/view/' . $view->name . '/edit';
-  if (!empty($_REQUEST['cancel'])) {
-    $cancel = $_REQUEST['cancel'];
+  $cancel = drupal_container()->get('request')->query->get('cancel');
+  if (empty($cancel)) {
+    $cancel = 'admin/structure/views/view/' . $view->name . '/edit';
   }
 
   $account = user_load($view->locked->ownerId);
@@ -917,10 +919,6 @@ function views_ui_edit_page($view, $display_id = NULL) {
 }
 
 function views_ui_build_preview($view, $display_id, $render = TRUE) {
-  if (isset($_POST['ajax_html_ids'])) {
-    unset($_POST['ajax_html_ids']);
-  }
-
   $build = array(
     '#theme_wrappers' => array('container'),
     '#attributes' => array('id' => 'views-preview-wrapper', 'class' => 'views-admin clearfix'),
@@ -1146,7 +1144,7 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
   // If relationships had to be fixed, we want to get that into the cache
   // so that edits work properly, and to try to get the user to save it
   // so that it's not using weird fixed up relationships.
-  if (!empty($view->relationships_changed) && empty($_POST)) {
+  if (!empty($view->relationships_changed) && drupal_container()->get('request')->request->count()) {
     drupal_set_message(t('This view has been automatically updated to fix missing relationships. While this View should continue to work, you should verify that the automatic updates are correct and save this view.'));
     views_ui_cache_set($view);
   }
@@ -1420,7 +1418,10 @@ function views_ui_edit_form_submit_preview($form, &$form_state) {
  * should not yet redirect to the destination.
  */
 function views_ui_edit_form_submit_delay_destination($form, &$form_state) {
-  if (isset($_GET['destination']) && $form_state['redirect'] !== FALSE) {
+  $query = drupal_container()->get('request')->query;
+  // @todo: Revisit this when http://drupal.org/node/1668866 is in.
+  $destination = $query->get('destination');
+  if (isset($destination) && $form_state['redirect'] !== FALSE) {
     if (!isset($form_state['redirect'])) {
       $form_state['redirect'] = current_path();
     }
@@ -1429,10 +1430,10 @@ function views_ui_edit_form_submit_delay_destination($form, &$form_state) {
     }
     $options = isset($form_state['redirect'][1]) ? $form_state['redirect'][1] : array();
     if (!isset($options['query']['destination'])) {
-      $options['query']['destination'] = $_GET['destination'];
+      $options['query']['destination'] = $destination;
     }
     $form_state['redirect'][1] = $options;
-    unset($_GET['destination']);
+    $query->remove('destination');
   }
 }
 
@@ -2122,8 +2123,10 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
   }
 
   // Direct the user to the right url, if the path of the display has changed.
-  if (!empty($_GET['destination'])) {
-    $destination = $_GET['destination'];
+  $query = drupal_container()->get('request')->query;
+  // @todo: Revisit this when http://drupal.org/node/1668866 is in.
+  $destination = $query->get('destination');
+  if (!empty($destination)) {
     // Find out the first display which has a changed path and redirect to this url.
     $old_view = views_get_view($form_state['view']->name);
     foreach ($old_view->display as $id => $display) {
@@ -2134,7 +2137,7 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
       $old_path = $display->display_options['path'];
       if (($display->display_plugin == 'page') && ($old_path == $destination) && ($old_path != $form_state['view']->display[$id]->display_options['path'])) {
         $destination = $form_state['view']->display[$id]->display_options['path'];
-        unset($_GET['destination']);
+        $query->remove('destination');
       }
     }
     $form_state['redirect'] = $destination;
@@ -2161,7 +2164,11 @@ function views_ui_edit_view_form_cancel($form, &$form_state) {
 }
 
 function views_ui_edit_view_form_delete($form, &$form_state) {
-  unset($_REQUEST['destination']);
+  $request = drupal_container()->get('request')->request;
+  // @todo: Revisit this when http://drupal.org/node/1668866 is in.
+  if ($request->get('destination') !== NULL) {
+    $request->remove('destination');
+  }
   // Redirect to the delete confirm page
   $form_state['redirect'] = array('admin/structure/views/view/' . $form_state['view']->name . '/delete', array('query' => drupal_get_destination() + array('cancel' => 'admin/structure/views/view/' . $form_state['view']->name . '/edit')));
 }
@@ -2870,12 +2877,6 @@ function views_ui_add_form_to_stack($key, &$view, $display_id, $args, $top = FAL
  * together.
  */
 function views_ui_ajax_form($js, $key, $view, $display_id = '') {
-  // Reset the cache of IDs. Drupal rather aggressively prevents id duplication
-  // but this causes it to remember IDs that are no longer even being used.
-  if (isset($_POST['ajax_html_ids'])) {
-    unset($_POST['ajax_html_ids']);
-  }
-
   $form = views_ui_ajax_forms($key);
   if (empty($form)) {
     return MENU_NOT_FOUND;
@@ -5071,7 +5072,7 @@ function views_ui_autocomplete_tag($string = '') {
     }
   }
 
-  drupal_json_output($matches);
+  return new JsonResponse($matches);
 }
 
 // ------------------------------------------------------------------

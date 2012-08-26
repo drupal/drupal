@@ -1707,8 +1707,8 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('Theming information');
         $form['#help_topic'] = 'analyze-theme';
 
-        if (isset($_POST['theme'])) {
-          $this->theme = $_POST['theme'];
+        if ($theme = drupal_container()->get('request')->request->get('theme')) {
+          $this->theme = $theme;
         }
         elseif (empty($this->theme)) {
           $this->theme = variable_get('theme_default', 'bartik');

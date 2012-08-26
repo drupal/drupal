@@ -81,12 +81,13 @@ class Table extends StylePluginBase {
    * @return bool
    */
   function build_sort() {
-    if (!isset($_GET['order']) && ($this->options['default'] == -1 || empty($this->view->field[$this->options['default']]))) {
+    $order = drupal_container()->get('request')->query->get('order');
+    if (!isset($order) && ($this->options['default'] == -1 || empty($this->view->field[$this->options['default']]))) {
       return TRUE;
     }
 
     // If a sort we don't know anything about gets through, exit gracefully.
-    if (isset($_GET['order']) && empty($this->view->field[$_GET['order']])) {
+    if (isset($order) && empty($this->view->field[$order])) {
       return TRUE;
     }
 
@@ -98,7 +99,9 @@ class Table extends StylePluginBase {
    * Add our actual sort criteria
    */
   function build_sort_post() {
-    if (!isset($_GET['order'])) {
+    $query = drupal_container()->get('request')->query;
+    $order = $query->get('order');
+    if (!isset($order)) {
       // check for a 'default' clicksort. If there isn't one, exit gracefully.
       if (empty($this->options['default'])) {
         return;
@@ -112,9 +115,10 @@ class Table extends StylePluginBase {
       }
     }
     else {
-      $sort = $_GET['order'];
+      $sort = $order;
       // Store the $order for later use.
-      $this->order = !empty($_GET['sort']) ? strtolower($_GET['sort']) : 'asc';
+      $request_sort = $query->get('sort');
+      $this->order = !empty($request_sort) ? strtolower($request_sort) : 'asc';
     }
 
     // If a sort we don't know anything about gets through, exit gracefully.

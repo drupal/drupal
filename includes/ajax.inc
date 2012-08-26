@@ -15,26 +15,28 @@
  * Menu callback to load a view via AJAX.
  */
 function views_ajax() {
-  if (isset($_REQUEST['view_name']) && isset($_REQUEST['view_display_id'])) {
-    $name = $_REQUEST['view_name'];
-    $display_id = $_REQUEST['view_display_id'];
-    $args = isset($_REQUEST['view_args']) && $_REQUEST['view_args'] !== '' ? explode('/', $_REQUEST['view_args']) : array();
-    $path = isset($_REQUEST['view_path']) ? rawurldecode($_REQUEST['view_path']) : NULL;
-    $dom_id = isset($_REQUEST['view_dom_id']) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $_REQUEST['view_dom_id']) : NULL;
-    $pager_element = isset($_REQUEST['pager_element']) ? intval($_REQUEST['pager_element']) : NULL;
+  $request = drupal_container()->get('request');
+  $name = $request->request->get('view_name');
+  $display_id = $request->request->get('view_display_id');
+  if (isset($name) && isset($display_id)) {
+    $args = $request->request->get('view_args');
+    $args = isset($args) && $args !== '' ? explode('/', $args) : array();
+    $path = $request->request->get('view_path');
+    $dom_id = $request->request->get('view_dom_id');
+    $dom_id = isset($dom_id) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $dom_id) : NULL;
+    $pager_element = $request->request->get('pager_element');
+    $pager_element = isset($pager_element) ? intval($pager_element) : NULL;
 
     $commands = array();
 
-    // Remove all of this stuff from $_GET so it doesn't end up in pagers and tablesort URLs.
+    // Remove all of this stuff from the query of the request so it doesn't end
+    // up in pagers and tablesort URLs.
     foreach (array('view_name', 'view_display_id', 'view_args', 'view_path', 'view_dom_id', 'pager_element', 'view_base_path', 'ajax_html_ids', 'ajax_page_state') as $key) {
-      if (isset($_GET[$key])) {
-        unset($_GET[$key]);
+      if ($request->query->has($key)) {
+        $request->query->remove($key);
       }
-      if (isset($_REQUEST[$key])) {
-        unset($_REQUEST[$key]);
-      }
-      if (isset($_POST[$key])) {
-        unset($_POST[$key]);
+      if ($request->request->has($key)) {
+        $request->request->remove($key);
       }
     }
 
@@ -48,12 +50,14 @@ function views_ajax() {
 
       // Add all $_POST data, because AJAX is always a post and many things,
       // such as tablesorts, exposed filters and paging assume $_GET.
-      $_GET = $_POST + $_GET;
+      $request_all = $request->request->all();
+      $query_all = $request->query->all();
+      $request->query->replace($request_all + $query_all);
 
       // Overwrite the destination.
       // @see drupal_get_destination()
       $origin_destination = $path;
-      $query = drupal_http_build_query($_REQUEST);
+      $query = drupal_http_build_query($request->query->all());
       if ($query != '') {
         $origin_destination .= '?' . $query;
       }
@@ -313,7 +317,7 @@ function views_ajax_autocomplete_user($string = '') {
     }
   }
 
-  drupal_json_output($matches);
+  return new JsonResponse($matches);
 }
 
 /**
@@ -366,7 +370,7 @@ function views_ajax_autocomplete_taxonomy($vid, $tags_typed = '') {
     }
   }
 
-  drupal_json_output($term_matches);
+  return new JsonResponse($term_matches);
 }
 
 /**

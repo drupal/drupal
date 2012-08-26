@@ -261,16 +261,20 @@ class Full extends PagerPluginBase {
 
   function query() {
     if ($this->items_per_page_exposed()) {
-      if (!empty($_GET['items_per_page']) && $_GET['items_per_page'] > 0) {
-        $this->options['items_per_page'] = $_GET['items_per_page'];
+      $query = drupal_container()->get('request')->query;
+      $items_per_page = $query->get('items_per_page');
+      if ($items_per_page > 0) {
+        $this->options['items_per_page'] = $items_per_page;
       }
-      elseif (!empty($_GET['items_per_page']) && $_GET['items_per_page'] == 'All' && $this->options['expose']['items_per_page_options_all']) {
+      elseif ($items_per_page == 'All' && $this->options['expose']['items_per_page_options_all']) {
         $this->options['items_per_page'] = 0;
       }
     }
     if ($this->offset_exposed()) {
-      if (isset($_GET['offset']) && $_GET['offset'] >= 0) {
-        $this->options['offset'] = $_GET['offset'];
+      $query = drupal_container()->get('request')->query;
+      $offset = $query->get('offset');
+      if (isset($offset) && $offset >= 0) {
+        $this->options['offset'] = $offset;
       }
     }
 
@@ -328,7 +332,8 @@ class Full extends PagerPluginBase {
 
     // Fill in missing values in the global page array, in case the global page
     // array hasn't been initialized before.
-    $page = isset($_GET['page']) ? explode(',', $_GET['page']) : array();
+    $page = drupal_container()->get('request')->query->get('page');
+    $page = isset($page) ? explode(',', $page) : array();
 
     for ($i = 0; $i <= $this->options['id'] || $i < count($pager_page_array); $i++) {
       $pager_page_array[$i] = empty($page[$i]) ? 0 : $page[$i];
