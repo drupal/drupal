@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Simulate a custom module with a local po file.
+ */
+
+/**
+ * Implements hook_system_info_alter().
+ *
+ * Make the test scripts to be believe this is not a hidden test module, but
+ * a regular custom module.
+ */
+function locale_test_system_info_alter(&$info, $file, $type) {
+  // Only modify the system info if required.
+  // By default the locale_test modules are hidden and have a project specified.
+  // To test the module detection proces by locale_project_list() the
+  // test modules should mimic a custom module. I.e. be non-hidden.
+  if (!variable_get('locale_translation_test_system_info_alter', FALSE)) {
+    return;
+  }
+
+  if ($file->name == 'locale_test' || $file->name == 'locale_test_disabled') {
+    // Make the module appear as not-disabled.
+    $info['hidden'] = FALSE;
+  }
+}

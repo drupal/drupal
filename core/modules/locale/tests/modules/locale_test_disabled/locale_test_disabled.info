@@ -1,0 +1,10 @@
+name = Disabled locale test
+description = Disabled support module for locale module testing.
+package = Testing
+version = VERSION
+core = 8.x
+hidden = TRUE
+project = locale_test_disabled
+
+; Definitions for interface translation.
+interface translation project = locale_test_disabled

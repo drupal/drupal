@@ -32,6 +32,9 @@ function locale_uninstall() {
   variable_del('locale_cache_length');
   variable_del('locale_translation_plurals');
   variable_del('locale_translation_javascript');
+  variable_del('locale_translation_test_system_info_alter');
+  variable_del('locale_translation_check_disabled');
+  variable_del('locale_translation_default_server_pattern');
 
   // Remove all node type language variables. Node module might have been
   // enabled, but may be disabled, so use a wildcard delete.
@@ -158,6 +161,55 @@ function locale_schema() {
     ),
     'primary key' => array('uri', 'langcode'),
   );
+
+  $schema['locale_project'] = array(
+    'description' => 'Translation status information for projects and server data.',
+    'fields' => array(
+      'name' => array(
+        'description' => 'A unique short name to identify the project.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'project_type' => array(
+        'description' => 'Project type, may be core, module, theme',
+        'type' => 'varchar',
+        'length' => 15,
+        'not null' => TRUE,
+      ),
+      'core' => array(
+        'description' => 'Core compatibility string for this project.',
+        'type' => 'varchar',
+        'length' => 4,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'version' => array(
+        'description' => 'The version release of the project.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'server_pattern' => array(
+        'description' => 'Pattern of path and name of the gettext file at the translation server.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'status' => array(
+        'description' => 'The update status of the project.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+
+  $schema['cache_locale'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_locale']['description'] = 'Cache table for the locale module to store various data.';
 
   return $schema;
 }
@@ -620,6 +672,113 @@ function locale_update_8010() {
     'primary key' => array('uri', 'langcode'),
   );
   db_create_table('locale_file', $table);
+}
+
+/**
+ * Add a cache table and locale_project table for the locale module.
+ */
+function locale_update_8011() {
+  // Add a 'locale' cache table.
+  db_create_table('cache_locale', array(
+    'description' => 'Cache table for the locale module to store various data.',
+    'fields' => array(
+      'cid' => array(
+        'description' => 'Primary Key: Unique cache ID.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data' => array(
+        'description' => 'A collection of data to cache.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+      ),
+      'expire' => array(
+        'description' => 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'created' => array(
+        'description' => 'A Unix timestamp indicating when the cache entry was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'serialized' => array(
+        'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'tags' => array(
+        'description' => 'Space-separated list of cache tags for this entry.',
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ),
+      'checksum' => array(
+        'description' => 'The tag invalidation sum when this entry was saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'expire' => array('expire'),
+    ),
+    'primary key' => array('cid'),
+  ));
+
+  // Add locale_project table.
+  db_create_table('locale_project', array(
+    'description' => 'Translation status information for projects and server data.',
+    'fields' => array(
+      'name' => array(
+        'description' => 'A unique short name to identify the project.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'project_type' => array(
+        'description' => 'Project type, may be core, module, theme',
+        'type' => 'varchar',
+        'length' => 15,
+        'not null' => TRUE,
+      ),
+      'core' => array(
+        'description' => 'Core compatibility string for this project.',
+        'type' => 'varchar',
+        'length' => 4,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'version' => array(
+        'description' => 'The release version of the project.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'server_pattern' => array(
+        'description' => 'Pattern of path and name of the gettext file at the translation server.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'status' => array(
+        'description' => 'The update status of the project.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+    ),
+    'primary key' => array('name'),
+  ));
 }
 
 /**
