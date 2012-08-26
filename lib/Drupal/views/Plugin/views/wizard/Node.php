@@ -21,34 +21,55 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "node",
  *   base_table = "node",
- *   created_column = "created",
- *   title = @Translation("Content"),
- *   available_sorts = {
- *     "title:DESC" = @Translation("Title")
- *   },
- *   filters = {
- *     "status" = {
- *       "value" = 1,
- *       "table" = "node",
- *       "field" = "status"
- *     }
- *   },
- *   path_field = {
- *     "id" = "nid",
- *     "table" = "node",
- *     "field" = "nid",
- *     "exclude" = TRUE,
- *     "link_to_node" = FALSE,
- *     "alter" = {
- *       "alter_text" = 1,
- *       "text" = "node/[nid]"
- *     }
- *   }
+ *   title = @Translation("Content")
  * )
- *
  */
 
 class Node extends WizardPluginBase {
+
+  /**
+   * Set the created column.
+   */
+  protected $createdColumn = 'created';
+
+  /**
+   * Set default values for the path field options.
+   */
+  protected $pathField = array(
+    'id' => 'nid',
+    'table' => 'node',
+    'field' => 'nid',
+    'exclude' => TRUE,
+    'link_to_node' => FALSE,
+    'alter' => array(
+      'alter_text' => TRUE,
+      'text' => 'node/[nid]'
+    )
+  );
+
+  /**
+   * Set default values for the filters.
+   */
+  protected $filters = array(
+    'status' => array(
+      'value' => TRUE,
+      'table' => 'node',
+      'field' => 'status'
+    )
+  );
+
+  /**
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::getAvailableSorts().
+   *
+   * @return array
+   */
+  public function getAvailableSorts() {
+    // You can't execute functions in properties, so override the method
+    return array(
+      'title:DESC' => t('Title')
+    );
+  }
+
 
   protected function row_style_options($type) {
     $options = array();

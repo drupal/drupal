@@ -17,20 +17,24 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "taxonomy_term",
  *   base_table = "taxonomy_term_data",
- *   title = @Translation("Taxonomy terms"),
- *   path_field = {
- *     "id" = "tid",
- *     "table" = "taxonomy_term_data",
- *     "field" = "tid",
- *     "exclude" = TRUE,
- *     "alter" = {
- *       "alter_text" = 1,
- *       "text" = "taxonomy/term/[tid]"
- *     }
- *   }
+ *   title = @Translation("Taxonomy terms")
  * )
  */
 class TaxonomyTerm extends WizardPluginBase {
+
+  /**
+   * Set default values for the path field options.
+   */
+  protected $pathField = array(
+    'id' => 'tid',
+    'table' => 'taxonomy_term_data',
+    'field' => 'tid',
+    'exclude' => TRUE,
+    'alter' => array(
+      'alter_text' => TRUE,
+      'text' => 'taxonomy/term/[tid]'
+    )
+  );
 
   protected function default_display_options($form, $form_state) {
     $display_options = parent::default_display_options($form, $form_state);

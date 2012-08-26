@@ -17,18 +17,26 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "file_managed",
  *   base_table = "file_managed",
- *   created_column = "timestamp",
- *   title = @Translation("Files"),
- *   path_field = {
- *     "id" = "uri",
- *     "table" = "file_managed",
- *     "field" = "uri",
- *     "exclude" = TRUE,
- *     "file_download_path" = TRUE
- *   }
+ *   title = @Translation("Files")
  * )
  */
 class File extends WizardPluginBase {
+
+  /**
+   * Set the created column.
+   */
+  protected $createdColumn = 'timestamp';
+
+  /**
+   * Set default values for the path field options.
+   */
+  protected $pathField = array(
+    'id' => 'uri',
+    'table' => 'file_managed',
+    'field' => 'uri',
+    'exclude' => TRUE,
+    'file_download_path' => TRUE
+  );
 
   protected function default_display_options($form, $form_state) {
     $display_options = parent::default_display_options($form, $form_state);

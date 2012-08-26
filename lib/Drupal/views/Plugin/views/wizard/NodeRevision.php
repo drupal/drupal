@@ -21,37 +21,53 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "node_revision",
  *   base_table = "node_revision",
- *   created_column = "timestamp",
- *   title = @Translation("Content revisions"),
- *   filters = {
- *     "status" = {
- *       "value" = 1,
- *       "table" = "node",
- *       "field" = "status"
- *     }
- *   },
- *   path_field = {
- *     "id" = "vid",
- *     "table" = "node_revision",
- *     "field" = "vid",
- *     "exclude" = TRUE,
- *     "alter" = {
- *       "alter_text" = 1,
- *       "text" = "node/[nid]/revisions/[vid]/view"
- *     }
- *   },
- *   path_fields_supplemental = {
- *     {
- *       "id" = "nid",
- *       "table" = "node",
- *       "field" = "nid",
- *       "exclude" = TRUE,
- *       "link_to_node" = FALSE
- *     }
- *   }
+ *   title = @Translation("Content revisions")
  * )
  */
 class NodeRevision extends WizardPluginBase {
+
+  /**
+   * Set the created column.
+   */
+  protected $createdColumn = 'timestamp';
+
+  /**
+   * Set default values for the path field options.
+   */
+  protected $pathField = array(
+    'id' => 'vid',
+    'table' => 'node_revision',
+    'field' => 'vid',
+    'exclude' => TRUE,
+    'alter' => array(
+      'alter_text' => TRUE,
+      'text' => 'node/[nid]/revisions/[vid]/view'
+    )
+  );
+
+  /**
+   * Set the additional information for the pathField property.
+   */
+  protected $pathFieldsSupplemental = array(
+    array(
+      'id' => 'nid',
+      'table' => 'node',
+      'field' => 'nid',
+      'exclude' => TRUE,
+      'link_to_node' => FALSE
+    )
+  );
+
+  /**
+   * Set default values for the filters.
+   */
+  protected $filters = array(
+    'status' => array(
+      'value' => TRUE,
+      'table' => 'node',
+      'field' => 'status'
+    )
+  );
 
   /**
    * Node revisions do not support full posts or teasers, so remove them.

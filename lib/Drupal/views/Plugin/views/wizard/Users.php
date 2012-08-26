@@ -21,29 +21,41 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "users",
  *   base_table = "users",
- *   created_column = "created",
- *   title = @Translation("Users"),
- *   filters = {
- *     "status" = {
- *       "value" = 1,
- *       "table" = "users",
- *       "field" = "status"
- *     }
- *   },
- *   path_field = {
- *     "id" = "uid",
- *     "table" = "users",
- *     "field" = "uid",
- *     "exclude" = TRUE,
- *     "link_to_user" = FALSE,
- *     "alter" = {
- *       "alter_text" = 1,
- *       "text" = "user/[uid]"
- *     }
- *   }
+ *   title = @Translation("Users")
  * )
  */
 class Users extends WizardPluginBase {
+
+  /**
+   * Set the created column.
+   */
+  protected $createdColumn = 'created';
+
+  /**
+   * Set default values for the path field options.
+   */
+  protected $pathField = array(
+    'id' => 'uid',
+    'table' => 'users',
+    'field' => 'uid',
+    'exclude' => TRUE,
+    'link_to_user' => FALSE,
+    'alter' => array(
+      'alter_text' => TRUE,
+      'text' => 'user/[uid]'
+    )
+  );
+
+  /**
+   * Set default values for the filters.
+   */
+  protected $filters = array(
+    'status' => array(
+      'value' => TRUE,
+      'table' => 'users',
+      'field' => 'status'
+    )
+  );
 
   protected function default_display_options($form, $form_state) {
     $display_options = parent::default_display_options($form, $form_state);

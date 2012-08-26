@@ -21,35 +21,47 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "comment",
  *   base_table = "comment",
- *   created_column = "created",
- *   title = @Translation("Comments"),
- *   filters = {
- *     "status" = {
- *       "value" = 1,
- *       "table" = "comment",
- *       "field" = "status"
- *     },
- *     "status_node" = {
- *       "value" = 1,
- *       "table" = "node",
- *       "field" = "status",
- *       "relationship" = "nid",
- *     }
- *   },
- *   path_field = {
- *     "id" = "cid",
- *     "table" = "comment",
- *     "field" = "cid",
- *     "exclude" = TRUE,
- *     "link_to_comment" = FALSE,
- *     "alter" = {
- *       "alter_text" = 1,
- *       "text" = "comment/[cid]#comment-[cid]"
- *     }
- *   }
+ *   title = @Translation("Comments")
  * )
  */
 class Comment extends WizardPluginBase {
+
+  /**
+   * Set the created column.
+   */
+  protected $createdColumn = 'created';
+
+  /**
+   * Set default values for the path field options.
+   */
+  protected $pathField = array(
+    'id' => 'cid',
+    'table' => 'comment',
+    'field' => 'cid',
+    'exclude' => TRUE,
+    'link_to_comment' => FALSE,
+    'alter' => array(
+      'alter_text' => TRUE,
+      'text' => 'comment/[cid]#comment-[cid]'
+    ),
+  );
+
+  /**
+   * Set default values for the filters.
+   */
+  protected $filters = array(
+    'status' => array(
+      'value' => TRUE,
+      'table' => 'comment',
+      'field' => 'status'
+    ),
+    'status_node' => array(
+      'value' => TRUE,
+      'table' => 'node',
+      'field' => 'status',
+      'relationship' => 'nid'
+    )
+  );
 
   protected function row_style_options($type) {
     $options = array();

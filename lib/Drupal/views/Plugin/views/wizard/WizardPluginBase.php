@@ -17,15 +17,80 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
  */
 abstract class WizardPluginBase implements WizardInterface {
 
+  /**
+   * Stores the base table connected with the wizard.
+   *
+   * @var string
+   */
   protected $base_table;
 
+  /**
+   * Stores the entity type connected with the wizard.
+   *
+   * There might be base tables connected with entity types, if not this would
+   * be empty.
+   *
+   * @var string
+   */
   protected $entity_type;
 
+  /**
+   * Contains the information from entity_get_info of the $entity_type.
+   *
+   * @var array
+   */
   protected $entity_info = array();
 
   protected $validated_views = array();
 
+  /**
+   * The wizard plugin definition, like the base_table.
+   *
+   * @var array
+   */
   protected $plugin = array();
+
+  /**
+   * The table column used for sorting by create date of this wizard.
+   *
+   * @var string
+   */
+  protected $createdColumn;
+
+  /**
+   * Stores a views item configuration array used for a jump-menu field.
+   *
+   * @var array
+   */
+  protected $pathField = array();
+
+  /**
+   * Stores additional fields required to generate the pathField.
+   *
+   * @var array
+   */
+  protected $pathFieldsSupplemental = array();
+
+  /**
+   * Stores views items configuration arrays for filters added by the wizard.
+   *
+   * @var array
+   */
+  protected $filters = array();
+
+  /**
+   * Stores views items configuration arrays for sorts added by the wizard.
+   *
+   * @var array
+   */
+  protected $sorts = array();
+
+  /**
+   * Stores the available store criteria.
+   *
+   * @var array
+   */
+  protected $availableSorts = array();
 
   protected $filter_defaults = array(
     'id' => NULL,
@@ -36,13 +101,6 @@ abstract class WizardPluginBase implements WizardInterface {
   function __construct($plugin) {
     $this->base_table = $plugin['base_table'];
     $default = $this->filter_defaults;
-
-    if (isset($plugin['filters'])) {
-      foreach ($plugin['filters'] as $name => $info) {
-        $default['id'] = $name;
-        $plugin['filters'][$name] = $info + $default;
-      }
-    }
 
     $this->plugin = $plugin;
 
@@ -56,15 +114,65 @@ abstract class WizardPluginBase implements WizardInterface {
   }
 
   /**
-   * Gets the active stored plugin information.
+   * Returns the createdColumn property.
    *
-   * @return array
-   *   The plugin information.
+   * @return string
    */
-  function getPlugin() {
-    return $this->plugin;
+  public function getCreatedColumn() {
+    return $this->createdColumn;
   }
 
+  /**
+   * Returns the pathField property.
+   *
+   * @return array
+   */
+  public function getPathField() {
+    return $this->pathField;
+  }
+
+  /**
+   * Returns the pathFieldsSupplemental property.
+   *
+   * @var array()
+   */
+  public function getPathFieldsSupplemental() {
+    return $this->pathFieldsSupplemental;
+  }
+
+  /**
+   * Returns the filters property.
+   *
+   * @return array
+   */
+  public function getFilters() {
+    $filters = array();
+
+    foreach ($this->filters as $name => $info) {
+      $default['id'] = $name;
+      $filters[$name] = $info + $default;
+    }
+
+    return $filters;
+  }
+
+  /**
+   * Returns the availableSorts property.
+   *
+   * @return array
+   */
+  public function getAvailableSorts() {
+    return $this->availableSorts;
+  }
+
+  /**
+   * Returns the sorts property.
+   *
+   * @return array
+   */
+  public function getSorts() {
+    return $this->sorts;
+  }
 
   function build_form($form, &$form_state) {
     $style_options = views_fetch_plugin_names('style', 'normal', array($this->base_table));
@@ -314,7 +422,6 @@ abstract class WizardPluginBase implements WizardInterface {
     elseif ($style_plugin->usesFields()) {
       $style_form['row_plugin'] = array('#markup' => '<span>' . t('of fields') . '</span>');
     }
-    $style_plugin->wizard_form($form, $form_state, $type);
   }
 
   /**
@@ -436,14 +543,15 @@ abstract class WizardPluginBase implements WizardInterface {
       'none' => t('Unsorted'),
     );
     // Check if we are allowed to sort by creation date.
-    if (!empty($this->plugin['created_column'])) {
+    $created_column = $this->getCreatedColumn();
+    if ($created_column) {
       $sorts += array(
-        $this->plugin['created_column'] . ':DESC' => t('Newest first'),
-        $this->plugin['created_column'] . ':ASC' => t('Oldest first'),
+        $created_column . ':DESC' => t('Newest first'),
+        $created_column . ':ASC' => t('Oldest first'),
       );
     }
-    if (isset($this->plugin['available_sorts'])) {
-      $sorts += $this->plugin['available_sorts'];
+    if ($available_sorts = $this->getAvailableSorts()) {
+      $sorts += $available_sorts;
     }
 
     foreach ($sorts as &$option) {
@@ -458,7 +566,7 @@ abstract class WizardPluginBase implements WizardInterface {
         '#type' => 'select',
         '#title' => t('sorted by'),
         '#options' => $sorts,
-        '#default_value' => isset($this->plugin['created_column']) ? $this->plugin['created_column'] . ':DESC' : 'none',
+        '#default_value' => isset($created_column) ? $created_column . ':DESC' : 'none',
       );
     }
   }
@@ -612,10 +720,8 @@ abstract class WizardPluginBase implements WizardInterface {
     $filters = array();
 
     // Add any filters provided by the plugin.
-    if (isset($this->plugin['filters'])) {
-      foreach ($this->plugin['filters'] as $name => $info) {
-        $filters[$name] = $info;
-      }
+    foreach ($this->getFilters() as $name => $info) {
+      $filters[$name] = $info;
     }
 
     // Add any filters specified by the user when filling out the wizard.
@@ -691,10 +797,8 @@ abstract class WizardPluginBase implements WizardInterface {
     $sorts = array();
 
     // Add any sorts provided by the plugin.
-    if (isset($this->plugin['sorts'])) {
-      foreach ($this->plugin['sorts'] as $name => $info) {
-        $sorts[$name] = $info;
-      }
+    foreach ($this->getSorts() as $name => $info) {
+      $sorts[$name] = $info;
     }
 
     // Add any sorts specified by the user when filling out the wizard.

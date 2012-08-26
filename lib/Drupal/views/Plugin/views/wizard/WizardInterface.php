@@ -31,7 +31,7 @@ interface WizardInterface {
    *
    * @return a view object.
    *
-   * @throws ViewsWizardException in the event of a problem.
+   * @throws Drupal\views\Plugin\views\wizard\WizardException
    */
   function create_view($form, &$form_state);
 
