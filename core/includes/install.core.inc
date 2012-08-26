@@ -3,6 +3,7 @@
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\TaskException;
+use Drupal\Core\Language\Language;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -1325,9 +1326,9 @@ function install_select_language_form($form, &$form_state, $files) {
       $select_options[$file->langcode] = $file->langcode;
     }
     // Build a list of languages simulated for browser detection.
-    $languages[$file->langcode] = (object) array(
+    $languages[$file->langcode] = new Language(array(
       'langcode' => $file->langcode,
-    );
+    ));
   }
 
   $browser_langcode = language_from_browser($languages);
@@ -1479,19 +1480,19 @@ function install_import_translations(&$install_state) {
   if (!isset($standard_languages[$langcode])) {
     // Drupal does not know about this language, so we prefill its values with
     // our best guess. The user will be able to edit afterwards.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => $langcode,
       'name' => $langcode,
       'default' => TRUE,
-    );
+    ));
     language_save($language);
   }
   else {
     // A known predefined language, details will be filled in properly.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => $langcode,
       'default' => TRUE,
-    );
+    ));
     language_save($language);
   }
 

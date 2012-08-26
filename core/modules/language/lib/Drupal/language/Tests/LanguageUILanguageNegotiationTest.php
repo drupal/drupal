@@ -8,6 +8,7 @@
 namespace Drupal\language\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\Language;
 
 /**
  * Test UI language negotiation
@@ -83,13 +84,13 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $language_domain = 'example.cn';
 
     // Setup the site languages by installing two languages.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => $langcode_browser_fallback,
-    );
+    ));
     language_save($language);
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => $langcode,
-    );
+    ));
     language_save($language);
 
     // We will look for this string in the admin/config screen to see if the
@@ -254,9 +255,9 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   function testUrlLanguageFallback() {
     // Add the Italian language.
     $langcode_browser_fallback = 'it';
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => $langcode_browser_fallback,
-    );
+    ));
     language_save($language);
     $languages = language_list();
 
@@ -282,7 +283,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Access the front page without specifying any valid URL language prefix
     // and having as browser language preference a non-default language.
     $http_header = array("Accept-Language: $langcode_browser_fallback;q=1");
-    $language = (object) array('langcode' => '');
+    $language = new Language(array('langcode' => ''));
     $this->drupalGet('', array('language' => $language), $http_header);
 
     // Check that the language switcher active link matches the given browser
@@ -302,9 +303,9 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   function testLanguageDomain() {
     // Add the Italian language.
     $langcode = 'it';
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => $langcode,
-    );
+    ));
     language_save($language);
     $languages = language_list();
 

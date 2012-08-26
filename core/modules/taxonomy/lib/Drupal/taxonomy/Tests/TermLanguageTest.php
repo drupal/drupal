@@ -7,6 +7,8 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests for the language feature on taxonomy terms.
  */
@@ -35,16 +37,16 @@ class TermLanguageTest extends TaxonomyTestBase {
 
   function testTermLanguage() {
     // Add first some custom languages.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'aa',
       'name' => $this->randomName(),
-    );
+    ));
     language_save($language);
 
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'bb',
       'name' => $this->randomName(),
-    );
+    ));
     language_save($language);
 
     // Add a term.

@@ -18,9 +18,9 @@ namespace Drupal\Core\Language;
  */
 class Language {
   // Properties within the Language are set up as the default language.
-  public $name = 'English';
-  public $langcode = 'en';
-  public $direction = 0;
+  public $name = '';
+  public $langcode = '';
+  public $direction = LANGUAGE_LTR;
   public $weight = 0;
   public $default = FALSE;
   public $method_id = NULL;
@@ -33,9 +33,22 @@ class Language {
    *   The properties used to construct the language.
    */
   public function __construct(array $options = array()) {
-    // Set all the properties for the language.
+    // Set all the provided properties for the language.
     foreach ($options as $name => $value) {
       $this->$name = $value;
+    }
+    // If some options were not set, set sane defaults of a predefined language.
+    if (!isset($options['name']) || !isset($options['direction'])) {
+      include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+      $predefined = standard_language_list();
+      if (isset($predefined[$this->langcode])) {
+        if (!isset($options['name'])) {
+          $this->name = $predefined[$this->langcode][0];
+        }
+        if (!isset($options['direction']) && isset($predefined[$this->langcode][2])) {
+          $this->direction = $predefined[$this->langcode][2];
+        }
+      }
     }
   }
 

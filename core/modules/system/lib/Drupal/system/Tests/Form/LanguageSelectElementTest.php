@@ -35,16 +35,16 @@ class LanguageSelectElementTest extends WebTestBase {
    */
   function testLanguageSelectElementOptions() {
     // Add some languages.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'aaa',
       'name' => $this->randomName(),
-    );
+    ));
     language_save($language);
 
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'bbb',
       'name' => $this->randomName(),
-    );
+    ));
     language_save($language);
 
     $this->drupalGet('form-test/language_select');

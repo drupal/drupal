@@ -8,6 +8,7 @@
 namespace Drupal\language\Tests;
 
 use Drupal\simpletest\UnitTestBase;
+use Drupal\Core\Language\Language;
 
 /**
  * Test browser language detection.
@@ -31,32 +32,32 @@ class LanguageBrowserDetectionUnitTest extends UnitTestBase {
 
     $languages = array(
       // In our test case, 'en' has priority over 'en-US'.
-      'en' => (object) array(
+      'en' => new Language(array(
         'langcode' => 'en',
-      ),
-      'en-US' => (object) array(
+      )),
+      'en-US' => new Language(array(
         'langcode' => 'en-US',
-      ),
+      )),
       // But 'fr-CA' has priority over 'fr'.
-      'fr-CA' => (object) array(
+      'fr-CA' => new Language(array(
         'langcode' => 'fr-CA',
-      ),
-      'fr' => (object) array(
+      )),
+      'fr' => new Language(array(
         'langcode' => 'fr',
-      ),
+      )),
       // 'es-MX' is alone.
-      'es-MX' => (object) array(
+      'es-MX' => new Language(array(
         'langcode' => 'es-MX',
-      ),
+      )),
       // 'pt' is alone.
-      'pt' => (object) array(
+      'pt' => new Language(array(
         'langcode' => 'pt',
-      ),
+      )),
       // Language codes with more then one dash are actually valid.
       // eh-oh-laa-laa is the official language code of the Teletubbies.
-      'eh-oh-laa-laa' => (object) array(
+      'eh-oh-laa-laa' => new Language(array(
         'langcode' => 'eh-oh-laa-laa',
-      ),
+      )),
     );
 
     $test_cases = array(

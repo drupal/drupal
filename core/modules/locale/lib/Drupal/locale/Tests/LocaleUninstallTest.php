@@ -8,6 +8,7 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\Language;
 
 /**
  * Locale uninstall with English UI functional test.
@@ -49,11 +50,11 @@ class LocaleUninstallTest extends WebTestBase {
   function testUninstallProcess() {
     $locale_module = array('locale', 'language');
 
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'fr',
       'name' => 'French',
       'default' => $this->langcode == 'fr',
-    );
+    ));
     language_save($language);
     // Reset statically cached language objects.
     language(NULL, TRUE);

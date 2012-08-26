@@ -208,14 +208,6 @@ function language_process_language_select($element) {
 function language_save($language) {
   $language->is_new = !(bool) db_query_range('SELECT 1 FROM {language} WHERE langcode = :langcode', 0, 1, array(':langcode' => $language->langcode))->fetchField();
 
-  // If name was not set, we add a predefined language.
-  if (!isset($language->name)) {
-    include_once DRUPAL_ROOT . '/core/includes/standard.inc';
-    $predefined = standard_language_list();
-    $language->name = $predefined[$language->langcode][0];
-    $language->direction = isset($predefined[$language->langcode][2]) ? $predefined[$language->langcode][2] : LANGUAGE_LTR;
-  }
-
   // Let other modules modify $language before saved.
   module_invoke_all('language_presave', $language);
 

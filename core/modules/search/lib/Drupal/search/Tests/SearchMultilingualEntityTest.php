@@ -7,6 +7,8 @@
 
 namespace Drupal\search\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests entities with multilingual fields.
  */
@@ -33,15 +35,15 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     parent::setUp();
 
     // Add two new languages.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'hu',
       'name' => 'Hungarian',
-    );
+    ));
     language_save($language);
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'sv',
       'name' => 'Swedish',
-    );
+    ));
     language_save($language);
 
     // Make the body field translatable.

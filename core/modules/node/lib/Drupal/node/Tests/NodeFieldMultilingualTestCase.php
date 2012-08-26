@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\Language;
 
 /**
  * Functional test for multilingual fields.
@@ -40,10 +41,10 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Add a new language.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'it',
       'name' => 'Italian',
-    );
+    ));
     language_save($language);
 
     // Enable URL language detection and selection.

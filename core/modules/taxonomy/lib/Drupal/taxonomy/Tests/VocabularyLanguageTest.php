@@ -7,6 +7,8 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Tests for the language feature on vocabularies.
  */
@@ -32,16 +34,16 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
 
   function testVocabularyLanguage() {
     // Add first some custom languages.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'aa',
       'name' => $this->randomName(),
-    );
+    ));
     language_save($language);
 
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'bb',
       'name' => $this->randomName(),
-    );
+    ));
     language_save($language);
 
     $this->drupalGet('admin/structure/taxonomy/add');

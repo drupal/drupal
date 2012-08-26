@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\Language;
 
 /**
  * Tests drupal_http_request().
@@ -133,10 +134,10 @@ class HttpRequestTest extends WebTestBase {
     $this->assertEqual($request->headers['content-language'], 'en', t('Content-Language HTTP header is English.'));
 
     // Add French language.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'fr',
       'name' => 'French',
-    );
+    ));
     language_save($language);
 
     // Request front page in French and check for matching Content-language.

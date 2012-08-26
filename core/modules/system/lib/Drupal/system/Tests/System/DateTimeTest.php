@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\Language;
 
 /**
  * Tests generic date and time handling capabilities of Drupal.
@@ -170,10 +171,10 @@ class DateTimeTest extends WebTestBase {
     $this->assertFalse($format, 'Unlocalized date format resides not in localized table.');
 
     // Enable German language
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'de',
       'default' => TRUE,
-    );
+    ));
     language_save($language);
 
     $date_format = array(

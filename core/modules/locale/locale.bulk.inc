@@ -8,6 +8,7 @@
 use Drupal\Component\Gettext\PoStreamWriter;
 use Drupal\locale\Gettext;
 use Drupal\locale\PoDatabaseReader;
+use Drupal\Core\Language\Language;
 
 
 /**
@@ -99,11 +100,9 @@ function locale_translate_import_form_submit($form, &$form_state) {
     // Add language, if not yet supported.
     $language = language_load($form_state['values']['langcode']);
     if (empty($language)) {
-      include_once DRUPAL_ROOT . '/core/includes/standard.inc';
-      $predefined = standard_language_list();
-      $language = (object) array(
-        'langcode' => $form_state['values']['langcode'],
-      );
+      $language = new Language(array(
+        'langcode' => $form_state['values']['langcode']
+      ));
       $language = language_save($language);
       drupal_set_message(t('The language %language has been created.', array('%language' => t($language->name))));
     }

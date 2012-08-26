@@ -10,6 +10,7 @@ namespace Drupal\entity\Tests;
 use Exception;
 use InvalidArgumentException;
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\Language;
 
 /**
  * Tests entity translation.
@@ -60,10 +61,10 @@ class EntityTranslationTest extends WebTestBase {
     // Create test languages.
     $this->langcodes = array();
     for ($i = 0; $i < 3; ++$i) {
-      $language = (object) array(
+      $language = new Language(array(
         'langcode' => 'l' . $i,
         'name' => $this->randomString(),
-      );
+      ));
       $this->langcodes[$i] = $language->langcode;
       language_save($language);
     }

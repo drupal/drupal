@@ -7,6 +7,8 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Unit test class for the multilanguage fields logic.
  *
@@ -55,10 +57,10 @@ class TranslationTest extends FieldTestBase {
     $this->instance = field_read_instance('test_entity', $this->field_name, 'test_bundle');
 
     for ($i = 0; $i < 3; ++$i) {
-      $language = (object) array(
+      $language = new Language(array(
         'langcode' => 'l' . $i,
         'name' => $this->randomString(),
-      );
+      ));
       language_save($language);
     }
   }

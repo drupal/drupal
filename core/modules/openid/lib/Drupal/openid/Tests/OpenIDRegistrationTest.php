@@ -7,6 +7,8 @@
 
 namespace Drupal\openid\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Test account registration using Simple Registration and Attribute Exchange.
  */
@@ -54,13 +56,13 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
     // process should pick 'pt' based on the sreg.language being 'pt-BR'
     // (and falling back on least specific language given no pt-br available
     // locally).
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'pt',
-    );
+    ));
     language_save($language);
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'pt-pt',
-    );
+    ));
     language_save($language);
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
@@ -109,9 +111,9 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
 
     // Save Portuguese, Brazil as an optional language. The process should pick
     // 'pt-br' based on the sreg.language later.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'pt-br',
-    );
+    ));
     language_save($language);
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
@@ -246,13 +248,13 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
 
     // Save Portuguese and Portuguese, Portugal as optional languages. The
     // process should pick 'pt-pt' as the more specific language.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'pt',
-    );
+    ));
     language_save($language);
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'pt-pt',
-    );
+    ));
     language_save($language);
 
     // Use a User-supplied Identity that is the URL of an XRDS document.

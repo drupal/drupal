@@ -5,6 +5,7 @@
  * Administration functions for language.module.
  */
 
+use Drupal\Core\Language\Language;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -249,7 +250,7 @@ function language_admin_edit_form($form, &$form_state, $language) {
  */
 function _language_admin_common_controls(&$form, $language = NULL) {
   if (!is_object($language)) {
-    $language = new stdClass();
+    $language = new Language(array('langcode' => NULL, 'name' => NULL,));
   }
   if (isset($language->langcode)) {
     $form['langcode_view'] = array(
@@ -268,8 +269,8 @@ function _language_admin_common_controls(&$form, $language = NULL) {
       '#title' => t('Language code'),
       '#maxlength' => 12,
       '#required' => TRUE,
-      '#default_value' => @$language->langcode,
-      '#disabled' => (isset($language->langcode)),
+      '#default_value' => '',
+      '#disabled' => FALSE,
       '#description' => t('Use language codes as <a href="@w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array('@w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
     );
   }
@@ -332,18 +333,14 @@ function language_admin_add_form_submit($form, &$form_state) {
   if ($langcode == 'custom') {
     $langcode = $form_state['values']['langcode'];
     // Custom language form.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => $langcode,
       'name' => $form_state['values']['name'],
       'direction' => $form_state['values']['direction'],
-    );
+    ));
   }
   else {
-    include_once DRUPAL_ROOT . '/core/includes/standard.inc';
-    $predefined = standard_language_list();
-    $language = (object) array(
-      'langcode' => $langcode,
-    );
+    $language = new Language(array('langcode' => $langcode));
   }
   // Save the language and inform the user that it happened.
   $language = language_save($language);

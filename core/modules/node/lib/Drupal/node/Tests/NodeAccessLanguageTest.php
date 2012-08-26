@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Language\Language;
+
 /**
  * Test case to verify node_access functionality for multiple languages.
  */
@@ -51,13 +53,13 @@ class NodeAccessLanguageTest extends NodeTestBase {
    */
   function testNodeAccess() {
     // Add Hungarian and Catalan.
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'hu',
-    );
+    ));
     language_save($language);
-    $language = (object) array(
+    $language = new Language(array(
       'langcode' => 'ca',
-    );
+    ));
     language_save($language);
 
     // Tests the default access provided for a published Hungarian node.
