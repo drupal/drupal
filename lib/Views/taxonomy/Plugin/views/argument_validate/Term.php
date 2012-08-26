@@ -87,14 +87,6 @@ class Term extends ArgumentValidatorPluginBase {
     $options['vocabularies'] = array_filter($options['vocabularies']);
   }
 
-  function convert_options(&$options) {
-    if (!isset($options['vocabularies']) && !empty($this->argument->options['validate_argument_vocabulary'])) {
-      $options['vocabularies'] = $this->argument->options['validate_argument_vocabulary'];
-      $options['type'] = $this->argument->options['validate_argument_type'];
-      $options['transform'] = isset($this->argument->options['validate_argument_transform']) ? $this->argument->options['validate_argument_transform'] : FALSE;
-    }
-  }
-
   function validate_argument($argument) {
     $vocabularies = array_filter($this->options['vocabularies']);
     $type = $this->options['type'];

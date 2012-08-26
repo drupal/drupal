@@ -37,12 +37,6 @@ class User extends ArgumentDefaultPluginBase {
     );
   }
 
-  function convert_options(&$options) {
-    if (!isset($options['user']) && isset($this->argument->options['default_argument_user'])) {
-      $options['user'] = $this->argument->options['default_argument_user'];
-    }
-  }
-
   function get_argument() {
     foreach (range(1, 3) as $i) {
       $user = menu_get_object('user', $i);

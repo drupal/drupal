@@ -37,7 +37,6 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
     $this->view = &$view;
     $this->argument = &$argument;
 
-    $this->convert_options($options);
     $this->unpack_options($this->options, $options);
   }
 
@@ -82,16 +81,6 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
       $form[$option_name]['#description'] .= ' <strong>' . t('Note: you do not have permission to modify this. If you change the default filter type, this setting will be lost and you will NOT be able to get it back.') . '</strong>';
     }
   }
-
-  /**
-   * Convert options from the older style.
-   *
-   * In Views 3, the method of storing default argument options has changed
-   * and each plugin now gets its own silo. This method can be used to
-   * move arguments from the old style to the new style. See
-   * views_plugin_argument_default_fixed for a good example of this method.
-   */
-  function convert_options(&$options) { }
 
 }
 

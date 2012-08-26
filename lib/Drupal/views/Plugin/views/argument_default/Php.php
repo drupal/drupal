@@ -42,12 +42,6 @@ class Php extends ArgumentDefaultPluginBase {
     $this->check_access($form, 'code');
   }
 
-  function convert_options(&$options) {
-    if (!isset($options['code']) && isset($this->argument->options['default_argument_php'])) {
-      $options['code'] = $this->argument->options['default_argument_php'];
-    }
-  }
-
   /**
    * Only let users with PHP block visibility permissions set/modify this
    * default plugin.

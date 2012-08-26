@@ -45,10 +45,4 @@ class Fixed extends ArgumentDefaultPluginBase {
     return $this->options['argument'];
   }
 
-  function convert_options(&$options) {
-    if (!isset($options['argument']) && isset($this->argument->options['default_argument_fixed'])) {
-      $options['argument'] = $this->argument->options['default_argument_fixed'];
-    }
-  }
-
 }

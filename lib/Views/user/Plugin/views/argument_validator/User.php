@@ -72,14 +72,6 @@ class User extends ArgumentValidatorPluginBase {
     $options['roles'] = array_filter($options['roles']);
   }
 
-  function convert_options(&$options) {
-    if (!isset($options['type']) && isset($this->argument->options['validate_user_argument_type'])) {
-      $options['type'] = $this->argument->options['validate_user_argument_type'];
-      $options['restrict_roles'] = $this->argument->options['validate_user_restrict_roles'];
-      $options['roles'] = $this->argument->options['validate_user_roles'];
-    }
-  }
-
   function validate_argument($argument) {
     $type = $this->options['type'];
     // is_numeric() can return false positives, so we ensure it's an integer.

@@ -49,12 +49,6 @@ class Php extends ArgumentValidatorPluginBase {
     return user_access('use PHP for settings');
   }
 
-  function convert_options(&$options) {
-    if (!isset($options['code']) && isset($this->argument->options['validate_argument_php'])) {
-      $options['code'] = $this->argument->options['validate_argument_php'];
-    }
-  }
-
   function validate_argument($argument) {
     // set up variables to make it easier to reference during the argument.
     $view = &$this->view;

@@ -80,15 +80,6 @@ class Node extends ArgumentValidatorPluginBase {
     $options['types'] = array_filter($options['types']);
   }
 
-  function convert_options(&$options) {
-    if (!isset($options['types']) && !empty($this->argument->options['validate_argument_node_type'])) {
-      $options['types'] = isset($this->argument->options['validate_argument_node_type']) ? $this->argument->options['validate_argument_node_type'] : array();
-      $options['access'] = !empty($this->argument->options['validate_argument_node_access']);
-      $options['access_op'] = isset($this->argument->options['validate_argument_node_access_op']) ? $this->argument->options['validate_argument_node_access_op'] : 'view';
-      $options['nid_type'] = isset($this->argument->options['validate_argument_nid_type']) ? $this->argument->options['validate_argument_nid_type'] : array();
-    }
-  }
-
   function validate_argument($argument) {
     $types = $this->options['types'];
 
