@@ -17,7 +17,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('language');
+  public static $modules = array('language', 'field_ui');
 
   public static function getInfo() {
     return array(
@@ -45,6 +45,11 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     $this->assertOptionSelected('edit-node-type-language-default', 'site_default', 'The default inital language is the site default.');
     $this->assertFieldChecked('edit-node-type-language-hidden', 'Language selector is hidden by default.');
 
+    // Tests if the language field cannot be rearranged on the manage fields tab.
+    $this->drupalGet('admin/structure/types/manage/article/fields');
+    $language_field = $this->xpath('//*[@id="field-overview"]/*[@id="language"]');
+    $this->assert(empty($language_field), 'Language field is not visible on manage fields tab.');
+
     $this->drupalGet('node/add/article');
     $this->assertNoField('langcode', 'Language is not selectable on node add/edit page by default.');
 
@@ -67,6 +72,11 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     $this->drupalGet('node/add/article');
     $this->assertField('langcode', 'Language is selectable on node add/edit page when language not hidden.');
     $this->assertOptionSelected('edit-langcode', 'hu', 'The inital language is the site default on the node add page after the site default language is changed.');
+
+    // Tests if the language field can be rearranged on the manage fields tab.
+    $this->drupalGet('admin/structure/types/manage/article/fields');
+    $language_field = $this->xpath('//*[@id="language"]');
+    $this->assert(!empty($language_field), 'Language field is visible on manage fields tab.');
 
     // Changes the inital language settings.
     $edit = array(

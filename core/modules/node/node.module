@@ -654,7 +654,9 @@ function node_field_extra_fields() {
 
     // Add also the 'language' select if Language module is enabled and the
     // bundle has multilingual support.
-    if ($module_language_enabled && variable_get('node_type_language_' . $bundle->type, 0)) {
+    // Visibility of the ordering of the language selector is the same as on the node/add form,
+    // i.e. node_type_language_hidden_TYPE variable
+    if ($module_language_enabled && !variable_get('node_type_language_hidden_' . $bundle->type, TRUE)) {
       $extra['node'][$bundle->type]['form']['language'] = array(
         'label' => t('Language'),
         'description' => $description,
