@@ -1336,7 +1336,6 @@ function install_select_language_form($form, &$form_state, $files) {
     '#options' => $select_options,
     // Use the browser detected language as default or English if nothing found.
     '#default_value' => !empty($browser_langcode) ? $browser_langcode : 'en',
-    '#size' => min(count($select_options), 10),
   );
 
   if (count($files) == 1) {

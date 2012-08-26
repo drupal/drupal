@@ -89,11 +89,14 @@ INSTALLATION
    - Download a translation file for the correct Drupal version and language
      from the translation server: http://localize.drupal.org/translate/downloads
 
-   - Place the file into your installation profile's translations
-     directory. For instance, if you are using the Standard install profile,
-     move the .po file into the directory:
+   - Place the file into the dedicated translations directory. By default this
+     directory is:
 
-       profiles/standard/translations/
+       sites/default/files/translations/
+
+     If the directory doesn't exist, you should create it. Make sure your file
+     is named drupal-VERSION.LANGCODE.po (for example, the German
+     translation for Drupal 8.0 should be named drupal-8.0.de.po).
 
    For detailed instructions, visit http://drupal.org/localize
 
