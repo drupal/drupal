@@ -11,9 +11,17 @@ use Drupal\views\ViewStorageController;
 use Drupal\views\View;
 use Drupal\views\ViewsDisplay;
 
+/**
+ * Tests that functionality of the the ViewsStorageController.
+ */
 class ViewsStorageTest extends WebTestBase {
 
-  protected $config_properties = array (
+  /**
+   * Properties that should be stored in the configuration.
+   *
+   * @var array
+   */
+  protected $config_properties = array(
     'disabled',
     'api_version',
     'name',
@@ -34,7 +42,7 @@ class ViewsStorageTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Views configuration entity CRUD tests',
+      'name' => 'Views configurable CRUD tests',
       'description' => 'Test the CRUD functionality for ViewStorage.',
       'group' => 'Views',
     );
@@ -43,64 +51,59 @@ class ViewsStorageTest extends WebTestBase {
   /**
    * Tests CRUD operations.
    */
-  function testConfigEntityCRUD() {
-    // Get the entity info.
+  function testConfigurableCRUD() {
+
+    // Get the Configurable information and controller.
     $info = entity_get_info('view');
-    // Get the entity controller.
     $controller = entity_get_controller('view');
 
-    // Test an info array has been returned.
-    $this->assertTrue(!empty($info) && is_array($info), 'View entity info array loaded.');
+    // Confirm that an info array has been returned.
+    $this->assertTrue(!empty($info) && is_array($info), 'The View  info array is loaded.');
 
     // Confirm we have the correct controller class.
-    $this->assertTrue($controller instanceof ViewStorageController, 'Correct entity controller loaded.');
+    $this->assertTrue($controller instanceof ViewStorageController, 'The correct controller is loaded.');
 
-    // Loading.
-
-    //Load a single config entity.
+    // Load a single Configurable object from the controller.
     $load = $controller->load(array('archive'));
     $view = reset($load);
 
-    // Confirm it's a view.
+    // Confirm that an actual view object is loaded and that it returns all of
+    // expected properties.
     $this->assertTrue($view instanceof View, 'Single View instance loaded.');
-
-    // Check that the View contains all of the properties.
     foreach ($this->config_properties as $property) {
       $this->assertTrue(isset($view->{$property}), t('Property: @property loaded onto View.', array('@property' => $property)));
     }
 
     // Check the displays have been loaded correctly from config display data.
     $expected_displays = array('default', 'page', 'block');
-    // Check display keys.
-    $this->assertEqual(array_keys($view->display), $expected_displays, 'Correct display names present.');
+    $this->assertEqual(array_keys($view->display), $expected_displays, 'The correct display names are present.');
 
+    // Check each ViewDisplay object and confirm that it has the correct key.
     foreach ($view->display as $key => $display) {
-      // Confirm it's a ViewDisplay object.
       $this->assertTrue($display instanceof ViewsDisplay, t('Display: @display is instance of ViewsDisplay.', array('@display' => $key)));
-      // Check the display ID array key and object property match.
       $this->assertEqual($key, $display->id, 'The display has the correct ID.');
-      // Check display options array exists on the ViewsDisplay.
+      // Confirm that the display options array exists.
       $display_options = $display->display_options;
       $this->assertTrue(!empty($display_options) && is_array($display_options), 'Display options exist.');
     }
 
-    // Load all config entities.
-    $all_entities = $controller->load();
-    // Get a list of all existing default view config.
+    // Fetch data for all Configurable objects and default view configurations.
+    $all_configurables = $controller->load();
     $all_config = config_get_storage_names_with_prefix('views.view');
 
-    // Remove 'views.view.' prefix from config names for comparision with
-    // loaded config entities.
+    // Remove the 'views.view.' prefix from config names for comparision with
+    // loaded Configurable objects.
     $prefix_map = function ($value) {
       $parts = explode('.', $value);
       return end($parts);
     };
 
-    // Check correct number of entities have been loaded.
-    $count = count($all_entities);
-    $this->assertEqual($count, count($all_config), t('Array of all @count entities loaded.', array('@count' => $count)));
-    // Check all of these machine names match.
-    $this->assertIdentical(array_keys($all_entities), array_map($prefix_map, $all_config), 'All loaded elements match.');
+    // Check that the correct number of Configurable objects have been loaded.
+    $count = count($all_configurables);
+    $this->assertEqual($count, count($all_config), t('The array of all @count Configurable objects is loaded.', array('@count' => $count)));
+
+    // Check that all of these machine names match.
+    $this->assertIdentical(array_keys($all_configurables), array_map($prefix_map, $all_config), 'All loaded elements match.');
   }
 
 }
