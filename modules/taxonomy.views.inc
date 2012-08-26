@@ -16,7 +16,6 @@ function taxonomy_views_data() {
   // ----------------------------------------------------------------------
   // taxonomy_vocabulary table
 
-  $data['vocabulary']['moved to'] = 'taxonomy_vocabulary';
   $data['taxonomy_vocabulary']['table']['group']  = t('Taxonomy vocabulary');
 
   $data['taxonomy_vocabulary']['table']['join'] = array(
@@ -108,7 +107,6 @@ function taxonomy_views_data() {
   // ----------------------------------------------------------------------
  // taxonomy_term_data table
 
-  $data['term_data']['moved to'] = 'taxonomy_term_data';
   $data['taxonomy_term_data']['table']['group']  = t('Taxonomy term');
   $data['taxonomy_term_data']['table']['base'] = array(
     'field' => 'tid',
@@ -268,7 +266,6 @@ function taxonomy_views_data() {
   // ----------------------------------------------------------------------
   // taxonomy_index table
 
-  $data['term_node']['moved to'] = 'taxonomy_index';
   $data['taxonomy_index']['table']['group']  = t('Taxonomy term');
 
   $data['taxonomy_index']['table']['join'] = array(
@@ -330,7 +327,6 @@ function taxonomy_views_data() {
 
   $data['taxonomy_term_hierarchy']['table']['group']  = t('Taxonomy term');
 
-  $data['term_hierarchy']['moved to'] = 'taxonomy_term_hierarchy';
   $data['taxonomy_term_hierarchy']['table']['join'] = array(
     'taxonomy_term_hierarchy' => array(
       // links to self through left.parent = right.tid (going down in depth)

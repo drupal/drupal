@@ -16,7 +16,6 @@ function system_views_data() {
   // ----------------------------------------------------------------------
   // file_managed table
 
-  $data['files']['moved to'] = 'file_managed';
   $data['file_managed']['table']['group']  = t('File');
 
   // Advertise this table as a possible base table

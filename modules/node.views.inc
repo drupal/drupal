@@ -227,7 +227,6 @@ function node_views_data() {
 
   $data['views_entity_node']['table']['group'] = t('Content');
 
-  $data['node']['view_node']['moved to'] = array('views_entity_node', 'view_node');
   $data['views_entity_node']['view_node'] = array(
     'field' => array(
       'title' => t('Link'),
@@ -236,7 +235,6 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['edit_node']['moved to'] = array('views_entity_node', 'edit_node');
   $data['views_entity_node']['edit_node'] = array(
     'field' => array(
       'title' => t('Edit link'),
@@ -245,7 +243,6 @@ function node_views_data() {
     ),
   );
 
-  $data['node']['delete_node']['moved to'] = array('views_entity_node', 'delete_node');
   $data['views_entity_node']['delete_node'] = array(
     'field' => array(
       'title' => t('Delete link'),
@@ -413,11 +410,8 @@ function node_views_data() {
 
   // Define the base group of this table. Fields that don't
   // have a group defined will go into this field by default.
-  $data['node_revisions']['moved to'] = 'node_revision';
   $data['node_revision']['table']['entity type'] = 'node';
   $data['node_revision']['table']['group']  = t('Content revision');
-  // Support the conversion of the field body
-  $data['node_revisions']['body']['moved to'] = array('field_revision_data', 'body-revision_id');
 
   // Advertise this table as a possible base table
   $data['node_revision']['table']['base'] = array(
@@ -594,7 +588,6 @@ function node_views_data() {
   // We're actually defining a specific instance of the table, so let's
   // alias it so that we can later add the real table for other purposes if we
   // need it.
-  $data['history_user']['moved to'] = 'history';
   $data['history']['table']['group']  = t('Content');
 
   // Explain how this table joins to others.

@@ -170,7 +170,6 @@ function user_views_data() {
   );
 
   // picture
-  $data['users']['picture_fid']['moved to'] = array('users', 'picture');
   $data['users']['picture'] = array(
     'title' => t('Picture'),
     'help' => t("The user's picture, if allowed."), // The help that appears on the UI,
@@ -232,7 +231,6 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['timestamp_year']['moved to'] = array('users', 'created_year');
   $data['users']['created_year'] = array(
     'title' => t('Created year'),
     'help' => t('Date in the form of YYYY.'),

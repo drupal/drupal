@@ -10,11 +10,7 @@
 /**
  * Implements hook_views_data().
  */
-
 function comment_views_data() {
-  $data['comments']['moved to'] = 'comment';
-  $data['comment']['comment']['moved to'] = array('field_data_comment_body', 'comment_body');
-  $data['comment']['comment']['field']['moved to'] = array('field_data_comment_body', 'comment_body');
   // Define the base group of this table. Fields that don't
   // have a group defined will go into this field by default.
   $data['comment']['table']['group']  = t('Comment');
@@ -190,7 +186,6 @@ function comment_views_data() {
     );
   }
 
-  $data['comments']['timestamp']['moved to'] = array('comment', 'changed');
   // changed (when comment was last updated)
   $data['comment']['changed'] = array(
     'title' => t('Updated date'),
@@ -207,7 +202,6 @@ function comment_views_data() {
     ),
   );
 
-  $data['comments']['timestamp_fulldate']['moved to'] = array('comment', 'changed_fulldata');
   $data['comment']['changed_fulldata'] = array(
     'title' => t('Created date'),
     'help' => t('Date in the form of CCYYMMDD.'),
@@ -217,7 +211,6 @@ function comment_views_data() {
     ),
   );
 
-  $data['comments']['timestamp_year_month']['moved to'] = array('comment', 'changed_year_month');
   $data['comment']['changed_year_month'] = array(
     'title' => t('Created year + month'),
     'help' => t('Date in the form of YYYYMM.'),
@@ -227,7 +220,6 @@ function comment_views_data() {
     ),
   );
 
-  $data['comments']['timestamp_year']['moved to'] = array('comment', 'changed_year');
   $data['comment']['changed_year'] = array(
     'title' => t('Created year'),
     'help' => t('Date in the form of YYYY.'),
@@ -237,7 +229,6 @@ function comment_views_data() {
     ),
   );
 
-  $data['comments']['timestamp_month']['moved to'] = array('comment', 'changed_month');
   $data['comment']['changed_month'] = array(
     'title' => t('Created month'),
     'help' => t('Date in the form of MM (01 - 12).'),
@@ -247,7 +238,6 @@ function comment_views_data() {
     ),
   );
 
-  $data['comments']['timestamp_day']['moved to'] = array('comment', 'changed_day');
   $data['comment']['changed_day'] = array(
     'title' => t('Created day'),
     'help' => t('Date in the form of DD (01 - 31).'),
@@ -257,7 +247,6 @@ function comment_views_data() {
     ),
   );
 
-  $data['comments']['timestamp_week']['moved to'] = array('comment', 'changed_week');
   $data['comment']['changed_week'] = array(
     'title' => t('Created week'),
     'help' => t('Date in the form of WW (01 - 53).'),

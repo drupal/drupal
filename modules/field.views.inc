@@ -187,7 +187,6 @@ function field_views_field_default_views_data($field) {
       $column = $field['field_name'] . '-' . $old_column;
     }
 
-    $data[$table][$old_column]['field']['moved to'] = array($table, $column);
     $data[$table][$column] = array(
       'group' => $group,
       'title' => $label,
