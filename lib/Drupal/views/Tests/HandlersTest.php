@@ -10,7 +10,7 @@ namespace Drupal\views\Tests;
 /**
  * Tests abstract handlers of views.
  */
-class HandlersTest extends ViewsSqlTest {
+class HandlersTest extends ViewsSchemaTestBase {
 
   public static function getInfo() {
     return array(

@@ -9,12 +9,12 @@ namespace Drupal\views\Tests\Style;
 
 use stdClass;
 use DOMDocument;
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests some general style plugin related functionality.
  */
-class PluginStyleTest extends ViewsSqlTest {
+class PluginStyleTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Styles',

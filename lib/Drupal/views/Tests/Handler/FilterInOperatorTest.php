@@ -7,12 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\InOperator handler.
  */
-class FilterInOperatorTest extends ViewsSqlTest {
+class FilterInOperatorTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Filter: in_operator',

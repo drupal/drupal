@@ -7,14 +7,14 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\FileSize handler.
  *
  * @see CommonXssUnitTest
  */
-class FieldFileSizeTest extends ViewsSqlTest {
+class FieldFileSizeTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Field: file_size',

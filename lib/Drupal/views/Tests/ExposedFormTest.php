@@ -10,7 +10,7 @@ namespace Drupal\views\Tests;
 /**
  * Tests exposed forms.
  */
-class ExposedFormTest extends ViewsSqlTest {
+class ExposedFormTest extends ViewsSchemaTestBase {
 
   protected $profile = 'standard';
 

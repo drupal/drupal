@@ -8,12 +8,12 @@
 namespace Drupal\views\Tests\Style;
 
 use DOMDocument;
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests the default/unformatted row style.
  */
-class PluginStyleUnformattedTest extends ViewsSqlTest {
+class PluginStyleUnformattedTest extends ViewsSchemaTestBase {
 
   /**
    * Stores all created nodes.

@@ -7,12 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests the Drupal\views\Plugin\views\field\Counter handler.
  */
-class FieldCounterTest extends ViewsSqlTest {
+class FieldCounterTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Field: Counter',

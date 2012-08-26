@@ -10,7 +10,7 @@ namespace Drupal\views\Tests;
 /**
  * Tests UI of aggregate functionality..
  */
-class UiGroupByTest extends ViewsSqlTest {
+class UiGroupByTest extends ViewsSchemaTestBase {
 
   protected $profile = 'standard';
 

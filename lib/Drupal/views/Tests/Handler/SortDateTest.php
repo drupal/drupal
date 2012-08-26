@@ -7,12 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests for core Drupal\views\Plugin\views\sort\Date handler.
  */
-class SortDateTest extends ViewsSqlTest {
+class SortDateTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Sort: date',

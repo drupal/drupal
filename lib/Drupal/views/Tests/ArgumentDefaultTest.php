@@ -12,7 +12,7 @@ use Drupal\views\View;
 /**
  * Basic test for pluggable argument default.
  */
-class ArgumentDefaultTest extends ViewsSqlTest {
+class ArgumentDefaultTest extends ViewsSchemaTestBase {
 
   protected $profile = 'standard';
 

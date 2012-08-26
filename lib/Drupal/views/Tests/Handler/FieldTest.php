@@ -7,14 +7,14 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests the generic field handler
  *
  * @see views_handler_field
  */
-class FieldTest extends ViewsSqlTest {
+class FieldTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Field',

@@ -7,12 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests the core Drupal\views\Plugin\views\argument\Null handler.
  */
-class ArgumentNullTest extends ViewsSqlTest {
+class ArgumentNullTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Argument: Null',

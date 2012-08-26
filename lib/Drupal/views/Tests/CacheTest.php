@@ -14,7 +14,8 @@ use Drupal\views\View;
  *
  * @see views_plugin_cache
  */
-class CacheTest extends ViewsSqlTest {
+class CacheTest extends ViewsSchemaTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Cache',

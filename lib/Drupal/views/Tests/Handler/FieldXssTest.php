@@ -7,14 +7,14 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Xss handler.
  *
  * @see CommonXssUnitTest
  */
-class FieldXssTest extends ViewsSqlTest {
+class FieldXssTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Field: Xss',

@@ -10,7 +10,7 @@ namespace Drupal\views\Tests;
 /**
  * Basic test class for Views query builder tests.
  */
-class BasicTest extends ViewsSqlTest {
+class BasicTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Basic query test',

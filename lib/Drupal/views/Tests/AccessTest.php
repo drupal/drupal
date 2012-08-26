@@ -12,7 +12,7 @@ use Drupal\views\View;
 /**
  * Basic test for pluggable access.
  */
-class AccessTest extends ViewsSqlTest {
+class AccessTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Access',

@@ -7,12 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Date handler.
  */
-class FieldDateTest extends ViewsSqlTest {
+class FieldDateTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Field: Date',

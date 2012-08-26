@@ -7,12 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Custom handler.
  */
-class FieldCustomTest extends ViewsSqlTest {
+class FieldCustomTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Field: Custom',

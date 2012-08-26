@@ -7,12 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests for core Drupal\views\Plugin\views\sort\SortPluginBase handler.
  */
-class SortTest extends ViewsSqlTest {
+class SortTest extends ViewsSchemaTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Sort: generic',

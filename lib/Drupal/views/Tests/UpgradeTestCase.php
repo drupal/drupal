@@ -14,7 +14,7 @@ use Drupal\views\View;
  *
  * You can find all conversions by searching for "moved to".
  */
-class UpgradeTestCase extends ViewsSqlTest {
+class UpgradeTestCase extends ViewsSchemaTestBase {
 
   /**
    * Modules to enable.

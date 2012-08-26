@@ -7,12 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests the combine filter handler.
  */
-class FilterCombineTest extends ViewsSqlTest {
+class FilterCombineTest extends ViewsSchemaTestBase {
   var $column_map = array();
 
   public static function getInfo() {
