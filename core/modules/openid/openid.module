@@ -86,7 +86,7 @@ function openid_help($path, $arg) {
 function openid_user_insert($account) {
   if (!empty($account->openid_claimed_id)) {
     // The user has registered after trying to log in via OpenID.
-    if (variable_get('user_email_verification', TRUE)) {
+    if (config('user.settings')->get('verify_mail')) {
       drupal_set_message(t('Once you have verified your e-mail address, you may log in via OpenID.'));
     }
     user_set_authmaps($account, array('authname_openid' => $account->openid_claimed_id));
@@ -216,9 +216,9 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
       $form['account']['mail']['#default_value'] = current($ax_mail_values);
     }
 
-    // If user_email_verification is off, hide the password field and just fill
+    // If email verification is off, hide the password field and just fill
     // with random password to avoid confusion.
-    if (!variable_get('user_email_verification', TRUE)) {
+    if (!config('user.settings')->get('verify_mail')) {
       $form['account']['pass']['#type'] = 'hidden';
       $form['account']['pass']['#value'] = user_password();
     }
@@ -709,7 +709,7 @@ function openid_authentication($response) {
 
   $account = user_external_load($identity);
   if (isset($account->uid)) {
-    if (!variable_get('user_email_verification', TRUE) || $account->login) {
+    if (!config('user.settings')->get('verify_mail') || $account->login) {
       // Check if user is blocked.
       $state['values']['name'] = $account->name;
       user_login_name_validate(array(), $state);
@@ -725,7 +725,7 @@ function openid_authentication($response) {
     // Let other modules act on OpenID login
     module_invoke_all('openid_response', $response, $account);
   }
-  elseif (variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)) {
+  elseif (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
     // Register new user.
 
     // Save response for use in openid_form_user_register_form_alter().

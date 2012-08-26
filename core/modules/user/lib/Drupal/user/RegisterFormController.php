@@ -74,7 +74,7 @@ class RegisterFormController extends AccountFormController {
   public function submit(array $form, array &$form_state) {
     $admin = $form_state['values']['administer_users'];
 
-    if (!variable_get('user_email_verification', TRUE) || $admin) {
+    if (!config('user.settings')->get('verify_mail') || $admin) {
       $pass = $form_state['values']['pass'];
     }
     else {
@@ -121,7 +121,7 @@ class RegisterFormController extends AccountFormController {
       drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
     }
     // No e-mail verification required; log in user immediately.
-    elseif (!$admin && !variable_get('user_email_verification', TRUE) && $account->status) {
+    elseif (!$admin && !config('user.settings')->get('verify_mail') && $account->status) {
       _user_mail_notify('register_no_approval_required', $account);
       $form_state['uid'] = $account->uid;
       user_login_submit(array(), $form_state);

@@ -475,5 +475,36 @@ function user_update_8003() {
 }
 
 /**
+ * Moves account settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function user_update_8004() {
+  update_variables_to_config('user.settings', array(
+    'anonymous' => 'anonymous',
+    'user_admin_role' => 'admin_role',
+    'user_register' => 'register',
+    'user_signatures' => 'signatures',
+    'user_mail_status_activated_notify' => 'notify.status_activated',
+    'user_mail_status_blocked_notify' => 'notify.status_blocked',
+    'user_mail_status_cancelled_notify' => 'notify.status_cancelled',
+    'user_email_verification' => 'verify_mail',
+  ));
+
+  // Convert the user.settings:register numeric value to text value.
+  $map = array(
+    '0' => 'admin_only',
+    '1' => 'visitors',
+    '2' => 'visitors_admin_approval',
+  );
+  $config = config('user.settings');
+  $user_register = $config->get('register');
+
+  if (is_numeric($user_register) && isset($map[$user_register])) {
+    $config->set('register', $map[$user_register])->save();
+  }
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x".
  */

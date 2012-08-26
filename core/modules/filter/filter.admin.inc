@@ -154,7 +154,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
     // If editing an existing text format, pre-select its current permissions.
     $form['roles']['#default_value'] = array_keys(filter_get_roles_by_format($format));
   }
-  elseif ($admin_role = variable_get('user_admin_role', 0)) {
+  elseif ($admin_role = config('user.settings')->get('admin_role')) {
     // If adding a new text format and the site has an administrative role,
     // pre-select that role so as to grant administrators access to the new
     // text format permission by default.

@@ -369,7 +369,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertEqual($node->comment_count, 1, t('The value of node comment_count is 1.'));
 
     // Prepare for anonymous comment submission (comment approval enabled).
-    variable_set('user_register', USER_REGISTER_VISITORS);
+    config('user.settings')->set('register', USER_REGISTER_VISITORS)->save();
     $this->drupalLogin($this->admin_user);
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
@@ -556,7 +556,7 @@ class CommentInterfaceTest extends CommentTestBase {
     }
 
     // Change user settings.
-    variable_set('user_register', $info['user_register']);
+    config('user.settings')->set('register', $info['user_register'])->save();
 
     // Change user permissions.
     $rid = ($this->loggedInUser ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID);
@@ -648,7 +648,7 @@ class CommentInterfaceTest extends CommentTestBase {
         if (!$this->loggedInUser) {
           if (user_access('post comments', $this->web_user)) {
             // The note depends on whether users are actually able to register.
-            if ($info['user_register']) {
+            if ($info['user_register'] != USER_REGISTER_ADMINISTRATORS_ONLY) {
               $this->assertText('Log in or register to post comments');
             }
             else {

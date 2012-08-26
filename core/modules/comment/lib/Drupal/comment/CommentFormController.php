@@ -85,7 +85,7 @@ class CommentFormController extends EntityFormController {
         '#default_value' => $author,
         '#maxlength' => 60,
         '#size' => 30,
-        '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', t('Anonymous')))),
+        '#description' => t('Leave blank for %anonymous.', array('%anonymous' => config('user.settings')->get('anonymous'))),
         '#autocomplete_path' => 'user/autocomplete',
       );
     }
@@ -284,7 +284,7 @@ class CommentFormController extends EntityFormController {
     // If the comment was posted by an anonymous user and no author name was
     // required, use "Anonymous" by default.
     if ($comment->is_anonymous && (!isset($comment->name) || $comment->name === '')) {
-      $comment->name = variable_get('anonymous', t('Anonymous'));
+      $comment->name = config('user.settings')->get('anonymous');
     }
 
     // Validate the comment's subject. If not specified, extract from comment

@@ -33,14 +33,14 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
 
   function setUp() {
     parent::setUp();
-    variable_set('user_register', USER_REGISTER_VISITORS);
+    config('user.settings')->set('register', USER_REGISTER_VISITORS)->save();
   }
 
   /**
    * Test OpenID auto-registration with e-mail verification enabled.
    */
   function testRegisterUserWithEmailVerification() {
-    variable_set('user_email_verification', TRUE);
+    config('user.settings')->set('verify_mail', TRUE)->save();
     variable_get('configurable_timezones', 1);
     variable_set('date_default_timezone', 'Europe/Brussels');
 
@@ -97,7 +97,7 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
    * Test OpenID auto-registration with e-mail verification disabled.
    */
   function testRegisterUserWithoutEmailVerification() {
-    variable_set('user_email_verification', FALSE);
+    config('user.settings')->set('verify_mail', FALSE)->save();
     variable_get('configurable_timezones', 1);
     variable_set('date_default_timezone', 'Europe/Brussels');
 
@@ -229,7 +229,7 @@ class OpenIDRegistrationTest extends OpenIDTestBase {
    * but no SREG.
    */
   function testRegisterUserWithAXButNoSREG() {
-    variable_set('user_email_verification', FALSE);
+    config('user.settings')->set('verify_mail', FALSE)->save();
     variable_set('date_default_timezone', 'Europe/Brussels');
 
     // Tell openid_test.module to respond with these AX fields.

@@ -27,16 +27,17 @@ class UserRegistrationTest extends WebTestBase {
   }
 
   function testRegistrationWithEmailVerification() {
+    $config = config('user.settings');
     // Require e-mail verification.
-    variable_set('user_email_verification', TRUE);
+    $config->set('verify_mail', TRUE)->save();
 
     // Set registration to administrator only.
-    variable_set('user_register', USER_REGISTER_ADMINISTRATORS_ONLY);
+    $config->set('register', USER_REGISTER_ADMINISTRATORS_ONLY)->save();
     $this->drupalGet('user/register');
     $this->assertResponse(403, t('Registration page is inaccessible when only administrators can create accounts.'));
 
     // Allow registration by site visitors without administrator approval.
-    variable_set('user_register', USER_REGISTER_VISITORS);
+    $config->set('register', USER_REGISTER_VISITORS)->save();
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
@@ -47,7 +48,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertTrue($new_user->status, t('New account is active after registration.'));
 
     // Allow registration by site visitors, but require administrator approval.
-    variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
+    $config->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
@@ -59,11 +60,14 @@ class UserRegistrationTest extends WebTestBase {
   }
 
   function testRegistrationWithoutEmailVerification() {
-    // Don't require e-mail verification.
-    variable_set('user_email_verification', FALSE);
+    $config = config('user.settings');
+    // Don't require e-mail verification and allow registration by site visitors
+    // without administrator approval.
+    $config
+      ->set('verify_mail', FALSE)
+      ->set('register', USER_REGISTER_VISITORS)
+      ->save();
 
-    // Allow registration by site visitors without administrator approval.
-    variable_set('user_register', USER_REGISTER_VISITORS);
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
@@ -85,7 +89,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->drupalLogout();
 
     // Allow registration by site visitors, but require administrator approval.
-    variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
+    $config->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
@@ -119,11 +123,12 @@ class UserRegistrationTest extends WebTestBase {
   }
 
   function testRegistrationEmailDuplicates() {
-    // Don't require e-mail verification.
-    variable_set('user_email_verification', FALSE);
-
-    // Allow registration by site visitors without administrator approval.
-    variable_set('user_register', USER_REGISTER_VISITORS);
+    // Don't require e-mail verification and allow registration by site visitors
+    // without administrator approval.
+    config('user.settings')
+      ->set('verify_mail', FALSE)
+      ->set('register', USER_REGISTER_VISITORS)
+      ->save();
 
     // Set up a user to check for duplicates.
     $duplicate_user = $this->drupalCreateUser();
@@ -144,11 +149,13 @@ class UserRegistrationTest extends WebTestBase {
   }
 
   function testRegistrationDefaultValues() {
-    // Allow registration by site visitors without administrator approval.
-    variable_set('user_register', USER_REGISTER_VISITORS);
-
-    // Don't require e-mail verification.
-    variable_set('user_email_verification', FALSE);
+    $config = config('user.settings');
+    // Don't require e-mail verification and allow registration by site visitors
+    // without administrator approval.
+    $config
+      ->set('verify_mail', FALSE)
+      ->set('register', USER_REGISTER_VISITORS)
+      ->save();
 
     // Set the default timezone to Brussels.
     variable_set('configurable_timezones', 1);
@@ -174,7 +181,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertEqual($new_user->theme, '', t('Correct theme field.'));
     $this->assertEqual($new_user->signature, '', t('Correct signature field.'));
     $this->assertTrue(($new_user->created > REQUEST_TIME - 20 ), t('Correct creation time.'));
-    $this->assertEqual($new_user->status, variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_VISITORS ? 1 : 0, t('Correct status field.'));
+    $this->assertEqual($new_user->status, $config->get('register') == USER_REGISTER_VISITORS ? 1 : 0, t('Correct status field.'));
     $this->assertEqual($new_user->timezone, variable_get('date_default_timezone'), t('Correct time zone field.'));
     $this->assertEqual($new_user->langcode, language_default()->langcode, t('Correct language field.'));
     $this->assertEqual($new_user->preferred_langcode, language_default()->langcode, t('Correct preferred language field.'));

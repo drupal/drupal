@@ -35,7 +35,7 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Login as web user and add a signature and a user picture.
     $this->drupalLogin($this->web_user);
-    variable_set('user_signatures', 1);
+    config('user.settings')->set('signatures', 1)->save();
     variable_set('user_pictures', 1);
     $test_signature = $this->randomName();
     $edit['signature[value]'] = '<a href="http://example.com/">' . $test_signature. '</a>';

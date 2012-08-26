@@ -54,6 +54,7 @@ class NodeFormController extends EntityFormController {
    * Overrides Drupal\entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $node) {
+    $user_config = config('user.settings');
     // Some special stuff when previewing a node.
     if (isset($form_state['node_preview'])) {
       $form['#prefix'] = $form_state['node_preview'];
@@ -171,7 +172,7 @@ class NodeFormController extends EntityFormController {
           drupal_get_path('module', 'node') . '/node.js',
           array(
             'type' => 'setting',
-            'data' => array('anonymous' => variable_get('anonymous', t('Anonymous'))),
+            'data' => array('anonymous' => $user_config->get('anonymous')),
           ),
         ),
       ),
@@ -185,7 +186,7 @@ class NodeFormController extends EntityFormController {
       '#autocomplete_path' => 'user/autocomplete',
       '#default_value' => !empty($node->name) ? $node->name : '',
       '#weight' => -1,
-      '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', t('Anonymous')))),
+      '#description' => t('Leave blank for %anonymous.', array('%anonymous' => $user_config->get('anonymous'))),
     );
 
     $form['author']['date'] = array(

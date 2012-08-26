@@ -52,7 +52,7 @@ class ArbitraryRebuildTest extends WebTestBase {
       ),
     );
     field_create_instance($instance);
-    variable_set('user_register', USER_REGISTER_VISITORS);
+    config('user.settings')->set('register', USER_REGISTER_VISITORS)->save();
   }
 
   /**

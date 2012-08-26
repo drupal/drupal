@@ -250,7 +250,7 @@ class UserCancelTest extends WebTestBase {
     $this->drupalGet('user/' . $account->uid . '/edit');
     $this->drupalPost(NULL, NULL, t('Cancel account'));
     $this->assertText(t('Are you sure you want to cancel your account?'), t('Confirmation form to cancel account displayed.'));
-    $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', array('%anonymous-name' => variable_get('anonymous', t('Anonymous')))), t('Informs that all content will be attributed to anonymous account.'));
+    $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', array('%anonymous-name' => config('user.settings')->get('anonymous'))), t('Informs that all content will be attributed to anonymous account.'));
 
     // Confirm account cancellation.
     $timestamp = time();

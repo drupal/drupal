@@ -23,18 +23,18 @@ const EMAIL_MAX_LENGTH = 254;
 /**
  * Only administrators can create user accounts.
  */
-const USER_REGISTER_ADMINISTRATORS_ONLY = 0;
+const USER_REGISTER_ADMINISTRATORS_ONLY = 'admin_only';
 
 /**
  * Visitors can create their own accounts.
  */
-const USER_REGISTER_VISITORS = 1;
+const USER_REGISTER_VISITORS = 'visitors';
 
 /**
  * Visitors can create accounts, but they don't become active without
  * administrative approval.
  */
-const USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL = 2;
+const USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL = 'visitors_admin_approval';
 
 /**
  * Implement hook_help().
@@ -576,7 +576,7 @@ function user_permission() {
     ),
     'cancel account' => array(
       'title' => t('Cancel own user account'),
-      'description' => t('Note: content may be kept, unpublished, deleted or transferred to the %anonymous-name user depending on the configured <a href="@user-settings-url">user settings</a>.', array('%anonymous-name' => variable_get('anonymous', t('Anonymous')), '@user-settings-url' => url('admin/config/people/accounts'))),
+      'description' => t('Note: content may be kept, unpublished, deleted or transferred to the %anonymous-name user depending on the configured <a href="@user-settings-url">user settings</a>.', array('%anonymous-name' => config('user.settings')->get('anonymous'), '@user-settings-url' => url('admin/config/people/accounts'))),
     ),
     'select account cancellation method' => array(
       'title' => t('Select method for cancelling own account'),
@@ -754,7 +754,7 @@ function user_login_block($form) {
     '#value' => t('Log in'),
   );
   $items = array();
-  if (variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)) {
+  if (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
     $items[] = l(t('Create new account'), 'user/register', array('attributes' => array('title' => t('Create a new user account.'))));
   }
   $items[] = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
@@ -917,7 +917,7 @@ function user_preprocess_block(&$variables) {
  *   printed to the page.
  */
 function user_format_name($account) {
-  $name = !empty($account->name) ? $account->name : variable_get('anonymous', t('Anonymous'));
+  $name = !empty($account->name) ? $account->name : config('user.settings')->get('anonymous');
   drupal_alter('user_format_name', $name, $account);
   return $name;
 }
@@ -1120,7 +1120,7 @@ function user_register() {
 }
 
 function user_register_access() {
-  return user_is_anonymous() && variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
+  return user_is_anonymous() && (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY);
 }
 
 /**
@@ -2811,7 +2811,7 @@ function user_multiple_cancel_confirm($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Notify user when account is canceled.'),
     '#default_value' => FALSE,
-    '#access' => variable_get('user_mail_status_canceled_notify', FALSE),
+    '#access' => config('user.settings')->get('notify.status_canceled'),
     '#description' => t('When enabled, the user will receive an e-mail notification after the account has been cancelled.'),
   );
 
@@ -2940,7 +2940,7 @@ function user_build_filter_query(SelectInterface $query) {
  * Implements hook_comment_view().
  */
 function user_comment_view($comment) {
-  if (variable_get('user_signatures', 0) && !empty($comment->signature)) {
+  if (config('user.settings')->get('signatures') && !empty($comment->signature)) {
     // @todo This alters and replaces the original object value, so a
     //   hypothetical process of loading, viewing, and saving will hijack the
     //   stored data. Consider renaming to $comment->signature_safe or similar
@@ -3030,9 +3030,8 @@ function user_preferred_language($account, $default = NULL) {
  */
 function _user_mail_notify($op, $account, $language = NULL) {
   // By default, we always notify except for canceled and blocked.
-  $default_notify = ($op != 'status_canceled' && $op != 'status_blocked');
-  $notify = variable_get('user_mail_' . $op . '_notify', $default_notify);
-  if ($notify) {
+  $notify = config('user.settings')->get('notify.' . $op);
+  if ($notify || ($op != 'status_canceled' && $op != 'status_blocked')) {
     $params['account'] = $account;
     $language = $language ? $language : user_preferred_language($account);
     $mail = drupal_mail('user', $op, $account->mail, $language, $params);
@@ -3225,7 +3224,7 @@ function user_form_field_ui_field_edit_form_submit($form, &$form_state) {
  */
 function user_modules_installed($modules) {
   // Assign all available permissions to the administrator role.
-  $rid = variable_get('user_admin_role', 0);
+  $rid = config('user.settings')->get('admin_role');
   if ($rid) {
     $permissions = array();
     foreach ($modules as $module) {

@@ -1704,7 +1704,7 @@ function comment_preview(Comment $comment) {
       $comment->picture = $account->picture;
     }
     elseif (empty($comment->name)) {
-      $comment->name = variable_get('anonymous', t('Anonymous'));
+      $comment->name = config('user.settings')->get('anonymous');
     }
 
     $comment->created = !empty($comment->created) ? $comment->created : REQUEST_TIME;
@@ -1839,7 +1839,7 @@ function theme_comment_post_forbidden($variables) {
         $destination = array('destination' => "node/$node->nid#comment-form");
       }
 
-      if (variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)) {
+      if (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
         // Users can register themselves.
         return t('<a href="@login">Log in</a> or <a href="@register">register</a> to post comments', array('@login' => url('user/login', array('query' => $destination)), '@register' => url('user/register', array('query' => $destination))));
       }

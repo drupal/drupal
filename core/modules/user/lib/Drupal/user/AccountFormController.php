@@ -20,6 +20,7 @@ abstract class AccountFormController extends EntityFormController {
    */
   public function form(array $form, array &$form_state, EntityInterface $account) {
     global $user;
+    $config = config('user.settings');
 
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
     $register = empty($account->uid);
@@ -101,7 +102,7 @@ abstract class AccountFormController extends EntityFormController {
         $form['#validate'][] = 'user_validate_current_pass';
       }
     }
-    elseif (!variable_get('user_email_verification', TRUE) || $admin) {
+    elseif (!$config->get('verify_mail') || $admin) {
       $form['account']['pass'] = array(
         '#type' => 'password_confirm',
         '#size' => 25,
@@ -114,7 +115,7 @@ abstract class AccountFormController extends EntityFormController {
       $status = isset($account->status) ? $account->status : 1;
     }
     else {
-      $status = $register ? variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) == USER_REGISTER_VISITORS : $account->status;
+      $status = $register ? $config->get('register') == USER_REGISTER_VISITORS : $account->status;
     }
 
     $form['account']['status'] = array(
@@ -159,7 +160,7 @@ abstract class AccountFormController extends EntityFormController {
       '#type' => 'fieldset',
       '#title' => t('Signature settings'),
       '#weight' => 1,
-      '#access' => (!$register && variable_get('user_signatures', 0)),
+      '#access' => (!$register && $config->get('signatures')),
     );
 
     $form['signature_settings']['signature'] = array(

@@ -31,8 +31,7 @@ class UserLanguageCreationTest extends WebTestBase {
 
   function setUp() {
     parent::setUp();
-
-    variable_set('user_register', USER_REGISTER_VISITORS);
+    config('user.settings')->set('register', USER_REGISTER_VISITORS)->save();
   }
 
   /**
