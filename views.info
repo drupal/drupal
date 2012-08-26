@@ -6,4 +6,4 @@ php = 5.2
 dependencies[] = ctools
 
 ; Always available CSS
-stylesheets[all][] = css/views.css
+stylesheets[all][] = css/views.base.css
