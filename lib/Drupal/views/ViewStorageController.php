@@ -110,10 +110,12 @@ class ViewStorageController extends ConfigStorageController {
    */
   protected function attachDisplays(&$entity) {
     if (isset($entity->display) && is_array($entity->display)) {
-      foreach ($entity->display as $key => $options) {
+      $displays = array();
+      foreach ($entity->get('display') as $key => $options) {
         // Create a ViewsDisplay object using the display options.
-        $entity->display[$key] = new ViewsDisplay($options);
+        $displays[$key] = new ViewsDisplay($options);
       }
+      $entity->set('display', $displays);
     }
   }
 
