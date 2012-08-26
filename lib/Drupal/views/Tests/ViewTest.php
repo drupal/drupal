@@ -13,6 +13,14 @@ use Drupal\views\View;
  * Views class tests.
  */
 class ViewTest extends ViewsSqlTest {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'comment');
+
   public static function getInfo() {
     return array(
       'name' => 'Test the view class',
@@ -291,4 +299,5 @@ class ViewTest extends ViewsSqlTest {
 
     return $view;
   }
+
 }

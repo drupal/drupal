@@ -13,6 +13,14 @@ use Drupal\views\View;
  * Tests aggregate functionality of views, for example count.
  */
 class QueryGroupByTest extends ViewsSqlTest {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
   public static function getInfo() {
     return array(
       'name' => 'Groupby',
@@ -286,4 +294,5 @@ class QueryGroupByTest extends ViewsSqlTest {
 
     return $view;
   }
+
 }
