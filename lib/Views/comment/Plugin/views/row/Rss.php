@@ -129,7 +129,7 @@ class Rss extends RowPluginBase {
       ),
       array(
         'key' => 'guid',
-        'value' => 'comment ' . $comment->cid . ' at ' . $base_url,
+        'value' => 'comment ' . $comment->id() . ' at ' . $base_url,
         'attributes' => array('isPermaLink' => 'false'),
       ),
     );
@@ -156,10 +156,10 @@ class Rss extends RowPluginBase {
 
     $item = new stdClass();
     $item->description = $item_text;
-    $item->title = $comment->subject;
+    $item->title = $comment->label();
     $item->link = $comment->link;
     $item->elements = $comment->rss_elements;
-    $item->cid = $comment->cid;
+    $item->cid = $comment->id();
 
     return theme($this->theme_functions(), array(
       'view' => $this->view,

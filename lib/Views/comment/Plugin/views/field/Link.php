@@ -61,7 +61,7 @@ class Link extends Entity {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
     $comment = $this->get_value($values);
     $nid = $comment->nid;
-    $cid = $comment->cid;
+    $cid = $comment->id();
 
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['html'] = TRUE;

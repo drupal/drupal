@@ -55,7 +55,7 @@ class LinkEdit extends Link {
       $this->options['alter']['query'] = drupal_get_destination();
     }
 
-    $this->options['alter']['path'] = "comment/" . $comment->cid . "/edit";
+    $this->options['alter']['path'] = "comment/" . $comment->id() . "/edit";
 
     return $text;
   }

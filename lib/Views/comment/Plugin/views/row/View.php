@@ -102,7 +102,7 @@ class View extends RowPluginBase {
     $nids = array();
     foreach ($cresult as $comment) {
       $comment->depth = count(explode('.', $comment->thread)) - 1;
-      $this->comments[$comment->cid] = $comment;
+      $this->comments[$comment->id()] = $comment;
       $nids[] = $comment->nid;
     }
 
