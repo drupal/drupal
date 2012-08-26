@@ -49,8 +49,6 @@ function views_core_modules() {
 
 /**
  * Implements hook_init().
- *
- *
  */
 function views_init() {
   $path = drupal_get_path('module', 'views');
