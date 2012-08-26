@@ -71,7 +71,7 @@ class ViewsStorageTest extends WebTestBase {
     // expected properties.
     $this->assertTrue($view instanceof View, 'Single View instance loaded.');
     foreach ($this->config_properties as $property) {
-      $this->assertTrue(isset($view->{$property}), t('Property: @property loaded onto View.', array('@property' => $property)));
+      $this->assertTrue(isset($view->{$property}), format_string('Property: @property loaded onto View.', array('@property' => $property)));
     }
 
     // Check the displays have been loaded correctly from config display data.
@@ -80,7 +80,7 @@ class ViewsStorageTest extends WebTestBase {
 
     // Check each ViewDisplay object and confirm that it has the correct key.
     foreach ($view->display as $key => $display) {
-      $this->assertTrue($display instanceof ViewsDisplay, t('Display: @display is instance of ViewsDisplay.', array('@display' => $key)));
+      $this->assertTrue($display instanceof ViewsDisplay, format_string('Display: @display is instance of ViewsDisplay.', array('@display' => $key)));
       $this->assertEqual($key, $display->id, 'The display has the correct ID.');
       // Confirm that the display options array exists.
       $display_options = $display->display_options;
@@ -100,10 +100,30 @@ class ViewsStorageTest extends WebTestBase {
 
     // Check that the correct number of Configurable objects have been loaded.
     $count = count($all_configurables);
-    $this->assertEqual($count, count($all_config), t('The array of all @count Configurable objects is loaded.', array('@count' => $count)));
+    $this->assertEqual($count, count($all_config), format_string('The array of all @count Configurable objects is loaded.', array('@count' => $count)));
 
     // Check that all of these machine names match.
     $this->assertIdentical(array_keys($all_configurables), array_map($prefix_map, $all_config), 'All loaded elements match.');
+
+    // Create a new View instance with empty values.
+    $created = $controller->create(array());
+
+    $this->assertTrue($created instanceof View, 'Created object is a View.');
+    // Check that the View contains all of the properties.
+    foreach ($this->config_properties as $property) {
+      $this->assertTrue(isset($view->{$property}), format_string('Property: @property created on View.', array('@property' => $property)));
+    }
+
+    // Create a new View instance with config values.
+    $values = config('views.view.archive')->get();
+    $created = $controller->create($values);
+
+    $this->assertTrue($created instanceof View, 'Created object is a View.');
+    // Check that the View contains all of the properties.
+    foreach ($this->config_properties as $property) {
+      $this->assertTrue(isset($view->{$property}), format_string('Property: @property created on View.', array('@property' => $property)));
+      $this->assertIdentical($values[$property], $created->{$property}, format_string('Property value: @property matches configuration value.', array('@property' => $property)));
+    }
   }
 
 }
