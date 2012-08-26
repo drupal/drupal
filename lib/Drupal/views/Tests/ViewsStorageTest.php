@@ -152,6 +152,12 @@ class ViewsStorageTest extends WebTestBase {
     // Check value have been written to config.
     $config = config('views.view.archive')->get();
     $this->assertEqual($view->tag, $config['tag'], 'View property saved to config.');
+
+    // Delete the config.
+    $created->delete();
+    $config = config('views.view.archive_copy');
+
+    $this->assertTrue($config->isNew(), 'Deleted config is now new.');
   }
 
 }
