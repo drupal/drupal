@@ -64,6 +64,13 @@ abstract class StylePluginBase extends PluginBase {
   protected $usesRowClass = FALSE;
 
   /**
+   * Does the style plugin support grouping of rows.
+   *
+   * @var bool
+   */
+  protected $usesGrouping = TRUE;
+
+  /**
    * Does the style plugin for itself support to add fields to it's output.
    *
    * This option only makes sense on style plugins without row plugins, like
@@ -97,9 +104,6 @@ abstract class StylePluginBase extends PluginBase {
       'grouping' => array(),
     );
 
-    $this->definition += array(
-      'uses_grouping' => TRUE,
-    );
   }
 
   function destroy() {
@@ -127,6 +131,15 @@ abstract class StylePluginBase extends PluginBase {
    */
   function usesRowClass() {
     return $this->usesRowClass;
+  }
+
+  /**
+   * Returns the usesGrouping property.
+   *
+   * @return bool
+   */
+  function usesGrouping() {
+    return $this->usesGrouping;
   }
 
   /**
@@ -224,10 +237,10 @@ abstract class StylePluginBase extends PluginBase {
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     // Only fields-based views can handle grouping.  Style plugins can also exclude
-    // themselves from being groupable by setting their "use grouping" definiton
-    // key to FALSE.
-    // @TODO: Document "uses grouping" in docs.php when docs.php is written.
-    if ($this->usesFields() && $this->definition['uses_grouping']) {
+    // themselves from being groupable by setting their "usesGrouping" property
+    // to FALSE.
+    // @TODO: Document "usesGrouping" in docs.php when docs.php is written.
+    if ($this->usesFields() && $this->usesGrouping()) {
       $options = array('' => t('- None -'));
       $field_labels = $this->display->handler->get_field_labels(TRUE);
       $options += $field_labels;
