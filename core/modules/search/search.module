@@ -430,7 +430,7 @@ function search_update_totals() {
  *
  * @see hook_search_preprocess()
  */
-function search_simplify($text) {
+function search_simplify($text, $langcode = NULL) {
   // Decode entities to UTF-8
   $text = decode_entities($text);
 
@@ -438,7 +438,7 @@ function search_simplify($text) {
   $text = drupal_strtolower($text);
 
   // Call an external processor for word handling.
-  search_invoke_preprocess($text);
+  search_invoke_preprocess($text, $langcode);
 
   // Simple CJK handling
   if (config('search.settings')->get('index.overlap_cjk')) {
@@ -523,7 +523,7 @@ function search_expand_cjk($matches) {
 /**
  * Simplifies and splits a string into tokens for indexing.
  */
-function search_index_split($text) {
+function search_index_split($text, $langcode = NULL) {
   $last = &drupal_static(__FUNCTION__);
   $lastsplit = &drupal_static(__FUNCTION__ . ':lastsplit');
 
@@ -531,7 +531,7 @@ function search_index_split($text) {
     return $lastsplit;
   }
   // Process words
-  $text = search_simplify($text);
+  $text = search_simplify($text, $langcode);
   $words = explode(' ', $text);
 
   // Save last keyword result
@@ -554,9 +554,9 @@ function _search_index_truncate(&$text) {
 /**
  * Invokes hook_search_preprocess() in modules.
  */
-function search_invoke_preprocess(&$text) {
+function search_invoke_preprocess(&$text, $langcode = NULL) {
   foreach (module_implements('search_preprocess') as $module) {
-    $text = module_invoke($module, 'search_preprocess', $text);
+    $text = module_invoke($module, 'search_preprocess', $text, $langcode);
   }
 }
 
@@ -668,7 +668,7 @@ function search_index($sid, $module, $text, $langcode) {
             $value = $linktitle;
           }
         }
-        $words = search_index_split($value);
+        $words = search_index_split($value, $langcode);
         foreach ($words as $word) {
           // Add word to accumulator
           $accum .= $word . ' ';
@@ -1109,7 +1109,7 @@ function search_data($keys, $module, $conditions = NULL) {
  * @return
  *   A string containing HTML for the excerpt.
  */
-function search_excerpt($keys, $text) {
+function search_excerpt($keys, $text, $langcode = NULL) {
   // We highlight around non-indexable or CJK characters.
   $boundary = '(?:(?<=[' . PREG_CLASS_UNICODE_WORD_BOUNDARY . PREG_CLASS_CJK . '])|(?=[' . PREG_CLASS_UNICODE_WORD_BOUNDARY . PREG_CLASS_CJK . ']))';
 
@@ -1156,7 +1156,7 @@ function search_excerpt($keys, $text) {
         $p = $match[0][1];
       }
       else {
-        $info = search_simplify_excerpt_match($key, $text, $included[$key], $boundary);
+        $info = search_simplify_excerpt_match($key, $text, $included[$key], $boundary, $langcode);
         if ($info['where']) {
           $p = $info['where'];
           if ($info['keyword']) {
@@ -1273,10 +1273,10 @@ function _search_excerpt_replace(&$text) {
  *   array with element 'where' giving the position of the match, and element
  *   'keyword' giving the actual word found in the text at that position.
  */
-function search_simplify_excerpt_match($key, $text, $offset, $boundary) {
+function search_simplify_excerpt_match($key, $text, $offset, $boundary, $langcode = NULL) {
   $pos = NULL;
-  $simplified_key = search_simplify($key);
-  $simplified_text = search_simplify($text);
+  $simplified_key = search_simplify($key, $langcode);
+  $simplified_text = search_simplify($text, $langcode);
 
   // Return immediately if simplified key or text are empty.
   if (!$simplified_key || !$simplified_text) {

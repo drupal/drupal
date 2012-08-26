@@ -1,0 +1,28 @@
+<?php
+/**
+ * @file
+ * Test module setting up two tests, one for checking if the entity $langcode is
+ * being passed on and another one sets up the alternate verb forms for the
+ * stemming test.
+ */
+
+/**
+ * Implements hook_search_preprocess().
+ */
+function search_langcode_test_search_preprocess($text, $langcode = NULL) {
+  if (isset($langcode) && $langcode == 'en') {
+    // Add the alternate verb forms for the word "testing".
+    if ($text == 'we are testing') {
+      $text .= ' test tested';
+    }
+    // Prints the langcode for testPreprocessLangcode().
+    else {
+      drupal_set_message('Langcode Preprocess Test: ' . $langcode);
+    }
+  }
+  // Prints the langcode for testPreprocessLangcode().
+  elseif (isset($langcode)) {
+    drupal_set_message('Langcode Preprocess Test: ' . $langcode);
+  }
+  return $text;
+}

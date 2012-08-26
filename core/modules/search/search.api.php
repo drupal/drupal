@@ -246,7 +246,7 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
       'node' => $node,
       'extra' => $extra,
       'score' => $item->calculated_score,
-      'snippet' => search_excerpt($keys, $node->rendered),
+      'snippet' => search_excerpt($keys, $node->rendered, $item->langcode),
       'langcode' => $node->langcode,
     );
   }
@@ -305,6 +305,9 @@ function hook_search_page($results) {
  *   from between two HTML tags or from the search query. It will not contain
  *   any HTML entities or HTML tags.
  *
+ * @param $langcode
+ *   The language code of the entitiy that has been found.
+ *
  * @return
  *   The text after preprocessing. Note that if your module decides not to alter
  *   the text, it should return the original text. Also, after preprocessing,
@@ -312,8 +315,16 @@ function hook_search_page($results) {
  *
  * @ingroup search
  */
-function hook_search_preprocess($text) {
-  // Do processing on $text
+function hook_search_preprocess($text, $langcode = NULL) {
+  // If the langcode is set to 'en' then add variations of the word "testing"
+  // which can also be found during English language searches.
+  if (isset($langcode) && $langcode == 'en') {
+    // Add the alternate verb forms for the word "testing".
+    if ($text == 'we are testing') {
+      $text .= ' test tested';
+    }
+  }
+
   return $text;
 }
 
