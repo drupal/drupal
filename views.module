@@ -1386,7 +1386,7 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
       continue;
     }
 
-    if (empty($plugin['no ui']) && (empty($base) || empty($plugin['base']) || array_intersect($base, $plugin['base']))) {
+    if (empty($plugin['no_ui']) && (empty($base) || empty($plugin['base']) || array_intersect($base, $plugin['base']))) {
       $plugins[$id] = $plugin['title'];
     }
   }
