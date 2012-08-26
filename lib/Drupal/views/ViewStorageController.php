@@ -104,7 +104,9 @@ class ViewStorageController extends ConfigStorageController {
   }
 
   /**
-   * @todo
+   * Attaches an array of ViewsDisplay objects to the view display property.
+   *
+   * @param Drupal\entity\StorableInterface $entity
    */
   protected function attachDisplays(&$entity) {
     if (isset($entity->display) && is_array($entity->display)) {
