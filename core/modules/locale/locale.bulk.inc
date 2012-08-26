@@ -227,7 +227,7 @@ function locale_translate_export_form_submit($form, &$form_state) {
   if (!empty($item)) {
     $uri = tempnam('temporary://', 'po_');
     $header = $reader->getHeader();
-    $header->setProjectName(variable_get('site_name', 'Drupal'));
+    $header->setProjectName(config('system.site')->get('name'));
     $header->setLanguageName($languageName);
 
     $writer = new PoStreamWriter;
