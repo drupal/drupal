@@ -74,68 +74,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
     }
   }
 
-  function init(&$view, &$options) {
-    parent::init($view, $options);
-
-    // Compatibility: The new UI changed several settings.
-    if (!empty($options['wildcard']) && !isset($options['exception']['value'])) {
-      $this->options['exception']['value'] = $options['wildcard'];
-    }
-    if (!empty($options['wildcard_substitution']) && !isset($options['exception']['title'])) {
-      // Enable the checkbox if the title is filled in.
-      $this->options['exception']['title_enable'] = 1;
-      $this->options['exception']['title'] = $options['wildcard_substitution'];
-    }
-
-    if (!isset($options['summary']['format']) && !empty($options['style_plugin'])) {
-      $this->options['summary']['format'] = $options['style_plugin'];
-    }
-
-    // Setup default value.
-    $options['style_options'] = isset($options['style_options']) ? $options['style_options'] : array();
-
-    if (!isset($options['summary']['sort_order']) && !empty($options['default_action']) && $options['default_action'] == 'summary asc') {
-      $this->options['default_action'] = 'summary';
-      $this->options['summary']['sort_order'] = 'asc';
-      $this->options['summary']['number_of_records'] = 0;
-      $this->options['summary_options'] = $options['style_options'];
-    }
-    elseif (!isset($options['summary']['sort_order']) && !empty($options['default_action']) && $options['default_action'] == 'summary desc') {
-      $this->options['default_action'] = 'summary';
-      $this->options['summary']['sort_order'] = 'desc';
-      $this->options['summary']['number_of_records'] = 0;
-      $this->options['summary_options'] = $options['style_options'];
-    }
-    elseif (!isset($options['summary']['sort_order']) && !empty($options['default_action']) && $options['default_action'] == 'summary asc by count') {
-      $this->options['default_action'] = 'summary';
-      $this->options['summary']['sort_order'] = 'asc';
-      $this->options['summary']['number_of_records'] = 1;
-      $this->options['summary_options'] = $options['style_options'];
-    }
-    elseif (!isset($options['summary']['sort_order']) && !empty($options['default_action']) && $options['default_action'] == 'summary desc by count') {
-      $this->options['default_action'] = 'summary';
-      $this->options['summary']['sort_order'] = 'desc';
-      $this->options['summary']['number_of_records'] = 1;
-      $this->options['summary_options'] = $options['style_options'];
-    }
-
-    if (!empty($options['title']) && !isset($options['title_enable'])) {
-      $this->options['title_enable'] = 1;
-    }
-    if (!empty($options['breadcrumb']) && !isset($options['breadcrumb_enable'])) {
-      $this->options['breadcrumb_enable'] = 1;
-    }
-
-    if (!empty($options['validate_type']) && !isset($options['validate']['type'])) {
-      $this->options['validate']['type'] = $options['validate_type'];
-      $this->options['specify_validation'] = 1;
-    }
-    if (!empty($options['validate_fail']) && !isset($options['validate']['fail'])) {
-      $this->options['validate']['fail'] = $options['validate_fail'];
-      $this->options['specify_validation'] = 1;
-    }
-  }
-
   /**
    * Give an argument the opportunity to modify the breadcrumb, if it wants.
    * This only gets called on displays where a breadcrumb is actually used.

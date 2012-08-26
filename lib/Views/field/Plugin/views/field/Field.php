@@ -92,12 +92,6 @@ class Field extends FieldPluginBase {
         $this->limit_values = TRUE;
       }
     }
-
-    // Convert old style entity id group column to new format.
-    // @todo Remove for next major version.
-    if ($this->options['group_column'] == 'entity id') {
-      $this->options['group_column'] = 'entity_id';
-    }
   }
 
   /**

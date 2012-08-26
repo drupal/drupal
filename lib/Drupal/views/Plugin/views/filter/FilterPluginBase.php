@@ -85,21 +85,16 @@ abstract class FilterPluginBase extends HandlerBase {
     $this->value = $this->options['value'];
     $this->group_info = $this->options['group_info']['default_group'];
 
-    // Compatibility: The new UI changed several settings.
-    if (!empty($options['exposed']) && !empty($options['expose']['optional']) && !isset($options['expose']['required'])) {
-      $this->options['expose']['required'] = !$options['expose']['optional'];
-    }
-    if (!empty($options['exposed']) && !empty($options['expose']['single']) && !isset($options['expose']['multiple'])) {
-      $this->options['expose']['multiple'] = !$options['expose']['single'];
-    }
+    // Set the default value of the operator ID.
     if (!empty($options['exposed']) && !empty($options['expose']['operator']) && !isset($options['expose']['operator_id'])) {
-      $this->options['expose']['operator_id'] = $options['expose']['operator_id'] = $options['expose']['operator'];
+      $this->options['expose']['operator_id'] = $options['expose']['operator'];
     }
 
     if ($this->multiple_exposed_input()) {
       $this->group_info = array_filter($options['group_info']['default_group_multiple']);
       $this->options['expose']['multiple'] = TRUE;
     }
+
 
     // If there are relationships in the view, allow empty should be true
     // so that we can do IS NULL checks on items. Not all filters respect

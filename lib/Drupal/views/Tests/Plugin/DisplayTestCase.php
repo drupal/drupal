@@ -85,22 +85,6 @@ class DisplayTestCase extends ViewsSqlTest {
   }
 
   /**
-   * Based on a bug some filter_groups landed in the overridden display, even the filters weren't overridden.
-   * This caused multiple issues.
-   * Take sure that the value from the default display are used.
-   *
-   * @see http://drupal.org/node/1259608
-   * @see views_plugin_display::init()
-   */
-  function testFilterGroupsUpdating() {
-    $view = $this->viewFilterGroupsUpdating();
-    $view->init_display();
-
-    $this->assertFalse($view->display['page']->handler->options['defaults']['filter_groups']);
-    $this->assertEqual($view->display['default']->handler->options['filter_groups'], $view->display['page']->handler->options['filter_groups'], 'Take sure the default options are used for the filter_groups');
-  }
-
-  /**
    * Returns a test view for testFilterGroupUpdating.
    *
    * @see testFilterGroupUpdating

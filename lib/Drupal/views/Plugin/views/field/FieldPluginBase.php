@@ -92,10 +92,6 @@ abstract class FieldPluginBase extends HandlerBase {
     return TRUE;
   }
 
-  function init(&$view, &$options) {
-    parent::init($view, $options);
-  }
-
   /**
    * Called to add the field to a query.
    */

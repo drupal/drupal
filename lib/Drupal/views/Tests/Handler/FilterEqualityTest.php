@@ -145,6 +145,7 @@ class FilterEqualityTest extends ViewsSqlTest {
         'table' => 'views_test',
         'field' => 'name',
         'relationship' => 'none',
+        'group' => 1,
         'exposed' => TRUE,
         'expose' => array(
           'operator' => 'name_op',

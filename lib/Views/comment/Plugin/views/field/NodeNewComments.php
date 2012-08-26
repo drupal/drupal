@@ -22,16 +22,6 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NodeNewComments extends Numeric {
 
-  function init(&$view, &$options) {
-    parent::init($view, $options);
-
-    // translate an older setting:
-    if (!empty($options['no_empty'])) {
-      $this->options['hide_empty'] = TRUE;
-      unset($this->options['no_empty']);
-    }
-  }
-
   function construct() {
     parent::construct();
     $this->additional_fields['nid'] = 'nid';

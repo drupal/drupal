@@ -70,7 +70,7 @@ class ArgumentValidatorTest extends ViewsSqlTest {
     $handler->display->display_options['arguments']['null']['field'] = 'null';
     $handler->display->display_options['arguments']['null']['style_plugin'] = 'default_summary';
     $handler->display->display_options['arguments']['null']['default_argument_type'] = 'fixed';
-    $handler->display->display_options['arguments']['null']['validate_type'] = 'php';
+    $handler->display->display_options['arguments']['null']['validate']['type'] = 'php';
     $handler->display->display_options['arguments']['null']['validate_options']['code'] = $code;
     $handler->display->display_options['arguments']['null']['must_not_be'] = 0;
 
@@ -102,7 +102,7 @@ class ArgumentValidatorTest extends ViewsSqlTest {
     $handler->display->display_options['arguments']['null']['field'] = 'null';
     $handler->display->display_options['arguments']['null']['style_plugin'] = 'default_summary';
     $handler->display->display_options['arguments']['null']['default_argument_type'] = 'fixed';
-    $handler->display->display_options['arguments']['null']['validate_type'] = 'numeric';
+    $handler->display->display_options['arguments']['null']['validate']['type'] = 'numeric';
     $handler->display->display_options['arguments']['null']['must_not_be'] = 0;
 
     return $view;

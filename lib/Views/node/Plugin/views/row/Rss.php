@@ -46,17 +46,6 @@ class Rss extends RowPluginBase {
     return $options;
   }
 
-  /**
-   * Override init function to convert fulltext view-mode to full.
-   */
-  function init(&$view, &$display, $options = NULL) {
-    parent::init($view, $display, $options);
-
-    if ($this->options['item_length'] == 'fulltext') {
-      $this->options['item_length'] = 'full';
-    }
-  }
-
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
