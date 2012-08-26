@@ -30,9 +30,8 @@ class ViewsDisplay {
   public $display_options;
 
   function __construct(array $display_options = array()) {
-    $this->display_options = $display_options['display_options'];
-
     if (!empty($display_options)) {
+      $this->display_options = $display_options['display_options'];
       $this->display_plugin = $display_options['display_plugin'];
       $this->id = $display_options['id'];
       $this->display_title = $display_options['display_title'];
