@@ -20,12 +20,16 @@ Drupal.behaviors.states = {
   attach: function (context, settings) {
     var $context = $(context);
     for (var selector in settings.states) {
-      for (var state in settings.states[selector]) {
-        new states.Dependent({
-          element: $context.find(selector),
-          state: states.State.sanitize(state),
-          constraints: settings.states[selector][state]
-        });
+      if (settings.states.hasOwnProperty(selector)) {
+        for (var state in settings.states[selector]) {
+          if (settings.states[selector].hasOwnProperty(state)) {
+            new states.Dependent({
+              element: $context.find(selector),
+              state: states.State.sanitize(state),
+              constraints: settings.states[selector][state]
+            });
+          }
+        }
       }
     }
 
@@ -52,7 +56,9 @@ states.Dependent = function (args) {
 
   this.dependees = this.getDependees();
   for (var selector in this.dependees) {
-    this.initializeDependee(selector, this.dependees[selector]);
+    if (this.dependees.hasOwnProperty(selector)) {
+      this.initializeDependee(selector, this.dependees[selector]);
+    }
   }
 };
 
@@ -89,7 +95,11 @@ states.Dependent.prototype = {
    *   dependee's compliance status.
    */
   initializeDependee: function (selector, dependeeStates) {
-    var state;
+    var state, self = this;
+
+    function stateEventHandler(e) {
+      self.update(e.data.selector, e.data.state, e.value);
+    }
 
     // Cache for the states of this dependee.
     this.values[selector] = {};
@@ -108,9 +118,7 @@ states.Dependent.prototype = {
         this.values[selector][state.name] = null;
 
         // Monitor state changes of the specified state for this dependee.
-        $(selector).bind('state:' + state, {selector: selector, state: state}, $.proxy(function (e) {
-          this.update(e.data.selector, e.data.state, e.value);
-        }, this));
+        $(selector).bind('state:' + state, {selector: selector, state: state}, stateEventHandler);
 
         // Make sure the event we just bound ourselves to is actually fired.
         new states.Trigger({ selector: selector, state: state });
@@ -546,9 +554,9 @@ function ternary (a, b) {
   return typeof a === 'undefined' ? b : (typeof b === 'undefined' ? a : a && b);
 }
 
-// Inverts a (if it's not undefined) when invert is true.
-function invert (a, invert) {
-  return (invert && typeof a !== 'undefined') ? !a : a;
+// Inverts a (if it's not undefined) when invertState is true.
+function invert (a, invertState) {
+  return (invertState && typeof a !== 'undefined') ? !a : a;
 }
 
 // Compares two values while ignoring undefined values.
