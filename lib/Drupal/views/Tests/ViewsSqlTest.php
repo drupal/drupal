@@ -28,23 +28,6 @@ abstract class ViewsSqlTest extends WebTestBase {
     views_module_include('views_default', TRUE);
     views_get_all_views(TRUE);
     menu_router_rebuild();
-
-    // Define the schema and views data variable before enabling the test module.
-    variable_set('views_test_schema', $this->schemaDefinition());
-    variable_set('views_test_views_data', $this->viewsData());
-
-    module_enable(array('views_test'));
-    $this->resetAll();
-
-    // Load the test dataset.
-    $data_set = $this->dataSet();
-    $query = db_insert('views_test')
-      ->fields(array_keys($data_set[0]));
-    foreach ($data_set as $record) {
-      $query->values($record);
-    }
-    $query->execute();
-    $this->checkPermissions(array(), TRUE);
   }
 
   /**
