@@ -8,17 +8,34 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\Language;
 
 /**
  * Test user token replacement in strings.
  */
 class UserTokenReplaceTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language');
+
   public static function getInfo() {
     return array(
       'name' => 'User token replacement',
       'description' => 'Generates text using placeholders for dummy content to check user token replacement.',
       'group' => 'User',
     );
+  }
+
+  public function setUp() {
+    parent::setUp();
+    $language = new Language(array(
+      'langcode' => 'de',
+    ));
+    language_save($language);
   }
 
   /**
@@ -70,6 +87,36 @@ class UserTokenReplaceTest extends WebTestBase {
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('user' => $account), array('language' => $language_interface, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, t('Unsanitized user token %token replaced.', array('%token' => $input)));
+    }
+
+    // Generate login and cancel link.
+    $tests = array();
+    $tests['[user:one-time-login-url]'] = user_pass_reset_url($account);
+    $tests['[user:cancel-url]'] = user_cancel_url($account);
+
+    // Generate tokens with interface language.
+    $link = url('user', array('absolute' => TRUE));
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('user' => $account), array('langcode' => $language_interface->langcode, 'callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
+      $this->assertTrue(strpos($output, $link) === 0, 'Generated URL is in interface language.');
+    }
+
+    // Generate tokens with the user's preferred language.
+    $account->preferred_langcode = 'de';
+    $account->save();
+    $link = url('user', array('language' => language_load($account->preferred_langcode), 'absolute' => TRUE));
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('user' => $account), array('callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
+      $this->assertTrue(strpos($output, $link) === 0, "Generated URL is in the user's preferred language.");
+    }
+
+    // Generate tokens with one specific language.
+    $link = url('user', array('language' => language_load('de'), 'absolute' => TRUE));
+    foreach ($tests as $input => $expected) {
+      foreach (array($user1, $user2) as $account) {
+        $output = token_replace($input, array('user' => $account), array('langcode' => 'de', 'callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
+        $this->assertTrue(strpos($output, $link) === 0, "Generated URL in in the requested language.");
+      }
     }
   }
 }

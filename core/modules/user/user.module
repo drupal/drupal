@@ -1817,14 +1817,25 @@ function user_external_login_register($name, $module) {
  *
  * @param object $account
  *   An object containing the user account.
+ * @param array $options
+ *   (optional) A keyed array of settings. Supported options are:
+ *   - langcode: A language code to be used when generating locale-sensitive
+ *    urls. If langcode is NULL the users preferred language is used.
  *
  * @return
  *   A unique URL that provides a one-time log in for the user, from which
  *   they can change their password.
  */
-function user_pass_reset_url($account) {
+function user_pass_reset_url($account, $options = array()) {
   $timestamp = REQUEST_TIME;
-  return url("user/reset/$account->uid/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), array('absolute' => TRUE));
+  $url_options = array('absolute' => TRUE);
+  if (isset($options['langcode'])) {
+    $url_options['language'] = language_load($options['langcode']);
+  }
+  else {
+    $url_options['language'] = user_preferred_language($account);
+  }
+  return url("user/reset/$account->uid/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), $url_options);
 }
 
 /**
@@ -1836,6 +1847,10 @@ function user_pass_reset_url($account) {
  *   - uid: The user uid number.
  *   - pass: The hashed user password string.
  *   - login: The user login name.
+ * @param array $options
+ *   (optional) A keyed array of settings. Supported options are:
+ *   - langcode: A language code to be used when generating locale-sensitive
+  *    urls. If langcode is NULL the users preferred language is used.
  *
  * @return
  *   A unique URL that may be used to confirm the cancellation of the user
@@ -1844,9 +1859,16 @@ function user_pass_reset_url($account) {
  * @see user_mail_tokens()
  * @see user_cancel_confirm()
  */
-function user_cancel_url($account) {
+function user_cancel_url($account, $options = array()) {
   $timestamp = REQUEST_TIME;
-  return url("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), array('absolute' => TRUE));
+  $url_options = array('absolute' => TRUE);
+  if (isset($options['langcode'])) {
+    $url_options['language'] = language_load($options['langcode']);
+  }
+  else {
+    $url_options['language'] = user_preferred_language($account);
+  }
+  return url("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), $url_options);
 }
 
 /**
@@ -2297,7 +2319,7 @@ Your account on [site:name] has been canceled.
   if ($replace) {
     // We do not sanitize the token replacement, since the output of this
     // replacement is intended for an e-mail message, not a web browser.
-    return token_replace($text, $variables, array('language' => $language, 'callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
+    return token_replace($text, $variables, array('langcode' => $langcode, 'callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
   }
 
   return $text;
@@ -2324,8 +2346,8 @@ Your account on [site:name] has been canceled.
  */
 function user_mail_tokens(&$replacements, $data, $options) {
   if (isset($data['user'])) {
-    $replacements['[user:one-time-login-url]'] = user_pass_reset_url($data['user']);
-    $replacements['[user:cancel-url]'] = user_cancel_url($data['user']);
+    $replacements['[user:one-time-login-url]'] = user_pass_reset_url($data['user'], $options);
+    $replacements['[user:cancel-url]'] = user_cancel_url($data['user'], $options);
   }
 }
 
