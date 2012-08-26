@@ -17,10 +17,7 @@ class ViewStorageController extends ConfigStorageController {
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     foreach ($queried_entities as $id => $entity) {
-      foreach ($entity->display as $key => $options) {
-        // Create a ViewsDisplay object using the display options.
-        $entity->display[$key] = new ViewsDisplay($options);
-      }
+      $this->attachDisplays($entity);
     }
   }
 
@@ -95,6 +92,27 @@ class ViewStorageController extends ConfigStorageController {
     unset($entity->original);
 
     return $return;
+  }
+
+  /**
+   * Overrides Drupal\config\ConfigStorageController::create().
+   */
+  public function create(array $values) {
+    $entity = parent::create($values);
+    $this->attachDisplays($entity);
+    return $entity;
+  }
+
+  /**
+   * @todo
+   */
+  protected function attachDisplays(&$entity) {
+    if (isset($entity->display) && is_array($entity->display)) {
+      foreach ($entity->display as $key => $options) {
+        // Create a ViewsDisplay object using the display options.
+        $entity->display[$key] = new ViewsDisplay($options);
+      }
+    }
   }
 
 }
