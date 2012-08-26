@@ -76,6 +76,13 @@ class LocaleImportFunctionalTest extends WebTestBase {
     $skip_message = format_plural(2, 'A translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
     $this->assertRaw($skip_message, t('Unsafe strings were skipped.'));
 
+    // Try importing a zero byte sized .po file.
+    $this->importPoFile($this->getEmptyPoFile(), array(
+      'langcode' => 'fr',
+    ));
+
+    // The import should have created 0 string and rejected 0.
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 0, '%delete' => 0)), 'The empty translation file was successfully imported.');
 
     // Try importing a .po file which doesn't exist.
     $name = $this->randomName(16);
@@ -336,6 +343,13 @@ msgstr "samedi"
 msgid "Sunday"
 msgstr "dimanche"
 EOF;
+  }
+
+  /**
+   * Helper function that returns a empty .po file.
+   */
+  function getEmptyPoFile() {
+    return '';
   }
 
   /**

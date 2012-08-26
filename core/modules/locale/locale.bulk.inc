@@ -496,13 +496,17 @@ function locale_translate_batch_finished($success, $results) {
     $additions = $updates = $deletes = $skips = 0;
     drupal_set_message(format_plural(count($results['files']), 'One translation file imported.', '@count translation files imported.'));
     $skipped_files = array();
-    foreach ($results['stats'] as $filepath => $report) {
-      $additions += $report['additions'];
-      $updates += $report['updates'];
-      $deletes += $report['deletes'];
-      $skips += $report['skips'];
-      if ($report['skips'] > 0) {
-        $skipped_files[] = $filepath;
+    // If there are no results and/or no stats (eg. coping with an empty .po
+    // file), simply do nothing.
+    if ($results && isset($results['stats'])) {
+      foreach ($results['stats'] as $filepath => $report) {
+        $additions += $report['additions'];
+        $updates += $report['updates'];
+        $deletes += $report['deletes'];
+        $skips += $report['skips'];
+        if ($report['skips'] > 0) {
+          $skipped_files[] = $filepath;
+        }
       }
     }
     drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)));

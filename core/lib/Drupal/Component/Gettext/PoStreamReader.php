@@ -230,6 +230,10 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    */
   private function readHeader() {
     $item = $this->readItem();
+    // Handle the case properly when the .po file is empty (0 bytes).
+    if (!$item) {
+      return;
+    }
     $header = new PoHeader;
     $header->setFromString(trim($item->getTranslation()));
     $this->_header = $header;

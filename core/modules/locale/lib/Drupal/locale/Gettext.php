@@ -10,6 +10,7 @@ namespace Drupal\locale;
 use Drupal\Component\Gettext\PoStreamReader;
 use Drupal\Component\Gettext\PoMemoryWriter;
 use Drupal\locale\PoDatabaseWriter;
+use Exception;
 
 /**
  * Static class providing Drupal specific Gettext functionality.
