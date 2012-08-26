@@ -1572,8 +1572,28 @@ function views_get_applicable_views($type) {
  */
 function views_get_all_views($reset = FALSE) {
   // @todo replace with http://drupal.org/node/1741154.
-  ctools_include('export');
-  return ctools_export_crud_load_all('views_view', $reset);
+  $controller = entity_get_controller('view');
+  return $controller->load();
+}
+
+/**
+ * Loads a view with the storage controller.
+ *
+ * @param string $id
+ *   The view name to load.
+ *
+ * @return Drupal\views\View
+ *   The view which is loaded.
+ */
+function views_storage_load($id) {
+  $controller = entity_get_controller('view');
+  $result = $controller->load(array($id));
+  return reset($result);
+}
+
+function views_storage_save(View $view) {
+  $controller = entity_get_controller('view');
+  return $controller->save($view);
 }
 
 /**
