@@ -223,26 +223,26 @@ class Field extends FieldPluginBase {
       $this->ensure_my_table();
       $this->add_additional_fields($fields);
 
-      // Filter by language, if field translation is enabled.
+      // Filter by langcode, if field translation is enabled.
       $field = $this->field_info;
-      if (field_is_translatable($entity_type, $field) && !empty($this->view->display_handler->options['field_language_add_to_query'])) {
-        $column = $this->table_alias . '.language';
+      if (field_is_translatable($entity_type, $field) && !empty($this->view->display_handler->options['field_langcode_add_to_query'])) {
+        $column = $this->table_alias . '.langcode';
         // By the same reason as field_language the field might be LANGUAGE_NOT_SPECIFIED in reality so allow it as well.
-        // @see this::field_language()
-        $default_language = language_default()->langcode;
-        $language = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-                                array(drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode, $default_language),
-                                $this->view->display_handler->options['field_language']);
+        // @see this::field_langcode()
+        $default_langcode = language_default()->langcode;
+        $langcode = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
+                                array(drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode, $default_langcode),
+                                $this->view->display_handler->options['field_langcode']);
         $placeholder = $this->placeholder();
-        $language_fallback_candidates = array($language);
+        $langcode_fallback_candidates = array($langcode);
         if (variable_get('locale_field_language_fallback', TRUE)) {
           require_once DRUPAL_ROOT . '/includes/language.inc';
-          $language_fallback_candidates = array_merge($language_fallback_candidates, language_fallback_get_candidates());
+          $langcode_fallback_candidates = array_merge($langcode_fallback_candidates, language_fallback_get_candidates());
         }
         else {
-          $language_fallback_candidates[] = LANGUAGE_NOT_SPECIFIED;
+          $langcode_fallback_candidates[] = LANGUAGE_NOT_SPECIFIED;
         }
-        $this->query->add_where_expression(0, "$column IN($placeholder) OR $column IS NULL", array($placeholder => $language_fallback_candidates));
+        $this->query->add_where_expression(0, "$column IN($placeholder) OR $column IS NULL", array($placeholder => $langcode_fallback_candidates));
       }
     }
 
@@ -719,7 +719,7 @@ class Field extends FieldPluginBase {
     $entity = clone $values->_field_data[$this->field_alias]['entity'];
 
     $entity_type = $values->_field_data[$this->field_alias]['entity_type'];
-    $langcode = $this->field_language($entity_type, $entity);
+    $langcode = $this->field_langcode($entity_type, $entity);
     // If we are grouping, copy our group fields into the cloned entity.
     // It's possible this will cause some weirdness, but there's only
     // so much we can hope to do.
@@ -840,7 +840,7 @@ class Field extends FieldPluginBase {
       return array();
     }
 
-    $langcode = $this->field_language($entity_type, $entity);
+    $langcode = $this->field_langcode($entity_type, $entity);
     $render_array = field_view_field($entity_type, $entity, $this->definition['field_name'], $display, $langcode);
 
     $items = array();
@@ -906,20 +906,20 @@ class Field extends FieldPluginBase {
    * Return the language code of the language the field should be displayed in,
    * according to the settings.
    */
-  function field_language($entity_type, $entity) {
+  function field_langcode($entity_type, $entity) {
     if (field_is_translatable($entity_type, $this->field_info)) {
-      $default_language = language_default()->langcode;
-      $language = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-                              array(drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode, $default_language),
+      $default_langcode = language_default()->langcode;
+      $langcode = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
+                              array(drupal_container()->get(LANGUAGE_TYPE_CONTENT)->langcode, $default_langcode),
                               $this->view->display_handler->options['field_language']);
 
       // Give the Field Language API a chance to fallback to a different language
       // (or LANGUAGE_NOT_SPECIFIED), in case the field has no data for the selected language.
       // field_view_field() does this as well, but since the returned language code
       // is used before calling it, the fallback needs to happen explicitly.
-      $language = field_language($entity_type, $entity, $this->field_info['field_name'], $language);
+      $langcode = field_language($entity_type, $entity, $this->field_info['field_name'], $langcode);
 
-      return $language;
+      return $langcode;
     }
     else {
       return LANGUAGE_NOT_SPECIFIED;

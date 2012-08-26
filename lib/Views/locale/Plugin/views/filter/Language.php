@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Definition of Views\locale\Plugin\views\filter\Language.
+ * Definition of Views\language\Plugin\views\filter\Language.
  */
 
-namespace Views\locale\Plugin\views\filter;
+namespace Views\language\Plugin\views\filter;
 
-use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\filter\InOperator;
+use Drupal\Core\Annotation\Plugin;
 
 /**
  * Filter by language.
@@ -16,8 +16,8 @@ use Drupal\views\Plugin\views\filter\InOperator;
  * @ingroup views_filter_handlers
  *
  * @Plugin(
- *   id = "locale_language",
- *   module = "locale"
+ *   id = "language",
+ *   module = "language"
  * )
  */
 class Language extends InOperator {

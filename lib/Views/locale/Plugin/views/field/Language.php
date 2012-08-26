@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Views\locale\Plugin\views\field\Language.
+ * Definition of Views\language\Plugin\views\field\Language.
  */
 
-namespace Views\locale\Plugin\views\field;
+namespace Views\language\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
@@ -16,8 +16,8 @@ use Drupal\Core\Annotation\Plugin;
  * @ingroup views_field_handlers
  *
  * @Plugin(
- *   id = "locale_language",
- *   module = "locale"
+ *   id = "language",
+ *   module = "language"
  * )
  */
 class Language extends FieldPluginBase {
@@ -40,9 +40,11 @@ class Language extends FieldPluginBase {
   }
 
   function render($values) {
-    $languages = locale_language_list(empty($this->options['native_language']) ? 'name' : 'native');
+    // @todo: Drupal Core dropped native language until config translation is
+    // ready, see http://drupal.org/node/1616594.
     $value = $this->get_value($values);
-    return isset($languages[$value]) ? $languages[$value] : '';
+    $language = language_load($value);
+    return $language ? $language->name : '';
   }
 
 }

@@ -28,7 +28,7 @@ class Revision extends Node {
       $this->additional_fields['vid'] = 'vid';
       $this->additional_fields['nid'] = 'nid';
       if (module_exists('translation')) {
-        $this->additional_fields['language'] = array('table' => 'node', 'field' => 'language');
+        $this->additional_fields['langcode'] = array('table' => 'node', 'field' => 'langcode');
       }
     }
   }
@@ -63,10 +63,10 @@ class Revision extends Node {
       $vid = $this->get_value($values, 'vid');
       $this->options['alter']['path'] = "node/" . $nid . '/revisions/' . $vid . '/view';
       if (module_exists('translation')) {
-        $language = $this->get_value($values, 'language');
+        $langcode = $this->get_value($values, 'langcode');
         $languages = language_list();
-        if (isset($languages[$language])) {
-          $this->options['alter']['language'] = $languages[$language];
+        if (isset($languages[$langcode])) {
+          $this->options['alter']['langcode'] = $languages[$langcode];
         }
       }
     }

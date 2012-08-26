@@ -221,6 +221,28 @@ function node_views_data() {
     ),
   );
 
+  // Language field
+  if (module_exists('language')) {
+    $data['node']['language']['moved to'] = array('node', 'langcode');
+    $data['node']['langcode'] = array(
+      'title' => t('Language'),
+      'help' => t('The language the content is in.'),
+      'field' => array(
+        'id' => 'node_language',
+        'click sortable' => TRUE,
+      ),
+      'filter' => array(
+        'id' => 'language',
+      ),
+      'argument' => array(
+        'id' => 'language',
+      ),
+      'sort' => array(
+        'id' => 'standard',
+      ),
+    );
+  }
+
   // Define some fields based upon views_handler_field_entity in the entity
   // table so they can be re-used with other query backends.
   // @see views_handler_field_entity

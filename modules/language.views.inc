@@ -19,10 +19,6 @@ function language_views_data() {
     'help' => t('A language used in drupal.'),
   );
 
-  // name
-  // direction
-  // weight
-
   $data['language']['langcode'] = array(
     'title' => t('Language code'),
     'help' => t("Language code, e.g. 'de' or 'en-US'."),

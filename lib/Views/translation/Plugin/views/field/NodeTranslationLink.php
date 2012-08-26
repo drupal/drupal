@@ -27,7 +27,7 @@ class NodeTranslationLink extends FieldPluginBase {
     $this->additional_fields['nid'] = 'nid';
     $this->additional_fields['tnid'] = 'tnid';
     $this->additional_fields['title'] = 'title';
-    $this->additional_fields['language'] = 'language';
+    $this->additional_fields['langcode'] = 'langcode';
   }
 
   function query() {
@@ -45,7 +45,7 @@ class NodeTranslationLink extends FieldPluginBase {
 
     $tnid = $this->get_value($values, 'tnid');
     // Only load translations if the node isn't in the current language.
-    if ($this->get_value($values, 'language') != $language_interface->langcode) {
+    if ($this->get_value($values, 'langcode') != $language_interface->langcode) {
       $translations = translation_node_get_translations($tnid);
       if (isset($translations[$language_interface->langcode])) {
         $values->{$this->aliases['nid']} = $translations[$language_interface->langcode]->nid;

@@ -195,27 +195,3 @@ function locale_views_data() {
 
   return $data;
 }
-
-/**
- * Implements hook_views_data_alter().
- */
-function locale_views_data_alter(&$data) {
-  // Language field
-  $data['node']['language'] = array(
-    'title' => t('Language'),
-    'help' => t('The language the content is in.'),
-    'field' => array(
-      'id' => 'node_language',
-      'click sortable' => TRUE,
-    ),
-    'filter' => array(
-      'id' => 'node_language',
-    ),
-    'argument' => array(
-      'id' => 'node_language',
-    ),
-    'sort' => array(
-      'id' => 'standard',
-    ),
-  );
-}

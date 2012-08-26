@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Views\locale\Plugin\views\field\NodeLanguage.
+ * Definition of Views\node\Plugin\views\field\Language.
  */
 
-namespace Views\locale\Plugin\views\field;
+namespace Views\node\Plugin\views\field;
 
 use Views\node\Plugin\views\field\Node;
 use Drupal\Core\Annotation\Plugin;
@@ -17,10 +17,10 @@ use Drupal\Core\Annotation\Plugin;
  *
  * @Plugin(
  *   id = "node_language",
- *   module = "locale"
+ *   module = "node"
  * )
  */
-class NodeLanguage extends Node {
+class Language extends Node {
 
   function option_definition() {
     $options = parent::option_definition();
@@ -40,9 +40,11 @@ class NodeLanguage extends Node {
   }
 
   function render($values) {
-    $languages = views_language_list(empty($this->options['native_language']) ? 'name' : 'native');
+    // @todo: Drupal Core dropped native language until config translation is
+    // ready, see http://drupal.org/node/1616594.
     $value = $this->get_value($values);
-    $value = isset($languages[$value]) ? $languages[$value] : '';
+    $language = language_load($value);
+    $value = $language ? $language->name : '';
     return $this->render_link($value, $values);
   }
 

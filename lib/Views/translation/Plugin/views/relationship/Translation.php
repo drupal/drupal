@@ -41,7 +41,7 @@ class Translation extends RelationshipPluginBase {
       'current' => t('Current language'),
       'default' => t('Default language'),
     );
-    $options = array_merge($options, locale_language_list());
+    $options = array_merge($options, views_language_list());
     $form['language'] = array(
       '#type' => 'select',
       '#options' => $options,
@@ -75,20 +75,20 @@ class Translation extends RelationshipPluginBase {
       switch ($this->options['language']) {
         case 'current':
           $def['extra'][] = array(
-            'field' => 'language',
+            'field' => 'langcode',
             'value' => '***CURRENT_LANGUAGE***',
           );
           break;
         case 'default':
           $def['extra'][] = array(
-            'field' => 'language',
+            'field' => 'langcode',
             'value' => '***DEFAULT_LANGUAGE***',
           );
           break;
         // Other values will be the language codes.
         default:
           $def['extra'][] = array(
-            'field' => 'language',
+            'field' => 'langcode',
             'value' => $this->options['language'],
           );
           break;

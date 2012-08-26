@@ -36,6 +36,7 @@ function views_core_modules() {
     'field',
     'filter',
     'file',
+    'language',
     'locale',
     'node',
     'search',
@@ -964,18 +965,18 @@ function views_add_contextual_links(&$render_element, $location, $view, $display
  *   Boolean to return all languages or only enabled ones
  *
  * @see locale_language_list()
+ * @todo Figure out whether we need this with language module.
  */
 function views_language_list($field = 'name', $all = FALSE) {
   if ($all) {
     $languages = language_list();
   }
   else {
-    $languages = language_list('enabled');
-    $languages = $languages[1];
+    $languages = language_list();
   }
   $list = array();
   foreach ($languages as $language) {
-    $list[$language->language] = ($field == 'name') ? t($language->name) : $language->$field;
+    $list[$language->langcode] = ($field == 'name') ? t($language->name) : $language->$field;
   }
   return $list;
 }

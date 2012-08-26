@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Views\locale\Plugin\views\argument\Language.
+ * Definition of Views\language\Plugin\views\argument\Language.
  */
 
-namespace Views\locale\Plugin\views\argument;
+namespace Views\language\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\Core\Annotation\Plugin;
@@ -16,22 +16,18 @@ use Drupal\Core\Annotation\Plugin;
  * @ingroup views_argument_handlers
  *
  * @Plugin(
- *   id = "locale_language",
- *   module = "locale"
+ *   id = "language",
+ *   module = "language"
  * )
  */
 class Language extends ArgumentPluginBase {
-
-  function construct() {
-    parent::construct('language');
-  }
 
   /**
    * Override the behavior of summary_name(). Get the user friendly version
    * of the language.
    */
   function summary_name($data) {
-    return $this->locale_language($data->{$this->name_alias});
+    return $this->language($data->{$this->name_alias});
   }
 
   /**
@@ -39,10 +35,10 @@ class Language extends ArgumentPluginBase {
    * of the language.
    */
   function title() {
-    return $this->locale_language($this->argument);
+    return $this->language($this->argument);
   }
 
-  function locale_language($langcode) {
+  function language($langcode) {
     $languages = views_language_list();
     return isset($languages[$langcode]) ? $languages[$langcode] : t('Unknown language');
   }

@@ -26,7 +26,7 @@ class NodeLinkTranslate extends Link {
     // ensure user has access to edit this node.
     $node = $this->get_value($values);
     $node->status = 1; // unpublished nodes ignore access control
-    if (empty($node->language) || !translation_supported_type($node->type) || !node_access('view', $node) || !user_access('translate content')) {
+    if (empty($node->langcode) || !translation_supported_type($node->type) || !node_access('view', $node) || !user_access('translate content')) {
       return;
     }
 

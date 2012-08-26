@@ -134,6 +134,15 @@ abstract class DisplayPluginBase extends PluginBase {
       $this->unpack_options($this->options, $options);
     }
 
+    // Convert the field_language and field_language_add_to_query settings.
+    $field_language = $this->get_option('field_language');
+    $field_language_add_to_query = $this->get_option('field_language_add_to_query');
+    if (isset($field_langcode)) {
+      $this->set_option('field_langcode', $field_language);
+      $this->set_option('field_langcode_add_to_query', $field_language_add_to_query);
+      $changed = TRUE;
+    }
+
     // Mark the view as changed so the user has a chance to save it.
     if ($changed) {
       $this->view->changed = TRUE;
@@ -487,11 +496,12 @@ abstract class DisplayPluginBase extends PluginBase {
         'default' => FALSE,
         'bool' => TRUE,
       ),
-      'field_language' => array(
+      'field_langcode' => array(
         'default' => '***CURRENT_LANGUAGE***',
       ),
-      'field_language_add_to_query' => array(
-        'default' => 1,
+      'field_langcode_add_to_query' => array(
+        'default' => TRUE,
+        'bool' => TRUE,
       ),
 
       // These types are all plugins that can have individual settings
@@ -1213,11 +1223,10 @@ abstract class DisplayPluginBase extends PluginBase {
     if (module_exists('language')) {
       $languages = array_merge($languages, language_list());
     }
-    $field_language = array();
-    $options['field_language'] = array(
+    $options['field_langcode'] = array(
       'category' => 'other',
       'title' => t('Field Language'),
-      'value' => $languages[$this->get_option('field_language')],
+      'value' => $languages[$this->get_option('field_langcode')],
       'desc' => t('All fields which support translations will be displayed in the selected language.'),
     );
 
@@ -1607,17 +1616,17 @@ abstract class DisplayPluginBase extends PluginBase {
           );
           $languages = array_merge($languages, views_language_list());
 
-          $form['field_language'] = array(
+          $form['field_langcode'] = array(
             '#type' => 'select',
             '#title' => t('Field Language'),
             '#description' => t('All fields which support translations will be displayed in the selected language.'),
             '#options' => $languages,
-            '#default_value' => $this->get_option('field_language'),
+            '#default_value' => $this->get_option('field_langcode'),
           );
-          $form['field_language_add_to_query'] = array(
+          $form['field_langcode_add_to_query'] = array(
             '#type' => 'checkbox',
             '#title' => t('When needed, add the field language condition to the query'),
-            '#default_value' => $this->get_option('field_language_add_to_query'),
+            '#default_value' => $this->get_option('field_langcode_add_to_query'),
           );
         }
         else {
@@ -2281,8 +2290,8 @@ abstract class DisplayPluginBase extends PluginBase {
         $this->set_option($section, $form_state['values'][$section]);
         break;
       case 'field_language':
-        $this->set_option('field_language', $form_state['values']['field_language']);
-        $this->set_option('field_language_add_to_query', $form_state['values']['field_language_add_to_query']);
+        $this->set_option('field_langcode', $form_state['values']['field_langcode']);
+        $this->set_option('field_langcode_add_to_query', $form_state['values']['field_langcode_add_to_query']);
         break;
       case 'use_ajax':
       case 'hide_attachment_summary':
