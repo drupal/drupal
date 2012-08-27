@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests;
 
+use stdClass;
+
 /**
  * Tests abstract handlers of views.
  */
@@ -41,7 +43,7 @@ class HandlersTest extends ViewsSchemaTestBase {
    * Tests views_break_phrase_string function.
    */
   function test_views_break_phrase_string() {
-    $empty_stdclass = new \StdClass();
+    $empty_stdclass = new StdClass();
     $empty_stdclass->operator = 'or';
     $empty_stdclass->value = array();
 
@@ -96,7 +98,7 @@ class HandlersTest extends ViewsSchemaTestBase {
    * Tests views_break_phrase function.
    */
   function test_views_break_phrase() {
-    $empty_stdclass = new \StdClass();
+    $empty_stdclass = new StdClass();
     $empty_stdclass->operator = 'or';
     $empty_stdclass->value = array();
 
