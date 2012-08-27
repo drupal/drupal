@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * Definition of Drupal\views\Tests\Language\ArgumentLanguage.php
+ * Definition of Drupal\views\Tests\Language\ArgumentLanguage.
  */
 
 namespace Drupal\views\Tests\Language;
@@ -14,6 +15,7 @@ use Drupal\Core\Language\Language;
  * @see Views\language\Plugin\views\argument\Language.php
  */
 class ArgumentLanguage extends LanguageTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Argument: Language',
@@ -41,4 +43,5 @@ class ArgumentLanguage extends LanguageTestBase {
       $view->destroy();
     }
   }
+
 }

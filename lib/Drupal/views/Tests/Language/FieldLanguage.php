@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * Definition of Drupal\views\Tests\Language\FieldLanguage.php
+ * Definition of Drupal\views\Tests\Language\FieldLanguage.
  */
 
 namespace Drupal\views\Tests\Language;
@@ -14,11 +15,12 @@ use Drupal\Core\Language\Language;
  * @see Views\language\Plugin\views\field\Language
  */
 class FieldLanguage extends LanguageTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Field: Language',
       'description' => 'Tests the field language handler.',
-      'group' => 'Views Handlers'
+      'group' => 'Views Handlers',
     );
   }
 
@@ -36,4 +38,5 @@ class FieldLanguage extends LanguageTestBase {
     $this->assertEqual($view->field['langcode']->advanced_render($view->result[0]), 'English');
     $this->assertEqual($view->field['langcode']->advanced_render($view->result[1]), 'Lolspeak');
   }
+
 }

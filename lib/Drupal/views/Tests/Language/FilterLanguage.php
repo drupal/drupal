@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * Definition of Drupal\views\Tests\Language\FilterLanguage.php
+ * Definition of Drupal\views\Tests\Language\FilterLanguage.
  */
 
 namespace Drupal\views\Tests\Language;
@@ -14,6 +15,7 @@ use Drupal\Core\Language\Language;
  * @see Views\language\Plugin\views\filter\Language
  */
 class FilterLanguage extends LanguageTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Filter: Language',
@@ -42,4 +44,5 @@ class FilterLanguage extends LanguageTestBase {
       $view->destroy();
     }
   }
+
 }

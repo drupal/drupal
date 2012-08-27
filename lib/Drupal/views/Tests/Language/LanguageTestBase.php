@@ -1,19 +1,26 @@
 <?php
+
 /**
  * @file
- * Definition of Drupal\views\Tests\Language\LanguageTestBase.php
+ * Definition of Drupal\views\Tests\Language\LanguageTestBase.
  */
 
 namespace Drupal\views\Tests\Language;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewsSchemaTestBase;
 use Drupal\Core\Language\Language;
 
 /**
  * Base class for all Language handler tests.
  */
-abstract class LanguageTestBase extends ViewsSqlTest {
-  public static $modules = array('views', 'language');
+abstract class LanguageTestBase extends ViewsSchemaTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('language');
 
   protected function setUp() {
     parent::setUp();
@@ -64,4 +71,5 @@ abstract class LanguageTestBase extends ViewsSqlTest {
 
     return $data;
   }
+
 }
