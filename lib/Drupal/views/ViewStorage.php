@@ -9,6 +9,9 @@ namespace Drupal\views;
 
 use Drupal\config\ConfigurableBase;
 
+/**
+ * Defines a ViewStorage configurable class.
+ */
 class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
 
   /**

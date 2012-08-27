@@ -10,6 +10,9 @@ namespace Drupal\views;
 use Drupal\config\ConfigStorageController;
 use Drupal\entity\StorableInterface;
 
+/**
+ * Defines the storage controller class for ViewStorage entities.
+ */
 class ViewStorageController extends ConfigStorageController {
 
   /**
