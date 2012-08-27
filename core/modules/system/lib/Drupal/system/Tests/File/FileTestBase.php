@@ -83,7 +83,7 @@ abstract class FileTestBase extends WebTestBase {
    */
   function assertFilePermissions($filepath, $expected_mode, $message = NULL) {
     // Clear out PHP's file stat cache to be sure we see the current value.
-    clearstatcache();
+    clearstatcache(TRUE, $filepath);
 
     // Mask out all but the last three octets.
     $actual_mode = fileperms($filepath) & 0777;
@@ -118,7 +118,7 @@ abstract class FileTestBase extends WebTestBase {
    */
   function assertDirectoryPermissions($directory, $expected_mode, $message = NULL) {
     // Clear out PHP's file stat cache to be sure we see the current value.
-    clearstatcache();
+    clearstatcache(TRUE, $directory);
 
     // Mask out all but the last three octets.
     $actual_mode = fileperms($directory) & 0777;

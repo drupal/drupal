@@ -655,7 +655,7 @@ class ArchiveTar // extends PEAR
         if ($p_filename == NULL) {
             $p_filename = $this->_tarname;
         }
-        clearstatcache();
+        clearstatcache(TRUE, $p_filename);
         return @is_file($p_filename) && !@is_link($p_filename);
     }
     // }}}
@@ -1086,7 +1086,7 @@ class ArchiveTar // extends PEAR
           $v_size = sprintf("%11s ", DecOct(0));
         } else {
           $v_typeflag = '';
-          clearstatcache();
+          clearstatcache(TRUE, $p_filename);
           $v_size = sprintf("%11s ", DecOct($v_info['size']));
         }
 
@@ -1642,7 +1642,7 @@ class ArchiveTar // extends PEAR
           }
 
           // ----- Check the file size
-          clearstatcache();
+          clearstatcache(TRUE, $v_header['filename']);
           if (filesize($v_header['filename']) != $v_header['size']) {
               $this->_error('Extracted file '.$v_header['filename']
 			                .' does not have the correct file size \''
@@ -1755,7 +1755,7 @@ class ArchiveTar // extends PEAR
             if (!$this->_openReadWrite())
                return false;
 
-            clearstatcache();
+            clearstatcache(TRUE, $this->_tarname);
             $v_size = filesize($this->_tarname);
 
             // We might have zero, one or two end blocks.
@@ -1801,7 +1801,7 @@ class ArchiveTar // extends PEAR
      */
     function _dirCheck($p_dir)
     {
-        clearstatcache();
+        clearstatcache(TRUE, $p_dir);
         if ((@is_dir($p_dir)) || ($p_dir == ''))
             return true;
 

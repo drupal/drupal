@@ -132,7 +132,7 @@ abstract class LocalStream implements StreamWrapperInterface {
     $output = @chmod($this->getLocalPath(), $mode);
     // We are modifying the underlying file here, so we have to clear the stat
     // cache so that PHP understands that URI has changed too.
-    clearstatcache();
+    clearstatcache(TRUE, $this->getLocalPath());
     return $output;
   }
 

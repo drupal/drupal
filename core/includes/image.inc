@@ -421,7 +421,7 @@ function image_save(stdClass $image, $destination = NULL) {
   }
   if ($return = image_toolkit_invoke('save', $image, array($destination))) {
     // Clear the cached file size and refresh the image information.
-    clearstatcache();
+    clearstatcache(TRUE, $destination);
     $image->info = image_get_info($destination, $image->toolkit);
 
     if (drupal_chmod($destination)) {

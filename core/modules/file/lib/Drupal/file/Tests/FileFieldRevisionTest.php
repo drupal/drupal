@@ -111,7 +111,10 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // TODO: This seems like a bug in File API. Clearing the stat cache should
     // not be necessary here. The file really is deleted, but stream wrappers
     // doesn't seem to think so unless we clear the PHP file stat() cache.
-    clearstatcache();
+    clearstatcache($node_file_r1->uri);
+    clearstatcache($node_file_r2->uri);
+    clearstatcache($node_file_r3->uri);
+    clearstatcache($node_file_r4->uri);
 
     // Call system_cron() to clean up the file. Make sure the timestamp
     // of the file is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.

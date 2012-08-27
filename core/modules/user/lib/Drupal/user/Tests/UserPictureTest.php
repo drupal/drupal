@@ -294,7 +294,7 @@ class UserPictureTest extends WebTestBase {
     $this->assertFalse($file, 'File is removed from database');
 
     // Clear out PHP's file stat cache so we see the current value.
-    clearstatcache();
+    clearstatcache(TRUE, $pic_path);
     $this->assertFalse(is_file($pic_path), 'File is removed from file system');
   }
 

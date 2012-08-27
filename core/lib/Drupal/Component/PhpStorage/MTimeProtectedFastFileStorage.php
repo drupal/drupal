@@ -204,7 +204,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
    * Clears PHP's stat cache and returns the directory's mtime.
    */
   protected function getUncachedMTime($directory) {
-    clearstatcache();
+    clearstatcache(TRUE, $directory);
     return filemtime($directory);
   }
 }
