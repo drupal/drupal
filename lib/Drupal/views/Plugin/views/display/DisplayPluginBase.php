@@ -1507,9 +1507,6 @@ abstract class DisplayPluginBase extends PluginBase {
         $plugin = $this->get_plugin('access');
         $form['#title'] .= t('Access options');
         if ($plugin) {
-          $form['#help_topic'] = $plugin->definition['help_topic'];
-          $form['#help_module'] = $plugin->definition['module'];
-
           $form['access_options'] = array(
             '#tree' => TRUE,
           );
@@ -1549,9 +1546,6 @@ abstract class DisplayPluginBase extends PluginBase {
         $plugin = $this->get_plugin('cache');
         $form['#title'] .= t('Caching options');
         if ($plugin) {
-          $form['#help_topic'] = $plugin->definition['help topic'];
-          $form['#help_module'] = $plugin->definition['module'];
-
           $form['cache_options'] = array(
             '#tree' => TRUE,
           );
@@ -1569,14 +1563,6 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('Query options');
         $this->view->init_query();
         if ($this->view->query) {
-          if (isset($this->view->query->definition['help_topic'])) {
-            $form['#help_topic'] = $this->view->query->definition['help_topic'];
-          }
-
-          if (isset($this->view->query->definition['module'])) {
-            $form['#help_module'] = $this->view->query->definition['module'];
-          }
-
           $form['query'] = array(
             '#tree' => TRUE,
             'type' => array(
@@ -1636,7 +1622,6 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'style_plugin':
         $manager = new ViewsPluginManager('style');
         $form['#title'] .= t('How should this view be styled');
-        $form['#help_topic'] = 'style';
         $form['style_plugin'] =  array(
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('style', $this->get_style_type(), array($this->view->base_table)),
@@ -1669,10 +1654,6 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         $plugin = $this->get_plugin(empty($style) ? 'row' : 'style');
         if ($plugin) {
-          if (isset($plugin->definition['help_topic'])) {
-            $form['#help_topic'] = $plugin->definition['help_topic'];
-            $form['#help_module'] = $plugin->definition['module'];
-          }
           $form[$form_state['section']] = array(
             '#tree' => TRUE,
           );
@@ -1681,7 +1662,6 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'row_plugin':
         $form['#title'] .= t('How should each row in this view be styled');
-        $form['#help_topic'] = 'style-row';
         $form['row_plugin'] =  array(
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('row', $this->get_style_type(), array($this->view->base_table)),
@@ -1754,8 +1734,6 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'analyze-theme':
         $form['#title'] .= t('Theming information');
-        $form['#help_topic'] = 'analyze-theme';
-
         if ($theme = drupal_container()->get('request')->request->get('theme')) {
           $this->theme = $theme;
         }
@@ -2056,8 +2034,6 @@ abstract class DisplayPluginBase extends PluginBase {
         $plugin = $this->get_plugin('exposed_form');
         $form['#title'] .= t('Exposed form options');
         if ($plugin) {
-          $form['#help_topic'] = $plugin->definition['help_topic'];
-
           $form['exposed_form_options'] = array(
             '#tree' => TRUE,
           );
@@ -2093,8 +2069,6 @@ abstract class DisplayPluginBase extends PluginBase {
         $plugin = $this->get_plugin('pager');
         $form['#title'] .= t('Pager options');
         if ($plugin) {
-          $form['#help_topic'] = $plugin->definition['help_topic'];
-
           $form['pager_options'] = array(
             '#tree' => TRUE,
           );

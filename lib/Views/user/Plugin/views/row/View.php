@@ -22,8 +22,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("User"),
  *   help = @Translation("Display the user with standard user view."),
  *   base = {"users"},
- *   type = "normal",
- *   help_topic = "style-users"
+ *   type = "normal"
  * )
  */
 class View extends RowPluginBase {

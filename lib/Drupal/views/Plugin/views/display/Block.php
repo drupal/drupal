@@ -23,8 +23,7 @@ use Drupal\Core\Annotation\Translation;
  *   uses_hook_block = TRUE,
  *   contextual_links_locations = {"block"},
  *   accept_attachments = TRUE,
- *   admin = @Translation("Block"),
- *   help_topic = "display-block"
+ *   admin = @Translation("Block")
  * )
  */
 class Block extends DisplayPluginBase {

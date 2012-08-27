@@ -18,8 +18,7 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "none",
  *   title = @Translation("None"),
- *   help = @Translation("Do not pass admin strings for translation."),
- *   help_topic = "localization-none"
+ *   help = @Translation("Do not pass admin strings for translation.")
  * )
  */
 class None extends LocalizationPluginBase {

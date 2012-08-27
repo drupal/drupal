@@ -18,8 +18,7 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "role",
  *   title = @Translation("Role"),
- *   help = @Translation("Access will be granted to users with any of the specified roles."),
- *   help_topic = "access-role"
+ *   help = @Translation("Access will be granted to users with any of the specified roles.")
  * )
  */
 class Role extends AccessPluginBase {

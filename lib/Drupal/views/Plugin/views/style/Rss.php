@@ -20,8 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("RSS Feed"),
  *   help = @Translation("Generates an RSS feed from a view."),
  *   theme = "views_view_rss",
- *   type = "feed",
- *   help_topic = "style-rss"
+ *   type = "feed"
  * )
  */
 class Rss extends StylePluginBase {

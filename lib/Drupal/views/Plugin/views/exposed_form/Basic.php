@@ -18,8 +18,7 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "basic",
  *   title = @Translation("Basic"),
- *   help = @Translation("Basic exposed form"),
- *   help_topic = "exposed-form-basic"
+ *   help = @Translation("Basic exposed form")
  * )
  */
 class Basic extends ExposedFormPluginBase {

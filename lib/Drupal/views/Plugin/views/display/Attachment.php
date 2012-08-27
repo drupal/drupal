@@ -25,8 +25,7 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Attachments added to other displays to achieve multiple views in the same view."),
  *   theme = "views_view",
  *   contextual_links_locations = {""},
- *   accept_attachments = FALSE,
- *   help_topic = "display-attachment"
+ *   accept_attachments = FALSE
  * )
  */
 class Attachment extends DisplayPluginBase {

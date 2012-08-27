@@ -18,8 +18,7 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "core",
  *   title = @Translation("Core"),
- *   help = @Translation("Use Drupal core t() function. Not recommended, as it doesn't support updates to existing strings."),
- *   help_topic = "localization-core"
+ *   help = @Translation("Use Drupal core t() function. Not recommended, as it doesn't support updates to existing strings.")
  * )
  */
 class Core extends LocalizationPluginBase {

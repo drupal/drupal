@@ -15,7 +15,6 @@
     print ' defaulted';
   }
   ?>">
-  <?php print $item_help_icon; ?>
   <?php print $title; ?>
 </div>
 

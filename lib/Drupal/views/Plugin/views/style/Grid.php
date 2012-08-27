@@ -20,8 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Grid"),
  *   help = @Translation("Displays rows in a grid."),
  *   theme = "views_view_grid",
- *   type = "normal",
- *   help_topic = "style-grid"
+ *   type = "normal"
  * )
  */
 class Grid extends StylePluginBase {

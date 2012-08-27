@@ -254,9 +254,6 @@ class views_ui extends ctools_export_ui {
   function list_render(&$form_state) {
     views_include('admin');
     views_ui_add_admin_css();
-    if (!drupal_container()->get('request')->request->get('js')) {
-      views_ui_check_advanced_help();
-    }
     drupal_add_library('system', 'jquery.bbq');
     views_add_js('views-list');
 

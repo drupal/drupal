@@ -6,7 +6,6 @@
  */
 ?>
 <div <?php print $attributes; ?>>
-  <?php print $item_help_icon; ?>
   <?php if (!empty($actions)) : ?>
     <?php print $actions; ?>
   <?php endif; ?>

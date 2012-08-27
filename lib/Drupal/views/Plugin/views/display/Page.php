@@ -23,8 +23,7 @@ use Drupal\Core\Annotation\Translation;
  *   contextual_links_locations = {"page"},
  *   theme = "views_view",
  *   accept_attachments = TRUE,
- *   admin = @Translation("Page"),
- *   help_topic = "display-page"
+ *   admin = @Translation("Page")
  * )
  */
 class Page extends DisplayPluginBase {
@@ -322,7 +321,6 @@ class Page extends DisplayPluginBase {
     switch ($form_state['section']) {
       case 'path':
         $form['#title'] .= t('The menu path or URL of this view');
-        $form['#help_topic'] = 'path';
         $form['path'] = array(
           '#type' => 'textfield',
           '#description' => t('This view will be displayed by visiting this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters: For example, "node/%/feed".'),
@@ -334,7 +332,6 @@ class Page extends DisplayPluginBase {
         break;
       case 'menu':
         $form['#title'] .= t('Menu item entry');
-        $form['#help_topic'] = 'menu';
         $form['menu'] = array(
           '#prefix' => '<div class="clearfix">',
           '#suffix' => '</div>',

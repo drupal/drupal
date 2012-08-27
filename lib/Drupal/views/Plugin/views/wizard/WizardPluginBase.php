@@ -228,7 +228,6 @@ abstract class WizardPluginBase implements WizardInterface {
     // Create the dropdown for choosing the display format.
     $form['displays']['page']['options']['style']['style_plugin'] = array(
       '#title' => t('Display format'),
-      '#help_topic' => 'style',
       '#type' => 'select',
       '#options' => $style_options,
     );
@@ -362,7 +361,6 @@ abstract class WizardPluginBase implements WizardInterface {
     // Create the dropdown for choosing the display format.
     $form['displays']['block']['options']['style']['style_plugin'] = array(
       '#title' => t('Display format'),
-      '#help_topic' => 'style',
       '#type' => 'select',
       '#options' => $style_options,
     );

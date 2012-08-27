@@ -52,7 +52,7 @@ function views_ui_get_admin_css() {
     $theme_key = isset($themes[$theme_key]->base_theme) ? $themes[$theme_key]->base_theme : '';
   }
   // Views contains style overrides for the following modules
-  $module_list = array('contextual', 'advanced_help', 'ctools');
+  $module_list = array('contextual', 'ctools');
   foreach ($module_list as $module) {
     if (module_exists($module)) {
       $list[$module_path . '/css/views-admin.' . $module . '.css'] = array();
@@ -68,30 +68,6 @@ function views_ui_get_admin_css() {
 function views_ui_add_admin_css() {
   foreach (views_ui_get_admin_css() as $file => $options) {
     drupal_add_css($file, $options);
-  }
-}
-
-/**
- * Check to see if the advanced help module is installed, and if not put up
- * a message.
- *
- * Only call this function if the user is already in a position for this to
- * be useful.
- */
-function views_ui_check_advanced_help() {
-  if (!config('views.settings')->get('ui.show.advanced_help_warning')) {
-    return;
-  }
-
-  if (!module_exists('advanced_help')) {
-    $filename = db_query_range("SELECT filename FROM {system} WHERE type = 'module' AND name = 'advanced_help'", 0, 1)
-      ->fetchField();
-    if ($filename && file_exists($filename)) {
-      drupal_set_message(t('If you <a href="@modules">enable the advanced help module</a>, Views will provide more and better help. <a href="@hide">Hide this message.</a>', array('@modules' => url('admin/modules'), '@hide' => url('admin/structure/views/settings'))));
-    }
-    else {
-      drupal_set_message(t('If you install the advanced help module from !href, Views will provide more and better help. <a href="@hide">Hide this message.</a>', array('!href' => l('http://drupal.org/project/advanced_help', 'http://drupal.org/project/advanced_help'), '@hide' => url('admin/structure/views/settings'))));
-    }
   }
 }
 
@@ -1802,10 +1778,6 @@ function template_preprocess_views_ui_display_tab_setting(&$variables) {
 function template_preprocess_views_ui_display_tab_bucket(&$variables) {
   $element = $variables['element'];
 
-  $variables['item_help_icon'] = '';
-  if (!empty($element['#item_help_icon'])) {
-    $variables['item_help_icon'] = render($element['#item_help_icon']);
-  }
   if (!empty($element['#name'])) {
     $variables['attributes']['class'][] = drupal_html_class($element['#name']);
   }
@@ -2185,13 +2157,6 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
 
   $build['#overridden'] = FALSE;
   $build['#defaulted'] = FALSE;
-  if (module_exists('advanced_help')) {
-    $build['#item_help_icon'] = array(
-      '#theme' => 'advanced_help_topic',
-      '#module' => 'views',
-      '#topic' => $type,
-    );
-  }
 
   $build['#name'] = $build['#title'] = $types[$type]['title'];
 
@@ -2492,12 +2457,6 @@ function views_ui_standard_form_buttons(&$form, &$form_state, $form_id, $name = 
   // We used to set these items on the form, but now we want them on the $form_state:
   if (isset($form['#title'])) {
     $form_state['title'] = $form['#title'];
-  }
-  if (isset($form['#help_topic'])) {
-    $form_state['help_topic'] = $form['#help_topic'];
-  }
-  if (isset($form['#help_module'])) {
-    $form_state['help_module'] = $form['#help_module'];
   }
   if (isset($form['#url'])) {
     $form_state['url'] = $form['#url'];
@@ -4768,11 +4727,6 @@ function views_ui_admin_settings_basic($form, &$form_state) {
     '#title' => t('Show filters on the list of views'),
     '#default_value' => $config->get('ui.show.listing_filters'),
   );
-  $form['basic']['ui_show_advanced_help_warning'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show advanced help warning'),
-    '#default_value' => $config->get('ui.show.advanced_help_warning'),
-  );
 
   $form['basic']['ui_show_master_display'] = array(
     '#type' => 'checkbox',
@@ -4874,7 +4828,6 @@ function views_ui_admin_settings_basic($form, &$form_state) {
 function views_ui_admin_settings_basic_submit(&$form, &$form_state) {
   config('views.settings')
     ->set('ui.show.listing_filters', $form_state['values']['ui_show_listing_filters'])
-    ->set('ui.show.advanced_help_warning', $form_state['values']['ui_show_advanced_help_warning'])
     ->set('ui.show.master_display', $form_state['values']['ui_show_master_display'])
     ->set('ui.show.advanced_column', $form_state['values']['ui_show_advanced_column'])
     ->set('ui.show.display_embed', $form_state['values']['ui_show_display_embed'])

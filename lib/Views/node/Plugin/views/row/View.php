@@ -24,8 +24,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  *   title = @Translation("Content"),
  *   help = @Translation("Display the content with standard node view."),
  *   base = {"node"},
- *   type = "normal",
- *   help_topic = "style-node"
+ *   type = "normal"
  * )
  */
 class View extends RowPluginBase {

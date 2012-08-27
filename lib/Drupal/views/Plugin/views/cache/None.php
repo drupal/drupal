@@ -18,8 +18,7 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "none",
  *   title = @Translation("None"),
- *   help = @Translation("No caching of Views data."),
- *   help_topic = "cache-none"
+ *   help = @Translation("No caching of Views data.")
  * )
  */
 class None extends CachePluginBase {

@@ -256,12 +256,6 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
     $display .= $output;
 
     $title = empty($form_state['title']) ? '' : $form_state['title'];
-    if (!empty($form_state['help_topic'])) {
-      $module = !empty($form_state['help_module']) ? $form_state['help_module'] : 'views';
-      if (module_exists('advanced_help')) {
-        $title = theme('advanced_help_topic', array('module' => $module, 'topic' => $form_state['help_topic'])) . $title;
-      }
-    }
 
     $url = empty($form_state['url']) ? url(current_path(), array('absolute' => TRUE)) : $form_state['url'];
 

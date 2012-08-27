@@ -60,31 +60,6 @@ class UiSettingsTest extends ViewsSqlTest {
   }
 
   /**
-   * Tests the advanced help message setting.
-   */
-  function testAdvancedHelpMessage() {
-    $this->drupalLogin($this->adminUser);
-
-    // Configure to hide the advanced help message.
-    $edit = array(
-      'ui_show_advanced_help_warning' => FALSE,
-    );
-    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
-    $this->drupalGet('admin/structure/views');
-
-    $this->assertNoText(t('If you install the advanced help module'));
-
-    // Configure to show the advanced help message.
-    $edit = array(
-      'ui_show_advanced_help_warning' => TRUE,
-    );
-    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
-    $this->drupalGet('admin/structure/views');
-
-    $this->assertText(t('If you install the advanced help module'));
-  }
-
-  /**
    * Tests the settings for the edit ui.
    */
   function testEditUi() {

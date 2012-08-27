@@ -19,7 +19,6 @@ use Drupal\Core\Annotation\Translation;
  *   id = "none",
  *   title = @Translation("Display all items"),
  *   help = @Translation("Display all items that this view might find."),
- *   help_topic = "pager-none",
  *   type = "basic"
  * )
  */

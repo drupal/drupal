@@ -264,7 +264,6 @@
  *      'use_pager' => FALSE,
  *      'accept_attachments' => FALSE,
  *      'admin' => t('Feed'),
- *      'help topic' => 'display-feed',
  *     ),
  * @endcode
  *
@@ -537,7 +536,6 @@ function hook_views_data_alter(&$data) {
  *     - no_ui: Set to TRUE to denote that the plugin doesn't appear to be
  *       selectable in the ui, though on the api side they still exists.
  *     - help: A short help text, wrapped in t() used as description on the plugin settings form.
- *     - help topic: The name of an entry by advanced help for the plugin.
  *     - theme: The name of a theme suggestion to use for the display.
  *     - js: An array with paths to js files that should be included for the
  *       display. Note that the path should be relative Drupal root, not module

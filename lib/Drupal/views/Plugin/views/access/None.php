@@ -18,8 +18,7 @@ use Drupal\Core\Annotation\Plugin;
  * @Plugin(
  *   id = "none",
  *   title = @Translation("None"),
- *   help = @Translation("Will be available to all users."),
- *   help_topic = "access-none"
+ *   help = @Translation("Will be available to all users.")
  * )
  */
 class None extends AccessPluginBase {

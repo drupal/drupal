@@ -101,8 +101,7 @@ class GroupwiseMax extends RelationshipPluginBase {
       // Provide the base field as sane default sort option.
       '#default_value' => !empty($this->options['subquery_sort']) ? $this->options['subquery_sort'] : $this->definition['base'] . '.' . $base_table_data['table']['base']['field'],
       '#options' => $sort_options,
-      '#description' => theme('advanced_help_topic', array('module' => 'views', 'topic' => 'relationship-representative')) .
-        t("The sort criteria is applied to the data brought in by the relationship to determine how a representative item is obtained for each row. For example, to show the most recent node for each user, pick 'Content: Updated date'."),
+      '#description' => t("The sort criteria is applied to the data brought in by the relationship to determine how a representative item is obtained for each row. For example, to show the most recent node for each user, pick 'Content: Updated date'."),
     );
 
     $form['subquery_order'] = array(

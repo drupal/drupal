@@ -18,8 +18,7 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "input_required",
  *   title = @Translation("Input required"),
- *   help = @Translation("An exposed form that only renders a view if the form contains user input."),
- *   help_topic = "exposed-form-input-required"
+ *   help = @Translation("An exposed form that only renders a view if the form contains user input.")
  * )
  */
 class InputRequired extends ExposedFormPluginBase {

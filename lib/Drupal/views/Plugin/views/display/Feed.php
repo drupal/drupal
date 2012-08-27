@@ -24,8 +24,7 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Display the view as a feed, such as an RSS feed."),
  *   uses_hook_menu = TRUE,
  *   accept_attachments = FALSE,
- *   admin = @Translation("Feed"),
- *   help_topic = "display-feed"
+ *   admin = @Translation("Feed")
  * )
  */
 class Feed extends Page {

@@ -21,8 +21,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("List"),
  *   help = @Translation("Displays the default summary as a list."),
  *   theme = "views_view_summary",
- *   type = "summary",
- *   help_topic = "style-summary"
+ *   type = "summary"
  * )
  */
 class DefaultSummary extends StylePluginBase {

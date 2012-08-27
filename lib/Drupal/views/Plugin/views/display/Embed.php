@@ -24,8 +24,7 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Provide a display which can be embedded using the views api."),
  *   theme = "views_view",
  *   uses_hook_menu = FALSE,
- *   accept_attachments = FALSE,
- *   help_topic = "display-embed"
+ *   accept_attachments = FALSE
  * )
  */
 class Embed extends DisplayPluginBase {

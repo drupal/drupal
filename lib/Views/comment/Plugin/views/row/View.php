@@ -21,8 +21,7 @@ use Drupal\Core\Annotation\Translation;
  *   help = @Translation("Display the comment with standard comment view."),
  *   theme = "views_view_row_comment",
  *   base = {"comment"},
- *   type = "normal",
- *   help_topic = "style-comment"
+ *   type = "normal"
  * )
  */
 class View extends RowPluginBase {

@@ -23,8 +23,7 @@ use stdClass;
  *   theme = "views_view_row_rss",
  *   base = {"node"},
  *   type = "feed",
- *   module = "node",
- *   help_topic = "style-node-rss"
+ *   module = "node"
  * )
  */
 class Rss extends RowPluginBase {

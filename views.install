@@ -207,7 +207,6 @@ function views_update_last_removed() {
 function views_update_8000() {
   update_variables_to_config('views.settings', array(
     'views_ui_show_listing_filters' => 'ui.show.listing_filters',
-    'views_ui_show_advanced_help_warning' => 'ui.show.advanced_help_warning',
     'views_ui_show_master_display' => 'ui.show.master_display',
     'views_ui_show_advanced_column' => 'ui.show.advanced_column',
     'views_ui_display_embed' => 'ui.show.display_embed',
