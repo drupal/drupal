@@ -1714,36 +1714,40 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
 }
 
 /**
- * Returns TRUE if a view is enabled, FALSE otherwise.
+ * Returns whether the view is enabled.
+ *
+ * @var Drupal\views\View
+ *   The view object of which the status is checked.
+ *
+ * @return bool
+ *   Returns TRUE if a view is enabled, FALSE otherwise.
  */
 function views_view_is_enabled($view) {
-  return empty($view->disabled);
+  return $view->isEnabled();
 }
 
 /**
- * Returns TRUE if a view is disabled, FALSE otherwise.
+ * Returns whether the view is disabled.
+ *
+ * @var Drupal\views\View
+ *   The view object of which the status is checked.
+ *
+ * @return bool
+ *   Returns TRUE if a view is disabled, FALSE otherwise.
  */
 function views_view_is_disabled($view) {
-  return !empty($view->disabled);
+  return !$view->isEnabled();
 }
 
 /**
- * Get a view from the database or from default views.
- *
- * This function is just a static wrapper around views::load(). This function
- * isn't called 'views_load()' primarily because it might get a view
- * from the default views which aren't technically loaded from the database.
+ * Get a view from the config.
  *
  * @param $name
  *   The name of the view.
- * @param $reset
- *   If TRUE, reset this entry in the load cache.
  * @return Drupal\views\View
- *   A reference to the $view object. Use $reset if you're sure you want
- *   a fresh one.
+ *   A reference to the $view object.
  */
 function views_get_view($name) {
-
   $view = entity_load('view', $name);
   if ($view) {
     $view->update();
