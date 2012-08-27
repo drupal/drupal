@@ -170,7 +170,7 @@ use Drupal\Core\Database\Query\Condition;
  * }
  * @endcode
  *
- * @link http://drupal.org/developing/api/database
+ * @link http://drupal.org/developing/api/database @endlink
  */
 
 
