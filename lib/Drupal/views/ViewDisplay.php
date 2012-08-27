@@ -29,13 +29,19 @@ class ViewDisplay {
    */
   public $display_options;
 
-  function __construct(array $display_options = array()) {
-    if (!empty($display_options)) {
-      $this->display_options = $display_options['display_options'];
-      $this->display_plugin = $display_options['display_plugin'];
-      $this->id = $display_options['id'];
-      $this->display_title = $display_options['display_title'];
-    }
+  public function __construct(array $display_options = array()) {
+    $display_options += array(
+      'display_options' => array(),
+      'display_plugin' => NULL,
+      'id' => NULL,
+      'display_title' => '',
+      'position' => NULL,
+    );
+
+    $this->display_options = $display_options['display_options'];
+    $this->display_plugin = $display_options['display_plugin'];
+    $this->id = $display_options['id'];
+    $this->display_title = $display_options['display_title'];
   }
 
 }

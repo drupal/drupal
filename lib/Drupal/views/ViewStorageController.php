@@ -104,7 +104,6 @@ class ViewStorageController extends ConfigStorageController {
    * Overrides Drupal\config\ConfigStorageController::create().
    */
   public function create(array $values) {
-
     // If there is no information about displays available add at least the
     // default display.
     $values += array(
@@ -124,13 +123,22 @@ class ViewStorageController extends ConfigStorageController {
    *
    * @param Drupal\entity\StorableInterface $entity
    */
-  protected function attachDisplays($entity) {
+  protected function attachDisplays(StorableInterface $entity) {
     if (isset($entity->display) && is_array($entity->display)) {
       $displays = array();
+
       foreach ($entity->get('display') as $key => $options) {
+        $options += array(
+          'display_options' => array(),
+          'display_plugin' => NULL,
+          'id' => NULL,
+          'display_title' => '',
+          'position' => NULL,
+        );
         // Create a ViewDisplay object using the display options.
         $displays[$key] = new ViewDisplay($options);
       }
+
       $entity->set('display', $displays);
     }
   }

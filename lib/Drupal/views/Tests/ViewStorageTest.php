@@ -168,7 +168,7 @@ class ViewStorageTest extends WebTestBase {
     $created_loaded = reset($loaded_entities);
     $values_loaded = config('views.view.archive')->get();
 
-    $this->assertTrue(isset($created_loaded->display['default']->display_options), 'Make sure that the display options exists.');
+    $this->assertTrue(isset($created_loaded->display['default']->display_options), 'Make sure that the display options exist.');
     $this->assertEqual($created_loaded->display['default']->display_plugin, 'default', 'Make sure the right display plugin is set.');
 
     $this->assertEqual($values, $values_loaded, 'The loaded config is the same as the original loaded one.');
