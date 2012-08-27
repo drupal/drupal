@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Defintion of Views\taxonomy\Plugin\views\argument_validate\Term.
+ * Definition of Views\taxonomy\Plugin\views\argument_validator\Term.
  */
 
 
@@ -19,6 +19,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  *   id = "taxonomy_term",
  *   module = "taxonomy",
  *   title = @Translation("Taxonomy term")
+ *   )
  */
 class Term extends ArgumentValidatorPluginBase {
 
@@ -97,19 +98,14 @@ class Term extends ArgumentValidatorPluginBase {
         if (!is_numeric($argument)) {
           return FALSE;
         }
-
-        $query = db_select('taxonomy_term_data', 'td');
-        $query->leftJoin('taxonomy_vocabulary', 'tv', 'td.vid = tv.vid');
-        $query->fields('td');
-        $query->fields('tv', array('machine_name'));
-        $query->condition('td.tid', $argument);
-        $query->addTag('term_access');
-        $term = $query->execute()->fetchObject();
+        // @todo Deal with missing addTag('term access') that was removed when
+        // the db_select that was replaced by the entity_load.
+        $term = entity_load('taxonomy_term', $argument);
         if (!$term) {
           return FALSE;
         }
         $this->argument->validated_title = check_plain($term->name);
-        return empty($vocabularies) || !empty($vocabularies[$term->machine_name]);
+        return empty($vocabularies) || !empty($vocabularies[$term->vocabulary_machine_name]);
 
       case 'tids':
         // An empty argument is not a term so doesn't pass.
@@ -143,22 +139,15 @@ class Term extends ArgumentValidatorPluginBase {
 
         // if unverified tids left - verify them and cache results
         if (count($test)) {
-          $query = db_select('taxonomy_term_data', 'td');
-          $query->leftJoin('taxonomy_vocabulary', 'tv', 'td.vid = tv.vid');
-          $query->fields('td');
-          $query->fields('tv', array('machine_name'));
-          $query->condition('td.tid', $test);
-
-          $result = $query->execute();
-
+          $result = entity_load_multiple('taxonomy_term', $test);
           foreach ($result as $term) {
-            if ($vocabularies && empty($vocabularies[$term->machine_name])) {
-              $validated_cache[$term->tid] = FALSE;
+            if ($vocabularies && empty($vocabularies[$term->vocabulary_machine_name])) {
+              $validated_cache[$term->id()] = FALSE;
               return FALSE;
             }
 
-            $titles[] = $validated_cache[$term->tid] = check_plain($term->name);
-            unset($test[$term->tid]);
+            $titles[] = $validated_cache[$term->id()] = check_plain($term->name);
+            unset($test[$term->id()]);
           }
         }
 
@@ -171,24 +160,15 @@ class Term extends ArgumentValidatorPluginBase {
 
       case 'name':
       case 'convert':
-        $query = db_select('taxonomy_term_data', 'td');
-        $query->leftJoin('taxonomy_vocabulary', 'tv', 'td.vid = tv.vid');
-        $query->fields('td');
-        $query->fields('tv', array('machine_name'));
-        if (!empty($vocabularies)) {
-          $query->condition('tv.machine_name', $vocabularies);
-        }
+        $terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => $argument));
+        $term = reset($terms);
         if ($transform) {
-          $query->where("replace(td.name, ' ', '-') = :name", array(':name' => $argument));
+          $term->name = str_replace(' ', '-', $term->name);
         }
-        else {
-          $query->condition('td.name', $argument);
-        }
-        $term = $query->execute()->fetchObject();
 
-        if ($term && (empty($vocabularies) || !empty($vocabularies[$term->machine_name]))) {
+        if ($term && (empty($vocabularies) || !empty($vocabularies[$term->vocabulary_machine_name]))) {
           if ($type == 'convert') {
-            $this->argument->argument = $term->tid;
+            $this->argument->argument = $term->id();
           }
           $this->argument->validated_title = check_plain($term->name);
           return TRUE;
@@ -205,21 +185,15 @@ class Term extends ArgumentValidatorPluginBase {
     if ($type == 'convert') {
       $arg_keys = array_flip($args);
 
-      $query = db_select('taxonomy_term_data', 'td');
-      $query->condition('tid', $args);
-      $query->addField('td', 'tid', 'tid');
-      if (!empty($vocabularies)) {
-        $query->leftJoin('taxonomy_vocabulary', 'tv', 'td.vid = tv.vid');
-        $query->condition('tv.machine_name', $vocabularies);
-      }
+      $result = entity_load_multiple('taxonomy_term', $args);
+
       if ($transform) {
-        $query->addExpression("REPLACE(td.name, ' ', '-')", 'name');
-      }
-      else {
-        $query->addField('td', 'name', 'name');
+        foreach ($result as $term) {
+          $term->name = str_replace(' ', '-', $term->name);
+        }
       }
 
-      foreach ($query->execute()->fetchAllKeyed() as $tid => $term) {
+      foreach ($result as $tid => $term) {
         $args[$arg_keys[$tid]] = $term;
       }
     }
