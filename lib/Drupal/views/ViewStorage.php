@@ -11,10 +11,6 @@ use Drupal\config\ConfigurableBase;
 
 class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
 
-  public function __construct(array $values, $entity_type) {
-    parent::__construct($values, 'view');
-  }
-
   /**
    * Overrides Drupal\entity\StorableInterface::id().
    */
