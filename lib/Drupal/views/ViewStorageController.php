@@ -108,7 +108,11 @@ class ViewStorageController extends ConfigStorageController {
     // default display.
     $values += array(
       'display' => array(
-        'default' => array()
+        'default' => array(
+          'display_plugin' => 'default',
+          'id' => 'default',
+          'display_title' => 'Master',
+        ),
       )
     );
 
