@@ -172,6 +172,19 @@ class ViewStorageTest extends WebTestBase {
     $this->assertEqual($created_loaded->display['default']->display_plugin, 'default', 'Make sure the right display plugin is set.');
 
     $this->assertEqual($values, $values_loaded, 'The loaded config is the same as the original loaded one.');
+
+    // Check whether a display can be added and saved to a View.
+    $created = $controller->create($values);
+    $created->new_display('page', 'Test', 'test');
+
+    $new_display = $created->display['test'];
+    $this->assertTrue($new_display instanceof ViewDisplay, 'New page display "test" created.');
+
+    $created->set('name', 'archive_new_display');
+    $created->save();
+    $values = config('views.view.archive_new_display')->get();
+
+    $this->assertTrue(isset($values['display']['test']) && is_array($values['display']['test']), 'New display was saved.');
   }
 
 }
