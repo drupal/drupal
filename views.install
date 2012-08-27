@@ -34,22 +34,15 @@ function views_schema() {
         'current_version' => '3.0',
       ),
       'object' => 'Drupal\views\View',
-      // the callback to load the displays
       'load all callback' => 'views_get_all_views',
       'load callback' => 'views_storage_load',
       'save callback' => 'views_storage_save',
       'status callback' => 'views_storage_status',
-      'subrecords callback' => 'views_load_display_records',
-      // the variable that holds enabled/disabled status
-      'status' => 'views_defaults',
       // CRUD callbacks
       'create callback' => 'views_new_view',
       'save callback' => 'views_save_view',
       'delete callback' => 'views_delete_view',
       'export callback' => 'views_export_view',
-      'status callback' => 'views_export_status',
-      'cache defaults' => TRUE,
-      'default cache bin' => 'cache_views',
     ),
     'fields' => array(
       'vid' => array(

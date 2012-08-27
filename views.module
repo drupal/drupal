@@ -1767,48 +1767,6 @@ function views_move_table($table) {
 }
 
 /**
- * Export callback to load the view subrecords, which are the displays.
- */
-function views_load_display_records(&$views) {
-  // Get vids from the views.
-  $names = array();
-  foreach ($views as $view) {
-    if (empty($view->display)) {
-      $names[$view->vid] = $view->name;
-    }
-  }
-
-  if (empty($names)) {
-    return;
-  }
-
-  foreach (View::db_objects() as $key => $object) {
-    $table_name = "views_" . $key;
-    $object_name = 'Drupal\views\Views' . $object;
-    $result = db_query("SELECT * FROM {{$table_name}} WHERE vid IN (:vids) ORDER BY vid, position",
-      array(':vids' => array_keys($names)));
-
-    foreach ($result as $data) {
-      $object = new $object_name(FALSE);
-      $object->load_row($data);
-
-      // Because it can get complicated with this much indirection,
-      // make a shortcut reference.
-      $location = &$views[$names[$object->vid]]->$key;
-
-      // If we have a basic id field, load the item onto the view based on
-      // this ID, otherwise push it on.
-      if (!empty($object->id)) {
-        $location[$object->id] = $object;
-      }
-      else {
-        $location[] = $object;
-      }
-    }
-  }
-}
-
-/**
  * Export CRUD callback to save a view.
  */
 function views_save_view(&$view) {
