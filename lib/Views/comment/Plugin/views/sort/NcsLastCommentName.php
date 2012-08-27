@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Plugin;
  * @ingroup views_sort_handlers
  *
  * @Plugin(
- *   id = "ncs_last_comment_name",
+ *   id = "comment_ncs_last_comment_name",
  *   module = "comment"
  * )
  */
@@ -25,7 +25,6 @@ class NcsLastCommentName extends SortPluginBase {
 
   function query() {
     $this->ensure_my_table();
-    $join = new Join();
     $join = views_get_join();
     $join->construct('users', $this->table_alias, 'last_comment_uid', 'uid');
 
