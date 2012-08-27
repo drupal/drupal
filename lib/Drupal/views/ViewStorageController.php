@@ -66,7 +66,13 @@ class ViewStorageController extends ConfigStorageController {
       if ($property == 'display') {
         $displays = array();
         foreach ($entity->display as $key => $display) {
-          $displays[$key] = $display->display_options;
+          $displays[$key] = array(
+            'display_options' => $display->display_options,
+            'display_plugin' => $display->display_plugin,
+            'id' => $display->id,
+            'display_title' => $display->display_title,
+            'position' => isset($display->position) ? $display->position : 0,
+          );
         }
         $config->set('display', $displays);
       }
