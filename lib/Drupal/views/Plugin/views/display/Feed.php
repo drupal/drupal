@@ -23,7 +23,6 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Feed"),
  *   help = @Translation("Display the view as a feed, such as an RSS feed."),
  *   uses_hook_menu = TRUE,
- *   accept_attachments = FALSE,
  *   admin = @Translation("Feed")
  * )
  */
@@ -197,7 +196,7 @@ class Feed extends Page {
         $form['#title'] .= t('Attach to');
         $displays = array();
         foreach ($this->view->display as $display_id => $display) {
-          if (!empty($display->handler) && $display->handler->accept_attachments()) {
+          if (!empty($display->handler) && $display->handler->acceptAttachments()) {
             $displays[$display_id] = $display->display_title;
           }
         }

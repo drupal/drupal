@@ -24,8 +24,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Attachment"),
  *   help = @Translation("Attachments added to other displays to achieve multiple views in the same view."),
  *   theme = "views_view",
- *   contextual_links_locations = {""},
- *   accept_attachments = FALSE
+ *   contextual_links_locations = {""}
  * )
  */
 class Attachment extends DisplayPluginBase {
@@ -195,7 +194,7 @@ class Attachment extends DisplayPluginBase {
         $form['#title'] .= t('Attach to');
         $displays = array();
         foreach ($this->view->display as $display_id => $display) {
-          if (!empty($display->handler) && $display->handler->accept_attachments()) {
+          if (!empty($display->handler) && $display->handler->acceptAttachments()) {
             $displays[$display_id] = $display->display_title;
           }
         }

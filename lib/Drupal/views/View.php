@@ -1449,7 +1449,7 @@ class View extends ViewsDbObject {
       return;
     }
 
-    if (!$this->display_handler->accept_attachments()) {
+    if (!$this->display_handler->acceptAttachments()) {
       return;
     }
 

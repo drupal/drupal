@@ -78,6 +78,14 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   protected $usesMore = TRUE;
 
+  /**
+   * Whether the display allows attachments.
+   *
+   * @var bool
+   *   TRUE if the display can use attachments, or FALSE otherwise.
+   */
+  protected $usesAttachments = FALSE;
+
   function init(&$view, &$display, $options = NULL) {
     $this->view = &$view;
     $this->display = &$display;
@@ -306,10 +314,12 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Can this display accept_attachments?
+   * Determines whether this display can use attachments.
+   *
+   * @return bool
    */
-  function accept_attachments() {
-    if (empty($this->definition['accept_attachments'])) {
+  function acceptAttachments() {
+    if (!$this->usesAttachments()) {
       return FALSE;
     }
     if (!empty($this->view->argument) && $this->get_option('hide_attachment_summary')) {
@@ -320,6 +330,15 @@ abstract class DisplayPluginBase extends PluginBase {
       }
     }
     return TRUE;
+  }
+
+  /**
+   * Returns whether the display can use attachments.
+   *
+   * @return bool
+   */
+  function usesAttachments() {
+    return $this->usesAttachments;
   }
 
   /**
@@ -1144,7 +1163,7 @@ abstract class DisplayPluginBase extends PluginBase {
         'desc' => t('Change whether or not this display will use AJAX.'),
       );
     }
-    if (!empty($this->definition['accept_attachments'])) {
+    if ($this->usesAttachments()) {
       $options['hide_attachment_summary'] = array(
         'category' => 'other',
         'title' => t('Hide attachments in summary'),

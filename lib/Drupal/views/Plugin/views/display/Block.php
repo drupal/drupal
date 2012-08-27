@@ -22,11 +22,17 @@ use Drupal\Core\Annotation\Translation;
  *   theme = "views_view",
  *   uses_hook_block = TRUE,
  *   contextual_links_locations = {"block"},
- *   accept_attachments = TRUE,
  *   admin = @Translation("Block")
  * )
  */
 class Block extends DisplayPluginBase {
+
+  /**
+   * Whether the display allows attachments.
+   *
+   * @var bool
+   */
+  protected $usesAttachments = TRUE;
 
   function option_definition() {
     $options = parent::option_definition();

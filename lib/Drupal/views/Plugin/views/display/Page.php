@@ -22,11 +22,17 @@ use Drupal\Core\Annotation\Translation;
  *   uses_hook_menu = TRUE,
  *   contextual_links_locations = {"page"},
  *   theme = "views_view",
- *   accept_attachments = TRUE,
  *   admin = @Translation("Page")
  * )
  */
 class Page extends DisplayPluginBase {
+
+  /**
+   * Whether the display allows attachments.
+   *
+   * @var bool
+   */
+  protected $usesAttachments = TRUE;
 
   /**
    * The page display has a path.

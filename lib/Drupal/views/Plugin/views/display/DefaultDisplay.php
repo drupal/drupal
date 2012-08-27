@@ -20,11 +20,17 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Master"),
  *   help = @Translation("Default settings for this view."),
  *   theme = "views_view",
- *   no_ui = TRUE,
- *   accept_attachments = TRUE
+ *   no_ui = TRUE
  * )
  */
 class DefaultDisplay extends DisplayPluginBase {
+
+  /**
+   * Whether the display allows attachments.
+   *
+   * @var bool
+   */
+  protected $usesAttachments = TRUE;
 
   /**
    * Determine if this display is the 'default' display which contains
