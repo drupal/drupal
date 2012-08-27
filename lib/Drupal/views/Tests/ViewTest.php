@@ -177,10 +177,6 @@ class ViewTest extends ViewsSqlTest {
     $handler->display->display_options['fields']['created']['id'] = 'created';
     $handler->display->display_options['fields']['created']['table'] = 'node';
     $handler->display->display_options['fields']['created']['field'] = 'created';
-    /* Sort criterion: Content: In moderation */
-    $handler->display->display_options['sorts']['moderate']['id'] = 'moderate';
-    $handler->display->display_options['sorts']['moderate']['table'] = 'node';
-    $handler->display->display_options['sorts']['moderate']['field'] = 'moderate';
     /* Sort criterion: Content: Last comment author */
     $handler->display->display_options['sorts']['last_comment_name']['id'] = 'last_comment_name';
     $handler->display->display_options['sorts']['last_comment_name']['table'] = 'node_comment_statistics';
