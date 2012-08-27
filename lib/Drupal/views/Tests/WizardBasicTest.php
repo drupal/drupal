@@ -126,10 +126,11 @@ class WizardBasicTest extends WizardTestBase {
     $this->assertNoText($node2->label());
 
     // Check if the export screen works.
-    $this->drupalGet('admin/structure/views/view/' . $view3['name'] . '/export');
-    $this->assertRaw('$view = new Drupal\views\View();');
-    $this->assertRaw($view3['human_name']);
-    $this->assertRaw($view3['description']);
+    // @todo Remove this once the export is gone.
+    // $this->drupalGet('admin/structure/views/view/' . $view3['name'] . '/export');
+    // $this->assertRaw('$view = new Drupal\views\View(array(), "view");');
+    // $this->assertRaw($view3['human_name']);
+    // $this->assertRaw($view3['description']);
 
     // Make sure the listing page doesn't show disabled default views.
     $this->assertNoText('tracker', t('Default tracker view does not show on the listing page.'));

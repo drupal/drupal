@@ -70,20 +70,6 @@ class ViewTest extends ViewsSqlTest {
     $this->assertEqual($view->attachment_after, '');
   }
 
-  function testDelete() {
-    // Delete a database view
-    $view = $this->view_test_delete();
-    $view->save();
-    $view = views_get_view($view->name);
-    $view->delete();
-
-    $view = views_get_view($view->name);
-    $this->assertNotNull($view, 'Make sure that the old view is still in the static cache.');
-
-    $view = views_get_view($view->name, TRUE);
-    $this->assertNull($view, "Make sure that the old view gets cleared by the reset parameter.");
-  }
-
   function testValidate() {
     // Test a view with multiple displays.
     // Validating a view shouldn't change the active display.
