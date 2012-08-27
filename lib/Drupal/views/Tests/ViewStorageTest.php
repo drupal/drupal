@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Definition of Drupal\views\Tests\ViewsStorageTest.
+ * Definition of Drupal\views\Tests\ViewStorageTest.
  */
 
 namespace Drupal\views\Tests;
@@ -9,12 +9,12 @@ namespace Drupal\views\Tests;
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewStorageController;
 use Drupal\views\View;
-use Drupal\views\ViewsDisplay;
+use Drupal\views\ViewDisplay;
 
 /**
- * Tests that functionality of the the ViewsStorageController.
+ * Tests that functionality of the the ViewStorageController.
  */
-class ViewsStorageTest extends WebTestBase {
+class ViewStorageTest extends WebTestBase {
 
   /**
    * Properties that should be stored in the configuration.
@@ -80,7 +80,7 @@ class ViewsStorageTest extends WebTestBase {
 
     // Check each ViewDisplay object and confirm that it has the correct key.
     foreach ($view->display as $key => $display) {
-      $this->assertTrue($display instanceof ViewsDisplay, format_string('Display: @display is instance of ViewsDisplay.', array('@display' => $key)));
+      $this->assertTrue($display instanceof ViewDisplay, format_string('Display: @display is instance of ViewDisplay.', array('@display' => $key)));
       $this->assertEqual($key, $display->id, 'The display has the correct ID.');
       // Confirm that the display options array exists.
       $display_options = $display->display_options;
@@ -131,7 +131,7 @@ class ViewsStorageTest extends WebTestBase {
 
     // Test created displays.
     foreach ($created->display as $key => $display) {
-      $this->assertTrue($display instanceof ViewsDisplay, format_string('Display @display is an instance of ViewsDisplay.', array('@display' => $key)));
+      $this->assertTrue($display instanceof ViewDisplay, format_string('Display @display is an instance of ViewDisplay.', array('@display' => $key)));
     }
 
     // Save the newly created view, but modify the name.

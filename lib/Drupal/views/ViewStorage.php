@@ -78,7 +78,7 @@ class ViewStorage extends ConfigurableBase {
     );
 
     // Create the new display object
-    $display = new ViewsDisplay($display_options);
+    $display = new ViewDisplay($display_options);
 
     // Add the new display object to the view.
     $this->display[$id] = $display;

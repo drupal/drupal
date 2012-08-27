@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\ViewsDisplay.
+ * Definition of Drupal\views\ViewDisplay.
  */
 
 namespace Drupal\views;
@@ -13,7 +13,7 @@ namespace Drupal\views;
  * This is just the database storage mechanism, and isn't terribly important
  * to the behavior of the display at all.
  */
-class ViewsDisplay {
+class ViewDisplay {
 
   /**
    * The display handler itself, which has all the methods.

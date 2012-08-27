@@ -110,7 +110,7 @@ class ViewStorageController extends ConfigStorageController {
   }
 
   /**
-   * Attaches an array of ViewsDisplay objects to the view display property.
+   * Attaches an array of ViewDisplay objects to the view display property.
    *
    * @param Drupal\entity\StorableInterface $entity
    */
@@ -118,8 +118,8 @@ class ViewStorageController extends ConfigStorageController {
     if (isset($entity->display) && is_array($entity->display)) {
       $displays = array();
       foreach ($entity->get('display') as $key => $options) {
-        // Create a ViewsDisplay object using the display options.
-        $displays[$key] = new ViewsDisplay($options);
+        // Create a ViewDisplay object using the display options.
+        $displays[$key] = new ViewDisplay($options);
       }
       $entity->set('display', $displays);
     }
