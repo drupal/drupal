@@ -9,7 +9,7 @@ namespace Drupal\views;
 
 use Drupal\config\ConfigurableBase;
 
-class ViewStorage extends ConfigurableBase {
+class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
 
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, 'view');
@@ -20,6 +20,27 @@ class ViewStorage extends ConfigurableBase {
    */
   public function id() {
     return $this->name;
+  }
+
+  /**
+   * Implements Drupal\views\ViewStorageInterface::enable().
+   */
+  public function enable() {
+    $this->disabled = FALSE;
+  }
+
+  /**
+   * Implements Drupal\views\ViewStorageInterface::disable().
+   */
+  public function disable() {
+    $this->disabled = TRUE;
+  }
+
+  /**
+   * Implements Drupal\views\ViewStorageInterface::isEnabled().
+   */
+  public function isEnabled() {
+    return !$this->disabled;
   }
 
   /**
