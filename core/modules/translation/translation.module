@@ -413,10 +413,8 @@ function translation_remove_from_set($node) {
         'tnid' => 0,
         'translate' => 0,
       ));
-    if (db_query('SELECT COUNT(nid) FROM {node} WHERE nid <> :nid AND tnid = :tnid', array(':nid'  => $node->nid, ':tnid' => $node->tnid))->fetchField() == 1) {
-      // Apart from the node being deleted, only one node remains in the set:
-      // remove the set altogether
-
+    if (db_query('SELECT COUNT(*) FROM {node} WHERE tnid = :tnid', array(':tnid' => $node->tnid))->fetchField() == 1) {
+      // There is only one node left in the set: remove the set altogether.
       $query
         ->condition('tnid', $node->tnid)
         ->execute();

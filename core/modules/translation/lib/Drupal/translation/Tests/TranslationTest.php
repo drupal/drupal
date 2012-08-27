@@ -250,55 +250,6 @@ class TranslationTest extends WebTestBase {
   }
 
   /**
-   * Delete a basic page with a translation.
-   */
-  function testMultilanguageContentDelete() {
-    // Add Italian to have three items in the translation set.
-    $this->drupalLogin($this->admin_user);
-    $this->addLanguage('it');
-    $this->resetCaches();
-    $this->drupalLogin($this->translator);
-
-    // Create Basic page in English.
-    $node_title = $this->randomName();
-    $node_body = $this->randomName();
-    $nodes = array('en' => $this->createPage($node_title, $node_body, 'en'));
-
-    // Add Spanish translation.
-    $nodes['es'] = $this->createTranslation($nodes['en'], $this->randomName(), $this->randomName(), 'es');
-    // Reload the English node to get the updated tnid.
-    $nodes['en'] = node_load($nodes['en']->nid, NULL, TRUE);
-
-    // Add Italian translation.
-    // Use Spanish translation as source, rather than the original English one
-    // to check correct tnid handling in createTranslation().
-    $nodes['it'] = $this->createTranslation($nodes['es'], $this->randomName(), $this->randomName(), 'it');
-
-    // Delete the original translation source.
-    node_delete($nodes['en']->nid);
-
-    // Reload the remaining nodes.
-    $nodes['es'] = node_load($nodes['es']->nid, NULL, TRUE);
-    $nodes['it'] = node_load($nodes['it']->nid, NULL, TRUE);
-
-    // The new tnid is selected by the state of {node}.translate.
-    // As the original source node has been deleted, the new tnid could be
-    // generated from either remaining node.
-    $this->assertNotEqual($nodes['es']->tnid, 0, 'ES still in translation set.');
-    $this->assertNotEqual($nodes['it']->tnid, 0, 'IT still in translation set.');
-    $this->assertEqual($nodes['es']->tnid, $nodes['it']->tnid, 'ES and IT still in same translation set.');
-
-    // Delete the spanish node.
-    node_delete($nodes['es']->nid);
-
-    // Reload the italian node. This is the last one.
-    $nodes['it'] = node_load($nodes['it']->nid, NULL, TRUE);
-
-    // The tnid must be zero.
-    $this->assertEqual($nodes['it']->tnid, 0, 'Translation set is terminated.');
-  }
-
-  /**
    * Resets static caches to make the test code match the client-side behavior.
    */
   function resetCaches() {
@@ -347,7 +298,7 @@ class TranslationTest extends WebTestBase {
     }
     else {
       // It's installed. No need to do anything.
-      $this->assertTrue(TRUE, 'Language [' . $language_code . '] already installed.');
+      $this->assertTrue(true, 'Language [' . $language_code . '] already installed.');
     }
   }
 
@@ -413,11 +364,8 @@ class TranslationTest extends WebTestBase {
 
     // Check to make sure that translation was successful.
     $translation = $this->drupalGetNodeByTitle($title);
-    // Maybe the source node was not in translation set,
-    // or it is not the base node of the translation set.
-    $tnid = (empty($node->tnid) ? $node->nid : $node->tnid);
     $this->assertTrue($translation, t('Node found in database.'));
-    $this->assertTrue($translation->tnid == $tnid, 'Translation set id correctly stored.');
+    $this->assertTrue($translation->tnid == $node->nid, t('Translation set id correctly stored.'));
 
     return $translation;
   }
