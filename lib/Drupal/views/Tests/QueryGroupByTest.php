@@ -250,7 +250,7 @@ class QueryGroupByTest extends ViewsSqlTest {
     $this->assertTrue(strpos($view->build_info['query'], 'HAVING'), t('Make sure that HAVING is in the query'));
   }
 
-  function viewsGroupByCountViewOnlyFilters() {
+  public function viewsGroupByCountViewOnlyFilters() {
     $view = new View();
     $view->name = 'group_by_in_filters';
     $view->description = '';
@@ -270,7 +270,7 @@ class QueryGroupByTest extends ViewsSqlTest {
     $handler->display->display_options['pager']['type'] = 'some';
     $handler->display->display_options['style_plugin'] = 'default';
     $handler->display->display_options['row_plugin'] = 'fields';
-    /* Field: Nodo: Tipo */
+    /* Field: Node: Type */
     $handler->display->display_options['fields']['type']['id'] = 'type';
     $handler->display->display_options['fields']['type']['table'] = 'node';
     $handler->display->display_options['fields']['type']['field'] = 'type';
@@ -284,7 +284,7 @@ class QueryGroupByTest extends ViewsSqlTest {
     $handler->display->display_options['fields']['type']['hide_empty'] = 0;
     $handler->display->display_options['fields']['type']['empty_zero'] = 0;
     $handler->display->display_options['fields']['type']['link_to_node'] = 0;
-    /* Filtrar: Nodo: Nid */
+    /* Filter: Node: Nid */
     $handler->display->display_options['filters']['nid']['id'] = 'nid';
     $handler->display->display_options['filters']['nid']['table'] = 'node';
     $handler->display->display_options['filters']['nid']['field'] = 'nid';

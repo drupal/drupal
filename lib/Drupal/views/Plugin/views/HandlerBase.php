@@ -182,8 +182,11 @@ abstract class HandlerBase extends PluginBase {
       $this->view->init_query();
       if ($this->query) {
         $info = $this->query->get_aggregation_info();
-        if (!empty($info[$this->options['group_type']]['method']) && function_exists($info[$this->options['group_type']]['method'])) {
-          return $info[$this->options['group_type']]['method']($this->options['group_type'], $field);
+        if (!empty($info[$this->options['group_type']]['method'])) {
+          $method = $info[$this->options['group_type']]['method'];
+          if (method_exists($this->query, $method)) {
+            return $this->query->$method($this->options['group_type'], $field);
+          }
         }
       }
     }
@@ -311,7 +314,7 @@ abstract class HandlerBase extends PluginBase {
   function groupby_form(&$form, &$form_state) {
     $view = &$form_state['view'];
     $display_id = $form_state['display_id'];
-    $types = Views::views_object_types();
+    $types = View::views_object_types();
     $type = $form_state['type'];
     $id = $form_state['id'];
 
