@@ -817,7 +817,7 @@ function poll_view_results($node, $view_mode, $block = FALSE) {
   // Make sure that choices are ordered by their weight.
   uasort($node->choice, 'drupal_sort_weight');
 
-  // Count the votes and find the maximum
+  // Count the votes and find the maximum.
   $total_votes = 0;
   $max_votes = 0;
   foreach ($node->choice as $choice) {
