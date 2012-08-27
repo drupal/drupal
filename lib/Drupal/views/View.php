@@ -552,7 +552,7 @@ class View extends ViewsDbObject {
     if (empty($this->display[$display_id])) {
       $display_id = 'default';
       if (empty($this->display[$display_id])) {
-        vpr('set_display() called with invalid display id @display.', array('@display' => $display_id));
+        debug('set_display() called with invalid display ID @display.', array('@display' => $display_id));
         return FALSE;
       }
     }
@@ -1179,7 +1179,6 @@ class View extends ViewsDbObject {
         $this->pager->total_items = $this->total_rows;
         $this->pager->update_page_info();
       }
-      vpr('Used cached results');
     }
     else {
       $this->query->execute($this);

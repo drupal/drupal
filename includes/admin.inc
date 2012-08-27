@@ -5181,7 +5181,6 @@ function views_fetch_fields($base, $type, $grouping = FALSE) {
         }
       }
     }
-//    vsm('Views UI data build time: ' . (views_microtime() - $start) * 1000 . ' ms');
   }
 
   // If we have an array of base tables available, go through them

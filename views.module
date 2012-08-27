@@ -1328,7 +1328,7 @@ function views_get_handler($table, $field, $key, $override = NULL) {
   }
 
   // DEBUG -- identify missing handlers
-  vpr("Missing handler: @table @field @key", array('@table' => $table, '@field' => $field, '@key' => $key));
+  debug(t("Missing handler: @table @field @key", array('@table' => $table, '@field' => $field, '@key' => $key)));
   $broken = array(
     'title' => t('Broken handler @table.@field', array('@table' => $table, '@field' => $field)),
     'id' => 'broken',
@@ -1537,7 +1537,6 @@ function views_get_applicable_views($type) {
 
     if (empty($view->display)) {
       // Skip this view as it is broken.
-      vsm(t("Skipping broken view @view", array('@view' => $view->name)));
       continue;
     }
 
@@ -1798,84 +1797,6 @@ function views_export_view(&$view, $indent = '') {
 function views_export_status($view, $status) {
   ctools_export_set_object_status($view, $status);
   views_invalidate_cache();
-}
-
-// ------------------------------------------------------------------
-// Views debug helper functions
-
-/**
- * Provide debug output for Views.
- *
- * This relies on devel.module
- * or on the debug() function if you use a simpletest.
- *
- * @param $message
- *   The message/variable which should be debugged.
- *   This either could be
- *     * an array/object which is converted to pretty output
- *     * a translation source string which is used together with the parameter placeholders.
- *
- * @param $placeholder
- *   The placeholders which are used for the translation source string.
- */
-function views_debug($message, $placeholders = array()) {
-  if (!is_string($message)) {
-    $output = '<pre>' . var_export($message, TRUE) . '</pre>';
-  }
-  $config = config('views.settings');
-  if (module_exists('devel') && $config->get('debug.output') && user_access('access devel information')) {
-    $devel_region = $config->get('debug.region');
-    if ($devel_region == 'watchdog') {
-      $output = $message;
-      watchdog('views_logging', $output, $placeholders);
-    }
-    elseif ($devel_region == 'drupal_debug') {
-      $output = empty($output) ? t($message, $placeholders) : $output;
-      dd($output);
-    }
-    else {
-      $output = empty($output) ? t($message, $placeholders) : $output;
-      dpm($output);
-    }
-  }
-  elseif (isset($GLOBALS['drupal_test_info'])) {
-    $output = empty($output) ? t($message, $placeholders) : $output;
-    debug($output);
-  }
-}
-
-/**
- * Shortcut to views_debug()
- */
-function vpr($message, $placeholders = array()) {
-  views_debug($message, $placeholders);
-}
-
-/**
- * Debug messages
- */
-function vsm($message) {
-  if (module_exists('devel')) {
-    dpm($message);
-  }
-}
-
-function views_trace() {
-  $message = '';
-  foreach (debug_backtrace() as $item) {
-    if (!empty($item['file']) && !in_array($item['function'], array('vsm_trace', 'vpr_trace', 'views_trace'))) {
-      $message .= basename($item['file']) . ": " . (empty($item['class']) ? '' : ($item['class'] . '->')) . "$item[function] line $item[line]" . "\n";
-    }
-  }
-  return $message;
-}
-
-function vsm_trace() {
-  vsm(views_trace());
-}
-
-function vpr_trace() {
-  dpr(views_trace());
 }
 
 // ------------------------------------------------------------------

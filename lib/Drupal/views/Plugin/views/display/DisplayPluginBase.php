@@ -92,9 +92,6 @@ abstract class DisplayPluginBase extends PluginBase {
           $plugin->init($this->view, $this);
           $this->extender[$extender] = $plugin;
         }
-        else {
-          vpr('Invalid display extender @extender', array('@handler' => $extender));
-        }
       }
     }
 

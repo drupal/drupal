@@ -8,8 +8,8 @@
 namespace Drupal\views\Plugin\views\query;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
-use Exception;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -1191,10 +1191,6 @@ class Sql extends QueryPluginBase {
       $string .= $field['field'];
       $fieldname = (!empty($field['alias']) ? $field['alias'] : $string);
 
-      if (!empty($field['distinct'])) {
-        throw new Exception("Column-level distinct is not supported anymore.");
-      }
-
       if (!empty($field['count'])) {
         // Retained for compatibility
         $field['function'] = 'count';
@@ -1472,7 +1468,6 @@ class Sql extends QueryPluginBase {
 
       $start = microtime(TRUE);
 
-
       try {
         if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
           $view->pager->execute_count_query($count_query);
@@ -1501,13 +1496,13 @@ class Sql extends QueryPluginBase {
           $view->total_rows = $view->pager->get_total_items();
         }
       }
-      catch (Exception $e) {
+      catch (DatabaseExceptionWrapper $e) {
         $view->result = array();
         if (!empty($view->live_preview)) {
           drupal_set_message($e->getMessage(), 'error');
         }
         else {
-          vpr('Exception in @human_name[@view_name]: @message', array('@human_name' => $view->human_name, '@view_name' => $view->name, '@message' => $e->getMessage()));
+          throw new DatabaseExceptionWrapper(format_string('Exception in @human_name[@view_name]: @message', array('@human_name' => $view->human_name, '@view_name' => $view->name, '@message' => $e->getMessage())));
         }
       }
 
