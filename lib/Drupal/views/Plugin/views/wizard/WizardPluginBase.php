@@ -1065,7 +1065,7 @@ abstract class WizardPluginBase implements WizardInterface {
    * @return
    *   The created view object.
    *
-   * @throws ViewsWizardException
+   * @throws Drupal\views\Plugin\views\wizard\WizardException
    */
   function create_view($form, &$form_state) {
     $view = $this->retrieve_validated_view($form, $form_state);

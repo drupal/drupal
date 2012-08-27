@@ -10,6 +10,7 @@ use Drupal\views\TempStore\UserTempStore;
 use Drupal\views\View;
 use Drupal\views\Analyzer;
 use Drupal\views\Plugin\Type\ViewsPluginManager;
+use Drupal\views\Plugin\views\wizard\WizardException;
 
 /**
  * Create an array of Views admin CSS for adding or attaching.
@@ -672,7 +673,7 @@ function views_ui_add_form_save_submit($form, &$form_state) {
   try {
     $view = $form_state['wizard_instance']->create_view($form, $form_state);
   }
-  catch (ViewsWizardException $e) {
+  catch (WizardException $e) {
     drupal_set_message($e->getMessage(), 'error');
     $form_state['redirect'] = 'admin/structure/views';
   }
@@ -699,7 +700,7 @@ function views_ui_add_form_store_edit_submit($form, &$form_state) {
   try {
     $view = $form_state['wizard_instance']->create_view($form, $form_state);
   }
-  catch (ViewsWizardException $e) {
+  catch (WizardException $e) {
     drupal_set_message($e->getMessage(), 'error');
     $form_state['redirect'] = 'admin/structure/views';
   }
