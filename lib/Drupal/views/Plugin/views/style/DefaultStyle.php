@@ -40,13 +40,6 @@ class DefaultStyle extends StylePluginBase {
    */
   protected $usesRowClass = TRUE;
 
-  /**
-   * Set default options
-   */
-  function options(&$options) {
-    parent::options($options);
-  }
-
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
   }

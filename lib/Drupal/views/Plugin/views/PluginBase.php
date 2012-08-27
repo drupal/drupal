@@ -93,23 +93,12 @@ abstract class PluginBase extends ComponentPluginBase {
   function construct() { $this->set_default_options(); }
 
   /**
-   * Set default options on this object. Called by the constructor in a
-   * complex chain to deal with backward compatibility.
-   *
-   * @deprecated since views2
-   */
-  function options(&$options) { }
-
-  /**
    * Set default options.
    * For backward compatibility, it sends the options array; this is a
    * feature that will likely disappear at some point.
    */
   function set_default_options() {
     $this->_set_option_defaults($this->options, $this->option_definition());
-
-    // Retained for complex defaults plus backward compatibility.
-    $this->options($this->options);
   }
 
   function _set_option_defaults(&$storage, $options, $level = 0) {
