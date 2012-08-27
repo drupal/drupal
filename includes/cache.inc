@@ -91,7 +91,7 @@ function _views_data_process_entity_types(&$data) {
 function _views_fetch_plugin_data($type = NULL, $id = NULL, $reset = FALSE) {
   if (!$type && !$id) {
     $plugins = array();
-    $plugin_types = array('access','area', 'argument', 'argument_default', 'argument_validator', 'cache', 'display_extender', 'display', 'exposed_form', 'field', 'filter', 'join', 'localization', 'pager', 'query', 'relationship', 'row', 'sort', 'style', 'wizard');
+    $plugin_types = array('access', 'area', 'argument', 'argument_default', 'argument_validator', 'cache', 'display_extender', 'display', 'exposed_form', 'field', 'filter', 'join', 'localization', 'pager', 'query', 'relationship', 'row', 'sort', 'style', 'wizard');
     foreach ($plugin_types as $plugin_type) {
       $manager = new ViewsPluginManager($plugin_type);
       $plugins[$plugin_type] = $manager->getDefinitions();
