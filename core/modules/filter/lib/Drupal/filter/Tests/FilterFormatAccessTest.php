@@ -103,6 +103,27 @@ class FilterFormatAccessTest extends WebTestBase {
     $this->assertTrue(isset($options[$this->allowed_format->format]), t('The allowed text format appears as an option when adding a new node.'));
     $this->assertFalse(isset($options[$this->disallowed_format->format]), t('The disallowed text format does not appear as an option when adding a new node.'));
     $this->assertTrue(isset($options[filter_fallback_format()]), t('The fallback format appears as an option when adding a new node.'));
+
+    // Check regular user access to the filter tips pages.
+    $this->drupalGet('filter/tips/' . $this->allowed_format->format);
+    $this->assertResponse(200);
+    $this->drupalGet('filter/tips/' . $this->disallowed_format->format);
+    $this->assertResponse(403);
+    $this->drupalGet('filter/tips/' . filter_fallback_format());
+    $this->assertResponse(200);
+    $this->drupalGet('filter/tips/invalid-format');
+    $this->assertResponse(404);
+
+    // Check admin user access to the filter tips pages.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('filter/tips/' . $this->allowed_format->format);
+    $this->assertResponse(200);
+    $this->drupalGet('filter/tips/' . $this->disallowed_format->format);
+    $this->assertResponse(200);
+    $this->drupalGet('filter/tips/' . filter_fallback_format());
+    $this->assertResponse(200);
+    $this->drupalGet('filter/tips/invalid-format');
+    $this->assertResponse(404);
   }
 
   function testFormatRoles() {
