@@ -1742,17 +1742,9 @@ function views_view_is_disabled($view) {
  *   A reference to the $view object. Use $reset if you're sure you want
  *   a fresh one.
  */
-function views_get_view($name, $reset = FALSE) {
-  if ($reset) {
-    $cache = &drupal_static('ctools_export_load_object');
-    if (isset($cache['views_view'][$name])) {
-      unset($cache['views_view'][$name]);
-    }
-  }
+function views_get_view($name) {
 
-  // @todo replace with http://drupal.org/node/1741154.
-  ctools_include('export');
-  $view = ctools_export_crud_load('views_view', $name);
+  $view = entity_load('view', $name);
   if ($view) {
     $view->update();
     return $view->clone_view();
