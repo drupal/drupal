@@ -52,7 +52,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('language' => $language_interface));
+      $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, t('Statistics token %token replaced.', array('%token' => $input)));
     }
   }

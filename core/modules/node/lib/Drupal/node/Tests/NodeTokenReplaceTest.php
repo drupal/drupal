@@ -66,7 +66,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('language' => $language_interface));
+      $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, t('Sanitized node token %token replaced.', array('%token' => $input)));
     }
 
@@ -78,7 +78,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:author:name]'] = user_format_name($account);
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('node' => $node), array('language' => $language_interface, 'sanitize' => FALSE));
+      $output = token_replace($input, array('node' => $node), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, t('Unsanitized node token %token replaced.', array('%token' => $input)));
     }
   }

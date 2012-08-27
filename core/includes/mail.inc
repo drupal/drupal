@@ -53,7 +53,7 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *
  *   function example_mail($key, &$message, $params) {
  *     $data['user'] = $params['account'];
- *     $options['language'] = $message['language'];
+ *     $options['langcode'] = $message['language'];
  *     user_mail_tokens($variables, $data, $options);
  *     switch($key) {
  *       case 'notice':

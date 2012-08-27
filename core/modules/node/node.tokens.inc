@@ -91,12 +91,12 @@ function node_token_info() {
  */
 function node_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $url_options = array('absolute' => TRUE);
-  if (isset($options['language'])) {
-    $url_options['language'] = $options['language'];
-    $language_code = $options['language']->langcode;
+  if (isset($options['langcode'])) {
+    $url_options['language'] = language_load($options['langcode']);
+    $langcode = $options['langcode'];
   }
   else {
-    $language_code = NULL;
+    $langcode = NULL;
   }
   $sanitize = !empty($options['sanitize']);
 
@@ -135,10 +135,10 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'body':
         case 'summary':
-          if ($items = field_get_items('node', $node, 'body', $language_code)) {
+          if ($items = field_get_items('node', $node, 'body', $langcode)) {
             $column = ($name == 'body') ? 'value' : 'summary';
             $instance = field_info_instance('node', 'body', $node->type);
-            $field_langcode = field_language('node', $node, 'body', $language_code);
+            $field_langcode = field_language('node', $node, 'body', $langcode);
             $replacements[$original] = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], $column) : $items[0][$column];
           }
           break;
@@ -163,11 +163,11 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'created':
-          $replacements[$original] = format_date($node->created, 'medium', '', NULL, $language_code);
+          $replacements[$original] = format_date($node->created, 'medium', '', NULL, $langcode);
           break;
 
         case 'changed':
-          $replacements[$original] = format_date($node->changed, 'medium', '', NULL, $language_code);
+          $replacements[$original] = format_date($node->changed, 'medium', '', NULL, $langcode);
           break;
       }
     }

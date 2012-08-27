@@ -274,31 +274,31 @@ class TranslationTest extends WebTestBase {
   /**
    * Installs the specified language, or enables it if it is already installed.
    *
-   * @param $language_code
+   * @param $langcode
    *   The language code to check.
    */
-  function addLanguage($language_code) {
+  function addLanguage($langcode) {
     // Check to make sure that language has not already been installed.
     $this->drupalGet('admin/config/regional/language');
 
-    if (strpos($this->drupalGetContent(), 'languages[' . $language_code . ']') === FALSE) {
+    if (strpos($this->drupalGetContent(), 'languages[' . $langcode . ']') === FALSE) {
       // Doesn't have language installed so add it.
       $edit = array();
-      $edit['predefined_langcode'] = $language_code;
+      $edit['predefined_langcode'] = $langcode;
       $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
       // Make sure we are not using a stale list.
       drupal_static_reset('language_list');
       $languages = language_list();
-      $this->assertTrue(array_key_exists($language_code, $languages), t('Language was installed successfully.'));
+      $this->assertTrue(array_key_exists($langcode, $languages), t('Language was installed successfully.'));
 
-      if (array_key_exists($language_code, $languages)) {
-        $this->assertRaw(t('The language %language has been created and can now be used.', array('%language' => $languages[$language_code]->name)), t('Language has been created.'));
+      if (array_key_exists($langcode, $languages)) {
+        $this->assertRaw(t('The language %language has been created and can now be used.', array('%language' => $languages[$langcode]->name)), t('Language has been created.'));
       }
     }
     else {
       // It's installed. No need to do anything.
-      $this->assertTrue(true, 'Language [' . $language_code . '] already installed.');
+      $this->assertTrue(true, 'Language [' . $langcode . '] already installed.');
     }
   }
 

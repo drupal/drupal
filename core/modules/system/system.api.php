@@ -3754,12 +3754,12 @@ function hook_url_outbound_alter(&$path, &$options, $original_path) {
  */
 function hook_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $url_options = array('absolute' => TRUE);
-  if (isset($options['language'])) {
-    $url_options['language'] = $options['language'];
-    $language_code = $options['language']->langcode;
+  if (isset($options['langcode'])) {
+    $url_options['language'] = language_load($options['langcode']);
+    $langcode = $options['langcode'];
   }
   else {
-    $language_code = NULL;
+    $langcode = NULL;
   }
   $sanitize = !empty($options['sanitize']);
 
@@ -3790,7 +3790,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'created':
-          $replacements[$original] = format_date($node->created, 'medium', '', NULL, $language_code);
+          $replacements[$original] = format_date($node->created, 'medium', '', NULL, $langcode);
           break;
       }
     }
@@ -3827,12 +3827,12 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
 function hook_tokens_alter(array &$replacements, array $context) {
   $options = $context['options'];
 
-  if (isset($options['language'])) {
-    $url_options['language'] = $options['language'];
-    $language_code = $options['language']->langcode;
+  if (isset($options['langcode'])) {
+    $url_options['language'] = language_load($options['langcode']);
+    $langcode = $options['langcode'];
   }
   else {
-    $language_code = NULL;
+    $langcode = NULL;
   }
   $sanitize = !empty($options['sanitize']);
 
@@ -3842,7 +3842,7 @@ function hook_tokens_alter(array &$replacements, array $context) {
     // Alter the [node:title] token, and replace it with the rendered content
     // of a field (field_title).
     if (isset($context['tokens']['title'])) {
-      $title = field_view_field('node', $node, 'field_title', 'default', $language_code);
+      $title = field_view_field('node', $node, 'field_title', 'default', $langcode);
       $replacements[$context['tokens']['title']] = drupal_render($title);
     }
   }

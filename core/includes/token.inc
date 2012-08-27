@@ -59,7 +59,7 @@
  * @param $options
  *   (optional) A keyed array of settings and flags to control the token
  *   replacement process. Supported options are:
- *   - language: A language object to be used when generating locale-sensitive
+ *   - langcode: A language code to be used when generating locale-sensitive
  *     tokens.
  *   - callback: A callback function that will be used to post-process the array
  *     of token replacements after they are generated. For example, a module
@@ -154,7 +154,7 @@ function token_scan($text) {
  * @param $options
  *   (optional) A keyed array of settings and flags to control the token
  *   replacement process. Supported options are:
- *   - language: A language object to be used when generating locale-sensitive
+ *   - langcode: A language code to be used when generating locale-sensitive
  *     tokens.
  *   - callback: A callback function that will be used to post-process the
  *     array of token replacements after they are generated. Can be used when

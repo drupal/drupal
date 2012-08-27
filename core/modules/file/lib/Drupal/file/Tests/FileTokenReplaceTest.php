@@ -65,7 +65,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('file' => $file), array('language' => $language_interface));
+      $output = token_replace($input, array('file' => $file), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, t('Sanitized file token %token replaced.', array('%token' => $input)));
     }
 
@@ -76,7 +76,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:size]'] = format_size($file->filesize);
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('file' => $file), array('language' => $language_interface, 'sanitize' => FALSE));
+      $output = token_replace($input, array('file' => $file), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, t('Unsanitized file token %token replaced.', array('%token' => $input)));
     }
   }

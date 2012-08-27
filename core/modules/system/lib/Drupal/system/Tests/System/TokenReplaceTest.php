@@ -47,13 +47,13 @@ class TokenReplaceTest extends WebTestBase {
     $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language_interface->langcode);
 
     // Test that the clear parameter cleans out non-existent tokens.
-    $result = token_replace($source, array('node' => $node), array('language' => $language_interface, 'clear' => TRUE));
+    $result = token_replace($source, array('node' => $node), array('langcode' => $language_interface->langcode, 'clear' => TRUE));
     $result = $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens cleared out.');
 
     // Test without using the clear parameter (non-existent token untouched).
     $target .= '[user:name]';
     $target .= '[bogus:token]';
-    $result = token_replace($source, array('node' => $node), array('language' => $language_interface));
+    $result = token_replace($source, array('node' => $node), array('langcode' => $language_interface->langcode));
     $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens ignored.');
 
     // Check that the results of token_generate are sanitized properly. This does NOT
@@ -95,7 +95,7 @@ class TokenReplaceTest extends WebTestBase {
     foreach ($tests as $test) {
       $input = $test['prefix'] . '[site:name]' . $test['suffix'];
       $expected = $test['prefix'] . 'Drupal' . $test['suffix'];
-      $output = token_replace($input, array(), array('language' => $language_interface));
+      $output = token_replace($input, array(), array('langcode' => $language_interface->langcode));
       $this->assertTrue($output == $expected, t('Token recognized in string %string', array('%string' => $input)));
     }
   }
@@ -129,7 +129,7 @@ class TokenReplaceTest extends WebTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array(), array('language' => $language_interface));
+      $output = token_replace($input, array(), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, t('Sanitized system site information token %token replaced.', array('%token' => $input)));
     }
 
@@ -138,7 +138,7 @@ class TokenReplaceTest extends WebTestBase {
     $tests['[site:slogan]'] = config('system.site')->get('slogan');
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array(), array('language' => $language_interface, 'sanitize' => FALSE));
+      $output = token_replace($input, array(), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, t('Unsanitized system site information token %token replaced.', array('%token' => $input)));
     }
   }
@@ -165,7 +165,7 @@ class TokenReplaceTest extends WebTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
 
     foreach ($tests as $input => $expected) {
-      $output = token_replace($input, array('date' => $date), array('language' => $language_interface));
+      $output = token_replace($input, array('date' => $date), array('langcode' => $language_interface->langcode));
       $this->assertEqual($output, $expected, t('Date token %token replaced.', array('%token' => $input)));
     }
   }

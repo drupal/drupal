@@ -40,12 +40,12 @@ function poll_token_info() {
  */
 function poll_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $sanitize = !empty($options['sanitize']);
-  if (isset($options['language'])) {
-    $url_options['language'] = $options['language'];
-    $language_code = $options['language']->langcode;
+  if (isset($options['langcode'])) {
+    $url_options['language'] = language_load($options['langcode']);
+    $langcode = $options['langcode'];
   }
   else {
-    $language_code = NULL;
+    $langcode = NULL;
   }
 
   $replacements = array();
@@ -97,7 +97,7 @@ function poll_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'poll-duration':
-          $replacements[$original] = format_interval($node->runtime, 1, $language_code);
+          $replacements[$original] = format_interval($node->runtime, 1, $langcode);
           break;
       }
     }
