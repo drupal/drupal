@@ -17,6 +17,8 @@ class ViewStorageController extends ConfigStorageController {
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     foreach ($queried_entities as $id => $entity) {
+      // @todo This property is left in for CTools export UI.
+      $entity->type = t('Normal');
       $this->attachDisplays($entity);
     }
   }
