@@ -1507,9 +1507,7 @@ function views_get_all_templates() {
  *   it can be successfully saved.
  */
 function views_new_view() {
-  $view = new View();
-  $view->vid = 'new';
-  $view->add_display('default');
+  $view = entity_create('view', array());
 
   return $view;
 }

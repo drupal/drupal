@@ -104,7 +104,17 @@ class ViewStorageController extends ConfigStorageController {
    * Overrides Drupal\config\ConfigStorageController::create().
    */
   public function create(array $values) {
+
+    // If there is no information about displays available add at least the
+    // default display.
+    $values += array(
+      'display' => array(
+        'default' => array()
+      )
+    );
+
     $entity = parent::create($values);
+
     $this->attachDisplays($entity);
     return $entity;
   }
