@@ -380,13 +380,14 @@ class Full extends PagerPluginBase {
       // Calculate and set the count of available pages.
       $pager_total[$this->options['id']] = $this->get_pager_total();
 
+      // @todo Use set_current_page() here: http://drupal.org/node/1758766
+      if ($this->current_page >= $pager_total[$this->options['id']]) {
+        // Pages are numbered from 0 so if there are 10 pages, the last page is 9.
+        $this->current_page = $pager_total[$this->options['id']] - 1;
+      }
       // See if the requested page was within range:
       if ($this->current_page < 0) {
         $this->current_page = 0;
-      }
-      elseif ($this->current_page >= $pager_total[$this->options['id']]) {
-        // Pages are numbered from 0 so if there are 10 pages, the last page is 9.
-        $this->current_page = $pager_total[$this->options['id']] - 1;
       }
 
       // Put this number in to guarantee that we do not generate notices when the pager
