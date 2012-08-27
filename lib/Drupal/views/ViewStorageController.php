@@ -95,6 +95,9 @@ class ViewStorageController extends ConfigStorageController {
       $this->invokeHook('insert', $entity);
     }
 
+    // Clear caches.
+    views_invalidate_cache();
+
     unset($entity->original);
 
     return $return;
