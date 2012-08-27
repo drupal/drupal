@@ -90,7 +90,7 @@ class User extends ArgumentValidatorPluginBase {
     }
     else {
       if ($type == 'name' || $type == 'either') {
-        $name = !empty($GLOBALS['user']->name) ? $GLOBALS['user']->name : variable_get('anonymous', t('Anonymous'));
+        $name = !empty($GLOBALS['user']->name) ? $GLOBALS['user']->name : config('user.settings')->get('anonymous');
         if ($argument == $name) {
           $account = clone $GLOBALS['user'];
         }

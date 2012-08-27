@@ -25,7 +25,7 @@ class UserUid extends ArgumentPluginBase {
 
   function title() {
     if (!$this->argument) {
-      $title = variable_get('anonymous', t('Anonymous'));
+      $title = config('user.settings')->get('anonymous');
     }
     else {
       $title = db_query('SELECT u.name FROM {users} u WHERE u.uid = :uid', array(':uid' => $this->argument))->fetchField();

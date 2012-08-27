@@ -30,7 +30,7 @@ class Uid extends Numeric {
    */
   function title_query() {
     if (!$this->argument) {
-      return array(variable_get('anonymous', t('Anonymous')));
+      return array(config('user.settings')->get('anonymous'));
     }
 
     $titles = array();

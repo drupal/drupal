@@ -45,7 +45,7 @@ class HandlerFieldUserNameTest extends ViewsSqlTest {
     $this->assertIdentical($render, $username, 'If the user is not linked the username should be printed out for a normal user.');
 
     $view->result[0]->uid = 0;
-    $anon_name = variable_get('anonymous', t('Anonymous'));
+    $anon_name = config('user.settings')->get('anonymous');
     $view->result[0]->users_name = '';
     $render = $view->field['name']->advanced_render($view->result[0]);
     $this->assertIdentical($render, $anon_name , 'For user0 it should use the default anonymous name by default.');
