@@ -192,6 +192,28 @@ class ViewStorageTest extends WebTestBase {
     $values = config('views.view.archive_new_display')->get();
 
     $this->assertTrue(isset($values['display']['test']) && is_array($values['display']['test']), 'New display was saved.');
+
+    // Test a View can be enabled and disabled again (with a new view).
+    $load = $controller->load(array('frontpage'));
+    $view = reset($load);
+
+    // The view should already be disabled.
+    $view->enable();
+    $this->assertTrue($view->isEnabled(), 'A view has been enabled.');
+
+    // Check the saved values.
+    $view->save();
+    $config = config('views.view.frontpage')->get();
+    $this->assertFalse($config['disabled'], 'The changed disabled property was saved.');
+
+    // Disable the view.
+    $view->disable();
+    $this->assertFalse($view->isEnabled(), 'A view has been disabled.');
+
+    // Check the saved values.
+    $view->save();
+    $config = config('views.view.frontpage')->get();
+    $this->assertTrue($config['disabled'], 'The changed disabled property was saved.');
   }
 
 }
