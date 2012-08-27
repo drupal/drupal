@@ -57,7 +57,7 @@ class UserTestCase extends ViewsSqlTest {
   }
 
   function test_view_user_relationship() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_user_relationship';
     $view->description = '';
     $view->tag = 'default';

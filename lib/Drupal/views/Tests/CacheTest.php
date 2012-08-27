@@ -31,7 +31,7 @@ class CacheTest extends ViewsSchemaTestBase {
    */
   protected function getBasicView() {
     // Create the basic view.
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_view';
     $view->add_display('default');
     $view->base_table = 'views_test';

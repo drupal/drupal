@@ -11,7 +11,7 @@
 function node_views_default_views() {
   $views = array();
 
-  $view = new Drupal\views\View();
+  $view = new Drupal\views\View(array(), 'view');
   $view->name = 'archive';
   $view->description = 'Display a list of months that link to content for that month.';
   $view->tag = 'default';

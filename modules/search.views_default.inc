@@ -11,7 +11,7 @@
 function search_views_default_views() {
   $views = array();
 
-  $view = new Drupal\views\View();
+  $view = new Drupal\views\View(array(), 'view');
   $view->name = 'backlinks';
   $view->description = 'Displays a list of nodes that link to the node, using the search backlinks table.';
   $view->tag = 'default';

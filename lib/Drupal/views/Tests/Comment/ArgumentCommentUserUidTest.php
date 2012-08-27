@@ -74,7 +74,7 @@ class ArgumentCommentUserUidTest extends ViewsSqlTest {
   }
 
   function view_comment_user_uid() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_comment_user_uid';
     $view->description = '';
     $view->tag = 'default';

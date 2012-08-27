@@ -96,7 +96,7 @@ class ArgumentDefaultTest extends ViewsSchemaTestBase {
   //function testArgumentDefaultNode() {}
 
   function view_argument_default_fixed() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_argument_default_fixed';
     $view->description = '';
     $view->tag = '';

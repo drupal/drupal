@@ -155,7 +155,7 @@ class FilterDateTest extends ViewsSqlTest {
   }
 
   function views_test_between() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_filter_date_between';
     $view->description = '';
     $view->tag = '';

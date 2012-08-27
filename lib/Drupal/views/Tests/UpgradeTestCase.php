@@ -119,7 +119,7 @@ class UpgradeTestCase extends ViewsSchemaTestBase {
   }
 
   public function viewsMovedToField() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_views_move_to_field';
     $view->description = '';
     $view->tag = '';
@@ -140,7 +140,7 @@ class UpgradeTestCase extends ViewsSchemaTestBase {
   }
 
   public function viewsMovedToHandler() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_views_move_to_handler';
     $view->description = '';
     $view->tag = '';
@@ -165,7 +165,7 @@ class UpgradeTestCase extends ViewsSchemaTestBase {
   }
 
   public function viewsMovedToTable() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_views_move_to_table';
     $view->description = '';
     $view->tag = '';
@@ -187,7 +187,7 @@ class UpgradeTestCase extends ViewsSchemaTestBase {
 
   protected function viewUpgradeImport() {
     $import = '
-      $view = new Drupal\views\View();
+      $view = new Drupal\views\View(array(), "view");
       $view->name = "comments_recent";
       $view->description = "Contains a block and a page to list recent comments; the block will automatically link to the page, which displays the comment body as well as a link to the node.";
       $view->tag = "default";

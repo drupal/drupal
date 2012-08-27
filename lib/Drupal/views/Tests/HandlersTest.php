@@ -47,7 +47,9 @@ class HandlersTest extends ViewsSchemaTestBase {
     $empty_stdclass->operator = 'or';
     $empty_stdclass->value = array();
 
+    views_include('handlers');
     $null = NULL;
+
     // check defaults
     $this->assertEqual($empty_stdclass, views_break_phrase_string('', $null));
 

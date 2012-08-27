@@ -142,7 +142,7 @@ class TranslatableTest extends ViewsSqlTest {
   }
 
   public function view_unpack_translatable() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'view_unpack_translatable';
     $view->description = '';
     $view->tag = '';

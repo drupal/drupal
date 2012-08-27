@@ -88,7 +88,7 @@ class UserArgumentValidate extends ViewsSqlTest {
   }
 
   function view_argument_validate_user($argtype) {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'view_argument_validate_user';
     $view->description = '';
     $view->tag = '';

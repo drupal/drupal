@@ -72,7 +72,7 @@ class QueryGroupByTest extends ViewsSqlTest {
   //}
 
   public function viewsAggregateCountView() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'aggregate_count';
     $view->description = '';
     $view->tag = '';
@@ -157,7 +157,7 @@ class QueryGroupByTest extends ViewsSqlTest {
   }
 
   function viewsGroupByViewHelper($group_by) {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'group_by_count';
     $view->description = '';
     $view->tag = '';
@@ -251,7 +251,7 @@ class QueryGroupByTest extends ViewsSqlTest {
   }
 
   public function viewsGroupByCountViewOnlyFilters() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'group_by_in_filters';
     $view->description = '';
     $view->tag = '';

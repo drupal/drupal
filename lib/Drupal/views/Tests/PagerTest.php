@@ -96,7 +96,7 @@ class PagerTest extends ViewsSqlTest {
   }
 
   public function viewsStorePagerSettings() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_store_pager_settings';
     $view->description = '';
     $view->tag = '';
@@ -155,7 +155,7 @@ class PagerTest extends ViewsSqlTest {
   }
 
   public function viewsPagerNoLimit() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_pager_none';
     $view->description = '';
     $view->tag = '';
@@ -231,7 +231,7 @@ class PagerTest extends ViewsSqlTest {
   }
 
   public function viewsPagerLimit() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_pager_some';
     $view->description = '';
     $view->tag = '';
@@ -315,7 +315,7 @@ class PagerTest extends ViewsSqlTest {
   }
 
   function viewPagerFullZeroItemsPerPage() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'view_pager_full_zero_items_per_page';
     $view->description = '';
     $view->tag = '';
@@ -355,7 +355,7 @@ class PagerTest extends ViewsSqlTest {
   }
 
   function viewsPagerFull() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_pager_full';
     $view->description = '';
     $view->tag = '';
@@ -381,7 +381,7 @@ class PagerTest extends ViewsSqlTest {
   }
 
   function viewsPagerFullFields() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_pager_full';
     $view->description = '';
     $view->tag = '';

@@ -62,7 +62,7 @@ class ArgumentStringTest extends ViewsSqlTest {
    * @return Drupal\views\View
    */
   function viewGlossary() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_glossary';
     $view->description = '';
     $view->tag = 'default';

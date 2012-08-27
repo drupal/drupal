@@ -70,7 +70,7 @@ class RelationshipNodeTermDataTest extends ViewsSqlTest {
   }
 
   function view_taxonomy_node_term_data() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_taxonomy_node_term_data';
     $view->description = '';
     $view->tag = '';

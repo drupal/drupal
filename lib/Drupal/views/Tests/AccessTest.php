@@ -142,7 +142,7 @@ class AccessTest extends ViewsSchemaTestBase {
   }
 
   function view_access_none() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_access_none';
     $view->description = '';
     $view->tag = '';
@@ -165,7 +165,7 @@ class AccessTest extends ViewsSchemaTestBase {
   }
 
   function view_access_perm() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_access_perm';
     $view->description = '';
     $view->tag = '';
@@ -189,7 +189,7 @@ class AccessTest extends ViewsSchemaTestBase {
   }
 
   function view_access_role() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_access_role';
     $view->description = '';
     $view->tag = '';
@@ -215,7 +215,7 @@ class AccessTest extends ViewsSchemaTestBase {
   }
 
   function view_access_dynamic() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_access_dynamic';
     $view->description = '';
     $view->tag = '';
@@ -241,7 +241,7 @@ class AccessTest extends ViewsSchemaTestBase {
   }
 
   function view_access_static() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_access_static';
     $view->description = '';
     $view->tag = '';

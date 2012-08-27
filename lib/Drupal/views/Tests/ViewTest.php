@@ -105,7 +105,7 @@ class ViewTest extends ViewsSqlTest {
    * This view provides some filters, fields, arguments, relationships, sorts, areas and attachments.
    */
   function view_test_destroy() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_destroy';
     $view->description = '';
     $view->tag = '';
@@ -261,7 +261,7 @@ class ViewTest extends ViewsSqlTest {
     return $view;
   }
   function view_test_delete() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_view_delete';
     $view->description = '';
     $view->tag = '';

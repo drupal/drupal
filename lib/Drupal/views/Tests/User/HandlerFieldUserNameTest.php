@@ -58,7 +58,7 @@ class HandlerFieldUserNameTest extends ViewsSqlTest {
 
   }
   function view_user_name() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_views_handler_field_user_name';
     $view->description = '';
     $view->tag = 'default';

@@ -162,7 +162,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    * We use this to obtain our subquery SQL.
    */
   function get_temporary_view() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->vid = 'new'; // @todo: what's this?
     $view->base_table = $this->definition['base'];
     $view->add_display('default');

@@ -46,7 +46,7 @@ class UserArgumentDefault extends ViewsSqlTest {
   }
 
   function view_plugin_argument_default_current_user() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_plugin_argument_default_current_user';
     $view->description = '';
     $view->tag = '';

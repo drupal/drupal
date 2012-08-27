@@ -11,7 +11,7 @@
 function statistics_views_default_views() {
   $views = array();
 
-  $view = new Drupal\views\View();
+  $view = new Drupal\views\View(array(), 'view');
   $view->name = 'popular';
   $view->description = 'Shows the most-viewed nodes on the site. This requires the statistics to be enabled at administer >> reports >> access log settings.';
   $view->tag = 'default';

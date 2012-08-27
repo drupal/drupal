@@ -201,7 +201,7 @@ class HandlerFieldFieldTest extends ApiTestBase {
   }
 
   protected function getFieldView() {
-    $view = new View;
+    $view = new View(array(), 'view');
     $view->name = 'view_fieldapi';
     $view->description = '';
     $view->tag = 'default';

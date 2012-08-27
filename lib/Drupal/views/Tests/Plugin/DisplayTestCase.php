@@ -43,7 +43,7 @@ class DisplayTestCase extends ViewsSqlTest {
    * @return Drupal\views\View
    */
   function viewFilterGroupsOverriding() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_filter_group_override';
     $view->description = '';
     $view->tag = 'default';
@@ -92,7 +92,7 @@ class DisplayTestCase extends ViewsSqlTest {
    * @return Drupal\views\View
    */
   function viewFilterGroupsUpdating() {
-    $view = new View();
+    $view = new View(array(), 'view');
     $view->name = 'test_filter_groups';
     $view->description = '';
     $view->tag = 'default';
