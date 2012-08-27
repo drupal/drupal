@@ -23,11 +23,6 @@ class ViewStorage extends ConfigurableBase {
   }
 
   /**
-   * @var string
-   */
-  public $db_table;
-
-  /**
    * Add a new display handler to the view, automatically creating an id.
    *
    * @param $type
