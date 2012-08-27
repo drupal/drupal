@@ -1575,7 +1575,7 @@ function views_get_all_views($reset = FALSE) {
 }
 
 /**
- * Loads a view with the storage controller.
+ * Load a view with the storage controller.
  *
  * @param string $id
  *   The view name to load.
@@ -1589,9 +1589,34 @@ function views_storage_load($id) {
   return reset($result);
 }
 
+/**
+ * Save a view with the storage controller.
+ *
+ * @param Drupal\views\View $view
+ *   The view which is saved.
+ *
+ * @return
+ *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation
+ *   performed.
+ */
 function views_storage_save(View $view) {
   $controller = entity_get_controller('view');
   return $controller->save($view);
+}
+
+/**
+ * Change the status of a view.
+ *
+ * @param Drupal\views\View $view
+ *   The view which gets a different status.
+ */
+function views_storage_status(View $view, $status) {
+  if (!$status) {
+    $view->enable();
+  }
+  else {
+    $view->disable();
+  }
 }
 
 /**

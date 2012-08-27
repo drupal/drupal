@@ -361,7 +361,13 @@ class views_ui extends ctools_export_ui {
   }
 
   function set_item_state($state, $js, $input, $item) {
-    ctools_export_set_object_status($item, $state);
+    if (!$state) {
+      $item->enable();
+    }
+    else {
+      $item->disable();
+    }
+    $item->save();
     menu_router_rebuild();
 
     if (!$js) {

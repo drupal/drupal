@@ -38,6 +38,7 @@ function views_schema() {
       'load all callback' => 'views_get_all_views',
       'load callback' => 'views_storage_load',
       'save callback' => 'views_storage_save',
+      'status callback' => 'views_storage_status',
       'subrecords callback' => 'views_load_display_records',
       // the variable that holds enabled/disabled status
       'status' => 'views_defaults',
