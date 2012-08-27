@@ -10,6 +10,7 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewStorageController;
 use Drupal\views\View;
 use Drupal\views\ViewDisplay;
+use Drupal\views\Plugin\views\display\Page;
 
 /**
  * Tests that functionality of the the ViewStorageController.
@@ -179,6 +180,12 @@ class ViewStorageTest extends WebTestBase {
 
     $new_display = $created->display['test'];
     $this->assertTrue($new_display instanceof ViewDisplay, 'New page display "test" created.');
+
+    // Take sure the right display_plugin is created/instantiated.
+    $this->assertEqual($new_display->display_plugin, 'page', 'New page display "test" uses the right display plugin.');
+    $created->init_display();
+    $this->assertTrue($new_display->handler instanceof Page, 'New page display "test" uses the right display plugin.');
+
 
     $created->set('name', 'archive_new_display');
     $created->save();
