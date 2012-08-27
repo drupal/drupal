@@ -158,6 +158,20 @@ class ViewStorageTest extends WebTestBase {
     $config = config('views.view.archive_copy');
 
     $this->assertTrue($config->isNew(), 'Deleted config is now new.');
+
+    // Check whether load, save and load produce the same kind of view.
+    $values = config('views.view.archive')->get();
+    $created = $controller->create($values);
+
+    $created->save();
+    $loaded_entities = $controller->load(array($created->id()));
+    $created_loaded = reset($loaded_entities);
+    $values_loaded = config('views.view.archive')->get();
+
+    $this->assertTrue(isset($created_loaded->display['default']->display_options), 'Make sure that the display options exists.');
+    $this->assertEqual($created_loaded->display['default']->display_plugin, 'default', 'Make sure the right display plugin is set.');
+
+    $this->assertEqual($values, $values_loaded, 'The loaded config is the same as the original loaded one.');
   }
 
 }
