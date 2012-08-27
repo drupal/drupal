@@ -25,7 +25,7 @@ class ViewStorage extends ConfigurableBase {
   /**
    * Add a new display handler to the view, automatically creating an id.
    *
-   * @param $type
+   * @param $plugin_id
    *   The plugin type from the views plugin data. Defaults to 'page'.
    * @param $title
    *   The title of the display; optional, may be filled in from default.
@@ -35,19 +35,23 @@ class ViewStorage extends ConfigurableBase {
    *   The key to the display in $view->display, so that the new display
    *   can be easily located.
    */
-  function add_display($type = 'page', $title = NULL, $id = NULL) {
-    if (empty($type)) {
+  function add_display($plugin_id = 'page', $title = NULL, $id = NULL) {
+    if (empty($plugin_id)) {
       return FALSE;
     }
 
-    $plugin = views_fetch_plugin_data('display', $type);
+    $plugin = views_fetch_plugin_data('display', $plugin_id);
     if (empty($plugin)) {
       $plugin['title'] = t('Broken');
     }
 
 
     if (empty($id)) {
-      $id = $this->generate_display_id($type);
+      $id = $this->generate_display_id($plugin_id);
+
+      // Generate a unique human readable name.
+      // Therefore find out how often the display_plugin already got used,
+      // which is stored at the end of the $id, for example page_1.
       if ($id !== 'default') {
         preg_match("/[0-9]+/", $id, $count);
         $count = $count[0];
@@ -57,6 +61,8 @@ class ViewStorage extends ConfigurableBase {
       }
 
       if (empty($title)) {
+        // If we had more then one instance already attach the count,
+        // so you end up with "Page" and "Page 2" for example.
         if ($count > 1) {
           $title = $plugin['title'] . ' ' . $count;
         }
@@ -67,7 +73,7 @@ class ViewStorage extends ConfigurableBase {
     }
 
     $display_options = array(
-      'type' => $type,
+      'display_plugin' => $plugin_id,
       'id' => $id,
       'display_title' => $title,
     );
