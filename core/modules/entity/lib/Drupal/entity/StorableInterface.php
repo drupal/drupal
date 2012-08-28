@@ -157,8 +157,8 @@ interface StorableInterface {
    *   The value to set, or NULL to unset the property.
    * @param $langcode
    *   (optional) If the property is translatable, the language code of the
-   *   language that should be used for getting the property. If set to
-   *   NULL, the entity's default language is being used.
+   *   language that should be used for setting the property. If set to NULL,
+   *   the entity's default language is being used.
    *
    * @see Drupal\entity\StorableInterface::language()
    */
