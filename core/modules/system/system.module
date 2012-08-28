@@ -2683,8 +2683,8 @@ function _system_rebuild_module_data() {
     // Look for the info file.
     $module->info = drupal_parse_info_file(dirname($module->uri) . '/' . $module->name . '.info');
 
-    // Add the info file modification time, so the modules page can be sorted
-    // by the date modules were added or updated.
+    // Add the info file modification time, so it becomes available for
+    // contributed modules to use for ordering module lists.
     $module->info['mtime'] = filemtime(dirname($module->uri) . '/' . $module->name . '.info');
 
     // Skip modules that don't provide info.
@@ -2831,8 +2831,8 @@ function _system_rebuild_theme_data() {
     $themes[$key]->filename = $theme->uri;
     $themes[$key]->info = drupal_parse_info_file($theme->uri) + $defaults;
 
-    // Add the info file modification time, so the themes page can be sorted
-    // by the date themes were added or updated.
+    // Add the info file modification time, so it becomes available for
+    // contributed modules to use for ordering theme lists.
     $themes[$key]->info['mtime'] = filemtime($theme->uri);
 
     // Invoke hook_system_info_alter() to give installed modules a chance to
