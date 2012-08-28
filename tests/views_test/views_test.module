@@ -52,3 +52,18 @@ function views_test_views_pre_render(&$view) {
     $view->pre_render_called = TRUE;
   }
 }
+
+/**
+ * Implements hook_views_post_build().
+ */
+function views_test_views_post_build(Drupal\views\View &$view) {
+  debug($view->current_display);
+  if ($view->name == 'test_page_display') {
+    if ($view->current_display == 'page_1') {
+      $view->build_info['denied'] = TRUE;
+    }
+    elseif ($view->current_display == 'page_2') {
+      $view->build_info['fail'] = TRUE;
+    }
+  }
+}

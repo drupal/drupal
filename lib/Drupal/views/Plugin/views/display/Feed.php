@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
@@ -66,7 +67,7 @@ class Feed extends Page {
   function execute() {
     $output = $this->view->render();
     if (empty($output)) {
-      return drupal_not_found();
+      throw new NotFoundHttpException();
     }
 
     $response = $this->view->getResponse();

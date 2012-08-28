@@ -8,6 +8,8 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Core\Annotation\Plugin;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -238,11 +240,11 @@ class Page extends DisplayPluginBase {
     // display, and arguments should be set on the view.
     $this->view->build();
     if (!empty($this->view->build_info['fail'])) {
-      return drupal_not_found();
+      throw new NotFoundHttpException();
     }
 
     if (!empty($this->view->build_info['denied'])) {
-      return drupal_access_denied();
+      throw new AccessDeniedHttpException();
     }
 
     $this->view->get_breadcrumb(TRUE);
