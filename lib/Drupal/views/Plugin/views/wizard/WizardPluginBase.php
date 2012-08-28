@@ -493,71 +493,6 @@ abstract class WizardPluginBase implements WizardInterface {
       // attached to it, etc.
       views_ui_add_ajax_trigger($form['displays']['show'], 'type', array('displays'));
     }
-
-    // Check if we are allowed to filter by taxonomy, and if so, add the
-    // "tagged with" filter to the view.
-    //
-    // We construct this filter using taxonomy_index.tid (which limits the
-    // filtering to a specific vocabulary) rather than taxonomy_term_data.name
-    // (which matches terms in any vocabulary). This is because it is a more
-    // commonly-used filter that works better with the autocomplete UI, and
-    // also to avoid confusion with other vocabularies on the site that may
-    // have terms with the same name but are not used for free tagging.
-    //
-    // The downside is that if there *is* more than one vocabulary on the site
-    // that is used for free tagging, the wizard will only be able to make the
-    // "tagged with" filter apply to one of them (see below for the method it
-    // uses to choose).
-    if (isset($fields['taxonomy_index.tid'])) {
-      // Check if this view will be displaying fieldable entities.
-      if (!empty($entity_info['fieldable'])) {
-        // Find all "tag-like" taxonomy fields associated with the view's
-        // entities. If a particular entity type (i.e., bundle) has been
-        // selected above, then we only search for taxonomy fields associated
-        // with that bundle. Otherwise, we use all bundles.
-        $bundles = array_keys($entity_info['bundles']);
-        // Double check that this is a real bundle before using it (since above
-        // we added a dummy option 'all' to the bundle list on the form).
-        if (isset($selected_bundle) && in_array($selected_bundle, $bundles)) {
-          $bundles = array($selected_bundle);
-        }
-        $tag_fields = array();
-        foreach ($bundles as $bundle) {
-          foreach (field_info_instances($this->entity_type, $bundle) as $instance) {
-            // We define "tag-like" taxonomy fields as ones that use the
-            // "Autocomplete term widget (tagging)" widget.
-            if ($instance['widget']['type'] == 'taxonomy_autocomplete') {
-              $tag_fields[] = $instance['field_name'];
-            }
-          }
-        }
-        $tag_fields = array_unique($tag_fields);
-        if (!empty($tag_fields)) {
-          // If there is more than one "tag-like" taxonomy field available to
-          // the view, we can only make our filter apply to one of them (as
-          // described above). We choose 'field_tags' if it is available, since
-          // that is created by the Standard install profile in core and also
-          // commonly used by contrib modules; thus, it is most likely to be
-          // associated with the "main" free-tagging vocabulary on the site.
-          if (in_array('field_tags', $tag_fields)) {
-            $tag_field_name = 'field_tags';
-          }
-          else {
-            $tag_field_name = reset($tag_fields);
-          }
-          // Add the autocomplete textfield to the wizard.
-          $form['displays']['show']['tagged_with'] = array(
-            '#type' => 'textfield',
-            '#title' => t('tagged with'),
-            '#autocomplete_path' => 'taxonomy/autocomplete/' . $tag_field_name,
-            '#size' => 30,
-            '#maxlength' => 1024,
-            '#field_name' => $tag_field_name,
-            '#element_validate' => array('views_ui_taxonomy_autocomplete_validate'),
-          );
-        }
-      }
-    }
   }
 
   /**
@@ -814,25 +749,6 @@ abstract class WizardPluginBase implements WizardInterface {
         'field' => $bundle_key,
         'value' => $value,
       );
-    }
-
-    // @todo: Figure out why this isn't part of node_views_wizard.
-    if (!empty($form_state['values']['show']['tagged_with']['tids'])) {
-      $filters['tid'] = array(
-        'id' => 'tid',
-        'table' => 'taxonomy_index',
-        'field' => 'tid',
-        'value' => $form_state['values']['show']['tagged_with']['tids'],
-        'vocabulary' => $form_state['values']['show']['tagged_with']['vocabulary'],
-      );
-      // If the user entered more than one valid term in the autocomplete
-      // field, they probably intended both of them to be applied.
-      if (count($form_state['values']['show']['tagged_with']['tids']) > 1) {
-        $filters['tid']['operator'] = 'and';
-        // Sort the terms so the filter will be displayed as it normally would
-        // on the edit screen.
-        sort($filters['tid']['value']);
-      }
     }
 
     return $filters;
