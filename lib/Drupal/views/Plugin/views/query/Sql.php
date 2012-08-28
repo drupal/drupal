@@ -110,15 +110,6 @@ class Sql extends QueryPluginBase {
   var $no_distinct;
 
   /**
-   * Defines the distinct type.
-   * - FALSE if it's distinct by base field.
-   * - TRUE if it just adds the sql distinct keyword.
-   *
-   * @var bool
-   */
-  public $pure_distinct = FALSE;
-
-  /**
    * Constructor; Create the basic query object and fill with default values.
    */
   function init($base_table = 'node', $base_field = 'nid', $options) {
@@ -146,17 +137,6 @@ class Sql extends QueryPluginBase {
       'alias' => $base_table,
     );
 
-    /**
-     * -- we no longer want the base field to appear automatigically.
-    if ($base_field) {
-    $this->fields[$base_field] = array(
-    'table' => $base_table,
-    'field' => $base_field,
-    'alias' => $base_field,
-    );
-    }
-     */
-
     $this->count_field = array(
       'table' => $base_table,
       'field' => $base_field,
@@ -169,20 +149,14 @@ class Sql extends QueryPluginBase {
   // Utility methods to set flags and data.
 
   /**
-   * Set the view to be distinct.
-   *
-   * There are either distinct per base field or distinct in the pure sql way,
-   * based on $pure_distinct.
+   * Set the view to be distinct (per base field).
    *
    * @param bool $value
    *   Should the view by distincted.
-   * @param bool $pure_distinct
-   *   Should only the sql keyword be added.
    */
-  function set_distinct($value = TRUE, $pure_distinct = FALSE) {
+  function set_distinct($value = TRUE) {
     if (!(isset($this->no_distinct) && $value)) {
       $this->distinct = $value;
-      $this->pure_distinct = $pure_distinct;
     }
   }
 
@@ -220,10 +194,6 @@ class Sql extends QueryPluginBase {
       'default' => FALSE,
       'bool' => TRUE,
     );
-    $options['pure_distinct'] = array(
-      'default' => FALSE,
-      'bool' => TRUE,
-    );
     $options['slave'] = array(
       'default' => FALSE,
       'bool' => TRUE,
@@ -256,17 +226,6 @@ class Sql extends QueryPluginBase {
       '#title' => t('Distinct'),
       '#description' => t('This will make the view display only distinct items. If there are multiple identical items, each will be displayed only once. You can use this to try and remove duplicates from a view, though it does not always work. Note that this can slow queries down, so use it with caution.'),
       '#default_value' => !empty($this->options['distinct']),
-    );
-    $form['pure_distinct'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Pure Distinct'),
-      '#description' => t('This will prevent views from adding the base column to the distinct field. If this is not selected and the base column is a primary key, then a non-pure distinct will not function properly because the primary key is always unique.'),
-      '#default_value' => !empty($this->options['pure_distinct']),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="query[options][distinct]"]' => array('checked' => TRUE),
-        ),
-      ),
     );
     $form['slave'] = array(
       '#type' => 'checkbox',
@@ -1179,11 +1138,19 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Build fields array.
+   * Returns a list of non-aggregates to be added to the "group by" clause.
+   *
+   * Non-aggregates are fields that have no aggregation function (count, sum,
+   * etc) applied. Since the SQL standard requires all fields to either have
+   * an aggregation function applied, or to be in the GROUP BY clause, Views
+   * gathers those fields and adds them to the GROUP BY clause.
+   *
+   * @return array
+   *   An array of the fieldnames which are non-aggregates.
    */
-  function compile_fields($fields_array, $query) {
+  function get_non_aggregates() {
     $non_aggregates = array();
-    foreach ($fields_array as $field) {
+    foreach ($this->fields as $field) {
       $string = '';
       if (!empty($field['table'])) {
         $string .= $field['table'] . '.';
@@ -1192,10 +1159,48 @@ class Sql extends QueryPluginBase {
       $fieldname = (!empty($field['alias']) ? $field['alias'] : $string);
 
       if (!empty($field['count'])) {
-        // Retained for compatibility
+        // Retained for compatibility.
         $field['function'] = 'count';
-        // It seems there's no way to abstract the table+column reference
-        // without adding a field, aliasing, and then using the alias.
+      }
+
+      if (!empty($field['function'])) {
+        $this->has_aggregate = TRUE;
+      }
+      // This is a formula, using no tables.
+      elseif (empty($field['table'])) {
+        $non_aggregates[] = $fieldname;
+      }
+      elseif (empty($field['aggregate'])) {
+        $non_aggregates[] = $fieldname;
+      }
+
+      if ($this->get_count_optimized) {
+        // We only want the first field in this case.
+        break;
+      }
+    }
+
+    return $non_aggregates;
+  }
+
+  /**
+   * Adds fields to the query.
+   *
+   * @param Drupal\Core\Database\Query\SelectInterface $query
+   *   The drupal query object.
+   */
+  function compile_fields($query) {
+    foreach ($this->fields as $field) {
+      $string = '';
+      if (!empty($field['table'])) {
+        $string .= $field['table'] . '.';
+      }
+      $string .= $field['field'];
+      $fieldname = (!empty($field['alias']) ? $field['alias'] : $string);
+
+      if (!empty($field['count'])) {
+        // Retained for compatibility.
+        $field['function'] = 'count';
       }
 
       if (!empty($field['function'])) {
@@ -1210,27 +1215,14 @@ class Sql extends QueryPluginBase {
       }
       // This is a formula, using no tables.
       elseif (empty($field['table'])) {
-        $non_aggregates[] = $fieldname;
         $placeholders = !empty($field['placeholders']) ? $field['placeholders'] : array();
         $query->addExpression($string, $fieldname, $placeholders);
       }
-
       elseif ($this->distinct && !in_array($fieldname, $this->groupby)) {
-        // d7cx: This code was there, apparently needed for PostgreSQL
-        // $string = db_driver() == 'pgsql' ? "FIRST($string)" : $string;
         $query->addField(!empty($field['table']) ? $field['table'] : $this->base_table, $field['field'], $fieldname);
       }
       elseif (empty($field['aggregate'])) {
-        $non_aggregates[] = $fieldname;
         $query->addField(!empty($field['table']) ? $field['table'] : $this->base_table, $field['field'], $fieldname);
-      }
-
-      // @TODO Remove this old code.
-      if (!empty($field['distinct']) && empty($field['function'])) {
-        $distinct[] = $string;
-      }
-      else {
-        $fields[] = $string;
       }
 
       if ($this->get_count_optimized) {
@@ -1238,9 +1230,6 @@ class Sql extends QueryPluginBase {
         break;
       }
     }
-    return array(
-      $non_aggregates,
-    );
   }
 
   /**
@@ -1253,10 +1242,8 @@ class Sql extends QueryPluginBase {
   function query($get_count = FALSE) {
     // Check query distinct value.
     if (empty($this->no_distinct) && $this->distinct && !empty($this->fields)) {
-      if ($this->pure_distinct === FALSE) {
-        $base_field_alias = $this->add_field($this->base_table, $this->base_field);
-        $this->add_groupby($base_field_alias);
-      }
+      $base_field_alias = $this->add_field($this->base_table, $this->base_field);
+      $this->add_groupby($base_field_alias);
       $distinct = TRUE;
     }
 
@@ -1264,9 +1251,8 @@ class Sql extends QueryPluginBase {
      * An optimized count query includes just the base field instead of all the fields.
      * Determine of this query qualifies by checking for a groupby or distinct.
      */
-    $fields_array = $this->fields;
     if ($get_count && !$this->groupby) {
-      foreach ($fields_array as $field) {
+      foreach ($this->fields as $field) {
         if (!empty($field['distinct']) || !empty($field['function'])) {
           $this->get_count_optimized = FALSE;
           break;
@@ -1319,16 +1305,22 @@ class Sql extends QueryPluginBase {
       }
     }
 
+    // Assemble the groupby clause, if any.
     $this->has_aggregate = FALSE;
-    $non_aggregates = array();
-
-    list($non_aggregates) = $this->compile_fields($fields_array, $query);
-
+    $non_aggregates = $this->get_non_aggregates();
     if (count($this->having)) {
       $this->has_aggregate = TRUE;
     }
+    $groupby = array();
     if ($this->has_aggregate && (!empty($this->groupby) || !empty($non_aggregates))) {
       $groupby = array_unique(array_merge($this->groupby, $non_aggregates));
+    }
+
+    // Add all fields to the query.
+    $this->compile_fields($query);
+
+    // Add groupby.
+    if ($groupby) {
       foreach ($groupby as $field) {
         $query->groupBy($field);
       }
@@ -1403,7 +1395,7 @@ class Sql extends QueryPluginBase {
   function build(&$view) {
     // Make the query distinct if the option was set.
     if (!empty($this->options['distinct'])) {
-      $this->set_distinct(TRUE, !empty($this->options['pure_distinct']));
+      $this->set_distinct(TRUE);
     }
 
     // Store the view in the object to be able to use it later.
@@ -1491,7 +1483,6 @@ class Sql extends QueryPluginBase {
         }
 
         $view->pager->post_execute($view->result);
-
         if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
           $view->total_rows = $view->pager->get_total_items();
         }
