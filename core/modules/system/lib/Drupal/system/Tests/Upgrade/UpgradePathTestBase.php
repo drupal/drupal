@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Upgrade;
 
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\WebTestBase;
+use Exception;
 
 /**
  * Perform end-to-end tests of the upgrade path.

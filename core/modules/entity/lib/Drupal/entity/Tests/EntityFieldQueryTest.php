@@ -11,6 +11,7 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\entity\EntityFieldQuery;
 use Drupal\entity\EntityFieldQueryException;
 use stdClass;
+use Exception;
 
 /**
  * Tests Drupal\entity\EntityFieldQuery.

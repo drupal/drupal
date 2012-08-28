@@ -8,6 +8,7 @@
 namespace Drupal\entity;
 
 use PDO;
+use Exception;
 use Drupal\Component\Uuid\Uuid;
 
 

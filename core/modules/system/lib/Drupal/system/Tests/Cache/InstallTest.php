@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Cache;
 
 use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Cache\InstallBackend;
+use Exception;
 
 /**
  * Tests the behavior of the cache backend used for installing Drupal.

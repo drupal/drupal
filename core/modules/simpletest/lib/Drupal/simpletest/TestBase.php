@@ -11,6 +11,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use ReflectionMethod;
 use ReflectionObject;
+use Exception;
 
 /**
  * Base class for Drupal tests.
