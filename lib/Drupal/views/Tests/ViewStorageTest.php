@@ -35,6 +35,20 @@ class ViewStorageTest extends WebTestBase {
   );
 
   /**
+   * The Configurable information from entity_get_info().
+   *
+   * @var array
+   */
+  protected $info;
+
+  /**
+   * The Configurable controller.
+   *
+   * @var Drupal\views\ViewStorageController
+   */
+  protected $controller;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -58,7 +72,7 @@ class ViewStorageTest extends WebTestBase {
     $this->controller = entity_get_controller('view');
 
     // Confirm that an info array has been returned.
-    $this->assertTrue(!empty($this->info) && is_array($this->info), 'The View  info array is loaded.');
+    $this->assertTrue(!empty($this->info) && is_array($this->info), 'The View info array is loaded.');
 
     // Confirm we have the correct controller class.
     $this->assertTrue($this->controller instanceof ViewStorageController, 'The correct controller is loaded.');

@@ -43,17 +43,20 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
   }
 
   /**
-   * Add a new display handler to the view, automatically creating an id.
+   * Adds a new display handler to the view, automatically creating an ID.
    *
-   * @param $plugin_id
-   *   The plugin type from the views plugin data. Defaults to 'page'.
-   * @param $title
-   *   The title of the display; optional, may be filled in from default.
-   * @param $id
-   *   The id to use.
-   * @return
-   *   The key to the display in $view->display, so that the new display
-   *   can be easily located.
+   * @param string $plugin_id
+   *   (optional) The plugin type from the Views plugin annotation. Defaults to
+   *   'page'.
+   * @param string $title
+   *   (optional) The title of the display. Defaults to NULL.
+   * @param string $id
+   *   (optional) The ID to use, e.g., 'default', 'page_1', 'block_2'. Defaults
+   *   to NULL.
+   *
+   * @return string|false
+   *   The key to the display in $view->display, or FALSE if no plugin ID was
+   *   provided.
    */
   function add_display($plugin_id = 'page', $title = NULL, $id = NULL) {
     if (empty($plugin_id)) {
@@ -65,13 +68,11 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
       $plugin['title'] = t('Broken');
     }
 
-
     if (empty($id)) {
       $id = $this->generate_display_id($plugin_id);
 
-      // Generate a unique human readable name.
-      // Therefore find out how often the display_plugin already got used,
-      // which is stored at the end of the $id, for example page_1.
+      // Generate a unique human-readable name by inspecting the counter at the
+      // end of the previous display ID, e.g., 'page_1'.
       if ($id !== 'default') {
         preg_match("/[0-9]+/", $id, $count);
         $count = $count[0];
@@ -81,13 +82,11 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
       }
 
       if (empty($title)) {
-        // If we had more then one instance already attach the count,
-        // so you end up with "Page" and "Page 2" for example.
+        // If there is no title provided, use the plugin title, and if there are
+        // multiple displays, append the count.
+        $title = $plugin['title'];
         if ($count > 1) {
-          $title = $plugin['title'] . ' ' . $count;
-        }
-        else {
-          $title = $plugin['title'];
+          $title .= ' ' . $count;
         }
       }
     }
@@ -107,44 +106,46 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
   }
 
   /**
-   * Generate a display id of a certain plugin type.
+   * Generates a display ID of a certain plugin type.
    *
-   * @param $type
-   *   Which plugin should be used for the new display id.
+   * @param string $plugin_id
+   *   Which plugin should be used for the new display ID.
    */
-  function generate_display_id($type) {
+  function generate_display_id($plugin_id) {
     // 'default' is singular and is unique, so just go with 'default'
     // for it. For all others, start counting.
-    if ($type == 'default') {
+    if ($plugin_id == 'default') {
       return 'default';
     }
-    // Initial id.
-    $id = $type . '_1';
+    // Initial ID.
+    $id = $plugin_id . '_1';
     $count = 1;
 
     // Loop through IDs based upon our style plugin name until
     // we find one that is unused.
     while (!empty($this->display[$id])) {
-      $id = $type . '_' . ++$count;
+      $id = $plugin_id . '_' . ++$count;
     }
 
     return $id;
   }
 
   /**
-   * Generates a unique ID for an item.
+   * Generates a unique ID for an handler instance.
    *
-   * These items are typically fields, filters, sort criteria, or arguments.
+   * These handler instances are typically fields, filters, sort criteria, or
+   * arguments.
    *
-   * @param $requested_id
-   *   The requested ID for the item.
-   * @param $existing_items
-   *   An array of existing items, keyed by their IDs.
+   * @param string $requested_id
+   *   The requested ID for the handler instance.
+   * @param array $existing_items
+   *   An array of existing handler instancess, keyed by their IDs.
    *
-   * @return
-   *   A unique ID. This will be equal to $requested_id if no item with that ID
-   *   already exists. Otherwise, it will be appended with an integer to make
-   *   it unique, e.g. "{$requested_id}_1", "{$requested_id}_2", etc.
+   * @return string
+   *   A unique ID. This will be equal to $requested_id if no handler instance
+   *   with that ID already exists. Otherwise, it will be appended with an
+   *   integer to make it unique, e.g., "{$requested_id}_1",
+   *   "{$requested_id}_2", etc.
    */
   public static function generate_item_id($requested_id, $existing_items) {
     $count = 0;
@@ -156,20 +157,24 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
   }
 
   /**
-   * Create a new display and a display handler for it.
-   * @param $type
-   *   The plugin type from the views plugin data. Defaults to 'page'.
-   * @param $title
-   *   The title of the display; optional, may be filled in from default.
-   * @param $id
-   *   The id to use.
-   * @return views_plugin_display
+   * Creates a new display and a display handler for it.
+   *
+   * @param string $plugin_id
+   *   (optional) The plugin type from the Views plugin annotation. Defaults to
+   *   'page'.
+   * @param string $title
+   *   (optional) The title of the display. Defaults to NULL.
+   * @param string $id
+   *   (optional) The ID to use, e.g., 'default', 'page_1', 'block_2'. Defaults
+   *   to NULL.
+   *
+   * @return Drupal\views\Plugin\views\display\DisplayPluginBase
    *   A reference to the new handler object.
    */
-  function &new_display($type = 'page', $title = NULL, $id = NULL) {
-    $id = $this->add_display($type, $title, $id);
+  function &new_display($plugin_id = 'page', $title = NULL, $id = NULL) {
+    $id = $this->add_display($plugin_id, $title, $id);
 
-    // Create a handler
+    // Create a handler.
     $this->display[$id]->handler = views_get_plugin('display', $this->display[$id]->display_plugin);
     if (empty($this->display[$id]->handler)) {
       // provide a 'default' handler as an emergency. This won't work well but
@@ -190,9 +195,26 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
   }
 
   /**
-   * Add an item with a handler to the view.
+   * Adds an instance of a handler to the view.
    *
-   * These items may be fields, filters, sort criteria, or arguments.
+   * Items may be fields, filters, sort criteria, or arguments.
+   *
+   * @param string $display_id
+   *   The machine name of the display.
+   * @param string $type
+   *   The type of handler being added.
+   * @param string $table
+   *   The name of the table this handler is from.
+   * @param string $field
+   *   The name of the field this handler is from.
+   * @param array $options
+   *   (optional) Extra options for this instance. Defaults to an empty array.
+   * @param string $id
+   *   (optional) A unique ID for this handler instance. Defaults to NULL, in
+   *   which case one will be generated.
+   *
+   * @return string
+   *   The unique ID for this handler instance.
    */
   function add_item($display_id, $type, $table, $field, $options = array(), $id = NULL) {
     $types = View::views_object_types();
@@ -204,29 +226,34 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
       $id = $this->generate_item_id($field, $fields);
     }
 
-    $new_item = array(
+    // If the desired type is not found, use the original value directly.
+    $handler_type = !empty($types[$type]['type']) ? $types[$type]['type'] : $type;
+
+    // @todo This variable is never used.
+    $handler = views_get_handler($table, $field, $handler_type);
+
+    $fields[$id] = array(
       'id' => $id,
       'table' => $table,
       'field' => $field,
     ) + $options;
 
-    if (!empty($types[$type]['type'])) {
-      $handler_type = $types[$type]['type'];
-    }
-    else {
-      $handler_type = $type;
-    }
-
-    $handler = views_get_handler($table, $field, $handler_type);
-
-    $fields[$id] = $new_item;
     $this->display[$display_id]->handler->set_option($types[$type]['plural'], $fields);
 
     return $id;
   }
 
   /**
-   * Get an array of items for the current display.
+   * Gets an array of handler instances for the current display.
+   *
+   * @param string $type
+   *   The type of handlers to retrieve.
+   * @param string $display_id
+   *   (optional) A specific display machine name to use. If NULL, the current
+   *   display will be used.
+   *
+   * @return array
+   *   An array of handler instances of a given type for this display.
    */
   function get_items($type, $display_id = NULL) {
     $this->set_display($display_id);
@@ -241,8 +268,18 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
   }
 
   /**
-   * Get the configuration of an item (field/sort/filter/etc) on a given
-   * display.
+   * Gets the configuration of a handler instance on a given display.
+   *
+   * @param string $display_id
+   *   The machine name of the display.
+   * @param string $type
+   *   The type of handler to retrieve.
+   * @param string $id
+   *   The ID of the handler to retrieve.
+   *
+   * @return array|null
+   *   Either the handler instance's configuration, or NULL if the handler is
+   *   not used on the display.
    */
   function get_item($display_id, $type, $id) {
     // Get info about the types so we can get the right data.
@@ -257,18 +294,26 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
   }
 
   /**
-   * Set the configuration of an item (field/sort/filter/etc) on a given
-   * display.
+   * Sets the configuration of a handler instance on a given display.
    *
-   * Pass in NULL for the $item to remove an item.
+   * @param string $display_id
+   *   The machine name of the display.
+   * @param string $type
+   *   The type of handler being set.
+   * @param string $id
+   *   The ID of the handler being set.
+   * @param array|null $item
+   *   An array of configuration for a handler, or NULL to remove this instance.
+   *
+   * @see set_item_option()
    */
   function set_item($display_id, $type, $id, $item) {
     // Get info about the types so we can get the right data.
     $types = View::views_object_types();
-    // Initialize the display
+    // Initialize the display.
     $this->set_display($display_id);
 
-    // Get the existing configuration
+    // Get the existing configuration.
     $fields = $this->display[$display_id]->handler->get_option($types[$type]['plural']);
     if (isset($item)) {
       $fields[$id] = $item;
@@ -282,11 +327,24 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
   }
 
   /**
-   * Set an option on an item.
+   * Sets an option on a handler instance.
    *
-   * Use this only if you have just 1 or 2 options to set; if you have
-   * many, consider getting the item, adding the options and doing
-   * set_item yourself.
+   * Use this only if you have just 1 or 2 options to set; if you have many,
+   * consider getting the handler instance, adding the options and using
+   * set_item() directly.
+   *
+   * @param string $display_id
+   *   The machine name of the display.
+   * @param string $type
+   *   The type of handler being set.
+   * @param string $id
+   *   The ID of the handler being set.
+   * @param string $option
+   *   The configuration key for the value being set.
+   * @param mixed $value
+   *   The value being set.
+   *
+   * @see set_item()
    */
   function set_item_option($display_id, $type, $id, $option, $value) {
     $item = $this->get_item($display_id, $type, $id);

@@ -16,11 +16,25 @@ namespace Drupal\views;
 class ViewDisplay {
 
   /**
+   * The display plugin ID.
+   *
+   * @var string
+   */
+  public $display_plugin;
+
+  /**
    * The display handler itself, which has all the methods.
    *
-   * @var views_plugin_display
+   * @var Drupal\views\Plugin\views\display\DisplayPluginBase
    */
   public $handler;
+
+  /**
+   * The machine name of this display.
+   *
+   * @var string
+   */
+  public $id;
 
   /**
    * Stores all options of the display, like fields, filters etc.
@@ -28,6 +42,13 @@ class ViewDisplay {
    * @var array
    */
   public $display_options;
+
+  /**
+   * The human-readable name of this display.
+   *
+   * @var string
+   */
+  public $display_title;
 
   /**
    * Constructs a ViewDisplay object.

@@ -1178,7 +1178,7 @@ function views_module_include($api, $reset = FALSE) {
     }
   }
 
-  // @todo replace with http://drupal.org/node/1741154.
+  // @todo Replace with http://drupal.org/node/1760284.
   ctools_include('plugins');
   return ctools_plugin_api_include('views', $api, views_api_minimum_version(), views_api_version());
 }
@@ -1194,7 +1194,7 @@ function views_get_module_apis($api = 'views', $reset = FALSE) {
     }
   }
 
-  // @todo replace with http://drupal.org/node/1741154.
+  // @todo Replace with http://drupal.org/node/1760284.
   ctools_include('plugins');
   return ctools_plugin_api_info('views', $api, views_api_minimum_version(), views_api_version());
 }
@@ -1507,9 +1507,7 @@ function views_get_all_templates() {
  *   it can be successfully saved.
  */
 function views_new_view() {
-  $view = entity_create('view', array());
-
-  return $view;
+  return entity_create('view', array());
 }
 
 /**
@@ -1569,9 +1567,7 @@ function views_get_applicable_views($type) {
  *   If TRUE, reset the static cache forcing views to be reloaded.
  */
 function views_get_all_views($reset = FALSE) {
-  // @todo replace with http://drupal.org/node/1741154.
-  $controller = entity_get_controller('view');
-  return $controller->load();
+  return entity_get_controller('view')->load();
 }
 
 /**
@@ -1584,8 +1580,7 @@ function views_get_all_views($reset = FALSE) {
  *   The view which is loaded.
  */
 function views_storage_load($id) {
-  $controller = entity_get_controller('view');
-  $result = $controller->load(array($id));
+  $result = entity_get_controller('view')->load(array($id));
   return reset($result);
 }
 
@@ -1600,8 +1595,7 @@ function views_storage_load($id) {
  *   performed.
  */
 function views_storage_save(View $view) {
-  $controller = entity_get_controller('view');
-  return $controller->save($view);
+  return entity_get_controller('view')->save($view);
 }
 
 /**
