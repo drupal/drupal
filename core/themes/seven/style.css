@@ -786,24 +786,22 @@ div.admin-options div.form-item {
 }
 
 /* Maintenance theming */
-body.in-maintenance #sidebar-first {
-  float: left; /* LTR */
-  width: 200px;
+body.in-maintenance #logo {
+  float: left;
+  padding: 0 20px 0 0;
 }
 body.in-maintenance #content {
-  float: right; /* LTR */
-  width: 550px;
   padding-right: 20px; /* LTR */
   clear: none;
 }
 body.in-maintenance #page {
   overflow: auto;
-  width: 770px;
+  max-width: 730px;
   margin: 0 auto;
-  padding-top: 2em;
+  padding: 2em 20px 40px;
 }
 body.in-maintenance #branding h1 {
-  width: 770px;
+  max-width: 730px;
   margin: 0 auto;
   float: none;
 }
