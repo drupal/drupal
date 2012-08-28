@@ -869,7 +869,10 @@ function drupal_process_form($form_id, &$form, &$form_state) {
     // cache when a form is processed, so scenarios that result in
     // the form being built behind the scenes and again for the
     // browser don't increment all the element IDs needlessly.
-    drupal_static_reset('drupal_html_id');
+    if (!form_get_errors()) {
+      // In case of errors, do not break HTML IDs of other forms.
+      drupal_static_reset('drupal_html_id');
+    }
 
     if ($form_state['submitted'] && !form_get_errors() && !$form_state['rebuild']) {
       // Execute form submit handlers.
