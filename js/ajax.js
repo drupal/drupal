@@ -4,6 +4,8 @@
  */
 (function ($) {
 
+  "use strict";
+
   Drupal.ajax.prototype.commands.viewsSetForm = function (ajax, response, status) {
     var ajax_title = Drupal.settings.views.ajax.title;
     var ajax_body = Drupal.settings.views.ajax.id;
@@ -38,7 +40,7 @@
   Drupal.ajax.prototype.commands.viewsDismissForm = function (ajax, response, status) {
     Drupal.ajax.prototype.commands.viewsSetForm({}, {'title': '', 'output': Drupal.settings.views.ajax.defaultForm});
     $(Drupal.settings.views.ajax.popup).dialog('close');
-  }
+  };
 
   Drupal.ajax.prototype.commands.viewsHilite = function (ajax, response, status) {
     $('.hilited').removeClass('hilited');
@@ -92,7 +94,7 @@
    */
   Drupal.theme.tableDragChangedWarning = function () {
     return [];
-  }
+  };
 
   /**
    * Trigger preview when the "live preview" checkbox is checked.
@@ -105,7 +107,7 @@
         }
       });
     }
-  }
+  };
 
   /**
    * Sync preview display.
@@ -120,7 +122,7 @@
         $("#views-live-preview #preview-display-id").val(display_id);
       }).addClass('views-ajax-processed');
     }
-  }
+  };
 
   Drupal.behaviors.viewsAjax = {
     collapseReplaced: false,
@@ -164,7 +166,7 @@
         var element_settings = base_element_settings;
         // Set the URL to go to the anchor.
         element_settings.url = $(this).attr('href');
-        if (Drupal.Views.getPath(element_settings.url).substring(0, 21) != 'admin/structure/views') {
+        if (Drupal.Views.getPath(element_settings.url).substring(0, 21) !== 'admin/structure/views') {
           return true;
         }
 
@@ -187,7 +189,7 @@
         var element_settings = base_element_settings;
         // Set the URL to go to the anchor.
         element_settings.url = $(this.form).attr('action');
-        if (Drupal.Views.getPath(element_settings.url).substring(0, 21) != 'admin/structure/views') {
+        if (Drupal.Views.getPath(element_settings.url).substring(0, 21) !== 'admin/structure/views') {
           return true;
         }
 
@@ -202,8 +204,8 @@
       if (!this.collapseReplaced && Drupal.collapseScrollIntoView) {
         this.collapseReplaced = true;
         Drupal.collapseScrollIntoView = function (node) {
-          for (var $parent = $(node); $parent.get(0) != document && $parent.size() != 0; $parent = $parent.parent()) {
-            if ($parent.css('overflow') == 'scroll' || $parent.css('overflow') == 'auto') {
+          for (var $parent = $(node); $parent.get(0) !== document && $parent.size() !== 0; $parent = $parent.parent()) {
+            if ($parent.css('overflow') === 'scroll' || $parent.css('overflow') === 'auto') {
               if (Drupal.viewsUi.resizeModal) {
                 // If the modal is already at the max height, don't bother with
                 // this since the only reason to do it is to grow the modal.

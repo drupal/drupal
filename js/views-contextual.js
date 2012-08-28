@@ -4,6 +4,8 @@
  */
 (function ($) {
 
+"use strict";
+
 Drupal.behaviors.viewsContextualLinks = {
   attach: function (context) {
     // If there are views-related contextual links attached to the main page

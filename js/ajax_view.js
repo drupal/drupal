@@ -4,6 +4,8 @@
  */
 (function ($) {
 
+"use strict";
+
 /**
  * Attaches the AJAX behavior to Views exposed filter forms and key View links.
  */
@@ -30,7 +32,7 @@ Drupal.views.ajaxView = function(settings) {
   var ajax_path = Drupal.settings.views.ajax_path;
 
   // If there are multiple views this might've ended up showing up multiple times.
-  if (ajax_path.constructor.toString().indexOf("Array") != -1) {
+  if (ajax_path.constructor.toString().indexOf("Array") !== -1) {
     ajax_path = ajax_path[0];
   }
 
@@ -124,7 +126,7 @@ Drupal.ajax.prototype.commands.viewsScrollTop = function (ajax, response, status
   // more complex such as a modal popup. Recurse up the DOM
   // and scroll the first element that has a non-zero top.
   var scrollTarget = response.selector;
-  while ($(scrollTarget).scrollTop() == 0 && $(scrollTarget).parent()) {
+  while ($(scrollTarget).scrollTop() === 0 && $(scrollTarget).parent()) {
     scrollTarget = $(scrollTarget).parent();
   }
   // Only scroll upward
