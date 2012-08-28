@@ -43,6 +43,14 @@ class CoreBundle extends Bundle
     $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
       ->addArgument(new Reference('request'))
       ->setScope('request');
+    $container->register('database', 'Drupal\Core\Database\Connection')
+      ->setFactoryClass('Drupal\Core\Database\Database')
+      ->setFactoryMethod('getConnection')
+      ->addArgument('default');
+    $container->register('database.slave', 'Drupal\Core\Database\Connection')
+      ->setFactoryClass('Drupal\Core\Database\Database')
+      ->setFactoryMethod('getConnection')
+      ->addArgument('slave');
 
     // @todo Replace below lines with the commented out block below it when it's
     //   performant to do so: http://drupal.org/node/1706064.
@@ -87,14 +95,6 @@ class CoreBundle extends Bundle
     $container->register('request_close_subscriber', 'Drupal\Core\EventSubscriber\RequestCloseSubscriber')
       ->addTag('kernel.event_subscriber');
     $container->register('config_global_override_subscriber', '\Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber');
-    $container->register('database', 'Drupal\Core\Database\Connection')
-      ->setFactoryClass('Drupal\Core\Database\Database')
-      ->setFactoryMethod('getConnection')
-      ->addArgument('default');
-    $container->register('database.slave', 'Drupal\Core\Database\Connection')
-      ->setFactoryClass('Drupal\Core\Database\Database')
-      ->setFactoryMethod('getConnection')
-      ->addArgument('slave');
     $container->register('exception_listener', 'Symfony\Component\HttpKernel\EventListener\ExceptionListener')
       ->addTag('kernel.event_subscriber')
       ->addArgument(new Reference('service_container'))
