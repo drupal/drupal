@@ -13,7 +13,7 @@ use Drupal\views\ViewDisplay;
 use Drupal\views\Plugin\views\display\Page;
 
 /**
- * Tests that functionality of the the ViewStorageController.
+ * Tests the functionality of the ViewStorageController.
  */
 class ViewStorageTest extends WebTestBase {
 
@@ -207,7 +207,7 @@ class ViewStorageTest extends WebTestBase {
   }
 
   /**
-   * Tests adding/saving/loading displays on configurables.
+   * Tests adding, saving, and loading displays on configurables.
    */
   protected function displayTests() {
     // Check whether a display can be added and saved to a View.
@@ -218,7 +218,7 @@ class ViewStorageTest extends WebTestBase {
     $new_display = $view->display['test'];
     $this->assertTrue($new_display instanceof ViewDisplay, 'New page display "test" created.');
 
-    // Take sure the right display_plugin is created/instantiated.
+    // Ensure the right display_plugin is created/instantiated.
     $this->assertEqual($new_display->display_plugin, 'page', 'New page display "test" uses the right display plugin.');
     $view->init_display();
     $this->assertTrue($new_display->handler instanceof Page, 'New page display "test" uses the right display plugin.');
@@ -258,11 +258,13 @@ class ViewStorageTest extends WebTestBase {
   }
 
   /**
-   * Load a single Configurable object from the controller.
+   * Loads a single Configurable object from the controller.
    *
    * @param string $view_name
+   *   The machine name of the view.
    *
    * @return object Drupal\views\View.
+   *   The loaded view object.
    */
   protected function loadView($view_name) {
     $load = $this->controller->load(array($view_name));

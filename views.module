@@ -1575,7 +1575,7 @@ function views_get_all_views($reset = FALSE) {
 }
 
 /**
- * Load a view with the storage controller.
+ * Loads a view with the storage controller.
  *
  * @param string $id
  *   The view name to load.
@@ -1590,12 +1590,12 @@ function views_storage_load($id) {
 }
 
 /**
- * Save a view with the storage controller.
+ * Saves a view with the storage controller.
  *
  * @param Drupal\views\View $view
  *   The view which is saved.
  *
- * @return
+ * @return int
  *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation
  *   performed.
  */
@@ -1605,10 +1605,12 @@ function views_storage_save(View $view) {
 }
 
 /**
- * Change the status of a view.
+ * Toggles the view status between enabled and disabled.
  *
  * @param Drupal\views\View $view
  *   The view which gets a different status.
+ * @param bool $status
+ *   Whether to enable or disable the view.
  */
 function views_storage_status(View $view, $status) {
   if (!$status) {
@@ -1716,8 +1718,8 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
 /**
  * Returns whether the view is enabled.
  *
- * @var Drupal\views\View
- *   The view object of which the status is checked.
+ * @param Drupal\views\View $view
+ *   The view object to check.
  *
  * @return bool
  *   Returns TRUE if a view is enabled, FALSE otherwise.
@@ -1729,8 +1731,8 @@ function views_view_is_enabled($view) {
 /**
  * Returns whether the view is disabled.
  *
- * @var Drupal\views\View
- *   The view object of which the status is checked.
+ * @param Drupal\views\View $view
+ *   The view object to check.
  *
  * @return bool
  *   Returns TRUE if a view is disabled, FALSE otherwise.
@@ -1740,10 +1742,11 @@ function views_view_is_disabled($view) {
 }
 
 /**
- * Get a view from the config.
+ * Loads a view from configuration.
  *
- * @param $name
+ * @param string $name
  *   The name of the view.
+ *
  * @return Drupal\views\View
  *   A reference to the $view object.
  */
