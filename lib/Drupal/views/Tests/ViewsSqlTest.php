@@ -25,7 +25,6 @@ abstract class ViewsSqlTest extends WebTestBase {
 
     // @todo Remove this hack or move it to child classes.
     views_init();
-    views_module_include('views_default', TRUE);
     views_get_all_views(TRUE);
     menu_router_rebuild();
   }

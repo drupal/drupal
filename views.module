@@ -2375,45 +2375,6 @@ function views_clean_css_identifier($identifier, $filter = array(' ' => '-', '/'
 }
 
 /**
- * Implement hook_views_exportables().
- */
-function views_views_exportables($op = 'list', $views = NULL, $name = 'foo') {
-  $all_views = views_get_all_views();
-  if ($op == 'list') {
-
-    foreach ($all_views as $name => $view) {
-      // in list, $views is a list of tags.
-      if (empty($views) || in_array($view->tag, $views)) {
-        $return[$name] = array(
-          'name' => check_plain($name),
-          'desc' => check_plain($view->description),
-          'tag' => check_plain($view->tag)
-        );
-      }
-    }
-    return $return;
-  }
-
-  if ($op == 'export') {
-    $code = "/**\n";
-    $code .= " * Implement hook_views_default_views().\n";
-    $code .= " */\n";
-    $code .= "function " . $name . "_views_default_views() {\n";
-    foreach ($views as $view => $truth) {
-      $code .= "  /*\n";
-      $code .= "   * View " . var_export($all_views[$view]->name, TRUE) . "\n";
-      $code .= "   */\n";
-      $code .= $all_views[$view]->export('  ');
-      $code .= '  $views[$view->name] = $view;' . "\n\n";
-    }
-    $code .= "  return \$views;\n";
-    $code .= "}\n";
-
-    return $code;
-  }
-}
-
-/**
  * #process callback to see if we need to check_plain() the options.
  *
  * Since FAPI is inconsistent, the #options are sanitized for you in all cases

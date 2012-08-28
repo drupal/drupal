@@ -92,10 +92,6 @@ class ModuleTest extends ViewsSchemaTestBase {
    * Tests the dynamic includes of templates via module feature.
    */
   function testModuleTemplates() {
-    $views_status = variable_get('views_defaults', array());
-    $views_status['frontpage'] = FALSE; // false is enabled
-    variable_set('views_defaults', $views_status);
-
     $existing = array();
     $type = array();
     $theme = array();
