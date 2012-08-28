@@ -37,7 +37,7 @@ class Permissions extends PrerenderList {
     $this->items = array();
 
     foreach ($values as $result) {
-      $uids[] = $this->get_value($result, NULL, TRUE);
+      $uids[] = $this->get_value($result);
     }
 
     if ($uids) {

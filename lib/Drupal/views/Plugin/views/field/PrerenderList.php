@@ -70,30 +70,6 @@ class PrerenderList extends FieldPluginBase {
   }
 
   /**
-   * Render the field.
-   *
-   * This function is deprecated, but left in for older systems that have not
-   * yet or won't update their prerender list fields. If a render_item method
-   * exists, this will not get used by advanced_render.
-   */
-  function render($values) {
-    $field = $this->get_value($values);
-    if (!empty($this->items[$field])) {
-      if ($this->options['type'] == 'separator') {
-        return implode($this->sanitize_value($this->options['separator']), $this->items[$field]);
-      }
-      else {
-        return theme('item_list',
-          array(
-            'items' => $this->items[$field],
-            'title' => NULL,
-            'type' => $this->options['type']
-          ));
-      }
-    }
-  }
-
-  /**
    * Render all items in this field together.
    *
    * When using advanced render, each possible item in the list is rendered
@@ -126,35 +102,12 @@ class PrerenderList extends FieldPluginBase {
    * should also be in this array.
    */
   function get_items($values) {
-    // Only the parent get_value returns a single field.
-    $field = parent::get_value($values);
+    $field = $this->get_value($values);
     if (!empty($this->items[$field])) {
       return $this->items[$field];
     }
 
     return array();
-  }
-
-  /**
-   * Get the value that's supposed to be rendered.
-   *
-   * @param $values
-   *   An object containing all retrieved values.
-   * @param $field
-   *   Optional name of the field where the value is stored.
-   * @param $raw
-   *   Use the raw data and not the data defined in pre_render
-   */
-  function get_value($values, $field = NULL, $raw = FALSE) {
-    if ($raw) {
-      return parent::get_value($values, $field);
-    }
-    $item = $this->get_items($values);
-    $item = (array) $item;
-    if (isset($field) && isset($item[$field])) {
-      return $item[$field];
-    }
-    return $item;
   }
 
   /**
