@@ -26,6 +26,8 @@
  *     language negotiation rule that was previously applied.
  *
  * @see template_preprocess_user_profile()
+ *
+ * @ingroup themeable
  */
 ?>
 <article class="profile"<?php print $attributes; ?>>

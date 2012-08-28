@@ -38,6 +38,8 @@
  * @see template_preprocess()
  * @see template_preprocess_html()
  * @see template_process()
+ *
+ * @ingroup themeable
  */
 ?><!DOCTYPE html>
 <html<?php print $html_attributes; ?>>

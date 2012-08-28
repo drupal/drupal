@@ -34,6 +34,8 @@
  * @see template_preprocess()
  * @see template_preprocess_taxonomy_term()
  * @see template_process()
+ *
+ * @ingroup themeable
  */
 ?>
 <div id="taxonomy-term-<?php print $term->tid; ?>"<?php print $attributes; ?>>

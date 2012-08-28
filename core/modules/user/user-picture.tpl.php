@@ -12,6 +12,8 @@
  *   check_plain() before use.
  *
  * @see template_preprocess_user_picture()
+ *
+ * @ingroup themeable
  */
 ?>
 <?php if ($user_picture): ?>

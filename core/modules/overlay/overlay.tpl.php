@@ -13,6 +13,8 @@
  * @see template_preprocess()
  * @see template_preprocess_overlay()
  * @see template_process()
+ *
+ * @ingroup themeable
  */
 ?>
 

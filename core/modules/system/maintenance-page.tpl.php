@@ -9,6 +9,8 @@
  *
  * @see template_preprocess()
  * @see template_preprocess_maintenance_page()
+ *
+ * @ingroup themeable
  */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
