@@ -124,8 +124,11 @@ class Comment extends WizardPluginBase {
     }
   }
 
-  protected function default_display_options($form, $form_state) {
-    $display_options = parent::default_display_options($form, $form_state);
+  /**
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::default_display_options().
+   */
+  protected function default_display_options() {
+    $display_options = parent::default_display_options();
 
     // Add permission-based access control.
     $display_options['access']['type'] = 'perm';
