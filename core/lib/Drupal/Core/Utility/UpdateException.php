@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Utility;
 
+use Exception;
+
 /**
  * Exception class used to throw error if a module update fails.
  */
