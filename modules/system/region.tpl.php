@@ -24,6 +24,8 @@
  * @see template_preprocess()
  * @see template_preprocess_region()
  * @see template_process()
+ *
+ * @ingroup themeable
  */
 ?>
 <?php if ($content): ?>

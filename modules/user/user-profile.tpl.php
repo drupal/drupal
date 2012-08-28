@@ -30,6 +30,8 @@
  * @see user-profile-item.tpl.php
  *   Where the html is handled for each item in the group.
  * @see template_preprocess_user_profile()
+ *
+ * @ingroup themeable
  */
 ?>
 <div class="profile"<?php print $attributes; ?>>
