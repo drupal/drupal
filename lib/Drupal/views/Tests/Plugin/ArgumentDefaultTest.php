@@ -14,8 +14,6 @@ use Drupal\views\View;
  */
 class ArgumentDefaultTest extends PluginTestBase {
 
-  protected $profile = 'standard';
-
   /**
    * A random string used in the default views.
    *

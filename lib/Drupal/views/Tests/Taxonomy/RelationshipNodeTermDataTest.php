@@ -17,6 +17,13 @@ class RelationshipNodeTermDataTest extends ViewTestBase {
 
   protected $profile = 'standard';
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('taxonomy');
+
   public static function getInfo() {
     return array(
       'name' => 'Taxonomy: Node term data Relationship',

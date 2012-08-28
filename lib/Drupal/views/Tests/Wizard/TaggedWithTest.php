@@ -12,6 +12,13 @@ namespace Drupal\views\Tests\Wizard;
  */
 class TaggedWithTest extends WizardTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('taxonomy');
+
   protected $node_type_with_tags;
 
   protected $node_type_without_tags;

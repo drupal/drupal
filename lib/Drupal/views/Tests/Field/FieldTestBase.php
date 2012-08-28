@@ -25,8 +25,6 @@ use Drupal\views\Tests\ViewTestBase;
  */
 abstract class FieldTestBase extends ViewTestBase {
 
-  protected $profile = 'standard';
-
   /**
    * Stores the field definitions used by the test.
    * @var array

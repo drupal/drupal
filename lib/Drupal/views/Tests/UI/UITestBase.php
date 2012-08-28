@@ -14,7 +14,12 @@ use Drupal\views\Tests\ViewTestBase;
  */
 abstract class UITestBase extends ViewTestBase {
 
-  protected $profile = 'standard';
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
 
   protected function setUp() {
     parent::setUp();

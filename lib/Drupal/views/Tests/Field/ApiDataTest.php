@@ -11,6 +11,7 @@ namespace Drupal\views\Tests\Field;
  * Test the produced views_data.
  */
 class ApiDataTest extends FieldTestBase {
+
   /**
    * Stores the fields for this test case.
    */
@@ -28,7 +29,6 @@ class ApiDataTest extends FieldTestBase {
     parent::setUp();
 
     $langcode = LANGUAGE_NOT_SPECIFIED;
-
 
     $field_names = $this->setUpFields();
 
@@ -70,15 +70,6 @@ class ApiDataTest extends FieldTestBase {
         'field_name_2' => array($langcode => array((array('value' => $this->randomName())))),
       );
       $this->nodes[] = $this->drupalCreateNode($edit);
-    }
-
-    $permissions = array('access comments', 'access content', 'post comments', 'skip comment approval');
-    for ($i = 0; $i < 5; $i++) {
-      $account = $this->drupalCreateUser($permissions);
-      $account->field_name_1 = array($langcode => array((array('value' => $this->randomName()))));
-      $account->field_name_2 = array($langcode => array((array('value' => $this->randomName()))));
-      $account->save();
-      $this->users[] = $account;
     }
 
     // Reset views data cache.
@@ -127,7 +118,6 @@ class ApiDataTest extends FieldTestBase {
     );
     $this->assertEqual($expected_join, $data[$revision_table]['table']['join']['node_revision']);
 
-
     // Check the table and the joins of the second field.
     // Attached to both node and user.
     $field_2 = $this->fields[2];
@@ -168,18 +158,6 @@ class ApiDataTest extends FieldTestBase {
       )
     );
     $this->assertEqual($expected_join, $data[$current_table_2]['table']['join']['users']);
-
-    // Check the fields
-    // @todo
-
-    // Check the arguments
-    // @todo
-
-    // Check the sort criterias
-    // @todo
-
-    // Check the relationships
-    // @todo
-
   }
+
 }

@@ -15,7 +15,12 @@ use Drupal\views\View;
  */
 abstract class CommentTestBase extends ViewTestBase {
 
-  protected $profile = 'standard';
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('comment');
 
   function setUp() {
     parent::setUp();

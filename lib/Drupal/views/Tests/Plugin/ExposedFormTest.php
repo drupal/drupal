@@ -12,8 +12,6 @@ namespace Drupal\views\Tests\Plugin;
  */
 class ExposedFormTest extends PluginTestBase {
 
-  protected $profile = 'standard';
-
   public static function getInfo() {
     return array(
       'name' => 'Exposed forms',
@@ -26,6 +24,9 @@ class ExposedFormTest extends PluginTestBase {
     parent::setUp();
 
     $this->enableViewsTestModule();
+
+    $this->drupalCreateContentType(array('type' => 'article'));
+    $this->drupalCreateContentType(array('type' => 'page'));
   }
 
   /**

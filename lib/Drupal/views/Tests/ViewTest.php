@@ -19,7 +19,7 @@ class ViewTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'comment');
+  public static $modules = array('comment');
 
   public static function getInfo() {
     return array(

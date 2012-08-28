@@ -24,6 +24,8 @@ class ItemsPerPageTest extends WizardTestBase {
    * Tests the number of items per page.
    */
   function testItemsPerPage() {
+    $this->drupalCreateContentType(array('type' => 'article'));
+
     // Create articles, each with a different creation time so that we can do a
     // meaningful sort.
     $node1 = $this->drupalCreateNode(array('type' => 'article', 'created' => REQUEST_TIME));

@@ -21,6 +21,9 @@ class BasicTest extends WizardTestBase {
   }
 
   function testViewsWizardAndListing() {
+    $this->drupalCreateContentType(array('type' => 'article'));
+    $this->drupalCreateContentType(array('type' => 'page'));
+
     // Check if we can access the main views admin page.
     $this->drupalGet('admin/structure/views');
     $this->assertText(t('Add new view'));

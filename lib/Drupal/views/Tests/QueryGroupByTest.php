@@ -14,13 +14,6 @@ use Drupal\views\View;
  */
 class QueryGroupByTest extends ViewTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('node');
-
   public static function getInfo() {
     return array(
       'name' => 'Groupby',
