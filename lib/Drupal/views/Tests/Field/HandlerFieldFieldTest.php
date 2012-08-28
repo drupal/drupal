@@ -17,13 +17,13 @@ use Drupal\views\View;
  *   Check locale:disabled, locale:enabled and locale:enabled with another language
  *   Check revisions
  */
-class HandlerFieldFieldTest extends ApiTestBase {
+class HandlerFieldFieldTest extends FieldTestBase {
   public $nodes;
 
   public static function getInfo() {
     return array(
-      'name' => 'Fieldapi: Field handler',
-      'description' => 'Tests the field itself of the fieldapi integration',
+      'name' => 'Field: Field handler',
+      'description' => 'Tests the field itself of the Field integration.',
       'group' => 'Views Modules'
     );
   }

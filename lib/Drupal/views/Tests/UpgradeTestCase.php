@@ -10,11 +10,11 @@ namespace Drupal\views\Tests;
 use Drupal\views\View;
 
 /**
- * Try to test the upgrade path of all conversions.
+ * Tests the upgrade path of all conversions.
  *
  * You can find all conversions by searching for "moved to".
  */
-class UpgradeTestCase extends ViewsSchemaTestBase {
+class UpgradeTestCase extends ViewTestBase {
 
   /**
    * Modules to enable.
@@ -28,15 +28,16 @@ class UpgradeTestCase extends ViewsSchemaTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Views Upgrade test',
-      'description' => 'Try to test the upgrade path of modules which were changed.',
+      'name' => 'Upgrade path',
+      'description' => 'Tests the upgrade path of modules which were changed.',
       'group' => 'Views',
     );
   }
 
   protected function setUp() {
     parent::setUp();
-    $this->resetAll();
+
+    $this->enableViewsTestModule();
   }
 
   function viewsData() {
@@ -286,4 +287,5 @@ class UpgradeTestCase extends ViewsSchemaTestBase {
 
       return $import;
   }
+
 }

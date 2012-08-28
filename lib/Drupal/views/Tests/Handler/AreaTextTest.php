@@ -7,14 +7,12 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSchemaTestBase;
-
 /**
  * Tests the text area handler.
  *
  * @see views_handler_area_text
  */
-class AreaTextTest extends ViewsSchemaTestBase {
+class AreaTextTest extends HandlerTestBase {
 
   public static function getInfo() {
     return array(
@@ -22,6 +20,12 @@ class AreaTextTest extends ViewsSchemaTestBase {
       'description' => 'Test the core views_handler_area_text handler.',
       'group' => 'Views Handlers',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
   }
 
   public function testAreaText() {

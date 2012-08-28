@@ -2,18 +2,19 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\WizardOverrideDisplaysTest.
+ * Definition of Drupal\views\Tests\UI\OverrideDisplaysTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\UI;
 
 /**
  * Tests that displays can be correctly overridden via the user interface.
  */
-class WizardOverrideDisplaysTest extends WizardTestBase {
+class OverrideDisplaysTest extends UITestBase {
+
   public static function getInfo() {
     return array(
-      'name' => 'Views UI overridden displays',
+      'name' => 'Overridden displays functionality',
       'description' => 'Test that displays can be correctly overridden via the user interface.',
       'group' => 'Views UI',
     );
@@ -189,5 +190,5 @@ class WizardOverrideDisplaysTest extends WizardTestBase {
     $this->drupalPost("admin/structure/views/view/{$view['name']}/edit/block", array(), t('Save'));
     $this->assertText($view['page[title]']);
   }
-}
 
+}

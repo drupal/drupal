@@ -10,7 +10,7 @@ namespace Drupal\views\Tests\Field;
 /**
  * Test the produced views_data.
  */
-class ApiDataTest extends ApiTestBase {
+class ApiDataTest extends FieldTestBase {
   /**
    * Stores the fields for this test case.
    */
@@ -18,8 +18,8 @@ class ApiDataTest extends ApiTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Fieldapi: Views Data',
-      'description' => 'Tests the fieldapi views data.',
+      'name' => 'Field: Views Data',
+      'description' => 'Tests the Field Views data.',
       'group' => 'Views Modules',
     );
   }

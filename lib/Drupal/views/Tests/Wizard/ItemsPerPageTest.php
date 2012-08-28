@@ -2,20 +2,21 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\WizardItemsPerPageTest.
+ * Definition of Drupal\views\Tests\Wizard\ItemsPerPageTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\Wizard;
 
 /**
  * Tests the ability of the views wizard to specify the number of items per page.
  */
-class WizardItemsPerPageTest extends WizardTestBase {
+class ItemsPerPageTest extends WizardTestBase {
+
   public static function getInfo() {
     return array(
-      'name' => 'Views UI wizard items per page functionality',
+      'name' => 'Items per page functionality',
       'description' => 'Test the ability of the views wizard to specify the number of items per page.',
-      'group' => 'Views UI',
+      'group' => 'Views Wizard',
     );
   }
 
@@ -90,5 +91,5 @@ class WizardItemsPerPageTest extends WizardTestBase {
     $pos3 = strpos($content, $node3->label());
     $this->assertTrue($pos5 < $pos4 && $pos4 < $pos3, t('The nodes appear in the expected order in the block display.'));
   }
-}
 
+}

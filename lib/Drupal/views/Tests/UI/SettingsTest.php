@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\UiSettingsTest.
+ * Definition of Drupal\views\Tests\UI\SettingsTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\UI;
 
 /**
- * Tests the various settings in the views ui.
+ * Tests the various settings in the views UI.
  */
-class UiSettingsTest extends ViewsSqlTest {
+class SettingsTest extends UITestBase {
 
   /**
    * Stores an admin user used by the different tests.
@@ -21,18 +21,11 @@ class UiSettingsTest extends ViewsSqlTest {
 
   public static function getInfo() {
     return array(
-      'name' => 'Views UI settings',
+      'name' => 'Settings functionality',
       'description' => 'Tests all ui related settings under admin/structure/views/settings.',
       'group' => 'Views UI',
     );
   }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->adminUser = $this->drupalCreateUser(array('administer views'));
-  }
-
 
   /**
    * Tests the settings for the views listing page.
@@ -62,7 +55,7 @@ class UiSettingsTest extends ViewsSqlTest {
   /**
    * Tests the settings for the edit ui.
    */
-  function testEditUi() {
+  function testEditUI() {
     $this->drupalLogin($this->adminUser);
 
     // Configure to always show the master display.
@@ -120,4 +113,5 @@ class UiSettingsTest extends ViewsSqlTest {
     $this->drupalPost('admin/structure/views/add', $view, t('Continue & edit'));
     $this->assertNoFieldById('edit-displays-top-add-display-embed');
   }
+
 }

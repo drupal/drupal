@@ -8,18 +8,18 @@
 namespace Drupal\views\Tests\User;
 
 use Drupal\views\View;
-use Drupal\views\Tests\ViewsSqlTest;
 
 /**
  * Tests the field username handler.
  *
  * @see views_handler_field_user_name
  */
-class HandlerFieldUserNameTest extends ViewsSqlTest {
+class HandlerFieldUserNameTest extends UserTestBase {
+
   public static function getInfo() {
     return array(
-      'name' => 'Tests user: name field',
-      'description' => 'Tests the handler of the user: name field',
+      'name' => 'User: Name Field',
+      'description' => 'Tests the handler of the user: name field.',
       'group' => 'Views Modules',
     );
   }
@@ -98,4 +98,5 @@ class HandlerFieldUserNameTest extends ViewsSqlTest {
 
     return $view;
   }
+
 }

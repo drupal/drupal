@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\ExposedFormTest.
+ * Definition of Drupal\views\Tests\Plugin\ExposedFormTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\Plugin;
 
 /**
  * Tests exposed forms.
  */
-class ExposedFormTest extends ViewsSchemaTestBase {
+class ExposedFormTest extends PluginTestBase {
 
   protected $profile = 'standard';
 
@@ -20,6 +20,12 @@ class ExposedFormTest extends ViewsSchemaTestBase {
       'description' => 'Test exposed forms functionality.',
       'group' => 'Views Plugins',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
   }
 
   /**

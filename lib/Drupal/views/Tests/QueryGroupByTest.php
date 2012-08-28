@@ -12,7 +12,7 @@ use Drupal\views\View;
 /**
  * Tests aggregate functionality of views, for example count.
  */
-class QueryGroupByTest extends ViewsSqlTest {
+class QueryGroupByTest extends ViewTestBase {
 
   /**
    * Modules to enable.

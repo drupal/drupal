@@ -2,25 +2,31 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Style\PluginStyleTest.
+ * Definition of Drupal\views\Tests\Plugin\StyleTest.
  */
 
-namespace Drupal\views\Tests\Style;
+namespace Drupal\views\Tests\Plugin;
 
 use stdClass;
 use DOMDocument;
-use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests some general style plugin related functionality.
  */
-class PluginStyleTest extends ViewsSchemaTestBase {
+class StyleTest extends PluginTestBase {
+
   public static function getInfo() {
     return array(
-      'name' => 'Styles',
+      'name' => 'Style: General',
       'description' => 'Test general style functionality.',
       'group' => 'Views Plugins',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
   }
 
   /**
@@ -281,4 +287,5 @@ class PluginStyleTest extends ViewsSchemaTestBase {
       $count++;
     }
   }
+
 }

@@ -57,8 +57,8 @@ class ViewStorageTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Views configurable CRUD tests',
-      'description' => 'Test the CRUD functionality for ViewStorage.',
+      'name' => 'Configurables CRUD tests',
+      'description' => 'Tests the CRUD functionality for ViewStorage.',
       'group' => 'Views',
     );
   }

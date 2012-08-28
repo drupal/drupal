@@ -7,18 +7,23 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSchemaTestBase;
-
 /**
  * Tests for core Drupal\views\Plugin\views\sort\SortPluginBase handler.
  */
-class SortTest extends ViewsSchemaTestBase {
+class SortTest extends HandlerTestBase {
+
   public static function getInfo() {
     return array(
-      'name' => 'Sort: generic',
+      'name' => 'Sort: Generic',
       'description' => 'Test the core Drupal\views\Plugin\views\sort\SortPluginBase handler.',
       'group' => 'Views Handlers',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
   }
 
   /**
@@ -122,4 +127,5 @@ class SortTest extends ViewsSchemaTestBase {
       'views_test_age' => 'age',
     ));
   }
+
 }

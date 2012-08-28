@@ -2,28 +2,27 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\User\UserArgumentValidate.
+ * Definition of Drupal\views\Tests\User\ArgumentValidateTest.
  */
 
 namespace Drupal\views\Tests\User;
 
 use Drupal\views\View;
-use Drupal\views\Tests\ViewsSqlTest;
 
 /**
  * Tests views user argument argument handler.
  */
-class UserArgumentValidate extends ViewsSqlTest {
+class ArgumentValidateTest extends UserTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Tests user argument validator',
-      'description' => 'Tests user argument validator',
+      'name' => 'User: Argument validator',
+      'description' => 'Tests user argument validator.',
       'group' => 'Views Plugins',
     );
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->account = $this->drupalCreateUser();

@@ -7,20 +7,20 @@
 
 namespace Drupal\views\Tests\Taxonomy;
 
-use Drupal\views\Tests\ViewsSqlTest;
+use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\View;
 
 /**
  * Tests the node_term_data relationship handler.
  */
-class RelationshipNodeTermDataTest extends ViewsSqlTest {
+class RelationshipNodeTermDataTest extends ViewTestBase {
 
   protected $profile = 'standard';
 
   public static function getInfo() {
     return array(
-      'name' => 'Tests handler relationship_node_term_data',
-      'description' => 'Tests the taxonomy term on node relationship handler',
+      'name' => 'Taxonomy: Node term data Relationship',
+      'description' => 'Tests the taxonomy term on node relationship handler.',
       'group' => 'Views Modules',
     );
   }
@@ -65,7 +65,6 @@ class RelationshipNodeTermDataTest extends ViewsSqlTest {
       ),
     );
     $this->column_map = array('nid' => 'nid');
-    debug($view->result);
     $this->assertIdenticalResultset($view, $resultset, $this->column_map);
   }
 
@@ -126,4 +125,5 @@ class RelationshipNodeTermDataTest extends ViewsSqlTest {
 
     return $view;
   }
+
 }

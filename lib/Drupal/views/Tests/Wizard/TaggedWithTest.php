@@ -2,26 +2,31 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\WizardTaggedWithTest.
+ * Definition of Drupal\views\Tests\Wizard\TaggedWithTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\Wizard;
 
 /**
  * Tests the ability of the views wizard to create views filtered by taxonomy.
  */
-class WizardTaggedWithTest extends WizardTestBase {
+class TaggedWithTest extends WizardTestBase {
+
   protected $node_type_with_tags;
+
   protected $node_type_without_tags;
+
   protected $tag_vocabulary;
+
   protected $tag_field;
+
   protected $tag_instance;
 
   public static function getInfo() {
     return array(
-      'name' => 'Views UI wizard taxonomy functionality',
+      'name' => 'Taxonomy functionality',
       'description' => 'Test the ability of the views wizard to create views filtered by taxonomy.',
-      'group' => 'Views UI',
+      'group' => 'Views Wizard',
     );
   }
 
@@ -174,5 +179,5 @@ class WizardTaggedWithTest extends WizardTestBase {
     $this->drupalPost(NULL, $view, t('Update "of type" choice'));
     $this->assertFieldByXpath($tags_xpath);
   }
-}
 
+}

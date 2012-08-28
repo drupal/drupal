@@ -7,18 +7,23 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSchemaTestBase;
-
 /**
  * Tests for core Drupal\views\Plugin\views\sort\Date handler.
  */
-class SortDateTest extends ViewsSchemaTestBase {
+class SortDateTest extends HandlerTestBase {
+
   public static function getInfo() {
     return array(
-      'name' => 'Sort: date',
+      'name' => 'Sort: Date',
       'description' => 'Test the core Drupal\views\Plugin\views\sort\Date handler.',
       'group' => 'Views Handlers',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
   }
 
   protected function expectedResultSet($granularity, $reverse = TRUE) {
@@ -199,4 +204,5 @@ class SortDateTest extends ViewsSchemaTestBase {
       }
     }
   }
+
 }

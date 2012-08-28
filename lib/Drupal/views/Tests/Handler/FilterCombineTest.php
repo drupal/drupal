@@ -7,12 +7,11 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSchemaTestBase;
-
 /**
  * Tests the combine filter handler.
  */
-class FilterCombineTest extends ViewsSchemaTestBase {
+class FilterCombineTest extends HandlerTestBase {
+
   var $column_map = array();
 
   public static function getInfo() {
@@ -25,6 +24,9 @@ class FilterCombineTest extends ViewsSchemaTestBase {
 
   function setUp() {
     parent::setUp();
+
+    $this->enableViewsTestModule();
+
     $this->column_map = array(
       'views_test_name' => 'name',
       'views_test_job' => 'job',
@@ -106,4 +108,5 @@ class FilterCombineTest extends ViewsSchemaTestBase {
     unset($schema['views_test']['fields']['job']['not null']);
     return $schema;
   }
+
 }

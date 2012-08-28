@@ -2,20 +2,21 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\WizardSortingTest.
+ * Definition of Drupal\views\Tests\Wizard\SortingTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\Wizard;
 
 /**
  * Tests the ability of the views wizard to create views with sorts.
  */
-class WizardSortingTest extends WizardTestBase {
+class SortingTest extends WizardTestBase {
+
   public static function getInfo() {
     return array(
-      'name' => 'Views UI wizard sorting functionality',
+      'name' => 'Sorting functionality',
       'description' => 'Test the ability of the views wizard to create views with sorts.',
-      'group' => 'Views UI',
+      'group' => 'Views Wizard',
     );
   }
 
@@ -75,5 +76,5 @@ class WizardSortingTest extends WizardTestBase {
     $pos1 = strpos($content, $node1->label());
     $this->assertTrue($pos3 < $pos2 && $pos2 < $pos1, t('The nodes appear in the expected order in a view that sorts by newest first.'));
   }
-}
 
+}

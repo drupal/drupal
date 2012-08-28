@@ -7,12 +7,11 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSchemaTestBase;
-
 /**
  * Tests the core Drupal\views\Plugin\views\filter\String handler.
  */
-class FilterStringTest extends ViewsSchemaTestBase {
+class FilterStringTest extends HandlerTestBase {
+
   var $column_map = array();
 
   public static function getInfo() {
@@ -25,6 +24,9 @@ class FilterStringTest extends ViewsSchemaTestBase {
 
   function setUp() {
     parent::setUp();
+
+    $this->enableViewsTestModule();
+
     $this->column_map = array(
       'views_test_name' => 'name',
     );

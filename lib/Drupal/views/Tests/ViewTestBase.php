@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of Drupal\views\Tests\ViewsSqlTest.
+ * Definition of Drupal\views\Tests\ViewTestBase.
  */
 
 namespace Drupal\views\Tests;
@@ -11,7 +11,7 @@ use Drupal\views\View;
 /**
  * Abstract class for views testing.
  */
-abstract class ViewsSqlTest extends WebTestBase {
+abstract class ViewTestBase extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -27,6 +27,32 @@ abstract class ViewsSqlTest extends WebTestBase {
     views_init();
     views_get_all_views(TRUE);
     menu_router_rebuild();
+  }
+
+
+  /**
+   * Sets up the views_test.module.
+   *
+   * Because the schema of views_test.module is dependent on the test using it,
+   * it cannot be enabled normally.
+   */
+  protected function enableViewsTestModule() {
+    // Define the schema and views data variable before enabling the test module.
+    variable_set('views_test_schema', $this->schemaDefinition());
+    variable_set('views_test_views_data', $this->viewsData());
+
+    module_enable(array('views_test'));
+    $this->resetAll();
+
+    // Load the test dataset.
+    $data_set = $this->dataSet();
+    $query = db_insert('views_test')
+      ->fields(array_keys($data_set[0]));
+    foreach ($data_set as $record) {
+      $query->values($record);
+    }
+    $query->execute();
+    $this->checkPermissions(array(), TRUE);
   }
 
   /**

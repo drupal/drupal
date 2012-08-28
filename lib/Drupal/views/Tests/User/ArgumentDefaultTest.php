@@ -2,108 +2,58 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\ArgumentDefaultTest.
+ * Definition of Drupal\views\Tests\User\ArgumentDefaultTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\User;
 
 use Drupal\views\View;
 
 /**
- * Basic test for pluggable argument default.
+ * Tests views user argument default plugin.
  */
-class ArgumentDefaultTest extends ViewsSchemaTestBase {
-
-  protected $profile = 'standard';
-
-  /**
-   * A random string used in the default views.
-   *
-   * @var string
-   */
-  protected $random;
+class ArgumentDefaultTest extends UserTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Argument default',
-      'description' => 'Tests pluggable argument_default for views.',
-      'group' => 'Views Plugins'
+      'name' => 'User: Argument default',
+      'description' => 'Tests user argument default plugin.',
+      'group' => 'Views Plugins',
     );
   }
 
-  public function setUp() {
-    parent::setUp();
+  public function test_plugin_argument_default_current_user() {
+    // Create a user to test.
+    $account = $this->drupalCreateUser();
 
-    $this->random = $this->randomString();
-  }
+    // Switch the user, we have to check the global user too, because drupalLogin is only for the simpletest browser.
+    $this->drupalLogin($account);
+    global $user;
+    $admin = $user;
+    drupal_save_session(FALSE);
+    $user = $account;
 
-  /**
-   * Tests the use of a default argument plugin that provides no options.
-   */
-  function testArgumentDefaultNoOptions() {
-    $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
-    $this->drupalLogin($admin_user);
-
-    // The current_user plugin has no options form, and should pass validation.
-    $argument_type = 'current_user';
-    $edit = array(
-      'options[default_argument_type]' => $argument_type,
-    );
-    $this->drupalPost('admin/structure/views/nojs/config-item/test_argument_default_current_user/default/argument/uid', $edit, t('Apply'));
-
-    // Note, the undefined index error has two spaces after it.
-    $error = array(
-      '%type' => 'Notice',
-      '!message' => 'Undefined index:  ' . $argument_type,
-      '%function' => 'views_handler_argument->options_validate()',
-    );
-    $message = t('%type: !message in %function', $error);
-    $this->assertNoRaw($message, t('Did not find error message: !message.', array('!message' => $message)));
-  }
-
-  /**
-   * Tests fixed default argument.
-   */
-  function testArgumentDefaultFixed() {
-    $view = $this->view_argument_default_fixed();
+    $view = $this->view_plugin_argument_default_current_user();
 
     $view->set_display('default');
     $view->pre_execute();
     $view->init_handlers();
 
-    $this->assertEqual($view->argument['null']->get_default_argument(), $this->random, 'Fixed argument should be used by default.');
-
-    $view->destroy();
-
-    // Make sure that a normal argument provided is used
-    $view = $this->view_argument_default_fixed();
-
-    $view->set_display('default');
-    $random_string = $this->randomString();
-    $view->execute_display('default', array($random_string));
-
-    $this->assertEqual($view->args[0], $random_string, 'Provided argument should be used.');
+    $this->assertEqual($view->argument['null']->get_default_argument(), $account->uid, 'Uid of the current user is used.');
+    // Switch back.
+    $user = $admin;
+    drupal_save_session(TRUE);
   }
 
-  /**
-   * @todo Test php default argument.
-   */
-  //function testArgumentDefaultPhp() {}
-
-  /**
-   * @todo Test node default argument.
-   */
-  //function testArgumentDefaultNode() {}
-
-  function view_argument_default_fixed() {
+  function view_plugin_argument_default_current_user() {
     $view = new View(array(), 'view');
-    $view->name = 'test_argument_default_fixed';
+    $view->name = 'test_plugin_argument_default_current_user';
     $view->description = '';
     $view->tag = '';
     $view->view_php = '';
     $view->base_table = 'node';
     $view->is_cacheable = FALSE;
-    $view->api_version = 2;
+    $view->api_version = '3.0-alpha1';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
@@ -137,10 +87,10 @@ class ArgumentDefaultTest extends ViewsSchemaTestBase {
     $handler->display->display_options['arguments']['null']['field'] = 'null';
     $handler->display->display_options['arguments']['null']['default_action'] = 'default';
     $handler->display->display_options['arguments']['null']['style_plugin'] = 'default_summary';
-    $handler->display->display_options['arguments']['null']['default_argument_type'] = 'fixed';
-    $handler->display->display_options['arguments']['null']['default_argument_options']['argument'] = $this->random;
+    $handler->display->display_options['arguments']['null']['default_argument_type'] = 'current_user';
     $handler->display->display_options['arguments']['null']['must_not_be'] = 0;
 
     return $view;
   }
+
 }

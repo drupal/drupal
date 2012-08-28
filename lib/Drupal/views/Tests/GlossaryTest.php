@@ -10,11 +10,11 @@ namespace Drupal\views\Tests;
 /**
  * Tests glossary view ( summary of arguments ).
  */
-class GlossaryTest extends ViewsSqlTest {
+class GlossaryTest extends ViewTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Glossary Test',
+      'name' => 'Glossary tests',
       'description' => 'Tests glossary functionality of views.',
       'group' => 'Views',
     );
@@ -56,4 +56,5 @@ class GlossaryTest extends ViewsSqlTest {
       $this->assertEqual($nodes_per_char[$item->title_truncated], $item->num_records);
     }
   }
+
 }

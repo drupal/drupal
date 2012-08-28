@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\AccessTest
+ * Definition of Drupal\views\Tests\Plugin\AccessTest
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\View;
 
 /**
  * Basic test for pluggable access.
  */
-class AccessTest extends ViewsSchemaTestBase {
+class AccessTest extends PluginTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Access',
@@ -21,8 +22,10 @@ class AccessTest extends ViewsSchemaTestBase {
     );
   }
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
+
+    $this->enableViewsTestModule();
 
     $this->admin_user = $this->drupalCreateUser(array('access all views'));
     $this->web_user = $this->drupalCreateUser();
@@ -265,4 +268,5 @@ class AccessTest extends ViewsSchemaTestBase {
 
     return $view;
   }
+
 }

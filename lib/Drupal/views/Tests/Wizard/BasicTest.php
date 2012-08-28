@@ -2,20 +2,21 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\WizardBasicTest.
+ * Definition of Drupal\views\Tests\Wizard\BasicTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\Wizard;
 
 /**
  * Tests creating views with the wizard and viewing them on the listing page.
  */
-class WizardBasicTest extends WizardTestBase {
+class BasicTest extends WizardTestBase {
+
   public static function getInfo() {
     return array(
-      'name' => 'Views UI wizard basic functionality',
+      'name' => 'Basic functionality',
       'description' => 'Test creating basic views with the wizard and viewing them on the listing page.',
-      'group' => 'Views UI',
+      'group' => 'Views Wizard',
     );
   }
 
@@ -135,4 +136,5 @@ class WizardBasicTest extends WizardTestBase {
     // Make sure the listing page doesn't show disabled default views.
     $this->assertNoText('tracker', t('Default tracker view does not show on the listing page.'));
   }
+
 }

@@ -7,13 +7,13 @@
 
 namespace Drupal\views\Tests\Language;
 
-use Drupal\views\Tests\ViewsSchemaTestBase;
+use Drupal\views\Tests\ViewTestBase;
 use Drupal\Core\Language\Language;
 
 /**
  * Base class for all Language handler tests.
  */
-abstract class LanguageTestBase extends ViewsSchemaTestBase {
+abstract class LanguageTestBase extends ViewTestBase {
 
   /**
    * Modules to enable.
@@ -24,6 +24,9 @@ abstract class LanguageTestBase extends ViewsSchemaTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->enableViewsTestModule();
+
     // Create another language beside english.
     $language = new Language(array('langcode' => 'xx-lolspeak', 'name' => 'Lolspeak'));
     language_save($language);

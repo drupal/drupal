@@ -10,12 +10,12 @@ namespace Drupal\views\Tests;
 /**
  * Tests the views analyze system.
  */
-class AnalyzeTest extends ViewsSqlTest {
+class AnalyzeTest extends ViewTestBase {
 
   public static function getInfo() {
     return array(
       'name' => 'Views Analyze',
-      'description' => 'Test the views analyze system.',
+      'description' => 'Tests the views analyze system.',
       'group' => 'Views',
     );
   }
@@ -46,4 +46,5 @@ class AnalyzeTest extends ViewsSqlTest {
     // This redirects the user back to the main views edit page.
     $this->drupalPost(NULL, array(), t('Ok'));
   }
+
 }

@@ -2,32 +2,37 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Style\PluginStyleUnformattedTest.
+ * Definition of Drupal\views\Tests\Plugin\StyleUnformattedTest.
  */
 
-namespace Drupal\views\Tests\Style;
+namespace Drupal\views\Tests\Plugin;
 
 use DOMDocument;
-use Drupal\views\Tests\ViewsSchemaTestBase;
 
 /**
  * Tests the default/unformatted row style.
  */
-class PluginStyleUnformattedTest extends ViewsSchemaTestBase {
+class StyleUnformattedTest extends PluginTestBase {
 
   /**
    * Stores all created nodes.
    *
    * @var array
    */
-  var $nodes;
+  protected $nodes;
 
   public static function getInfo() {
     return array(
-      'name' => 'Style: unformatted',
+      'name' => 'Style: Unformatted',
       'description' => 'Test unformatted style functionality.',
       'group' => 'Views Plugins',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
   }
 
   /**

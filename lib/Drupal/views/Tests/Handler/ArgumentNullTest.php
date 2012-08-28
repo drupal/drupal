@@ -7,18 +7,23 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSchemaTestBase;
-
 /**
  * Tests the core Drupal\views\Plugin\views\argument\Null handler.
  */
-class ArgumentNullTest extends ViewsSchemaTestBase {
+class ArgumentNullTest extends HandlerTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Argument: Null',
       'description' => 'Test the core Drupal\views\Plugin\views\argument\Null handler.',
       'group' => 'Views Handlers',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
   }
 
   function viewsData() {

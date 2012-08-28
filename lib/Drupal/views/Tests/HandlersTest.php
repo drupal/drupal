@@ -12,14 +12,20 @@ use stdClass;
 /**
  * Tests abstract handlers of views.
  */
-class HandlersTest extends ViewsSchemaTestBase {
+class HandlersTest extends ViewTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Handlers test',
-      'description' => 'test abstract handler definitions',
+      'name' => 'Handlers tests',
+      'description' => 'Tests abstract handler definitions.',
       'group' => 'Views',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
   }
 
   function testFilterInOperatorUi() {
@@ -149,4 +155,5 @@ class HandlersTest extends ViewsSchemaTestBase {
   protected function assertEqualValue($first, $handler, $message = '', $group = 'Other') {
     return $this->assert($first == $handler->value, $message ? $message : t('First value is equal to second value'), $group);
   }
+
 }

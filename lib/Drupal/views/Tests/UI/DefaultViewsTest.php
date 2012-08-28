@@ -2,18 +2,19 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\WizardDefaultViewsTest.
+ * Definition of Drupal\views\Tests\UI\DefaultViewsTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\UI;
 
 /**
  * Tests enabling, disabling, and reverting default views via the listing page.
  */
-class WizardDefaultViewsTest extends WizardTestBase {
+class DefaultViewsTest extends UITestBase {
+
   public static function getInfo() {
     return array(
-      'name' => 'Views UI default views functionality',
+      'name' => 'Default views functionality',
       'description' => 'Test enabling, disabling, and reverting default views via the listing page.',
       'group' => 'Views UI',
     );
@@ -27,7 +28,7 @@ class WizardDefaultViewsTest extends WizardTestBase {
     // the listing page).
     $edit_href = 'admin/structure/views/view/frontpage/edit';
     $this->drupalGet('admin/structure/views');
-    // TODO: Disabled default views do now appear on the front page. Test this
+    // @todo Disabled default views do now appear on the front page. Test this
     // behavior with templates instead.
     // $this->assertNoLinkByHref($edit_href);
 
@@ -65,7 +66,7 @@ class WizardDefaultViewsTest extends WizardTestBase {
     // Now disable the view, and make sure it stops appearing on the main view
     // listing page but instead goes back to displaying on the disabled views
     // listing page.
-    // TODO: Test this behavior with templates instead.
+    // @todo Test this behavior with templates instead.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink(t('Disable'), '/frontpage/');
     // $this->assertUrl('admin/structure/views');
@@ -114,5 +115,5 @@ class WizardDefaultViewsTest extends WizardTestBase {
       return FALSE;
     }
   }
-}
 
+}

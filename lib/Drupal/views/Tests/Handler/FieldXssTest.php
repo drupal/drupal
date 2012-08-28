@@ -7,20 +7,25 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSchemaTestBase;
-
 /**
  * Tests the core Drupal\views\Plugin\views\field\Xss handler.
  *
  * @see CommonXssUnitTest
  */
-class FieldXssTest extends ViewsSchemaTestBase {
+class FieldXssTest extends HandlerTestBase {
+
   public static function getInfo() {
     return array(
-      'name' => 'Field: Xss',
+      'name' => 'Field: XSS',
       'description' => 'Test the core Drupal\views\Plugin\views\field\Xss handler.',
       'group' => 'Views Handlers',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
   }
 
   function dataHelper() {
@@ -61,4 +66,5 @@ class FieldXssTest extends ViewsSchemaTestBase {
       $counter++;
     }
   }
+
 }

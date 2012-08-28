@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\CacheTest.
+ * Definition of Drupal\views\Tests\Plugin\CacheTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\View;
 
@@ -14,7 +14,7 @@ use Drupal\views\View;
  *
  * @see views_plugin_cache
  */
-class CacheTest extends ViewsSchemaTestBase {
+class CacheTest extends PluginTestBase {
 
   public static function getInfo() {
     return array(
@@ -22,6 +22,12 @@ class CacheTest extends ViewsSchemaTestBase {
       'description' => 'Tests pluggable caching for views.',
       'group' => 'Views Plugins'
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
   }
 
   /**

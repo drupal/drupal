@@ -7,13 +7,13 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSqlTest;
 use Drupal\views\View;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\Date handler.
  */
-class FilterDateTest extends ViewsSqlTest {
+class FilterDateTest extends HandlerTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Filter: Date',
@@ -191,4 +191,5 @@ class FilterDateTest extends ViewsSqlTest {
     $view = $this->views_test_between();
     return $view;
   }
+
 }

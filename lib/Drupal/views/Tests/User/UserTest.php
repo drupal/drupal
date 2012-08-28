@@ -2,29 +2,39 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\User\UserTestCase.
+ * Definition of Drupal\views\Tests\User\UserTest.
  */
 
 namespace Drupal\views\Tests\User;
 
 use Drupal\views\View;
-use Drupal\views\Tests\ViewsSqlTest;
 
 /**
  * Tests basic user module integration into views.
  */
-class UserTestCase extends ViewsSqlTest {
-  var $users = array();
-  var $nodes = array();
+class UserTest extends UserTestBase {
+
+  /**
+   * Users to use during this test.
+   *
+   * @var array
+   */
+  protected $users = array();
+
+  /**
+   * Nodes to use during this test.
+   *
+   * @var array
+   */
+  protected $nodes = array();
 
   public static function getInfo() {
     return array(
-      'name' => 'Tests basic user integration',
-      'description' => 'Tests the integration of user module',
+      'name' => 'User: Basic integration',
+      'description' => 'Tests the integration of user.module.',
       'group' => 'Views Modules',
     );
   }
-
 
   protected function setUp() {
     parent::setUp();
@@ -145,4 +155,5 @@ class UserTestCase extends ViewsSqlTest {
 
     return $view;
   }
+
 }

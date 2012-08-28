@@ -2,29 +2,19 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\UiGroupByTest.
+ * Definition of Drupal\views\Tests\UI\GroupByTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\UI;
 
 /**
  * Tests UI of aggregate functionality..
  */
-class UiGroupByTest extends ViewsSchemaTestBase {
-
-  protected $profile = 'standard';
-
-  function setUp() {
-    parent::setUp();
-
-    // Create and log in a user with administer views permission.
-    $views_admin = $this->drupalCreateUser(array('administer views', 'administer blocks', 'bypass node access', 'access user profiles', 'view revisions'));
-    $this->drupalLogin($views_admin);
-  }
+class GroupByTest extends UITestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Groupby UI',
+      'name' => 'Group By functionality',
       'description' => 'Tests UI of aggregate functionality.',
       'group' => 'Views UI',
     );
@@ -33,7 +23,7 @@ class UiGroupByTest extends ViewsSchemaTestBase {
   /**
    * Tests whether basic saving works.
    *
-   * @todo: this should check the change of the settings as well.
+   * @todo This should check the change of the settings as well.
    */
   function testGroupBySave() {
     $this->drupalGet('admin/structure/views/view/test_views_groupby_save/edit');
@@ -48,4 +38,5 @@ class UiGroupByTest extends ViewsSchemaTestBase {
 
     $this->drupalGet('admin/structure/views/nojs/display/test_views_groupby_save/default/group_by');
   }
+
 }

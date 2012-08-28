@@ -7,14 +7,13 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSchemaTestBase;
-
 /**
  * Tests the generic field handler
  *
  * @see views_handler_field
  */
-class FieldTest extends ViewsSchemaTestBase {
+class FieldTest extends HandlerTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Field',
@@ -25,6 +24,9 @@ class FieldTest extends ViewsSchemaTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->enableViewsTestModule();
+
     $this->column_map = array(
       'views_test_name' => 'name',
     );

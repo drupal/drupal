@@ -7,24 +7,26 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSchemaTestBase;
-
 /**
  * Tests the numeric filter handler.
  */
-class FilterNumericTest extends ViewsSchemaTestBase {
+class FilterNumericTest extends HandlerTestBase {
+
   var $column_map = array();
 
   public static function getInfo() {
     return array(
       'name' => 'Filter: Numeric',
-      'description' => 'Tests the numeric filter handler',
+      'description' => 'Tests the numeric filter handler.',
       'group' => 'Views Handlers',
     );
   }
 
   function setUp() {
     parent::setUp();
+
+    $this->enableViewsTestModule();
+
     $this->column_map = array(
       'views_test_name' => 'name',
       'views_test_age' => 'age',

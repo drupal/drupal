@@ -7,18 +7,23 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewsSchemaTestBase;
-
 /**
  * Tests the core Drupal\views\Plugin\views\field\Date handler.
  */
-class FieldDateTest extends ViewsSchemaTestBase {
+class FieldDateTest extends HandlerTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Field: Date',
       'description' => 'Test the core Drupal\views\Plugin\views\field\Date handler.',
       'group' => 'Views Handlers',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
   }
 
   function viewsData() {
@@ -88,4 +93,5 @@ class FieldDateTest extends ViewsSchemaTestBase {
       $this->assertEqual($expected_result, $actual_result, $message);
     }
   }
+
 }

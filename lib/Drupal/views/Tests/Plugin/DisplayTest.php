@@ -2,22 +2,21 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\DisplayTestCase.
+ * Definition of Drupal\views\Tests\Plugin\DisplayTest.
  */
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\views\Tests\ViewsSqlTest;
 use Drupal\views\View;
 
 /**
- *
+ * Tests the basic display plugin.
  */
-class DisplayTestCase extends ViewsSqlTest {
+class DisplayTest extends PluginTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Display plugin',
+      'name' => 'Display',
       'description' => 'Tests the basic display plugin.',
       'group' => 'Views Plugins',
     );
@@ -180,4 +179,5 @@ class DisplayTestCase extends ViewsSqlTest {
 
     return $view;
   }
+
 }

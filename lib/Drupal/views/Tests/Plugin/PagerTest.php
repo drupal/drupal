@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\PagerTest.
+ * Definition of Drupal\views\Tests\Plugin\PagerTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\View;
 
 /**
  * Tests the pluggable pager system.
  */
-class PagerTest extends ViewsSqlTest {
+class PagerTest extends PluginTestBase {
 
   public static function getInfo() {
     return array(
       'name' => 'Pager',
-      'description' => 'Test the pluggable pager system',
+      'description' => 'Test the pluggable pager system.',
       'group' => 'Views Plugins',
     );
   }
@@ -494,4 +494,5 @@ class PagerTest extends ViewsSqlTest {
     $this->assertEqual($view->get_current_page(), $rand_number, 'Make sure get_current_page uses the settings of set_current_page.');
 
   }
+
 }
