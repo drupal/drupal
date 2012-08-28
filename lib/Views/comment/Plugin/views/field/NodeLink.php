@@ -7,7 +7,7 @@
 
 namespace Views\comment\Plugin\views\field;
 
-use Drupal\views\Plugin\views\field\Entity;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -20,22 +20,7 @@ use Drupal\Core\Annotation\Plugin;
  *   module = "comment"
  * )
  */
-class NodeLink extends Entity {
-
-  function construct() {
-    parent::construct();
-
-    // Add the node fields that comment_link will need..
-    $this->additional_fields['nid'] = array(
-      'field' => 'nid',
-    );
-    $this->additional_fields['type'] = array(
-      'field' => 'type',
-    );
-    $this->additional_fields['comment'] = array(
-      'field' => 'comment',
-    );
-  }
+class NodeLink extends FieldPluginBase {
 
   function option_definition() {
     $options = parent::option_definition();
@@ -54,14 +39,10 @@ class NodeLink extends Entity {
     parent::options_form($form, $form_state);
   }
 
-  function query() {
-    $this->ensure_my_table();
-    $this->add_additional_fields();
-  }
+  function query() {}
 
   function render($values) {
-    // Build fake $node.
-    $node = $this->get_value($values);
+    $node = $this->get_entity($values);
 
     // Call comment.module's hook_link: comment_link($type, $node = NULL, $teaser = FALSE)
     // Call node by reference so that something is changed here

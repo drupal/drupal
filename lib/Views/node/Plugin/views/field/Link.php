@@ -7,7 +7,7 @@
 
 namespace Views\node\Plugin\views\field;
 
-use Drupal\views\Plugin\views\field\Entity;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Plugin;
  *   module = "node"
  * )
  */
-class Link extends Entity {
+class Link extends FieldPluginBase {
 
   function option_definition() {
     $options = parent::option_definition();
@@ -41,8 +41,10 @@ class Link extends Entity {
     $form['alter']['external'] = array('#access' => FALSE);
   }
 
+  function query() {}
+
   function render($values) {
-    if ($entity = $this->get_value($values)) {
+    if ($entity = $this->get_entity($values)) {
       return $this->render_link($entity, $values);
     }
   }

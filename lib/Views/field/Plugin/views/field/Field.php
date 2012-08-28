@@ -135,58 +135,15 @@ class Field extends FieldPluginBase {
   /**
    * Called to add the field to a query.
    *
-   * By default, the only columns added to the query are entity_id and
-   * entity_type. This is because other needed data is fetched by entity_load().
-   * Other columns are added only if they are used in groupings, or if
-   * 'add fields to query' is specifically set to TRUE in the field definition.
-   *
-   * The 'add fields to query' switch is used by modules which need all data
-   * present in the query itself (such as "sphinx").
+   * By default, all needed data is taken from entities loaded by the query
+   * plugin. Columns are added only if they are used in groupings.
    */
   function query($use_groupby = FALSE) {
     $this->get_base_table();
 
-    $params = array();
-    if ($use_groupby) {
-      // When grouping on a "field API" field (whose "real_field" is set to
-      // entity_id), retrieve the minimum entity_id to have a valid entity_id to
-      // pass to field_view_field().
-      $params = array(
-        'function' => 'min',
-      );
-
-      $this->ensure_my_table();
-    }
-
-    // Get the entity type according to the base table of the field.
-    // Then add it to the query as a formula. That way we can avoid joining
-    // the field table if all we need is entity_id and entity_type.
     $entity_type = $this->definition['entity_tables'][$this->base_table];
-    $entity_info = entity_get_info($entity_type);
-
-    if (isset($this->relationship)) {
-      $this->base_table_alias = $this->relationship;
-    }
-    else {
-      $this->base_table_alias = $this->base_table;
-    }
-
-    // We always need the base field (entity_id / revision_id).
-    if (empty($this->definition['is revision'])) {
-      $this->field_alias = $this->query->add_field($this->base_table_alias, $entity_info['entity keys']['id'], '', $params);
-    }
-    else {
-      $this->field_alias = $this->query->add_field($this->base_table_alias, $entity_info['entity keys']['revision'], '', $params);
-      $this->aliases['entity_id'] = $this->query->add_field($this->base_table_alias, $entity_info['entity keys']['id'], '', $params);
-    }
-
-
-    // The alias needs to be unique, so we use both the field table and the entity type.
-    $entity_type_alias = $this->definition['table'] . '_' . $entity_type . '_entity_type';
-    $this->aliases['entity_type'] = $this->query->add_field(NULL, "'$entity_type'", $entity_type_alias);
-
     $fields = $this->additional_fields;
-    // We've already added entity_type, so we can remove it from the list.
+    // No need to add the entity type.
     $entity_type_key = array_search('entity_type', $fields);
     if ($entity_type_key !== FALSE) {
       unset($fields[$entity_type_key]);
@@ -195,13 +152,10 @@ class Field extends FieldPluginBase {
     if ($use_groupby) {
       // Add the fields that we're actually grouping on.
       $options = array();
-
       if ($this->options['group_column'] != 'entity_id') {
         $options = array($this->options['group_column'] => $this->options['group_column']);
       }
-
       $options += is_array($this->options['group_columns']) ? $this->options['group_columns'] : array();
-
 
       $fields = array();
       $rkey = $this->definition['is revision'] ? 'FIELD_LOAD_REVISION' : 'FIELD_LOAD_CURRENT';
@@ -245,23 +199,14 @@ class Field extends FieldPluginBase {
         $this->query->add_where_expression(0, "$column IN($placeholder) OR $column IS NULL", array($placeholder => $langcode_fallback_candidates));
       }
     }
-
-    // The revision id inhibits grouping.
-    // So, stop here if we're using grouping, or if aren't adding all columns to
-    // the query.
-    if ($use_groupby || empty($this->definition['add fields to query'])) {
-      return;
-    }
-
-    $this->add_additional_fields(array('revision_id'));
   }
 
   /**
    * Determine if the field table should be added to the query.
    */
   function add_field_table($use_groupby) {
-    // Grouping is enabled, or we are explicitly required to do this.
-    if ($use_groupby || !empty($this->definition['add fields to query'])) {
+    // Grouping is enabled.
+    if ($use_groupby) {
       return TRUE;
     }
     // This a multiple value field, but "group multiple values" is not checked.
@@ -622,69 +567,6 @@ class Field extends FieldPluginBase {
   }
 
   /**
-   * Load the entities for all fields that are about to be displayed.
-   */
-  function post_execute(&$values) {
-    if (!empty($values)) {
-      // Divide the entity ids by entity type, so they can be loaded in bulk.
-      $entities_by_type = array();
-      $revisions_by_type = array();
-      foreach ($values as $key => $object) {
-        if (isset($this->aliases['entity_type']) && isset($object->{$this->aliases['entity_type']}) && isset($object->{$this->field_alias}) && !isset($values[$key]->_field_data[$this->field_alias])) {
-          $entity_type = $object->{$this->aliases['entity_type']};
-          if (empty($this->definition['is revision'])) {
-            $entity_id = $object->{$this->field_alias};
-            $entities_by_type[$entity_type][$key] = $entity_id;
-          }
-          else {
-            $revision_id = $object->{$this->field_alias};
-            $entity_id = $object->{$this->aliases['entity_id']};
-            $entities_by_type[$entity_type][$key] = array($entity_id, $revision_id);
-          }
-        }
-      }
-
-      // Load the entities.
-      foreach ($entities_by_type as $entity_type => $entity_ids) {
-        $entity_info = entity_get_info($entity_type);
-        if (empty($this->definition['is revision'])) {
-          $entities = entity_load_multiple($entity_type, $entity_ids);
-          $keys = $entity_ids;
-        }
-        else {
-          // Revisions can't be loaded multiple, so we have to load them
-          // one by one.
-          $entities = array();
-          $keys = array();
-          foreach ($entity_ids as $key => $combined) {
-            list($entity_id, $revision_id) = $combined;
-            $entity = entity_revision_load($entity_type, $revision_id);
-            if ($entity) {
-              $entities[$revision_id] = array_shift($entity);
-              $keys[$key] = $revision_id;
-            }
-          }
-        }
-
-        foreach ($keys as $key => $entity_id) {
-          // If this is a revision, load the revision instead.
-          if (isset($entities[$entity_id])) {
-            $values[$key]->_field_data[$this->field_alias] = array(
-              'entity_type' => $entity_type,
-              'entity' => $entities[$entity_id],
-            );
-          }
-        }
-      }
-
-      // Now, transfer the data back into the resultset so it can be easily used.
-      foreach ($values as $row_id => &$value) {
-        $value->{'field_' . $this->options['id']} = $this->set_items($value, $row_id);
-      }
-    }
-  }
-
-  /**
    * Render all items in this field together.
    *
    * When using advanced render, each possible item in the list is rendered
@@ -710,16 +592,76 @@ class Field extends FieldPluginBase {
     }
   }
 
+  /**
+   * Return an array of items for the field.
+   */
   function get_items($values) {
-    return $values->{'field_' . $this->options['id']};
+    $original_entity = $this->get_entity($values);
+    if (!$original_entity) {
+      return array();
+    }
+    $entity = $this->process_entity($original_entity);
+    if (!$entity) {
+      return array();
+    }
+
+    $display = array(
+      'type' => $this->options['type'],
+      'settings' => $this->options['settings'],
+      'label' => 'hidden',
+      // Pass the View object in the display so that fields can act on it.
+      'views_view' => $this->view,
+      'views_field' => $this,
+      'views_row_id' => $this->view->row_index,
+    );
+
+    $entity_type = $entity->entityType();
+    $langcode = $this->field_langcode($entity_type, $entity);
+    $render_array = field_view_field($entity_type, $entity, $this->definition['field_name'], $display, $langcode);
+
+    $items = array();
+    if ($this->options['field_api_classes']) {
+      // Make a copy.
+      $array = $render_array;
+      return array(array('rendered' => drupal_render($render_array)));
+    }
+
+    foreach (element_children($render_array) as $count) {
+      $items[$count]['rendered'] = $render_array[$count];
+      // field_view_field() adds an #access property to the render array that
+      // determines whether or not the current user is allowed to view the
+      // field in the context of the current entity. We need to respect this
+      // parameter when we pull out the children of the field array for
+      // rendering.
+      if (isset($render_array['#access'])) {
+        $items[$count]['rendered']['#access'] = $render_array['#access'];
+      }
+      // Only add the raw field items (for use in tokens) if the current user
+      // has access to view the field content.
+      if ((!isset($items[$count]['rendered']['#access']) || $items[$count]['rendered']['#access']) && !empty($render_array['#items'][$count])) {
+        $items[$count]['raw'] = $render_array['#items'][$count];
+      }
+    }
+    return $items;
   }
 
-  function get_value($values, $field = NULL) {
-    // Go ahead and render and store in $this->items.
-    $entity = clone $values->_field_data[$this->field_alias]['entity'];
+  /**
+   * Process an entity before using it for rendering.
+   *
+   * Replaces values with aggregated values if aggregation is enabled.
+   * Takes delta settings into account (@todo remove in #1758616).
+   *
+   * @param $entity
+   *   The entity to be processed.
+   *
+   * @return
+   *   TRUE if the processing completed successfully, otherwise FALSE.
+   */
+  function process_entity($entity) {
+    $processed_entity = clone $entity;
 
-    $entity_type = $values->_field_data[$this->field_alias]['entity_type'];
-    $langcode = $this->field_langcode($entity_type, $entity);
+    $entity_type = $entity->entityType();
+    $langcode = $this->field_langcode($entity_type, $processed_entity);
     // If we are grouping, copy our group fields into the cloned entity.
     // It's possible this will cause some weirdness, but there's only
     // so much we can hope to do.
@@ -744,21 +686,21 @@ class Field extends FieldPluginBase {
       if ($data) {
         // Now, overwrite the original value with our aggregated value.
         // This overwrites it so there is always just one entry.
-        $entity->{$this->definition['field_name']}[$langcode] = array($base_value);
+        $processed_entity->{$this->definition['field_name']}[$langcode] = array($base_value);
       }
       else {
-        $entity->{$this->definition['field_name']}[$langcode] = array();
+        $processed_entity->{$this->definition['field_name']}[$langcode] = array();
       }
     }
 
     // The field we are trying to display doesn't exist on this entity.
-    if (!isset($entity->{$this->definition['field_name']})) {
-      return array();
+    if (!isset($processed_entity->{$this->definition['field_name']})) {
+      return FALSE;
     }
 
     // We are supposed to show only certain deltas.
-    if ($this->limit_values && !empty($entity->{$this->definition['field_name']})) {
-      $all_values = !empty($entity->{$this->definition['field_name']}[$langcode]) ? $entity->{$this->definition['field_name']}[$langcode] : array();
+    if ($this->limit_values && !empty($processed_entity->{$this->definition['field_name']})) {
+      $all_values = !empty($processed_entity->{$this->definition['field_name']}[$langcode]) ? $processed_entity->{$this->definition['field_name']}[$langcode] : array();
       if ($this->options['delta_reversed']) {
         $all_values = array_reverse($all_values);
       }
@@ -804,69 +746,10 @@ class Field extends FieldPluginBase {
           }
         }
       }
-      $entity->{$this->definition['field_name']}[$langcode] = $new_values;
+      $processed_entity->{$this->definition['field_name']}[$langcode] = $new_values;
     }
 
-    if ($field == 'entity') {
-      return $entity;
-    }
-    else {
-      return !empty($entity->{$this->definition['field_name']}[$langcode]) ? $entity->{$this->definition['field_name']}[$langcode] : array();
-    }
-  }
-
-  /**
-   * Return an array of items for the field.
-   */
-  function set_items($values, $row_id) {
-    if (empty($values->_field_data[$this->field_alias]) || empty($values->_field_data[$this->field_alias]['entity'])) {
-      return array();
-    }
-
-    $display = array(
-      'type' => $this->options['type'],
-      'settings' => $this->options['settings'],
-      'label' => 'hidden',
-      // Pass the View object in the display so that fields can act on it.
-      'views_view' => $this->view,
-      'views_field' => $this,
-      'views_row_id' => $row_id,
-    );
-
-
-    $entity_type = $values->_field_data[$this->field_alias]['entity_type'];
-    $entity = $this->get_value($values, 'entity');
-    if (!$entity) {
-      return array();
-    }
-
-    $langcode = $this->field_langcode($entity_type, $entity);
-    $render_array = field_view_field($entity_type, $entity, $this->definition['field_name'], $display, $langcode);
-
-    $items = array();
-    if ($this->options['field_api_classes']) {
-      // Make a copy.
-      $array = $render_array;
-      return array(array('rendered' => drupal_render($render_array)));
-    }
-
-    foreach (element_children($render_array) as $count) {
-      $items[$count]['rendered'] = $render_array[$count];
-      // field_view_field() adds an #access property to the render array that
-      // determines whether or not the current user is allowed to view the
-      // field in the context of the current entity. We need to respect this
-      // parameter when we pull out the children of the field array for
-      // rendering.
-      if (isset($render_array['#access'])) {
-        $items[$count]['rendered']['#access'] = $render_array['#access'];
-      }
-      // Only add the raw field items (for use in tokens) if the current user
-      // has access to view the field content.
-      if ((!isset($items[$count]['rendered']['#access']) || $items[$count]['rendered']['#access']) && !empty($render_array['#items'][$count])) {
-        $items[$count]['raw'] = $render_array['#items'][$count];
-      }
-    }
-    return $items;
+    return $processed_entity;
   }
 
   function render_item($count, $item) {

@@ -7,7 +7,7 @@
 
 namespace Views\comment\Plugin\views\field;
 
-use Drupal\views\Plugin\views\field\Entity;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
 
 /**
@@ -20,11 +20,7 @@ use Drupal\Core\Annotation\Plugin;
  *   module = "comment"
  * )
  */
-class Link extends Entity {
-
-  function construct() {
-    parent::construct();
-  }
+class Link extends FieldPluginBase {
 
   function option_definition() {
     $options = parent::option_definition();
@@ -47,19 +43,16 @@ class Link extends Entity {
     parent::options_form($form, $form_state);
   }
 
-  function query() {
-    $this->ensure_my_table();
-    $this->add_additional_fields();
-  }
+  function query() {}
 
   function render($values) {
-    $value = $this->get_value($values, 'cid');
-    return $this->render_link($this->sanitize_value($value), $values);
+    $comment = $this->get_entity($values);
+    return $this->render_link($comment, $values);
   }
 
   function render_link($data, $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
-    $comment = $this->get_value($values);
+    $comment = $data;
     $nid = $comment->nid;
     $cid = $comment->id();
 

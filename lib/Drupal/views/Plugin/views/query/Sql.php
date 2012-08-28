@@ -1316,6 +1316,25 @@ class Sql extends QueryPluginBase {
       $groupby = array_unique(array_merge($this->groupby, $non_aggregates));
     }
 
+    // Make sure each entity table has the base field added so that the
+    // entities can be loaded.
+    $entity_tables = $this->get_entity_tables();
+    if ($entity_tables) {
+      $params = array();
+      if ($groupby) {
+        // Handle grouping, by retrieving the minimum entity_id.
+        $params = array(
+          'function' => 'min',
+        );
+      }
+
+      foreach ($entity_tables as $table_alias => $table) {
+        $info = entity_get_info($table['entity_type']);
+        $base_field = empty($table['revision']) ? $info['entity keys']['id'] : $info['entity keys']['revision'];
+        $this->add_field($table_alias, $base_field, '', $params);
+      }
+    }
+
     // Add all fields to the query.
     $this->compile_fields($query);
 
@@ -1486,6 +1505,9 @@ class Sql extends QueryPluginBase {
         if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
           $view->total_rows = $view->pager->get_total_items();
         }
+
+        // Load all entities contained in the results.
+        $this->load_entities($view->result);
       }
       catch (DatabaseExceptionWrapper $e) {
         $view->result = array();
@@ -1502,6 +1524,125 @@ class Sql extends QueryPluginBase {
       $start = microtime(TRUE);
     }
     $view->execute_time = microtime(TRUE) - $start;
+  }
+
+  /**
+   * Returns an array of all tables from the query that map to an entity type.
+   *
+   * Includes the base table and all relationships, if eligible.
+   * Available keys for each table:
+   * - base: The actual base table (i.e. "user" for an author relationship).
+   * - relationship_id: The id of the relationship, or "none".
+   * - entity_type: The entity type matching the base table.
+   * - revision: A boolean that specifies whether the table is a base table or
+   *   a revision table of the entity type.
+   *
+   * @return array
+   *   An array of table information, keyed by table alias.
+   */
+  function get_entity_tables() {
+    // Start with the base table.
+    $entity_tables = array();
+    $base_table_data = views_fetch_data($this->base_table);
+    if (isset($base_table_data['table']['entity type'])) {
+      $entity_tables[$this->base_table] = array(
+        'base' => $this->base_table,
+        'relationship_id' => 'none',
+        'entity_type' => $base_table_data['table']['entity type'],
+        'revision' => FALSE,
+      );
+    }
+    // Include all relationships.
+    foreach ($this->view->relationship as $relationship_id => $relationship) {
+      $table_data = views_fetch_data($relationship->definition['base']);
+      if (isset($table_data['table']['entity type'])) {
+        $entity_tables[$relationship->alias] = array(
+          'base' => $relationship->definition['base'],
+          'relationship_id' => $relationship_id,
+          'entity_type' => $table_data['table']['entity type'],
+          'revision' => FALSE,
+        );
+      }
+    }
+
+    // Determine which of the tables are revision tables.
+    foreach ($entity_tables as $table_alias => $table) {
+      $info = entity_get_info($table['entity_type']);
+      if (isset($info['revision table']) && $info['revision table'] == $table['base']) {
+        $entity_tables[$table_alias]['revision'] = TRUE;
+      }
+    }
+
+    return $entity_tables;
+  }
+
+  /**
+   * Loads all entities contained in the passed-in $results.
+   *.
+   * If the entity belongs to the base table, then it gets stored in
+   * $result->_entity. Otherwise, it gets stored in
+   * $result->_relationship_entities[$relationship_id];
+   */
+  function load_entities(&$results) {
+    $entity_tables = $this->get_entity_tables();
+    // No entity tables found, nothing else to do here.
+    if (empty($entity_tables)) {
+      return;
+    }
+
+     // Initialize the entity placeholders in $results.
+    foreach ($results as $index => $result) {
+      $results[$index]->_entity = FALSE;
+      $results[$index]->_relationship_entities = array();
+    }
+
+    // Assemble a list of entities to load.
+    $ids_by_table = array();
+    foreach ($entity_tables as $table_alias => $table) {
+      $entity_type = $table['entity_type'];
+      $info = entity_get_info($entity_type);
+      $id_key = empty($table['revision']) ? $info['entity keys']['id'] : $info['entity keys']['revision'];
+      $id_alias = $this->get_field_alias($table_alias, $id_key);
+
+      foreach ($results as $index => $result) {
+        // Store the entity id if it was found.
+        if (!empty($result->$id_alias)) {
+          $ids_by_table[$table_alias][$index] = $result->$id_alias;
+        }
+      }
+    }
+
+    // Load all entities and assign them to the correct result row.
+    foreach ($ids_by_table as $table_alias => $ids) {
+      $table = $entity_tables[$table_alias];
+      $entity_type = $table['entity_type'];
+      $relationship_id = $table['relationship_id'];
+
+      // Drupal core currently has no way to load multiple revisions. Sad.
+      if ($table['revision']) {
+        $entities = array();
+        foreach ($ids as $index => $revision_id) {
+          $entity = entity_revision_load($entity_type, $revision_id);
+          if ($entity) {
+            $entities[$revision_id] = $entity;
+          }
+        }
+      }
+      else {
+        $entities = entity_load_multiple($entity_type, $ids);
+      }
+
+      foreach ($ids as $index => $id) {
+        $entity = isset($entities[$id]) ? $entities[$id] : FALSE;
+
+        if ($relationship_id == 'none') {
+          $results[$index]->_entity = $entity;
+        }
+        else {
+          $results[$index]->_relationship_entities[$relationship_id] = $entity;
+        }
+      }
+    }
   }
 
   function add_signature(&$view) {
@@ -1587,50 +1728,6 @@ class Sql extends QueryPluginBase {
         ),
       )
     );
-  }
-
-  /**
-   * Returns the according entity objects for the given query results.
-   *
-   */
-  function get_result_entities($results, $relationship = NULL) {
-    $base_table = $this->base_table;
-    $base_table_alias = $base_table;
-
-    if (!empty($relationship)) {
-      foreach ($this->view->relationship as $current) {
-        if ($current->alias == $relationship) {
-          $base_table = $current->definition['base'];
-          $base_table_alias = $relationship;
-          break;
-        }
-      }
-    }
-    $table_data = views_fetch_data($base_table);
-
-    // Bail out if the table has not specified the according entity-type.
-    if (!isset($table_data['table']['entity type'])) {
-      return FALSE;
-    }
-    $entity_type = $table_data['table']['entity type'];
-    $info = entity_get_info($entity_type);
-    $id_alias = $this->get_field_alias($base_table_alias, $info['entity keys']['id']);
-
-    // Assemble the ids of the entities to load.
-    $ids = array();
-    foreach ($results as $key => $result) {
-      if (isset($result->$id_alias)) {
-        $ids[$key] = $result->$id_alias;
-      }
-    }
-
-    $entities = entity_load_multiple($entity_type, $ids);
-    // Re-key the array by row-index.
-    $result = array();
-    foreach ($ids as $key => $id) {
-      $result[$key] = isset($entities[$id]) ? $entities[$id] : FALSE;
-    }
-    return array($entity_type, $result);
   }
 
   function aggregation_method_simple($group_type, $field) {

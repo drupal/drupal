@@ -158,10 +158,14 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
   }
 
   /**
-   * Returns the according entity objects for the given query results.
+   * Loads all entities contained in the passed-in $results.
+   *.
+   * If the entity belongs to the base table, then it gets stored in
+   * $result->_entity. Otherwise, it gets stored in
+   * $result->_relationship_entities[$relationship_id];
+   *
+   * Query plugins that don't support entities can leave the method empty.
    */
-  function get_result_entities($results, $relationship = NULL) {
-    return FALSE;
-  }
+  function load_entities(&$results) {}
 
 }

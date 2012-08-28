@@ -363,6 +363,22 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
+   * Get the entity matching the current row and relationship.
+   *
+   * @param $values
+   *   An object containing all retrieved values.
+   */
+  function get_entity($values) {
+    $relationship_id = $this->options['relationship'];
+    if ($relationship_id == 'none') {
+      return $values->_entity;
+    }
+    else {
+      return $values->_relationship_entities[$relationship_id];
+    }
+  }
+
+  /**
    * Get the value that's supposed to be rendered.
    *
    * This api exists so that other modules can easy set the values of the field
