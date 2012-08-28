@@ -29,6 +29,10 @@ class Fid extends Numeric {
     $titles = array();
 
     $result = db_query("SELECT f.title FROM {aggregator_feed} f WHERE f.fid IN (:fids)", array(':fids' => $this->value));
+    $query = db_select('aggregator_feed', 'f');
+    $query->addField('f', 'title');
+    $query->condition('f.fid', $this->value);
+    $result = $query->execute();
     foreach ($result as $term) {
       $titles[] = check_plain($term->title);
     }

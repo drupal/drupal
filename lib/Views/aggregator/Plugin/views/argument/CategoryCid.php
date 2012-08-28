@@ -28,7 +28,10 @@ class CategoryCid extends Numeric {
   function title_query() {
     $titles = array();
 
-    $result = db_query("SELECT c.title FROM {aggregator_category} c WHERE c.cid IN (:cid)", array(':cid' => $this->value));
+    $query = db_select('aggregator_category', 'c');
+    $query->addField('c', 'title');
+    $query->condition('c.cid', $this->value);
+    $result = $query->execute();
     foreach ($result as $term) {
       $titles[] = check_plain($term->title);
     }

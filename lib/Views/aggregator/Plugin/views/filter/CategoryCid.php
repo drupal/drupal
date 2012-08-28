@@ -28,7 +28,8 @@ class CategoryCid extends InOperator {
     }
 
     $this->value_options = array();
-
+    // Uses db_query() rather than db_select() because the query is static and
+    // does not include any variables.
     $result = db_query('SELECT * FROM {aggregator_category} ORDER BY title');
     foreach ($result as $category) {
       $this->value_options[$category->cid] = $category->title;

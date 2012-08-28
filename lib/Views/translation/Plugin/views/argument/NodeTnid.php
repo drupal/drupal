@@ -28,7 +28,10 @@ class NodeTnid extends Numeric {
   function title_query() {
     $titles = array();
 
-    $result = db_query("SELECT n.title FROM {node} n WHERE n.tnid IN (:tnids)", array(':tnids' => $this->value));
+    $query = db_select('node', 'n');
+    $query->addField('n', 'title');
+    $query->condition('n.tnid', $this->value);
+    $result = $query->execute();
     foreach ($result as $term) {
       $titles[] = check_plain($term->title);
     }

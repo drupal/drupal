@@ -52,12 +52,13 @@ class Rss extends RowPluginBase {
 
   function render($row) {
     $iid =  $row->{$this->field_alias};
-    $sql =  "SELECT ai.iid, ai.fid, ai.title, ai.link, ai.author, ai.description, ";
-    $sql .= "ai.timestamp, ai.guid, af.title AS feed_title, ai.link AS feed_LINK ";
-    $sql .= "FROM {aggregator_item} ai LEFT JOIN {aggregator_feed} af ON ai.fid = af.fid ";
-    $sql .= "WHERE ai.iid = :iid";
-
-    $item = db_query($sql, array(':iid' => $iid))->fetchObject();
+    $query = db_select('aggregator_item', 'ai');
+    $query->leftJoin('aggregator_feed', 'af', 'ai.fid = af.fid');
+    $query->fields('ai');
+    $query->addExpression('af.title', 'feed_title');
+    $query->addExpression('ai.link', 'feed_LINK');
+    $query->condition('iid', $iid);
+    $result = $query->execute();
 
     $item->elements = array(
       array(

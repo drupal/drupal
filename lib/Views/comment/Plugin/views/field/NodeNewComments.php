@@ -73,15 +73,16 @@ class NodeNewComments extends Numeric {
     }
 
     if ($nids) {
-      $result = db_query("SELECT n.nid, COUNT(c.cid) as num_comments FROM {node} n INNER JOIN {comment} c ON n.nid = c.nid
-        LEFT JOIN {history} h ON h.nid = n.nid AND h.uid = :h_uid WHERE n.nid IN (:nids)
-        AND c.changed > GREATEST(COALESCE(h.timestamp, :timestamp), :timestamp) AND c.status = :status GROUP BY n.nid  ", array(
-          ':status' => COMMENT_PUBLISHED,
-          ':h_uid' => $user->uid,
-          ':nids' => $nids,
-          ':timestamp' => NODE_NEW_LIMIT,
-        ));
-
+      $query = db_select('node', 'n');
+      $query->addField('n', 'nid');
+      $query->innerJoin('comment', 'c', 'n.nid = c.nid');
+      $query->addExpression('COUNT(c.cid)', 'num_comments');
+      $query->leftJoin('history', 'h', 'h.nid = n.nid');
+      $query->condition('n.nid', $nids);
+      $query->where('c.changed > GREATEST(COALESCE(h.timestamp, :timestamp), :timestamp)', array(':timestamp' => NODE_NEW_LIMIT));
+      $query->condition('c.status', COMMENT_PUBLISHED);
+      $query->groupBy('n.nid');
+      $result = $query->execute();
       foreach ($result as $node) {
         foreach ($ids[$node->nid] as $id) {
           $values[$id]->{$this->field_alias} = $node->num_comments;

@@ -85,7 +85,7 @@ class User extends ArgumentValidatorPluginBase {
           // real global $user object.
           $account = clone $GLOBALS['user'];
         }
-        $where = 'uid = :argument';
+        $condition = 'uid';
       }
     }
     else {
@@ -94,18 +94,21 @@ class User extends ArgumentValidatorPluginBase {
         if ($argument == $name) {
           $account = clone $GLOBALS['user'];
         }
-        $where = "name = :argument";
+        $condition = 'name';
       }
     }
 
     // If we don't have a WHERE clause, the argument is invalid.
-    if (empty($where)) {
+    if (empty($condition)) {
       return FALSE;
     }
 
     if (!isset($account)) {
-      $query = "SELECT uid, name FROM {users} WHERE $where";
-      $account = db_query($query, array(':argument' => $argument))->fetchObject();
+      $account = db_select('users', 'u')
+        ->fields('u', array('uid', 'name'))
+        ->condition($condition, $argument)
+        ->execute()
+        ->fetchObject();
     }
     if (empty($account)) {
       // User not found.
@@ -117,7 +120,10 @@ class User extends ArgumentValidatorPluginBase {
       $roles = $this->options['roles'];
       $account->roles = array();
       $account->roles[] = $account->uid ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID;
-      $result = db_query('SELECT rid FROM {users_roles} WHERE uid = :uid', array(':uid' => $account->uid));
+      $query = db_select('users_roles', 'u');
+      $query->addField('u', 'rid');
+      $query->condition('u.uid', $account->uid);
+      $result = $query->execute();
       foreach ($result as $role) {
         $account->roles[] = $role->rid;
       }

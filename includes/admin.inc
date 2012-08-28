@@ -4694,7 +4694,9 @@ function views_ui_get_roles() {
   static $roles = NULL;
   if (!isset($roles)) {
     $roles = array();
-    $result = db_query("SELECT r.rid, r.name FROM {role} r ORDER BY r.name");
+    // Uses db_query() rather than db_select() because the query is static and
+    // does not include any variables.
+    $result = $result = db_query("SELECT r.rid, r.name FROM {role} r ORDER BY r.name");
     foreach ($result as $obj) {
       $roles[$obj->rid] = $obj->name;
     }

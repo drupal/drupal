@@ -25,7 +25,10 @@ class RolesRid extends ManyToOne {
   function title_query() {
     $titles = array();
 
-    $result = db_query("SELECT name FROM {role} WHERE rid IN (:rids)", array(':rids' => $this->value));
+    $query = db_select('role', 'r');
+    $query->addField('r', 'name');
+    $query->condition('r.rid', $this->value);
+    $result = $query->execute();
     foreach ($result as $term) {
       $titles[] = check_plain($term->name);
     }

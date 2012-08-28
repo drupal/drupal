@@ -41,8 +41,13 @@ class Roles extends PrerenderList {
     }
 
     if ($uids) {
-      $result = db_query("SELECT u.uid, u.rid, r.name FROM {role} r INNER JOIN {users_roles} u ON u.rid = r.rid WHERE u.uid IN (:uids) ORDER BY r.name",
-        array(':uids' => $uids));
+      $query = db_select('role', 'r');
+      $query->join('users_roles', 'u', 'u.rid = r.rid');
+      $query->addField('r', 'name');
+      $query->fields('u', array('uid', 'rid'));
+      $query->condition('u.uid', $uids);
+      $query->orderBy('r.name');
+      $result = $query->execute();
       foreach ($result as $role) {
         $this->items[$role->uid][$role->rid]['role'] = check_plain($role->name);
         $this->items[$role->uid][$role->rid]['rid'] = $role->rid;

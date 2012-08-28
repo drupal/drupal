@@ -27,7 +27,7 @@ class Name extends InOperator {
   function value_form(&$form, &$form_state) {
     $values = array();
     if ($this->value) {
-      $result = db_query("SELECT * FROM {users} u WHERE uid IN (:uids)", array(':uids' => $this->value));
+      $result = entity_load_multiple_by_properties('user', array('uid' => $this->value));
       foreach ($result as $account) {
         if ($account->uid) {
           $values[] = $account->name;
@@ -131,7 +131,7 @@ class Name extends InOperator {
       return $uids;
     }
 
-    $result = db_query("SELECT * FROM {users} WHERE name IN (:names)", array(':names' => $args));
+    $result = entity_load_multiple_by_properties('user', array('name' => $args));
     foreach ($result as $account) {
       unset($missing[strtolower($account->name)]);
       $uids[] = $account->uid;
@@ -156,8 +156,7 @@ class Name extends InOperator {
     $this->value_options = array();
 
     if ($this->value) {
-      $result = db_query("SELECT * FROM {users} u WHERE uid IN (:uids)", array(':uids' => $this->value));
-
+      $result = entity_load_multiple_by_properties('user', array('uid' => $this->value));
       foreach ($result as $account) {
         if ($account->uid) {
           $this->value_options[$account->uid] = $account->name;

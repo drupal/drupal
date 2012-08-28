@@ -25,6 +25,8 @@ class Type extends InOperator {
       $this->value_title = t('Type');
       // Enable filtering by type.
       $types = array();
+      // Uses db_query() rather than db_select() because the query is static and
+      // does not include any variables.
       $types = db_query('SELECT DISTINCT(type) FROM {system} ORDER BY type')->fetchAllKeyed(0, 0);
       $this->value_options = $types;
     }

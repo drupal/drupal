@@ -52,8 +52,14 @@ class Permissions extends PrerenderList {
 
       $permissions = module_invoke_all('permission');
 
-      $result = db_query("SELECT u.uid, u.rid, rp.permission FROM {role_permission} rp INNER JOIN {users_roles} u ON u.rid = rp.rid WHERE u.uid IN (:uids) AND rp.module IN (:modules) ORDER BY rp.permission",
-        array(':uids' => $uids, ':modules' => array_keys($modules)));
+      $query = db_select('role_permission', 'rp');
+      $query->join('users_roles', 'u', 'u.rid = rp.rid');
+      $query->fields('u', array('uid', 'rid'));
+      $query->addField('rp', 'permission');
+      $query->condition('u.uid', $uids);
+      $query->condition('rp.module', array_keys($modules));
+      $query->orderBy('rp.permission');
+      $result = $query->execute();
 
       foreach ($result as $perm) {
         $this->items[$perm->uid][$perm->permission]['permission'] = $permissions[$perm->permission]['title'];
