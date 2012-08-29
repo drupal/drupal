@@ -2876,6 +2876,10 @@ function hook_install() {
  * the same directory as mymodule.module. Drupal core's updates are implemented
  * using the system module as a name and stored in database/updates.inc.
  *
+ * Not all module functions are available from within a hook_update_N() function.
+ * In order to call a function from your mymodule.module or an include file,
+ * you need to explicitly load that file first.
+ *
  * If your update task is potentially time-consuming, you'll need to implement a
  * multipass update to avoid PHP timeouts. Multipass updates use the $sandbox
  * parameter provided by the batch API (normally, $context['sandbox']) to store
