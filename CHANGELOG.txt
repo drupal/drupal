@@ -1,6 +1,10 @@
 
 Drupal 7.16, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug which caused shortcut set titles to be double-escaped. The fix
+  replaces the "Edit shortcuts" menu item's title callback entry in hook_menu()
+  with a new function that does not escape HTML characters (data structure
+  change).
 - Modified the Update manager module to allow drupal.org to collect usage
   statistics for individual modules and themes, rather than only for entire
   projects.
