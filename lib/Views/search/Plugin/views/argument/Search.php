@@ -30,7 +30,7 @@ class Search extends ArgumentPluginBase {
    */
   function query_parse_search_expression($input) {
     if (!isset($this->search_query)) {
-      $this->search_query = db_select('search_index', 'i', array('target' => 'slave'))->extend('viewsSearchQuery');
+      $this->search_query = db_select('search_index', 'i', array('target' => 'slave'))->extend('Drupal\views\Search\ViewsSearchQuery');
       $this->search_query->searchExpression($input, $this->view->base_table);
       $this->search_query->publicParseSearchExpression();
     }
