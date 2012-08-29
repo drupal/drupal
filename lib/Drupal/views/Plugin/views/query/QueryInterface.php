@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Definition of Drupal\views\Plugin\query\QueryInterface.
  */
 

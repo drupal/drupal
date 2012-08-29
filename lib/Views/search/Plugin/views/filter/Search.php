@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Defintion of Views\search\Plugin\views\filter\Search.
+ * Definition of Views\search\Plugin\views\filter\Search.
  */
 
 namespace Views\search\Plugin\views\filter;

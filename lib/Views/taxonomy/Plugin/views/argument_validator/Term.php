@@ -5,7 +5,6 @@
  * Definition of Views\taxonomy\Plugin\views\argument_validator\Term.
  */
 
-
 namespace Views\taxonomy\Plugin\views\argument_validator;
 
 use Drupal\Core\Annotation\Plugin;

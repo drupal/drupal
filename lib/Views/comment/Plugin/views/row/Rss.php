@@ -54,7 +54,6 @@ class Rss extends RowPluginBase {
     );
   }
 
-
   function pre_render($result) {
     $cids = array();
     $nids = array();
@@ -91,7 +90,6 @@ class Rss extends RowPluginBase {
     $options['default'] = t('Use site default RSS settings');
     return $options;
   }
-
 
   function render($row) {
     global $base_url;

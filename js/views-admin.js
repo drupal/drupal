@@ -236,7 +236,6 @@ Drupal.viewsUi.addItemForm.prototype.handleCheck = function (event) {
   this.refreshCheckedItems();
 };
 
-
 /**
  * Refresh the display of the checked items.
  */
@@ -248,7 +247,6 @@ Drupal.viewsUi.addItemForm.prototype.refreshCheckedItems = function() {
   this.$selected_div.find('.views-selected-options').html(this.checkedItems.join(', '));
   Drupal.viewsUi.resizeModal('', true);
 };
-
 
 /**
  * The input field items that add displays must be rendered as <input> elements.
@@ -317,7 +315,6 @@ Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu = function ($trigger) {
   $trigger.parent().toggleClass('open');
   $trigger.next().slideToggle('fast');
 };
-
 
 Drupal.behaviors.viewsUiSearchOptions = {};
 
@@ -440,7 +437,6 @@ Drupal.viewsUi.OptionsSearch.prototype.handleKeyup = function (event) {
   }
 };
 
-
 Drupal.behaviors.viewsUiPreview = {};
 Drupal.behaviors.viewsUiPreview.attach = function (context, settings) {
 
@@ -470,7 +466,6 @@ Drupal.behaviors.viewsUiPreview.attach = function (context, settings) {
     $('#preview-submit').once('edit-displays-live-preview').click();
   }
 };
-
 
 Drupal.behaviors.viewsUiRearrangeFilter = {};
 Drupal.behaviors.viewsUiRearrangeFilter.attach = function (context, settings) {
@@ -762,7 +757,6 @@ Drupal.viewsUi.rearrangeFilterHandler.prototype.modifyTableDrag = function () {
     }
   };
 };
-
 
 /**
  * Redraw the operator labels that are displayed next to each filter.

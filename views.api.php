@@ -506,7 +506,6 @@ function hook_views_data_alter(&$data) {
   // Note that the $data array is not returned – it is modified by reference.
 }
 
-
 /**
  * Describes plugins defined by the module.
  *

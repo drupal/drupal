@@ -58,7 +58,6 @@ class FieldList extends Numeric {
     );
   }
 
-
   function summary_name($data) {
     $value = $data->{$this->name_alias};
     // If the list element has a human readable name show it,

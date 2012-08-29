@@ -10,7 +10,6 @@ namespace Views\file\Plugin\views\field;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 
-
 /**
  * Field handler to provide simple renderer that allows linking to a file.
  *

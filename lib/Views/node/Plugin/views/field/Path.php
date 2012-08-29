@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Defintion of Views\node\Plugin\views\field\Path.
+ * Definition of Views\node\Plugin\views\field\Path.
  */
 
 namespace Views\node\Plugin\views\field;

@@ -18,6 +18,7 @@ use Drupal\views\View;
  *   Check revisions
  */
 class HandlerFieldFieldTest extends FieldTestBase {
+
   public $nodes;
 
   public static function getInfo() {

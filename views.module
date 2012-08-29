@@ -1472,7 +1472,6 @@ function views_get_enabled_display_extenders() {
   return array_filter($enabled);
 }
 
-
 // -----------------------------------------------------------------------
 // Views database functions
 
@@ -2107,7 +2106,6 @@ function views_exposed_form_submit(&$form, &$form_state) {
   }
   $form_state['view']->exposed_data = $form_state['values'];
   $form_state['view']->exposed_raw_input = array();
-
 
   $exclude = array('submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', '', 'reset');
   $exposed_form_plugin = $form_state['exposed_form_plugin'];

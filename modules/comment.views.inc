@@ -164,7 +164,6 @@ function comment_views_data() {
     ),
   );
 
-
   // Langcode field
   if (module_exists('language')) {
     $data['comment']['language']['moved to'] = array('comment', 'langcode');
@@ -304,7 +303,6 @@ function comment_views_data() {
       'id' => 'comment_link_delete',
     ),
   );
-
 
   // link to approve comment
   $data['comment']['approve_comment'] = array(

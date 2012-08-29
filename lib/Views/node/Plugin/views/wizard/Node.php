@@ -71,7 +71,6 @@ class Node extends WizardPluginBase {
     );
   }
 
-
   protected function row_style_options($type) {
     $options = array();
     $options['teasers'] = t('teasers');
@@ -178,7 +177,6 @@ class Node extends WizardPluginBase {
 
     return $filters;
   }
-
 
   protected function page_display_options($form, $form_state) {
     $display_options = parent::page_display_options($form, $form_state);

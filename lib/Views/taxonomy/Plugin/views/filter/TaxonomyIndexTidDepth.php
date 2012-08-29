@@ -5,7 +5,6 @@
  * Definition of Views\taxonomy\Plugin\views\filter\TaxonomyIndexTidDepth.
  */
 
-
 namespace Views\taxonomy\Plugin\views\filter;
 
 use Drupal\Core\Annotation\Plugin;

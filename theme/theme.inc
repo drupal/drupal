@@ -639,7 +639,6 @@ function template_preprocess_views_view_table(&$vars) {
     $vars['field_classes'][0][0] = 'views-empty';
   }
 
-
   if (!empty($options['sticky'])) {
     drupal_add_js('misc/tableheader.js');
     $vars['attributes']['class'][] = "sticky-enabled";
@@ -1029,8 +1028,6 @@ function theme_views_mini_pager($vars) {
   // max is the maximum page number
   $pager_max = $pager_total[$element];
   // End of marker calculations.
-
-
 
   if ($pager_total[$element] > 1) {
 

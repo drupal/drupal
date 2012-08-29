@@ -5,7 +5,6 @@
  * Definition of Views\taxonomy\Plugin\views\field\Taxonomy.
  */
 
-
 namespace Views\taxonomy\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;

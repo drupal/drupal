@@ -23,6 +23,7 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class Sql extends QueryPluginBase {
+
   /**
    * A list of tables in the order they should be added, keyed by alias.
    */

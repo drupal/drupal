@@ -117,5 +117,4 @@ function translation_views_data_alter(&$data) {
     ),
   );
 
-
 }

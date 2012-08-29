@@ -213,7 +213,6 @@ class TaxonomyIndexTid extends ManyToOne {
       }
     }
 
-
     if (empty($form_state['exposed'])) {
       // Retain the helper option
       $this->helper->options_form($form, $form_state);

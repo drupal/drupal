@@ -230,7 +230,6 @@ function views_ui_theme() {
       'file' => 'includes/admin.inc',
     ),
 
-
     // On behalf of a plugin
     'views_ui_style_plugin_table' => array(
       'render element' => 'form',
@@ -349,7 +348,6 @@ function views_ui_cache_set(&$view) {
   }
   views_temp_store()->set($view->name, $view);
 }
-
 
 /**
  * Specialized menu callback to load a view that is only a default
@@ -533,7 +531,6 @@ function views_ui_view_preview_section_rows_links($view) {
 
   return $links;
 }
-
 
 /**
  * Implments hook_ctools_plugin_directory().
@@ -751,7 +748,6 @@ function views_ui_ajax_get_form($form_id) {
   }
 }
 // @todo move these when we can
-
 
 /**
  * Helper function to get a list of paths assigned to a view.

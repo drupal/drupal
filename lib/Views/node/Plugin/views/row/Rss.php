@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the node RSS row style plugin.
+ * Definition of Views\node\Plugin\views\row\Rss.
  */
 
 namespace Views\node\Plugin\views\row;
@@ -81,7 +81,6 @@ class Rss extends RowPluginBase {
     $options = $this->options_form_summary_options();
     return check_plain($options[$this->options['item_length']]);
   }
-
 
   function pre_render($values) {
     $nids = array();

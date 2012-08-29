@@ -10,7 +10,6 @@ namespace Views\field\Plugin\views\argument;
 use Drupal\views\Plugin\views\argument\String;
 use Drupal\Core\Annotation\Plugin;
 
-
 /**
  * Argument handler for list field to show the human readable name in the
  * summary.

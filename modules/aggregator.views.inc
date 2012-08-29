@@ -167,7 +167,6 @@ function aggregator_views_data() {
     ),
   );
 
-
   // ----------------------------------------------------------------------
   // Aggregator feed table
 

@@ -13,6 +13,7 @@ use Drupal\views\View;
  * Tests the core Drupal\views\Plugin\views\argument\String handler.
  */
 class ArgumentStringTest extends HandlerTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Argument: String',
@@ -98,4 +99,5 @@ class ArgumentStringTest extends HandlerTestBase {
 
     return $view;
   }
+
 }

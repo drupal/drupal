@@ -193,7 +193,6 @@ class views_ui extends ctools_export_ui {
     );
   }
 
-
   function list_build_row($view, &$form_state, $operations) {
     if (!empty($view->human_name)) {
       $title = $view->human_name;

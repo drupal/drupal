@@ -116,8 +116,6 @@ function taxonomy_views_data() {
   );
   $data['taxonomy_term_data']['table']['entity type'] = 'taxonomy_term';
 
-
-
   // The term data table
   $data['taxonomy_term_data']['table']['join'] = array(
     'taxonomy_vocabulary' => array(

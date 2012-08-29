@@ -68,7 +68,6 @@ class View extends RowPluginBase {
     );
   }
 
-
   /**
    * Return the main options, which are shown in the summary title.
    */

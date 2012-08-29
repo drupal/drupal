@@ -281,7 +281,6 @@ function node_views_data() {
     ),
   );
 
-
   // Bogus fields for aliasing purposes.
 
   $data['node']['created_fulldate'] = array(

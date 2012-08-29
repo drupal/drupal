@@ -21,6 +21,7 @@ use Drupal\views\Plugin\views\access\AccessPluginBase;
  * )
  */
 class DynamicTest extends AccessPluginBase {
+
   function option_definition() {
     $options = parent::option_definition();
     $options['access'] = array('default' => FALSE, 'bool' => TRUE);
@@ -35,4 +36,5 @@ class DynamicTest extends AccessPluginBase {
   function get_access_callback() {
     return array('views_test_test_dynamic_access_callback', array(!empty($options['access']), 1, 2));
   }
+
 }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Defintion of Views\node\Plugin\views\argument\UidRevision.
+ * Definition of Views\node\Plugin\views\argument\UidRevision.
  */
 
 namespace Views\node\Plugin\views\argument;

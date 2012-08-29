@@ -26,7 +26,6 @@ function user_views_data() {
   );
   $data['users']['table']['entity type'] = 'user';
 
-
   $data['users']['table']['default_relationship'] = array(
     'node' => array(
       'table' => 'node',

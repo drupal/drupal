@@ -77,7 +77,6 @@ function statistics_views_data() {
     ),
   );
 
-
   // ----------------------------------------------------------------
   // accesslog table
 
@@ -257,7 +256,6 @@ function statistics_views_data() {
       'id' => 'date',
     ),
   );
-
 
   return $data;
 }

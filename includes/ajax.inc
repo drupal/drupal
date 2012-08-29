@@ -276,7 +276,6 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
   return $output;
 }
 
-
 /**
  * Page callback for views user autocomplete
  */

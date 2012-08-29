@@ -22,6 +22,7 @@ use Drupal\views\Plugin\views\localization\LocalizationPluginBase;
  * )
  */
 class LocalizationTest extends LocalizationPluginBase {
+
   /**
    * Store the strings which was translated.
    */
@@ -50,4 +51,5 @@ class LocalizationTest extends LocalizationPluginBase {
   function get_export_strings() {
     return $this->export_strings;
   }
+
 }
