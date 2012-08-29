@@ -36,7 +36,7 @@ class FilterHooksTest extends WebTestBase {
   }
 
   /**
-   * Test that hooks run correctly on creating, editing, and deleting a text format.
+   * Tests that hooks run correctly on creating, editing, and deleting a text format.
    */
   function testFilterHooks() {
     // Add a text format.

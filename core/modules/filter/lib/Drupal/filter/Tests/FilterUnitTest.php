@@ -23,7 +23,7 @@ class FilterUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test the line break filter.
+   * Tests the line break filter.
    */
   function testLineBreakFilter() {
     // Setup dummy filter object.
@@ -283,7 +283,7 @@ class FilterUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test filter settings, defaults, access restrictions and similar.
+   * Tests filter settings, defaults, access restrictions and similar.
    *
    * @todo This is for functions like filter_filter and check_markup, whose
    *   functionality is not completely focused on filtering. Some ideas:
@@ -339,7 +339,7 @@ class FilterUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test the spam deterrent.
+   * Tests the spam deterrent.
    */
   function testNoFollowFilter() {
     // Setup dummy filter object.
@@ -370,7 +370,7 @@ class FilterUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test the loose, admin HTML filter.
+   * Tests the loose, admin HTML filter.
    */
   function testFilterXSSAdmin() {
     // DRUPAL-SA-2008-044
@@ -764,7 +764,7 @@ www.example.com with a newline in comments -->
   }
 
   /**
-   * Test the HTML corrector filter.
+   * Tests the HTML corrector filter.
    *
    * @todo This test could really use some validity checking function.
    */

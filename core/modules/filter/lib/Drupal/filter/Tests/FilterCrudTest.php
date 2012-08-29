@@ -31,7 +31,7 @@ class FilterCrudTest extends WebTestBase {
   }
 
   /**
-   * Test CRUD operations for text formats and filters.
+   * Tests CRUD operations for text formats and filters.
    */
   function testTextFormatCrud() {
     // Add a text format with minimum data only.

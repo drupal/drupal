@@ -24,12 +24,12 @@
  * input filters they provide.
  *
  * Filtering is a two-step process. First, the content is 'prepared' by calling
- * the 'prepare callback' function for every filter. The purpose of the 'prepare
- * callback' is to escape HTML-like structures. For example, imagine a filter
- * which allows the user to paste entire chunks of programming code without
- * requiring manual escaping of special HTML characters like < or &. If the
- * programming code were left untouched, then other filters could think it was
- * HTML and change it. For many filters, the prepare step is not necessary.
+ * the 'prepare callback' function for every filter. The purpose of the
+ * 'prepare callback' is to escape HTML-like structures. For example, imagine a
+ * filter which allows the user to paste entire chunks of programming code
+ * without requiring manual escaping of special HTML characters like < or &. If
+ * the programming code were left untouched, then other filters could think it
+ * was HTML and change it. For many filters, the prepare step is not necessary.
  *
  * The second step is the actual processing step. The result from passing the
  * text through all the filters' prepare steps gets passed to all the filters
@@ -39,10 +39,10 @@
  *
  * For performance reasons content is only filtered once; the result is stored
  * in the cache table and retrieved from the cache the next time the same piece
- * of content is displayed. If a filter's output is dynamic, it can override the
- * cache mechanism, but obviously this should be used with caution: having one
- * filter that does not support caching in a particular text format disables
- * caching for the entire format, not just for one filter.
+ * of content is displayed. If a filter's output is dynamic, it can override
+ * the cache mechanism, but obviously this should be used with caution: having
+ * one filter that does not support caching in a particular text format
+ * disables caching for the entire format, not just for one filter.
  *
  * Beware of the filter cache when developing your module: it is advised to set
  * your filter to 'cache' => FALSE while developing, but be sure to remove that
@@ -56,8 +56,9 @@
  *   - title: (required) An administrative summary of what the filter does.
  *   - description: Additional administrative information about the filter's
  *     behavior, if needed for clarification.
- *   - settings callback: The name of a function that returns configuration form
- *     elements for the filter. See hook_filter_FILTER_settings() for details.
+ *   - settings callback: The name of a function that returns configuration
+ *     form elements for the filter. See hook_filter_FILTER_settings() for
+ *     details.
  *   - default settings: An associative array containing default settings for
  *     the filter, to be applied when the filter has not been configured yet.
  *   - prepare callback: The name of a function that escapes the content before
@@ -69,9 +70,9 @@
  *     Note that setting this to FALSE makes the entire text format not
  *     cacheable, which may have an impact on the site's overall performance.
  *     See filter_format_allowcache() for details.
- *   - tips callback: The name of a function that returns end-user-facing filter
- *     usage guidelines for the filter. See hook_filter_FILTER_tips() for
- *     details.
+ *   - tips callback: The name of a function that returns end-user-facing
+ *     filter usage guidelines for the filter. See hook_filter_FILTER_tips()
+ *     for details.
  *   - weight: A default weight for the filter in new text formats.
  *
  * @see filter_example.module

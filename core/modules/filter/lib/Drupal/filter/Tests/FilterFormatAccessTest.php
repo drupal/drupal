@@ -126,6 +126,9 @@ class FilterFormatAccessTest extends WebTestBase {
     $this->assertResponse(404);
   }
 
+  /**
+   * Tests if text format is available to a role.
+   */
   function testFormatRoles() {
     // Get the role ID assigned to the regular user.
     $roles = $this->web_user->roles;
@@ -149,7 +152,7 @@ class FilterFormatAccessTest extends WebTestBase {
   }
 
   /**
-   * Test editing a page using a disallowed text format.
+   * Tests editing a page using a disallowed text format.
    *
    * Verifies that regular users and administrators are able to edit a page,
    * but not allowed to change the fields which use an inaccessible text

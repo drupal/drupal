@@ -2,12 +2,13 @@
 
 /**
  * @file
- * User page callbacks for the filter module.
+ * User page callbacks for the Filter module.
  */
 
-
 /**
- * Menu callback; show a page with long filter tips.
+ * Page callback: Displays a page with long filter tips.
+ *
+ * @see filter_menu()
  */
 function filter_tips_long($format = NULL) {
   if (!empty($format)) {
@@ -19,13 +20,12 @@ function filter_tips_long($format = NULL) {
   return $output;
 }
 
-
 /**
  * Returns HTML for a set of filter tips.
  *
  * @param $variables
  *   An associative array containing:
- *   - tips: An array containing descriptions and a CSS id in the form of
+ *   - tips: An array containing descriptions and a CSS ID in the form of
  *     'module-name/filter-id' (only used when $long is TRUE) for each
  *     filter in one or more text formats. Example:
  *     @code

@@ -100,7 +100,7 @@ class FilterAdminTest extends WebTestBase {
   }
 
   /**
-   * Test filter administration functionality.
+   * Tests filter administration functionality.
    */
   function testFilterAdmin() {
     // URL filter.

@@ -9,6 +9,9 @@ namespace Drupal\filter\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the behavior of check_markup() when it is called without text format.
+ */
 class FilterNoFormatTest extends WebTestBase {
   public static function getInfo() {
     return array(
@@ -18,6 +21,10 @@ class FilterNoFormatTest extends WebTestBase {
     );
   }
 
+  /**
+   * Tests if text with no format is filtered the same as text in the fallback
+   * format.
+   */
   function testCheckMarkupNoFormat() {
     // Create some text. Include some HTML and line breaks, so we get a good
     // test of the filtering that is applied to it.
