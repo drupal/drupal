@@ -370,6 +370,9 @@ function file_file_predelete(File $file) {
  * This function is assigned as a #process callback in file_element_info().
  */
 function file_managed_file_process($element, &$form_state, $form) {
+  // Append the '-upload' to the #id so the field label's 'for' attribute
+  // corresponds with the file element.
+  $element['#id'] .= '-upload';
   $fid = isset($element['#value']['fid']) ? $element['#value']['fid'] : 0;
 
   // Set some default element properties.

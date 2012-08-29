@@ -68,6 +68,9 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       // Ensure the page now has an upload button instead of a remove button.
       $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), t('After clicking the "Remove" button, it is no longer displayed.'));
       $this->assertFieldByXpath('//input[@type="submit"]', t('Upload'), t('After clicking the "Remove" button, the "Upload" button is displayed.'));
+      // Test label has correct 'for' attribute.
+      $label = $this->xpath("//label[@for='edit-" . drupal_clean_css_identifier($field_name) . "-" . LANGUAGE_NOT_SPECIFIED . "-0-upload']");
+      $this->assertTrue(isset($label[0]), 'Label for upload found.');
 
       // Save the node and ensure it does not have the file.
       $this->drupalPost(NULL, array(), t('Save'));
