@@ -91,6 +91,7 @@ function search_schema() {
         'table' => 'search_dataset',
         'columns' => array(
           'sid' => 'sid',
+          'langcode' => 'langcode',
           'type' => 'type',
         ),
       ),
