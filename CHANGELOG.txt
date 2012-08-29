@@ -1,6 +1,9 @@
 
 Drupal 7.16, xxxx-xx-xx (development version)
 -----------------------
+- Modified the Update manager module to allow drupal.org to collect usage
+  statistics for individual modules and themes, rather than only for entire
+  projects.
 - Fixed a regression which caused a "call to undefined function
   drupal_find_base_themes()" fatal error under rare circumstances.
 

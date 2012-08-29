@@ -288,17 +288,25 @@ function _update_build_fetch_url($project, $site_key = '') {
   $name = $project['name'];
   $url = _update_get_fetch_url_base($project);
   $url .= '/' . $name . '/' . DRUPAL_CORE_COMPATIBILITY;
-  // Only append a site_key and the version information if we have a site_key
-  // in the first place, and if this is not a disabled module or theme. We do
-  // not want to record usage statistics for disabled code.
+
+  // Only append usage infomation if we have a site key and the project is
+  // enabled. We do not want to record usage statistics for disabled projects.
   if (!empty($site_key) && (strpos($project['project_type'], 'disabled') === FALSE)) {
+    // Append the site key.
     $url .= (strpos($url, '?') !== FALSE) ? '&' : '?';
     $url .= 'site_key=';
     $url .= rawurlencode($site_key);
+
+    // Append the version.
     if (!empty($project['info']['version'])) {
       $url .= '&version=';
       $url .= rawurlencode($project['info']['version']);
     }
+
+    // Append the list of modules or themes enabled.
+    $list = array_keys($project['includes']);
+    $url .= '&list=';
+    $url .= rawurlencode(implode(',', $list));
   }
   return $url;
 }
