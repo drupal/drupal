@@ -505,7 +505,7 @@ function views_taxonomy_set_breadcrumb(&$breadcrumb, &$argument) {
     }
     else {
       $args[$argument->position] = $parent->tid;
-      $path = $argument->view->get_url($args);
+      $path = $argument->view->getUrl($args);
     }
     $breadcrumb[$path] = check_plain($parent->name);
   }

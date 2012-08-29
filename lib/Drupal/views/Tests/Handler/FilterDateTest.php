@@ -42,12 +42,12 @@ class FilterDateTest extends HandlerTestBase {
   function testOffset() {
     $view = $this->views_test_offset();
     // Test offset for simple operator.
-    $view->set_display('default');
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->initHandlers();
     $view->filter['created']->operator = '>';
     $view->filter['created']->value['type'] = 'offset';
     $view->filter['created']->value['value'] = '+1 hour';
-    $view->execute_display('default');
+    $view->executeDisplay('default');
     $expected_result = array(
       array('nid' => $this->nodes[3]->nid),
     );
@@ -55,13 +55,13 @@ class FilterDateTest extends HandlerTestBase {
     $view->destroy();
 
     // Test offset for between operator.
-    $view->set_display('default');
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->initHandlers();
     $view->filter['created']->operator = 'between';
     $view->filter['created']->value['type'] = 'offset';
     $view->filter['created']->value['max'] = '+2 days';
     $view->filter['created']->value['min'] = '+1 hour';
-    $view->execute_display('default');
+    $view->executeDisplay('default');
     $expected_result = array(
       array('nid' => $this->nodes[3]->nid),
     );
@@ -76,12 +76,12 @@ class FilterDateTest extends HandlerTestBase {
   function testBetween() {
     // Test between with min and max.
     $view = $this->views_test_between();
-    $view->set_display('default');
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->initHandlers();
     $view->filter['created']->operator = 'between';
     $view->filter['created']->value['min'] = format_date(150000, 'custom', 'Y-m-d H:s');
     $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
-    $view->execute_display('default');
+    $view->executeDisplay('default');
     $expected_result = array(
       array('nid' => $this->nodes[1]->nid),
     );
@@ -90,11 +90,11 @@ class FilterDateTest extends HandlerTestBase {
 
     // Test between with just max.
     $view = $this->views_test_between();
-    $view->set_display('default');
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->initHandlers();
     $view->filter['created']->operator = 'between';
     $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
-    $view->execute_display('default');
+    $view->executeDisplay('default');
     $expected_result = array(
       array('nid' => $this->nodes[0]->nid),
       array('nid' => $this->nodes[1]->nid),
@@ -104,12 +104,12 @@ class FilterDateTest extends HandlerTestBase {
 
     // Test not between with min and max.
     $view = $this->views_test_between();
-    $view->set_display('default');
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->initHandlers();
     $view->filter['created']->operator = 'not between';
     $view->filter['created']->value['min'] = format_date(150000, 'custom', 'Y-m-d H:s');
     $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
-    $view->execute_display('default');
+    $view->executeDisplay('default');
     $expected_result = array(
       array('nid' => $this->nodes[0]->nid),
       array('nid' => $this->nodes[2]->nid),
@@ -120,11 +120,11 @@ class FilterDateTest extends HandlerTestBase {
 
     // Test not between with just max.
     $view = $this->views_test_between();
-    $view->set_display('default');
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->initHandlers();
     $view->filter['created']->operator = 'not between';
     $view->filter['created']->value['max'] = format_date(150000, 'custom', 'Y-m-d H:s');
-    $view->execute_display('default');
+    $view->executeDisplay('default');
     $expected_result = array(
       array('nid' => $this->nodes[1]->nid),
       array('nid' => $this->nodes[2]->nid),

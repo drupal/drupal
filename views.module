@@ -488,7 +488,7 @@ function views_menu_alter(&$callbacks) {
   $views = views_get_applicable_views('uses_hook_menu');
   foreach ($views as $data) {
     list($view, $display_id) = $data;
-    $result = $view->execute_hook_menu($display_id, $callbacks);
+    $result = $view->executeHookMenu($display_id, $callbacks);
     if (is_array($result)) {
       // The menu system doesn't support having two otherwise
       // identical paths with different placeholders.  So we
@@ -566,13 +566,13 @@ function views_arg_load($value, $name, $display_id, $index) {
   }
 
   if ($view = views_get_view($name)) {
-    $view->set_display($display_id);
-    $view->init_handlers();
+    $view->setDisplay($display_id);
+    $view->initHandlers();
 
     $ids = array_keys($view->argument);
 
     $indexes = array();
-    $path = explode('/', $view->get_path());
+    $path = explode('/', $view->getPath());
 
     foreach ($path as $id => $piece) {
       if ($piece == '%' && !empty($ids)) {
@@ -613,7 +613,7 @@ function views_page($name, $display_id) {
 
   // Load the view and render it.
   if ($view = views_get_view($name)) {
-    return $view->execute_display($display_id, $args);
+    return $view->executeDisplay($display_id, $args);
   }
 
   // Fallback; if we get here no view was found or handler was not valid.
@@ -696,7 +696,7 @@ function views_block_info() {
       continue;
     }
 
-    $view->init_display();
+    $view->initDisplay();
     foreach ($view->display as $display_id => $display) {
 
       if (isset($display->handler) && !empty($display->handler->definition['uses_hook_block'])) {
@@ -767,7 +767,7 @@ function views_block_view($delta) {
     $type = '-' . $type;
     if ($view = views_get_view($name)) {
       if ($view->access($display_id)) {
-        $view->set_display($display_id);
+        $view->setDisplay($display_id);
         if (isset($view->display_handler)) {
           $output = $view->display_handler->view_special_blocks($type);
           // Before returning the block output, convert it to a renderable
@@ -790,7 +790,7 @@ function views_block_view($delta) {
   // Load the view
   if ($view = views_get_view($name)) {
     if ($view->access($display_id)) {
-      $output = $view->execute_display($display_id);
+      $output = $view->executeDisplay($display_id);
       // Before returning the block output, convert it to a renderable array
       // with contextual links.
       views_add_block_contextual_links($output, $view, $display_id);
@@ -1546,8 +1546,8 @@ function views_get_applicable_views($type) {
       if (!empty($plugin[$type])) {
         // This view uses_hook_menu. Clone it so that different handlers
         // don't trip over each other, and add it to the list.
-        $v = $view->clone_view();
-        if ($v->set_display($id) && $v->display_handler->get_option('enabled')) {
+        $v = $view->cloneView();
+        if ($v->setDisplay($id) && $v->display_handler->get_option('enabled')) {
           $result[] = array($v, $id);
         }
         // In PHP 4.4.7 and presumably earlier, if we do not unset $v
@@ -1687,7 +1687,7 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
   foreach ($views as $view) {
     // Return only views.
     if ($views_only && $view->name != $exclude_view_name) {
-      $options[$view->name] = $view->get_human_name();
+      $options[$view->name] = $view->getHumanName();
     }
     // Return views with display ids.
     else {
@@ -1748,7 +1748,7 @@ function views_get_view($name) {
   $view = entity_load('view', $name);
   if ($view) {
     $view->update();
-    return $view->clone_view();
+    return $view->cloneView();
   }
 }
 
@@ -1835,7 +1835,7 @@ function views_form($form, &$form_state, $view, $output) {
 
   $form = array();
   $query = drupal_get_query_parameters();
-  $form['#action'] = url($view->get_url(), array('query' => $query));
+  $form['#action'] = url($view->getUrl(), array('query' => $query));
   // Tell the preprocessor whether it should hide the header, footer, pager...
   $form['show_view_elements'] = array(
     '#type' => 'value',
@@ -2008,7 +2008,7 @@ function views_exposed_form($form, &$form_state) {
   $view = &$form_state['view'];
   $display = &$form_state['display'];
 
-  $form_state['input'] = $view->get_exposed_input();
+  $form_state['input'] = $view->getExposedInput();
 
   // Let form plugins know this is for exposed widgets.
   $form_state['exposed'] = TRUE;
@@ -2231,7 +2231,7 @@ function _views_query_tag_alter_condition(AlterableInterface $query, &$condition
  *
  * Note that this function does NOT display the title of the view. If you want
  * to do that, you will need to do what this function does manually, by
- * loading the view, getting the preview and then getting $view->get_title().
+ * loading the view, getting the preview and then getting $view->getTitle().
  *
  * @param $name
  *   The name of the view to embed.
@@ -2283,15 +2283,15 @@ function views_get_view_result($name, $display_id = NULL) {
   $view = views_get_view($name);
   if (is_object($view)) {
     if (is_array($args)) {
-      $view->set_arguments($args);
+      $view->setArguments($args);
     }
     if (is_string($display_id)) {
-      $view->set_display($display_id);
+      $view->setDisplay($display_id);
     }
     else {
-      $view->init_display();
+      $view->initDisplay();
     }
-    $view->pre_execute();
+    $view->preExecute();
     $view->execute();
     return $view->result;
   }

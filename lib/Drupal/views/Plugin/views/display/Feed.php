@@ -243,10 +243,10 @@ class Feed extends Page {
     // attach a feed icon.
     $plugin = $this->get_plugin();
     if ($plugin) {
-      $clone = $this->view->clone_view();
-      $clone->set_display($this->display->id);
-      $clone->build_title();
-      $plugin->attach_to($display_id, $this->get_path(), $clone->get_title());
+      $clone = $this->view->cloneView();
+      $clone->setDisplay($this->display->id);
+      $clone->buildTitle();
+      $plugin->attach_to($display_id, $this->get_path(), $clone->getTitle());
 
       // Clean up
       $clone->destroy();

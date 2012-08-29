@@ -43,14 +43,14 @@ class DefaultDisplay extends DisplayPluginBase {
    *
    * For the simplest use:
    * @code
-   *   $output = $view->execute_display('default', $args);
+   *   $output = $view->executeDisplay('default', $args);
    * @endcode
    *
    * For more complex usages, a view can be partially built:
    * @code
-   *   $view->set_arguments($args);
+   *   $view->setArguments($args);
    *   $view->build('default'); // Build the query
-   *   $view->pre_execute(); // Pre-execute the query.
+   *   $view->preExecute(); // Pre-execute the query.
    *   $view->execute(); // Run the query
    *   $output = $view->render(); // Render the view
    * @endcode
@@ -61,7 +61,7 @@ class DefaultDisplay extends DisplayPluginBase {
    *
    * You can also do:
    * @code
-   *   $view->set_arguments($args);
+   *   $view->setArguments($args);
    *   $output = $view->render('default'); // Render the view
    * @endcode
    *

@@ -44,7 +44,7 @@ class FieldTest extends HandlerTestBase {
    */
   function _testHideIfEmpty() {
     $view = $this->getBasicView();
-    $view->init_display();
+    $view->initDisplay();
     $this->executeView($view);
 
     $column_map_reversed = array_flip($this->column_map);
@@ -262,7 +262,7 @@ class FieldTest extends HandlerTestBase {
    */
   function _testEmptyText() {
     $view = $this->getBasicView();
-    $view->init_display();
+    $view->initDisplay();
     $this->executeView($view);
 
     $column_map_reversed = array_flip($this->column_map);
@@ -299,8 +299,8 @@ class FieldTest extends HandlerTestBase {
    */
   function testIsValueEmpty() {
     $view = $this->getBasicView();
-    $view->init_display();
-    $view->init_handlers();
+    $view->initDisplay();
+    $view->initHandlers();
     $field = $view->field['name'];
 
     $this->assertFalse($field->is_value_empty("not empty", TRUE), 'A normal string is not empty.');

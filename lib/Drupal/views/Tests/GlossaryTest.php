@@ -47,8 +47,8 @@ class GlossaryTest extends ViewTestBase {
 
     // Execute glossary view
     $view = views_get_view('glossary');
-    $view->set_display('attachment');
-    $view->execute_display('attachment');
+    $view->setDisplay('attachment');
+    $view->executeDisplay('attachment');
 
     // Check that the amount of nodes per char.
     $result_nodes_per_char = array();

@@ -26,7 +26,7 @@ class HandlerFieldUserNameTest extends UserTestBase {
 
   function testUserName() {
     $view = $this->view_user_name();
-    $view->init_display();
+    $view->initDisplay();
     $this->executeView($view);
 
     $view->row_index = 0;

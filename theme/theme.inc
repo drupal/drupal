@@ -83,11 +83,11 @@ function template_preprocess_views_view(&$vars) {
 
   // @todo: Figure out whether this belongs into views_ui_preprocess_views_view.
   // Render title for the admin preview.
-  $vars['title'] = !empty($view->views_ui_context) ? filter_xss_admin($view->get_title()) : '';
+  $vars['title'] = !empty($view->views_ui_context) ? filter_xss_admin($view->getTitle()) : '';
 
   if ($view->display_handler->render_pager()) {
     $exposed_input = isset($view->exposed_raw_input) ? $view->exposed_raw_input : NULL;
-    $vars['pager'] = $view->render_pager($exposed_input);
+    $vars['pager'] = $view->renderPager($exposed_input);
   }
 
   $vars['attachment_before'] = !empty($view->attachment_before) ? $view->attachment_before : '';
@@ -130,7 +130,7 @@ function template_preprocess_views_view(&$vars) {
             'view_path' => check_plain(current_path()),
             // Pass through URL to ensure we get e.g. language prefixes.
 //            'view_base_path' => isset($view->display['page']) ? substr(url($view->display['page']->display_options['path']), strlen($base_path)) : '',
-            'view_base_path' => $view->get_path(),
+            'view_base_path' => $view->getPath(),
             'view_dom_id' => $vars['dom_id'],
             // To fit multiple views on a page, the programmer may have
             // overridden the display's pager_element.
@@ -390,7 +390,7 @@ function template_preprocess_views_view_summary(&$vars) {
     if (!empty($argument->options['summary_options']['base_path'])) {
       $base_path = $argument->options['summary_options']['base_path'];
     }
-    $vars['rows'][$id]->url = url($view->get_url($args, $base_path), $url_options);
+    $vars['rows'][$id]->url = url($view->getUrl($args, $base_path), $url_options);
     $vars['rows'][$id]->count = intval($row->{$argument->count_alias});
     if (isset($active_urls[$vars['rows'][$id]->url])) {
       $vars['row_classes'][$id] = 'active';
@@ -440,7 +440,7 @@ function template_preprocess_views_view_summary_unformatted(&$vars) {
     if (!empty($argument->options['summary_options']['base_path'])) {
       $base_path = $argument->options['summary_options']['base_path'];
     }
-    $vars['rows'][$id]->url = url($view->get_url($args, $base_path), $url_options);
+    $vars['rows'][$id]->url = url($view->getUrl($args, $base_path), $url_options);
     $vars['rows'][$id]->count = intval($row->{$argument->count_alias});
     if (isset($active_urls[$vars['rows'][$id]->url])) {
       $vars['row_classes'][$id] = 'active';
@@ -860,7 +860,7 @@ function template_preprocess_views_view_rss(&$vars) {
     }
   }
   else {
-    $title = $view->get_title();
+    $title = $view->getTitle();
   }
   $vars['title'] = check_plain($title);
 
@@ -872,7 +872,7 @@ function template_preprocess_views_view_rss(&$vars) {
   }
 
   if ($path) {
-    $path = $view->get_url(NULL, $path);
+    $path = $view->getUrl(NULL, $path);
     $url_options = array('absolute' => TRUE);
     if (!empty($view->exposed_raw_input)) {
       $url_options['query'] = $view->exposed_raw_input;

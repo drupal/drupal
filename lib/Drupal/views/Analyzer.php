@@ -66,7 +66,7 @@ class Analyzer {
    *   'warning' and 'error'.
    */
   public function getMessages() {
-    $this->view->init_display();
+    $this->view->initDisplay();
     $messages = module_invoke_all('views_analyze', $this->view);
 
     return $messages;

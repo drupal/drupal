@@ -1420,7 +1420,7 @@ class Sql extends QueryPluginBase {
     // Store the view in the object to be able to use it later.
     $this->view = $view;
 
-    $view->init_pager();
+    $view->initPager();
 
     // Let the pager modify the query to add limits.
     $view->pager->query();

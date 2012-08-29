@@ -43,7 +43,7 @@ class ExposedFormTest extends PluginTestBase {
     $this->drupalGet('test_rename_reset_button');
     // Rename the label of the reset button.
     $view = views_get_view('test_rename_reset_button');
-    $view->set_display('default');
+    $view->setDisplay('default');
 
     $exposed_form = $view->display_handler->get_option('exposed_form');
     $exposed_form['options']['reset_button_label'] = $expected_label = $this->randomName();

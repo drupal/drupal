@@ -44,7 +44,7 @@ class AccessTest extends PluginTestBase {
   function testAccessNone() {
     $view = $this->view_access_none();
 
-    $view->set_display('default');
+    $view->setDisplay('default');
 
     $this->assertTrue($view->display_handler->access($this->admin_user), t('Admin-Account should be able to access the view everytime'));
     $this->assertTrue($view->display_handler->access($this->web_user));
@@ -57,7 +57,7 @@ class AccessTest extends PluginTestBase {
   function testAccessPerm() {
     $view = $this->view_access_perm();
 
-    $view->set_display('default');
+    $view->setDisplay('default');
     $access_plugin = $view->display_handler->get_plugin('access');
 
     $this->assertTrue($view->display_handler->access($this->admin_user), t('Admin-Account should be able to access the view everytime'));
@@ -71,7 +71,7 @@ class AccessTest extends PluginTestBase {
   function testAccessRole() {
     $view = $this->view_access_role();
 
-    $view->set_display('default');
+    $view->setDisplay('default');
     $access_plugin = $view->display_handler->get_plugin('access');
 
     $this->assertTrue($view->display_handler->access($this->admin_user), t('Admin-Account should be able to access the view everytime'));
@@ -89,7 +89,7 @@ class AccessTest extends PluginTestBase {
   function testStaticAccessPlugin() {
     $view = $this->view_access_static();
 
-    $view->set_display('default');
+    $view->setDisplay('default');
     $access_plugin = $view->display_handler->get_plugin('access');
 
     $this->assertFalse($access_plugin->access($this->normal_user));
@@ -101,7 +101,7 @@ class AccessTest extends PluginTestBase {
     $expected_hook_menu = array(
       'views_test_test_static_access_callback', array(FALSE)
     );
-    $hook_menu = $view->execute_hook_menu('page_1');
+    $hook_menu = $view->executeHookMenu('page_1');
     $this->assertEqual($expected_hook_menu, $hook_menu['test_access_static']['access arguments'][0]);
 
     $expected_hook_menu = array(
@@ -120,7 +120,7 @@ class AccessTest extends PluginTestBase {
     variable_set('test_dynamic_access_argument1', $argument1);
     variable_set('test_dynamic_access_argument2', $argument2);
 
-    $view->set_display('default');
+    $view->setDisplay('default');
     $access_plugin = $view->display_handler->get_plugin('access');
 
     $this->assertFalse($access_plugin->access($this->normal_user));
@@ -128,14 +128,14 @@ class AccessTest extends PluginTestBase {
     $access_plugin->options['access'] = TRUE;
     $this->assertFalse($access_plugin->access($this->normal_user));
 
-    $view->set_arguments(array($argument1, $argument2));
+    $view->setArguments(array($argument1, $argument2));
     $this->assertTrue($access_plugin->access($this->normal_user));
 
     // FALSE comes from hook_menu caching.
     $expected_hook_menu = array(
       'views_test_test_dynamic_access_callback', array(FALSE, 1, 2)
     );
-    $hook_menu = $view->execute_hook_menu('page_1');
+    $hook_menu = $view->executeHookMenu('page_1');
     $this->assertEqual($expected_hook_menu, $hook_menu['test_access_dynamic']['access arguments'][0]);
 
     $expected_hook_menu = array(

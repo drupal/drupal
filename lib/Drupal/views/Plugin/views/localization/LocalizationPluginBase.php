@@ -142,7 +142,7 @@ abstract class LocalizationPluginBase extends PluginBase {
   }
 
   function process_locale_strings($op) {
-    $this->view->init_display();
+    $this->view->initDisplay();
 
     foreach ($this->view->display as $display_id => $display) {
       $translatable = array();

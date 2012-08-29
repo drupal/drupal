@@ -271,7 +271,7 @@ function views_ui_custom_theme() {
 function views_ui_edit_page_title($view) {
   module_load_include('inc', 'views_ui', 'includes/admin');
   $bases = views_fetch_base_tables();
-  $name = $view->get_human_name();
+  $name = $view->getHumanName();
   if (isset($bases[$view->base_table])) {
     $name .= ' (' . $bases[$view->base_table]['title'] . ')';
   }
@@ -479,7 +479,7 @@ function views_ui_view_preview_section_handler_links($view, $type, $title = FALS
   $handlers = $view->display_handler->get_handlers($type);
   $links = array();
 
-  $types = View::views_object_types();
+  $types = View::viewsObjectTypes();
   if ($title) {
     $links[$type . '-title'] = array(
       'title' => $types[$type]['title'],
@@ -768,7 +768,7 @@ function _views_ui_get_paths($view) {
     $all_paths[] = t('Edit this view to add a display.');
   }
   else {
-    $view->init_display();   // Make sure all the handlers are set up
+    $view->initDisplay();   // Make sure all the handlers are set up
     foreach ($view->display as $display) {
       if (!empty($display->handler) && $display->handler->has_path()) {
         $one_path = $display->handler->get_option('path');

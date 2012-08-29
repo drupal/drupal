@@ -243,18 +243,18 @@ class Attachment extends DisplayPluginBase {
 
     // Get a fresh view because our current one has a lot of stuff on it because it's
     // already been executed.
-    $view = $this->view->clone_view();
+    $view = $this->view->cloneView();
     $view->original_args = $view->args;
 
     $args = $this->get_option('inherit_arguments') ? $this->view->args : array();
-    $view->set_arguments($args);
-    $view->set_display($this->display->id);
+    $view->setArguments($args);
+    $view->setDisplay($this->display->id);
     if ($this->get_option('inherit_pager')) {
       $view->display_handler->usesPager = $this->view->display[$display_id]->handler->usesPager();
       $view->display_handler->set_option('pager', $this->view->display[$display_id]->handler->get_option('pager'));
     }
 
-    $attachment = $view->execute_display($this->display->id, $args);
+    $attachment = $view->executeDisplay($this->display->id, $args);
 
     switch ($this->get_option('attachment_position')) {
       case 'before':

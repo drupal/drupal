@@ -116,7 +116,7 @@ abstract class CachePluginBase extends PluginBase {
         $data = array(
           'result' => $this->view->result,
           'total_rows' => isset($this->view->total_rows) ? $this->view->total_rows : 0,
-          'current_page' => $this->view->get_current_page(),
+          'current_page' => $this->view->getCurrentPage(),
         );
         cache($this->table)->set($this->get_results_key(), $data, $this->cache_set_expire($type));
         break;
@@ -147,7 +147,7 @@ abstract class CachePluginBase extends PluginBase {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->view->result = $cache->data['result'];
             $this->view->total_rows = $cache->data['total_rows'];
-            $this->view->set_current_page($cache->data['current_page']);
+            $this->view->setCurrentPage($cache->data['current_page']);
             $this->view->execute_time = 0;
             return TRUE;
           }

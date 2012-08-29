@@ -199,7 +199,7 @@ class views_ui extends ctools_export_ui {
       $title = $view->human_name;
     }
     else {
-      $title = $view->get_title();
+      $title = $view->getTitle();
       if (empty($title)) {
         $title = $view->name;
       }
@@ -356,7 +356,7 @@ class views_ui extends ctools_export_ui {
     $template->type = t('Default');
 
     $output = $this->clone_page($js, $input, $template, $step);
-    drupal_set_title(t('Create view from template @template', array('@template' => $template->get_human_name())));
+    drupal_set_title(t('Create view from template @template', array('@template' => $template->getHumanName())));
     return $output;
   }
 
@@ -404,10 +404,10 @@ function views_ui_clone_form($form, &$form_state) {
   }
   do {
     if (empty($form_state['item']->is_template)) {
-      $name = format_plural($counter, 'Clone of', 'Clone @count of') . ' ' . $view->get_human_name();
+      $name = format_plural($counter, 'Clone of', 'Clone @count of') . ' ' . $view->getHumanName();
     }
     else {
-      $name = $view->get_human_name();
+      $name = $view->getHumanName();
       if ($counter > 1) {
         $name .= ' ' . $counter;
       }

@@ -94,7 +94,7 @@ abstract class HandlerBase extends PluginBase {
       $options['field'] = $this->actual_field;
     }
 
-    $types = View::views_object_types();
+    $types = View::viewsObjectTypes();
     $plural = $this->plugin_type;
     if (isset($types[$this->plugin_type]['plural'])) {
       $plural = $types[$this->plugin_type]['plural'];
@@ -179,7 +179,7 @@ abstract class HandlerBase extends PluginBase {
 
     // If grouping, check to see if the aggregation method needs to modify the field.
     if ($this->view->display_handler->use_group_by()) {
-      $this->view->init_query();
+      $this->view->initQuery();
       if ($this->query) {
         $info = $this->query->get_aggregation_info();
         if (!empty($info[$this->options['group_type']]['method'])) {
@@ -314,7 +314,7 @@ abstract class HandlerBase extends PluginBase {
   function groupby_form(&$form, &$form_state) {
     $view = &$form_state['view'];
     $display_id = $form_state['display_id'];
-    $types = View::views_object_types();
+    $types = View::viewsObjectTypes();
     $type = $form_state['type'];
     $id = $form_state['id'];
 
@@ -323,7 +323,7 @@ abstract class HandlerBase extends PluginBase {
 
     $form['#section'] = $display_id . '-' . $type . '-' . $id;
 
-    $view->init_query();
+    $view->initQuery();
     $info = $view->query->get_aggregation_info();
     foreach ($info as $id => $aggregate) {
       $group_types[$id] = $aggregate['title'];

@@ -57,11 +57,11 @@ class TranslatableTest extends ViewTestBase {
    */
   public function testUnpackTranslatable() {
     $view = $this->view_unpack_translatable();
-    $view->init_localization();
+    $view->initLocalization();
 
     $this->assertEqual('Drupal\views_test\Plugin\views\localization\LocalizationTest', get_class($view->localization_plugin), 'Make sure that init_localization initializes the right translation plugin');
 
-    $view->export_locale_strings();
+    $view->exportLocaleStrings();
 
     $expected_strings = $this->strings;
     $result_strings = $view->localization_plugin->get_export_strings();
@@ -86,7 +86,7 @@ class TranslatableTest extends ViewTestBase {
    */
   public function testTranslation() {
     $view = $this->view_unpack_translatable();
-    $view->set_display('default');
+    $view->setDisplay('default');
     $this->executeView($view);
 
     $expected_strings = array();
@@ -108,7 +108,7 @@ class TranslatableTest extends ViewTestBase {
   public function testTranslationKey() {
     $view = $this->view_unpack_translatable();
     $view->editing = TRUE;
-    $view->init_display();
+    $view->initDisplay();
 
     // Don't run translation. We just want to get the right keys.
 

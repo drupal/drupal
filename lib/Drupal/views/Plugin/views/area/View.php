@@ -66,7 +66,7 @@ class View extends AreaPluginBase {
       if (empty($view) || !$view->access($display_id)) {
         return;
       }
-      $view->set_display($display_id);
+      $view->setDisplay($display_id);
 
       // Avoid recursion
       $view->parent_views += $this->view->parent_views;

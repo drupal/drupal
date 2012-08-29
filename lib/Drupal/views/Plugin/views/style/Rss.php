@@ -35,13 +35,13 @@ class Rss extends StylePluginBase {
   function attach_to($display_id, $path, $title) {
     $display = $this->view->display[$display_id]->handler;
     $url_options = array();
-    $input = $this->view->get_exposed_input();
+    $input = $this->view->getExposedInput();
     if ($input) {
       $url_options['query'] = $input;
     }
     $url_options['absolute'] = TRUE;
 
-    $url = url($this->view->get_url(NULL, $path), $url_options);
+    $url = url($this->view->getUrl(NULL, $path), $url_options);
     if ($display->has_path()) {
       if (empty($this->preview)) {
         drupal_add_feed($url, $title);

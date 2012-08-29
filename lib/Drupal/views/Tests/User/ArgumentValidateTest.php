@@ -32,9 +32,9 @@ class ArgumentValidateTest extends UserTestBase {
     $account = $this->account;
     // test 'uid' case
     $view = $this->view_argument_validate_user('uid');
-    $view->set_display('default');
-    $view->pre_execute();
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->preExecute();
+    $view->initHandlers();
     $this->assertTrue($view->argument['null']->validate_arg($account->uid));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
@@ -50,9 +50,9 @@ class ArgumentValidateTest extends UserTestBase {
     $account = $this->account;
     // test 'name' case
     $view = $this->view_argument_validate_user('name');
-    $view->set_display('default');
-    $view->pre_execute();
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->preExecute();
+    $view->initHandlers();
     $this->assertTrue($view->argument['null']->validate_arg($account->name));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
@@ -68,9 +68,9 @@ class ArgumentValidateTest extends UserTestBase {
     $account = $this->account;
     // test 'either' case
     $view = $this->view_argument_validate_user('either');
-    $view->set_display('default');
-    $view->pre_execute();
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->preExecute();
+    $view->initHandlers();
     $this->assertTrue($view->argument['null']->validate_arg($account->name));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;

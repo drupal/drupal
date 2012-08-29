@@ -72,7 +72,7 @@ class FilterNumericTest extends HandlerTestBase {
 
     // Filter: Age, Operator: =, Value: 28
     $filters['age']['group_info']['default_group'] = 1;
-    $view->set_display('page_1');
+    $view->setDisplay('page_1');
     $view->display['page_1']->handler->override_option('filters', $filters);
 
     $this->executeView($view);
@@ -163,7 +163,7 @@ class FilterNumericTest extends HandlerTestBase {
 
     // Filter: Age, Operator: between, Value: 26 and 29
     $filters['age']['group_info']['default_group'] = 2;
-    $view->set_display('page_1');
+    $view->setDisplay('page_1');
     $view->display['page_1']->handler->override_option('filters', $filters);
 
 
@@ -191,7 +191,7 @@ class FilterNumericTest extends HandlerTestBase {
 
     // Filter: Age, Operator: between, Value: 26 and 29
     $filters['age']['group_info']['default_group'] = 3;
-    $view->set_display('page_1');
+    $view->setDisplay('page_1');
     $view->display['page_1']->handler->override_option('filters', $filters);
 
 
@@ -280,7 +280,7 @@ class FilterNumericTest extends HandlerTestBase {
 
     // Filter: Age, Operator: empty, Value:
     $filters['age']['group_info']['default_group'] = 4;
-    $view->set_display('page_1');
+    $view->setDisplay('page_1');
     $view->display['page_1']->handler->override_option('filters', $filters);
 
 
@@ -296,7 +296,7 @@ class FilterNumericTest extends HandlerTestBase {
 
     // Filter: Age, Operator: empty, Value:
     $filters['age']['group_info']['default_group'] = 5;
-    $view->set_display('page_1');
+    $view->setDisplay('page_1');
     $view->display['page_1']->handler->override_option('filters', $filters);
 
 
@@ -345,8 +345,8 @@ class FilterNumericTest extends HandlerTestBase {
       ),
     ));
 
-    $view->set_display('default');
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->initHandlers();
 
     $id_operators = $view->filter['id']->operators();
     $age_operators = $view->filter['age']->operators();

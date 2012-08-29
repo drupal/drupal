@@ -35,9 +35,9 @@ class ArgumentDefaultTest extends UserTestBase {
 
     $view = $this->view_plugin_argument_default_current_user();
 
-    $view->set_display('default');
-    $view->pre_execute();
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->preExecute();
+    $view->initHandlers();
 
     $this->assertEqual($view->argument['null']->get_default_argument(), $account->uid, 'Uid of the current user is used.');
     // Switch back.

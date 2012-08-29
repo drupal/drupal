@@ -722,7 +722,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   function get_url() {
-    return $this->view->get_url();
+    return $this->view->getUrl();
   }
 
   /**
@@ -866,7 +866,7 @@ abstract class DisplayPluginBase extends PluginBase {
   function get_handlers($type) {
     if (!isset($this->handlers[$type])) {
       $this->handlers[$type] = array();
-      $types = View::views_object_types();
+      $types = View::viewsObjectTypes();
       $plural = $types[$type]['plural'];
 
       foreach ($this->get_option($plural) as $id => $info) {
@@ -887,7 +887,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $override = NULL;
         if ($this->use_group_by() && !empty($info['group_type'])) {
           if (empty($this->view->query)) {
-            $this->view->init_query();
+            $this->view->initQuery();
           }
           $aggregate = $this->view->query->get_aggregation_info();
           if (!empty($aggregate[$info['group_type']]['handler'][$type])) {
@@ -1214,7 +1214,7 @@ abstract class DisplayPluginBase extends PluginBase {
       );
     }
 
-    $this->view->init_query();
+    $this->view->initQuery();
     if ($this->view->query->get_aggregation_info()) {
       $options['group_by'] = array(
         'category' => 'other',
@@ -1577,7 +1577,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $plugin_name = $query_options['type'];
 
         $form['#title'] .= t('Query options');
-        $this->view->init_query();
+        $this->view->initQuery();
         if ($this->view->query) {
           $form['query'] = array(
             '#tree' => TRUE,
@@ -2478,7 +2478,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
       if ($path) {
         if (empty($override_path)) {
-          $path = $this->view->get_url(NULL, $path);
+          $path = $this->view->getUrl(NULL, $path);
         }
         $url_options = array();
         if (!empty($this->view->exposed_raw_input)) {
@@ -2572,11 +2572,11 @@ abstract class DisplayPluginBase extends PluginBase {
    * overridden on an individual display.
    */
   function pre_execute() {
-    $this->view->set_use_ajax($this->isAJAXEnabled());
+    $this->view->setUseAJAX($this->isAJAXEnabled());
     if ($this->usesMore() && !$this->use_more_always()) {
       $this->view->get_total_rows = TRUE;
     }
-    $this->view->init_handlers();
+    $this->view->initHandlers();
     if ($this->uses_exposed()) {
       $exposed_form = $this->get_plugin('exposed_form');
       $exposed_form->pre_execute();
@@ -2657,7 +2657,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     // Validate handlers
-    foreach (View::views_object_types() as $type => $info) {
+    foreach (View::viewsObjectTypes() as $type => $info) {
       foreach ($this->get_handlers($type) as $handler) {
         $result = $handler->validate();
         if (!empty($result) && is_array($result)) {
@@ -2682,7 +2682,7 @@ abstract class DisplayPluginBase extends PluginBase {
    *
    */
   function is_identifier_unique($id, $identifier) {
-    foreach (View::views_object_types() as $type => $info) {
+    foreach (View::viewsObjectTypes() as $type => $info) {
       foreach ($this->get_handlers($type) as $key => $handler) {
         if ($handler->can_expose() && $handler->is_exposed()) {
           if ($handler->is_a_group()) {
@@ -2729,7 +2729,7 @@ abstract class DisplayPluginBase extends PluginBase {
       if (arg(0) == 'admin' && arg(1) == 'structure' && arg(2) == 'views') {
         return;
       }
-      $this->view->init_handlers();
+      $this->view->initHandlers();
 
       if ($this->uses_exposed() && $this->get_option('exposed_block')) {
         $exposed_form = $this->get_plugin('exposed_form');
@@ -2786,7 +2786,7 @@ abstract class DisplayPluginBase extends PluginBase {
     else {
       $type = $option;
     }
-    $types = View::views_object_types();
+    $types = View::viewsObjectTypes();
     foreach ($storage[$option] as $id => $info) {
       if (!empty($types[$type]['type'])) {
         $handler_type = $types[$type]['type'];
@@ -2800,7 +2800,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $override = NULL;
       if ($this->use_group_by() && !empty($info['group_type'])) {
         if (empty($this->view->query)) {
-          $this->view->init_query();
+          $this->view->initQuery();
         }
         $aggregate = $this->view->query->get_aggregation_info();
         if (!empty($aggregate[$info['group_type']]['handler'][$type])) {
@@ -2944,7 +2944,7 @@ abstract class DisplayPluginBase extends PluginBase {
     else {
       $type = $option;
     }
-    $types = View::views_object_types();
+    $types = View::viewsObjectTypes();
     foreach ($storage[$option] as $id => $info) {
       if (!empty($types[$type]['type'])) {
         $handler_type = $types[$type]['type'];

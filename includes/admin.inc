@@ -118,17 +118,17 @@ function views_ui_preview($view, $display_id, $args = array()) {
       }
     }
 
-    $view->set_exposed_input($exposed_input);
+    $view->setExposedInput($exposed_input);
 
-    if (!$view->set_display($display_id)) {
+    if (!$view->setDisplay($display_id)) {
       return t('Invalid display id @display', array('@display' => $display_id));
     }
 
-    $view->set_arguments($args);
+    $view->setArguments($args);
 
     // Store the current view URL for later use:
     if ($view->display_handler->get_option('path')) {
-      $path = $view->get_url();
+      $path = $view->getUrl();
     }
 
     // Make view links come back to preview.
@@ -190,7 +190,7 @@ function views_ui_preview($view, $display_id, $args = array()) {
           }
         }
         if ($show_info) {
-          $rows['query'][] = array('<strong>' . t('Title') . '</strong>', filter_xss_admin($view->get_title()));
+          $rows['query'][] = array('<strong>' . t('Title') . '</strong>', filter_xss_admin($view->getTitle()));
           if (isset($path)) {
             $path = l($path, $path);
           }
@@ -781,7 +781,7 @@ function views_ui_taxonomy_autocomplete_validate($element, &$form_state) {
  */
 function theme_views_ui_view_info($variables) {
   $view = $variables['view'];
-  $title = $view->get_human_name();
+  $title = $view->getHumanName();
 
   $displays = _views_ui_get_displays_list($view);
   $displays = empty($displays) ? t('None') : format_plural(count($displays), 'Display', 'Displays') . ': ' . '<em>' . implode(', ', $displays) . '</em>';
@@ -913,7 +913,7 @@ function views_ui_build_preview($view, $display_id, $render = TRUE) {
   $build['preview'] = array(
     '#theme_wrappers' => array('container'),
     '#attributes' => array('id' => 'views-live-preview'),
-    '#markup' => $render ? views_ui_preview($view->clone_view(), $display_id, $args) : '',
+    '#markup' => $render ? views_ui_preview($view->cloneView(), $display_id, $args) : '',
   );
 
   return $build;
@@ -942,12 +942,12 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
   $form_state['no_cache'] = TRUE;
 
   if ($display_id) {
-    if (!$view->set_display($display_id)) {
+    if (!$view->setDisplay($display_id)) {
       $form['#markup'] = t('Invalid display id @display', array('@display' => $display_id));
       return $form;
     }
 
-    $view->fix_missing_relationships();
+    $view->fixMissingRelationships();
   }
 
   $form['#attached']['js'][] = ctools_attach_js('collapsible-div');
@@ -1999,7 +1999,7 @@ function views_ui_import_validate($form, &$form_state) {
   // Make sure base table gets set properly if it got moved.
   $view->update();
 
-  $view->init_display();
+  $view->initDisplay();
 
   $broken = FALSE;
 
@@ -2026,7 +2026,7 @@ function views_ui_import_validate($form, &$form_state) {
         }
       }
 
-      foreach (View::views_object_types() as $type => $info) {
+      foreach (View::viewsObjectTypes() as $type => $info) {
         $handlers = $display->handler->get_handlers($type);
         if ($handlers) {
           foreach ($handlers as $id => $handler) {
@@ -2118,7 +2118,7 @@ function views_ui_edit_view_form_submit($form, &$form_state) {
   }
 
   $form_state['view']->save();
-  drupal_set_message(t('The view %name has been saved.', array('%name' => $form_state['view']->get_human_name())));
+  drupal_set_message(t('The view %name has been saved.', array('%name' => $form_state['view']->getHumanName())));
 
   // Remove this view from cache so we can edit it properly.
   views_temp_store()->delete($form_state['view']->name);
@@ -2154,7 +2154,7 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
   $build = array(
     '#theme_wrappers' => array('views_ui_display_tab_bucket'),
   );
-  $types = View::views_object_types();
+  $types = View::viewsObjectTypes();
 
   $build['#overridden'] = FALSE;
   $build['#defaulted'] = FALSE;
@@ -2344,7 +2344,7 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
  * Regenerate the current tab for AJAX updates.
  */
 function views_ui_regenerate_tab(&$view, &$output, $display_id) {
-  if (!$view->set_display('default')) {
+  if (!$view->setDisplay('default')) {
     return;
   }
 
@@ -3156,7 +3156,7 @@ function views_ui_edit_details_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Human-readable name'),
     '#description' => t('A descriptive human-readable name for this view. Spaces are allowed'),
-    '#default_value' => $view->get_human_name(),
+    '#default_value' => $view->getHumanName(),
   );
   $form['details']['tag'] = array(
     '#type' => 'textfield',
@@ -3200,7 +3200,7 @@ function views_ui_edit_display_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $section = $form_state['section'];
 
-  if (!$view->set_display($display_id)) {
+  if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
   $display = &$view->display[$display_id];
@@ -3276,8 +3276,8 @@ function views_ui_config_type_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $type = $form_state['type'];
 
-  $types = View::views_object_types();
-  if (!$view->set_display($display_id)) {
+  $types = View::viewsObjectTypes();
+  if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
   $display = &$view->display[$display_id];
@@ -3308,7 +3308,7 @@ function views_ui_config_type_form($form, &$form_state) {
  * Submit handler for type configuration form
  */
 function views_ui_config_type_form_submit($form, &$form_state) {
-  $types = View::views_object_types();
+  $types = View::viewsObjectTypes();
   $display = &$form_state['view']->display[$form_state['display_id']];
 
   // Store in cache
@@ -3323,8 +3323,8 @@ function views_ui_rearrange_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $type = $form_state['type'];
 
-  $types = View::views_object_types();
-  if (!$view->set_display($display_id)) {
+  $types = View::viewsObjectTypes();
+  if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
   $display = &$view->display[$display_id];
@@ -3555,7 +3555,7 @@ function theme_views_ui_build_group_filter_form($variables) {
  * Submit handler for rearranging form.
  */
 function views_ui_rearrange_form_submit($form, &$form_state) {
-  $types = View::views_object_types();
+  $types = View::viewsObjectTypes();
   $display = &$form_state['view']->display[$form_state['display_id']];
 
   $old_fields = $display->handler->get_option($types[$form_state['type']]['plural']);
@@ -3591,8 +3591,8 @@ function views_ui_rearrange_filter_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $type = $form_state['type'];
 
-  $types = View::views_object_types();
-  if (!$view->set_display($display_id)) {
+  $types = View::viewsObjectTypes();
+  if (!$view->setDisplay($display_id)) {
     views_ajax_render(t('Invalid display id @display', array('@display' => $display_id)));
   }
   $display = &$view->display[$display_id];
@@ -3857,7 +3857,7 @@ function theme_views_ui_rearrange_filter_form(&$vars) {
  * Submit handler for rearranging form
  */
 function views_ui_rearrange_filter_form_submit($form, &$form_state) {
-  $types = View::views_object_types();
+  $types = View::viewsObjectTypes();
   $display = &$form_state['view']->display[$form_state['display_id']];
   $remember_groups = array();
 
@@ -3975,12 +3975,12 @@ function views_ui_add_item_form($form, &$form_state) {
     ),
   );
 
-  if (!$view->set_display($display_id)) {
+  if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
   $display = &$view->display[$display_id];
 
-  $types = View::views_object_types();
+  $types = View::viewsObjectTypes();
   $ltitle = $types[$type]['ltitle'];
   $section = $types[$type]['plural'];
 
@@ -3995,7 +3995,7 @@ function views_ui_add_item_form($form, &$form_state) {
   views_ui_standard_display_dropdown($form, $form_state, $section);
 
   // Figure out all the base tables allowed based upon what the relationships provide.
-  $base_tables = $view->get_base_tables();
+  $base_tables = $view->getBaseTables();
   $options = views_fetch_fields(array_keys($base_tables), $type, $display->handler->use_group_by());
 
   if (!empty($options)) {
@@ -4096,7 +4096,7 @@ function views_ui_add_item_form($form, &$form_state) {
  */
 function views_ui_add_item_form_submit($form, &$form_state) {
   $type = $form_state['type'];
-  $types = View::views_object_types();
+  $types = View::viewsObjectTypes();
   $section = $types[$type]['plural'];
 
   // Handle the override select.
@@ -4212,7 +4212,7 @@ function views_ui_config_item_form($form, &$form_state) {
       '#attributes' => array('class' => array('scroll')),
     ),
   );
-  if (!$view->set_display($display_id)) {
+  if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
   $item = $view->get_item($display_id, $type, $id);
@@ -4223,7 +4223,7 @@ function views_ui_config_item_form($form, &$form_state) {
       $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
     }
     else {
-      $types = View::views_object_types();
+      $types = View::viewsObjectTypes();
 
       // If this item can come from the default display, show a dropdown
       // that lets the user choose which display the changes should apply to.
@@ -4273,7 +4273,7 @@ function views_ui_config_item_form($form, &$form_state) {
           // We want this relationship option to get saved even if the user
           // skips submitting the form.
           $view->set_item_option($display_id, $type, $id, 'relationship', $rel);
-          $temp_view = $view->clone_view();
+          $temp_view = $view->cloneView();
           views_ui_cache_set($temp_view);
         }
 
@@ -4343,7 +4343,7 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   // Run it through the handler's submit function.
   $form_state['handler']->options_submit($form['options'], $form_state);
   $item = $form_state['handler']->options;
-  $types = View::views_object_types();
+  $types = View::viewsObjectTypes();
 
   // For footer/header $handler_type is area but $type is footer/header.
   // For all other handle types it's the same.
@@ -4355,7 +4355,7 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   $override = NULL;
   if ($form_state['view']->display_handler->use_group_by() && !empty($item['group_type'])) {
     if (empty($form_state['view']->query)) {
-      $form_state['view']->init_query();
+      $form_state['view']->initQuery();
     }
     $aggregate = $form_state['view']->query->get_aggregation_info();
     if (!empty($aggregate[$item['group_type']]['handler'][$type])) {
@@ -4397,7 +4397,7 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   // Run it through the handler's submit function.
   $form_state['handler']->options_submit($form['options'], $form_state);
   $item = $form_state['handler']->options;
-  $types = View::views_object_types();
+  $types = View::viewsObjectTypes();
 
   // For footer/header $handler_type is area but $type is footer/header.
   // For all other handle types it's the same.
@@ -4409,7 +4409,7 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   $override = NULL;
   if ($form_state['view']->display_handler->use_group_by() && !empty($item['group_type'])) {
     if (empty($form_state['view']->query)) {
-      $form_state['view']->init_query();
+      $form_state['view']->initQuery();
     }
     $aggregate = $form_state['view']->query->get_aggregation_info();
     if (!empty($aggregate[$item['group_type']]['handler'][$type])) {
@@ -4458,11 +4458,11 @@ function views_ui_config_item_group_form($type, &$form_state) {
       '#attributes' => array('class' => array('scroll')),
     ),
   );
-  if (!$view->set_display($display_id)) {
+  if (!$view->setDisplay($display_id)) {
     views_ajax_render(t('Invalid display id @display', array('@display' => $display_id)));
   }
 
-  $view->init_query();
+  $view->initQuery();
 
   $item = $view->get_item($display_id, $type, $id);
 
@@ -4473,7 +4473,7 @@ function views_ui_config_item_group_form($type, &$form_state) {
     }
     else {
       $handler->init($view, $item);
-      $types = View::views_object_types();
+      $types = View::viewsObjectTypes();
 
       $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->ui_name()));
 
@@ -4562,7 +4562,7 @@ function views_ui_config_item_extra_form($form, &$form_state) {
       '#attributes' => array('class' => array('scroll')),
     ),
   );
-  if (!$view->set_display($display_id)) {
+  if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
   $item = $view->get_item($display_id, $type, $id);
@@ -4574,7 +4574,7 @@ function views_ui_config_item_extra_form($form, &$form_state) {
     }
     else {
       $handler->init($view, $item);
-      $types = View::views_object_types();
+      $types = View::viewsObjectTypes();
 
       $form['#title'] = t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->ui_name()));
 
@@ -4633,7 +4633,7 @@ function views_ui_config_style_form($form, &$form_state) {
       '#attributes' => array('class' => array('scroll')),
     ),
   );
-  if (!$view->set_display($display_id)) {
+  if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
   $item = $view->get_item($display_id, $type, $id);
@@ -4645,7 +4645,7 @@ function views_ui_config_style_form($form, &$form_state) {
     }
     else {
       $handler->init($view, $item);
-      $types = View::views_object_types();
+      $types = View::viewsObjectTypes();
 
       $form['#title'] = t('Configure summary style for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->ui_name()));
 
@@ -5311,7 +5311,7 @@ function views_ui_add_template_page() {
   $rows = array();
   foreach ($templates as $name => $template) {
     $rows[] = array(
-      array('data' => check_plain($template->get_human_name())),
+      array('data' => check_plain($template->getHumanName())),
       array('data' => check_plain($template->description)),
       array('data' => l('add', 'admin/structure/views/template/' . $template->name . '/add')),
     );
@@ -5370,8 +5370,8 @@ function views_ui_field_list() {
   $fields = array();
   foreach ($views as $view) {
     foreach ($view->display as $display_id => $display) {
-      if ($view->set_display($display_id)) {
-        foreach (View::views_object_types() as $type => $info) {
+      if ($view->setDisplay($display_id)) {
+        foreach (View::viewsObjectTypes() as $type => $info) {
           foreach ($view->get_items($type, $display_id) as $item) {
             $data = views_fetch_data($item['table']);
             if (isset($data[$item['field']]) && isset($data[$item['field']][$type])

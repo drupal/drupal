@@ -110,7 +110,7 @@ class FilterInOperatorTest extends HandlerTestBase {
 
     // Filter: Age, Operator: in, Value: 26, 30
     $filters['age']['group_info']['default_group'] = 1;
-    $view->set_display('page_1');
+    $view->setDisplay('page_1');
     $view->display['page_1']->handler->override_option('filters', $filters);
 
     $this->executeView($view);
@@ -139,7 +139,7 @@ class FilterInOperatorTest extends HandlerTestBase {
 
     // Filter: Age, Operator: in, Value: 26, 30
     $filters['age']['group_info']['default_group'] = 2;
-    $view->set_display('page_1');
+    $view->setDisplay('page_1');
     $view->display['page_1']->handler->override_option('filters', $filters);
 
     $this->executeView($view);

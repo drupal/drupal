@@ -47,7 +47,7 @@ class QueryGroupByTest extends ViewTestBase {
     $this->drupalCreateNode($node_2);
 
     $view = $this->viewsAggregateCountView();
-    $output = $view->execute_display();
+    $output = $view->executeDisplay();
 
     $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');
 
@@ -138,7 +138,7 @@ class QueryGroupByTest extends ViewTestBase {
     $this->drupalCreateNode($node_2);
 
     $view = $this->viewsGroupByViewHelper($group_by);
-    $output = $view->execute_display();
+    $output = $view->executeDisplay();
 
     $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');
     // Group by nodetype to identify the right count.
@@ -237,7 +237,7 @@ class QueryGroupByTest extends ViewTestBase {
     }
 
     $view = $this->viewsGroupByCountViewOnlyFilters();
-    $output = $view->execute_display();
+    $output = $view->executeDisplay();
 
     $this->assertTrue(strpos($view->build_info['query'], 'GROUP BY'), t('Make sure that GROUP BY is in the query'));
     $this->assertTrue(strpos($view->build_info['query'], 'HAVING'), t('Make sure that HAVING is in the query'));

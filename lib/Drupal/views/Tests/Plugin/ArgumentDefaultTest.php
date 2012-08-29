@@ -67,9 +67,9 @@ class ArgumentDefaultTest extends PluginTestBase {
   function testArgumentDefaultFixed() {
     $view = $this->view_argument_default_fixed();
 
-    $view->set_display('default');
-    $view->pre_execute();
-    $view->init_handlers();
+    $view->setDisplay('default');
+    $view->preExecute();
+    $view->initHandlers();
 
     $this->assertEqual($view->argument['null']->get_default_argument(), $this->random, 'Fixed argument should be used by default.');
 
@@ -78,9 +78,9 @@ class ArgumentDefaultTest extends PluginTestBase {
     // Make sure that a normal argument provided is used
     $view = $this->view_argument_default_fixed();
 
-    $view->set_display('default');
+    $view->setDisplay('default');
     $random_string = $this->randomString();
-    $view->execute_display('default', array($random_string));
+    $view->executeDisplay('default', array($random_string));
 
     $this->assertEqual($view->args[0], $random_string, 'Provided argument should be used.');
   }
@@ -100,9 +100,7 @@ class ArgumentDefaultTest extends PluginTestBase {
     $view->name = 'test_argument_default_fixed';
     $view->description = '';
     $view->tag = '';
-    $view->view_php = '';
     $view->base_table = 'node';
-    $view->is_cacheable = FALSE;
     $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 

@@ -37,7 +37,7 @@ class ArgumentStringTest extends HandlerTestBase {
     }
 
     $view = $this->viewGlossary();
-    $view->init_display();
+    $view->initDisplay();
     $this->executeView($view);
 
     $count_field = 'nid';

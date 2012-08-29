@@ -162,8 +162,8 @@ abstract class ViewTestBase extends WebTestBase {
    * @param array $args
    */
   protected function executeView($view, $args = array()) {
-    $view->set_display();
-    $view->pre_execute($args);
+    $view->setDisplay();
+    $view->preExecute($args);
     $view->execute();
     $this->verbose('<pre>Executed view: ' . ((string) $view->build_info['query']) . '</pre>');
   }

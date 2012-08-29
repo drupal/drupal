@@ -877,7 +877,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   /**
    * Provide the argument to use to link from the summary to the next level;
    * this will be called once per row of a summary, and used as part of
-   * $view->get_url().
+   * $view->getUrl().
    *
    * @param $data
    *   The query results for the row.

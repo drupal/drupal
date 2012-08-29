@@ -70,12 +70,12 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
           break;
 
         case 'title':
-          $title = $view->get_title();
+          $title = $view->getTitle();
           $replacements[$original] = $sanitize ? check_plain($title) : $title;
           break;
 
         case 'url':
-          if ($path = $view->get_url()) {
+          if ($path = $view->getUrl()) {
             $replacements[$original] = url($path, $url_options);
           }
           break;
@@ -84,7 +84,7 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
 
     // [view:url:*] nested tokens. This only works if Token module is installed.
     if ($url_tokens = token_find_with_prefix($tokens, 'url')) {
-      if ($path = $view->get_url()) {
+      if ($path = $view->getUrl()) {
         $replacements += token_generate('url', $url_tokens, array('path' => $path), $options);
       }
     }

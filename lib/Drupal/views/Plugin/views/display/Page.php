@@ -81,7 +81,7 @@ class Page extends DisplayPluginBase {
 
     $bits = explode('/', $this->get_option('path'));
     $page_arguments = array($this->view->name, $this->display->id);
-    $this->view->init_handlers();
+    $this->view->initHandlers();
     $view_arguments = $this->view->argument;
 
     // Replace % with %views_arg for menu autoloading and add to the
@@ -247,7 +247,7 @@ class Page extends DisplayPluginBase {
       throw new AccessDeniedHttpException();
     }
 
-    $this->view->get_breadcrumb(TRUE);
+    $this->view->getBreadcrumb(TRUE);
 
 
     // And now render the view.
@@ -255,7 +255,7 @@ class Page extends DisplayPluginBase {
 
     // First execute the view so it's possible to get tokens for the title.
     // And the title, which is much easier.
-    drupal_set_title(filter_xss_admin($this->view->get_title()), PASS_THROUGH);
+    drupal_set_title(filter_xss_admin($this->view->getTitle()), PASS_THROUGH);
     return $render;
   }
 

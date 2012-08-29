@@ -34,7 +34,7 @@ class Combine extends String {
 
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
-    $this->view->init_style();
+    $this->view->initStyle();
 
     // Allow to choose all fields as possible
     if ($this->view->style_plugin->usesFields()) {

@@ -217,8 +217,8 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    *   The unique ID for this handler instance.
    */
   function add_item($display_id, $type, $table, $field, $options = array(), $id = NULL) {
-    $types = View::views_object_types();
-    $this->set_display($display_id);
+    $types = View::viewsObjectTypes();
+    $this->setDisplay($display_id);
 
     $fields = $this->display[$display_id]->handler->get_option($types[$type]['plural']);
 
@@ -256,14 +256,14 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    *   An array of handler instances of a given type for this display.
    */
   function get_items($type, $display_id = NULL) {
-    $this->set_display($display_id);
+    $this->setDisplay($display_id);
 
     if (!isset($display_id)) {
       $display_id = $this->current_display;
     }
 
     // Get info about the types so we can get the right data.
-    $types = View::views_object_types();
+    $types = View::viewsObjectTypes();
     return $this->display[$display_id]->handler->get_option($types[$type]['plural']);
   }
 
@@ -283,9 +283,9 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    */
   function get_item($display_id, $type, $id) {
     // Get info about the types so we can get the right data.
-    $types = View::views_object_types();
+    $types = View::viewsObjectTypes();
     // Initialize the display
-    $this->set_display($display_id);
+    $this->setDisplay($display_id);
 
     // Get the existing configuration
     $fields = $this->display[$display_id]->handler->get_option($types[$type]['plural']);
@@ -309,9 +309,9 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    */
   function set_item($display_id, $type, $id, $item) {
     // Get info about the types so we can get the right data.
-    $types = View::views_object_types();
+    $types = View::viewsObjectTypes();
     // Initialize the display.
-    $this->set_display($display_id);
+    $this->setDisplay($display_id);
 
     // Get the existing configuration.
     $fields = $this->display[$display_id]->handler->get_option($types[$type]['plural']);

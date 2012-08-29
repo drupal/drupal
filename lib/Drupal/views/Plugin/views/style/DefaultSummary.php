@@ -39,7 +39,7 @@ class DefaultSummary extends StylePluginBase {
 
   function query() {
     if (!empty($this->options['override'])) {
-      $this->view->set_items_per_page(intval($this->options['items_per_page']));
+      $this->view->setItemsPerPage(intval($this->options['items_per_page']));
     }
   }
 

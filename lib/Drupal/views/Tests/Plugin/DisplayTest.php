@@ -27,7 +27,7 @@ class DisplayTest extends PluginTestBase {
    */
   function testFilterGroupsOverriding() {
     $view = $this->viewFilterGroupsUpdating();
-    $view->init_display();
+    $view->initDisplay();
 
     // mark is as overridden, yes FALSE, means overridden.
     $view->display['page']->handler->set_override('filter_groups', FALSE);

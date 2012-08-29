@@ -234,7 +234,7 @@ class ViewStorageTest extends WebTestBase {
 
     // Ensure the right display_plugin is created/instantiated.
     $this->assertEqual($new_display->display_plugin, 'page', 'New page display "test" uses the right display plugin.');
-    $view->init_display();
+    $view->initDisplay();
     $this->assertTrue($new_display->handler instanceof Page, 'New page display "test" uses the right display plugin.');
 
 

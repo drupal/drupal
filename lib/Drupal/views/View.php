@@ -273,7 +273,7 @@ class View extends ViewStorage {
    * this attempts to do some automatic updates that must happen
    * to ensure older views will at least try to work.
    */
-  function update() {
+  public function update() {
     // When views are converted automatically the base_table should be renamed
     // to have a working query.
     $this->base_table = views_move_table($this->base_table);
@@ -284,7 +284,7 @@ class View extends ViewStorage {
    * Returns a list of the sub-object types used by this view. These types are
    * stored on the display, and are used in the build process.
    */
-  function display_objects() {
+  public function displayObjects() {
     return array('argument', 'field', 'sort', 'filter', 'relationship', 'header', 'footer', 'empty');
   }
 
@@ -292,14 +292,14 @@ class View extends ViewStorage {
    * Set the arguments that come to this view. Usually from the URL
    * but possibly from elsewhere.
    */
-  function set_arguments($args) {
+  public function setArguments($args) {
     $this->args = $args;
   }
 
   /**
    * Change/Set the current page for the pager.
    */
-  function set_current_page($page) {
+  public function setCurrentPage($page) {
     $this->current_page = $page;
 
     // If the pager is already initialized, pass it through to the pager.
@@ -311,7 +311,7 @@ class View extends ViewStorage {
   /**
    * Get the current page from the pager.
    */
-  function get_current_page() {
+  public function getCurrentPage() {
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
       return $this->pager->get_current_page();
@@ -325,7 +325,7 @@ class View extends ViewStorage {
   /**
    * Get the items per page from the pager.
    */
-  function get_items_per_page() {
+  public function getItemsPerPage() {
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
       return $this->pager->get_items_per_page();
@@ -339,7 +339,7 @@ class View extends ViewStorage {
   /**
    * Set the items per page on the pager.
    */
-  function set_items_per_page($items_per_page) {
+  public function setItemsPerPage($items_per_page) {
     $this->items_per_page = $items_per_page;
 
     // If the pager is already initialized, pass it through to the pager.
@@ -351,7 +351,7 @@ class View extends ViewStorage {
   /**
    * Get the pager offset from the pager.
    */
-  function get_offset() {
+  public function getOffset() {
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
       return $this->pager->get_offset();
@@ -365,7 +365,7 @@ class View extends ViewStorage {
   /**
    * Set the offset on the pager.
    */
-  function set_offset($offset) {
+  public function setOffset($offset) {
     $this->offset = $offset;
 
     // If the pager is already initialized, pass it through to the pager.
@@ -377,7 +377,7 @@ class View extends ViewStorage {
   /**
    * Determine if the pager actually uses a pager.
    */
-  function use_pager() {
+  public function usePager() {
     if (!empty($this->pager)) {
       return $this->pager->use_pager();
     }
@@ -388,7 +388,7 @@ class View extends ViewStorage {
    * tablesorting and exposed filters will be fetched via an AJAX call
    * rather than a page refresh.
    */
-  function set_use_ajax($use_ajax) {
+  public function setUseAJAX($use_ajax) {
     $this->use_ajax = $use_ajax;
   }
 
@@ -396,14 +396,14 @@ class View extends ViewStorage {
    * Set the exposed filters input to an array. If unset they will be taken
    * from $_GET when the time comes.
    */
-  function set_exposed_input($filters) {
+  public function setExposedInput($filters) {
     $this->exposed_input = $filters;
   }
 
   /**
    * Figure out what the exposed input for this view is.
    */
-  function get_exposed_input() {
+  public function getExposedInput() {
     // Fill our input either from $_GET or from something previously set on the
     // view.
     if (empty($this->exposed_input)) {
@@ -434,7 +434,7 @@ class View extends ViewStorage {
   /**
    * Set the display for this view and initialize the display handler.
    */
-  function init_display($reset = FALSE) {
+  public function initDisplay($reset = FALSE) {
     // The default display is always the first one in the list.
     if (isset($this->current_display)) {
       return TRUE;
@@ -479,12 +479,12 @@ class View extends ViewStorage {
    * @param $displays
    *   Either a single display id or an array of display ids.
    */
-  function choose_display($displays) {
+  public function chooseDisplay($displays) {
     if (!is_array($displays)) {
       return $displays;
     }
 
-    $this->init_display();
+    $this->initDisplay();
 
     foreach ($displays as $display_id) {
       if ($this->display[$display_id]->handler->access()) {
@@ -501,10 +501,10 @@ class View extends ViewStorage {
    * @param $display_id
    *   The id of the display to mark as current.
    */
-  function set_display($display_id = NULL) {
+  public function setDisplay($display_id = NULL) {
     // If we have not already initialized the display, do so. But be careful.
     if (empty($this->current_display)) {
-      $this->init_display();
+      $this->initDisplay();
 
       // If handlers were not initialized, and no argument was sent, set up
       // to the default display.
@@ -513,7 +513,7 @@ class View extends ViewStorage {
       }
     }
 
-    $display_id = $this->choose_display($display_id);
+    $display_id = $this->chooseDisplay($display_id);
 
     // If no display id sent in and one wasn't chosen above, we're finished.
     if (empty($display_id)) {
@@ -549,7 +549,7 @@ class View extends ViewStorage {
    * Note that arguments may have changed which style plugin we use, so
    * check the view object first, then ask the display handler.
    */
-  function init_style() {
+  public function initStyle() {
     if (isset($this->style_plugin)) {
       return is_object($this->style_plugin);
     }
@@ -576,7 +576,7 @@ class View extends ViewStorage {
    * This will try to add relationships automatically if it can, and will
    * remove the handlers if it cannot.
    */
-  function fix_missing_relationships() {
+  public function fixMissingRelationships() {
     if (isset($this->relationships_fixed)) {
       return;
     }
@@ -604,7 +604,7 @@ class View extends ViewStorage {
     $base_tables = array_keys($base_tables);
     $missing_base_tables = array();
 
-    $types = View::views_object_types();
+    $types = View::viewsObjectTypes();
     foreach ($types as $key => $info) {
       foreach ($this->display_handler->get_option($info['plural']) as $id => $options) {
         $options['table'] = views_move_table($options['table']);
@@ -660,11 +660,11 @@ class View extends ViewStorage {
   /**
    * Acquire and attach all of the handlers.
    */
-  function init_handlers() {
+  public function initHandlers() {
     if (empty($this->inited)) {
-      $this->fix_missing_relationships();
-      foreach (View::views_object_types() as $key => $info) {
-        $this->_init_handler($key, $info);
+      $this->fixMissingRelationships();
+      foreach (View::viewsObjectTypes() as $key => $info) {
+        $this->_initHandler($key, $info);
       }
       $this->inited = TRUE;
     }
@@ -676,7 +676,7 @@ class View extends ViewStorage {
    * Like style initialization, pager initialization is held until late
    * to allow for overrides.
    */
-  function init_pager() {
+  public function initPager() {
     if (!isset($this->pager)) {
       $this->pager = $this->display_handler->get_plugin('pager');
 
@@ -687,7 +687,7 @@ class View extends ViewStorage {
       // These overrides may have been set earlier via $view->set_*
       // functions.
       if (isset($this->items_per_page)) {
-        $this->pager->set_items_per_page($this->items_per_page);
+        $this->pager->setItemsPerPage($this->items_per_page);
       }
 
       if (isset($this->offset)) {
@@ -699,7 +699,7 @@ class View extends ViewStorage {
   /**
    * Render the pager, if necessary.
    */
-  public function render_pager($exposed_input) {
+  public function renderPager($exposed_input) {
     if (!empty($this->pager) && $this->pager->use_pager()) {
       return $this->pager->render($exposed_input);
     }
@@ -711,7 +711,7 @@ class View extends ViewStorage {
    * Create a list of base tables eligible for this view. Used primarily
    * for the UI. Display must be already initialized.
    */
-  function get_base_tables() {
+  public function getBaseTables() {
     $base_tables = array(
       $this->base_table => TRUE,
       '#global' => TRUE,
@@ -726,8 +726,8 @@ class View extends ViewStorage {
   /**
    * Run the pre_query() on all active handlers.
    */
-  function _pre_query() {
-    foreach (View::views_object_types() as $key => $info) {
+  protected function _preQuery() {
+    foreach (View::viewsObjectTypes() as $key => $info) {
       $handlers = &$this->$key;
       $position = 0;
       foreach ($handlers as $id => $handler) {
@@ -741,8 +741,8 @@ class View extends ViewStorage {
   /**
    * Run the post_execute() on all active handlers.
    */
-  function _post_execute() {
-    foreach (View::views_object_types() as $key => $info) {
+  protected function _postExecute() {
+    foreach (View::viewsObjectTypes() as $key => $info) {
       $handlers = &$this->$key;
       foreach ($handlers as $id => $handler) {
         $handlers[$id]->post_execute($this->result);
@@ -756,9 +756,9 @@ class View extends ViewStorage {
    * @param $key
    *   One of 'argument', 'field', 'sort', 'filter', 'relationship'
    * @param $info
-   *   The $info from views_object_types for this object.
+   *   The $info from viewsObjectTypes for this object.
    */
-  function _init_handler($key, $info) {
+  protected function _initHandler($key, $info) {
     // Load the requested items from the display onto the object.
     $this->$key = $this->display_handler->get_handlers($key);
 
@@ -776,7 +776,7 @@ class View extends ViewStorage {
   /**
    * Build all the arguments.
    */
-  function _build_arguments() {
+  protected function _buildArguments() {
     // Initially, we want to build sorts and fields. This can change, though,
     // if we get a summary view.
     if (empty($this->argument)) {
@@ -841,7 +841,7 @@ class View extends ViewStorage {
         // Since we're really generating the breadcrumb for the item above us,
         // check the default action of this argument.
         if ($this->display_handler->uses_breadcrumb() && $argument->uses_breadcrumb()) {
-          $path = $this->get_url($breadcrumb_args);
+          $path = $this->getUrl($breadcrumb_args);
           if (strpos($path, '%') === FALSE) {
             if (!empty($argument->options['breadcrumb_enable']) && !empty($argument->options['breadcrumb'])) {
               $breadcrumb = $argument->options['breadcrumb'];
@@ -887,7 +887,7 @@ class View extends ViewStorage {
   /**
    * Do some common building initialization.
    */
-  function init_query() {
+  public function initQuery() {
     if (!empty($this->query)) {
       $class = get_class($this->query);
       if ($class && $class != 'stdClass') {
@@ -922,13 +922,13 @@ class View extends ViewStorage {
   /**
    * Build the query for the view.
    */
-  function build($display_id = NULL) {
+  public function build($display_id = NULL) {
     if (!empty($this->built)) {
       return;
     }
 
     if (empty($this->current_display) || $display_id) {
-      if (!$this->set_display($display_id)) {
+      if (!$this->setDisplay($display_id)) {
         return FALSE;
       }
     }
@@ -950,7 +950,7 @@ class View extends ViewStorage {
       'query_args' => array(),
     );
 
-    $this->init_query();
+    $this->initQuery();
 
     // Call a module hook and see if it wants to present us with a
     // pre-built query or instruct us not to build the query for
@@ -958,10 +958,10 @@ class View extends ViewStorage {
     // @todo: Implement this. Use the same mechanism Panels uses.
 
     // Run through our handlers and ensure they have necessary information.
-    $this->init_handlers();
+    $this->initHandlers();
 
     // Let the handlers interact with each other if they really want.
-    $this->_pre_query();
+    $this->_preQuery();
 
     if ($this->display_handler->uses_exposed()) {
       $exposed_form = $this->display_handler->get_plugin('exposed_form');
@@ -994,16 +994,16 @@ class View extends ViewStorage {
     $this->build_sort = TRUE;
 
     // Arguments can, in fact, cause this whole thing to abort.
-    if (!$this->_build_arguments()) {
+    if (!$this->_buildArguments()) {
       $this->build_time = microtime(TRUE) - $start;
-      $this->attach_displays();
+      $this->attachDisplays();
       return $this->built;
     }
 
     // Initialize the style; arguments may have changed which style we use,
     // so waiting as long as possible is important. But we need to know
     // about the style when we go to build fields.
-    if (!$this->init_style()) {
+    if (!$this->initStyle()) {
       $this->build_info['fail'] = TRUE;
       return FALSE;
     }
@@ -1055,7 +1055,7 @@ class View extends ViewStorage {
     $this->build_time = microtime(TRUE) - $start;
 
     // Attach displays
-    $this->attach_displays();
+    $this->attachDisplays();
 
     // Let modules modify the view just after building it.
     foreach (module_implements('views_post_build') as $module) {
@@ -1069,11 +1069,13 @@ class View extends ViewStorage {
   /**
    * Internal method to build an individual set of handlers.
    *
+   * @todo Some filter needs this function, even it is internal.
+   *
    * @param string $key
    *    The type of handlers (filter etc.) which should be iterated over to
    *    build the relationship and query information.
    */
-  function _build($key) {
+  public function _build($key) {
     $handlers = &$this->$key;
     foreach ($handlers as $id => $data) {
 
@@ -1116,7 +1118,7 @@ class View extends ViewStorage {
    *   Return whether the executing was successful, for example an argument
    *   could stop the process.
    */
-  function execute($display_id = NULL) {
+  public function execute($display_id = NULL) {
     if (empty($this->built)) {
       if (!$this->build($display_id)) {
         return FALSE;
@@ -1157,7 +1159,7 @@ class View extends ViewStorage {
       // Enforce the array key rule as documented in
       // views_plugin_query::execute().
       $this->result = array_values($this->result);
-      $this->_post_execute();
+      $this->_postExecute();
       if ($cache) {
         $cache->cache_set('results');
       }
@@ -1184,7 +1186,7 @@ class View extends ViewStorage {
    * @return (string|NULL)
    *   Return the output of the rendered view or NULL if something failed in the process.
    */
-  function render($display_id = NULL) {
+  public function render($display_id = NULL) {
     $this->execute($display_id);
 
     // Check to see if the build failed.
@@ -1203,7 +1205,7 @@ class View extends ViewStorage {
 
     $start = microtime(TRUE);
     if (!empty($this->live_preview) && $config->get('ui.show.additional_queries')) {
-      $this->start_query_capture();
+      $this->startQueryCapture();
     }
 
     $exposed_form = $this->display_handler->get_plugin('exposed_form');
@@ -1229,7 +1231,7 @@ class View extends ViewStorage {
       }
 
       // Initialize the style plugin.
-      $this->init_style();
+      $this->initStyle();
 
       // Give field handlers the opportunity to perform additional queries
       // using the entire resultset prior to rendering.
@@ -1292,7 +1294,7 @@ class View extends ViewStorage {
     }
 
     if (!empty($this->live_preview) && $config->get('ui.show.additional_queries')) {
-      $this->end_query_capture();
+      $this->endQueryCapture();
     }
     $this->render_time = microtime(TRUE) - $start;
 
@@ -1314,7 +1316,7 @@ class View extends ViewStorage {
    * @return string
    *   The rendered output of the field.
    */
-  function render_field($field, $row) {
+  public function renderField($field, $row) {
     if (isset($this->field[$field]) && isset($this->result[$row])) {
       return $this->field[$field]->advanced_render($this->result[$row]);
     }
@@ -1332,19 +1334,19 @@ class View extends ViewStorage {
    *
    * If you simply want to view the display, use View::preview() instead.
    */
-  function execute_display($display_id = NULL, $args = array()) {
-    if (empty($this->current_display) || $this->current_display != $this->choose_display($display_id)) {
-      if (!$this->set_display($display_id)) {
+  public function executeDisplay($display_id = NULL, $args = array()) {
+    if (empty($this->current_display) || $this->current_display != $this->chooseDisplay($display_id)) {
+      if (!$this->setDisplay($display_id)) {
         return FALSE;
       }
     }
 
-    $this->pre_execute($args);
+    $this->preExecute($args);
 
     // Execute the view
     $output = $this->display_handler->execute();
 
-    $this->post_execute();
+    $this->postExecute();
     return $output;
   }
 
@@ -1355,19 +1357,19 @@ class View extends ViewStorage {
    * Can also be called when views are embedded, as this guarantees
    * normalized output.
    */
-  function preview($display_id = NULL, $args = array()) {
+  public function preview($display_id = NULL, $args = array()) {
     if (empty($this->current_display) || ((!empty($display_id)) && $this->current_display != $display_id)) {
-      if (!$this->set_display($display_id)) {
+      if (!$this->setDisplay($display_id)) {
         return FALSE;
       }
     }
 
     $this->preview = TRUE;
-    $this->pre_execute($args);
+    $this->preExecute($args);
     // Preview the view.
     $output = $this->display_handler->preview();
 
-    $this->post_execute();
+    $this->postExecute();
     return $output;
   }
 
@@ -1375,7 +1377,7 @@ class View extends ViewStorage {
    * Run attachments and let the display do what it needs to do prior
    * to running.
    */
-  function pre_execute($args = array()) {
+  public function preExecute($args = array()) {
     $this->old_view[] = views_get_current_view();
     views_set_current_view($this);
     $display_id = $this->current_display;
@@ -1383,7 +1385,7 @@ class View extends ViewStorage {
     // Prepare the view with the information we have, but only if we were
     // passed arguments, as they may have been set previously.
     if ($args) {
-      $this->set_arguments($args);
+      $this->setArguments($args);
     }
 
     // Let modules modify the view just prior to executing it.
@@ -1402,7 +1404,7 @@ class View extends ViewStorage {
   /**
    * Unset the current view, mostly.
    */
-  function post_execute() {
+  public function postExecute() {
     // unset current view so we can be properly destructed later on.
     // Return the previous value in case we're an attachment.
 
@@ -1416,7 +1418,7 @@ class View extends ViewStorage {
   /**
    * Run attachment displays for the view.
    */
-  function attach_displays() {
+  public function attachDisplays() {
     if (!empty($this->is_attachment)) {
       return;
     }
@@ -1443,11 +1445,11 @@ class View extends ViewStorage {
    * @param $callbacks
    *   A menu callback array passed from views_menu_alter().
    */
-  function execute_hook_menu($display_id = NULL, &$callbacks = array()) {
+  public function executeHookMenu($display_id = NULL, &$callbacks = array()) {
     // Prepare the view with the information we have.
 
     // This was probably already called, but it's good to be safe.
-    if (!$this->set_display($display_id)) {
+    if (!$this->setDisplay($display_id)) {
       return FALSE;
     }
 
@@ -1461,11 +1463,11 @@ class View extends ViewStorage {
    * Called to get hook_block information from the view and the
    * named display handler.
    */
-  function execute_hook_block_list($display_id = NULL) {
+  public function executeHookBlockList($display_id = NULL) {
     // Prepare the view with the information we have.
 
     // This was probably already called, but it's good to be safe.
-    if (!$this->set_display($display_id)) {
+    if (!$this->setDisplay($display_id)) {
       return FALSE;
     }
 
@@ -1479,14 +1481,14 @@ class View extends ViewStorage {
    * Determine if the given user has access to the view. Note that
    * this sets the display handler if it hasn't been.
    */
-  function access($displays = NULL, $account = NULL) {
+  public function access($displays = NULL, $account = NULL) {
     // Noone should have access to disabled views.
     if (!empty($this->disabled)) {
       return FALSE;
     }
 
     if (!isset($this->current_display)) {
-      $this->init_display();
+      $this->initDisplay();
     }
 
     if (!$account) {
@@ -1534,9 +1536,9 @@ class View extends ViewStorage {
    * Get the view's current title. This can change depending upon how it
    * was built.
    */
-  function get_title() {
+  public function getTitle() {
     if (empty($this->display_handler)) {
-      if (!$this->set_display('default')) {
+      if (!$this->setDisplay('default')) {
         return FALSE;
       }
     }
@@ -1550,7 +1552,7 @@ class View extends ViewStorage {
     }
 
     // Allow substitutions from the first row.
-    if ($this->init_style()) {
+    if ($this->initStyle()) {
       $title = $this->style_plugin->tokenize_value($title, 0);
     }
     return $title;
@@ -1561,7 +1563,7 @@ class View extends ViewStorage {
    *
    * The tokens in the title get's replaced before rendering.
    */
-  function set_title($title) {
+  public function setTitle($title) {
     $this->build_info['title'] = $title;
     return TRUE;
   }
@@ -1571,7 +1573,7 @@ class View extends ViewStorage {
    *
    * When a certain view doesn't have a human readable name return the machine readable name.
    */
-  function get_human_name() {
+  public function getHumanName() {
     if (!empty($this->human_name)) {
       $human_name = $this->human_name;
     }
@@ -1584,16 +1586,16 @@ class View extends ViewStorage {
   /**
    * Force the view to build a title.
    */
-  function build_title() {
-    $this->init_display();
+  public function buildTitle() {
+    $this->initDisplay();
 
     if (empty($this->built)) {
-      $this->init_query();
+      $this->initQuery();
     }
 
-    $this->init_handlers();
+    $this->initHandlers();
 
-    $this->_build_arguments();
+    $this->_buildArguments();
   }
 
   /**
@@ -1601,13 +1603,13 @@ class View extends ViewStorage {
    *
    * This URL will be adjusted for arguments.
    */
-  function get_url($args = NULL, $path = NULL) {
+  public function getUrl($args = NULL, $path = NULL) {
     if (!empty($this->override_url)) {
       return $this->override_url;
     }
 
     if (!isset($path)) {
-      $path = $this->get_path();
+      $path = $this->getPath();
     }
     if (!isset($args)) {
       $args = $this->args;
@@ -1665,13 +1667,13 @@ class View extends ViewStorage {
   /**
    * Get the base path used for this view.
    */
-  function get_path() {
+  public function getPath() {
     if (!empty($this->override_path)) {
       return $this->override_path;
     }
 
     if (empty($this->display_handler)) {
-      if (!$this->set_display('default')) {
+      if (!$this->setDisplay('default')) {
         return FALSE;
       }
     }
@@ -1684,7 +1686,7 @@ class View extends ViewStorage {
    * @param $set
    *   If true, use drupal_set_breadcrumb() to install the breadcrumb.
    */
-  function get_breadcrumb($set = FALSE) {
+  public function getBreadcrumb($set = FALSE) {
     // Now that we've built the view, extract the breadcrumb.
     $base = TRUE;
     $breadcrumb = array();
@@ -1713,13 +1715,6 @@ class View extends ViewStorage {
   }
 
   /**
-   * Is this view cacheable?
-   */
-  function is_cacheable() {
-    return $this->is_cacheable;
-  }
-
-  /**
    * Set up query capturing.
    *
    * db_query() stores the queries that it runs in global $queries,
@@ -1728,7 +1723,7 @@ class View extends ViewStorage {
    * can do that without forcing a db rewrite by just manipulating
    * $conf. This is kind of evil but it works.
    */
-  function start_query_capture() {
+  public function startQueryCapture() {
     global $conf, $queries;
     if (empty($conf['dev_query'])) {
       $this->fix_dev_query = TRUE;
@@ -1750,7 +1745,7 @@ class View extends ViewStorage {
    *
    * @see View::start_query_capture()
    */
-  function end_query_capture() {
+  public function endQueryCapture() {
     global $conf, $queries;
     if (!empty($this->fix_dev_query)) {
       $conf['dev_query'] = FALSE;
@@ -1780,7 +1775,7 @@ class View extends ViewStorage {
    *
    * I'd call this clone() but it's reserved.
    */
-  function copy() {
+  public function copy() {
     $code = $this->export();
     eval($code);
     return $view;
@@ -1800,7 +1795,7 @@ class View extends ViewStorage {
    * @return Drupal\views\View
    *    The cloned view.
    */
-  function clone_view() {
+  public function cloneView() {
     $clone = clone $this;
 
     $keys = array('current_display', 'display_handler', 'build_info', 'built', 'executed', 'attachment_before', 'attachment_after', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'exposed_widgets', 'many_to_one_tables', 'feed_icon');
@@ -1833,7 +1828,7 @@ class View extends ViewStorage {
    * Unset references so that a $view object may be properly garbage
    * collected.
    */
-  function destroy() {
+  public function destroy() {
     foreach (array_keys($this->display) as $display_id) {
       if (isset($this->display[$display_id]->handler)) {
         $this->display[$display_id]->handler->destroy();
@@ -1841,7 +1836,7 @@ class View extends ViewStorage {
       }
     }
 
-    foreach (View::views_object_types() as $type => $info) {
+    foreach (View::viewsObjectTypes() as $type => $info) {
       if (isset($this->$type)) {
         $handlers = &$this->$type;
         foreach ($handlers as $id => $item) {
@@ -1897,8 +1892,8 @@ class View extends ViewStorage {
    * @return
    *   TRUE if the view is valid; an array of error strings if it is not.
    */
-  function validate() {
-    $this->init_display();
+  public function validate() {
+    $this->initDisplay();
 
     $errors = array();
     $this->display_errors = NULL;
@@ -1919,14 +1914,14 @@ class View extends ViewStorage {
       }
     }
 
-    $this->set_display($current_display);
+    $this->setDisplay($current_display);
     return $errors ? $errors : TRUE;
   }
 
   /**
    * Find and initialize the localizer plugin.
    */
-  function init_localization() {
+  public function initLocalization() {
     // @todo The check for the view was added to ensure that
     //   $this->localization_plugin->init() is run.
     if (isset($this->localization_plugin) && is_object($this->localization_plugin) && isset($this->localization_plugin->view)) {
@@ -1952,7 +1947,7 @@ class View extends ViewStorage {
   /**
    * Determine whether a view supports admin string translation.
    */
-  function is_translatable() {
+  public function isTranslatable() {
     // If the view is normal or overridden, use admin string translation.
     // A newly created view won't have a type. Accept this.
     return (!isset($this->type) || in_array($this->type, array(t('Normal'), t('Overridden')))) ? TRUE : FALSE;
@@ -1961,32 +1956,32 @@ class View extends ViewStorage {
   /**
    * Send strings for localization.
    */
-  function save_locale_strings() {
-    $this->process_locale_strings('save');
+  public function saveLocaleStrings() {
+    $this->processLocaleStrings('save');
   }
 
   /**
    * Delete localized strings.
    */
-  function delete_locale_strings() {
-    $this->process_locale_strings('delete');
+  public function deleteLocaleStrings() {
+    $this->processLocaleStrings('delete');
   }
 
   /**
    * Export localized strings.
    */
-  function export_locale_strings() {
-    $this->process_locale_strings('export');
+  public function exportLocaleStrings() {
+    $this->processLocaleStrings('export');
   }
 
   /**
    * Process strings for localization, deletion or export to code.
    */
-  function process_locale_strings($op) {
+  public function processLocaleStrings($op) {
     // Ensure this view supports translation, we have a display, and we
     // have a localization plugin.
     // @fixme Export does not init every handler.
-    if (($this->is_translatable() || $op == 'export') && $this->init_display() && $this->init_localization()) {
+    if (($this->isTranslatable() || $op == 'export') && $this->initDisplay() && $this->initLocalization()) {
       $this->localization_plugin->process_locale_strings($op);
     }
   }
@@ -1995,7 +1990,7 @@ class View extends ViewStorage {
    * Providea a list of views object types used in a view, with some information
    * about them.
    */
-  public static function views_object_types() {
+  public static function viewsObjectTypes() {
     static $retval = NULL;
 
     // Statically cache this so t() doesn't run a bajillion times.

@@ -152,7 +152,7 @@ class BasicTest extends ViewTestBase {
     $saved_view = clone $view;
 
     // Execute with a view
-    $view->set_arguments(array(27));
+    $view->setArguments(array(27));
     $this->executeView($view);
 
     // Build the expected result.

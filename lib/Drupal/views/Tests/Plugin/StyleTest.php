@@ -35,8 +35,8 @@ class StyleTest extends PluginTestBase {
   function testGroupingLegacy() {
     $view = $this->getBasicView();
     // Setup grouping by the job.
-    $view->init_display();
-    $view->init_style();
+    $view->initDisplay();
+    $view->initStyle();
     $view->style_plugin->options['grouping'] = 'job';
 
     // Reduce the amount of items to make the test a bit easier.
@@ -131,8 +131,8 @@ class StyleTest extends PluginTestBase {
   function _testGrouping($stripped = FALSE) {
     $view = $this->getBasicView();
     // Setup grouping by the job and the age field.
-    $view->init_display();
-    $view->init_style();
+    $view->initDisplay();
+    $view->initStyle();
     $view->style_plugin->options['grouping'] = array(
       array('field' => 'job'),
       array('field' => 'age'),
@@ -265,8 +265,8 @@ class StyleTest extends PluginTestBase {
     $view = $this->getBasicView();
 
     // Setup some random css class.
-    $view->init_display();
-    $view->init_style();
+    $view->initDisplay();
+    $view->initStyle();
     $random_name = $this->randomName();
     $view->style_plugin->options['row_class'] = $random_name . " test-token-[name]";
 

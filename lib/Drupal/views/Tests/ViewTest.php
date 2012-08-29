@@ -75,7 +75,7 @@ class ViewTest extends ViewTestBase {
     // Validating a view shouldn't change the active display.
     // @todo: Create an extra validation view.
     $view = $this->view_test_destroy();
-    $view->set_display('page_1');
+    $view->setDisplay('page_1');
 
     $view->validate();
 

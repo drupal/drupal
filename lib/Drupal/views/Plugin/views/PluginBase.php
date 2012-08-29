@@ -131,7 +131,7 @@ abstract class PluginBase extends ComponentPluginBase {
 
     if (!empty($this->view)) {
       // Ensure we have a localization plugin.
-      $this->view->init_localization();
+      $this->view->initLocalization();
 
       // Set up default localization keys. Handlers and such set this for us
       if (empty($localization_keys) && isset($this->localization_keys)) {
@@ -170,7 +170,7 @@ abstract class PluginBase extends ComponentPluginBase {
       // Don't localize strings during editing. When editing, we need to work with
       // the original data, not the translated version.
       else if (empty($this->view->editing) && !empty($definition[$key]['translatable']) && !empty($value) || !empty($definition['contains'][$key]['translatable']) && !empty($value)) {
-        if (!empty($this->view) && $this->view->is_translatable()) {
+        if (!empty($this->view) && $this->view->isTranslatable()) {
           // Allow other modules to make changes to the string before it's
           // sent for translation.
           // The $keys array is built from the view name, any localization keys

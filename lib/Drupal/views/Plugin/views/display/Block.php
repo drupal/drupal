@@ -54,10 +54,10 @@ class Block extends DisplayPluginBase {
 
     if (empty($desc)) {
       if ($this->display->display_title == $this->definition['title']) {
-        $desc = t('View: !view', array('!view' => $this->view->get_human_name()));
+        $desc = t('View: !view', array('!view' => $this->view->getHumanName()));
       }
       else {
-        $desc = t('View: !view: !display', array('!view' => $this->view->get_human_name(), '!display' => $this->display->display_title));
+        $desc = t('View: !view: !display', array('!view' => $this->view->getHumanName(), '!display' => $this->display->display_title));
       }
     }
     return array(
@@ -75,7 +75,7 @@ class Block extends DisplayPluginBase {
     // Prior to this being called, the $view should already be set to this
     // display, and arguments should be set on the view.
     $info['content'] = $this->view->render();
-    $info['subject'] = filter_xss_admin($this->view->get_title());
+    $info['subject'] = filter_xss_admin($this->view->getTitle());
     if (!empty($this->view->result) || $this->get_option('empty') || !empty($this->view->style_plugin->definition['even empty'])) {
       return $info;
     }
@@ -171,7 +171,7 @@ class Block extends DisplayPluginBase {
         );
         break;
       case 'exposed_form_options':
-        $this->view->init_handlers();
+        $this->view->initHandlers();
         if (!$this->uses_exposed() && parent::uses_exposed()) {
           $form['exposed_form_options']['warning'] = array(
             '#weight' => -10,
