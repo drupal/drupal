@@ -944,8 +944,20 @@ abstract class WizardPluginBase implements WizardInterface {
 
   /**
    * Retrieves a validated view for a form submission.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   * @param bool $unset
+   *   Should the view be removed from the list of validated views.
+   *
+   * @return Drupal\views\View $view
+   *   The validated view object.
    */
-  protected function retrieve_validated_view($form, $form_state, $unset = TRUE) {
+  protected function retrieve_validated_view(array $form, array &$form_state, $unset = TRUE) {
+    // @todo Figure out why all this hashing is done. Wouldn't it be easier to
+    //   store a single entry and that's it?
     $key = hash('sha256', serialize($form_state['values']));
     $view = (isset($this->validated_views[$key]) ? $this->validated_views[$key] : NULL);
     if ($unset) {
@@ -956,8 +968,15 @@ abstract class WizardPluginBase implements WizardInterface {
 
   /**
    * Stores a validated view from a form submission.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   * @param Drupal\views\View $view
+   *   The validated view object.
    */
-  protected function set_validated_view($form, $form_state, $view) {
+  protected function set_validated_view(array $form, array &$form_state, View $view) {
     $key = hash('sha256', serialize($form_state['values']));
     $this->validated_views[$key] = $view;
   }
@@ -966,11 +985,8 @@ abstract class WizardPluginBase implements WizardInterface {
    * Implements Drupal\views\Plugin\views\wizard\WizardInterface::validate().
    *
    * Instantiates the view from the form submission and validates its values.
-   *
-   * @return
-   *   TRUE if the view is valid; an array of error strings if it is not.
    */
-  function validate($form, &$form_state) {
+  function validate(array $form, array &$form_state) {
     $view = $this->instantiate_view($form, $form_state);
     $errors = $view->validate();
     if (!is_array($errors) || empty($errors)) {
@@ -982,18 +998,11 @@ abstract class WizardPluginBase implements WizardInterface {
 
   /**
    * Implements Drupal\views\Plugin\views\wizard\WizardInterface::create_view().
-   *
-   * Creates a view from values that have already been validated.
-   *
-   * @return
-   *   The created view object.
-   *
-   * @throws Drupal\views\Plugin\views\wizard\WizardException
    */
-  function create_view($form, &$form_state) {
+  function create_view(array $form, array &$form_state) {
     $view = $this->retrieve_validated_view($form, $form_state);
     if (empty($view)) {
-      throw new WizardException(t('Attempted to create_view with values that have not been validated'));
+      throw new WizardException('Attempted to create_view with values that have not been validated.');
     }
     return $view;
   }

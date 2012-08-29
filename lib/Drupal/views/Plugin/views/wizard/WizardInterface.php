@@ -28,17 +28,30 @@ interface WizardInterface {
   /**
    * Validate form and values.
    *
-   * @return an array of form errors.
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   *
+   * @return array
+   *   An empty array if the view is valid; an array of error strings if it is
+   *   not.
    */
-  function validate($form, &$form_state);
+  function validate(array $form, array &$form_state);
 
   /**
-   * Create a new View from form values.
+   * Creates a view from values that have already been validated.
    *
-   * @return a view object.
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   *
+   * @return Drupal\views\View
+   *   The created view object.
    *
    * @throws Drupal\views\Plugin\views\wizard\WizardException
    */
-  function create_view($form, &$form_state);
+  function create_view(array $form, array &$form_state);
 
 }
