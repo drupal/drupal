@@ -1,6 +1,8 @@
 
 Drupal 7.16, xxxx-xx-xx (development version)
 -----------------------
+- Fixed double occurrence of a "ul" HTML tag on secondary local tasks in the
+  Seven theme (markup change).
 - Fixed a bug which caused shortcut set titles to be double-escaped. The fix
   replaces the "Edit shortcuts" menu item's title callback entry in hook_menu()
   with a new function that does not escape HTML characters (data structure
