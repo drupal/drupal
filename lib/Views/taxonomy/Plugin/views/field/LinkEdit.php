@@ -55,17 +55,19 @@ class LinkEdit extends FieldPluginBase {
   }
 
   function render($values) {
-    // Mock a term object for taxonomy_term_access(). Use machine name and
-    // vid to ensure compatibility with vid based and machine name based
-    // access checks. See http://drupal.org/node/995156
-    $term = entity_create('taxonomy_term', array(
-      'vid' => $values->{$this->aliases['vid']},
-      'vocabulary_machine_name' => $values->{$this->aliases['vocabulary_machine_name']},
-    ));
-    if (taxonomy_term_access('edit', $term)) {
-      $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
-      $tid = $this->get_value($values, 'tid');
-      return l($text, 'taxonomy/term/'. $tid . '/edit', array('query' => drupal_get_destination()));
+    // Check there is an actual value, as on a relationship there may not be.
+    if ($tid = $this->get_value($values, 'tid')) {
+      // Mock a term object for taxonomy_term_access(). Use machine name and
+      // vid to ensure compatibility with vid based and machine name based
+      // access checks. See http://drupal.org/node/995156
+      $term = entity_create('taxonomy_term', array(
+        'vid' => $values->{$this->aliases['vid']},
+        'vocabulary_machine_name' => $values->{$this->aliases['vocabulary_machine_name']},
+      ));
+      if (taxonomy_term_access('edit', $term)) {
+        $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');
+        return l($text, 'taxonomy/term/'. $tid . '/edit', array('query' => drupal_get_destination()));
+      }
     }
   }
 
