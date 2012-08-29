@@ -2,14 +2,17 @@
 
 /**
  * @file
- * Administrative page callbacks for the dblog module.
+ * Administrative page callbacks for the Database Logging module.
  */
 
 /**
- * Menu callback; displays a listing of log messages.
+ * Page callback: Displays a listing of database log messages.
  *
- * Messages are truncated at 56 chars. Full-length message could be viewed at
+ * Messages are truncated at 56 chars. Full-length messages can be viewed on
  * the message details page.
+ *
+ * @see dblog_menu()
+ * @see dblog_event()
  */
 function dblog_overview() {
   $filter = dblog_build_filter_query();
@@ -81,12 +84,15 @@ function dblog_overview() {
 }
 
 /**
- * Menu callback; generic function to display a page of the most frequent events.
+ * Page callback: Shows the most frequent log messages of a given event type.
  *
- * Messages are not truncated because events from this page have no detail view.
+ * Messages are not truncated on this page because events detailed herein do not
+ * have links to a detailed view.
  *
- * @param $type
- *   type of dblog events to display.
+ * @param string $type
+ *   Type of database log events to display (e.g., 'search').
+ *
+ * @see dblog_menu()
  */
 function dblog_top($type) {
 
@@ -129,7 +135,12 @@ function dblog_top($type) {
 }
 
 /**
- * Menu callback; displays details about a log message.
+ * Page callback: Displays details about a specific database log message.
+ *
+ * @param int $id
+ *   Unique ID of the database log message.
+ *
+ * @see dblog_menu()
  */
 function dblog_event($id) {
   $severity = watchdog_severity_levels();
@@ -186,7 +197,10 @@ function dblog_event($id) {
 }
 
 /**
- * Build query for dblog administration filters based on session.
+ * Builds a query for database log administration filters based on session.
+ *
+ * @return array
+ *   An associative array with keys 'where' and 'args'.
  */
 function dblog_build_filter_query() {
   if (empty($_SESSION['dblog_overview_filter'])) {
@@ -215,9 +229,16 @@ function dblog_build_filter_query() {
   );
 }
 
-
 /**
- * List dblog administration filters that can be applied.
+ * Creates a list of database log administration filters that can be applied.
+ *
+ * @return array
+ *   Associative array of filters. The top-level keys are used as the form
+ *   element names for the filters, and the values are arrays with the following
+ *   elements:
+ *   - title: Title of the filter.
+ *   - where: The filter condition.
+ *   - options: Array of options for the select list for the filter.
  */
 function dblog_filters() {
   $filters = array();
@@ -246,7 +267,7 @@ function dblog_filters() {
 /**
  * Returns HTML for a log message.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - event: An object with at least the message and variables properties.
  *   - link: (optional) Format message as link, event->wid is required.
@@ -276,11 +297,11 @@ function theme_dblog_message($variables) {
 }
 
 /**
- * Return form for dblog administration filters.
+ * Form constructor for the database logging filter form.
  *
- * @ingroup forms
- * @see dblog_filter_form_submit()
  * @see dblog_filter_form_validate()
+ * @see dblog_filter_form_submit()
+ * @ingroup forms
  */
 function dblog_filter_form($form) {
   $filters = dblog_filters();
@@ -318,12 +339,13 @@ function dblog_filter_form($form) {
       '#value' => t('Reset')
     );
   }
-
   return $form;
 }
 
 /**
- * Validate result from dblog administration filter form.
+ * Form validation handler for dblog_filter_form().
+ *
+ * @see dblog_filter_form_submit()
  */
 function dblog_filter_form_validate($form, &$form_state) {
   if ($form_state['values']['op'] == t('Filter') && empty($form_state['values']['type']) && empty($form_state['values']['severity'])) {
@@ -332,7 +354,9 @@ function dblog_filter_form_validate($form, &$form_state) {
 }
 
 /**
- * Process result from dblog administration filter form.
+ * Form submission handler for dblog_filter_form().
+ *
+ * @see dblog_filter_form_validate()
  */
 function dblog_filter_form_submit($form, &$form_state) {
   $op = $form_state['values']['op'];
@@ -353,10 +377,10 @@ function dblog_filter_form_submit($form, &$form_state) {
 }
 
 /**
- * Return form for dblog clear button.
+ * Form constructor for the form that clears out the log.
  *
- * @ingroup forms
  * @see dblog_clear_log_submit()
+ * @ingroup forms
  */
 function dblog_clear_log_form($form) {
   $form['dblog_clear'] = array(
@@ -371,12 +395,11 @@ function dblog_clear_log_form($form) {
     '#value' => t('Clear log messages'),
     '#submit' => array('dblog_clear_log_submit'),
   );
-
   return $form;
 }
 
 /**
- * Submit callback: clear database with log messages.
+ * Form submission handler for dblog_clear_log_form().
  */
 function dblog_clear_log_submit() {
   $_SESSION['dblog_overview_filter'] = array();
