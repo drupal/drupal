@@ -11,8 +11,8 @@
  *   such as render($content['field_example']). Use
  *   hide($content['field_example']) to temporarily suppress the printing of a
  *   given element.
- * - $term_url: Direct url of the current term.
- * - $term_name: Name of the current term.
+ * - $url: Direct url of the current term.
+ * - $label: Name of the current term.
  * - $attributes: An instance of Attributes class that can be manipulated as an
  *    array and printed as a string.
  *    It includes the 'class' information, which includes:
@@ -41,7 +41,7 @@
 <div id="taxonomy-term-<?php print $term->tid; ?>"<?php print $attributes; ?>>
 
   <?php if (!$page): ?>
-    <h2><a href="<?php print $term_url; ?>"><?php print $term_name; ?></a></h2>
+    <h2><a href="<?php print $url; ?>"><?php print $label; ?></a></h2>
   <?php endif; ?>
 
   <div class="content">
