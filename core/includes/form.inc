@@ -3344,21 +3344,6 @@ function theme_container($variables) {
 /**
  * Returns HTML for a table with radio buttons or checkboxes.
  *
- * An example of per-row options:
- * @code
- * $options = array();
- * $options[0]['title'] = "A red row"
- * $options[0]['#attributes'] = array ('class' => array('red-row'));
- * $options[1]['title'] = "A blue row"
- * $options[1]['#attributes'] = array ('class' => array('blue-row'));
- *
- * $form['myselector'] = array (
- * '#type' => 'tableselect',
- * '#title' => 'My Selector'
- * '#options' => $options,
- * );
- * @endcode
- *
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties and children of
@@ -3366,7 +3351,35 @@ function theme_container($variables) {
  *     and #js_select. The #options property is an array of selection options;
  *     each array element of #options is an array of properties. These
  *     properties can include #attributes, which is added to the
- *     table row's HTML attributes; see theme_table().
+ *     table row's HTML attributes; see theme_table(). An example of per-row
+ *     options:
+ *     @code
+ *     $options = array(
+ *       array(
+ *         'title' => 'How to Learn Drupal',
+ *         'content_type' => 'Article',
+ *         'status' => 'published',
+ *         '#attributes' => array('class' => array('article-row')),
+ *       ),
+ *       array(
+ *         'title' => 'Privacy Policy',
+ *         'content_type' => 'Page',
+ *         'status' => 'published',
+ *         '#attributes' => array('class' => array('page-row')),
+ *       ),
+ *     );
+ *     $header = array(
+ *       'title' => t('Title'),
+ *       'content_type' => t('Content type'),
+ *       'status' => t('Status'),
+ *     );
+ *     $form['table'] = array(
+ *       '#type' => 'tableselect',
+ *       '#header' => $header,
+ *       '#options' => $options,
+ *       '#empty' => t('No content available.'),
+ *     );
+ *     @endcode
  *
  * @ingroup themeable
  */
