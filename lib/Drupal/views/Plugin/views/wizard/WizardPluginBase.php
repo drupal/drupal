@@ -116,14 +116,15 @@ abstract class WizardPluginBase implements WizardInterface {
   /**
    * Constructs the WizardPluginBase object.
    *
-   * @param array $plugin
-   *   The plugin information array.
+   * @param array $definition
+   *   The information stored in the annotation definition.
    */
-  function __construct($plugin) {
-    $this->base_table = $plugin['base_table'];
-    $default = $this->filter_defaults;
+  function __construct(array $definition) {
+    $this->base_table = $definition['base_table'];
 
-    $this->plugin = $plugin;
+    // @todo: Move plugin to definition to keep it consistent with the rest of
+    //   views.
+    $this->plugin = $definition;
 
     $entities = entity_get_info();
     foreach ($entities as $entity_type => $entity_info) {
@@ -175,6 +176,8 @@ abstract class WizardPluginBase implements WizardInterface {
    */
   public function getFilters() {
     $filters = array();
+
+    $default = $this->filter_defaults;
 
     foreach ($this->filters as $name => $info) {
       $default['id'] = $name;

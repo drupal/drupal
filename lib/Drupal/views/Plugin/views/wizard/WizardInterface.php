@@ -12,7 +12,13 @@ namespace Drupal\views\Plugin\views\wizard;
  */
 interface WizardInterface {
 
-  function __construct($plugin);
+  /**
+   * Constructs a wizard plugin object.
+   *
+   * @param array $definition
+   *   The information stored in the annotation definition.
+   */
+  function __construct(array $definition);
 
   /**
    * For AJAX callbacks to build other elements in the "show" form.
