@@ -5,7 +5,7 @@ description: 'A list of all content, by letter.'
 tag: default
 base_table: node
 human_name: Glossary
-core: '0'
+core: '8'
 display:
     default:
         id: default

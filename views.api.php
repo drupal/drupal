@@ -102,7 +102,7 @@
  * @code
  * name = Example module
  * description = "Gives an example of a module."
- * core = 7.x
+ * core = 8.x
  * files[] = example.module
  * files[] = example.install
  *
@@ -673,7 +673,7 @@ function hook_views_default_views() {
   $view->tag = 'default';
   $view->base_table = 'node';
   $view->human_name = 'Front page';
-  $view->core = 0;
+  $view->core = 8;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 

@@ -5,7 +5,7 @@ description: 'A view to emulate Drupal core''s handling of taxonomy/term.'
 tag: default
 base_table: node
 human_name: 'Taxonomy term'
-core: '7'
+core: '8'
 display:
     default:
         id: default

@@ -16,7 +16,7 @@ function node_views_templates() {
   $view->tag = '';
   $view->base_table = 'node';
   $view->human_name = 'Image Gallery';
-  $view->core = 7;
+  $view->core = 8;
   $view->api_version = '3.0';
   $view->disabled = TRUE; /* Edit this to true to make a default view disabled initially */
 

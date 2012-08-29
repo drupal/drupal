@@ -127,7 +127,7 @@ class UpgradeTestCase extends ViewTestBase {
     $view->view_php = '';
     $view->base_table = 'views_test';
     $view->is_cacheable = FALSE;
-    $view->api_version = 2;
+    $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
@@ -148,7 +148,7 @@ class UpgradeTestCase extends ViewTestBase {
     $view->view_php = '';
     $view->base_table = 'views_test';
     $view->is_cacheable = FALSE;
-    $view->api_version = 2;
+    $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
@@ -173,7 +173,7 @@ class UpgradeTestCase extends ViewTestBase {
     $view->view_php = '';
     $view->base_table = 'views_old_table';
     $view->is_cacheable = FALSE;
-    $view->api_version = 2;
+    $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
@@ -194,8 +194,8 @@ class UpgradeTestCase extends ViewTestBase {
       $view->tag = "default";
       $view->base_table = "comments";
       $view->human_name = "";
-      $view->core = 0;
-      $view->api_version = "3.0-alpha1";
+      $view->core = 8;
+      $view->api_version = "3.0";
       $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
       /* Display: Defaults */

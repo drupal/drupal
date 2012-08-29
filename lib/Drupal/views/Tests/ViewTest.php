@@ -97,7 +97,7 @@ class ViewTest extends ViewTestBase {
     $view->tag = '';
     $view->base_table = 'node';
     $view->human_name = '';
-    $view->api_version = '3.0-alpha1';
+    $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
@@ -253,8 +253,8 @@ class ViewTest extends ViewTestBase {
     $view->tag = '';
     $view->base_table = 'node';
     $view->human_name = 'test_view_delete';
-    $view->core = 7;
-    $view->api_version = '3.0-alpha1';
+    $view->core = 8;
+    $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Defaults */

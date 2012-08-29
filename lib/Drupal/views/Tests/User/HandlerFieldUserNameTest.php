@@ -64,7 +64,7 @@ class HandlerFieldUserNameTest extends UserTestBase {
     $view->tag = 'default';
     $view->base_table = 'users';
     $view->human_name = 'test_views_handler_field_user_name';
-    $view->core = 7;
+    $view->core = 8;
     $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 

@@ -48,7 +48,7 @@ class DisplayTest extends PluginTestBase {
     $view->tag = 'default';
     $view->base_table = 'node';
     $view->human_name = 'test_filter_group_override';
-    $view->core = 7;
+    $view->core = 8;
     $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
@@ -97,7 +97,7 @@ class DisplayTest extends PluginTestBase {
     $view->tag = 'default';
     $view->base_table = 'node';
     $view->human_name = 'test_filter_groups';
-    $view->core = 7;
+    $view->core = 8;
     $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 

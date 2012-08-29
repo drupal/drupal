@@ -161,7 +161,7 @@ class FilterDateTest extends HandlerTestBase {
     $view->tag = '';
     $view->base_table = 'node';
     $view->human_name = '';
-    $view->core = 0;
+    $view->core = 8;
     $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 

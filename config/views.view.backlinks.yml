@@ -5,7 +5,7 @@ description: 'Displays a list of nodes that link to the node, using the search b
 tag: default
 base_table: node
 human_name: Backlinks
-core: '0'
+core: '8'
 display:
     default:
         id: default

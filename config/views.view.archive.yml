@@ -5,7 +5,7 @@ description: 'Display a list of months that link to content for that month.'
 tag: default
 base_table: node
 human_name: Archive
-core: '0'
+core: '8'
 display:
     default:
         id: default

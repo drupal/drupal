@@ -1,6 +1,6 @@
-api_version: '2'
+api_version: '3.0'
 base_table: node
-core: {  }
+core: '8'
 description: ''
 disabled: '0'
 display:

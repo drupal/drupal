@@ -5,7 +5,7 @@ description: 'Shows all new activity on system.'
 tag: default
 base_table: node
 human_name: Tracker
-core: '0'
+core: '8'
 display:
     default:
         id: default
