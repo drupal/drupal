@@ -45,7 +45,9 @@ class TrackerAttributesTest extends WebTestBase {
   }
 
   /**
-   * Create nodes as both admin and anonymous user and test for correct RDFa
+   * Tests for correct attributes on tracker page.
+   *
+   * Creates nodes as both admin and anonymous user and tests for correct RDFa
    * markup on the tracker page for those nodes and their comments.
    */
   function testAttributesInTracker() {

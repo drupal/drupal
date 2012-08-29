@@ -79,8 +79,10 @@ class CommentAttributesTest extends CommentTestBase {
   }
 
   /**
-   * Tests the presence of the RDFa markup for the title, date and author and
-   * homepage on registered users and anonymous comments.
+   * Tests if RDFa markup for meta information is present in comments.
+   *
+   * Tests presence of RDFa markup for the title, date and author and homepage
+   * on comments from registered and anonymous users.
    */
   public function testCommentRdfaMarkup() {
 

@@ -92,6 +92,8 @@ class RdfaMarkupTest extends WebTestBase {
   }
 
   /**
+   * Tests if file fields in teasers have correct resources.
+   *
    * Ensure that file fields have the correct resource as the object in RDFa
    * when displayed as a teaser.
    */

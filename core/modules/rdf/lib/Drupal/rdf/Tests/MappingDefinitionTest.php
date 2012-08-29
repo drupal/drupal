@@ -50,8 +50,10 @@ class MappingDefinitionTest extends TaxonomyTestBase {
   }
 
   /**
-   * Create a content type and a node of type test_bundle_hook_install and test
-   * whether the RDF mapping defined in rdf_test.install is used.
+   * Tests if RDF mapping defined in rdf_test.install is used.
+   *
+   * Creates a content type and a node of type test_bundle_hook_install and
+   * tests whether the RDF mapping defined in rdf_test.install is used.
    */
   function testAttributesInMarkup2() {
     $type = $this->drupalCreateContentType(array('type' => 'test_bundle_hook_install'));
@@ -68,8 +70,10 @@ class MappingDefinitionTest extends TaxonomyTestBase {
   }
 
   /**
-   * Create a random content type and node and ensure the default mapping for
-   * node is used.
+   * Tests if the default mapping for a node is being used.
+   *
+   * Creates a random content type and node and ensures the default mapping for
+   * the node is being used.
    */
   function testAttributesInMarkup3() {
     $type = $this->drupalCreateContentType();
@@ -87,7 +91,10 @@ class MappingDefinitionTest extends TaxonomyTestBase {
   }
 
   /**
-   * Create a random user and ensure the default mapping for user is used.
+   * Tests if default mapping for user is being used.
+   *
+   * Creates a random user and ensures the default mapping for the user is
+   * being used.
    */
   function testUserAttributesInMarkup() {
     // Create two users, one with access to user profiles.

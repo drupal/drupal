@@ -30,7 +30,7 @@ class GetRdfNamespacesTest extends WebTestBase {
   }
 
   /**
-   * Tests getting RDF namesapces.
+   * Tests getting RDF namespaces.
    */
   function testGetRdfNamespaces() {
     // Get all RDF namespaces.
