@@ -8,6 +8,7 @@
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\File\File;
 
 /**
@@ -1106,33 +1107,30 @@ function image_effect_load($ieid, $style_name) {
 /**
  * Save an image effect.
  *
- * @param $style_name
+ * @param string $style_name
  *   The image style this effect belongs to.
- * @param $effect
- *   An image effect array.
- * @return
- *   An image effect array. In the case of a new effect, 'ieid' will be set.
+ * @param array $effect
+ *   An image effect array. Passed by reference.
+ *
+ * @return array
+ *   The saved image effect array. The 'ieid' key will be set for the effect.
  */
-function image_effect_save($style_name, $effect) {
+function image_effect_save($style_name, &$effect) {
   $config = config('image.style.' . $style_name);
 
-  if (!isset($effect['ieid']) || empty($effect['ieid'])) {
-    // We need to generate the ieid and save the new effect.
-    // The machine name is all the elements of the data array concatenated
-    // together, delimited by underscores.
-    $effect['ieid'] = $effect['name'];
-    foreach ($effect['data'] as $key => $value) {
-      $effect['ieid'] .= '_' . $value;
-    }
-    // @todo The machine name must not use any special non-alphanumeric
-    //   characters, and may also not contain dots/periods, as that is the
-    //   config system's nested key syntax.
-    $effect['ieid'] = preg_replace('@[^a-zA-Z0-9_-]@', '', $effect['ieid']);
+  // Generate a unique image effect ID for a new effect.
+  if (empty($effect['ieid'])) {
+    $uuid = new Uuid();
+    $effect['ieid'] = $uuid->generate();
   }
   $config->set('effects.' . $effect['ieid'], $effect);
   $config->save();
+
+  // Flush all derivatives that exist for this style, so they are regenerated
+  // with the new or updated effect.
   $style = image_style_load($style_name);
   image_style_flush($style);
+
   return $effect;
 }
 

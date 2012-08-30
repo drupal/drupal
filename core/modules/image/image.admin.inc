@@ -326,7 +326,15 @@ function image_style_delete_form_submit($form, &$form_state) {
  * @see image_effect_form_submit()
  */
 function image_effect_form($form, &$form_state, $style, $effect) {
-  if (!empty($effect['data'])) {
+  // If there's no configuration for this image effect, return to
+  // the image style page.
+  if (!isset($effect['form callback'])) {
+    drupal_goto('admin/config/media/image-styles/edit/' . $style['name']);
+  }
+  $form_state['image_style'] = $style;
+  $form_state['image_effect'] = $effect;
+
+  if (!empty($effect['ieid'])) {
     $title = t('Edit %label effect', array('%label' => $effect['label']));
   }
   else{
@@ -334,18 +342,19 @@ function image_effect_form($form, &$form_state, $style, $effect) {
   }
   drupal_set_title($title, PASS_THROUGH);
 
-  $form_state['image_style'] = $style;
-  $form_state['image_effect'] = $effect;
-
-  // If no configuration for this image effect, return to the image style page.
-  if (!isset($effect['form callback'])) {
-    drupal_goto('admin/config/media/image-styles/edit/' . $style['name']);
-  }
-
-  $form['#tree'] = TRUE;
   $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array();
 
+  $form['ieid'] = array(
+    '#type' => 'value',
+    '#value' => !empty($effect['ieid']) ? $effect['ieid'] : NULL,
+  );
+  $form['name'] = array(
+    '#type' => 'value',
+    '#value' => $effect['name'],
+  );
+
   $form['data'] = call_user_func($effect['form callback'], $effect['data']);
+  $form['data']['#tree'] = TRUE;
 
   // Check the URL for a weight, then the image effect, otherwise use default.
   $form['weight'] = array(
@@ -353,10 +362,10 @@ function image_effect_form($form, &$form_state, $style, $effect) {
     '#value' => isset($_GET['weight']) ? intval($_GET['weight']) : (isset($effect['weight']) ? $effect['weight'] : count($style['effects'])),
   );
 
-  $form['actions'] = array('#tree' => FALSE, '#type' => 'actions');
+  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => isset($effect['ieid']) ? t('Update effect') : t('Add effect'),
+    '#value' => !empty($effect['ieid']) ? t('Update effect') : t('Add effect'),
   );
   $form['actions']['cancel'] = array(
     '#type' => 'link',
@@ -371,12 +380,11 @@ function image_effect_form($form, &$form_state, $style, $effect) {
  * Submit handler for updating an image effect.
  */
 function image_effect_form_submit($form, &$form_state) {
-  $effect = array(
-    'name' => $form_state['image_effect']['name'],
-    'data' => $form_state['values']['data'],
-    'weight' => $form_state['values']['weight'],
-  );
+  form_state_values_clean($form_state);
+
+  $effect = $form_state['values'];
   image_effect_save($form_state['image_style']['name'], $effect);
+
   drupal_set_message(t('The image effect was successfully applied.'));
   $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $form_state['image_style']['name'];
 }
@@ -633,12 +641,10 @@ function theme_image_style_effects($variables) {
       $row[] = array('data' => '', 'colspan' => 2);
     }
 
-    if (!isset($form[$key]['#access']) || $form[$key]['#access']) {
-      $rows[] = array(
-        'data' => $row,
-        'class' => !empty($form[$key]['weight']['#access']) || $key == 'new' ? array('draggable') : array(),
-      );
-    }
+    $rows[] = array(
+      'data' => $row,
+      'class' => array('draggable'),
+    );
   }
 
   $header = array(

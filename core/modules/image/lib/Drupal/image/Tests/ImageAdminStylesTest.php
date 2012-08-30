@@ -258,4 +258,41 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid);
     $this->assertRaw(image_style_url('thumbnail', file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri), t('Image displayed using style replacement style.'));
   }
+
+  /**
+   * Verifies that editing an image effect does not cause it to be duplicated.
+   */
+  function testEditEffect() {
+    // Add a scale effect.
+    $this->drupalGet('admin/config/media/image-styles/add');
+    $this->drupalPost(NULL, array('name' => 'test_style_effect_edit'), t('Create new style'));
+    $this->drupalPost(NULL, array('new' => 'image_scale_and_crop'), t('Add'));
+    $this->drupalPost(NULL, array('data[width]' => '300', 'data[height]' => '200'), t('Add effect'));
+    $this->assertText(t('Scale and crop 300x200'));
+
+    // There should normally be only one edit link on this page initially.
+    $this->clickLink(t('edit'));
+    $this->drupalPost(NULL, array('data[width]' => '360', 'data[height]' => '240'), t('Update effect'));
+    $this->assertText(t('Scale and crop 360x240'));
+
+    // Check that the previous effect is replaced.
+    $this->assertNoText(t('Scale and crop 300x200'));
+
+    // Add another scale effect.
+    $this->drupalGet('admin/config/media/image-styles/add');
+    $this->drupalPost(NULL, array('name' => 'test_style_scale_edit_scale'), t('Create new style'));
+    $this->drupalPost(NULL, array('new' => 'image_scale'), t('Add'));
+    $this->drupalPost(NULL, array('data[width]' => '12', 'data[height]' => '19'), t('Add effect'));
+
+    // Edit the scale effect that was just added.
+    $this->clickLink(t('edit'));
+    $this->drupalPost(NULL, array('data[width]' => '24', 'data[height]' => '19'), t('Update effect'));
+    $this->drupalPost(NULL, array('new' => 'image_scale'), t('Add'));
+
+    // Add another scale effect and make sure both exist.
+    $this->drupalPost(NULL, array('data[width]' => '12', 'data[height]' => '19'), t('Add effect'));
+    $this->assertText(t('Scale 24x19'));
+    $this->assertText(t('Scale 12x19'));
+  }
+
 }
