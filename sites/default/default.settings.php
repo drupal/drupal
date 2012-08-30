@@ -551,12 +551,20 @@ $conf['404_fast_html'] = '<!DOCTYPE html><head><title>404 Not Found</title></hea
  *
  * The Update Manager module included with Drupal provides a mechanism for
  * site administrators to securely install missing updates for the site
- * directly through the web user interface by providing either SSH or FTP
- * credentials. This allows the site to update the new files as the user who
- * owns all the Drupal files, instead of as the user the webserver is running
- * as. However, some sites might wish to disable this functionality, and only
- * update the code directly via SSH or FTP themselves. This setting completely
+ * directly through the web user interface. On securely-configured servers,
+ * the Update manager will require the administrator to provide SSH or FTP
+ * credentials before allowing the installation to proceed; this allows the
+ * site to update the new files as the user who owns all the Drupal files,
+ * instead of as the user the webserver is running as. On servers where the
+ * webserver user is itself the owner of the Drupal files, the administrator
+ * will not be prompted for SSH or FTP credentials (note that these server
+ * setups are common on shared hosting, but are inherently insecure).
+ *
+ * Some sites might wish to disable the above functionality, and only update
+ * the code directly via SSH or FTP themselves. This setting completely
  * disables all functionality related to these authorized file operations.
+ *
+ * @see http://drupal.org/node/244924
  *
  * Remove the leading hash signs to disable.
  */
