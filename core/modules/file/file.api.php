@@ -51,12 +51,6 @@ function hook_file_download_access($field, Drupal\entity\EntityInterface $entity
  *   - entity: The entity which references the file.
  *   - file: The file entity that is being requested.
  *
- * @return
- *   An array of grants, keyed by module name, each with a Boolean grant value.
- *   Return an empty array to assert FALSE. You may choose to return your own
- *   module's value in addition to other grants or to overwrite the values set
- *   by other modules.
- *
  * @see hook_file_download_access().
  */
 function hook_file_download_access_alter(&$grants, $context) {
