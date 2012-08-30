@@ -37,6 +37,15 @@ Cache system
 - Nathaniel Catchpole 'catch' http://drupal.org/user/35733
 - Mark Sonnabaum 'msonnabaum' http://drupal.org/user/75278
 
+Configuration system
+- Greg Dunlap 'heyrocker' http://drupal.org/user/128537
+- Daniel F. Kudwien 'sun' http://drupal.org/user/54136
+- Alex Pott 'alexpott' http://drupal.org/user/157725
+
+Configurable entity system
+- Daniel F. Kudwien 'sun' http://drupal.org/user/54136
+- Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
+
 Cron system
 - Károly Négyesi 'chx' http://drupal.org/user/9446
 - Derek Wright 'dww' http://drupal.org/user/46549
@@ -168,6 +177,9 @@ Color module
 
 Comment module
 - Dick Olsson 'dixon_' http://drupal.org/user/239911
+
+Configuration module
+- ?
 
 Contact module
 - Dave Reid 'davereid' http://drupal.org/user/53892
