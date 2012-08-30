@@ -68,13 +68,7 @@ class JavaScriptTest extends WebTestBase {
    */
   function testAddFile() {
     $javascript = drupal_add_js('core/misc/collapse.js');
-    $this->assertTrue(array_key_exists('core/misc/jquery.js', $javascript), t('jQuery is added when a file is added.'));
-    $this->assertTrue(array_key_exists('core/misc/drupal.js', $javascript), t('Drupal.js is added when file is added.'));
-    $this->assertTrue(array_key_exists('core/misc/html5.js', $javascript), t('html5.js is added when file is added.'));
     $this->assertTrue(array_key_exists('core/misc/collapse.js', $javascript), t('JavaScript files are correctly added.'));
-    $this->assertEqual(base_path(), $javascript['settings']['data'][0]['basePath'], t('Base path JavaScript setting is correctly set.'));
-    $this->assertIdentical($GLOBALS['script_path'], $javascript['settings']['data'][1]['scriptPath'], t('Script path JavaScript setting is correctly set.'));
-    $this->assertIdentical('', $javascript['settings']['data'][2]['pathPrefix'], t('Path prefix JavaScript setting is correctly set.'));
   }
 
   /**
@@ -82,8 +76,10 @@ class JavaScriptTest extends WebTestBase {
    */
   function testAddSetting() {
     // Add a file in order to test default settings.
-    $javascript = drupal_add_js('core/misc/collapse.js');
-    $last_settings = end($javascript['settings']['data']);
+    drupal_add_library('system', 'drupal.settings');
+    drupal_add_js(array('dummy' => 'value'), 'setting');
+    $javascript = drupal_add_js();
+    $last_settings = reset($javascript['settings']['data']);
     $this->assertTrue($last_settings['currentPath'], 'The current path JavaScript setting is set correctly.');
 
     $javascript = drupal_add_js(array('drupal' => 'rocks', 'dries' => 280342800), 'setting');
@@ -107,6 +103,7 @@ class JavaScriptTest extends WebTestBase {
   function testAsyncAttribute() {
     $default_query_string = variable_get('css_js_query_string', '0');
 
+    drupal_add_library('system', 'drupal');
     drupal_add_js('http://example.com/script.js', array('async' => TRUE));
     drupal_add_js('core/misc/collapse.js', array('async' => TRUE));
     $javascript = drupal_get_js();
@@ -124,6 +121,7 @@ class JavaScriptTest extends WebTestBase {
   function testDeferAttribute() {
     $default_query_string = variable_get('css_js_query_string', '0');
 
+    drupal_add_library('system', 'drupal');
     drupal_add_js('http://example.com/script.js', array('defer' => TRUE));
     drupal_add_js('core/misc/collapse.js', array('defer' => TRUE));
     $javascript = drupal_get_js();
@@ -139,6 +137,7 @@ class JavaScriptTest extends WebTestBase {
    * Test drupal_get_js() for JavaScript settings.
    */
   function testHeaderSetting() {
+    drupal_add_library('system', 'drupal.settings');
     // Only the second of these two entries should appear in Drupal.settings.
     drupal_add_js(array('commonTest' => 'commonTestShouldNotAppear'), 'setting');
     drupal_add_js(array('commonTest' => 'commonTestShouldAppear'), 'setting');
@@ -183,6 +182,7 @@ class JavaScriptTest extends WebTestBase {
    * Test to see if resetting the JavaScript empties the cache.
    */
   function testReset() {
+    drupal_add_library('system', 'drupal');
     drupal_add_js('core/misc/collapse.js');
     drupal_static_reset('drupal_add_js');
     $this->assertEqual(array(), drupal_add_js(), t('Resetting the JavaScript correctly empties the cache.'));
@@ -192,6 +192,7 @@ class JavaScriptTest extends WebTestBase {
    * Test adding inline scripts.
    */
   function testAddInline() {
+    drupal_add_library('system', 'drupal');
     $inline = 'jQuery(function () { });';
     $javascript = drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
     $this->assertTrue(array_key_exists('core/misc/jquery.js', $javascript), t('jQuery is added when inline scripts are added.'));
@@ -203,6 +204,7 @@ class JavaScriptTest extends WebTestBase {
    * Test rendering an external JavaScript file.
    */
   function testRenderExternal() {
+    drupal_add_library('system', 'drupal');
     $external = 'http://example.com/example.js';
     drupal_add_js($external, 'external');
     $javascript = drupal_get_js();
@@ -214,6 +216,7 @@ class JavaScriptTest extends WebTestBase {
    * Test drupal_get_js() with a footer scope.
    */
   function testFooterHTML() {
+    drupal_add_library('system', 'drupal');
     $inline = 'jQuery(function () { });';
     drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
     $javascript = drupal_get_js('footer');
@@ -224,6 +227,7 @@ class JavaScriptTest extends WebTestBase {
    * Test drupal_add_js() sets preproccess to false when cache is set to false.
    */
   function testNoCache() {
+    drupal_add_library('system', 'drupal');
     $javascript = drupal_add_js('core/misc/collapse.js', array('cache' => FALSE));
     $this->assertFalse($javascript['core/misc/collapse.js']['preprocess'], t('Setting cache to FALSE sets proprocess to FALSE when adding JavaScript.'));
   }
@@ -232,6 +236,7 @@ class JavaScriptTest extends WebTestBase {
    * Test adding a JavaScript file with a different group.
    */
   function testDifferentGroup() {
+    drupal_add_library('system', 'drupal');
     $javascript = drupal_add_js('core/misc/collapse.js', array('group' => JS_THEME));
     $this->assertEqual($javascript['core/misc/collapse.js']['group'], JS_THEME, t('Adding a JavaScript file with a different group caches the given group.'));
   }
@@ -252,6 +257,7 @@ class JavaScriptTest extends WebTestBase {
   function testBrowserConditionalComments() {
     $default_query_string = variable_get('css_js_query_string', '0');
 
+    drupal_add_library('system', 'drupal');
     drupal_add_js('core/misc/collapse.js', array('browsers' => array('IE' => 'lte IE 8', '!IE' => FALSE)));
     drupal_add_js('jQuery(function () { });', array('type' => 'inline', 'browsers' => array('IE' => FALSE)));
     $javascript = drupal_get_js();
@@ -267,6 +273,7 @@ class JavaScriptTest extends WebTestBase {
    * Test JavaScript versioning.
    */
   function testVersionQueryString() {
+    drupal_add_library('system', 'drupal');
     drupal_add_js('core/misc/collapse.js', array('version' => 'foo'));
     drupal_add_js('core/misc/ajax.js', array('version' => 'bar'));
     $javascript = drupal_get_js();
@@ -283,6 +290,7 @@ class JavaScriptTest extends WebTestBase {
     // ahead of ones without. The order of JavaScript execution must be the
     // same regardless of whether aggregation is enabled, so ensure this
     // expected order, first with aggregation off.
+    drupal_add_library('system', 'drupal');
     drupal_add_js('core/misc/ajax.js');
     drupal_add_js('core/misc/collapse.js', array('every_page' => TRUE));
     drupal_add_js('core/misc/autocomplete.js');
@@ -302,6 +310,7 @@ class JavaScriptTest extends WebTestBase {
     $config = config('system.performance');
     $config->set('preprocess.js', 1);
     $config->save();
+    drupal_add_library('system', 'drupal');
     drupal_add_js('core/misc/ajax.js');
     drupal_add_js('core/misc/collapse.js', array('every_page' => TRUE));
     drupal_add_js('core/misc/autocomplete.js');
@@ -312,7 +321,7 @@ class JavaScriptTest extends WebTestBase {
       '<script type="text/javascript" src="' . file_create_url(drupal_build_js_cache(array('core/misc/collapse.js' => $js_items['core/misc/collapse.js'], 'core/misc/batch.js' => $js_items['core/misc/batch.js']))) . '"></script>',
       '<script type="text/javascript" src="' . file_create_url(drupal_build_js_cache(array('core/misc/ajax.js' => $js_items['core/misc/ajax.js'], 'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']))) . '"></script>',
     ));
-    $this->assertTrue(strpos($javascript, $expected) > 0, t('JavaScript is aggregated in the expected groups and order.'));
+    $this->assertTrue(strpos($javascript, $expected) !== FALSE, t('JavaScript is aggregated in the expected groups and order.'));
   }
 
   /**
@@ -324,6 +333,7 @@ class JavaScriptTest extends WebTestBase {
     drupal_static_reset('drupal_add_js');
 
     // Add two JavaScript files to the current request and build the cache.
+    drupal_add_library('system', 'drupal');
     drupal_add_js('core/misc/ajax.js');
     drupal_add_js('core/misc/autocomplete.js');
 
@@ -340,6 +350,7 @@ class JavaScriptTest extends WebTestBase {
     // Reset variables and add a file in a different scope first.
     variable_del('drupal_js_cache_files');
     drupal_static_reset('drupal_add_js');
+    drupal_add_library('system', 'drupal');
     drupal_add_js('some/custom/javascript_file.js', array('scope' => 'footer'));
     drupal_add_js('core/misc/ajax.js');
     drupal_add_js('core/misc/autocomplete.js');
@@ -406,6 +417,7 @@ class JavaScriptTest extends WebTestBase {
     // JavaScript files are sorted first by group, then by the 'every_page'
     // flag, then by weight (see drupal_sort_css_js()), so to test the effect of
     // weight, we need the other two options to be the same.
+    drupal_add_library('system', 'jquery');
     drupal_add_js('core/misc/collapse.js', array('group' => JS_LIBRARY, 'every_page' => TRUE, 'weight' => -21));
     $javascript = drupal_get_js();
     $this->assertTrue(strpos($javascript, 'core/misc/collapse.js') < strpos($javascript, 'core/misc/jquery.js'), t('Rendering a JavaScript file above jQuery.'));
@@ -432,7 +444,7 @@ class JavaScriptTest extends WebTestBase {
    * Adds a library to the page and tests for both its JavaScript and its CSS.
    */
   function testLibraryRender() {
-    $result = drupal_add_library('system', 'farbtastic');
+    $result = drupal_add_library('system', 'jquery.farbtastic');
     $this->assertTrue($result !== FALSE, t('Library was added without errors.'));
     $scripts = drupal_get_js();
     $styles = drupal_get_css();
@@ -447,11 +459,11 @@ class JavaScriptTest extends WebTestBase {
    */
   function testLibraryAlter() {
     // Verify that common_test altered the title of Farbtastic.
-    $library = drupal_get_library('system', 'farbtastic');
+    $library = drupal_get_library('system', 'jquery.farbtastic');
     $this->assertEqual($library['title'], 'Farbtastic: Altered Library', t('Registered libraries were altered.'));
 
     // common_test_library_info_alter() also added a dependency on jQuery Form.
-    drupal_add_library('system', 'farbtastic');
+    drupal_add_library('system', 'jquery.farbtastic');
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'core/misc/jquery.form.js'), t('Altered library dependencies are added to the page.'));
   }
@@ -462,7 +474,7 @@ class JavaScriptTest extends WebTestBase {
    * @see common_test_library_info()
    */
   function testLibraryNameConflicts() {
-    $farbtastic = drupal_get_library('common_test', 'farbtastic');
+    $farbtastic = drupal_get_library('common_test', 'jquery.farbtastic');
     $this->assertEqual($farbtastic['title'], 'Custom Farbtastic Library', t('Alternative libraries can be added to the page.'));
   }
 
@@ -484,7 +496,7 @@ class JavaScriptTest extends WebTestBase {
    * Tests the addition of libraries through the #attached['library'] property.
    */
   function testAttachedLibrary() {
-    $element['#attached']['library'][] = array('system', 'farbtastic');
+    $element['#attached']['library'][] = array('system', 'jquery.farbtastic');
     drupal_render($element);
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'core/misc/farbtastic/farbtastic.js'), t('The attached_library property adds the additional libraries.'));
@@ -496,14 +508,14 @@ class JavaScriptTest extends WebTestBase {
   function testGetLibrary() {
     // Retrieve all libraries registered by a module.
     $libraries = drupal_get_library('common_test');
-    $this->assertTrue(isset($libraries['farbtastic']), t('Retrieved all module libraries.'));
+    $this->assertTrue(isset($libraries['jquery.farbtastic']), t('Retrieved all module libraries.'));
     // Retrieve all libraries for a module not implementing hook_library_info().
-    // Note: This test installs Locale module.
-    $libraries = drupal_get_library('locale');
+    // Note: This test installs language module.
+    $libraries = drupal_get_library('language');
     $this->assertEqual($libraries, array(), t('Retrieving libraries from a module not implementing hook_library_info() returns an emtpy array.'));
 
     // Retrieve a specific library by module and name.
-    $farbtastic = drupal_get_library('common_test', 'farbtastic');
+    $farbtastic = drupal_get_library('common_test', 'jquery.farbtastic');
     $this->assertEqual($farbtastic['version'], '5.3', t('Retrieved a single library.'));
     // Retrieve a non-existing library by module and name.
     $farbtastic = drupal_get_library('common_test', 'foo');

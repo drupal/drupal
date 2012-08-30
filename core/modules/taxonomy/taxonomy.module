@@ -1697,3 +1697,27 @@ function taxonomy_entity_query_alter($query) {
     unset($conditions['bundle']);
   }
 }
+
+/**
+ * Implements hook_library_info().
+ */
+function taxonomy_library_info() {
+  $libraries['drupal.taxonomy'] = array(
+    'title' => 'Taxonomy',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'taxonomy') . '/taxonomy.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'taxonomy') . '/taxonomy.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+      array('system', 'drupal.tabledrag'),
+    ),
+  );
+
+  return $libraries;
+}

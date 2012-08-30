@@ -447,9 +447,8 @@ function theme_taxonomy_overview_terms($variables) {
   if ($form['#parent_fields']) {
     drupal_add_tabledrag('taxonomy', 'match', 'parent', 'term-parent', 'term-parent', 'term-id', FALSE);
     drupal_add_tabledrag('taxonomy', 'depth', 'group', 'term-depth', NULL, NULL, FALSE);
-    drupal_add_js(drupal_get_path('module', 'taxonomy') . '/taxonomy.js');
+    drupal_add_library('taxonomy', 'drupal.taxonomy');
     drupal_add_js(array('taxonomy' => array('backStep' => $back_step, 'forwardStep' => $forward_step)), 'setting');
-    drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
   }
   drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'term-weight');
 

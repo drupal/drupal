@@ -82,8 +82,8 @@ function block_admin_display_prepare_blocks($theme) {
 function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_regions = NULL) {
   $path = drupal_get_path('module', 'block');
   $form['#attached']['css'][] = $path . '/block.admin.css';
-  $form['#attached']['js'][] = 'core/misc/tableheader.js';
-  $form['#attached']['js'][] = $path . '/block.js';
+  $form['#attached']['library'][] = array('system', 'drupal.tableheader');
+  $form['#attached']['library'][] = array('block', 'drupal.block');
 
   // Get a list of block regions if one was not provided.
   if (!isset($block_regions)) {
@@ -346,7 +346,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
   $form['visibility'] = array(
     '#type' => 'vertical_tabs',
     '#attached' => array(
-      'js' => array(drupal_get_path('module', 'block') . '/block.js'),
+      'library' => array(array('block', 'drupal.block')),
     ),
   );
 

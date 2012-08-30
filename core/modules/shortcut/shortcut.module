@@ -766,3 +766,21 @@ function shortcut_set_title($shortcut_set) {
   return $shortcut_set->title;
 }
 
+/**
+ * Implements hook_library_info().
+ */
+function shortcut_library_info() {
+  $libraries['drupal.shortcut.admin'] = array(
+    'title' => 'Shortcut',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'shortcut') . '/shortcut.admin.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+    ),
+  );
+
+  return $libraries;
+}

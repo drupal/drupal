@@ -3081,7 +3081,7 @@ function user_form_process_password_confirm($element) {
     ),
   );
 
-  $element['#attached']['js'][] = drupal_get_path('module', 'user') . '/user.js';
+  $element['#attached']['library'][] = array('user', 'drupal.user');
   // Ensure settings are only added once per page.
   static $already_added = FALSE;
   if (!$already_added) {
@@ -3198,7 +3198,7 @@ function user_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id
       // a custom behavior, since the #states system would also synchronize on
       // uncheck.
       '#attached' => array(
-        'js' => array(drupal_get_path('module', 'user') . '/user.js'),
+        'library' => array(array('user', 'drupal.user')),
       ),
     );
 
@@ -3313,4 +3313,37 @@ function user_file_download_access($field, EntityInterface $entity, File $file) 
   if ($entity->entityType() == 'user') {
     return user_view_access($entity);
   }
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function user_library_info() {
+  $libraries['drupal.user'] = array(
+    'title' => 'User',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'user') . '/user.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.once'),
+    ),
+  );
+
+  $libraries['drupal.user.permissions'] = array(
+    'title' => 'User permissions',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'user') . '/user.permissions.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+    ),
+  );
+
+  return $libraries;
 }

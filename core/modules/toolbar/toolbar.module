@@ -188,17 +188,12 @@ function toolbar_system_info_alter(&$info, $file, $type) {
 function toolbar_view() {
   global $user;
 
-  $module_path = drupal_get_path('module', 'toolbar');
   $build = array(
     '#theme' => 'toolbar',
     '#attached'=> array(
-      'js' => array(
-        $module_path . '/toolbar.js',
+      'library' => array(
+        array('toolbar', 'drupal.toolbar'),
       ),
-      'css' => array(
-        $module_path . '/toolbar.css',
-      ),
-      'library' => array(array('system', 'jquery.cookie')),
     ),
   );
 
@@ -361,4 +356,29 @@ function toolbar_in_active_trail($path) {
     }
   }
   return in_array($path, $active_paths);
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function toolbar_library_info() {
+  $libraries['drupal.toolbar'] = array(
+    'title' => 'Toolbar',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'toolbar') . '/toolbar.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'toolbar') . '/toolbar.css',
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+      array('system', 'jquery.once'),
+      array('system', 'jquery.cookie'),
+    ),
+  );
+
+  return $libraries;
 }

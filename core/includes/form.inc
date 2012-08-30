@@ -3424,7 +3424,7 @@ function theme_tableselect($variables) {
     // checkboxes/radios in the first table column.
     if ($element['#js_select']) {
       // Add a "Select all" checkbox.
-      drupal_add_js('core/misc/tableselect.js');
+      drupal_add_library('system', 'drupal.tableselect');
       array_unshift($header, array('class' => array('select-all')));
     }
     else {
@@ -3614,7 +3614,7 @@ function form_process_machine_name($element, &$form_state) {
       ),
     ),
   );
-  $element['#attached']['js'][] = 'core/misc/machine-name.js';
+  $element['#attached']['library'][] = array('system', 'drupal.machine-name');
   $element['#attached']['js'][] = $js_settings;
 
   return $element;

@@ -116,9 +116,7 @@ function translation_permission() {
 function translation_form_node_type_form_alter(&$form, &$form_state) {
   // Hide form element if default language is a constant.
   // TODO: When form #states allows OR values change this to use form #states.
-  $form['#attached']['js'] = array(
-    drupal_get_path('module', 'translation') . '/translation.js',
-  );
+  $form['#attached']['library'][] = array('translation', 'drupal.translation');
   // Add translation option to content type form.
   $form['language']['node_type_language_translation_enabled'] = array(
     '#type' => 'checkbox',
@@ -539,4 +537,23 @@ function translation_language_switch_links_alter(array &$links, $type, $path) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function translation_library_info() {
+  $libraries['drupal.translation'] = array(
+    'title' => 'Translation',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'translation') . '/translation.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+    ),
+  );
+
+  return $libraries;
 }

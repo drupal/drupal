@@ -134,9 +134,7 @@ function openid_form_user_login_alter(&$form, &$form_state) {
 }
 
 function _openid_user_login_form_alter(&$form, &$form_state) {
-  $form['#attached']['css'][] = drupal_get_path('module', 'openid') . '/openid.css';
-  $form['#attached']['js'][] = drupal_get_path('module', 'openid') . '/openid.js';
-  $form['#attached']['library'][] = array('system', 'jquery.cookie');
+  $form['#attached']['library'][] = array('openid', 'drupal.openid');
   if (!empty($form_state['input']['openid_identifier'])) {
     $form['name']['#required'] = FALSE;
     $form['pass']['#required'] = FALSE;
@@ -1075,4 +1073,26 @@ function openid_cron() {
   db_delete('openid_nonce')
     ->condition('expires', REQUEST_TIME, '<')
     ->execute();
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function openid_library_info() {
+  $libraries['openid'] = array(
+    'title' => 'OpenID',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'openid') . '/openid.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'openid') . '/openid.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'drupal'),
+      array('system', 'jquery.cookie')
+    ),
+  );
+
+  return $libraries;
 }

@@ -544,7 +544,7 @@ function _book_add_form_elements(&$form, &$form_state, Node $node) {
       'class' => array('book-outline-form'),
     ),
     '#attached' => array(
-      'js' => array(drupal_get_path('module', 'book') . '/book.js'),
+      'library' => array(array('book', 'drupal.book')),
     ),
     '#tree' => TRUE,
   );
@@ -1453,4 +1453,24 @@ function book_menu_subtree_data($link) {
   }
 
   return $tree[$cid];
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function book_library_info() {
+  $libraries['drupal.book'] = array(
+    'title' => 'Book',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'book') . '/book.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.form'),
+    ),
+  );
+
+  return $libraries;
 }

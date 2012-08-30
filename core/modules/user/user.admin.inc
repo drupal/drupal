@@ -360,7 +360,7 @@ function user_admin_settings($form, &$form_state) {
     '#title' => t('Enable user pictures.'),
     '#default_value' => $picture_support,
   );
-  drupal_add_js(drupal_get_path('module', 'user') . '/user.js');
+  $form['#attached']['library'][] = array('user', 'drupal.user');
   $form['personalization']['pictures'] = array(
     '#type' => 'container',
     '#states' => array(
@@ -738,7 +738,7 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
 
-  $form['#attached']['js'][] = drupal_get_path('module', 'user') . '/user.permissions.js';
+  $form['#attached']['library'][] = array('user', 'drupal.user.permissions');
 
   return $form;
 }

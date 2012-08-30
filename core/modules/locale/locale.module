@@ -374,7 +374,7 @@ function locale_js_alter(&$javascript) {
   $files = $new_files = FALSE;
 
   foreach ($javascript as $item) {
-    if ($item['type'] == 'file') {
+    if (isset($item['type']) && $item['type'] == 'file') {
       $files = TRUE;
       $filepath = $item['data'];
       if (!in_array($filepath, $parsed)) {
@@ -421,6 +421,38 @@ function locale_js_alter(&$javascript) {
 }
 
 /**
+ * Implements hook_library_info().
+ */
+function locale_library_info() {
+  $libraries['drupal.locale.admin'] = array(
+    'title' => 'Locale',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'locale') . '/locale.admin.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.once'),
+    ),
+  );
+  $libraries['drupal.locale.datepicker'] = array(
+    'title' => 'Locale Datepicker UI',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'locale') . '/locale.datepicker.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
  * Implement hook_library_info_alter().
  *
  * Provides the language support for the jQuery UI Date Picker.
@@ -431,8 +463,7 @@ function locale_library_info_alter(&$libraries, $module) {
     // locale.datepicker.js should be added in the JS_LIBRARY group, so that
     // this attach behavior will execute early. JS_LIBRARY is the default for
     // hook_library_info_alter(), thus does not have to be specified explicitly.
-    $datepicker = drupal_get_path('module', 'locale') . '/locale.datepicker.js';
-    $libraries['jquery.ui.datepicker']['js'][$datepicker] = array();
+    $libraries['jquery.ui.datepicker']['dependencies'][] = array('locale', 'drupal.locale.datepicker');
     $libraries['jquery.ui.datepicker']['js'][] = array(
       'data' => array(
         'jquery' => array(

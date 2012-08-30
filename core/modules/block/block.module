@@ -1085,3 +1085,22 @@ function block_language_delete($language) {
     ->condition('langcode', $language->langcode)
     ->execute();
 }
+
+/**
+ * Implements hook_library_info().
+ */
+function block_library_info() {
+  $libraries['drupal.block'] = array(
+    'title' => 'Block',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'block') . '/block.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+    ),
+  );
+
+  return $libraries;
+}

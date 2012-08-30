@@ -184,9 +184,8 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
     '#options' => $color_sets,
     '#default_value' => $scheme_name,
     '#attached' => array(
-      // Add Farbtastic color picker.
       'library' => array(
-        array('system', 'farbtastic'),
+        array('color', 'drupal.color'),
       ),
       // Add custom CSS.
       'css' => array(
@@ -194,7 +193,6 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
       ),
       // Add custom JavaScript.
       'js' => array(
-        $base . '/color.js',
         array(
           'data' => array(
             'color' => array(
@@ -246,6 +244,7 @@ function theme_color_scheme_form($variables) {
   $path = drupal_get_path('theme', $theme) . '/';
   drupal_add_css($path . $info['preview_css']);
 
+  // @todo Transform to add library.
   $preview_js_path = isset($info['preview_js']) ? $path . $info['preview_js'] : drupal_get_path('module', 'color') . '/' . 'preview.js';
   // Add the JS at a weight below color.js.
   drupal_add_js($preview_js_path, array('weight' => -1));
@@ -743,4 +742,39 @@ function _color_rgb2hsl($rgb) {
   }
 
   return array($h, $s, $l);
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function color_library_info() {
+  $libraries['drupal.color'] = array(
+    'title' => 'Color',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'color') . '/color.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.once'),
+      array('system', 'jquery.farbtastic'),
+      array('color', 'drupal.color.preview'),
+    ),
+  );
+  $libraries['drupal.color.preview'] = array(
+    'title' => 'Color preview',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'color') . '/preview.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+      array('system', 'jquery.once'),
+    ),
+  );
+
+  return $libraries;
 }

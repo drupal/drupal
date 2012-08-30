@@ -40,10 +40,10 @@ function contextual_permission() {
  */
 function contextual_library_info() {
   $path = drupal_get_path('module', 'contextual');
-  $libraries['contextual-links'] = array(
+  $libraries['drupal.contextual-links'] = array(
     'title' => 'Contextual Links',
     'website' => 'http://drupal.org/node/473268',
-    'version' => '1.0',
+    'version' => VERSION,
     'js' => array(
       $path . '/contextual.js' => array(),
     ),
@@ -51,7 +51,13 @@ function contextual_library_info() {
       $path . '/contextual.base.css' => array(),
       $path . '/contextual.theme.css' => array(),
     ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.once'),
+    ),
   );
+
   return $libraries;
 }
 
@@ -68,7 +74,7 @@ function contextual_element_info() {
     '#attributes' => array('class' => array('contextual-links')),
     '#attached' => array(
       'library' => array(
-        array('contextual', 'contextual-links'),
+        array('contextual', 'drupal.contextual-links'),
       ),
     ),
   );

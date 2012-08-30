@@ -255,9 +255,7 @@ function locale_translate_edit_form($form, &$form_state) {
   $form['#attached']['css'] = array(
     $path . '/locale.admin.css',
   );
-  $form['#attached']['js'] = array(
-    $path . '/locale.admin.js',
-  );
+  $form['#attached']['library'][] = array('locale', 'drupal.locale.admin');
 
   $form['langcode'] = array(
     '#type' => 'value',

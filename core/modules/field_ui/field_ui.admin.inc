@@ -640,8 +640,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
 
-  $form['#attached']['css'][] = drupal_get_path('module', 'field_ui') . '/field_ui.admin.css';
-  $form['#attached']['js'][] = drupal_get_path('module', 'field_ui') . '/field_ui.js';
+  $form['#attached']['library'][] = array('field_ui', 'drupal.field_ui');
 
   // Add settings for the update selects behavior.
   $js_fields = array();
@@ -1228,8 +1227,7 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
 
-  $form['#attached']['js'][] = drupal_get_path('module', 'field_ui') . '/field_ui.js';
-  $form['#attached']['css'][] = drupal_get_path('module', 'field_ui') . '/field_ui.admin.css';
+  $form['#attached']['library'][] = array('field_ui', 'drupal.field_ui');
 
   // Add tabledrag behavior.
   $form['#attached']['drupal_add_tabledrag'][] = array('field-display-overview', 'order', 'sibling', 'field-weight');

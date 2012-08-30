@@ -103,11 +103,7 @@ function statistics_permission() {
  */
 function statistics_node_view(Node $node, $view_mode) {
   if (!empty($node->nid) && $view_mode == 'full') {
-    $node->content['#attached']['js'] = array(
-      drupal_get_path('module', 'statistics') . '/statistics.js' => array(
-        'scope' => 'footer'
-      ),
-    );
+    $node->content['#attached']['library'][] = array('statistics', 'drupal.statistics');
     $settings = array('nid' => $node->nid);
     $node->content['#attached']['js'][] = array(
       'data' => array('statistics' => $settings),
@@ -461,4 +457,26 @@ function statistics_preprocess_block(&$variables) {
   if ($variables['block']->module == 'statistics') {
     $variables['attributes']['role'] = 'navigation';
   }
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function statistics_library_info() {
+  $libraries['drupal.statistics'] = array(
+    'title' => 'Statistics',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'statistics') . '/statistics.js' => array(
+        'scope' => 'footer'
+      ),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+    ),
+  );
+
+  return $libraries;
 }

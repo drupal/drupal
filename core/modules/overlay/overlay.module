@@ -200,7 +200,7 @@ function overlay_library_info() {
   $module_path = drupal_get_path('module', 'overlay');
 
   // Overlay parent.
-  $libraries['parent'] = array(
+  $libraries['drupal.overlay.parent'] = array(
     'title' => 'Overlay: Parent',
     'website' => 'http://drupal.org/documentation/modules/overlay',
     'version' => '1.0',
@@ -211,12 +211,15 @@ function overlay_library_info() {
       $module_path . '/overlay-parent.css' => array(),
     ),
     'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
       array('system', 'jquery.ui.core'),
       array('system', 'jquery.bbq'),
     ),
   );
   // Overlay child.
-  $libraries['child'] = array(
+  $libraries['drupal.overlay.child'] = array(
     'title' => 'Overlay: Child',
     'website' => 'http://drupal.org/documentation/modules/overlay',
     'version' => '1.0',
@@ -225,6 +228,12 @@ function overlay_library_info() {
     ),
     'css' => array(
       $module_path . '/overlay-child.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+      array('system', 'jquery.once'),
     ),
   );
 

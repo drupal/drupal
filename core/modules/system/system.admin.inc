@@ -1696,7 +1696,7 @@ function system_logging_settings_submit($form, &$form_state) {
  * @see system_performance_settings_submit().
  */
 function system_performance_settings($form, &$form_state) {
-  drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
+  drupal_add_library('system', 'drupal.system');
   $config = config('system.performance');
 
   $form['clear_cache'] = array(
@@ -2886,7 +2886,8 @@ function system_configure_date_formats_form($form, &$form_state, $dfid = 0) {
     '#default_value' => ($dfid ? $format->format : ''),
     '#field_suffix' => ' <small id="edit-date-format-suffix">' . $now . '</small>',
     '#attached' => array(
-      'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+      'library' => array(array('system', 'drupal.system')),
+      'js' => array($js_settings),
     ),
     '#required' => TRUE,
   );

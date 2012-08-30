@@ -68,9 +68,7 @@ function simpletest_test_form($form) {
 function theme_simpletest_test_table($variables) {
   $table = $variables['table'];
 
-  drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
-  drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js');
-  drupal_add_js('core/misc/tableselect.js');
+  drupal_add_library('simpletest', 'drupal.simpletest');
 
   // Create header for test selection table.
   $header = array(

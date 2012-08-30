@@ -878,8 +878,7 @@ function filter_process_format($element) {
 
   // Turn original element into a text format wrapper.
   $path = drupal_get_path('module', 'filter');
-  $element['#attached']['js'][] = $path . '/filter.js';
-  $element['#attached']['css'][] = $path . '/filter.admin.css';
+  $element['#attached']['library'][] = array('filter', 'drupal.filter');
 
   // Setup child container for the text format widget.
   $element['format'] = array(
@@ -1764,3 +1763,42 @@ function _filter_html_escape_tips($filter, $format, $long = FALSE) {
 /**
  * @} End of "defgroup standard_filters".
  */
+
+/**
+ * Implements hook_library_info().
+ */
+function filter_library_info() {
+  $libraries['drupal.filter.admin'] = array(
+    'title' => 'Filter',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'filter') . '/filter.admin.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'filter') . '/filter.admin.css'
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.once'),
+      array('system', 'drupal.form'),
+    ),
+  );
+  $libraries['drupal.filter'] = array(
+    'title' => 'Filter',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'filter') . '/filter.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'filter') . '/filter.admin.css'
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.once'),
+    ),
+  );
+
+  return $libraries;
+}

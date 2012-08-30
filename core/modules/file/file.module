@@ -78,8 +78,7 @@ function file_element_info() {
     '#size' => 22,
     '#extended' => FALSE,
     '#attached' => array(
-      'css' => array($file_path . '/file.admin.css'),
-      'js' => array($file_path . '/file.js'),
+      'library' => array(array('file','drupal.file')),
     ),
   );
   return $types;
@@ -1035,3 +1034,26 @@ function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_R
 /**
  * @} End of "defgroup file-module-api".
  */
+
+/**
+ * Implements hook_library_info().
+ */
+function file_library_info() {
+  $libraries['drupal.file'] = array(
+    'title' => 'File',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'file') . '/file.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'file') . '/file.admin.css'
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+    ),
+  );
+
+  return $libraries;
+}

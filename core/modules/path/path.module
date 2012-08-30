@@ -129,7 +129,7 @@ function path_form_node_form_alter(&$form, $form_state) {
       'class' => array('path-form'),
     ),
     '#attached' => array(
-      'js' => array(drupal_get_path('module', 'path') . '/path.js'),
+      'library' => array(array('path', 'drupal.path')),
     ),
     '#access' => user_access('create url aliases') || user_access('administer url aliases'),
     '#weight' => 30,
@@ -313,4 +313,24 @@ function path_taxonomy_term_update(Term $term) {
 function path_taxonomy_term_delete(Term $term) {
   // Delete all aliases associated with this term.
   path_delete(array('source' => 'taxonomy/term/' . $term->tid));
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function path_library_info() {
+  $libraries['drupal.path'] = array(
+    'title' => 'Path',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'path') . '/path.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.form'),
+    ),
+  );
+
+  return $libraries;
 }

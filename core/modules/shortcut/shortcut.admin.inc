@@ -73,7 +73,7 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
     }
 
     $form['#attached'] = array(
-      'js' => array(drupal_get_path('module', 'shortcut') . '/shortcut.admin.js'),
+      'library' => array(array('shortcut', 'drupal.shortcut.admin')),
     );
 
     $form['actions'] = array('#type' => 'actions');

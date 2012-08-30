@@ -566,3 +566,28 @@ function simpletest_mail_alter(&$message) {
     $message['send'] = FALSE;
   }
 }
+
+/**
+ * Implements hook_library_info().
+ */
+function simpletest_library_info() {
+  $libraries['drupal.simpletest'] = array(
+    'title' => 'Simpletest',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'simpletest') . '/simpletest.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'simpletest') . '/simpletest.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+      array('system', 'jquery.once'),
+      array('system', 'drupal.tableselect'),
+    ),
+  );
+
+  return $libraries;
+}

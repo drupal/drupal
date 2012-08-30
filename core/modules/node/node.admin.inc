@@ -222,7 +222,7 @@ function node_filter_form() {
     $form['filters']['status']['actions']['reset'] = array('#type' => 'submit', '#value' => t('Reset'));
   }
 
-  drupal_add_js('core/misc/form.js');
+  $form['#attached']['library'][] = array('system', 'drupal.form');
 
   return $form;
 }

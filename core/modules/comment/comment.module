@@ -1188,7 +1188,7 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
         'class' => array('comment-node-type-settings-form'),
       ),
       '#attached' => array(
-        'js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
+        'library' => array('comment', 'drupal.comment'),
       ),
     );
     // Unlike coment_form_node_form_alter(), all of these settings are applied
@@ -1266,8 +1266,8 @@ function comment_form_node_form_alter(&$form, $form_state) {
       'class' => array('comment-node-settings-form'),
     ),
     '#attached' => array(
-      'js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
-     ),
+      'library' => array('comment', 'drupal.comment'),
+    ),
     '#weight' => 30,
   );
   $comment_count = isset($node->nid) ? db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() : 0;
@@ -2141,4 +2141,24 @@ function comment_file_download_access($field, EntityInterface $entity, File $fil
     }
     return FALSE;
   }
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function comment_library_info() {
+  $libraries['drupal.comment'] = array(
+    'title' => 'Comment',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'comment') . '/comment-node-form.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.form'),
+    ),
+  );
+
+  return $libraries;
 }

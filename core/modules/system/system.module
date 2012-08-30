@@ -1216,6 +1216,28 @@ function _system_batch_theme() {
  * Implements hook_library_info().
  */
 function system_library_info() {
+  // Drupal-specific JavaScript.
+  $libraries['drupal'] = array(
+    'title' => 'Drupal',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/drupal.js' => array('group' => JS_LIBRARY, 'weight' => -18),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+    ),
+  );
+
+  // Drupal settings.
+  $libraries['drupal.settings'] = array(
+    'title' => 'Drupal Settings',
+    'version' => VERSION,
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+    ),
+  );
+
   // Drupal's Ajax framework.
   $libraries['drupal.ajax'] = array(
     'title' => 'Drupal AJAX',
@@ -1225,6 +1247,9 @@ function system_library_info() {
       'core/misc/ajax.js' => array('group' => JS_LIBRARY, 'weight' => 2),
     ),
     'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
       array('system', 'drupal.progress'),
     ),
   );
@@ -1237,7 +1262,11 @@ function system_library_info() {
       'core/misc/batch.js' => array('group' => JS_DEFAULT, 'cache' => FALSE),
     ),
     'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
       array('system', 'drupal.progress'),
+      array('system', 'jquery.once'),
     ),
   );
 
@@ -1248,6 +1277,11 @@ function system_library_info() {
     'js' => array(
       'core/misc/progress.js' => array('group' => JS_DEFAULT),
     ),
+    'dependencies' => array(
+      array('system', 'drupal'),
+      array('system', 'jquery'),
+      array('system', 'drupal.settings'),
+    ),
   );
 
   // Drupal's form library.
@@ -1257,6 +1291,12 @@ function system_library_info() {
     'js' => array(
       'core/misc/form.js' => array('group' => JS_LIBRARY, 'weight' => 1),
     ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.cookie'),
+      array('system', 'jquery.once'),
+    ),
   );
 
   // Drupal's states library.
@@ -1265,6 +1305,12 @@ function system_library_info() {
     'version' => VERSION,
     'js' => array(
       'core/misc/states.js' => array('group' => JS_LIBRARY, 'weight' => 1),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+      array('system', 'jquery.once'),
     ),
   );
 
@@ -1276,6 +1322,10 @@ function system_library_info() {
       'core/misc/tabledrag.js' => array('group' => JS_LIBRARY, 'weight' => -1),
     ),
     'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+      array('system', 'jquery.once'),
       array('system', 'jquery.cookie'),
     ),
   );
@@ -1288,6 +1338,8 @@ function system_library_info() {
       'core/misc/collapse.js' => array('group' => JS_DEFAULT),
     ),
     'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
       // collapse.js relies on drupalGetSummary in form.js
       array('system', 'drupal.form'),
     ),
@@ -1299,6 +1351,11 @@ function system_library_info() {
     'version' => VERSION,
     'js' => array(
       'core/misc/autocomplete.js' => array('group' => JS_DEFAULT),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.ajax'),
     ),
   );
 
@@ -1320,6 +1377,9 @@ function system_library_info() {
     'js' => array(
       'core/misc/jquery.once.js' => array('group' => JS_LIBRARY, 'weight' => -19),
     ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+    ),
   );
 
   // jQuery Form Plugin.
@@ -1331,6 +1391,7 @@ function system_library_info() {
       'core/misc/jquery.form.js' => array(),
     ),
     'dependencies' => array(
+      array('system', 'jquery'),
       array('system', 'jquery.cookie'),
     ),
   );
@@ -1342,6 +1403,9 @@ function system_library_info() {
     'version' => '1.2.1',
     'js' => array(
       'core/misc/jquery.ba-bbq.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
     ),
   );
 
@@ -1357,13 +1421,16 @@ function system_library_info() {
       'core/misc/vertical-tabs.css' => array(),
     ),
     'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
       // Vertical tabs relies on drupalGetSummary in form.js
       array('system', 'drupal.form'),
     ),
   );
 
   // Farbtastic.
-  $libraries['farbtastic'] = array(
+  $libraries['jquery.farbtastic'] = array(
     'title' => 'Farbtastic',
     'website' => 'http://code.google.com/p/farbtastic/',
     'version' => '1.2',
@@ -1400,6 +1467,9 @@ function system_library_info() {
     'css' => array(
       'core/misc/ui/themes/base/jquery.ui.core.css' => array(),
       'core/misc/ui/themes/base/jquery.ui.theme.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
     ),
   );
   $libraries['jquery.ui.accordion'] = array(
@@ -1834,6 +1904,83 @@ function system_library_info() {
     'version' => $libraries['jquery.ui.core']['version'], // Shipped with jQuery UI.
     'js' => array(
       'core/misc/ui/external/jquery.cookie.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+    ),
+  );
+
+  $libraries['drupal.tableselect'] = array(
+    'title' => 'Tableselect',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/tableselect.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'drupal'),
+      array('system', 'jquery'),
+    ),
+  );
+  $libraries['drupal.tableheader'] = array(
+    'title' => 'Table header',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/tableheader.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+      array('system', 'jquery.once'),
+    ),
+  );
+  $libraries['drupal.timezone'] = array(
+    'title' => 'Timezone',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/timezone.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+    ),
+  );
+  $libraries['drupal.machine-name'] = array(
+    'title' => 'Machine name',
+    'version' => VERSION,
+    'js' => array(
+      'core/misc/machine-name.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+    ),
+  );
+
+  $libraries['drupal.system'] = array(
+    'title' => 'System',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'system') . '/system.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+    ),
+  );
+  $libraries['drupal.system.cron'] = array(
+    'title' => 'System cron',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'system') . '/system.cron.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+      array('system', 'jquery.once'),
     ),
   );
 
@@ -2276,7 +2423,7 @@ function system_user_timezone(&$form, &$form_state) {
   if (!isset($account->timezone) && $account->uid == $user->uid && empty($form_state['input']['timezone'])) {
     $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Confirm the selection and click save.');
     $form['timezone']['timezone']['#attributes'] = array('class' => array('timezone-detect'));
-    drupal_add_js('core/misc/timezone.js');
+    drupal_add_library('system', 'drupal.timezone');
   }
 }
 

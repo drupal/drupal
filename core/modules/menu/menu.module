@@ -650,7 +650,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
     '#collapsed' => !$link['link_title'],
     '#group' => 'additional_settings',
     '#attached' => array(
-      'js' => array(drupal_get_path('module', 'menu') . '/menu.js'),
+      'library' => array(array('menu', 'drupal.menu')),
     ),
     '#tree' => TRUE,
     '#weight' => -2,
@@ -755,7 +755,7 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#attached' => array(
-      'js' => array(drupal_get_path('module', 'menu') . '/menu.admin.js'),
+      'library' => array(array('menu', 'drupal.menu.admin')),
     ),
     '#group' => 'additional_settings',
   );
@@ -818,4 +818,35 @@ function menu_preprocess_block(&$variables) {
   if ($variables['block']->module == 'menu') {
     $variables['attributes']['role'] = 'navigation';
   }
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function menu_library_info() {
+  $libraries['drupal.menu'] = array(
+    'title' => 'Menu',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'menu') . '/menu.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.form'),
+    ),
+  );
+  $libraries['drupal.menu.admin'] = array(
+    'title' => 'Menu admin',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'menu') . '/menu.admin.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+    ),
+  );
+
+  return $libraries;
 }

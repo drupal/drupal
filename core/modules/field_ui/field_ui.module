@@ -380,3 +380,27 @@ function field_ui_form_node_type_form_submit($form, &$form_state) {
     $form_state['redirect'] = _field_ui_bundle_admin_path('node', $form_state['values']['type']) .'/fields';
   }
 }
+
+/**
+ * Implements hook_library_info().
+ */
+function field_ui_library_info() {
+  $libraries['drupal.field_ui'] = array(
+    'title' => 'Field UI',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'field_ui') . '/field_ui.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'field_ui') . '/field_ui.admin.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupal.settings'),
+      array('system', 'jquery.once'),
+    ),
+  );
+
+  return $libraries;
+}

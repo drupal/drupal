@@ -114,6 +114,10 @@ class LocaleExportTest extends WebTestBase {
    * Test exportation of translation template file.
    */
   function testExportTranslationTemplateFile() {
+    // Load an admin page with JavaScript so drupal_add_library() fires at least
+    // once and _locale_parse_js_file() gets to run at least once so that the
+    // locales_source table gets populated with something.
+    $this->drupalGet('admin/config/regional/language');
     // Get the translation template file.
     $this->drupalPost('admin/config/regional/translate/export', array(), t('Export'));
     // Ensure we have a translation file.
