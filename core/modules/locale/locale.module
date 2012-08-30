@@ -352,9 +352,14 @@ function locale_themes_enabled($themes) {
  *   identified projects for the components.
  */
 function locale_system_update($components) {
-  include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
-  if ($batch = locale_translate_batch_import_files(array(), TRUE)) {
-    batch_set($batch);
+  // Skip running the translation imports if in the installer,
+  // because it would break out of the installer flow. We have
+  // built-in support for translation imports in the installer.
+  if (!drupal_installation_attempted()) {
+    include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
+    if ($batch = locale_translate_batch_import_files(array(), TRUE)) {
+      batch_set($batch);
+    }
   }
 }
 
