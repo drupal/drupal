@@ -33,7 +33,7 @@ class SortTest extends HandlerTestBase {
     $view = $this->getBasicView();
 
     // Change the ordering
-    $view->display['default']->handler->override_option('sorts', array(
+    $view->display['default']->handler->overrideOption('sorts', array(
       'age' => array(
         'order' => 'ASC',
         'id' => 'age',
@@ -56,7 +56,7 @@ class SortTest extends HandlerTestBase {
     $view = $this->getBasicView();
 
     // Reverse the ordering
-    $view->display['default']->handler->override_option('sorts', array(
+    $view->display['default']->handler->overrideOption('sorts', array(
       'age' => array(
         'order' => 'DESC',
         'id' => 'age',
@@ -84,7 +84,7 @@ class SortTest extends HandlerTestBase {
     $view = $this->getBasicView();
 
     // Change the ordering
-    $view->display['default']->handler->override_option('sorts', array(
+    $view->display['default']->handler->overrideOption('sorts', array(
       'name' => array(
         'order' => 'ASC',
         'id' => 'name',
@@ -107,7 +107,7 @@ class SortTest extends HandlerTestBase {
     $view = $this->getBasicView();
 
     // Reverse the ordering
-    $view->display['default']->handler->override_option('sorts', array(
+    $view->display['default']->handler->overrideOption('sorts', array(
       'name' => array(
         'order' => 'DESC',
         'id' => 'name',

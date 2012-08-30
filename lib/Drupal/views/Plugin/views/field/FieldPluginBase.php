@@ -850,7 +850,7 @@ abstract class FieldPluginBase extends HandlerBase {
 
       // Get a list of the available fields and arguments for token replacement.
       $options = array();
-      foreach ($this->view->display_handler->get_handlers('field') as $field => $handler) {
+      foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
         $options[t('Fields')]["[$field]"] = $handler->ui_name();
         // We only use fields up to (and including) this one.
         if ($field == $this->options['id']) {
@@ -858,7 +858,7 @@ abstract class FieldPluginBase extends HandlerBase {
         }
       }
       $count = 0; // This lets us prepare the key as we want it printed.
-      foreach ($this->view->display_handler->get_handlers('argument') as $arg => $handler) {
+      foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
         $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->ui_name()));
         $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->ui_name()));
       }
@@ -1468,7 +1468,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       $tokens = $this->view->build_info['substitutions'];
     }
     $count = 0;
-    foreach ($this->view->display_handler->get_handlers('argument') as $arg => $handler) {
+    foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
       $token = '%' . ++$count;
       if (!isset($tokens[$token])) {
         $tokens[$token] = '';
@@ -1484,7 +1484,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
     $tokens += $this->get_token_values_recursive(drupal_container()->get('request')->query->all());
 
     // Now add replacements for our fields.
-    foreach ($this->view->display_handler->get_handlers('field') as $field => $handler) {
+    foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
       if (isset($handler->last_render)) {
         $tokens["[$field]"] = $handler->last_render;
       }

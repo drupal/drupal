@@ -43,28 +43,28 @@ class Feed extends Page {
    */
   protected $usesPager = FALSE;
 
-  function init(&$view, &$display, $options = NULL) {
+  public function init(&$view, &$display, $options = NULL) {
     parent::init($view, $display, $options);
 
     // Set the default row style. Ideally this would be part of the option
     // definition, but in this case it's dependent on the view's base table,
     // which we don't know until init().
-    $row_plugins = views_fetch_plugin_names('row', $this->get_style_type(), array($view->base_table));
+    $row_plugins = views_fetch_plugin_names('row', $this->getStyleType(), array($view->base_table));
     $default_row_plugin = key($row_plugins);
     if ($this->options['row_plugin'] == '') {
       $this->options['row_plugin'] = $default_row_plugin;
     }
   }
 
-  function uses_breadcrumb() { return FALSE; }
-  function get_style_type() { return 'feed'; }
+  public function usesBreadcrumb() { return FALSE; }
+  protected function getStyleType() { return 'feed'; }
 
   /**
    * Feeds do not go through the normal page theming mechanism. Instead, they
    * go through their own little theme function and then return NULL so that
    * Drupal believes that the page has already rendered itself...which it has.
    */
-  function execute() {
+  public function execute() {
     $output = $this->view->render();
     if (empty($output)) {
       throw new NotFoundHttpException();
@@ -75,7 +75,7 @@ class Feed extends Page {
     return $response;
   }
 
-  function preview() {
+  public function preview() {
     if (!empty($this->view->live_preview)) {
       return '<pre>' . check_plain($this->view->render()) . '</pre>';
     }
@@ -86,16 +86,16 @@ class Feed extends Page {
    * Instead of going through the standard views_view.tpl.php, delegate this
    * to the style handler.
    */
-  function render() {
+  public function render() {
     return $this->view->style_plugin->render($this->view->result);
   }
 
-  function defaultable_sections($section = NULL) {
+  public function defaultableSections($section = NULL) {
     if (in_array($section, array('style_options', 'style_plugin', 'row_options', 'row_plugin'))) {
       return FALSE;
     }
 
-    $sections = parent::defaultable_sections($section);
+    $sections = parent::defaultableSections($section);
 
     // Tell views our sitename_title option belongs in the title section.
     if ($section == 'title') {
@@ -107,7 +107,7 @@ class Feed extends Page {
     return $sections;
   }
 
-  function option_definition() {
+  public function option_definition() {
     $options = parent::option_definition();
 
     $options['displays'] = array('default' => array());
@@ -125,9 +125,9 @@ class Feed extends Page {
     return $options;
   }
 
-  function options_summary(&$categories, &$options) {
+  public function optionsSummary(&$categories, &$options) {
     // It is very important to call the parent function here:
-    parent::options_summary($categories, $options);
+    parent::optionsSummary($categories, $options);
 
     // Since we're childing off the 'page' type, we'll still *call* our
     // category 'page' but let's override it so it says feed settings.
@@ -139,14 +139,14 @@ class Feed extends Page {
       ),
     );
 
-    if ($this->get_option('sitename_title')) {
+    if ($this->getOption('sitename_title')) {
       $options['title']['value'] = t('Using the site name');
     }
 
     // I don't think we want to give feeds menus directly.
     unset($options['menu']);
 
-    $displays = array_filter($this->get_option('displays'));
+    $displays = array_filter($this->getOption('displays'));
     if (count($displays) > 1) {
       $attach_to = t('Multiple displays');
     }
@@ -171,7 +171,7 @@ class Feed extends Page {
   /**
    * Provide the default form for setting options.
    */
-  function options_form(&$form, &$form_state) {
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     // It is very important to call the parent function here.
     parent::options_form($form, $form_state);
@@ -184,7 +184,7 @@ class Feed extends Page {
         $form['sitename_title'] = array(
           '#type' => 'checkbox',
           '#title' => t('Use the site name for the title'),
-          '#default_value' => $this->get_option('sitename_title'),
+          '#default_value' => $this->getOption('sitename_title'),
         );
         $form['title'] = $title;
         $form['title']['#states'] = array(
@@ -205,7 +205,7 @@ class Feed extends Page {
           '#type' => 'checkboxes',
           '#description' => t('The feed icon will be available only to the selected displays.'),
           '#options' => $displays,
-          '#default_value' => $this->get_option('displays'),
+          '#default_value' => $this->getOption('displays'),
         );
         break;
       case 'path':
@@ -217,15 +217,15 @@ class Feed extends Page {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  function options_submit(&$form, &$form_state) {
+  public function options_submit(&$form, &$form_state) {
     // It is very important to call the parent function here:
     parent::options_submit($form, $form_state);
     switch ($form_state['section']) {
       case 'title':
-        $this->set_option('sitename_title', $form_state['values']['sitename_title']);
+        $this->setOption('sitename_title', $form_state['values']['sitename_title']);
         break;
       case 'displays':
-        $this->set_option($form_state['section'], $form_state['values'][$form_state['section']]);
+        $this->setOption($form_state['section'], $form_state['values'][$form_state['section']]);
         break;
     }
   }
@@ -233,20 +233,20 @@ class Feed extends Page {
   /**
    * Attach to another view.
    */
-  function attach_to($display_id) {
-    $displays = $this->get_option('displays');
+  public function attachTo($display_id) {
+    $displays = $this->getOption('displays');
     if (empty($displays[$display_id])) {
       return;
     }
 
     // Defer to the feed style; it may put in meta information, and/or
     // attach a feed icon.
-    $plugin = $this->get_plugin();
+    $plugin = $this->getPlugin('style');
     if ($plugin) {
       $clone = $this->view->cloneView();
       $clone->setDisplay($this->display->id);
       $clone->buildTitle();
-      $plugin->attach_to($display_id, $this->get_path(), $clone->getTitle());
+      $plugin->attach_to($display_id, $this->getPath(), $clone->getTitle());
 
       // Clean up
       $clone->destroy();
@@ -254,7 +254,7 @@ class Feed extends Page {
     }
   }
 
-  function uses_link_display() {
+  public function usesLinkDisplay() {
     return TRUE;
   }
 

@@ -474,7 +474,7 @@ function theme_views_ui_view_preview_section($vars) {
  */
 function views_ui_view_preview_section_handler_links($view, $type, $title = FALSE) {
   $display = $view->display_handler->display;
-  $handlers = $view->display_handler->get_handlers($type);
+  $handlers = $view->display_handler->getHandlers($type);
   $links = array();
 
   $types = View::viewsObjectTypes();
@@ -766,8 +766,8 @@ function _views_ui_get_paths($view) {
   else {
     $view->initDisplay();   // Make sure all the handlers are set up
     foreach ($view->display as $display) {
-      if (!empty($display->handler) && $display->handler->has_path()) {
-        $one_path = $display->handler->get_option('path');
+      if (!empty($display->handler) && $display->handler->hasPath()) {
+        $one_path = $display->handler->getOption('path');
         if (empty($path_sort)) {
           $path_sort = strtolower($one_path);
         }

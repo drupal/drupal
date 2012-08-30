@@ -646,7 +646,7 @@ function node_row_node_view_preprocess_node(&$vars) {
   $options = $vars['view']->style_plugin->row_plugin->options;
 
   // Prevent the comment form from showing up if this is not a page display.
-  if ($vars['view_mode'] == 'full' && !$vars['view']->display_handler->has_path()) {
+  if ($vars['view_mode'] == 'full' && !$vars['view']->display_handler->hasPath()) {
     $node->comment = FALSE;
   }
 
@@ -681,9 +681,9 @@ function node_views_analyze($view) {
       if (empty($display->handler)) {
         continue;
       }
-      if (!$display->handler->is_defaulted('access') || !$display->handler->is_defaulted('filters')) {
+      if (!$display->handler->isDefaulted('access') || !$display->handler->isDefaulted('filters')) {
         // check for no access control
-        $access = $display->handler->get_option('access');
+        $access = $display->handler->getOption('access');
         if (empty($access['type']) || $access['type'] == 'none') {
           $select = db_select('role', 'r');
           $select->innerJoin('role_permission', 'p', 'r.rid = p.rid');
@@ -700,7 +700,7 @@ function node_views_analyze($view) {
           if (!($roles['anonymous']->safe && $roles['authenticated']->safe)) {
             $ret[] = Analyzer::formatMessage(t('Some roles lack permission to access content, but display %display has no access control.', array('%display' => $display->display_title)), 'warning');
           }
-          $filters = $display->handler->get_option('filters');
+          $filters = $display->handler->getOption('filters');
           foreach ($filters as $filter) {
             if ($filter['table'] == 'node' && ($filter['field'] == 'status' || $filter['field'] == 'status_extra')) {
               continue 2;
@@ -713,7 +713,7 @@ function node_views_analyze($view) {
   }
   foreach ($view->display as $id => $display) {
     if ($display->display_plugin == 'page') {
-      if ($display->handler->get_option('path') == 'node/%') {
+      if ($display->handler->getOption('path') == 'node/%') {
         $ret[] = Analyzer::formatMessage(t('Display %display has set node/% as path. This will not produce what you want. If you want to have multiple versions of the node view, use panels.', array('%display' => $display->display_title)), 'warning');
       }
     }

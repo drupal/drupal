@@ -27,7 +27,7 @@ class FilterLanguage extends LanguageTestBase {
   public function testFilter() {
     foreach (array('en' => 'John', 'xx-lolspeak' => 'George') as $langcode => $name) {
       $view = $this->getBasicView();
-      $view->display['default']->handler->override_option('filters', array(
+      $view->display['default']->handler->overrideOption('filters', array(
         'langcode' => array(
           'id' => 'langcode',
           'table' => 'views_test',

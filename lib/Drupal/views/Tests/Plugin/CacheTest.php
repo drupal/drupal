@@ -44,7 +44,7 @@ class CacheTest extends PluginTestBase {
 
     // Set up the fields we need.
     $display = $view->new_display('default', 'Master', 'default');
-    $display->override_option('fields', array(
+    $display->overrideOption('fields', array(
       'id' => array(
         'id' => 'id',
         'table' => 'views_test',
@@ -66,7 +66,7 @@ class CacheTest extends PluginTestBase {
     ));
 
     // Set up the sort order.
-    $display->override_option('sorts', array(
+    $display->overrideOption('sorts', array(
       'id' => array(
         'order' => 'ASC',
         'id' => 'id',
@@ -88,7 +88,7 @@ class CacheTest extends PluginTestBase {
     // Create a basic result which just 2 results.
     $view = $this->getBasicView();
     $view->setDisplay();
-    $view->display_handler->override_option('cache', array(
+    $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
       'results_lifespan' => '3600',
       'output_lifespan' => '3600',
@@ -109,7 +109,7 @@ class CacheTest extends PluginTestBase {
     // The Result should be the same as before, because of the caching.
     $view = $this->getBasicView();
     $view->setDisplay();
-    $view->display_handler->override_option('cache', array(
+    $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
       'results_lifespan' => '3600',
       'output_lifespan' => '3600',
@@ -129,7 +129,7 @@ class CacheTest extends PluginTestBase {
     // Create a basic result which just 2 results.
     $view = $this->getBasicView();
     $view->setDisplay();
-    $view->display_handler->override_option('cache', array(
+    $view->display_handler->overrideOption('cache', array(
       'type' => 'none',
     ));
 
@@ -149,7 +149,7 @@ class CacheTest extends PluginTestBase {
     // The Result changes, because the view is not cached.
     $view = $this->getBasicView();
     $view->setDisplay();
-    $view->display_handler->override_option('cache', array(
+    $view->display_handler->overrideOption('cache', array(
       'type' => 'none',
     ));
 
@@ -168,7 +168,7 @@ class CacheTest extends PluginTestBase {
     $view = $this->getBasicView();
     $view->initDisplay();
     $view->name = 'test_cache_header_storage';
-    $view->display_handler->override_option('cache', array(
+    $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
       'output_lifespan' => '3600',
     ));

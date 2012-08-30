@@ -396,7 +396,7 @@ function views_preprocess_node(&$vars) {
 
       // If a node is being rendered in a view, and the view does not have a path,
       // prevent drupal from accidentally setting the $page variable:
-      if ($vars['page'] && $vars['view_mode'] == 'full' && !$vars['view']->display_handler->has_path()) {
+      if ($vars['page'] && $vars['view_mode'] == 'full' && !$vars['view']->display_handler->hasPath()) {
         $vars['page'] = FALSE;
       }
     }
@@ -700,14 +700,14 @@ function views_block_info() {
     foreach ($view->display as $display_id => $display) {
 
       if (isset($display->handler) && !empty($display->handler->definition['uses_hook_block'])) {
-        $result = $display->handler->execute_hook_block_list();
+        $result = $display->handler->executeHookBlockList();
         if (is_array($result)) {
           $items = array_merge($items, $result);
         }
       }
 
-      if (isset($display->handler) && $display->handler->get_option('exposed_block')) {
-        $result = $display->handler->get_special_blocks();
+      if (isset($display->handler) && $display->handler->getOption('exposed_block')) {
+        $result = $display->handler->getSpecialBlocks();
         if (is_array($result)) {
           $items = array_merge($items, $result);
         }
@@ -769,7 +769,7 @@ function views_block_view($delta) {
       if ($view->access($display_id)) {
         $view->setDisplay($display_id);
         if (isset($view->display_handler)) {
-          $output = $view->display_handler->view_special_blocks($type);
+          $output = $view->display_handler->viewSpecialBlocks($type);
           // Before returning the block output, convert it to a renderable
           // array with contextual links.
           views_add_block_contextual_links($output, $view, $display_id, 'special_block_' . $type);
@@ -1546,7 +1546,7 @@ function views_get_applicable_views($type) {
         // This view uses_hook_menu. Clone it so that different handlers
         // don't trip over each other, and add it to the list.
         $v = $view->cloneView();
-        if ($v->setDisplay($id) && $v->display_handler->get_option('enabled')) {
+        if ($v->setDisplay($id) && $v->display_handler->getOption('enabled')) {
           $result[] = array($v, $id);
         }
         // In PHP 4.4.7 and presumably earlier, if we do not unset $v
@@ -2049,7 +2049,7 @@ function views_exposed_form($form, &$form_state) {
     '#id' => drupal_html_id('edit-submit-' . $view->name),
   );
 
-  $form['#action'] = url($view->display_handler->get_url());
+  $form['#action'] = url($view->display_handler->getUrl());
   $form['#theme'] = views_theme_functions('views_exposed_form', $view, $display);
   $form['#id'] = drupal_clean_css_identifier('views_exposed_form-' . check_plain($view->name) . '-' . check_plain($display->id));
 //  $form['#attributes']['class'] = array('views-exposed-form');

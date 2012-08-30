@@ -88,7 +88,7 @@ class InputRequired extends ExposedFormPluginBase {
       $this->display->handler->handlers['empty'] = array(
         'area' => $handler,
       );
-      $this->display->handler->set_option('empty', array('text' => $options));
+      $this->display->handler->setOption('empty', array('text' => $options));
     }
   }
 

@@ -160,7 +160,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
-    $argument_text = $this->view->display_handler->get_argument_text();
+    $argument_text = $this->view->display_handler->getArgumentText();
 
     $form['#pre_render'][] = 'views_ui_pre_render_move_argument_options';
 
@@ -479,7 +479,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       ),
     );
 
-    if ($this->view->display_handler->has_path()) {
+    if ($this->view->display_handler->hasPath()) {
       $defaults['not found']['title'] = t('Show "Page not found"');
     }
 
@@ -851,7 +851,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    */
   function summary_basics($count_field = TRUE) {
     // Add the number of nodes counter
-    $distinct = ($this->view->display_handler->get_option('distinct') && empty($this->query->no_distinct));
+    $distinct = ($this->view->display_handler->getOption('distinct') && empty($this->query->no_distinct));
 
     $count_alias = $this->query->add_field($this->query->base_table, $this->query->base_field, 'num_records', array('count' => TRUE, 'distinct' => $distinct));
     $this->query->add_groupby($this->name_alias);

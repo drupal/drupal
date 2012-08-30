@@ -421,7 +421,7 @@ class View extends ViewStorage {
       // default display. If they are, store them on this display. This way,
       // multiple displays in the same view can share the same filters and
       // remember settings.
-      $display_id = ($this->display_handler->is_defaulted('filters')) ? 'default' : $this->current_display;
+      $display_id = ($this->display_handler->isDefaulted('filters')) ? 'default' : $this->current_display;
 
       if (empty($this->exposed_input) && !empty($_SESSION['views'][$this->name][$display_id])) {
         $this->exposed_input = $_SESSION['views'][$this->name][$display_id];
@@ -555,8 +555,8 @@ class View extends ViewStorage {
     }
 
     if (!isset($this->plugin_name)) {
-      $this->plugin_name = $this->display_handler->get_option('style_plugin');
-      $this->style_options = $this->display_handler->get_option('style_options');
+      $this->plugin_name = $this->display_handler->getOption('style_plugin');
+      $this->style_options = $this->display_handler->getOption('style_options');
     }
 
     $this->style_plugin = views_get_plugin('style', $this->plugin_name);
@@ -593,7 +593,7 @@ class View extends ViewStorage {
 
     // For each relationship we have, make sure we mark the base it provides as
     // available.
-    foreach ($this->display_handler->get_option('relationships') as $id => $options) {
+    foreach ($this->display_handler->getOption('relationships') as $id => $options) {
       $options['table'] = views_move_table($options['table']);
       $data = views_fetch_data($options['table'], FALSE);
       if (isset($data[$options['field']]['relationship']['base'])) {
@@ -606,7 +606,7 @@ class View extends ViewStorage {
 
     $types = View::viewsObjectTypes();
     foreach ($types as $key => $info) {
-      foreach ($this->display_handler->get_option($info['plural']) as $id => $options) {
+      foreach ($this->display_handler->getOption($info['plural']) as $id => $options) {
         $options['table'] = views_move_table($options['table']);
         $data = views_fetch_data($options['table'], FALSE);
 
@@ -644,14 +644,14 @@ class View extends ViewStorage {
           $relationship = $this->add_item($this->current_display, 'relationship', $info['table'], $info['field'], $relationship_options);
         }
         foreach ($handlers as $handler) {
-          $options = $this->display_handler->get_option($types[$handler['type']]['plural']);
+          $options = $this->display_handler->getOption($types[$handler['type']]['plural']);
           if ($relationship) {
             $options[$handler['id']]['relationship'] = $relationship;
           }
           else {
             unset($options[$handler['id']]);
           }
-          $this->display_handler->set_option($types[$handler['type']]['plural'], $options);
+          $this->display_handler->setOption($types[$handler['type']]['plural'], $options);
         }
       }
     }
@@ -678,7 +678,7 @@ class View extends ViewStorage {
    */
   public function initPager() {
     if (!isset($this->pager)) {
-      $this->pager = $this->display_handler->get_plugin('pager');
+      $this->pager = $this->display_handler->getPlugin('pager');
 
       if ($this->pager->use_pager()) {
         $this->pager->set_current_page($this->current_page);
@@ -717,7 +717,7 @@ class View extends ViewStorage {
       '#global' => TRUE,
     );
 
-    foreach ($this->display_handler->get_handlers('relationship') as $handler) {
+    foreach ($this->display_handler->getHandlers('relationship') as $handler) {
       $base_tables[$handler->definition['base']] = TRUE;
     }
     return $base_tables;
@@ -760,7 +760,7 @@ class View extends ViewStorage {
    */
   protected function _initHandler($key, $info) {
     // Load the requested items from the display onto the object.
-    $this->$key = $this->display_handler->get_handlers($key);
+    $this->$key = $this->display_handler->getHandlers($key);
 
     // This reference deals with difficult PHP indirection.
     $handlers = &$this->$key;
@@ -787,7 +787,7 @@ class View extends ViewStorage {
     $position = -1;
 
     // Create a title for use in the breadcrumb trail.
-    $title = $this->display_handler->get_option('title');
+    $title = $this->display_handler->getOption('title');
 
     $this->build_info['breadcrumb'] = array();
     $breadcrumb_args = array();
@@ -831,7 +831,7 @@ class View extends ViewStorage {
         }
         else {
           $arg_title = $argument->get_title();
-          $argument->query($this->display_handler->use_group_by());
+          $argument->query($this->display_handler->useGroupBy());
         }
 
         // Add this argument's substitution
@@ -840,7 +840,7 @@ class View extends ViewStorage {
 
         // Since we're really generating the breadcrumb for the item above us,
         // check the default action of this argument.
-        if ($this->display_handler->uses_breadcrumb() && $argument->uses_breadcrumb()) {
+        if ($this->display_handler->usesBreadcrumb() && $argument->uses_breadcrumb()) {
           $path = $this->getUrl($breadcrumb_args);
           if (strpos($path, '%') === FALSE) {
             if (!empty($argument->options['breadcrumb_enable']) && !empty($argument->options['breadcrumb'])) {
@@ -904,7 +904,7 @@ class View extends ViewStorage {
     }
 
     // Load the options.
-    $query_options = $this->display_handler->get_option('query');
+    $query_options = $this->display_handler->getOption('query');
 
     // Create and initialize the query object.
     $plugin = !empty($views_data['table']['base']['query class']) ? $views_data['table']['base']['query class'] : 'views_query';
@@ -963,8 +963,8 @@ class View extends ViewStorage {
     // Let the handlers interact with each other if they really want.
     $this->_preQuery();
 
-    if ($this->display_handler->uses_exposed()) {
-      $exposed_form = $this->display_handler->get_plugin('exposed_form');
+    if ($this->display_handler->usesExposed()) {
+      $exposed_form = $this->display_handler->getPlugin('exposed_form');
       $this->exposed_widgets = $exposed_form->render_exposed_form();
       if (form_set_error() || !empty($this->build_info['abort'])) {
         $this->built = TRUE;
@@ -979,7 +979,7 @@ class View extends ViewStorage {
 
     // Set the filtering groups.
     if (!empty($this->filter)) {
-      $filter_groups = $this->display_handler->get_option('filter_groups');
+      $filter_groups = $this->display_handler->getOption('filter_groups');
       if ($filter_groups) {
         $this->query->set_group_operator($filter_groups['operator']);
         foreach ($filter_groups['groups'] as $id => $operator) {
@@ -1028,10 +1028,10 @@ class View extends ViewStorage {
     $this->_build('empty');
 
     // Allow display handler to affect the query:
-    $this->display_handler->query($this->display_handler->use_group_by());
+    $this->display_handler->query($this->display_handler->useGroupBy());
 
     // Allow style handler to affect the query:
-    $this->style_plugin->query($this->display_handler->use_group_by());
+    $this->style_plugin->query($this->display_handler->useGroupBy());
 
     // Allow exposed form to affect the query:
     if (isset($exposed_form)) {
@@ -1102,7 +1102,7 @@ class View extends ViewStorage {
             }
           }
           $handlers[$id]->set_relationship();
-          $handlers[$id]->query($this->display_handler->use_group_by());
+          $handlers[$id]->query($this->display_handler->useGroupBy());
         }
       }
     }
@@ -1130,7 +1130,7 @@ class View extends ViewStorage {
     }
 
     // Don't allow to use deactivated displays, but display them on the live preview.
-    if (!$this->display[$this->current_display]->handler->get_option('enabled') && empty($this->live_preview)) {
+    if (!$this->display[$this->current_display]->handler->getOption('enabled') && empty($this->live_preview)) {
       $this->build_info['fail'] = TRUE;
       return FALSE;
     }
@@ -1146,7 +1146,7 @@ class View extends ViewStorage {
       $cache = FALSE;
     }
     else {
-      $cache = $this->display_handler->get_plugin('cache');
+      $cache = $this->display_handler->getPlugin('cache');
     }
     if ($cache && $cache->cache_get('results')) {
       if ($this->pager->use_pager()) {
@@ -1208,7 +1208,7 @@ class View extends ViewStorage {
       $this->startQueryCapture();
     }
 
-    $exposed_form = $this->display_handler->get_plugin('exposed_form');
+    $exposed_form = $this->display_handler->getPlugin('exposed_form');
     $exposed_form->pre_render($this->result);
 
     // Check for already-cached output.
@@ -1216,7 +1216,7 @@ class View extends ViewStorage {
       $cache = FALSE;
     }
     else {
-      $cache = $this->display_handler->get_plugin('cache');
+      $cache = $this->display_handler->getPlugin('cache');
     }
     if ($cache && $cache->cache_get('output')) {
     }
@@ -1398,7 +1398,7 @@ class View extends ViewStorage {
     $this->dom_id = !empty($this->dom_id) ? $this->dom_id : md5($this->name . REQUEST_TIME . rand());
 
     // Allow the display handler to set up for execution
-    $this->display_handler->pre_execute();
+    $this->display_handler->preExecute();
   }
 
   /**
@@ -1431,7 +1431,7 @@ class View extends ViewStorage {
     // Give other displays an opportunity to attach to the view.
     foreach ($this->display as $id => $display) {
       if (!empty($this->display[$id]->handler)) {
-        $this->display[$id]->handler->attach_to($this->current_display);
+        $this->display[$id]->handler->attachTo($this->current_display);
       }
     }
     $this->is_attachment = FALSE;
@@ -1455,7 +1455,7 @@ class View extends ViewStorage {
 
     // Execute the view
     if (isset($this->display_handler)) {
-      return $this->display_handler->execute_hook_menu($callbacks);
+      return $this->display_handler->executeHookMenu($callbacks);
     }
   }
 
@@ -1473,7 +1473,7 @@ class View extends ViewStorage {
 
     // Execute the view
     if (isset($this->display_handler)) {
-      return $this->display_handler->execute_hook_block_list();
+      return $this->display_handler->executeHookBlockList();
     }
   }
 
@@ -1548,7 +1548,7 @@ class View extends ViewStorage {
       $title = $this->build_info['title'];
     }
     else {
-      $title = $this->display_handler->get_option('title');
+      $title = $this->display_handler->getOption('title');
     }
 
     // Allow substitutions from the first row.
@@ -1677,7 +1677,7 @@ class View extends ViewStorage {
         return FALSE;
       }
     }
-    return $this->display_handler->get_path();
+    return $this->display_handler->getPath();
   }
 
   /**

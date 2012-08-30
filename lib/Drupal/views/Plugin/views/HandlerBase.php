@@ -99,7 +99,7 @@ abstract class HandlerBase extends PluginBase {
     if (isset($types[$this->plugin_type]['plural'])) {
       $plural = $types[$this->plugin_type]['plural'];
     }
-    if ($this->view->display_handler->is_defaulted($plural)) {
+    if ($this->view->display_handler->isDefaulted($plural)) {
       $display_id = 'default';
     }
 
@@ -178,7 +178,7 @@ abstract class HandlerBase extends PluginBase {
     }
 
     // If grouping, check to see if the aggregation method needs to modify the field.
-    if ($this->view->display_handler->use_group_by()) {
+    if ($this->view->display_handler->useGroupBy()) {
       $this->view->initQuery();
       if ($this->query) {
         $info = $this->query->get_aggregation_info();

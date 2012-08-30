@@ -390,7 +390,7 @@ abstract class ViewTestBase extends WebTestBase {
 
     // Set up the fields we need.
     $display = $view->new_display('default', 'Master', 'default');
-    $display->override_option('fields', array(
+    $display->overrideOption('fields', array(
       'id' => array(
         'id' => 'id',
         'table' => 'views_test',
@@ -412,7 +412,7 @@ abstract class ViewTestBase extends WebTestBase {
     ));
 
     // Set up the sort order.
-    $display->override_option('sorts', array(
+    $display->overrideOption('sorts', array(
       'id' => array(
         'order' => 'ASC',
         'id' => 'id',
@@ -423,7 +423,7 @@ abstract class ViewTestBase extends WebTestBase {
     ));
 
     // Set up the pager.
-    $display->override_option('pager', array(
+    $display->overrideOption('pager', array(
       'type' => 'none',
       'options' => array('offset' => 0),
     ));

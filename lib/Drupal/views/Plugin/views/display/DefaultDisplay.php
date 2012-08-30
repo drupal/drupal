@@ -36,7 +36,7 @@ class DefaultDisplay extends DisplayPluginBase {
    * Determine if this display is the 'default' display which contains
    * fallback settings
    */
-  function is_default_display() { return TRUE; }
+  public function isDefaultDisplay() { return TRUE; }
 
   /**
    * The default execute handler fully renders the view.
@@ -72,7 +72,7 @@ class DefaultDisplay extends DisplayPluginBase {
    * as setting page titles, breadcrumbs, and generating exposed filter
    * data if necessary.
    */
-  function execute() {
+  public function execute() {
     return $this->view->render($this->display->id);
   }
 

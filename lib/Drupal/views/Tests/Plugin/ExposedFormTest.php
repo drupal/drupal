@@ -45,10 +45,10 @@ class ExposedFormTest extends PluginTestBase {
     $view = views_get_view('test_rename_reset_button');
     $view->setDisplay('default');
 
-    $exposed_form = $view->display_handler->get_option('exposed_form');
+    $exposed_form = $view->display_handler->getOption('exposed_form');
     $exposed_form['options']['reset_button_label'] = $expected_label = $this->randomName();
     $exposed_form['options']['reset_button'] = TRUE;
-    $view->display_handler->set_option('exposed_form', $exposed_form);
+    $view->display_handler->setOption('exposed_form', $exposed_form);
     $view->save();
 
     views_invalidate_cache();

@@ -64,7 +64,7 @@ abstract class CachePluginBase extends PluginBase {
     $this->display = &$display;
 
     if (is_object($display->handler)) {
-      $options = $display->handler->get_option('cache');
+      $options = $display->handler->getOption('cache');
       // Overlay incoming options on top of defaults
       $this->unpack_options($this->options, $options);
     }
@@ -274,7 +274,7 @@ abstract class CachePluginBase extends PluginBase {
 
       $build_info = $this->view->build_info;
 
-      $query_plugin = $this->view->display_handler->get_plugin('query');
+      $query_plugin = $this->view->display_handler->getPlugin('query');
 
       foreach (array('query', 'count_query') as $index) {
         // If the default query back-end is used generate SQL query strings from

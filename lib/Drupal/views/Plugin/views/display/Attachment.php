@@ -49,11 +49,11 @@ class Attachment extends DisplayPluginBase {
     return $options;
   }
 
-  function execute() {
+  public function execute() {
     return $this->view->render($this->display->id);
   }
 
-  function attachment_positions($position = NULL) {
+  public function attachmentPositions($position = NULL) {
     $positions = array(
       'before' => t('Before'),
       'after' => t('After'),
@@ -72,9 +72,9 @@ class Attachment extends DisplayPluginBase {
    *
    * This output is returned as an array.
    */
-  function options_summary(&$categories, &$options) {
+  public function optionsSummary(&$categories, &$options) {
     // It is very important to call the parent function here:
-    parent::options_summary($categories, $options);
+    parent::optionsSummary($categories, $options);
 
     $categories['attachment'] = array(
       'title' => t('Attachment settings'),
@@ -84,7 +84,7 @@ class Attachment extends DisplayPluginBase {
       ),
     );
 
-    $displays = array_filter($this->get_option('displays'));
+    $displays = array_filter($this->getOption('displays'));
     if (count($displays) > 1) {
       $attach_to = t('Multiple displays');
     }
@@ -108,31 +108,31 @@ class Attachment extends DisplayPluginBase {
     $options['attachment_position'] = array(
       'category' => 'attachment',
       'title' => t('Attachment position'),
-      'value' => $this->attachment_positions($this->get_option('attachment_position')),
+      'value' => $this->attachmentPositions($this->getOption('attachment_position')),
     );
 
     $options['inherit_arguments'] = array(
       'category' => 'attachment',
       'title' => t('Inherit contextual filters'),
-      'value' => $this->get_option('inherit_arguments') ? t('Yes') : t('No'),
+      'value' => $this->getOption('inherit_arguments') ? t('Yes') : t('No'),
     );
 
     $options['inherit_exposed_filters'] = array(
       'category' => 'attachment',
       'title' => t('Inherit exposed filters'),
-      'value' => $this->get_option('inherit_exposed_filters') ? t('Yes') : t('No'),
+      'value' => $this->getOption('inherit_exposed_filters') ? t('Yes') : t('No'),
     );
 
     $options['inherit_pager'] = array(
       'category' => 'pager',
       'title' => t('Inherit pager'),
-      'value' => $this->get_option('inherit_pager') ? t('Yes') : t('No'),
+      'value' => $this->getOption('inherit_pager') ? t('Yes') : t('No'),
     );
 
     $options['render_pager'] = array(
       'category' => 'pager',
       'title' => t('Render pager'),
-      'value' => $this->get_option('render_pager') ? t('Yes') : t('No'),
+      'value' => $this->getOption('render_pager') ? t('Yes') : t('No'),
     );
 
   }
@@ -140,7 +140,7 @@ class Attachment extends DisplayPluginBase {
   /**
    * Provide the default form for setting options.
    */
-  function options_form(&$form, &$form_state) {
+  public function options_form(&$form, &$form_state) {
     // It is very important to call the parent function here:
     parent::options_form($form, $form_state);
 
@@ -151,7 +151,7 @@ class Attachment extends DisplayPluginBase {
           '#type' => 'checkbox',
           '#title' => t('Inherit'),
           '#description' => t('Should this display inherit its contextual filter values from the parent display to which it is attached?'),
-          '#default_value' => $this->get_option('inherit_arguments'),
+          '#default_value' => $this->getOption('inherit_arguments'),
         );
         break;
       case 'inherit_exposed_filters':
@@ -160,7 +160,7 @@ class Attachment extends DisplayPluginBase {
           '#type' => 'checkbox',
           '#title' => t('Inherit'),
           '#description' => t('Should this display inherit its exposed filter values from the parent display to which it is attached?'),
-          '#default_value' => $this->get_option('inherit_exposed_filters'),
+          '#default_value' => $this->getOption('inherit_exposed_filters'),
         );
         break;
       case 'inherit_pager':
@@ -169,7 +169,7 @@ class Attachment extends DisplayPluginBase {
           '#type' => 'checkbox',
           '#title' => t('Inherit'),
           '#description' => t('Should this display inherit its paging values from the parent display to which it is attached?'),
-          '#default_value' => $this->get_option('inherit_pager'),
+          '#default_value' => $this->getOption('inherit_pager'),
         );
         break;
       case 'render_pager':
@@ -178,7 +178,7 @@ class Attachment extends DisplayPluginBase {
           '#type' => 'checkbox',
           '#title' => t('Render'),
           '#description' => t('Should this display render the pager values? This is only meaningful if inheriting a pager.'),
-          '#default_value' => $this->get_option('render_pager'),
+          '#default_value' => $this->getOption('render_pager'),
         );
         break;
       case 'attachment_position':
@@ -186,8 +186,8 @@ class Attachment extends DisplayPluginBase {
         $form['attachment_position'] = array(
           '#type' => 'radios',
           '#description' => t('Attach before or after the parent display?'),
-          '#options' => $this->attachment_positions(),
-          '#default_value' => $this->get_option('attachment_position'),
+          '#options' => $this->attachmentPositions(),
+          '#default_value' => $this->getOption('attachment_position'),
         );
         break;
       case 'displays':
@@ -202,7 +202,7 @@ class Attachment extends DisplayPluginBase {
           '#type' => 'checkboxes',
           '#description' => t('Select which display or displays this should attach to.'),
           '#options' => $displays,
-          '#default_value' => $this->get_option('displays'),
+          '#default_value' => $this->getOption('displays'),
         );
         break;
     }
@@ -212,7 +212,7 @@ class Attachment extends DisplayPluginBase {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  function options_submit(&$form, &$form_state) {
+  public function options_submit(&$form, &$form_state) {
     // It is very important to call the parent function here:
     parent::options_submit($form, $form_state);
     switch ($form_state['section']) {
@@ -222,7 +222,7 @@ class Attachment extends DisplayPluginBase {
       case 'inherit_exposed_filters':
       case 'attachment_position':
       case 'displays':
-        $this->set_option($form_state['section'], $form_state['values'][$form_state['section']]);
+        $this->setOption($form_state['section'], $form_state['values'][$form_state['section']]);
         break;
     }
   }
@@ -230,8 +230,8 @@ class Attachment extends DisplayPluginBase {
   /**
    * Attach to another view.
    */
-  function attach_to($display_id) {
-    $displays = $this->get_option('displays');
+  public function attachTo($display_id) {
+    $displays = $this->getOption('displays');
 
     if (empty($displays[$display_id])) {
       return;
@@ -246,17 +246,17 @@ class Attachment extends DisplayPluginBase {
     $view = $this->view->cloneView();
     $view->original_args = $view->args;
 
-    $args = $this->get_option('inherit_arguments') ? $this->view->args : array();
+    $args = $this->getOption('inherit_arguments') ? $this->view->args : array();
     $view->setArguments($args);
     $view->setDisplay($this->display->id);
-    if ($this->get_option('inherit_pager')) {
+    if ($this->getOption('inherit_pager')) {
       $view->display_handler->usesPager = $this->view->display[$display_id]->handler->usesPager();
-      $view->display_handler->set_option('pager', $this->view->display[$display_id]->handler->get_option('pager'));
+      $view->display_handler->setOption('pager', $this->view->display[$display_id]->handler->getOption('pager'));
     }
 
     $attachment = $view->executeDisplay($this->display->id, $args);
 
-    switch ($this->get_option('attachment_position')) {
+    switch ($this->getOption('attachment_position')) {
       case 'before':
         $this->view->attachment_before .= $attachment;
         break;
@@ -277,8 +277,8 @@ class Attachment extends DisplayPluginBase {
    * they are set to inherit the exposed filter settings
    * of their parent display.
    */
-  function uses_exposed() {
-    if (!empty($this->options['inherit_exposed_filters']) && parent::uses_exposed()) {
+  public function usesExposed() {
+    if (!empty($this->options['inherit_exposed_filters']) && parent::usesExposed()) {
       return TRUE;
     }
     return FALSE;
@@ -289,12 +289,12 @@ class Attachment extends DisplayPluginBase {
    * settings from its parent display, then don't render and
    * display a second set of exposed filter widgets.
    */
-  function displays_exposed() {
+  public function displaysExposed() {
     return $this->options['inherit_exposed_filters'] ? FALSE : TRUE;
   }
 
-  function render_pager() {
-    return $this->usesPager() && $this->get_option('render_pager');
+  public function renderPager() {
+    return $this->usesPager() && $this->getOption('render_pager');
   }
 
 }

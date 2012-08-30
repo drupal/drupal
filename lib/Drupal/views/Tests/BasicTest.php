@@ -50,7 +50,7 @@ class BasicTest extends ViewTestBase {
     $view = $this->getBasicView();
 
     // Add a filter.
-    $view->display['default']->handler->override_option('filters', array(
+    $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'operator' => '<',
         'value' => array(
@@ -108,7 +108,7 @@ class BasicTest extends ViewTestBase {
     $view = $this->getBasicView();
 
     // Add a argument.
-    $view->display['default']->handler->override_option('arguments', array(
+    $view->display['default']->handler->overrideOption('arguments', array(
       'age' => array(
         'default_action' => 'ignore',
         'style_plugin' => 'default_summary',

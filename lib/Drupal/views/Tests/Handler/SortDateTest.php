@@ -157,7 +157,7 @@ class SortDateTest extends HandlerTestBase {
         $view = $this->getBasicView();
 
         // Change the fields.
-        $view->display['default']->handler->override_option('fields', array(
+        $view->display['default']->handler->overrideOption('fields', array(
           'name' => array(
             'id' => 'name',
             'table' => 'views_test',
@@ -173,7 +173,7 @@ class SortDateTest extends HandlerTestBase {
         ));
 
         // Change the ordering
-        $view->display['default']->handler->override_option('sorts', array(
+        $view->display['default']->handler->overrideOption('sorts', array(
           'created' => array(
             'id' => 'created',
             'table' => 'views_test',

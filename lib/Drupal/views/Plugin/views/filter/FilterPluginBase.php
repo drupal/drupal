@@ -99,7 +99,7 @@ abstract class FilterPluginBase extends HandlerBase {
     // If there are relationships in the view, allow empty should be true
     // so that we can do IS NULL checks on items. Not all filters respect
     // allow empty, but string and numeric do and that covers enough.
-    if ($this->view->display_handler->get_option('relationships')) {
+    if ($this->view->display_handler->getOption('relationships')) {
       $this->definition['allow empty'] = TRUE;
     }
   }
@@ -583,7 +583,7 @@ abstract class FilterPluginBase extends HandlerBase {
       form_error($form['expose']['identifier'], t('This identifier is not allowed.'));
     }
 
-    if (!$this->view->display_handler->is_identifier_unique($form_state['id'], $form_state['values']['options']['expose']['identifier'])) {
+    if (!$this->view->display_handler->isIdentifierUnique($form_state['id'], $form_state['values']['options']['expose']['identifier'])) {
       form_error($form['expose']['identifier'], t('This identifier is used by another handler.'));
     }
   }
@@ -601,7 +601,7 @@ abstract class FilterPluginBase extends HandlerBase {
         form_error($form['group_info']['identifier'], t('This identifier is not allowed.'));
       }
 
-      if (!$this->view->display_handler->is_identifier_unique($form_state['id'], $form_state['values']['options']['group_info']['identifier'])) {
+      if (!$this->view->display_handler->isIdentifierUnique($form_state['id'], $form_state['values']['options']['group_info']['identifier'])) {
         form_error($form['group_info']['identifier'], t('This identifier is used by another handler.'));
       }
     }
@@ -1236,7 +1236,7 @@ abstract class FilterPluginBase extends HandlerBase {
 
     // Figure out which display id is responsible for the filters, so we
     // know where to look for session stored values.
-    $display_id = ($this->view->display_handler->is_defaulted('filters')) ? 'default' : $this->view->current_display;
+    $display_id = ($this->view->display_handler->isDefaulted('filters')) ? 'default' : $this->view->current_display;
 
     // false means that we got a setting that means to recuse ourselves,
     // so we should erase whatever happened to be there.
@@ -1327,7 +1327,7 @@ abstract class FilterPluginBase extends HandlerBase {
 
     // Figure out which display id is responsible for the filters, so we
     // know where to look for session stored values.
-    $display_id = ($this->view->display_handler->is_defaulted('filters')) ? 'default' : $this->view->current_display;
+    $display_id = ($this->view->display_handler->isDefaulted('filters')) ? 'default' : $this->view->current_display;
 
     // shortcut test.
     $operator = !empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id']);

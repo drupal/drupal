@@ -49,7 +49,7 @@ class FilterCombineTest extends HandlerTestBase {
     $view = $this->getBasicView();
 
     // Change the filtering.
-    $view->display['default']->handler->override_option('filters', array(
+    $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'id' => 'combine',
         'table' => 'views',

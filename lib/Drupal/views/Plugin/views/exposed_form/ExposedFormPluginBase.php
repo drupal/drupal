@@ -152,7 +152,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     // Some types of displays (eg. attachments) may wish to use the exposed
     // filters of their parent displays instead of showing an additional
     // exposed filter form for the attachment as well as that for the parent.
-    if (!$this->view->display_handler->displays_exposed() || (!$block && $this->view->display_handler->get_option('exposed_block'))) {
+    if (!$this->view->display_handler->displaysExposed() || (!$block && $this->view->display_handler->getOption('exposed_block'))) {
       unset($form_state['rerender']);
     }
 
@@ -164,7 +164,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     $form = drupal_build_form('views_exposed_form', $form_state);
     $output = drupal_render($form);
 
-    if (!$this->view->display_handler->displays_exposed() || (!$block && $this->view->display_handler->get_option('exposed_block'))) {
+    if (!$this->view->display_handler->displaysExposed() || (!$block && $this->view->display_handler->getOption('exposed_block'))) {
       return "";
     }
     else {
@@ -257,7 +257,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
       }
     }
 
-    $pager = $this->view->display_handler->get_plugin('pager');
+    $pager = $this->view->display_handler->getPlugin('pager');
     if ($pager) {
       $pager->exposed_form_alter($form, $form_state);
       $form_state['pager_plugin'] = $pager;
@@ -311,7 +311,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     // default display. If they are, store them on this display. This way,
     // multiple displays in the same view can share the same filters and
     // remember settings.
-    $display_id = ($this->view->display_handler->is_defaulted('filters')) ? 'default' : $this->view->current_display;
+    $display_id = ($this->view->display_handler->isDefaulted('filters')) ? 'default' : $this->view->current_display;
 
     if (isset($_SESSION['views'][$this->view->name][$display_id])) {
       unset($_SESSION['views'][$this->view->name][$display_id]);

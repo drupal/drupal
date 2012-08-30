@@ -35,7 +35,7 @@ abstract class AccessPluginBase extends PluginBase {
     $this->display = &$display;
 
     if (is_object($display->handler)) {
-      $options = $display->handler->get_option('access');
+      $options = $display->handler->getOption('access');
       // Overlay incoming options on top of defaults
       $this->unpack_options($this->options, $options);
     }

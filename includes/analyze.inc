@@ -27,7 +27,7 @@ function views_ui_views_analyze($view) {
     if (empty($display->handler)) {
       continue;
     }
-    if ($display->handler->has_path() && $path = $display->handler->get_option('path')) {
+    if ($display->handler->hasPath() && $path = $display->handler->getOption('path')) {
       $normal_path = drupal_get_normal_path($path);
       if ($path != $normal_path) {
         $ret[] = Analyzer::formatMessage(t('You have configured display %display with a path which is an path alias as well. This might lead to unwanted effects so better use an internal path.', array('%display' => $display->display_title)), 'warning');

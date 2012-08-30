@@ -220,7 +220,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
     $types = View::viewsObjectTypes();
     $this->setDisplay($display_id);
 
-    $fields = $this->display[$display_id]->handler->get_option($types[$type]['plural']);
+    $fields = $this->display[$display_id]->handler->getOption($types[$type]['plural']);
 
     if (empty($id)) {
       $id = $this->generate_item_id($field, $fields);
@@ -238,7 +238,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
       'field' => $field,
     ) + $options;
 
-    $this->display[$display_id]->handler->set_option($types[$type]['plural'], $fields);
+    $this->display[$display_id]->handler->setOption($types[$type]['plural'], $fields);
 
     return $id;
   }
@@ -264,7 +264,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
 
     // Get info about the types so we can get the right data.
     $types = View::viewsObjectTypes();
-    return $this->display[$display_id]->handler->get_option($types[$type]['plural']);
+    return $this->display[$display_id]->handler->getOption($types[$type]['plural']);
   }
 
   /**
@@ -288,7 +288,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
     $this->setDisplay($display_id);
 
     // Get the existing configuration
-    $fields = $this->display[$display_id]->handler->get_option($types[$type]['plural']);
+    $fields = $this->display[$display_id]->handler->getOption($types[$type]['plural']);
 
     return isset($fields[$id]) ? $fields[$id] : NULL;
   }
@@ -314,7 +314,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
     $this->setDisplay($display_id);
 
     // Get the existing configuration.
-    $fields = $this->display[$display_id]->handler->get_option($types[$type]['plural']);
+    $fields = $this->display[$display_id]->handler->getOption($types[$type]['plural']);
     if (isset($item)) {
       $fields[$id] = $item;
     }
@@ -323,7 +323,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
     }
 
     // Store.
-    $this->display[$display_id]->handler->set_option($types[$type]['plural'], $fields);
+    $this->display[$display_id]->handler->setOption($types[$type]['plural'], $fields);
   }
 
   /**

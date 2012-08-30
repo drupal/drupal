@@ -143,7 +143,7 @@ class PagerTest extends PluginTestBase {
         'offset' => 3,
       ),
     );
-    $view->display_handler->set_option('pager', $pager);
+    $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
 
     $this->assertEqual(count($view->result), 8, 'Make sure that every item beside the first three is returned in the result');
@@ -221,7 +221,7 @@ class PagerTest extends PluginTestBase {
         'items_per_page' => 5,
       ),
     );
-    $view->display_handler->set_option('pager', $pager);
+    $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
     $this->assertEqual(count($view->result), 3, 'Make sure that only a certain count of items is returned');
 
@@ -280,7 +280,7 @@ class PagerTest extends PluginTestBase {
         'items_per_page' => 5,
       ),
     );
-    $view->display_handler->set_option('pager', $pager);
+    $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
     $this->assertEqual(count($view->result), 3, 'Make sure that only a certain count of items is returned');
 
@@ -308,7 +308,7 @@ class PagerTest extends PluginTestBase {
       ),
     );
 
-    $view->display_handler->set_option('pager', $pager);
+    $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
     $this->assertEqual($view->pager->get_items_per_page(), 0);
     $this->assertEqual(count($view->result), 11);

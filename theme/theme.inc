@@ -61,7 +61,7 @@ function template_preprocess_views_view(&$vars) {
   $vars['attributes']['class'][] = 'view-id-' . $vars['name'];
   $vars['attributes']['class'][] = 'view-display-id-' . $vars['display_id'];
 
-  $css_class = $view->display_handler->get_option('css_class');
+  $css_class = $view->display_handler->getOption('css_class');
   if (!empty($css_class)) {
     $vars['css_class'] = preg_replace('/[^a-zA-Z0-9- ]/', '-', $css_class);
     $vars['attributes']['class'][] = $vars['css_class'];
@@ -69,14 +69,14 @@ function template_preprocess_views_view(&$vars) {
 
   $empty = empty($vars['rows']);
 
-  $vars['header'] = $view->display_handler->render_area('header', $empty);
-  $vars['footer'] = $view->display_handler->render_area('footer', $empty);
+  $vars['header'] = $view->display_handler->renderArea('header', $empty);
+  $vars['footer'] = $view->display_handler->renderArea('footer', $empty);
   if ($empty) {
-    $vars['empty'] = $view->display_handler->render_area('empty', $empty);
+    $vars['empty'] = $view->display_handler->renderArea('empty', $empty);
   }
 
   $vars['exposed']    = !empty($view->exposed_widgets) ? $view->exposed_widgets : '';
-  $vars['more']       = $view->display_handler->render_more_link();
+  $vars['more']       = $view->display_handler->renderMoreLink();
   $vars['feed_icon']  = !empty($view->feed_icon) ? $view->feed_icon : '';
 
   $vars['pager']      = '';
@@ -85,7 +85,7 @@ function template_preprocess_views_view(&$vars) {
   // Render title for the admin preview.
   $vars['title'] = !empty($view->views_ui_context) ? filter_xss_admin($view->getTitle()) : '';
 
-  if ($view->display_handler->render_pager()) {
+  if ($view->display_handler->renderPager()) {
     $exposed_input = isset($view->exposed_raw_input) ? $view->exposed_raw_input : NULL;
     $vars['pager'] = $view->renderPager($exposed_input);
   }
@@ -633,7 +633,7 @@ function template_preprocess_views_view_table(&$vars) {
 
   $vars['attributes']['class'] = array('views-table');
   if (empty($vars['rows']) && !empty($options['empty_table'])) {
-    $vars['rows'][0][0] = $view->display_handler->render_area('empty');
+    $vars['rows'][0][0] = $view->display_handler->renderArea('empty');
     // Calculate the amounts of rows with output.
     $vars['field_attributes'][0][0]['colspan'] = count($vars['header']);
     $vars['field_classes'][0][0] = 'views-empty';
@@ -852,7 +852,7 @@ function template_preprocess_views_view_rss(&$vars) {
   // escaped source data (such as &amp becoming &amp;amp;).
   $vars['description'] = check_plain(decode_entities(strip_tags($style->get_description())));
 
-  if ($view->display_handler->get_option('sitename_title')) {
+  if ($view->display_handler->getOption('sitename_title')) {
     $title = $config->get('name');
     if ($slogan = $config->get('slogan')) {
       $title .= ' - ' . $slogan;
@@ -865,9 +865,9 @@ function template_preprocess_views_view_rss(&$vars) {
 
   // Figure out which display which has a path we're using for this feed. If there isn't
   // one, use the global $base_url
-  $link_display_id = $view->display_handler->get_link_display();
+  $link_display_id = $view->display_handler->getLinkDisplay();
   if ($link_display_id && !empty($view->display[$link_display_id])) {
-    $path = $view->display[$link_display_id]->handler->get_path();
+    $path = $view->display[$link_display_id]->handler->getPath();
   }
 
   if ($path) {

@@ -30,7 +30,7 @@ class ContextualLinks extends FieldPluginBase {
   }
 
   function options_form(&$form, &$form_state) {
-    $all_fields = $this->view->display_handler->get_field_labels();
+    $all_fields = $this->view->display_handler->getFieldLabels();
     // Offer to include only those fields that follow this one.
     $field_options = array_slice($all_fields, 0, array_search($this->options['id'], array_keys($all_fields)));
     $form['fields'] = array(

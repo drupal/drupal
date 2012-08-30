@@ -618,7 +618,7 @@ abstract class WizardPluginBase implements WizardInterface {
     // Display: Master
     $default_display = $view->new_display('default', 'Master', 'default');
     foreach ($display_options['default'] as $option => $value) {
-      $default_display->set_option($option, $value);
+      $default_display->setOption($option, $value);
     }
 
     // Display: Page
@@ -896,12 +896,12 @@ abstract class WizardPluginBase implements WizardInterface {
     foreach ($options as $option => $value) {
       // If the default display supports this option, set the value there.
       // Otherwise, set it on the provided display.
-      $default_value = $default_display->get_option($option);
+      $default_value = $default_display->getOption($option);
       if (isset($default_value)) {
-        $default_display->set_option($option, $value);
+        $default_display->setOption($option, $value);
       }
       else {
-        $display->set_option($option, $value);
+        $display->setOption($option, $value);
       }
     }
   }
@@ -932,12 +932,12 @@ abstract class WizardPluginBase implements WizardInterface {
     foreach ($options as $option => $value) {
       // Only override the default value if it is different from the value that
       // was provided.
-      $default_value = $default_display->get_option($option);
+      $default_value = $default_display->getOption($option);
       if (!isset($default_value)) {
-        $display->set_option($option, $value);
+        $display->setOption($option, $value);
       }
       elseif ($default_value !== $value) {
-        $display->override_option($option, $value);
+        $display->overrideOption($option, $value);
       }
     }
   }

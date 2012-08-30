@@ -46,7 +46,7 @@ class RssFields extends RowPluginBase {
     parent::options_form($form, $form_state);
 
     $initial_labels = array('' => t('- None -'));
-    $view_fields_labels = $this->display->handler->get_field_labels();
+    $view_fields_labels = $this->display->handler->getFieldLabels();
     $view_fields_labels = array_merge($initial_labels, $view_fields_labels);
 
     $form['title_field'] = array(

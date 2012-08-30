@@ -30,9 +30,9 @@ class DisplayTest extends PluginTestBase {
     $view->initDisplay();
 
     // mark is as overridden, yes FALSE, means overridden.
-    $view->display['page']->handler->set_override('filter_groups', FALSE);
-    $this->assertFalse($view->display['page']->handler->is_defaulted('filter_groups'), "Take sure that 'filter_groups' is marked as overridden.");
-    $this->assertFalse($view->display['page']->handler->is_defaulted('filters'), "Take sure that 'filters'' is marked as overridden.");
+    $view->display['page']->handler->setOverride('filter_groups', FALSE);
+    $this->assertFalse($view->display['page']->handler->isDefaulted('filter_groups'), "Take sure that 'filter_groups' is marked as overridden.");
+    $this->assertFalse($view->display['page']->handler->isDefaulted('filters'), "Take sure that 'filters'' is marked as overridden.");
   }
 
   /**

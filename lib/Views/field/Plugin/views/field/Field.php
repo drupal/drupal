@@ -120,7 +120,7 @@ class Field extends FieldPluginBase {
       // base table of the view is the base table of the current field.
       // For example a field from a node author on a node view does have users as base table.
       if (!empty($this->options['relationship']) && $this->options['relationship'] != 'none') {
-        $relationships = $this->view->display_handler->get_option('relationships');
+        $relationships = $this->view->display_handler->getOption('relationships');
         if (!empty($relationships[$this->options['relationship']])) {
           $options = $relationships[$this->options['relationship']];
           $data = views_fetch_data($options['table']);

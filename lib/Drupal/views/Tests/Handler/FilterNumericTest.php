@@ -45,7 +45,7 @@ class FilterNumericTest extends HandlerTestBase {
     $view = $this->getBasicView();
 
     // Change the filtering
-    $view->display['default']->handler->override_option('filters', array(
+    $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
         'table' => 'views_test',
@@ -73,7 +73,7 @@ class FilterNumericTest extends HandlerTestBase {
     // Filter: Age, Operator: =, Value: 28
     $filters['age']['group_info']['default_group'] = 1;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->override_option('filters', $filters);
+    $view->display['page_1']->handler->overrideOption('filters', $filters);
 
     $this->executeView($view);
     $resultset = array(
@@ -89,7 +89,7 @@ class FilterNumericTest extends HandlerTestBase {
     $view = $this->getBasicView();
 
     // Change the filtering
-    $view->display['default']->handler->override_option('filters', array(
+    $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
         'table' => 'views_test',
@@ -125,7 +125,7 @@ class FilterNumericTest extends HandlerTestBase {
     $view = $this->getBasicView();
 
       // Change the filtering
-    $view->display['default']->handler->override_option('filters', array(
+    $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
         'table' => 'views_test',
@@ -164,7 +164,7 @@ class FilterNumericTest extends HandlerTestBase {
     // Filter: Age, Operator: between, Value: 26 and 29
     $filters['age']['group_info']['default_group'] = 2;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->override_option('filters', $filters);
+    $view->display['page_1']->handler->overrideOption('filters', $filters);
 
 
     $this->executeView($view);
@@ -192,7 +192,7 @@ class FilterNumericTest extends HandlerTestBase {
     // Filter: Age, Operator: between, Value: 26 and 29
     $filters['age']['group_info']['default_group'] = 3;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->override_option('filters', $filters);
+    $view->display['page_1']->handler->overrideOption('filters', $filters);
 
 
     $this->executeView($view);
@@ -218,7 +218,7 @@ class FilterNumericTest extends HandlerTestBase {
     $view = $this->getBasicView();
 
     // Change the filtering
-    $view->display['default']->handler->override_option('filters', array(
+    $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
         'table' => 'views_test',
@@ -237,7 +237,7 @@ class FilterNumericTest extends HandlerTestBase {
     $view = $this->getBasicView();
 
     // Change the filtering
-    $view->display['default']->handler->override_option('filters', array(
+    $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
         'table' => 'views_test',
@@ -281,7 +281,7 @@ class FilterNumericTest extends HandlerTestBase {
     // Filter: Age, Operator: empty, Value:
     $filters['age']['group_info']['default_group'] = 4;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->override_option('filters', $filters);
+    $view->display['page_1']->handler->overrideOption('filters', $filters);
 
 
     $this->executeView($view);
@@ -297,7 +297,7 @@ class FilterNumericTest extends HandlerTestBase {
     // Filter: Age, Operator: empty, Value:
     $filters['age']['group_info']['default_group'] = 5;
     $view->setDisplay('page_1');
-    $view->display['page_1']->handler->override_option('filters', $filters);
+    $view->display['page_1']->handler->overrideOption('filters', $filters);
 
 
     $this->executeView($view);
@@ -330,7 +330,7 @@ class FilterNumericTest extends HandlerTestBase {
   public function testAllowEmpty() {
     $view = $this->getBasicView();
 
-    $view->display['default']->handler->override_option('filters', array(
+    $view->display['default']->handler->overrideOption('filters', array(
       'id' => array(
         'id' => 'id',
         'table' => 'views_test',

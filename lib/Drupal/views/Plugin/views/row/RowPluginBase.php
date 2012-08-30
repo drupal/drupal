@@ -46,7 +46,7 @@ abstract class RowPluginBase extends PluginBase {
     $this->display = &$display;
 
     // Overlay incoming options on top of defaults
-    $this->unpack_options($this->options, isset($options) ? $options : $display->handler->get_option('row_options'));
+    $this->unpack_options($this->options, isset($options) ? $options : $display->handler->getOption('row_options'));
   }
 
   /**
@@ -78,7 +78,7 @@ abstract class RowPluginBase extends PluginBase {
 
       // A whole bunch of code to figure out what relationships are valid for
       // this item.
-      $relationships = $view->display_handler->get_option('relationships');
+      $relationships = $view->display_handler->getOption('relationships');
       $relationship_options = array();
 
       foreach ($relationships as $relationship) {

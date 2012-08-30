@@ -32,9 +32,9 @@ class Score extends Numeric {
   }
 
   function options_form(&$form, &$form_state) {
-    $style_options = $this->view->display_handler->get_option('style_options');
+    $style_options = $this->view->display_handler->getOption('style_options');
     if (isset($style_options['default']) && $style_options['default'] == $this->options['id']) {
-      $handlers = $this->view->display_handler->get_handlers('field');
+      $handlers = $this->view->display_handler->getHandlers('field');
       $options = array('' => t('No alternate'));
       foreach ($handlers as $id => $handler) {
         $options[$id] = $handler->ui_name();

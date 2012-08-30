@@ -240,7 +240,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
     // If view is an attachment and is inheriting exposed filters, then assume
     // exposed input has already been validated
-    if (!empty($this->view->is_attachment) && $this->view->display_handler->uses_exposed()) {
+    if (!empty($this->view->is_attachment) && $this->view->display_handler->usesExposed()) {
       $this->validated_exposed_input = (array) $this->view->exposed_raw_input[$this->options['expose']['identifier']];
     }
 

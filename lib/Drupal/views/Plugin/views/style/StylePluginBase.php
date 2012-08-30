@@ -94,10 +94,10 @@ abstract class StylePluginBase extends PluginBase {
     $this->display = &$display;
 
     // Overlay incoming options on top of defaults
-    $this->unpack_options($this->options, isset($options) ? $options : $display->handler->get_option('style_options'));
+    $this->unpack_options($this->options, isset($options) ? $options : $display->handler->getOption('style_options'));
 
-    if ($this->usesRowPlugin() && $display->handler->get_option('row_plugin')) {
-      $this->row_plugin = $display->handler->get_plugin('row');
+    if ($this->usesRowPlugin() && $display->handler->getOption('row_plugin')) {
+      $this->row_plugin = $display->handler->getPlugin('row');
     }
 
     $this->options += array(
@@ -242,7 +242,7 @@ abstract class StylePluginBase extends PluginBase {
     // @TODO: Document "usesGrouping" in docs.php when docs.php is written.
     if ($this->usesFields() && $this->usesGrouping()) {
       $options = array('' => t('- None -'));
-      $field_labels = $this->display->handler->get_field_labels(TRUE);
+      $field_labels = $this->display->handler->getFieldLabels(TRUE);
       $options += $field_labels;
       // If there are no fields, we can't group on them.
       if (count($options) > 1) {
@@ -661,7 +661,7 @@ abstract class StylePluginBase extends PluginBase {
     $errors = parent::validate();
 
     if ($this->usesRowPlugin()) {
-      $plugin = $this->display->handler->get_plugin('row');
+      $plugin = $this->display->handler->getPlugin('row');
       if (empty($plugin)) {
         $errors[] = t('Style @style requires a row style but the row plugin is invalid.', array('@style' => $this->definition['title']));
       }

@@ -39,10 +39,10 @@ class Page extends DisplayPluginBase {
   /**
    * The page display has a path.
    */
-  function has_path() { return TRUE; }
-  function uses_breadcrumb() { return TRUE; }
+  public function hasPath() { return TRUE; }
+  public function usesBreadcrumb() { return TRUE; }
 
-  function option_definition() {
+  public function option_definition() {
     $options = parent::option_definition();
 
     $options['path'] = array('default' => '');
@@ -74,12 +74,12 @@ class Page extends DisplayPluginBase {
   /**
    * Add this display's path information to Drupal's menu system.
    */
-  function execute_hook_menu($callbacks) {
+  public function executeHookMenu($callbacks) {
     $items = array();
     // Replace % with the link to our standard views argument loader
     // views_arg_load -- which lives in views.module
 
-    $bits = explode('/', $this->get_option('path'));
+    $bits = explode('/', $this->getOption('path'));
     $page_arguments = array($this->view->name, $this->display->id);
     $this->view->initHandlers();
     $view_arguments = $this->view->argument;
@@ -98,7 +98,7 @@ class Page extends DisplayPluginBase {
 
     $path = implode('/', $bits);
 
-    $access_plugin = $this->get_plugin('access');
+    $access_plugin = $this->getPlugin('access');
     if (!isset($access_plugin)) {
       $access_plugin = views_get_plugin('access', 'none');
     }
@@ -143,7 +143,7 @@ class Page extends DisplayPluginBase {
         // Identify URL embedded arguments and correlate them to a handler
         'load arguments'  => array($this->view->name, $this->display->id, '%index'),
       );
-      $menu = $this->get_option('menu');
+      $menu = $this->getOption('menu');
       if (empty($menu)) {
         $menu = array('type' => 'none');
       }
@@ -184,7 +184,7 @@ class Page extends DisplayPluginBase {
       // If this is a 'default' tab, check to see if we have to create teh
       // parent menu item.
       if ($menu['type'] == 'default tab') {
-        $tab_options = $this->get_option('tab_options');
+        $tab_options = $this->getOption('tab_options');
         if (!empty($tab_options['type']) && $tab_options['type'] != 'none') {
           $bits = explode('/', $path);
           // Remove the last piece.
@@ -232,7 +232,7 @@ class Page extends DisplayPluginBase {
    * a drupal_set_title for the page, and does a views_set_page_view
    * on the view.
    */
-  function execute() {
+  public function execute() {
     // Let the world know that this is the page view we're using.
     views_set_page_view($this->view);
 
@@ -264,9 +264,9 @@ class Page extends DisplayPluginBase {
    *
    * This output is returned as an array.
    */
-  function options_summary(&$categories, &$options) {
+  public function optionsSummary(&$categories, &$options) {
     // It is very important to call the parent function here:
-    parent::options_summary($categories, $options);
+    parent::optionsSummary($categories, $options);
 
     $categories['page'] = array(
       'title' => t('Page settings'),
@@ -276,7 +276,7 @@ class Page extends DisplayPluginBase {
       ),
     );
 
-    $path = strip_tags('/' . $this->get_option('path'));
+    $path = strip_tags('/' . $this->getOption('path'));
     if (empty($path)) {
       $path = t('None');
     }
@@ -287,7 +287,7 @@ class Page extends DisplayPluginBase {
       'value' => views_ui_truncate($path, 24),
     );
 
-    $menu = $this->get_option('menu');
+    $menu = $this->getOption('menu');
     if (!is_array($menu)) {
       $menu = array('type' => 'none');
     }
@@ -321,7 +321,7 @@ class Page extends DisplayPluginBase {
   /**
    * Provide the default form for setting options.
    */
-  function options_form(&$form, &$form_state) {
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     // It is very important to call the parent function here:
     parent::options_form($form, $form_state);
@@ -332,7 +332,7 @@ class Page extends DisplayPluginBase {
         $form['path'] = array(
           '#type' => 'textfield',
           '#description' => t('This view will be displayed by visiting this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters: For example, "node/%/feed".'),
-          '#default_value' => $this->get_option('path'),
+          '#default_value' => $this->getOption('path'),
           '#field_prefix' => '<span dir="ltr">' . url(NULL, array('absolute' => TRUE)),
           '#field_suffix' => '</span>&lrm;',
           '#attributes' => array('dir' => 'ltr'),
@@ -345,7 +345,7 @@ class Page extends DisplayPluginBase {
           '#suffix' => '</div>',
           '#tree' => TRUE,
         );
-        $menu = $this->get_option('menu');
+        $menu = $this->getOption('menu');
         if (empty($menu)) {
           $menu = array('type' => 'none', 'title' => '', 'weight' => 0);
         }
@@ -466,7 +466,7 @@ class Page extends DisplayPluginBase {
         break;
       case 'tab_options':
         $form['#title'] .= t('Default tab options');
-        $tab_options = $this->get_option('tab_options');
+        $tab_options = $this->getOption('tab_options');
         if (empty($tab_options)) {
           $tab_options = array('type' => 'none', 'title' => '', 'weight' => 0);
         }
@@ -562,7 +562,7 @@ class Page extends DisplayPluginBase {
     }
   }
 
-  function options_validate(&$form, &$form_state) {
+  public function options_validate(&$form, &$form_state) {
     // It is very important to call the parent function here:
     parent::options_validate($form, $form_state);
     switch ($form_state['section']) {
@@ -579,7 +579,7 @@ class Page extends DisplayPluginBase {
         $form_state['values']['path'] = trim($form_state['values']['path'], '/ ');
         break;
       case 'menu':
-        $path = $this->get_option('path');
+        $path = $this->getOption('path');
         if ($form_state['values']['menu']['type'] == 'normal' && strpos($path, '%') !== FALSE) {
           form_error($form['menu']['type'], t('Views cannot create normal menu items for paths with a % in them.'));
         }
@@ -599,36 +599,36 @@ class Page extends DisplayPluginBase {
     }
   }
 
-  function options_submit(&$form, &$form_state) {
+  public function options_submit(&$form, &$form_state) {
     // It is very important to call the parent function here:
     parent::options_submit($form, $form_state);
     switch ($form_state['section']) {
       case 'path':
-        $this->set_option('path', $form_state['values']['path']);
+        $this->setOption('path', $form_state['values']['path']);
         break;
       case 'menu':
-        $this->set_option('menu', $form_state['values']['menu']);
+        $this->setOption('menu', $form_state['values']['menu']);
         // send ajax form to options page if we use it.
         if ($form_state['values']['menu']['type'] == 'default tab') {
           views_ui_add_form_to_stack('display', $this->view, $this->display->id, array('tab_options'));
         }
         break;
       case 'tab_options':
-        $this->set_option('tab_options', $form_state['values']['tab_options']);
+        $this->setOption('tab_options', $form_state['values']['tab_options']);
         break;
     }
   }
 
-  function validate() {
+  public function validate() {
     $errors = parent::validate();
 
-    $menu = $this->get_option('menu');
+    $menu = $this->getOption('menu');
     if (!empty($menu['type']) && $menu['type'] != 'none' && empty($menu['title'])) {
       $errors[] = t('Display @display is set to use a menu but the menu link text is not set.', array('@display' => $this->display->display_title));
     }
 
     if ($menu['type'] == 'default tab') {
-      $tab_options = $this->get_option('tab_options');
+      $tab_options = $this->getOption('tab_options');
       if (!empty($tab_options['type']) && $tab_options['type'] != 'none' && empty($tab_options['title'])) {
         $errors[] = t('Display @display is set to use a parent menu but the parent menu link text is not set.', array('@display' => $this->display->display_title));
       }
@@ -637,7 +637,7 @@ class Page extends DisplayPluginBase {
     return $errors;
   }
 
-  function get_argument_text() {
+  public function getArgumentText() {
     return array(
       'filter value not present' => t('When the filter value is <em>NOT</em> in the URL'),
       'filter value present' => t('When the filter value <em>IS</em> in the URL or a default is provided'),
@@ -645,7 +645,7 @@ class Page extends DisplayPluginBase {
     );
   }
 
-  function get_pager_text() {
+  public function getPagerText() {
     return array(
       'items per page title' => t('Items per page'),
       'items per page description' => t('The number of items to display per page. Enter 0 for no limit.')

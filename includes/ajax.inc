@@ -67,7 +67,7 @@ function views_ajax() {
       // Override the display's pager_element with the one actually used.
       if (isset($pager_element)) {
         $commands[] = views_ajax_command_scroll_top('.view-dom-id-' . $dom_id);
-        $view->display[$display_id]->handler->set_option('pager_element', $pager_element);
+        $view->display[$display_id]->handler->setOption('pager_element', $pager_element);
       }
       // Reuse the same DOM id so it matches that in Drupal.settings.
       $view->dom_id = $dom_id;

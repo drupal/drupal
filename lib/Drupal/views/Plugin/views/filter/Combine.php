@@ -39,7 +39,7 @@ class Combine extends String {
     // Allow to choose all fields as possible
     if ($this->view->style_plugin->usesFields()) {
       $options = array();
-      foreach ($this->view->display_handler->get_handlers('field') as $name => $field) {
+      foreach ($this->view->display_handler->getHandlers('field') as $name => $field) {
         $options[$name] = $field->ui_name(TRUE);
       }
       if ($options) {

@@ -58,7 +58,7 @@ class AccessTest extends PluginTestBase {
     $view = $this->view_access_perm();
 
     $view->setDisplay('default');
-    $access_plugin = $view->display_handler->get_plugin('access');
+    $access_plugin = $view->display_handler->getPlugin('access');
 
     $this->assertTrue($view->display_handler->access($this->admin_user), t('Admin-Account should be able to access the view everytime'));
     $this->assertFalse($view->display_handler->access($this->web_user));
@@ -72,7 +72,7 @@ class AccessTest extends PluginTestBase {
     $view = $this->view_access_role();
 
     $view->setDisplay('default');
-    $access_plugin = $view->display_handler->get_plugin('access');
+    $access_plugin = $view->display_handler->getPlugin('access');
 
     $this->assertTrue($view->display_handler->access($this->admin_user), t('Admin-Account should be able to access the view everytime'));
     $this->assertFalse($view->display_handler->access($this->web_user));
@@ -90,7 +90,7 @@ class AccessTest extends PluginTestBase {
     $view = $this->view_access_static();
 
     $view->setDisplay('default');
-    $access_plugin = $view->display_handler->get_plugin('access');
+    $access_plugin = $view->display_handler->getPlugin('access');
 
     $this->assertFalse($access_plugin->access($this->normal_user));
 
@@ -121,7 +121,7 @@ class AccessTest extends PluginTestBase {
     variable_set('test_dynamic_access_argument2', $argument2);
 
     $view->setDisplay('default');
-    $access_plugin = $view->display_handler->get_plugin('access');
+    $access_plugin = $view->display_handler->getPlugin('access');
 
     $this->assertFalse($access_plugin->access($this->normal_user));
 
