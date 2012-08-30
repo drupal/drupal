@@ -3,35 +3,35 @@
     "packages": [
         {
             "package": "doctrine/common",
-            "version": "2.3.0-RC1"
+            "version": "2.3.0-RC2"
         },
         {
             "package": "symfony/class-loader",
-            "version": "v2.1.0-RC1"
+            "version": "v2.1.0-RC2"
         },
         {
             "package": "symfony/dependency-injection",
-            "version": "v2.1.0-RC1"
+            "version": "v2.1.0-RC2"
         },
         {
             "package": "symfony/event-dispatcher",
-            "version": "v2.1.0-RC1"
+            "version": "v2.1.0-RC2"
         },
         {
             "package": "symfony/http-foundation",
-            "version": "v2.1.0-RC1"
+            "version": "v2.1.0-RC2"
         },
         {
             "package": "symfony/http-kernel",
-            "version": "v2.1.0-RC1"
+            "version": "v2.1.0-RC2"
         },
         {
             "package": "symfony/routing",
-            "version": "v2.1.0-RC1"
+            "version": "v2.1.0-RC2"
         },
         {
             "package": "symfony/yaml",
-            "version": "v2.1.0-RC1"
+            "version": "v2.1.0-RC2"
         },
         {
             "package": "twig/twig",

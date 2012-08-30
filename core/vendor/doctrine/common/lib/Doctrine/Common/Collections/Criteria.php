@@ -20,6 +20,7 @@
 namespace Doctrine\Common\Collections;
 
 use Doctrine\Common\Collections\Expr\Expression;
+use Doctrine\Common\Collections\Expr\CompositeExpression;
 
 /**
  * Criteria for filtering Selectable collections.
@@ -40,6 +41,11 @@ class Criteria
     const DESC = 'DESC';
 
     /**
+     * @var \Doctrine\Common\Collections\ExpressionBuilder
+     */
+    private static $expressionBuilder;
+
+    /**
      * @var \Doctrine\Common\Collections\Expr\Expression
      */
     private $expression;
@@ -58,6 +64,29 @@ class Criteria
      * @var int
      */
     private $maxResults;
+
+    /**
+     * Creates an instance of the class.
+     *
+     * @return Criteria
+     */
+    public static function create()
+    {
+        return new static();
+    }
+
+    /**
+     * Return the expression builder.
+     *
+     * @return \Doctrine\Common\Collections\ExpressionBuilder
+     */
+    public static function expr()
+    {
+        if (self::$expressionBuilder === null) {
+            self::$expressionBuilder = new ExpressionBuilder();
+        }
+        return self::$expressionBuilder;
+    }
 
     /**
      * Construct new criteria
@@ -84,6 +113,46 @@ class Criteria
     public function where(Expression $expression)
     {
         $this->expression = $expression;
+        return $this;
+    }
+
+    /**
+     * Append the where expression to evaluate when this criteria is searched for
+     * using an AND with previous expression.
+     *
+     * @param Expression
+     * @return Criteria
+     */
+    public function andWhere(Expression $expression)
+    {
+        if ($this->expression === null) {
+            return $this->where($expression);
+        }
+
+        $this->expression = new CompositeExpression(CompositeExpression::TYPE_AND, array(
+            $this->expression, $expression
+        ));
+
+        return $this;
+    }
+
+    /**
+     * Append the where expression to evaluate when this criteria is searched for
+     * using an OR with previous expression.
+     *
+     * @param Expression
+     * @return Criteria
+     */
+    public function orWhere(Expression $expression)
+    {
+        if ($this->expression === null) {
+            return $this->where($expression);
+        }
+
+        $this->expression = new CompositeExpression(CompositeExpression::TYPE_OR, array(
+            $this->expression, $expression
+        ));
+
         return $this;
     }
 
