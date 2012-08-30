@@ -6,6 +6,7 @@
  */
 
 use Drupal\entity\EntityInterface;
+use Drupal\field_test\TestEntity;
 
 /**
  * Implements hook_entity_info().
@@ -28,6 +29,9 @@ function field_test_entity_info() {
       'name' => t('Test Entity'),
       'entity class' => 'Drupal\field_test\TestEntity',
       'controller class' => 'Drupal\field_test\TestEntityController',
+      'form controller class' => array(
+        'default' => 'Drupal\field_test\TestEntityFormController',
+      ),
       'fieldable' => TRUE,
       'field cache' => FALSE,
       'base table' => 'test_entity',
@@ -278,96 +282,17 @@ function field_test_entity_add($fttype) {
   $fttype = str_replace('-', '_', $fttype);
   $entity = field_test_create_entity(NULL, NULL, $fttype);
   drupal_set_title(t('Create test_entity @bundle', array('@bundle' => $fttype)), PASS_THROUGH);
-  return drupal_get_form('field_test_entity_form', $entity, TRUE);
+  return entity_get_form($entity);
 }
 
 /**
  * Menu callback: displays the 'Edit exiisting test_entity' form.
  */
-function field_test_entity_edit($entity) {
+function field_test_entity_edit(TestEntity $entity) {
   drupal_set_title(t('test_entity @ftid revision @ftvid', array('@ftid' => $entity->ftid, '@ftvid' => $entity->ftvid)), PASS_THROUGH);
-  return drupal_get_form('field_test_entity_form', $entity);
+  return entity_get_form($entity);
 }
 
-/**
- * Test_entity form.
- */
-function field_test_entity_form($form, &$form_state, $entity, $add = FALSE) {
-  // During initial form build, add the entity to the form state for use during
-  // form building and processing. During a rebuild, use what is in the form
-  // state.
-  if (!isset($form_state['test_entity'])) {
-    $form_state['test_entity'] = $entity;
-  }
-  else {
-    $entity = $form_state['test_entity'];
-  }
-
-  foreach (array('ftid', 'ftvid', 'fttype') as $key) {
-    $form[$key] = array(
-      '#type' => 'value',
-      '#value' => isset($entity->$key) ? $entity->$key : NULL,
-    );
-  }
-
-  // Add field widgets.
-  field_attach_form('test_entity', $entity, $form, $form_state);
-
-  if (!$add) {
-    $form['revision'] = array(
-      '#access' => user_access('administer field_test content'),
-      '#type' => 'checkbox',
-      '#title' => t('Create new revision'),
-      '#default_value' => FALSE,
-      '#weight' => 100,
-    );
-  }
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-    '#weight' => 101,
-  );
-
-  return $form;
-}
-
-/**
- * Validate handler for field_test_entity_form().
- */
-function field_test_entity_form_validate($form, &$form_state) {
-  $pseudo_entity = entity_create('test_entity', $form_state['values']);
-  field_attach_form_validate('test_entity', $pseudo_entity, $form, $form_state);
-}
-
-/**
- * Submit handler for field_test_entity_form().
- */
-function field_test_entity_form_submit($form, &$form_state) {
-  $entity = field_test_entity_form_submit_build_test_entity($form, $form_state);
-  $insert = empty($entity->ftid);
-  field_test_entity_save($entity);
-
-  $message = $insert ? t('test_entity @id has been created.', array('@id' => $entity->ftid)) : t('test_entity @id has been updated.', array('@id' => $entity->ftid));
-  drupal_set_message($message);
-
-  if ($entity->ftid) {
-    $form_state['redirect'] = 'test-entity/manage/' . $entity->ftid . '/edit';
-  }
-  else {
-    // Error on save.
-    drupal_set_message(t('The entity could not be saved.'), 'error');
-    $form_state['rebuild'] = TRUE;
-  }
-}
-
-/**
- * Updates the form state's entity by processing this submission's values.
- */
-function field_test_entity_form_submit_build_test_entity($form, &$form_state) {
-  $entity = $form_state['test_entity'];
-  entity_form_submit_build_entity('test_entity', $entity, $form, $form_state);
-  return $entity;
-}
 
 /**
  * Form combining two separate entities.

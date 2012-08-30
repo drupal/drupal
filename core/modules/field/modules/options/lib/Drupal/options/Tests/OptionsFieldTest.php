@@ -63,7 +63,7 @@ class OptionsFieldTest extends FieldTestBase {
 
     // All three options appear.
     $entity = field_test_create_entity();
-    $form = drupal_get_form('field_test_entity_form', $entity);
+    $form = entity_get_form($entity);
     $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
     $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
     $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
@@ -89,7 +89,7 @@ class OptionsFieldTest extends FieldTestBase {
     $this->field['settings']['allowed_values'] = array(2 => 'Two');
     field_update_field($this->field);
     $entity = field_test_create_entity();
-    $form = drupal_get_form('field_test_entity_form', $entity);
+    $form = entity_get_form($entity);
     $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
     $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
     $this->assertTrue(empty($form[$this->field_name][$langcode][3]), t('Option 3 does not exist'));
@@ -97,7 +97,7 @@ class OptionsFieldTest extends FieldTestBase {
     // Completely new options appear.
     $this->field['settings']['allowed_values'] = array(10 => 'Update', 20 => 'Twenty');
     field_update_field($this->field);
-    $form = drupal_get_form('field_test_entity_form', $entity);
+    $form = entity_get_form($entity);
     $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
     $this->assertTrue(empty($form[$this->field_name][$langcode][2]), t('Option 2 does not exist'));
     $this->assertTrue(empty($form[$this->field_name][$langcode][3]), t('Option 3 does not exist'));
@@ -119,7 +119,7 @@ class OptionsFieldTest extends FieldTestBase {
     );
     $this->instance = field_create_instance($this->instance);
     $entity = field_test_create_entity();
-    $form = drupal_get_form('field_test_entity_form', $entity);
+    $form = entity_get_form($entity);
     $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
     $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
     $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
