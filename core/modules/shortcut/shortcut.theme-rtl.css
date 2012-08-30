@@ -40,6 +40,5 @@
 }
 .add-or-remove-shortcuts a:focus .text,
 .add-or-remove-shortcuts a:hover .text {
-  -moz-border-radius: 5px 0 0 5px;
   border-radius: 5px 0 0 5px;
 }

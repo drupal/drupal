@@ -22,7 +22,6 @@
   padding: 5px 0;
 }
 #shortcut-toolbar a {
-  -moz-border-radius: 5px;
   border-radius: 5px;
   margin-right: 5px; /* LTR */
   padding: 0 5px;
@@ -38,7 +37,6 @@
 }
 #shortcut-toolbar .icon {
   background-color: #444;
-  -moz-border-radius: 5px;
   border-radius: 5px;
   height: 30px;
   margin-right: 5px; /* LTR */
@@ -73,7 +71,6 @@
 .add-or-remove-shortcuts a:focus .text,
 .add-or-remove-shortcuts a:hover .text {
   background-color: #5f605b;
-  -moz-border-radius: 0 5px 5px 0; /* LTR */
   border-radius: 0 5px 5px 0; /* LTR */
   color: #fff;
   cursor: pointer;

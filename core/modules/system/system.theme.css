@@ -240,7 +240,6 @@ th.checkbox {
   background: #ccc;
   border-color: #666;
   margin: 0 0.2em;
-  -moz-border-radius: 3px;
   border-radius: 3px;
 }
 .progress .filled {

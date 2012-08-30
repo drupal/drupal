@@ -1,4 +1,3 @@
-
 /**
  * @file
  * RTL styling for contextual module.
@@ -9,7 +8,6 @@
   right: auto;
 }
 .contextual .contextual-links {
-  -moz-border-radius: 0 4px 4px 4px; /* FF3.6 */
   border-radius: 0 4px 4px 4px;
   left: 0;
   right: auto;
