@@ -296,6 +296,20 @@ const REGISTRY_WRITE_LOOKUP_CACHE = 2;
 const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 
 /**
+ * $config_directories key for active directory.
+ *
+ * @see config_get_config_directory
+ */
+const CONFIG_ACTIVE_DIRECTORY = 'active';
+
+/**
+ * $config_directories key for staging directory.
+ *
+ * @see config_get_config_directory
+ */
+const CONFIG_STAGING_DIRECTORY = 'staging';
+
+/**
  * Starts the timer with the specified name.
  *
  * If you start and stop the same timer multiple times, the measured intervals
@@ -469,20 +483,27 @@ function find_conf_path($http_host, $script_name, $require_settings = TRUE) {
 }
 
 /**
- * Returns the path of the configuration directory.
+ * Returns the path of a configuration directory.
+ *
+ * @param string $type
+ *   (optional) The type of config directory to return. Drupal core provides
+ *   'active' and 'staging'. Defaults to CONFIG_ACTIVE_DIRECTORY.
  *
  * @return string
  *   The configuration directory path.
  */
-function config_get_config_directory() {
-  global $config_directory_name;
+function config_get_config_directory($type = CONFIG_ACTIVE_DIRECTORY) {
+  global $config_directories;
 
   if ($test_prefix = drupal_valid_test_ua()) {
     // @see Drupal\simpletest\WebTestBase::setUp()
-    $path = conf_path() . '/files/simpletest/' . substr($test_prefix, 10) . '/config';
+    $path = conf_path() . '/files/simpletest/' . substr($test_prefix, 10) . '/config_' . $type;
+  }
+  elseif (!empty($config_directories[$type])) {
+    $path = conf_path() . '/files/' . $config_directories[$type];
   }
   else {
-    $path = conf_path() . '/files/' . $config_directory_name;
+    throw new Exception(format_string('The configuration directory type %type does not exist.', array('%type' => $type)));
   }
   return $path;
 }
@@ -675,7 +696,7 @@ function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root, $script_path;
 
   // Export these settings.php variables to the global namespace.
-  global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directory_name;
+  global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url, $config_directories;
   $conf = array();
 
   // Make conf_path() available as local variable in settings.php.

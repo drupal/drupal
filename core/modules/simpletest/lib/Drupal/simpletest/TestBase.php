@@ -689,7 +689,7 @@ abstract class TestBase {
     // Backup statics and globals.
     $this->originalContainer = clone drupal_container();
     $this->originalLanguage = $language_interface;
-    $this->originalConfigDirectory = $GLOBALS['config_directory_name'];
+    $this->originalConfigDirectories = $GLOBALS['config_directories'];
 
     // Save further contextual information.
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
@@ -717,13 +717,23 @@ abstract class TestBase {
     file_prepare_directory($this->temp_files_directory, FILE_CREATE_DIRECTORY);
     $this->generatedTestFiles = FALSE;
 
-    // Create and set a new configuration directory and signature key.
-    // The child site automatically adjusts the global $config_directory_name to
+    // Create and set new configuration directories. The child site
+    // uses drupal_valid_test_ua() to adjust the config directory paths to
     // a test-prefix-specific directory within the public files directory.
     // @see config_get_config_directory()
-    $GLOBALS['config_directory_name'] = 'simpletest/' . substr($this->databasePrefix, 10) . '/config';
-    $this->configFileDirectory = $this->originalFileDirectory . '/' . $GLOBALS['config_directory_name'];
-    file_prepare_directory($this->configFileDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    $GLOBALS['config_directories'] = array();
+    foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
+      $GLOBALS['config_directories'][$type] = 'simpletest/' . substr($this->databasePrefix, 10) . '/config_' . $type;
+    }
+
+    $this->configDirectories = array();
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    foreach ($GLOBALS['config_directories'] as $type => $path) {
+      if (!install_ensure_config_directory($type)) {
+        return FALSE;
+      }
+      $this->configDirectories[$type] = $this->originalFileDirectory . '/' . $path;
+    }
 
     // Log fatal errors.
     ini_set('log_errors', 1);
@@ -781,7 +791,7 @@ abstract class TestBase {
     // Restore original statics and globals.
     drupal_container($this->originalContainer);
     $language_interface = $this->originalLanguage;
-    $GLOBALS['config_directory_name'] = $this->originalConfigDirectory;
+    $GLOBALS['config_directories'] = $this->originalConfigDirectories;
 
     // Restore original shutdown callbacks.
     $callbacks = &drupal_register_shutdown_function();

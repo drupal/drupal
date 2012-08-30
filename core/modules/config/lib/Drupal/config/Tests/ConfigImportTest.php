@@ -64,6 +64,8 @@ class ConfigImportTest extends WebTestBase {
   function testDeleted() {
     $name = 'config_test.system';
     $dynamic_name = 'config_test.dynamic.default';
+    $active_storage = new DatabaseStorage();
+    $staging_storage = new FileStorage(array('directory' => config_get_config_directory(CONFIG_STAGING_DIRECTORY)));
 
     // Verify the default configuration values exist.
     $config = config($name);
@@ -74,18 +76,16 @@ class ConfigImportTest extends WebTestBase {
     // Export.
     config_export();
 
-    // Delete the configuration objects.
-    $file_storage = new FileStorage();
-    $file_storage->delete($name);
-    $file_storage->delete($dynamic_name);
+    // Delete the configuration objects from the staging directory.
+    $staging_storage->delete($name);
+    $staging_storage->delete($dynamic_name);
 
     // Import.
     config_import();
 
     // Verify the values have disappeared.
-    $database_storage = new DatabaseStorage();
-    $this->assertIdentical($database_storage->read($name), FALSE);
-    $this->assertIdentical($database_storage->read($dynamic_name), FALSE);
+    $this->assertIdentical($active_storage->read($name), FALSE);
+    $this->assertIdentical($active_storage->read($dynamic_name), FALSE);
 
     $config = config($name);
     $this->assertIdentical($config->get('foo'), NULL);
@@ -107,34 +107,36 @@ class ConfigImportTest extends WebTestBase {
   function testNew() {
     $name = 'config_test.new';
     $dynamic_name = 'config_test.dynamic.new';
-
-    // Verify the configuration to create does not exist yet.
-    $file_storage = new FileStorage();
-    $this->assertIdentical($file_storage->exists($name), FALSE, $name . ' not found.');
-    $this->assertIdentical($file_storage->exists($dynamic_name), FALSE, $dynamic_name . ' not found.');
+    $staging_storage = new FileStorage(array('directory' => config_get_config_directory(CONFIG_STAGING_DIRECTORY)));
 
     // Export.
     config_export();
 
-    // Create new configuration objects.
-    $file_storage->write($name, array(
+    // Verify the configuration to create does not exist yet.
+    $this->assertIdentical($staging_storage->exists($name), FALSE, $name . ' not found.');
+    $this->assertIdentical($staging_storage->exists($dynamic_name), FALSE, $dynamic_name . ' not found.');
+
+    // Create new configuration objects in the staging directory.
+    $original_name_data = array(
       'add_me' => 'new value',
-    ));
-    $file_storage->write($dynamic_name, array(
+    );
+    $staging_storage->write($name, $original_name_data);
+    $original_dynamic_data = array(
       'id' => 'new',
       'label' => 'New',
-    ));
-    $this->assertIdentical($file_storage->exists($name), TRUE, $name . ' found.');
-    $this->assertIdentical($file_storage->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
+    );
+    $staging_storage->write($dynamic_name, $original_dynamic_data);
+    $this->assertIdentical($staging_storage->exists($name), TRUE, $name . ' found.');
+    $this->assertIdentical($staging_storage->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
 
     // Import.
     config_import();
 
     // Verify the values appeared.
     $config = config($name);
-    $this->assertIdentical($config->get('add_me'), 'new value');
+    $this->assertIdentical($config->get('add_me'), $original_name_data['add_me']);
     $config = config($dynamic_name);
-    $this->assertIdentical($config->get('label'), 'New');
+    $this->assertIdentical($config->get('label'), $original_dynamic_data['label']);
 
     // Verify that appropriate module API hooks have been invoked.
     $this->assertFalse(isset($GLOBALS['hook_config_test']['load']));
@@ -151,21 +153,26 @@ class ConfigImportTest extends WebTestBase {
   function testUpdated() {
     $name = 'config_test.system';
     $dynamic_name = 'config_test.dynamic.default';
+    $staging_storage = new FileStorage(array('directory' => config_get_config_directory(CONFIG_STAGING_DIRECTORY)));
 
     // Export.
     config_export();
 
-    // Replace the file content of the existing configuration objects.
-    $file_storage = new FileStorage();
-    $this->assertIdentical($file_storage->exists($name), TRUE, $name . ' found.');
-    $this->assertIdentical($file_storage->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
-    $file_storage->write($name, array(
+    // Verify that the configuration objects to import exist.
+    $this->assertIdentical($staging_storage->exists($name), TRUE, $name . ' found.');
+    $this->assertIdentical($staging_storage->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
+
+    // Replace the file content of the existing configuration objects in the
+    // staging directory.
+    $original_name_data = array(
       'foo' => 'beer',
-    ));
-    $file_storage->write($dynamic_name, array(
+    );
+    $staging_storage->write($name, $original_name_data);
+    $original_dynamic_data = array(
       'id' => 'default',
       'label' => 'Updated',
-    ));
+    );
+    $staging_storage->write($dynamic_name, $original_dynamic_data);
 
     // Verify the active store still returns the default values.
     $config = config($name);
@@ -181,6 +188,10 @@ class ConfigImportTest extends WebTestBase {
     $this->assertIdentical($config->get('foo'), 'beer');
     $config = config($dynamic_name);
     $this->assertIdentical($config->get('label'), 'Updated');
+
+    // Verify that the original file content is still the same.
+    $this->assertIdentical($staging_storage->read($name), $original_name_data);
+    $this->assertIdentical($staging_storage->read($dynamic_name), $original_dynamic_data);
 
     // Verify that appropriate module API hooks have been invoked.
     $this->assertTrue(isset($GLOBALS['hook_config_test']['load']));

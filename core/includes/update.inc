@@ -89,7 +89,7 @@ function update_prepare_d8_bootstrap() {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
   // Check whether settings.php needs to be rewritten.
-  $settings_exist = !empty($GLOBALS['config_directory_name']);
+  $settings_exist = !empty($GLOBALS['config_directories']);
 
   // If any of the required settings needs to be written, then settings.php
   // needs to be writable.
@@ -139,11 +139,11 @@ function update_prepare_d8_bootstrap() {
       // Update the environment for the language bootstrap if needed.
       update_prepare_d8_language();
 
-      // Ensure the configuration directory exists and is writable or create it.
-      // If no $config_directory_name has been specified in settings.php and
-      // created manually already, and the directory cannot be created by the
+      // Ensure the configuration directories exist and are writable, or create
+      // them. If the directories have not been specified in settings.php and
+      // created manually already, and either directory cannot be created by the
       // web server, an exception will be thrown, halting the update.
-      drupal_install_config_directory();
+      drupal_install_config_directories();
 
       // Change language column to langcode in url_alias.
       if (db_table_exists('url_alias') && db_field_exists('url_alias', 'language')) {

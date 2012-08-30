@@ -320,7 +320,7 @@ function install_begin_request(&$install_state) {
 
   // Check existing settings.php.
   $install_state['database_verified'] = install_verify_database_settings();
-  $install_state['config_verified'] = install_ensure_config_directory();
+  $install_state['config_verified'] = install_verify_config_directory(CONFIG_ACTIVE_DIRECTORY) && install_verify_config_directory(CONFIG_STAGING_DIRECTORY);
   $install_state['settings_verified'] = $install_state['config_verified'] && $install_state['database_verified'];
 
   if ($install_state['database_verified']) {
@@ -1053,8 +1053,8 @@ function install_settings_form_submit($form, &$form_state) {
 
   drupal_rewrite_settings($settings);
 
-  // Add the config directory to settings.php.
-  drupal_install_config_directory();
+  // Add the config directories to settings.php.
+  drupal_install_config_directories();
 
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This

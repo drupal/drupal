@@ -330,14 +330,15 @@ function system_requirements($phase) {
   // Check the config directory if it is defined in settings.php. If it isn't
   // defined, the installer will create a valid config directory later, but
   // during runtime we must always display an error.
-  if (!empty($GLOBALS['config_directory_name'])) {
-    $directories[] = config_get_config_directory();
+  if (!empty($GLOBALS['config_directories'])) {
+    $directories[] = config_get_config_directory(CONFIG_ACTIVE_DIRECTORY);
+    $directories[] = config_get_config_directory(CONFIG_STAGING_DIRECTORY);
   }
   elseif ($phase != 'install') {
-    $requirements['config directory'] = array(
-      'title' => $t('Configuration directory'),
+    $requirements['config directories'] = array(
+      'title' => $t('Configuration directories'),
       'value' => $t('Not present'),
-      'description' => $t('Your %file file must define the $config_directory_name variable as the name of a directory in which configuration files can be written.', array('%file' => conf_path() . '/settings.php')),
+      'description' => $t('Your %file file must define the $config_directories variable as an array containing the name of a directories in which configuration files can be written.', array('%file' => conf_path() . '/settings.php')),
       'severity' => REQUIREMENT_ERROR,
     );
   }

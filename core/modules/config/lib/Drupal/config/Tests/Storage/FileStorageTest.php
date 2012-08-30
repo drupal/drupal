@@ -25,7 +25,7 @@ class FileStorageTest extends ConfigStorageTestBase {
   function setUp() {
     parent::setUp();
     $this->storage = new FileStorage();
-    $this->invalidStorage = new FileStorage(array('directory' => $this->configFileDirectory . '/nonexisting'));
+    $this->invalidStorage = new FileStorage(array('directory' => $this->configDirectories[CONFIG_ACTIVE_DIRECTORY] . '/nonexisting'));
 
     // FileStorage::listAll() requires other configuration data to exist.
     $this->storage->write('system.performance', config('system.performance')->get());
