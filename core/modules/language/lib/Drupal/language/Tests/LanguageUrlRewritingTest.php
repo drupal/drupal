@@ -107,6 +107,10 @@ class LanguageUrlRewritingTest extends WebTestBase {
     drupal_static_reset('language_url_outbound_alter');
     drupal_static_reset('language_url_rewrite_url');
 
+    // In case index.php is part of the URLs, we need to adapt the asserted
+    // URLs as well.
+    $index_php = strpos(url('', array('absolute' => TRUE)), 'index.php') !== FALSE;
+
     // Remember current HTTP_HOST.
     $http_host = $_SERVER['HTTP_HOST'];
     // Fake a different port.
@@ -114,9 +118,25 @@ class LanguageUrlRewritingTest extends WebTestBase {
 
     // Create an absolute French link.
     $language = language_load('fr');
-    $url = url('', array('absolute' => TRUE, 'language' => $language));
+    $url = url('', array(
+      'absolute' => TRUE,
+      'language' => $language,
+    ));
 
-    $this->assertTrue(strcmp($url, 'http://example.fr:88/') == 0, 'The right port is used.');
+    $expected = $index_php ? 'http://example.fr:88/index.php/' : 'http://example.fr:88/';
+
+    $this->assertEqual($url, $expected, 'The right port is used.');
+
+    // If we set the port explicitly in url(), it should not be overriden.
+    $url = url('', array(
+      'absolute' => TRUE,
+      'language' => $language,
+      'base_url' => $GLOBALS['base_url'] . ':90',
+    ));
+
+    $expected = $index_php ? 'http://example.fr:90/index.php/' : 'http://example.fr:90/';
+
+    $this->assertEqual($url, $expected, 'A given port is not overriden.');
 
     // Restore HTTP_HOST.
     $_SERVER['HTTP_HOST'] = $http_host;
