@@ -72,11 +72,14 @@ function hook_config_import_change($name, $new_config, $old_config) {
   $id = substr($name, strlen($entity_info['config prefix']) + 1);
   $config_test = entity_load('config_test', $id);
 
+  // Store the original config, and iterate through each property to store it.
   $config_test->original = clone $config_test;
   foreach ($old_config->get() as $property => $value) {
     $config_test->original->$property = $value;
   }
 
+  // Iterate through each property of the new config, copying it to the
+  // configurable test object.
   foreach ($new_config->get() as $property => $value) {
     $config_test->$property = $value;
   }

@@ -137,7 +137,7 @@ class ConfigStorageController implements StorageControllerInterface {
    * Drupal\taxonomy\TermStorageController::buildQuery() for examples.
    *
    * @param $ids
-   *   An array of entity IDs, or FALSE to load all entities.
+   *   An array of entity IDs, or NULL to load all entities.
    * @param $revision_id
    *   The ID of the revision to load, or FALSE if this query is asking for the
    *   most current revision(s).
@@ -149,6 +149,7 @@ class ConfigStorageController implements StorageControllerInterface {
     $config_class = $this->entityInfo['entity class'];
     $prefix = $this->entityInfo['config prefix'] . '.';
 
+    // Load all of the configurables.
     if ($ids === NULL) {
       $names = drupal_container()->get('config.storage')->listAll($prefix);
       $result = array();
@@ -161,6 +162,7 @@ class ConfigStorageController implements StorageControllerInterface {
     else {
       $result = array();
       foreach ($ids as $id) {
+        // Add the prefix to the ID to serve as the configurable name.
         $config = config($prefix . $id);
         if (!$config->isNew()) {
           $result[$id] = new $config_class($config->get(), $this->entityType);

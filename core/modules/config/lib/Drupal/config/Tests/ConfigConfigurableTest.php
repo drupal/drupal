@@ -14,6 +14,11 @@ use Drupal\simpletest\WebTestBase;
  */
 class ConfigConfigurableTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
   public static $modules = array('config_test');
 
   public static function getInfo() {
@@ -28,52 +33,56 @@ class ConfigConfigurableTest extends WebTestBase {
    * Tests basic CRUD operations through the UI.
    */
   function testCRUD() {
+    $id = strtolower($this->randomName());
+    $label1 = $this->randomName();
+    $label2 = $this->randomName();
+    $label3 = $this->randomName();
+
     // Create a configurable entity.
-    $id = 'thingie';
     $edit = array(
       'id' => $id,
-      'label' => 'Thingie',
+      'label' => $label1,
     );
     $this->drupalPost('admin/structure/config_test/add', $edit, 'Save');
     $this->assertResponse(200);
-    $this->assertText('Thingie');
+    $this->assertText($label1);
 
     // Update the configurable entity.
     $this->assertLinkByHref('admin/structure/config_test/manage/' . $id);
     $edit = array(
-      'label' => 'Thongie',
+      'label' => $label2,
     );
     $this->drupalPost('admin/structure/config_test/manage/' . $id, $edit, 'Save');
     $this->assertResponse(200);
-    $this->assertNoText('Thingie');
-    $this->assertText('Thongie');
+    $this->assertNoText($label1);
+    $this->assertText($label2);
 
     // Delete the configurable entity.
     $this->assertLinkByHref('admin/structure/config_test/manage/' . $id . '/delete');
     $this->drupalPost('admin/structure/config_test/manage/' . $id . '/delete', array(), 'Delete');
     $this->assertResponse(200);
-    $this->assertNoText('Thingie');
-    $this->assertNoText('Thongie');
+    $this->assertNoText($label1);
+    $this->assertNoText($label2);
 
     // Re-create a configurable entity.
     $edit = array(
       'id' => $id,
-      'label' => 'Thingie',
+      'label' => $label1,
     );
     $this->drupalPost('admin/structure/config_test/add', $edit, 'Save');
     $this->assertResponse(200);
-    $this->assertText('Thingie');
+    $this->assertText($label1);
 
     // Rename the configurable entity's ID/machine name.
     $this->assertLinkByHref('admin/structure/config_test/manage/' . $id);
-    $new_id = 'zingie';
     $edit = array(
-      'id' => $new_id,
-      'label' => 'Zingie',
+      'id' => strtolower($this->randomName()),
+      'label' => $label3,
     );
     $this->drupalPost('admin/structure/config_test/manage/' . $id, $edit, 'Save');
     $this->assertResponse(200);
-    $this->assertNoText('Thingie');
-    $this->assertText('Zingie');
+    $this->assertNoText($label1);
+    $this->assertText($label3);
   }
+
 }
