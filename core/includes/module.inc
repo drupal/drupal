@@ -9,7 +9,7 @@ use Drupal\Component\Graph\Graph;
 use Drupal\Core\Config\DatabaseStorage;
 
 /**
- * Load all the modules that have been enabled in the system table.
+ * Loads all the modules that have been enabled in the system table.
  *
  * @param $bootstrap
  *   Whether to load only the reduced set of modules loaded in "bootstrap mode"
@@ -98,7 +98,7 @@ function module_list_reset() {
 }
 
 /**
- * Build a list of bootstrap modules and enabled modules and themes.
+ * Builds a list of bootstrap modules and enabled modules and themes.
  *
  * @param $type
  *   The type of list to return:
@@ -213,7 +213,7 @@ function system_list($type) {
 }
 
 /**
- * Reset all system_list() caches.
+ * Resets all system_list() caches.
  */
 function system_list_reset() {
   drupal_static_reset('system_list');
@@ -224,7 +224,7 @@ function system_list_reset() {
 }
 
 /**
- * Find dependencies any level deep and fill in required by information too.
+ * Determines which modules require and are required by each module.
  *
  * @param $files
  *   The array of filesystem objects used to rebuild the cache.
@@ -257,7 +257,7 @@ function _module_build_dependencies($files) {
 }
 
 /**
- * Determine whether a given module exists.
+ * Determines whether a given module exists.
  *
  * @param $module
  *   The name of the module (without the .module extension).
@@ -271,7 +271,7 @@ function module_exists($module) {
 }
 
 /**
- * Load a module's installation hooks.
+ * Loads a module's installation hooks.
  *
  * @param $module
  *   The name of the module (without the .module extension).
@@ -287,7 +287,7 @@ function module_load_install($module) {
 }
 
 /**
- * Load a module include file.
+ * Loads a module include file.
  *
  * Examples:
  * @code
@@ -329,8 +329,7 @@ function module_load_include($type, $module, $name = NULL) {
 }
 
 /**
- * Load an include file for each of the modules that have been enabled in
- * the system table.
+ * Loads an include file for each module enabled in the {system} table.
  */
 function module_load_all_includes($type, $name = NULL) {
   $modules = module_list();
@@ -502,7 +501,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
 }
 
 /**
- * Disable a given set of modules.
+ * Disables a given set of modules.
  *
  * @param $module_list
  *   An array of module names.
@@ -671,7 +670,7 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
  */
 
 /**
- * Determine whether a module implements a hook.
+ * Determines whether a module implements a hook.
  *
  * @param $module
  *   The name of the module (without the .module extension).
@@ -700,7 +699,7 @@ function module_hook($module, $hook) {
 }
 
 /**
- * Determine which modules are implementing a hook.
+ * Determines which modules are implementing a hook.
  *
  * @param $hook
  *   The name of the hook (e.g. "help" or "menu").
@@ -774,7 +773,7 @@ function module_implements($hook) {
 }
 
 /**
- * Regenerate the stored list of hook implementations.
+ * Regenerates the stored list of hook implementations.
  */
 function module_implements_reset() {
   // We maintain a persistent cache of hook implementations in addition to the
@@ -795,7 +794,7 @@ function module_implements_reset() {
 }
 
 /**
- * Retrieve a list of what hooks are explicitly declared.
+ * Retrieves a list of what hooks are explicitly declared.
  */
 function module_hook_info() {
   // When this function is indirectly invoked from bootstrap_invoke_all() prior
@@ -858,7 +857,7 @@ function module_implements_write_cache() {
 }
 
 /**
- * Invoke a hook in a particular module.
+ * Invokes a hook in a particular module.
  *
  * @param $module
  *   The name of the module (without the .module extension).
@@ -880,7 +879,7 @@ function module_invoke($module, $hook) {
 }
 
 /**
- * Invoke a hook in all enabled modules that implement it.
+ * Invokes a hook in all enabled modules that implement it.
  *
  * @param $hook
  *   The name of the hook to invoke.
@@ -917,7 +916,7 @@ function module_invoke_all($hook) {
  */
 
 /**
- * Array of modules required by core.
+ * Returns an array of modules required by core.
  */
 function drupal_required_modules() {
   $files = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', 'modules', 'name', 0);
@@ -937,7 +936,7 @@ function drupal_required_modules() {
 }
 
 /**
- * Hands off alterable variables to type-specific *_alter implementations.
+ * Passes alterable variables to specific hook_TYPE_alter() implementations.
  *
  * This dispatch function hands off the passed-in variables to type-specific
  * hook_TYPE_alter() implementations in modules. It ensures a consistent

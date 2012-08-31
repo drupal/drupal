@@ -34,7 +34,7 @@
  */
 
 /**
- * Return a list of available toolkits.
+ * Gets a list of available toolkits.
  *
  * @return
  *   An array with the toolkit names as keys and the descriptions as values.
@@ -55,7 +55,7 @@ function image_get_available_toolkits() {
 }
 
 /**
- * Retrieve the name of the currently used toolkit.
+ * Gets the name of the currently used toolkit.
  *
  * @return
  *   String containing the name of the selected toolkit, or FALSE on error.
@@ -101,7 +101,7 @@ function image_toolkit_invoke($method, stdClass $image, array $params = array())
 }
 
 /**
- * Get details about an image.
+ * Gets details about an image.
  *
  * Drupal supports GIF, JPG and PNG file formats when used with the GD
  * toolkit, and may support others, depending on which toolkits are
@@ -261,7 +261,7 @@ function image_scale(stdClass $image, $width = NULL, $height = NULL, $upscale = 
 }
 
 /**
- * Resize an image to the given dimensions (ignoring aspect ratio).
+ * Resizes an image to the given dimensions (ignoring aspect ratio).
  *
  * @param $image
  *   An image object returned by image_load().
@@ -284,7 +284,7 @@ function image_resize(stdClass $image, $width, $height) {
 }
 
 /**
- * Rotate an image by the given number of degrees.
+ * Rotates an image by the given number of degrees.
  *
  * @param $image
  *   An image object returned by image_load().
@@ -308,7 +308,7 @@ function image_rotate(stdClass $image, $degrees, $background = NULL) {
 }
 
 /**
- * Crop an image to the rectangle specified by the given rectangle.
+ * Crops an image to a rectangle specified by the given dimensions.
  *
  * @param $image
  *   An image object returned by image_load().
@@ -340,7 +340,7 @@ function image_crop(stdClass $image, $x, $y, $width, $height) {
 }
 
 /**
- * Convert an image to grayscale.
+ * Converts an image to grayscale.
  *
  * @param $image
  *   An image object returned by image_load().
@@ -355,9 +355,8 @@ function image_desaturate(stdClass $image) {
   return image_toolkit_invoke('desaturate', $image);
 }
 
-
 /**
- * Load an image file and return an image object.
+ * Loads an image file and returns an image object.
  *
  * Any changes to the file are not saved until image_save() is called.
  *
@@ -400,7 +399,7 @@ function image_load($file, $toolkit = FALSE) {
 }
 
 /**
- * Close the image and save the changes to a file.
+ * Closes the image and saves the changes to a file.
  *
  * @param $image
  *   An image object returned by image_load(). The object's 'info' property

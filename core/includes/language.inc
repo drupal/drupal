@@ -479,7 +479,7 @@ function language_from_default() {
 }
 
 /**
- * Split the given path into prefix and actual path.
+ * Splits the given path into prefix and actual path.
  *
  * Parse the given path and return the language object identified by the prefix
  * and the actual path.
@@ -512,10 +512,10 @@ function language_url_split_prefix($path, $languages) {
 }
 
 /**
- * Return the possible fallback languages ordered by language weight.
+ * Returns the possible fallback languages ordered by language weight.
  *
  * @param
- *   The language type.
+ *   (optional) The language type. Defaults to LANGUAGE_TYPE_CONTENT.
  *
  * @return
  *   An array of language codes.
