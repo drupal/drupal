@@ -1,5 +1,5 @@
 name = Minimal
-description = Start with only a few modules enabled.
+description = Build a custom site without pre-configured functionality. Suitable for advanced users.
 version = VERSION
 core = 8.x
 dependencies[] = node
