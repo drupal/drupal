@@ -780,10 +780,10 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
     '#attributes' => array('class' => array('menu-title-select')),
   );
 
-  // Call Drupal.menu_update_parent_list() to filter the list of
+  // Call Drupal.menuUpdateParentList() to filter the list of
   // available default parent menu items based on the selected menus.
   drupal_add_js(
-    '(function ($) { Drupal.menu_update_parent_list(); })(jQuery);',
+    '(function ($) { Drupal.menuUpdateParentList(); })(jQuery);',
     array('scope' => 'footer', 'type' => 'inline')
   );
 }

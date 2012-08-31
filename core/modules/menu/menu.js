@@ -43,7 +43,7 @@ Drupal.behaviors.menuLinkAutomaticTitle = {
         $link_title.data('menuLinkAutomaticTitleOveridden', true);
       });
       // Global trigger on checkbox (do not fill-in a value when disabled).
-      $checkbox.change(function () {
+      $checkbox.on('change', function () {
         if ($checkbox.is(':checked')) {
           if (!$link_title.data('menuLinkAutomaticTitleOveridden')) {
             $link_title.val($title.val());
