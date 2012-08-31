@@ -7,10 +7,45 @@
  * Note that this is only a partial integration.
  */
 
+namespace Drupal\views\Plugin\ctools\export_ui;
+
+use Drupal\ctools\Plugin\ctools\export_ui\ExportUIPluginBase;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
+
 /**
  * CTools Export UI class handler for Views UI.
+ *
+ * @Plugin(
+ *   id = "views_ui",
+ *   name = "views_ui",
+ *   schema = "views_view",
+ *   module = "views",
+ *   access = "administer views",
+ *   menu = {
+ *     "menu_item" = "views",
+ *     "menu_title" = "Views",
+ *     "menu_description" = "Manage customized lists of content.",
+ *   },
+ *   title_singular = @Translation("view"),
+ *   title_singular_proper = @Translation("View"),
+ *   title_plural = @Translation("views"),
+ *   title_plural_proper = @Translation("Views"),
+ *   strings = {
+ *     "confirmation" = {
+ *       "revert" = {
+ *         "information" = @Translation("This action will permanently remove any customizations made to this view."),
+ *         "success" = @Translation("The view has been reverted.")
+ *       },
+ *       "delete" = {
+ *         "information" = @Translation("This action will permanently remove the view from your database."),
+ *         "success" = @Translation("The view has been deleted.")
+ *       },
+ *     },
+ *   }
+ * )
  */
-class views_ui extends ctools_export_ui {
+class ViewsUI extends ExportUIPluginBase {
 
   function init($plugin) {
     // We modify the plugin info here so that we take the defaults and
@@ -29,7 +64,7 @@ class views_ui extends ctools_export_ui {
     $plugin['menu']['items']['revert']['path'] = 'view/%ctools_export_ui/revert';
     $plugin['menu']['items']['revert']['type'] = MENU_VISIBLE_IN_BREADCRUMB;
 
-    $prefix_count = count(explode('/', $plugin['menu']['menu prefix']));
+    $prefix_count = count(explode('/', $plugin['menu']['menu_prefix']));
     $plugin['menu']['items']['add-template'] = array(
       'path' => 'template/%/add',
       'title' => 'Add from template',
