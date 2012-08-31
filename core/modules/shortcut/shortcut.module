@@ -351,7 +351,10 @@ function shortcut_set_load($set_name) {
 function shortcut_set_save(&$shortcut_set) {
   // First save the shortcut set itself.
   if (isset($shortcut_set->set_name)) {
-    $return = drupal_write_record('shortcut_set', $shortcut_set, 'set_name');
+    $return = db_merge('shortcut_set')
+      ->key(array('set_name' => $shortcut_set->set_name))
+      ->fields(array('title' => $shortcut_set->title))
+      ->execute();
   }
   else {
     $shortcut_set->set_name = shortcut_set_get_unique_name();

@@ -67,9 +67,15 @@ abstract class ShortcutTestBase extends WebTestBase {
   /**
    * Creates a generic shortcut set.
    */
-  function generateShortcutSet($title = '', $default_links = TRUE) {
+  function generateShortcutSet($title = '', $default_links = TRUE, $set_name = '') {
     $set = new stdClass();
     $set->title = empty($title) ? $this->randomName(10) : $title;
+
+    // Set name is generated automatically if not set.
+    if (!empty($set_name)) {
+      $set->set_name = $set_name;
+    }
+
     if ($default_links) {
       $set->links = array();
       $set->links[] = $this->generateShortcutLink('node/add');

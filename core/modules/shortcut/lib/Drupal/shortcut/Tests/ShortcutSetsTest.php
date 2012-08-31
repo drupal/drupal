@@ -153,4 +153,16 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalGet('admin/config/user-interface/shortcut/' . SHORTCUT_DEFAULT_SET_NAME . '/delete');
     $this->assertResponse(403);
   }
+
+  /**
+   * Tests creating a new shortcut set with a defined set name.
+   */
+  function testShortcutSetCreateWithSetName() {
+    $random_name = $this->randomName(10);
+    $new_set = $this->generateShortcutSet($random_name, TRUE, $random_name);
+    $sets = shortcut_sets();
+    $this->assertTrue(isset($sets[$random_name]), 'Successfully created a shortcut set with a defined set name.');
+    $this->drupalGet('user/' . $this->admin_user->uid . '/shortcuts');
+    $this->assertText($new_set->title, 'Generated shortcut set was listed as a choice on the user account page.');
+  }
 }
