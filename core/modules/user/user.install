@@ -224,6 +224,13 @@ function user_schema() {
         'default' => '',
         'description' => 'The {language}.langcode that the user prefers for receiving emails and viewing the site.',
       ),
+      'preferred_admin_langcode' => array(
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The {language}.langcode that the user prefers for viewing administration pages.',
+      ),
       'picture' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -505,6 +512,19 @@ function user_update_8004() {
   }
 }
 
+/**
+ * Creates a preferred_admin_langcode column.
+ */
+function user_update_8005() {
+   $spec = array(
+    'description' => 'The {language}.langcode that the user prefers for viewing administration pages.',
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+  );
+  db_add_field('users', 'preferred_admin_langcode', $spec);
+}
 /**
  * @} End of "addtogroup updates-7.x-to-8.x".
  */

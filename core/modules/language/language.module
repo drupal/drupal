@@ -411,6 +411,15 @@ function language_language_negotiation_info() {
     'description' => t('Use an already detected language for URLs if none is found.'),
   );
 
+  $negotiation_info[LANGUAGE_NEGOTIATION_USER_ADMIN] = array(
+    'types' => array(LANGUAGE_TYPE_INTERFACE),
+    'callbacks' => array('negotiation' => 'language_from_user_admin'),
+    'file' => $file,
+    'weight' => 10,
+    'name' => t('Account administration pages'),
+    'description' => t('Account administration pages language setting.'),
+  );
+
   return $negotiation_info;
 }
 

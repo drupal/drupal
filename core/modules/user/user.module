@@ -2950,14 +2950,24 @@ function theme_user_signature($variables) {
  *
  * @param $account
  *   User account to look up language for.
+ * @param $type
+ *   Optional string to define which preferred langcode should be used.
+ *   Default to 'preferred_langcode' property.
+ *   If set 'preferred_$type_langcode' is used.
  * @param $default
  *   Optional default language object to return if the account
  *   has no valid language.
  */
-function user_preferred_language($account, $default = NULL) {
+function user_preferred_language($account, $type = NULL, $default = NULL) {
   $language_list = language_list();
-  if (!empty($account->preferred_langcode) && isset($language_list[$account->preferred_langcode])) {
-    return $language_list[$account->preferred_langcode];
+  if (isset($type)) {
+    $preferred_langcode = $account->{'preferred_' . $type . '_langcode'};
+  }
+  else {
+    $preferred_langcode = $account->preferred_langcode;
+  }
+  if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {
+    return $language_list[$preferred_langcode];
   }
   else {
     return $default ? $default : language_default();

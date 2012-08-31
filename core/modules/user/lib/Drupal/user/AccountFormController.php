@@ -206,6 +206,8 @@ abstract class AccountFormController extends EntityFormController {
 
     $user_preferred_language = $register ? $language_interface : user_preferred_language($account);
 
+    $user_preferred_admin_language = $register ? $language_interface : user_preferred_language($account, 'admin');
+
     // Is default the interface language?
     include_once DRUPAL_ROOT . '/core/includes/language.inc';
     $interface_language_is_default = language_negotiation_method_get_first(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
@@ -219,10 +221,18 @@ abstract class AccountFormController extends EntityFormController {
 
     $form['language']['preferred_langcode'] = array(
       '#type' => 'language_select',
-      '#title' => t('Language'),
+      '#title' => t('Site language'),
       '#languages' => LANGUAGE_CONFIGURABLE,
       '#default_value' => $user_preferred_language->langcode,
       '#description' => $interface_language_is_default ? t("This account's preferred language for e-mails and site presentation.") : t("This account's preferred language for e-mails."),
+    );
+
+    $form['language']['preferred_admin_langcode'] = array(
+      '#type' => 'language_select',
+      '#title' => t('Administration pages language'),
+      '#languages' => LANGUAGE_CONFIGURABLE,
+      '#default_value' => $user_preferred_admin_language->langcode,
+      '#access' => user_access('access administration pages', $account),
     );
 
     // User entities contain both a langcode property (for identifying the

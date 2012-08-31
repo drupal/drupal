@@ -122,6 +122,13 @@ class User extends Entity {
   public $preferred_langcode = LANGUAGE_NOT_SPECIFIED;
 
   /**
+   * The user's preferred langcode for viewing administration pages.
+   *
+   * @var string
+   */
+  public $preferred_admin_langcode = LANGUAGE_NOT_SPECIFIED;
+
+  /**
    * The file ID of the user's picture.
    *
    * @var integer

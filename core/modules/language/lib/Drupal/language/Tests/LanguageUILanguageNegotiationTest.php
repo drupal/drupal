@@ -197,6 +197,107 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->drupalGet("$langcode_unknown/admin/config", array(), $http_header_browser_fallback);
     $this->assertResponse(404, "Unknown language path prefix should return 404");
 
+    // Set preferred langcode for user to NULL.
+    $account = $this->loggedInUser;
+    $account->preferred_langcode = NULL;
+    $account->save();
+
+    $tests = array(
+      array(
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER, LANGUAGE_NEGOTIATION_DEFAULT),
+        'path' => 'admin/config',
+        'expect' => $default_string,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_DEFAULT,
+        'http_header' => array(),
+        'message' => 'USER > DEFAULT: no preferred user language setting, the UI language is default',
+      ),
+    );
+
+    // Set preferred langcode for user to unknown language.
+    $account = $this->loggedInUser;
+    $account->preferred_langcode = $langcode_unknown;
+    $account->save();
+
+    $tests = array(
+      array(
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER, LANGUAGE_NEGOTIATION_DEFAULT),
+        'path' => 'admin/config',
+        'expect' => $default_string,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_DEFAULT,
+        'http_header' => array(),
+        'message' => 'USER > DEFAULT: invalid preferred user language setting, the UI language is default',
+      ),
+    );
+
+
+    // Set preferred langcode for user to non default.
+    $account->preferred_langcode = $langcode;
+    $account->save();
+
+    $tests = array(
+      array(
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER, LANGUAGE_NEGOTIATION_DEFAULT),
+        'path' => 'admin/config',
+        'expect' => $language_string,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_USER,
+        'http_header' => array(),
+        'message' => 'USER > DEFAULT: defined prefereed user language setting, the UI language is based on user setting',
+      ),
+    );
+
+    foreach ($tests as $test) {
+      $this->runTest($test);
+    }
+
+    // Set preferred admin langcode for user to NULL.
+    $account->preferred_admin_langcode = NULL;
+    $account->save();
+
+    $tests = array(
+      array(
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER_ADMIN, LANGUAGE_NEGOTIATION_DEFAULT),
+        'path' => 'admin/config',
+        'expect' => $default_string,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_DEFAULT,
+        'http_header' => array(),
+        'message' => 'USER ADMIN > DEFAULT: no preferred user admin language setting, the UI language is default',
+      ),
+    );
+
+    // Set preferred admin langcode for user to unknown language.
+    $account->preferred_admin_langcode = $langcode_unknown;
+    $account->save();
+
+    $tests = array(
+      array(
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER_ADMIN, LANGUAGE_NEGOTIATION_DEFAULT),
+        'path' => 'admin/config',
+        'expect' => $default_string,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_DEFAULT,
+        'http_header' => array(),
+        'message' => 'USER ADMIN > DEFAULT: invalid preferred user admin language setting, the UI language is default',
+      ),
+    );
+
+    // Set preferred admin langcode for user to non default.
+    $account->preferred_admin_langcode = $langcode;
+    $account->save();
+
+    $tests = array(
+      array(
+        'language_negotiation' => array(LANGUAGE_NEGOTIATION_USER_ADMIN, LANGUAGE_NEGOTIATION_DEFAULT),
+        'path' => 'admin/config',
+        'expect' => $language_string,
+        'expected_method_id' => LANGUAGE_NEGOTIATION_USER_ADMIN,
+        'http_header' => array(),
+        'message' => 'USER ADMIN > DEFAULT: defined prefereed user admin language setting, the UI language is based on user setting',
+      ),
+    );
+
+    foreach ($tests as $test) {
+      $this->runTest($test);
+    }
+
     // Setup for domain negotiation, first configure the language to have domain
     // URL.
     $edit = array("domain[$langcode]" => $language_domain);

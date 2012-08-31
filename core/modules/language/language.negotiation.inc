@@ -31,6 +31,11 @@ const LANGUAGE_NEGOTIATION_URL_FALLBACK = 'language-url-fallback';
 const LANGUAGE_NEGOTIATION_USER = 'language-user';
 
 /**
+ * The language is set based on the user admin language settings.
+ */
+const LANGUAGE_NEGOTIATION_USER_ADMIN = 'language-user-admin';
+
+/**
  * The language is set based on the request/session parameters.
  */
 const LANGUAGE_NEGOTIATION_SESSION = 'language-session';
@@ -150,14 +155,35 @@ function language_from_browser($languages) {
  *   A valid language code on success, FALSE otherwise.
  */
 function language_from_user($languages) {
-  // User preference (only for logged users).
+  // User preference (only for authenticated users).
   global $user;
 
-  if ($user->uid && !empty($user->preferred_langcode)) {
+  if ($user->uid && !empty($user->preferred_langcode) && isset($languages[$user->preferred_langcode])) {
     return $user->preferred_langcode;
   }
 
   // No language preference from the user.
+  return FALSE;
+}
+
+/**
+ * Identifies admin language from the user preferences.
+ *
+ * @param $languages
+ *   An array of valid language objects.
+ *
+ * @return
+ *   A valid language code on success, FALSE otherwise.
+ */
+function language_from_user_admin($languages) {
+  // User preference (only for authenticated users).
+  global $user;
+
+  if ($user->uid && !empty($user->preferred_admin_langcode) && isset($languages[$user->preferred_admin_langcode]) && path_is_admin(current_path())) {
+    return $user->preferred_admin_langcode;
+  }
+
+  // No language preference from the user or not on an admin path.
   return FALSE;
 }
 
