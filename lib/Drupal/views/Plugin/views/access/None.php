@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class None extends AccessPluginBase {
 
-  function summary_title() {
+  public function summaryTitle() {
     return t('Unrestricted');
   }
 

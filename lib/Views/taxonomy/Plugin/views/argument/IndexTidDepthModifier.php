@@ -25,9 +25,9 @@ use Drupal\Core\Annotation\Plugin;
  */
 class IndexTidDepthModifier extends ArgumentPluginBase {
 
-  function options_form(&$form, &$form_state) { }
+  public function buildOptionsForm(&$form, &$form_state) { }
 
-  function query($group_by = FALSE) { }
+  public function query($group_by = FALSE) { }
 
   function pre_query() {
     // We don't know our argument yet, but it's based upon our position:

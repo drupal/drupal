@@ -22,14 +22,14 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Link extends FieldPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['text'] = array('default' => '', 'translatable' => TRUE);
     $options['link_to_node'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['text'] = array(
       '#type' => 'textfield',
       '#title' => t('Text to display'),
@@ -40,10 +40,10 @@ class Link extends FieldPluginBase {
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_node'],
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
-  function query() {}
+  public function query() {}
 
   function render($values) {
     $comment = $this->get_entity($values);

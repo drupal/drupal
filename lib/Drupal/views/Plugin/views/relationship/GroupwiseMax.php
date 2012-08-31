@@ -68,8 +68,8 @@ class GroupwiseMax extends RelationshipPluginBase {
   /**
    * Defines default values for options.
    */
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['subquery_sort'] = array('default' => NULL);
     // Descending more useful.
@@ -85,8 +85,8 @@ class GroupwiseMax extends RelationshipPluginBase {
    * Extends the relationship's basic options, allowing the user to pick
    * a sort and an order for it.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     // Get the sorts that apply to our base.
     $sorts = views_fetch_fields($this->definition['base'], 'sort');
@@ -172,7 +172,7 @@ class GroupwiseMax extends RelationshipPluginBase {
   /**
    * When the form is submitted, take sure to clear the subquery string cache.
    */
-  function options_form_submit(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, &$form_state) {
     $cid = 'views_relationship_groupwise_max:' . $this->view->name . ':' . $this->view->current_display . ':' . $this->options['id'];
     cache('views_data')->delete($cid);
   }
@@ -338,7 +338,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    * This is mostly a copy of our parent's query() except for this bit with
    * the join class.
    */
-  function query() {
+  public function query() {
     // Figure out what base table this relationship brings to the party.
     $table_data = views_fetch_data($this->definition['base']);
     $base_field = empty($this->definition['base field']) ? $table_data['table']['base']['field'] : $this->definition['base field'];

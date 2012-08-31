@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Group extends ArgumentPluginBase {
 
-  function construct() {
+  public function construct() {
     parent::construct('group');
   }
 

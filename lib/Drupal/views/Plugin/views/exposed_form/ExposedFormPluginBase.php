@@ -41,11 +41,11 @@ abstract class ExposedFormPluginBase extends PluginBase {
     $this->view = &$view;
     $this->display = &$display;
 
-    $this->unpack_options($this->options, $options);
+    $this->unpackOptions($this->options, $options);
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['submit_button'] = array('default' => 'Apply', 'translatable' => TRUE);
     $options['reset_button'] = array('default' => FALSE, 'bool' => TRUE);
     $options['reset_button_label'] = array('default' => 'Reset', 'translatable' => TRUE);
@@ -57,8 +57,8 @@ abstract class ExposedFormPluginBase extends PluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['submit_button'] = array(
       '#type' => 'textfield',
       '#title' => t('Submit button text'),
@@ -172,7 +172,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     }
   }
 
-  function query() {
+  public function query() {
     $view = $this->view;
     $exposed_data = isset($view->exposed_data) ? $view->exposed_data : array();
     $sort_by = isset($exposed_data['sort_by']) ? $exposed_data['sort_by'] : NULL;

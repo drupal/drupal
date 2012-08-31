@@ -28,8 +28,8 @@ class Time extends CachePluginBase {
    */
   protected $usesOptions = TRUE;
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['results_lifespan'] = array('default' => 3600);
     $options['results_lifespan_custom'] = array('default' => 0);
     $options['output_lifespan'] = array('default' => 3600);
@@ -38,8 +38,8 @@ class Time extends CachePluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $options = array(60, 300, 1800, 3600, 21600, 518400);
     $options = drupal_map_assoc($options, 'format_interval');
     $options = array(-1 => t('Never cache')) + $options + array('custom' => t('Custom'));
@@ -86,7 +86,7 @@ class Time extends CachePluginBase {
     );
   }
 
-  function options_validate(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, &$form_state) {
     $custom_fields = array('output_lifespan', 'results_lifespan');
     foreach ($custom_fields as $field) {
       if ($form_state['values']['cache_options'][$field] == 'custom' && !is_numeric($form_state['values']['cache_options'][$field . '_custom'])) {
@@ -95,7 +95,7 @@ class Time extends CachePluginBase {
     }
   }
 
-  function summary_title() {
+  public function summaryTitle() {
     $results_lifespan = $this->get_lifespan('results');
     $output_lifespan = $this->get_lifespan('output');
     return format_interval($results_lifespan, 1) . '/' . format_interval($output_lifespan, 1);

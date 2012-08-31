@@ -38,18 +38,18 @@ class ManyToOne extends InOperator {
     $this->helper = new ManyToOneHelper($this);
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['operator']['default'] = 'or';
     $options['value']['default'] = array();
 
     if (isset($this->helper)) {
-      $this->helper->option_definition($options);
+      $this->helper->defineOptions($options);
     }
     else {
       $helper = new ManyToOneHelper($this);
-      $helper->option_definition($options);
+      $helper->defineOptions($options);
     }
 
     return $options;
@@ -108,7 +108,7 @@ class ManyToOne extends InOperator {
     parent::value_form($form, $form_state);
 
     if (empty($form_state['exposed'])) {
-      $this->helper->options_form($form, $form_state);
+      $this->helper->buildOptionsForm($form, $form_state);
     }
   }
 

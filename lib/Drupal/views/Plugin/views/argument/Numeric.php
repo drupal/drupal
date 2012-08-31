@@ -33,8 +33,8 @@ class Numeric extends ArgumentPluginBase {
    */
   var $value;
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['break_phrase'] = array('default' => FALSE, 'bool' => TRUE);
     $options['not'] = array('default' => FALSE, 'bool' => TRUE);
@@ -42,8 +42,8 @@ class Numeric extends ArgumentPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     // allow + for or, , for and
     $form['break_phrase'] = array(
@@ -96,7 +96,7 @@ class Numeric extends ArgumentPluginBase {
     return $this->value;
   }
 
-  function query($group_by = FALSE) {
+  public function query($group_by = FALSE) {
     $this->ensure_my_table();
 
     if (!empty($this->options['break_phrase'])) {

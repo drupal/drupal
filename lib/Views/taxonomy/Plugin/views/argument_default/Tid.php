@@ -36,8 +36,8 @@ class Tid extends ArgumentDefaultPluginBase {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['term_page'] = array('default' => TRUE, 'bool' => TRUE);
     $options['node'] = array('default' => FALSE, 'bool' => TRUE);
@@ -48,7 +48,7 @@ class Tid extends ArgumentDefaultPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['term_page'] = array(
       '#type' => 'checkbox',
       '#title' => t('Load default filter from term page'),
@@ -106,7 +106,7 @@ class Tid extends ArgumentDefaultPluginBase {
     );
   }
 
-  function options_submit(&$form, &$form_state, &$options = array()) {
+  public function submitOptionsForm(&$form, &$form_state, &$options = array()) {
     // Filter unselected items so we don't unnecessarily store giant arrays.
     $options['vocabularies'] = array_filter($options['vocabularies']);
   }

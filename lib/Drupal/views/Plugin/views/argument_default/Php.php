@@ -22,15 +22,15 @@ use Drupal\Core\Annotation\Translation;
  */
 class Php extends ArgumentDefaultPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['code'] = array('default' => '');
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['code'] = array(
       '#type' => 'textarea',
       '#title' => t('PHP contextual filter code'),

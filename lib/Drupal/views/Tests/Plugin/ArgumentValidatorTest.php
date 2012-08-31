@@ -28,10 +28,10 @@ class ArgumentValidatorTest extends PluginTestBase {
     $view->setDisplay('default');
     $view->preExecute();
     $view->initHandlers();
-    $this->assertTrue($view->argument['null']->validate_arg($string));
+    $this->assertTrue($view->argument['null']->validateArgument($string));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
-    $this->assertFalse($view->argument['null']->validate_arg($this->randomName()));
+    $this->assertFalse($view->argument['null']->validateArgument($this->randomName()));
   }
 
   function testArgumentValidateNumeric() {
@@ -39,10 +39,10 @@ class ArgumentValidatorTest extends PluginTestBase {
     $view->setDisplay('default');
     $view->preExecute();
     $view->initHandlers();
-    $this->assertFalse($view->argument['null']->validate_arg($this->randomString()));
+    $this->assertFalse($view->argument['null']->validateArgument($this->randomString()));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
-    $this->assertTrue($view->argument['null']->validate_arg(12));
+    $this->assertTrue($view->argument['null']->validateArgument(12));
   }
 
   function view_test_argument_validate_php($string) {

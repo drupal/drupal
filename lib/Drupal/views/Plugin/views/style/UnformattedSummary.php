@@ -25,15 +25,15 @@ use Drupal\Core\Annotation\Translation;
  */
 class UnformattedSummary extends DefaultSummary {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['inline'] = array('default' => FALSE, 'bool' => TRUE);
     $options['separator'] = array('default' => '');
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['inline'] = array(
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['inline']),

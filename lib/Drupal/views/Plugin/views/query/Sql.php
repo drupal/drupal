@@ -184,8 +184,8 @@ class Sql extends QueryPluginBase {
     $this->header = $header;
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['disable_sql_rewrite'] = array(
       'default' => FALSE,
       'translatable' => FALSE,
@@ -212,8 +212,8 @@ class Sql extends QueryPluginBase {
   /**
    * Add settings for the ui.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['disable_sql_rewrite'] = array(
       '#title' => t('Disable SQL rewriting'),
@@ -253,7 +253,7 @@ class Sql extends QueryPluginBase {
   /**
    * Special submit handling.
    */
-  function options_submit(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, &$form_state) {
     $element = array('#parents' => array('query', 'options', 'query_tags'));
     $value = explode(',', drupal_array_get_nested_value($form_state['values'], $element['#parents']));
     $value = array_filter(array_map('trim', $value));
@@ -1240,7 +1240,7 @@ class Sql extends QueryPluginBase {
    * @param $get_count
    *   Provide a countquery if this is true, otherwise provide a normal query.
    */
-  function query($get_count = FALSE) {
+  public function query($get_count = FALSE) {
     // Check query distinct value.
     if (empty($this->no_distinct) && $this->distinct && !empty($this->fields)) {
       $base_field_alias = $this->add_field($this->base_table, $this->base_field);

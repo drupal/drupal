@@ -119,8 +119,10 @@ class BasicTest extends ViewTestBase {
         'breadcrumb' => '',
         'default_argument_type' => 'fixed',
         'default_argument' => '',
-        'validate_type' => 'none',
-        'validate_fail' => 'not found',
+        'validate' => array(
+          'type' => 'none',
+          'fail' => 'not found',
+        ),
         'break_phrase' => 0,
         'not' => 0,
         'id' => 'age',

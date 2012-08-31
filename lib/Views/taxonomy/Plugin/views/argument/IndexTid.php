@@ -22,14 +22,14 @@ use Drupal\views\Plugin\views\argument\ManyToOne;
  */
 class IndexTid extends ManyToOne {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['set_breadcrumb'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['set_breadcrumb'] = array(
       '#type' => 'checkbox',
       '#title' => t("Set the breadcrumb for the term parents"),

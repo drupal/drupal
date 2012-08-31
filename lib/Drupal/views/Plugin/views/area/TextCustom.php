@@ -20,14 +20,14 @@ use Drupal\Core\Annotation\Plugin;
  */
 class TextCustom extends AreaPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     unset($options['format']);
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     // Alter the form element, to be a regular text area.
     $form['content']['#type'] = 'textarea';
@@ -35,8 +35,8 @@ class TextCustom extends AreaPluginBase {
     unset($form['content']['#wysiwyg']);
   }
 
-  // Empty, so we don't inherit options_submit from the parent.
-  function options_submit(&$form, &$form_state) {
+  // Empty, so we don't inherit submitOptionsForm from the parent.
+  public function submitOptionsForm(&$form, &$form_state) {
   }
 
   function render($empty = FALSE) {

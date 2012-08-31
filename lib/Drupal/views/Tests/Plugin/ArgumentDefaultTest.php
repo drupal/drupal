@@ -55,7 +55,7 @@ class ArgumentDefaultTest extends PluginTestBase {
     $error = array(
       '%type' => 'Notice',
       '!message' => 'Undefined index:  ' . $argument_type,
-      '%function' => 'views_handler_argument->options_validate()',
+      '%function' => 'views_handler_argument->validateOptionsForm()',
     );
     $message = t('%type: !message in %function', $error);
     $this->assertNoRaw($message, t('Did not find error message: !message.', array('!message' => $message)));

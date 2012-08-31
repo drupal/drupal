@@ -39,7 +39,7 @@ class Search extends ArgumentPluginBase {
   /**
    * Add this argument to the query.
    */
-  function query($group_by = FALSE) {
+  public function query($group_by = FALSE) {
     $required = FALSE;
     $this->query_parse_search_expression($this->argument);
     if (!isset($this->search_query)) {

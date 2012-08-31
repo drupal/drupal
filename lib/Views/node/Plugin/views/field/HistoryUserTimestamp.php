@@ -37,16 +37,16 @@ class HistoryUserTimestamp extends Node {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['comments'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     if (module_exists('comment')) {
       $form['comments'] = array(
         '#type' => 'checkbox',
@@ -57,7 +57,7 @@ class HistoryUserTimestamp extends Node {
     }
   }
 
-  function query() {
+  public function query() {
     // Only add ourselves to the query if logged in.
     global $user;
     if (!$user->uid) {

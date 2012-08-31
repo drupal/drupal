@@ -69,7 +69,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Construct a new field handler.
    */
-  function construct() {
+  public function construct() {
     parent::construct();
 
     $this->additional_fields = array();
@@ -95,7 +95,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Called to add the field to a query.
    */
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     // Add the field.
     $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
@@ -407,8 +407,8 @@ abstract class FieldPluginBase extends HandlerBase {
     return TRUE;
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['label'] = array('default' => $this->definition['title'], 'translatable' => TRUE);
     $options['exclude'] = array('default' => FALSE, 'bool' => TRUE);
@@ -465,7 +465,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Performs some cleanup tasks on the options array before saving it.
    */
-  function options_submit(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, &$form_state) {
     $options = &$form_state['values']['options'];
     $types = array('element_type', 'element_label_type', 'element_wrapper_type');
     $classes = array_combine(array('element_class', 'element_label_class', 'element_wrapper_class'), $types);
@@ -492,8 +492,8 @@ abstract class FieldPluginBase extends HandlerBase {
    * Default options form that provides the label widget that all fields
    * should have.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $label = $this->label();
     $form['custom_label'] = array(
@@ -1591,7 +1591,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
    * allows sites to override output fairly easily.
    */
   function theme($values) {
-    return theme($this->theme_functions(),
+    return theme($this->themeFunctions(),
       array(
         'view' => $this->view,
         'field' => $this,
@@ -1599,7 +1599,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       ));
   }
 
-  function theme_functions() {
+  public function themeFunctions() {
     $themes = array();
     $hook = 'views_view_field';
 

@@ -22,29 +22,29 @@ use Drupal\Core\Annotation\Plugin;
  */
 class LinkEdit extends FieldPluginBase {
 
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->additional_fields['lid'] = 'lid';
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['text'] = array('default' => '', 'translatable' => TRUE);
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['text'] = array(
       '#type' => 'textfield',
       '#title' => t('Text to display'),
       '#default_value' => $this->options['text'],
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $this->add_additional_fields();
   }

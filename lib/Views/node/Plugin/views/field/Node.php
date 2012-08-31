@@ -35,8 +35,8 @@ class Node extends FieldPluginBase {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['link_to_node'] = array('default' => isset($this->definition['link_to_node default']) ? $this->definition['link_to_node default'] : FALSE, 'bool' => TRUE);
     return $options;
   }
@@ -44,7 +44,7 @@ class Node extends FieldPluginBase {
   /**
    * Provide link to node option
    */
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['link_to_node'] = array(
       '#title' => t('Link this field to the original piece of content'),
       '#description' => t("Enable to override this field's links."),
@@ -52,7 +52,7 @@ class Node extends FieldPluginBase {
       '#default_value' => !empty($this->options['link_to_node']),
     );
 
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   /**

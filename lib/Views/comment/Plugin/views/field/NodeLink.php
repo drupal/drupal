@@ -22,13 +22,13 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NodeLink extends FieldPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['teaser'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['teaser'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show teaser-style link'),
@@ -36,10 +36,10 @@ class NodeLink extends FieldPluginBase {
       '#description' => t('Show the comment link in the form used on standard node teasers, rather than the full node form.'),
     );
 
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
-  function query() {}
+  public function query() {}
 
   function render($values) {
     $node = $this->get_entity($values);

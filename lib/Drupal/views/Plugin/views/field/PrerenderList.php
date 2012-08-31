@@ -35,8 +35,8 @@ class PrerenderList extends FieldPluginBase {
    */
   var $items = array();
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['type'] = array('default' => 'separator');
     $options['separator'] = array('default' => ', ');
@@ -44,7 +44,7 @@ class PrerenderList extends FieldPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['type'] = array(
       '#type' => 'radios',
       '#title' => t('Display type'),
@@ -66,7 +66,7 @@ class PrerenderList extends FieldPluginBase {
         ),
       ),
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   /**

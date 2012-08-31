@@ -23,7 +23,7 @@ class CreatedYearMonth extends Date {
   /**
    * Constructor implementation
    */
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->format = 'F Y';
     $this->arg_format = 'Ym';

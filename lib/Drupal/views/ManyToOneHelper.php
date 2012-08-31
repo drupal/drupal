@@ -27,11 +27,11 @@ class ManyToOneHelper {
     $this->handler = $handler;
   }
 
-  static function option_definition(&$options) {
+  public static function defineOptions(&$options) {
     $options['reduce_duplicates'] = array('default' => FALSE, 'bool' => TRUE);
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['reduce_duplicates'] = array(
       '#type' => 'checkbox',
       '#title' => t('Reduce duplicates'),

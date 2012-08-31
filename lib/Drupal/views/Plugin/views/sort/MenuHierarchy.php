@@ -25,14 +25,14 @@ use Drupal\Core\Annotation\Plugin;
  */
 class MenuHierarchy extends SortPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['sort_within_level'] = array('default' => FALSE);
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['sort_within_level'] = array(
       '#type' => 'checkbox',
       '#title' => t('Sort within each hierarchy level'),
@@ -41,7 +41,7 @@ class MenuHierarchy extends SortPluginBase {
     );
   }
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $max_depth = isset($this->definition['max depth']) ? $this->definition['max depth'] : MENU_MAX_DEPTH;
     for ($i = 1; $i <= $max_depth; ++$i) {

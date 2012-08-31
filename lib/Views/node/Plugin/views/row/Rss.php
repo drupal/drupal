@@ -36,8 +36,8 @@ class Rss extends RowPluginBase {
   // Stores the nodes loaded with pre_render.
   var $nodes = array();
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['item_length'] = array('default' => 'default');
     $options['links'] = array('default' => FALSE, 'bool' => TRUE);
@@ -45,13 +45,13 @@ class Rss extends RowPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['item_length'] = array(
       '#type' => 'select',
       '#title' => t('Display type'),
-      '#options' => $this->options_form_summary_options(),
+      '#options' => $this->buildOptionsForm_summary_options(),
       '#default_value' => $this->options['item_length'],
     );
     $form['links'] = array(
@@ -64,7 +64,7 @@ class Rss extends RowPluginBase {
   /**
    * Return the main options, which are shown in the summary title.
    */
-  function options_form_summary_options() {
+  public function buildOptionsForm_summary_options() {
     $entity_info = entity_get_info('node');
     $options = array();
     if (!empty($entity_info['view modes'])) {
@@ -77,8 +77,8 @@ class Rss extends RowPluginBase {
     return $options;
   }
 
-  function summary_title() {
-    $options = $this->options_form_summary_options();
+  public function summaryTitle() {
+    $options = $this->buildOptionsForm_summary_options();
     return check_plain($options[$this->options['item_length']]);
   }
 
@@ -172,7 +172,7 @@ class Rss extends RowPluginBase {
     $item->elements = $node->rss_elements;
     $item->nid = $node->nid;
 
-    return theme($this->theme_functions(), array(
+    return theme($this->themeFunctions(), array(
       'view' => $this->view,
       'options' => $this->options,
       'row' => $item

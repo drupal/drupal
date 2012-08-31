@@ -37,7 +37,7 @@ abstract class AccessPluginBase extends PluginBase {
     if (is_object($display->handler)) {
       $options = $display->handler->getOption('access');
       // Overlay incoming options on top of defaults
-      $this->unpack_options($this->options, $options);
+      $this->unpackOptions($this->options, $options);
     }
   }
 
@@ -45,28 +45,28 @@ abstract class AccessPluginBase extends PluginBase {
    * Retrieve the options when this is a new access
    * control plugin
    */
-  function option_definition() { return array(); }
+  protected function defineOptions() { return array(); }
 
   /**
    * Provide the default form for setting options.
    */
-  function options_form(&$form, &$form_state) { }
+  public function buildOptionsForm(&$form, &$form_state) { }
 
   /**
    * Provide the default form form for validating options
    */
-  function options_validate(&$form, &$form_state) { }
+  public function validateOptionsForm(&$form, &$form_state) { }
 
   /**
    * Provide the default form form for submitting options
    */
-  function options_submit(&$form, &$form_state) { }
+  public function submitOptionsForm(&$form, &$form_state) { }
 
   /**
    * Return a string to display as the clickable title for the
    * access control.
    */
-  function summary_title() {
+  public function summaryTitle() {
     return t('Unknown');
   }
 

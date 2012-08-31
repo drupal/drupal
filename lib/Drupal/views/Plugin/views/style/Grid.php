@@ -42,8 +42,8 @@ class Grid extends StylePluginBase {
   /**
    * Set default options
    */
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['columns'] = array('default' => '4');
     $options['alignment'] = array('default' => 'horizontal');
@@ -56,8 +56,8 @@ class Grid extends StylePluginBase {
   /**
    * Render the given style.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['columns'] = array(
       '#type' => 'number',
       '#title' => t('Number of columns'),

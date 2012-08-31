@@ -29,8 +29,8 @@ class Rss extends RowPluginBase {
    var $base_table = 'comment';
    var $base_field = 'cid';
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['item_length'] = array('default' => 'default');
     $options['links'] = array('default' => FALSE, 'bool' => TRUE);
@@ -38,8 +38,8 @@ class Rss extends RowPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['item_length'] = array(
       '#type' => 'select',
@@ -158,7 +158,7 @@ class Rss extends RowPluginBase {
     $item->elements = $comment->rss_elements;
     $item->cid = $comment->id();
 
-    return theme($this->theme_functions(), array(
+    return theme($this->themeFunctions(), array(
       'view' => $this->view,
       'options' => $this->options,
       'row' => $item

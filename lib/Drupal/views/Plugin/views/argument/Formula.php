@@ -30,7 +30,7 @@ class Formula extends ArgumentPluginBase {
   /**
    * Constructor
    */
-  function construct() {
+  public function construct() {
     parent::construct();
 
     if (!empty($this->definition['formula'])) {
@@ -60,7 +60,7 @@ class Formula extends ArgumentPluginBase {
   /**
    * Build the query based upon the formula
    */
-  function query($group_by = FALSE) {
+  public function query($group_by = FALSE) {
     $this->ensure_my_table();
     // Now that our table is secure, get our formula.
     $placeholder = $this->placeholder();

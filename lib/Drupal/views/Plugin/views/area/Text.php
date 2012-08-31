@@ -20,16 +20,16 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Text extends AreaPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['content'] = array('default' => '', 'translatable' => TRUE, 'format_key' => 'format');
     $options['format'] = array('default' => NULL);
     $options['tokenize'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['content'] = array(
       '#type' => 'text_format',
@@ -90,10 +90,10 @@ class Text extends AreaPluginBase {
     }
   }
 
-  function options_submit(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, &$form_state) {
     $form_state['values']['options']['format'] = $form_state['values']['options']['content']['format'];
     $form_state['values']['options']['content'] = $form_state['values']['options']['content']['value'];
-    parent::options_submit($form, $form_state);
+    parent::submitOptionsForm($form, $form_state);
   }
 
   function render($empty = FALSE) {

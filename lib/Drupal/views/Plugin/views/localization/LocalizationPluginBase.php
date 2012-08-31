@@ -152,7 +152,7 @@ abstract class LocalizationPluginBase extends PluginBase {
       }
       // Unpack handlers.
       if (is_object($this->view->display[$display_id]->handler)) {
-        $this->view->display[$display_id]->handler->unpack_translatables($translatable);
+        $this->view->display[$display_id]->handler->unpackTranslatables($translatable);
       }
       foreach ($translatable as $data) {
         $data['keys'] = array_merge(array($this->view->name, $display_id), $data['keys']);

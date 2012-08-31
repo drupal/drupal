@@ -66,7 +66,7 @@ abstract class CachePluginBase extends PluginBase {
     if (is_object($display->handler)) {
       $options = $display->handler->getOption('cache');
       // Overlay incoming options on top of defaults
-      $this->unpack_options($this->options, $options);
+      $this->unpackOptions($this->options, $options);
     }
   }
 
@@ -74,7 +74,7 @@ abstract class CachePluginBase extends PluginBase {
    * Return a string to display as the clickable title for the
    * access control.
    */
-  function summary_title() {
+  public function summaryTitle() {
     return t('Unknown');
   }
 

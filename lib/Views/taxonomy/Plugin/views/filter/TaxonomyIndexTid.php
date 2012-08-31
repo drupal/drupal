@@ -45,8 +45,8 @@ class TaxonomyIndexTid extends ManyToOne {
 
   function get_value_options() { /* don't overwrite the value options */ }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['type'] = array('default' => 'textfield');
     $options['limit'] = array('default' => TRUE, 'bool' => TRUE);
@@ -215,7 +215,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
     if (empty($form_state['exposed'])) {
       // Retain the helper option
-      $this->helper->options_form($form, $form_state);
+      $this->helper->buildOptionsForm($form, $form_state);
     }
   }
 

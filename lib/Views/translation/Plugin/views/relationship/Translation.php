@@ -23,8 +23,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Translation extends RelationshipPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['language'] = array('default' => 'current');
 
     return $options;
@@ -33,8 +33,8 @@ class Translation extends RelationshipPluginBase {
   /**
    * Add a translation selector.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $options = array(
       'all' => t('All'),
@@ -54,7 +54,7 @@ class Translation extends RelationshipPluginBase {
   /**
    * Called to implement a relationship in a query.
    */
-  function query() {
+  public function query() {
     // Figure out what base table this relationship brings to the party.
     $table_data = views_fetch_data($this->definition['base']);
     $base_field = empty($this->definition['base field']) ? $table_data['table']['base']['field'] : $this->definition['base field'];

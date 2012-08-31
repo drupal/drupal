@@ -24,15 +24,15 @@ use Drupal\Core\Annotation\Translation;
  */
 class Full extends PagerPluginBase {
 
-  function summary_title() {
+  public function summaryTitle() {
     if (!empty($this->options['offset'])) {
       return format_plural($this->options['items_per_page'], '@count item, skip @skip', 'Paged, @count items, skip @skip', array('@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']));
     }
       return format_plural($this->options['items_per_page'], '@count item', 'Paged, @count items', array('@count' => $this->options['items_per_page']));
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['items_per_page'] = array('default' => 10);
     $options['offset'] = array('default' => 0);
     $options['id'] = array('default' => 0);
@@ -65,8 +65,8 @@ class Full extends PagerPluginBase {
   /**
    * Provide the default form for setting options.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $pager_text = $this->display->handler->getPagerText();
     $form['items_per_page'] = array(
       '#title' => $pager_text['items per page title'],
@@ -225,7 +225,7 @@ class Full extends PagerPluginBase {
     );
   }
 
-  function options_validate(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, &$form_state) {
     // Only accept integer values.
     $error = FALSE;
     $exposed_options = $form_state['values']['pager_options']['expose']['items_per_page_options'];
@@ -258,7 +258,7 @@ class Full extends PagerPluginBase {
     }
   }
 
-  function query() {
+  public function query() {
     if ($this->items_per_page_exposed()) {
       $query = drupal_container()->get('request')->query;
       $items_per_page = $query->get('items_per_page');

@@ -23,7 +23,7 @@ class CreatedWeek extends Date {
   /**
    * Constructor implementation
    */
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->arg_format = 'w';
     $this->formula = views_date_sql_extract('WEEK', "***table***.$this->real_field");

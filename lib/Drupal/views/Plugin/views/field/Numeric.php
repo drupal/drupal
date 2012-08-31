@@ -24,8 +24,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Numeric extends FieldPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['set_precision'] = array('default' => FALSE, 'bool' => TRUE);
     $options['precision'] = array('default' => 0);
@@ -40,7 +40,7 @@ class Numeric extends FieldPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     if (!empty($this->definition['float'])) {
       $form['set_precision'] = array(
         '#type' => 'checkbox',
@@ -123,7 +123,7 @@ class Numeric extends FieldPluginBase {
       '#description' => t('Text to put after the number, such as currency symbol.'),
     );
 
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   function render($values) {

@@ -22,13 +22,13 @@ use Drupal\Core\Annotation\Plugin;
  */
 class FormatName extends FieldPluginBase {
 
-  function construct() {
+  public function construct() {
     parent::construct();
     // Be explicit about the table we are using.
     $this->additional_fields['name'] = array('table' => 'filter_formats', 'field' => 'name');
   }
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $this->add_additional_fields();
   }

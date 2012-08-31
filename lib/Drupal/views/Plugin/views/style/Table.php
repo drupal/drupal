@@ -59,8 +59,8 @@ class Table extends StylePluginBase {
    */
   public $order;
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['columns'] = array('default' => array());
     $options['default'] = array('default' => '');
@@ -195,8 +195,8 @@ class Table extends StylePluginBase {
   /**
    * Render the given style.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $handlers = $this->display->handler->getHandlers('field');
     if (empty($handlers)) {
       $form['error_markup'] = array(

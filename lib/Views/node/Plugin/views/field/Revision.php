@@ -32,8 +32,8 @@ class Revision extends Node {
       }
     }
   }
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['link_to_node_revision'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
@@ -41,14 +41,14 @@ class Revision extends Node {
   /**
    * Provide link to revision option.
    */
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['link_to_node_revision'] = array(
       '#title' => t('Link this field to its content revision'),
       '#description' => t('This will override any other link you have set.'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['link_to_node_revision']),
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   /**

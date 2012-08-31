@@ -25,8 +25,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 class IndexTidDepth extends ArgumentPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['depth'] = array('default' => 0);
     $options['break_phrase'] = array('default' => FALSE, 'bool' => TRUE);
@@ -36,7 +36,7 @@ class IndexTidDepth extends ArgumentPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['depth'] = array(
       '#type' => 'weight',
       '#title' => t('Depth'),
@@ -69,7 +69,7 @@ class IndexTidDepth extends ArgumentPluginBase {
         ),
       ),
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   function set_breadcrumb(&$breadcrumb) {
@@ -98,7 +98,7 @@ class IndexTidDepth extends ArgumentPluginBase {
     return $actions;
   }
 
-  function query($group_by = FALSE) {
+  public function query($group_by = FALSE) {
     $this->ensure_my_table();
 
     if (!empty($this->options['break_phrase'])) {

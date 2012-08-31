@@ -43,8 +43,8 @@ class TaxonomyIndexTid extends PrerenderList {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['link_to_taxonomy'] = array('default' => TRUE, 'bool' => TRUE);
     $options['limit'] = array('default' => FALSE, 'bool' => TRUE);
@@ -56,7 +56,7 @@ class TaxonomyIndexTid extends PrerenderList {
   /**
    * Provide "link to term" option.
    */
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['link_to_taxonomy'] = array(
       '#title' => t('Link this field to its term page'),
       '#type' => 'checkbox',
@@ -88,13 +88,13 @@ class TaxonomyIndexTid extends PrerenderList {
 
     );
 
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   /**
    * Add this term to the query
    */
-  function query() {
+  public function query() {
     $this->add_additional_fields();
   }
 

@@ -22,8 +22,8 @@ use Drupal\views\Plugin\views\access\AccessPluginBase;
  */
 class StaticTest extends AccessPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['access'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;

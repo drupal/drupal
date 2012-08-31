@@ -37,7 +37,7 @@ interface WizardInterface {
    *   An empty array if the view is valid; an array of error strings if it is
    *   not.
    */
-  function validate(array $form, array &$form_state);
+  public function validate(array $form, array &$form_state);
 
   /**
    * Creates a view from values that have already been validated.

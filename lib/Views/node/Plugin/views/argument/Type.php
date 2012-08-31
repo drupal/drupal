@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Type extends String {
 
-  function construct() {
+  public function construct() {
     parent::construct('type');
   }
 

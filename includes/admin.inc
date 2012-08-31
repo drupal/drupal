@@ -2514,7 +2514,7 @@ function views_ui_standard_submit($form, &$form_state) {
     $display = &$form_state['view']->display[$form_state['display_id']];
     // optionsOverride toggles the override of this section.
     $display->handler->optionsOverride($form, $form_state);
-    $display->handler->options_submit($form, $form_state);
+    $display->handler->submitOptionsForm($form, $form_state);
   }
   elseif (!$was_defaulted && $is_defaulted) {
     // We used to have an override for this display, but the user now wants
@@ -2524,7 +2524,7 @@ function views_ui_standard_submit($form, &$form_state) {
     $display = &$form_state['view']->display[$form_state['display_id']];
     // optionsOverride toggles the override of this section.
     $display->handler->optionsOverride($form, $form_state);
-    $display->handler->options_submit($form, $form_state);
+    $display->handler->submitOptionsForm($form, $form_state);
   }
 
   $submit_handler = $form['#form_id'] . '_submit';
@@ -3210,7 +3210,7 @@ function views_ui_edit_display_form($form, &$form_state) {
     '#theme_wrappers' => array('container'),
     '#attributes' => array('class' => array('scroll')),
   );
-  $display->handler->options_form($form['options'], $form_state);
+  $display->handler->buildOptionsForm($form['options'], $form_state);
 
   // The handler options form sets $form['#title'], which we need on the entire
   // $form instead of just the ['options'] section.
@@ -3237,7 +3237,7 @@ function views_ui_edit_display_form($form, &$form_state) {
  */
 function views_ui_edit_display_form_validate($form, &$form_state) {
   $display = &$form_state['view']->display[$form_state['display_id']];
-  $display->handler->options_validate($form['options'], $form_state);
+  $display->handler->validateOptionsForm($form['options'], $form_state);
 
   if (form_get_errors()) {
     $form_state['rerender'] = TRUE;
@@ -3249,7 +3249,7 @@ function views_ui_edit_display_form_validate($form, &$form_state) {
  */
 function views_ui_edit_display_form_submit($form, &$form_state) {
   $display = &$form_state['view']->display[$form_state['display_id']];
-  $display->handler->options_submit($form, $form_state);
+  $display->handler->submitOptionsForm($form, $form_state);
 
   views_ui_cache_set($form_state['view']);
 }
@@ -4306,7 +4306,7 @@ function views_ui_config_item_form($form, &$form_state) {
       $form['#section'] = $display_id . '-' . $type . '-' . $id;
 
       // Get form from the handler.
-      $handler->options_form($form['options'], $form_state);
+      $handler->buildOptionsForm($form['options'], $form_state);
       $form_state['handler'] = &$handler;
     }
 
@@ -4328,7 +4328,7 @@ function views_ui_config_item_form($form, &$form_state) {
  * Submit handler for configing new item(s) to a view.
  */
 function views_ui_config_item_form_validate($form, &$form_state) {
-  $form_state['handler']->options_validate($form['options'], $form_state);
+  $form_state['handler']->validateOptionsForm($form['options'], $form_state);
 
   if (form_get_errors()) {
     $form_state['rerender'] = TRUE;
@@ -4341,7 +4341,7 @@ function views_ui_config_item_form_validate($form, &$form_state) {
  */
 function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   // Run it through the handler's submit function.
-  $form_state['handler']->options_submit($form['options'], $form_state);
+  $form_state['handler']->submitOptionsForm($form['options'], $form_state);
   $item = $form_state['handler']->options;
   $types = View::viewsObjectTypes();
 
@@ -4374,7 +4374,7 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
 
   // This unpacks only options that are in the definition, ensuring random
   // extra stuff on the form is not sent through.
-  $handler->unpack_options($handler->options, $options, NULL, FALSE);
+  $handler->unpackOptions($handler->options, $options, NULL, FALSE);
 
   // Store the item back on the view
   $form_state['view']->temporary_options[$type][$form_state['id']] = $handler->options;
@@ -4395,7 +4395,7 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
  */
 function views_ui_config_item_form_submit($form, &$form_state) {
   // Run it through the handler's submit function.
-  $form_state['handler']->options_submit($form['options'], $form_state);
+  $form_state['handler']->submitOptionsForm($form['options'], $form_state);
   $item = $form_state['handler']->options;
   $types = View::viewsObjectTypes();
 
@@ -4428,7 +4428,7 @@ function views_ui_config_item_form_submit($form, &$form_state) {
 
   // This unpacks only options that are in the definition, ensuring random
   // extra stuff on the form is not sent through.
-  $handler->unpack_options($handler->options, $options, NULL, FALSE);
+  $handler->unpackOptions($handler->options, $options, NULL, FALSE);
 
   // Store the item back on the view
   $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $handler->options);
@@ -4658,7 +4658,7 @@ function views_ui_config_style_form($form, &$form_state) {
         );
         $plugin->init($view, $view->display[$display_id], $handler->options['style_options']);
 
-        $plugin->options_form($form['style_options'], $form_state);
+        $plugin->buildOptionsForm($form['style_options'], $form_state);
       }
 
       $form_state['handler'] = &$handler;
@@ -4674,7 +4674,7 @@ function views_ui_config_style_form($form, &$form_state) {
  */
 function views_ui_config_style_form_submit($form, &$form_state) {
   // Run it through the handler's submit function.
-  $form_state['handler']->options_submit($form['style_options'], $form_state);
+  $form_state['handler']->submitOptionsForm($form['style_options'], $form_state);
   $item = $form_state['handler']->options;
 
   // Store the data we're given.

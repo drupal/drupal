@@ -31,15 +31,15 @@ class None extends PagerPluginBase {
     $this->set_items_per_page(0);
   }
 
-  function summary_title() {
+  public function summaryTitle() {
     if (!empty($this->options['offset'])) {
       return t('All items, skip @skip', array('@skip' => $this->options['offset']));
     }
     return t('All items');
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['offset'] = array('default' => 0);
 
     return $options;
@@ -48,8 +48,8 @@ class None extends PagerPluginBase {
   /**
    * Provide the default form for setting options.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['offset'] = array(
       '#type' => 'textfield',
       '#title' => t('Offset'),
@@ -78,7 +78,7 @@ class None extends PagerPluginBase {
     $this->total_items = count($result);
   }
 
-  function query() {
+  public function query() {
     // The only query modifications we might do are offsets.
     if (!empty($this->options['offset'])) {
       $this->view->query->set_offset($this->options['offset']);

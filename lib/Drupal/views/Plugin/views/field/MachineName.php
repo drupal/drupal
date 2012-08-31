@@ -46,15 +46,15 @@ class MachineName extends FieldPluginBase {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['machine_name'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['machine_name'] = array(
       '#title' => t('Output machine name'),

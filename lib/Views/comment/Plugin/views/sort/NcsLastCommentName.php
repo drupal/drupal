@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NcsLastCommentName extends SortPluginBase {
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $join = views_get_join();
     $join->construct('users', $this->table_alias, 'last_comment_uid', 'uid');

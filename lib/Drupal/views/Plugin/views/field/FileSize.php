@@ -20,16 +20,16 @@ use Drupal\Core\Annotation\Plugin;
  */
 class FileSize extends FieldPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['file_size_display'] = array('default' => 'formatted');
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['file_size_display'] = array(
       '#title' => t('File size display'),
       '#type' => 'select',

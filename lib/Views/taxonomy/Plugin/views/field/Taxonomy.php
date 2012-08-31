@@ -29,7 +29,7 @@ class Taxonomy extends FieldPluginBase {
    * This constructer assumes the taxonomy_term_data table. If using another
    * table, we'll need to be more specific.
    */
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->additional_fields['vid'] = 'vid';
     $this->additional_fields['tid'] = 'tid';
@@ -39,8 +39,8 @@ class Taxonomy extends FieldPluginBase {
     );
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['link_to_taxonomy'] = array('default' => FALSE, 'bool' => TRUE);
     $options['convert_spaces'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
@@ -49,7 +49,7 @@ class Taxonomy extends FieldPluginBase {
   /**
    * Provide link to taxonomy option
    */
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['link_to_taxonomy'] = array(
       '#title' => t('Link this field to its taxonomy term page'),
       '#description' => t("Enable to override this field's links."),
@@ -62,7 +62,7 @@ class Taxonomy extends FieldPluginBase {
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['convert_spaces']),
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   /**

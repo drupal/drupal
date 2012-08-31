@@ -22,12 +22,12 @@ use Drupal\views\Plugin\views\field\PrerenderList;
  */
 class Permissions extends PrerenderList {
 
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->additional_fields['uid'] = array('table' => 'users', 'field' => 'uid');
   }
 
-  function query() {
+  public function query() {
     $this->add_additional_fields();
     $this->field_alias = $this->aliases['uid'];
   }

@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class RevisionLink extends Link {
 
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->additional_fields['node_vid'] = array('table' => 'node_revision', 'field' => 'vid');
   }

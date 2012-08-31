@@ -29,7 +29,7 @@ class GroupByNumeric extends SortPluginBase {
   /**
    * Called to add the field to a query.
    */
-  function query() {
+  public function query() {
     $this->ensure_my_table();
 
     $params = array(

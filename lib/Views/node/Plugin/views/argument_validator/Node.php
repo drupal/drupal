@@ -22,8 +22,8 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  */
 class Node extends ArgumentValidatorPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['types'] = array('default' => array());
     $options['access'] = array('default' => FALSE, 'bool' => TRUE);
     $options['access_op'] = array('default' => 'view');
@@ -32,7 +32,7 @@ class Node extends ArgumentValidatorPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $types = node_type_get_types();
     $options = array();
     foreach ($types as $type => $info) {
@@ -75,7 +75,7 @@ class Node extends ArgumentValidatorPluginBase {
     );
   }
 
-  function options_submit(&$form, &$form_state, &$options = array()) {
+  public function submitOptionsForm(&$form, &$form_state, &$options = array()) {
     // filter trash out of the options so we don't store giant unnecessary arrays
     $options['types'] = array_filter($options['types']);
   }

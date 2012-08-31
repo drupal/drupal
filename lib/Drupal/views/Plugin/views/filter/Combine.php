@@ -25,15 +25,15 @@ class Combine extends String {
    */
   var $query;
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['fields'] = array('default' => array());
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $this->view->initStyle();
 
     // Allow to choose all fields as possible
@@ -58,7 +58,7 @@ class Combine extends String {
     }
   }
 
-  function query() {
+  public function query() {
     $this->view->_build('field');
     $fields = array();
     // Only add the fields if they have a proper field and table alias.

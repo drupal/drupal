@@ -25,8 +25,8 @@ class String extends FilterPluginBase {
   // exposed filter options
   var $always_multiple = TRUE;
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['expose']['contains']['required'] = array('default' => FALSE, 'bool' => TRUE);
 
@@ -252,7 +252,7 @@ class String extends FilterPluginBase {
    * level of indirection. You will find them in $this->operator
    * and $this->value respectively.
    */
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $field = "$this->table_alias.$this->real_field";
 

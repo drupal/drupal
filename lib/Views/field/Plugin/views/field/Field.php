@@ -138,7 +138,7 @@ class Field extends FieldPluginBase {
    * By default, all needed data is taken from entities loaded by the query
    * plugin. Columns are added only if they are used in groupings.
    */
-  function query($use_groupby = FALSE) {
+  public function query($use_groupby = FALSE) {
     $this->get_base_table();
 
     $entity_type = $this->definition['entity_tables'][$this->base_table];
@@ -251,10 +251,10 @@ class Field extends FieldPluginBase {
     $this->query->add_orderby(NULL, NULL, $order, $this->aliases[$column]);
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
-    // option_definition runs before init/construct, so no $this->field_info
+    // defineOptions runs before init/construct, so no $this->field_info
     $field = field_info_field($this->definition['field_name']);
     $field_type = field_info_field_types($field['type']);
     $column_names = array_keys($field['columns']);
@@ -321,8 +321,8 @@ class Field extends FieldPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $field = $this->field_info;
     $formatters = _field_view_formatter_options($field['type']);

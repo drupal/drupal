@@ -30,8 +30,8 @@ class RssFields extends RowPluginBase {
    */
   protected $usesFields = TRUE;
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['title_field'] = array('default' => '');
     $options['link_field'] = array('default' => '');
     $options['description_field'] = array('default' => '');
@@ -42,8 +42,8 @@ class RssFields extends RowPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $initial_labels = array('' => t('- None -'));
     $view_fields_labels = $this->display->handler->getFieldLabels();
@@ -111,7 +111,7 @@ class RssFields extends RowPluginBase {
     );
   }
 
-  function validate() {
+  public function validate() {
     $errors = parent::validate();
     $required_options = array('title_field', 'link_field', 'description_field', 'creator_field', 'date_field');
     foreach ($required_options as $required_option) {
@@ -175,7 +175,7 @@ class RssFields extends RowPluginBase {
       }
     }
 
-    return theme($this->theme_functions(),
+    return theme($this->themeFunctions(),
       array(
         'view' => $this->view,
         'options' => $this->options,

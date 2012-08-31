@@ -20,12 +20,12 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Custom extends FieldPluginBase {
 
-  function query() {
+  public function query() {
     // do nothing -- to override the parent query.
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     // Override the alter text option to always alter the text.
     $options['alter']['contains']['alter_text'] = array('default' => TRUE, 'bool' => TRUE);
@@ -33,8 +33,8 @@ class Custom extends FieldPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     // Remove the checkbox
     unset($form['alter']['alter_text']);

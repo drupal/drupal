@@ -97,7 +97,7 @@ class TranslatableTest extends ViewTestBase {
     sort($expected_strings);
     sort($view->localization_plugin->translated_strings);
 
-    // @todo The plugin::unpack_options() method is missing some keys of the
+    // @todo The plugin::unpackOptions() method is missing some keys of the
     //   display, but calls the translate method two times per item.
     //$this->assertEqual($expected_strings, $view->localization_plugin->translated_strings, 'Make sure that every string got loaded translated');
   }
@@ -114,7 +114,7 @@ class TranslatableTest extends ViewTestBase {
 
     foreach ($view->display as $display_id => $display) {
       $translatables = array();
-      $display->handler->unpack_translatables($translatables);
+      $display->handler->unpackTranslatables($translatables);
 
       $this->string_keys = array(
         'Master1' => array('title'),

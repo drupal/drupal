@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class UidRevision extends Name {
 
-  function query($group_by = FALSE) {
+  public function query($group_by = FALSE) {
     $this->ensure_my_table();
 
     $placeholder = $this->placeholder();

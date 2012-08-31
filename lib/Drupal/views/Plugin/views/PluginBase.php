@@ -81,31 +81,31 @@ abstract class PluginBase extends ComponentPluginBase {
    * @return array
    *   Returns the options of this handler/plugin.
    *
-   * @see Drupal\views\Plugin\views\PluginBase::export_option()
-   * @see Drupal\views\Plugin\views\PluginBase::unpack_translatable()
+   * @see Drupal\views\Plugin\views\PluginBase::exportOption()
+   * @see Drupal\views\Plugin\views\PluginBase::unpackTranslatable()
    */
-  function option_definition() { return array(); }
+  protected function defineOptions() { return array(); }
 
   /**
    * Views handlers use a special construct function so that we can more
    * easily construct them with variable arguments.
    */
-  function construct() { $this->set_default_options(); }
+  public function construct() { $this->setDefaultOptions(); }
 
   /**
    * Set default options.
    * For backward compatibility, it sends the options array; this is a
    * feature that will likely disappear at some point.
    */
-  function set_default_options() {
-    $this->_set_option_defaults($this->options, $this->option_definition());
+  protected function setDefaultOptions() {
+    $this->setOptionDefaults($this->options, $this->defineOptions());
   }
 
-  function _set_option_defaults(&$storage, $options, $level = 0) {
+  protected function setOptionDefaults(&$storage, $options, $level = 0) {
     foreach ($options as $option => $definition) {
       if (isset($definition['contains']) && is_array($definition['contains'])) {
         $storage[$option] = array();
-        $this->_set_option_defaults($storage[$option], $definition['contains'], $level++);
+        $this->setOptionDefaults($storage[$option], $definition['contains'], $level++);
       }
       elseif (!empty($definition['translatable']) && !empty($definition['default'])) {
         $storage[$option] = t($definition['default']);
@@ -120,13 +120,13 @@ abstract class PluginBase extends ComponentPluginBase {
    * Unpack options over our existing defaults, drilling down into arrays
    * so that defaults don't get totally blown away.
    */
-  function unpack_options(&$storage, $options, $definition = NULL, $all = TRUE, $check = TRUE, $localization_keys = array()) {
+  public function unpackOptions(&$storage, $options, $definition = NULL, $all = TRUE, $check = TRUE, $localization_keys = array()) {
     if ($check && !is_array($options)) {
       return;
     }
 
     if (!isset($definition)) {
-      $definition = $this->option_definition();
+      $definition = $this->defineOptions();
     }
 
     if (!empty($this->view)) {
@@ -165,7 +165,7 @@ abstract class PluginBase extends ComponentPluginBase {
           continue;
         }
 
-        $this->unpack_options($storage[$key], $value, isset($definition[$key]['contains']) ? $definition[$key]['contains'] : array(), $all, FALSE, array_merge($localization_keys, array($key)));
+        $this->unpackOptions($storage[$key], $value, isset($definition[$key]['contains']) ? $definition[$key]['contains'] : array(), $all, FALSE, array_merge($localization_keys, array($key)));
       }
       // Don't localize strings during editing. When editing, we need to work with
       // the original data, not the translated version.
@@ -200,7 +200,7 @@ abstract class PluginBase extends ComponentPluginBase {
   /**
    * Let the handler know what its full definition is.
    */
-  function setDefinition($definition) {
+  public function setDefinition($definition) {
     $this->definition = $definition;
     if (isset($definition['id'])) {
       $this->plugin_id = $definition['id'];
@@ -210,7 +210,7 @@ abstract class PluginBase extends ComponentPluginBase {
     }
   }
 
-  function destroy() {
+  public function destroy() {
     if (isset($this->view)) {
       unset($this->view);
     }
@@ -224,16 +224,16 @@ abstract class PluginBase extends ComponentPluginBase {
     }
   }
 
-  function export_options($indent, $prefix) {
+  public function exportOptions($indent, $prefix) {
     $output = '';
-    foreach ($this->option_definition() as $option => $definition) {
-      $output .= $this->export_option($indent, $prefix, $this->options, $option, $definition, array());
+    foreach ($this->defineOptions() as $option => $definition) {
+      $output .= $this->exportOption($indent, $prefix, $this->options, $option, $definition, array());
     }
 
     return $output;
   }
 
-  function export_option($indent, $prefix, $storage, $option, $definition, $parents) {
+  protected function exportOption($indent, $prefix, $storage, $option, $definition, $parents) {
     // Do not export options for which we have no settings.
     if (!isset($storage[$option])) {
       return;
@@ -257,7 +257,7 @@ abstract class PluginBase extends ComponentPluginBase {
     // If it has child items, export those separately.
     if (isset($definition['contains'])) {
       foreach ($definition['contains'] as $sub_option => $sub_definition) {
-        $output .= $this->export_option($indent, $prefix, $storage[$option], $sub_option, $sub_definition, $parents);
+        $output .= $this->exportOption($indent, $prefix, $storage[$option], $sub_option, $sub_definition, $parents);
       }
     }
     // Otherwise export just this item.
@@ -286,9 +286,9 @@ abstract class PluginBase extends ComponentPluginBase {
   /**
    * Unpacks each handler to store translatable texts.
    */
-  function unpack_translatables(&$translatable, $parents = array()) {
-    foreach ($this->option_definition() as $option => $definition) {
-      $this->unpack_translatable($translatable, $this->options, $option, $definition, $parents, array());
+  public function unpackTranslatables(&$translatable, $parents = array()) {
+    foreach ($this->defineOptions() as $option => $definition) {
+      $this->unpackTranslatable($translatable, $this->options, $option, $definition, $parents, array());
     }
   }
 
@@ -305,7 +305,7 @@ abstract class PluginBase extends ComponentPluginBase {
    * @param $parents
    * @param $keys
    */
-  function unpack_translatable(&$translatable, $storage, $option, $definition, $parents, $keys = array()) {
+  protected function unpackTranslatable(&$translatable, $storage, $option, $definition, $parents, $keys = array()) {
     // Do not export options for which we have no settings.
     if (!isset($storage[$option])) {
       return;
@@ -329,7 +329,7 @@ abstract class PluginBase extends ComponentPluginBase {
     if (isset($definition['contains'])) {
       foreach ($definition['contains'] as $sub_option => $sub_definition) {
         $translation_keys = array_merge($keys, array($sub_option));
-        $this->unpack_translatable($translatable, $storage[$option], $sub_option, $sub_definition, $parents, $translation_keys);
+        $this->unpackTranslatable($translatable, $storage[$option], $sub_option, $sub_definition, $parents, $translation_keys);
       }
     }
 
@@ -339,7 +339,7 @@ abstract class PluginBase extends ComponentPluginBase {
       foreach ($options as $key => $value) {
         $translation_keys = array_merge($keys, array($key));
         if (is_array($value)) {
-          $this->unpack_translatable($translatable, $options, $key, $definition, $parents, $translation_keys);
+          $this->unpackTranslatable($translatable, $options, $key, $definition, $parents, $translation_keys);
         }
         else if (!empty($definition[$key]['translatable']) && !empty($value)) {
           // Build source data and add to the array
@@ -378,7 +378,7 @@ abstract class PluginBase extends ComponentPluginBase {
   /**
    * Provide a form to edit options for this plugin.
    */
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     // Some form elements belong in a fieldset for presentation, but can't
     // be moved into one because of the form_state['values'] hierarchy. Those
     // elements can add a #fieldset => 'fieldset_name' property, and they'll
@@ -389,29 +389,29 @@ abstract class PluginBase extends ComponentPluginBase {
   /**
    * Validate the options form.
    */
-  function options_validate(&$form, &$form_state) { }
+  public function validateOptionsForm(&$form, &$form_state) { }
 
   /**
    * Handle any special handling on the validate form.
    */
-  function options_submit(&$form, &$form_state) { }
+  public function submitOptionsForm(&$form, &$form_state) { }
 
   /**
    * Add anything to the query that we might need to.
    */
-  function query() { }
+  public function query() { }
 
   /**
    * Provide a full list of possible theme templates used by this style.
    */
-  function theme_functions() {
+  public function themeFunctions() {
     return views_theme_functions($this->definition['theme'], $this->view, $this->display);
   }
 
   /**
    * Provide a list of additional theme functions for the theme information page
    */
-  function additional_theme_functions() {
+  public function additionalThemeFunctions() {
     $funcs = array();
     if (!empty($this->definition['additional themes'])) {
       foreach ($this->definition['additional themes'] as $theme => $type) {
@@ -428,20 +428,21 @@ abstract class PluginBase extends ComponentPluginBase {
    *   An array of error strings to tell the user what is wrong with this
    *   plugin.
    */
-  function validate() { return array(); }
+  public function validate() { return array(); }
 
   /**
    * Returns the summary of the settings in the display.
    */
-  function summary_title() {
+  public function summaryTitle() {
     return t('Settings');
   }
+
   /**
    * Return the human readable name of the display.
    *
    * This appears on the ui beside each plugin and beside the settings link.
    */
-  function plugin_title() {
+  public function pluginTitle() {
     if (isset($this->definition['short_title'])) {
       return check_plain($this->definition['short_title']);
     }

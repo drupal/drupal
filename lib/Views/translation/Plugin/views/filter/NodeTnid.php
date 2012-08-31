@@ -24,8 +24,8 @@ class NodeTnid extends FilterPluginBase {
 
   function admin_summary() { }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['operator']['default'] = 1;
 
@@ -49,7 +49,7 @@ class NodeTnid extends FilterPluginBase {
 
   function can_expose() { return FALSE; }
 
-  function query() {
+  public function query() {
     $table = $this->ensure_my_table();
     // Select for source translations (tnid = nid). Conditionally, also accept either untranslated nodes (tnid = 0).
     $this->query->add_where_expression($this->options['group'], "$table.tnid = $table.nid" . ($this->operator ? " OR $table.tnid = 0" : ''));

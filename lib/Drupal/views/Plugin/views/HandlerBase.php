@@ -110,7 +110,7 @@ abstract class HandlerBase extends PluginBase {
       $options['id']
     );
 
-    $this->unpack_options($this->options, $options);
+    $this->unpackOptions($this->options, $options);
 
     // This exist on most handlers, but not all. So they are still optional.
     if (isset($options['table'])) {
@@ -135,8 +135,8 @@ abstract class HandlerBase extends PluginBase {
     $this->query = &$view->query;
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['id'] = array('default' => '');
     $options['table'] = array('default' => '');
@@ -263,12 +263,12 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Validate the options form.
    */
-  function options_validate(&$form, &$form_state) { }
+  public function validateOptionsForm(&$form, &$form_state) { }
 
   /**
    * Build the options form.
    */
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     // Some form elements belong in a fieldset for presentation, but can't
     // be moved into one because of the form_state['values'] hierarchy. Those
     // elements can add a #fieldset => 'fieldset_name' property, and they'll
@@ -300,7 +300,7 @@ abstract class HandlerBase extends PluginBase {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  function options_submit(&$form, &$form_state) { }
+  public function submitOptionsForm(&$form, &$form_state) { }
 
   /**
    * Provides the handler some groupby.
@@ -602,14 +602,14 @@ abstract class HandlerBase extends PluginBase {
    * Validates the handler against the complete View.
    *
    * This is called when the complete View is being validated. For validating
-   * the handler options form use options_validate().
+   * the handler options form use validateOptionsForm().
    *
-   * @see views_handler::options_validate()
+   * @see views_handler::validateOptionsForm()
    *
    * @return
    *   Empty array if the handler is valid; an array of error strings if it is not.
    */
-  function validate() { return array(); }
+  public function validate() { return array(); }
 
   /**
    * Determine if the handler is considered 'broken', meaning it's a

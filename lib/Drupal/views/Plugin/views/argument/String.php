@@ -33,8 +33,8 @@ class String extends ArgumentPluginBase {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['glossary'] = array('default' => FALSE, 'bool' => TRUE);
     $options['limit'] = array('default' => 0);
@@ -51,8 +51,8 @@ class String extends ArgumentPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['glossary'] = array(
       '#type' => 'checkbox',
@@ -178,7 +178,7 @@ class String extends ArgumentPluginBase {
   /**
    * Build the query based upon the formula
    */
-  function query($group_by = FALSE) {
+  public function query($group_by = FALSE) {
     $argument = $this->argument;
     if (!empty($this->options['transform_dash'])) {
       $argument = strtr($argument, '-', ' ');

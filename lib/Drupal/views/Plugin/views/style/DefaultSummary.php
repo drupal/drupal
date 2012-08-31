@@ -26,8 +26,8 @@ use Drupal\Core\Annotation\Translation;
  */
 class DefaultSummary extends StylePluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['base_path'] = array('default' => '');
     $options['count'] = array('default' => TRUE, 'bool' => TRUE);
@@ -37,13 +37,13 @@ class DefaultSummary extends StylePluginBase {
     return $options;
   }
 
-  function query() {
+  public function query() {
     if (!empty($this->options['override'])) {
       $this->view->setItemsPerPage(intval($this->options['items_per_page']));
     }
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['base_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Base path'),
@@ -84,7 +84,7 @@ class DefaultSummary extends StylePluginBase {
       $rows[] = $row;
     }
 
-    return theme($this->theme_functions(), array(
+    return theme($this->themeFunctions(), array(
       'view' => $this->view,
       'options' => $this->options,
       'rows' => $rows

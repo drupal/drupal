@@ -23,7 +23,7 @@ class CreatedFullDate extends Date {
   /**
    * Constructor implementation
    */
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->format = 'F j, Y';
     $this->arg_format = 'Ymd';

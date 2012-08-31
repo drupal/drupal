@@ -46,7 +46,7 @@ abstract class RowPluginBase extends PluginBase {
     $this->display = &$display;
 
     // Overlay incoming options on top of defaults
-    $this->unpack_options($this->options, isset($options) ? $options : $display->handler->getOption('row_options'));
+      $this->unpackOptions($this->options, isset($options) ? $options : $display->handler->getOption('row_options'));
   }
 
   /**
@@ -59,8 +59,8 @@ abstract class RowPluginBase extends PluginBase {
   }
 
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     if (isset($this->base_table)) {
       $options['relationship'] = array('default' => 'none');
     }
@@ -71,8 +71,8 @@ abstract class RowPluginBase extends PluginBase {
   /**
    * Provide a form for setting options.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     if (isset($this->base_table)) {
       $view = &$form_state['view'];
 
@@ -120,15 +120,15 @@ abstract class RowPluginBase extends PluginBase {
   /**
    * Validate the options form.
    */
-  function options_validate(&$form, &$form_state) { }
+  public function validateOptionsForm(&$form, &$form_state) { }
 
   /**
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  function options_submit(&$form, &$form_state) { }
+  public function submitOptionsForm(&$form, &$form_state) { }
 
-  function query() {
+  public function query() {
     if (isset($this->base_table)) {
       if (isset($this->options['relationship']) && isset($this->view->relationship[$this->options['relationship']])) {
         $relationship = $this->view->relationship[$this->options['relationship']];
@@ -159,7 +159,7 @@ abstract class RowPluginBase extends PluginBase {
    *   The rendered output of a single row, used by the style plugin.
    */
   function render($row) {
-    return theme($this->theme_functions(),
+    return theme($this->themeFunctions(),
       array(
         'view' => $this->view,
         'options' => $this->options,

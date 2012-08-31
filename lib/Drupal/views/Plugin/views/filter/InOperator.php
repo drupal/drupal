@@ -32,7 +32,7 @@ class InOperator extends FilterPluginBase {
    */
   var $value_options = NULL;
 
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->value_title = t('Options');
     $this->value_options = NULL;
@@ -84,8 +84,8 @@ class InOperator extends FilterPluginBase {
     );
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['operator']['default'] = 'in';
     $options['value']['default'] = array();
@@ -365,7 +365,7 @@ class InOperator extends FilterPluginBase {
     return $operator . (($values !== '') ? ' ' . $values : '');
   }
 
-  function query() {
+  public function query() {
     $info = $this->operators();
     if (!empty($info[$this->operator]['method'])) {
       $this->{$info[$this->operator]['method']}();
@@ -395,7 +395,7 @@ class InOperator extends FilterPluginBase {
     $this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field", NULL, $operator);
   }
 
-  function validate() {
+  public function validate() {
     $this->get_value_options();
     $errors = array();
 

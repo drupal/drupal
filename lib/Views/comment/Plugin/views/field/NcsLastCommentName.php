@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NcsLastCommentName extends FieldPluginBase {
 
-  function query() {
+  public function query() {
     // last_comment_name only contains data if the user is anonymous. So we
     // have to join in a specially related user table.
     $this->ensure_my_table();
@@ -41,8 +41,8 @@ class NcsLastCommentName extends FieldPluginBase {
     $this->uid = $this->query->add_field($this->table_alias, 'last_comment_uid');
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['link_to_user'] = array('default' => TRUE, 'bool' => TRUE);
 

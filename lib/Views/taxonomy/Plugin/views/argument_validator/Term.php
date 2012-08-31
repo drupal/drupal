@@ -36,8 +36,8 @@ class Term extends ArgumentValidatorPluginBase {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['vocabularies'] = array('default' => array());
     $options['type'] = array('default' => 'tid');
     $options['transform'] = array('default' => FALSE, 'bool' => TRUE);
@@ -45,7 +45,7 @@ class Term extends ArgumentValidatorPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $vocabularies = taxonomy_vocabulary_get_names();
     $options = array();
     foreach ($vocabularies as $voc) {
@@ -82,7 +82,7 @@ class Term extends ArgumentValidatorPluginBase {
     );
   }
 
-  function options_submit(&$form, &$form_state, &$options = array()) {
+  public function submitOptionsForm(&$form, &$form_state, &$options = array()) {
     // Filter unselected items so we don't unnecessarily store giant arrays.
     $options['vocabularies'] = array_filter($options['vocabularies']);
   }

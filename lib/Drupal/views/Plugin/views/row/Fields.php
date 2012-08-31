@@ -35,8 +35,8 @@ class Fields extends RowPluginBase {
    */
   protected $usesFields = TRUE;
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['inline'] = array('default' => array());
     $options['separator'] = array('default' => '');
@@ -48,8 +48,8 @@ class Fields extends RowPluginBase {
   /**
    * Provide a form for setting options.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $options = $this->display->handler->getFieldLabels();
 
     if (empty($this->options['inline'])) {
@@ -102,7 +102,7 @@ class Fields extends RowPluginBase {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  function options_submit(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, &$form_state) {
     $form_state['values']['row_options']['inline'] = array_filter($form_state['values']['row_options']['inline']);
   }
 

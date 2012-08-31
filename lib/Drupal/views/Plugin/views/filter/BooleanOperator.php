@@ -38,7 +38,7 @@ class BooleanOperator extends FilterPluginBase {
   // Whether to accept NULL as a false value or not
   var $accept_null = FALSE;
 
-  function construct() {
+  public function construct() {
     $this->value_value = t('True');
     if (isset($this->definition['label'])) {
       $this->value_value = $this->definition['label'];
@@ -84,8 +84,8 @@ class BooleanOperator extends FilterPluginBase {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['value']['default'] = FALSE;
 
@@ -161,7 +161,7 @@ class BooleanOperator extends FilterPluginBase {
     $this->options['expose']['required'] = TRUE;
   }
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $field = "$this->table_alias.$this->real_field";
 

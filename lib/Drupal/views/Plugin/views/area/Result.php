@@ -20,8 +20,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Result extends AreaPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['content'] = array(
       'default' => 'Displaying @start - @end of @total',
@@ -31,8 +31,8 @@ class Result extends AreaPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $variables = array(
       'items' => array(
         '@start -- the initial record number in the set',

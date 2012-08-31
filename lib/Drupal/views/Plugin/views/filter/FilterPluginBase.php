@@ -104,8 +104,8 @@ abstract class FilterPluginBase extends HandlerBase {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['operator'] = array('default' => '=');
     $options['value'] = array('default' => '');
@@ -188,8 +188,8 @@ abstract class FilterPluginBase extends HandlerBase {
    * or to at least make sure all of the functions in this form
    * are called.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     if ($this->can_expose()) {
       $this->show_expose_button($form, $form_state);
     }
@@ -229,7 +229,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Simple validate handler
    */
-  function options_validate(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, &$form_state) {
     $this->operator_validate($form, $form_state);
     $this->value_validate($form, $form_state);
     if (!empty($this->options['exposed']) && !$this->is_a_group()) {
@@ -243,7 +243,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Simple submit handler
    */
-  function options_submit(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, &$form_state) {
     unset($form_state['values']['expose_button']); // don't store this.
     unset($form_state['values']['group_button']); // don't store this.
     if (!$this->is_a_group()) {
@@ -273,7 +273,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * This may be overridden by child classes, and it must
    * define $form['operator'];
    *
-   * @see options_form()
+   * @see buildOptionsForm()
    */
   function operator_form(&$form, &$form_state) {
     $options = $this->operator_options();
@@ -321,7 +321,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * This should be overridden by all child classes and it must
    * define $form['value']
    *
-   * @see options_form()
+   * @see buildOptionsForm()
    */
   function value_form(&$form, &$form_state) { $form['value'] = array(); }
 
@@ -460,7 +460,7 @@ abstract class FilterPluginBase extends HandlerBase {
   /**
    * Options form subform for exposed filter options.
    *
-   * @see options_form()
+   * @see buildOptionsForm()
    */
   function expose_form(&$form, &$form_state) {
     $form['#theme'] = 'views_ui_expose_filter_form';
@@ -1367,7 +1367,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * level of indirection. You will find them in $this->operator
    * and $this->value respectively.
    */
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field", $this->value, $this->operator);
   }

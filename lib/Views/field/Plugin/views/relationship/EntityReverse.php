@@ -31,7 +31,7 @@ class EntityReverse extends RelationshipPluginBase  {
   /**
    * Called to implement a relationship in a query.
    */
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     // First, relate our base table to the current base table to the
     // field, using the base table's id field to the field's column.

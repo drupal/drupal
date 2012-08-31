@@ -22,20 +22,20 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Path extends FieldPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['absolute'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
 
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->additional_fields['nid'] = 'nid';
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['absolute'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use absolute link (begins with "http://")'),
@@ -45,7 +45,7 @@ class Path extends FieldPluginBase {
     );
   }
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $this->add_additional_fields();
   }

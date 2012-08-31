@@ -21,16 +21,16 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Date extends SortPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['granularity'] = array('default' => 'second');
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['granularity'] = array(
       '#type' => 'radios',
@@ -51,7 +51,7 @@ class Date extends SortPluginBase {
   /**
    * Called to add the sort to a query.
    */
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     switch ($this->options['granularity']) {
       case 'second':

@@ -39,19 +39,19 @@ class View extends RowPluginBase {
    */
   var $nodes = array();
 
-  function summary_title() {
+  public function summaryTitle() {
     return t('Settings');
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['links'] = array('default' => TRUE, 'bool' => TRUE);
     $options['view_mode'] = array('default' => 'full');
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $options = $this->options_form_summary_options();
     $form['view_mode'] = array(

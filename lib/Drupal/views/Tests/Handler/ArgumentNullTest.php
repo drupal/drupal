@@ -51,13 +51,13 @@ class ArgumentNullTest extends HandlerTestBase {
 
     // Make sure that the argument is not validated yet.
     unset($view->argument['null']->argument_validated);
-    $this->assertTrue($view->argument['null']->validate_arg(26));
+    $this->assertTrue($view->argument['null']->validateArgument(26));
     // test must_not_be option.
     unset($view->argument['null']->argument_validated);
     $view->argument['null']->options['must_not_be'] = TRUE;
-    $this->assertFalse($view->argument['null']->validate_arg(26), 'must_not_be returns FALSE, if there is an argument');
+    $this->assertFalse($view->argument['null']->validateArgument(26), 'must_not_be returns FALSE, if there is an argument');
     unset($view->argument['null']->argument_validated);
-    $this->assertTrue($view->argument['null']->validate_arg(NULL), 'must_not_be returns TRUE, if there is no argument');
+    $this->assertTrue($view->argument['null']->validateArgument(NULL), 'must_not_be returns TRUE, if there is no argument');
 
     // Test execution.
     $view = $this->getBasicView();

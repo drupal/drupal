@@ -42,8 +42,8 @@ class Page extends DisplayPluginBase {
   public function hasPath() { return TRUE; }
   public function usesBreadcrumb() { return TRUE; }
 
-  public function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['path'] = array('default' => '');
     $options['menu'] = array(
@@ -321,10 +321,10 @@ class Page extends DisplayPluginBase {
   /**
    * Provide the default form for setting options.
    */
-  public function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     // It is very important to call the parent function here:
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
 
     switch ($form_state['section']) {
       case 'path':
@@ -562,9 +562,9 @@ class Page extends DisplayPluginBase {
     }
   }
 
-  public function options_validate(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, &$form_state) {
     // It is very important to call the parent function here:
-    parent::options_validate($form, $form_state);
+    parent::validateOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'path':
         if (strpos($form_state['values']['path'], '$arg') !== FALSE) {
@@ -599,9 +599,9 @@ class Page extends DisplayPluginBase {
     }
   }
 
-  public function options_submit(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, &$form_state) {
     // It is very important to call the parent function here:
-    parent::options_submit($form, $form_state);
+    parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'path':
         $this->setOption('path', $form_state['values']['path']);

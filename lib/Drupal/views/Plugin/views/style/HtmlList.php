@@ -42,8 +42,8 @@ class HtmlList extends StylePluginBase {
   /**
    * Set default options
    */
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['type'] = array('default' => 'ul');
     $options['class'] = array('default' => '');
@@ -55,8 +55,8 @@ class HtmlList extends StylePluginBase {
   /**
    * Render the given style.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['type'] = array(
       '#type' => 'radios',
       '#title' => t('List type'),

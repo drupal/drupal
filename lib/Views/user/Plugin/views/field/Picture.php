@@ -22,7 +22,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  */
 class Picture extends FieldPluginBase {
 
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->additional_fields['uid'] = 'uid';
     $this->additional_fields['name'] = 'name';
@@ -51,15 +51,15 @@ class Picture extends FieldPluginBase {
     return 'div';
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['link_photo_to_profile'] = array('default' => TRUE, 'bool' => TRUE);
     $options['image_style'] = array('default' => '');
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['link_photo_to_profile'] = array(
       '#title' => t("Link to user's profile"),
       '#description' => t("Link the user picture to the user's profile"),

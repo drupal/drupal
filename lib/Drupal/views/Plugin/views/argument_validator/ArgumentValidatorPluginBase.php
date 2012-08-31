@@ -30,29 +30,29 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
     $this->view = &$view;
     $this->argument = &$argument;
 
-    $this->unpack_options($this->options, $options);
+    $this->unpackOptions($this->options, $options);
   }
 
   /**
    * Retrieve the options when this is a new access
    * control plugin
    */
-  function option_definition() { return array(); }
+  protected function defineOptions() { return array(); }
 
   /**
    * Provide the default form for setting options.
    */
-  function options_form(&$form, &$form_state) { }
+  public function buildOptionsForm(&$form, &$form_state) { }
 
   /**
    * Provide the default form form for validating options
    */
-  function options_validate(&$form, &$form_state) { }
+  public function validateOptionsForm(&$form, &$form_state) { }
 
   /**
    * Provide the default form form for submitting options
    */
-  function options_submit(&$form, &$form_state, &$options = array()) { }
+  public function submitOptionsForm(&$form, &$form_state, &$options = array()) { }
 
   /**
    * Determine if the administrator has the privileges to use this plugin
@@ -63,7 +63,7 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
    * If we don't have access to the form but are showing it anyway, ensure that
    * the form is safe and cannot be changed from user input.
    *
-   * This is only called by child objects if specified in the options_form(),
+   * This is only called by child objects if specified in the buildOptionsForm(),
    * so it will not always be used.
    */
   function check_access(&$form, $option_name) {

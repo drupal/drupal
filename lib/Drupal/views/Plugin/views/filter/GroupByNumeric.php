@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class GroupByNumeric extends Numeric {
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $field = $this->get_field();
 

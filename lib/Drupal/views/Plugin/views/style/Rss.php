@@ -62,16 +62,16 @@ class Rss extends StylePluginBase {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['description'] = array('default' => '', 'translatable' => TRUE);
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['description'] = array(
       '#type' => 'textfield',
@@ -132,7 +132,7 @@ class Rss extends StylePluginBase {
       $rows .= $this->row_plugin->render($row);
     }
 
-    $output = theme($this->theme_functions(),
+    $output = theme($this->themeFunctions(),
       array(
         'view' => $this->view,
         'options' => $this->options,

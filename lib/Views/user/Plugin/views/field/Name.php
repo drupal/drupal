@@ -32,8 +32,8 @@ class Name extends User {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['overwrite_anonymous'] = array('default' => FALSE, 'bool' => TRUE);
     $options['anonymous_text'] = array('default' => '', 'translatable' => TRUE);
@@ -42,7 +42,7 @@ class Name extends User {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['format_username'] = array(
       '#title' => t('Use formatted username'),
       '#type' => 'checkbox',
@@ -69,7 +69,7 @@ class Name extends User {
       '#fieldset' => 'more',
     );
 
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   function render_link($data, $values) {

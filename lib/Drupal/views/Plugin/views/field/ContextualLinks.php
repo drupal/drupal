@@ -20,8 +20,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 class ContextualLinks extends FieldPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['fields'] = array('default' => array());
     $options['destination'] = array('default' => 1);
@@ -29,7 +29,7 @@ class ContextualLinks extends FieldPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $all_fields = $this->view->display_handler->getFieldLabels();
     // Offer to include only those fields that follow this one.
     $field_options = array_slice($all_fields, 0, array_search($this->options['id'], array_keys($all_fields)));
@@ -111,6 +111,6 @@ class ContextualLinks extends FieldPluginBase {
     }
   }
 
-  function query() { }
+  public function query() { }
 
 }

@@ -35,15 +35,15 @@ class ArgumentValidateTest extends UserTestBase {
     $view->setDisplay('default');
     $view->preExecute();
     $view->initHandlers();
-    $this->assertTrue($view->argument['null']->validate_arg($account->uid));
+    $this->assertTrue($view->argument['null']->validateArgument($account->uid));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a string variable since type is 'uid'
-    $this->assertFalse($view->argument['null']->validate_arg($account->name));
+    $this->assertFalse($view->argument['null']->validateArgument($account->name));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a valid numeric, but for a user that doesn't exist
-    $this->assertFalse($view->argument['null']->validate_arg(32));
+    $this->assertFalse($view->argument['null']->validateArgument(32));
   }
 
   function testArgumentValidateUserName() {
@@ -53,15 +53,15 @@ class ArgumentValidateTest extends UserTestBase {
     $view->setDisplay('default');
     $view->preExecute();
     $view->initHandlers();
-    $this->assertTrue($view->argument['null']->validate_arg($account->name));
+    $this->assertTrue($view->argument['null']->validateArgument($account->name));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a uid variable since type is 'name'
-    $this->assertFalse($view->argument['null']->validate_arg($account->uid));
+    $this->assertFalse($view->argument['null']->validateArgument($account->uid));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a valid string, but for a user that doesn't exist
-    $this->assertFalse($view->argument['null']->validate_arg($this->randomName()));
+    $this->assertFalse($view->argument['null']->validateArgument($this->randomName()));
   }
 
   function testArgumentValidateUserEither() {
@@ -71,19 +71,19 @@ class ArgumentValidateTest extends UserTestBase {
     $view->setDisplay('default');
     $view->preExecute();
     $view->initHandlers();
-    $this->assertTrue($view->argument['null']->validate_arg($account->name));
+    $this->assertTrue($view->argument['null']->validateArgument($account->name));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a uid variable since type is 'name'
-    $this->assertTrue($view->argument['null']->validate_arg($account->uid));
+    $this->assertTrue($view->argument['null']->validateArgument($account->uid));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a valid string, but for a user that doesn't exist
-    $this->assertFalse($view->argument['null']->validate_arg($this->randomName()));
+    $this->assertFalse($view->argument['null']->validateArgument($this->randomName()));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a valid uid, but for a user that doesn't exist
-    $this->assertFalse($view->argument['null']->validate_arg(32));
+    $this->assertFalse($view->argument['null']->validateArgument(32));
   }
 
   function view_argument_validate_user($argtype) {

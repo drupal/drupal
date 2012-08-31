@@ -30,8 +30,8 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
     );
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['depth'] = array('default' => 0);
 
@@ -49,7 +49,7 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
     );
   }
 
-  function query() {
+  public function query() {
     // If no filter values are present, then do nothing.
     if (count($this->value) == 0) {
       return;

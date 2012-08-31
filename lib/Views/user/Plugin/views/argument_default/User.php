@@ -22,14 +22,14 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  */
 class User extends ArgumentDefaultPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['user'] = array('default' => '', 'bool' => TRUE, 'translatable' => FALSE);
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['user'] = array(
       '#type' => 'checkbox',
       '#title' => t('Also look for a node and use the node author'),

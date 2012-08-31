@@ -25,7 +25,7 @@ class None extends CachePluginBase {
 
   function cache_start() { /* do nothing */ }
 
-  function summary_title() {
+  public function summaryTitle() {
     return t('None');
   }
 

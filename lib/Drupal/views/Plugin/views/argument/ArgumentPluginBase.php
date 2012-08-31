@@ -63,7 +63,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   /**
    * Constructor
    */
-  function construct() {
+  public function construct() {
     parent::construct();
 
     if (!empty($this->definition['name field'])) {
@@ -119,8 +119,8 @@ abstract class ArgumentPluginBase extends HandlerBase {
     return !empty($info['style plugin']) || !empty($validate_info['style plugin']);
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['default_action'] = array('default' => 'ignore');
     $options['exception'] = array(
@@ -157,8 +157,8 @@ abstract class ArgumentPluginBase extends HandlerBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $argument_text = $this->view->display_handler->getArgumentText();
 
@@ -342,7 +342,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
               ),
               '#id' => 'edit-options-validate-options-' . $id,
             );
-            $plugin->options_form($form['validate']['options'][$id], $form_state);
+            $plugin->buildOptionsForm($form['validate']['options'][$id], $form_state);
             $validate_types[$id] = $info['title'];
           }
         }
@@ -366,7 +366,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     );
   }
 
-  function options_validate(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, &$form_state) {
     if (empty($form_state['values']['options'])) {
       return;
     }
@@ -375,25 +375,25 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $default_id = $form_state['values']['options']['default_argument_type'];
     $plugin = $this->get_plugin('argument_default', $default_id);
     if ($plugin) {
-      $plugin->options_validate($form['argument_default'][$default_id], $form_state, $form_state['values']['options']['argument_default'][$default_id]);
+      $plugin->validateOptionsForm($form['argument_default'][$default_id], $form_state, $form_state['values']['options']['argument_default'][$default_id]);
     }
 
     // summary plugin
     $summary_id = $form_state['values']['options']['summary']['format'];
     $plugin = $this->get_plugin('style', $summary_id);
     if ($plugin) {
-      $plugin->options_validate($form['summary']['options'][$summary_id], $form_state, $form_state['values']['options']['summary']['options'][$summary_id]);
+      $plugin->validateOptionsForm($form['summary']['options'][$summary_id], $form_state, $form_state['values']['options']['summary']['options'][$summary_id]);
     }
 
     $validate_id = $form_state['values']['options']['validate']['type'];
     $plugin = $this->get_plugin('argument_validator', $validate_id);
     if ($plugin) {
-      $plugin->options_validate($form['validate']['options'][$default_id], $form_state, $form_state['values']['options']['validate']['options'][$validate_id]);
+      $plugin->validateOptionsForm($form['validate']['options'][$default_id], $form_state, $form_state['values']['options']['validate']['options'][$validate_id]);
     }
 
   }
 
-  function options_submit(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, &$form_state) {
     if (empty($form_state['values']['options'])) {
       return;
     }
@@ -403,7 +403,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $plugin = $this->get_plugin('argument_default', $default_id);
     if ($plugin) {
       $options = &$form_state['values']['options']['argument_default'][$default_id];
-      $plugin->options_submit($form['argument_default'][$default_id], $form_state, $options);
+      $plugin->submitOptionsForm($form['argument_default'][$default_id], $form_state, $options);
       // Copy the now submitted options to their final resting place so they get saved.
       $form_state['values']['options']['default_argument_options'] = $options;
     }
@@ -413,7 +413,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $plugin = $this->get_plugin('style', $summary_id);
     if ($plugin) {
       $options = &$form_state['values']['options']['summary']['options'][$summary_id];
-      $plugin->options_submit($form['summary']['options'][$summary_id], $form_state, $options);
+      $plugin->submitOptionsForm($form['summary']['options'][$summary_id], $form_state, $options);
       // Copy the now submitted options to their final resting place so they get saved.
       $form_state['values']['options']['summary_options'] = $options;
     }
@@ -422,7 +422,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $plugin = $this->get_plugin('argument_validator', $validate_id);
     if ($plugin) {
       $options = &$form_state['values']['options']['validate']['options'][$validate_id];
-      $plugin->options_submit($form['validate']['options'][$validate_id], $form_state, $options);
+      $plugin->submitOptionsForm($form['validate']['options'][$validate_id], $form_state, $options);
       // Copy the now submitted options to their final resting place so they get saved.
       $form_state['values']['options']['validate_options'] = $options;
     }
@@ -548,7 +548,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
             ),
           );
           $options[$id] = $info['title'];
-          $plugin->options_form($form['argument_default'][$id], $form_state);
+          $plugin->buildOptionsForm($form['argument_default'][$id], $form_state);
         }
       }
     }
@@ -635,7 +635,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
           ),
         );
         $options[$id] = $info['title'];
-        $plugin->options_form($form['summary']['options'][$id], $form_state);
+        $plugin->buildOptionsForm($form['summary']['options'][$id], $form_state);
       }
     }
   }
@@ -669,7 +669,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   /**
    * How to act if validation failes
    */
-  function validate_fail() {
+  public function validateFail() {
     $info = $this->default_actions($this->options['validate']['fail']);
     return $this->default_action($info);
   }
@@ -906,7 +906,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *
    * The argument sent may be found at $this->argument.
    */
-  function query($group_by = FALSE) {
+  public function query($group_by = FALSE) {
     $this->ensure_my_table();
     $this->query->add_where(0, "$this->table_alias.$this->real_field", $this->argument);
   }
@@ -936,7 +936,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   /**
    * Validate that this argument works. By default, all arguments are valid.
    */
-  function validate_arg($arg) {
+  public function validateArgument($arg) {
     // By using % in URLs, arguments could be validated twice; this eases
     // that pain.
     if (isset($this->argument_validated)) {
@@ -973,7 +973,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       return TRUE;
     }
 
-    $rc = $this->validate_arg($arg);
+    $rc = $this->validateArgument($arg);
 
     // If the validator has changed the validate fail condition to a
     // soft fail, deal with that:
@@ -1011,7 +1011,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    */
   function set_argument($arg) {
     $this->argument = $arg;
-    return $this->validate_arg($arg);
+    return $this->validateArgument($arg);
   }
 
   /**
@@ -1072,7 +1072,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       $output .= $indent . $prefix . "['summary']['$option'] = '$name';\n";
 
       // Pass off to the plugin to export itself.
-      $output .= $plugin->export_options($indent, $prefix . "['summary_options']");
+      $output .= $plugin->exportOptions($indent, $prefix . "['summary_options']");
     }
 
     return $output;
@@ -1096,7 +1096,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       $output .= $indent . $prefix . "['validate']['$option'] = '$name';\n";
 
       // Pass off to the plugin to export itself.
-      $output .= $plugin->export_options($indent, $prefix . "['validate_options']");
+      $output .= $plugin->exportOptions($indent, $prefix . "['validate_options']");
     }
 
     return $output;
@@ -1123,7 +1123,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       $output .= $indent . $prefix . "['$option'] = '$name';\n";
 
       // Pass off to the plugin to export itself.
-      $output .= $plugin->export_options($indent, $prefix . "['$option_name']");
+      $output .= $plugin->exportOptions($indent, $prefix . "['$option_name']");
     }
 
     return $output;

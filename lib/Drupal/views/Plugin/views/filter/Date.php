@@ -20,8 +20,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Date extends Numeric {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     // value is already set up properly, we're just adding our new field to it.
     $options['value']['contains']['type']['default'] = 'date';
@@ -47,15 +47,15 @@ class Date extends Numeric {
     parent::value_form($form, $form_state);
   }
 
-  function options_validate(&$form, &$form_state) {
-    parent::options_validate($form, $form_state);
+  public function validateOptionsForm(&$form, &$form_state) {
+    parent::validateOptionsForm($form, $form_state);
 
     if (!empty($this->options['exposed']) && empty($form_state['values']['options']['expose']['required'])) {
       // Who cares what the value is if it's exposed and non-required.
       return;
     }
 
-    $this->validate_valid_time($form['value'], $form_state['values']['options']['operator'], $form_state['values']['options']['value']);
+    $this->validateValidTime($form['value'], $form_state['values']['options']['operator'], $form_state['values']['options']['value']);
   }
 
   function exposed_validate(&$form, &$form_state) {
@@ -76,14 +76,14 @@ class Date extends Numeric {
       $operator = $this->operator;
     }
 
-    $this->validate_valid_time($this->options['expose']['identifier'], $operator, $value);
+    $this->validateValidTime($this->options['expose']['identifier'], $operator, $value);
 
   }
 
   /**
    * Validate that the time values convert to something usable.
    */
-  function validate_valid_time(&$form, $operator, $value) {
+  public function validateValidTime(&$form, $operator, $value) {
     $operators = $this->operators();
 
     if ($operators[$operator]['values'] == 1) {

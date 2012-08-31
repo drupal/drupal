@@ -822,7 +822,7 @@ class View extends ViewStorage {
 
         // Set the argument, which will also validate that the argument can be set.
         if (!$argument->set_argument($arg)) {
-          $status = $argument->validate_fail($arg);
+          $status = $argument->validateFail($arg);
           break;
         }
 

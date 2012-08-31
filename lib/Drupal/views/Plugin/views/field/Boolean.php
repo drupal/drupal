@@ -30,8 +30,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Boolean extends FieldPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['type'] = array('default' => 'yes-no');
     $options['not'] = array('definition bool' => 'reverse');
 
@@ -52,7 +52,7 @@ class Boolean extends FieldPluginBase {
     $this->formats = array_merge($default_formats, $output_formats);
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     foreach ($this->formats as $key => $item) {
       $options[$key] = implode('/', $item);
     }
@@ -69,7 +69,7 @@ class Boolean extends FieldPluginBase {
       '#description' => t('If checked, true will be displayed as false.'),
       '#default_value' => $this->options['not'],
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   function render($values) {

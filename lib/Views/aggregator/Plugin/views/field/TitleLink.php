@@ -23,13 +23,13 @@ use Drupal\Core\Annotation\Plugin;
  */
 class TitleLink extends FieldPluginBase {
 
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->additional_fields['link'] = 'link';
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['display_as_link'] = array('default' => TRUE, 'bool' => TRUE);
 
@@ -39,13 +39,13 @@ class TitleLink extends FieldPluginBase {
   /**
    * Provide link to the page being visited.
    */
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['display_as_link'] = array(
       '#title' => t('Display as link'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['display_as_link']),
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   function render($values) {

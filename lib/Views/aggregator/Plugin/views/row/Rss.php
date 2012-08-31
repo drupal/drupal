@@ -28,15 +28,15 @@ class Rss extends RowPluginBase {
   var $base_table = 'aggregator_item';
   var $base_field = 'iid';
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['item_length'] = array('default' => 'default');
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['item_length'] = array(
       '#type' => 'select',
       '#title' => t('Display type'),
@@ -82,7 +82,7 @@ class Rss extends RowPluginBase {
       }
     }
 
-    return theme($this->theme_functions(), array(
+    return theme($this->themeFunctions(), array(
       'view' => $this->view,
       'options' => $this->options,
       'row' => $item

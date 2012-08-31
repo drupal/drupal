@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NodeTranslationLink extends FieldPluginBase {
 
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->additional_fields['nid'] = 'nid';
     $this->additional_fields['tnid'] = 'tnid';
@@ -30,7 +30,7 @@ class NodeTranslationLink extends FieldPluginBase {
     $this->additional_fields['langcode'] = 'langcode';
   }
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $this->add_additional_fields();
   }

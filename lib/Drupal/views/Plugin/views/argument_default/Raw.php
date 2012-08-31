@@ -22,16 +22,16 @@ use Drupal\Core\Annotation\Translation;
  */
 class Raw extends ArgumentDefaultPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['index'] = array('default' => '');
     $options['use_alias'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     // Using range(1, 10) will create an array keyed 0-9, which allows arg() to
     // properly function since it is also zero-based.
     $form['index'] = array(

@@ -20,16 +20,16 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Serialized extends FieldPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['format'] = array('default' => 'unserialized');
     $options['key'] = array('default' => '');
     return $options;
   }
 
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['format'] = array(
       '#type' => 'select',
@@ -54,7 +54,7 @@ class Serialized extends FieldPluginBase {
     );
   }
 
-  function options_validate(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, &$form_state) {
     // Require a key if the format is key.
     if ($form_state['values']['options']['format'] == 'key' && $form_state['values']['options']['key'] == '') {
       form_error($form['key'], t('You have to enter a key if you want to display a key of the data.'));

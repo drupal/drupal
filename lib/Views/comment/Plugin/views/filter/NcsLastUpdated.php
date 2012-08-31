@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NcsLastUpdated extends Date {
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $this->node_table = $this->query->ensure_table('node', $this->relationship);
 

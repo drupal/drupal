@@ -32,8 +32,8 @@ class User extends FieldPluginBase {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['link_to_user'] = array('default' => TRUE, 'bool' => TRUE);
     return $options;
   }
@@ -41,14 +41,14 @@ class User extends FieldPluginBase {
   /**
    * Provide link to node option
    */
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['link_to_user'] = array(
       '#title' => t('Link this field to its user'),
       '#description' => t("Enable to override this field's links."),
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_user'],
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   function render_link($data, $values) {

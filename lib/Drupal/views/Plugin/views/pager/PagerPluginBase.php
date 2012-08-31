@@ -43,7 +43,7 @@ abstract class PagerPluginBase extends PluginBase {
     $this->view = &$view;
     $this->display = &$display;
 
-    $this->unpack_options($this->options, $options);
+    $this->unpackOptions($this->options, $options);
   }
 
   /**
@@ -124,18 +124,18 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Provide the default form form for validating options
    */
-  function options_validate(&$form, &$form_state) { }
+  public function validateOptionsForm(&$form, &$form_state) { }
 
   /**
    * Provide the default form form for submitting options
    */
-  function options_submit(&$form, &$form_state) { }
+  public function submitOptionsForm(&$form, &$form_state) { }
 
   /**
    * Return a string to display as the clickable title for the
    * pager plugin.
    */
-  function summary_title() {
+  public function summaryTitle() {
     return t('Unknown');
   }
 
@@ -184,7 +184,7 @@ abstract class PagerPluginBase extends PluginBase {
    *
    * This is called during the build phase and can directly modify the query.
    */
-  function query() { }
+  public function query() { }
 
   /**
    * Perform any needed actions just prior to the query executing.

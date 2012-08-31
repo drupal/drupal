@@ -20,18 +20,18 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Null extends ArgumentPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['must_not_be'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
   /**
-   * Override options_form() so that only the relevant options
+   * Override buildOptionsForm() so that only the relevant options
    * are displayed to the user.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['must_not_be'] = array(
       '#type' => 'checkbox',
       '#title' => t('Fail basic validation if any argument is given'),
@@ -72,6 +72,6 @@ class Null extends ArgumentPluginBase {
    * Override the behavior of query() to prevent the query
    * from being changed in any way.
    */
-  function query($group_by = FALSE) {}
+  public function query($group_by = FALSE) {}
 
 }

@@ -47,8 +47,8 @@ abstract class AreaPluginBase extends HandlerBase {
     return $this->options['label'];
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $this->definition['field'] = !empty($this->definition['field']) ? $this->definition['field'] : '';
     $label = !empty($this->definition['label']) ? $this->definition['label'] : $this->definition['field'];
@@ -69,8 +69,8 @@ abstract class AreaPluginBase extends HandlerBase {
    * Default options form that provides the label widget that all fields
    * should have.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Label'),
@@ -90,7 +90,7 @@ abstract class AreaPluginBase extends HandlerBase {
   /**
    * Don't run a query
    */
-  function query() { }
+  public function query() { }
 
   /**
    * Render the area

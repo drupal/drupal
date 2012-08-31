@@ -627,7 +627,7 @@ abstract class WizardPluginBase implements WizardInterface {
       // The page display is usually the main one (from the user's point of
       // view). Its options should therefore become the overall view defaults,
       // so that new displays which are added later automatically inherit them.
-      $this->set_default_options($display_options['page'], $display, $default_display);
+      $this->setDefaultOptions($display_options['page'], $display, $default_display);
 
       // Display: Feed (attached to the page).
       if (isset($display_options['feed'])) {
@@ -642,7 +642,7 @@ abstract class WizardPluginBase implements WizardInterface {
       // When there is no page, the block display options should become the
       // overall view defaults.
       if (!isset($display_options['page'])) {
-        $this->set_default_options($display_options['block'], $display, $default_display);
+        $this->setDefaultOptions($display_options['block'], $display, $default_display);
       }
       else {
         $this->set_override_options($display_options['block'], $display, $default_display);
@@ -892,7 +892,7 @@ abstract class WizardPluginBase implements WizardInterface {
    * @param $default_display
    *   The default display, which will store the options when possible.
    */
-  protected function set_default_options($options, $display, $default_display) {
+  protected function setDefaultOptions($options, $display, $default_display) {
     foreach ($options as $option => $value) {
       // If the default display supports this option, set the value there.
       // Otherwise, set it on the provided display.
@@ -912,7 +912,7 @@ abstract class WizardPluginBase implements WizardInterface {
    * This function can be used to set options for a display when it is desired
    * that the options inherit from the default display whenever possible. This
    * avoids setting too many options as overrides, which will be harder for the
-   * user to modify later. For example, if $this->set_default_options() was
+   * user to modify later. For example, if $this->setDefaultOptions() was
    * previously called on a page display and then this function is called on a
    * block display, and if the user entered the same title for both displays in
    * the views wizard, then the view will wind up with the title stored as the
@@ -986,7 +986,7 @@ abstract class WizardPluginBase implements WizardInterface {
    *
    * Instantiates the view from the form submission and validates its values.
    */
-  function validate(array $form, array &$form_state) {
+  public function validate(array $form, array &$form_state) {
     $view = $this->instantiate_view($form, $form_state);
     $errors = $view->validate();
     if (!is_array($errors) || empty($errors)) {

@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class LastTimestamp extends Date {
 
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->additional_fields['comment_count'] = 'comment_count';
   }

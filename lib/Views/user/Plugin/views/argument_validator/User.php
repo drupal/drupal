@@ -26,8 +26,8 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  */
 class User extends ArgumentValidatorPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['type'] = array('default' => 'uid');
     $options['restrict_roles'] = array('default' => FALSE, 'bool' => TRUE);
     $options['roles'] = array('default' => array());
@@ -35,7 +35,7 @@ class User extends ArgumentValidatorPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['type'] = array(
       '#type' => 'radios',
       '#title' => t('Type of user filter value to allow'),
@@ -67,7 +67,7 @@ class User extends ArgumentValidatorPluginBase {
     );
   }
 
-  function options_submit(&$form, &$form_state, &$options = array()) {
+  public function submitOptionsForm(&$form, &$form_state, &$options = array()) {
     // filter trash out of the options so we don't store giant unnecessary arrays
     $options['roles'] = array_filter($options['roles']);
   }

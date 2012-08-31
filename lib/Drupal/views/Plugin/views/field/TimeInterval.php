@@ -20,16 +20,16 @@ use Drupal\Core\Annotation\Plugin;
  */
 class TimeInterval extends FieldPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['granularity'] = array('default' => 2);
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['granularity'] = array(
       '#type' => 'textfield',

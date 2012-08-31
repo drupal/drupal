@@ -116,17 +116,17 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     views_include('cache');
-    // Cache for unpack_options, but not if we are in the ui.
+    // Cache for unpackOptions, but not if we are in the ui.
     static $unpack_options = array();
     if (empty($view->editing)) {
-      $cid = 'unpack_options:' . md5(serialize(array($this->options, $options)));
+      $cid = 'unpackOptions:' . md5(serialize(array($this->options, $options)));
       if (empty($unpack_options[$cid])) {
         $cache = views_cache_get($cid, TRUE);
         if (!empty($cache->data)) {
           $this->options = $cache->data;
         }
         else {
-          $this->unpack_options($this->options, $options);
+          $this->unpackOptions($this->options, $options);
           views_cache_set($cid, $this->options, TRUE);
         }
         $unpack_options[$cid] = $this->options;
@@ -136,7 +136,7 @@ abstract class DisplayPluginBase extends PluginBase {
       }
     }
     else {
-      $this->unpack_options($this->options, $options);
+      $this->unpackOptions($this->options, $options);
     }
 
     // Convert the field_language and field_language_add_to_query settings.
@@ -412,7 +412,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
   }
 
-  public function option_definition() {
+  protected function defineOptions() {
     $options = array(
       'defaults' => array(
         'default' => array(
@@ -1118,8 +1118,8 @@ abstract class DisplayPluginBase extends PluginBase {
     $manager = new ViewsPluginManager('style');
     $style_plugin = $manager->getDefinition($this->getOption('style_plugin'));
     $style_plugin_instance = $this->getPlugin('style');
-    $style_summary = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->summary_title();
-    $style_title = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->plugin_title();
+    $style_summary = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->summaryTitle();
+    $style_title = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->pluginTitle();
 
     $style = '';
 
@@ -1140,8 +1140,8 @@ abstract class DisplayPluginBase extends PluginBase {
       $manager = new ViewsPluginManager('row');
       $row_plugin = $manager->getDefinition($this->getOption('row_plugin'));
       $row_plugin_instance = $this->getPlugin('row');
-      $row_summary = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->summary_title();
-      $row_title = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->plugin_title();
+      $row_summary = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->summaryTitle();
+      $row_title = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->pluginTitle();
 
       $options['row_plugin'] = array(
         'category' => 'format',
@@ -1186,12 +1186,12 @@ abstract class DisplayPluginBase extends PluginBase {
       $pager_plugin = views_get_plugin('pager', 'none');
     }
 
-    $pager_str = $pager_plugin->summary_title();
+    $pager_str = $pager_plugin->summaryTitle();
 
     $options['pager'] = array(
       'category' => 'pager',
       'title' => t('Use pager'),
-      'value' => $pager_plugin->plugin_title(),
+      'value' => $pager_plugin->pluginTitle(),
       'setting' => $pager_str,
       'desc' => t("Change this display's pager setting."),
     );
@@ -1252,12 +1252,12 @@ abstract class DisplayPluginBase extends PluginBase {
       $access_plugin = views_get_plugin('access', 'none');
     }
 
-    $access_str = $access_plugin->summary_title();
+    $access_str = $access_plugin->summaryTitle();
 
     $options['access'] = array(
       'category' => 'access',
       'title' => t('Access'),
-      'value' => $access_plugin->plugin_title(),
+      'value' => $access_plugin->pluginTitle(),
       'setting' => $access_str,
       'desc' => t('Specify access control type for this display.'),
     );
@@ -1272,12 +1272,12 @@ abstract class DisplayPluginBase extends PluginBase {
       $cache_plugin = views_get_plugin('cache', 'none');
     }
 
-    $cache_str = $cache_plugin->summary_title();
+    $cache_str = $cache_plugin->summaryTitle();
 
     $options['cache'] = array(
       'category' => 'other',
       'title' => t('Caching'),
-      'value' => $cache_plugin->plugin_title(),
+      'value' => $cache_plugin->pluginTitle(),
       'setting' => $cache_str,
       'desc' => t('Specify caching type for this display.'),
     );
@@ -1317,12 +1317,12 @@ abstract class DisplayPluginBase extends PluginBase {
       $exposed_form_plugin = views_get_plugin('exposed_form', 'basic');
     }
 
-    $exposed_form_str = $exposed_form_plugin->summary_title();
+    $exposed_form_str = $exposed_form_plugin->summaryTitle();
 
     $options['exposed_form'] = array(
       'category' => 'exposed',
       'title' => t('Exposed form style'),
-      'value' => $exposed_form_plugin->plugin_title(),
+      'value' => $exposed_form_plugin->pluginTitle(),
       'setting' => $exposed_form_str,
       'desc' => t('Select the kind of exposed filter to use.'),
     );
@@ -1358,8 +1358,8 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * Provide the default form for setting options.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     if ($this->defaultableSections($form_state['section'])) {
       views_ui_standard_display_dropdown($form, $form_state, $form_state['section']);
     }
@@ -1530,7 +1530,7 @@ abstract class DisplayPluginBase extends PluginBase {
             '#type' => 'value',
             '#value' => $access['type'],
           );
-          $plugin->options_form($form['access_options'], $form_state);
+          $plugin->buildOptionsForm($form['access_options'], $form_state);
         }
         break;
       case 'cache':
@@ -1569,7 +1569,7 @@ abstract class DisplayPluginBase extends PluginBase {
             '#type' => 'value',
             '#value' => $cache['type'],
           );
-          $plugin->options_form($form['cache_options'], $form_state);
+          $plugin->buildOptionsForm($form['cache_options'], $form_state);
         }
         break;
       case 'query':
@@ -1590,7 +1590,7 @@ abstract class DisplayPluginBase extends PluginBase {
             ),
           );
 
-          $this->view->query->options_form($form['query']['options'], $form_state);
+          $this->view->query->buildOptionsForm($form['query']['options'], $form_state);
         }
         break;
       case 'field_language':
@@ -1673,7 +1673,7 @@ abstract class DisplayPluginBase extends PluginBase {
           $form[$form_state['section']] = array(
             '#tree' => TRUE,
           );
-          $plugin->options_form($form[$form_state['section']], $form_state);
+          $plugin->buildOptionsForm($form[$form_state['section']], $form_state);
         }
         break;
       case 'row_plugin':
@@ -1823,8 +1823,8 @@ abstract class DisplayPluginBase extends PluginBase {
         // not have themes. The 'feed' display, for example, completely
         // delegates to the style.
         if (!empty($this->definition['theme'])) {
-          $funcs[] = $this->optionLink(t('Display output'), 'analyze-theme-display') . ': '  . $this->formatThemes($this->theme_functions());
-          $themes = $this->additional_theme_functions();
+          $funcs[] = $this->optionLink(t('Display output'), 'analyze-theme-display') . ': '  . $this->formatThemes($this->themeFunctions());
+          $themes = $this->additionalThemeFunctions();
           if ($themes) {
             foreach ($themes as $theme) {
               $funcs[] = $this->optionLink(t('Alternative display output'), 'analyze-theme-display') . ': '  . $this->formatThemes($theme);
@@ -1834,8 +1834,8 @@ abstract class DisplayPluginBase extends PluginBase {
 
         $plugin = $this->getPlugin();
         if ($plugin) {
-          $funcs[] = $this->optionLink(t('Style output'), 'analyze-theme-style') . ': ' . $this->formatThemes($plugin->theme_functions(), $plugin->additional_theme_functions());
-          $themes = $plugin->additional_theme_functions();
+          $funcs[] = $this->optionLink(t('Style output'), 'analyze-theme-style') . ': ' . $this->formatThemes($plugin->themeFunctions(), $plugin->additionalThemeFunctions());
+          $themes = $plugin->additionalThemeFunctions();
           if ($themes) {
             foreach ($themes as $theme) {
               $funcs[] = $this->optionLink(t('Alternative style'), 'analyze-theme-style') . ': '  . $this->formatThemes($theme);
@@ -1845,8 +1845,8 @@ abstract class DisplayPluginBase extends PluginBase {
           if ($plugin->usesRowPlugin()) {
             $row_plugin = $this->getPlugin('row');
             if ($row_plugin) {
-              $funcs[] = $this->optionLink(t('Row style output'), 'analyze-theme-row') . ': ' . $this->formatThemes($row_plugin->theme_functions());
-              $themes = $row_plugin->additional_theme_functions();
+              $funcs[] = $this->optionLink(t('Row style output'), 'analyze-theme-row') . ': ' . $this->formatThemes($row_plugin->themeFunctions());
+              $themes = $row_plugin->additionalThemeFunctions();
               if ($themes) {
                 foreach ($themes as $theme) {
                   $funcs[] = $this->optionLink(t('Alternative row style'), 'analyze-theme-row') . ': '  . $this->formatThemes($theme);
@@ -1857,7 +1857,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
           if ($plugin->usesFields()) {
             foreach ($this->getHandlers('field') as $id => $handler) {
-              $funcs[] = $this->optionLink(t('Field @field (ID: @id)', array('@field' => $handler->ui_name(), '@id' => $id)), 'analyze-theme-field') . ': ' . $this->formatThemes($handler->theme_functions());
+              $funcs[] = $this->optionLink(t('Field @field (ID: @id)', array('@field' => $handler->ui_name(), '@id' => $id)), 'analyze-theme-field') . ': ' . $this->formatThemes($handler->themeFunctions());
             }
           }
         }
@@ -2053,7 +2053,7 @@ abstract class DisplayPluginBase extends PluginBase {
           $form['exposed_form_options'] = array(
             '#tree' => TRUE,
           );
-          $plugin->options_form($form['exposed_form_options'], $form_state);
+          $plugin->buildOptionsForm($form['exposed_form_options'], $form_state);
         }
         break;
       case 'pager':
@@ -2088,13 +2088,13 @@ abstract class DisplayPluginBase extends PluginBase {
           $form['pager_options'] = array(
             '#tree' => TRUE,
           );
-          $plugin->options_form($form['pager_options'], $form_state);
+          $plugin->buildOptionsForm($form['pager_options'], $form_state);
         }
         break;
     }
 
     foreach ($this->extender as $extender) {
-      $extender->options_form($form, $form_state);
+      $extender->buildOptionsForm($form, $form_state);
     }
   }
 
@@ -2129,7 +2129,7 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * Validate the options form.
    */
-  function options_validate(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, &$form_state) {
     switch ($form_state['section']) {
       case 'display_title':
         if (empty($form_state['values']['display_title'])) {
@@ -2161,42 +2161,42 @@ abstract class DisplayPluginBase extends PluginBase {
         // if row, $style will be empty.
         $plugin = $this->getPlugin(empty($style) ? 'row' : 'style');
         if ($plugin) {
-          $plugin->options_validate($form[$form_state['section']], $form_state);
+          $plugin->validateOptionsForm($form[$form_state['section']], $form_state);
         }
         break;
       case 'access_options':
         $plugin = $this->getPlugin('access');
         if ($plugin) {
-          $plugin->options_validate($form['access_options'], $form_state);
+          $plugin->validateOptionsForm($form['access_options'], $form_state);
         }
         break;
       case 'query':
         if ($this->view->query) {
-          $this->view->query->options_validate($form['query'], $form_state);
+          $this->view->query->validateOptionsForm($form['query'], $form_state);
         }
         break;
       case 'cache_options':
         $plugin = $this->getPlugin('cache');
         if ($plugin) {
-          $plugin->options_validate($form['cache_options'], $form_state);
+          $plugin->validateOptionsForm($form['cache_options'], $form_state);
         }
         break;
       case 'exposed_form_options':
         $plugin = $this->getPlugin('exposed_form');
         if ($plugin) {
-          $plugin->options_validate($form['exposed_form_options'], $form_state);
+          $plugin->validateOptionsForm($form['exposed_form_options'], $form_state);
         }
         break;
       case 'pager_options':
         $plugin = $this->getPlugin('pager');
         if ($plugin) {
-          $plugin->options_validate($form['pager_options'], $form_state);
+          $plugin->validateOptionsForm($form['pager_options'], $form_state);
         }
         break;
     }
 
     foreach ($this->extender as $extender) {
-      $extender->options_validate($form, $form_state);
+      $extender->validateOptionsForm($form, $form_state);
     }
   }
 
@@ -2204,7 +2204,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  function options_submit(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, &$form_state) {
     // Not sure I like this being here, but it seems (?) like a logical place.
     $cache_plugin = $this->getPlugin('cache');
     if ($cache_plugin) {
@@ -2239,7 +2239,7 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'access_options':
         $plugin = views_get_plugin('access', $form_state['values'][$section]['type']);
         if ($plugin) {
-          $plugin->options_submit($form['access_options'], $form_state);
+          $plugin->submitOptionsForm($form['access_options'], $form_state);
           $this->setOption('access', $form_state['values'][$section]);
         }
         break;
@@ -2260,14 +2260,14 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'cache_options':
         $plugin = views_get_plugin('cache', $form_state['values'][$section]['type']);
         if ($plugin) {
-          $plugin->options_submit($form['cache_options'], $form_state);
+          $plugin->submitOptionsForm($form['cache_options'], $form_state);
           $this->setOption('cache', $form_state['values'][$section]);
         }
         break;
       case 'query':
         $plugin = $this->get_plugin('query');
         if ($plugin) {
-          $plugin->options_submit($form['query']['options'], $form_state);
+          $plugin->submitOptionsForm($form['query']['options'], $form_state);
           $this->setOption('query', $form_state['values'][$section]);
         }
         break;
@@ -2335,7 +2335,7 @@ abstract class DisplayPluginBase extends PluginBase {
         // if row, $style will be empty.
         $plugin = $this->getPlugin(empty($style) ? 'row' : 'style');
         if ($plugin) {
-          $plugin->options_submit($form['options'][$section], $form_state);
+          $plugin->submitOptionsForm($form['options'][$section], $form_state);
         }
         $this->setOption($section, $form_state['values'][$section]);
         break;
@@ -2360,7 +2360,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $plugin = $this->getPlugin('exposed_form');
         if ($plugin) {
           $exposed_form = $this->getOption('exposed_form');
-          $plugin->options_submit($form['exposed_form_options'], $form_state);
+          $plugin->submitOptionsForm($form['exposed_form_options'], $form_state);
           $exposed_form['options'] = $form_state['values'][$section];
           $this->setOption('exposed_form', $exposed_form);
         }
@@ -2387,7 +2387,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $plugin = $this->getPlugin('pager');
         if ($plugin) {
           $pager = $this->getOption('pager');
-          $plugin->options_submit($form['pager_options'], $form_state);
+          $plugin->submitOptionsForm($form['pager_options'], $form_state);
           $pager['options'] = $form_state['values'][$section];
           $this->setOption('pager', $pager);
         }
@@ -2395,7 +2395,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     foreach ($this->extender as $extender) {
-      $extender->options_submit($form, $form_state);
+      $extender->submitOptionsForm($form, $form_state);
     }
   }
 
@@ -2533,7 +2533,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * Render this display.
    */
   public function render() {
-    return theme($this->theme_functions(), array('view' => $this->view));
+    return theme($this->themeFunctions(), array('view' => $this->view));
   }
 
   public function renderArea($area, $empty = FALSE) {
@@ -2743,12 +2743,12 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Override of export_option()
+   * Override of exportOption()
    *
    * Because displays do not want to export options that are NOT overridden from the
    * default display, we need some special handling during the export process.
    */
-  function export_option($indent, $prefix, $storage, $option, $definition, $parents) {
+  public function exportOption($indent, $prefix, $storage, $option, $definition, $parents) {
     // The $prefix is wrong because we store our actual options a little differently:
     $prefix = '$handler->display->display_options';
     $output = '';
@@ -2765,14 +2765,14 @@ abstract class DisplayPluginBase extends PluginBase {
       }
     }
 
-    $output .= parent::export_option($indent, $prefix, $storage, $option, $definition, $parents);
+    $output .= parent::exportOption($indent, $prefix, $storage, $option, $definition, $parents);
     return $output;
   }
 
   /**
    * Special method to export items that have handlers.
    *
-   * This method was specified in the option_definition() as the method to utilize to
+   * This method was specified in the defineOptions() as the method to utilize to
    * export fields, filters, sort criteria, relationships and arguments. This passes
    * the export off to the individual handlers so that they can export themselves
    * properly.
@@ -2813,7 +2813,7 @@ abstract class DisplayPluginBase extends PluginBase {
       if ($handler) {
         $handler->init($this->view, $info);
         $output .= $indent . '/* ' . $types[$type]['stitle'] . ': ' . $handler->ui_name() . " */\n";
-        $output .= $handler->export_options($indent, $prefix . "['$option']['$id']");
+        $output .= $handler->exportOptions($indent, $prefix . "['$option']['$id']");
       }
 
       // Prevent reference problems.
@@ -2855,7 +2855,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $output .= $indent . $prefix . "['$option'] = '$value';\n";
 
       // Pass off to the plugin to export itself.
-      $output .= $plugin->export_options($indent, $prefix . "['$options_field']");
+      $output .= $plugin->exportOptions($indent, $prefix . "['$options_field']");
     }
 
     return $output;
@@ -2885,7 +2885,7 @@ abstract class DisplayPluginBase extends PluginBase {
       }
 
       // Pass off to the plugin to export itself.
-      $output .= $plugin->export_options($indent, $new_prefix);
+      $output .= $plugin->exportOptions($indent, $new_prefix);
     }
 
     return $output;
@@ -2911,7 +2911,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     if ($plugin) {
-      return $plugin->unpack_translatables($translatable, $parents);
+      return $plugin->unpackTranslatables($translatable, $parents);
     }
   }
 
@@ -2923,14 +2923,14 @@ abstract class DisplayPluginBase extends PluginBase {
     $plugin = $this->getPlugin($plugin_type);
     if ($plugin) {
       // Write which plugin to use.
-      return $plugin->unpack_translatables($translatable, $parents);
+      return $plugin->unpackTranslatables($translatable, $parents);
     }
   }
 
     /**
    * Special method to unpack items that have handlers.
    *
-   * This method was specified in the option_definition() as the method to utilize to
+   * This method was specified in the defineOptions() as the method to utilize to
    * export fields, filters, sort criteria, relationships and arguments. This passes
    * the export off to the individual handlers so that they can export themselves
    * properly.
@@ -2957,7 +2957,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $handler = views_get_handler($info['table'], $info['field'], $handler_type);
       if ($handler) {
         $handler->init($this->view, $info);
-        $handler->unpack_translatables($translatable, array_merge($parents, array($type, $info['table'], $info['id'])));
+        $handler->unpackTranslatables($translatable, array_merge($parents, array($type, $info['table'], $info['id'])));
       }
 
       // Prevent reference problems.

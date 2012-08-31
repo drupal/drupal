@@ -20,8 +20,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 class View extends AreaPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['view_to_insert'] = array('default' => '');
     $options['inherit_arguments'] = array('default' => FALSE, 'bool' => TRUE);
@@ -32,8 +32,8 @@ class View extends AreaPluginBase {
    * Default options form that provides the label widget that all fields
    * should have.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $view_display = $this->view->name . ':' . $this->view->current_display;
 

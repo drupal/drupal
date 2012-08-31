@@ -22,8 +22,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Score extends Numeric {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['alternate_sort'] = array('default' => '');
     $options['alternate_order'] = array('default' => 'asc');
@@ -31,7 +31,7 @@ class Score extends Numeric {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $style_options = $this->view->display_handler->getOption('style_options');
     if (isset($style_options['default']) && $style_options['default'] == $this->options['id']) {
       $handlers = $this->view->display_handler->getHandlers('field');
@@ -56,10 +56,10 @@ class Score extends Numeric {
       );
     }
 
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
-  function query() {
+  public function query() {
     // Check to see if the search filter added 'score' to the table.
     // Our filter stores it as $handler->search_score -- and we also
     // need to check its relationship to make sure that we're using the same

@@ -69,8 +69,8 @@ abstract class RelationshipPluginBase extends HandlerBase {
     return $this->options['label'];
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
 
     // Relationships definitions should define a default label, but if they aren't get another default value.
@@ -91,8 +91,8 @@ abstract class RelationshipPluginBase extends HandlerBase {
    * Default options form that provides the label widget that all fields
    * should have.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Identifier'),
@@ -112,7 +112,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
   /**
    * Called to implement a relationship in a query.
    */
-  function query() {
+  public function query() {
     // Figure out what base table this relationship brings to the party.
     $table_data = views_fetch_data($this->definition['base']);
     $base_field = empty($this->definition['base field']) ? $table_data['table']['base']['field'] : $this->definition['base field'];

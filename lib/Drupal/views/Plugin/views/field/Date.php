@@ -20,8 +20,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Date extends FieldPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['date_format'] = array('default' => 'small');
     $options['custom_date_format'] = array('default' => '');
@@ -30,7 +30,7 @@ class Date extends FieldPluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
 
     $date_formats = array();
     $date_types = system_get_date_types();
@@ -78,7 +78,7 @@ class Date extends FieldPluginBase {
       );
     }
 
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   function render($values) {

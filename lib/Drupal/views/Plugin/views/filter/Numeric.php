@@ -23,8 +23,8 @@ class Numeric extends FilterPluginBase {
 
   var $always_multiple = TRUE;
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['value'] = array(
       'contains' => array(
@@ -243,7 +243,7 @@ class Numeric extends FilterPluginBase {
     }
   }
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $field = "$this->table_alias.$this->real_field";
 

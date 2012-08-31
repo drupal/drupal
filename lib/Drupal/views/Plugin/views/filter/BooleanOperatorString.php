@@ -26,7 +26,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class BooleanOperatorString extends BooleanOperator {
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $where = "$this->table_alias.$this->real_field ";
 

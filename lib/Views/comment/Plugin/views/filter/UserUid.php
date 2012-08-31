@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class UserUid extends FilterPluginBase {
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
 
     $subselect = db_select('comment', 'c');

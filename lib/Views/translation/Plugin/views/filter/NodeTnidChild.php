@@ -28,7 +28,7 @@ class NodeTnidChild extends FilterPluginBase {
 
   function can_expose() { return FALSE; }
 
-  function query() {
+  public function query() {
     $table = $this->ensure_my_table();
     $this->query->add_where_expression($this->options['group'], "$table.tnid <> $table.nid AND $table.tnid > 0");
   }

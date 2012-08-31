@@ -36,7 +36,7 @@ class Permission extends AccessPluginBase {
     return array('views_check_perm', array($this->options['perm']));
   }
 
-  function summary_title() {
+  public function summaryTitle() {
     $permissions = module_invoke_all('permission');
     if (isset($permissions[$this->options['perm']])) {
       return $permissions[$this->options['perm']]['title'];
@@ -46,15 +46,15 @@ class Permission extends AccessPluginBase {
   }
 
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['perm'] = array('default' => 'access content');
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $perms = array();
     $module_info = system_get_info('module');
 

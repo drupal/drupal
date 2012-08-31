@@ -29,7 +29,7 @@ class Markup extends FieldPluginBase {
   /**
    * Constructor; calls to base object constructor.
    */
-  function construct() {
+  public function construct() {
     parent::construct();
 
     $this->format = $this->definition['format'];

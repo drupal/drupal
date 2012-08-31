@@ -22,22 +22,22 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NodeNewComments extends Numeric {
 
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->additional_fields['nid'] = 'nid';
     $this->additional_fields['type'] = 'type';
     $this->additional_fields['comment_count'] = array('table' => 'node_comment_statistics', 'field' => 'comment_count');
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['link_to_comment'] = array('default' => TRUE, 'bool' => TRUE);
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['link_to_comment'] = array(
       '#title' => t('Link this field to new comments'),
       '#description' => t("Enable to override this field's links."),
@@ -45,10 +45,10 @@ class NodeNewComments extends Numeric {
       '#default_value' => $this->options['link_to_comment'],
     );
 
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $this->add_additional_fields();
     $this->field_alias = $this->table . '_' . $this->field;

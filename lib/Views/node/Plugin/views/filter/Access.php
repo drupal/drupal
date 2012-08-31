@@ -31,7 +31,7 @@ class Access extends FilterPluginBase {
   /**
    * See _node_access_where_sql() for a non-views query based implementation.
    */
-  function query() {
+  public function query() {
     if (!user_access('administer nodes')) {
       $table = $this->ensure_my_table();
       $grants = db_or();

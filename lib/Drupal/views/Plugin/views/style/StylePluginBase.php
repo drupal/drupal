@@ -94,7 +94,7 @@ abstract class StylePluginBase extends PluginBase {
     $this->display = &$display;
 
     // Overlay incoming options on top of defaults
-    $this->unpack_options($this->options, isset($options) ? $options : $display->handler->getOption('style_options'));
+    $this->unpackOptions($this->options, isset($options) ? $options : $display->handler->getOption('style_options'));
 
     if ($this->usesRowPlugin() && $display->handler->getOption('row_plugin')) {
       $this->row_plugin = $display->handler->getPlugin('row');
@@ -106,7 +106,7 @@ abstract class StylePluginBase extends PluginBase {
 
   }
 
-  function destroy() {
+  public function destroy() {
     parent::destroy();
 
     if (isset($this->row_plugin)) {
@@ -221,8 +221,8 @@ abstract class StylePluginBase extends PluginBase {
     return !empty($this->definition['even empty']);
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['grouping'] = array('default' => array());
     if ($this->usesRowClass()) {
       $options['row_class'] = array('default' => '');
@@ -234,8 +234,8 @@ abstract class StylePluginBase extends PluginBase {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     // Only fields-based views can handle grouping.  Style plugins can also exclude
     // themselves from being groupable by setting their "usesGrouping" property
     // to FALSE.
@@ -330,7 +330,7 @@ abstract class StylePluginBase extends PluginBase {
     }
   }
 
-  function options_validate(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, &$form_state) {
     // Don't run validation on style plugins without the grouping setting.
     if (isset($form_state['values']['style_options']['grouping'])) {
       // Don't save grouping if no field is specified.
@@ -455,7 +455,7 @@ abstract class StylePluginBase extends PluginBase {
           }
         }
 
-        $output .= theme($this->theme_functions(),
+        $output .= theme($this->themeFunctions(),
           array(
             'view' => $this->view,
             'options' => $this->options,
@@ -657,7 +657,7 @@ abstract class StylePluginBase extends PluginBase {
     return $value;
   }
 
-  function validate() {
+  public function validate() {
     $errors = parent::validate();
 
     if ($this->usesRowPlugin()) {
@@ -675,7 +675,7 @@ abstract class StylePluginBase extends PluginBase {
     return $errors;
   }
 
-  function query() {
+  public function query() {
     parent::query();
     if (isset($this->row_plugin)) {
       $this->row_plugin->query();

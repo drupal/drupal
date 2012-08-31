@@ -18,12 +18,12 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Random extends SortPluginBase {
 
-  function query() {
+  public function query() {
     $this->query->add_orderby('rand');
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     $form['order']['#access'] = FALSE;
   }
 

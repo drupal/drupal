@@ -22,12 +22,12 @@ use Drupal\views\Plugin\views\filter\BooleanOperator;
  */
 class Current extends BooleanOperator {
 
-  function construct() {
+  public function construct() {
     parent::construct();
     $this->value_value = t('Is the logged in user');
   }
 
-  function query() {
+  public function query() {
     $this->ensure_my_table();
 
     $field = $this->table_alias . '.' . $this->real_field . ' ';

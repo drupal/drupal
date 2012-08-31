@@ -23,15 +23,15 @@ use Drupal\Core\Annotation\Translation;
  */
 class View extends RowPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['score'] = array('default' => TRUE, 'bool' => TRUE);
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['score'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display score'),
@@ -43,7 +43,7 @@ class View extends RowPluginBase {
    * Override the behavior of the render() function.
    */
   function render($row) {
-    return theme($this->theme_functions(),
+    return theme($this->themeFunctions(),
       array(
         'view' => $this->view,
         'options' => $this->options,

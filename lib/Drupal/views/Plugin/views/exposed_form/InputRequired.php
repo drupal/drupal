@@ -23,16 +23,16 @@ use Drupal\Core\Annotation\Translation;
  */
 class InputRequired extends ExposedFormPluginBase {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['text_input_required'] = array('default' => 'Select any filter and click on Apply to see results', 'translatable' => TRUE);
     $options['text_input_required_format'] = array('default' => NULL);
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['text_input_required'] = array(
       '#type' => 'text_format',
@@ -44,10 +44,10 @@ class InputRequired extends ExposedFormPluginBase {
     );
   }
 
-  function options_submit(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, &$form_state) {
     $form_state['values']['exposed_form_options']['text_input_required_format'] = $form_state['values']['exposed_form_options']['text_input_required']['format'];
     $form_state['values']['exposed_form_options']['text_input_required'] = $form_state['values']['exposed_form_options']['text_input_required']['value'];
-    parent::options_submit($form, $form_state);
+    parent::submitOptionsForm($form, $form_state);
   }
 
   function exposed_filter_applied() {
@@ -92,7 +92,7 @@ class InputRequired extends ExposedFormPluginBase {
     }
   }
 
-  function query() {
+  public function query() {
     if (!$this->exposed_filter_applied()) {
       // We return with no query; this will force the empty text.
       $this->view->built = TRUE;

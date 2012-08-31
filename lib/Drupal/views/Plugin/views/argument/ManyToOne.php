@@ -38,8 +38,8 @@ class ManyToOne extends ArgumentPluginBase {
     $this->value = array();
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     if (!empty($this->definition['numeric'])) {
       $options['break_phrase'] = array('default' => FALSE, 'bool' => TRUE);
@@ -49,18 +49,18 @@ class ManyToOne extends ArgumentPluginBase {
     $options['require_value'] = array('default' => FALSE, 'bool' => TRUE);
 
     if (isset($this->helper)) {
-      $this->helper->option_definition($options);
+      $this->helper->defineOptions($options);
     }
     else {
       $helper = new ManyToOneHelper($this);
-      $helper->option_definition($options);
+      $helper->defineOptions($options);
     }
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     // allow + for or, , for and
     $form['break_phrase'] = array(
@@ -86,7 +86,7 @@ class ManyToOne extends ArgumentPluginBase {
       '#fieldset' => 'more',
     );
 
-    $this->helper->options_form($form, $form_state);
+    $this->helper->buildOptionsForm($form, $form_state);
   }
 
   /**
@@ -97,7 +97,7 @@ class ManyToOne extends ArgumentPluginBase {
     $this->helper->ensure_my_table();
   }
 
-  function query($group_by = FALSE) {
+  public function query($group_by = FALSE) {
     $empty = FALSE;
     if (isset($this->definition['zero is null']) && $this->definition['zero is null']) {
       if (empty($this->argument)) {

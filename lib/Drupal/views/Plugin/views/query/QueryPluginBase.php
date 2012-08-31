@@ -27,7 +27,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
   function init($base_table, $base_field, $options) {
     $this->base_table = $base_table;
     $this->base_field = $base_field;
-    $this->unpack_options($this->options, $options);
+    $this->unpackOptions($this->options, $options);
   }
 
   /**
@@ -37,7 +37,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
    * @param $get_count
    *   Provide a countquery if this is true, otherwise provide a normal query.
    */
-  function query($get_count = FALSE) { }
+  public function query($get_count = FALSE) { }
 
   /**
    * Let modules modify the query just prior to finalizing it.
@@ -91,15 +91,15 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
   /**
    * Add settings for the ui.
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
   }
 
-  function options_validate(&$form, &$form_state) { }
+  public function validateOptionsForm(&$form, &$form_state) { }
 
-  function options_submit(&$form, &$form_state) { }
+  public function submitOptionsForm(&$form, &$form_state) { }
 
-  function summary_title() {
+  public function summaryTitle() {
     return t('Settings');
   }
 

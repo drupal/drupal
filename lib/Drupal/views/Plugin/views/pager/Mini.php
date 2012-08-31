@@ -24,7 +24,7 @@ use Drupal\Core\Annotation\Translation;
  */
 class Mini extends PagerPluginBase {
 
-  function summary_title() {
+  public function summaryTitle() {
     if (!empty($this->options['offset'])) {
       return format_plural($this->options['items_per_page'], 'Mini pager, @count item, skip @skip', 'Mini pager, @count items, skip @skip', array('@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']));
     }

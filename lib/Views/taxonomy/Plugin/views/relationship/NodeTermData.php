@@ -36,13 +36,13 @@ class NodeTermData extends RelationshipPluginBase  {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['vocabularies'] = array('default' => array());
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $vocabularies = taxonomy_vocabulary_get_names();
     $options = array();
     foreach ($vocabularies as $voc) {
@@ -56,13 +56,13 @@ class NodeTermData extends RelationshipPluginBase  {
       '#default_value' => $this->options['vocabularies'],
       '#description' => t('Choose which vocabularies you wish to relate. Remember that every term found will create a new record, so this relationship is best used on just one vocabulary that has only one term per node.'),
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   /**
    * Called to implement a relationship in a query.
    */
-  function query() {
+  public function query() {
     $this->ensure_my_table();
 
     $def = $this->definition;

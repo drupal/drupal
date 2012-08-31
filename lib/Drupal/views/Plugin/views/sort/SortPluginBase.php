@@ -31,14 +31,14 @@ abstract class SortPluginBase extends HandlerBase {
   /**
    * Called to add the sort to a query.
    */
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     // Add the field.
     $this->query->add_orderby($this->table_alias, $this->real_field, $this->options['order']);
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['order'] = array('default' => 'ASC');
     $options['exposed'] = array('default' => FALSE, 'bool' => TRUE);
@@ -73,8 +73,8 @@ abstract class SortPluginBase extends HandlerBase {
   /**
    * Basic options for all sort criteria
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
     if ($this->can_expose()) {
       $this->show_expose_button($form, $form_state);
     }
@@ -138,7 +138,7 @@ abstract class SortPluginBase extends HandlerBase {
   /**
    * Simple validate handler
    */
-  function options_validate(&$form, &$form_state) {
+  public function validateOptionsForm(&$form, &$form_state) {
     $this->sort_validate($form, $form_state);
     if (!empty($this->options['exposed'])) {
       $this->expose_validate($form, $form_state);
@@ -149,7 +149,7 @@ abstract class SortPluginBase extends HandlerBase {
   /**
    * Simple submit handler
    */
-  function options_submit(&$form, &$form_state) {
+  public function submitOptionsForm(&$form, &$form_state) {
     unset($form_state['values']['expose_button']); // don't store this.
     $this->sort_submit($form, $form_state);
     if (!empty($this->options['exposed'])) {

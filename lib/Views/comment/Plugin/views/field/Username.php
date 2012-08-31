@@ -31,19 +31,19 @@ class Username extends FieldPluginBase {
     $this->additional_fields['homepage'] = 'homepage';
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['link_to_user'] = array('default' => TRUE, 'bool' => TRUE);
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['link_to_user'] = array(
       '#title' => t("Link this field to its user or an author's homepage"),
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_user'],
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   function render_link($data, $values) {

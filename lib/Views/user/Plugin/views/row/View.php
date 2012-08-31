@@ -33,17 +33,17 @@ class View extends RowPluginBase {
   // Store the users to be used for pre_render.
   var $users = array();
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['view_mode'] = array('default' => 'full');
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
-    $options = $this->options_form_summary_options();
+    $options = $this->buildOptionsForm_summary_options();
     $form['view_mode'] = array(
       '#type' => 'select',
       '#options' => $options,
@@ -56,7 +56,7 @@ class View extends RowPluginBase {
     /**
      * Return the main options, which are shown in the summary title.
      */
-    function options_form_summary_options() {
+    public function buildOptionsForm_summary_options() {
       $entity_info = entity_get_info('user');
       $options = array();
       if (!empty($entity_info['view modes'])) {
@@ -73,8 +73,8 @@ class View extends RowPluginBase {
       return $options;
     }
 
-    function summary_title() {
-      $options = $this->options_form_summary_options();
+    public function summaryTitle() {
+      $options = $this->buildOptionsForm_summary_options();
       return check_plain($options[$this->options['view_mode']]);
     }
 

@@ -33,8 +33,8 @@ class Comment extends FieldPluginBase {
     }
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['link_to_comment'] = array('default' => TRUE, 'bool' => TRUE);
     $options['link_to_node'] = array('default' => FALSE, 'bool' => TRUE);
 
@@ -44,7 +44,7 @@ class Comment extends FieldPluginBase {
   /**
    * Provide link-to-comment option
    */
-  function options_form(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['link_to_comment'] = array(
       '#title' => t('Link this field to its comment'),
       '#description' => t("Enable to override this field's links."),
@@ -56,7 +56,7 @@ class Comment extends FieldPluginBase {
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_node'],
     );
-    parent::options_form($form, $form_state);
+    parent::buildOptionsForm($form, $form_state);
   }
 
   function render_link($data, $values) {

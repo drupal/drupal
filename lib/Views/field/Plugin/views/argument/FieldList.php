@@ -36,15 +36,15 @@ class FieldList extends Numeric {
     $this->allowed_values = options_allowed_values($field);
   }
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['summary']['contains']['human'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
     $form['summary']['human'] = array(
       '#title' => t('Display list value as human readable'),

@@ -40,8 +40,8 @@ class Search extends FilterPluginBase {
    */
   var $parsed = FALSE;
 
-  function option_definition() {
-    $options = parent::option_definition();
+  protected function defineOptions() {
+    $options = parent::defineOptions();
 
     $options['operator']['default'] = 'optional';
 
@@ -115,7 +115,7 @@ class Search extends FilterPluginBase {
    * level of indirection. You will find them in $this->operator
    * and $this->value respectively.
    */
-  function query() {
+  public function query() {
     // Since attachment views don't validate the exposed input, parse the search
     // expression if required.
     if (!$this->parsed) {
