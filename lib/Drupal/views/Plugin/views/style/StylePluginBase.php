@@ -661,7 +661,8 @@ abstract class StylePluginBase extends PluginBase {
     $errors = parent::validate();
 
     if ($this->usesRowPlugin()) {
-      $plugin = $this->display->handler->getPlugin('row');
+      $name = $this->display->handler->getOption('row_plugin');
+      $plugin = $this->display->handler->getPlugin('row', $name);
       if (empty($plugin)) {
         $errors[] = t('Style @style requires a row style but the row plugin is invalid.', array('@style' => $this->definition['title']));
       }

@@ -2172,7 +2172,8 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
       break;
     case 'field':
       // Fetch the style plugin info so we know whether to list fields or not.
-      $style_plugin = $display->handler->getPlugin();
+      $name = $display->handler->getOption('style_plugin');
+      $style_plugin = $display->handler->getPlugin('style', $name);
       $uses_fields = $style_plugin && $style_plugin->usesFields();
       if (!$uses_fields) {
         $build['fields'][] = array(

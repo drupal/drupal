@@ -763,7 +763,8 @@ abstract class DisplayPluginBase extends PluginBase {
    * @return bool
    */
   public function usesFields() {
-    $plugin = $this->getPlugin('style');
+    $name = $this->getOption('style_plugin');
+    $plugin = $this->getPlugin('style', $name);
     if ($plugin) {
       return $plugin->usesFields();
     }
@@ -1116,8 +1117,9 @@ abstract class DisplayPluginBase extends PluginBase {
     );
 
     $manager = new ViewsPluginManager('style');
-    $style_plugin = $manager->getDefinition($this->getOption('style_plugin'));
-    $style_plugin_instance = $this->getPlugin('style');
+    $name = $this->getOption('style_plugin');
+    $style_plugin = $manager->getDefinition($name);
+    $style_plugin_instance = $this->getPlugin('style', $name);
     $style_summary = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->summaryTitle();
     $style_title = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->pluginTitle();
 
@@ -1138,8 +1140,9 @@ abstract class DisplayPluginBase extends PluginBase {
 
     if ($style_plugin_instance->usesRowPlugin()) {
       $manager = new ViewsPluginManager('row');
-      $row_plugin = $manager->getDefinition($this->getOption('row_plugin'));
-      $row_plugin_instance = $this->getPlugin('row');
+      $name = $this->getOption('row_plugin');
+      $row_plugin = $manager->getDefinition($name);
+      $row_plugin_instance = $this->getPlugin('row', $name);
       $row_summary = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->summaryTitle();
       $row_title = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->pluginTitle();
 
@@ -1645,7 +1648,8 @@ abstract class DisplayPluginBase extends PluginBase {
           '#description' => t('If the style you choose has settings, be sure to click the settings button that will appear next to it in the View summary.'),
         );
 
-        $style_plugin = $this->getPlugin('style');
+        $name = $this->getOption('style_plugin');
+        $style_plugin = $this->getPlugin('style', $name);
         if ($style_plugin->usesOptions()) {
           $form['markup'] = array(
             '#markup' => '<div class="form-item description">' . t('You may also adjust the !settings for the currently selected style.', array('!settings' => $this->optionLink(t('settings'), 'style_options'))) . '</div>',
@@ -1684,7 +1688,8 @@ abstract class DisplayPluginBase extends PluginBase {
           '#default_value' => $this->getOption('row_plugin'),
         );
 
-        $row_plugin = $this->getPlugin('row');
+        $name = $this->getOption('row_plugin');
+        $row_plugin = $this->getPlugin('row', $name);
         if ($row_plugin->usesOptions()) {
           $form['markup'] = array(
             '#markup' => '<div class="form-item description">' . t('You may also adjust the !settings for the currently selected row style.', array('!settings' => $this->optionLink(t('settings'), 'row_options'))) . '</div>',
@@ -1832,7 +1837,8 @@ abstract class DisplayPluginBase extends PluginBase {
           }
         }
 
-        $plugin = $this->getPlugin();
+        $name = $this->getOption('style_plugin');
+        $plugin = $this->getPlugin('style', $name);
         if ($plugin) {
           $funcs[] = $this->optionLink(t('Style output'), 'analyze-theme-style') . ': ' . $this->formatThemes($plugin->themeFunctions(), $plugin->additionalThemeFunctions());
           $themes = $plugin->additionalThemeFunctions();
@@ -1843,7 +1849,8 @@ abstract class DisplayPluginBase extends PluginBase {
           }
 
           if ($plugin->usesRowPlugin()) {
-            $row_plugin = $this->getPlugin('row');
+            $name = $this->getOption('row_plugin');
+            $row_plugin = $this->getPlugin('row', $name);
             if ($row_plugin) {
               $funcs[] = $this->optionLink(t('Row style output'), 'analyze-theme-row') . ': ' . $this->formatThemes($row_plugin->themeFunctions());
               $themes = $row_plugin->additionalThemeFunctions();
@@ -1945,7 +1952,8 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('Theming information (style)');
         $output = '<p>' . t('Back to !info.', array('!info' => $this->optionLink(t('theming information'), 'analyze-theme'))) . '</p>';
 
-        $plugin = $this->getPlugin();
+        $name = $this->getOption('style_plugin');
+        $plugin = $this->getPlugin('style', $name);
 
         if (empty($plugin->definition['theme'])) {
           $output .= t('This display has no style theming information');
@@ -1972,7 +1980,8 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('Theming information (row style)');
         $output = '<p>' . t('Back to !info.', array('!info' => $this->optionLink(t('theming information'), 'analyze-theme'))) . '</p>';
 
-        $plugin = $this->getPlugin('row');
+        $name = $this->getOption('row_plugin');
+        $plugin = $this->getPlugin('row', $name);
 
         if (empty($plugin->definition['theme'])) {
           $output .= t('This display has no row style theming information');
@@ -2640,7 +2649,8 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     // Validate style plugin
-    $style = $this->getPlugin();
+    $name = $this->getOption('style_plugin');
+    $style = $this->getPlugin('style', $name);
     if (empty($style)) {
       $errors[] = t('Display "@display" has an invalid style plugin.', array('@display' => $this->display->display_title));
     }
@@ -2832,7 +2842,8 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   public function exportStyle($indent, $prefix, $storage, $option, $definition, $parents) {
     $output = '';
-    $style_plugin = $this->getPlugin();
+    $name = $this->getOption('style_plugin');
+    $style_plugin = $this->getPlugin('style', $name);
     if ($option == 'style_plugin') {
       $type = 'style';
       $options_field = 'style_options';
@@ -2845,7 +2856,8 @@ abstract class DisplayPluginBase extends PluginBase {
 
       $type = 'row';
       $options_field = 'row_options';
-      $plugin = $this->getPlugin('row');
+      $name = $this->getOption('row_plugin');
+      $plugin = $this->getPlugin('row', $name);
       // If the style plugin doesn't use row plugins, don't even bother.
     }
 
@@ -2893,10 +2905,9 @@ abstract class DisplayPluginBase extends PluginBase {
 
   public function unpackStyle($indent, $prefix, $storage, $option, $definition, $parents) {
     $output = '';
-    $style_plugin = $this->getPlugin();
+    $name = $this->getOption('style_plugin');
+    $style_plugin = $this->getPlugin('style', $name);
     if ($option == 'style_plugin') {
-      $type = 'style';
-      $options_field = 'style_options';
       $plugin = $style_plugin;
     }
     else {
@@ -2904,9 +2915,8 @@ abstract class DisplayPluginBase extends PluginBase {
         return;
       }
 
-      $type = 'row';
-      $options_field = 'row_options';
-      $plugin = $this->getPlugin('row');
+      $name = $this->getOption('row_plugin');
+      $plugin = $this->getPlugin('row', $name);
       // If the style plugin doesn't use row plugins, don't even bother.
     }
 
