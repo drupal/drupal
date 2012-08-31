@@ -39,7 +39,7 @@ interface NestedMatcherInterface extends RequestMatcherInterface {
   /**
    * Sets the final matcher for the matching plan.
    *
-   * @param UrlMatcherInterface $final
+   * @param FinalMatcherInterface $final
    *   The matcher that will be called last to ensure only a single route is
    *   found.
    *

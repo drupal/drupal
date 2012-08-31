@@ -60,7 +60,7 @@ class MatcherDumper implements MatcherDumperInterface {
   }
 
   /**
-   * Dumps a set of routes to a PHP class.
+   * Dumps a set of routes to the router table in the database.
    *
    * Available options:
    *

@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * A PartialMatcher works like a UrlMatcher, but will return multiple candidate routes.
+ * A FinalMatcher returns only one route from a collection of candidate routes.
  */
 interface FinalMatcherInterface {
 
