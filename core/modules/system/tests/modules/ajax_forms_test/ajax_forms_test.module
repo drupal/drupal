@@ -7,7 +7,6 @@
 
 /**
  * Implements hook_menu().
- * @return unknown_type
  */
 function ajax_forms_test_menu() {
   $items = array();
@@ -94,9 +93,6 @@ function ajax_forms_test_simple_form_checkbox_callback($form, $form_state) {
 
 /**
  * Form to display the Ajax Commands.
- * @param $form
- * @param $form_state
- * @return unknown_type
  */
 function ajax_forms_test_ajax_commands_form($form, &$form_state) {
   $form = array();
