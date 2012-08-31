@@ -288,13 +288,9 @@ function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALS
 /**
  * Get a list of all of the tests provided by the system.
  *
- * The list of test classes is loaded from the registry where it looks for
- * files ending in ".test". Once loaded the test list is cached and stored in
- * a static variable. In order to list tests provided by disabled modules
- * hook_registry_files_alter() is used to forcefully add them to the registry.
- *
- * PSR-0 classes are found by searching the designated directory for each module
- * for files matching the PSR-0 standard.
+ * The list of test classes is loaded by searching the designated directory for
+ * each module for files matching the PSR-0 standard. Once loaded the test list
+ * is cached and stored in a static variable.
  *
  * @return
  *   An array of tests keyed with the groups specified in each of the tests
@@ -310,7 +306,6 @@ function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALS
  *       ),
  *     );
  *   @endcode
- * @see simpletest_registry_files_alter()
  */
 function simpletest_test_get_all() {
   $groups = &drupal_static(__FUNCTION__);
@@ -326,11 +321,8 @@ function simpletest_test_get_all() {
       $groups = $cache->data;
     }
     else {
-      // Select all clases in files ending with .test.
-      // @todo: Remove this once all tests have been ported to PSR-0.
-      $classes = db_query("SELECT name FROM {registry} WHERE type = :type AND filename LIKE :name", array(':type' => 'class', ':name' => '%.test'))->fetchCol();
-
       // Select all PSR-0 classes in the Tests namespace of all modules.
+      $classes = array();
       $system_list = db_query("SELECT name, filename FROM {system}")->fetchAllKeyed();
 
       foreach ($system_list as $name => $filename) {
@@ -403,29 +395,6 @@ function simpletest_classloader_register() {
 }
 
 /**
- * Implements hook_registry_files_alter().
- *
- * Add the test files for disabled modules so that we get a list containing
- * all the avialable tests.
- */
-function simpletest_registry_files_alter(&$files, $modules) {
-  foreach ($modules as $module) {
-    // Only add test files for disabled modules, as enabled modules should
-    // already include any test files they provide.
-    if (!$module->status) {
-      $dir = $module->dir;
-      if (!empty($module->info['files'])) {
-        foreach ($module->info['files'] as $file) {
-          if (substr($file, -5) == '.test') {
-            $files["$dir/$file"] = array('module' => $module->name, 'weight' => $module->weight);
-          }
-        }
-      }
-    }
-  }
-}
-
-/**
  * Generate test file.
  */
 function simpletest_generate_file($filename, $width, $lines, $type = 'binary-text') {
@@ -469,7 +438,6 @@ function simpletest_clean_environment() {
   }
 
   // Detect test classes that have been added, renamed or deleted.
-  registry_rebuild();
   cache()->delete('simpletest');
 }
 

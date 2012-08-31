@@ -7061,10 +7061,8 @@ function drupal_flush_all_caches() {
   // Clear all non-drupal_static() static caches.
   // None currently; kept if any static caches need to be reset in the future.
 
-  // Update and synchronize the class registry and extension information based
-  // on current/actual code.
-  // Module data is rebuilt as part of registry_rebuild().
-  registry_rebuild();
+  // Rebuild module and theme data.
+  system_rebuild_module_data();
   system_rebuild_theme_data();
 
   // Ensure that all modules that are currently supposed to be enabled are

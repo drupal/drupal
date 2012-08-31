@@ -29,7 +29,6 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    */
   public function onTerminate(PostResponseEvent $event) {
     module_invoke_all('exit');
-    _registry_check_code(REGISTRY_WRITE_LOOKUP_CACHE);
     drupal_cache_system_paths();
     module_implements_write_cache();
     system_run_automated_cron();

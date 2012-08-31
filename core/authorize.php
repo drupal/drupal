@@ -69,7 +69,7 @@ require_once DRUPAL_ROOT . '/core/includes/module.inc';
 require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
 
 // We prepare only a minimal bootstrap. This includes the database and
-// variables, however, so we have access to the class autoloader registry.
+// variables, however, so we have access to the class autoloader.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
 
 // This must go after drupal_bootstrap(), which unsets globals!

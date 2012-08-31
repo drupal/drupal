@@ -374,8 +374,6 @@ abstract class Database {
       throw new DriverNotSpecifiedException('Driver not specified for this database connection: ' . $key);
     }
 
-    // We cannot rely on the registry yet, because the registry requires an
-    // open database connection.
     $driver_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Connection";
     $new_connection = new $driver_class(self::$databaseInfo[$key][$target]);
     $new_connection->setTarget($target);
