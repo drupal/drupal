@@ -49,6 +49,13 @@ class ConfigStorageController implements StorageControllerInterface {
   protected $idKey;
 
   /**
+   * Name of the entity's UUID property.
+   *
+   * @var string
+   */
+  protected $uuidKey = 'uuid';
+
+  /**
    * Implements Drupal\entity\StorageControllerInterface::__construct().
    *
    * Sets basic variables.
@@ -58,9 +65,6 @@ class ConfigStorageController implements StorageControllerInterface {
     $this->entityInfo = entity_get_info($entityType);
     $this->hookLoadArguments = array();
     $this->idKey = $this->entityInfo['entity keys']['id'];
-
-    // The UUID key and property is hard-coded for all configurables.
-    $this->uuidKey = 'uuid';
   }
 
   /**
