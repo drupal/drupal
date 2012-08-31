@@ -2,21 +2,31 @@
  * @file
  * Javascript related to the main view list.
  */
-(function ($) {
+(function ($, Drupal) {
 
 "use strict";
 
 Drupal.behaviors.viewsUIList = {
-  attach: function (context) {
-    $('#ctools-export-ui-list-items thead a').once('views-ajax-processed').each(function() {
-      $(this).click(function() {
+  attach: function () {
+    var $itemsTable = $('#ctools-export-ui-list-items thead').once('views-ajax-processed');
+    var $itemsForm = $('#ctools-export-ui-list-form');
+    if ($itemsTable.length) {
+      $itemsTable.on('click', 'a', function (e) {
+        e.preventDefault();
         var query = $.deparam.querystring(this.href);
-        $('#ctools-export-ui-list-form select[name=order]').val(query.order);
-        $('#ctools-export-ui-list-form select[name=sort]').val(query.sort);
-        $('#ctools-export-ui-list-form input.ctools-auto-submit-click').trigger('click');
-        event.preventDefault();
+        $itemsForm.find('select[name=order]').val(query.order);
+        $itemsForm.find('select[name=sort]').val(query.sort);
+        $itemsForm.find('input.ctools-auto-submit-click').trigger('click');
       });
-    });
+    }
+  },
+  detach: function (context, settings, trigger) {
+    if (trigger === 'unload') {
+      var $itemsTable = $('#ctools-export-ui-list-items thead').removeOnce('views-ajax-processed');
+      if ($itemsTable.length) {
+        $itemsTable.off('click');
+      }
+    }
   }
 };
 
