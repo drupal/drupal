@@ -21,12 +21,18 @@ var showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'))
  */
 Drupal.behaviors.tableDrag = {
   attach: function (context, settings) {
-    for (var base in settings.tableDrag) {
-      $(context).find('#' + base).once('tabledrag', function () {
+    function initTableDrag(table, base) {
+      if (table.length) {
         // Create the new tableDrag instance. Save in the Drupal variable
         // to allow other scripts access to the object.
-        Drupal.tableDrag[base] = new Drupal.tableDrag(this, settings.tableDrag[base]);
-      });
+        Drupal.tableDrag[base] = new Drupal.tableDrag(table[0], settings.tableDrag[base]);
+      }
+    }
+
+    for (var base in settings.tableDrag) {
+      if (settings.tableDrag.hasOwnProperty(base)) {
+        initTableDrag($(context).find('#' + base).once('tabledrag'), base);
+      }
     }
   }
 };
@@ -65,12 +71,16 @@ Drupal.tableDrag = function (table, tableSettings) {
   // don't need to track horizontal movement and indentations.
   this.indentEnabled = false;
   for (var group in tableSettings) {
-    for (var n in tableSettings[group]) {
-      if (tableSettings[group][n].relationship === 'parent') {
-        this.indentEnabled = true;
-      }
-      if (tableSettings[group][n].limit > 0) {
-        this.maxDepth = tableSettings[group][n].limit;
+    if (tableSettings.hasOwnProperty(group)) {
+      for (var n in tableSettings[group]) {
+        if (tableSettings[group].hasOwnProperty(n)) {
+          if (tableSettings[group][n].relationship === 'parent') {
+            this.indentEnabled = true;
+          }
+          if (tableSettings[group][n].limit > 0) {
+            this.maxDepth = tableSettings[group][n].limit;
+          }
+        }
       }
     }
   }
@@ -133,47 +143,60 @@ Drupal.tableDrag = function (table, tableSettings) {
  * 'Drupal.tableDrag.showWeight' localStorage value.
  */
 Drupal.tableDrag.prototype.initColumns = function () {
-  var $table = $(this.table);
+  var $table = $(this.table), hidden, cell, columnIndex;
   for (var group in this.tableSettings) {
-    // Find the first field in this group.
-    for (var d in this.tableSettings[group]) {
-      var field = $table.find('.' + this.tableSettings[group][d].target + ':first');
-      if (field.length && this.tableSettings[group][d].hidden) {
-        var hidden = this.tableSettings[group][d].hidden;
-        var cell = field.closest('td');
-        break;
-      }
-    }
-
-    // Mark the column containing this field so it can be hidden.
-    if (hidden && cell[0]) {
-      // Add 1 to our indexes. The nth-child selector is 1 based, not 0 based.
-      // Match immediate children of the parent element to allow nesting.
-      var columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
-      $table.find('> thead > tr, > tbody > tr, > tr').each(function () {
-        // Get the columnIndex and adjust for any colspans in this row.
-        var index = columnIndex;
-        var cells = $(this).children();
-        cells.each(function (n) {
-          if (n < index && this.colSpan && this.colSpan > 1) {
-            index -= this.colSpan - 1;
-          }
-        });
-        if (index > 0) {
-          cell = cells.filter(':nth-child(' + index + ')');
-          if (cell[0].colSpan && cell[0].colSpan > 1) {
-            // If this cell has a colspan, mark it so we can reduce the colspan.
-            cell.addClass('tabledrag-has-colspan');
-          }
-          else {
-            // Mark this cell so we can hide it.
-            cell.addClass('tabledrag-hide');
+    if (this.tableSettings.hasOwnProperty(group)) { // Find the first field in this group.
+      for (var d in this.tableSettings[group]) {
+        if (this.tableSettings[group].hasOwnProperty(d)) {
+          var field = $table.find('.' + this.tableSettings[group][d].target + ':first');
+          if (field.length && this.tableSettings[group][d].hidden) {
+            hidden = this.tableSettings[group][d].hidden;
+            cell = field.closest('td');
+            break;
           }
         }
-      });
+      }
+
+      // Mark the column containing this field so it can be hidden.
+      if (hidden && cell[0]) {
+        // Add 1 to our indexes. The nth-child selector is 1 based, not 0 based.
+        // Match immediate children of the parent element to allow nesting.
+        columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
+        $table.find('> thead > tr, > tbody > tr, > tr').each(this.addColspanClass(columnIndex));
+      }
     }
   }
   this.displayColumns(showWeight);
+};
+
+/**
+ * Mark cells that have colspan so we can adjust the colspan
+ * instead of hiding them altogether.
+ */
+Drupal.tableDrag.prototype.addColspanClass = function(columnIndex) {
+  return function () {
+    // Get the columnIndex and adjust for any colspans in this row.
+    var $row = $(this);
+    var index = columnIndex;
+    var cells = $row.children();
+    var cell;
+    cells.each(function (n) {
+      if (n < index && this.colSpan && this.colSpan > 1) {
+        index -= this.colSpan - 1;
+      }
+    });
+    if (index > 0) {
+      cell = cells.filter(':nth-child(' + index + ')');
+      if (cell[0].colSpan && cell[0].colSpan > 1) {
+        // If this cell has a colspan, mark it so we can reduce the colspan.
+        cell.addClass('tabledrag-has-colspan');
+      }
+      else {
+        // Mark this cell so we can hide it.
+        cell.addClass('tabledrag-hide');
+      }
+    }
+  };
 };
 
 /**
@@ -253,15 +276,20 @@ Drupal.tableDrag.prototype.showColumns = function () {
  */
 Drupal.tableDrag.prototype.rowSettings = function (group, row) {
   var field = $(row).find('.' + group);
-  for (var delta in this.tableSettings[group]) {
-    var targetClass = this.tableSettings[group][delta].target;
-    if (field.is('.' + targetClass)) {
-      // Return a copy of the row settings.
-      var rowSettings = {};
-      for (var n in this.tableSettings[group][delta]) {
-        rowSettings[n] = this.tableSettings[group][delta][n];
+  var tableSettingsGroup = this.tableSettings[group];
+  for (var delta in tableSettingsGroup) {
+    if (tableSettingsGroup.hasOwnProperty(delta)) {
+      var targetClass = tableSettingsGroup[delta].target;
+      if (field.is('.' + targetClass)) {
+        // Return a copy of the row settings.
+        var rowSettings = {};
+        for (var n in tableSettingsGroup[delta]) {
+          if (tableSettingsGroup[delta].hasOwnProperty(n)) {
+            rowSettings[n] = tableSettingsGroup[delta][n];
+          }
+        }
+        return rowSettings;
       }
-      return rowSettings;
     }
   }
 };
@@ -361,6 +389,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
     }
 
     var keyChange = false;
+    var groupHeight;
     switch (event.keyCode) {
       case 37: // Left arrow.
       case 63234: // Safari left arrow.
@@ -382,7 +411,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
 
           if ($(item).is('.tabledrag-root')) {
             // Swap with the previous top-level row.
-            var groupHeight = 0;
+            groupHeight = 0;
             while (previousRow && $previousRow.find('.indentation').length) {
               $previousRow = $(previousRow).prev('tr').eq(0);
               previousRow = $previousRow.get(0);
@@ -425,7 +454,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
 
           if ($(item).is('.tabledrag-root')) {
             // Swap with the next group (necessarily a top-level one).
-            var groupHeight = 0;
+            groupHeight = 0;
             var nextGroup = new self.row(nextRow, 'keyboard', self.indentEnabled, self.maxDepth, false);
             if (nextGroup) {
               $(nextGroup.group).each(function () {
@@ -538,10 +567,12 @@ Drupal.tableDrag.prototype.dragRow = function (event, self) {
  * Blur event handler, bound to drag handle for keyboard support.
  */
 Drupal.tableDrag.prototype.dropRow = function (event, self) {
+  var droppedRow, $droppedRow;
+
   // Drop row functionality shared between mouseup and blur events.
   if (self.rowObject !== null) {
-    var droppedRow = self.rowObject.element;
-    var $droppedRow = $(droppedRow);
+    droppedRow = self.rowObject.element;
+    $droppedRow = $(droppedRow);
     // The row is already in the right place so we just release it.
     if (self.rowObject.changed === true) {
       // Update the fields in the dropped row.
@@ -550,10 +581,14 @@ Drupal.tableDrag.prototype.dropRow = function (event, self) {
       // If a setting exists for affecting the entire group, update all the
       // fields in the entire dragged group.
       for (var group in self.tableSettings) {
-        var rowSettings = self.rowSettings(group, droppedRow);
-        if (rowSettings.relationship === 'group') {
-          for (var n in self.rowObject.children) {
-            self.updateField(self.rowObject.children[n], group);
+        if (self.tableSettings.hasOwnProperty(group)) {
+          var rowSettings = self.rowSettings(group, droppedRow);
+          if (rowSettings.relationship === 'group') {
+            for (var n in self.rowObject.children) {
+              if (self.rowObject.children.hasOwnProperty(n)) {
+                self.updateField(self.rowObject.children[n], group);
+              }
+            }
           }
         }
       }
@@ -626,22 +661,23 @@ Drupal.tableDrag.prototype.findDropTargetRow = function (x, y) {
     var $row = $(row);
     var indentDiff = 0;
     var rowY = $row.offset().top;
+    var rowHeight;
     // Because Safari does not report offsetHeight on table rows, but does on
     // table cells, grab the firstChild of the row and use that instead.
     // http://jacob.peargrove.com/blog/2006/technical/table-row-offsettop-bug-in-safari.
     if (row.offsetHeight === 0) {
-      var rowHeight = parseInt(row.firstChild.offsetHeight, 10) / 2;
+      rowHeight = parseInt(row.firstChild.offsetHeight, 10) / 2;
     }
     // Other browsers.
     else {
-      var rowHeight = parseInt(row.offsetHeight, 10) / 2;
+      rowHeight = parseInt(row.offsetHeight, 10) / 2;
     }
 
     // Because we always insert before, we need to offset the height a bit.
     if ((y > (rowY - rowHeight)) && (y < (rowY + rowHeight))) {
       if (this.indentEnabled) {
         // Check that this row is not a child of the row being dragged.
-        for (var n in this.rowObject.group) {
+        for (n in this.rowObject.group) {
           if (this.rowObject.group[n] === row) {
             return null;
           }
@@ -681,9 +717,11 @@ Drupal.tableDrag.prototype.findDropTargetRow = function (x, y) {
  */
 Drupal.tableDrag.prototype.updateFields = function (changedRow) {
   for (var group in this.tableSettings) {
-    // Each group may have a different setting for relationship, so we find
-    // the source rows for each separately.
-    this.updateField(changedRow, group);
+    if (this.tableSettings.hasOwnProperty(group)) {
+      // Each group may have a different setting for relationship, so we find
+      // the source rows for each separately.
+      this.updateField(changedRow, group);
+    }
   }
 };
 
@@ -699,18 +737,21 @@ Drupal.tableDrag.prototype.updateFields = function (changedRow) {
 Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
   var rowSettings = this.rowSettings(group, changedRow);
   var $changedRow = $(changedRow);
-
+  var sourceRow;
+  var $previousRow;
+  var previousRow;
+  var useSibling;
   // Set the row as its own target.
   if (rowSettings.relationship === 'self' || rowSettings.relationship === 'group') {
-    var sourceRow = changedRow;
+    sourceRow = changedRow;
   }
   // Siblings are easy, check previous and next rows.
   else if (rowSettings.relationship === 'sibling') {
-    var $previousRow = $changedRow.prev('tr').eq(0);
-    var previousRow = $previousRow.get(0);
+    $previousRow = $changedRow.prev('tr').eq(0);
+    previousRow = $previousRow.get(0);
     var $nextRow = $changedRow.next('tr').eq(0);
     var nextRow = $nextRow.get(0);
-    var sourceRow = changedRow;
+    sourceRow = changedRow;
     if ($previousRow.is('.draggable') && $previousRow.find('.' + group).length) {
       if (this.indentEnabled) {
         if ($previousRow.find('.indentations').length === $changedRow.find('.indentations').length) {
@@ -735,8 +776,8 @@ Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
   // Parents, look up the tree until we find a field not in this group.
   // Go up as many parents as indentations in the changed row.
   else if (rowSettings.relationship === 'parent') {
-    var $previousRow = $changedRow.prev('tr');
-    var previousRow = $previousRow;
+    $previousRow = $changedRow.prev('tr');
+    previousRow = $previousRow;
     while ($previousRow.length && $previousRow.find('.indentation').length >= this.rowObject.indents) {
       $previousRow = $previousRow.prev('tr');
       previousRow = $previousRow;
@@ -755,7 +796,7 @@ Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
       if (sourceRow === this.rowObject.element) {
         sourceRow = $(this.rowObject.group[this.rowObject.group.length - 1]).next('tr.draggable').get(0);
       }
-      var useSibling = true;
+      useSibling = true;
     }
   }
 
@@ -915,7 +956,7 @@ Drupal.tableDrag.prototype.row = function (tableRow, method, indentEnabled, maxD
   this.group = [tableRow];
   this.groupDepth = $tableRow.find('.indentation').length;
   this.changed = false;
-  this.table = $tableRow.closest('table').get(0);
+  this.table = $tableRow.closest('table')[0];
   this.indentEnabled = indentEnabled;
   this.maxDepth = maxDepth;
   this.direction = ''; // Direction the row is being moved.
@@ -942,24 +983,25 @@ Drupal.tableDrag.prototype.row.prototype.findChildren = function (addClasses) {
   var currentRow = $(this.element, this.table).next('tr.draggable');
   var rows = [];
   var child = 0;
+  function rowIndentation(el, indentNum) {
+    var self = $(el);
+    if (child === 1 && (indentNum === parentIndentation)) {
+      self.addClass('tree-child-first');
+    }
+    if (indentNum === parentIndentation) {
+      self.addClass('tree-child');
+    }
+    else if (indentNum > parentIndentation) {
+      self.addClass('tree-child-horizontal');
+    }
+  }
   while (currentRow.length) {
-    var rowIndentation = currentRow.find('.indentation').length;
     // A greater indentation indicates this is a child.
-    if (rowIndentation > parentIndentation) {
+    if (currentRow.find('.indentation').length > parentIndentation) {
       child++;
       rows.push(currentRow[0]);
       if (addClasses) {
-        currentRow.find('.indentation').each(function (indentNum) {
-          if (child === 1 && (indentNum === parentIndentation)) {
-            $(this).addClass('tree-child-first');
-          }
-          if (indentNum === parentIndentation) {
-            $(this).addClass('tree-child');
-          }
-          else if (indentNum > parentIndentation) {
-            $(this).addClass('tree-child-horizontal');
-          }
-        });
+        currentRow.find('.indentation').each(rowIndentation);
       }
     }
     else {
@@ -1117,6 +1159,7 @@ Drupal.tableDrag.prototype.row.prototype.findSiblings = function (rowSettings) {
   var siblings = [];
   var directions = ['prev', 'next'];
   var rowIndentation = this.indents;
+  var checkRowIndentation;
   for (var d = 0; d < directions.length; d++) {
     var checkRow = $(this.element)[directions[d]]();
     while (checkRow.length) {
@@ -1125,7 +1168,7 @@ Drupal.tableDrag.prototype.row.prototype.findSiblings = function (rowSettings) {
         // Either add immediately if this is a flat table, or check to ensure
         // that this row has the same level of indentation.
         if (this.indentEnabled) {
-          var checkRowIndentation = checkRow.find('.indentation').length;
+          checkRowIndentation = checkRow.find('.indentation').length;
         }
 
         if (!(this.indentEnabled) || (checkRowIndentation === rowIndentation)) {
@@ -1156,11 +1199,13 @@ Drupal.tableDrag.prototype.row.prototype.findSiblings = function (rowSettings) {
  */
 Drupal.tableDrag.prototype.row.prototype.removeIndentClasses = function () {
   for (var n in this.children) {
-    $(this.children[n]).find('.indentation')
-      .removeClass('tree-child')
-      .removeClass('tree-child-first')
-      .removeClass('tree-child-last')
-      .removeClass('tree-child-horizontal');
+    if (this.children.hasOwnProperty(n)) {
+      $(this.children[n]).find('.indentation')
+        .removeClass('tree-child')
+        .removeClass('tree-child-first')
+        .removeClass('tree-child-last')
+        .removeClass('tree-child-horizontal');
+    }
   }
 };
 
