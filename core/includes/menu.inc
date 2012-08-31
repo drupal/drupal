@@ -412,9 +412,9 @@ function menu_unserialize($data, $map) {
  * @param $path
  *   The path.
  * @param $router_item
- *   The router item. Usually you take a router entry from menu_get_item and
- *   set it back either modified or to a different path. This lets you modify the
- *   navigation block, the page title, the breadcrumb and the page help in one
+ *   The router item. Usually a router entry from menu_get_item() is either
+ *   modified or set to a different path. This allows the navigation block,
+ *   the page title, the breadcrumb, and the page help to be modified in one
  *   call.
  */
 function menu_set_item($path, $router_item) {
@@ -422,7 +422,7 @@ function menu_set_item($path, $router_item) {
 }
 
 /**
- * Get a router item.
+ * Gets a router item.
  *
  * @param $path
  *   The path, for example node/5. The function will find the corresponding
@@ -551,7 +551,7 @@ function _menu_load_objects(&$item, &$map) {
 }
 
 /**
- * Check access to a menu item using the access callback
+ * Checks access to a menu item using the access callback
  *
  * @param $item
  *   A menu router or menu link item
@@ -583,7 +583,7 @@ function _menu_check_access(&$item, $map) {
 }
 
 /**
- * Localize the router item title using t() or another callback.
+ * Localizes the router item title using t() or another callback.
  *
  * Translate the title and description to allow storage of English title
  * strings in the database, yet display of them in the language required
@@ -765,14 +765,14 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
 }
 
 /**
- * This function translates the path elements in the map using any to_arg
- * helper function. These functions take an argument and return an object.
- * See http://drupal.org/node/109153 for more information.
+ * Translates the path elements in the map using any to_arg helper function.
  *
  * @param $map
  *   An array of path arguments (ex: array('node', '5'))
  * @param $to_arg_functions
  *   An array of helper function (ex: array(2 => 'menu_tail_to_arg'))
+ *
+ * @see hook_menu()
  */
 function _menu_link_map_translate(&$map, $to_arg_functions) {
   $to_arg_functions = unserialize($to_arg_functions);
@@ -789,14 +789,14 @@ function _menu_link_map_translate(&$map, $to_arg_functions) {
 }
 
 /**
- * Returns path as one string from the argument we are currently at.
+ * Returns a string containing the path relative to the current index.
  */
 function menu_tail_to_arg($arg, $map, $index) {
   return implode('/', array_slice($map, $index));
 }
 
 /**
- * Loads path as one string from the argument we are currently at.
+ * Loads the path as one string relative to the current index.
  *
  * To use this load function, you must specify the load arguments
  * in the router item as:
@@ -813,8 +813,10 @@ function menu_tail_load($arg, &$map, $index) {
 }
 
 /**
- * This function is similar to _menu_translate() but does link-specific
- * preparation such as always calling to_arg functions
+ * Provides menu link access control, translation, and argument handling.
+ *
+ * This function is similar to _menu_translate(), but it also does
+ * link-specific preparation (such as always calling to_arg() functions).
  *
  * @param $item
  *   A menu link.
@@ -908,7 +910,7 @@ function _menu_link_translate(&$item, $translate = FALSE) {
 }
 
 /**
- * Get a loaded object from a router item.
+ * Gets a loaded object from a router item.
  *
  * menu_get_object() provides access to objects loaded by the current router
  * item. For example, on the page node/%node, the router loads the %node object,
@@ -1048,7 +1050,7 @@ function menu_tree_output($tree) {
 }
 
 /**
- * Get the data structure representing a named menu tree.
+ * Gets the data structure representing a named menu tree.
  *
  * Since this can be the full tree including hidden items, the data returned
  * may be used for generating an an admin interface or a select.
@@ -1117,7 +1119,7 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
 }
 
 /**
- * Set the path for determining the active trail of the specified menu tree.
+ * Sets the path for determining the active trail of the specified menu tree.
  *
  * This path will also affect the breadcrumbs under some circumstances.
  * Breadcrumbs are built using the preferred link returned by
@@ -1142,7 +1144,7 @@ function menu_tree_set_path($menu_name, $path = NULL) {
 }
 
 /**
- * Get the path for determining the active trail of the specified menu tree.
+ * Gets the path for determining the active trail of the specified menu tree.
  *
  * @param $menu_name
  *   The menu name of the requested tree.
@@ -1156,7 +1158,7 @@ function menu_tree_get_path($menu_name) {
 }
 
 /**
- * Get the data structure representing a named menu tree, based on the current page.
+ * Gets the data structure for a named menu tree, based on the current page.
  *
  * The tree order is maintained by storing each parent in an individual
  * field, see http://drupal.org/node/141866 for more.
@@ -1292,7 +1294,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
 }
 
 /**
- * Build a menu tree, translate links, and check access.
+ * Builds a menu tree, translates links, and checks access.
  *
  * @param $menu_name
  *   The name of the menu.
@@ -1307,8 +1309,8 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
  *     trail. This option is ignored, if 'expanded' is non-empty. Internally
  *     used for breadcrumbs.
  *   - min_depth: The minimum depth of menu links in the resulting tree.
- *     Defaults to 1, which is the default to build a whole tree for a menu, i.e.
- *     excluding menu container itself.
+ *     Defaults to 1, which is the default to build a whole tree for a menu
+ *     (excluding menu container itself).
  *   - max_depth: The maximum depth of menu links in the resulting tree.
  *   - conditions: An associative array of custom database select query
  *     condition key/value pairs; see _menu_build_tree() for the actual query.
@@ -1325,7 +1327,7 @@ function menu_build_tree($menu_name, array $parameters = array()) {
 }
 
 /**
- * Build a menu tree.
+ * Builds a menu tree.
  *
  * This function may be used build the data for a menu tree only, for example
  * to further massage the data manually before further processing happens.
@@ -1423,7 +1425,7 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
 }
 
 /**
- * Recursive helper function - collect node links.
+ * Collects node links from a given menu tree recursively.
  *
  * @param $tree
  *   The menu tree you wish to collect node links from.
@@ -1446,7 +1448,7 @@ function menu_tree_collect_node_links(&$tree, &$node_links) {
 }
 
 /**
- * Check access and perform other dynamic operations for each link in the tree.
+ * Checks access and performs dynamic operations for each link in the tree.
  *
  * @param $tree
  *   The menu tree you wish to operate on.
@@ -1473,7 +1475,7 @@ function menu_tree_check_access(&$tree, $node_links = array()) {
 }
 
 /**
- * Recursive helper function for menu_tree_check_access()
+ * Sorts the menu tree and recursively checks access for each item.
  */
 function _menu_tree_check_access(&$tree) {
   $new_tree = array();
@@ -1496,7 +1498,7 @@ function _menu_tree_check_access(&$tree) {
 }
 
 /**
- * Builds the data representing a menu tree.
+ * Sorts and returns the built data representing a menu tree.
  *
  * @param $links
  *   A flat array of menu links that are part of the menu. Each array element
@@ -1528,7 +1530,7 @@ function menu_tree_data(array $links, array $parents = array(), $depth = 1) {
 }
 
 /**
- * Recursive helper function to build the data representing a menu tree.
+ * Builds the data representing a menu tree.
  *
  * The function is a bit complex because the rendering of a link depends on
  * the next menu link.
@@ -1741,7 +1743,7 @@ function menu_set_custom_theme() {
 }
 
 /**
- * Return an array containing the names of system-defined (default) menus.
+ * Returns an array containing the names of system-defined (default) menus.
  */
 function menu_list_system_menus() {
   return array(
@@ -1753,7 +1755,7 @@ function menu_list_system_menus() {
 }
 
 /**
- * Return an array of links to be rendered as the Main menu.
+ * Returns an array of links to be rendered as the Main menu.
  */
 function menu_main_menu() {
   $config = config('menu.settings');
@@ -1764,7 +1766,7 @@ function menu_main_menu() {
 }
 
 /**
- * Return an array of links to be rendered as the Secondary links.
+ * Returns an array of links to be rendered as the Secondary links.
  */
 function menu_secondary_menu() {
   $config = config('menu.settings');
@@ -1784,7 +1786,7 @@ function menu_secondary_menu() {
 }
 
 /**
- * Return an array of links for a navigation menu.
+ * Returns an array of links for a navigation menu.
  *
  * @param $menu_name
  *   The name of the menu.
@@ -2076,13 +2078,11 @@ function menu_local_tasks($level = 0) {
 }
 
 /**
- * Retrieve contextual links for a system object based on registered local tasks.
+ * Retrieves contextual links for a path based on registered local tasks.
  *
  * This leverages the menu system to retrieve the first layer of registered
  * local tasks for a given system path. All local tasks of the tab type
  * MENU_CONTEXT_INLINE are taken into account.
- *
- * @see hook_menu()
  *
  * For example, when considering the following registered local tasks:
  * - node/%node/view (default local task) with no 'context' defined
@@ -2111,6 +2111,7 @@ function menu_local_tasks($level = 0) {
  *   A list of menu router items that are local tasks for the passed-in path.
  *
  * @see contextual_links_preprocess()
+ * @see hook_menu()
  */
 function menu_contextual_links($module, $parent_path, $args) {
   static $path_empty = array();
@@ -2204,7 +2205,7 @@ function menu_local_actions() {
 }
 
 /**
- * Returns the router path, or the path of the parent tab of a default local task.
+ * Returns the router path, or the path for a default local task's parent.
  */
 function menu_tab_root_path() {
   $links = menu_local_tasks();
@@ -2247,7 +2248,9 @@ function theme_menu_local_tasks(&$variables) {
 }
 
 /**
- * Set (or get) the active menu for the current page - determines the active trail.
+ * Sets (or gets) the active menu for the current page.
+ *
+ * The active menu for the page determines the active trail.
  *
  * @return
  *   An array of menu machine names, in order of preference. The
@@ -2269,17 +2272,17 @@ function menu_set_active_menu_names($menu_names = NULL) {
 }
 
 /**
- * Get the active menu for the current page - determines the active trail.
+ * Gets the active menu for the current page.
  */
 function menu_get_active_menu_names() {
   return menu_set_active_menu_names();
 }
 
 /**
- * Set the active path, which determines which page is loaded.
+ * Sets the active path, which determines which page is loaded.
  *
  * Note that this may not have the desired effect unless invoked very early
- * in the page load, such as during hook_boot, or unless you do a subrequest
+ * in the page load, such as during hook_boot(), or unless you do a subrequest
  * to generate your page output.
  *
  * @param $path
@@ -2294,7 +2297,7 @@ function menu_set_active_item($path) {
 }
 
 /**
- * Sets the active trail (path to menu tree root) of the current page.
+ * Sets the active trail (path to the menu tree root) of the current page.
  *
  * Any trail set by this function will only be used for functionality that calls
  * menu_get_active_trail(). Drupal core only uses trails set here for
@@ -2384,7 +2387,7 @@ function menu_set_active_trail($new_trail = NULL) {
 }
 
 /**
- * Lookup the preferred menu link for a given system path.
+ * Looks up the preferred menu link for a given system path.
  *
  * @param $path
  *   The path, for example 'node/5'. The function will find the corresponding
@@ -2504,7 +2507,7 @@ function menu_get_active_trail() {
 }
 
 /**
- * Get the breadcrumb for the current page, as determined by the active trail.
+ * Gets the breadcrumb for the current page, as determined by the active trail.
  *
  * @see menu_set_active_trail()
  */
@@ -2555,7 +2558,7 @@ function menu_get_active_breadcrumb() {
 }
 
 /**
- * Get the title of the current page, as determined by the active trail.
+ * Gets the title of the current page, as determined by the active trail.
  */
 function menu_get_active_title() {
   $active_trail = menu_get_active_trail();
@@ -2568,7 +2571,7 @@ function menu_get_active_title() {
 }
 
 /**
- * Get a menu link by its mlid, access checked and link translated for rendering.
+ * Gets a translated, access-checked menu link that is ready for rendering.
  *
  * This function should never be called from within node_load() or any other
  * function used as a menu object load function since an infinite recursion may
@@ -2609,7 +2612,9 @@ function menu_cache_clear($menu_name = 'navigation') {
 }
 
 /**
- * Clears all cached menu data. This should be called any time broad changes
+ * Clears all cached menu data.
+ *
+ * This should be called any time broad changes
  * might have been made to the router items or menu links.
  */
 function menu_cache_clear_all() {
@@ -2630,10 +2635,10 @@ function menu_reset_static_cache() {
 }
 
 /**
- * (Re)populate the database tables used by various menu functions.
+ * Populates the database tables used by various menu functions.
  *
  * This function will clear and populate the {menu_router} table, add entries
- * to {menu_links} for new router items, then remove stale items from
+ * to {menu_links} for new router items, and then remove stale items from
  * {menu_links}.
  *
  * @return
@@ -2671,7 +2676,7 @@ function menu_router_rebuild() {
 }
 
 /**
- * Collect and alter the menu definitions.
+ * Collects and alters the menu definitions.
  */
 function menu_router_build() {
   // We need to manually call each module so that we can know which module
@@ -2695,7 +2700,7 @@ function menu_router_build() {
 }
 
 /**
- * Helper function to store the menu router if we have it in memory.
+ * Stores the menu router if we have it in memory.
  */
 function _menu_router_cache($new_menu = NULL) {
   $menu = &drupal_static(__FUNCTION__);
@@ -2707,7 +2712,7 @@ function _menu_router_cache($new_menu = NULL) {
 }
 
 /**
- * Get the menu router.
+ * Gets the menu router.
  */
 function menu_get_router() {
   // Check first if we have it in memory already.
@@ -2744,7 +2749,7 @@ function _menu_link_build($item) {
 }
 
 /**
- * Helper function to build menu links for the items in the menu router.
+ * Builds menu links for the items in the menu router.
  */
 function _menu_navigation_links_rebuild($menu) {
   // Add normal and suggested items as links.
@@ -2844,7 +2849,7 @@ function _menu_navigation_links_rebuild($menu) {
 }
 
 /**
- * Clone an array of menu links.
+ * Clones an array of menu links.
  *
  * @param $links
  *   An array of menu links to clone.
@@ -2935,12 +2940,14 @@ function menu_link_delete($mlid, $path = NULL) {
 }
 
 /**
- * Helper function for menu_link_delete; deletes a single menu link.
+ * Deletes a single menu link.
  *
  * @param $item
  *   Item to be deleted.
  * @param $force
  *   Forces deletion. Internal use only, setting to TRUE is discouraged.
+ *
+ * @see menu_link_delete()
  */
 function _menu_delete_item($item, $force = FALSE) {
   $item = is_object($item) ? get_object_vars($item) : $item;
@@ -3152,7 +3159,7 @@ function menu_link_save(&$item, $existing_item = array(), $parent_candidates = a
 }
 
 /**
- * Find a possible parent for a given menu link.
+ * Finds a possible parent for a given menu link.
  *
  * Because the parent of a given link might not exist anymore in the database,
  * we apply a set of heuristics to determine a proper parent:
@@ -3166,6 +3173,7 @@ function menu_link_save(&$item, $existing_item = array(), $parent_candidates = a
  *   A menu link.
  * @param $parent_candidates
  *   An array of menu links keyed by mlid.
+ *
  * @return
  *   A menu link structure of the possible parent or FALSE if no valid parent
  *   has been found.
@@ -3231,7 +3239,7 @@ function _menu_link_find_parent($menu_link, $parent_candidates = array()) {
 }
 
 /**
- * Helper function to clear the page and block caches at most twice per page load.
+ * Clears the page and block caches at most twice per page load.
  */
 function _menu_clear_page_cache() {
   $cache_cleared = &drupal_static(__FUNCTION__, 0);
@@ -3253,7 +3261,7 @@ function _menu_clear_page_cache() {
 }
 
 /**
- * Helper function to update a list of menus with expanded items
+ * Updates a list of menus with expanded items.
  */
 function _menu_set_expanded_menus() {
   $names = db_query("SELECT menu_name FROM {menu_links} WHERE expanded <> 0 GROUP BY menu_name")->fetchCol();
@@ -3261,7 +3269,7 @@ function _menu_set_expanded_menus() {
 }
 
 /**
- * Find the router path which will serve this path.
+ * Finds the router path which will serve this path.
  *
  * @param $link_path
  *  The path for we are looking up its router path.
@@ -3303,7 +3311,7 @@ function _menu_find_router_path($link_path) {
 }
 
 /**
- * Insert, update or delete an uncustomized menu link related to a module.
+ * Inserts, updates, or deletes an uncustomized menu link related to a module.
  *
  * @param $module
  *   The name of the module.
@@ -3343,7 +3351,7 @@ function menu_link_maintain($module, $op, $link_path, $link_title) {
 }
 
 /**
- * Find the depth of an item's children relative to its depth.
+ * Finds the depth of an item's children relative to its depth.
  *
  * For example, if the item has a depth of 2, and the maximum of any child in
  * the menu link tree is 5, the relative depth is 3.
@@ -3375,7 +3383,7 @@ function menu_link_children_relative_depth($item) {
 }
 
 /**
- * Update the children of a menu link that's being moved.
+ * Updates the children of a menu link that is being moved.
  *
  * The menu name, parents (p1 - p6), and depth are updated for all children of
  * the link, and the has_children status of the previous parent is updated.
@@ -3424,7 +3432,7 @@ function _menu_link_move_children($item, $existing_item) {
 }
 
 /**
- * Check and update the has_children status for the parent of a link.
+ * Checks and updates the 'has_children' status for the parent of a link.
  */
 function _menu_update_parental_status($item, $exclude = FALSE) {
   // If plid == 0, there is nothing to update.
@@ -3448,7 +3456,7 @@ function _menu_update_parental_status($item, $exclude = FALSE) {
 }
 
 /**
- * Helper function that sets the p1..p9 values for a menu link being saved.
+ * Sets the p1 through p9 values for a menu link being saved.
  */
 function _menu_link_parents_set(&$item, $parent) {
   $i = 1;
@@ -3466,7 +3474,7 @@ function _menu_link_parents_set(&$item, $parent) {
 }
 
 /**
- * Helper function to build the router table based on the data from hook_menu.
+ * Builds the router table based on the data from hook_menu().
  */
 function _menu_router_build($callbacks) {
   // First pass: separate callbacks from paths, making paths ready for
@@ -3690,7 +3698,7 @@ function _menu_router_build($callbacks) {
 }
 
 /**
- * Helper function to save data from menu_router_build() to the router table.
+ * Saves data from menu_router_build() to the router table.
  */
 function _menu_router_save($menu, $masks) {
   // Delete the existing router since we have some data to replace it.

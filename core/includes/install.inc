@@ -1,5 +1,10 @@
 <?php
 
+ /**
+ * @file
+ * API functions for installing modules and themes.
+ */
+
 use Drupal\Core\Database\Database;
 use Drupal\locale\Gettext;
 
@@ -74,7 +79,7 @@ const FILE_NOT_WRITABLE = 64;
 const FILE_NOT_EXECUTABLE = 128;
 
 /**
- * Initialize the update system by loading all installed module's .install files.
+ * Loads .install files for installed modules to initialize the update system.
  */
 function drupal_load_updates() {
   foreach (drupal_get_installed_schema_version(NULL, FALSE, TRUE) as $module => $schema_version) {
@@ -109,11 +114,12 @@ function drupal_install_profile_distribution_name() {
 }
 
 /**
- * Auto detect the base_url with PHP predefined variables.
+ * Detects the base URL using the PHP $_SERVER variables.
  *
  * @param $file
  *   The name of the file calling this function so we can strip it out of
  *   the URI when generating the base_url.
+ *
  * @return
  *   The auto-detected $base_url that should be configured in settings.php
  */
@@ -127,7 +133,7 @@ function drupal_detect_baseurl($file = 'core/install.php') {
 }
 
 /**
- * Detect all supported databases that are compiled into PHP.
+ * Detects all supported databases that are compiled into PHP.
  *
  * @return
  *  An array of database types compiled into PHP.
@@ -143,7 +149,7 @@ function drupal_detect_database_types() {
 }
 
 /**
- * Return all supported database installer objects that are compiled into PHP.
+ * Returns all supported database installer objects that are compiled into PHP.
  *
  * @return
  *  An array of database installer objects compiled into PHP.
@@ -180,7 +186,7 @@ function drupal_get_database_types() {
 }
 
 /**
- * Replace values in settings.php with values in the submitted array.
+ * Replaces values in settings.php with values in the submitted array.
  *
  * @param $settings
  *   An array of settings that need to be updated.
@@ -339,10 +345,11 @@ function install_ensure_config_directory($type) {
 }
 
 /**
- * Verify an install profile for installation.
+ * Verifies an install profile for installation.
  *
  * @param $install_state
  *   An array of information about the current installation state.
+ *
  * @return
  *   The list of modules to install.
  */
@@ -389,7 +396,7 @@ function drupal_verify_profile($install_state) {
 }
 
 /**
- * Callback to install the system module.
+ * Installs the system module.
  *
  * Separated from the installation of other modules so core system
  * functions can be made available while other modules are installed.
@@ -430,7 +437,7 @@ function drupal_install_system() {
 }
 
 /**
- * Verify the state of the specified file.
+ * Verifies the state of the specified file.
  *
  * @param $file
  *   The file to check for.
@@ -438,6 +445,7 @@ function drupal_install_system() {
  *   An optional bitmask created from various FILE_* constants.
  * @param $type
  *   The type of file. Can be file (default), dir, or link.
+ *
  * @return
  *   TRUE on success or FALSE on failure. A message is set for the latter.
  */
@@ -509,7 +517,7 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file') {
 }
 
 /**
- * Create a directory with specified permissions.
+ * Creates a directory with the specified permissions.
  *
  * @param $file
  *  The name of the directory to create;
@@ -517,6 +525,7 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file') {
  *  The permissions of the directory to create.
  * @param $message
  *  (optional) Whether to output messages. Defaults to TRUE.
+ *
  * @return
  *  TRUE/FALSE whether or not the directory was successfully created.
  */
@@ -548,7 +557,7 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
 }
 
 /**
- * Attempt to fix file permissions.
+ * Attempts to fix file permissions.
  *
  * The general approach here is that, because we do not know the security
  * setup of the webserver, we apply our permission changes to all three
@@ -565,6 +574,7 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
  *  The desired permissions for the file.
  * @param $message
  *  (optional) Whether to output messages. Defaults to TRUE.
+ *
  * @return
  *  TRUE/FALSE whether or not we were able to fix the file's permissions.
  */
@@ -630,7 +640,7 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
 }
 
 /**
- * Send the user to a different installer page.
+ * Sends the user to a different installer page.
  *
  * This issues an on-site HTTP redirect. Messages (and errors) are erased.
  *
@@ -708,7 +718,7 @@ function drupal_requirements_url($severity) {
 }
 
 /**
- * Functional equivalent of t(), used when some systems are not available.
+ * Translates a string when some systems are not available.
  *
  * Used during the install process, when database, theme, and localization
  * system is possibly not yet available.
@@ -767,7 +777,7 @@ function st($string, array $args = array(), array $options = array()) {
 }
 
 /**
- * Check an install profile's requirements.
+ * Checks an install profile's requirements.
  *
  * @param string $profile
  *   Name of install profile to check.
@@ -801,11 +811,12 @@ function drupal_check_profile($profile, array $install_state) {
 }
 
 /**
- * Extract highest severity from requirements array.
+ * Extracts the highest severity from the requirements array.
  *
  * @param $requirements
  *   An array of requirements, in the same format as is returned by
  *   hook_requirements().
+ *
  * @return
  *   The highest severity in the array.
  */
@@ -820,12 +831,13 @@ function drupal_requirements_severity(&$requirements) {
 }
 
 /**
- * Check a module's requirements.
+ * Checks a module's requirements.
  *
  * @param $module
  *   Machine name of module to check.
+ *
  * @return
- *   TRUE/FALSE depending on the requirements are in place.
+ *   TRUE or FALSE, depending on whether the requirements are met.
  */
 function drupal_check_module($module) {
   module_load_install($module);
@@ -850,13 +862,14 @@ function drupal_check_module($module) {
 }
 
 /**
- * Retrieve info about an install profile from its .info file.
+ * Retrieves information about an install profile from its .info file.
  *
  * The information stored in a profile .info file is similar to that stored in
  * a normal Drupal module .info file. For example:
  * - name: The real name of the install profile for display purposes.
  * - description: A brief description of the profile.
- * - dependencies: An array of shortnames of other modules this install profile requires.
+ * - dependencies: An array of shortnames of other modules that this install
+ *   profile requires.
  *
  * Additional, less commonly-used information that can appear in a profile.info
  * file but not in a normal Drupal module .info file includes:
