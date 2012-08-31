@@ -322,7 +322,6 @@ class Page extends DisplayPluginBase {
    * Provide the default form for setting options.
    */
   public function buildOptionsForm(&$form, &$form_state) {
-    parent::buildOptionsForm($form, $form_state);
     // It is very important to call the parent function here:
     parent::buildOptionsForm($form, $form_state);
 
