@@ -59,15 +59,6 @@ class CoreBundle extends Bundle
     $container->register('router.dumper', '\Drupal\Core\Routing\MatcherDumper')
       ->addArgument(new Reference('database'));
 
-    $container->register('database', 'Drupal\Core\Database\Connection')
-      ->setFactoryClass('Drupal\Core\Database\Database')
-      ->setFactoryMethod('getConnection')
-      ->addArgument('default');
-    $container->register('database.slave', 'Drupal\Core\Database\Connection')
-      ->setFactoryClass('Drupal\Core\Database\Database')
-      ->setFactoryMethod('getConnection')
-      ->addArgument('slave');
-
     // @todo Replace below lines with the commented out block below it when it's
     //   performant to do so: http://drupal.org/node/1706064.
     $dispatcher = $container->get('dispatcher');
