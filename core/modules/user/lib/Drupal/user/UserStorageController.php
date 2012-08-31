@@ -221,4 +221,16 @@ class UserStorageController extends DatabaseStorageController {
       }
     }
   }
+
+  /**
+   * Overrides Drupal\entity\DatabaseStorageController::postDelete().
+   */
+  protected function postDelete($entities) {
+    db_delete('users_roles')
+      ->condition('uid', array_keys($entities), 'IN')
+      ->execute();
+    db_delete('authmap')
+      ->condition('uid', array_keys($entities), 'IN')
+      ->execute();
+  }
 }

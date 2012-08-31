@@ -2018,41 +2018,7 @@ function user_delete($uid) {
  * @see hook_user_delete()
  */
 function user_delete_multiple(array $uids) {
-  if (!empty($uids)) {
-    $accounts = user_load_multiple($uids);
-
-    $transaction = db_transaction();
-    try {
-      foreach ($accounts as $uid => $account) {
-        // Allow modules to act prior to user deletion.
-        module_invoke_all('user_predelete', $account);
-        module_invoke_all('entity_predelete', $account, 'user');
-
-        field_attach_delete('user', $account);
-        drupal_session_destroy_uid($account->uid);
-      }
-
-      db_delete('users')
-        ->condition('uid', $uids, 'IN')
-        ->execute();
-      db_delete('users_roles')
-        ->condition('uid', $uids, 'IN')
-        ->execute();
-      db_delete('authmap')
-        ->condition('uid', $uids, 'IN')
-        ->execute();
-
-        // Allow modules to respond to user deletion.
-        module_invoke_all('user_delete', $account);
-        module_invoke_all('entity_delete', $account, 'user');
-    }
-    catch (Exception $e) {
-      $transaction->rollback();
-      watchdog_exception('user', $e);
-      throw $e;
-    }
-    entity_get_controller('user')->resetCache();
-  }
+  entity_get_controller('user')->delete($uids);
 }
 
 /**
