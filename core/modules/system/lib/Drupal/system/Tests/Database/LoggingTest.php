@@ -26,14 +26,17 @@ class LoggingTest extends DatabaseTestBase {
    * Test that we can log the existence of a query.
    */
   function testEnableLogging() {
-    Database::startLog('testing');
+    $log = Database::startLog('testing');
 
     db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
     db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchCol();
 
+    // Trigger a call that does not have file in the backtrace.
+    call_user_func_array('db_query', array('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo')))->fetchCol();
+
     $queries = Database::getLog('testing', 'default');
 
-    $this->assertEqual(count($queries), 2, t('Correct number of queries recorded.'));
+    $this->assertEqual(count($queries), 3, t('Correct number of queries recorded.'));
 
     foreach ($queries as $query) {
       $this->assertEqual($query['caller']['function'], __FUNCTION__, t('Correct function in query log.'));

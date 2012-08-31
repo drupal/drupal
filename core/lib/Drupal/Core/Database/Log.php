@@ -130,12 +130,11 @@ class Log {
    * Determine the routine that called this query.
    *
    * We define "the routine that called this query" as the first entry in
-   * the call stack that is not inside the includes/Drupal/Database directory
-   * and does not begin with db_. That makes the climbing logic very simple, and
-   * handles the variable stack depth caused by the query builders.
-   *
-   * @todo Revisit this logic to not be dependent on file path, so that we can
-   *       split most of the DB layer out of Drupal.
+   * the call stack that is not inside the includes/Drupal/Database directory,
+   * does not begin with db_ and does have a file (which excludes
+   * call_user_func_array(), anonymous functions and similar). That makes the
+   * climbing logic very simple, and handles the variable stack depth caused by
+   * the query builders.
    *
    * @link http://www.php.net/debug_backtrace
    * @return
@@ -154,7 +153,8 @@ class Log {
       if (empty($stack[$i]['class'])) {
         $stack[$i]['class'] = '';
       }
-      if (strpos($stack[$i]['class'], __NAMESPACE__) === FALSE && strpos($stack[$i + 1]['function'], 'db_') === FALSE) {
+      if (strpos($stack[$i]['class'], __NAMESPACE__) === FALSE && strpos($stack[$i + 1]['function'], 'db_') === FALSE && !empty($stack[$i]['file'])) {
+        $stack[$i] += array('file' => '?', 'line' => '?', 'args' => array());
         return array(
           'file' => $stack[$i]['file'],
           'line' => $stack[$i]['line'],
