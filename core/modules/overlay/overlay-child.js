@@ -18,7 +18,7 @@ Drupal.behaviors.overlayChild = {
       window.location = window.location.href.replace(/([?&]?)render=overlay&?/g, '$1').replace(/\?$/, '');
     }
 
-    var settings = settings.overlayChild || {};
+    settings = settings.overlayChild || {};
 
     // If the entire parent window should be refreshed when the overlay is
     // closed, pass that information to the parent window.
