@@ -10,7 +10,7 @@
  */
 
 use Drupal\node\Node;
-use Drupal\Core\File\File;
+use Drupal\file\File;
 use Drupal\entity\EntityInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

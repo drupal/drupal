@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\SpaceUsedTest.
+ * Definition of Drupal\file\Tests\SpaceUsedTest.
  */
 
-namespace Drupal\system\Tests\File;
+namespace Drupal\file\Tests;
 
 /**
  *  This will run tests against the file_space_used() function.
  */
-class SpaceUsedTest extends FileTestBase {
+class SpaceUsedTest extends FileManagedTestBase {
   public static function getInfo() {
     return array(
       'name' => 'File space used tests',

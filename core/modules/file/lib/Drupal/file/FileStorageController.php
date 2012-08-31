@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\Core\File\FileStorageController.
+ * Definition of Drupal\file\FileStorageController.
  */
 
-namespace Drupal\Core\File;
+namespace Drupal\file;
 
 use Drupal\entity\DatabaseStorageController;
 use Drupal\entity\StorableInterface;

@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\ValidateTest.
+ * Definition of Drupal\file\Tests\ValidateTest.
  */
 
-namespace Drupal\system\Tests\File;
+namespace Drupal\file\Tests;
 
 /**
  * Tests the file_validate() function.
  */
-class ValidateTest extends FileHookTestBase {
+class ValidateTest extends FileManagedTestBase {
   public static function getInfo() {
     return array(
       'name' => 'File validate',

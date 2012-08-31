@@ -19,7 +19,7 @@ class ThemeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'block');
+  public static $modules = array('node', 'block', 'file');
 
   public static function getInfo() {
     return array(

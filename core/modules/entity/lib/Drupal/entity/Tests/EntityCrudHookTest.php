@@ -28,7 +28,7 @@ class EntityCrudHookTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_crud_hook_test', 'taxonomy', 'comment');
+  public static $modules = array('entity_crud_hook_test', 'taxonomy', 'comment', 'file');
 
   protected $ids = array();
 

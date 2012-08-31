@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\MoveTest.
+ * Definition of Drupal\file\Tests\MoveTest.
  */
 
-namespace Drupal\system\Tests\File;
+namespace Drupal\file\Tests;
 
 /**
  * Move related tests
  */
-class MoveTest extends FileHookTestBase {
+class MoveTest extends FileManagedTestBase {
   public static function getInfo() {
     return array(
       'name' => 'File moving',

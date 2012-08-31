@@ -2,26 +2,28 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\FileHookTestBase.
+ * Definition of Drupal\file\Tests\FileManagedTestBase.
  */
 
-namespace Drupal\system\Tests\File;
+namespace Drupal\file\Tests;
+
+use Drupal\system\Tests\File\FileTestBase;
+use \stdClass;
 
 /**
  * Base class for file tests that use the file_test module to test uploads and
  * hooks.
  */
-abstract class FileHookTestBase extends FileTestBase {
+abstract class FileManagedTestBase extends FileTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('file_test');
+  public static $modules = array('file_test', 'file');
 
   function setUp() {
-    // Install file_test module
     parent::setUp();
     // Clear out any hook calls.
     file_test_reset();
@@ -83,5 +85,37 @@ abstract class FileHookTestBase extends FileTestBase {
       }
     }
     $this->assertEqual($actual_count, $expected_count, $message);
+  }
+
+  /**
+   * Create a file and save it to the files table and assert that it occurs
+   * correctly.
+   *
+   * @param $filepath
+   *   Optional string specifying the file path. If none is provided then a
+   *   randomly named file will be created in the site's files directory.
+   * @param $contents
+   *   Optional contents to save into the file. If a NULL value is provided an
+   *   arbitrary string will be used.
+   * @param $scheme
+   *   Optional string indicating the stream scheme to use. Drupal core includes
+   *   public, private, and temporary. The public wrapper is the default.
+   * @return
+   *   File object.
+   */
+  function createFile($filepath = NULL, $contents = NULL, $scheme = NULL) {
+    $file = new stdClass();
+    $file->uri = $this->createUri($filepath, $contents, $scheme);
+    $file->filename = drupal_basename($file->uri);
+    $file->filemime = 'text/plain';
+    $file->uid = 1;
+    $file->timestamp = REQUEST_TIME;
+    $file->filesize = filesize($file->uri);
+    $file->status = 0;
+    // Write the record directly rather than using the API so we don't invoke
+    // the hooks.
+    $this->assertNotIdentical(drupal_write_record('file_managed', $file), FALSE, t('The file was added to the database.'), 'Create test file');
+
+    return entity_create('file', (array) $file);
   }
 }

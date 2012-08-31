@@ -14,7 +14,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\node\Node;
-use Drupal\Core\File\File;
+use Drupal\file\File;
 use Drupal\entity\EntityInterface;
 
 /**

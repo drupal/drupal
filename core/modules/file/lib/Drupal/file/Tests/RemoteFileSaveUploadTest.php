@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\RemoteFileSaveUploadTest.
+ * Definition of Drupal\file\Tests\RemoteFileSaveUploadTest.
  */
 
-namespace Drupal\system\Tests\File;
+namespace Drupal\file\Tests;
 
 /**
  * Tests the file_save_upload() function on remote filesystems.

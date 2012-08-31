@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\File;
 
 use Drupal\simpletest\WebTestBase;
-use stdClass;
 
 /**
  * Base class for file tests that adds some additional file specific
@@ -159,9 +158,8 @@ abstract class FileTestBase extends WebTestBase {
     return $path;
   }
 
-  /**
-   * Create a file and save it to the files table and assert that it occurs
-   * correctly.
+    /**
+   * Create a file and return the URI of it.
    *
    * @param $filepath
    *   Optional string specifying the file path. If none is provided then a
@@ -173,9 +171,9 @@ abstract class FileTestBase extends WebTestBase {
    *   Optional string indicating the stream scheme to use. Drupal core includes
    *   public, private, and temporary. The public wrapper is the default.
    * @return
-   *   File object.
+   *   File URI.
    */
-  function createFile($filepath = NULL, $contents = NULL, $scheme = NULL) {
+  function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {
     if (!isset($filepath)) {
       // Prefix with non-latin characters to ensure that all file-related
       // tests work with international filenames.
@@ -192,19 +190,6 @@ abstract class FileTestBase extends WebTestBase {
 
     file_put_contents($filepath, $contents);
     $this->assertTrue(is_file($filepath), t('The test file exists on the disk.'), 'Create test file');
-
-    $file = new stdClass();
-    $file->uri = $filepath;
-    $file->filename = drupal_basename($file->uri);
-    $file->filemime = 'text/plain';
-    $file->uid = 1;
-    $file->timestamp = REQUEST_TIME;
-    $file->filesize = filesize($file->uri);
-    $file->status = 0;
-    // Write the record directly rather than using the API so we don't invoke
-    // the hooks.
-    $this->assertNotIdentical(drupal_write_record('file_managed', $file), FALSE, t('The file was added to the database.'), 'Create test file');
-
-    return entity_create('file', (array) $file);
+    return $filepath;
   }
 }

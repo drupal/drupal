@@ -70,21 +70,21 @@ class UrlRewritingTest extends FileTestBase {
 
     // Test alteration of file URLs to use a CDN.
     variable_set('file_test_hook_file_url_alter', 'cdn');
-    $file = $this->createFile();
-    $url = file_create_url($file->uri);
+    $uri = $this->createUri();
+    $url = file_create_url($uri);
     $public_directory_path = file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath();
-    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . $public_directory_path . '/' . $file->filename, $url, t('Correctly generated a CDN URL for a created file.'));
+    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . $public_directory_path . '/' . drupal_basename($uri), $url, t('Correctly generated a CDN URL for a created file.'));
 
     // Test alteration of file URLs to use root-relative URLs.
     variable_set('file_test_hook_file_url_alter', 'root-relative');
-    $file = $this->createFile();
-    $url = file_create_url($file->uri);
-    $this->assertEqual(base_path() . '/' . $public_directory_path . '/' . $file->filename, $url, t('Correctly generated a root-relative URL for a created file.'));
+    $uri = $this->createUri();
+    $url = file_create_url($uri);
+    $this->assertEqual(base_path() . '/' . $public_directory_path . '/' . drupal_basename($uri), $url, t('Correctly generated a root-relative URL for a created file.'));
 
     // Test alteration of file URLs to use a protocol-relative URLs.
     variable_set('file_test_hook_file_url_alter', 'protocol-relative');
-    $file = $this->createFile();
-    $url = file_create_url($file->uri);
-    $this->assertEqual('/' . base_path() . '/' . $public_directory_path . '/' . $file->filename, $url, t('Correctly generated a protocol-relative URL for a created file.'));
+    $uri = $this->createUri();
+    $url = file_create_url($uri);
+    $this->assertEqual('/' . base_path() . '/' . $public_directory_path . '/' . drupal_basename($uri), $url, t('Correctly generated a protocol-relative URL for a created file.'));
   }
 }

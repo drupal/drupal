@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\SaveDataTest.
+ * Definition of Drupal\file\Tests\SaveDataTest.
  */
 
-namespace Drupal\system\Tests\File;
+namespace Drupal\file\Tests;
 
 /**
  * Tests the file_save_data() function.
  */
-class SaveDataTest extends FileHookTestBase {
+class SaveDataTest extends FileManagedTestBase {
   public static function getInfo() {
     return array(
       'name' => 'File save data',

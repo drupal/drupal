@@ -69,7 +69,7 @@ class RegistryParseFilesTestCase extends WebTestBase {
       $this->$fileType->className = 'registry_test_class' . substr($chrs, 16, 16);
       $this->$fileType->interfaceName = 'registry_test_interface' . substr($chrs, 32, 16);
       $this->$fileType->contents = $this->getFileContents($fileType);
-      file_save_data($this->$fileType->contents, $this->$fileType->fileName);
+      file_unmanaged_save_data($this->$fileType->contents, $this->$fileType->fileName);
 
       if ($fileType == 'existing_changed') {
         // Add a record with an incorrect hash.

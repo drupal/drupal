@@ -1,8 +1,8 @@
 <?php
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\File\File;
 use Drupal\entity\EntityInterface;
+use Drupal\file\File;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

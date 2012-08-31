@@ -2,17 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\ValidatorTest.
+ * Definition of Drupal\file\Tests\ValidatorTest.
  */
 
-namespace Drupal\system\Tests\File;
-
-use Drupal\simpletest\WebTestBase;
+namespace Drupal\file\Tests;
 
 /**
  *  This will run tests against the file validation functions (file_validate_*).
  */
-class ValidatorTest extends WebTestBase {
+class ValidatorTest extends FileManagedTestBase {
   public static function getInfo() {
     return array(
       'name' => 'File validator tests',

@@ -2,23 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\File\DownloadTest.
+ * Definition of Drupal\file\Tests\DownloadTest.
  */
 
-namespace Drupal\system\Tests\File;
+namespace Drupal\file\Tests;
 
 /**
  * Tests for download/file transfer functions.
  */
-class DownloadTest extends FileTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('file_test');
-
+class DownloadTest extends FileManagedTestBase {
   public static function getInfo() {
     return array(
       'name' => 'File download',
