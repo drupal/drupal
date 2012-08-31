@@ -560,7 +560,7 @@ abstract class WizardPluginBase implements WizardInterface {
     // be able to get all the overrides correct.
     $this->alter_display_options($display_options, $form, $form_state);
 
-    $this->add_displays($view, $display_options, $form, $form_state);
+    $this->addDisplays($view, $display_options, $form, $form_state);
 
     return $view;
   }
@@ -614,16 +614,16 @@ abstract class WizardPluginBase implements WizardInterface {
   /**
    * Adds the array of display options to the view, with appropriate overrides.
    */
-  protected function add_displays($view, $display_options, $form, $form_state) {
+  protected function addDisplays($view, $display_options, $form, $form_state) {
     // Display: Master
-    $default_display = $view->new_display('default', 'Master', 'default');
+    $default_display = $view->newDisplay('default', 'Master', 'default');
     foreach ($display_options['default'] as $option => $value) {
       $default_display->setOption($option, $value);
     }
 
     // Display: Page
     if (isset($display_options['page'])) {
-      $display = $view->new_display('page', 'Page', 'page');
+      $display = $view->newDisplay('page', 'Page', 'page');
       // The page display is usually the main one (from the user's point of
       // view). Its options should therefore become the overall view defaults,
       // so that new displays which are added later automatically inherit them.
@@ -631,14 +631,14 @@ abstract class WizardPluginBase implements WizardInterface {
 
       // Display: Feed (attached to the page).
       if (isset($display_options['feed'])) {
-        $display = $view->new_display('feed', 'Feed', 'feed');
+        $display = $view->newDisplay('feed', 'Feed', 'feed');
         $this->set_override_options($display_options['feed'], $display, $default_display);
       }
     }
 
     // Display: Block.
     if (isset($display_options['block'])) {
-      $display = $view->new_display('block', 'Block', 'block');
+      $display = $view->newDisplay('block', 'Block', 'block');
       // When there is no page, the block display options should become the
       // overall view defaults.
       if (!isset($display_options['page'])) {

@@ -21,7 +21,7 @@ function node_views_templates() {
   $view->disabled = TRUE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Defaults */
-  $handler = $view->new_display('default', 'Defaults', 'default');
+  $handler = $view->newDisplay('default', 'Defaults', 'default');
   $handler->display->display_options['title'] = 'Image gallery';
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
@@ -109,7 +109,7 @@ function node_views_templates() {
   $handler->display->display_options['filters']['status']['value'] = '1';
 
   /* Display: Gallery page */
-  $handler = $view->new_display('page', 'Gallery page', 'page_1');
+  $handler = $view->newDisplay('page', 'Gallery page', 'page_1');
   $handler->display->display_options['path'] = 'gallery';
   $translatables['image_gallery'] = array(
     t('Defaults'),

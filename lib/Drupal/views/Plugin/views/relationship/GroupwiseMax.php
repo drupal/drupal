@@ -165,7 +165,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     $view = new View(array(), 'view');
     $view->vid = 'new'; // @todo: what's this?
     $view->base_table = $this->definition['base'];
-    $view->add_display('default');
+    $view->addDisplay('default');
     return $view;
   }
 
@@ -209,7 +209,7 @@ class GroupwiseMax extends RelationshipPluginBase {
       $sort = $options['subquery_sort'];
       list($sort_table, $sort_field) = explode('.', $sort);
       $sort_options = array('order' => $options['subquery_order']);
-      $temp_view->add_item('default', 'sort', $sort_table, $sort_field, $sort_options);
+      $temp_view->addItem('default', 'sort', $sort_table, $sort_field, $sort_options);
     }
 
     // Get the namespace string.
@@ -223,12 +223,12 @@ class GroupwiseMax extends RelationshipPluginBase {
     // Add the base table ID field.
     $views_data = views_fetch_data($this->definition['base']);
     $base_field = $views_data['table']['base']['field'];
-    $temp_view->add_item('default', 'field', $this->definition['base'], $this->definition['field']);
+    $temp_view->addItem('default', 'field', $this->definition['base'], $this->definition['field']);
 
     // Add the correct argument for our relationship's base
     // ie the 'how to get back to base' argument.
     // The relationship definition tells us which one to use.
-    $temp_view->add_item(
+    $temp_view->addItem(
       'default',
       'argument',
       $this->definition['argument table'], // eg 'term_node',

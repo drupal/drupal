@@ -31,7 +31,7 @@ class FilterUserUIDTest extends CommentTestBase {
   function view_comment_user_uid() {
     $view = parent::view_comment_user_uid();
     // Remove the argument.
-    $view->set_item('default', 'argument', 'uid_touch', NULL);
+    $view->setItem('default', 'argument', 'uid_touch', NULL);
 
     $options = array(
       'id' => 'uid_touch',
@@ -39,7 +39,7 @@ class FilterUserUIDTest extends CommentTestBase {
       'field' => 'uid_touch',
       'value' => array($this->loggedInUser->uid),
     );
-    $view->add_item('default', 'filter', 'node', 'uid_touch', $options);
+    $view->addItem('default', 'filter', 'node', 'uid_touch', $options);
 
     return $view;
   }

@@ -58,7 +58,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    *   The key to the display in $view->display, or FALSE if no plugin ID was
    *   provided.
    */
-  function add_display($plugin_id = 'page', $title = NULL, $id = NULL) {
+  public function addDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
     if (empty($plugin_id)) {
       return FALSE;
     }
@@ -69,7 +69,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
     }
 
     if (empty($id)) {
-      $id = $this->generate_display_id($plugin_id);
+      $id = $this->generateDisplayId($plugin_id);
 
       // Generate a unique human-readable name by inspecting the counter at the
       // end of the previous display ID, e.g., 'page_1'.
@@ -111,7 +111,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    * @param string $plugin_id
    *   Which plugin should be used for the new display ID.
    */
-  function generate_display_id($plugin_id) {
+  protected function generateDisplayId($plugin_id) {
     // 'default' is singular and is unique, so just go with 'default'
     // for it. For all others, start counting.
     if ($plugin_id == 'default') {
@@ -147,7 +147,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    *   integer to make it unique, e.g., "{$requested_id}_1",
    *   "{$requested_id}_2", etc.
    */
-  public static function generate_item_id($requested_id, $existing_items) {
+  public static function generateItemId($requested_id, $existing_items) {
     $count = 0;
     $id = $requested_id;
     while (!empty($existing_items[$id])) {
@@ -171,8 +171,8 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    * @return Drupal\views\Plugin\views\display\DisplayPluginBase
    *   A reference to the new handler object.
    */
-  function &new_display($plugin_id = 'page', $title = NULL, $id = NULL) {
-    $id = $this->add_display($plugin_id, $title, $id);
+  public function &newDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
+    $id = $this->addDisplay($plugin_id, $title, $id);
 
     // Create a handler.
     $this->display[$id]->handler = views_get_plugin('display', $this->display[$id]->display_plugin);
@@ -216,14 +216,14 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    * @return string
    *   The unique ID for this handler instance.
    */
-  function add_item($display_id, $type, $table, $field, $options = array(), $id = NULL) {
+  public function addItem($display_id, $type, $table, $field, $options = array(), $id = NULL) {
     $types = View::viewsObjectTypes();
     $this->setDisplay($display_id);
 
     $fields = $this->display[$display_id]->handler->getOption($types[$type]['plural']);
 
     if (empty($id)) {
-      $id = $this->generate_item_id($field, $fields);
+      $id = $this->generateItemId($field, $fields);
     }
 
     // If the desired type is not found, use the original value directly.
@@ -255,7 +255,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    * @return array
    *   An array of handler instances of a given type for this display.
    */
-  function get_items($type, $display_id = NULL) {
+  public function getItems($type, $display_id = NULL) {
     $this->setDisplay($display_id);
 
     if (!isset($display_id)) {
@@ -281,7 +281,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    *   Either the handler instance's configuration, or NULL if the handler is
    *   not used on the display.
    */
-  function get_item($display_id, $type, $id) {
+  public function getItem($display_id, $type, $id) {
     // Get info about the types so we can get the right data.
     $types = View::viewsObjectTypes();
     // Initialize the display
@@ -307,7 +307,7 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    *
    * @see set_item_option()
    */
-  function set_item($display_id, $type, $id, $item) {
+  public function setItem($display_id, $type, $id, $item) {
     // Get info about the types so we can get the right data.
     $types = View::viewsObjectTypes();
     // Initialize the display.
@@ -346,10 +346,10 @@ class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
    *
    * @see set_item()
    */
-  function set_item_option($display_id, $type, $id, $option, $value) {
-    $item = $this->get_item($display_id, $type, $id);
+  public function setItemOption($display_id, $type, $id, $option, $value) {
+    $item = $this->getItem($display_id, $type, $id);
     $item[$option] = $value;
-    $this->set_item($display_id, $type, $id, $item);
+    $this->setItem($display_id, $type, $id, $item);
   }
 
 }

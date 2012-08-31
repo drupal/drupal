@@ -53,7 +53,7 @@ class DisplayTest extends PluginTestBase {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master', 'default');
+    $handler = $view->newDisplay('default', 'Master', 'default');
     $handler->display->display_options['access']['type'] = 'perm';
     $handler->display->display_options['cache']['type'] = 'none';
     $handler->display->display_options['query']['type'] = 'views_query';
@@ -77,7 +77,7 @@ class DisplayTest extends PluginTestBase {
     $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
 
     /* Display: Page */
-    $handler = $view->new_display('page', 'Page', 'page_1');
+    $handler = $view->newDisplay('page', 'Page', 'page_1');
     $handler->display->display_options['path'] = 'test';
 
     return $view;
@@ -102,7 +102,7 @@ class DisplayTest extends PluginTestBase {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master', 'default');
+    $handler = $view->newDisplay('default', 'Master', 'default');
     $handler->display->display_options['title'] = 'test_filter_groups';
     $handler->display->display_options['access']['type'] = 'perm';
     $handler->display->display_options['cache']['type'] = 'none';
@@ -149,7 +149,7 @@ class DisplayTest extends PluginTestBase {
     $handler->display->display_options['filters']['nid_1']['group'] = 2;
 
     /* Display: Page */
-    $handler = $view->new_display('page', 'Page', 'page');
+    $handler = $view->newDisplay('page', 'Page', 'page');
     $handler->display->display_options['filter_groups']['operator'] = 'OR';
     $handler->display->display_options['filter_groups']['groups'] = array(
       1 => 'OR',

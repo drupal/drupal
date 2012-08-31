@@ -1286,7 +1286,7 @@ function views_ui_edit_form_submit_add_display($form, &$form_state) {
   // Create the new display.
   $parents = $form_state['triggering_element']['#parents'];
   $display_type = array_pop($parents);
-  $display_id = $view->add_display($display_type);
+  $display_id = $view->addDisplay($display_type);
   views_ui_cache_set($view);
 
   // Redirect to the new display's edit page.
@@ -1302,7 +1302,7 @@ function views_ui_edit_form_submit_duplicate_display($form, &$form_state) {
 
   // Create the new display.
   $display = $view->display[$display_id];
-  $new_display_id = $view->add_display($display->display_plugin);
+  $new_display_id = $view->addDisplay($display->display_plugin);
   $view->display[$new_display_id] = clone $display;
   $view->display[$new_display_id]->id = $new_display_id;
 
@@ -4126,7 +4126,7 @@ function views_ui_add_item_form_submit($form, &$form_state) {
       if ($cut = strpos($field, '$')) {
         $field = substr($field, 0, $cut);
       }
-      $id = $form_state['view']->add_item($form_state['display_id'], $type, $table, $field);
+      $id = $form_state['view']->addItem($form_state['display_id'], $type, $table, $field);
 
       // check to see if we have group by settings
       $key = $type;
@@ -4169,7 +4169,7 @@ function views_ui_config_item_form_build_group($form, &$form_state) {
     $form_state['handler']->build_group_options();
   }
 
-  $form_state['view']->set_item($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   views_ui_add_form_to_stack($form_state['form_key'], $form_state['view'], $form_state['display_id'], array($form_state['type'], $form_state['id']), TRUE, TRUE);
 
@@ -4188,7 +4188,7 @@ function views_ui_config_item_form_add_group($form, &$form_state) {
   // Add a new row.
   $item['group_info']['group_items'][] = array();
 
-  $form_state['view']->set_item($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   views_ui_cache_set($form_state['view']);
   $form_state['rerender'] = TRUE;
@@ -4215,7 +4215,7 @@ function views_ui_config_item_form($form, &$form_state) {
   if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $item = $view->get_item($display_id, $type, $id);
+  $item = $view->getItem($display_id, $type, $id);
 
   if ($item) {
     $handler = $view->display_handler->getHandler($type, $id);
@@ -4272,7 +4272,7 @@ function views_ui_config_item_form($form, &$form_state) {
           $rel = key($relationship_options);
           // We want this relationship option to get saved even if the user
           // skips submitting the form.
-          $view->set_item_option($display_id, $type, $id, 'relationship', $rel);
+          $view->setItemOption($display_id, $type, $id, 'relationship', $rel);
           $temp_view = $view->cloneView();
           views_ui_cache_set($temp_view);
         }
@@ -4431,7 +4431,7 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   $handler->unpack_options($handler->options, $options, NULL, FALSE);
 
   // Store the item back on the view
-  $form_state['view']->set_item($form_state['display_id'], $form_state['type'], $form_state['id'], $handler->options);
+  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $handler->options);
 
   // Ensure any temporary options are removed.
   if (isset($form_state['view']->temporary_options[$type][$form_state['id']])) {
@@ -4464,7 +4464,7 @@ function views_ui_config_item_group_form($type, &$form_state) {
 
   $view->initQuery();
 
-  $item = $view->get_item($display_id, $type, $id);
+  $item = $view->getItem($display_id, $type, $id);
 
   if ($item) {
     $handler = $view->display_handler->getHandler($type, $id);
@@ -4500,7 +4500,7 @@ function views_ui_config_item_group_form_submit($form, &$form_state) {
   $handler->groupby_form_submit($form, $form_state);
 
   // Store the item back on the view
-  $form_state['view']->set_item($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
@@ -4517,7 +4517,7 @@ function views_ui_config_item_form_remove($form, &$form_state) {
     $display =& $form_state['view']->display[$form_state['display_id']];
     $display->handler->optionsOverride($form, $form_state);
   }
-  $form_state['view']->set_item($form_state['display_id'], $form_state['type'], $form_state['id'], NULL);
+  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], NULL);
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
@@ -4536,7 +4536,7 @@ function views_ui_config_item_form_expose($form, &$form_state) {
     $form_state['handler']->expose_options();
   }
 
-  $form_state['view']->set_item($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   views_ui_add_form_to_stack($form_state['form_key'], $form_state['view'], $form_state['display_id'], array($form_state['type'], $form_state['id']), TRUE, TRUE);
 
@@ -4565,7 +4565,7 @@ function views_ui_config_item_extra_form($form, &$form_state) {
   if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $item = $view->get_item($display_id, $type, $id);
+  $item = $view->getItem($display_id, $type, $id);
 
   if ($item) {
     $handler = $view->display_handler->getHandler($type, $id);
@@ -4611,7 +4611,7 @@ function views_ui_config_item_extra_form_submit($form, &$form_state) {
   }
 
   // Store the item back on the view
-  $form_state['view']->set_item($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
@@ -4636,7 +4636,7 @@ function views_ui_config_style_form($form, &$form_state) {
   if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
-  $item = $view->get_item($display_id, $type, $id);
+  $item = $view->getItem($display_id, $type, $id);
 
   if ($item) {
     $handler = views_get_handler($item['table'], $item['field'], $type);
@@ -4681,7 +4681,7 @@ function views_ui_config_style_form_submit($form, &$form_state) {
   $item['style_options'] = $form_state['values']['style_options'];
 
   // Store the item back on the view
-  $form_state['view']->set_item($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+  $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
   // Write to cache
   views_ui_cache_set($form_state['view']);
@@ -5372,7 +5372,7 @@ function views_ui_field_list() {
     foreach ($view->display as $display_id => $display) {
       if ($view->setDisplay($display_id)) {
         foreach (View::viewsObjectTypes() as $type => $info) {
-          foreach ($view->get_items($type, $display_id) as $item) {
+          foreach ($view->getItems($type, $display_id) as $item) {
             $data = views_fetch_data($item['table']);
             if (isset($data[$item['field']]) && isset($data[$item['field']][$type])
               && $data = $data[$item['field']][$type]) {

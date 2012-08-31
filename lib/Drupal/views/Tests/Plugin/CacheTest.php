@@ -39,11 +39,11 @@ class CacheTest extends PluginTestBase {
     // Create the basic view.
     $view = new View(array(), 'view');
     $view->name = 'test_view';
-    $view->add_display('default');
+    $view->addDisplay('default');
     $view->base_table = 'views_test';
 
     // Set up the fields we need.
-    $display = $view->new_display('default', 'Master', 'default');
+    $display = $view->newDisplay('default', 'Master', 'default');
     $display->overrideOption('fields', array(
       'id' => array(
         'id' => 'id',

@@ -641,7 +641,7 @@ class View extends ViewStorage {
           $info = $data['table']['default_relationship'][$this->base_table];
 
           $relationship_options = isset($info['options']) ? $info['options'] : array();
-          $relationship = $this->add_item($this->current_display, 'relationship', $info['table'], $info['field'], $relationship_options);
+          $relationship = $this->addItem($this->current_display, 'relationship', $info['table'], $info['field'], $relationship_options);
         }
         foreach ($handlers as $handler) {
           $options = $this->display_handler->getOption($types[$handler['type']]['plural']);

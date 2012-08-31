@@ -677,7 +677,7 @@ function hook_views_default_views() {
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
+  $handler = $view->newDisplay('default', 'Master', 'default');
   $handler->display->display_options['access']['type'] = 'none';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
@@ -712,11 +712,11 @@ function hook_views_default_views() {
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
 
   /* Display: Page */
-  $handler = $view->new_display('page', 'Page', 'page');
+  $handler = $view->newDisplay('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'frontpage';
 
   /* Display: Feed */
-  $handler = $view->new_display('feed', 'Feed', 'feed');
+  $handler = $view->newDisplay('feed', 'Feed', 'feed');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Front page feed';
   $handler->display->display_options['pager']['type'] = 'some';

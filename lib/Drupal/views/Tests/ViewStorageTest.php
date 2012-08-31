@@ -228,7 +228,7 @@ class ViewStorageTest extends WebTestBase {
     // Check whether a display can be added and saved to a View.
     $view = $this->loadView('frontpage');
 
-    $view->new_display('page', 'Test', 'test');
+    $view->newDisplay('page', 'Test', 'test');
 
     $new_display = $view->display['test'];
     $this->assertTrue($new_display instanceof ViewDisplay, 'New page display "test" created.');

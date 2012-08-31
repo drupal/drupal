@@ -58,7 +58,7 @@ class ArgumentValidatorTest extends PluginTestBase {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master', 'default');
+    $handler = $view->newDisplay('default', 'Master', 'default');
     $handler->display->display_options['access']['type'] = 'none';
     $handler->display->display_options['cache']['type'] = 'none';
     $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -90,7 +90,7 @@ class ArgumentValidatorTest extends PluginTestBase {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master', 'default');
+    $handler = $view->newDisplay('default', 'Master', 'default');
     $handler->display->display_options['access']['type'] = 'none';
     $handler->display->display_options['cache']['type'] = 'none';
     $handler->display->display_options['exposed_form']['type'] = 'basic';

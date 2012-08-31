@@ -78,7 +78,7 @@ class UserTest extends UserTestBase {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master', 'default');
+    $handler = $view->newDisplay('default', 'Master', 'default');
     $handler->display->display_options['title'] = 'test_user_relationship';
     $handler->display->display_options['access']['type'] = 'perm';
     $handler->display->display_options['cache']['type'] = 'none';

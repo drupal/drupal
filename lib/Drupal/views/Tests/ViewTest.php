@@ -101,7 +101,7 @@ class ViewTest extends ViewTestBase {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master', 'default');
+    $handler = $view->newDisplay('default', 'Master', 'default');
     $handler->display->display_options['access']['type'] = 'none';
     $handler->display->display_options['cache']['type'] = 'none';
     $handler->display->display_options['query']['type'] = 'views_query';
@@ -203,11 +203,11 @@ class ViewTest extends ViewTestBase {
     $handler->display->display_options['filters']['title']['field'] = 'title';
 
     /* Display: Page */
-    $handler = $view->new_display('page', 'Page', 'page_1');
+    $handler = $view->newDisplay('page', 'Page', 'page_1');
     $handler->display->display_options['path'] = 'test_destroy';
 
     /* Display: Attachment */
-    $handler = $view->new_display('attachment', 'Attachment', 'attachment_1');
+    $handler = $view->newDisplay('attachment', 'Attachment', 'attachment_1');
     $handler->display->display_options['pager']['type'] = 'some';
     $handler->display->display_options['displays'] = array(
       'default' => 'default',
@@ -215,7 +215,7 @@ class ViewTest extends ViewTestBase {
     );
 
     /* Display: Attachment */
-    $handler = $view->new_display('attachment', 'Attachment', 'attachment_2');
+    $handler = $view->newDisplay('attachment', 'Attachment', 'attachment_2');
     $handler->display->display_options['pager']['type'] = 'some';
     $handler->display->display_options['displays'] = array(
       'default' => 'default',
@@ -258,7 +258,7 @@ class ViewTest extends ViewTestBase {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Defaults */
-    $handler = $view->new_display('default', 'Defaults', 'default');
+    $handler = $view->newDisplay('default', 'Defaults', 'default');
     $handler->display->display_options['access']['type'] = 'none';
     $handler->display->display_options['cache']['type'] = 'none';
     $handler->display->display_options['query']['type'] = 'views_query';

@@ -152,7 +152,7 @@ class TranslatableTest extends ViewTestBase {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master1', 'default');
+    $handler = $view->newDisplay('default', 'Master1', 'default');
     $handler->display->display_options['title'] = 'title1';
     $handler->display->display_options['use_more_text'] = 'more1';
     $handler->display->display_options['access']['type'] = 'none';

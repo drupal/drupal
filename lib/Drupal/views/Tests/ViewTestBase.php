@@ -180,7 +180,7 @@ abstract class ViewTestBase extends WebTestBase {
     // the exposed forms cache.
     drupal_static_reset('views_exposed_form_cache');
 
-    $display = $view->new_display('page', 'Page', 'page_1');
+    $display = $view->newDisplay('page', 'Page', 'page_1');
     return $view;
   }
 
@@ -385,11 +385,11 @@ abstract class ViewTestBase extends WebTestBase {
     // Create the basic view.
     $view = new View(array(), 'view');
     $view->name = 'test_view';
-    $view->add_display('default');
+    $view->addDisplay('default');
     $view->base_table = 'views_test';
 
     // Set up the fields we need.
-    $display = $view->new_display('default', 'Master', 'default');
+    $display = $view->newDisplay('default', 'Master', 'default');
     $display->overrideOption('fields', array(
       'id' => array(
         'id' => 'id',

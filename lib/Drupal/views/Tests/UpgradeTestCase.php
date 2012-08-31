@@ -131,7 +131,7 @@ class UpgradeTestCase extends ViewTestBase {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master', 'default');
+    $handler = $view->newDisplay('default', 'Master', 'default');
 
     $handler->display->display_options['fields']['old_field_1']['id'] = 'old_field_1';
     $handler->display->display_options['fields']['old_field_1']['table'] = 'views_test';
@@ -152,7 +152,7 @@ class UpgradeTestCase extends ViewTestBase {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master', 'default');
+    $handler = $view->newDisplay('default', 'Master', 'default');
 
     $handler->display->display_options['fields']['old_field_2']['id'] = 'old_field_2';
     $handler->display->display_options['fields']['old_field_2']['table'] = 'views_test';
@@ -177,7 +177,7 @@ class UpgradeTestCase extends ViewTestBase {
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
     /* Display: Master */
-    $handler = $view->new_display('default', 'Master', 'default');
+    $handler = $view->newDisplay('default', 'Master', 'default');
 
     $handler->display->display_options['fields']['id']['id'] = 'id';
     $handler->display->display_options['fields']['id']['table'] = 'views_old_table';
@@ -199,7 +199,7 @@ class UpgradeTestCase extends ViewTestBase {
       $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
 
       /* Display: Defaults */
-      $handler = $view->new_display("default", "Defaults", "default");
+      $handler = $view->newDisplay("default", "Defaults", "default");
       $handler->display->display_options["title"] = "Recent comments";
       $handler->display->display_options["use_more"] = TRUE;
       $handler->display->display_options["access"]["type"] = "none";
@@ -240,7 +240,7 @@ class UpgradeTestCase extends ViewTestBase {
       $handler->display->display_options["filters"]["status_extra"]["expose"]["operator"] = FALSE;
 
       /* Display: Page */
-      $handler = $view->new_display("page", "Page", "page");
+      $handler = $view->newDisplay("page", "Page", "page");
       $handler->display->display_options["defaults"]["items_per_page"] = FALSE;
       $handler->display->display_options["defaults"]["style_plugin"] = FALSE;
       $handler->display->display_options["style_plugin"] = "html_list";
@@ -281,7 +281,7 @@ class UpgradeTestCase extends ViewTestBase {
       $handler->display->display_options["path"] = "comments/recent";
 
       /* Display: Block */
-      $handler = $view->new_display("block", "Block", "block");
+      $handler = $view->newDisplay("block", "Block", "block");
       $handler->display->display_options["block_description"] = "Recent comments view"
 ;';
 
