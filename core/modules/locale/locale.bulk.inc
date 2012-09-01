@@ -43,17 +43,29 @@ function locale_translate_import_form($form, &$form_state) {
     );
   }
 
+  $validators = array(
+    'file_validate_extensions' => array('po'),
+    'file_validate_size' => array(file_upload_max_size()),
+  );
   $form['file'] = array(
     '#type' => 'file',
     '#title' => t('Translation file'),
+    '#description' => theme('file_upload_help', array('description' => t('A Gettext Portable Object file.'), 'upload_validators' => $validators)),
     '#size' => 50,
-    '#description' => t('A Gettext Portable Object (<em>.po</em>) file.'),
+    '#upload_validators' => $validators,
+    '#attributes' => array('class' => array('file-import-input')),
+    '#attached' => array(
+      'js' => array(
+        drupal_get_path('module', 'locale') . '/locale.bulk.js' => array(),
+      ),
+    ),
   );
   $form['langcode'] = array(
     '#type' => 'select',
     '#title' => t('Language'),
     '#options' => $language_options,
     '#default_value' => $default,
+    '#attributes' => array('class' => array('langcode-input')),
   );
 
   $form['customized'] = array(
@@ -92,10 +104,8 @@ function locale_translate_import_form($form, &$form_state) {
  * Processes the locale import form submission.
  */
 function locale_translate_import_form_submit($form, &$form_state) {
-  $validators = array('file_validate_extensions' => array('po'));
-
   // Ensure we have the file uploaded.
-  if ($file = file_save_upload('file', $validators)) {
+  if ($file = file_save_upload('file', $form['file']['#upload_validators'])) {
 
     // Add language, if not yet supported.
     $language = language_load($form_state['values']['langcode']);
@@ -115,8 +125,8 @@ function locale_translate_import_form_submit($form, &$form_state) {
     batch_set($batch);
   }
   else {
-    drupal_set_message(t('File to import not found.'), 'error');
-    $form_state['redirect'] = 'admin/config/regional/translate/import';
+    form_set_error('file', t('File to import not found.'));
+    $form_state['rebuild'] = TRUE;
     return;
   }
 
