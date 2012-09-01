@@ -37,7 +37,7 @@ class View extends RowPluginBase {
   // Stores the nodes loaded with pre_render.
   var $nodes = array();
 
-  function init(&$view, &$display, $options = NULL) {
+  public function init(&$view, &$display, $options = NULL) {
     parent::init($view, $display, $options);
     // Handle existing views with the deprecated 'teaser' option.
     if (isset($this->options['teaser'])) {

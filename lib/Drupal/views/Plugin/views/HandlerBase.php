@@ -78,7 +78,7 @@ abstract class HandlerBase extends PluginBase {
    *   The item from the database; the actual contents of this will vary
    *   based upon the type of handler.
    */
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     $this->view = &$view;
     $display_id = $this->view->current_display;
     // Check to see if this handler type is defaulted. Note that
@@ -143,7 +143,7 @@ abstract class HandlerBase extends PluginBase {
     $options['field'] = array('default' => '');
     $options['relationship'] = array('default' => 'none');
     $options['group_type'] = array('default' => 'group');
-    $options['ui_name'] = array('default' => '');
+    $options['ui_name'] = array('default' => '', 'translatable' => TRUE);
 
     return $options;
   }
@@ -151,7 +151,7 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Return a string representing this handler's name in the UI.
    */
-  function ui_name($short = FALSE) {
+  public function uiName($short = FALSE) {
     if (!empty($this->options['ui_name'])) {
       $title = check_plain($this->options['ui_name']);
       return $title;
@@ -165,9 +165,9 @@ abstract class HandlerBase extends PluginBase {
    *
    * This should be overridden for handlers with formulae or other
    * non-standard fields. Because this takes an argument, fields
-   * overriding this can just call return parent::get_field($formula)
+   * overriding this can just call return parent::getField($formula)
    */
-  function get_field($field = NULL) {
+  public function getField($field = NULL) {
     if (!isset($field)) {
       if (!empty($this->formula)) {
         $field = $this->get_formula();
@@ -205,7 +205,7 @@ abstract class HandlerBase extends PluginBase {
    * @return string
    *   Returns the safe value.
    */
-  function sanitize_value($value, $type = NULL) {
+  protected function sanitizeValue($value, $type = NULL) {
     switch ($type) {
       case 'xss':
         $value = filter_xss($value);
@@ -238,7 +238,7 @@ abstract class HandlerBase extends PluginBase {
    * @return string
    *    The transformed string.
    */
-  function case_transform($string, $option) {
+  protected function caseTransform($string, $option) {
     global $multibyte;
 
     switch ($option) {
@@ -305,13 +305,13 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Provides the handler some groupby.
    */
-  function use_group_by() {
+  public function usesGroupBy() {
     return TRUE;
   }
   /**
    * Provide a form for aggregation settings.
    */
-  function groupby_form(&$form, &$form_state) {
+  public function buildGroupByForm(&$form, &$form_state) {
     $view = &$form_state['view'];
     $display_id = $form_state['display_id'];
     $types = View::viewsObjectTypes();
@@ -319,7 +319,7 @@ abstract class HandlerBase extends PluginBase {
     $id = $form_state['id'];
 
     $form['#title'] = check_plain($view->display[$display_id]->display_title) . ': ';
-    $form['#title'] .= t('Configure aggregation settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $this->ui_name()));
+    $form['#title'] .= t('Configure aggregation settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $this->uiName()));
 
     $form['#section'] = $display_id . '-' . $type . '-' . $id;
 
@@ -342,7 +342,7 @@ abstract class HandlerBase extends PluginBase {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  function groupby_form_submit(&$form, &$form_state) {
+  public function submitGroupByForm(&$form, &$form_state) {
     $item =& $form_state['handler']->options;
 
     $item['group_type'] = $form_state['values']['options']['group_type'];
@@ -352,90 +352,90 @@ abstract class HandlerBase extends PluginBase {
    * If a handler has 'extra options' it will get a little settings widget and
    * another form called extra_options.
    */
-  function has_extra_options() { return FALSE; }
+  public function hasExtraOptions() { return FALSE; }
 
   /**
    * Provide defaults for the handler.
    */
-  function extra_options(&$option) { }
+  public function defineExtraOptions(&$option) { }
 
   /**
    * Provide a form for setting options.
    */
-  function extra_options_form(&$form, &$form_state) { }
+  public function buildExtraOptionsForm(&$form, &$form_state) { }
 
   /**
    * Validate the options form.
    */
-  function extra_options_validate($form, &$form_state) { }
+  public function validateExtraOptionsForm($form, &$form_state) { }
 
   /**
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  function extra_options_submit($form, &$form_state) { }
+  public function submitExtraOptionsForm($form, &$form_state) { }
 
   /**
    * Determine if a handler can be exposed.
    */
-  function can_expose() { return FALSE; }
+  public function canExpose() { return FALSE; }
 
   /**
    * Set new exposed option defaults when exposed setting is flipped
    * on.
    */
-  function expose_options() { }
+  public function defaultExposeOptions() { }
 
   /**
    * Get information about the exposed form for the form renderer.
    */
-  function exposed_info() { }
+  public function exposedInfo() { }
 
   /**
    * Render our chunk of the exposed handler form when selecting
    */
-  function exposed_form(&$form, &$form_state) { }
+  public function buildExposedForm(&$form, &$form_state) { }
 
   /**
    * Validate the exposed handler form
    */
-  function exposed_validate(&$form, &$form_state) { }
+  public function validateExposed(&$form, &$form_state) { }
 
   /**
    * Submit the exposed handler form
    */
-  function exposed_submit(&$form, &$form_state) { }
+  public function submitExposed(&$form, &$form_state) { }
 
   /**
    * Form for exposed handler options.
    */
-  function expose_form(&$form, &$form_state) { }
+  public function buildExposeForm(&$form, &$form_state) { }
 
   /**
    * Validate the options form.
    */
-  function expose_validate($form, &$form_state) { }
+  public function validateExposeForm($form, &$form_state) { }
 
   /**
    * Perform any necessary changes to the form exposes prior to storage.
    * There is no need for this function to actually store the data.
    */
-  function expose_submit($form, &$form_state) { }
+  public function submitExposeForm($form, &$form_state) { }
 
   /**
    * Shortcut to display the expose/hide button.
    */
-  function show_expose_button(&$form, &$form_state) { }
+  public function showExposeButton(&$form, &$form_state) { }
 
   /**
    * Shortcut to display the exposed options form.
    */
-  function show_expose_form(&$form, &$form_state) {
+  public function showExposeForm(&$form, &$form_state) {
     if (empty($this->options['exposed'])) {
       return;
     }
 
-    $this->expose_form($form, $form_state);
+    $this->buildExposeForm($form, $form_state);
 
     // When we click the expose button, we add new gadgets to the form but they
     // have no data in $_POST so their defaults get wiped out. This prevents
@@ -455,7 +455,7 @@ abstract class HandlerBase extends PluginBase {
    *
    * @return boolean
    */
-  function access() {
+  public function access() {
     if (isset($this->definition['access callback']) && function_exists($this->definition['access callback'])) {
       if (isset($this->definition['access arguments']) && is_array($this->definition['access arguments'])) {
         return call_user_func_array($this->definition['access callback'], $this->definition['access arguments']);
@@ -472,7 +472,7 @@ abstract class HandlerBase extends PluginBase {
    * This gives all the handlers some time to set up before any handler has
    * been fully run.
    */
-  function pre_query() { }
+  public function preQuery() { }
 
   /**
    * Run after the view is executed, before the result is cached.
@@ -481,12 +481,12 @@ abstract class HandlerBase extends PluginBase {
    * used so that handlers that pull up secondary data can put it in the
    * $values so that the raw data can be utilized externally.
    */
-  function post_execute(&$values) { }
+  public function postExecute(&$values) { }
 
   /**
    * Provides a unique placeholders for handlers.
    */
-  function placeholder() {
+  protected function placeholder() {
     return $this->query->placeholder($this->options['table'] . '_' . $this->options['field']);
   }
 
@@ -494,7 +494,7 @@ abstract class HandlerBase extends PluginBase {
    * Called just prior to query(), this lets a handler set up any relationship
    * it needs.
    */
-  function set_relationship() {
+  public function setRelationship() {
     // Ensure this gets set to something.
     $this->relationship = NULL;
 
@@ -524,7 +524,7 @@ abstract class HandlerBase extends PluginBase {
    * Ensure the main table for this handler is in the query. This is used
    * a lot.
    */
-  function ensure_my_table() {
+  public function ensureMyTable() {
     if (!isset($this->table_alias)) {
       $this->table_alias = $this->query->ensure_table($this->table, $this->relationship);
     }
@@ -534,14 +534,14 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Provide text for the administrative summary
    */
-  function admin_summary() { }
+  public function adminSummary() { }
 
   /**
    * Determine if the argument needs a style plugin.
    *
    * @return TRUE/FALSE
    */
-  function needs_style_plugin() { return FALSE; }
+  public function needsStylePlugin() { return FALSE; }
 
   /**
    * Determine if this item is 'exposed', meaning it provides form elements
@@ -549,31 +549,31 @@ abstract class HandlerBase extends PluginBase {
    *
    * @return TRUE/FALSE
    */
-  function is_exposed() {
+  public function isExposed() {
     return !empty($this->options['exposed']);
   }
 
   /**
    * Returns TRUE if the exposed filter works like a grouped filter.
    */
-  function is_a_group() { return FALSE; }
+  public function isAGroup() { return FALSE; }
 
   /**
    * Define if the exposed input has to be submitted multiple times.
    * This is TRUE when exposed filters grouped are using checkboxes as
    * widgets.
    */
-  function multiple_exposed_input() { return FALSE; }
+  public function multipleExposedInput() { return FALSE; }
 
   /**
    * Take input from exposed handlers and assign to this handler, if necessary.
    */
-  function accept_exposed_input($input) { return TRUE; }
+  public function acceptExposedInput($input) { return TRUE; }
 
   /**
    * If set to remember exposed input in the session, store it there.
    */
-  function store_exposed_input($input, $status) { return TRUE; }
+  public function storeExposedInput($input, $status) { return TRUE; }
 
   /**
    * Get the join object that should be used for this handler.
@@ -582,7 +582,7 @@ abstract class HandlerBase extends PluginBase {
    * getting the join if it is necessary to make some changes to it, such
    * as adding an 'extra'.
    */
-  function get_join() {
+  public function getJoin() {
     // get the join from this table that links back to the base table.
     // Determine the primary table to seek
     if (empty($this->query->relationships[$this->relationship])) {
@@ -615,6 +615,6 @@ abstract class HandlerBase extends PluginBase {
    * Determine if the handler is considered 'broken', meaning it's a
    * a placeholder used when a handler can't be found.
    */
-  function broken() { }
+  public function broken() { }
 
 }

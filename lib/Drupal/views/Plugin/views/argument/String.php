@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class String extends ArgumentPluginBase {
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($this->definition['many to one'])) {
       $this->helper = new ManyToOneHelper($this);
@@ -144,7 +144,7 @@ class String extends ArgumentPluginBase {
    */
   function summary_query() {
     if (empty($this->definition['many to one'])) {
-      $this->ensure_my_table();
+      $this->ensureMyTable();
     }
     else {
       $this->table_alias = $this->helper->summary_join();
@@ -169,7 +169,7 @@ class String extends ArgumentPluginBase {
   /**
    * Get the formula for this argument.
    *
-   * $this->ensure_my_table() MUST have been called prior to this.
+   * $this->ensureMyTable() MUST have been called prior to this.
    */
   function get_formula() {
     return "SUBSTRING($this->table_alias.$this->real_field, 1, " . intval($this->options['limit']) . ")";
@@ -196,12 +196,12 @@ class String extends ArgumentPluginBase {
       if (!empty($this->options['glossary'])) {
         $this->helper->formula = TRUE;
       }
-      $this->helper->ensure_my_table();
+      $this->helper->ensureMyTable();
       $this->helper->add_filter();
       return;
     }
 
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $formula = FALSE;
     if (empty($this->options['glossary'])) {
       $field = "$this->table_alias.$this->real_field";
@@ -238,7 +238,7 @@ class String extends ArgumentPluginBase {
   }
 
   function summary_argument($data) {
-    $value = $this->case_transform($data->{$this->base_alias}, $this->options['path_case']);
+    $value = $this->caseTransform($data->{$this->base_alias}, $this->options['path_case']);
     if (!empty($this->options['transform_dash'])) {
       $value = strtr($value, ' ', '-');
     }
@@ -250,7 +250,7 @@ class String extends ArgumentPluginBase {
   }
 
   function title() {
-    $this->argument = $this->case_transform($this->argument, $this->options['case']);
+    $this->argument = $this->caseTransform($this->argument, $this->options['case']);
     if (!empty($this->options['transform_dash'])) {
       $this->argument = strtr($this->argument, '-', ' ');
     }
@@ -282,7 +282,7 @@ class String extends ArgumentPluginBase {
   }
 
   function summary_name($data) {
-    return $this->case_transform(parent::summary_name($data), $this->options['case']);
+    return $this->caseTransform(parent::summary_name($data), $this->options['case']);
   }
 
 }

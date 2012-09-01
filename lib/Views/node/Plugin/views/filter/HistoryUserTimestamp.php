@@ -28,8 +28,8 @@ class HistoryUserTimestamp extends FilterPluginBase {
   // Don't display empty space where the operator would be.
   var $no_operator = TRUE;
 
-  function expose_form(&$form, &$form_state) {
-    parent::expose_form($form, $form_state);
+  public function buildExposeForm(&$form, &$form_state) {
+    parent::buildExposeForm($form, $form_state);
     // @todo There are better ways of excluding required and multiple (object flags)
     unset($form['expose']['required']);
     unset($form['expose']['multiple']);
@@ -72,7 +72,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
 
     $limit = REQUEST_TIME - NODE_NEW_LIMIT;
 
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $field = "$this->table_alias.$this->real_field";
     $node = $this->query->ensure_table('node', $this->relationship);
 
@@ -90,7 +90,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
     $this->query->add_where_expression($this->options['group'], "($field IS NULL AND ($node.changed > (***CURRENT_TIME*** - $limit) $clause)) OR $field < $node.changed $clause2");
   }
 
-  function admin_summary() {
+  public function adminSummary() {
     if (!empty($this->options['exposed'])) {
       return t('exposed');
     }

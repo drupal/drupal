@@ -188,7 +188,7 @@ abstract class DisplayPluginBase extends PluginBase {
     if (!isset($this->has_exposed)) {
       foreach ($this->handlers as $type => $value) {
         foreach ($this->view->$type as $id => $handler) {
-          if ($handler->can_expose() && $handler->is_exposed()) {
+          if ($handler->canExpose() && $handler->isExposed()) {
             // one is all we need; if we find it, return true.
             $this->has_exposed = TRUE;
             return TRUE;
@@ -324,7 +324,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
     if (!empty($this->view->argument) && $this->getOption('hide_attachment_summary')) {
       foreach ($this->view->argument as $argument_id => $argument) {
-        if ($argument->needs_style_plugin() && empty($argument->argument_validated)) {
+        if ($argument->needsStylePlugin() && empty($argument->argument_validated)) {
           return FALSE;
         }
       }
@@ -943,7 +943,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $relationships[$relationship] = $label;
       }
       else {
-        $relationships[$relationship] = $handler->ui_name();
+        $relationships[$relationship] = $handler->uiName();
       }
     }
 
@@ -956,7 +956,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $options[$id] = $label;
       }
       else {
-        $options[$id] = $handler->ui_name();
+        $options[$id] = $handler->uiName();
       }
       if (!empty($handler->options['relationship']) && !empty($relationships[$handler->options['relationship']])) {
         $options[$id] = '(' . $relationships[$handler->options['relationship']] . ') ' . $options[$id];
@@ -1717,8 +1717,8 @@ abstract class DisplayPluginBase extends PluginBase {
         $options = array();
         $count = 0; // This lets us prepare the key as we want it printed.
         foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
-          $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->ui_name()));
-          $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->ui_name()));
+          $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->uiName()));
+          $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->uiName()));
         }
 
         // Default text.
@@ -1864,7 +1864,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
           if ($plugin->usesFields()) {
             foreach ($this->getHandlers('field') as $id => $handler) {
-              $funcs[] = $this->optionLink(t('Field @field (ID: @id)', array('@field' => $handler->ui_name(), '@id' => $id)), 'analyze-theme-field') . ': ' . $this->formatThemes($handler->themeFunctions());
+              $funcs[] = $this->optionLink(t('Field @field (ID: @id)', array('@field' => $handler->uiName(), '@id' => $id)), 'analyze-theme-field') . ': ' . $this->formatThemes($handler->themeFunctions());
             }
           }
         }
@@ -2696,8 +2696,8 @@ abstract class DisplayPluginBase extends PluginBase {
   public function isIdentifierUnique($id, $identifier) {
     foreach (View::viewsObjectTypes() as $type => $info) {
       foreach ($this->getHandlers($type) as $key => $handler) {
-        if ($handler->can_expose() && $handler->is_exposed()) {
-          if ($handler->is_a_group()) {
+        if ($handler->canExpose() && $handler->isExposed()) {
+          if ($handler->isAGroup()) {
             if ($id != $key && $identifier == $handler->options['group_info']['identifier']) {
               return FALSE;
             }
@@ -2822,7 +2822,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $handler = views_get_handler($info['table'], $info['field'], $handler_type, $override);
       if ($handler) {
         $handler->init($this->view, $info);
-        $output .= $indent . '/* ' . $types[$type]['stitle'] . ': ' . $handler->ui_name() . " */\n";
+        $output .= $indent . '/* ' . $types[$type]['stitle'] . ': ' . $handler->uiName() . " */\n";
         $output .= $handler->exportOptions($indent, $prefix . "['$option']['$id']");
       }
 

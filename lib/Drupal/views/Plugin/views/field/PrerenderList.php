@@ -78,7 +78,7 @@ class PrerenderList extends FieldPluginBase {
   function render_items($items) {
     if (!empty($items)) {
       if ($this->options['type'] == 'separator') {
-        return implode($this->sanitize_value($this->options['separator'], 'xss_admin'), $items);
+        return implode($this->sanitizeValue($this->options['separator'], 'xss_admin'), $items);
       }
       else {
         return theme('item_list',

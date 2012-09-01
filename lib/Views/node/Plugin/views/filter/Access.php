@@ -22,9 +22,9 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Access extends FilterPluginBase {
 
-  function admin_summary() { }
+  public function adminSummary() { }
   function operator_form(&$form, &$form_state) { }
-  function can_expose() {
+  public function canExpose() {
     return FALSE;
   }
 
@@ -33,7 +33,7 @@ class Access extends FilterPluginBase {
    */
   public function query() {
     if (!user_access('administer nodes')) {
-      $table = $this->ensure_my_table();
+      $table = $this->ensureMyTable();
       $grants = db_or();
       foreach (node_access_grants('view') as $realm => $gids) {
         foreach ($gids as $gid) {

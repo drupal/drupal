@@ -38,7 +38,7 @@ class Boolean extends FieldPluginBase {
     return $options;
   }
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
 
     $default_formats = array(

@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Plugin;
  * such as terms (many terms per node) or roles (many roles per user).
  *
  * The construct method needs to be overridden to provide a list of options;
- * alternately, the value_form and admin_summary methods need to be overriden
+ * alternately, the value_form and adminSummary methods need to be overriden
  * to provide something that isn't just a select list.
  *
  * @ingroup views_filter_handlers
@@ -33,7 +33,7 @@ class ManyToOne extends InOperator {
    */
   var $helper = NULL;
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     $this->helper = new ManyToOneHelper($this);
   }
@@ -113,17 +113,17 @@ class ManyToOne extends InOperator {
   }
 
   /**
-   * Override ensure_my_table so we can control how this joins in.
+   * Override ensureMyTable so we can control how this joins in.
    * The operator actually has influence over joining.
    */
-  function ensure_my_table() {
+  public function ensureMyTable() {
     // Defer to helper if the operator specifies it.
     $info = $this->operators();
     if (isset($info[$this->operator]['ensure_my_table']) && $info[$this->operator]['ensure_my_table'] == 'helper') {
-      return $this->helper->ensure_my_table();
+      return $this->helper->ensureMyTable();
     }
 
-    return parent::ensure_my_table();
+    return parent::ensureMyTable();
   }
 
   function op_helper() {

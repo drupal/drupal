@@ -58,7 +58,7 @@ class Date extends Numeric {
     $this->validateValidTime($form['value'], $form_state['values']['options']['operator'], $form_state['values']['options']['value']);
   }
 
-  function exposed_validate(&$form, &$form_state) {
+  public function validateExposed(&$form, &$form_state) {
     if (empty($this->options['exposed'])) {
       return;
     }
@@ -132,14 +132,14 @@ class Date extends Numeric {
   }
 
 
-  function accept_exposed_input($input) {
+  public function acceptExposedInput($input) {
     if (empty($this->options['exposed'])) {
       return TRUE;
     }
 
     // Store this because it will get overwritten.
     $type = $this->value['type'];
-    $rc = parent::accept_exposed_input($input);
+    $rc = parent::acceptExposedInput($input);
 
     // Don't filter if value(s) are empty.
     $operators = $this->operators();

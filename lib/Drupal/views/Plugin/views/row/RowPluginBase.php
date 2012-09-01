@@ -41,7 +41,7 @@ abstract class RowPluginBase extends PluginBase {
   /**
    * Initialize the row plugin.
    */
-  function init(&$view, &$display, $options = NULL) {
+  public function init(&$view, &$display, $options = NULL) {
     $this->view = &$view;
     $this->display = &$display;
 

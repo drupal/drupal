@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class LinkDelete extends Link {
 
-  function access() {
+  public function access() {
     //needs permission to administer comments in general
     return user_access('administer comments');
   }

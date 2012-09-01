@@ -29,7 +29,7 @@ class DynamicTest extends AccessPluginBase {
     return $options;
   }
 
-  function access($account) {
+  public function access($account) {
     return !empty($this->options['access']) && isset($this->view->args[0]) && $this->view->args[0] == variable_get('test_dynamic_access_argument1', NULL) && isset($this->view->args[1]) && $this->view->args[1] == variable_get('test_dynamic_access_argument2', NULL);
   }
 

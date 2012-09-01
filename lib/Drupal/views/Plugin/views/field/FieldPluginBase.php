@@ -96,7 +96,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * Called to add the field to a query.
    */
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     // Add the field.
     $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
     $this->field_alias = $this->query->add_field($this->table_alias, $this->real_field, NULL, $params);
@@ -183,7 +183,7 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Get this field's label.
    */
-  function label() {
+  public function label() {
     if (!isset($this->options['label'])) {
       return '';
     }
@@ -851,7 +851,7 @@ abstract class FieldPluginBase extends HandlerBase {
       // Get a list of the available fields and arguments for token replacement.
       $options = array();
       foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
-        $options[t('Fields')]["[$field]"] = $handler->ui_name();
+        $options[t('Fields')]["[$field]"] = $handler->uiName();
         // We only use fields up to (and including) this one.
         if ($field == $this->options['id']) {
           break;
@@ -859,8 +859,8 @@ abstract class FieldPluginBase extends HandlerBase {
       }
       $count = 0; // This lets us prepare the key as we want it printed.
       foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
-        $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->ui_name()));
-        $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->ui_name()));
+        $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->uiName()));
+        $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->uiName()));
       }
 
       $this->document_self_tokens($options[t('Fields')]);
@@ -1080,7 +1080,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
   /**
    * Provide extra data to the administration form
    */
-  function admin_summary() {
+  public function adminSummary() {
     return $this->label();
   }
 
@@ -1103,7 +1103,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
    */
   function render($values) {
     $value = $this->get_value($values);
-    return $this->sanitize_value($value);
+    return $this->sanitizeValue($value);
   }
 
   /**
@@ -1332,7 +1332,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       $path = strip_tags(decode_entities(strtr($path, $tokens)));
 
       if (!empty($alter['path_case']) && $alter['path_case'] != 'none') {
-        $path = $this->case_transform($path, $this->options['alter']['path_case']);
+        $path = $this->caseTransform($path, $this->options['alter']['path_case']);
       }
 
       if (!empty($alter['replace_spaces'])) {
@@ -1625,8 +1625,8 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
     return $themes;
   }
 
-  function ui_name($short = FALSE) {
-    return $this->get_field(parent::ui_name($short));
+  public function uiName($short = FALSE) {
+    return $this->getField(parent::uiName($short));
   }
 
 }

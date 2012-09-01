@@ -59,7 +59,7 @@ abstract class CachePluginBase extends PluginBase {
    * @param $display
    *   The display handler.
    */
-  function init(&$view, &$display) {
+  public function init(&$view, &$display) {
     $this->view = &$view;
     $this->display = &$display;
 

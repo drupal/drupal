@@ -20,11 +20,11 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Broken extends AreaPluginBase {
 
-  function ui_name($short = FALSE) {
+  public function uiName($short = FALSE) {
     return t('Broken/missing handler');
   }
 
-  function ensure_my_table() { /* No table to ensure! */ }
+  public function ensureMyTable() { /* No table to ensure! */ }
   public function query($group_by = FALSE) { /* No query to run */ }
   function render($empty = FALSE) { return ''; }
   public function buildOptionsForm(&$form, &$form_state) {
@@ -36,7 +36,7 @@ class Broken extends AreaPluginBase {
   /**
    * Determine if the handler is considered 'broken'
    */
-  function broken() {
+  public function broken() {
     return TRUE;
   }
 

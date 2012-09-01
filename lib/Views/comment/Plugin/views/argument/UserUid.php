@@ -55,7 +55,7 @@ class UserUid extends ArgumentPluginBase {
   }
 
   public function query($group_by = FALSE) {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
 
     $subselect = db_select('comment', 'c');
     $subselect->addField('c', 'cid');

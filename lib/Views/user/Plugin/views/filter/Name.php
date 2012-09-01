@@ -62,8 +62,8 @@ class Name extends InOperator {
     }
   }
 
-  function accept_exposed_input($input) {
-    $rc = parent::accept_exposed_input($input);
+  public function acceptExposedInput($input) {
+    $rc = parent::acceptExposedInput($input);
 
     if ($rc) {
       // If we have previously validated input, override.
@@ -75,7 +75,7 @@ class Name extends InOperator {
     return $rc;
   }
 
-  function exposed_validate(&$form, &$form_state) {
+  public function validateExposed(&$form, &$form_state) {
     if (empty($this->options['exposed'])) {
       return;
     }
@@ -151,7 +151,7 @@ class Name extends InOperator {
   // Override to do nothing.
   function get_value_options() { }
 
-  function admin_summary() {
+  public function adminSummary() {
     // set up $this->value_options for the parent summary
     $this->value_options = array();
 
@@ -167,7 +167,7 @@ class Name extends InOperator {
       }
     }
 
-    return parent::admin_summary();
+    return parent::adminSummary();
   }
 
 }

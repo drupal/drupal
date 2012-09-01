@@ -46,7 +46,7 @@ class Php extends ArgumentDefaultPluginBase {
    * Only let users with PHP block visibility permissions set/modify this
    * default plugin.
    */
-  function access() {
+  public function access() {
     return user_access('use PHP for settings');
   }
 

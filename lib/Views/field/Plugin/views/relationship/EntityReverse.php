@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class EntityReverse extends RelationshipPluginBase  {
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
 
     $this->field_info = field_info_field($this->definition['field_name']);
@@ -32,7 +32,7 @@ class EntityReverse extends RelationshipPluginBase  {
    * Called to implement a relationship in a query.
    */
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     // First, relate our base table to the current base table to the
     // field, using the base table's id field to the field's column.
     $views_data = views_fetch_data($this->table);

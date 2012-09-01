@@ -46,7 +46,7 @@ class Formula extends ArgumentPluginBase {
    * Build the summary query based on a formula
    */
   function summary_query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     // Now that our table is secure, get our formula.
     $formula = $this->get_formula();
 
@@ -61,7 +61,7 @@ class Formula extends ArgumentPluginBase {
    * Build the query based upon the formula
    */
   public function query($group_by = FALSE) {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     // Now that our table is secure, get our formula.
     $placeholder = $this->placeholder();
     $formula = $this->get_formula() .' = ' . $placeholder;

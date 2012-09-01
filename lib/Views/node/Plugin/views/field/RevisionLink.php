@@ -27,7 +27,7 @@ class RevisionLink extends Link {
     $this->additional_fields['node_vid'] = array('table' => 'node_revision', 'field' => 'vid');
   }
 
-  function access() {
+  public function access() {
     return user_access('view revisions') || user_access('administer nodes');
   }
 

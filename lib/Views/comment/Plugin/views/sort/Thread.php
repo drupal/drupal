@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
 class Thread extends SortPluginBase {
 
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
 
     //Read comment_render() in comment.module for an explanation of the
     //thinking behind this sort.

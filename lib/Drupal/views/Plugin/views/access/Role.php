@@ -28,7 +28,7 @@ class Role extends AccessPluginBase {
    */
   protected $usesOptions = TRUE;
 
-  function access($account) {
+  public function access($account) {
     return views_check_roles(array_filter($this->options['role']), $account);
   }
 

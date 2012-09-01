@@ -25,7 +25,7 @@ class Extension extends FieldPluginBase {
   function render($values) {
     $value = $this->get_value($values);
     if (preg_match('/\.([^\.]+)$/', $value, $match)) {
-      return $this->sanitize_value($match[1]);
+      return $this->sanitizeValue($match[1]);
     }
   }
 

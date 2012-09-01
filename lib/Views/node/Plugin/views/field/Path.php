@@ -46,7 +46,7 @@ class Path extends FieldPluginBase {
   }
 
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $this->add_additional_fields();
   }
 

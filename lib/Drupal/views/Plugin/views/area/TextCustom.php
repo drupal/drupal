@@ -55,7 +55,7 @@ class TextCustom extends AreaPluginBase {
       if ($this->options['tokenize']) {
         $value = $this->view->style_plugin->tokenize_value($value, 0);
       }
-      return $this->sanitize_value($value, 'xss_admin');
+      return $this->sanitizeValue($value, 'xss_admin');
     }
   }
 

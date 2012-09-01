@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class RevisionLinkRevert extends RevisionLink {
 
-  function access() {
+  public function access() {
     return user_access('revert revisions') || user_access('administer nodes');
   }
 

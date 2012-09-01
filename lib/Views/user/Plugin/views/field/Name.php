@@ -25,7 +25,7 @@ class Name extends User {
   /**
    * Add uid in the query so we can test for anonymous if needed.
    */
-  function init(&$view, &$data) {
+  public function init(&$view, &$data) {
     parent::init($view, $data);
     if (!empty($this->options['overwrite_anonymous']) || !empty($this->options['format_username'])) {
       $this->additional_fields['uid'] = 'uid';

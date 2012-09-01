@@ -24,7 +24,7 @@ use Drupal\Core\Annotation\Plugin;
 class UserUid extends FilterPluginBase {
 
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
 
     $subselect = db_select('comment', 'c');
     $subselect->addField('c', 'cid');

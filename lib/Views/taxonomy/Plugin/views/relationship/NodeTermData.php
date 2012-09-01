@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NodeTermData extends RelationshipPluginBase  {
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
 
     // Convert legacy vids option to machine name vocabularies.
@@ -63,7 +63,7 @@ class NodeTermData extends RelationshipPluginBase  {
    * Called to implement a relationship in a query.
    */
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
 
     $def = $this->definition;
     $def['table'] = 'taxonomy_term_data';

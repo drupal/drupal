@@ -25,7 +25,7 @@ class TaxonomyIndexTid extends ManyToOne {
   // Stores the exposed input for this filter.
   var $validated_exposed_input = NULL;
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($this->definition['vocabulary'])) {
       $this->options['vocabulary'] = $this->definition['vocabulary'];
@@ -41,7 +41,7 @@ class TaxonomyIndexTid extends ManyToOne {
     }
   }
 
-  function has_extra_options() { return TRUE; }
+  public function hasExtraOptions() { return TRUE; }
 
   function get_value_options() { /* don't overwrite the value options */ }
 
@@ -57,7 +57,7 @@ class TaxonomyIndexTid extends ManyToOne {
     return $options;
   }
 
-  function extra_options_form(&$form, &$form_state) {
+  public function buildExtraOptionsForm(&$form, &$form_state) {
     $vocabularies = taxonomy_vocabulary_get_names();
     $options = array();
     foreach ($vocabularies as $voc) {
@@ -233,7 +233,7 @@ class TaxonomyIndexTid extends ManyToOne {
     }
   }
 
-  function accept_exposed_input($input) {
+  public function acceptExposedInput($input) {
     if (empty($this->options['exposed'])) {
       return TRUE;
     }
@@ -249,7 +249,7 @@ class TaxonomyIndexTid extends ManyToOne {
       return FALSE;
     }
 
-    $rc = parent::accept_exposed_input($input);
+    $rc = parent::acceptExposedInput($input);
     if ($rc) {
       // If we have previously validated input, override.
       if (isset($this->validated_exposed_input)) {
@@ -260,7 +260,7 @@ class TaxonomyIndexTid extends ManyToOne {
     return $rc;
   }
 
-  function exposed_validate(&$form, &$form_state) {
+  public function validateExposed(&$form, &$form_state) {
     if (empty($this->options['exposed'])) {
       return;
     }
@@ -343,8 +343,8 @@ class TaxonomyIndexTid extends ManyToOne {
     // prevent array_filter from messing up our arrays in parent submit.
   }
 
-  function expose_form(&$form, &$form_state) {
-    parent::expose_form($form, $form_state);
+  public function buildExposeForm(&$form, &$form_state) {
+    parent::buildExposeForm($form, $form_state);
     if ($this->options['type'] != 'select') {
       unset($form['expose']['reduce']);
     }
@@ -355,7 +355,7 @@ class TaxonomyIndexTid extends ManyToOne {
     );
   }
 
-  function admin_summary() {
+  public function adminSummary() {
     // set up $this->value_options for the parent summary
     $this->value_options = array();
 
@@ -369,7 +369,7 @@ class TaxonomyIndexTid extends ManyToOne {
         $this->value_options[$term->tid] = $term->name;
       }
     }
-    return parent::admin_summary();
+    return parent::adminSummary();
   }
 
 }

@@ -485,7 +485,7 @@ function views_ui_view_preview_section_handler_links($view, $type, $title = FALS
   }
 
   foreach ($handlers as $id => $handler) {
-    $field_name = $handler->ui_name(TRUE);
+    $field_name = $handler->uiName(TRUE);
     $links[$type . '-edit-' . $id] = array(
       'title' => t('Edit @section', array('@section' => $field_name)),
       'href' => "admin/structure/views/nojs/config-item/$view->name/$display->id/$type/$id",

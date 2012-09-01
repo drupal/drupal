@@ -33,7 +33,7 @@ abstract class LocalizationPluginBase extends PluginBase {
    * @param $view
    *   The view object.
    */
-  function init(&$view) {
+  public function init(&$view) {
     $this->view = &$view;
   }
 

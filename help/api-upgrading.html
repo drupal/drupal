@@ -107,7 +107,7 @@ Example change for views_plugin_argument_validate_user:
        ),
 </pre>
 
-<h3>The introduction of get_value() and sanitize_value()</h3>
+<h3>The introduction of get_value() and sanitizeValue()</h3>
 The views_handler class got two new functions:
 <pre>
 /**
@@ -133,7 +133,7 @@ function get_value($values, $field = NULL) {
  * @param $type
  *   The type of sanitization needed. If not provided, check_plain() is used.
  */
-function sanitize_value($value, $type = NULL) {
+public function sanitizeValue($value, $type = NULL) {
   switch ($type) {
     case 'xss':
       $value = filter_xss($value);
@@ -158,7 +158,7 @@ all of the logic there (as well as having to constantly keep up with upstream Vi
 the backend can just override get_values(), which is significantly less code.
 
 Of course, different ways of fetching and displaying data might require different
-ways of sanitizing it, hence the usage of the sanitize_value() function.
+ways of sanitizing it, hence the usage of the sanitizeValue() function.
 
 Examples of converting render() field handler implementations:
 <pre>
@@ -175,12 +175,12 @@ $format = $this->get_values($values, 'format');
 // Instead of this:
 return check_plain($value);
 // We write:
-return $this->sanitize_value($value);
+return $this->sanitizeValue($value);
 
-// Since sanitize_value() supports different sanitization functions, this:
+// Since sanitizeValue() supports different sanitization functions, this:
 return filter_xss($value);
 // Can become:
-return $this->sanitize_value($value, 'xss');
+return $this->sanitizeValue($value, 'xss');
 </pre>
 
 

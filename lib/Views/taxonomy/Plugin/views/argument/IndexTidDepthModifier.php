@@ -29,7 +29,7 @@ class IndexTidDepthModifier extends ArgumentPluginBase {
 
   public function query($group_by = FALSE) { }
 
-  function pre_query() {
+  public function preQuery() {
     // We don't know our argument yet, but it's based upon our position:
     $argument = isset($this->view->args[$this->position]) ? $this->view->args[$this->position] : NULL;
     if (!is_numeric($argument)) {

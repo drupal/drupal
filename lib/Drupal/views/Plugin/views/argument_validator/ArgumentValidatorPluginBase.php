@@ -26,7 +26,7 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
    * Initialize this plugin with the view and the argument
    * it is linked to.
    */
-  function init(&$view, &$argument, $options) {
+  public function init(&$view, &$argument, $options) {
     $this->view = &$view;
     $this->argument = &$argument;
 
@@ -57,7 +57,7 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
   /**
    * Determine if the administrator has the privileges to use this plugin
    */
-  function access() { return TRUE; }
+  public function access() { return TRUE; }
 
   /**
    * If we don't have access to the form but are showing it anyway, ensure that

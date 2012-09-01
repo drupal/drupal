@@ -57,7 +57,7 @@ class Search extends ArgumentPluginBase {
       }
     }
     else {
-      $search_index = $this->ensure_my_table();
+      $search_index = $this->ensureMyTable();
 
       $search_condition = db_and();
 

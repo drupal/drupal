@@ -24,7 +24,7 @@ use Drupal\Core\Annotation\Translation;
  */
 class None extends PagerPluginBase {
 
-  function init(&$view, &$display, $options = array()) {
+  public function init(&$view, &$display, $options = array()) {
     parent::init($view, $display, $options);
 
     // If the pager is set to none, then it should show all items.
@@ -74,7 +74,7 @@ class None extends PagerPluginBase {
     // If we are displaying all items, never count. But we can update the count in post_execute.
   }
 
-  function post_execute(&$result) {
+  public function postExecute(&$result) {
     $this->total_items = count($result);
   }
 

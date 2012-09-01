@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class GroupByNumeric extends SortPluginBase {
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
 
     // Initialize the original handler.
@@ -30,7 +30,7 @@ class GroupByNumeric extends SortPluginBase {
    * Called to add the field to a query.
    */
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
 
     $params = array(
       'function' => $this->options['group_type'],
@@ -39,8 +39,8 @@ class GroupByNumeric extends SortPluginBase {
     $this->query->add_orderby($this->table_alias, $this->real_field, $this->options['order'], NULL, $params);
   }
 
-  function ui_name($short = FALSE) {
-    return $this->get_field(parent::ui_name($short));
+  public function uiName($short = FALSE) {
+    return $this->getField(parent::uiName($short));
   }
 
 }

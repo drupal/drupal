@@ -25,7 +25,7 @@ class AccesslogPath extends FieldPluginBase {
   /**
    * Override init function to provide generic option to link to node.
    */
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($this->options['display_as_link'])) {
       $this->additional_fields['path'] = 'path';
@@ -54,7 +54,7 @@ class AccesslogPath extends FieldPluginBase {
 
   function render($values) {
     $value = $this->get_value($values);
-    return $this->render_link($this->sanitize_value($value), $values);
+    return $this->render_link($this->sanitizeValue($value), $values);
   }
 
   function render_link($data, $values) {

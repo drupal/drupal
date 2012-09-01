@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NodeTnid extends FilterPluginBase {
 
-  function admin_summary() { }
+  public function adminSummary() { }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -47,10 +47,10 @@ class NodeTnid extends FilterPluginBase {
     );
   }
 
-  function can_expose() { return FALSE; }
+  public function canExpose() { return FALSE; }
 
   public function query() {
-    $table = $this->ensure_my_table();
+    $table = $this->ensureMyTable();
     // Select for source translations (tnid = nid). Conditionally, also accept either untranslated nodes (tnid = 0).
     $this->query->add_where_expression($this->options['group'], "$table.tnid = $table.nid" . ($this->operator ? " OR $table.tnid = 0" : ''));
   }

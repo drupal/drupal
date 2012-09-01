@@ -22,14 +22,14 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NodeTnidChild extends FilterPluginBase {
 
-  function admin_summary() { }
+  public function adminSummary() { }
 
   function operator_form(&$form, &$form_state) { }
 
-  function can_expose() { return FALSE; }
+  public function canExpose() { return FALSE; }
 
   public function query() {
-    $table = $this->ensure_my_table();
+    $table = $this->ensureMyTable();
     $this->query->add_where_expression($this->options['group'], "$table.tnid <> $table.nid AND $table.tnid > 0");
   }
 

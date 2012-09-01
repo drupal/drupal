@@ -38,12 +38,12 @@ class Language extends User {
       $lang = $lang[$data];
     }
 
-    return $this->sanitize_value($lang->name);
+    return $this->sanitizeValue($lang->name);
   }
 
   function render($values) {
     $value = $this->get_value($values);
-    return $this->render_link($this->sanitize_value($value), $values);
+    return $this->render_link($this->sanitizeValue($value), $values);
   }
 
 }

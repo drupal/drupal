@@ -2276,12 +2276,12 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
       continue;
     }
 
-    $field_name = check_plain($handler->ui_name(TRUE));
+    $field_name = check_plain($handler->uiName(TRUE));
     if (!empty($field['relationship']) && !empty($relationships[$field['relationship']])) {
       $field_name = '(' . $relationships[$field['relationship']] . ') ' . $field_name;
     }
 
-    $description = filter_xss_admin($handler->admin_summary());
+    $description = filter_xss_admin($handler->adminSummary());
     $link_text = $field_name . (empty($description) ? '' : " ($description)");
     $link_attributes = array('class' => array('views-ajax-link'));
     if (!empty($field['exclude'])) {
@@ -2294,11 +2294,11 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
       $build['fields'][$id]['#changed'] = TRUE;
     }
 
-    if ($display->handler->useGroupBy() && $handler->use_group_by()) {
+    if ($display->handler->useGroupBy() && $handler->usesGroupBy()) {
       $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/$view->name/$display->id/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => t('Aggregation settings')), 'html' => TRUE));
     }
 
-    if ($handler->has_extra_options()) {
+    if ($handler->hasExtraOptions()) {
       $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Settings') . '</span>', "admin/structure/views/nojs/config-item-extra/$view->name/$display->id/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => t('Settings')), 'html' => TRUE));
     }
 
@@ -3371,7 +3371,7 @@ function views_ui_rearrange_form($form, &$form_state) {
     );
     $handler = $display->handler->getHandler($type, $id);
     if ($handler) {
-      $name = $handler->ui_name() . ' ' . $handler->admin_summary();
+      $name = $handler->uiName() . ' ' . $handler->adminSummary();
       if (!empty($field['relationship']) && !empty($relationships[$field['relationship']])) {
         $name = '(' . $relationships[$field['relationship']] . ') ' . $name;
       }
@@ -3726,7 +3726,7 @@ function views_ui_rearrange_filter_form($form, &$form_state) {
     );
 
     if ($handler) {
-      $name = $handler->ui_name() . ' ' . $handler->admin_summary();
+      $name = $handler->uiName() . ' ' . $handler->adminSummary();
       if (!empty($field['relationship']) && !empty($relationships[$field['relationship']])) {
         $name = '(' . $relationships[$field['relationship']] . ') ' . $name;
       }
@@ -4136,12 +4136,12 @@ function views_ui_add_item_form_submit($form, &$form_state) {
         $key = $types[$type]['type'];
       }
       $handler = views_get_handler($table, $field, $key);
-      if ($form_state['view']->display_handler->useGroupBy() && $handler->use_group_by()) {
+      if ($form_state['view']->display_handler->useGroupBy() && $handler->usesGroupBy()) {
         views_ui_add_form_to_stack('config-item-group', $form_state['view'], $form_state['display_id'], array($type, $id));
       }
 
       // check to see if this type has settings, if so add the settings form first
-      if ($handler && $handler->has_extra_options()) {
+      if ($handler && $handler->hasExtraOptions()) {
         views_ui_add_form_to_stack('config-item-extra', $form_state['view'], $form_state['display_id'], array($type, $id));
       }
       // Then add the form to the stack
@@ -4293,7 +4293,7 @@ function views_ui_config_item_form($form, &$form_state) {
         );
       }
 
-      $form['#title'] = t('Configure @type: @item', array('@type' => $types[$type]['lstitle'], '@item' => $handler->ui_name()));
+      $form['#title'] = t('Configure @type: @item', array('@type' => $types[$type]['lstitle'], '@item' => $handler->uiName()));
 
       if (!empty($handler->definition['help'])) {
         $form['options']['form_description'] = array(
@@ -4476,9 +4476,9 @@ function views_ui_config_item_group_form($type, &$form_state) {
       $handler->init($view, $item);
       $types = View::viewsObjectTypes();
 
-      $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->ui_name()));
+      $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->uiName()));
 
-      $handler->groupby_form($form['options'], $form_state);
+      $handler->buildGroupByForm($form['options'], $form_state);
       $form_state['handler'] = &$handler;
     }
 
@@ -4498,7 +4498,7 @@ function views_ui_config_item_group_form_submit($form, &$form_state) {
   $handler = views_get_handler($item['table'], $item['field'], $type);
   $handler->init($form_state['view'], $item);
 
-  $handler->groupby_form_submit($form, $form_state);
+  $handler->submitGroupByForm($form, $form_state);
 
   // Store the item back on the view
   $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
@@ -4534,7 +4534,7 @@ function views_ui_config_item_form_expose($form, &$form_state) {
 
   // If necessary, set new defaults:
   if ($item['exposed']) {
-    $form_state['handler']->expose_options();
+    $form_state['handler']->defaultExposeOptions();
   }
 
   $form_state['view']->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
@@ -4577,12 +4577,12 @@ function views_ui_config_item_extra_form($form, &$form_state) {
       $handler->init($view, $item);
       $types = View::viewsObjectTypes();
 
-      $form['#title'] = t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->ui_name()));
+      $form['#title'] = t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->uiName()));
 
       $form['#section'] = $display_id . '-' . $type . '-' . $id;
 
       // Get form from the handler.
-      $handler->extra_options_form($form['options'], $form_state);
+      $handler->buildExtraOptionsForm($form['options'], $form_state);
       $form_state['handler'] = &$handler;
     }
 
@@ -4595,7 +4595,7 @@ function views_ui_config_item_extra_form($form, &$form_state) {
  * Validation handler for configing new item(s) to a view.
  */
 function views_ui_config_item_extra_form_validate($form, &$form_state) {
-  $form_state['handler']->extra_options_validate($form['options'], $form_state);
+  $form_state['handler']->validateExtraOptionsForm($form['options'], $form_state);
 }
 
 /**
@@ -4603,7 +4603,7 @@ function views_ui_config_item_extra_form_validate($form, &$form_state) {
  */
 function views_ui_config_item_extra_form_submit($form, &$form_state) {
   // Run it through the handler's submit function.
-  $form_state['handler']->extra_options_submit($form['options'], $form_state);
+  $form_state['handler']->submitExtraOptionsForm($form['options'], $form_state);
   $item = $form_state['handler']->options;
 
   // Store the data we're given.
@@ -4648,7 +4648,7 @@ function views_ui_config_style_form($form, &$form_state) {
       $handler->init($view, $item);
       $types = View::viewsObjectTypes();
 
-      $form['#title'] = t('Configure summary style for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->ui_name()));
+      $form['#title'] = t('Configure summary style for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->uiName()));
 
       $form['#section'] = $display_id . '-' . $type . '-style-options';
 

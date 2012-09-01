@@ -24,7 +24,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Node extends FieldPluginBase {
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     // Don't add the additional fields to groupby
     if (!empty($this->options['link_to_node'])) {
@@ -85,7 +85,7 @@ class Node extends FieldPluginBase {
 
   function render($values) {
     $value = $this->get_value($values);
-    return $this->render_link($this->sanitize_value($value), $values);
+    return $this->render_link($this->sanitizeValue($value), $values);
   }
 
 }

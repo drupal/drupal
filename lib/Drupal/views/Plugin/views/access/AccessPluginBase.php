@@ -30,7 +30,7 @@ abstract class AccessPluginBase extends PluginBase {
    * @param $display
    *   The display handler.
    */
-  function init(&$view, &$display) {
+  public function init(&$view, &$display) {
     $this->view = &$view;
     $this->display = &$display;
 
@@ -73,7 +73,7 @@ abstract class AccessPluginBase extends PluginBase {
   /**
    * Determine if the current user has access or not.
    */
-  function access($account) {
+  public function access($account) {
     // default to no access control.
     return TRUE;
   }

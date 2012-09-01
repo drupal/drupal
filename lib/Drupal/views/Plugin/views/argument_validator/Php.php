@@ -45,7 +45,7 @@ class Php extends ArgumentValidatorPluginBase {
    * Only let users with PHP block visibility permissions set/modify this
    * validate plugin.
    */
-  function access() {
+  public function access() {
     return user_access('use PHP for settings');
   }
 

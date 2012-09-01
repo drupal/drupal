@@ -39,7 +39,7 @@ abstract class PagerPluginBase extends PluginBase {
    * @param $display
    *   The display handler.
    */
-  function init(&$view, &$display, $options = array()) {
+  public function init(&$view, &$display, $options = array()) {
     $this->view = &$view;
     $this->display = &$display;
 
@@ -194,7 +194,7 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Perform any needed actions just after the query executing.
    */
-  function post_execute(&$result) { }
+  public function postExecute(&$result) { }
 
   /**
    * Perform any needed actions just before rendering.

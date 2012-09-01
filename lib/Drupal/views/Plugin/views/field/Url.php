@@ -43,10 +43,10 @@ class Url extends FieldPluginBase {
   function render($values) {
     $value = $this->get_value($values);
     if (!empty($this->options['display_as_link'])) {
-      return l($this->sanitize_value($value), $value, array('html' => TRUE));
+      return l($this->sanitizeValue($value), $value, array('html' => TRUE));
     }
     else {
-      return $this->sanitize_value($value, 'url');
+      return $this->sanitizeValue($value, 'url');
     }
   }
 

@@ -32,7 +32,7 @@ class ContactLink extends Link {
   // An example of field level access control.
   // We must override the access method in the parent class, as that requires
   // the 'access user profiles' permission, which the contact form does not.
-  function access() {
+  public function access() {
     return user_access('access user contact forms');
   }
 

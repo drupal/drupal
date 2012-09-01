@@ -25,7 +25,7 @@ class Username extends FieldPluginBase {
   /**
    * Override init function to add uid and homepage fields.
    */
-  function init(&$view, &$data) {
+  public function init(&$view, &$data) {
     parent::init($view, $data);
     $this->additional_fields['uid'] = 'uid';
     $this->additional_fields['homepage'] = 'homepage';
@@ -64,7 +64,7 @@ class Username extends FieldPluginBase {
 
   function render($values) {
     $value = $this->get_value($values);
-    return $this->render_link($this->sanitize_value($value), $values);
+    return $this->render_link($this->sanitizeValue($value), $values);
   }
 
 }

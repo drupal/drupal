@@ -25,7 +25,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class HistoryUserTimestamp extends Node {
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     global $user;
     if ($user->uid) {

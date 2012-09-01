@@ -46,7 +46,7 @@ class ManyToOneHelper {
    * it that option. If it wants us to do this, it must set $helper->formula = TRUE
    * and implement handler->get_formula();
    */
-  function get_field() {
+  public function getField() {
     if (!empty($this->formula)) {
       return $this->handler->get_formula();
     }
@@ -68,7 +68,7 @@ class ManyToOneHelper {
     $field = $this->handler->relationship . '_' . $this->handler->table . '.' . $this->handler->field;
 
     if (empty($join)) {
-      $join = $this->get_join();
+      $join = $this->getJoin();
     }
 
     // See if there's a chain between us and the base relationship. If so, we need
@@ -109,8 +109,8 @@ class ManyToOneHelper {
     return $alias;
   }
 
-  function get_join() {
-    return $this->handler->get_join();
+  public function getJoin() {
+    return $this->handler->getJoin();
   }
 
   /**
@@ -119,7 +119,7 @@ class ManyToOneHelper {
    */
   function summary_join() {
     $field = $this->handler->relationship . '_' . $this->handler->table . '.' . $this->handler->field;
-    $join = $this->get_join();
+    $join = $this->getJoin();
 
     // shortcuts
     $options = $this->handler->options;
@@ -151,10 +151,10 @@ class ManyToOneHelper {
   }
 
   /**
-   * Override ensure_my_table so we can control how this joins in.
+   * Override ensureMyTable so we can control how this joins in.
    * The operator actually has influence over joining.
    */
-  function ensure_my_table() {
+  public function ensureMyTable() {
     if (!isset($this->handler->table_alias)) {
       // Case 1: Operator is an 'or' and we're not reducing duplicates.
       // We hence get the absolute simplest:
@@ -163,7 +163,7 @@ class ManyToOneHelper {
         if (empty($this->handler->options['add_table']) && empty($this->handler->view->many_to_one_tables[$field])) {
           // query optimization, INNER joins are slightly faster, so use them
           // when we know we can.
-          $join = $this->get_join();
+          $join = $this->getJoin();
           if (isset($join)) {
             $join->type = 'INNER';
           }
@@ -171,7 +171,7 @@ class ManyToOneHelper {
           $this->handler->view->many_to_one_tables[$field] = $this->handler->value;
         }
         else {
-          $join = $this->get_join();
+          $join = $this->getJoin();
           $join->type = 'LEFT';
           if (!empty($this->handler->view->many_to_one_tables[$field])) {
             foreach ($this->handler->view->many_to_one_tables[$field] as $value) {
@@ -198,7 +198,7 @@ class ManyToOneHelper {
         // Clone the join for each table:
         $this->handler->table_aliases = array();
         foreach ($this->handler->value as $value) {
-          $join = $this->get_join();
+          $join = $this->getJoin();
           if ($this->handler->operator == 'and') {
             $join->type = 'INNER';
           }
@@ -230,7 +230,7 @@ class ManyToOneHelper {
       // We just do one join. We'll add a where clause during
       // the query phase to ensure that $table.$field IS NULL.
       else {
-        $join = $this->get_join();
+        $join = $this->getJoin();
         $join->type = 'LEFT';
         $join->extra = array();
         $join->extra_type = 'OR';
@@ -251,7 +251,7 @@ class ManyToOneHelper {
   /**
    * Provides a unique placeholders for handlers.
    */
-  function placeholder() {
+  protected function placeholder() {
     return $this->handler->query->placeholder($this->handler->options['table'] . '_' . $this->handler->options['field']);
   }
 
@@ -259,10 +259,10 @@ class ManyToOneHelper {
     if (empty($this->handler->value)) {
       return;
     }
-    $this->handler->ensure_my_table();
+    $this->handler->ensureMyTable();
 
     // Shorten some variables:
-    $field = $this->get_field();
+    $field = $this->getField();
     $options = $this->handler->options;
     $operator = $this->handler->operator;
     $formula = !empty($this->formula);

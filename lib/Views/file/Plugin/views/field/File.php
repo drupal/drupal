@@ -25,7 +25,7 @@ class File extends FieldPluginBase {
   /**
    * Constructor to provide additional field to add.
    */
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($options['link_to_file'])) {
       $this->additional_fields['uri'] = 'uri';
@@ -67,7 +67,7 @@ class File extends FieldPluginBase {
 
   function render($values) {
     $value = $this->get_value($values);
-    return $this->render_link($this->sanitize_value($value), $values);
+    return $this->render_link($this->sanitizeValue($value), $values);
   }
 
 }

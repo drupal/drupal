@@ -48,9 +48,9 @@ class Type extends Node {
     */
   function render_name($data, $values) {
     if ($this->options['machine_name'] != 1 && $data !== NULL && $data !== '') {
-      return t($this->sanitize_value(node_type_get_name($data)));
+      return t($this->sanitizeValue(node_type_get_name($data)));
     }
-    return $this->sanitize_value($data);
+    return $this->sanitizeValue($data);
   }
 
   function render($values) {

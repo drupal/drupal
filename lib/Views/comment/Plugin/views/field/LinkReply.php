@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class LinkReply extends Link {
 
-  function access() {
+  public function access() {
     //check for permission to reply to comments
     return user_access('post comments');
   }

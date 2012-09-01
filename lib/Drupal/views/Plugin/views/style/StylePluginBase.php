@@ -89,7 +89,7 @@ abstract class StylePluginBase extends PluginBase {
    *   The style options might come externally as the style can be sourced
    *   from at least two locations. If it's not included, look on the display.
    */
-  function init(&$view, &$display, $options = NULL) {
+  public function init(&$view, &$display, $options = NULL) {
     $this->view = &$view;
     $this->display = &$display;
 

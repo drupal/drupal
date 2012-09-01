@@ -24,7 +24,7 @@ abstract class QueryPluginBase extends PluginBase implements QueryInterface {
   /**
    * Constructor; Create the basic query object and fill with default values.
    */
-  function init($base_table, $base_field, $options) {
+  public function init($base_table, $base_field, $options) {
     $this->base_table = $base_table;
     $this->base_field = $base_field;
     $this->unpackOptions($this->options, $options);

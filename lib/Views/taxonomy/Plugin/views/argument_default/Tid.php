@@ -22,7 +22,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  */
 class Tid extends ArgumentDefaultPluginBase {
 
-  function init(&$view, &$argument, $options) {
+  public function init(&$view, &$argument, $options) {
     parent::init($view, $argument, $options);
 
     // Convert legacy vids option to machine name vocabularies.

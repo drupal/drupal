@@ -21,8 +21,8 @@ use Drupal\Core\Annotation\Plugin;
 class GroupByNumeric extends Numeric {
 
   public function query() {
-    $this->ensure_my_table();
-    $field = $this->get_field();
+    $this->ensureMyTable();
+    $field = $this->getField();
 
     $info = $this->operators();
     if (!empty($info[$this->operator]['method'])) {
@@ -57,8 +57,8 @@ class GroupByNumeric extends Numeric {
     $this->query->add_having_expression($this->options['group'], "$field $operator");
   }
 
-  function ui_name($short = FALSE) {
-    return $this->get_field(parent::ui_name($short));
+  public function uiName($short = FALSE) {
+    return $this->getField(parent::uiName($short));
   }
 
   function can_group() { return FALSE; }

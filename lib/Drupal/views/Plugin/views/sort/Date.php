@@ -52,7 +52,7 @@ class Date extends SortPluginBase {
    * Called to add the sort to a query.
    */
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     switch ($this->options['granularity']) {
       case 'second':
       default:

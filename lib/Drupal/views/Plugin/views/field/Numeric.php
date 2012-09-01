@@ -151,9 +151,9 @@ class Numeric extends FieldPluginBase {
       $value = format_plural($value, $this->options['format_plural_singular'], $this->options['format_plural_plural']);
     }
 
-    return $this->sanitize_value($this->options['prefix'], 'xss')
-      . $this->sanitize_value($value)
-      . $this->sanitize_value($this->options['suffix'], 'xss');
+    return $this->sanitizeValue($this->options['prefix'], 'xss')
+      . $this->sanitizeValue($value)
+      . $this->sanitizeValue($this->options['suffix'], 'xss');
   }
 
 }

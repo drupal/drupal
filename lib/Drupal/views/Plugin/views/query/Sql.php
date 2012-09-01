@@ -113,7 +113,7 @@ class Sql extends QueryPluginBase {
   /**
    * Constructor; Create the basic query object and fill with default values.
    */
-  function init($base_table = 'node', $base_field = 'nid', $options) {
+  public function init($base_table = 'node', $base_field = 'nid', $options) {
     parent::init($base_table, $base_field, $options);
     $this->base_table = $base_table;  // Predefine these above, for clarity.
     $this->base_field = $base_field;
@@ -1502,7 +1502,7 @@ class Sql extends QueryPluginBase {
           $view->result[] = $item;
         }
 
-        $view->pager->post_execute($view->result);
+        $view->pager->postExecute($view->result);
         if ($view->pager->use_count_query() || !empty($view->get_total_rows)) {
           $view->total_rows = $view->pager->get_total_items();
         }

@@ -157,8 +157,8 @@ class String extends FilterPluginBase {
     return $options;
   }
 
-  function admin_summary() {
-    if ($this->is_a_group()) {
+  public function adminSummary() {
+    if ($this->isAGroup()) {
       return t('grouped');
     }
     if (!empty($this->options['exposed'])) {
@@ -253,7 +253,7 @@ class String extends FilterPluginBase {
    * and $this->value respectively.
    */
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $field = "$this->table_alias.$this->real_field";
 
     $info = $this->operators();

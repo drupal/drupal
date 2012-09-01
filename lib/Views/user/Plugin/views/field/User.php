@@ -25,7 +25,7 @@ class User extends FieldPluginBase {
   /**
    * Override init function to provide generic option to link to user.
    */
-  function init(&$view, &$data) {
+  public function init(&$view, &$data) {
     parent::init($view, $data);
     if (!empty($this->options['link_to_user'])) {
       $this->additional_fields['uid'] = 'uid';
@@ -61,7 +61,7 @@ class User extends FieldPluginBase {
 
   function render($values) {
     $value = $this->get_value($values);
-    return $this->render_link($this->sanitize_value($value), $values);
+    return $this->render_link($this->sanitizeValue($value), $values);
   }
 
 }

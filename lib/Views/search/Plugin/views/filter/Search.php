@@ -79,7 +79,7 @@ class Search extends FilterPluginBase {
   /**
    * Validate the options form.
    */
-  function exposed_validate(&$form, &$form_state) {
+  public function validateExposed(&$form, &$form_state) {
     if (!isset($this->options['expose']['identifier'])) {
       return;
     }
@@ -137,7 +137,7 @@ class Search extends FilterPluginBase {
       }
     }
     else {
-      $search_index = $this->ensure_my_table();
+      $search_index = $this->ensureMyTable();
 
       $search_condition = db_and();
 

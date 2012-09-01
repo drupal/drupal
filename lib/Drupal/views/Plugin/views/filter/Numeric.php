@@ -244,7 +244,7 @@ class Numeric extends FilterPluginBase {
   }
 
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $field = "$this->table_alias.$this->real_field";
 
     $info = $this->operators();
@@ -281,8 +281,8 @@ class Numeric extends FilterPluginBase {
     $this->query->add_where($this->options['group'], $field, $this->value, 'RLIKE');
   }
 
-  function admin_summary() {
-    if ($this->is_a_group()) {
+  public function adminSummary() {
+    if ($this->isAGroup()) {
       return t('grouped');
     }
     if (!empty($this->options['exposed'])) {
@@ -303,7 +303,7 @@ class Numeric extends FilterPluginBase {
   /**
    * Do some minor translation of the exposed input
    */
-  function accept_exposed_input($input) {
+  public function acceptExposedInput($input) {
     if (empty($this->options['exposed'])) {
       return TRUE;
     }
@@ -319,7 +319,7 @@ class Numeric extends FilterPluginBase {
       }
     }
 
-    $rc = parent::accept_exposed_input($input);
+    $rc = parent::acceptExposedInput($input);
 
     if (empty($this->options['expose']['required'])) {
       // We have to do some of our own checking for non-required filters.

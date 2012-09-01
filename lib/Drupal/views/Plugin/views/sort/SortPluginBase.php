@@ -26,13 +26,13 @@ abstract class SortPluginBase extends HandlerBase {
   /**
    * Determine if a sort can be exposed.
    */
-  function can_expose() { return TRUE; }
+  public function canExpose() { return TRUE; }
 
   /**
    * Called to add the sort to a query.
    */
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     // Add the field.
     $this->query->add_orderby($this->table_alias, $this->real_field, $this->options['order']);
   }
@@ -53,7 +53,7 @@ abstract class SortPluginBase extends HandlerBase {
   /**
    * Display whether or not the sort order is ascending or descending
    */
-  function admin_summary() {
+  public function adminSummary() {
     if (!empty($this->options['exposed'])) {
       return t('Exposed');
     }
@@ -75,21 +75,21 @@ abstract class SortPluginBase extends HandlerBase {
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
-    if ($this->can_expose()) {
-      $this->show_expose_button($form, $form_state);
+    if ($this->canExpose()) {
+      $this->showExposeButton($form, $form_state);
     }
     $form['op_val_start'] = array('#value' => '<div class="clearfix">');
     $this->show_sort_form($form, $form_state);
     $form['op_val_end'] = array('#value' => '</div>');
-    if ($this->can_expose()) {
-      $this->show_expose_form($form, $form_state);
+    if ($this->canExpose()) {
+      $this->showExposeForm($form, $form_state);
     }
   }
 
   /**
    * Shortcut to display the expose/hide button.
    */
-  function show_expose_button(&$form, &$form_state) {
+  public function showExposeButton(&$form, &$form_state) {
     $form['expose_button'] = array(
       '#prefix' => '<div class="views-expose clearfix">',
       '#suffix' => '</div>',
@@ -141,7 +141,7 @@ abstract class SortPluginBase extends HandlerBase {
   public function validateOptionsForm(&$form, &$form_state) {
     $this->sort_validate($form, $form_state);
     if (!empty($this->options['exposed'])) {
-      $this->expose_validate($form, $form_state);
+      $this->validateExposeForm($form, $form_state);
     }
 
   }
@@ -153,7 +153,7 @@ abstract class SortPluginBase extends HandlerBase {
     unset($form_state['values']['expose_button']); // don't store this.
     $this->sort_submit($form, $form_state);
     if (!empty($this->options['exposed'])) {
-      $this->expose_submit($form, $form_state);
+      $this->submitExposeForm($form, $form_state);
     }
   }
 
@@ -186,7 +186,7 @@ abstract class SortPluginBase extends HandlerBase {
     );
   }
 
-  function expose_form(&$form, &$form_state) {
+  public function buildExposeForm(&$form, &$form_state) {
     // #flatten will move everything from $form['expose'][$key] to $form[$key]
     // prior to rendering. That's why the pre_render for it needs to run first,
     // so that when the next pre_render (the one for fieldsets) runs, it gets
@@ -207,7 +207,7 @@ abstract class SortPluginBase extends HandlerBase {
   /**
    * Provide default options for exposed sorts.
    */
-  function expose_options() {
+  public function defaultExposeOptions() {
     $this->options['expose'] = array(
       'order' => $this->options['order'],
       'label' => $this->definition['title'],

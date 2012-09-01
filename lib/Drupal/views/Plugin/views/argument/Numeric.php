@@ -97,7 +97,7 @@ class Numeric extends ArgumentPluginBase {
   }
 
   public function query($group_by = FALSE) {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
 
     if (!empty($this->options['break_phrase'])) {
       views_break_phrase($this->argument, $this);

@@ -38,8 +38,8 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
     return $options;
   }
 
-  function extra_options_form(&$form, &$form_state) {
-    parent::extra_options_form($form, $form_state);
+  public function buildExtraOptionsForm(&$form, &$form_state) {
+    parent::buildExtraOptionsForm($form, $form_state);
 
     $form['depth'] = array(
       '#type' => 'weight',
@@ -65,7 +65,7 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
       $operator = 'IN';# " IN (" . implode(', ', array_fill(0, sizeof($this->value), '%d')) . ")";
     }
 
-    // The normal use of ensure_my_table() here breaks Views.
+    // The normal use of ensureMyTable() here breaks Views.
     // So instead we trick the filter into using the alias of the base table.
     // See http://drupal.org/node/271833
     // If a relationship is set, we must use the alias it provides.

@@ -113,7 +113,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *
    * @return TRUE/FALSE
    */
-  function needs_style_plugin() {
+  public function needsStylePlugin() {
     $info = $this->default_actions($this->options['default_action']);
     $validate_info = $this->default_actions($this->options['validate']['fail']);
     return !empty($info['style plugin']) || !empty($validate_info['style plugin']);
@@ -802,7 +802,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    *   The alias used to get the number of records (count) for this entry.
    */
   function summary_query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     // Add the field.
     $this->base_alias = $this->query->add_field($this->table_alias, $this->real_field);
 
@@ -907,7 +907,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * The argument sent may be found at $this->argument.
    */
   public function query($group_by = FALSE) {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $this->query->add_where(0, "$this->table_alias.$this->real_field", $this->argument);
   }
 

@@ -724,7 +724,7 @@ class View extends ViewStorage {
   }
 
   /**
-   * Run the pre_query() on all active handlers.
+   * Run the preQuery() on all active handlers.
    */
   protected function _preQuery() {
     foreach (View::viewsObjectTypes() as $key => $info) {
@@ -732,20 +732,20 @@ class View extends ViewStorage {
       $position = 0;
       foreach ($handlers as $id => $handler) {
         $handlers[$id]->position = $position;
-        $handlers[$id]->pre_query();
+        $handlers[$id]->preQuery();
         $position++;
       }
     }
   }
 
   /**
-   * Run the post_execute() on all active handlers.
+   * Run the postExecute() on all active handlers.
    */
   protected function _postExecute() {
     foreach (View::viewsObjectTypes() as $key => $info) {
       $handlers = &$this->$key;
       foreach ($handlers as $id => $handler) {
-        $handlers[$id]->post_execute($this->result);
+        $handlers[$id]->postExecute($this->result);
       }
     }
   }
@@ -804,7 +804,7 @@ class View extends ViewStorage {
         continue;
       }
 
-      $argument->set_relationship();
+      $argument->setRelationship();
 
       $arg = isset($this->args[$position]) ? $this->args[$position] : NULL;
       $argument->position = $position;
@@ -1081,27 +1081,27 @@ class View extends ViewStorage {
 
       if (!empty($handlers[$id]) && is_object($handlers[$id])) {
         $multiple_exposed_input = array(0 => NULL);
-        if ($handlers[$id]->multiple_exposed_input()) {
+        if ($handlers[$id]->multipleExposedInput()) {
           $multiple_exposed_input = $handlers[$id]->group_multiple_exposed_input($this->exposed_data);
         }
         foreach ($multiple_exposed_input as $group_id) {
           // Give this handler access to the exposed filter input.
           if (!empty($this->exposed_data)) {
             $converted = FALSE;
-            if ($handlers[$id]->is_a_group()) {
+            if ($handlers[$id]->isAGroup()) {
               $converted = $handlers[$id]->convert_exposed_input($this->exposed_data, $group_id);
               $handlers[$id]->store_group_input($this->exposed_data, $converted);
               if (!$converted) {
                 continue;
               }
             }
-            $rc = $handlers[$id]->accept_exposed_input($this->exposed_data);
-            $handlers[$id]->store_exposed_input($this->exposed_data, $rc);
+            $rc = $handlers[$id]->acceptExposedInput($this->exposed_data);
+            $handlers[$id]->storeExposedInput($this->exposed_data, $rc);
             if (!$rc) {
               continue;
             }
           }
-          $handlers[$id]->set_relationship();
+          $handlers[$id]->setRelationship();
           $handlers[$id]->query($this->display_handler->useGroupBy());
         }
       }

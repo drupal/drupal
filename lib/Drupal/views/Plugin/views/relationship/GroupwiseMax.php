@@ -343,7 +343,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     $table_data = views_fetch_data($this->definition['base']);
     $base_field = empty($this->definition['base field']) ? $table_data['table']['base']['field'] : $this->definition['base field'];
 
-    $this->ensure_my_table();
+    $this->ensureMyTable();
 
     $def = $this->definition;
     $def['table'] = $this->definition['base'];

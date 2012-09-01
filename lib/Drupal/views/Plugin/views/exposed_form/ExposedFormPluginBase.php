@@ -37,7 +37,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
    * @param $display
    *   The display handler.
    */
-  function init(&$view, &$display, $options = array()) {
+  public function init(&$view, &$display, $options = array()) {
     $this->view = &$view;
     $this->display = &$display;
 
@@ -182,14 +182,14 @@ abstract class ExposedFormPluginBase extends PluginBase {
       if (isset($view->sort[$sort_by])) {
         $view->query->orderby = array();
         foreach ($view->sort as $key => $sort) {
-          if (!$sort->is_exposed()) {
+          if (!$sort->isExposed()) {
             $sort->query();
           }
           elseif ($key == $sort_by) {
             if (isset($exposed_data['sort_order']) && in_array($exposed_data['sort_order'], array('ASC', 'DESC'))) {
               $sort->options['order'] = $exposed_data['sort_order'];
             }
-            $sort->set_relationship();
+            $sort->setRelationship();
             $sort->query();
           }
         }
@@ -203,7 +203,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
 
   function pre_execute() { }
 
-  function post_execute() { }
+  public function postExecute() { }
 
   function exposed_form_alter(&$form, &$form_state) {
     if (!empty($this->options['reset_button'])) {
@@ -217,7 +217,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     // Check if there is exposed sorts for this view
     $exposed_sorts = array();
     foreach ($this->view->sort as $id => $handler) {
-      if ($handler->can_expose() && $handler->is_exposed()) {
+      if ($handler->canExpose() && $handler->isExposed()) {
         $exposed_sorts[$id] = check_plain($handler->options['expose']['label']);
       }
     }

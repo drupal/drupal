@@ -42,7 +42,7 @@ class MenuHierarchy extends SortPluginBase {
   }
 
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $max_depth = isset($this->definition['max depth']) ? $this->definition['max depth'] : MENU_MAX_DEPTH;
     for ($i = 1; $i <= $max_depth; ++$i) {
       if ($this->options['sort_within_level']) {

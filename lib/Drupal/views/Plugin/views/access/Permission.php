@@ -28,7 +28,7 @@ class Permission extends AccessPluginBase {
    */
   protected $usesOptions = TRUE;
 
-  function access($account) {
+  public function access($account) {
     return views_check_perm($this->options['perm'], $account);
   }
 

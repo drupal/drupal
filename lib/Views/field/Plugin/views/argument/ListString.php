@@ -30,7 +30,7 @@ class ListString extends String {
    */
   var $allowed_values = NULL;
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     $field = field_info_field($this->definition['field_name']);
     $this->allowed_values = options_allowed_values($field);
@@ -64,11 +64,11 @@ class ListString extends String {
     $value = $data->{$this->name_alias};
     // If the list element has a human readable name show it,
     if (isset($this->allowed_values[$value]) && !empty($this->options['summary']['human'])) {
-      return $this->case_transform(field_filter_xss($this->allowed_values[$value]), $this->options['case']);
+      return $this->caseTransform(field_filter_xss($this->allowed_values[$value]), $this->options['case']);
     }
     // else fallback to the key.
     else {
-      return $this->case_transform(check_plain($value), $this->options['case']);
+      return $this->caseTransform(check_plain($value), $this->options['case']);
     }
   }
 

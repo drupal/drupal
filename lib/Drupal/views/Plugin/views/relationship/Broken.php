@@ -20,11 +20,11 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Broken extends RelationshipPluginBase {
 
-  function ui_name($short = FALSE) {
+  public function uiName($short = FALSE) {
     return t('Broken/missing handler');
   }
 
-  function ensure_my_table() { /* No table to ensure! */ }
+  public function ensureMyTable() { /* No table to ensure! */ }
   public function query() { /* No query to run */ }
   public function buildOptionsForm(&$form, &$form_state) {
     $form['markup'] = array(
@@ -35,6 +35,6 @@ class Broken extends RelationshipPluginBase {
   /**
    * Determine if the handler is considered 'broken'
    */
-  function broken() { return TRUE; }
+  public function broken() { return TRUE; }
 
 }

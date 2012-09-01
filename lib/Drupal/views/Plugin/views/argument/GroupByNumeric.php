@@ -21,15 +21,15 @@ use Drupal\Core\Annotation\Plugin;
 class GroupByNumeric extends ArgumentPluginBase {
 
   public function query($group_by = FALSE) {
-    $this->ensure_my_table();
-    $field = $this->get_field();
+    $this->ensureMyTable();
+    $field = $this->getField();
     $placeholder = $this->placeholder();
 
     $this->query->add_having_expression(0, "$field = $placeholder", array($placeholder => $this->argument));
   }
 
-  function ui_name($short = FALSE) {
-    return $this->get_field(parent::ui_name($short));
+  public function uiName($short = FALSE) {
+    return $this->getField(parent::uiName($short));
   }
 
   function get_sort_name() {

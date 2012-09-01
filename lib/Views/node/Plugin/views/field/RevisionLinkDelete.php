@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class RevisionLinkDelete extends RevisionLink {
 
-  function access() {
+  public function access() {
     return user_access('delete revisions') || user_access('administer nodes');
   }
 

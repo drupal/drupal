@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
 class UidRevision extends Uid {
 
   public function query($group_by = FALSE) {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $placeholder = $this->placeholder();
     $this->query->add_where_expression(0, "$this->table_alias.uid = $placeholder OR ((SELECT COUNT(*) FROM {node_revision} nr WHERE nr.uid = $placeholder AND nr.nid = $this->table_alias.nid) > 0)", array($placeholder => $this->argument));
   }

@@ -40,7 +40,7 @@ class Combine extends String {
     if ($this->view->style_plugin->usesFields()) {
       $options = array();
       foreach ($this->view->display_handler->getHandlers('field') as $name => $field) {
-        $options[$name] = $field->ui_name(TRUE);
+        $options[$name] = $field->uiName(TRUE);
       }
       if ($options) {
         $form['fields'] = array(
@@ -65,7 +65,7 @@ class Combine extends String {
     foreach ($this->options['fields'] as $id) {
       $field = $this->view->field[$id];
       // Always add the table of the selected fields to be sure a table alias exists.
-      $field->ensure_my_table();
+      $field->ensureMyTable();
       if (!empty($field->field_alias) && !empty($field->field_alias)) {
         $fields[] = "$field->table_alias.$field->real_field";
       }

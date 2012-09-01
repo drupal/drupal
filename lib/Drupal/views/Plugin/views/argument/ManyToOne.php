@@ -29,7 +29,7 @@ use Drupal\views\ManyToOneHelper;
  */
 class ManyToOne extends ArgumentPluginBase {
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     $this->helper = new ManyToOneHelper($this);
 
@@ -90,11 +90,11 @@ class ManyToOne extends ArgumentPluginBase {
   }
 
   /**
-   * Override ensure_my_table so we can control how this joins in.
+   * Override ensureMyTable so we can control how this joins in.
    * The operator actually has influence over joining.
    */
-  function ensure_my_table() {
-    $this->helper->ensure_my_table();
+  public function ensureMyTable() {
+    $this->helper->ensureMyTable();
   }
 
   public function query($group_by = FALSE) {
@@ -110,7 +110,7 @@ class ManyToOne extends ArgumentPluginBase {
       }
     }
     if ($empty) {
-      parent::ensure_my_table();
+      parent::ensureMyTable();
       $this->query->add_where(0, "$this->table_alias.$this->real_field", NULL, 'IS NULL');
       return;
     }
@@ -159,7 +159,7 @@ class ManyToOne extends ArgumentPluginBase {
 
   function summary_query() {
     $field = $this->table . '.' . $this->field;
-    $join = $this->get_join();
+    $join = $this->getJoin();
 
     if (!empty($this->options['require_value'])) {
       $join->type = 'INNER';

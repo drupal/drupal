@@ -22,7 +22,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Revision extends Node {
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($this->options['link_to_node_revision'])) {
       $this->additional_fields['vid'] = 'vid';

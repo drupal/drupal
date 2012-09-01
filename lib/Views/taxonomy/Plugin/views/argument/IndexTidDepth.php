@@ -99,7 +99,7 @@ class IndexTidDepth extends ArgumentPluginBase {
   }
 
   public function query($group_by = FALSE) {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
 
     if (!empty($this->options['break_phrase'])) {
       $tids = new stdClass();

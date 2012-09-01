@@ -65,7 +65,7 @@ class Field extends FieldPluginBase {
    */
   public $instance;
 
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
 
     $this->field_info = $field = field_info_field($this->definition['field_name']);
@@ -100,7 +100,7 @@ class Field extends FieldPluginBase {
    * @return bool
    *   Return TRUE if the user has access to view this field.
    */
-  function access() {
+  public function access() {
     $base_table = $this->get_base_table();
     return field_access('view', $this->field_info, $this->definition['entity_tables'][$base_table]);
   }
@@ -174,7 +174,7 @@ class Field extends FieldPluginBase {
 
     // Add additional fields (and the table join itself) if needed.
     if ($this->add_field_table($use_groupby)) {
-      $this->ensure_my_table();
+      $this->ensureMyTable();
       $this->add_additional_fields($fields);
 
       // Filter by langcode, if field translation is enabled.
@@ -242,7 +242,7 @@ class Field extends FieldPluginBase {
       return;
     }
 
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $column = _field_sql_storage_columnname($this->definition['field_name'], $this->options['click_sort_column']);
     if (!isset($this->aliases[$column])) {
       // Column is not in query; add a sort on it (without adding the column).
@@ -529,8 +529,8 @@ class Field extends FieldPluginBase {
   /**
    * Extend the groupby form with group columns.
    */
-  function groupby_form(&$form, &$form_state) {
-    parent::groupby_form($form, $form_state);
+  public function buildGroupByForm(&$form, &$form_state) {
+    parent::buildGroupByForm($form, $form_state);
     // With "field API" fields, the column target of the grouping function
     // and any additional grouping columns must be specified.
     $group_columns = array(
@@ -557,8 +557,8 @@ class Field extends FieldPluginBase {
     );
   }
 
-  function groupby_form_submit(&$form, &$form_state) {
-    parent::groupby_form_submit($form, $form_state);
+  public function submitGroupByForm(&$form, &$form_state) {
+    parent::submitGroupByForm($form, $form_state);
     $item =& $form_state['handler']->options;
 
     // Add settings for "field API" fields.

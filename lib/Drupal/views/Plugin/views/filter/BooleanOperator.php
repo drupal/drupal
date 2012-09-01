@@ -137,8 +137,8 @@ class BooleanOperator extends FilterPluginBase {
     }
   }
 
-  function admin_summary() {
-    if ($this->is_a_group()) {
+  public function adminSummary() {
+    if ($this->isAGroup()) {
       return t('grouped');
     }
     if (!empty($this->options['exposed'])) {
@@ -154,15 +154,15 @@ class BooleanOperator extends FilterPluginBase {
     return $this->value_options[!empty($this->value)];
   }
 
-  function expose_options() {
-    parent::expose_options();
+  public function defaultExposeOptions() {
+    parent::defaultExposeOptions();
     $this->options['expose']['operator_id'] = '';
     $this->options['expose']['label'] = $this->value_value;
     $this->options['expose']['required'] = TRUE;
   }
 
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $field = "$this->table_alias.$this->real_field";
 
     if (empty($this->value)) {

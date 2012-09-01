@@ -55,7 +55,7 @@
  * - handler->init()
  *   - Attach the handler to a view, and usually provides the options from the
  *     display.
- * - handler->pre_query()
+ * - handler->preQuery()
  *   - Run prior to the query() stage to do early processing.
  * - handler->query()
  *   - Do the bulk of the work this handler needs to do to add itself to the

@@ -43,18 +43,18 @@ class Link extends FieldPluginBase {
   }
 
   // An example of field level access control.
-  function access() {
+  public function access() {
     return user_access('access user profiles');
   }
 
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $this->add_additional_fields();
   }
 
   function render($values) {
     $value = $this->get_value($values, 'uid');
-    return $this->render_link($this->sanitize_value($value), $values);
+    return $this->render_link($this->sanitizeValue($value), $values);
   }
 
   function render_link($data, $values) {

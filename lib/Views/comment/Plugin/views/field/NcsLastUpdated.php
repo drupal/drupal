@@ -23,7 +23,7 @@ use Drupal\Core\Annotation\Plugin;
 class NcsLastUpdated extends Date {
 
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $this->node_table = $this->query->ensure_table('node', $this->relationship);
     $this->field_alias = $this->query->add_field(NULL, "GREATEST(" . $this->node_table . ".changed, " . $this->table_alias . ".last_comment_timestamp)", $this->table_alias . '_' . $this->field);
   }

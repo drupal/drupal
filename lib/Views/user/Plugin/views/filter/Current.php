@@ -28,7 +28,7 @@ class Current extends BooleanOperator {
   }
 
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
 
     $field = $this->table_alias . '.' . $this->real_field . ' ';
     $or = db_or();

@@ -29,7 +29,7 @@ class FormatName extends FieldPluginBase {
   }
 
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $this->add_additional_fields();
   }
 
@@ -40,9 +40,9 @@ class FormatName extends FieldPluginBase {
       // filter_formats() will reliably return the default format even if the
       // current user is unprivileged.
       $format = filter_formats(filter_default_format());
-      return $this->sanitize_value($format->name);
+      return $this->sanitizeValue($format->name);
     }
-    return $this->sanitize_value($format_name);
+    return $this->sanitizeValue($format_name);
   }
 
 }

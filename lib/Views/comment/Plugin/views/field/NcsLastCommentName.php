@@ -25,7 +25,7 @@ class NcsLastCommentName extends FieldPluginBase {
   public function query() {
     // last_comment_name only contains data if the user is anonymous. So we
     // have to join in a specially related user table.
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     // join 'users' to this table via vid
     $join = views_get_join();
     $join->construct('users', $this->table_alias, 'last_comment_uid', 'uid');
@@ -59,7 +59,7 @@ class NcsLastCommentName extends FieldPluginBase {
       ));
     }
     else {
-      return $this->sanitize_value($this->get_value($values));
+      return $this->sanitizeValue($this->get_value($values));
     }
   }
 

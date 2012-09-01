@@ -30,7 +30,7 @@ abstract class AreaPluginBase extends HandlerBase {
    * Make sure that no result area handlers are set to be shown when the result
    * is empty.
    */
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     if ($this->handler_type == 'empty') {
       $this->options['empty'] = TRUE;
@@ -38,9 +38,9 @@ abstract class AreaPluginBase extends HandlerBase {
   }
 
   /**
-   * Get this field's label.
+   * Get this area's label.
    */
-  function label() {
+  public function label() {
     if (!isset($this->options['label'])) {
       return $this->ui_name();
     }
@@ -61,7 +61,7 @@ abstract class AreaPluginBase extends HandlerBase {
   /**
    * Provide extra data to the administration form
    */
-  function admin_summary() {
+  public function adminSummary() {
     return $this->label();
   }
 
@@ -77,6 +77,7 @@ abstract class AreaPluginBase extends HandlerBase {
       '#default_value' => isset($this->options['label']) ? $this->options['label'] : '',
       '#description' => t('The label for this area that will be displayed only administratively.'),
     );
+
 
     if ($form_state['type'] != 'empty') {
       $form['empty'] = array(
@@ -102,7 +103,7 @@ abstract class AreaPluginBase extends HandlerBase {
   /**
    * Area handlers shouldn't have groupby.
    */
-  function use_group_by() {
+  public function usesGroupBy() {
     return FALSE;
   }
 

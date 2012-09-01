@@ -69,13 +69,13 @@ class InOperator extends FilterPluginBase {
     return $this->value_options;
   }
 
-  function expose_options() {
-    parent::expose_options();
+  public function defaultExposeOptions() {
+    parent::defaultExposeOptions();
     $this->options['expose']['reduce'] = FALSE;
   }
 
-  function expose_form(&$form, &$form_state) {
-    parent::expose_form($form, $form_state);
+  public function buildExposeForm(&$form, &$form_state) {
+    parent::buildExposeForm($form, $form_state);
     $form['expose']['reduce'] = array(
       '#type' => 'checkbox',
       '#title' => t('Limit list to selected items'),
@@ -271,7 +271,7 @@ class InOperator extends FilterPluginBase {
     return $options;
   }
 
-  function accept_exposed_input($input) {
+  public function acceptExposedInput($input) {
     // A very special override because the All state for this type of
     // filter could have a default:
     if (empty($this->options['exposed'])) {
@@ -287,7 +287,7 @@ class InOperator extends FilterPluginBase {
       }
     }
 
-    return parent::accept_exposed_input($input);
+    return parent::acceptExposedInput($input);
   }
 
   function value_submit($form, &$form_state) {
@@ -303,8 +303,8 @@ class InOperator extends FilterPluginBase {
     $form_state['values']['options']['value'] = $form['value']['#value'];
   }
 
-  function admin_summary() {
-    if ($this->is_a_group()) {
+  public function adminSummary() {
+    if ($this->isAGroup()) {
       return t('grouped');
     }
     if (!empty($this->options['exposed'])) {
@@ -376,7 +376,7 @@ class InOperator extends FilterPluginBase {
     if (empty($this->value)) {
       return;
     }
-    $this->ensure_my_table();
+    $this->ensureMyTable();
 
     // We use array_values() because the checkboxes keep keys and that can cause
     // array addition problems.
@@ -384,7 +384,7 @@ class InOperator extends FilterPluginBase {
   }
 
   function op_empty() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     if ($this->operator == 'empty') {
       $operator = "IS NULL";
     }
@@ -406,7 +406,7 @@ class InOperator extends FilterPluginBase {
     }
 
     if (!in_array($this->operator, $this->operator_values(1))) {
-      $errors[] = t('The operator is invalid on filter: @filter.', array('@filter' => $this->ui_name(TRUE)));
+      $errors[] = t('The operator is invalid on filter: @filter.', array('@filter' => $this->uiName(TRUE)));
     }
     if (is_array($this->value)) {
       if (!isset($this->value_options)) {
@@ -429,11 +429,11 @@ class InOperator extends FilterPluginBase {
       }
       // Choose different kind of ouput for 0, a single and multiple values.
       if (count($this->value) == 0) {
-        $errors[] = t('No valid values found on filter: @filter.', array('@filter' => $this->ui_name(TRUE)));
+        $errors[] = t('No valid values found on filter: @filter.', array('@filter' => $this->uiName(TRUE)));
       }
     }
     elseif (!empty($this->value) && ($this->operator == 'in' || $this->operator == 'not in')) {
-      $errors[] = t('The value @value is not an array for @operator on filter: @filter', array('@value' => views_var_export($this->value), '@operator' => $this->operator, '@filter' => $this->ui_name(TRUE)));
+      $errors[] = t('The value @value is not an array for @operator on filter: @filter', array('@value' => views_var_export($this->value), '@operator' => $this->operator, '@filter' => $this->uiName(TRUE)));
     }
     return $errors;
   }

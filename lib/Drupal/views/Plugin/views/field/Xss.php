@@ -23,7 +23,7 @@ class Xss extends FieldPluginBase {
 
   function render($values) {
     $value = $this->get_value($values);
-    return $this->sanitize_value($value, 'xss');
+    return $this->sanitizeValue($value, 'xss');
   }
 
 }

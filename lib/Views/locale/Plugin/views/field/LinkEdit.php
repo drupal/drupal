@@ -45,18 +45,18 @@ class LinkEdit extends FieldPluginBase {
   }
 
   public function query() {
-    $this->ensure_my_table();
+    $this->ensureMyTable();
     $this->add_additional_fields();
   }
 
-  function access() {
+  public function access() {
     // Ensure user has access to edit translations.
     return user_access('translate interface');
   }
 
   function render($values) {
     $value = $this->get_value($values, 'lid');
-    return $this->render_link($this->sanitize_value($value), $values);
+    return $this->render_link($this->sanitizeValue($value), $values);
   }
 
   function render_link($data, $values) {

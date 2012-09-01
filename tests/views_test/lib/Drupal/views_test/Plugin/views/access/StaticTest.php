@@ -29,7 +29,7 @@ class StaticTest extends AccessPluginBase {
     return $options;
   }
 
-  function access($account) {
+  public function access($account) {
     return !empty($this->options['access']);
   }
 

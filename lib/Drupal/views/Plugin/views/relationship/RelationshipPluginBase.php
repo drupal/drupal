@@ -47,7 +47,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
    * Init handler to let relationships live on tables other than
    * the table they operate on.
    */
-  function init(&$view, &$options) {
+  public function init(&$view, &$options) {
     parent::init($view, $options);
     if (isset($this->definition['relationship table'])) {
       $this->table = $this->definition['relationship table'];
@@ -68,6 +68,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     }
     return $this->options['label'];
   }
+
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -117,7 +118,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     $table_data = views_fetch_data($this->definition['base']);
     $base_field = empty($this->definition['base field']) ? $table_data['table']['base']['field'] : $this->definition['base field'];
 
-    $this->ensure_my_table();
+    $this->ensureMyTable();
 
     $def = $this->definition;
     $def['table'] = $this->definition['base'];
@@ -160,7 +161,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
   /**
    * You can't groupby a relationship.
    */
-  function use_group_by() {
+  public function usesGroupBy() {
     return FALSE;
   }
 
