@@ -312,7 +312,7 @@ function theme_field_multiple_value_form($variables) {
 
     $header = array(
       array(
-        'data' => '<label>' . t('!title: !required', array('!title' => $element['#title'], '!required' => $required)) . "</label>",
+        'data' => '<label>' . t('!title !required', array('!title' => $element['#title'], '!required' => $required)) . "</label>",
         'colspan' => 2,
         'class' => array('field-label'),
       ),
