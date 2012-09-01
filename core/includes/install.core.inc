@@ -1493,6 +1493,11 @@ function install_import_translations(&$install_state) {
     language_save($language);
   }
 
+  // If a non-english language was selected, remove English.
+  if ($langcode != 'en') {
+    language_delete('en');
+  }
+
   // Collect files to import for this language.
   $batch = locale_translate_batch_import_files(array('langcode' => $langcode));
   if (!empty($batch)) {

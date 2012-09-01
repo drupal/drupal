@@ -236,6 +236,10 @@ function language_save($language) {
   // Kill the static cache in language_list().
   drupal_static_reset('language_list');
 
+  // Update URL Prefixes for all languages after the new default language is
+  // propagated and the language_list() cache is flushed.
+  language_negotiation_url_prefixes_update();
+
   return $language;
 }
 
@@ -457,38 +461,10 @@ function language_language_insert($language) {
 
   language_negotiation_include();
 
-  // Add new language to the list of language prefixes.
-  $prefixes = language_negotiation_url_prefixes();
-  $prefixes[$language->langcode] = (empty($language->default) ? $language->langcode : '');
-  language_negotiation_url_prefixes_save($prefixes);
-
   // Add language to the list of language domains.
   $domains = language_negotiation_url_domains();
   $domains[$language->langcode] = '';
   language_negotiation_url_domains_save($domains);
-}
-
-/**
- * Implements hook_language_update().
- */
-function language_language_update($language) {
-  if (!empty($language->locked)) {
-    return;
-  }
-
-  language_negotiation_include();
-
-  // If the language is the default, then ensure that no other languages have
-  // blank prefix codes.
-  if (!empty($language->default)) {
-    $prefixes = language_negotiation_url_prefixes();
-    foreach ($prefixes as $langcode => $prefix) {
-      if ($prefix == '' && $langcode != $language->langcode) {
-        $prefixes[$langcode] = $langcode;
-      }
-    }
-    language_negotiation_url_prefixes_save($prefixes);
-  }
 }
 
 /**

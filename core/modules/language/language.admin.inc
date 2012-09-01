@@ -693,9 +693,10 @@ function language_negotiation_configure_url_form($form, &$form_state) {
   $prefixes = language_negotiation_url_prefixes();
   $domains = language_negotiation_url_domains();
   foreach ($languages as $langcode => $language) {
+    $t_args = array('%language' => $language->name, '%langcode' => $language->langcode);
     $form['prefix'][$langcode] = array(
       '#type' => 'textfield',
-      '#title' => t('%language (%langcode) path prefix', array('%language' => $language->name, '%langcode' => $language->langcode)),
+      '#title' => $language->default ? t('%language (%langcode) path prefix (Default language)', $t_args) : t('%language (%langcode) path prefix', $t_args),
       '#maxlength' => 64,
       '#default_value' => isset($prefixes[$langcode]) ? $prefixes[$langcode] : '',
       '#field_prefix' => $base_url . '/',
@@ -738,6 +739,11 @@ function language_negotiation_configure_url_form_validate($form, &$form_state) {
         // although it is required for selected negotiation type.
         form_error($form['prefix'][$langcode], t('The prefix may only be left blank for the default language.'));
       }
+    }
+    elseif (strpos($value, '/') !== FALSE) {
+      // Throw a form error if the string contains a slash,
+      // which would not work.
+      form_error($form['prefix'][$langcode], t('The prefix may not contain a slash.'));
     }
     elseif (isset($count[$value]) && $count[$value] > 1) {
       // Throw a form error if there are two languages with the same

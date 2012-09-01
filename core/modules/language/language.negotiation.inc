@@ -474,6 +474,24 @@ function language_negotiation_url_prefixes() {
 }
 
 /**
+ * Update the list of prefixes from the installed languages.
+ */
+function language_negotiation_url_prefixes_update() {
+  $prefixes = language_negotiation_url_prefixes();
+  foreach (language_list() as $language) {
+    // The prefix for this language should be updated if it's not assigned yet
+    // or the prefix is set to the empty string.
+    if (empty($prefixes[$language->langcode])) {
+      // For the default language, set the prefix to the empty string,
+      // otherwise use the langcode.
+      $prefixes[$language->langcode] = !empty($language->default) ? '' : $language->langcode;
+    }
+    // Otherwise we keep the configured prefix.
+  }
+  language_negotiation_url_prefixes_save($prefixes);
+}
+
+/**
  * Saves language prefix settings.
  */
 function language_negotiation_url_prefixes_save(array $prefixes) {
