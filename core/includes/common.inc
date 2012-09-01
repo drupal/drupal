@@ -5130,7 +5130,7 @@ function drupal_cron_cleanup() {
  * this function will search the site-wide modules directory (i.e., /modules/),
  * your install profile's directory (i.e.,
  * /profiles/your_site_profile/modules/), the all-sites directory (i.e.,
- * /sites/all/modules/), and your site-specific directory (i.e.,
+ * /modules/), and your site-specific directory (i.e.,
  * /sites/your_site_dir/modules/), in that order, and return information about
  * all of the files ending in .module in those directories.
  *
@@ -5147,7 +5147,7 @@ function drupal_cron_cleanup() {
  * @param string $directory
  *   The subdirectory name in which the files are found. For example,
  *   'core/modules' will search in sub-directories of the /core/modules
- *   directory, sub-directories of /sites/all/modules/, etc.
+ *   directory, sub-directories of /modules/, etc.
  * @param string $key
  *   The key to be used for the associative array returned. Possible values are
  *   'uri', for the file's URI; 'filename', for the basename of the file; and
@@ -5173,10 +5173,10 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   // Search for the directory in core.
   $searchdir = array('core/' . $directory);
 
-  // The 'profiles' directory contains pristine collections of modules and
+  // The 'core/profiles' directory contains pristine collections of modules and
   // themes as provided by a distribution. It is pristine in the same way that
   // the 'core/modules' directory is pristine for core; users should avoid
-  // any modification by using the sites/all or sites/<domain> directories.
+  // any modification by using the top-level or sites/<domain> directories.
   $profile = drupal_get_profile();
   // For SimpleTest to be able to test modules packaged together with a
   // distribution we need to include the profile of the parent site (in which
@@ -5191,11 +5191,11 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   // profile always has precedence.
   $searchdir[] = drupal_get_path('profile', $profile) . '/' . $directory;
 
-  // For the case of searching for profiles, scan top-level directories.
-  // @todo Replace entire sites/all/$directory with this.
+  // Always search for contributed and custom extensions in top-level
+  // directories as well as sites/all/* directories. If the same extension is
+  // located in both directories, then the latter wins for legacy/historical
+  // reasons.
   $searchdir[] = $directory;
-
-  // Always search sites/all/* as well as the global directories.
   $searchdir[] = 'sites/all/' . $directory;
 
   if (file_exists("$config/$directory")) {
@@ -5215,7 +5215,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
     // The exception to this is if the later file is from a module or theme not
     // compatible with Drupal core. This may occur during upgrades of Drupal
     // core when new modules exist in core while older contrib modules with the
-    // same name exist in a directory such as sites/all/modules/.
+    // same name exist in a directory such as /modules.
     foreach (array_intersect_key($files_to_add, $files) as $file_key => $file) {
       // If it has no info file, then we just behave liberally and accept the
       // new resource on the list for merging.

@@ -38,8 +38,7 @@ More about configuration:
    See INSTALL.txt and UPGRADE.txt in the "core" directory.
  * Learn about how to use Drupal to create your site:
    http://drupal.org/documentation
- * Download contributed modules to sites/all/modules to extend Drupal's
-   functionality:
+ * Download contributed modules to /modules to extend Drupal's functionality:
    http://drupal.org/project/modules
  * See also: "Developing for Drupal" for writing your own modules, below.
 
@@ -52,8 +51,7 @@ themes. More themes are available for download, and you can also create your own
 custom theme.
 
 More about themes:
- * Download contributed themes to sites/all/themes to modify Drupal's
-   appearance:
+ * Download contributed themes to /themes to modify Drupal's appearance:
    http://drupal.org/project/themes
  * Develop your own theme:
    http://drupal.org/documentation/theme

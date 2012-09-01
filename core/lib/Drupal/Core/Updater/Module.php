@@ -19,11 +19,11 @@ class Module extends Updater implements UpdaterInterface {
    * If the module is already installed, drupal_get_path() will return
    * a valid path and we should install it there (although we need to use an
    * absolute path, so we prepend DRUPAL_ROOT). If we're installing a new
-   * module, we always want it to go into sites/all/modules, since that's
+   * module, we always want it to go into /modules, since that's
    * where all the documentation recommends users install their modules, and
    * there's no way that can conflict on a multi-site installation, since
    * the Update manager won't let you install a new module if it's already
-   * found on your system, and if there was a copy in sites/all, we'd see it.
+   * found on your system, and if there was a copy in the top-level we'd see it.
    *
    * @return string
    *   A directory path.
@@ -33,7 +33,7 @@ class Module extends Updater implements UpdaterInterface {
       $relative_path = dirname($relative_path);
     }
     else {
-      $relative_path = 'sites/all/modules';
+      $relative_path = 'modules';
     }
     return DRUPAL_ROOT . '/' . $relative_path;
   }
