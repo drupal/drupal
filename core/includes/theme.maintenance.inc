@@ -122,7 +122,7 @@ function theme_task_list($variables) {
     }
     else {
       $class = $done ? 'done' : '';
-      $status = $done ? '(' . t('done') . ')' : '';
+      $status = $done ? '(' . $t('done') . ')' : '';
     }
     $output .= '<li';
     $output .= ($class ? ' class="' . $class . '"' : '') . '>';
