@@ -34,7 +34,7 @@ class PollTranslateTest extends PollTestBase {
    * the vote count values are set to 0.
    */
   function testPollTranslate() {
-    $admin_user = $this->drupalCreateUser(array('administer content types', 'administer languages', 'edit any poll content', 'create poll content', 'administer nodes', 'translate content'));
+    $admin_user = $this->drupalCreateUser(array('administer content types', 'administer languages', 'edit any poll content', 'create poll content', 'administer nodes', 'translate all content'));
 
     // Set up a poll with two choices.
     $title = $this->randomName();

@@ -38,8 +38,9 @@ class TranslationTest extends WebTestBase {
     parent::setUp();
 
     // Setup users.
-    $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages', 'translate content'));
-    $this->translator = $this->drupalCreateUser(array('create page content', 'edit own page content', 'translate content'));
+    $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages', 'translate all content'));
+    $this->translator = $this->drupalCreateUser(array('create page content', 'edit own page content', 'translate all content'));
+    $this->limited_translator = $this->drupalCreateUser(array('create page content', 'edit own page content', 'translate own content'));
 
     $this->drupalLogin($this->admin_user);
 
@@ -247,6 +248,35 @@ class TranslationTest extends WebTestBase {
     $this->assertLanguageSwitchLinks($node, $node, TRUE, $type);
     $this->assertLanguageSwitchLinks($node, $node_es, TRUE, $type);
     $this->assertLanguageSwitchLinks($node, $node_it, TRUE, $type);
+  }
+
+  /**
+   * Checks that users with "translate own content" role only can translate own content.
+   */
+  function testTranslateOwnContentRole() {
+    // Create a Basic page in English and its translation in Spanish with user
+    // that has "translate own content" role.
+    $this->drupalLogin($this->limited_translator);
+    $node = $this->createPage($this->randomName(), $this->randomName(), 'en');
+    $this->assertLinkByHref('node/' . $node->nid . '/translate', 0, t('User with "translate own content" role can see translate link'));
+    $this->drupalGet('node/' . $node->nid . '/translate');
+    $this->assertResponse(200, t('User with "translate own content" role can get translate page'));
+    $translation_es = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'es');
+
+    // Create a page as translator user.
+    $this->drupalLogin($this->translator);
+    $node = $this->createPage($this->randomName(), $this->randomName(), 'en');
+    // Change to limited_translator and check that translate links aren't shown.
+    $this->drupalLogin($this->limited_translator);
+    $this->assertNoLinkByHref('node/' . $node->nid . '/translate', t('User with "translate own content" role can\'t see translate link'));
+    // Check if user with "translate own content" role can see translate page
+    // from other user's node.
+    $this->drupalGet('node/' . $node->nid . '/translate');
+    $this->assertResponse(403, t('User with "translate own content" role can\'t get translate page'));
+
+    // Try to change to translate with "brute force".
+    $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'target' => 'es')));
+    $this->assertResponse(403, t('User with "translate own content" role can\'t get create translate page'));
   }
 
   /**

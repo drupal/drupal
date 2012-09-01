@@ -43,7 +43,7 @@ class TextTranslationTest extends WebTestBase {
       'bypass node access',
       filter_permission_name($full_html_format),
     ));
-    $this->translator = $this->drupalCreateUser(array('create article content', 'edit own article content', 'translate content'));
+    $this->translator = $this->drupalCreateUser(array('create article content', 'edit own article content', 'translate all content'));
 
     // Enable an additional language.
     $this->drupalLogin($this->admin);

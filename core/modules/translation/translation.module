@@ -37,7 +37,7 @@ function translation_help($path, $arg) {
       $output .= '<dt>' . t('Assigning a language to content') . '</dt>';
       $output .= '<dd>' . t('Use the <em>Language</em> drop down to select the appropriate language when creating or editing content.') . '</dd>';
       $output .= '<dt>' . t('Translating content') . '</dt>';
-      $output .= '<dd>' . t('Users with the <em>translate content</em> permission can translate content, if the content type has been configured to allow translations. To translate content, select the <em>Translations</em> tab when viewing the content, select the language for which you wish to provide content, and then enter the content.') . '</dd>';
+      $output .= '<dd>' . t('Users with the <em>translate all content</em> or <em>translate own content</em> permission can translate content, if the content type has been configured to allow translations. To translate content, select the <em>Translations</em> tab when viewing the content, select the language for which you wish to provide content, and then enter the content.') . '</dd>';
       $output .= '<dt>' . t('Maintaining translations') . '</dt>';
       $output .= '<dd>' . t('If editing content in one language requires that translated versions also be updated to reflect the change, use the <em>Flag translations as outdated</em> check box to mark the translations as outdated and in need of revision. Individual translations may also be marked for revision by selecting the <em>This translation needs to be updated</em> check box on the translation editing form.') . '</dd>';
       $output .= '</dl>';
@@ -67,7 +67,9 @@ function translation_menu() {
 }
 
 /**
- * Access callback: Checks that the user has permission to 'translate content'.
+ * Access callback: Checks that the user has permission to 'translate
+ * all content' or to 'translate own content' and has created the node
+ * being translated.
  *
  * Only displays the translation tab for nodes that are not language-neutral
  * of types that have translation enabled.
@@ -82,7 +84,7 @@ function translation_menu() {
  */
 function _translation_tab_access($node) {
   if ($node->langcode != LANGUAGE_NOT_SPECIFIED && translation_supported_type($node->type) && node_access('view', $node)) {
-    return user_access('translate content');
+    return translation_user_can_translate_node($node);
   }
   return FALSE;
 }
@@ -104,10 +106,47 @@ function translation_admin_paths() {
  */
 function translation_permission() {
   return array(
-    'translate content' => array(
-      'title' => t('Translate content'),
+    'translate all content' => array(
+      'title' => t('Translate all content'),
+    ),
+    'translate own content' => array(
+      'title' => t('Translate own content'),
     ),
   );
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function translation_node_access($node, $op, $account, $langcode) {
+  $request_has_translation_arg = isset($_GET['translation']) && isset($_GET['target']) && is_numeric($_GET['translation']);
+  if ($op == 'create' && $request_has_translation_arg) {
+    $source_node = node_load($_GET['translation']);
+    if (empty($source_node) || !translation_user_can_translate_node($source_node, $account)){
+      return NODE_ACCESS_DENY;
+    }
+  }
+
+  return NODE_ACCESS_IGNORE;
+}
+
+/**
+ * Check if the user has permissions to translate a node.
+ *
+ * @param $node
+ *   Node being checked.
+ * @param $account
+ *   User object to check translation permissions.
+ *
+ * @return
+ *   TRUE if the user can translate a node, FALSE otherwise.
+ */
+function translation_user_can_translate_node($node, $account = NULL) {
+  // If no user object is supplied, the access check is for the current user.
+  if (empty($account)) {
+    $account = $GLOBALS['user'];
+  }
+  return node_access('view', $node, $account) && (user_access('translate all content', $account) || ($node->uid == $account->uid && user_access('translate own content', $account)));
 }
 
 /**
@@ -173,7 +212,7 @@ function translation_form_node_form_alter(&$form, &$form_state) {
       $form['translation'] = array(
         '#type' => 'fieldset',
         '#title' => t('Translation settings'),
-        '#access' => user_access('translate content'),
+        '#access' => translation_user_can_translate_node($node),
         '#collapsible' => TRUE,
         '#collapsed' => !$node->translate,
         '#tree' => TRUE,
@@ -267,20 +306,12 @@ function translation_node_prepare(Node $node) {
   if (translation_supported_type($node->type) &&
     // And it's a new node.
     empty($node->nid) &&
-    // And the user has permission to translate content.
-    user_access('translate content') &&
     // And the $_GET variables are set properly.
     isset($_GET['translation']) &&
     isset($_GET['target']) &&
     is_numeric($_GET['translation'])) {
 
     $source_node = node_load($_GET['translation']);
-    if (empty($source_node) || !node_access('view', $source_node)) {
-      // Source node not found or no access to view. We should not check
-      // for edit access, since the translator might not have permissions
-      // to edit the source node but should still be able to translate.
-      return;
-    }
 
     $language_list = language_list();
     $langcode = $_GET['target'];

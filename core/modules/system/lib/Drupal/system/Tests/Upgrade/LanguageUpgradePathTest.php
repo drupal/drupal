@@ -159,4 +159,24 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     // whether index 'plural' has been removed.
     $this->assertFalse(db_index_exists('locales_target', 'plural'), t('Translations without plurals upgraded.'));
   }
+
+  /**
+   * Tests upgrading translations permissions.
+   */
+  public function testLanguagePermissionsUpgrade() {
+    db_insert('role_permission')->fields(array(
+      'rid' => 2,
+      'permission' => 'translate content',
+      'module' => 'translation',
+    ))->execute();
+
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // Check that translate content role doesn't exist on database.
+    $old_permission_exists = db_query('SELECT * FROM {role_permission} WHERE permission LIKE ?', array('translate content'))->fetchObject();
+    $this->assertFalse($old_permission_exists, t('No translate content role left on database.'));
+    // Check that translate content has been renamed to translate all content.
+    $new_permission_exists = db_query('SELECT * FROM {role_permission} WHERE permission LIKE ?', array('translate all content'))->fetchObject();
+    $this->assertTrue($new_permission_exists, t('Rename role translate content to translate all content was completed successfully.'));
+  }
 }
