@@ -172,9 +172,9 @@ following the instructions in the INTRODUCTION section at the top of this file:
    If you made modifications to files like .htaccess or robots.txt, you will
    need to re-apply them from your backup, after the new files are in place.
 
-10. If you uninstalled any modules, remove them from the sites/all/modules and
-   other sites/*/modules directories. Leave other modules in place, even though
-   they are incompatible with Drupal 8.x.
+10. If you uninstalled any modules, remove them from the /modules and other
+   sites/*/modules directories. Leave other modules in place, even though they
+   are incompatible with Drupal 8.x.
 
 11. Download the latest Drupal 8.x release from http://drupal.org to a
    directory outside of your web root. Extract the archive and copy the files

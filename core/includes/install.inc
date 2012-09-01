@@ -389,7 +389,7 @@ function drupal_verify_profile($install_state) {
       'title'       => st('Required modules'),
       'value'       => st('Required modules not found.'),
       'severity'    => REQUIREMENT_ERROR,
-      'description' => st('The following modules are required but were not found. Move them into the appropriate modules subdirectory, such as <em>sites/all/modules</em>. Missing modules: !modules', array('!modules' => implode(', ', $modules))),
+      'description' => st('The following modules are required but were not found. Move them into the appropriate modules subdirectory, such as <em>/modules</em>. Missing modules: !modules', array('!modules' => implode(', ', $modules))),
     );
   }
   return $requirements;

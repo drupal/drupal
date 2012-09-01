@@ -388,7 +388,7 @@ Drupal.overlay.isAdminLink = function (url) {
  *   TRUE if the URL is external to the site, FALSE otherwise.
  */
 Drupal.overlay.isExternalLink = function (url) {
-  var re = RegExp('^((f|ht)tps?:)?//(?!' + window.location.host + ')');
+  var re = new RegExp('^((f|ht)tps?:)?//(?!' + window.location.host + ')');
   return re.test(url);
 };
 
@@ -462,7 +462,7 @@ Drupal.overlay.eventhandlerAlterDisplacedElements = function (event) {
     else {
       var el1 = $('<div style="direction: rtl; overflow: scroll;"></div>').appendTo(document.body);
       var el2 = $('<div></div>').appendTo(el1);
-      Drupal.overlay.leftSidedScrollbarOffset = parseInt(el2[0].offsetLeft - el1[0].offsetLeft);
+      Drupal.overlay.leftSidedScrollbarOffset = parseInt(el2[0].offsetLeft - el1[0].offsetLeft, 10);
       el1.remove();
     }
   }
@@ -482,7 +482,7 @@ Drupal.overlay.eventhandlerAlterDisplacedElements = function (event) {
     }
 
     // Prevent displaced elements overlapping window's scrollbar.
-    var currentMaxWidth = parseInt($(this).css(maxWidthName));
+    var currentMaxWidth = parseInt($(this).css(maxWidthName), 10);
     if ((data.drupalOverlay && data.drupalOverlay.maxWidth) || isNaN(currentMaxWidth) || currentMaxWidth > maxWidth || currentMaxWidth <= 0) {
       $(this).css(maxWidthName, maxWidth);
       (data.drupalOverlay = data.drupalOverlay || {}).maxWidth = true;
@@ -582,9 +582,7 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
     else if (this.isAdminLink(href)) {
       // If the link contains the overlay-restore class and the overlay-context
       // state is set, also update the parent window's location.
-      var parentLocation = ($target.hasClass('overlay-restore') && typeof $.bbq.getState('overlay-context') === 'string')
-        ? Drupal.url($.bbq.getState('overlay-context'))
-        : null;
+      var parentLocation = ($target.hasClass('overlay-restore') && typeof $.bbq.getState('overlay-context') === 'string') ? Drupal.url($.bbq.getState('overlay-context')) : null;
       href = this.fragmentizeLink($target.get(0), parentLocation);
       // Only override default behavior when left-clicking and user is not
       // pressing the ALT, CTRL, META (Command key on the Macintosh keyboard)
@@ -618,11 +616,9 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
       else {
         // Add the overlay-context state to the link, so "overlay-restore" links
         // can restore the context.
-        if ($target[0].hash) {
-          // Leave links with an existing fragment alone. Adding an extra
-          // parameter to a link like "node/1#section-1" breaks the link.
-        }
-        else {
+        // Leave links with an existing fragment alone. Adding an extra
+        // parameter to a link like "node/1#section-1" breaks the link.
+        if (!$target[0].hash) {
           // For links with no existing fragment, add the overlay context.
           $target.attr('href', $.param.fragment(href, { 'overlay-context': this.getPath(window.location) + window.location.search }));
         }
@@ -777,6 +773,23 @@ Drupal.overlay.fragmentizeLink = function (link, parentLocation) {
 };
 
 /**
+ * Refresh a specific region.
+ *
+ * @param regionName
+ *   Name of the region.
+ * @param regionSelector
+ *   CSS selector for the region.
+ */
+function refreshRegion(regionName, regionSelector) {
+  var $region = $(regionSelector);
+  Drupal.detachBehaviors($region);
+  $.get(Drupal.url(Drupal.settings.overlay.ajaxCallback + '/' + regionName), function (newElement) {
+    $region.replaceWith($(newElement));
+    Drupal.attachBehaviors($region, Drupal.settings);
+  });
+}
+
+/**
  * Refresh any regions of the page that are displayed outside the overlay.
  *
  * @param data
@@ -792,14 +805,7 @@ Drupal.overlay.refreshRegions = function (data) {
       region_info = data[region];
       for (regionClass in region_info) {
         if (region_info.hasOwnProperty(regionClass)) {
-          (function (regionName, regionSelector) {
-            var $region = $(regionSelector);
-            Drupal.detachBehaviors($region);
-            $.get(Drupal.url(Drupal.settings.overlay.ajaxCallback + '/' + regionName), function (newElement) {
-              $region.replaceWith($(newElement));
-              Drupal.attachBehaviors($region, Drupal.settings);
-            });
-          }(region_info[regionClass], '.' + regionClass));
+          refreshRegion(region_info[regionClass], '.' + regionClass);
         }
       }
     }

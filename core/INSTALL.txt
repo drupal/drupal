@@ -312,9 +312,9 @@ more at http://drupal.org/project/modules and http://drupal.org/project/themes
 Do not mix downloaded or custom modules and themes with Drupal's core modules
 and themes. Drupal's modules and themes are located in the top-level modules and
 themes directories, while the modules and themes you add to Drupal are normally
-placed in the sites/all/modules and sites/all/themes directories. If you run a
-multisite installation, you can also place modules and themes in the
-site-specific directories -- see the Multisite Configuration section, below.
+placed in the /modules and /themes directories. If you run a multisite
+installation, you can also place modules and themes in the site-specific
+directories -- see the Multisite Configuration section, below.
 
 Never edit Drupal's core modules and themes; instead, use the hooks available in
 the Drupal API. To modify the behavior of Drupal, develop a module as described

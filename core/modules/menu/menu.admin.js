@@ -4,22 +4,19 @@
 
 Drupal.behaviors.menuChangeParentItems = {
   attach: function (context, settings) {
-    $('fieldset#edit-menu input').each(function () {
-      $(this).change(function () {
-        // Update list of available parent menu items.
-        Drupal.menu_update_parent_list();
-      });
-    });
+    // Update list of available parent menu items.
+    $('#edit-menu').on('change', 'input', Drupal.menuUpdateParentList);
   }
 };
 
 /**
  * Function to set the options of the menu parent item dropdown.
  */
-Drupal.menu_update_parent_list = function () {
+Drupal.menuUpdateParentList = function () {
+  var $menuFieldset = $('#edit-menu');
   var values = [];
 
-  $('fieldset#edit-menu').find('input:checked').each(function () {
+  $menuFieldset.find('input:checked').each(function () {
     // Get the names of all checked menus.
     values.push(Drupal.checkPlain($.trim($(this).val())));
   });
@@ -30,16 +27,19 @@ Drupal.menu_update_parent_list = function () {
     data: {'menus[]' : values},
     dataType: 'json',
     success: function (options) {
+      var $select = $('#edit-menu-parent');
       // Save key of last selected element.
-      var selected = $('fieldset#edit-menu #edit-menu-parent :selected').val();
+      var selected = $select.val();
       // Remove all exisiting options from dropdown.
-      $('fieldset#edit-menu #edit-menu-parent').children().remove();
+      $select.children().remove();
       // Add new options to dropdown.
-      jQuery.each(options, function(index, value) {
-        $('fieldset#edit-menu #edit-menu-parent').append(
-          $('<option ' + (index === selected ? ' selected="selected"' : '') + '></option>').val(index).text(value)
-        );
-      });
+      for (var machineName in options) {
+        if (options.hasOwnProperty(machineName)) {
+          $select.append(
+            $('<option ' + (machineName === selected ? ' selected="selected"' : '') + '></option>').val(machineName).text(options[machineName])
+          );
+        }
+      }
     }
   });
 };
