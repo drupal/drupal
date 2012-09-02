@@ -314,7 +314,7 @@ function language_admin_add_custom_form_validate($form, &$form_state) {
   if ($form_state['values']['predefined_langcode'] == 'custom') {
     $langcode = $form_state['values']['langcode'];
     // Reuse the editing form validation routine if we add a custom language.
-    language_admin_edit_form_validate($form, $form_state);
+    language_admin_edit_form_validate($form['custom_language'], $form_state);
 
     if ($language = language_load($langcode)) {
       form_set_error('langcode', t('The language %language (%langcode) already exists.', array('%language' => $language->name, '%langcode' => $langcode)));
