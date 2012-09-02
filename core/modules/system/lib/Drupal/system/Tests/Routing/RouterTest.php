@@ -46,4 +46,14 @@ class RouterTest extends WebTestBase {
     $this->assertRaw('</html>', 'Page markup was found.');
   }
 
+  /**
+   * Confirms that placeholders in paths work correctly.
+   */
+  public function testDefaultControllerPlaceholders() {
+    $value = $this->randomName();
+    $this->drupalGet('router_test/test3/' . $value);
+    $this->assertRaw($value, 'The correct string was returned because the route was successful.');
+    $this->assertRaw('</html>', 'Page markup was found.');
+  }
+
 }

@@ -44,22 +44,25 @@ class CompiledRoute {
 
 
   /**
-    * Constructs a new CompiledRoute object.
-    *
-    * @param Route  $route
-    *   A original Route instance.
-    * @param int $fit
-    *   The fitness of the route.
-    * @param string $fit
-    *   The pattern outline for this route.
-    *  @param int $num_parts
-    *   The number of parts in the path.
-    */
-  public function __construct(Route $route, $fit, $pattern_outline, $num_parts) {
+   * Constructs a new CompiledRoute object.
+   *
+   * @param Route  $route
+   *   A original Route instance.
+   * @param int $fit
+   *   The fitness of the route.
+   * @param string $fit
+   *   The pattern outline for this route.
+   *  @param int $num_parts
+   *   The number of parts in the path.
+   *  @param string $regex
+   *   The regular expression to match placeholders out of this path.
+   */
+  public function __construct(Route $route, $fit, $pattern_outline, $num_parts, $regex) {
     $this->route = $route;
     $this->fit = $fit;
     $this->patternOutline = $pattern_outline;
     $this->numParts = $num_parts;
+    $this->regex = $regex;
   }
 
   /**
@@ -98,6 +101,16 @@ class CompiledRoute {
    */
   public function getPatternOutline() {
     return $this->patternOutline;
+  }
+
+  /**
+   * Returns the placeholder regex.
+   *
+   * @return string
+   *   The regex to locate placeholders in this pattern.
+   */
+  public function getRegex() {
+    return $this->regex;
   }
 
   /**

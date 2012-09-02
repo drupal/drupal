@@ -19,5 +19,10 @@ function router_test_route_info() {
   ));
   $collection->add('router_test_2', $route);
 
+  $route = new Route('router_test/test3/{value}', array(
+    '_content' => '\Drupal\router_test\TestControllers::test3'
+  ));
+  $collection->add('router_test_3', $route);
+
   return $collection;
 }

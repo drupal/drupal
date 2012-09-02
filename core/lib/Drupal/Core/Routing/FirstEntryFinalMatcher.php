@@ -39,7 +39,14 @@ class FirstEntryFinalMatcher implements FinalMatcherInterface {
   public function matchRequest(Request $request) {
     // Return whatever the first route in the collection is.
     foreach ($this->routes as $name => $route) {
-      return array_merge($this->mergeDefaults(array(), $route->getDefaults()), array('_route' => $name));
+      $path = '/' . $request->attributes->get('system_path');
+
+      $route->setOption('compiler_class', '\Drupal\Core\Routing\RouteCompiler');
+      $compiled = $route->compile();
+
+      preg_match($compiled->getRegex(), $path, $matches);
+
+      return array_merge($this->mergeDefaults($matches, $route->getDefaults()), array('_route' => $name));
     }
   }
 
