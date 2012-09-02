@@ -58,6 +58,8 @@ class CoreBundle extends Bundle
 
     $container->register('router.dumper', '\Drupal\Core\Routing\MatcherDumper')
       ->addArgument(new Reference('database'));
+    $container->register('router.builder', 'Drupal\Core\Routing\RouteBuilder')
+      ->addArgument(new Reference('router.dumper'));
 
     // @todo Replace below lines with the commented out block below it when it's
     //   performant to do so: http://drupal.org/node/1706064.

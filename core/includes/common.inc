@@ -6830,7 +6830,7 @@ function drupal_flush_all_caches() {
   // Rebuild the menu router based on all rebuilt data.
   // Important: This rebuild must happen last, so the menu router is guaranteed
   // to be based on up to date information.
-  router_rebuild();
+  drupal_container()->get('router.builder')->rebuild();
   menu_router_rebuild();
 
   // Re-initialize the maintenance theme, if the current request attempted to
@@ -6839,22 +6839,6 @@ function drupal_flush_all_caches() {
   if (function_exists('_drupal_maintenance_theme')) {
     unset($GLOBALS['theme']);
     drupal_maintenance_theme();
-  }
-}
-
-function router_rebuild() {
-  // We need to manually call each module so that we can know which module
-  // a given item came from.
-
-  $dumper = drupal_container()->get('router.dumper', Container::NULL_ON_INVALID_REFERENCE);
-
-  if ($dumper) {
-    foreach (module_implements('route_info') as $module) {
-      $routes = call_user_func($module . '_route_info');
-      drupal_alter('router_info', $routes, $module);
-      $dumper->addRoutes($routes);
-      $dumper->dump(array('route_set' => $module));
-    }
   }
 }
 
