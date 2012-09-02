@@ -14,6 +14,7 @@ Drupal 7.16, xxxx-xx-xx (development version)
   drupal_find_base_themes()" fatal error under rare circumstances.
 - Added "lang" attributes to language links, to better support screen readers.
 - Added proxy server support to drupal_http_request().
+- Updated various admin tables to use default "empty table" text UX pattern.
 
 Drupal 7.15, 2012-08-01
 -----------------------
