@@ -6845,14 +6845,13 @@ function drupal_flush_all_caches() {
 function router_rebuild() {
   // We need to manually call each module so that we can know which module
   // a given item came from.
-  $callbacks = array();
 
   $dumper = drupal_container()->get('router.dumper', Container::NULL_ON_INVALID_REFERENCE);
 
   if ($dumper) {
     foreach (module_implements('route_info') as $module) {
       $routes = call_user_func($module . '_route_info');
-      drupal_alter('router_info', $routes);
+      drupal_alter('router_info', $routes, $module);
       $dumper->addRoutes($routes);
       $dumper->dump(array('route_set' => $module));
     }
