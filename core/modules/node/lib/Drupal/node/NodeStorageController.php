@@ -8,7 +8,7 @@
 namespace Drupal\node;
 
 use Drupal\entity\DatabaseStorageController;
-use Drupal\entity\StorableInterface;
+use Drupal\entity\EntityInterface;
 use Drupal\entity\EntityStorageException;
 use Exception;
 
@@ -82,7 +82,7 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::save().
    */
-  public function save(StorableInterface $entity) {
+  public function save(EntityInterface $entity) {
     $transaction = db_transaction();
     try {
       // Load the stored entity, if any.
@@ -129,10 +129,10 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Saves a node revision.
    *
-   * @param Drupal\entity\StorableInterface $node
+   * @param Drupal\entity\EntityInterface $node
    *   The node entity.
    */
-  protected function saveRevision(StorableInterface $entity) {
+  protected function saveRevision(EntityInterface $entity) {
     $record = clone $entity;
     $record->uid = $entity->revision_uid;
     $record->timestamp = $entity->revision_timestamp;
@@ -197,7 +197,7 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::invokeHook().
    */
-  protected function invokeHook($hook, StorableInterface $node) {
+  protected function invokeHook($hook, EntityInterface $node) {
     if ($hook == 'insert' || $hook == 'update') {
       node_invoke($node, $hook);
     }
@@ -246,7 +246,7 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::preSave().
    */
-  protected function preSave(StorableInterface $node) {
+  protected function preSave(EntityInterface $node) {
     // Before saving the node, set changed and revision times.
     $node->changed = REQUEST_TIME;
 
@@ -262,7 +262,7 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
-  function postSave(StorableInterface $node, $update) {
+  function postSave(EntityInterface $node, $update) {
     node_access_acquire_grants($node, $update);
   }
 

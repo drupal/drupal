@@ -46,8 +46,8 @@ function config_test_config_import_change($name, $new_config, $old_config) {
     $config_test->original->$property = $value;
   }
 
-  // Iterate through each property of the new config, copying it to the
-  // configurable test object.
+  // Iterate through each property of the new config, copying it to the test
+  // object.
   foreach ($new_config->get() as $property => $value) {
     $config_test->$property = $value;
   }
@@ -177,7 +177,7 @@ function config_test_delete($id) {
  */
 function config_test_list_page() {
   $entities = entity_load_multiple('config_test');
-  uasort($entities, 'Drupal\config\ConfigurableBase::sort');
+  uasort($entities, 'Drupal\config\ConfigEntityBase::sort');
 
   $rows = array();
   foreach ($entities as $config_test) {

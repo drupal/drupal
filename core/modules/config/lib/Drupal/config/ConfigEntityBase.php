@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Definition of Drupal\config\ConfigurableBase.
+ * Definition of Drupal\config\ConfigEntityBase.
  */
 
 namespace Drupal\config;
 
-use Drupal\entity\StorableBase;
+use Drupal\entity\Entity;
 
 /**
- * Defines a base configurable entity class.
+ * Defines a base configuration entity class.
  */
-abstract class ConfigurableBase extends StorableBase implements ConfigurableInterface {
+abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface {
 
   /**
-   * The original ID of the configurable entity.
+   * The original ID of the configuration entity.
    *
-   * The ID of a configurable entity is a unique string (machine name). When a
-   * configurable entity is updated and its machine name is renamed, the
+   * The ID of a configuration entity is a unique string (machine name). When a
+   * configuration entity is updated and its machine name is renamed, the
    * original ID needs to be known.
    *
    * @var string
@@ -38,7 +38,7 @@ abstract class ConfigurableBase extends StorableBase implements ConfigurableInte
   }
 
   /**
-   * Implements ConfigurableInterface::getOriginalID().
+   * Implements ConfigEntityInterface::getOriginalID().
    */
   public function getOriginalID() {
     return $this->originalID;
@@ -47,8 +47,8 @@ abstract class ConfigurableBase extends StorableBase implements ConfigurableInte
   /**
    * Overrides Entity::isNew().
    *
-   * EntityInterface::enforceIsNew() is not supported by configurable entities,
-   * since each Configurable is unique.
+   * EntityInterface::enforceIsNew() is not supported by configuration entities,
+   * since each configuration entity is unique.
    */
   final public function isNew() {
     return !$this->id();
@@ -57,8 +57,8 @@ abstract class ConfigurableBase extends StorableBase implements ConfigurableInte
   /**
    * Overrides Entity::bundle().
    *
-   * EntityInterface::bundle() is not supported by configurable entities, since
-   * a Configurable is a bundle.
+   * EntityInterface::bundle() is not supported by configuration entities, since
+   * a configuration entity is a bundle.
    */
   final public function bundle() {
     return $this->entityType;
@@ -68,7 +68,7 @@ abstract class ConfigurableBase extends StorableBase implements ConfigurableInte
    * Overrides Entity::get().
    *
    * EntityInterface::get() implements support for fieldable entities, but
-   * configurable entities are not fieldable.
+   * configuration entities are not fieldable.
    */
   public function get($property_name, $langcode = NULL) {
     // @todo: Add support for translatable properties being not fields.
@@ -79,7 +79,7 @@ abstract class ConfigurableBase extends StorableBase implements ConfigurableInte
    * Overrides Entity::set().
    *
    * EntityInterface::set() implements support for fieldable entities, but
-   * configurable entities are not fieldable.
+   * configuration entities are not fieldable.
    */
   public function set($property_name, $value, $langcode = NULL) {
     // @todo: Add support for translatable properties being not fields.
@@ -87,7 +87,7 @@ abstract class ConfigurableBase extends StorableBase implements ConfigurableInte
   }
 
   /**
-   * Helper callback for uasort() to sort Configurable entities by weight and label.
+   * Helper callback for uasort() to sort configuration entities by weight and label.
    */
   public static function sort($a, $b) {
     $a_weight = isset($a->weight) ? $a->weight : 0;

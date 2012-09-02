@@ -7,7 +7,7 @@
 
 namespace Drupal\comment;
 
-use Drupal\entity\StorableInterface;
+use Drupal\entity\EntityInterface;
 use Drupal\entity\DatabaseStorageController;
 use LogicException;
 
@@ -58,7 +58,7 @@ class CommentStorageController extends DatabaseStorageController {
    * @see comment_int_to_alphadecimal()
    * @see comment_alphadecimal_to_int()
    */
-  protected function preSave(StorableInterface $comment) {
+  protected function preSave(EntityInterface $comment) {
     global $user;
 
     if (!isset($comment->status)) {
@@ -151,7 +151,7 @@ class CommentStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
-  protected function postSave(StorableInterface $comment, $update) {
+  protected function postSave(EntityInterface $comment, $update) {
     $this->releaseThreadLock();
     // Update the {node_comment_statistics} table prior to executing the hook.
     $this->updateNodeStatistics($comment->nid);

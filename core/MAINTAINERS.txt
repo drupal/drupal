@@ -42,7 +42,7 @@ Configuration system
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 - Alex Pott 'alexpott' http://drupal.org/user/157725
 
-Configurable entity system
+Configuration entity system
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 - Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
 

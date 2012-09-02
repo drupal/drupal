@@ -174,7 +174,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
       if (!empty($this->entityInfo['entity class'])) {
         // We provide the necessary arguments for PDO to create objects of the
         // specified entity class.
-        // @see Drupal\entity\StorableInterface::__construct()
+        // @see Drupal\entity\EntityInterface::__construct()
         $query_result->setFetchMode(PDO::FETCH_CLASS, $this->entityInfo['entity class'], array(array(), $this->entityType));
       }
       $queried_entities = $query_result->fetchAllAssoc($this->idKey);
@@ -457,7 +457,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
   /**
    * Implements Drupal\entity\EntityStorageControllerInterface::save().
    */
-  public function save(StorableInterface $entity) {
+  public function save(EntityInterface $entity) {
     $transaction = db_transaction();
     try {
       // Load the stored entity, if any.
@@ -502,7 +502,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    *
    * Used before the entity is saved and before invoking the presave hook.
    */
-  protected function preSave(StorableInterface $entity) { }
+  protected function preSave(EntityInterface $entity) { }
 
   /**
    * Acts on a saved entity before the insert or update hook is invoked.
@@ -514,7 +514,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    *   (bool) TRUE if the entity has been updated, or FALSE if it has been
    *   inserted.
    */
-  protected function postSave(StorableInterface $entity, $update) { }
+  protected function postSave(EntityInterface $entity, $update) { }
 
   /**
    * Acts on entities before they are deleted.
@@ -538,7 +538,7 @@ class DatabaseStorageController implements EntityStorageControllerInterface {
    * @param $entity
    *   The entity object.
    */
-  protected function invokeHook($hook, StorableInterface $entity) {
+  protected function invokeHook($hook, EntityInterface $entity) {
     if (!empty($this->entityInfo['fieldable']) && function_exists($function = 'field_attach_' . $hook)) {
       $function($this->entityType, $entity);
     }

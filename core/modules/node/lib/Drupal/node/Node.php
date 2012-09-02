@@ -7,12 +7,13 @@
 
 namespace Drupal\node;
 
+use Drupal\entity\ContentEntityInterface;
 use Drupal\entity\Entity;
 
 /**
  * Defines the node entity class.
  */
-class Node extends Entity {
+class Node extends Entity implements ContentEntityInterface {
 
   /**
    * The node ID.

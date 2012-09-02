@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\ConfigConfigurableTest.
+ * Definition of Drupal\config\Tests\ConfigEntityTest.
  */
 
 namespace Drupal\config\Tests;
@@ -10,9 +10,9 @@ namespace Drupal\config\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests configurable entities.
+ * Tests configuration entities.
  */
-class ConfigConfigurableTest extends WebTestBase {
+class ConfigEntityTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -23,8 +23,8 @@ class ConfigConfigurableTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Configurable entities',
-      'description' => 'Tests configurable entities.',
+      'name' => 'Configuration entities',
+      'description' => 'Tests configuration entities.',
       'group' => 'Configuration',
     );
   }
@@ -38,7 +38,7 @@ class ConfigConfigurableTest extends WebTestBase {
     $label2 = $this->randomName();
     $label3 = $this->randomName();
 
-    // Create a configurable entity.
+    // Create a configuration entity.
     $edit = array(
       'id' => $id,
       'label' => $label1,
@@ -47,7 +47,7 @@ class ConfigConfigurableTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertText($label1);
 
-    // Update the configurable entity.
+    // Update the configuration entity.
     $this->assertLinkByHref('admin/structure/config_test/manage/' . $id);
     $edit = array(
       'label' => $label2,
@@ -57,14 +57,14 @@ class ConfigConfigurableTest extends WebTestBase {
     $this->assertNoText($label1);
     $this->assertText($label2);
 
-    // Delete the configurable entity.
+    // Delete the configuration entity.
     $this->assertLinkByHref('admin/structure/config_test/manage/' . $id . '/delete');
     $this->drupalPost('admin/structure/config_test/manage/' . $id . '/delete', array(), 'Delete');
     $this->assertResponse(200);
     $this->assertNoText($label1);
     $this->assertNoText($label2);
 
-    // Re-create a configurable entity.
+    // Re-create a configuration entity.
     $edit = array(
       'id' => $id,
       'label' => $label1,
@@ -73,7 +73,7 @@ class ConfigConfigurableTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertText($label1);
 
-    // Rename the configurable entity's ID/machine name.
+    // Rename the configuration entity's ID/machine name.
     $this->assertLinkByHref('admin/structure/config_test/manage/' . $id);
     $edit = array(
       'id' => strtolower($this->randomName()),
