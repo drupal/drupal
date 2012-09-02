@@ -19,7 +19,7 @@ abstract class UITestBase extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = array('views_ui', 'block');
 
   protected function setUp() {
     parent::setUp();

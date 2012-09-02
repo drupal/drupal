@@ -15,6 +15,13 @@ use Drupal\views\View;
 class ArgumentDefaultTest extends PluginTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('views_ui');
+
+  /**
    * A random string used in the default views.
    *
    * @var string

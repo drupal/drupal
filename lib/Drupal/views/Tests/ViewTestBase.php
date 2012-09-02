@@ -18,7 +18,7 @@ abstract class ViewTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('views', 'views_ui');
+  public static $modules = array('views');
 
   protected function setUp() {
     parent::setUp();

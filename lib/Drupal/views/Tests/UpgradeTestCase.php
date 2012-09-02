@@ -24,7 +24,7 @@ class UpgradeTestCase extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('php');
+  public static $modules = array('views_ui', 'php');
 
   public static function getInfo() {
     return array(
