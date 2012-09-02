@@ -7,15 +7,15 @@
 
 namespace Drupal\views;
 
-use Drupal\config\ConfigurableBase;
+use Drupal\config\ConfigEntityBase;
 
 /**
- * Defines a ViewStorage configurable class.
+ * Defines a ViewStorage configuration entity class.
  */
-class ViewStorage extends ConfigurableBase implements ViewStorageInterface {
+class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
 
   /**
-   * Overrides Drupal\entity\StorableInterface::id().
+   * Overrides Drupal\entity\EntityInterface::id().
    */
   public function id() {
     return $this->name;

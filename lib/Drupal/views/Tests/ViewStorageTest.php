@@ -36,14 +36,14 @@ class ViewStorageTest extends WebTestBase {
   );
 
   /**
-   * The Configurable information from entity_get_info().
+   * The configuration entity information from entity_get_info().
    *
    * @var array
    */
   protected $info;
 
   /**
-   * The Configurable controller.
+   * The configuration entity storage controller.
    *
    * @var Drupal\views\ViewStorageController
    */
@@ -58,7 +58,7 @@ class ViewStorageTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Configurables CRUD tests',
+      'name' => 'Configuration entity CRUD tests',
       'description' => 'Tests the CRUD functionality for ViewStorage.',
       'group' => 'Views',
     );
@@ -67,8 +67,8 @@ class ViewStorageTest extends WebTestBase {
   /**
    * Tests CRUD operations.
    */
-  function testConfigurableCRUD() {
-    // Get the Configurable information and controller.
+  function testConfigurationEntityCRUD() {
+    // Get the configuration entity information and controller.
     $this->info = entity_get_info('view');
     $this->controller = entity_get_controller('view');
 
@@ -88,7 +88,7 @@ class ViewStorageTest extends WebTestBase {
   }
 
   /**
-   * Tests loading configurables.
+   * Tests loading configuration entities.
    */
   protected function loadTests() {
     $view = $this->loadView('archive');
@@ -113,27 +113,27 @@ class ViewStorageTest extends WebTestBase {
       $this->assertTrue(!empty($display_options) && is_array($display_options), 'Display options exist.');
     }
 
-    // Fetch data for all Configurable objects and default view configurations.
-    $all_configurables = $this->controller->load();
+    // Fetch data for all configuration entities and default view configurations.
+    $all_configuration_entities = $this->controller->load();
     $all_config = config_get_storage_names_with_prefix('views.view');
 
     // Remove the 'views.view.' prefix from config names for comparision with
-    // loaded Configurable objects.
+    // loaded configuration entities.
     $prefix_map = function ($value) {
       $parts = explode('.', $value);
       return end($parts);
     };
 
-    // Check that the correct number of Configurable objects have been loaded.
-    $count = count($all_configurables);
-    $this->assertEqual($count, count($all_config), format_string('The array of all @count Configurable objects is loaded.', array('@count' => $count)));
+    // Check that the correct number of configuration entities have been loaded.
+    $count = count($all_configuration_entities);
+    $this->assertEqual($count, count($all_config), format_string('The array of all @count configuration entities is loaded.', array('@count' => $count)));
 
     // Check that all of these machine names match.
-    $this->assertIdentical(array_keys($all_configurables), array_map($prefix_map, $all_config), 'All loaded elements match.');
+    $this->assertIdentical(array_keys($all_configuration_entities), array_map($prefix_map, $all_config), 'All loaded elements match.');
   }
 
   /**
-   * Tests creating configurables.
+   * Tests creating configuration entities.
    */
   protected function createTests() {
     // Create a new View instance with empty values.
@@ -169,7 +169,7 @@ class ViewStorageTest extends WebTestBase {
   }
 
   /**
-   * Tests saving configurables.
+   * Tests saving configuration entities.
    */
   protected function saveTests() {
     $view = $this->loadView('archive');
@@ -209,7 +209,7 @@ class ViewStorageTest extends WebTestBase {
   }
 
   /**
-   * Tests deleting configurables.
+   * Tests deleting configuration entities.
    */
   protected function deleteTests() {
     $view = $this->loadView('tracker');
@@ -222,7 +222,7 @@ class ViewStorageTest extends WebTestBase {
   }
 
   /**
-   * Tests adding, saving, and loading displays on configurables.
+   * Tests adding, saving, and loading displays on configuration entities.
    */
   protected function displayTests() {
     // Check whether a display can be added and saved to a View.
@@ -247,7 +247,7 @@ class ViewStorageTest extends WebTestBase {
   }
 
   /**
-   * Tests statuses of configurables.
+   * Tests statuses of configuration entities.
    */
   protected function statusTests() {
     // Test a View can be enabled and disabled again (with a new view).
@@ -273,7 +273,7 @@ class ViewStorageTest extends WebTestBase {
   }
 
   /**
-   * Loads a single Configurable object from the controller.
+   * Loads a single configuration entity from the controller.
    *
    * @param string $view_name
    *   The machine name of the view.

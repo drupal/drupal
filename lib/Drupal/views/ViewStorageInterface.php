@@ -7,25 +7,25 @@
 
 namespace Drupal\views;
 
-use Drupal\config\ConfigurableInterface;
+use Drupal\config\ConfigEntityInterface;
 
 /**
  * Defines an interface for View storage classes.
  */
-interface ViewStorageInterface extends ConfigurableInterface {
+interface ViewStorageInterface extends ConfigEntityInterface {
 
   /**
-   * Sets the configurable entity status to enabled.
+   * Sets the configuration entity status to enabled.
    */
   public function enable();
 
   /**
-   * Sets the configurable entity status to disabled.
+   * Sets the configuration entity status to disabled.
    */
   public function disable();
 
   /**
-   * Returns whether the configurable entity is enabled.
+   * Returns whether the configuration entity is enabled.
    *
    * @return bool
    */

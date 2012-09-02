@@ -8,7 +8,7 @@
 namespace Drupal\views;
 
 use Drupal\config\ConfigStorageController;
-use Drupal\entity\StorableInterface;
+use Drupal\entity\EntityInterface;
 
 /**
  * Defines the storage controller class for ViewStorage entities.
@@ -18,11 +18,11 @@ class ViewStorageController extends ConfigStorageController {
   /**
    * Overrides Drupal\config\ConfigStorageController::attachLoad();
    */
-  protected function attachLoad(&$queried_objects, $revision_id = FALSE) {
-    foreach ($queried_objects as $id => $configurable) {
+  protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
+    foreach ($queried_entities as $id => $entity) {
       // @todo This property is left in for CTools export UI.
-      $configurable->type = t('Normal');
-      $this->attachDisplays($configurable);
+      $entity->type = t('Normal');
+      $this->attachDisplays($entity);
     }
   }
 
@@ -33,25 +33,25 @@ class ViewStorageController extends ConfigStorageController {
    * properties to be set on the config object. This can be removed when the
    * view storage is isolated so the ReflectionClass can work.
    */
-  public function save(StorableInterface $configurable) {
+  public function save(EntityInterface $entity) {
     $prefix = $this->entityInfo['config prefix'] . '.';
 
-    // Load the stored configurable, if any, and rename it.
-    if ($configurable->getOriginalID()) {
-      $id = $configurable->getOriginalID();
+    // Load the stored entity, if any, and rename it.
+    if ($entity->getOriginalID()) {
+      $id = $entity->getOriginalID();
     }
     else {
-      $id = $configurable->id();
+      $id = $entity->id();
     }
     $config = config($prefix . $id);
-    $config->setName($prefix . $configurable->id());
+    $config->setName($prefix . $entity->id());
 
-    if (!$config->isNew() && !isset($configurable->original)) {
-      $configurable->original = entity_load_unchanged($this->entityType, $id);
+    if (!$config->isNew() && !isset($entity->original)) {
+      $entity->original = entity_load_unchanged($this->entityType, $id);
     }
 
-    $this->preSave($configurable);
-    $this->invokeHook('presave', $configurable);
+    $this->preSave($entity);
+    $this->invokeHook('presave', $entity);
 
     // @todo This temp measure will be removed once we have a better way or
     //   separation of storage and the executed view.
@@ -70,7 +70,7 @@ class ViewStorageController extends ConfigStorageController {
     foreach ($config_properties as $property) {
       if ($property == 'display') {
         $displays = array();
-        foreach ($configurable->display as $key => $display) {
+        foreach ($entity->display as $key => $display) {
           $displays[$key] = array(
             'display_options' => $display->display_options,
             'display_plugin' => $display->display_plugin,
@@ -82,28 +82,28 @@ class ViewStorageController extends ConfigStorageController {
         $config->set('display', $displays);
       }
       else {
-        $config->set($property, $configurable->$property);
+        $config->set($property, $entity->$property);
       }
     }
 
     if (!$config->isNew()) {
       $return = SAVED_NEW;
       $config->save();
-      $this->postSave($configurable, TRUE);
-      $this->invokeHook('update', $configurable);
+      $this->postSave($entity, TRUE);
+      $this->invokeHook('update', $entity);
     }
     else {
       $return = SAVED_UPDATED;
       $config->save();
-      $configurable->enforceIsNew(FALSE);
-      $this->postSave($configurable, FALSE);
-      $this->invokeHook('insert', $configurable);
+      $entity->enforceIsNew(FALSE);
+      $this->postSave($entity, FALSE);
+      $this->invokeHook('insert', $entity);
     }
 
     // Clear caches.
     views_invalidate_cache();
 
-    unset($configurable->original);
+    unset($entity->original);
 
     return $return;
   }
@@ -124,22 +124,22 @@ class ViewStorageController extends ConfigStorageController {
       )
     );
 
-    $configurable = parent::create($values);
+    $entity = parent::create($values);
 
-    $this->attachDisplays($configurable);
-    return $configurable;
+    $this->attachDisplays($entity);
+    return $entity;
   }
 
   /**
    * Attaches an array of ViewDisplay objects to the view display property.
    *
-   * @param Drupal\entity\StorableInterface $configurable
+   * @param Drupal\entity\EntityInterface $entity
    */
-  protected function attachDisplays(StorableInterface $configurable) {
-    if (isset($configurable->display) && is_array($configurable->display)) {
+  protected function attachDisplays(EntityInterface $entity) {
+    if (isset($entity->display) && is_array($entity->display)) {
       $displays = array();
 
-      foreach ($configurable->get('display') as $key => $options) {
+      foreach ($entity->get('display') as $key => $options) {
         $options += array(
           'display_options' => array(),
           'display_plugin' => NULL,
@@ -151,7 +151,7 @@ class ViewStorageController extends ConfigStorageController {
         $displays[$key] = new ViewDisplay($options);
       }
 
-      $configurable->set('display', $displays);
+      $entity->set('display', $displays);
     }
   }
 
