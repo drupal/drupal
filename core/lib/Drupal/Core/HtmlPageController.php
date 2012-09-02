@@ -22,11 +22,20 @@ class HtmlPageController implements ContainerAwareInterface {
 
   public function content(Request $request, $_content) {
 
-    $content_controller = $this->getContentController($_content);
+    // @todo When we have a Generator, we can replace the forward() call with
+    // a render() call, which would handle ESI and hInclude as well.  That will
+    // require an _internal route.  For examples, see:
+    // https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Resources/config/routing/internal.xml
+    // https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/InternalController.php
+    $attributes = $request->attributes;
+    $controller = $attributes->get('_content');
+    $attributes->remove('system_path');
+    $attributes->remove('_content');
+    $response = $this->container->get('http_kernel')->forward($controller, $attributes->all(), $request->query->all());
 
-    $page_callback_result = call_user_func_array($content_controller, array());
+    $page_content = $response->getContent();
 
-    return new Response(drupal_render_page($page_callback_result));
+    return new Response(drupal_render_page($page_content));
   }
 
   protected function getContentController($controller) {

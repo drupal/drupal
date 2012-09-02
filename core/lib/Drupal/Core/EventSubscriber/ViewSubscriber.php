@@ -10,6 +10,7 @@ namespace Drupal\Core\EventSubscriber;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -44,15 +45,25 @@ class ViewSubscriber implements EventSubscriberInterface {
    */
   public function onView(GetResponseForControllerResultEvent $event) {
 
-    $request = $event->getRequest();
+    // For a master request, we process the result and wrap it as needed.
+    // For a subrequest, all we want is the string value.  We assume that
+    // is just an HTML string from a controller, so wrap that into a response
+    // object.  The subrequest's response will get dissected and placed into
+    // the larger page as needed.
+    if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
+      $request = $event->getRequest();
 
-    $method = 'on' . $this->negotiation->getContentType($request);
+      $method = 'on' . $this->negotiation->getContentType($request);
 
-    if (method_exists($this, $method)) {
-      $event->setResponse($this->$method($event));
+      if (method_exists($this, $method)) {
+        $event->setResponse($this->$method($event));
+      }
+      else {
+        $event->setResponse(new Response('Unsupported Media Type', 415));
+      }
     }
     else {
-      $event->setResponse(new Response('Unsupported Media Type', 415));
+      $event->setResponse(new Response($event->getControllerResult()));
     }
   }
 
