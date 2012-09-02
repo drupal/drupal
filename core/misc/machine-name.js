@@ -62,7 +62,7 @@ Drupal.behaviors.machineName = {
       if (settings.machineName.hasOwnProperty(source_id)) {
         options =  settings.machineName[source_id];
 
-        var $source = $context.find(source_id).addClass('machine-name-source');
+        var $source = $context.find(source_id).addClass('machine-name-source').once('machine-name');
         var $target = $context.find(options.target).addClass('machine-name-target');
         var $suffix = $context.find(options.suffix);
         var $wrapper = $target.closest('.form-item');
