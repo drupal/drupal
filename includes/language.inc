@@ -190,6 +190,11 @@ function language_negotiation_get_switch_links($type, $path) {
   $links = FALSE;
   $negotiation = variable_get("language_negotiation_$type", array());
 
+  // Only get the languages if we have more than one.
+  if (count(language_list()) >= 2) {
+    $language = language_initialize($type);
+  }
+
   foreach ($negotiation as $id => $provider) {
     if (isset($provider['callbacks']['switcher'])) {
       if (isset($provider['file'])) {
@@ -198,6 +203,12 @@ function language_negotiation_get_switch_links($type, $path) {
 
       $callback = $provider['callbacks']['switcher'];
       $result = $callback($type, $path);
+
+      // Add support for WCAG 2.0's Language of Parts to add language identifiers.
+      // http://www.w3.org/TR/UNDERSTANDING-WCAG20/meaning-other-lang-id.html
+      foreach ($result as $langcode => $link) {
+        $result[$langcode]['attributes']['lang'] = $langcode;
+      }
 
       if (!empty($result)) {
         // Allow modules to provide translations for specific links.
