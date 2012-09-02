@@ -4,9 +4,21 @@ namespace Drupal\Core;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
+class HtmlPageController implements ContainerAwareInterface {
 
-class HtmlPageController {
+  /**
+   * The injection container for this object.
+   *
+   * @var ContainerInterface
+   */
+  protected $container;
+
+  public function setContainer(ContainerInterface $container = NULL) {
+    $this->container = $container;
+  }
 
   public function content(Request $request, $_content) {
 
