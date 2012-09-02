@@ -117,6 +117,11 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalGet('node/' . $node->nid);
     $this->assertText($term1->name, 'Term is displayed when viewing the node.');
 
+    $this->clickLink(t('Edit'));
+    $this->assertText($term1->name, 'Term is displayed when editing the node.');
+    $this->drupalPost(NULL, array(), t('Save'));
+    $this->assertText($term1->name, 'Term is displayed after saving the node with no changes.');
+
     // Edit the node with a different term.
     $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term2->tid;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
@@ -488,4 +493,31 @@ class TermTest extends TaxonomyTestBase {
     $terms = taxonomy_term_load_multiple_by_name($term2->name, 'non_existing_vocabulary');
     $this->assertEqual(count($terms), 0, 'No terms loaded when restricted by a non-existing vocabulary.');
   }
+
+  /**
+   * Tests that editing and saving a node with no changes works correctly.
+   */
+  function testReSavingTags() {
+    // Enable tags in the vocabulary.
+    $instance = $this->instance;
+    $instance['widget'] = array('type' => 'taxonomy_autocomplete');
+    field_update_instance($instance);
+
+    // Create a term and a node using it.
+    $term = $this->createTerm($this->vocabulary);
+    $langcode = LANGUAGE_NOT_SPECIFIED;
+    $edit = array();
+    $edit["title"] = $this->randomName(8);
+    $edit["body[$langcode][0][value]"] = $this->randomName(16);
+    $edit[$this->instance['field_name'] . '[' . $langcode . ']'] = $term->label();
+    $this->drupalPost('node/add/article', $edit, t('Save'));
+
+    // Check that the term is displayed when editing and saving the node with no
+    // changes.
+    $this->clickLink(t('Edit'));
+    $this->assertRaw($term->label(), 'Term is displayed when editing the node.');
+    $this->drupalPost(NULL, array(), t('Save'));
+    $this->assertRaw($term->label(), 'Term is displayed after saving the node with no changes.');
+  }
+
 }
