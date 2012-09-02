@@ -391,7 +391,7 @@ class NodeFormController extends EntityFormController {
     if ($node->nid) {
       $form_state['values']['nid'] = $node->nid;
       $form_state['nid'] = $node->nid;
-      $form_state['redirect'] = 'node/' . $node->nid;
+      $form_state['redirect'] = node_access('view', $node) ? 'node/' . $node->nid : '<front>';
     }
     else {
       // In the unlikely case something went wrong on save, the node will be

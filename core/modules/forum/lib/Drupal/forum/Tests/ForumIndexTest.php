@@ -70,6 +70,7 @@ class ForumIndexTest extends WebTestBase {
       'status' => FALSE,
     );
     $this->drupalPost("node/{$node->nid}/edit", $edit, t('Save'));
+    $this->drupalGet("node/{$node->nid}");
     $this->assertText(t('Access denied'), 'Unpublished node is no longer accessible.');
 
     // Verify that the node no longer appears on the index.
