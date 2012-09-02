@@ -4154,7 +4154,7 @@ function form_type_range_value($element, $input = FALSE) {
 }
 
 /**
- * Returns HTML for a url form element.
+ * Returns HTML for a URL form element.
  *
  * @param $variables
  *   An associative array containing:

@@ -433,7 +433,7 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
  *   The hostname and optional port number, e.g. "www.example.com" or
  *   "www.example.com:8080".
  * @param $script_name
- *   The part of the url following the hostname, including the leading slash.
+ *   The part of the URL following the hostname, including the leading slash.
  * @param $require_settings
  *   Defaults to TRUE. If TRUE, then only match directories with a
  *   'settings.php' file. Otherwise match any directory.
@@ -768,7 +768,7 @@ function drupal_settings_initialize() {
   }
   else {
     // Otherwise use $base_url as session name, without the protocol
-    // to use the same session identifiers across http and https.
+    // to use the same session identifiers across HTTP and HTTPS.
     list( , $session_name) = explode('://', $base_url, 2);
     // HTTP_HOST can be modified by a visitor, but we already sanitized it
     // in drupal_settings_initialize().

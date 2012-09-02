@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Form;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests url element.
+ * Tests URL element.
  */
 class UrlTest extends WebTestBase {
 
@@ -25,8 +25,8 @@ class UrlTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Form API url',
-      'description' => 'Tests the form API url element.',
+      'name' => 'Form API URL',
+      'description' => 'Tests the form API URL element.',
       'group' => 'Form API',
     );
   }

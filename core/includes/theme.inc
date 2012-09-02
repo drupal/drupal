@@ -2087,7 +2087,7 @@ function theme_item_list($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - url: The url for the link.
+ *   - url: The URL for the link.
  */
 function theme_more_help_link($variables) {
   return '<div class="more-help-link">' . l(t('More help'), $variables['url']) . '</div>';
@@ -2152,7 +2152,7 @@ function theme_html_tag($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - url: The url of the main page.
+ *   - url: The URL of the main page.
  *   - title: A descriptive verb for the link, like 'Read more'.
  */
 function theme_more_link($variables) {

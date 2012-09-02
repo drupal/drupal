@@ -173,7 +173,7 @@ function comment_node_type_load($name) {
 }
 
 /**
- * Entity uri callback.
+ * Entity URI callback.
  */
 function comment_uri(Comment $comment) {
   return array(

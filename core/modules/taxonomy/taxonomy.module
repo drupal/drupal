@@ -169,7 +169,7 @@ function taxonomy_entity_info() {
 }
 
 /**
- * Entity uri callback.
+ * Entity URI callback.
  */
 function taxonomy_term_uri($term) {
   return array(

@@ -28,7 +28,7 @@ class Gettext {
    * @param string $langcode
    *   Language code string.
    * @param array $files
-   *   List of file objects with uri properties pointing to read.
+   *   List of file objects with URI properties pointing to read.
    *
    * @return array
    *   Structured array as produced by a PoMemoryWriter.
@@ -52,7 +52,7 @@ class Gettext {
    * Reads the given PO files into the database.
    *
    * @param stdClass $file
-   *   File object with an uri property pointing at the file's path.
+   *   File object with an URI property pointing at the file's path.
    *
    * @param array $options
    *   An array with options that can have the following elements:

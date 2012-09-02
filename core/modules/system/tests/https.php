@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Fake an https request, for use during testing.
+ * Fake an HTTPS request, for use during testing.
  */
 
 use Drupal\Core\DrupalKernel;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 // Set a global variable to indicate a mock HTTPS request.
 $is_https_mock = empty($_SERVER['HTTPS']);
 
-// Change to https.
+// Change to HTTPS.
 $_SERVER['HTTPS'] = 'on';
 foreach ($_SERVER as $key => $value) {
   $_SERVER[$key] = str_replace('core/modules/system/tests/https.php', 'index.php', $value);

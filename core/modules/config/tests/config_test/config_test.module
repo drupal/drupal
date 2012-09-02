@@ -94,7 +94,7 @@ function config_test_entity_info() {
 }
 
 /**
- * Entity uri callback.
+ * Entity URI callback.
  *
  * @param Drupal\config_test\ConfigTest $config_test
  *   A ConfigTest entity.

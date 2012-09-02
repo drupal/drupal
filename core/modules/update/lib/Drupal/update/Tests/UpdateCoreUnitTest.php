@@ -64,7 +64,7 @@ class UpdateCoreUnitTest extends UnitTestBase {
     $url = _update_build_fetch_url($project, $site_key);
     $this->assertEqual($url, $expected, "When site_key provided, '$url' should be '$expected'.");
 
-    // http://drupal.org/node/1481156 test incorrect logic when url contains
+    // http://drupal.org/node/1481156 test incorrect logic when URL contains
     // a question mark.
     $project['info']['project status url'] = 'http://www.example.com/?project=';
     $expected = 'http://www.example.com/?project=/' . $project['name'] . '/' . DRUPAL_CORE_COMPATIBILITY;

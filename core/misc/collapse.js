@@ -15,7 +15,7 @@ function CollapsibleFieldset(node, settings) {
     settings
   );
   // Expand fieldset if there are errors inside, or if it contains an
-  // element that is targeted by the uri fragment identifier.
+  // element that is targeted by the URI fragment identifier.
   var anchor = location.hash && location.hash !== '#' ? ', ' + location.hash : '';
   if (this.$node.find('.error' + anchor).length) {
     this.$node.removeClass('collapsed');

@@ -181,7 +181,7 @@ function user_entity_info() {
 }
 
 /**
- * Entity uri callback.
+ * Entity URI callback.
  */
 function user_uri($user) {
   return array(
@@ -1820,7 +1820,7 @@ function user_external_login_register($name, $module) {
  * @param array $options
  *   (optional) A keyed array of settings. Supported options are:
  *   - langcode: A language code to be used when generating locale-sensitive
- *    urls. If langcode is NULL the users preferred language is used.
+ *    URLs. If langcode is NULL the users preferred language is used.
  *
  * @return
  *   A unique URL that provides a one-time log in for the user, from which
@@ -1850,7 +1850,7 @@ function user_pass_reset_url($account, $options = array()) {
  * @param array $options
  *   (optional) A keyed array of settings. Supported options are:
  *   - langcode: A language code to be used when generating locale-sensitive
-  *    urls. If langcode is NULL the users preferred language is used.
+  *    URLs. If langcode is NULL the users preferred language is used.
  *
  * @return
  *   A unique URL that may be used to confirm the cancellation of the user
