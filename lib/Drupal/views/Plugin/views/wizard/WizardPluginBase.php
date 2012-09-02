@@ -356,6 +356,10 @@ abstract class WizardPluginBase implements WizardInterface {
       );
     }
 
+    if (!module_exists('block')) {
+      return $form;
+    }
+
     $form['displays']['block'] = array(
       '#type' => 'fieldset',
       '#attributes' => array('class' => array('views-attachment', 'fieldset-no-legend')),

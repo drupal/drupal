@@ -31,6 +31,7 @@ function views_core_modules() {
   return array(
     'aggregator',
     'book',
+    'block',
     'comment',
     'contact',
     'field',
@@ -2536,6 +2537,10 @@ if (!function_exists('aggregator_views_api')) {
 
 if (!function_exists('book_views_api')) {
   function book_views_api() { return views_views_api(); }
+}
+
+if (!function_exists('block_views_api')) {
+  function block_views_api() { return views_views_api(); }
 }
 
 if (!function_exists('comment_views_api')) {

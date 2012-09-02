@@ -3,12 +3,14 @@
 /**
  * @file
  * Definition of Drupal\views\Plugin\views\display\Block.
+ * Definition of Views\block\Plugin\views\display\Block.
  */
 
-namespace Drupal\views\Plugin\views\display;
+namespace Views\block\Plugin\views\display;
 
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 
 /**
  * The plugin that handles a block.
@@ -17,6 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Plugin(
  *   id = "block",
+ *   module = "block",
  *   title = @Translation("Block"),
  *   help = @Translation("Display the view as a block."),
  *   theme = "views_view",
