@@ -77,7 +77,6 @@ class JavaScriptTest extends WebTestBase {
   function testAddSetting() {
     // Add a file in order to test default settings.
     drupal_add_library('system', 'drupal.settings');
-    drupal_add_js(array('dummy' => 'value'), 'setting');
     $javascript = drupal_add_js();
     $last_settings = reset($javascript['settings']['data']);
     $this->assertTrue($last_settings['currentPath'], 'The current path JavaScript setting is set correctly.');
@@ -138,6 +137,15 @@ class JavaScriptTest extends WebTestBase {
    */
   function testHeaderSetting() {
     drupal_add_library('system', 'drupal.settings');
+
+    $javascript = drupal_get_js('header');
+    $this->assertTrue(strpos($javascript, 'basePath') > 0, 'Rendered JavaScript header returns basePath setting.');
+    $this->assertTrue(strpos($javascript, 'scriptPath') > 0, 'Rendered JavaScript header returns scriptPath setting.');
+    $this->assertTrue(strpos($javascript, 'pathPrefix') > 0, 'Rendered JavaScript header returns pathPrefix setting.');
+    $this->assertTrue(strpos($javascript, 'currentPath') > 0, 'Rendered JavaScript header returns currentPath setting.');
+    $this->assertTrue(strpos($javascript, 'core/misc/drupal.js') > 0, 'Rendered JavaScript header includes Drupal.js.');
+    $this->assertTrue(strpos($javascript, 'core/misc/jquery.js') > 0, 'Rendered JavaScript header includes jQuery.');
+
     // Only the second of these two entries should appear in Drupal.settings.
     drupal_add_js(array('commonTest' => 'commonTestShouldNotAppear'), 'setting');
     drupal_add_js(array('commonTest' => 'commonTestShouldAppear'), 'setting');
@@ -150,12 +158,6 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_js(array('commonTestArray' => array('key' => 'commonTestNewValue')), 'setting');
 
     $javascript = drupal_get_js('header');
-    $this->assertTrue(strpos($javascript, 'basePath') > 0, 'Rendered JavaScript header returns basePath setting.');
-    $this->assertTrue(strpos($javascript, 'scriptPath') > 0, 'Rendered JavaScript header returns scriptPath setting.');
-    $this->assertTrue(strpos($javascript, 'pathPrefix') > 0, 'Rendered JavaScript header returns pathPrefix setting.');
-    $this->assertTrue(strpos($javascript, 'currentPath') > 0, 'Rendered JavaScript header returns currentPath setting.');
-    $this->assertTrue(strpos($javascript, 'core/misc/jquery.js') > 0, 'Rendered JavaScript header includes jQuery.');
-
     // Test whether drupal_add_js can be used to override a previous setting.
     $this->assertTrue(strpos($javascript, 'commonTestShouldAppear') > 0, t('Rendered JavaScript header returns custom setting.'));
     $this->assertTrue(strpos($javascript, 'commonTestShouldNotAppear') === FALSE, t('drupal_add_js() correctly overrides a custom setting.'));

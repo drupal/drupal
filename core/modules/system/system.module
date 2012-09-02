@@ -1212,6 +1212,9 @@ function system_library_info() {
   $libraries['drupal.settings'] = array(
     'title' => 'Drupal Settings',
     'version' => VERSION,
+    'js' => array(
+      array('type' => 'setting', 'data' => array()),
+    ),
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
