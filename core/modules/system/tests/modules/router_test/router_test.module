@@ -3,6 +3,9 @@
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * Implements hook_router_info().
+ */
 function router_test_route_info() {
   $collection = new RouteCollection();
 
@@ -10,6 +13,11 @@ function router_test_route_info() {
     '_controller' => '\Drupal\router_test\TestControllers::test1'
   ));
   $collection->add('router_test_1', $route);
+
+  $route = new Route('router_test/test2', array(
+    '_content' => '\Drupal\router_test\TestControllers::test2'
+  ));
+  $collection->add('router_test_2', $route);
 
   return $collection;
 }

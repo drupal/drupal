@@ -82,6 +82,7 @@ class CoreBundle extends Bundle
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\FinishResponseSubscriber());
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\RequestCloseSubscriber());
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber());
+    $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\RouteProcessorSubscriber());
     $container->set('content_negotiation', $content_negotation);
     $dispatcher->addSubscriber(\Drupal\Core\ExceptionController::getExceptionListener($container));
 

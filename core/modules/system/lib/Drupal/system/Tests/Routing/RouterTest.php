@@ -25,9 +25,21 @@ class RouterTest extends WebTestBase {
     );
   }
 
+  /**
+   * Confirms that the router can get to a controller.
+   */
   public function testCanRoute() {
     $this->drupalGet('router_test/test1');
     $this->assertRaw('test1', 'The correct string was returned because the route was successful.');
+  }
+
+  /**
+   * Confirms that our default controller logic works properly.
+   */
+  public function testDefaultController() {
+    $this->drupalGet('router_test/test2');
+    $this->assertRaw('test2', 'The correct string was returned because the route was successful.');
+    $this->assertRaw('</html>', 'Page markup was found.');
   }
 
 }
