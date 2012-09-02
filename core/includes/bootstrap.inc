@@ -2245,6 +2245,9 @@ function _drupal_bootstrap_configuration() {
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
 
+  // Make sure we are using the test database prefix in child Drupal sites.
+  _drupal_initialize_db_test_prefix();
+
   // Activate the class loader.
   drupal_classloader();
 
@@ -2310,17 +2313,9 @@ function _drupal_bootstrap_page_cache() {
 }
 
 /**
- * Initializes the database system and registers autoload functions.
+ * In a test environment, get the test db prefix and set it in $databases.
  */
-function _drupal_bootstrap_database() {
-  // Redirect the user to the installation script if Drupal has not been
-  // installed yet (i.e., if no $databases array has been defined in the
-  // settings.php file) and we are not already installing.
-  if (empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    install_goto('core/install.php');
-  }
-
+function _drupal_initialize_db_test_prefix() {
   // The user agent header is used to pass a database prefix in the request when
   // running tests. However, for security reasons, it is imperative that we
   // validate we ourselves made the request.
@@ -2348,6 +2343,20 @@ function _drupal_bootstrap_database() {
       );
     }
   }
+}
+
+/**
+ * Initializes the database system by loading database.inc.
+ */
+function _drupal_bootstrap_database() {
+  // Redirect the user to the installation script if Drupal has not been
+  // installed yet (i.e., if no $databases array has been defined in the
+  // settings.php file) and we are not already installing.
+  if (empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    install_goto('core/install.php');
+  }
+
 
   // Initialize the database system. Note that the connection
   // won't be initialized until it is actually requested.
