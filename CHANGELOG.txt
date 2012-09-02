@@ -12,6 +12,7 @@ Drupal 7.16, xxxx-xx-xx (development version)
   projects.
 - Fixed a regression which caused a "call to undefined function
   drupal_find_base_themes()" fatal error under rare circumstances.
+- Added "lang" attributes to language links, to better support screen readers.
 
 Drupal 7.15, 2012-08-01
 -----------------------
