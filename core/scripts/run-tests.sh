@@ -376,6 +376,9 @@ function simpletest_script_run_one_test($test_id, $test_class) {
     // Override configuration according to command line parameters.
     $conf['simpletest.settings']['verbose'] = $args['verbose'];
     $conf['simpletest.settings']['clear_results'] = !$args['keep-results'];
+    // @todo D8: Remove after converting Simpletest settings to config.
+    $conf['simpletest_verbose'] = $args['verbose'];
+    $conf['simpletest_clear_results'] = !$args['keep-results'];
 
     $test = new $test_class($test_id);
     $test->run();
