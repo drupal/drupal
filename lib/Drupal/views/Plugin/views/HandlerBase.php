@@ -143,7 +143,7 @@ abstract class HandlerBase extends PluginBase {
     $options['field'] = array('default' => '');
     $options['relationship'] = array('default' => 'none');
     $options['group_type'] = array('default' => 'group');
-    $options['ui_name'] = array('default' => '', 'translatable' => TRUE);
+    $options['admin_label'] = array('default' => '', 'translatable' => TRUE);
 
     return $options;
   }
@@ -151,9 +151,9 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Return a string representing this handler's name in the UI.
    */
-  public function uiName($short = FALSE) {
-    if (!empty($this->options['ui_name'])) {
-      $title = check_plain($this->options['ui_name']);
+  public function adminLabel($short = FALSE) {
+    if (!empty($this->options['admin_label'])) {
+      $title = check_plain($this->options['admin_label']);
       return $title;
     }
     $title = ($short && isset($this->definition['title short'])) ? $this->definition['title short'] : $this->definition['title'];
@@ -275,11 +275,11 @@ abstract class HandlerBase extends PluginBase {
     // be moved to their fieldset during pre_render.
     $form['#pre_render'][] = 'views_ui_pre_render_add_fieldset_markup';
 
-    $form['ui_name'] = array(
+    $form['admin_label'] = array(
       '#type' => 'textfield',
       '#title' => t('Administrative title'),
       '#description' => t('This title will be displayed on the views edit page instead of the default one. This might be useful if you have the same item twice.'),
-      '#default_value' => $this->options['ui_name'],
+      '#default_value' => $this->options['admin_label'],
       '#fieldset' => 'more',
     );
 
@@ -319,7 +319,7 @@ abstract class HandlerBase extends PluginBase {
     $id = $form_state['id'];
 
     $form['#title'] = check_plain($view->display[$display_id]->display_title) . ': ';
-    $form['#title'] .= t('Configure aggregation settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $this->uiName()));
+    $form['#title'] .= t('Configure aggregation settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $this->adminLabel()));
 
     $form['#section'] = $display_id . '-' . $type . '-' . $id;
 

@@ -2276,7 +2276,7 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
       continue;
     }
 
-    $field_name = check_plain($handler->uiName(TRUE));
+    $field_name = check_plain($handler->adminLabel(TRUE));
     if (!empty($field['relationship']) && !empty($relationships[$field['relationship']])) {
       $field_name = '(' . $relationships[$field['relationship']] . ') ' . $field_name;
     }
@@ -3371,7 +3371,7 @@ function views_ui_rearrange_form($form, &$form_state) {
     );
     $handler = $display->handler->getHandler($type, $id);
     if ($handler) {
-      $name = $handler->uiName() . ' ' . $handler->adminSummary();
+      $name = $handler->adminLabel() . ' ' . $handler->adminSummary();
       if (!empty($field['relationship']) && !empty($relationships[$field['relationship']])) {
         $name = '(' . $relationships[$field['relationship']] . ') ' . $name;
       }
@@ -3726,7 +3726,7 @@ function views_ui_rearrange_filter_form($form, &$form_state) {
     );
 
     if ($handler) {
-      $name = $handler->uiName() . ' ' . $handler->adminSummary();
+      $name = $handler->adminLabel() . ' ' . $handler->adminSummary();
       if (!empty($field['relationship']) && !empty($relationships[$field['relationship']])) {
         $name = '(' . $relationships[$field['relationship']] . ') ' . $name;
       }
@@ -4293,7 +4293,7 @@ function views_ui_config_item_form($form, &$form_state) {
         );
       }
 
-      $form['#title'] = t('Configure @type: @item', array('@type' => $types[$type]['lstitle'], '@item' => $handler->uiName()));
+      $form['#title'] = t('Configure @type: @item', array('@type' => $types[$type]['lstitle'], '@item' => $handler->adminLabel()));
 
       if (!empty($handler->definition['help'])) {
         $form['options']['form_description'] = array(
@@ -4476,7 +4476,7 @@ function views_ui_config_item_group_form($type, &$form_state) {
       $handler->init($view, $item);
       $types = View::viewsObjectTypes();
 
-      $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->uiName()));
+      $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
       $handler->buildGroupByForm($form['options'], $form_state);
       $form_state['handler'] = &$handler;
@@ -4577,7 +4577,7 @@ function views_ui_config_item_extra_form($form, &$form_state) {
       $handler->init($view, $item);
       $types = View::viewsObjectTypes();
 
-      $form['#title'] = t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->uiName()));
+      $form['#title'] = t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
       $form['#section'] = $display_id . '-' . $type . '-' . $id;
 
@@ -4648,7 +4648,7 @@ function views_ui_config_style_form($form, &$form_state) {
       $handler->init($view, $item);
       $types = View::viewsObjectTypes();
 
-      $form['#title'] = t('Configure summary style for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->uiName()));
+      $form['#title'] = t('Configure summary style for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
       $form['#section'] = $display_id . '-' . $type . '-style-options';
 

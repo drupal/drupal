@@ -28,8 +28,8 @@ class GroupByNumeric extends ArgumentPluginBase {
     $this->query->add_having_expression(0, "$field = $placeholder", array($placeholder => $this->argument));
   }
 
-  public function uiName($short = FALSE) {
-    return $this->getField(parent::uiName($short));
+  public function adminLabel($short = FALSE) {
+    return $this->getField(parent::adminLabel($short));
   }
 
   function get_sort_name() {

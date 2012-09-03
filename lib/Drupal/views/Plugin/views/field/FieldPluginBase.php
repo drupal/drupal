@@ -851,7 +851,7 @@ abstract class FieldPluginBase extends HandlerBase {
       // Get a list of the available fields and arguments for token replacement.
       $options = array();
       foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
-        $options[t('Fields')]["[$field]"] = $handler->uiName();
+        $options[t('Fields')]["[$field]"] = $handler->adminLabel();
         // We only use fields up to (and including) this one.
         if ($field == $this->options['id']) {
           break;
@@ -859,8 +859,8 @@ abstract class FieldPluginBase extends HandlerBase {
       }
       $count = 0; // This lets us prepare the key as we want it printed.
       foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
-        $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->uiName()));
-        $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->uiName()));
+        $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->adminLabel()));
+        $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->adminLabel()));
       }
 
       $this->document_self_tokens($options[t('Fields')]);
@@ -1625,8 +1625,8 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
     return $themes;
   }
 
-  public function uiName($short = FALSE) {
-    return $this->getField(parent::uiName($short));
+  public function adminLabel($short = FALSE) {
+    return $this->getField(parent::adminLabel($short));
   }
 
 }

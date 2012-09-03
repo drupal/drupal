@@ -49,13 +49,13 @@ class Text extends AreaPluginBase {
     // Get a list of the available fields and arguments for token replacement.
     $options = array();
     foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
-      $options[t('Fields')]["[$field]"] = $handler->uiName();
+      $options[t('Fields')]["[$field]"] = $handler->adminLabel();
     }
 
     $count = 0; // This lets us prepare the key as we want it printed.
     foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
-      $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->uiName()));
-      $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->uiName()));
+      $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->adminLabel()));
+      $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->adminLabel()));
     }
 
     if (!empty($options)) {

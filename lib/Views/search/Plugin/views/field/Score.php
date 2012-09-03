@@ -37,7 +37,7 @@ class Score extends Numeric {
       $handlers = $this->view->display_handler->getHandlers('field');
       $options = array('' => t('No alternate'));
       foreach ($handlers as $id => $handler) {
-        $options[$id] = $handler->uiName();
+        $options[$id] = $handler->adminLabel();
       }
 
       $form['alternate_sort'] = array(

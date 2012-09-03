@@ -39,8 +39,8 @@ class GroupByNumeric extends SortPluginBase {
     $this->query->add_orderby($this->table_alias, $this->real_field, $this->options['order'], NULL, $params);
   }
 
-  public function uiName($short = FALSE) {
-    return $this->getField(parent::uiName($short));
+  public function adminLabel($short = FALSE) {
+    return $this->getField(parent::adminLabel($short));
   }
 
 }

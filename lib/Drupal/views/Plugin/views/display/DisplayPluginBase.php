@@ -943,7 +943,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $relationships[$relationship] = $label;
       }
       else {
-        $relationships[$relationship] = $handler->uiName();
+        $relationships[$relationship] = $handler->adminLabel();
       }
     }
 
@@ -956,7 +956,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $options[$id] = $label;
       }
       else {
-        $options[$id] = $handler->uiName();
+        $options[$id] = $handler->adminLabel();
       }
       if (!empty($handler->options['relationship']) && !empty($relationships[$handler->options['relationship']])) {
         $options[$id] = '(' . $relationships[$handler->options['relationship']] . ') ' . $options[$id];
@@ -1717,8 +1717,8 @@ abstract class DisplayPluginBase extends PluginBase {
         $options = array();
         $count = 0; // This lets us prepare the key as we want it printed.
         foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
-          $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->uiName()));
-          $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->uiName()));
+          $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->adminLabel()));
+          $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->adminLabel()));
         }
 
         // Default text.
@@ -1864,7 +1864,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
           if ($plugin->usesFields()) {
             foreach ($this->getHandlers('field') as $id => $handler) {
-              $funcs[] = $this->optionLink(t('Field @field (ID: @id)', array('@field' => $handler->uiName(), '@id' => $id)), 'analyze-theme-field') . ': ' . $this->formatThemes($handler->themeFunctions());
+              $funcs[] = $this->optionLink(t('Field @field (ID: @id)', array('@field' => $handler->adminLabel(), '@id' => $id)), 'analyze-theme-field') . ': ' . $this->formatThemes($handler->themeFunctions());
             }
           }
         }
@@ -2822,7 +2822,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $handler = views_get_handler($info['table'], $info['field'], $handler_type, $override);
       if ($handler) {
         $handler->init($this->view, $info);
-        $output .= $indent . '/* ' . $types[$type]['stitle'] . ': ' . $handler->uiName() . " */\n";
+        $output .= $indent . '/* ' . $types[$type]['stitle'] . ': ' . $handler->adminLabel() . " */\n";
         $output .= $handler->exportOptions($indent, $prefix . "['$option']['$id']");
       }
 

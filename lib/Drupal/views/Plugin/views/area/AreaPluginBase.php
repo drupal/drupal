@@ -42,7 +42,7 @@ abstract class AreaPluginBase extends HandlerBase {
    */
   public function label() {
     if (!isset($this->options['label'])) {
-      return $this->ui_name();
+      return $this->admin_label();
     }
     return $this->options['label'];
   }

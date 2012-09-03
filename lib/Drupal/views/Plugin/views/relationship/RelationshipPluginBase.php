@@ -64,11 +64,10 @@ abstract class RelationshipPluginBase extends HandlerBase {
    */
   function label() {
     if (!isset($this->options['label'])) {
-      return $this->ui_name();
+      return $this->adminLabel();
     }
     return $this->options['label'];
   }
-
 
   protected function defineOptions() {
     $options = parent::defineOptions();

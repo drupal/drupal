@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Broken extends FilterPluginBase {
 
-  public function uiName($short = FALSE) {
+  public function adminLabel($short = FALSE) {
     return t('Broken/missing handler');
   }
 

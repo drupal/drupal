@@ -40,7 +40,7 @@ class Combine extends String {
     if ($this->view->style_plugin->usesFields()) {
       $options = array();
       foreach ($this->view->display_handler->getHandlers('field') as $name => $field) {
-        $options[$name] = $field->uiName(TRUE);
+        $options[$name] = $field->adminLabel(TRUE);
       }
       if ($options) {
         $form['fields'] = array(
