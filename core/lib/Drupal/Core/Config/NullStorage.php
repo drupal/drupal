@@ -59,14 +59,14 @@ class NullStorage implements StorageInterface {
   /**
    * Implements Drupal\Core\Config\StorageInterface::encode().
    */
-  public static function encode($data) {
+  public function encode($data) {
     return $data;
   }
 
   /**
    * Implements Drupal\Core\Config\StorageInterface::decode().
    */
-  public static function decode($raw) {
+  public function decode($raw) {
     return $raw;
   }
 

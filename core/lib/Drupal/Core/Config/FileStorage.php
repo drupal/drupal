@@ -7,7 +7,8 @@
 
 namespace Drupal\Core\Config;
 
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Defines the file storage controller.
@@ -22,6 +23,20 @@ class FileStorage implements StorageInterface {
    * @var array
    */
   protected $options;
+
+  /**
+   * A shared YAML dumper instance.
+   *
+   * @var Symfony\Component\Yaml\Dumper
+   */
+  protected $dumper;
+
+  /**
+   * A shared YAML parser instance.
+   *
+   * @var Symfony\Component\Yaml\Parser
+   */
+  protected $parser;
 
   /**
    * Implements Drupal\Core\Config\StorageInterface::__construct().
@@ -119,14 +134,38 @@ class FileStorage implements StorageInterface {
   }
 
   /**
+   * Gets the YAML dumper instance.
+   *
+   * @return Symfony\Component\Yaml\Dumper
+   */
+  protected function getDumper() {
+    if (!isset($this->dumper)) {
+      $this->dumper = new Dumper();
+    }
+    return $this->dumper;
+  }
+
+  /**
+   * Gets the YAML parser instance.
+   *
+   * @return Symfony\Component\Yaml\Parser
+   */
+  protected function getParser() {
+    if (!isset($this->parser)) {
+      $this->parser = new Parser();
+    }
+    return $this->parser;
+  }
+
+  /**
    * Implements Drupal\Core\Config\StorageInterface::encode().
    *
    * @throws Symfony\Component\Yaml\Exception\DumpException
    */
-  public static function encode($data) {
+  public function encode($data) {
     // The level where you switch to inline YAML is set to PHP_INT_MAX to ensure
     // this does not occur.
-    return Yaml::dump($data, PHP_INT_MAX);
+    return $this->getDumper()->dump($data, PHP_INT_MAX);
   }
 
   /**
@@ -134,8 +173,8 @@ class FileStorage implements StorageInterface {
    *
    * @throws Symfony\Component\Yaml\Exception\ParseException
    */
-  public static function decode($raw) {
-    $data = Yaml::parse($raw);
+  public function decode($raw) {
+    $data = $this->getParser()->parse($raw);
     // A simple string is valid YAML for any reason.
     if (!is_array($data)) {
       return FALSE;

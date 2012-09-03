@@ -116,7 +116,7 @@ class DatabaseStorage implements StorageInterface {
   /**
    * Implements Drupal\Core\Config\StorageInterface::encode().
    */
-  public static function encode($data) {
+  public function encode($data) {
     return serialize($data);
   }
 
@@ -126,7 +126,7 @@ class DatabaseStorage implements StorageInterface {
    * @throws ErrorException
    *   unserialize() triggers E_NOTICE if the string cannot be unserialized.
    */
-  public static function decode($raw) {
+  public function decode($raw) {
     $data = @unserialize($raw);
     return is_array($data) ? $data : FALSE;
   }
