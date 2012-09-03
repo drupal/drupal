@@ -64,14 +64,17 @@ class Comment extends WizardPluginBase {
     )
   );
 
-  protected function row_style_options($type) {
+  /**
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::row_style_options().
+   */
+  protected function row_style_options() {
     $options = array();
     $options['comment'] = t('comments');
     $options['fields'] = t('fields');
     return $options;
   }
 
-  protected function build_form_style(&$form, &$form_state, $type) {
+  protected function build_form_style(array &$form, array &$form_state, $type) {
     parent::build_form_style($form, $form_state, $type);
     $style_form =& $form['displays'][$type]['options']['style'];
     // Some style plugins don't support row plugins so stop here if that's the

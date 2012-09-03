@@ -425,16 +425,23 @@ abstract class WizardPluginBase implements WizardInterface {
   }
 
   /**
-   * Builds the part of the form that builds the display format options.
+   * Adds the style options to the wizard form.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   * @param string $type
+   *   The display ID (e.g. 'page' or 'block').
    */
-  protected function build_form_style(&$form, &$form_state, $type) {
+  protected function build_form_style(array &$form, array &$form_state, $type) {
     $style_form =& $form['displays'][$type]['options']['style'];
     $style = $style_form['style_plugin']['#default_value'];
     // @fixme
 
     $style_plugin = views_get_plugin('style', $style);
     if (isset($style_plugin) && $style_plugin->usesRowPlugin()) {
-      $options = $this->row_style_options($type);
+      $options = $this->row_style_options();
       $style_form['row_plugin'] = array(
         '#type' => 'select',
         '#title' => t('of'),
@@ -461,10 +468,12 @@ abstract class WizardPluginBase implements WizardInterface {
   }
 
   /**
-   * Adds possible row style options to the form.
+   * Retrieves row style plugin names.
+   *
+   * @return array
+   *   Returns the plugin names available for the base table of the wizard.
    */
-  protected function row_style_options($type) {
-    $data = views_fetch_data($this->base_table);
+  protected function row_style_options() {
     // Get all available row plugins by default.
     $options = views_fetch_plugin_names('row', 'normal', array($this->base_table));
     return $options;

@@ -71,7 +71,10 @@ class Node extends WizardPluginBase {
     );
   }
 
-  protected function row_style_options($type) {
+  /**
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::row_style_options().
+   */
+  protected function row_style_options() {
     $options = array();
     $options['teasers'] = t('teasers');
     $options['full_posts'] = t('full posts');
@@ -81,7 +84,17 @@ class Node extends WizardPluginBase {
     return $options;
   }
 
-  protected function build_form_style(&$form, &$form_state, $type) {
+  /**
+   * Adds the style options to the wizard form.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   * @param string $type
+   *   The display ID (e.g. 'page' or 'block').
+   */
+  protected function build_form_style(array &$form, array &$form_state, $type) {
     parent::build_form_style($form, $form_state, $type);
     $style_form =& $form['displays'][$type]['options']['style'];
     // Some style plugins don't support row plugins so stop here if that's the
