@@ -30,7 +30,7 @@ class SortTest extends HandlerTestBase {
    * Tests numeric ordering of the result set.
    */
   public function testNumericOrdering() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Change the ordering
     $view->display['default']->handler->overrideOption('sorts', array(
@@ -53,7 +53,7 @@ class SortTest extends HandlerTestBase {
       'views_test_age' => 'age',
     ));
 
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Reverse the ordering
     $view->display['default']->handler->overrideOption('sorts', array(
@@ -81,7 +81,7 @@ class SortTest extends HandlerTestBase {
    * Tests string ordering of the result set.
    */
   public function testStringOrdering() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Change the ordering
     $view->display['default']->handler->overrideOption('sorts', array(
@@ -104,7 +104,7 @@ class SortTest extends HandlerTestBase {
       'views_test_age' => 'age',
     ));
 
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Reverse the ordering
     $view->display['default']->handler->overrideOption('sorts', array(

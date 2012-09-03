@@ -33,7 +33,7 @@ class FieldUrlTest extends HandlerTestBase {
   }
 
   public function testFieldUrl() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     $view->display['default']->handler->overrideOption('fields', array(
       'name' => array(
@@ -50,8 +50,8 @@ class FieldUrlTest extends HandlerTestBase {
     $this->assertEqual('John', $view->field['name']->advanced_render($view->result[0]));
 
     // Make the url a link.
-    $view->delete();
-    $view = $this->getBasicView();
+    $view->destroy();
+    $view = $this->getView();
 
     $view->display['default']->handler->overrideOption('fields', array(
       'name' => array(

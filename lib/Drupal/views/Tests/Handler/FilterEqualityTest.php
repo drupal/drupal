@@ -38,7 +38,7 @@ class FilterEqualityTest extends HandlerTestBase {
   }
 
   function testEqual() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Change the filtering
     $view->display['default']->handler->overrideOption('filters', array(
@@ -80,7 +80,7 @@ class FilterEqualityTest extends HandlerTestBase {
   }
 
   function testNotEqual() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Change the filtering
     $view->display['default']->handler->overrideOption('filters', array(

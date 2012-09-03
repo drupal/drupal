@@ -33,7 +33,7 @@ class FieldDateTest extends HandlerTestBase {
   }
 
   public function testFieldDate() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     $view->display['default']->handler->overrideOption('fields', array(
       'created' => array(

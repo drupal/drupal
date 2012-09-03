@@ -43,7 +43,7 @@ class FieldTest extends HandlerTestBase {
    * This tests alters the result to get easier and less coupled results.
    */
   function _testHideIfEmpty() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
     $view->initDisplay();
     $this->executeView($view);
 
@@ -261,7 +261,7 @@ class FieldTest extends HandlerTestBase {
    * Tests the usage of the empty text.
    */
   function _testEmptyText() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
     $view->initDisplay();
     $this->executeView($view);
 
@@ -298,7 +298,7 @@ class FieldTest extends HandlerTestBase {
    * Tests views_handler_field::is_value_empty().
    */
   function testIsValueEmpty() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
     $view->initDisplay();
     $view->initHandlers();
     $field = $view->field['name'];

@@ -35,7 +35,7 @@ class ArgumentNullTest extends HandlerTestBase {
 
   public function testAreaText() {
     // Test validation
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Add a null argument.
     $string = $this->randomString();
@@ -60,7 +60,7 @@ class ArgumentNullTest extends HandlerTestBase {
     $this->assertTrue($view->argument['null']->validateArgument(NULL), 'must_not_be returns TRUE, if there is no argument');
 
     // Test execution.
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Add a argument, which has null as handler.
     $string = $this->randomString();

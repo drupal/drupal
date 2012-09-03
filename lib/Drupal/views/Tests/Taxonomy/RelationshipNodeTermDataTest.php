@@ -8,7 +8,6 @@
 namespace Drupal\views\Tests\Taxonomy;
 
 use Drupal\views\Tests\ViewTestBase;
-use Drupal\views\View;
 
 /**
  * Tests the node_term_data relationship handler.
@@ -63,74 +62,21 @@ class RelationshipNodeTermDataTest extends ViewTestBase {
   }
 
   function testViewsHandlerRelationshipNodeTermData() {
-    $view = $this->view_taxonomy_node_term_data();
-
-    $this->executeView($view, array($this->term_1->tid, $this->term_2->tid));
+    $this->executeView($this->view, array($this->term_1->tid, $this->term_2->tid));
     $resultset = array(
       array(
         'nid' => $this->node->nid,
       ),
     );
     $this->column_map = array('nid' => 'nid');
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($this->view, $resultset, $this->column_map);
   }
 
-  function view_taxonomy_node_term_data() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_taxonomy_node_term_data';
-    $view->description = '';
-    $view->tag = '';
-    $view->base_table = 'node';
-    $view->human_name = 'test_taxonomy_node_term_data';
-    $view->core = 8;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'perm';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['query']['type'] = 'views_query';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'full';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'node';
-    /* Relationship: Content: Taxonomy terms on node */
-    $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
-    $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
-    $handler->display->display_options['relationships']['term_node_tid']['field'] = 'term_node_tid';
-    $handler->display->display_options['relationships']['term_node_tid']['label'] = 'Term #1';
-    $handler->display->display_options['relationships']['term_node_tid']['vocabularies'] = array(
-      'tags' => 0,
-    );
-    /* Relationship: Content: Taxonomy terms on node */
-    $handler->display->display_options['relationships']['term_node_tid_1']['id'] = 'term_node_tid_1';
-    $handler->display->display_options['relationships']['term_node_tid_1']['table'] = 'node';
-    $handler->display->display_options['relationships']['term_node_tid_1']['field'] = 'term_node_tid';
-    $handler->display->display_options['relationships']['term_node_tid_1']['label'] = 'Term #2';
-    $handler->display->display_options['relationships']['term_node_tid_1']['vocabularies'] = array(
-      'tags' => 0,
-    );
-    /* Contextual filter: Taxonomy term: Term ID */
-    $handler->display->display_options['arguments']['tid']['id'] = 'tid';
-    $handler->display->display_options['arguments']['tid']['table'] = 'taxonomy_term_data';
-    $handler->display->display_options['arguments']['tid']['field'] = 'tid';
-    $handler->display->display_options['arguments']['tid']['relationship'] = 'term_node_tid';
-    $handler->display->display_options['arguments']['tid']['default_argument_type'] = 'fixed';
-    $handler->display->display_options['arguments']['tid']['summary']['number_of_records'] = '0';
-    $handler->display->display_options['arguments']['tid']['summary']['format'] = 'default_summary';
-    $handler->display->display_options['arguments']['tid']['summary_options']['items_per_page'] = '25';
-    /* Contextual filter: Taxonomy term: Term ID */
-    $handler->display->display_options['arguments']['tid_1']['id'] = 'tid_1';
-    $handler->display->display_options['arguments']['tid_1']['table'] = 'taxonomy_term_data';
-    $handler->display->display_options['arguments']['tid_1']['field'] = 'tid';
-    $handler->display->display_options['arguments']['tid_1']['relationship'] = 'term_node_tid_1';
-    $handler->display->display_options['arguments']['tid_1']['default_argument_type'] = 'fixed';
-    $handler->display->display_options['arguments']['tid_1']['summary']['number_of_records'] = '0';
-    $handler->display->display_options['arguments']['tid_1']['summary']['format'] = 'default_summary';
-    $handler->display->display_options['arguments']['tid_1']['summary_options']['items_per_page'] = '25';
-
-    return $view;
+  /**
+   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
+   */
+  protected function getBasicView() {
+    return $this->createViewFromConfig('test_taxonomy_node_term_data');
   }
 
 }

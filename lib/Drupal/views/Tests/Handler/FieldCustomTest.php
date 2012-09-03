@@ -33,7 +33,7 @@ class FieldCustomTest extends HandlerTestBase {
   }
 
   public function testFieldCustom() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Alter the text of the field to a random string.
     $random = $this->randomName();

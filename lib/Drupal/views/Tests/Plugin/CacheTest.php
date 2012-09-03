@@ -86,8 +86,7 @@ class CacheTest extends PluginTestBase {
    */
   function testTimeCaching() {
     // Create a basic result which just 2 results.
-    $view = $this->getBasicView();
-    $view->setDisplay();
+    $view = $this->getView();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
       'results_lifespan' => '3600',
@@ -107,8 +106,7 @@ class CacheTest extends PluginTestBase {
     drupal_write_record('views_test', $record);
 
     // The Result should be the same as before, because of the caching.
-    $view = $this->getBasicView();
-    $view->setDisplay();
+    $view = $this->getView();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
       'results_lifespan' => '3600',
@@ -127,8 +125,7 @@ class CacheTest extends PluginTestBase {
    */
   function testNoneCaching() {
     // Create a basic result which just 2 results.
-    $view = $this->getBasicView();
-    $view->setDisplay();
+    $view = $this->getView();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'none',
     ));
@@ -147,8 +144,7 @@ class CacheTest extends PluginTestBase {
     drupal_write_record('views_test', $record);
 
     // The Result changes, because the view is not cached.
-    $view = $this->getBasicView();
-    $view->setDisplay();
+    $view = $this->getView();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'none',
     ));
@@ -165,8 +161,7 @@ class CacheTest extends PluginTestBase {
     // Create a view with output caching enabled.
     // Some hook_views_pre_render in views_test.module adds the test css/js file.
     // so they should be added to the css/js storage.
-    $view = $this->getBasicView();
-    $view->initDisplay();
+    $view = $this->getView();
     $view->name = 'test_cache_header_storage';
     $view->display_handler->overrideOption('cache', array(
       'type' => 'time',

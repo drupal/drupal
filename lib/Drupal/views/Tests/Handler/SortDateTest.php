@@ -154,7 +154,7 @@ class SortDateTest extends HandlerTestBase {
   public function testDateOrdering() {
     foreach (array('second', 'minute', 'hour', 'day', 'month', 'year') as $granularity) {
       foreach (array(FALSE, TRUE) as $reverse) {
-        $view = $this->getBasicView();
+        $view = $this->getView();
 
         // Change the fields.
         $view->display['default']->handler->overrideOption('fields', array(

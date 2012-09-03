@@ -8,7 +8,6 @@
 namespace Drupal\views\Tests\Comment;
 
 use Drupal\views\Tests\ViewTestBase;
-use Drupal\views\View;
 
 /**
  * Tests the argument_comment_user_uid handler.
@@ -43,42 +42,11 @@ abstract class CommentTestBase extends ViewTestBase {
     entity_create('comment', $comment)->save();
   }
 
-  function view_comment_user_uid() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_comment_user_uid';
-    $view->description = '';
-    $view->tag = 'default';
-    $view->base_table = 'node';
-    $view->human_name = 'test_comment_user_uid';
-    $view->core = 8;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'perm';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['query']['type'] = 'views_query';
-    $handler->display->display_options['query']['options']['query_comment'] = FALSE;
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'full';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'node';
-    /* Field: Content: nid */
-    $handler->display->display_options['fields']['nid']['id'] = 'nid';
-    $handler->display->display_options['fields']['nid']['table'] = 'node';
-    $handler->display->display_options['fields']['nid']['field'] = 'nid';
-    /* Contextual filter: Content: User posted or commented */
-    $handler->display->display_options['arguments']['uid_touch']['id'] = 'uid_touch';
-    $handler->display->display_options['arguments']['uid_touch']['table'] = 'node';
-    $handler->display->display_options['arguments']['uid_touch']['field'] = 'uid_touch';
-    $handler->display->display_options['arguments']['uid_touch']['default_argument_type'] = 'fixed';
-    $handler->display->display_options['arguments']['uid_touch']['default_argument_skip_url'] = 0;
-    $handler->display->display_options['arguments']['uid_touch']['summary']['number_of_records'] = '0';
-    $handler->display->display_options['arguments']['uid_touch']['summary']['format'] = 'default_summary';
-    $handler->display->display_options['arguments']['uid_touch']['summary_options']['items_per_page'] = '25';
-
-    return $view;
+  /**
+   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
+   */
+  protected function getBasicView() {
+    return $this->createViewFromConfig('test_comment_user_uid');
   }
 
 }

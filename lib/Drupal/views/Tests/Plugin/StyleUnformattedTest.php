@@ -52,7 +52,7 @@ class StyleUnformattedTest extends PluginTestBase {
    * Take sure that the default css classes works as expected.
    */
   function testDefaultRowClasses() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
     $rendered_output = $view->preview();
     $this->storeViewPreview($rendered_output);
 

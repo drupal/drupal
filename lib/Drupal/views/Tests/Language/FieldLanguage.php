@@ -25,7 +25,7 @@ class FieldLanguage extends LanguageTestBase {
   }
 
   public function testField() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
     $view->display['default']->handler->overrideOption('fields', array(
       'langcode' => array(
         'id' => 'langcode',

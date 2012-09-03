@@ -46,7 +46,7 @@ class SortRandomTest extends HandlerTestBase {
    * Return a basic view with random ordering.
    */
   protected function getBasicRandomView() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Add a random ordering.
     $view->display['default']->handler->overrideOption('sorts', array(
@@ -67,7 +67,7 @@ class SortRandomTest extends HandlerTestBase {
    */
   public function testRandomOrdering() {
     // Execute a basic view first.
-    $view = $this->getBasicView();
+    $view = $this->getView();
     $this->executeView($view);
 
     // Verify the result.

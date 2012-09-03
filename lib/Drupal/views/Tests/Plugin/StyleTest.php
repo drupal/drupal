@@ -33,7 +33,7 @@ class StyleTest extends PluginTestBase {
    * Tests the grouping legacy features of styles.
    */
   function testGroupingLegacy() {
-    $view = $this->getBasicView();
+    $view = $this->view->cloneView();
     // Setup grouping by the job.
     $view->initDisplay();
     $view->initStyle();
@@ -129,7 +129,7 @@ class StyleTest extends PluginTestBase {
    * Tests the grouping features of styles.
    */
   function _testGrouping($stripped = FALSE) {
-    $view = $this->getBasicView();
+    $view = $this->getView();
     // Setup grouping by the job and the age field.
     $view->initDisplay();
     $view->initStyle();
@@ -262,7 +262,7 @@ class StyleTest extends PluginTestBase {
    * Tests custom css classes.
    */
   function testCustomRowClasses() {
-    $view = $this->getBasicView();
+    $view = $this->view->cloneView();
 
     // Setup some random css class.
     $view->initDisplay();

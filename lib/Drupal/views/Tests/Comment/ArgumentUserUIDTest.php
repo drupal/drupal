@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Comment;
 
-use Drupal\views\View;
-
 /**
  * Tests the argument_comment_user_uid handler.
  */
@@ -23,9 +21,7 @@ class ArgumentUserUIDTest extends CommentTestBase {
   }
 
   function testCommentUserUIDTest() {
-    $view = $this->view_comment_user_uid();
-
-    $this->executeView($view, array($this->account->uid));
+    $this->executeView($this->view, array($this->account->uid));
     $result_set = array(
       array(
         'nid' => $this->node_user_posted->nid,
@@ -35,7 +31,7 @@ class ArgumentUserUIDTest extends CommentTestBase {
       ),
     );
     $this->column_map = array('nid' => 'nid');
-    $this->assertIdenticalResultset($view, $result_set, $this->column_map);
+    $this->assertIdenticalResultset($this->view, $result_set, $this->column_map);
   }
 
 }

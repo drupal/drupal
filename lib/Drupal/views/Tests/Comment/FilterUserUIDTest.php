@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Comment;
 
-use Drupal\views\View;
-
 /**
  * Tests the filter_comment_user_uid handler.
  *
@@ -24,14 +22,8 @@ class FilterUserUIDTest extends CommentTestBase {
     );
   }
 
-  /**
-   * Override the view from the argument test case to remove the argument and
-   * add filter with the uid as the value.
-   */
-  function view_comment_user_uid() {
-    $view = parent::view_comment_user_uid();
-    // Remove the argument.
-    $view->setItem('default', 'argument', 'uid_touch', NULL);
+  function testCommentUserUIDTest() {
+    $this->view->setItem('default', 'argument', 'uid_touch', NULL);
 
     $options = array(
       'id' => 'uid_touch',
@@ -39,15 +31,8 @@ class FilterUserUIDTest extends CommentTestBase {
       'field' => 'uid_touch',
       'value' => array($this->loggedInUser->uid),
     );
-    $view->addItem('default', 'filter', 'node', 'uid_touch', $options);
-
-    return $view;
-  }
-
-  function testCommentUserUIDTest() {
-    $view = $this->view_comment_user_uid();
-
-    $this->executeView($view, array($this->account->uid));
+    $this->view->addItem('default', 'filter', 'node', 'uid_touch', $options);
+    $this->executeView($this->view, array($this->account->uid));
     $result_set = array(
       array(
         'nid' => $this->node_user_posted->nid,
@@ -57,7 +42,7 @@ class FilterUserUIDTest extends CommentTestBase {
       ),
     );
     $this->column_map = array('nid' => 'nid');
-    $this->assertIdenticalResultset($view, $result_set, $this->column_map);
+    $this->assertIdenticalResultset($this->view, $result_set, $this->column_map);
   }
 
 }

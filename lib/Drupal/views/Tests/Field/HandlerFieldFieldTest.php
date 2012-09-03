@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Field;
 
-use Drupal\views\View;
-
 /**
  * Tests the field_field handler.
  * @TODO
@@ -61,6 +59,19 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
       $this->nodes[$i] = $this->drupalCreateNode($edit);
     }
+
+    foreach ($this->fields as $key => $field) {
+      $this->view->display_handler->display->display_options['fields'][$field['field_name']]['id'] = $field['field_name'];
+      $this->view->display_handler->display->display_options['fields'][$field['field_name']]['table'] = 'field_data_' . $field['field_name'];
+      $this->view->display_handler->display->display_options['fields'][$field['field_name']]['field'] = $field['field_name'];
+    }
+  }
+
+  /**
+   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
+   */
+  protected function getBasicView() {
+    return $this->createViewFromConfig('test_view_fieldapi');
   }
 
   public function testFieldRender() {
@@ -70,7 +81,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
   }
 
   public function _testSimpleFieldRender() {
-    $view = $this->getFieldView();
+    $view = $this->getView();
     $this->executeView($view);
 
     // Tests that the rendered fields match the actual value of the fields.
@@ -88,9 +99,9 @@ class HandlerFieldFieldTest extends FieldTestBase {
    * Tests that fields with formatters runs as expected.
    */
   public function _testFormatterSimpleFieldRender() {
-    $view = $this->getFieldView();
-    $view->display['default']->display_options['fields'][$this->fields[0]['field_name']]['type'] = 'text_trimmed';
-    $view->display['default']->display_options['fields'][$this->fields[0]['field_name']]['settings'] = array(
+    $view = $this->getView();
+    $view->display['default']->handler->options['fields'][$this->fields[0]['field_name']]['type'] = 'text_trimmed';
+    $view->display['default']->handler->options['fields'][$this->fields[0]['field_name']]['settings'] = array(
       'trim_length' => 3,
     );
     $this->executeView($view);
@@ -104,11 +115,11 @@ class HandlerFieldFieldTest extends FieldTestBase {
   }
 
   public function _testMultipleFieldRender() {
-    $view = $this->getFieldView();
+    $view = $this->getView();
 
     // Test delta limit.
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
-    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
+    $view->display['default']->handler->options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
+    $view->display['default']->handler->options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
     $this->executeView($view);
 
     for ($i = 0; $i < 3; $i++) {
@@ -199,38 +210,6 @@ class HandlerFieldFieldTest extends FieldTestBase {
       }
       $this->assertEqual($rendered_field, implode(':', $items), 'Take sure that the amount of items are limited.');
     }
-  }
-
-  protected function getFieldView() {
-    $view = new View(array(), 'view');
-    $view->name = 'view_fieldapi';
-    $view->description = '';
-    $view->tag = 'default';
-    $view->base_table = 'node';
-    $view->human_name = 'view_fieldapi';
-    $view->core = 8;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'perm';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['query']['type'] = 'views_query';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'full';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'fields';
-
-    $handler->display->display_options['fields']['nid']['id'] = 'nid';
-    $handler->display->display_options['fields']['nid']['table'] = 'node';
-    $handler->display->display_options['fields']['nid']['field'] = 'nid';
-    foreach ($this->fields as $key => $field) {
-      $handler->display->display_options['fields'][$field['field_name']]['id'] = $field['field_name'];
-      $handler->display->display_options['fields'][$field['field_name']]['table'] = 'field_data_' . $field['field_name'];
-      $handler->display->display_options['fields'][$field['field_name']]['field'] = $field['field_name'];
-    }
-    return $view;
   }
 
 }

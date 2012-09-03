@@ -29,7 +29,7 @@ class AreaTextTest extends HandlerTestBase {
   }
 
   public function testAreaText() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // add a text header
     $string = $this->randomName();

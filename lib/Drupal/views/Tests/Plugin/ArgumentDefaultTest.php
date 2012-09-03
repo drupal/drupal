@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\views\View;
-
 /**
  * Basic test for pluggable argument default.
  */
@@ -37,11 +35,11 @@ class ArgumentDefaultTest extends PluginTestBase {
   }
 
   protected function setUp() {
+    $this->random = $this->randomString();
+
     parent::setUp();
 
     $this->enableViewsTestModule();
-
-    $this->random = $this->randomString();
   }
 
   /**
@@ -72,20 +70,15 @@ class ArgumentDefaultTest extends PluginTestBase {
    * Tests fixed default argument.
    */
   function testArgumentDefaultFixed() {
-    $view = $this->view_argument_default_fixed();
-
-    $view->setDisplay('default');
+    $view = $this->getView();
     $view->preExecute();
     $view->initHandlers();
 
     $this->assertEqual($view->argument['null']->get_default_argument(), $this->random, 'Fixed argument should be used by default.');
 
-    $view->destroy();
-
     // Make sure that a normal argument provided is used
-    $view = $this->view_argument_default_fixed();
+    $view = $this->getView();
 
-    $view->setDisplay('default');
     $random_string = $this->randomString();
     $view->executeDisplay('default', array($random_string));
 
@@ -102,50 +95,12 @@ class ArgumentDefaultTest extends PluginTestBase {
    */
   //function testArgumentDefaultNode() {}
 
-  function view_argument_default_fixed() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_argument_default_fixed';
-    $view->description = '';
-    $view->tag = '';
-    $view->base_table = 'node';
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'full';
-    $handler->display->display_options['pager']['options']['items_per_page'] = '10';
-    $handler->display->display_options['pager']['options']['offset'] = '0';
-    $handler->display->display_options['pager']['options']['id'] = '0';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'fields';
-    /* Field: Content: Title */
-    $handler->display->display_options['fields']['title']['id'] = 'title';
-    $handler->display->display_options['fields']['title']['table'] = 'node';
-    $handler->display->display_options['fields']['title']['field'] = 'title';
-    $handler->display->display_options['fields']['title']['alter']['alter_text'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['make_link'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['trim'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['word_boundary'] = 1;
-    $handler->display->display_options['fields']['title']['alter']['ellipsis'] = 1;
-    $handler->display->display_options['fields']['title']['alter']['strip_tags'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['html'] = 0;
-    $handler->display->display_options['fields']['title']['hide_empty'] = 0;
-    $handler->display->display_options['fields']['title']['empty_zero'] = 0;
-    $handler->display->display_options['fields']['title']['link_to_node'] = 0;
-    /* Argument: Global: Null */
-    $handler->display->display_options['arguments']['null']['id'] = 'null';
-    $handler->display->display_options['arguments']['null']['table'] = 'views';
-    $handler->display->display_options['arguments']['null']['field'] = 'null';
-    $handler->display->display_options['arguments']['null']['default_action'] = 'default';
-    $handler->display->display_options['arguments']['null']['style_plugin'] = 'default_summary';
-    $handler->display->display_options['arguments']['null']['default_argument_type'] = 'fixed';
-    $handler->display->display_options['arguments']['null']['default_argument_options']['argument'] = $this->random;
-    $handler->display->display_options['arguments']['null']['must_not_be'] = 0;
-
+  /**
+   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
+   */
+  protected function getBasicView() {
+    $view = $this->createViewFromConfig('test_argument_default_fixed');
+    $view->display['default']->display_options['arguments']['null']['default_argument_options']['argument'] = $this->random;
     return $view;
   }
 

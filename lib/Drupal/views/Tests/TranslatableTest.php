@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\views\View;
-
 /**
  * Tests Views pluggable translations.
  */
@@ -50,16 +48,25 @@ class TranslatableTest extends ViewTestBase {
       'fieldlabel1',
       'filterlabel1'
     );
+
+    $this->view = $this->getBasicView();
+  }
+
+  /**
+   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
+   */
+  protected function getBasicView() {
+    return $this->createViewFromConfig('test_view_unpack_translatable');
   }
 
   /**
    * Tests the unpack translation funtionality.
    */
   public function testUnpackTranslatable() {
-    $view = $this->view_unpack_translatable();
+    $view = $this->getView();
     $view->initLocalization();
 
-    $this->assertEqual('Drupal\views_test\Plugin\views\localization\LocalizationTest', get_class($view->localization_plugin), 'Make sure that init_localization initializes the right translation plugin');
+    $this->assertEqual('Drupal\views_test_data\Plugin\views\localization\LocalizationTest', get_class($view->localization_plugin), 'Make sure that init_localization initializes the right translation plugin');
 
     $view->exportLocaleStrings();
 
@@ -70,7 +77,7 @@ class TranslatableTest extends ViewTestBase {
 
   public function testUi() {
     // Make sure that the string is not translated in the UI.
-    $view = $this->view_unpack_translatable();
+    $view = $this->getView();
     $view->save();
     views_invalidate_cache();
 
@@ -85,8 +92,7 @@ class TranslatableTest extends ViewTestBase {
    * Make sure that the translations get into the loaded view.
    */
   public function testTranslation() {
-    $view = $this->view_unpack_translatable();
-    $view->setDisplay('default');
+    $view = $this->getView();
     $this->executeView($view);
 
     $expected_strings = array();
@@ -106,7 +112,7 @@ class TranslatableTest extends ViewTestBase {
    * Make sure that the different things have the right translation keys.
    */
   public function testTranslationKey() {
-    $view = $this->view_unpack_translatable();
+    $view = $this->getView();
     $view->editing = TRUE;
     $view->initDisplay();
 
@@ -140,74 +146,6 @@ class TranslatableTest extends ViewTestBase {
         $this->assertEqual($translatable['keys'], $this->string_keys[$translatable['value']]);
       }
     }
-  }
-
-  public function view_unpack_translatable() {
-    $view = new View(array(), 'view');
-    $view->name = 'view_unpack_translatable';
-    $view->description = '';
-    $view->tag = '';
-    $view->base_table = 'node';
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-    $view->uuid = NULL;
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master1', 'default');
-    $handler->display->display_options['title'] = 'title1';
-    $handler->display->display_options['use_more_text'] = 'more1';
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['query']['type'] = 'views_query';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Apply1';
-    $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
-    $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Reset1';
-    $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Sort By1';
-    $handler->display->display_options['exposed_form']['options']['sort_asc_label'] = 'Asc1';
-    $handler->display->display_options['exposed_form']['options']['sort_desc_label'] = 'Desc1';
-    $handler->display->display_options['pager']['type'] = 'full';
-    $handler->display->display_options['pager']['options']['items_per_page'] = '10';
-    $handler->display->display_options['pager']['options']['offset'] = '0';
-    $handler->display->display_options['pager']['options']['id'] = '0';
-    $handler->display->display_options['pager']['options']['quantity'] = '9';
-    $handler->display->display_options['pager']['options']['tags']['first'] = 'Tag first1';
-    $handler->display->display_options['pager']['options']['tags']['previous'] = 'Tag prev1';
-    $handler->display->display_options['pager']['options']['tags']['next'] = 'Tag next1';
-    $handler->display->display_options['pager']['options']['tags']['last'] = 'Tag last1';
-    $handler->display->display_options['pager']['options']['expose']['items_per_page'] = TRUE;
-    $handler->display->display_options['pager']['options']['expose']['items_per_page_label'] = 'Items per page1';
-    $handler->display->display_options['pager']['options']['expose']['offset'] = TRUE;
-    $handler->display->display_options['pager']['options']['expose']['offset_label'] = 'Offset1';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'fields';
-    /* Field: Content: Nid */
-    $handler->display->display_options['fields']['nid']['id'] = 'nid';
-    $handler->display->display_options['fields']['nid']['table'] = 'node';
-    $handler->display->display_options['fields']['nid']['field'] = 'nid';
-    $handler->display->display_options['fields']['nid']['label'] = 'fieldlabel1';
-    $handler->display->display_options['fields']['nid']['alter']['alter_text'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['make_link'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['trim'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['word_boundary'] = 1;
-    $handler->display->display_options['fields']['nid']['alter']['ellipsis'] = 1;
-    $handler->display->display_options['fields']['nid']['alter']['strip_tags'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['html'] = 0;
-    $handler->display->display_options['fields']['nid']['hide_empty'] = 0;
-    $handler->display->display_options['fields']['nid']['empty_zero'] = 0;
-    $handler->display->display_options['fields']['nid']['link_to_node'] = 0;
-    /* Filter: Content: Nid */
-    $handler->display->display_options['filters']['nid']['id'] = 'nid';
-    $handler->display->display_options['filters']['nid']['table'] = 'node';
-    $handler->display->display_options['filters']['nid']['field'] = 'nid';
-    $handler->display->display_options['filters']['nid']['exposed'] = TRUE;
-    $handler->display->display_options['filters']['nid']['expose']['operator_id'] = 'nid_op';
-    $handler->display->display_options['filters']['nid']['expose']['label'] = 'filterlabel1';
-    $handler->display->display_options['filters']['nid']['expose']['identifier'] = 'nid';
-    $handler->display->display_options['filters']['nid']['expose']['multiple'] = 1;
-    $handler->display->display_options['filters']['nid']['expose']['reduce'] = 0;
-
-    return $view;
   }
 
 }

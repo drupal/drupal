@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\views\View;
-
 /**
  * Tests aggregate functionality of views, for example count.
  */
@@ -20,7 +18,6 @@ class QueryGroupByTest extends ViewTestBase {
       'description' => 'Tests aggregate functionality of views, for example count.',
       'group' => 'Views',
     );
-
   }
 
   /**
@@ -46,8 +43,8 @@ class QueryGroupByTest extends ViewTestBase {
     $this->drupalCreateNode($node_2);
     $this->drupalCreateNode($node_2);
 
-    $view = $this->viewsAggregateCountView();
-    $output = $view->executeDisplay();
+    $view = $this->createViewFromConfig('test_aggregate_count');
+    $this->executeView($view);
 
     $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');
 
@@ -63,54 +60,6 @@ class QueryGroupByTest extends ViewTestBase {
 
   //public function testAggregateSum() {
   //}
-
-  public function viewsAggregateCountView() {
-    $view = new View(array(), 'view');
-    $view->name = 'aggregate_count';
-    $view->description = '';
-    $view->tag = '';
-    $view->base_table = 'node';
-    $view->human_name = '';
-    $view->core = 8;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['group_by'] = TRUE;
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['query']['type'] = 'views_query';
-    $handler->display->display_options['query']['options']['query_comment'] = FALSE;
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'some';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'fields';
-    /* Field: Content: Title */
-    $handler->display->display_options['fields']['nid']['id'] = 'nid';
-    $handler->display->display_options['fields']['nid']['table'] = 'node';
-    $handler->display->display_options['fields']['nid']['field'] = 'title';
-    $handler->display->display_options['fields']['nid']['alter']['alter_text'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['make_link'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['word_boundary'] = 1;
-    $handler->display->display_options['fields']['nid']['alter']['ellipsis'] = 1;
-    $handler->display->display_options['fields']['nid']['alter']['strip_tags'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['trim'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['html'] = 0;
-    $handler->display->display_options['fields']['nid']['hide_empty'] = 0;
-    $handler->display->display_options['fields']['nid']['empty_zero'] = 0;
-    $handler->display->display_options['fields']['nid']['link_to_node'] = 0;
-    /* Contextual filter: Content: Type */
-    $handler->display->display_options['arguments']['type']['id'] = 'type';
-    $handler->display->display_options['arguments']['type']['table'] = 'node';
-    $handler->display->display_options['arguments']['type']['field'] = 'type';
-    $handler->display->display_options['arguments']['type']['default_action'] = 'summary';
-    $handler->display->display_options['arguments']['type']['default_argument_type'] = 'fixed';
-    $handler->display->display_options['arguments']['type']['summary']['format'] = 'default_summary';
-
-
-    return $view;
-  }
 
   /**
    * @param $group_by
@@ -137,8 +86,9 @@ class QueryGroupByTest extends ViewTestBase {
     $this->drupalCreateNode($node_2);
     $this->drupalCreateNode($node_2);
 
-    $view = $this->viewsGroupByViewHelper($group_by);
-    $output = $view->executeDisplay();
+    $view = $this->createViewFromConfig('test_group_by_count');
+    $view->display['default']->handler->options['fields']['nid']['group_type'] = $group_by;
+    $this->executeView($view);
 
     $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');
     // Group by nodetype to identify the right count.
@@ -147,59 +97,6 @@ class QueryGroupByTest extends ViewTestBase {
     }
     $this->assertEqual($results[$type1->type], $values[0]);
     $this->assertEqual($results[$type2->type], $values[1]);
-  }
-
-  function viewsGroupByViewHelper($group_by) {
-    $view = new View(array(), 'view');
-    $view->name = 'group_by_count';
-    $view->description = '';
-    $view->tag = '';
-    $view->view_php = '';
-    $view->base_table = 'node';
-    $view->is_cacheable = FALSE;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['group_by'] = TRUE;
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'some';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'fields';
-    /* Field: Content: Nid */
-    $handler->display->display_options['fields']['nid']['id'] = 'nid';
-    $handler->display->display_options['fields']['nid']['table'] = 'node';
-    $handler->display->display_options['fields']['nid']['field'] = 'nid';
-    $handler->display->display_options['fields']['nid']['group_type'] = $group_by;
-    $handler->display->display_options['fields']['nid']['alter']['alter_text'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['make_link'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['trim'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['word_boundary'] = 1;
-    $handler->display->display_options['fields']['nid']['alter']['ellipsis'] = 1;
-    $handler->display->display_options['fields']['nid']['alter']['strip_tags'] = 0;
-    $handler->display->display_options['fields']['nid']['alter']['html'] = 0;
-    $handler->display->display_options['fields']['nid']['hide_empty'] = 0;
-    $handler->display->display_options['fields']['nid']['empty_zero'] = 0;
-    $handler->display->display_options['fields']['nid']['link_to_node'] = 0;
-    /* Field: Content: Type */
-    $handler->display->display_options['fields']['type']['id'] = 'type';
-    $handler->display->display_options['fields']['type']['table'] = 'node';
-    $handler->display->display_options['fields']['type']['field'] = 'type';
-    $handler->display->display_options['fields']['type']['alter']['alter_text'] = 0;
-    $handler->display->display_options['fields']['type']['alter']['make_link'] = 0;
-    $handler->display->display_options['fields']['type']['alter']['trim'] = 0;
-    $handler->display->display_options['fields']['type']['alter']['word_boundary'] = 1;
-    $handler->display->display_options['fields']['type']['alter']['ellipsis'] = 1;
-    $handler->display->display_options['fields']['type']['alter']['strip_tags'] = 0;
-    $handler->display->display_options['fields']['type']['alter']['html'] = 0;
-    $handler->display->display_options['fields']['type']['hide_empty'] = 0;
-    $handler->display->display_options['fields']['type']['empty_zero'] = 0;
-    $handler->display->display_options['fields']['type']['link_to_node'] = 0;
-
-    return $view;
   }
 
   public function testGroupByCount() {
@@ -236,56 +133,17 @@ class QueryGroupByTest extends ViewTestBase {
       $this->drupalCreateNode($node_1);
     }
 
-    $view = $this->viewsGroupByCountViewOnlyFilters();
-    $output = $view->executeDisplay();
+    $this->executeView($this->view);
 
-    $this->assertTrue(strpos($view->build_info['query'], 'GROUP BY'), t('Make sure that GROUP BY is in the query'));
-    $this->assertTrue(strpos($view->build_info['query'], 'HAVING'), t('Make sure that HAVING is in the query'));
+    $this->assertTrue(strpos($this->view->build_info['query'], 'GROUP BY'), t('Make sure that GROUP BY is in the query'));
+    $this->assertTrue(strpos($this->view->build_info['query'], 'HAVING'), t('Make sure that HAVING is in the query'));
   }
 
-  public function viewsGroupByCountViewOnlyFilters() {
-    $view = new View(array(), 'view');
-    $view->name = 'group_by_in_filters';
-    $view->description = '';
-    $view->tag = '';
-    $view->view_php = '';
-    $view->base_table = 'node';
-    $view->is_cacheable = FALSE;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['group_by'] = TRUE;
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'some';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'fields';
-    /* Field: Node: Type */
-    $handler->display->display_options['fields']['type']['id'] = 'type';
-    $handler->display->display_options['fields']['type']['table'] = 'node';
-    $handler->display->display_options['fields']['type']['field'] = 'type';
-    $handler->display->display_options['fields']['type']['alter']['alter_text'] = 0;
-    $handler->display->display_options['fields']['type']['alter']['make_link'] = 0;
-    $handler->display->display_options['fields']['type']['alter']['trim'] = 0;
-    $handler->display->display_options['fields']['type']['alter']['word_boundary'] = 1;
-    $handler->display->display_options['fields']['type']['alter']['ellipsis'] = 1;
-    $handler->display->display_options['fields']['type']['alter']['strip_tags'] = 0;
-    $handler->display->display_options['fields']['type']['alter']['html'] = 0;
-    $handler->display->display_options['fields']['type']['hide_empty'] = 0;
-    $handler->display->display_options['fields']['type']['empty_zero'] = 0;
-    $handler->display->display_options['fields']['type']['link_to_node'] = 0;
-    /* Filter: Node: Nid */
-    $handler->display->display_options['filters']['nid']['id'] = 'nid';
-    $handler->display->display_options['filters']['nid']['table'] = 'node';
-    $handler->display->display_options['filters']['nid']['field'] = 'nid';
-    $handler->display->display_options['filters']['nid']['group_type'] = 'count';
-    $handler->display->display_options['filters']['nid']['operator'] = '>';
-    $handler->display->display_options['filters']['nid']['value']['value'] = '3';
-
-    return $view;
+  /**
+   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
+   */
+  protected function getBasicView() {
+    return $this->createViewFromConfig('test_group_by_in_filters');
   }
 
 }

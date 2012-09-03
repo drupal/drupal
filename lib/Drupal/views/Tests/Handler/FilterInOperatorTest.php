@@ -34,7 +34,7 @@ class FilterInOperatorTest extends HandlerTestBase {
   }
 
   public function testFilterInOperatorSimple() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Add a in_operator ordering.
     $view->display['default']->handler->overrideOption('filters', array(
@@ -66,8 +66,7 @@ class FilterInOperatorTest extends HandlerTestBase {
       'views_test_age' => 'age',
     ));
 
-    $view->delete();
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Add a in_operator ordering.
     $view->display['default']->handler->overrideOption('filters', array(

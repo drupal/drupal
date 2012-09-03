@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\views\View;
-
 /**
  * Views class tests.
  */
@@ -33,7 +31,7 @@ class ViewTest extends ViewTestBase {
    * Tests the deconstructor to be sure that every kind of heavy objects are removed.
    */
   function testDestroy() {
-    $view = $this->view_test_destroy();
+    $view = $this->getView();
 
     $view->preview();
     $view->destroy();
@@ -41,7 +39,7 @@ class ViewTest extends ViewTestBase {
     $this->assertViewDestroy($view);
 
     // Manipulate the display variable to test a previous bug.
-    $view = $this->view_test_destroy();
+    $view = $this->getView();
     $view->preview();
 
     $view->destroy();
@@ -74,12 +72,11 @@ class ViewTest extends ViewTestBase {
     // Test a view with multiple displays.
     // Validating a view shouldn't change the active display.
     // @todo: Create an extra validation view.
-    $view = $this->view_test_destroy();
-    $view->setDisplay('page_1');
+    $this->view->setDisplay('page_1');
 
-    $view->validate();
+    $this->view->validate();
 
-    $this->assertEqual('page_1', $view->current_display, "The display should be constant while validating");
+    $this->assertEqual('page_1', $this->view->current_display, "The display should be constant while validating");
 
     // @todo: Write real tests for the validation.
     // In general the following things could be tested:
@@ -88,198 +85,10 @@ class ViewTest extends ViewTestBase {
   }
 
   /**
-   * This view provides some filters, fields, arguments, relationships, sorts, areas and attachments.
+   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
    */
-  function view_test_destroy() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_destroy';
-    $view->description = '';
-    $view->tag = '';
-    $view->base_table = 'node';
-    $view->human_name = '';
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['query']['type'] = 'views_query';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'full';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'fields';
-    /* Header: Global: Text area */
-    $handler->display->display_options['header']['area']['id'] = 'area';
-    $handler->display->display_options['header']['area']['table'] = 'views';
-    $handler->display->display_options['header']['area']['field'] = 'area';
-    $handler->display->display_options['header']['area']['empty'] = FALSE;
-    /* Header: Global: Text area */
-    $handler->display->display_options['header']['area_1']['id'] = 'area_1';
-    $handler->display->display_options['header']['area_1']['table'] = 'views';
-    $handler->display->display_options['header']['area_1']['field'] = 'area';
-    $handler->display->display_options['header']['area_1']['empty'] = FALSE;
-    /* Footer: Global: Text area */
-    $handler->display->display_options['footer']['area']['id'] = 'area';
-    $handler->display->display_options['footer']['area']['table'] = 'views';
-    $handler->display->display_options['footer']['area']['field'] = 'area';
-    $handler->display->display_options['footer']['area']['empty'] = FALSE;
-    /* Footer: Global: Text area */
-    $handler->display->display_options['footer']['area_1']['id'] = 'area_1';
-    $handler->display->display_options['footer']['area_1']['table'] = 'views';
-    $handler->display->display_options['footer']['area_1']['field'] = 'area';
-    $handler->display->display_options['footer']['area_1']['empty'] = FALSE;
-    /* Empty text: Global: Text area */
-    $handler->display->display_options['empty']['area']['id'] = 'area';
-    $handler->display->display_options['empty']['area']['table'] = 'views';
-    $handler->display->display_options['empty']['area']['field'] = 'area';
-    $handler->display->display_options['empty']['area']['empty'] = FALSE;
-    /* Empty text: Global: Text area */
-    $handler->display->display_options['empty']['area_1']['id'] = 'area_1';
-    $handler->display->display_options['empty']['area_1']['table'] = 'views';
-    $handler->display->display_options['empty']['area_1']['field'] = 'area';
-    $handler->display->display_options['empty']['area_1']['empty'] = FALSE;
-    /* Relationship: Comment: Node */
-    $handler->display->display_options['relationships']['nid']['id'] = 'nid';
-    $handler->display->display_options['relationships']['nid']['table'] = 'comments';
-    $handler->display->display_options['relationships']['nid']['field'] = 'nid';
-    /* Relationship: Comment: Parent comment */
-    $handler->display->display_options['relationships']['pid']['id'] = 'pid';
-    $handler->display->display_options['relationships']['pid']['table'] = 'comments';
-    $handler->display->display_options['relationships']['pid']['field'] = 'pid';
-    /* Relationship: Comment: User */
-    $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-    $handler->display->display_options['relationships']['uid']['table'] = 'comments';
-    $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-    /* Field: Content: Nid */
-    $handler->display->display_options['fields']['nid']['id'] = 'nid';
-    $handler->display->display_options['fields']['nid']['table'] = 'node';
-    $handler->display->display_options['fields']['nid']['field'] = 'nid';
-    /* Field: Content: Path */
-    $handler->display->display_options['fields']['path']['id'] = 'path';
-    $handler->display->display_options['fields']['path']['table'] = 'node';
-    $handler->display->display_options['fields']['path']['field'] = 'path';
-    /* Field: Content: Post date */
-    $handler->display->display_options['fields']['created']['id'] = 'created';
-    $handler->display->display_options['fields']['created']['table'] = 'node';
-    $handler->display->display_options['fields']['created']['field'] = 'created';
-    /* Sort criterion: Content: Last comment author */
-    $handler->display->display_options['sorts']['last_comment_name']['id'] = 'last_comment_name';
-    $handler->display->display_options['sorts']['last_comment_name']['table'] = 'node_comment_statistics';
-    $handler->display->display_options['sorts']['last_comment_name']['field'] = 'last_comment_name';
-    /* Sort criterion: Content: Last comment time */
-    $handler->display->display_options['sorts']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
-    $handler->display->display_options['sorts']['last_comment_timestamp']['table'] = 'node_comment_statistics';
-    $handler->display->display_options['sorts']['last_comment_timestamp']['field'] = 'last_comment_timestamp';
-    /* Argument: Content: Created date */
-    $handler->display->display_options['arguments']['created_fulldate']['id'] = 'created_fulldate';
-    $handler->display->display_options['arguments']['created_fulldate']['table'] = 'node';
-    $handler->display->display_options['arguments']['created_fulldate']['field'] = 'created_fulldate';
-    $handler->display->display_options['arguments']['created_fulldate']['style_plugin'] = 'default_summary';
-    $handler->display->display_options['arguments']['created_fulldate']['default_argument_type'] = 'fixed';
-    /* Argument: Content: Created day */
-    $handler->display->display_options['arguments']['created_day']['id'] = 'created_day';
-    $handler->display->display_options['arguments']['created_day']['table'] = 'node';
-    $handler->display->display_options['arguments']['created_day']['field'] = 'created_day';
-    $handler->display->display_options['arguments']['created_day']['style_plugin'] = 'default_summary';
-    $handler->display->display_options['arguments']['created_day']['default_argument_type'] = 'fixed';
-    /* Argument: Content: Created month */
-    $handler->display->display_options['arguments']['created_month']['id'] = 'created_month';
-    $handler->display->display_options['arguments']['created_month']['table'] = 'node';
-    $handler->display->display_options['arguments']['created_month']['field'] = 'created_month';
-    $handler->display->display_options['arguments']['created_month']['style_plugin'] = 'default_summary';
-    $handler->display->display_options['arguments']['created_month']['default_argument_type'] = 'fixed';
-    /* Filter: Content: Nid */
-    $handler->display->display_options['filters']['nid']['id'] = 'nid';
-    $handler->display->display_options['filters']['nid']['table'] = 'node';
-    $handler->display->display_options['filters']['nid']['field'] = 'nid';
-    /* Filter: Content: Published */
-    $handler->display->display_options['filters']['status']['id'] = 'status';
-    $handler->display->display_options['filters']['status']['table'] = 'node';
-    $handler->display->display_options['filters']['status']['field'] = 'status';
-    /* Filter: Content: Title */
-    $handler->display->display_options['filters']['title']['id'] = 'title';
-    $handler->display->display_options['filters']['title']['table'] = 'node';
-    $handler->display->display_options['filters']['title']['field'] = 'title';
-
-    /* Display: Page */
-    $handler = $view->newDisplay('page', 'Page', 'page_1');
-    $handler->display->display_options['path'] = 'test_destroy';
-
-    /* Display: Attachment */
-    $handler = $view->newDisplay('attachment', 'Attachment', 'attachment_1');
-    $handler->display->display_options['pager']['type'] = 'some';
-    $handler->display->display_options['displays'] = array(
-      'default' => 'default',
-      'page_1' => 'page_1',
-    );
-
-    /* Display: Attachment */
-    $handler = $view->newDisplay('attachment', 'Attachment', 'attachment_2');
-    $handler->display->display_options['pager']['type'] = 'some';
-    $handler->display->display_options['displays'] = array(
-      'default' => 'default',
-      'page_1' => 'page_1',
-    );
-    $translatables['test_destroy'] = array(
-      t('Master'),
-      t('more'),
-      t('Apply'),
-      t('Reset'),
-      t('Sort By'),
-      t('Asc'),
-      t('Desc'),
-      t('Items per page'),
-      t('- All -'),
-      t('Offset'),
-      t('Text area'),
-      t('Content'),
-      t('Parent comment'),
-      t('User'),
-      t('Nid'),
-      t('Path'),
-      t('Post date'),
-      t('All'),
-      t('Page'),
-      t('Attachment'),
-    );
-
-    return $view;
-  }
-  function view_test_delete() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_view_delete';
-    $view->description = '';
-    $view->tag = '';
-    $view->base_table = 'node';
-    $view->human_name = 'test_view_delete';
-    $view->core = 8;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Defaults */
-    $handler = $view->newDisplay('default', 'Defaults', 'default');
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['query']['type'] = 'views_query';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'full';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'fields';
-    $translatables['test_view_delete'] = array(
-      t('Defaults'),
-      t('more'),
-      t('Apply'),
-      t('Reset'),
-      t('Sort By'),
-      t('Asc'),
-      t('Desc'),
-      t('Items per page'),
-      t('- All -'),
-      t('Offset'),
-    );
-
-    return $view;
+  protected function getBasicView() {
+    return $this->createViewFromConfig('test_destroy');
   }
 
 }

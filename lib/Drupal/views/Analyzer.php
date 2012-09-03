@@ -39,16 +39,6 @@ class Analyzer {
   }
 
   /**
-   * Gets the view which is analyzed by this analyzer.
-   *
-   * @return Drupal\views\View.
-   *   The view to analyze.
-   */
-  public function getView() {
-    return $this->view;
-  }
-
-  /**
    * Sets the view which is analyzed by this analyzer.
    *
    * @param Drupal\views\View

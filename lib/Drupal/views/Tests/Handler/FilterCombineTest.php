@@ -35,7 +35,6 @@ class FilterCombineTest extends HandlerTestBase {
 
   protected function getBasicView() {
     $view = parent::getBasicView();
-    $fields = $view->display['default']->handler->options['fields'];
     $view->display['default']->display_options['fields']['job'] = array(
       'id' => 'job',
       'table' => 'views_test',
@@ -46,7 +45,7 @@ class FilterCombineTest extends HandlerTestBase {
   }
 
   public function testFilterCombineContains() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // Change the filtering.
     $view->display['default']->handler->overrideOption('filters', array(

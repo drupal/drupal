@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\views\View;
-
 /**
  * Tests the pluggable pager system.
  */
@@ -58,7 +56,7 @@ class PagerTest extends PluginTestBase {
     $this->assertText('Mini', 'Changed pager plugin, should change some text');
 
     // Test behaviour described in http://drupal.org/node/652712#comment-2354400
-    $view = $this->viewsStorePagerSettings();
+    $view = $this->createViewFromConfig('test_store_pager_settings');
     // Make it editable in the admin interface.
     $view->save();
 
@@ -102,29 +100,6 @@ class PagerTest extends PluginTestBase {
 
   }
 
-  public function viewsStorePagerSettings() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_store_pager_settings';
-    $view->description = '';
-    $view->tag = '';
-    $view->view_php = '';
-    $view->base_table = 'node';
-    $view->is_cacheable = FALSE;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-    $view->uuid = NULL;
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'none';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'node';
-    return $view;
-  }
-
   /**
    * Tests the none-pager-query.
    */
@@ -134,16 +109,12 @@ class PagerTest extends PluginTestBase {
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }
-    $view = $this->viewsPagerNoLimit();
-    $view->setDisplay('default');
+    $view = $this->getView();
     $this->executeView($view);
     $this->assertEqual(count($view->result), 11, 'Make sure that every item is returned in the result');
 
-    $view->destroy();
-
     // Setup and test a offset.
-    $view = $this->viewsPagerNoLimit();
-    $view->setDisplay('default');
+    $view = $this->getView();
 
     $pager = array(
       'type' => 'none',
@@ -162,37 +133,20 @@ class PagerTest extends PluginTestBase {
     $this->assertEqual($view->pager->get_items_per_page(), 0);
   }
 
-  public function viewsPagerNoLimit() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_pager_none';
-    $view->description = '';
-    $view->tag = '';
-    $view->view_php = '';
-    $view->base_table = 'node';
-    $view->is_cacheable = FALSE;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'none';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'node';
-    return $view;
+  /**
+   * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
+   */
+  protected function getBasicView() {
+    return $this->createViewFromConfig('test_pager_none');
   }
 
   public function testViewTotalRowsWithoutPager() {
     $this->createNodes(23);
 
-    $view = $this->viewsPagerNoLimit();
-    $view->get_total_rows = TRUE;
-    $view->setDisplay('default');
-    $this->executeView($view);
+    $this->view->get_total_rows = TRUE;
+    $this->executeView($this->view);
 
-    $this->assertEqual($view->total_rows, 23, "'total_rows' is calculated when pager type is 'none' and 'get_total_rows' is TRUE.");
+    $this->assertEqual($this->view->total_rows, 23, "'total_rows' is calculated when pager type is 'none' and 'get_total_rows' is TRUE.");
   }
 
   public function createNodes($count) {
@@ -207,20 +161,19 @@ class PagerTest extends PluginTestBase {
    * Tests the some pager plugin.
    */
   public function testLimit() {
+    $saved_view = $this->createViewFromConfig('test_pager_some');
+
     // Create 11 nodes and make sure that everyone is returned.
     // We create 11 nodes, because the default pager plugin had 10 items per page.
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }
-    $view = $this->viewsPagerLimit();
-    $view->setDisplay('default');
+    $view = $saved_view->cloneView();
     $this->executeView($view);
     $this->assertEqual(count($view->result), 5, 'Make sure that only a certain count of items is returned');
-    $view->destroy();
 
     // Setup and test a offset.
-    $view = $this->viewsPagerLimit();
-    $view->setDisplay('default');
+    $view = $this->getView($saved_view);
 
     $pager = array(
       'type' => 'none',
@@ -238,48 +191,23 @@ class PagerTest extends PluginTestBase {
     $this->assertFalse($view->pager->use_count_query());
   }
 
-  public function viewsPagerLimit() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_pager_some';
-    $view->description = '';
-    $view->tag = '';
-    $view->view_php = '';
-    $view->base_table = 'node';
-    $view->is_cacheable = FALSE;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'some';
-    $handler->display->display_options['pager']['options']['offset'] = 0;
-    $handler->display->display_options['pager']['options']['items_per_page'] = 5;
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'node';
-    return $view;
-  }
-
   /**
    * Tests the normal pager.
    */
   public function testNormalPager() {
+    $saved_view = $this->createViewFromConfig('test_pager_full');
+
     // Create 11 nodes and make sure that everyone is returned.
     // We create 11 nodes, because the default pager plugin had 10 items per page.
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }
-    $view = $this->viewsPagerFull();
-    $view->setDisplay('default');
+    $view = $saved_view->cloneView();
     $this->executeView($view);
     $this->assertEqual(count($view->result), 5, 'Make sure that only a certain count of items is returned');
-    $view->destroy();
 
     // Setup and test a offset.
-    $view = $this->viewsPagerFull();
-    $view->setDisplay('default');
+    $view = $this->getView($saved_view);
 
     $pager = array(
       'type' => 'full',
@@ -293,8 +221,7 @@ class PagerTest extends PluginTestBase {
     $this->assertEqual(count($view->result), 3, 'Make sure that only a certain count of items is returned');
 
     // Test items per page = 0
-    $view = $this->viewPagerFullZeroItemsPerPage();
-    $view->setDisplay('default');
+    $view = $this->createViewFromConfig('test_view_pager_full_zero_items_per_page');
     $this->executeView($view);
 
     $this->assertEqual(count($view->result), 11, 'All items are return');
@@ -302,11 +229,8 @@ class PagerTest extends PluginTestBase {
     // TODO test number of pages.
 
     // Test items per page = 0.
-    $view->destroy();
-
     // Setup and test a offset.
-    $view = $this->viewsPagerFull();
-    $view->setDisplay('default');
+    $view = $this->getView($saved_view);
 
     $pager = array(
       'type' => 'full',
@@ -320,110 +244,6 @@ class PagerTest extends PluginTestBase {
     $this->executeView($view);
     $this->assertEqual($view->pager->get_items_per_page(), 0);
     $this->assertEqual(count($view->result), 11);
-  }
-
-  function viewPagerFullZeroItemsPerPage() {
-    $view = new View(array(), 'view');
-    $view->name = 'view_pager_full_zero_items_per_page';
-    $view->description = '';
-    $view->tag = '';
-    $view->view_php = '';
-    $view->base_table = 'node';
-    $view->is_cacheable = FALSE;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'full';
-    $handler->display->display_options['pager']['options']['items_per_page'] = '0';
-    $handler->display->display_options['pager']['options']['offset'] = '0';
-    $handler->display->display_options['pager']['options']['id'] = '0';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'fields';
-    /* Field: Content: Title */
-    $handler->display->display_options['fields']['title']['id'] = 'title';
-    $handler->display->display_options['fields']['title']['table'] = 'node';
-    $handler->display->display_options['fields']['title']['field'] = 'title';
-    $handler->display->display_options['fields']['title']['alter']['alter_text'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['make_link'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['trim'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['word_boundary'] = 1;
-    $handler->display->display_options['fields']['title']['alter']['ellipsis'] = 1;
-    $handler->display->display_options['fields']['title']['alter']['strip_tags'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['html'] = 0;
-    $handler->display->display_options['fields']['title']['hide_empty'] = 0;
-    $handler->display->display_options['fields']['title']['empty_zero'] = 0;
-    $handler->display->display_options['fields']['title']['link_to_node'] = 0;
-
-    return $view;
-  }
-
-  function viewsPagerFull() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_pager_full';
-    $view->description = '';
-    $view->tag = '';
-    $view->view_php = '';
-    $view->base_table = 'node';
-    $view->is_cacheable = FALSE;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'full';
-    $handler->display->display_options['pager']['options']['items_per_page'] = '5';
-    $handler->display->display_options['pager']['options']['offset'] = '0';
-    $handler->display->display_options['pager']['options']['id'] = '0';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'node';
-
-    return $view;
-  }
-
-  function viewsPagerFullFields() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_pager_full';
-    $view->description = '';
-    $view->tag = '';
-    $view->view_php = '';
-    $view->base_table = 'node';
-    $view->is_cacheable = FALSE;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-    $handler->display->display_options['access']['type'] = 'none';
-    $handler->display->display_options['cache']['type'] = 'none';
-    $handler->display->display_options['exposed_form']['type'] = 'basic';
-    $handler->display->display_options['pager']['type'] = 'full';
-    $handler->display->display_options['pager']['options']['items_per_page'] = '5';
-    $handler->display->display_options['pager']['options']['offset'] = '0';
-    $handler->display->display_options['pager']['options']['id'] = '0';
-    $handler->display->display_options['style_plugin'] = 'default';
-    $handler->display->display_options['row_plugin'] = 'fields';
-    $handler->display->display_options['fields']['title']['id'] = 'title';
-    $handler->display->display_options['fields']['title']['table'] = 'node';
-    $handler->display->display_options['fields']['title']['field'] = 'title';
-    $handler->display->display_options['fields']['title']['alter']['alter_text'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['make_link'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['trim'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['word_boundary'] = 1;
-    $handler->display->display_options['fields']['title']['alter']['ellipsis'] = 1;
-    $handler->display->display_options['fields']['title']['alter']['strip_tags'] = 0;
-    $handler->display->display_options['fields']['title']['alter']['html'] = 0;
-    $handler->display->display_options['fields']['title']['hide_empty'] = 0;
-    $handler->display->display_options['fields']['title']['empty_zero'] = 0;
-    $handler->display->display_options['fields']['title']['link_to_node'] = 0;
-    return $view;
   }
 
   /**
@@ -442,8 +262,7 @@ class PagerTest extends PluginTestBase {
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }
-    $view = $this->viewsPagerFullFields();
-    $view->setDisplay('default');
+    $view = $this->createViewFromConfig('test_pager_full');
     $this->executeView($view);
     $view->use_ajax = TRUE; // force the value again here
     $view->pager = NULL;
@@ -455,7 +274,7 @@ class PagerTest extends PluginTestBase {
    * Test the api functions on the view object.
    */
   function testPagerApi() {
-    $view = $this->viewsPagerFull();
+    $view = $this->createViewFromConfig('test_pager_full');
     // On the first round don't initialize the pager.
 
     $this->assertEqual($view->getItemsPerPage(), NULL, 'If the pager is not initialized and no manual override there is no items per page.');
@@ -500,7 +319,6 @@ class PagerTest extends PluginTestBase {
     $rand_number = rand(6, 11);
     $view->pager->set_current_page($rand_number);
     $this->assertEqual($view->getCurrentPage(), $rand_number, 'Make sure get_current_page uses the settings of set_current_page.');
-
   }
 
 }

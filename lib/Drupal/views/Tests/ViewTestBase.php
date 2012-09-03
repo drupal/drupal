@@ -6,7 +6,6 @@
 
 namespace Drupal\views\Tests;
 use Drupal\simpletest\WebTestBase;
-use Drupal\views\View;
 
 /**
  * Abstract class for views testing.
@@ -20,6 +19,13 @@ abstract class ViewTestBase extends WebTestBase {
    */
   public static $modules = array('views');
 
+  /**
+   * The view to use for the test.
+   *
+   * @var Drupal\views\View
+   */
+  protected $view;
+
   protected function setUp() {
     parent::setUp();
 
@@ -27,6 +33,8 @@ abstract class ViewTestBase extends WebTestBase {
     views_init();
     views_get_all_views(TRUE);
     menu_router_rebuild();
+
+    $this->view = $this->getBasicView();
   }
 
 
@@ -41,7 +49,7 @@ abstract class ViewTestBase extends WebTestBase {
     variable_set('views_test_schema', $this->schemaDefinition());
     variable_set('views_test_views_data', $this->viewsData());
 
-    module_enable(array('views_test'));
+    module_enable(array('views_test_data'));
     $this->resetAll();
 
     // Load the test dataset.
@@ -174,7 +182,7 @@ abstract class ViewTestBase extends WebTestBase {
    * @return view
    */
   protected function getBasicPageView() {
-    $view = $this->getBasicView();
+    $view = $this->getView();
 
     // In order to test exposed filters, we have to disable
     // the exposed forms cache.
@@ -382,52 +390,46 @@ abstract class ViewTestBase extends WebTestBase {
    * @return Drupal\views\View
    */
   protected function getBasicView() {
-    // Create the basic view.
-    $view = new View(array(), 'view');
-    $view->name = 'test_view';
-    $view->addDisplay('default');
-    $view->base_table = 'views_test';
+    return $this->createViewFromConfig('test_view');
+  }
 
-    // Set up the fields we need.
-    $display = $view->newDisplay('default', 'Master', 'default');
-    $display->overrideOption('fields', array(
-      'id' => array(
-        'id' => 'id',
-        'table' => 'views_test',
-        'field' => 'id',
-        'relationship' => 'none',
-      ),
-      'name' => array(
-        'id' => 'name',
-        'table' => 'views_test',
-        'field' => 'name',
-        'relationship' => 'none',
-      ),
-      'age' => array(
-        'id' => 'age',
-        'table' => 'views_test',
-        'field' => 'age',
-        'relationship' => 'none',
-      ),
-    ));
+  /**
+   * Creates a new View instance by creating directly from config data.
+   *
+   * @param string $view_name
+   *   The name of the test view to create.
+   *
+   * @return Drupal\views\View
+   *   A View instance.
+   */
+  protected function createViewFromConfig($view_name) {
+    module_enable(array('views_test_config'));
+    $data = config("views.view.$view_name")->get();
 
-    // Set up the sort order.
-    $display->overrideOption('sorts', array(
-      'id' => array(
-        'order' => 'ASC',
-        'id' => 'id',
-        'table' => 'views_test',
-        'field' => 'id',
-        'relationship' => 'none',
-      ),
-    ));
+    $view = entity_create('view', $data);
+    $view->setDisplay();
 
-    // Set up the pager.
-    $display->overrideOption('pager', array(
-      'type' => 'none',
-      'options' => array('offset' => 0),
-    ));
+    return $view;
+  }
 
+  /**
+   * Clones the view used in this test and sets the default display.
+   *
+   * @param Drupal\views\View $original_view
+   *   (optional) The view to clone. If not specified, the default view for the
+   *   test will be used.
+   *
+   * @return Drupal\views\View
+   *   A clone of the view.
+   */
+  protected function getView($original_view = NULL) {
+    if (isset($original_view)) {
+      $view = $original_view->cloneView();
+    }
+    else {
+      $view = $this->view->cloneView();
+    }
+    $view->setDisplay();
     return $view;
   }
 

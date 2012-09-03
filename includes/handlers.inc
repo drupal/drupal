@@ -6,8 +6,6 @@
  */
 
 use Drupal\Core\Database\Database;
-use Drupal\views\View;
-use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Plugin\Type\ViewsPluginManager;
 use Drupal\Component\Plugin\Exception\PluginException;
 

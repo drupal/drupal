@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\views\View;
-
 /**
  * Tests the upgrade path of all conversions.
  *
@@ -68,7 +66,7 @@ class UpgradeTestCase extends ViewTestBase {
    */
   public function testMovedTo() {
     // Test moving on field lavel.
-    $view = $this->viewsMovedToField();
+    $view = $this->createViewFromConfig('test_views_move_to_field');
     $view->update();
     $view->build();
 
@@ -79,7 +77,7 @@ class UpgradeTestCase extends ViewTestBase {
     $this->assertEqual('old_field_1', $view->field['old_field_1']->original_field, 'The field should have stored the original_field');
 
     // Test moving on handler lavel.
-    $view = $this->viewsMovedToHandler();
+    $view = $this->createViewFromConfig('test_views_move_to_handler');
     $view->update();
     $view->build();
 
@@ -92,7 +90,7 @@ class UpgradeTestCase extends ViewTestBase {
     $this->assertEqual('views_test', $view->filter['old_field_3']->table);
 
     // Test moving on table level.
-    $view = $this->viewsMovedToTable();
+    $view = $this->createViewFromConfig('test_views_move_to_table');
     $view->update();
     $view->build();
 
@@ -119,73 +117,10 @@ class UpgradeTestCase extends ViewTestBase {
     $this->assertText('Recent comments');
   }
 
-  public function viewsMovedToField() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_views_move_to_field';
-    $view->description = '';
-    $view->tag = '';
-    $view->view_php = '';
-    $view->base_table = 'views_test';
-    $view->is_cacheable = FALSE;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-
-    $handler->display->display_options['fields']['old_field_1']['id'] = 'old_field_1';
-    $handler->display->display_options['fields']['old_field_1']['table'] = 'views_test';
-    $handler->display->display_options['fields']['old_field_1']['field'] = 'old_field_1';
-
-    return $view;
-  }
-
-  public function viewsMovedToHandler() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_views_move_to_handler';
-    $view->description = '';
-    $view->tag = '';
-    $view->view_php = '';
-    $view->base_table = 'views_test';
-    $view->is_cacheable = FALSE;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-
-    $handler->display->display_options['fields']['old_field_2']['id'] = 'old_field_2';
-    $handler->display->display_options['fields']['old_field_2']['table'] = 'views_test';
-    $handler->display->display_options['fields']['old_field_2']['field'] = 'old_field_2';
-
-    $handler->display->display_options['filters']['old_field_3']['id'] = 'old_field_3';
-    $handler->display->display_options['filters']['old_field_3']['table'] = 'views_test';
-    $handler->display->display_options['filters']['old_field_3']['field'] = 'old_field_3';
-
-    return $view;
-  }
-
-  public function viewsMovedToTable() {
-    $view = new View(array(), 'view');
-    $view->name = 'test_views_move_to_table';
-    $view->description = '';
-    $view->tag = '';
-    $view->view_php = '';
-    $view->base_table = 'views_old_table';
-    $view->is_cacheable = FALSE;
-    $view->api_version = '3.0';
-    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-
-    /* Display: Master */
-    $handler = $view->newDisplay('default', 'Master', 'default');
-
-    $handler->display->display_options['fields']['id']['id'] = 'id';
-    $handler->display->display_options['fields']['id']['table'] = 'views_old_table';
-    $handler->display->display_options['fields']['id']['field'] = 'id';
-
-    return $view;
-  }
-
+  /**
+   * @todo When we know if we are having import, we can either remove or
+   * update this.
+   */
   protected function viewUpgradeImport() {
     $import = '
       $view = new Drupal\views\View(array(), "view");
