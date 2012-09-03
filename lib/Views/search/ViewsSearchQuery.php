@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\views\Search\ViewsSearchQuery.
+ * Definition of Views\search\ViewsSearchQuery.
  */
 
-namespace Drupal\search;
+namespace Views\search;
 
 /**
  * Extends the core SearchQuery to be able to gets it's protected values.

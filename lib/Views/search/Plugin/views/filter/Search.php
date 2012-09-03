@@ -31,7 +31,7 @@ class Search extends FilterPluginBase {
    * This value extends the query extender to be able to provide methods
    * which returns the protected values.
    *
-   * @var Drupal\views\Search\ViewsSearchQuery
+   * @var Views\search\ViewsSearchQuery
    */
   var $search_query = NULL;
 
@@ -102,7 +102,7 @@ class Search extends FilterPluginBase {
   function query_parse_search_expression($input) {
     if (!isset($this->search_query)) {
       $this->parsed = TRUE;
-      $this->search_query = db_select('search_index', 'i', array('target' => 'slave'))->extend('Drupal\views\Search\ViewsSearchQuery');
+      $this->search_query = db_select('search_index', 'i', array('target' => 'slave'))->extend('Views\search\ViewsSearchQuery');
       $this->search_query->searchExpression($input, $this->view->base_table);
       $this->search_query->publicParseSearchExpression();
     }
