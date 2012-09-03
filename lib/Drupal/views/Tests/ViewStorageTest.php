@@ -130,6 +130,10 @@ class ViewStorageTest extends WebTestBase {
 
     // Check that all of these machine names match.
     $this->assertIdentical(array_keys($all_configuration_entities), array_map($prefix_map, $all_config), 'All loaded elements match.');
+
+    // Make sure that loaded default views get a uuid.
+    $view = views_get_view('frontpage');
+    $this->assertTrue($view->uuid());
   }
 
   /**
@@ -166,6 +170,11 @@ class ViewStorageTest extends WebTestBase {
       $this->assertTrue($display instanceof ViewDisplay, format_string('Display @display is an instance of ViewDisplay.', array('@display' => $key)));
     }
 
+    // Check the uuid of the loaded View.
+    $created->set('name', 'glossary_new');
+    $created->save();
+    $created_loaded = $this->loadView('glossary_new');
+    $this->assertIdentical($created->uuid(), $created_loaded->uuid(), 'The created uuid has been saved correctly.');
   }
 
   /**

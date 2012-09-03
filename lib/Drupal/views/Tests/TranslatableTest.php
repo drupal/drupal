@@ -150,6 +150,7 @@ class TranslatableTest extends ViewTestBase {
     $view->base_table = 'node';
     $view->api_version = '3.0';
     $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+    $view->uuid = NULL;
 
     /* Display: Master */
     $handler = $view->newDisplay('default', 'Master1', 'default');

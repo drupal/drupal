@@ -9,6 +9,7 @@ namespace Drupal\views;
 
 use Drupal\config\ConfigStorageController;
 use Drupal\entity\EntityInterface;
+use Drupal\Component\Uuid\Uuid;
 
 /**
  * Defines the storage controller class for ViewStorage entities.
@@ -16,10 +17,25 @@ use Drupal\entity\EntityInterface;
 class ViewStorageController extends ConfigStorageController {
 
   /**
+   * Holds a UUID factory instance.
+   *
+   * @var Drupal\Component\Uuid\Uuid
+   */
+  protected $uuidFactory = NULL;
+
+  /**
    * Overrides Drupal\config\ConfigStorageController::attachLoad();
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     foreach ($queried_entities as $id => $entity) {
+      // Create a uuid if we don't have one.
+      if (empty($entity->{$this->uuidKey})) {
+        // Only get an instance of uuid once.
+        if (!isset($this->uuidFactory)) {
+          $this->uuidFactory = new Uuid();
+        }
+        $entity->{$this->uuidKey} = $this->uuidFactory->generate();
+      }
       // @todo This property is left in for CTools export UI.
       $entity->type = t('Normal');
       $this->attachDisplays($entity);
@@ -65,6 +81,7 @@ class ViewStorageController extends ConfigStorageController {
       'human_name',
       'core',
       'display',
+      'uuid',
     );
 
     foreach ($config_properties as $property) {
