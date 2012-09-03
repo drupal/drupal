@@ -49,8 +49,8 @@ function field_info_cache_clear() {
  *     the field type.
  *   - 'widget types': Array of hook_field_widget_info() results, keyed by
  *     widget_type. Each element has the following components: label, field
- *     types, settings, and behaviors from hook_field_widget_info(), as well
- *     as module, giving the module that exposes the widget type.
+ *     types, settings, weight, and behaviors from hook_field_widget_info(),
+ *     as well as module, giving the module that exposes the widget type.
  *   - 'formatter types': Array of hook_field_formatter_info() results, keyed by
  *     formatter_type. Each element has the following components: label, field
  *     types, and behaviors from hook_field_formatter_info(), as well as
@@ -121,6 +121,7 @@ function _field_info_collate_types() {
         }
       }
       drupal_alter('field_widget_info', $info['widget types']);
+      uasort($info['widget types'], 'drupal_sort_weight');
 
       // Populate formatter types.
       foreach (module_implements('field_formatter_info') as $module) {
