@@ -5,6 +5,8 @@
  * Preprocessors and helper functions to make theming easier.
  */
 
+use Drupal\Core\Template\Attribute;
+
 /**
  * Provide a full array of possible themes to try for a given hook.
  *
@@ -886,7 +888,7 @@ function template_preprocess_views_view_rss(&$vars) {
   }
 
   $vars['langcode'] = check_plain(language(LANGUAGE_TYPE_INTERFACE)->langcode);
-  $vars['namespaces'] = drupal_attributes($style->namespaces);
+  $vars['namespaces'] = new Attribute($style->namespaces);
   $vars['items'] = $items;
   $vars['channel_elements'] = format_xml_elements($style->channel_elements);
 
@@ -1086,7 +1088,7 @@ function theme_views_mini_pager($vars) {
  */
 function theme_views_container($variables) {
   $element = $variables['element'];
-  return '<div' . drupal_attributes($element['#attributes']) . '>' . $element['#children'] . '</div>';
+  return '<div' . new Attribute($element['#attributes']) . '>' . $element['#children'] . '</div>';
 }
 
 /**
