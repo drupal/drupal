@@ -16,13 +16,11 @@ use Symfony\Component\Yaml\Parser;
 class FileStorage implements StorageInterface {
 
   /**
-   * Configuration options for this storage controller.
+   * The filesystem path for configuration objects.
    *
-   * - directory: The filesystem path for configuration objects.
-   *
-   * @var array
+   * @var string
    */
-  protected $options;
+  protected $directory = '';
 
   /**
    * A shared YAML dumper instance.
@@ -39,13 +37,13 @@ class FileStorage implements StorageInterface {
   protected $parser;
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::__construct().
+   * Constructs a new FileStorage controller.
+   *
+   * @param string $directory
+   *   A directory path to use for reading and writing of configuration files.
    */
-  public function __construct(array $options = array()) {
-    if (!isset($options['directory'])) {
-      $options['directory'] = config_get_config_directory();
-    }
-    $this->options = $options;
+  public function __construct($directory) {
+    $this->directory = $directory;
   }
 
   /**
@@ -55,7 +53,7 @@ class FileStorage implements StorageInterface {
    *   The path to the configuration file.
    */
   public function getFilePath($name) {
-    return $this->options['directory'] . '/' . $name . '.' . self::getFileExtension();
+    return $this->directory . '/' . $name . '.' . self::getFileExtension();
   }
 
   /**
@@ -114,8 +112,8 @@ class FileStorage implements StorageInterface {
    */
   public function delete($name) {
     if (!$this->exists($name)) {
-      if (!file_exists($this->options['directory'])) {
-        throw new StorageException($this->options['directory'] . '/ not found.');
+      if (!file_exists($this->directory)) {
+        throw new StorageException($this->directory . '/ not found.');
       }
       return FALSE;
     }
@@ -188,11 +186,11 @@ class FileStorage implements StorageInterface {
   public function listAll($prefix = '') {
     // glob() silently ignores the error of a non-existing search directory,
     // even with the GLOB_ERR flag.
-    if (!file_exists($this->options['directory'])) {
-      throw new StorageException($this->options['directory'] . '/ not found.');
+    if (!file_exists($this->directory)) {
+      throw new StorageException($this->directory . '/ not found.');
     }
     $extension = '.' . self::getFileExtension();
-    $files = glob($this->options['directory'] . '/' . $prefix . '*' . $extension);
+    $files = glob($this->directory . '/' . $prefix . '*' . $extension);
     $clean_name = function ($value) use ($extension) {
       return basename($value, $extension);
     };

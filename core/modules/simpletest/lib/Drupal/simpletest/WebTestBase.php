@@ -674,6 +674,10 @@ abstract class WebTestBase extends TestBase {
     // Symfony\Component\HttpKernel\handle(), this kernel needs manual booting
     // as it is not used to handle a request.
     $this->kernel->boot();
+    // The DrupalKernel does not update the container in drupal_container(), but
+    // replaces it with a new object. We therefore need to replace the minimal
+    // boostrap container that has been set up by TestBase::prepareEnvironment().
+    $this->container = drupal_container();
 
     // Reset/rebuild all data structures after enabling the modules.
     $this->resetAll();

@@ -7,7 +7,6 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Config\FileStorage;
 use Drupal\simpletest\WebTestBase;
 
@@ -23,15 +22,11 @@ class ConfigFileContentTest extends WebTestBase {
     );
   }
 
-  function setUp() {
-    parent::setUp();
-  }
-
   /**
    * Tests setting, writing, and reading of a configuration setting.
    */
   function testReadWriteConfig() {
-    $database_storage = new DatabaseStorage();
+    $storage = $this->container->get('config.storage');
 
     $name = 'foo.bar';
     $key = 'foo';
@@ -67,8 +62,8 @@ class ConfigFileContentTest extends WebTestBase {
     $this->assertEqual($config->get(), array(), t('New config object is empty.'));
 
     // Verify nothing was saved.
-    $db_data = $database_storage->read($name);
-    $this->assertIdentical($db_data, FALSE);
+    $data = $storage->read($name);
+    $this->assertIdentical($data, FALSE);
 
     // Add a top level value
     $config = config($name);
@@ -94,8 +89,8 @@ class ConfigFileContentTest extends WebTestBase {
     $config->save();
 
     // Verify the database entry exists.
-    $db_data = $database_storage->read($name);
-    $this->assertTrue($db_data);
+    $data = $storage->read($name);
+    $this->assertTrue($data);
 
     // Read top level value
     $config = config($name);
@@ -152,27 +147,27 @@ class ConfigFileContentTest extends WebTestBase {
     $config->set($key, $value)->save();
 
     // Verify the database entry exists from a chained save.
-    $db_data = $database_storage->read($chained_name);
-    $this->assertEqual($db_data, $config->get());
+    $data = $storage->read($chained_name);
+    $this->assertEqual($data, $config->get());
 
     // Get file listing for all files starting with 'foo'. Should return
     // two elements.
-    $files = $database_storage->listAll('foo');
+    $files = $storage->listAll('foo');
     $this->assertEqual(count($files), 2, 'Two files listed with the prefix \'foo\'.');
 
     // Get file listing for all files starting with 'biff'. Should return
     // one element.
-    $files = $database_storage->listAll('biff');
+    $files = $storage->listAll('biff');
     $this->assertEqual(count($files), 1, 'One file listed with the prefix \'biff\'.');
 
     // Get file listing for all files starting with 'foo.bar'. Should return
     // one element.
-    $files = $database_storage->listAll('foo.bar');
+    $files = $storage->listAll('foo.bar');
     $this->assertEqual(count($files), 1, 'One file listed with the prefix \'foo.bar\'.');
 
     // Get file listing for all files starting with 'bar'. Should return
     // an empty array.
-    $files = $database_storage->listAll('bar');
+    $files = $storage->listAll('bar');
     $this->assertEqual($files, array(), 'No files listed with the prefix \'bar\'.');
 
     // Delete the configuration.
@@ -180,8 +175,8 @@ class ConfigFileContentTest extends WebTestBase {
     $config->delete();
 
     // Verify the database entry no longer exists.
-    $db_data = $database_storage->read($name);
-    $this->assertIdentical($db_data, FALSE);
+    $data = $storage->read($name);
+    $this->assertIdentical($data, FALSE);
   }
 
   /**
@@ -205,7 +200,7 @@ class ConfigFileContentTest extends WebTestBase {
     );
 
     // Encode and write, and reload and decode the configuration data.
-    $filestorage = new FileStorage();
+    $filestorage = new FileStorage($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
     $filestorage->write($name, $config_data);
     $config_parsed = $filestorage->read($name);
 

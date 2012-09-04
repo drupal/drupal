@@ -724,6 +724,8 @@ function system_schema() {
   );
   $schema['cache_bootstrap'] = $schema['cache'];
   $schema['cache_bootstrap']['description'] = 'Cache table for data required to bootstrap Drupal, may be routed to a shared memory cache.';
+  $schema['cache_config'] = $schema['cache'];
+  $schema['cache_config']['description'] = 'Cache table for configuration data.';
   $schema['cache_form'] = $schema['cache'];
   $schema['cache_form']['description'] = 'Cache table for the form system to store recently built forms and their storage data, to be used in subsequent page requests.';
   $schema['cache_page'] = $schema['cache'];
@@ -732,28 +734,6 @@ function system_schema() {
   $schema['cache_menu']['description'] = 'Cache table for the menu system to store router information as well as generated link trees for various menu/page/user combinations.';
   $schema['cache_path'] = $schema['cache'];
   $schema['cache_path']['description'] = 'Cache table for path alias lookup.';
-
-  $schema['config'] = array(
-    'description' => 'Default active store for the configuration system.',
-    'fields' => array(
-      'name' => array(
-        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus the file extension).',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'data' => array(
-        'description' => 'The raw data for this configuration entry.',
-        'type' => 'blob',
-        'not null' => TRUE,
-        'size' => 'big',
-        'translatable' => TRUE,
-      ),
-    ),
-    'primary key' => array('name'),
-  );
-
 
   $schema['date_format_type'] = array(
     'description' => 'Stores configured date format types.',
@@ -1567,33 +1547,63 @@ function system_update_8002() {
 }
 
 /**
- * Adds {config} table for new Configuration system.
+ * Creates {cache_config} cache table for the new configuration system.
  */
 function system_update_8003() {
-  // @todo Temporary.
-  if (db_table_exists('config')) {
-    db_drop_table('config');
-  }
-  db_create_table('config', array(
-    'description' => 'Default active store for the configuration system.',
+  $spec = array(
+    'description' =>  'Cache table for configuration data.',
     'fields' => array(
-      'name' => array(
-        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus the file extension).',
+      'cid' => array(
+        'description' => 'Primary Key: Unique cache ID.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'data' => array(
-        'description' => 'The raw data for this configuration entry.',
+        'description' => 'A collection of data to cache.',
         'type' => 'blob',
-        'not null' => TRUE,
+        'not null' => FALSE,
         'size' => 'big',
-        'translatable' => TRUE,
+      ),
+      'expire' => array(
+        'description' => 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'created' => array(
+        'description' => 'A Unix timestamp indicating when the cache entry was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'serialized' => array(
+        'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'tags' => array(
+        'description' => 'Space-separated list of cache tags for this entry.',
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ),
+      'checksum' => array(
+        'description' => 'The tag invalidation sum when this entry was saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
       ),
     ),
-    'primary key' => array('name'),
-  ));
+    'indexes' => array(
+      'expire' => array('expire'),
+    ),
+    'primary key' => array('cid'),
+  );
+  db_create_table('cache_config', $spec);
 }
 
 /**
@@ -1673,7 +1683,7 @@ function system_update_8007() {
   foreach ($tables as $table) {
     // Assume we have a valid cache table if there is both 'cid' and 'data'
     // columns.
-    if (db_field_exists($table, 'cid') && db_field_exists($table, 'data')) {
+    if (db_field_exists($table, 'cid') && db_field_exists($table, 'data') && !db_field_exists($table, 'tags')) {
       db_add_field($table, 'tags', array(
         'description' => 'Space-separated list of cache tags for this entry.',
         'type' => 'text',

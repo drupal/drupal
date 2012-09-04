@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Graph\Graph;
-use Drupal\Core\Config\DatabaseStorage;
 
 /**
  * Loads all the modules that have been enabled in the system table.
@@ -617,7 +616,7 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
     $module_list = array_keys($module_list);
   }
 
-  $storage = new DatabaseStorage();
+  $storage = drupal_container()->get('config.storage');
   foreach ($module_list as $module) {
     // Uninstall the module.
     module_load_install($module);

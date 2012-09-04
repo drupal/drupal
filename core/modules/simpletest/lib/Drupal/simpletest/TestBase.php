@@ -726,6 +726,9 @@ abstract class TestBase {
       $GLOBALS['config_directories'][$type] = 'simpletest/' . substr($this->databasePrefix, 10) . '/config_' . $type;
     }
 
+    // Reset and create a new service container.
+    $this->container = drupal_container(NULL, TRUE);
+
     $this->configDirectories = array();
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
     foreach ($GLOBALS['config_directories'] as $type => $path) {

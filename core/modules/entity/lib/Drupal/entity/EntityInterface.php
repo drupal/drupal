@@ -211,8 +211,12 @@ interface EntityInterface {
   /**
    * Checks if this entity is the current revision.
    *
+   * @param bool $new_value
+   *   (optional) A Boolean to (re)set the isCurrentRevision flag.
+   *
    * @return bool
-   *   TRUE if the entity is the current revision, FALSE otherwise.
+   *   TRUE if the entity is the current revision, FALSE otherwise. If
+   *   $new_value was passed, the previous value is returned.
    */
-  public function isCurrentRevision();
+  public function isCurrentRevision($new_value = NULL);
 }

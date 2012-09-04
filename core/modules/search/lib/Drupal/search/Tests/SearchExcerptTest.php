@@ -7,23 +7,26 @@
 
 namespace Drupal\search\Tests;
 
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the search_excerpt() function.
  */
-class SearchExcerptTest extends UnitTestBase {
+class SearchExcerptTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('search');
+
   public static function getInfo() {
     return array(
       'name' => 'Search excerpt extraction',
       'description' => 'Tests that the search_excerpt() function works.',
       'group' => 'Search',
     );
-  }
-
-  function setUp() {
-    drupal_load('module', 'search');
-    parent::setUp();
   }
 
   /**

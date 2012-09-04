@@ -16,13 +16,15 @@ namespace Drupal\Core\Config;
 interface StorageInterface {
 
   /**
-   * Constructs the storage controller.
+   * Returns whether a configuration object exists.
    *
-   * @param array $options
-   *   An associative array containing configuration options specific to the
-   *   storage controller.
+   * @param string $name
+   *   The name of a configuration object to test.
+   *
+   * @return bool
+   *   TRUE if the configuration object exists, FALSE otherwise.
    */
-  public function __construct(array $options = array());
+  public function exists($name);
 
   /**
    * Reads configuration data from the storage.

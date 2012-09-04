@@ -32,6 +32,9 @@ abstract class ConfigStorageTestBase extends WebTestBase {
   function testCRUD() {
     $name = 'config_test.storage';
 
+    // Checking whether a non-existing name exists returns FALSE.
+    $this->assertIdentical($this->storage->exists($name), FALSE);
+
     // Reading a non-existing name returns FALSE.
     $data = $this->storage->read($name);
     $this->assertIdentical($data, FALSE);
@@ -51,8 +54,12 @@ abstract class ConfigStorageTestBase extends WebTestBase {
     $data = array('foo' => 'bar');
     $result = $this->storage->write($name, $data);
     $this->assertIdentical($result, TRUE);
+
     $raw_data = $this->read($name);
     $this->assertIdentical($raw_data, $data);
+
+    // Checking whether an existing name exists returns TRUE.
+    $this->assertIdentical($this->storage->exists($name), TRUE);
 
     // Writing the identical data again still returns TRUE.
     $result = $this->storage->write($name, $data);

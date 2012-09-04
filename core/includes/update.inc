@@ -1056,7 +1056,7 @@ function update_variables_to_config($config_name, array $variable_map) {
   $module = strtok($config_name, '.');
 
   // Load and set default configuration values.
-  $file = new FileStorage(array('directory' => drupal_get_path('module', $module) . '/config'));
+  $file = new FileStorage(drupal_get_path('module', $module) . '/config');
   if (!$file->exists($config_name)) {
     throw new ConfigException("Default configuration file $config_name for $module extension not found but is required to exist.");
   }
