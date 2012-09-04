@@ -2069,7 +2069,7 @@ function drupal_anonymous_user() {
   $user->uid = 0;
   $user->hostname = ip_address();
   $user->roles = array();
-  $user->roles[DRUPAL_ANONYMOUS_RID] = 'anonymous user';
+  $user->roles[DRUPAL_ANONYMOUS_RID] = DRUPAL_ANONYMOUS_RID;
   return $user;
 }
 

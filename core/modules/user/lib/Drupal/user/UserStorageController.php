@@ -32,10 +32,10 @@ class UserStorageController extends DatabaseStorageController {
       $queried_users[$key]->data = unserialize($record->data);
       $queried_users[$key]->roles = array();
       if ($record->uid) {
-        $queried_users[$record->uid]->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
+        $queried_users[$record->uid]->roles[DRUPAL_AUTHENTICATED_RID] = DRUPAL_AUTHENTICATED_RID;
       }
       else {
-        $queried_users[$record->uid]->roles[DRUPAL_ANONYMOUS_RID] = 'anonymous user';
+        $queried_users[$record->uid]->roles[DRUPAL_ANONYMOUS_RID] = DRUPAL_ANONYMOUS_RID;
       }
     }
 
@@ -67,7 +67,7 @@ class UserStorageController extends DatabaseStorageController {
       $values['created'] = REQUEST_TIME;
     }
     // Users always have the authenticated user role.
-    $values['roles'][DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
+    $values['roles'][DRUPAL_AUTHENTICATED_RID] = DRUPAL_AUTHENTICATED_RID;
 
     return parent::create($values);
   }
