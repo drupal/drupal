@@ -51,12 +51,6 @@ function hook_file_download_access($file_item, $entity_type, $entity) {
  *   The type of $entity; for example, 'node' or 'user'.
  * @param $entity
  *   The $entity to which $file is referenced.
- *
- * @return
- *   An array of grants, keyed by module name, each with a Boolean grant value.
- *   Return an empty array to assert FALSE. You may choose to return your own
- *   module's value in addition to other grants or to overwrite the values set
- *   by other modules.
  */
 function hook_file_download_access_alter(&$grants, $file_item, $entity_type, $entity) {
   // For our example module, we always enforce the rules set by node module.
