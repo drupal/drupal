@@ -170,13 +170,19 @@ function simpletest_uninstall() {
   drupal_load('module', 'simpletest');
   simpletest_clean_database();
 
-  // Remove settings variables.
-  variable_del('simpletest_httpauth_method');
-  variable_del('simpletest_httpauth_username');
-  variable_del('simpletest_httpauth_password');
-  variable_del('simpletest_clear_results');
-  variable_del('simpletest_verbose');
-
   // Remove generated files.
   file_unmanaged_delete_recursive('public://simpletest');
+}
+
+/**
+ * Move simpletest settings from variables to config.
+ */
+function simpletest_update_8000() {
+  update_variables_to_config('simpletest.settings', array(
+    'simpletest_clear_results' => 'clear_results',
+    'simpletest_httpauth_method' => 'httpauth.method',
+    'simpletest_httpauth_password' => 'httpauth.password',
+    'simpletest_httpauth_username' => 'httpauth.username',
+    'simpletest_verbose' => 'verbose',
+  ));
 }

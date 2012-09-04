@@ -5145,7 +5145,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   // distribution we need to include the profile of the parent site (in which
   // test runs are triggered).
   if (drupal_valid_test_ua()) {
-    $testing_profile = variable_get('simpletest_parent_profile', FALSE);
+    $testing_profile = config('simpletest.settings')->get('parent_profile');
     if ($testing_profile && $testing_profile != $profile) {
       $searchdir[] = drupal_get_path('profile', $testing_profile) . '/' . $directory;
     }

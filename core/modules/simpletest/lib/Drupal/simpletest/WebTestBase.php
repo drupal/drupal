@@ -140,6 +140,11 @@ abstract class WebTestBase extends TestBase {
   protected $generatedTestFiles = FALSE;
 
   /**
+   * The maximum number of redirects to follow when handling responses.
+   */
+  protected $maximumRedirects = 5;
+
+  /**
    * The number of redirects followed during the handling of a request.
    */
   protected $redirect_count;
@@ -628,11 +633,11 @@ abstract class WebTestBase extends TestBase {
     variable_set('file_private_path', $this->private_files_directory);
     variable_set('file_temporary_path', $this->temp_files_directory);
 
-    // Set the 'simpletest_parent_profile' variable to add the parent profile's
+    // Set 'parent_profile' of simpletest to add the parent profile's
     // search path to the child site's search paths.
     // @see drupal_system_listing()
     // @todo This may need to be primed like 'install_profile' above.
-    variable_set('simpletest_parent_profile', $this->originalProfile);
+    config('simpletest.settings')->set('parent_profile', $this->originalProfile)->save();
 
     // Include the testing profile.
     variable_set('install_profile', $this->profile);
@@ -902,7 +907,7 @@ abstract class WebTestBase extends TestBase {
     // to prevent fragments being sent to the web server as part
     // of the request.
     // TODO: Remove this for Drupal 8, since fixed in curl 7.20.0.
-    if (in_array($status, array(300, 301, 302, 303, 305, 307)) && $this->redirect_count < variable_get('simpletest_maximum_redirects', 5)) {
+    if (in_array($status, array(300, 301, 302, 303, 305, 307)) && $this->redirect_count < $this->maximumRedirects) {
       if ($this->drupalGetHeader('location')) {
         $this->redirect_count++;
         $curl_options = array();
