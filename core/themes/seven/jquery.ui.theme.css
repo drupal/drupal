@@ -361,10 +361,22 @@
   background: url(images/buttons.png) 0 0 repeat-x;
   border-radius: 20px;
 }
+.ui-dialog .ui-dialog-buttonpane button:hover,
+.ui-dialog .ui-dialog-buttonpane button:focus {
+  background-position: 0 -40px;
+  border: 1px solid #bebebe;
+  border-left-color: #afafaf;
+  border-right-color: #afafaf;
+  border-bottom-color: #9b9b9b;
+  color: #2e2e2e;
+}
 .ui-dialog .ui-dialog-buttonpane button:active {
-  background: #666;
+  background-position: 0 -80px;
+  border: 1px solid #333;
+  border-left-color: #222;
+  border-right-color: #222;
+  border-bottom-color: #111;
   color: #fff;
-  border-color: #555;
   text-shadow: #222 0px -1px 0px;
 }
 .overlay {
