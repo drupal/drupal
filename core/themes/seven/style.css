@@ -621,21 +621,26 @@ a.button:visited,
 a.button:hover,
 a.button:active {
   text-decoration: none;
-  color: #5a5a5a;
 }
-.node-form input#edit-submit,
-.node-form input#edit-submit-1 {
-  border: 1px solid #8eB7cd;
-  border-left-color: #8eB7cd;
-  border-right-color: #8eB7cd;
-  border-bottom-color: #7691a2;
-  background: url(images/buttons.png) 0 -40px repeat-x;
-  color: #133B54;
+input.form-submit:hover,
+input.form-submit:focus,
+a.button:hover,
+a.button:focus {
+  background-position: 0 -40px;
+  border: 1px solid #bebebe;
+  border-left-color: #afafaf;
+  border-right-color: #afafaf;
+  border-bottom-color: #9b9b9b;
+  color: #2e2e2e;
 }
-input.form-submit:active {
-  background: #666;
+input.form-submit:active,
+a.button:active {
+  background-position: 0 -80px;
+  border: 1px solid #333;
+  border-left-color: #222;
+  border-right-color: #222;
+  border-bottom-color: #111;
   color: #fff;
-  border-color: #555;
   text-shadow: #222 0 -1px 0;
 }
 input.form-button-disabled,
