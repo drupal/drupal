@@ -15,7 +15,7 @@ use Drupal\Component\Uuid\Uuid;
 /**
  * Defines a base entity controller class.
  *
- * Default implementation of Drupal\entity\DatabaseStorageControllerInterface.
+ * Default implementation of Drupal\entity\EntityStorageControllerInterface.
  *
  * This class can be used as-is by most simple entity types. Entity types
  * requiring special handling can extend the class.
