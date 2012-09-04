@@ -1,10 +1,10 @@
 name: medium
 effects:
-    bddf0d06-42f9-4c75-a700-a33cafa25ea0:
-        name: image_scale
-        data:
-            width: '220'
-            height: '220'
-            upscale: '1'
-        weight: '0'
-        ieid: bddf0d06-42f9-4c75-a700-a33cafa25ea0
+  bddf0d06-42f9-4c75-a700-a33cafa25ea0:
+    name: image_scale
+    data:
+      width: '220'
+      height: '220'
+      upscale: '1'
+    weight: '0'
+    ieid: bddf0d06-42f9-4c75-a700-a33cafa25ea0

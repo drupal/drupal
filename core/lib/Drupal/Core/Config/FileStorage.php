@@ -136,6 +136,9 @@ class FileStorage implements StorageInterface {
   protected function getDumper() {
     if (!isset($this->dumper)) {
       $this->dumper = new Dumper();
+      // Set Yaml\Dumper's default indentation for nested nodes/collections to
+      // 2 spaces for consistency with Drupal coding standards.
+      $this->dumper->setIndentation(2);
     }
     return $this->dumper;
   }
