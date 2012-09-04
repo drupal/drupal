@@ -128,6 +128,46 @@ class PathMatcherTest extends UnitTestBase {
   }
 
   /**
+   * Confirms that we can find routes whose pattern would match the request.
+   */
+  function testOutlinePathMatchDefaults() {
+    $connection = Database::getConnection();
+    $matcher = new PathMatcher($connection, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $collection = new RouteCollection();
+    $collection->add('poink', new Route('/some/path/{value}', array(
+      'value' => 'poink',
+    )));
+
+    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper->addRoutes($collection);
+    $dumper->dump();
+
+    $path = '/some/path';
+
+    $request = Request::create($path, 'GET');
+
+    try {
+      $routes = $matcher->matchRequestPartial($request);
+
+      // All of the matching paths have the correct pattern.
+      foreach ($routes as $route) {
+        $compiled = $route->compile();
+        debug($compiled->getPatternOutline());
+        $this->assertEqual($route->compile()->getPatternOutline(), '/path/path/%', 'Found path has correct pattern');
+      }
+
+      $this->assertEqual(count($routes->all()), 1, 'The correct number of routes was found.');
+      $this->assertNotNull($routes->get('poink'), 'The first matching route was found.');
+    }
+    catch (ResourceNotFoundException $e) {
+      $this->fail('No matching route found with default argument value.');
+    }
+  }
+
+  /**
    * Confirm that an exception is thrown when no matching path is found.
    */
   function testOutlinePathNoMatch() {

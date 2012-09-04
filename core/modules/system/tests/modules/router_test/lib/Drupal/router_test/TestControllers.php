@@ -26,4 +26,8 @@ class TestControllers {
     return $value;
   }
 
+  public function test4($value) {
+    return $value;
+  }
+
 }
