@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Utility\Color;
+use Drupal\Core\Template\Attribute;
 
 /**
  * @defgroup forms Form builder functions
@@ -2670,7 +2671,7 @@ function theme_select($variables) {
   element_set_attributes($element, array('id', 'name', 'size'));
   _form_set_class($element, array('form-select'));
 
-  return '<select' . drupal_attributes($element['#attributes']) . '>' . form_select_options($element) . '</select>';
+  return '<select' . new Attribute($element['#attributes']) . '>' . form_select_options($element) . '</select>';
 }
 
 /**
@@ -2784,7 +2785,7 @@ function theme_fieldset($variables) {
   element_set_attributes($element, array('id'));
   _form_set_class($element, array('form-wrapper'));
 
-  $output = '<fieldset' . drupal_attributes($element['#attributes']) . '>';
+  $output = '<fieldset' . new Attribute($element['#attributes']) . '>';
   if (!empty($element['#title'])) {
     // Always wrap fieldset legends in a SPAN for CSS positioning.
     $output .= '<legend><span class="fieldset-legend">' . $element['#title'] . '</span></legend>';
@@ -2806,7 +2807,8 @@ function theme_fieldset($variables) {
  * Returns HTML for a radio button form element.
  *
  * Note: The input "name" attribute needs to be sanitized before output, which
- *       is currently done by passing all attributes to drupal_attributes().
+ *       is currently done by initializing Drupal\Core\Template\Attribute with
+ *       all the attributes.
  *
  * @param $variables
  *   An associative array containing:
@@ -2826,7 +2828,7 @@ function theme_radio($variables) {
   }
   _form_set_class($element, array('form-radio'));
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />';
+  return '<input' . new Attribute($element['#attributes']) . ' />';
 }
 
 /**
@@ -2853,7 +2855,7 @@ function theme_radios($variables) {
   if (isset($element['#attributes']['title'])) {
     $attributes['title'] = $element['#attributes']['title'];
   }
-  return '<div' . drupal_attributes($attributes) . '>' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
+  return '<div' . new Attribute($attributes) . '>' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
 }
 
 /**
@@ -2932,7 +2934,7 @@ function theme_date($variables) {
   }
   $attributes['class'][] = 'container-inline';
 
-  return '<div' . drupal_attributes($attributes) . '>' . drupal_render_children($element) . '</div>';
+  return '<div' . new Attribute($attributes) . '>' . drupal_render_children($element) . '</div>';
 }
 
 /**
@@ -3054,8 +3056,8 @@ function form_process_radios($element) {
       $element[$key] += array(
         '#type' => 'radio',
         '#title' => $choice,
-        // The key is sanitized in drupal_attributes() during output from the
-        // theme function.
+        // The key is sanitized in Drupal\Core\Template\Attribute during output
+        // from the theme function.
         '#return_value' => $key,
         // Use default or FALSE. A value of FALSE means that the radio button is
         // not 'checked'.
@@ -3094,7 +3096,7 @@ function theme_checkbox($variables) {
   }
   _form_set_class($element, array('form-checkbox'));
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />';
+  return '<input' . new Attribute($element['#attributes']) . ' />';
 }
 
 /**
@@ -3120,7 +3122,7 @@ function theme_checkboxes($variables) {
   if (isset($element['#attributes']['title'])) {
     $attributes['title'] = $element['#attributes']['title'];
   }
-  return '<div' . drupal_attributes($attributes) . '>' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
+  return '<div' . new Attribute($attributes) . '>' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
 }
 
 /**
@@ -3338,7 +3340,7 @@ function theme_container($variables) {
     $element['#attributes']['class'][] = 'form-wrapper';
   }
 
-  return '<div' . drupal_attributes($element['#attributes']) . '>' . $element['#children'] . '</div>';
+  return '<div' . new Attribute($element['#attributes']) . '>' . $element['#children'] . '</div>';
 }
 
 /**
@@ -3914,7 +3916,7 @@ function theme_button($variables) {
     $element['#attributes']['class'][] = 'form-button-disabled';
   }
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />';
+  return '<input' . new Attribute($element['#attributes']) . ' />';
 }
 
 /**
@@ -3943,7 +3945,7 @@ function theme_image_button($variables) {
     $element['#attributes']['class'][] = 'form-button-disabled';
   }
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />';
+  return '<input' . new Attribute($element['#attributes']) . ' />';
 }
 
 /**
@@ -3960,7 +3962,7 @@ function theme_hidden($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'hidden';
   element_set_attributes($element, array('name', 'value'));
-  return '<input' . drupal_attributes($element['#attributes']) . " />\n";
+  return '<input' . new Attribute($element['#attributes']) . " />\n";
 }
 
 /**
@@ -3980,7 +3982,7 @@ function theme_textfield($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-text'));
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
+  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**
@@ -4000,7 +4002,7 @@ function theme_email($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-email'));
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
+  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**
@@ -4034,7 +4036,7 @@ function theme_tel($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-tel'));
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
+  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**
@@ -4055,7 +4057,7 @@ function theme_number($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max', 'placeholder'));
   _form_set_class($element, array('form-number'));
 
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+  $output = '<input' . new Attribute($element['#attributes']) . ' />';
 
   return $output;
 }
@@ -4078,7 +4080,7 @@ function theme_range($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max'));
   _form_set_class($element, array('form-range'));
 
-  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
+  $output = '<input' . new Attribute($element['#attributes']) . ' />';
 
   return $output;
 }
@@ -4170,7 +4172,7 @@ function theme_url($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-url'));
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
+  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**
@@ -4190,7 +4192,7 @@ function theme_search($variables) {
   element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-search'));
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
+  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**
@@ -4245,7 +4247,7 @@ function theme_color($variables) {
   element_set_attributes($element, array('id', 'name', 'value'));
   _form_set_class($element, array('form-color'));
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />' . drupal_render_children($element);
+  return '<input' . new Attribute($element['#attributes']) . ' />' . drupal_render_children($element);
 }
 
 /**
@@ -4268,7 +4270,7 @@ function theme_form($variables) {
     $element['#attributes']['accept-charset'] = "UTF-8";
   }
   // Anonymous DIV to satisfy XHTML compliance.
-  return '<form' . drupal_attributes($element['#attributes']) . '><div>' . $element['#children'] . '</div></form>';
+  return '<form' . new Attribute($element['#attributes']) . '><div>' . $element['#children'] . '</div></form>';
 }
 
 /**
@@ -4296,8 +4298,8 @@ function theme_textarea($variables) {
     $element['#attributes']['class'][] = 'resize-' . $element['#resizable'];
   }
 
-  $output = '<div' . drupal_attributes($wrapper_attributes) . '>';
-  $output .= '<textarea' . drupal_attributes($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>';
+  $output = '<div' . new Attribute($wrapper_attributes) . '>';
+  $output .= '<textarea' . new Attribute($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>';
   $output .= '</div>';
   return $output;
 }
@@ -4319,7 +4321,7 @@ function theme_password($variables) {
   element_set_attributes($element, array('id', 'name', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-text'));
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />';
+  return '<input' . new Attribute($element['#attributes']) . ' />';
 }
 
 /**
@@ -4369,7 +4371,7 @@ function theme_file($variables) {
   element_set_attributes($element, array('id', 'name', 'size'));
   _form_set_class($element, array('form-file'));
 
-  return '<input' . drupal_attributes($element['#attributes']) . ' />';
+  return '<input' . new Attribute($element['#attributes']) . ' />';
 }
 
 /**
@@ -4445,7 +4447,7 @@ function theme_form_element($variables) {
   if (!empty($element['#attributes']['disabled'])) {
     $attributes['class'][] = 'form-disabled';
   }
-  $output = '<div' . drupal_attributes($attributes) . '>' . "\n";
+  $output = '<div' . new Attribute($attributes) . '>' . "\n";
 
   // If #title is not set, we don't display any label or required marker.
   if (!isset($element['#title'])) {
@@ -4478,7 +4480,7 @@ function theme_form_element($variables) {
     if (!empty($element['#id'])) {
       $attributes['id'] = $element['#id'] . '--description';
     }
-    $output .= '<div' . drupal_attributes($attributes) . '>' . $element['#description'] . "</div>\n";
+    $output .= '<div' . new Attribute($attributes) . '>' . $element['#description'] . "</div>\n";
   }
 
   $output .= "</div>\n";
@@ -4502,7 +4504,7 @@ function theme_form_required_marker($variables) {
     'class' => 'form-required',
     'title' => $t('This field is required.'),
   );
-  return '<abbr' . drupal_attributes($attributes) . '>*</abbr>';
+  return '<abbr' . new Attribute($attributes) . '>*</abbr>';
 }
 
 /**
@@ -4558,7 +4560,7 @@ function theme_form_element_label($variables) {
   }
 
   // The leading whitespace helps visually separate fields from inline labels.
-  return ' <label' . drupal_attributes($attributes) . '>' . $t('!title !required', array('!title' => $title, '!required' => $required)) . "</label>\n";
+  return ' <label' . new Attribute($attributes) . '>' . $t('!title !required', array('!title' => $title, '!required' => $required)) . "</label>\n";
 }
 
 /**

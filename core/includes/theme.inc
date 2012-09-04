@@ -9,6 +9,7 @@
  */
 
 use Drupal\Core\Utility\ThemeRegistry;
+use Drupal\Core\Template\Attribute;
 
 /**
  * @defgroup content_flags Content markers
@@ -1503,7 +1504,7 @@ function template_preprocess_datetime(&$variables) {
  * @see http://www.w3.org/TR/html5-author/the-time-element.html#attr-time-datetime
  */
 function theme_datetime($variables) {
-  $output = '<time' . drupal_attributes($variables['attributes']) . '>';
+  $output = '<time' . new Attribute($variables['attributes']) . '>';
   $output .= !empty($variables['html']) ? $variables['text'] : check_plain($variables['text']);
   $output .= '</time>';
   return $output;
@@ -1569,7 +1570,7 @@ function theme_status_messages($variables) {
  * @see l()
  */
 function theme_link($variables) {
-  return '<a href="' . check_plain(url($variables['path'], $variables['options'])) . '"' . drupal_attributes($variables['options']['attributes']) . '>' . ($variables['options']['html'] ? $variables['text'] : check_plain($variables['text'])) . '</a>';
+  return '<a href="' . check_plain(url($variables['path'], $variables['options'])) . '"' . new Attribute($variables['options']['attributes']) . '>' . ($variables['options']['html'] ? $variables['text'] : check_plain($variables['text'])) . '</a>';
 }
 
 /**
@@ -1632,12 +1633,12 @@ function theme_links($variables) {
         $heading['attributes']['class'] = $heading['class'];
       }
 
-      $output .= '<' . $heading['level'] . drupal_attributes($heading['attributes']) . '>';
+      $output .= '<' . $heading['level'] . new Attribute($heading['attributes']) . '>';
       $output .= check_plain($heading['text']);
       $output .= '</' . $heading['level'] . '>';
     }
 
-    $output .= '<ul' . drupal_attributes($attributes) . '>';
+    $output .= '<ul' . new Attribute($attributes) . '>';
 
     $num_links = count($links);
     $i = 0;
@@ -1673,12 +1674,12 @@ function theme_links($variables) {
           'html' => FALSE,
           'attributes' => array(),
         );
-        $item = '<span' . drupal_attributes($link['attributes']) . '>';
+        $item = '<span' . new Attribute($link['attributes']) . '>';
         $item .= ($link['html'] ? $link['title'] : check_plain($link['title']));
         $item .= '</span>';
       }
 
-      $output .= '<li' . drupal_attributes(array('class' => $class)) . '>';
+      $output .= '<li' . new Attribute(array('class' => $class)) . '>';
       $output .= $item;
       $output .= '</li>';
     }
@@ -1722,7 +1723,7 @@ function theme_image($variables) {
     }
   }
 
-  return '<img' . drupal_attributes($attributes) . ' />';
+  return '<img' . new Attribute($attributes) . ' />';
 }
 
 /**
@@ -1838,7 +1839,7 @@ function theme_table($variables) {
     $attributes['class'][] = 'sticky-enabled';
   }
 
-  $output = '<table' . drupal_attributes($attributes) . ">\n";
+  $output = '<table' . new Attribute($attributes) . ">\n";
 
   if (isset($caption)) {
     $output .= '<caption>' . $caption . "</caption>\n";
@@ -1866,15 +1867,15 @@ function theme_table($variables) {
 
       // Build colgroup
       if (is_array($cols) && count($cols)) {
-        $output .= ' <colgroup' . drupal_attributes($attributes) . '>';
+        $output .= ' <colgroup' . new Attribute($attributes) . '>';
         $i = 0;
         foreach ($cols as $col) {
-          $output .= ' <col' . drupal_attributes($col) . ' />';
+          $output .= ' <col' . new Attribute($col) . ' />';
         }
         $output .= " </colgroup>\n";
       }
       else {
-        $output .= ' <colgroup' . drupal_attributes($attributes) . " />\n";
+        $output .= ' <colgroup' . new Attribute($attributes) . " />\n";
       }
     }
   }
@@ -1940,7 +1941,7 @@ function theme_table($variables) {
         }
 
         // Build row
-        $output .= ' <tr' . drupal_attributes($attributes) . '>';
+        $output .= ' <tr' . new Attribute($attributes) . '>';
         $i = 0;
         foreach ($cells as $cell) {
           $cell = tablesort_cell($cell, $header, $ts, $i++);
@@ -2018,7 +2019,7 @@ function theme_item_list($variables) {
 
   $output = '';
   if ($items) {
-    $output .= '<' . $type . drupal_attributes($list_attributes) . '>';
+    $output .= '<' . $type . new Attribute($list_attributes) . '>';
 
     $num_items = count($items);
     $i = 0;
@@ -2064,7 +2065,7 @@ function theme_item_list($variables) {
         $attributes['class'][] = 'last';
       }
 
-      $output .= '<li' . drupal_attributes($attributes) . '>' . $value . '</li>';
+      $output .= '<li' . new Attribute($attributes) . '>' . $value . '</li>';
     }
     $output .= "</$type>";
   }
@@ -2129,7 +2130,7 @@ function theme_feed_icon($variables) {
  */
 function theme_html_tag($variables) {
   $element = $variables['element'];
-  $attributes = isset($element['#attributes']) ? drupal_attributes($element['#attributes']) : '';
+  $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';
   if (!isset($element['#value'])) {
     return '<' . $element['#tag'] . $attributes . " />\n";
   }
@@ -2211,7 +2212,7 @@ function theme_meter($variables) {
     }
   }
 
-  $output = '<div' . drupal_attributes($attributes) . '>';
+  $output = '<div' . new Attribute($attributes) . '>';
   $output .= '  <div style="width: '. $variables['percentage'] .'%;" class="foreground"></div>';
   $output .= "</div>\n";
 
@@ -2266,7 +2267,7 @@ function _theme_table_cell($cell, $header = FALSE) {
     $header |= isset($cell['header']);
     unset($cell['data']);
     unset($cell['header']);
-    $attributes = drupal_attributes($cell);
+    $attributes = new Attribute($cell);
   }
   else {
     $data = $cell;
@@ -2322,7 +2323,7 @@ function template_preprocess(&$variables, $hook) {
     $default_variables = _template_preprocess_default_variables();
   }
   if (!isset($default_attributes)) {
-    $default_attributes = drupal_attributes(array('class' => array()));
+    $default_attributes = new Attribute(array('class' => array()));
   }
   $variables += $default_variables + array(
     'attributes' => clone $default_attributes,
@@ -2422,7 +2423,7 @@ function template_preprocess_html(&$variables) {
   }
 
   // Initializes attributes which are specific to the html and body elements.
-  $variables['html_attributes'] = drupal_attributes();
+  $variables['html_attributes'] = new Attribute;
 
   // HTML element attributes.
   $variables['html_attributes']['lang'] = $language_interface->langcode;

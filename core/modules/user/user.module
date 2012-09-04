@@ -3,6 +3,7 @@
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\entity\EntityInterface;
 use Drupal\file\File;
+use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -1059,8 +1060,8 @@ function template_process_username(&$variables) {
  *     other desired page to link to for more information about the user.
  *   - link_options: An array of options to pass to the l() function's $options
  *     parameter if linking the user's name to the user's page.
- *   - attributes: An array of attributes to pass to the
- *     drupal_attributes() function if not linking to the user's page.
+ *   - attributes: An array of attributes to instantiate the
+ *     Drupal\Core\Template\Attribute class if not linking to the user's page.
  *
  * @see template_preprocess_username()
  * @see template_process_username()
@@ -1076,7 +1077,7 @@ function theme_username($variables) {
     // Modules may have added important attributes so they must be included
     // in the output. Additional classes may be added as array elements like
     // $variables['attributes']['class'][] = 'myclass';
-    $output = '<span' . drupal_attributes($variables['attributes']) . '>' . $variables['name'] . $variables['extra'] . '</span>';
+    $output = '<span' . new Attribute($variables['attributes']) . '>' . $variables['name'] . $variables['extra'] . '</span>';
   }
   return $output;
 }
