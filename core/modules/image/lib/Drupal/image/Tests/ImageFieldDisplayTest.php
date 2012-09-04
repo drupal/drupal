@@ -77,7 +77,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.
-      $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png; name="' . $test_image->filename . '"', t('Content-Type header was sent.'));
+      $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png', t('Content-Type header was sent.'));
       $this->assertEqual($this->drupalGetHeader('Content-Disposition'), 'inline; filename="' . $test_image->filename . '"', t('Content-Disposition header was sent.'));
       $this->assertTrue(strstr($this->drupalGetHeader('Cache-Control'),'private') !== FALSE, t('Cache-Control header was sent.'));
 
