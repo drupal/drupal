@@ -647,14 +647,14 @@ function overlay_set_mode($mode = NULL) {
 
   switch ($overlay_mode) {
     case 'parent':
-      drupal_add_library('overlay', 'parent');
+      drupal_add_library('overlay', 'drupal.overlay.parent');
 
       // Allow modules to act upon overlay events.
       module_invoke_all('overlay_parent_initialize');
       break;
 
     case 'child':
-      drupal_add_library('overlay', 'child');
+      drupal_add_library('overlay', 'drupal.overlay.child');
 
       // Allow modules to act upon overlay events.
       module_invoke_all('overlay_child_initialize');
