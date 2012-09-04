@@ -20,7 +20,7 @@ class ImageEffectsTest extends ToolkitTestBase {
    *
    * @var array
    */
-  public static $modules = array('image_test');
+  public static $modules = array('image_test', 'image_module_test');
 
   public static function getInfo() {
     return array(
@@ -118,5 +118,24 @@ class ImageEffectsTest extends ToolkitTestBase {
     $calls = image_test_get_all_calls();
     $this->assertEqual($calls['rotate'][0][1], 90, t('Degrees were passed correctly'));
     $this->assertEqual($calls['rotate'][0][2], 0xffffff, t('Background color was passed correctly'));
+  }
+
+  /**
+   * Test image effect caching.
+   */
+  function testImageEffectsCaching() {
+    $image_effect_definitions_called = &drupal_static('image_module_test_image_effect_info_alter');
+
+    // First call should grab a fresh copy of the data.
+    $effects = image_effect_definitions();
+    $this->assertTrue($image_effect_definitions_called === 1, 'image_effect_definitions() generated data.');
+
+    // Second call should come from cache.
+    drupal_static_reset('image_effect_definitions');
+    drupal_static_reset('image_module_test_image_effect_info_alter');
+    $cached_effects = image_effect_definitions();
+    $this->assertTrue(is_null($image_effect_definitions_called), 'image_effect_definitions() returned data from cache.');
+
+    $this->assertTrue($effects == $cached_effects, 'Cached effects are the same as generated effects.');
   }
 }

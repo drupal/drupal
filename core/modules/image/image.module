@@ -978,7 +978,7 @@ function image_effect_definitions() {
   $effects = &drupal_static(__FUNCTION__);
 
   if (!isset($effects)) {
-    if ($cache = cache()->get("image_effects:$langcode") && !empty($cache->data)) {
+    if ($cache = cache()->get("image_effects:$langcode")) {
       $effects = $cache->data;
     }
     else {
