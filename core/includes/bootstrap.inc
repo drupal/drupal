@@ -1771,18 +1771,29 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = TRUE) {
 }
 
 /**
- * Returns all messages that have been set.
+ * Returns all messages that have been set with drupal_set_message().
  *
- * @param $type
- *   (optional) Only return messages of this type.
- * @param $clear_queue
- *   (optional) Set to FALSE if you do not want to clear the messages queue
+ * @param string $type
+ *   (optional) Limit the messages returned by type. Defaults to NULL, meaning
+ *   all types. These values are supported:
+ *   - NULL
+ *   - 'status'
+ *   - 'warning'
+ *   - 'error'
+ * @param bool $clear_queue
+ *   (optional) If this is TRUE, the queue will be cleared of messages of the
+ *   type specified in the $type parameter. Otherwise the queue will be left
+ *   intact. Defaults to TRUE.
  *
- * @return
- *   An associative array, the key is the message type, the value an array
- *   of messages. If the $type parameter is passed, you get only that type,
- *   or an empty array if there are no such messages. If $type is not passed,
- *   all message types are returned, or an empty array if none exist.
+ * @return array
+ *   A multidimensional array with keys corresponding to the set message types.
+ *   The indexed array values of each contain the set messages for that type.
+ *   The messages returned are limited to the type specified in the $type
+ *   parameter. If there are no messages of the specified type, an empty array
+ *   is returned.
+ *
+ * @see drupal_set_message()
+ * @see theme_status_messages()
  */
 function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
   if ($messages = drupal_set_message()) {
