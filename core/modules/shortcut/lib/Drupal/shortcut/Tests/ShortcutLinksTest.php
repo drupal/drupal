@@ -35,6 +35,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     // Create some paths to test.
     $test_cases = array(
+      array('path' => ''),
       array('path' => 'admin'),
       array('path' => 'admin/config/system/site-information'),
       array('path' => "node/{$this->node->nid}/edit"),
@@ -52,7 +53,8 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $this->assertResponse(200);
       $saved_set = shortcut_set_load($set->set_name);
       $paths = $this->getShortcutInformation($saved_set, 'link_path');
-      $this->assertTrue(in_array(drupal_get_normal_path($test['path']), $paths), 'Shortcut created: '. $test['path']);
+      $test_path = empty($test['path']) ? '<front>' : $test['path'];
+      $this->assertTrue(in_array(drupal_get_normal_path($test_path), $paths), 'Shortcut created: '. $test['path']);
       $this->assertLink($title, 0, 'Shortcut link found on the page.');
     }
   }

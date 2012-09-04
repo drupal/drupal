@@ -8,7 +8,7 @@
 namespace Drupal\file;
 
 use Drupal\entity\DatabaseStorageController;
-use Drupal\entity\StorableInterface;
+use Drupal\entity\EntityInterface;
 
 /**
  * File storage controller for files.
@@ -34,7 +34,7 @@ class FileStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::presave().
    */
-  protected function preSave(StorableInterface $entity) {
+  protected function preSave(EntityInterface $entity) {
     $entity->timestamp = REQUEST_TIME;
     $entity->filesize = filesize($entity->uri);
     if (!isset($entity->langcode)) {

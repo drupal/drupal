@@ -22,10 +22,12 @@ namespace Drupal\Core\Config;
  * This also can be used for testing purposes.
  */
 class NullStorage implements StorageInterface {
+
   /**
-   * Implements Drupal\Core\Config\StorageInterface::__construct().
+   * Implements Drupal\Core\Config\StorageInterface::exists().
    */
-  public function __construct(array $options = array()) {
+  public function exists($name) {
+    return FALSE;
   }
 
   /**
@@ -59,14 +61,14 @@ class NullStorage implements StorageInterface {
   /**
    * Implements Drupal\Core\Config\StorageInterface::encode().
    */
-  public static function encode($data) {
+  public function encode($data) {
     return $data;
   }
 
   /**
    * Implements Drupal\Core\Config\StorageInterface::decode().
    */
-  public static function decode($raw) {
+  public function decode($raw) {
     return $raw;
   }
 

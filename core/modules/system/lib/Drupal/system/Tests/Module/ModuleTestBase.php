@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Module;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Config\FileStorage;
 use Drupal\simpletest\WebTestBase;
 
@@ -99,7 +98,7 @@ abstract class ModuleTestBase extends WebTestBase {
     if (!is_dir($module_config_dir)) {
       return;
     }
-    $module_file_storage = new FileStorage(array('directory' => $module_config_dir));
+    $module_file_storage = new FileStorage($module_config_dir);
     $names = $module_file_storage->listAll();
 
     // Verify that the config directory is not empty.

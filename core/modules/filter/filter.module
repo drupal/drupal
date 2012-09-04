@@ -4,6 +4,7 @@
  * @file
  * Framework for handling the filtering of content.
  */
+use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_cache_flush().
@@ -349,6 +350,9 @@ function filter_admin_format_title($format) {
 function filter_permission() {
   $perms['administer filters'] = array(
     'title' => t('Administer text formats and filters'),
+    'description' => t('Define how text is handled by combining filters into <a href="@url">text formats</a>.', array(
+      '@url' => url('admin/config/content/formats'),
+    )),
     'restrict access' => TRUE,
   );
 
@@ -1198,7 +1202,7 @@ function theme_filter_guidelines($variables) {
   $format = $variables['format'];
   $attributes['class'][] = 'filter-guidelines-item';
   $attributes['class'][] = 'filter-guidelines-' . $format->format;
-  $output = '<div' . drupal_attributes($attributes) . '>';
+  $output = '<div' . new Attribute($attributes) . '>';
   $output .= '<h3>' . check_plain($format->name) . '</h3>';
   $output .= theme('filter_tips', array('tips' => _filter_tips($format->format, FALSE)));
   $output .= '</div>';

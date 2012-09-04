@@ -7,12 +7,13 @@
 
 namespace Drupal\taxonomy;
 
+use Drupal\entity\ContentEntityInterface;
 use Drupal\entity\Entity;
 
 /**
  * Defines the taxonomy term entity.
  */
-class Term extends Entity {
+class Term extends Entity implements ContentEntityInterface {
 
   /**
    * The taxonomy term ID.

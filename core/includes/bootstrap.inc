@@ -433,7 +433,7 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
  *   The hostname and optional port number, e.g. "www.example.com" or
  *   "www.example.com:8080".
  * @param $script_name
- *   The part of the url following the hostname, including the leading slash.
+ *   The part of the URL following the hostname, including the leading slash.
  * @param $require_settings
  *   Defaults to TRUE. If TRUE, then only match directories with a
  *   'settings.php' file. Otherwise match any directory.
@@ -768,7 +768,7 @@ function drupal_settings_initialize() {
   }
   else {
     // Otherwise use $base_url as session name, without the protocol
-    // to use the same session identifiers across http and https.
+    // to use the same session identifiers across HTTP and HTTPS.
     list( , $session_name) = explode('://', $base_url, 2);
     // HTTP_HOST can be modified by a visitor, but we already sanitized it
     // in drupal_settings_initialize().
@@ -1771,18 +1771,29 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = TRUE) {
 }
 
 /**
- * Returns all messages that have been set.
+ * Returns all messages that have been set with drupal_set_message().
  *
- * @param $type
- *   (optional) Only return messages of this type.
- * @param $clear_queue
- *   (optional) Set to FALSE if you do not want to clear the messages queue
+ * @param string $type
+ *   (optional) Limit the messages returned by type. Defaults to NULL, meaning
+ *   all types. These values are supported:
+ *   - NULL
+ *   - 'status'
+ *   - 'warning'
+ *   - 'error'
+ * @param bool $clear_queue
+ *   (optional) If this is TRUE, the queue will be cleared of messages of the
+ *   type specified in the $type parameter. Otherwise the queue will be left
+ *   intact. Defaults to TRUE.
  *
- * @return
- *   An associative array, the key is the message type, the value an array
- *   of messages. If the $type parameter is passed, you get only that type,
- *   or an empty array if there are no such messages. If $type is not passed,
- *   all message types are returned, or an empty array if none exist.
+ * @return array
+ *   A multidimensional array with keys corresponding to the set message types.
+ *   The indexed array values of each contain the set messages for that type.
+ *   The messages returned are limited to the type specified in the $type
+ *   parameter. If there are no messages of the specified type, an empty array
+ *   is returned.
+ *
+ * @see drupal_set_message()
+ * @see theme_status_messages()
  */
 function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
   if ($messages = drupal_set_message()) {
@@ -2245,6 +2256,9 @@ function _drupal_bootstrap_configuration() {
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
 
+  // Make sure we are using the test database prefix in child Drupal sites.
+  _drupal_initialize_db_test_prefix();
+
   // Activate the class loader.
   drupal_classloader();
 
@@ -2310,17 +2324,9 @@ function _drupal_bootstrap_page_cache() {
 }
 
 /**
- * Initializes the database system and registers autoload functions.
+ * In a test environment, get the test db prefix and set it in $databases.
  */
-function _drupal_bootstrap_database() {
-  // Redirect the user to the installation script if Drupal has not been
-  // installed yet (i.e., if no $databases array has been defined in the
-  // settings.php file) and we are not already installing.
-  if (empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    install_goto('core/install.php');
-  }
-
+function _drupal_initialize_db_test_prefix() {
   // The user agent header is used to pass a database prefix in the request when
   // running tests. However, for security reasons, it is imperative that we
   // validate we ourselves made the request.
@@ -2348,6 +2354,20 @@ function _drupal_bootstrap_database() {
       );
     }
   }
+}
+
+/**
+ * Initializes the database system by loading database.inc.
+ */
+function _drupal_bootstrap_database() {
+  // Redirect the user to the installation script if Drupal has not been
+  // installed yet (i.e., if no $databases array has been defined in the
+  // settings.php file) and we are not already installing.
+  if (empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    install_goto('core/install.php');
+  }
+
 
   // Initialize the database system. Note that the connection
   // won't be initialized until it is actually requested.
@@ -2404,47 +2424,62 @@ function drupal_get_bootstrap_phase() {
  *
  * @see Drupal\Core\DrupalKernel
  *
- * @param $reset
- *   A new container instance to reset the Drupal container to.
+ * @param Symfony\Component\DependencyInjection\Container $new_container
+ *   A new container instance to replace the current.
+ * @param bool $rebuild
+ *   (optional) Internal use only. Whether to enforce a rebuild of the container.
+ *   Used by the testing framework to inject a fresh container for unit tests.
  *
  * @return Symfony\Component\DependencyInjection\Container
  *   The instance of the Container used to set up and maintain object
  *   instances.
  */
-function drupal_container(Container $reset = NULL) {
+function drupal_container(Container $new_container = NULL, $rebuild = FALSE) {
   // We do not use drupal_static() here because we do not have a mechanism by
   // which to reinitialize the stored objects, so a drupal_static_reset() call
   // would leave Drupal in a nonfunctional state.
   static $container = NULL;
-  if (isset($reset)) {
-    $container = $reset;
+  if ($rebuild) {
+    $container = NULL;
   }
-  elseif (!isset($container)) {
+  if (isset($new_container)) {
+    $container = $new_container;
+  }
+  if (!isset($container)) {
     // Return a ContainerBuilder instance with the bare essentials needed for any
     // full bootstrap regardless of whether there will be a DrupalKernel involved.
     // This will get merged with the full Kernel-built Container on normal page
     // requests.
     $container = new ContainerBuilder();
 
-    // Register configuration storage class and options.
-    // @todo The active store and its options need to be configurable.
-    //   Use either global $conf (recursion warning) or global $config, or a
-    //   bootstrap configuration *file* to allow to set/override this very
-    //   lowest of low level configuration.
-    $container->setParameter('config.storage.options', array(
-      'connection' => 'default',
-      'target' => 'default',
-    ));
-    $container->register('config.storage', 'Drupal\Core\Config\DatabaseStorage')
-      ->addArgument('%config.storage.options%');
+    // Register active configuration storage.
+    $container
+      ->register('config.cachedstorage.storage', 'Drupal\Core\Config\FileStorage')
+      ->addArgument(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY));
+    // @todo Replace this with a cache.factory service plus 'config' argument.
+    $container
+      ->register('cache.config')
+      ->setFactoryClass('Drupal\Core\Cache\CacheFactory')
+      ->setFactoryMethod('get')
+      ->addArgument('config');
 
+    $container
+      ->register('config.storage', 'Drupal\Core\Config\CachedStorage')
+      ->addArgument(new Reference('config.cachedstorage.storage'))
+      ->addArgument(new Reference('cache.config'));
+
+    // Register configuration object factory.
     $container->register('config.subscriber.globalconf', 'Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber');
     $container->register('dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher')
       ->addMethodCall('addSubscriber', array(new Reference('config.subscriber.globalconf')));
-    // Register configuration object factory.
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
       ->addArgument(new Reference('dispatcher'));
+
+    // Register staging configuration storage.
+    $container
+      ->register('config.storage.staging', 'Drupal\Core\Config\FileStorage')
+      ->addArgument(config_get_config_directory(CONFIG_STAGING_DIRECTORY));
   }
   return $container;
 }

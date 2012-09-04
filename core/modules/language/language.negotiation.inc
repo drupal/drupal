@@ -265,7 +265,7 @@ function language_from_url($languages, $request) {
       foreach ($languages as $language) {
         // Skip the check if the language doesn't have a domain.
         if (!empty($domains[$language->langcode])) {
-          // Ensure that there is exactly one protocol in the url when checking
+          // Ensure that there is exactly one protocol in the URL when checking
           // the hostname.
           $host = 'http://' . str_replace(array('http://', 'https://'), '', $domains[$language->langcode]);
           $host = parse_url($host, PHP_URL_HOST);

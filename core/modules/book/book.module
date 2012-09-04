@@ -6,6 +6,7 @@
  */
 
 use Drupal\node\Node;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_help().
@@ -1245,7 +1246,7 @@ function template_preprocess_book_export_html(&$variables) {
  */
 function template_process_book_export_html(&$variables) {
   // Flatten out html_attributes
-  $variables['html_attributes'] = drupal_attributes($variables['html_attributes']);
+  $variables['html_attributes'] = new Attribute($variables['html_attributes']);
 }
 
 /**

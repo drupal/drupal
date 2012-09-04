@@ -31,11 +31,6 @@ use IteratorAggregate;
  *  echo '<cat class="cat ' . $attributes['class'] . '" ' . $attributes . '>';
  *  // Produces <cat class="cat black-cat white-cat black-white-cat" id="socks">
  * @endcode
- *
- * Most of the time this object is not created directly, but
- * instantiated by drupal_attributes().
- *
- * @see drupal_attributes()
  */
 class Attribute implements ArrayAccess, IteratorAggregate {
 

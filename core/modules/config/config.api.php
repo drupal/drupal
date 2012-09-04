@@ -31,7 +31,7 @@
  *   A configuration object containing the old configuration data.
  */
 function hook_config_import_create($name, $new_config, $old_config) {
-  // Only configurable entities require custom handling. Any other module
+  // Only configuration entities require custom handling. Any other module
   // settings can be synchronized directly.
   if (strpos($name, 'config_test.dynamic.') !== 0) {
     return FALSE;
@@ -60,7 +60,7 @@ function hook_config_import_create($name, $new_config, $old_config) {
  *   A configuration object containing the old configuration data.
  */
 function hook_config_import_change($name, $new_config, $old_config) {
-  // Only configurable entities require custom handling. Any other module
+  // Only configuration entities require custom handling. Any other module
   // settings can be synchronized directly.
   if (strpos($name, 'config_test.dynamic.') !== 0) {
     return FALSE;
@@ -78,8 +78,8 @@ function hook_config_import_change($name, $new_config, $old_config) {
     $config_test->original->$property = $value;
   }
 
-  // Iterate through each property of the new config, copying it to the
-  // configurable test object.
+  // Iterate through each property of the new config, copying it to the test
+  // object.
   foreach ($new_config->get() as $property => $value) {
     $config_test->$property = $value;
   }
@@ -107,7 +107,7 @@ function hook_config_import_change($name, $new_config, $old_config) {
  *   A configuration object containing the old configuration data.
  */
 function hook_config_import_delete($name, $new_config, $old_config) {
-  // Only configurable entities require custom handling. Any other module
+  // Only configuration entities require custom handling. Any other module
   // settings can be synchronized directly.
   if (strpos($name, 'config_test.dynamic.') !== 0) {
     return FALSE;

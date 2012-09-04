@@ -1,0 +1,6 @@
+clear_results: '1'
+httpauth:
+  method: '1'
+  password: ''
+  username: ''
+verbose: '1'

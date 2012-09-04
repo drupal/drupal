@@ -342,7 +342,7 @@ abstract class LocalStream implements StreamWrapperInterface {
    * Support for unlink().
    *
    * @param string $uri
-   *   A string containing the uri to the resource to delete.
+   *   A string containing the URI to the resource to delete.
    *
    * @return bool
    *   TRUE if resource was successfully deleted.
@@ -358,9 +358,9 @@ abstract class LocalStream implements StreamWrapperInterface {
    * Support for rename().
    *
    * @param string $from_uri,
-   *   The uri to the file to rename.
+   *   The URI to the file to rename.
    * @param string $to_uri
-   *   The new uri for file.
+   *   The new URI for file.
    *
    * @return bool
    *   TRUE if file was successfully renamed.

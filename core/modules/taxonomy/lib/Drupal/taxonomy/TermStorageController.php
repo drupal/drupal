@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\entity\StorableInterface;
+use Drupal\entity\EntityInterface;
 use Drupal\entity\DatabaseStorageController;
 
 /**
@@ -99,7 +99,7 @@ class TermStorageController extends DatabaseStorageController {
   /**
    * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
-  protected function postSave(StorableInterface $entity, $update) {
+  protected function postSave(EntityInterface $entity, $update) {
     if (isset($entity->parent)) {
       db_delete('taxonomy_term_hierarchy')
         ->condition('tid', $entity->tid)

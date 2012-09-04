@@ -7,7 +7,8 @@
 
 namespace Drupal\Core\Config;
 
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Defines the file storage controller.
@@ -15,22 +16,34 @@ use Symfony\Component\Yaml\Yaml;
 class FileStorage implements StorageInterface {
 
   /**
-   * Configuration options for this storage controller.
+   * The filesystem path for configuration objects.
    *
-   * - directory: The filesystem path for configuration objects.
-   *
-   * @var array
+   * @var string
    */
-  protected $options;
+  protected $directory = '';
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::__construct().
+   * A shared YAML dumper instance.
+   *
+   * @var Symfony\Component\Yaml\Dumper
    */
-  public function __construct(array $options = array()) {
-    if (!isset($options['directory'])) {
-      $options['directory'] = config_get_config_directory();
-    }
-    $this->options = $options;
+  protected $dumper;
+
+  /**
+   * A shared YAML parser instance.
+   *
+   * @var Symfony\Component\Yaml\Parser
+   */
+  protected $parser;
+
+  /**
+   * Constructs a new FileStorage controller.
+   *
+   * @param string $directory
+   *   A directory path to use for reading and writing of configuration files.
+   */
+  public function __construct($directory) {
+    $this->directory = $directory;
   }
 
   /**
@@ -40,7 +53,7 @@ class FileStorage implements StorageInterface {
    *   The path to the configuration file.
    */
   public function getFilePath($name) {
-    return $this->options['directory'] . '/' . $name . '.' . self::getFileExtension();
+    return $this->directory . '/' . $name . '.' . self::getFileExtension();
   }
 
   /**
@@ -54,10 +67,7 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Returns whether the configuration file exists.
-   *
-   * @return bool
-   *   TRUE if the configuration file exists, FALSE otherwise.
+   * Implements Drupal\Core\Config\StorageInterface::exists().
    */
   public function exists($name) {
     return file_exists($this->getFilePath($name));
@@ -99,8 +109,8 @@ class FileStorage implements StorageInterface {
    */
   public function delete($name) {
     if (!$this->exists($name)) {
-      if (!file_exists($this->options['directory'])) {
-        throw new StorageException($this->options['directory'] . '/ not found.');
+      if (!file_exists($this->directory)) {
+        throw new StorageException($this->directory . '/ not found.');
       }
       return FALSE;
     }
@@ -119,14 +129,41 @@ class FileStorage implements StorageInterface {
   }
 
   /**
+   * Gets the YAML dumper instance.
+   *
+   * @return Symfony\Component\Yaml\Dumper
+   */
+  protected function getDumper() {
+    if (!isset($this->dumper)) {
+      $this->dumper = new Dumper();
+      // Set Yaml\Dumper's default indentation for nested nodes/collections to
+      // 2 spaces for consistency with Drupal coding standards.
+      $this->dumper->setIndentation(2);
+    }
+    return $this->dumper;
+  }
+
+  /**
+   * Gets the YAML parser instance.
+   *
+   * @return Symfony\Component\Yaml\Parser
+   */
+  protected function getParser() {
+    if (!isset($this->parser)) {
+      $this->parser = new Parser();
+    }
+    return $this->parser;
+  }
+
+  /**
    * Implements Drupal\Core\Config\StorageInterface::encode().
    *
    * @throws Symfony\Component\Yaml\Exception\DumpException
    */
-  public static function encode($data) {
+  public function encode($data) {
     // The level where you switch to inline YAML is set to PHP_INT_MAX to ensure
     // this does not occur.
-    return Yaml::dump($data, PHP_INT_MAX);
+    return $this->getDumper()->dump($data, PHP_INT_MAX);
   }
 
   /**
@@ -134,8 +171,8 @@ class FileStorage implements StorageInterface {
    *
    * @throws Symfony\Component\Yaml\Exception\ParseException
    */
-  public static function decode($raw) {
-    $data = Yaml::parse($raw);
+  public function decode($raw) {
+    $data = $this->getParser()->parse($raw);
     // A simple string is valid YAML for any reason.
     if (!is_array($data)) {
       return FALSE;
@@ -149,11 +186,11 @@ class FileStorage implements StorageInterface {
   public function listAll($prefix = '') {
     // glob() silently ignores the error of a non-existing search directory,
     // even with the GLOB_ERR flag.
-    if (!file_exists($this->options['directory'])) {
-      throw new StorageException($this->options['directory'] . '/ not found.');
+    if (!file_exists($this->directory)) {
+      throw new StorageException($this->directory . '/ not found.');
     }
     $extension = '.' . self::getFileExtension();
-    $files = glob($this->options['directory'] . '/' . $prefix . '*' . $extension);
+    $files = glob($this->directory . '/' . $prefix . '*' . $extension);
     $clean_name = function ($value) use ($extension) {
       return basename($value, $extension);
     };

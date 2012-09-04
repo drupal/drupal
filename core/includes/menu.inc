@@ -5,6 +5,8 @@
  * API for the Drupal menu system.
  */
 
+use Drupal\Core\Template\Attribute;
+
 /**
  * @defgroup menu Menu system
  * @{
@@ -1602,7 +1604,7 @@ function theme_menu_link(array $variables) {
     $sub_menu = drupal_render($element['#below']);
   }
   $output = l($element['#title'], $element['#href'], $element['#localized_options']);
-  return '<li' . drupal_attributes($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
+  return '<li' . new Attribute($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
 }
 
 /**

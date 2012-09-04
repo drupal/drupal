@@ -44,8 +44,8 @@
  *     if a higher level persistent cache is available for the entity type.
  *     Defaults to TRUE.
  *   - uri callback: A function taking an entity as argument and returning the
- *     uri elements of the entity, e.g. 'path' and 'options'. The actual entity
- *     uri can be constructed by passing these elements to url().
+ *     URI elements of the entity, e.g. 'path' and 'options'. The actual entity
+ *     URI can be constructed by passing these elements to url().
  *   - label callback: (optional) A function taking an entity and optional langcode
  *     argument, and returning the label of the entity. If langcode is omitted, the
  *     entity's default language is used.

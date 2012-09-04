@@ -5,6 +5,8 @@
  * Functions to aid in presenting database results as a set of pages.
  */
 
+use Drupal\Core\Template\Attribute;
+
 /**
  * Returns the current page being requested for display within a pager.
  *
@@ -476,7 +478,7 @@ function theme_pager_link($variables) {
   //   possible to use l() here.
   // @see http://drupal.org/node/1410574
   $attributes['href'] = url(current_path(), array('query' => $query));
-  return '<a' . drupal_attributes($attributes) . '>' . check_plain($text) . '</a>';
+  return '<a' . new Attribute($attributes) . '>' . check_plain($text) . '</a>';
 }
 
 /**

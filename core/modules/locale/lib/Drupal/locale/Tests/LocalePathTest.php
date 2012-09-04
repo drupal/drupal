@@ -24,7 +24,7 @@ class LocalePathTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Path language settings',
-      'description' => 'Checks you can configure a language for individual url aliases.',
+      'description' => 'Checks you can configure a language for individual URL aliases.',
       'group' => 'Locale',
     );
   }

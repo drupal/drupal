@@ -7,7 +7,6 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Core\Config\DatabaseStorage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -26,7 +25,7 @@ class ConfigCRUDTest extends WebTestBase {
    * Tests CRUD operations.
    */
   function testCRUD() {
-    $storage = new DatabaseStorage();
+    $storage = $this->container->get('config.storage');
     $name = 'config_test.crud';
 
     $config = config($name);

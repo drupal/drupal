@@ -1,9 +1,9 @@
 cache:
-    page:
-        enabled: '0'
-        max_age: '0'
+  page:
+    enabled: '0'
+    max_age: '0'
 preprocess:
-    css: '0'
-    js: '0'
+  css: '0'
+  js: '0'
 response:
-    gzip: '0'
+  gzip: '0'

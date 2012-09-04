@@ -3,6 +3,7 @@
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\entity\EntityInterface;
 use Drupal\file\File;
+use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -181,7 +182,7 @@ function user_entity_info() {
 }
 
 /**
- * Entity uri callback.
+ * Entity URI callback.
  */
 function user_uri($user) {
   return array(
@@ -1059,8 +1060,8 @@ function template_process_username(&$variables) {
  *     other desired page to link to for more information about the user.
  *   - link_options: An array of options to pass to the l() function's $options
  *     parameter if linking the user's name to the user's page.
- *   - attributes: An array of attributes to pass to the
- *     drupal_attributes() function if not linking to the user's page.
+ *   - attributes: An array of attributes to instantiate the
+ *     Drupal\Core\Template\Attribute class if not linking to the user's page.
  *
  * @see template_preprocess_username()
  * @see template_process_username()
@@ -1076,7 +1077,7 @@ function theme_username($variables) {
     // Modules may have added important attributes so they must be included
     // in the output. Additional classes may be added as array elements like
     // $variables['attributes']['class'][] = 'myclass';
-    $output = '<span' . drupal_attributes($variables['attributes']) . '>' . $variables['name'] . $variables['extra'] . '</span>';
+    $output = '<span' . new Attribute($variables['attributes']) . '>' . $variables['name'] . $variables['extra'] . '</span>';
   }
   return $output;
 }
@@ -1820,7 +1821,7 @@ function user_external_login_register($name, $module) {
  * @param array $options
  *   (optional) A keyed array of settings. Supported options are:
  *   - langcode: A language code to be used when generating locale-sensitive
- *    urls. If langcode is NULL the users preferred language is used.
+ *    URLs. If langcode is NULL the users preferred language is used.
  *
  * @return
  *   A unique URL that provides a one-time log in for the user, from which
@@ -1850,7 +1851,7 @@ function user_pass_reset_url($account, $options = array()) {
  * @param array $options
  *   (optional) A keyed array of settings. Supported options are:
  *   - langcode: A language code to be used when generating locale-sensitive
-  *    urls. If langcode is NULL the users preferred language is used.
+  *    URLs. If langcode is NULL the users preferred language is used.
  *
  * @return
  *   A unique URL that may be used to confirm the cancellation of the user

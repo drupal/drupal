@@ -411,6 +411,18 @@ abstract class GenericCacheBackendUnitTestBase extends UnitTestBase {
     $backend = $this->getCacheBackend();
 
     // Create two cache entries with the same tag and tag value.
+    $backend->set('test_cid_clear1', $this->defaultValue, CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => 2));
+    $backend->set('test_cid_clear2', $this->defaultValue, CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => 2));
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1')
+                      && $this->checkCacheExists('test_cid_clear2'),
+                      'Two cache items were created.');
+    // Invalidate test_tag of value 1. This should invalidate both entries.
+    $backend->invalidateTags(array('test_tag' => 2));
+    $this->assertFalse($this->checkCacheExists('test_cid_clear1')
+                      || $this->checkCacheExists('test_cid_clear2'),
+                      'Two caches removed after clearing a cache tag.');
+
+    // Create two cache entries with the same tag and an array tag value.
     $backend->set('test_cid_clear1', $this->defaultValue, CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => array(1)));
     $backend->set('test_cid_clear2', $this->defaultValue, CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => array(1)));
     $this->assertTrue($this->checkCacheExists('test_cid_clear1')

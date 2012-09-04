@@ -5,6 +5,8 @@
  * Enables semantically enriched output for Drupal sites in the form of RDFa.
  */
 
+use Drupal\Core\Template\Attribute;
+
 /**
  * Implements hook_help().
  */
@@ -268,10 +270,10 @@ function rdf_mapping_delete($type, $bundle) {
 /**
  * Builds an array of RDFa attributes for a given mapping.
  *
- * This array will typically be passed through drupal_attributes() to create
- * the attributes variables that are available to template files. These include
- * $attributes, $title_attributes, $content_attributes and the field-specific
- * $item_attributes variables.
+ * This array will typically be passed through Drupal\Core\Template\Attribute
+ * to create the attributes variables that are available to template files.
+ * These include $attributes, $title_attributes, $content_attributes and the
+ * field-specific $item_attributes variables.
  *
  * @param $mapping
  *   An array containing a mandatory 'predicates' key and optional 'datatype',
@@ -289,7 +291,7 @@ function rdf_mapping_delete($type, $bundle) {
  *   function.
  *
  * @return
- *   RDFa attributes suitable for drupal_attributes().
+ *   RDFa attributes suitable for Drupal\Core\Template\Attribute.
  *
  * @see theme_rdf_template_variable_wrapper()
  */
@@ -815,7 +817,7 @@ function rdf_preprocess_image(&$variables) {
  * an extra wrapper element, you can override this function to not wrap that
  * variable and instead print the following inside your template file:
  * @code
- *   drupal_attributes($rdf_template_variable_attributes[$variable_name])
+ *   new Drupal\Core\Template\Attribute($rdf_template_variable_attributes[$variable_name])
  * @endcode
  *
  * @param $variables
@@ -853,7 +855,7 @@ function rdf_preprocess_image(&$variables) {
 function theme_rdf_template_variable_wrapper($variables) {
   $output = $variables['content'];
   if (!empty($output) && !empty($variables['attributes'])) {
-    $attributes = drupal_attributes($variables['attributes']);
+    $attributes = new Attribute($variables['attributes']);
     $output = $variables['inline'] ? "<span$attributes>$output</span>" : "<div$attributes>$output</div>";
   }
   return $output;
@@ -889,7 +891,7 @@ function theme_rdf_metadata($variables) {
     // be used, but for maximum browser compatibility, W3C recommends the
     // former when serving pages using the text/html media type, see
     // http://www.w3.org/TR/xhtml1/#C_3.
-    $output .= '<span' . drupal_attributes($attributes) . '></span>';
+    $output .= '<span' . new Attribute($attributes) . '></span>';
   }
   return $output;
 }

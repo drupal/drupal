@@ -2,6 +2,6 @@ name: Drupal
 mail: ''
 slogan: ''
 page:
-    403: ''
-    404: ''
-    front: user
+  403: ''
+  404: ''
+  front: user

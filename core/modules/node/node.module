@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Template\Attribute;
 use Drupal\node\Node;
 use Drupal\file\File;
 use Drupal\entity\EntityInterface;
@@ -281,7 +282,7 @@ function node_field_display_node_alter(&$display, $context) {
 }
 
 /**
- * Entity uri callback.
+ * Entity URI callback.
  *
  * @param Drupal\node\Node $node
  *   A node entity.
@@ -2465,7 +2466,7 @@ function node_feed($nids = FALSE, $channel = array()) {
   $channel = array_merge($channel_defaults, $channel);
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-  $output .= "<rss version=\"" . $channel["version"] . "\" xml:base=\"" . $base_url . "\" " . drupal_attributes($namespaces) . ">\n";
+  $output .= "<rss version=\"" . $channel["version"] . "\" xml:base=\"" . $base_url . "\" " . new Attribute($namespaces) . ">\n";
   $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language'], $channel_extras);
   $output .= "</rss>\n";
 

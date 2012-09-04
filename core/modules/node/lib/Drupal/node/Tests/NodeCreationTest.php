@@ -95,4 +95,23 @@ class NodeCreationTest extends NodeTestBase {
     $records = db_query("SELECT wid FROM {watchdog} WHERE variables LIKE '%Test exception for rollback.%'")->fetchAll();
     $this->assertTrue(count($records) > 0, t('Rollback explanatory error logged to watchdog.'));
   }
+
+  /**
+   * Create an unpublished node and confirm correct redirect behavior.
+   */
+  function testUnpublishedNodeCreation() {
+    // Set "Basic page" content type to be unpublished by default.
+    variable_set('node_options_page', array());
+    // Set the front page to the default "node" page.
+    config('system.site')->set('page.front', 'node')->save();
+
+    // Create a node.
+    $edit = array();
+    $edit["title"] = $this->randomName(8);
+    $edit["body[" . LANGUAGE_NOT_SPECIFIED . "][0][value]"] = $this->randomName(16);
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+
+    // Check that the user was redirected to the home page.
+    $this->assertText(t('Welcome to Drupal'), t('The user is redirected to the home page.'));
+  }
 }

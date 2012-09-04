@@ -140,6 +140,11 @@ abstract class WebTestBase extends TestBase {
   protected $generatedTestFiles = FALSE;
 
   /**
+   * The maximum number of redirects to follow when handling responses.
+   */
+  protected $maximumRedirects = 5;
+
+  /**
    * The number of redirects followed during the handling of a request.
    */
   protected $redirect_count;
@@ -628,11 +633,11 @@ abstract class WebTestBase extends TestBase {
     variable_set('file_private_path', $this->private_files_directory);
     variable_set('file_temporary_path', $this->temp_files_directory);
 
-    // Set the 'simpletest_parent_profile' variable to add the parent profile's
+    // Set 'parent_profile' of simpletest to add the parent profile's
     // search path to the child site's search paths.
     // @see drupal_system_listing()
     // @todo This may need to be primed like 'install_profile' above.
-    variable_set('simpletest_parent_profile', $this->originalProfile);
+    config('simpletest.settings')->set('parent_profile', $this->originalProfile)->save();
 
     // Include the testing profile.
     variable_set('install_profile', $this->profile);
@@ -674,6 +679,10 @@ abstract class WebTestBase extends TestBase {
     // Symfony\Component\HttpKernel\handle(), this kernel needs manual booting
     // as it is not used to handle a request.
     $this->kernel->boot();
+    // The DrupalKernel does not update the container in drupal_container(), but
+    // replaces it with a new object. We therefore need to replace the minimal
+    // boostrap container that has been set up by TestBase::prepareEnvironment().
+    $this->container = drupal_container();
 
     // Reset/rebuild all data structures after enabling the modules.
     $this->resetAll();
@@ -816,8 +825,8 @@ abstract class WebTestBase extends TestBase {
         CURLOPT_URL => $base_url,
         CURLOPT_FOLLOWLOCATION => FALSE,
         CURLOPT_RETURNTRANSFER => TRUE,
-        CURLOPT_SSL_VERIFYPEER => FALSE, // Required to make the tests run on https.
-        CURLOPT_SSL_VERIFYHOST => FALSE, // Required to make the tests run on https.
+        CURLOPT_SSL_VERIFYPEER => FALSE, // Required to make the tests run on HTTPS.
+        CURLOPT_SSL_VERIFYHOST => FALSE, // Required to make the tests run on HTTPS.
         CURLOPT_HEADERFUNCTION => array(&$this, 'curlHeaderCallback'),
         CURLOPT_USERAGENT => $this->databasePrefix,
       );
@@ -898,7 +907,7 @@ abstract class WebTestBase extends TestBase {
     // to prevent fragments being sent to the web server as part
     // of the request.
     // TODO: Remove this for Drupal 8, since fixed in curl 7.20.0.
-    if (in_array($status, array(300, 301, 302, 303, 305, 307)) && $this->redirect_count < variable_get('simpletest_maximum_redirects', 5)) {
+    if (in_array($status, array(300, 301, 302, 303, 305, 307)) && $this->redirect_count < $this->maximumRedirects) {
       if ($this->drupalGetHeader('location')) {
         $this->redirect_count++;
         $curl_options = array();
@@ -1828,10 +1837,10 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Get the current url from the cURL handler.
+   * Get the current URL from the cURL handler.
    *
    * @return
-   *   The current url.
+   *   The current URL.
    */
   protected function getUrl() {
     return $this->url;

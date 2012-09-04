@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @file
+ * Defines a simple e-mail field type.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function email_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#email':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The E-mail module defines a field for storing e-mail addresses, for use with the Field module. E-mail addresses are validated to ensure they match the expected format. See the <a href="@field-help">Field module help page</a> for more information about fields.', array('@field-help' => url('admin/help/field'))) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_field_info().
+ */
+function email_field_info() {
+  return array(
+    'email' => array(
+      'label' => t('E-mail'),
+      'description' => t('This field stores an e-mail address in the database.'),
+      'default_widget' => 'email_default',
+      'default_formatter' => 'text_plain',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function email_field_is_empty($item, $field) {
+  return !isset($item['value']) || $item['value'] === '';
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function email_field_widget_info() {
+  return array(
+    'email_default' => array(
+      'label' => t('E-mail'),
+      'field types' => array('email'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function email_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $element['value'] = $element + array(
+    '#type' => 'email',
+    '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
+  );
+  return $element;
+
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function email_field_formatter_info() {
+  return array(
+    'email_mailto' => array(
+      'label' => t('Mailto link'),
+      'field types' => array('email'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function email_field_formatter_info_alter(&$info) {
+  $info['text_plain']['field types'][] = 'email';
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function email_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  foreach ($items as $delta => $item) {
+    $element[$delta] = array(
+      '#type' => 'link',
+      '#title' => $item['value'],
+      '#href' => 'mailto:' . $item['value'],
+    );
+  }
+  return $element;
+}

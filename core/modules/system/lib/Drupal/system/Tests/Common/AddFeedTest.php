@@ -43,12 +43,12 @@ class AddFeedTest extends WebTestBase {
         'output_url' => url($path, array('absolute' => TRUE)),
         'title' => '',
       ),
-      'external url without title' => array(
+      'external URL without title' => array(
         'input_url' => $external_url,
         'output_url' => $external_url,
         'title' => '',
       ),
-      'local url without title' => array(
+      'local URL without title' => array(
         'input_url' => $fully_qualified_local_url,
         'output_url' => $fully_qualified_local_url,
         'title' => '',
@@ -58,12 +58,12 @@ class AddFeedTest extends WebTestBase {
         'output_url' => url($path_for_title, array('absolute' => TRUE)),
         'title' => $this->randomName(12),
       ),
-      'external url with title' => array(
+      'external URL with title' => array(
         'input_url' => $external_for_title,
         'output_url' => $external_for_title,
         'title' => $this->randomName(12),
       ),
-      'local url with title' => array(
+      'local URL with title' => array(
         'input_url' => $fully_qualified_for_title,
         'output_url' => $fully_qualified_for_title,
         'title' => $this->randomName(12),
@@ -84,7 +84,7 @@ class AddFeedTest extends WebTestBase {
    * Create a pattern representing the RSS feed in the page.
    */
   function urlToRSSLinkPattern($url, $title = '') {
-    // Escape any regular expression characters in the url ('?' is the worst).
+    // Escape any regular expression characters in the URL ('?' is the worst).
     $url = preg_replace('/([+?.*])/', '[$0]', $url);
     $generated_pattern = '%<link +rel="alternate" +type="application/rss.xml" +title="' . $title . '" +href="' . $url . '" */>%';
     return $generated_pattern;

@@ -5,6 +5,7 @@
  */
 
 use Drupal\entity\EntityFieldQuery;
+use Drupal\Core\Template\Attribute;
 
 /*
  * Load all public Field API functions. Drupal currently has no
@@ -1107,17 +1108,17 @@ function template_process_field(&$variables, $hook) {
   static $default_attributes;
   // The default theme implementation is a function, so template_process() does
   // not automatically run, so we need to flatten the classes and attributes
-  // here. For best performance, only call drupal_attributes() when needed, and
-  // note that template_preprocess_field() does not initialize the
-  // *_attributes variables.
+  // here. For best performance, only instantiate Drupal\Core\Template\Attribute
+  // when needed, and note that template_preprocess_field() does not initialize
+  // the *_attributes variables.
   if (!isset($default_attributes)) {
-    $default_attributes = drupal_attributes();
+    $default_attributes = new Attribute;
   }
-  $variables['attributes'] = isset($variables['attributes']) ? drupal_attributes($variables['attributes']) : clone $default_attributes;
-  $variables['title_attributes'] = isset($variables['title_attributes']) ? drupal_attributes($variables['title_attributes']) : clone($default_attributes);
-  $variables['content_attributes'] = isset($variables['content_attributes']) ? drupal_attributes($variables['content_attributes']) : clone($default_attributes);
+  $variables['attributes'] = isset($variables['attributes']) ? new Attribute($variables['attributes']) : clone $default_attributes;
+  $variables['title_attributes'] = isset($variables['title_attributes']) ? new Attribute($variables['title_attributes']) : clone($default_attributes);
+  $variables['content_attributes'] = isset($variables['content_attributes']) ? new Attribute($variables['content_attributes']) : clone($default_attributes);
   foreach ($variables['items'] as $delta => $item) {
-    $variables['item_attributes'][$delta] = isset($variables['item_attributes'][$delta]) ? drupal_attributes($variables['item_attributes'][$delta]) : clone($default_attributes);
+    $variables['item_attributes'][$delta] = isset($variables['item_attributes'][$delta]) ? new Attribute($variables['item_attributes'][$delta]) : clone($default_attributes);
   }
 }
 

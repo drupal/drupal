@@ -10,6 +10,9 @@ namespace Drupal\dblog\Tests;
 use Drupal\simpletest\WebTestBase;
 use SimpleXMLElement;
 
+/**
+ * Tests logging messages to the database.
+ */
 class DBLogTest extends WebTestBase {
 
   /**
@@ -275,7 +278,7 @@ class DBLogTest extends WebTestBase {
     // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertResponse(200);
-    // Check that full-length url displayed.
+    // Check that full-length URL displayed.
     $this->assertText($not_found_url, t('DBLog event was recorded: [page not found]'));
   }
 

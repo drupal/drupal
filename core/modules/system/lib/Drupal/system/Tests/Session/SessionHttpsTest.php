@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Session;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Ensure that when running under https two session cookies are generated.
+ * Ensure that when running under HTTPS two session cookies are generated.
  */
 class SessionHttpsTest extends WebTestBase {
 
@@ -23,8 +23,8 @@ class SessionHttpsTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Session https handling',
-      'description' => 'Ensure that when running under https two session cookies are generated.',
+      'name' => 'Session HTTPS handling',
+      'description' => 'Ensure that when running under HTTPS two session cookies are generated.',
       'group' => 'Session'
     );
   }
@@ -108,7 +108,7 @@ class SessionHttpsTest extends WebTestBase {
     $this->cookies = array();
 
     if ($is_https) {
-      // The functionality does not make sense when running on https.
+      // The functionality does not make sense when running on HTTPS.
       return;
     }
 

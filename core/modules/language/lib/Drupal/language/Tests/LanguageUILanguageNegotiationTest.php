@@ -52,7 +52,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'UI language negotiation',
-      'description' => 'Test UI language switching by url path prefix and domain.',
+      'description' => 'Test UI language switching by URL path prefix and domain.',
       'group' => 'Language',
     );
   }
@@ -434,21 +434,21 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
     $url_scheme = ($is_https) ? 'https://' : 'http://';
     $correct_link = $url_scheme . $link;
-    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right url (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right URL (@url) in accordance with the chosen language', array('@url' => $italian_url)));
 
-    // Test https via options.
+    // Test HTTPS via options.
     variable_set('https', TRUE);
     $italian_url = url('admin', array('https' => TRUE, 'language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
-    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right https url (via options) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right HTTPS URL (via options) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
     variable_set('https', FALSE);
 
-    // Test https via current url scheme.
+    // Test HTTPS via current URL scheme.
     $temp_https = $is_https;
     $is_https = TRUE;
     $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
-    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right url (via current url scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+    $this->assertTrue($italian_url == $correct_link, t('The url() function returns the right URL (via current URL scheme) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
     $is_https = $temp_https;
   }
 }

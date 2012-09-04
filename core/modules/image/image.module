@@ -1198,7 +1198,7 @@ function theme_image_style($variables) {
   $variables['width'] = $dimensions['width'];
   $variables['height'] = $dimensions['height'];
 
-  // Determine the url for the styled image.
+  // Determine the URL for the styled image.
   $variables['uri'] = image_style_url($variables['style_name'], $variables['uri']);
   return theme('image', $variables);
 }

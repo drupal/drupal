@@ -620,8 +620,8 @@ function shortcut_valid_link($path) {
   if ($path != $normal_path) {
     $path = $normal_path;
   }
-  // Only accept links that correspond to valid paths on the site itself.
-  return !url_is_external($path) && menu_get_item($path);
+  // An empty path is valid too and will be converted to <front>.
+  return (!url_is_external($path) && menu_get_item($path)) || empty($path) || $path == '<front>';
 }
 
 /**

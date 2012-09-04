@@ -1,4 +1,4 @@
 parent:
-    bar: Bar
-    baz: Baz
+  bar: Bar
+  baz: Baz
 foo: Foo

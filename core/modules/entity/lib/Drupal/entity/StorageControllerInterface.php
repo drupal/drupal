@@ -54,7 +54,7 @@ interface StorageControllerInterface {
    * @param int $revision_id
    *   The revision id.
    *
-   * @return Drupal\entity\StorableInterface|false
+   * @return Drupal\entity\EntityInterface|false
    *   The specified entity revision or FALSE if not found.
    */
   public function loadRevision($revision_id);
@@ -78,7 +78,7 @@ interface StorageControllerInterface {
    *   An array of values to set, keyed by property name. If the entity type has
    *   bundles the bundle key has to be specified.
    *
-   * @return Drupal\entity\StorableInterface
+   * @return Drupal\entity\EntityInterface
    *   A new entity object.
    */
   public function create(array $values);
@@ -97,7 +97,7 @@ interface StorageControllerInterface {
   /**
    * Saves the entity permanently.
    *
-   * @param Drupal\entity\StorableInterface $entity
+   * @param Drupal\entity\EntityInterface $entity
    *   The entity to save.
    *
    * @return
@@ -107,6 +107,6 @@ interface StorageControllerInterface {
    * @throws Drupal\entity\EntityStorageException
    *   In case of failures, an exception is thrown.
    */
-  public function save(StorableInterface $entity);
+  public function save(EntityInterface $entity);
 
 }

@@ -7,12 +7,13 @@
 
 namespace Drupal\comment;
 
+use Drupal\entity\ContentEntityInterface;
 use Drupal\entity\Entity;
 
 /**
  * Defines the comment entity class.
  */
-class Comment extends Entity {
+class Comment extends Entity implements ContentEntityInterface {
 
   /**
    * The comment ID.

@@ -275,7 +275,7 @@ function drupal_install_config_directories() {
     drupal_rewrite_settings($settings);
   }
 
-  // Ensure that the config directory exists or can be created, and is writable.
+  // Ensure the config directories exist or can be created, and are writable.
   foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $config_type) {
     // This should never fail, since if the config directory was specified in
     // settings.php it will have already been created and verified earlier, and
@@ -296,7 +296,7 @@ function drupal_install_config_directories() {
  * Checks whether a config directory name is defined, and if so, whether it
  * exists and is writable.
  *
- * This partically duplicates install_ensure_config_directory(), but is required
+ * This partially duplicates install_ensure_config_directory(), but is required
  * since the installer would create the config directory too early in the
  * installation process otherwise (e.g., when only visiting install.php when
  * there is a settings.php already, but not actually executing the installation).
@@ -313,9 +313,16 @@ function install_verify_config_directory($type) {
   if (!isset($config_directories[$type])) {
     return FALSE;
   }
-  $config_directory = config_get_config_directory($type);
-  if (is_dir($config_directory) && is_writable($config_directory)) {
-    return TRUE;
+  // config_get_config_directory() throws an exception when the passed $type
+  // does not exist in $config_directories. This can happen if there is a
+  // prepared settings.php that defines $config_directories already.
+  try {
+    $config_directory = config_get_config_directory($type);
+    if (is_dir($config_directory) && is_writable($config_directory)) {
+      return TRUE;
+    }
+  }
+  catch (\Exception $e) {
   }
   return FALSE;
 }

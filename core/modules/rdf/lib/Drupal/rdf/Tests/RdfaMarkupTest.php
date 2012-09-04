@@ -138,7 +138,7 @@ class RdfaMarkupTest extends WebTestBase {
     $image = current($this->drupalGetTestFiles('image'));
 
     // Create an array for drupalPost with the field names as the keys and
-    // the uris for the test files as the values.
+    // the URIs for the test files as the values.
     $edit = array("files[" . $field_name . "_" . $langcode . "_0]" => drupal_realpath($file->uri),
                   "files[" . $image_field . "_" . $langcode . "_0]" => drupal_realpath($image->uri));
 

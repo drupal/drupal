@@ -77,7 +77,7 @@ class HtmlToTextTest extends WebTestBase {
     $tests = array(
       // @todo Trailing linefeeds should be trimmed.
       '<a href = "http://drupal.org">Drupal.org</a>' => "Drupal.org [1]\n\n[1] http://drupal.org\n",
-      // @todo Footer urls should be absolute.
+      // @todo Footer URLs should be absolute.
       "<a href = \"$base_path\">Homepage</a>" => "Homepage [1]\n\n[1] $base_url/\n",
       '<address>Drupal</address>' => "Drupal\n",
       // @todo The <address> tag is currently not supported.
@@ -297,7 +297,7 @@ class HtmlToTextTest extends WebTestBase {
       . '<br /><a href="http://www.example.com">Host, no path</a>'
       . '<br /><a href="' . $base_path . 'node/1">Path, no host</a>'
       . '<br /><a href="node/1">Relative path</a>';
-    // @todo Footnote urls should be absolute.
+    // @todo Footnote URLs should be absolute.
     $tt = "Host and path [1]"
       . "\nHost, no path [2]"
       // @todo The following two references should be combined.

@@ -8,6 +8,7 @@
 use Drupal\node\Node;
 use Drupal\taxonomy\Term;
 use Drupal\taxonomy\Vocabulary;
+use Drupal\entity\EntityInterface;
 
 /**
  * Denotes that no term in the vocabulary has a parent.
@@ -168,7 +169,7 @@ function taxonomy_entity_info() {
 }
 
 /**
- * Entity uri callback.
+ * Entity URI callback.
  */
 function taxonomy_term_uri($term) {
   return array(

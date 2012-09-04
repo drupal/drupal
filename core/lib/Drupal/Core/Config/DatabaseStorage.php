@@ -8,6 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Connection;
 use Exception;
 
 /**
@@ -16,31 +17,49 @@ use Exception;
 class DatabaseStorage implements StorageInterface {
 
   /**
-   * Database connection options for this storage controller.
+   * The database connection.
    *
-   * - connection: The connection key to use.
-   * - target: The target on the connection to use.
+   * @var Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * The database table name.
+   *
+   * @var string
+   */
+  protected $table;
+
+  /**
+   * Additional database connection options to use in queries.
    *
    * @var array
    */
-  protected $options;
+  protected $options = array();
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::__construct().
+   * Constructs a new DatabaseStorage controller.
+   *
+   * @param Drupal\Core\Database\Connection $connection
+   *   A Database connection to use for reading and writing configuration data.
+   * @param string $table
+   *   A database table name to store configuration data in.
+   * @param array $options
+   *   (optional) Any additional database connection options to use in queries.
    */
-  public function __construct(array $options = array()) {
-    $options += array(
-      'connection' => 'default',
-      'target' => 'default',
-    );
+  public function __construct(Connection $connection, $table, array $options = array()) {
+    $this->connection = $connection;
+    $this->table = $table;
     $this->options = $options;
   }
 
   /**
-   * Returns the database connection to use.
+   * Implements Drupal\Core\Config\StorageInterface::exists().
    */
-  protected function getConnection() {
-    return Database::getConnection($this->options['target'], $this->options['connection']);
+  public function exists($name) {
+    return (bool) $this->connection->queryRange('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name = :name', 0, 1, array(
+      ':name' => $name,
+    ), $this->options)->fetchField();
   }
 
   /**
@@ -56,10 +75,8 @@ class DatabaseStorage implements StorageInterface {
     // read without actually having the database available. In this case,
     // catch the exception and just return an empty array so the caller can
     // handle it if need be.
-    // @todo Remove this and use appropriate config.storage service definition
-    //   in the installer instead.
     try {
-      $raw = $this->getConnection()->query('SELECT data FROM {config} WHERE name = :name', array(':name' => $name), $this->options)->fetchField();
+      $raw = $this->connection->query('SELECT data FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name = :name', array(':name' => $name), $this->options)->fetchField();
       if ($raw !== FALSE) {
         $data = $this->decode($raw);
       }
@@ -79,7 +96,7 @@ class DatabaseStorage implements StorageInterface {
   public function write($name, array $data) {
     $data = $this->encode($data);
     $options = array('return' => Database::RETURN_AFFECTED) + $this->options;
-    return (bool) $this->getConnection()->merge('config', $options)
+    return (bool) $this->connection->merge($this->table, $options)
       ->key(array('name' => $name))
       ->fields(array('data' => $data))
       ->execute();
@@ -94,7 +111,7 @@ class DatabaseStorage implements StorageInterface {
    */
   public function delete($name) {
     $options = array('return' => Database::RETURN_AFFECTED) + $this->options;
-    return (bool) $this->getConnection()->delete('config', $options)
+    return (bool) $this->connection->delete($this->table, $options)
       ->condition('name', $name)
       ->execute();
   }
@@ -107,7 +124,7 @@ class DatabaseStorage implements StorageInterface {
    */
   public function rename($name, $new_name) {
     $options = array('return' => Database::RETURN_AFFECTED) + $this->options;
-    return (bool) $this->getConnection()->update('config', $options)
+    return (bool) $this->connection->update($this->table, $options)
       ->fields(array('name' => $new_name))
       ->condition('name', $name)
       ->execute();
@@ -116,7 +133,7 @@ class DatabaseStorage implements StorageInterface {
   /**
    * Implements Drupal\Core\Config\StorageInterface::encode().
    */
-  public static function encode($data) {
+  public function encode($data) {
     return serialize($data);
   }
 
@@ -126,7 +143,7 @@ class DatabaseStorage implements StorageInterface {
    * @throws ErrorException
    *   unserialize() triggers E_NOTICE if the string cannot be unserialized.
    */
-  public static function decode($raw) {
+  public function decode($raw) {
     $data = @unserialize($raw);
     return is_array($data) ? $data : FALSE;
   }
@@ -139,7 +156,7 @@ class DatabaseStorage implements StorageInterface {
    *   Only thrown in case $this->options['throw_exception'] is TRUE.
    */
   public function listAll($prefix = '') {
-    return $this->getConnection()->query('SELECT name FROM {config} WHERE name LIKE :name', array(
+    return $this->connection->query('SELECT name FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name LIKE :name', array(
       ':name' => db_like($prefix) . '%',
     ), $this->options)->fetchCol();
   }

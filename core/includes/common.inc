@@ -448,7 +448,7 @@ function drupal_get_query_parameters(array $query = NULL, array $exclude = array
  *   The query string to split.
  *
  * @return
- *   An array of url decoded couples $param_name => $value.
+ *   An array of URL decoded couples $param_name => $value.
  */
 function drupal_get_query_array($query) {
   $result = array();
@@ -1246,8 +1246,9 @@ function flood_is_allowed($name, $threshold, $window = 3600, $identifier = NULL)
  * to being output to an HTML attribute value. It is often called as part of
  * check_url() or filter_xss(), but those functions return an HTML-encoded
  * string, so this function can be called independently when the output needs to
- * be a plain-text string for passing to t(), l(), drupal_attributes(), or
- * another function that will call check_plain() separately.
+ * be a plain-text string for passing to t(), l(),
+ * Drupal\Core\Template\Attribute, or another function that will call
+ * check_plain() separately.
  *
  * @param $uri
  *   A plain-text URI that might contain dangerous protocols.
@@ -1300,10 +1301,11 @@ function drupal_strip_dangerous_protocols($uri) {
  * @return
  *   A URI stripped of dangerous protocols and encoded for output to an HTML
  *   attribute value. Because it is already encoded, it should not be set as a
- *   value within a $attributes array passed to drupal_attributes(), because
- *   drupal_attributes() expects those values to be plain-text strings. To pass
- *   a filtered URI to drupal_attributes(), call
- *   drupal_strip_dangerous_protocols() instead.
+ *   value within a $attributes array passed to Drupal\Core\Template\Attribute,
+ *   because Drupal\Core\Template\Attribute expects those values to be
+ *   plain-text strings. To pass a filtered URI to
+ *   Drupal\Core\Template\Attribute, call drupal_strip_dangerous_protocols()
+ *   instead.
  *
  * @see drupal_strip_dangerous_protocols()
  */
@@ -1661,7 +1663,7 @@ function format_xml_elements($array) {
       if ($value['key']) {
         $output .= ' <' . $value['key'];
         if (isset($value['attributes']) && is_array($value['attributes'])) {
-          $output .= drupal_attributes($value['attributes']);
+          $output .= new Attribute($value['attributes']);
         }
 
         if (isset($value['value']) && $value['value'] != '') {
@@ -2086,7 +2088,7 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  *     for the URL. If $options['language'] is omitted, the language will be
  *     obtained from language(LANGUAGE_TYPE_URL).
  *   - 'https': Whether this URL should point to a secure location. If not
- *     defined, the current scheme is used, so the user stays on http or https
+ *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
  *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can
  *     only be enforced when the variable 'https' is set to TRUE.
  *   - 'base_url': Only used internally, to modify the base URL when a language
@@ -2243,46 +2245,6 @@ function drupal_http_header_attributes(array $attributes = array()) {
 }
 
 /**
- * Converts an associative array to an XML/HTML tag attribute string.
- *
- * Each array key and its value will be formatted into an attribute string.
- * If a value is itself an array, then its elements are concatenated to a single
- * space-delimited string (for example, a class attribute with multiple values).
- *
- * Attribute values are sanitized by running them through check_plain().
- * Attribute names are not automatically sanitized. When using user-supplied
- * attribute names, it is strongly recommended to allow only white-listed names,
- * since certain attributes carry security risks and can be abused.
- *
- * Examples of security aspects when using drupal_attributes:
- * @code
- *   // By running the value in the following statement through check_plain,
- *   // the malicious script is neutralized.
- *   drupal_attributes(array('title' => t('<script>steal_cookie();</script>')));
- *
- *   // The statement below demonstrates dangerous use of drupal_attributes, and
- *   // will return an onmouseout attribute with JavaScript code that, when used
- *   // as attribute in a tag, will cause users to be redirected to another site.
- *   //
- *   // In this case, the 'onmouseout' attribute should not be whitelisted --
- *   // you don't want users to have the ability to add this attribute or others
- *   // that take JavaScript commands.
- *   drupal_attributes(array('onmouseout' => 'window.location="http://malicious.com/";')));
- * @endcode
- *
- * @param $attributes
- *   An associative array of key-value pairs to be converted to attributes.
- *
- * @return
- *   A string ready for insertion in a tag (starts with a space).
- *
- * @ingroup sanitization
- */
-function drupal_attributes(array $attributes = array()) {
-  return new Attribute($attributes);
-}
-
-/**
  * Formats an internal or external URL link as an HTML anchor tag.
  *
  * This function correctly handles aliased paths, and adds an 'active' class
@@ -2303,7 +2265,8 @@ function drupal_attributes(array $attributes = array()) {
  *   - 'attributes': An associative array of HTML attributes to apply to the
  *     anchor tag. If element 'class' is included, it must be an array; 'title'
  *     must be a string; other elements are more flexible, as they just need
- *     to work in a call to drupal_attributes($options['attributes']).
+ *     to work as an argument for the constructor of the class
+ *     Drupal\Core\Template\Attribute($options['attributes']).
  *   - 'html' (default FALSE): Whether $text is HTML or just plain-text. For
  *     example, to make an image tag into a link, this must be set to TRUE, or
  *     you will see the escaped HTML image tag. $text is not sanitized if
@@ -2370,7 +2333,7 @@ function l($text, $path, array $options = array()) {
   }
   // The result of url() is a plain-text URL. Because we are using it here
   // in an HTML argument context, we need to encode it properly.
-  return '<a href="' . check_plain(url($path, $options)) . '"' . drupal_attributes($options['attributes']) . '>' . ($options['html'] ? $text : check_plain($text)) . '</a>';
+  return '<a href="' . check_plain(url($path, $options)) . '"' . new Attribute($options['attributes']) . '>' . ($options['html'] ? $text : check_plain($text)) . '</a>';
 }
 
 /**
@@ -5182,7 +5145,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   // distribution we need to include the profile of the parent site (in which
   // test runs are triggered).
   if (drupal_valid_test_ua()) {
-    $testing_profile = variable_get('simpletest_parent_profile', FALSE);
+    $testing_profile = config('simpletest.settings')->get('parent_profile');
     if ($testing_profile && $testing_profile != $profile) {
       $searchdir[] = drupal_get_path('profile', $testing_profile) . '/' . $directory;
     }

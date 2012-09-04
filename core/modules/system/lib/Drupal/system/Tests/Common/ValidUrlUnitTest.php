@@ -22,7 +22,7 @@ class ValidUrlUnitTest extends UnitTestBase {
   }
 
   /**
-   * Test valid absolute urls.
+   * Test valid absolute URLs.
    */
   function testValidAbsolute() {
     $url_schemes = array('http', 'https', 'ftp');
@@ -51,13 +51,13 @@ class ValidUrlUnitTest extends UnitTestBase {
       foreach ($valid_absolute_urls as $url) {
         $test_url = $scheme . '://' . $url;
         $valid_url = valid_url($test_url, TRUE);
-        $this->assertTrue($valid_url, t('@url is a valid url.', array('@url' => $test_url)));
+        $this->assertTrue($valid_url, t('@url is a valid URL.', array('@url' => $test_url)));
       }
     }
   }
 
   /**
-   * Test invalid absolute urls.
+   * Test invalid absolute URLs.
    */
   function testInvalidAbsolute() {
     $url_schemes = array('http', 'https', 'ftp');
@@ -71,13 +71,13 @@ class ValidUrlUnitTest extends UnitTestBase {
       foreach ($invalid_ablosule_urls as $url) {
         $test_url = $scheme . '://' . $url;
         $valid_url = valid_url($test_url, TRUE);
-        $this->assertFalse($valid_url, t('@url is NOT a valid url.', array('@url' => $test_url)));
+        $this->assertFalse($valid_url, t('@url is NOT a valid URL.', array('@url' => $test_url)));
       }
     }
   }
 
   /**
-   * Test valid relative urls.
+   * Test valid relative URLs.
    */
   function testValidRelative() {
     $valid_relative_urls = array(
@@ -92,13 +92,13 @@ class ValidUrlUnitTest extends UnitTestBase {
       foreach ($valid_relative_urls as $url) {
         $test_url = $front . $url;
         $valid_url = valid_url($test_url);
-        $this->assertTrue($valid_url, t('@url is a valid url.', array('@url' => $test_url)));
+        $this->assertTrue($valid_url, t('@url is a valid URL.', array('@url' => $test_url)));
       }
     }
   }
 
   /**
-   * Test invalid relative urls.
+   * Test invalid relative URLs.
    */
   function testInvalidRelative() {
     $invalid_relative_urls = array(
@@ -111,7 +111,7 @@ class ValidUrlUnitTest extends UnitTestBase {
       foreach ($invalid_relative_urls as $url) {
         $test_url = $front . $url;
         $valid_url = valid_url($test_url);
-        $this->assertFALSE($valid_url, t('@url is NOT a valid url.', array('@url' => $test_url)));
+        $this->assertFALSE($valid_url, t('@url is NOT a valid URL.', array('@url' => $test_url)));
       }
     }
   }

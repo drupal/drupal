@@ -21,7 +21,7 @@ class MemoryBackend implements CacheBackendInterface {
   /**
    * Array to store cache objects.
    */
-  protected $cache;
+  protected $cache = array();
 
   /**
    * All tags invalidated during the request.
@@ -202,7 +202,7 @@ class MemoryBackend implements CacheBackendInterface {
         }
       }
       else {
-        $flat_tags["$namespace:$value"] = "$namespace:$values";
+        $flat_tags["$namespace:$values"] = "$namespace:$values";
       }
     }
     return $flat_tags;

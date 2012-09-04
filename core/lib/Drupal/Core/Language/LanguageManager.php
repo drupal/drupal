@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * This service is dependent on the 'request' service and can therefore pass the
  * Request object to the code that deals with each particular language type.
- * This means the Request can be used directly for things like url-based
+ * This means the Request can be used directly for things like URL-based
  * language negotiation.
  */
 class LanguageManager {

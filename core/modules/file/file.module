@@ -7,6 +7,7 @@
 
 use Drupal\entity\EntityFieldQuery;
 use Drupal\file\File;
+use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 // Load all Field module hooks for File.
@@ -1352,7 +1353,7 @@ function theme_file_managed_file($variables) {
 
   // This wrapper is required to apply JS behaviors and CSS styling.
   $output = '';
-  $output .= '<div' . drupal_attributes($attributes) . '>';
+  $output .= '<div' . new Attribute($attributes) . '>';
   $output .= drupal_render_children($element);
   $output .= '</div>';
   return $output;
