@@ -67,10 +67,7 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Returns whether the configuration file exists.
-   *
-   * @return bool
-   *   TRUE if the configuration file exists, FALSE otherwise.
+   * Implements Drupal\Core\Config\StorageInterface::exists().
    */
   public function exists($name) {
     return file_exists($this->getFilePath($name));
