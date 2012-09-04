@@ -78,7 +78,7 @@
  * the elements and properties of the form. For information on the array
  * components and format, and more detailed explanations of the Form API
  * workflow, see the
- * @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html Form API reference @endlink
+ * @link forms_api_reference.html Form API reference @endlink
  * and the
  * @link http://drupal.org/node/37775 Form API documentation section. @endlink
  * In addition, there is a set of Form API tutorials in
@@ -215,17 +215,15 @@ function drupal_get_form($form_id) {
  *     set.
  *   - values: An associative array of values submitted to the form. The
  *     validation functions and submit functions use this array for nearly all
- *     their decision making. (Note that
- *     @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html/7#tree #tree @endlink
- *     determines whether the values are a flat array or an array whose
- *     structure parallels the $form array.)
- *   - input: The array of values as they were submitted by the user. These are
- *     raw and unvalidated, so should not be used without a thorough
- *     understanding of security implications. In almost all cases, code should
- *     use the data in the 'values' array exclusively. The most common use of
- *     this key is for multi-step forms that need to clear some of the user
- *     input when setting 'rebuild'. The values correspond to $_POST or $_GET,
- *     depending on the 'method' chosen.
+ *     their decision making. (Note that #tree determines whether the values are
+ *     a flat array or an array whose structure parallels the $form array. See
+ *     @link forms_api_reference.html Form API reference @endlink for more
+ *     information.) These are raw and unvalidated, so should not be used
+ *     without a thorough understanding of security implications. In almost all
+ *     cases, code should use the data in the 'values' array exclusively. The
+ *     most common use of this key is for multi-step forms that need to clear
+ *     some of the user input when setting 'rebuild'. The values correspond to
+ *     $_POST or $_GET, depending on the 'method' chosen.
  *   - always_process: If TRUE and the method is GET, a form_id is not
  *     necessary. This should only be used on RESTful GET forms that do NOT
  *     write data, as this could lead to security issues. It is useful so that

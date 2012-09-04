@@ -168,7 +168,7 @@
  *   displayed while awaiting a response from the callback, and add an optional
  *   message. Possible keys: 'type', 'message', 'url', 'interval'.
  *   More information is available in the
- *   @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html/7 Form API Reference @endlink
+ *   @link forms_api_reference.html Form API Reference @endlink
  *
  * In addition to using Form API for doing in-form modification, Ajax may be
  * enabled by adding classes to buttons and links. By adding the 'use-ajax'
