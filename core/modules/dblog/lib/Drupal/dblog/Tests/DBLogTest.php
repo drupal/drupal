@@ -10,6 +10,9 @@ namespace Drupal\dblog\Tests;
 use Drupal\simpletest\WebTestBase;
 use SimpleXMLElement;
 
+/**
+ * Tests logging messages to the database.
+ */
 class DBLogTest extends WebTestBase {
 
   /**
