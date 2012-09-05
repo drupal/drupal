@@ -635,9 +635,6 @@ function template_preprocess_taxonomy_term(&$variables) {
   $variables['label'] = check_plain($term->label());
   $variables['page']      = $variables['view_mode'] == 'full' && taxonomy_term_is_page($term);
 
-  // Flatten the term object's member fields.
-  $variables = array_merge((array) $term, $variables);
-
   // Helpful $content variable for templates.
   $variables['content'] = array();
   foreach (element_children($variables['elements']) as $key) {
