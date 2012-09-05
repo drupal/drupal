@@ -8,12 +8,11 @@
 namespace Drupal\views\Tests\Plugin;
 
 use stdClass;
-use DOMDocument;
 
 /**
  * Tests some general style plugin related functionality.
  */
-class StyleTest extends PluginTestBase {
+class StyleTest extends StyleTestBase {
 
   public static function getInfo() {
     return array(
@@ -21,12 +20,6 @@ class StyleTest extends PluginTestBase {
       'description' => 'Test general style functionality.',
       'group' => 'Views Plugins',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
   }
 
   /**
@@ -241,20 +234,6 @@ class StyleTest extends PluginTestBase {
       unset($expected['Drummer']['rows']['Age: 28']);
 
       $this->assertEqual($sets_new_value, $expected, t('The style plugins should proper group the results with grouping by the value.'));
-    }
-  }
-
-
-  /**
-   * Stores a view output in the elements.
-   */
-  function storeViewPreview($output) {
-    $htmlDom = new DOMDocument();
-    @$htmlDom->loadHTML($output);
-    if ($htmlDom) {
-      // It's much easier to work with simplexml than DOM, luckily enough
-      // we can just simply import our DOM tree.
-      $this->elements = simplexml_import_dom($htmlDom);
     }
   }
 

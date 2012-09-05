@@ -7,19 +7,10 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use DOMDocument;
-
 /**
  * Tests the default/unformatted row style.
  */
-class StyleUnformattedTest extends PluginTestBase {
-
-  /**
-   * Stores all created nodes.
-   *
-   * @var array
-   */
-  protected $nodes;
+class StyleUnformattedTest extends StyleTestBase {
 
   public static function getInfo() {
     return array(
@@ -27,25 +18,6 @@ class StyleUnformattedTest extends PluginTestBase {
       'description' => 'Test unformatted style functionality.',
       'group' => 'Views Plugins',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->enableViewsTestModule();
-  }
-
-  /**
-   * Stores a view output in the elements.
-   */
-  function storeViewPreview($output) {
-    $htmlDom = new DOMDocument();
-    @$htmlDom->loadHTML($output);
-    if ($htmlDom) {
-      // It's much easier to work with simplexml than DOM, luckily enough
-      // we can just simply import our DOM tree.
-      $this->elements = simplexml_import_dom($htmlDom);
-    }
   }
 
   /**

@@ -68,3 +68,59 @@ function views_test_data_views_post_build(View &$view) {
     }
   }
 }
+
+/**
+ * Implements hook_preprocess_HOOK() for theme_views_view_mapping_test().
+ */
+function template_preprocess_views_view_mapping_test(&$variables) {
+  $variables['element'] = array();
+
+  foreach ($variables['rows'] as $delta => $row) {
+    $fields = array();
+    foreach ($variables['options']['mapping'] as $type => $field_names) {
+      if (!is_array($field_names)) {
+        $field_names = array($field_names);
+      }
+      foreach ($field_names as $field_name) {
+        if ($value = $variables['view']->style_plugin->get_field($delta, $field_name)) {
+          $fields[$type . '-' . $field_name] = $type . ':' . $value;
+        }
+      }
+    }
+
+    // If there are no fields in this row, skip to the next one.
+    if (empty($fields)) {
+      continue;
+    }
+
+    // Build a container for the row.
+    $variables['element'][$delta] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'views-row-mapping-test',
+        ),
+      ),
+    );
+
+    // Add each field to the row.
+    foreach ($fields as $key => $render) {
+      $variables['element'][$delta][$key] = array(
+        '#children' => $render,
+        '#type' => 'container',
+        '#attributes' => array(
+          'class' => array(
+            $key,
+          ),
+        ),
+      );
+    }
+  }
+}
+
+/**
+ * Returns HTML for the Mapping Test style.
+ */
+function theme_views_view_mapping_test($variables) {
+  return drupal_render($variables['element']);
+}
