@@ -16,10 +16,15 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
+ * Views API version string.
+ */
+const VIEWS_API_VERSION = '3.0';
+
+/**
  * Advertise the current views api version
  */
 function views_api_version() {
-  return '3.0';
+  return VIEWS_API_VERSION;
 }
 
 /**

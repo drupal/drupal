@@ -23,73 +23,118 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
  */
 class View extends ViewStorage {
 
-  var $base_table = 'node';
+  /**
+   * The name of the base table this view will use.
+   *
+   * @var string
+   */
+  public $base_table = 'node';
 
-  var $base_field = 'nid';
+  /**
+   * The name of the base field to use.
+   *
+   * @var string
+   */
+  public $base_field = 'nid';
 
   /**
    * The name of the view.
    *
    * @var string
    */
-  var $name = "";
+  public $name = '';
 
   /**
    * The description of the view, which is used only in the interface.
    *
    * @var string
    */
-  var $description;
+  public $description = '';
 
   /**
    * The "tags" of a view.
+   *
    * The tags are stored as a single string, though it is used as multiple tags
    * for example in the views overview.
    *
    * @var string
    */
-  var $tag;
+  public $tag = '';
 
   /**
    * The human readable name of the view.
    *
    * @var string
    */
-  var $human_name;
+  public $human_name = '';
 
   /**
    * The core version the view was created for.
+   *
    * @var int
    */
-  var $core;
+  public $core = DRUPAL_CORE_COMPATIBILITY;
 
   /**
-   * The views-api version this view was created by.
-   *
-   * Some examples of the variable are 3.0 or 3.0-alpha1
+   * The views API version this view was created by.
    *
    * @var string
    */
-  var $api_version;
+  public $api_version = VIEWS_API_VERSION;
 
   /**
-   * Is the view disabled.
+   * Returns whether the view's status is disabled or not.
    *
-   * This value is used for exported view, to provide some default views which aren't enabled.
+   * This value is used for exported view, to provide some default views which
+   * aren't enabled.
    *
    * @var bool
    */
-  var $disabled;
+  public $disabled = FALSE;
 
   // State variables
-  var $built = FALSE;
-  var $executed = FALSE;
-  var $editing = FALSE;
 
-  var $args = array();
-  var $build_info = array();
+  /**
+   * Whether or not the view has been built.
+   *
+   * @var bool
+   */
+  public $built = FALSE;
 
-  var $use_ajax = FALSE;
+  /**
+   * Whether the view has been executed/query has been run.
+   *
+   * @var bool
+   */
+  public $executed = FALSE;
+
+  /**
+   * Indicates if a view is currently being edited.
+   *
+   * @var bool
+   */
+  public $editing = FALSE;
+
+  /**
+   * Any arguments that have been passed into the view.
+   *
+   * @var array
+   */
+  public $args = array();
+
+  /**
+   * An array of build info.
+   *
+   * @var array
+   */
+  public $build_info = array();
+
+  /**
+   * Whether this view uses AJAX.
+   *
+   * @var bool
+   */
+  public $use_ajax = FALSE;
 
   /**
    * Where the results of a query will go.
@@ -98,32 +143,95 @@ class View extends ViewStorage {
    *
    * @var array
    */
-  var $result = array();
+  public $result = array();
 
   // May be used to override the current pager info.
-  var $current_page = NULL;
-  var $items_per_page = NULL;
-  var $offset = NULL;
-  var $total_rows = NULL;
 
-  // Places to put attached renderings:
-  var $attachment_before = '';
-  var $attachment_after = '';
+  /**
+   * The current page. If the view uses pagination.
+   *
+   * @var int
+   */
+  public $current_page = NULL;
+
+  /**
+   * The number of items per page.
+   *
+   * @var int
+   */
+  public $items_per_page = NULL;
+
+  /**
+   * The pager offset.
+   *
+   * @var int
+   */
+  public $offset = NULL;
+
+  /**
+   * The total number of rows returned from the query.
+   *
+   * @var array
+   */
+  public $total_rows = NULL;
+
+  /**
+   * Rendered attachments to place before the view.
+   *
+   * @var string
+   */
+  public $attachment_before = '';
+
+  /**
+   * Rendered attachements to place after the view.
+   *
+   * @var string
+   */
+  public $attachment_after = '';
 
   // Exposed widget input
-  var $exposed_data = array();
-  var $exposed_input = array();
-  // Exposed widget input directly from the $form_state['values'].
-  var $exposed_raw_input = array();
 
-  // Used to store views that were previously running if we recurse.
-  var $old_view = array();
+  /**
+   * All the form data from $form_state['values'].
+   *
+   * @var array
+   */
+  public $exposed_data = array();
 
-  // To avoid recursion in views embedded into areas.
-  var $parent_views = array();
+  /**
+   * An array of input values from exposed forms.
+   *
+   * @var array
+   */
+  public $exposed_input = array();
 
-  // Is the current stored view runned as an attachment to another view.
-  var $is_attachment = NULL;
+  /**
+   * Exposed widget input directly from the $form_state['values'].
+   *
+   * @var array
+   */
+  public $exposed_raw_input = array();
+
+  /**
+   * Used to store views that were previously running if we recurse.
+   *
+   * @var array
+   */
+  public $old_view = array();
+
+  /**
+   * To avoid recursion in views embedded into areas.
+   *
+   * @var array
+   */
+  public $parent_views = array();
+
+  /**
+   * Whether this view is an attachment to another view.
+   *
+   * @var bool
+   */
+  public $is_attachment = NULL;
 
   // Stores the next steps of form items to handle.
   // It's an array of stack items, which contain the form id, the type of form,
@@ -136,14 +244,14 @@ class View extends ViewStorage {
    *
    * @var string
    */
-  var $current_display;
+  public $current_display;
 
   /**
-   * Where the $query object will reside:
+   * Where the $query object will reside.
    *
-   * @var views_plugin_query
+   * @var Drupal\views\Plugin\query\QueryInterface
    */
-  var $query = NULL;
+  public $query = NULL;
 
   /**
    * The used pager plugin used by the current executed view.
@@ -155,23 +263,26 @@ class View extends ViewStorage {
   /**
    * The current used display plugin.
    *
-   * @var views_plugin_display
+   * @var Drupal\views\Plugin\views\display\DisplayPluginBase
    */
-  var $display_handler;
+  public $display_handler;
 
   /**
    * Stores all display handlers of this view.
    *
-   * @var array[views_display]
+   * An array containing Drupal\views\Plugin\views\display\DisplayPluginBase
+   * objects.
+   *
+   * @var array
    */
-  var $display;
+  public $display;
 
   /**
    * The current used style plugin.
    *
-   * @var views_plugin_style
+   * @var Drupal\views\Plugin\views\style\StylePluginBase
    */
-  var $style_plugin;
+  public $style_plugin;
 
   /**
    * Stored the changed options of the style plugin.
@@ -179,85 +290,113 @@ class View extends ViewStorage {
    * @deprecated Better use $view->style_plugin->options
    * @var array
    */
-  var $style_options;
+  public $style_options;
 
   /**
    * Stores the current active row while rendering.
    *
    * @var int
    */
-  var $row_index;
+  public $row_index;
 
    /**
    * Allow to override the url of the current view.
    *
    * @var string
    */
-  var $override_url = NULL;
+  public $override_url = NULL;
 
   /**
    * Allow to override the path used for generated urls.
    *
    * @var string
    */
-  var $override_path = NULL;
+  public $override_path = NULL;
 
   /**
    * Allow to override the used database which is used for this query.
+   *
+   * @var bool
    */
-  var $base_database = NULL;
+  public $base_database = NULL;
 
-  /**
-   * Here comes a list of the possible handler which are active on this view.
-   */
+  // Handlers which are active on this view.
 
   /**
    * Stores the field handlers which are initialized on this view.
-   * @var array[views_handler_field]
+   *
+   * An array containing Drupal\views\Plugin\views\field\FieldPluginBase
+   * objects.
+   *
+   * @var array
    */
-  var $field;
+  public $field;
 
   /**
    * Stores the argument handlers which are initialized on this view.
-   * @var array[views_handler_argument]
+   *
+   * An array containing Drupal\views\Plugin\views\argument\ArgumentPluginBase
+   * objects.
+   *
+   * @var array
    */
-  var $argument;
+  public $argument;
 
   /**
    * Stores the sort handlers which are initialized on this view.
-   * @var array[views_handler_sort]
+   *
+   * An array containing Drupal\views\Plugin\views\sort\SortPluginBase objects.
+   *
+   * @var array
    */
-  var $sort;
+  public $sort;
 
   /**
    * Stores the filter handlers which are initialized on this view.
-   * @var array[views_handler_filter]
+   *
+   * An array containing Drupal\views\Plugin\views\filter\FilterPluginBase
+   * objects.
+   *
+   * @var array
    */
-  var $filter;
+  public $filter;
 
   /**
    * Stores the relationship handlers which are initialized on this view.
-   * @var array[views_handler_relationship]
+   *
+   * An array containing Drupal\views\Plugin\views\relationship\RelationshipPluginBase
+   * objects.
+   *
+   * @var array
    */
-  var $relationship;
+  public $relationship;
 
   /**
    * Stores the area handlers for the header which are initialized on this view.
-   * @var array[views_handler_area]
+   *
+   * An array containing Drupal\views\Plugin\views\area\AreaPluginBase objects.
+   *
+   * @var array
    */
-  var $header;
+  public $header;
 
   /**
    * Stores the area handlers for the footer which are initialized on this view.
-   * @var array[views_handler_area]
+   *
+   * An array containing Drupal\views\Plugin\views\area\AreaPluginBase objects.
+   *
+   * @var array
    */
-  var $footer;
+  public $footer;
 
   /**
    * Stores the area handlers for the empty text which are initialized on this view.
-   * @var array[views_handler_area]
+   *
+   * An array containing Drupal\views\Plugin\views\area\AreaPluginBase objects.
+   *
+   * @var array
    */
-  var $empty;
+  public $empty;
 
   /**
    * Stores the current response object.
