@@ -45,10 +45,24 @@ abstract class ShortcutTestBase extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    // Create Basic page and Article node types.
     if ($this->profile != 'standard') {
+      // Create Basic page and Article node types.
       $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
       $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+
+      // Populate the default shortcut set.
+      $shortcut_set = shortcut_set_load(SHORTCUT_DEFAULT_SET_NAME);
+      $shortcut_set->links[] = array(
+        'link_path' => 'node/add',
+        'link_title' => st('Add content'),
+        'weight' => -20,
+      );
+      $shortcut_set->links[] = array(
+        'link_path' => 'admin/content',
+        'link_title' => st('Find content'),
+        'weight' => -19,
+      );
+      shortcut_set_save($shortcut_set);
     }
 
     // Create users.
