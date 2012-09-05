@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
+use Drupal\Component\Plugin\Exception\PluginException;
 
 class ViewsPluginManager extends PluginManagerBase {
 
@@ -74,52 +75,24 @@ class ViewsPluginManager extends PluginManagerBase {
   }
 
   /**
-   * Creates a plugin from an id.
+   * Creates a plugin from an ID.
+   *
+   * @param string $plugin_id
+   *   The plugin ID.
+   * @param array|false $definition
+   *   Either the definition array, or FALSE if it needs to be loaded.
+   *
+   * @return Drupal\views\Plugin\views\PluginBase
+   *   The plugin instance.
    */
-  public function createPluginFromId($id) {
-    $definition = $this->getDefinition($id);
+  public function createPluginFromId($plugin_id, $definition = FALSE) {
+    if (!$definition) {
+      $definition = $this->getDefinition($plugin_id);
+    }
     if (!empty($definition)) {
-      $plugin = $this->createPluginFromDefinition($defintion);
-      return $plugin;
+      $instance = $this->createInstance($plugin_id, array('type' => $this->type, 'definition' => $definition));
+      return $instance;
     }
-  }
-
-  /**
-   * Creates a plugin from a definition.
-   */
-  public function createPluginFromDefinition($definition) {
-    $instance = $this->createInstance($definition['id']);
-    $instance->is_plugin = TRUE;
-    $instance->plugin_type = $this->$type;
-    $instance->setDefinition($definition);
-
-    // Let the handler have something like a constructor.
-    $instance->construct();
-
-    return $instance;
-  }
-
-  /**
-   * Creates a handler from a definition.
-   */
-  public function createHandlerFromDefinition($definition) {
-    // @todo This is crazy. Find a way to remove the override functionality.
-    $id = !empty($definition['override handler']) ? $definition['override handler'] : $definition['id'];
-    try {
-      $instance = $this->createInstance($id);
-    }
-    catch (PluginException $e) {
-      $instance = $this->createInstance($definition['id']);
-    }
-
-    $instance->is_handler = TRUE;
-    $instance->plugin_type = $this->$type;
-    $instance->setDefinition($definition);
-
-    // let the handler have something like a constructor.
-    $instance->construct();
-
-    return $instance;
   }
 
 }

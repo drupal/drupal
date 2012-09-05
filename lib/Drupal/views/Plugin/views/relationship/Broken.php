@@ -24,6 +24,7 @@ class Broken extends RelationshipPluginBase {
     return t('Broken/missing handler');
   }
 
+  public function defineOptions() { return array(); }
   public function ensureMyTable() { /* No table to ensure! */ }
   public function query() { /* No query to run */ }
   public function buildOptionsForm(&$form, &$form_state) {

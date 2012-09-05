@@ -59,6 +59,12 @@ abstract class PluginBase extends ComponentPluginBase {
   public function __construct(array $configuration, $plugin_id) {
     $this->configuration = $configuration;
     $this->plugin_id = $plugin_id;
+    $this->plugin_type = $configuration['type'];
+    $this->definition = $configuration['definition'];
+    if (isset($this->definition['field'])) {
+      $this->real_field = $this->definition['field'];
+    }
+    $this->construct();
   }
 
   /**
@@ -90,14 +96,7 @@ abstract class PluginBase extends ComponentPluginBase {
    * Views handlers use a special construct function so that we can more
    * easily construct them with variable arguments.
    */
-  public function construct() { $this->setDefaultOptions(); }
-
-  /**
-   * Set default options.
-   * For backward compatibility, it sends the options array; this is a
-   * feature that will likely disappear at some point.
-   */
-  protected function setDefaultOptions() {
+  public function construct() {
     $this->setOptionDefaults($this->options, $this->defineOptions());
   }
 
@@ -138,7 +137,7 @@ abstract class PluginBase extends ComponentPluginBase {
         $localization_keys = $this->localization_keys;
       }
       // but plugins don't because there isn't a common init() these days.
-      else if (!empty($this->is_plugin)) {
+      else if (empty($this->is_handler)) {
         if ($this->plugin_type != 'display') {
           $localization_keys = array($this->view->current_display);
           $localization_keys[] = $this->plugin_type;
@@ -194,19 +193,6 @@ abstract class PluginBase extends ComponentPluginBase {
       else if ($all || !empty($definition[$key])) {
         $storage[$key] = $value;
       }
-    }
-  }
-
-  /**
-   * Let the handler know what its full definition is.
-   */
-  public function setDefinition($definition) {
-    $this->definition = $definition;
-    if (isset($definition['id'])) {
-      $this->plugin_id = $definition['id'];
-    }
-    if (isset($definition['field'])) {
-      $this->real_field = $definition['field'];
     }
   }
 

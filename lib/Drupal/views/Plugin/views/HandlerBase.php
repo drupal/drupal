@@ -70,6 +70,14 @@ abstract class HandlerBase extends PluginBase {
   public $relationship = NULL;
 
   /**
+   * Constructs a Handler object.
+   */
+  public function __construct(array $configuration, $plugin_id) {
+    parent::__construct($configuration, $plugin_id);
+    $this->is_handler = TRUE;
+  }
+
+  /**
    * Init the handler with necessary data.
    *
    * @param Drupal\views\View $view

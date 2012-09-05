@@ -6,45 +6,6 @@
  */
 
 use Drupal\Core\Database\Database;
-use Drupal\Component\Plugin\Exception\PluginException;
-
-/**
- * Prepare a handler's data by checking defaults and such.
- */
-function _views_prepare_handler($definition, $data, $field, $type) {
-  foreach (array('group', 'title', 'title short', 'help', 'real field') as $key) {
-    if (!isset($definition[$key])) {
-      // First check the field level
-      if (!empty($data[$field][$key])) {
-        $definition[$key] = $data[$field][$key];
-      }
-      // Then if that doesn't work, check the table level
-      elseif (!empty($data['table'][$key])) {
-        $definition[$key] = $data['table'][$key];
-      }
-    }
-  }
-
-  return _views_create_handler($type, $definition);
-}
-
-/**
- * Get a handler for a plugin
- *
- * @param string $type
- *   The plugin type like access or display.
- * @param string $id
- *   The name of the plugin like standard.
- *
- * @return views_plugin
- *
- * The created plugin object.
- */
-function _views_create_handler($type, $definition) {
-  $manager = new ViewsPluginManager($type);
-  $plugin = $manager->createHandlerFromDefinition($definition);
-  return $plugin;
-}
 
 /**
  * Fetch a handler to join one table to a primary table from the data cache
@@ -59,7 +20,7 @@ function views_get_table_join($table, $base_table) {
     else {
       $id = 'standard';
     }
-    $handler = views_get_plugin_instance('join', $id);
+    $handler = views_get_plugin('join', $id);
 
     // Fill in some easy defaults
     $handler->definition = $h;

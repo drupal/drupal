@@ -24,6 +24,7 @@ class Broken extends AreaPluginBase {
     return t('Broken/missing handler');
   }
 
+  public function defineOptions() { return array(); }
   public function ensureMyTable() { /* No table to ensure! */ }
   public function query($group_by = FALSE) { /* No query to run */ }
   function render($empty = FALSE) { return ''; }

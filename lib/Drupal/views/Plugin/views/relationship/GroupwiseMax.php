@@ -377,7 +377,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     else {
       $id = 'subquery';
     }
-    $join = views_get_plugin_instance('join', $id);
+    $join = views_get_plugin('join', $id);
 
     $join->definition = $def;
     $join->construct();

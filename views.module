@@ -910,7 +910,7 @@ function views_add_contextual_links(&$render_element, $location, $view, $display
     // Also do not do anything if the display plugin has not defined any
     // contextual links that are intended to be displayed in the requested
     // location.
-    $plugin = views_get_plugin_defintion('display', $view->display[$display_id]->display_plugin);
+    $plugin = views_get_plugin_definition('display', $view->display[$display_id]->display_plugin);
     // If contextual_links_locations are not set, provide a sane default. (To
     // avoid displaying any contextual links at all, a display plugin can still
     // set 'contextual_links_locations' to, e.g., {""}.)
@@ -1277,7 +1277,7 @@ function views_include_handlers($reset = FALSE) {
 function views_get_handler($table, $field, $key, $override = NULL) {
   static $recursion_protection = array();
 
-  $data = views_get_plugin_definitions($table);
+  $data = views_fetch_data($table, FALSE);
   $handler = NULL;
   views_include('handlers');
 
@@ -1329,7 +1329,30 @@ function views_get_handler($table, $field, $key, $override = NULL) {
       $data[$field][$key]['override handler'] = $override;
     }
 
-    $handler = _views_prepare_handler($data[$field][$key], $data, $field, $key);
+    $definition = $data[$field][$key];
+    $type = $key;
+    foreach (array('group', 'title', 'title short', 'help', 'real field') as $key) {
+      if (!isset($definition[$key])) {
+        // First check the field level
+        if (!empty($data[$field][$key])) {
+          $definition[$key] = $data[$field][$key];
+        }
+        // Then if that doesn't work, check the table level
+        elseif (!empty($data['table'][$key])) {
+          $definition[$key] = $data['table'][$key];
+        }
+      }
+    }
+
+    // @todo This is crazy. Find a way to remove the override functionality.
+    $manager = new ViewsPluginManager($type);
+    $plugin_id = !empty($definition['override handler']) ? $definition['override handler'] : $definition['id'];
+    try {
+      return $manager->createPluginFromId($plugin_id, $definition);
+    }
+    catch (PluginException $e) {
+      return $manager->createPluginFromId($definition['id'], $definition);
+    }
   }
 
   if ($handler) {
@@ -1344,7 +1367,12 @@ function views_get_handler($table, $field, $key, $override = NULL) {
     'table' => $table,
     'field' => $field,
   );
-  return _views_create_handler($key, $broken);
+
+  // In case the manager was already initialized above, try to reuse it.
+  if (!isset($manager)) {
+    $manager = new ViewsPluginManager($key);
+  }
+  return $manager->createPluginFromId('broken');
 }
 
 /**
@@ -1402,24 +1430,30 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
 }
 
 /**
- * Get a handler for a plugin
+ * Get an instance of a plugin.
  *
  * @param string $type
- *   The plugin type like access or display.
- * @param string $id
- *   The name of the plugin like standard.
+ *   The plugin type, e.g., 'access' or 'display'.
+ * @param string $plugin_id
+ *   The name of the plugin, e.g., 'standard'.
  *
- * @return views_plugin
- *
- * The created plugin object.
+ * @return Drupal\views\Plugin\view\PluginBase
+ *   The created plugin instance.
  */
-function views_get_plugin($type, $id) {
+function views_get_plugin($type, $plugin_id) {
   $manager = new ViewsPluginManager($type);
-  $manager->createPluginFromId($id);
+  return $manager->createPluginFromId($plugin_id);
 }
 
 /**
- * Gets all the views plugin definitions
+ * Gets all the views plugin definitions.
+ *
+ * @param string|false $type
+ *   Either the plugin type, or FALSE to load all definitions.
+ *
+ * @return array
+ *   An array of plugin definitions for a single type, or an associative array
+ *   of plugin definitions keyed by plugin type.
  */
 function views_get_plugin_definitions($type = FALSE) {
   $plugins = array();
@@ -1435,24 +1469,19 @@ function views_get_plugin_definitions($type = FALSE) {
 }
 
 /**
- * Gets the plugin definition from a plugin type with a specific id.
- */
-function views_get_plugin_definition($type, $id) {
-  $manager = new ViewsPluginManager($type);
-  return $manager->getDefintion($id);
-}
-
-/**
- * Get a join plugin instance.
+ * Gets the plugin definition from a plugin type with a specific ID.
  *
+ * @param string $type
+ *   The plugin type, e.g., 'access' or 'display'.
  * @param string $plugin_id
- *   The name of the join for example standard.
+ *   The name of the plugin, e.g., 'standard'.
  *
- * @return Drupal\views\Plugin\views\join\JoinPluginBase
+ * @return array
+ *   A plugin definition.
  */
-function views_get_plugin_instance($type, $plugin_id = 'standard', array $configuration = array()) {
+function views_get_plugin_definition($type, $plugin_id) {
   $manager = new ViewsPluginManager($type);
-  return $manager->createInstance($plugin_id, $configuration);
+  return $manager->getDefinition($plugin_id);
 }
 
 /**
@@ -1557,7 +1586,7 @@ function views_get_applicable_views($type) {
     // Loop on array keys because something seems to muck with $view->display
     // a bit in PHP4.
     foreach (array_keys($view->display) as $id) {
-      $plugin = views_get_plugin_defintion('display', $view->display[$id]->display_plugin);
+      $plugin = views_get_plugin_definition('display', $view->display[$id]->display_plugin);
       if (!empty($plugin[$type])) {
         // This view uses_hook_menu. Clone it so that different handlers
         // don't trip over each other, and add it to the list.

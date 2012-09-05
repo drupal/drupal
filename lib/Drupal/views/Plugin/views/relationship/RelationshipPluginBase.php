@@ -138,7 +138,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     else {
       $id = 'standard';
     }
-    $join = views_get_plugin_instance('join', $id);
+    $join = views_get_plugin('join', $id);
 
     $join->definition = $def;
     $join->options = $this->options;

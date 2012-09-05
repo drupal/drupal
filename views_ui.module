@@ -552,7 +552,7 @@ function views_ui_ctools_plugin_directory($module, $plugin) {
  *   An array with information about the requested wizard type.
  */
 function views_ui_get_wizard($wizard_type) {
-  $wizard_plugins = views_get_plugin_definition('wizard', $wizard_type);
+  $wizard = views_get_plugin_definition('wizard', $wizard_type);
   // @todo - handle this via an alter hook instead.
   if (!$wizard) {
     // Must be a base table using the default wizard plugin.
@@ -624,7 +624,7 @@ function views_ui_ctools_plugin_type() {
 }
 
 function views_ui_get_form_wizard_instance($wizard) {
-  return views_get_plugin_instance('wizard', $wizard['name']);
+  return views_get_plugin('wizard', $wizard['name']);
 }
 
 /**

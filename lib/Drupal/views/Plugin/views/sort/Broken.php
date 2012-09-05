@@ -24,6 +24,7 @@ class Broken extends SortPluginBase {
     return t('Broken/missing handler');
   }
 
+  public function defineOptions() { return array(); }
   public function ensureMyTable() { /* No table to ensure! */ }
   public function query($group_by = FALSE) { /* No query to run */ }
   public function buildOptionsForm(&$form, &$form_state) {

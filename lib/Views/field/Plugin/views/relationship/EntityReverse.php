@@ -58,7 +58,7 @@ class EntityReverse extends RelationshipPluginBase  {
     else {
       $id = 'standard';
     }
-    $first_join = views_get_plugin_instance('join', $id);
+    $first_join = views_get_plugin('join', $id);
 
     $first_join->definition = $first;
     $first_join->construct();
@@ -85,7 +85,7 @@ class EntityReverse extends RelationshipPluginBase  {
     else {
       $id = 'standard';
     }
-    $second_join = views_get_plugin_instance('join', $id);
+    $second_join = views_get_plugin('join', $id);
     $second_join->definition = $second;
     $second_join->construct();
     $second_join->adjusted = TRUE;

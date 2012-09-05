@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\wizard;
 
 use Drupal\views\View;
+use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 
 /**
@@ -16,7 +17,7 @@ use Drupal\views\Plugin\views\wizard\WizardInterface;
  * This is a very generic Views Wizard class that can be constructed for any
  * base table.
  */
-abstract class WizardPluginBase implements WizardInterface {
+abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
   /**
    * The base table connected with the wizard.
@@ -48,13 +49,6 @@ abstract class WizardPluginBase implements WizardInterface {
    * @var array
    */
   protected $validated_views = array();
-
-  /**
-   * The wizard plugin definition, like the base_table.
-   *
-   * @var array
-   */
-  protected $plugin = array();
 
   /**
    * The table column used for sorting by create date of this wizard.
@@ -118,12 +112,8 @@ abstract class WizardPluginBase implements WizardInterface {
    * @param array $definition
    *   The information stored in the annotation definition.
    */
-  function __construct(array $definition) {
-    $this->base_table = $definition['base_table'];
-
-    // @todo: Move plugin to definition to keep it consistent with the rest of
-    //   views.
-    $this->plugin = $definition;
+  function construct() {
+    $this->base_table = $this->definition['base_table'];
 
     $entities = entity_get_info();
     foreach ($entities as $entity_type => $entity_info) {
@@ -999,7 +989,7 @@ abstract class WizardPluginBase implements WizardInterface {
    *
    * Instantiates the view from the form submission and validates its values.
    */
-  public function validate(array $form, array &$form_state) {
+  public function validateView(array $form, array &$form_state) {
     $view = $this->instantiate_view($form, $form_state);
     $errors = $view->validate();
     if (!is_array($errors) || empty($errors)) {

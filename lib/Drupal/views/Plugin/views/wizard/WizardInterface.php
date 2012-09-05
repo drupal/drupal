@@ -13,14 +13,6 @@ namespace Drupal\views\Plugin\views\wizard;
 interface WizardInterface {
 
   /**
-   * Constructs a wizard plugin object.
-   *
-   * @param array $definition
-   *   The information stored in the annotation definition.
-   */
-  function __construct(array $definition);
-
-  /**
    * Form callback to build other elements in the "show" form.
    *
    * This method builds all form elements beside of the selection of the
@@ -48,7 +40,7 @@ interface WizardInterface {
    *   An empty array if the view is valid; an array of error strings if it is
    *   not.
    */
-  public function validate(array $form, array &$form_state);
+  public function validateView(array $form, array &$form_state);
 
   /**
    * Creates a view from values that have already been validated.

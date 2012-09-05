@@ -1046,7 +1046,7 @@ class View extends ViewStorage {
 
     // Create and initialize the query object.
     $plugin = !empty($views_data['table']['base']['query class']) ? $views_data['table']['base']['query class'] : 'views_query';
-    $this->query = views_get_plugin_instance('query', $plugin);
+    $this->query = views_get_plugin('query', $plugin);
 
     if (empty($this->query)) {
       return FALSE;

@@ -817,7 +817,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $plugin = views_get_plugin($type, $name);
       }
       else {
-        $plugin = views_get_plugin_instance('query', $name);
+        $plugin = views_get_plugin('query', $name);
       }
 
       if (!$plugin) {

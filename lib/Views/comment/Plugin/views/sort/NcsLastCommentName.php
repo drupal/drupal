@@ -25,7 +25,7 @@ class NcsLastCommentName extends SortPluginBase {
 
   public function query() {
     $this->ensureMyTable();
-    $join = views_get_plugin_instance('join');
+    $join = views_get_plugin('join', 'standard');
     $join->construct('users', $this->table_alias, 'last_comment_uid', 'uid');
 
     // @todo this might be safer if we had an ensure_relationship rather than guessing

@@ -46,7 +46,7 @@ class MenuHierarchy extends SortPluginBase {
     $max_depth = isset($this->definition['max depth']) ? $this->definition['max depth'] : MENU_MAX_DEPTH;
     for ($i = 1; $i <= $max_depth; ++$i) {
       if ($this->options['sort_within_level']) {
-        $join = views_get_plugin_instance('join');
+        $join = views_get_plugin('join', 'standard');
         $join->construct('menu_links', $this->table_alias, $this->field . $i, 'mlid');
         $menu_links = $this->query->add_table('menu_links', NULL, $join);
         $this->query->add_orderby($menu_links, 'weight', $this->options['order']);
