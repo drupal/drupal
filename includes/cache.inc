@@ -5,8 +5,6 @@
  * Load Views' data so that it knows what is available to build queries from.
  */
 
-use Drupal\views\Plugin\Type\ViewsPluginManager;
-
 /**
  * Fetch Views' data from the cache
  *
@@ -82,30 +80,6 @@ function _views_data_process_entity_types(&$data) {
         $data[$entity_table]['table']['group'] = $table_info['table']['group'];
       }
     }
-  }
-}
-
-/**
- * Fetch the plugin data from cache.
- */
-function _views_fetch_plugin_data($type = NULL, $id = NULL, $reset = FALSE) {
-  if (!$type && !$id) {
-    $plugins = array();
-    $plugin_types = array('access', 'area', 'argument', 'argument_default', 'argument_validator', 'cache', 'display_extender', 'display', 'exposed_form', 'field', 'filter', 'join', 'localization', 'pager', 'query', 'relationship', 'row', 'sort', 'style', 'wizard');
-    foreach ($plugin_types as $plugin_type) {
-      $manager = new ViewsPluginManager($plugin_type);
-      $plugins[$plugin_type] = $manager->getDefinitions();
-    }
-    return $plugins;
-  }
-
-  $manager = new ViewsPluginManager($type);
-
-  if (!$id) {
-    return $manager->getDefinitions();
-  }
-  else {
-    return $manager->getDefinition($id);
   }
 }
 

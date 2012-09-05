@@ -92,7 +92,7 @@ class NodeTermData extends RelationshipPluginBase  {
       $def['table formula'] = $query;
     }
 
-    $join = views_get_join('standard');
+    $join = views_get_plugin_instance('join');
 
     $join->definition = $def;
     $join->construct();

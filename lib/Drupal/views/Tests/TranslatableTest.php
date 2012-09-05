@@ -32,7 +32,8 @@ class TranslatableTest extends ViewTestBase {
 
     config('views.settings')->set('localization_plugin', 'test_localization')->save();
     // Reset the plugin data.
-    views_fetch_plugin_data(NULL, NULL, TRUE);
+    // @todo when all the plugin information is cached make a reset function and
+    // call it here.
     $this->strings = array(
       'Master1',
       'Apply1',

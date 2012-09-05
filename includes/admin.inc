@@ -9,7 +9,6 @@ use Drupal\Core\Database\Database;
 use Drupal\views\TempStore\UserTempStore;
 use Drupal\views\View;
 use Drupal\views\Analyzer;
-use Drupal\views\Plugin\Type\ViewsPluginManager;
 use Drupal\views\Plugin\views\wizard\WizardException;
 
 /**
@@ -348,9 +347,9 @@ function views_ui_add_form($form, &$form_state) {
   $wizard_key = $show_form['wizard_key']['#default_value'];
 
   views_include_handlers();
-  $manager = new ViewsPluginManager('wizard');
-  $info = $manager->getDefinition($wizard_key);
-  $wizard_instance = $manager->createInstance($wizard_key, $info);
+  $info = views_get_plugin_definition('wizard', $wizard_key);
+  $wizard_instance = views_get_plugin_instance($wizard_key, $info);
+
   $form = $wizard_instance->build_form($form, $form_state);
 
   $form['save'] = array(
@@ -656,10 +655,9 @@ function views_ui_nojs_submit($form, &$form_state) {
  */
 function views_ui_wizard_form_validate($form, &$form_state) {
   $wizard = views_ui_get_wizard($form_state['values']['show']['wizard_key']);
-  $manager = new ViewsPluginManager('wizard');
-  $definition = $manager->getDefinition($wizard['id']);
+  $definition = views_get_plugin_definition('wizard', $wizard['id']);
   $form_state['wizard'] = $wizard;
-  $form_state['wizard_instance'] = $manager->createInstance($wizard['id'], $definition);
+  $form_state['wizard_instance'] = views_get_plugin_instance($wizard['id'], $definition);
   $errors = $form_state['wizard_instance']->validate($form, $form_state);
   foreach ($errors as $name => $message) {
     form_set_error($name, $message);
@@ -1521,7 +1519,7 @@ function views_ui_get_display_tab_details($view, $display) {
     '#attributes' => array('id' => 'edit-display-settings-details'),
   );
 
-  $plugin = views_fetch_plugin_data('display', $view->display[$display->id]->display_plugin);
+  $plugin = views_get_plugin_definition('display', $view->display[$display->id]->display_plugin);
   // The following is for display purposes only. We need to determine if there is more than one button and wrap
   // the buttons in a .ctools-dropbutton class if more than one is present.  Otherwise, we'll just wrap the
   // actions in the .ctools-button class.

@@ -186,7 +186,7 @@ function views_theme($existing, $type, $theme, $path) {
     'variables' => array('view' => NULL, 'grouping' => NULL, 'grouping_level' => NULL, 'rows' => NULL, 'title' => NULL),
   );
 
-  $plugins = views_fetch_plugin_data();
+  $plugins = views_get_plugin_definitions();
 
   // Register theme functions for all style plugins
   foreach ($plugins as $type => $info) {
@@ -346,7 +346,7 @@ function _views_find_module_templates($cache, $path) {
  *     keyed by machine name.
  */
 function views_plugin_list() {
-  $plugin_data = views_fetch_plugin_data();
+  $plugin_data = views_get_plugin_definitions();
   $plugins = array();
   foreach (views_get_enabled_views() as $view) {
     foreach ($view->display as $display_id => $display) {
@@ -910,7 +910,7 @@ function views_add_contextual_links(&$render_element, $location, $view, $display
     // Also do not do anything if the display plugin has not defined any
     // contextual links that are intended to be displayed in the requested
     // location.
-    $plugin = views_fetch_plugin_data('display', $view->display[$display_id]->display_plugin);
+    $plugin = views_get_plugin_defintion('display', $view->display[$display_id]->display_plugin);
     // If contextual_links_locations are not set, provide a sane default. (To
     // avoid displaying any contextual links at all, a display plugin can still
     // set 'contextual_links_locations' to, e.g., {""}.)
@@ -1277,7 +1277,7 @@ function views_include_handlers($reset = FALSE) {
 function views_get_handler($table, $field, $key, $override = NULL) {
   static $recursion_protection = array();
 
-  $data = views_fetch_data($table, FALSE);
+  $data = views_get_plugin_definitions($table);
   $handler = NULL;
   views_include('handlers');
 
@@ -1359,14 +1359,6 @@ function views_fetch_data($table = NULL, $move = TRUE, $reset = FALSE) {
 // Views plugin functions
 
 /**
- * Fetch the plugin data from cache.
- */
-function views_fetch_plugin_data($type = NULL, $id = NULL, $reset = FALSE) {
-  views_include('cache');
-  return _views_fetch_plugin_data($type, $id, $reset);
-}
-
-/**
  * Fetch a list of all base tables available
  *
  * @param $type
@@ -1381,8 +1373,7 @@ function views_fetch_plugin_data($type = NULL, $id = NULL, $reset = FALSE) {
  *   A keyed array of in the form of 'base_table' => 'Description'.
  */
 function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
-  $manager = new ViewsPluginManager($type);
-  $definitions = $manager->getDefinitions();
+  $definitions = views_get_plugin_definitions($type);
   $plugins = array();
 
   foreach ($definitions as $id => $plugin) {
@@ -1422,14 +1413,33 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
  *
  * The created plugin object.
  */
-function views_get_plugin($type, $id, $reset = FALSE) {
-  views_include('handlers');
-
+function views_get_plugin($type, $id) {
   $manager = new ViewsPluginManager($type);
-  $definition = $manager->getDefinition($id);
-  if (!empty($definition)) {
-    return _views_create_plugin($type, $definition);
+  $manager->createPluginFromId($id);
+}
+
+/**
+ * Gets all the views plugin definitions
+ */
+function views_get_plugin_definitions($type = FALSE) {
+  $plugins = array();
+  $plugin_types = $type ? array($type) : array('access', 'area', 'argument', 'argument_default', 'argument_validator', 'cache', 'display_extender', 'display', 'exposed_form', 'field', 'filter', 'join', 'localization', 'pager', 'query', 'relationship', 'row', 'sort', 'style', 'wizard');
+  foreach ($plugin_types as $plugin_type) {
+    $manager = new ViewsPluginManager($plugin_type);
+    $plugins[$plugin_type] = $manager->getDefinitions();
   }
+  if ($type) {
+    return $plugins[$type];
+  }
+  return $plugins;
+}
+
+/**
+ * Gets the plugin definition from a plugin type with a specific id.
+ */
+function views_get_plugin_definition($type, $id) {
+  $manager = new ViewsPluginManager($type);
+  return $manager->getDefintion($id);
 }
 
 /**
@@ -1440,9 +1450,9 @@ function views_get_plugin($type, $id, $reset = FALSE) {
  *
  * @return Drupal\views\Plugin\views\join\JoinPluginBase
  */
-function views_get_join($plugin_id = 'standard') {
-  $manager = new ViewsPluginManager('join');
-  return $manager->createInstance($plugin_id);
+function views_get_plugin_instance($type, $plugin_id = 'standard', array $configuration = array()) {
+  $manager = new ViewsPluginManager($type);
+  return $manager->createInstance($plugin_id, $configuration);
 }
 
 /**
@@ -1547,7 +1557,7 @@ function views_get_applicable_views($type) {
     // Loop on array keys because something seems to muck with $view->display
     // a bit in PHP4.
     foreach (array_keys($view->display) as $id) {
-      $plugin = views_fetch_plugin_data('display', $view->display[$id]->display_plugin);
+      $plugin = views_get_plugin_defintion('display', $view->display[$id]->display_plugin);
       if (!empty($plugin[$type])) {
         // This view uses_hook_menu. Clone it so that different handlers
         // don't trip over each other, and add it to the list.

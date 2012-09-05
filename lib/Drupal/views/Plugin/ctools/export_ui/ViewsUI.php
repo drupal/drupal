@@ -184,7 +184,7 @@ class ViewsUI extends ExportUIPluginBase {
     );
 
     $displays = array();
-    foreach (views_fetch_plugin_data('display') as $id => $info) {
+    foreach (views_get_plugin_definitions('display') as $id => $info) {
       if (!empty($info['admin'])) {
         $displays[$id] = $info['admin'];
       }

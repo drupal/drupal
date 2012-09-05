@@ -73,4 +73,53 @@ class ViewsPluginManager extends PluginManagerBase {
     );
   }
 
+  /**
+   * Creates a plugin from an id.
+   */
+  public function createPluginFromId($id) {
+    $definition = $this->getDefinition($id);
+    if (!empty($definition)) {
+      $plugin = $this->createPluginFromDefinition($defintion);
+      return $plugin;
+    }
+  }
+
+  /**
+   * Creates a plugin from a definition.
+   */
+  public function createPluginFromDefinition($definition) {
+    $instance = $this->createInstance($definition['id']);
+    $instance->is_plugin = TRUE;
+    $instance->plugin_type = $this->$type;
+    $instance->setDefinition($definition);
+
+    // Let the handler have something like a constructor.
+    $instance->construct();
+
+    return $instance;
+  }
+
+  /**
+   * Creates a handler from a definition.
+   */
+  public function createHandlerFromDefinition($definition) {
+    // @todo This is crazy. Find a way to remove the override functionality.
+    $id = !empty($definition['override handler']) ? $definition['override handler'] : $definition['id'];
+    try {
+      $instance = $this->createInstance($id);
+    }
+    catch (PluginException $e) {
+      $instance = $this->createInstance($definition['id']);
+    }
+
+    $instance->is_handler = TRUE;
+    $instance->plugin_type = $this->$type;
+    $instance->setDefinition($definition);
+
+    // let the handler have something like a constructor.
+    $instance->construct();
+
+    return $instance;
+  }
+
 }

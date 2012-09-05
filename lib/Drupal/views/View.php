@@ -8,7 +8,6 @@
 namespace Drupal\views;
 
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * @defgroup views_objects Objects that represent a View or part of a view
@@ -1047,8 +1046,7 @@ class View extends ViewStorage {
 
     // Create and initialize the query object.
     $plugin = !empty($views_data['table']['base']['query class']) ? $views_data['table']['base']['query class'] : 'views_query';
-    $plugin_type = new ViewsPluginManager('query');
-    $this->query = $plugin_type->createInstance($plugin);
+    $this->query = views_get_plugin_instance('query', $plugin);
 
     if (empty($this->query)) {
       return FALSE;

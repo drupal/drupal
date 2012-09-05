@@ -32,8 +32,8 @@ class AccessTest extends PluginTestBase {
     $this->normal_role = $this->drupalCreateRole(array());
     $this->normal_user = $this->drupalCreateUser(array('views_test test permission'));
     $this->normal_user->roles[$this->normal_role] = $this->normal_role;
-    // Reset the plugin data.
-    views_fetch_plugin_data(NULL, NULL, TRUE);
+    // @todo when all the plugin information is cached make a reset function and
+    // call it here.
   }
 
   /**

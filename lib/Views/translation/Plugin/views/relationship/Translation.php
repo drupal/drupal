@@ -101,7 +101,7 @@ class Translation extends RelationshipPluginBase {
     else {
       $id = 'standard';
     }
-    $join = views_get_join($id);
+    $join = views_get_plugin_instance('join', $id);
 
     $join->definition = $def;
     $join->construct();

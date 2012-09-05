@@ -303,7 +303,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     );
 
     $validate_types = array('none' => t('- Basic validation -'));
-    $plugins = views_fetch_plugin_data('argument_validator');
+    $plugins = views_get_plugin_definitions('argument_validator');
     foreach ($plugins as $id => $info) {
       if (!empty($info['no_ui'])) {
         continue;
@@ -498,7 +498,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * default action is set to provide default argument.
    */
   function default_argument_form(&$form, &$form_state) {
-    $plugins = views_fetch_plugin_data('argument_default');
+    $plugins = views_get_plugin_definitions('argument_default');
     $options = array();
 
     $form['default_argument_skip_url'] = array(
@@ -562,7 +562,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * default action is set to display one.
    */
   function default_summary_form(&$form, &$form_state) {
-    $style_plugins = views_fetch_plugin_data('style');
+    $style_plugins = views_get_plugin_definitions('style');
     $summary_plugins = array();
     $format_options = array();
     foreach ($style_plugins as $key => $plugin) {

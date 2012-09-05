@@ -27,7 +27,7 @@ class NcsLastCommentName extends FieldPluginBase {
     // have to join in a specially related user table.
     $this->ensureMyTable();
     // join 'users' to this table via vid
-    $join = views_get_join();
+    $join = views_get_plugin_instance('join');
     $join->construct('users', $this->table_alias, 'last_comment_uid', 'uid');
     $join->extra = array(array('field' => 'uid', 'operator' => '!=', 'value' => '0'));
 

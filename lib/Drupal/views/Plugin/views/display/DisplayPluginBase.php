@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\display;
 
 use Drupal\views\View;
 use Drupal\views\Plugin\views\PluginBase;
-use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * @defgroup views_display_plugins Views display plugins
@@ -818,8 +817,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $plugin = views_get_plugin($type, $name);
       }
       else {
-        $plugin_type = new ViewsPluginManager('query');
-        $plugin = $plugin_type->createInstance($name);
+        $plugin = views_get_plugin_instance('query', $name);
       }
 
       if (!$plugin) {
@@ -1116,9 +1114,8 @@ abstract class DisplayPluginBase extends PluginBase {
       'desc' => t('Change the title that this display will use.'),
     );
 
-    $manager = new ViewsPluginManager('style');
     $name = $this->getOption('style_plugin');
-    $style_plugin = $manager->getDefinition($name);
+    $style_plugin = views_get_plugin_definition('style', $name);
     $style_plugin_instance = $this->getPlugin('style', $name);
     $style_summary = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->summaryTitle();
     $style_title = empty($style_plugin['title']) ? t('Missing style plugin') : $style_plugin_instance->pluginTitle();
@@ -1139,9 +1136,8 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     if ($style_plugin_instance->usesRowPlugin()) {
-      $manager = new ViewsPluginManager('row');
       $name = $this->getOption('row_plugin');
-      $row_plugin = $manager->getDefinition($name);
+      $row_plugin = views_get_plugin_definition('row', $name);
       $row_plugin_instance = $this->getPlugin('row', $name);
       $row_summary = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->summaryTitle();
       $row_title = empty($row_plugin['title']) ? t('Missing style plugin') : $row_plugin_instance->pluginTitle();
@@ -1639,7 +1635,6 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         break;
       case 'style_plugin':
-        $manager = new ViewsPluginManager('style');
         $form['#title'] .= t('How should this view be styled');
         $form['style_plugin'] =  array(
           '#type' => 'radios',

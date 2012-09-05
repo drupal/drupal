@@ -6,50 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
-use Drupal\views\Plugin\Type\ViewsPluginManager;
 use Drupal\Component\Plugin\Exception\PluginException;
-
-/**
- * Instantiate and construct a new plugin.
- */
-function _views_create_plugin($type, $definition) {
-  $manager = new ViewsPluginManager($type);
-  $instance = $manager->createInstance($definition['id']);
-
-  $instance->is_plugin = TRUE;
-  $instance->plugin_type = $type;
-  $instance->setDefinition($definition);
-
-  // Let the handler have something like a constructor.
-  $instance->construct();
-
-  return $instance;
-}
-
-/**
- * Instantiate and construct a new handler
- */
-function _views_create_handler($type, $definition) {
-  $manager = new ViewsPluginManager($type);
-  // @todo This is crazy. Find a way to remove the override functionality.
-  $id = !empty($definition['override handler']) ? $definition['override handler'] : $definition['id'];
-  try {
-    $instance = $manager->createInstance($id);
-  }
-  catch (PluginException $e) {
-    $instance = $manager->createInstance($definition['id']);
-  }
-
-  $instance->is_handler = TRUE;
-  $instance->plugin_type = $type;
-
-  $instance->setDefinition($definition);
-
-  // let the handler have something like a constructor.
-  $instance->construct();
-
-  return $instance;
-}
 
 /**
  * Prepare a handler's data by checking defaults and such.
@@ -72,6 +29,24 @@ function _views_prepare_handler($definition, $data, $field, $type) {
 }
 
 /**
+ * Get a handler for a plugin
+ *
+ * @param string $type
+ *   The plugin type like access or display.
+ * @param string $id
+ *   The name of the plugin like standard.
+ *
+ * @return views_plugin
+ *
+ * The created plugin object.
+ */
+function _views_create_handler($type, $definition) {
+  $manager = new ViewsPluginManager($type);
+  $plugin = $manager->createHandlerFromDefinition($definition);
+  return $plugin;
+}
+
+/**
  * Fetch a handler to join one table to a primary table from the data cache
  */
 function views_get_table_join($table, $base_table) {
@@ -84,7 +59,7 @@ function views_get_table_join($table, $base_table) {
     else {
       $id = 'standard';
     }
-    $handler = views_get_join($id);
+    $handler = views_get_plugin_instance('join', $id);
 
     // Fill in some easy defaults
     $handler->definition = $h;

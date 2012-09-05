@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\wizard;
 
 use Drupal\views\View;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
-use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * Provides the interface and base class for Views Wizard plugins.
@@ -749,8 +748,7 @@ abstract class WizardPluginBase implements WizardInterface {
       $table_data = views_fetch_data($table);
       // If the 'in' operator is being used, map the values to an array.
       $handler = $table_data[$bundle_key]['filter']['id'];
-      $plugin_manager = new ViewsPluginManager('filter');
-      $handler_definition = $plugin_manager->getDefinition($handler);
+      $handler_definition = views_get_plugin_definition('filter', $handler);
       if ($handler == 'in_operator' || is_subclass_of($handler_definition['class'], 'Drupal\\views\\Plugin\\views\\filter\\InOperator')) {
         $value = drupal_map_assoc(array($form_state['values']['show']['type']));
       }

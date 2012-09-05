@@ -63,7 +63,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
       return FALSE;
     }
 
-    $plugin = views_fetch_plugin_data('display', $plugin_id);
+    $plugin = views_get_plugin_definition('display', $plugin_id);
     if (empty($plugin)) {
       $plugin['title'] = t('Broken');
     }
