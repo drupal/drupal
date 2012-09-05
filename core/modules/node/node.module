@@ -1901,6 +1901,9 @@ function node_menu() {
   $items['rss.xml'] = array(
     'title' => 'RSS feed',
     'page callback' => 'node_feed',
+    // Pass a FALSE and array argument to ensure that additional path components
+    // are not passed to node_feed().
+    'page arguments' => array(FALSE, array()),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
