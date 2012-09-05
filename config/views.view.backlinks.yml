@@ -27,7 +27,7 @@ display:
                 type: full
                 options:
                     items_per_page: 30
-            style_plugin: list
+            style_plugin: html_list
             style_options:
                 type: ol
             row_plugin: fields
@@ -100,7 +100,7 @@ display:
                 row_options: false
                 arguments: false
             use_more: true
-            style_plugin: list
+            style_plugin: html_list
             row_plugin: fields
             arguments:
                 nid:

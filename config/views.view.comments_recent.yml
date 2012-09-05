@@ -29,7 +29,7 @@ display:
                 type: some
                 options:
                     items_per_page: 5
-            style_plugin: list
+            style_plugin: html_list
             row_plugin: fields
             relationships:
                 nid:
@@ -77,7 +77,7 @@ display:
                 row_plugin: false
                 row_options: false
                 fields: false
-            style_plugin: list
+            style_plugin: html_list
             row_plugin: fields
             row_options:
                 inline:
