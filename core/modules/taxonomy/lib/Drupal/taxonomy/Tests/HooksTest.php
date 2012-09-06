@@ -35,7 +35,12 @@ class HooksTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test that hooks are run correctly on creating, editing and deleting a term.
+   * Test hooks on CRUD of terms.
+   *
+   * Test that hooks are run correctly on creating, editing, viewing,
+   * and deleting a term.
+   *
+   * @see taxonomy_test.module
    */
   function testTaxonomyTermHooks() {
     $vocabulary = $this->createVocabulary();
@@ -59,6 +64,14 @@ class HooksTest extends TaxonomyTestBase {
     taxonomy_terms_static_reset();
     $term = taxonomy_term_load($term->tid);
     $this->assertEqual($edit['antonym'], $term->antonym, 'Antonym was successfully edited.');
+
+    // View the term and ensure that hook_taxonomy_term_view() and
+    // hook_entity_view() are invoked.
+    $term = taxonomy_term_load($term->tid);
+    module_load_include('inc', 'taxonomy', 'taxonomy.pages');
+    $term_build = taxonomy_term_page($term);
+    $this->assertFalse(empty($term_build['taxonomy_terms'][$term->tid]['taxonomy_test_term_view_check']), 'hook_taxonomy_term_view() was invoked when viewing the term.');
+    $this->assertFalse(empty($term_build['taxonomy_terms'][$term->tid]['taxonomy_test_entity_view_check']), 'hook_entity_view() was invoked when viewing the term.');
 
     // Delete the term.
     taxonomy_term_delete($term->tid);

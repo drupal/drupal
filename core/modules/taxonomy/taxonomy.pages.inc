@@ -35,21 +35,24 @@ function taxonomy_term_page(Term $term) {
   drupal_set_breadcrumb($breadcrumb);
   drupal_add_feed('taxonomy/term/' . $term->tid . '/feed', 'RSS - ' . $term->label());
 
-  $build = array();
+  // If there is a menu link to this term, the link becomes the last part
+  // of the active trail, and the link name becomes the page title.
+  // Thus, we must explicitly set the page title to be the node title.
+  $uri = $term->uri();
 
-  $build['term_heading'] = array(
-    '#prefix' => '<div class="term-listing-heading">',
-    '#suffix' => '</div>',
-    'term' => taxonomy_term_view($term, 'full'),
-  );
+  // Set the term path as the canonical URL to prevent duplicate content.
+  drupal_add_html_head_link(array('rel' => 'canonical', 'href' => url($uri['path'], $uri['options'])), TRUE);
+  // Set the non-aliased path as a default shortlink.
+  drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
 
+  $build = taxonomy_term_show($term);
   if ($nids = taxonomy_select_nodes($term->tid, TRUE, variable_get('default_nodes_main', 10))) {
     $nodes = node_load_multiple($nids);
     $build += node_view_multiple($nodes);
     $build['pager'] = array(
       '#theme' => 'pager',
       '#weight' => 5,
-     );
+    );
   }
   else {
     $build['no_content'] = array(
