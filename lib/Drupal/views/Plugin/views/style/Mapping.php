@@ -42,9 +42,7 @@ abstract class Mapping extends StylePluginBase {
    *   - #filter: (optional) A method on the plugin to filter field options.
    *   - #toggle: (optional) If this select should be toggled by a checkbox.
    */
-  protected function defineMapping() {
-    return array();
-  }
+  abstract protected function defineMapping();
 
   /**
    * Overrides Drupal\views\Plugin\views\style\StylePluginBase::defineOptions().
