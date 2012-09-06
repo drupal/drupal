@@ -1048,7 +1048,7 @@ If you would like to have the characters \'[\' and \']\' please use the html ent
       '#type' => 'textarea',
       '#title' => t('No results text'),
       '#default_value' => $this->options['empty'],
-      '#description' => t('Provide text to display if this field returns no results. You may include HTML. You may enter data from this view as per the "Replacement patterns" in the "Rewrite Results" section below.'),
+      '#description' => t('Provide text to display if this field contains an empty result. You may include HTML. You may enter data from this view as per the "Replacement patterns" in the "Rewrite Results" section below.'),
       '#fieldset' => 'empty_field_behavior',
     );
 
