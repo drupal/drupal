@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Definition of Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest.
  */
 
