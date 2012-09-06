@@ -4,29 +4,29 @@ core: '8'
 description: ''
 disabled: '0'
 display:
-    default:
-        display_options:
-            access:
-                type: test_static
-            cache:
-                type: none
-            exposed_form:
-                type: basic
-            pager:
-                type: full
-            row_plugin: fields
-            style_plugin: default
-        display_plugin: default
-        display_title: Master
-        id: default
-        position: '0'
-    page_1:
-        display_options:
-            path: test_access_static
-        display_plugin: page
-        display_title: Page
-        id: page_1
-        position: '0'
+  default:
+    display_options:
+      access:
+        type: test_static
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      row_plugin: fields
+      style_plugin: default
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page_1:
+    display_options:
+      path: test_access_static
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: '0'
 human_name: ''
 name: test_access_static
 tag: ''

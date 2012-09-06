@@ -4,36 +4,36 @@ core: '8'
 description: ''
 disabled: '0'
 display:
-    default:
-        display_options:
-            access:
-                type: none
-            cache:
-                type: none
-            exposed_form:
-                type: basic
-            fields:
-                nid:
-                    field: nid
-                    id: nid
-                    table: node
-            filters:
-                created:
-                    field: created
-                    id: created
-                    table: node
-            pager:
-                type: full
-            query:
-                options:
-                    query_comment: '0'
-                type: views_query
-            row_plugin: fields
-            style_plugin: default
-        display_plugin: default
-        display_title: Master
-        id: default
-        position: '0'
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      fields:
+        nid:
+          field: nid
+          id: nid
+          table: node
+      filters:
+        created:
+          field: created
+          id: created
+          table: node
+      pager:
+        type: full
+      query:
+        options:
+          query_comment: '0'
+        type: views_query
+      row_plugin: fields
+      style_plugin: default
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
 human_name: ''
 name: test_filter_date_between
 tag: ''
