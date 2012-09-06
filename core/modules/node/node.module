@@ -533,11 +533,34 @@ function node_type_load($name) {
 /**
  * Saves a node type to the database.
  *
- * @param $info
- *   The node type to save, as an object.
+ * @param object $info
+ *   The node type to save; an object with the following properties:
+ *   - type: A string giving the machine name of the node type.
+ *   - name: A string giving the human-readable name of the node type.
+ *   - base: A string that indicates the base string for hook functions. For
+ *     example, 'node_content' is the value used by the UI when creating a new
+ *     node type.
+ *   - description: A string that describes the node type.
+ *   - help: A string giving the help information shown to the user when
+ *     creating a node of this type.
+ *   - custom: TRUE or FALSE indicating whether this type is defined by a module
+ *     (FALSE) or by a user (TRUE) via Add Content Type.
+ *   - modified: TRUE or FALSE indicating whether this type has been modified by
+ *     an administrator. Currently not used in any way.
+ *   - locked: TRUE or FALSE indicating whether the administrator can change the
+ *     machine name of this type.
+ *   - disabled: TRUE or FALSE indicating whether this type has been disabled.
+ *   - has_title: TRUE or FALSE indicating whether this type uses the node title
+ *     field.
+ *   - title_label: A string containing the label for the title.
+ *   - module: A string giving the module defining this type of node.
+ *   - orig_type: A string giving the original machine-readable name of this
+ *     node type. This may be different from the current type name if the locked
+ *     field is 0.
  *
- * @return
- *   Status flag indicating outcome of the operation.
+ * @return int
+ *   A status flag indicating the outcome of the operation, either SAVED_NEW or
+ *   SAVED_UPDATED.
  */
 function node_type_save($info) {
   $existing_type = !empty($info->old_type) ? $info->old_type : $info->type;

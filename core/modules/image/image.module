@@ -612,10 +612,17 @@ function image_style_load($name) {
 /**
  * Save an image style.
  *
- * @param style
- *   An image style array.
- * @return
- *   An image style array.
+ * @param array $style
+ *   An image style array containing:
+ *   - name: An unique name for the style.
+ *   - effects: An optional array of effects.
+ *
+ * @return array
+ *   An image style array containing:
+ *   - name: An unique name for the style.
+ *   - effects: An array of effects.
+ *   - is_new: Is set to TRUE if this is a new style, and FALSE if it is an
+ *     existing style.
  */
 function image_style_save($style) {
   $config = config('image.style.' . $style['name']);
