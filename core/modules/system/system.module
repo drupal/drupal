@@ -1936,6 +1936,7 @@ function system_library_info() {
     ),
     'dependencies' => array(
       array('system', 'jquery'),
+      array('system', 'jquery.once'),
       array('system', 'drupal'),
       array('system', 'drupal.settings'),
     ),
