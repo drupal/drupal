@@ -1665,7 +1665,7 @@ function taxonomy_build_node_index($node) {
     }
   }
   // We only maintain the taxonomy index for published nodes.
-  if ($status) {
+  if ($status && $node->isDefaultRevision()) {
     // Collect a unique list of all the term IDs from all node fields.
     $tid_all = array();
     foreach (field_info_instances('node', $node->type) as $instance) {

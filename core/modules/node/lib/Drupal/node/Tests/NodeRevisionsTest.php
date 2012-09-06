@@ -24,13 +24,14 @@ class NodeRevisionsTest extends NodeTestBase {
 
     // Create and login user.
     $web_user = $this->drupalCreateUser(array('view revisions', 'revert revisions', 'edit any page content',
-                                               'delete revisions', 'delete any page content'));
+                                               'delete revisions', 'delete any page content', 'administer nodes'));
     $this->drupalLogin($web_user);
 
     // Create initial node.
     $node = $this->drupalCreateNode();
     $settings = get_object_vars($node);
     $settings['revision'] = 1;
+    $settings['isDefaultRevision'] = TRUE;
 
     $nodes = array();
     $logs = array();
@@ -47,6 +48,7 @@ class NodeRevisionsTest extends NodeTestBase {
       $this->drupalCreateNode($settings);
       $node = node_load($node->nid); // Make sure we get revision information.
       $settings = get_object_vars($node);
+      $settings['isDefaultRevision'] = TRUE;
 
       $nodes[] = $node;
     }
@@ -75,8 +77,8 @@ class NodeRevisionsTest extends NodeTestBase {
       $this->assertText($log, t('Log message found.'));
     }
 
-    // Confirm that this is the current revision.
-    $this->assertTrue($node->isCurrentRevision(), 'Third node revision is the current one.');
+    // Confirm that this is the default revision.
+    $this->assertTrue($node->isDefaultRevision(), 'Third node revision is the default one.');
 
     // Confirm that revisions revert properly.
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/revert", array(), t('Revert'));
@@ -86,9 +88,9 @@ class NodeRevisionsTest extends NodeTestBase {
     $reverted_node = node_load($node->nid);
     $this->assertTrue(($nodes[1]->body[LANGUAGE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[LANGUAGE_NOT_SPECIFIED][0]['value']), t('Node reverted correctly.'));
 
-    // Confirm that this is not the current version.
+    // Confirm that this is not the default version.
     $node = node_revision_load($node->vid);
-    $this->assertFalse($node->isCurrentRevision(), 'Third node revision is not the current one.');
+    $this->assertFalse($node->isDefaultRevision(), 'Third node revision is not the default one.');
 
     // Confirm revisions delete properly.
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/delete", array(), t('Delete'));
@@ -112,6 +114,33 @@ class NodeRevisionsTest extends NodeTestBase {
       '%title' => $nodes[2]->label(),
       '%revision-date' => format_date($old_revision_date),
     )));
+
+    // Make a new revision and set it to not be default.
+    // This will create a new revision that is not "front facing".
+    $new_node_revision = clone $node;
+    $new_body = $this->randomName();
+    $new_node_revision->body[LANGUAGE_NOT_SPECIFIED][0]['value'] = $new_body;
+    // Save this as a non-default revision.
+    $new_node_revision->revision = TRUE;
+    $new_node_revision->isDefaultRevision = FALSE;
+    node_save($new_node_revision);
+
+    $this->drupalGet("node/$node->nid");
+    $this->assertNoText($new_body, t('Revision body text is not present on default version of node.'));
+
+    // Verify that the new body text is present on the revision.
+    $this->drupalGet("node/$node->nid/revisions/" . $new_node_revision->vid . "/view");
+    $this->assertText($new_body, t('Revision body text is present when loading specific revision.'));
+
+    // Verify that the non-default revision vid is greater than the default
+    // revision vid.
+    $default_revision = db_select('node', 'n')
+      ->fields('n', array('vid'))
+      ->condition('nid', $node->nid)
+      ->execute()
+      ->fetchCol();
+    $default_revision_vid = $default_revision[0];
+    $this->assertTrue($new_node_revision->vid > $default_revision_vid, 'Revision vid is greater than default revision vid.');
   }
 
   /**

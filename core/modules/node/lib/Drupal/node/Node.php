@@ -30,6 +30,16 @@ class Node extends Entity implements ContentEntityInterface {
   public $vid;
 
   /**
+   * Indicates whether this is the default node revision.
+   *
+   * The default revision of a node is the one loaded when no specific revision
+   * has been specified. Only default revisions are saved to the node table.
+   *
+   * @var boolean
+   */
+  public $isDefaultRevision = TRUE;
+
+  /**
    * The node UUID.
    *
    * @var string

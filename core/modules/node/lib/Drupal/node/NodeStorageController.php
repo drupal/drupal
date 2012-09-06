@@ -100,7 +100,16 @@ class NodeStorageController extends DatabaseStorageController {
       }
       else {
         $op = 'update';
-        $return = drupal_write_record($this->entityInfo['base table'], $entity, $this->idKey);
+        // Update the base node table, but only if this revision is marked as
+        // the default.
+        if ($entity->isDefaultRevision()) {
+          $return = drupal_write_record($this->entityInfo['base table'], $entity, $this->idKey);
+        }
+        else {
+          // @todo, should a different value be returned when saving an entity
+          // with $isDefaultRevision = FALSE?
+          $return = FALSE;
+        }
       }
 
       if ($this->revisionKey) {
@@ -139,19 +148,19 @@ class NodeStorageController extends DatabaseStorageController {
 
     if (empty($entity->{$this->revisionKey}) || !empty($entity->revision)) {
       drupal_write_record($this->revisionTable, $record);
-      db_update($this->entityInfo['base table'])
-        ->fields(array($this->revisionKey => $record->{$this->revisionKey}))
-        ->condition($this->idKey, $entity->{$this->idKey})
-        ->execute();
+      // Only update the base node table if this revision is the default.
+      if ($entity->isDefaultRevision()) {
+        db_update($this->entityInfo['base table'])
+          ->fields(array($this->revisionKey => $record->{$this->revisionKey}))
+          ->condition($this->idKey, $entity->{$this->idKey})
+          ->execute();
+      }
     }
     else {
       drupal_write_record($this->revisionTable, $record, $this->revisionKey);
     }
     // Make sure to update the new revision key for the entity.
     $entity->{$this->revisionKey} = $record->{$this->revisionKey};
-
-    // Mark this revision as the current one.
-    $entity->isCurrentRevision(TRUE);
   }
 
   /**
@@ -263,9 +272,13 @@ class NodeStorageController extends DatabaseStorageController {
    * Overrides Drupal\entity\DatabaseStorageController::postSave().
    */
   function postSave(EntityInterface $node, $update) {
-    node_access_acquire_grants($node, $update);
+    // Update the node access table for this node, but only if it is the
+    // default revision. There's no need to delete existing records if the node
+    // is new.
+    if ($node->isDefaultRevision()) {
+      node_access_acquire_grants($node, $update);
+    }
   }
-
   /**
    * Overrides Drupal\entity\DatabaseStorageController::preDelete().
    */

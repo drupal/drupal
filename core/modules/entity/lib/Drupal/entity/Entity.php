@@ -42,11 +42,11 @@ class Entity implements EntityInterface {
   protected $enforceIsNew;
 
   /**
-   * Indicates whether this is the current revision.
+   * Indicates whether this is the default revision.
    *
    * @var bool
    */
-  protected $isCurrentRevision = TRUE;
+  protected $isDefaultRevision = TRUE;
 
   /**
    * Constructs a new entity object.
@@ -277,12 +277,12 @@ class Entity implements EntityInterface {
   }
 
   /**
-   * Implements Drupal\entity\EntityInterface::isCurrentRevision().
+   * Implements Drupal\entity\EntityInterface::isDefaultRevision().
    */
-  public function isCurrentRevision($new_value = NULL) {
-    $return = $this->isCurrentRevision;
+  public function isDefaultRevision($new_value = NULL) {
+    $return = $this->isDefaultRevision;
     if (isset($new_value)) {
-      $this->isCurrentRevision = (bool) $new_value;
+      $this->isDefaultRevision = (bool) $new_value;
     }
     return $return;
   }

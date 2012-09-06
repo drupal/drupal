@@ -1129,8 +1129,8 @@ function node_delete_multiple($nids) {
  */
 function node_revision_delete($revision_id) {
   if ($revision = node_revision_load($revision_id)) {
-    // Prevent deleting the current revision.
-    if ($revision->isCurrentRevision()) {
+    // Prevent deleting the default revision.
+    if ($revision->isDefaultRevision()) {
       return FALSE;
     }
 
@@ -1795,20 +1795,20 @@ function _node_revision_access(Node $node, $op = 'view', $account = NULL, $langc
     }
 
     // There should be at least two revisions. If the vid of the given node
-    // and the vid of the current revision differ, then we already have two
+    // and the vid of the default revision differ, then we already have two
     // different revisions so there is no need for a separate database check.
-    // Also, if you try to revert to or delete the current revision, that's
+    // Also, if you try to revert to or delete the default revision, that's
     // not good.
-    if ($node->isCurrentRevision() && (db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
+    if ($node->isDefaultRevision() && (db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
       $access[$cid] = FALSE;
     }
     elseif (user_access('administer nodes', $account)) {
       $access[$cid] = TRUE;
     }
     else {
-      // First check the access to the current revision and finally, if the
-      // node passed in is not the current revision then access to that, too.
-      $access[$cid] = node_access($op, node_load($node->nid), $account, $langcode) && ($node->isCurrentRevision() || node_access($op, $node, $account, $langcode));
+      // First check the access to the default revision and finally, if the
+      // node passed in is not the default revision then access to that, too.
+      $access[$cid] = node_access($op, node_load($node->nid), $account, $langcode) && ($node->isDefaultRevision() || node_access($op, $node, $account, $langcode));
     }
   }
 

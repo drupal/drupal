@@ -209,14 +209,14 @@ interface EntityInterface {
   public function getRevisionId();
 
   /**
-   * Checks if this entity is the current revision.
+   * Checks if this entity is the default revision.
    *
    * @param bool $new_value
-   *   (optional) A Boolean to (re)set the isCurrentRevision flag.
+   *   (optional) A Boolean to (re)set the isDefaultRevision flag.
    *
    * @return bool
-   *   TRUE if the entity is the current revision, FALSE otherwise. If
+   *   TRUE if the entity is the default revision, FALSE otherwise. If
    *   $new_value was passed, the previous value is returned.
    */
-  public function isCurrentRevision($new_value = NULL);
+  public function isDefaultRevision($new_value = NULL);
 }

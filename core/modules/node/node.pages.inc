@@ -291,6 +291,8 @@ function node_revision_revert_confirm($form, $form_state, $node_revision) {
 function node_revision_revert_confirm_submit($form, &$form_state) {
   $node_revision = $form['#node_revision'];
   $node_revision->revision = 1;
+  // Make this the new default revision for the node.
+  $node_revision->isDefaultRevision = TRUE;
 
   // The revision timestamp will be updated when the revision is saved. Keep the
   // original one for the confirmation message.
