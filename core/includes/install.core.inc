@@ -1368,6 +1368,7 @@ function install_select_language(&$install_state) {
  */
 function install_select_language_form($form, &$form_state, $files) {
   include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+  include_once DRUPAL_ROOT . '/core/modules/language/language.module';
   include_once DRUPAL_ROOT . '/core/modules/language/language.negotiation.inc';
 
   $standard_languages = standard_language_list();

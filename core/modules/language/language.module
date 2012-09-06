@@ -37,6 +37,10 @@ function language_help($path, $arg) {
       $output = '<p>' . t('Determine the language from a request/session parameter. Example: "http://example.com?language=de" sets language to German based on the use of "de" within the "language" parameter.') . '</p>';
       return $output;
 
+    case 'admin/config/regional/language/detection/browser':
+      $output = '<p>' . t('Browsers use different language codes to refer to the same languages. You can add and edit mappings from browser language codes to the <a href="@configure-languages">languages used by Drupal</a>.', array('@configure-languages' => url('admin/config/regional/language'))) . '</p>';
+      return $output;
+
     case 'admin/structure/block/manage/%/%':
       if ($arg[4] == 'language' && $arg[5] == 'language_interface') {
         return '<p>' . t('With multiple languages enabled, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
@@ -116,6 +120,21 @@ function language_menu() {
     'file' => 'language.admin.inc',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
+  $items['admin/config/regional/language/detection/browser'] = array(
+    'title' => 'Browser language detection configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('language_negotiation_configure_browser_form'),
+    'access arguments' => array('administer languages'),
+    'file' => 'language.admin.inc',
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
+  );
+  $items['admin/config/regional/language/detection/browser/delete/%'] = array(
+    'title' => 'Delete language mapping',
+    'page arguments' => array('language_negotiation_configure_browser_delete_form', 7),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('administer languages'),
+    'file' => 'language.admin.inc',
+  );
 
   return $items;
 }
@@ -153,6 +172,10 @@ function language_theme() {
     ),
     'language_negotiation_configure_form' => array(
       'render element' => 'form',
+    ),
+    'language_negotiation_configure_browser_form_table' => array(
+      'render element' => 'form',
+      'file' => 'language.admin.inc',
     ),
   );
 }
@@ -395,6 +418,7 @@ function language_language_negotiation_info() {
     'cache' => 0,
     'name' => t('Browser'),
     'description' => t("Language from the browser's language settings."),
+    'config' => 'admin/config/regional/language/detection/browser',
   );
 
   $negotiation_info[LANGUAGE_NEGOTIATION_INTERFACE] = array(
@@ -580,4 +604,32 @@ function language_url_outbound_alter(&$path, &$options, $original_path) {
       }
     }
   }
+}
+
+/**
+ * Returns language mappings between browser and Drupal language codes.
+ *
+ * @return array
+ *   An array containing browser language codes as keys with corresponding
+ *   Drupal language codes as values.
+ */
+function language_get_browser_drupal_langcode_mappings() {
+  $config = config('language.mappings');
+  if ($config->isNew()) {
+    return array();
+  }
+  return $config->get();
+}
+
+/**
+ * Stores language mappings between browser and Drupal language codes.
+ *
+ * @param array $mappings
+ *   An array containing browser language codes as keys with corresponding
+ *   Drupal language codes as values.
+ */
+function language_set_browser_drupal_langcode_mappings($mappings) {
+  $config = config('language.mappings');
+  $config->setData($mappings);
+  $config->save();
 }

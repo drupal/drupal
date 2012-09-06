@@ -63,6 +63,15 @@ function language_from_interface() {
 /**
  * Identify language from the Accept-language HTTP header we got.
  *
+ * The algorithm works as follows:
+ * - map browser language codes to Drupal language codes.
+ * - order all browser language codes by qvalue from high to low.
+ * - add generic browser language codes if they aren't already specified
+ *   but with a slightly lower qvalue.
+ * - find the most specific Drupal language code with the highest qvalue.
+ * - if 2 or more languages are having the same qvalue, respect the order of
+ *   them inside the $languages array.
+ *
  * We perform browser accept-language parsing only if page cache is disabled,
  * otherwise we would cache a user-specific preference.
  *
@@ -86,7 +95,18 @@ function language_from_browser($languages) {
   // Samples: "hu, en-us;q=0.66, en;q=0.33", "hu,en-us;q=0.5"
   $browser_langcodes = array();
   if (preg_match_all('@(?<=[, ]|^)([a-zA-Z-]+|\*)(?:;q=([0-9.]+))?(?:$|\s*,\s*)@', trim($_SERVER['HTTP_ACCEPT_LANGUAGE']), $matches, PREG_SET_ORDER)) {
+    // Load custom mappings to support browsers that are sending non standard
+    // language codes.
+    $mappings = language_get_browser_drupal_langcode_mappings();
     foreach ($matches as $match) {
+      if ($mappings) {
+        $langcode = strtolower($match[1]);
+        foreach ($mappings as $browser_langcode => $drupal_langcode) {
+          if ($langcode == $browser_langcode) {
+            $match[1] = $drupal_langcode;
+          }
+        }
+      }
       // We can safely use strtolower() here, tags are ASCII.
       // RFC2616 mandates that the decimal part is no more than three digits,
       // so we multiply the qvalue by 1000 to avoid floating point comparisons.
@@ -105,9 +125,23 @@ function language_from_browser($languages) {
   // http://blogs.msdn.com/b/ie/archive/2006/10/17/accept-language-header-for-internet-explorer-7.aspx
   asort($browser_langcodes);
   foreach ($browser_langcodes as $langcode => $qvalue) {
-    $generic_tag = strtok($langcode, '-');
-    if (!isset($browser_langcodes[$generic_tag])) {
-      $browser_langcodes[$generic_tag] = $qvalue;
+    // For Chinese languages the generic tag is either zh-hans or zh-hant, so we
+    // need to handle this separately, we can not split $langcode on the
+    // first occurence of '-' otherwise we get a non-existing language zh.
+    // All other languages use a langcode without a '-', so we can safely split
+    // on the first occurence of it.
+    $generic_tag = '';
+    if (strlen($langcode) > 7 && (substr($langcode, 0, 7) == 'zh-hant' || substr($langcode, 0, 7) == 'zh-hans')) {
+      $generic_tag = substr($langcode, 0, 7);
+    }
+    else {
+      $generic_tag = strtok($langcode, '-');
+    }
+    if (!empty($generic_tag) && !isset($browser_langcodes[$generic_tag])) {
+      // Add the generic langcode, but make sure it has a lower qvalue as the
+      // more specific one, so the more specific one gets selected if it's
+      // defined by both the browser and Drupal.
+      $browser_langcodes[$generic_tag] = $qvalue - 0.1;
     }
   }
 
