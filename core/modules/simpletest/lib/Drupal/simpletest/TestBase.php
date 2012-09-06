@@ -692,6 +692,8 @@ abstract class TestBase {
     $this->originalContainer = clone drupal_container();
     $this->originalLanguage = $language_interface;
     $this->originalConfigDirectories = $GLOBALS['config_directories'];
+    $this->originalThemeKey = $GLOBALS['theme_key'];
+    $this->originalTheme = $GLOBALS['theme'];
 
     // Save further contextual information.
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
@@ -740,6 +742,15 @@ abstract class TestBase {
       $this->configDirectories[$type] = $this->originalFileDirectory . '/' . $path;
     }
 
+    // Unset globals.
+    unset($GLOBALS['theme_key']);
+    unset($GLOBALS['theme']);
+
+    // Re-initialize the theme to ensure that tests do not see an inconsistent
+    // behavior when calling functions that would initialize the theme if it has
+    // not been initialized yet.
+    drupal_theme_initialize();
+
     // Log fatal errors.
     ini_set('log_errors', 1);
     ini_set('error_log', $this->public_files_directory . '/error.log');
@@ -782,6 +793,10 @@ abstract class TestBase {
     // Restore original database connection.
     Database::removeConnection('default');
     Database::renameConnection('simpletest_original_default', 'default');
+
+    // Restore original globals.
+    $GLOBALS['theme_key'] = $this->originalThemeKey;
+    $GLOBALS['theme'] = $this->originalTheme;
 
     // Reset all static variables.
     drupal_static_reset();
