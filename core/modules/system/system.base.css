@@ -236,6 +236,8 @@ tr .ajax-progress-throbber .throbber {
   position: absolute !important;
   clip: rect(1px, 1px, 1px, 1px);
   left: 0;
+  overflow: hidden;
+  height: 1px;
 }
 
 /**
@@ -246,6 +248,8 @@ tr .ajax-progress-throbber .throbber {
 .element-invisible.element-focusable:focus {
   position: static !important;
   clip: auto;
+  overflow: visible;
+  height: auto;
 }
 
 /**
