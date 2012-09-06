@@ -836,7 +836,9 @@ abstract class WizardPluginBase implements WizardInterface {
     $display_options['path'] = $page['path'];
     $display_options['style_plugin'] = $page['style']['style_plugin'];
     // Not every style plugin supports row style plugins.
-    $display_options['row_plugin'] = isset($page['style']['row_plugin']) ? $page['style']['row_plugin'] : 'fields';
+    // Make sure that the selected row plugin is a valid one.
+    $options = $this->row_style_options();
+    $display_options['row_plugin'] = (isset($page['style']['row_plugin']) && isset($options[$page['style']['row_plugin']])) ? $page['style']['row_plugin'] : 'fields';
     if (empty($page['items_per_page'])) {
       $display_options['pager']['type'] = 'none';
     }
