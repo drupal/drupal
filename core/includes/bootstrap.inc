@@ -446,30 +446,28 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
  * @see conf_path()
  */
 function find_conf_path($http_host, $script_name, $require_settings = TRUE) {
-  $confdir = 'sites';
+  // Determine whether multi-site functionality is enabled.
+  if (!file_exists(DRUPAL_ROOT . '/sites/sites.php')) {
+    return 'sites/default';
+  }
 
   $sites = array();
-  if (file_exists(DRUPAL_ROOT . '/' . $confdir . '/sites.php')) {
-    // This will overwrite $sites with the desired mappings.
-    include(DRUPAL_ROOT . '/' . $confdir . '/sites.php');
-  }
+  include DRUPAL_ROOT . '/sites/sites.php';
 
   $uri = explode('/', $script_name);
   $server = explode('.', implode('.', array_reverse(explode(':', rtrim($http_host, '.')))));
   for ($i = count($uri) - 1; $i > 0; $i--) {
     for ($j = count($server); $j > 0; $j--) {
       $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
-      if (isset($sites[$dir]) && file_exists(DRUPAL_ROOT . '/' . $confdir . '/' . $sites[$dir])) {
+      if (isset($sites[$dir]) && file_exists(DRUPAL_ROOT . '/sites/' . $sites[$dir])) {
         $dir = $sites[$dir];
       }
-      if (file_exists(DRUPAL_ROOT . '/' . $confdir . '/' . $dir . '/settings.php') || (!$require_settings && file_exists(DRUPAL_ROOT . '/' . $confdir . '/' . $dir))) {
-        $conf = "$confdir/$dir";
-        return $conf;
+      if (file_exists(DRUPAL_ROOT . '/sites/' . $dir . '/settings.php') || (!$require_settings && file_exists(DRUPAL_ROOT . '/sites/' . $dir))) {
+        return "sites/$dir";
       }
     }
   }
-  $conf = "$confdir/default";
-  return $conf;
+  return 'sites/default';
 }
 
 /**
