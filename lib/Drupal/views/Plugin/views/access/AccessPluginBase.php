@@ -72,11 +72,14 @@ abstract class AccessPluginBase extends PluginBase {
 
   /**
    * Determine if the current user has access or not.
+   *
+   * @param Drupal\user\User $account
+   *   The user who wants to access this view.
+   *
+   * @return TRUE
+   *   Returns whether the user has access to the view.
    */
-  public function access($account) {
-    // default to no access control.
-    return TRUE;
-  }
+  abstract public function access($account);
 
   /**
    * Determine the access callback and arguments.
@@ -85,15 +88,12 @@ abstract class AccessPluginBase extends PluginBase {
    * performance hits during menu item access testing, which happens
    * a lot.
    *
-   * @return an array; the first item should be the function to call,
-   *   and the second item should be an array of arguments. The first
-   *   item may also be TRUE (bool only) which will indicate no
-   *   access control.)
+   * @return array
+   *   The first item of the array should be the function to call,and the
+   *   second item should be an array of arguments. The first item may also be
+   *   TRUE (bool only) which will indicate no access control.
    */
-  function get_access_callback() {
-    // default to no access control.
-    return TRUE;
-  }
+  abstract function get_access_callback();
 
 }
 

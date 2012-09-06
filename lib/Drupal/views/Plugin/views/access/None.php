@@ -27,4 +27,20 @@ class None extends AccessPluginBase {
     return t('Unrestricted');
   }
 
+  /**
+   * Implements Drupal\views\Plugin\views\access\AccessPluginBase::access().
+   */
+  public function access($account) {
+    // No access control.
+    return TRUE;
+  }
+
+  /**
+   * Implements Drupal\views\Plugin\views\access\AccessPluginBase::get_access_callback().
+   */
+  public function get_access_callback() {
+    // No access control.
+    return TRUE;
+  }
+
 }
