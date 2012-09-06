@@ -66,3 +66,11 @@ function entity_test_load_multiple(array $ids = NULL, $reset = FALSE) {
 function entity_test_delete_multiple(array $ids) {
   entity_get_controller('entity_test')->delete($ids);
 }
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function entity_test_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $langcode = $form_state['controller']->getFormLangcode($form_state);
+  variable_set('entity_form_langcode', $langcode);
+}

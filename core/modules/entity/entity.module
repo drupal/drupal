@@ -467,12 +467,13 @@ function entity_form_id(EntityInterface $entity, $operation = 'default') {
  * @return
  *   A $form_state array already filled the entity form controller.
  */
-function entity_form_state_defaults(EntityInterface $entity, $operation = 'default') {
+function entity_form_state_defaults(EntityInterface $entity, $operation = 'default', $langcode = NULL) {
   $form_state = array();
   $controller = entity_form_controller($entity->entityType(), $operation);
   $form_state['build_info']['callback'] = array($controller, 'build');
   $form_state['build_info']['base_form_id'] = $entity->entityType() . '_form';
   $form_state['build_info']['args'] = array($entity);
+  $form_state['langcode'] = $langcode;
   return $form_state;
 }
 
@@ -506,8 +507,8 @@ function entity_form_submit(EntityInterface $entity, $operation = 'default', &$f
  * @return
  *   The processed form for the given entity and operation.
  */
-function entity_get_form(EntityInterface $entity, $operation = 'default') {
-  $form_state = entity_form_state_defaults($entity, $operation);
+function entity_get_form(EntityInterface $entity, $operation = 'default', $langcode = NULL) {
+  $form_state = entity_form_state_defaults($entity, $operation, $langcode);
   $form_id = entity_form_id($entity, $operation);
   return drupal_build_form($form_id, $form_state);
 }

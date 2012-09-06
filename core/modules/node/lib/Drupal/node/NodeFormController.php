@@ -337,7 +337,14 @@ class NodeFormController extends EntityFormController {
   protected function submitNodeLanguage(array $form, array &$form_state) {
     if (field_has_translation_handler('node', 'node')) {
       $bundle = $form_state['values']['type'];
-      $node_language = $form_state['values']['langcode'];
+      $entity = $this->getEntity($form_state);
+      $form_langcode = $this->getFormLangcode($form_state);
+
+      // If we are editing the default language values, we use the submitted
+      // entity language as the new language for fields to handle any language
+      // change. Otherwise the current form language is the proper value, since
+      // in this case it is not supposed to change.
+      $current_langcode = $entity->language()->langcode == $form_langcode ? $form_state['values']['langcode'] : $form_langcode;
 
       foreach (field_info_instances('node', $bundle) as $instance) {
         $field_name = $instance['field_name'];
@@ -346,8 +353,8 @@ class NodeFormController extends EntityFormController {
 
         // Handle a possible language change: new language values are inserted,
         // previous ones are deleted.
-        if ($field['translatable'] && $previous_langcode != $node_language) {
-          $form_state['values'][$field_name][$node_language] = $form_state['values'][$field_name][$previous_langcode];
+        if ($field['translatable'] && $previous_langcode != $current_langcode) {
+          $form_state['values'][$field_name][$current_langcode] = $form_state['values'][$field_name][$previous_langcode];
           $form_state['values'][$field_name][$previous_langcode] = array();
         }
       }

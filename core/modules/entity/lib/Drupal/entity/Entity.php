@@ -8,6 +8,7 @@
 namespace Drupal\entity;
 
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Language\Language;
 
 /**
  * Defines a base entity class.
@@ -148,9 +149,7 @@ class Entity implements EntityInterface {
    * Implements EntityInterface::language().
    */
   public function language() {
-    // @todo: Check for language.module instead, once Field API language
-    // handling depends upon it too.
-    return module_exists('locale') ? language_load($this->langcode) : FALSE;
+    return !empty($this->langcode) ? language_load($this->langcode) : new Language(array('langcode' => LANGUAGE_NOT_SPECIFIED));
   }
 
   /**

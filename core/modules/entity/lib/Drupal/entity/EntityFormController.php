@@ -207,12 +207,27 @@ class EntityFormController implements EntityFormControllerInterface {
   /**
    * Implements Drupal\entity\EntityFormControllerInterface::getFormLangcode().
    */
-  public function getFormLangcode($form_state) {
-    // @todo Introduce a new form language type (see hook_language_types_info())
-    // to be used as the default active form language, should it be missing, so
-    // that entity forms can be used to submit multilingual values.
-    $language = $this->getEntity($form_state)->language();
-    return !empty($language->langcode) ? $language->langcode : NULL;
+  public function getFormLangcode(array $form_state) {
+    $entity = $this->getEntity($form_state);
+    $translations = $entity->translations();
+
+    if (!empty($form_state['langcode'])) {
+      $langcode = $form_state['langcode'];
+    }
+    else {
+      // If no form langcode was provided we default to the current content
+      // language and inspect existing translations to find a valid fallback,
+      // if any.
+      $langcode = language(LANGUAGE_TYPE_CONTENT)->langcode;
+      $fallback = language_multilingual() ? language_fallback_get_candidates() : array();
+      while (!empty($langcode) && !isset($translations[$langcode])) {
+        $langcode = array_shift($fallback);
+      }
+    }
+
+    // If the site is not multilingual or no translation for the given form
+    // language is available, fall back to the entity language.
+    return !empty($langcode) ? $langcode : $entity->language()->langcode;
   }
 
   /**

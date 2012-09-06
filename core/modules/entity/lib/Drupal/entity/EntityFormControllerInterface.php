@@ -49,7 +49,7 @@ interface EntityFormControllerInterface {
    * @return string
    *   The form language code.
    */
-  public function getFormLangcode($form_state);
+  public function getFormLangcode(array $form_state);
 
   /**
    * Returns the operation identifying the form controller.
