@@ -84,7 +84,7 @@ class LanguageConfigurationTest extends WebTestBase {
     $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'french', 'French path prefix has changed.');
 
-    // Check that prefix of non default langauge cannot be changed to
+    // Check that prefix of non default language cannot be changed to
     // empty string.
     $edit = array(
       'prefix[en]' => '',

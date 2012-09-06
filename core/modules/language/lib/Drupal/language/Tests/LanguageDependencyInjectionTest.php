@@ -76,7 +76,7 @@ class LanguageDependencyInjectionTest extends WebTestBase {
     // Initialize the language system.
     drupal_language_initialize();
 
-    // The langauge system creates a Language object which contains the
+    // The language system creates a Language object which contains the
     // same properties as the new default language object.
     $expected = new Language($new_language_default);
     $result = language(LANGUAGE_TYPE_INTERFACE);

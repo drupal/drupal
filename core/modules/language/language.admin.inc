@@ -883,7 +883,7 @@ function language_negotiation_configure_browser_form($form, &$form_state) {
   );
   $form['new_mapping']['drupal_langcode'] = array(
     '#type' => 'select',
-    '#title' => t('Drupal langauge'),
+    '#title' => t('Drupal language'),
     '#options' => $language_options,
     '#default_value' => '',
   );

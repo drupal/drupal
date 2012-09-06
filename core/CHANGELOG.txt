@@ -45,6 +45,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
         path prefix detection is now default.
       * Added HTML 5 language markup; language information added in markup in
         several more places.
+      * Made it possible to assign external language codes to local languages.
     * Simplified and added new features in interface translation:
       * Made interface translation directly accessible from language list.
       * Centralized interface translation import to one directory.
