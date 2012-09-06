@@ -660,10 +660,10 @@ function forum_block_info() {
  * Implements hook_block_configure().
  */
 function forum_block_configure($delta = '') {
-  $form['block_num_' . $delta] = array(
+  $form['block_' . $delta . '_limit'] = array(
     '#type' => 'select',
     '#title' => t('Number of topics'),
-    '#default_value' => config('forum.settings')->get('block.num_' . $delta),
+    '#default_value' => config('forum.settings')->get('block.' . $delta . '.limit'),
     '#options' => drupal_map_assoc(range(2, 20)),
   );
   return $form;
@@ -673,7 +673,7 @@ function forum_block_configure($delta = '') {
  * Implements hook_block_save().
  */
 function forum_block_save($delta = '', $edit = array()) {
-  config('forum.settings')->set('block.num_' . $delta, $edit['block_num_' . $delta])->save();
+  config('forum.settings')->set('block.' . $delta . '.limit', $edit['block_' . $delta . '_limit'])->save();
 }
 
 /**
