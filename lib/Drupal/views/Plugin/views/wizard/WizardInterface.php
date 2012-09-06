@@ -21,9 +21,20 @@ interface WizardInterface {
   function __construct(array $definition);
 
   /**
-   * For AJAX callbacks to build other elements in the "show" form.
+   * Form callback to build other elements in the "show" form.
+   *
+   * This method builds all form elements beside of the selection of the
+   * base table.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   *
+   * @return array
+   *   Returns the changed wizard form.
    */
-  function build_form($form, &$form_state);
+  function build_form(array $form, array &$form_state);
 
   /**
    * Validate form and values.

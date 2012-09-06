@@ -206,9 +206,9 @@ abstract class WizardPluginBase implements WizardInterface {
   }
 
   /**
-   * Form constructor for the wizard form structure.
+   * Implements Drupal\views\Plugin\views\wizard\WizardInterface::build_form().
    */
-  function build_form($form, &$form_state) {
+  function build_form(array $form, array &$form_state) {
     $style_options = views_fetch_plugin_names('style', 'normal', array($this->base_table));
     $feed_row_options = views_fetch_plugin_names('row', 'feed', array($this->base_table));
     $path_prefix = url(NULL, array('absolute' => TRUE));
@@ -231,7 +231,7 @@ abstract class WizardPluginBase implements WizardInterface {
     );
 
     // All options for the page display are included in this container so they
-    // can be hidden en masse when the "Create a page" checkbox is unchecked.
+    // can be hidden as a group when the "Create a page" checkbox is unchecked.
     $form['displays']['page']['options'] = array(
       '#type' => 'container',
       '#attributes' => array('class' => array('options-set')),
@@ -373,7 +373,7 @@ abstract class WizardPluginBase implements WizardInterface {
     );
 
     // All options for the block display are included in this container so they
-    // can be hidden en masse when the "Create a block" checkbox is unchecked.
+    // can be hidden as a group when the "Create a page" checkbox is unchecked.
     $form['displays']['block']['options'] = array(
       '#type' => 'container',
       '#attributes' => array('class' => array('options-set')),
