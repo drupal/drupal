@@ -1705,7 +1705,8 @@ function watchdog($type, $message, array $variables = array(), $severity = WATCH
       'request_uri' => $base_root . request_uri(),
       'referer'     => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
       'ip'          => ip_address(),
-      'timestamp'   => REQUEST_TIME,
+      // Request time isn't accurate for long processes, use time() instead.
+      'timestamp'   => time(),
     );
 
     // Call the logging hooks to log/process the message
