@@ -26,11 +26,8 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Markup extends FieldPluginBase {
 
-  /**
-   * Constructor; calls to base object constructor.
-   */
-  public function construct() {
-    parent::construct();
+  public function init(&$view, &$options) {
+    parent::init($view, $options);
 
     $this->format = $this->definition['format'];
 

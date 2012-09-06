@@ -27,6 +27,7 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
    * it is linked to.
    */
   public function init(&$view, &$argument, $options) {
+    $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->argument = &$argument;
 

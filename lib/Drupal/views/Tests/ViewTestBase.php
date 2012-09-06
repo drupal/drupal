@@ -61,6 +61,9 @@ abstract class ViewTestBase extends WebTestBase {
     }
     $query->execute();
     $this->checkPermissions(array(), TRUE);
+
+    // Reset the test view, in case it was dependent on the test data module.
+    $this->view = $this->getBasicView();
   }
 
   /**
@@ -403,7 +406,10 @@ abstract class ViewTestBase extends WebTestBase {
    *   A View instance.
    */
   protected function createViewFromConfig($view_name) {
-    module_enable(array('views_test_config'));
+    if (!module_exists('views_test_config')) {
+      module_enable(array('views_test_config'));
+    }
+
     $data = config("views.view.$view_name")->get();
 
     $view = entity_create('view', $data);

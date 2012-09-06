@@ -34,6 +34,7 @@ abstract class LocalizationPluginBase extends PluginBase {
    *   The view object.
    */
   public function init(&$view) {
+    $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
   }
 

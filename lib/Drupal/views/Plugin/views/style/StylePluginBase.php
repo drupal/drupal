@@ -90,6 +90,7 @@ abstract class StylePluginBase extends PluginBase {
    *   from at least two locations. If it's not included, look on the display.
    */
   public function init(&$view, &$display, $options = NULL) {
+    $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->display = &$display;
 

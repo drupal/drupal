@@ -67,7 +67,7 @@ class HandlersTest extends ViewTestBase {
     $this->assertEqual($empty_stdclass, views_break_phrase_string('', $null));
 
     $handler = views_get_handler('node', 'title', 'argument');
-    $this->assertEqual($handler, views_break_phrase_string('', $handler));
+    $this->assertEqual($handler, views_break_phrase_string('', $handler), 'The views_break_phrase_string() works correctly.');
 
     // test ors
     $handler = views_break_phrase_string('word1 word2+word');
@@ -122,7 +122,7 @@ class HandlersTest extends ViewTestBase {
     $this->assertEqual($empty_stdclass, views_break_phrase('', $null));
 
     $handler = views_get_handler('node', 'title', 'argument');
-    $this->assertEqual($handler, views_break_phrase('', $handler));
+    $this->assertEqual($handler, views_break_phrase('', $handler), 'The views_break_phrase() function works correctly.');
 
     // Generate three random numbers which can be used below;
     $n1 = rand(0, 100);

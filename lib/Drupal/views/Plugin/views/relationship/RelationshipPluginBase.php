@@ -48,6 +48,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
    * the table they operate on.
    */
   public function init(&$view, &$options) {
+    $this->setOptionDefaults($this->options, $this->defineOptions());
     parent::init($view, $options);
     if (isset($this->definition['relationship table'])) {
       $this->table = $this->definition['relationship table'];

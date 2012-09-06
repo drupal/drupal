@@ -18,6 +18,7 @@ use Drupal\Core\Annotation\Translation;
 abstract class DisplayExtenderPluginBase extends PluginBase {
 
   public function init(&$view, &$display) {
+    $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = $view;
     $this->display = $display;
   }

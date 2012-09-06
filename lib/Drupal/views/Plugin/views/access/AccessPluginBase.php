@@ -31,6 +31,7 @@ abstract class AccessPluginBase extends PluginBase {
    *   The display handler.
    */
   public function init(&$view, &$display) {
+    $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->display = &$display;
 

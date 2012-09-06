@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views;
 
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\PluginBase as ComponentPluginBase;
 
 abstract class PluginBase extends ComponentPluginBase {
@@ -56,14 +57,19 @@ abstract class PluginBase extends ComponentPluginBase {
   /**
    * Constructs a Plugin object.
    */
-  public function __construct(array $configuration, $plugin_id) {
-    $this->configuration = $configuration;
-    $this->plugin_id = $plugin_id;
-    $this->plugin_type = $configuration['type'];
-    $this->definition = $configuration['definition'];
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
+    $this->definition = $this->discovery->getDefinition($plugin_id) + $configuration;
+
+    // @todo Change calls to $this->plugin_type to use the definition directly.
+    $this->plugin_type = $this->definition['plugin_type'];
+
+    // @todo Change calls to $this->real_field to use the definition directly.
     if (isset($this->definition['field'])) {
       $this->real_field = $this->definition['field'];
     }
+
     $this->construct();
   }
 
@@ -97,7 +103,6 @@ abstract class PluginBase extends ComponentPluginBase {
    * easily construct them with variable arguments.
    */
   public function construct() {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
   }
 
   protected function setOptionDefaults(&$storage, $options, $level = 0) {

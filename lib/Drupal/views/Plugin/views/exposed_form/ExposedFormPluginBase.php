@@ -38,6 +38,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
    *   The display handler.
    */
   public function init(&$view, &$display, $options = array()) {
+    $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->display = &$display;
 

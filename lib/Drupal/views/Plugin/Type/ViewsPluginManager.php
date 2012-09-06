@@ -11,7 +11,6 @@ use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
-use Drupal\Component\Plugin\Exception\PluginException;
 
 class ViewsPluginManager extends PluginManagerBase {
 
@@ -36,7 +35,7 @@ class ViewsPluginManager extends PluginManagerBase {
     $this->type = $type;
 
     $this->discovery = new CacheDecorator(new AnnotatedClassDiscovery('views', $this->type), 'views:' . $this->type, 'views');
-    $this->factory = new DefaultFactory($this->discovery);
+    $this->factory = new DefaultFactory($this);
     $this->coreModules = views_core_modules();
   }
 
@@ -71,28 +70,8 @@ class ViewsPluginManager extends PluginManagerBase {
       'theme path' => $theme_path,
       'theme file' => $theme_file,
       'parent' => 'parent',
+      'plugin_type' => $this->type,
     );
-  }
-
-  /**
-   * Creates a plugin from an ID.
-   *
-   * @param string $plugin_id
-   *   The plugin ID.
-   * @param array|false $definition
-   *   Either the definition array, or FALSE if it needs to be loaded.
-   *
-   * @return Drupal\views\Plugin\views\PluginBase
-   *   The plugin instance.
-   */
-  public function createPluginFromId($plugin_id, $definition = FALSE) {
-    if (!$definition) {
-      $definition = $this->getDefinition($plugin_id);
-    }
-    if (!empty($definition)) {
-      $instance = $this->createInstance($plugin_id, array('type' => $this->type, 'definition' => $definition));
-      return $instance;
-    }
   }
 
 }

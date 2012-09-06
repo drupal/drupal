@@ -42,6 +42,7 @@ abstract class RowPluginBase extends PluginBase {
    * Initialize the row plugin.
    */
   public function init(&$view, &$display, $options = NULL) {
+    $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $this->display = &$display;
 

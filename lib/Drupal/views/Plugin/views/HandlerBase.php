@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views;
 
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\View;
 
@@ -72,8 +73,8 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Constructs a Handler object.
    */
-  public function __construct(array $configuration, $plugin_id) {
-    parent::__construct($configuration, $plugin_id);
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
     $this->is_handler = TRUE;
   }
 
@@ -87,6 +88,7 @@ abstract class HandlerBase extends PluginBase {
    *   based upon the type of handler.
    */
   public function init(&$view, &$options) {
+    $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = &$view;
     $display_id = $this->view->current_display;
     // Check to see if this handler type is defaulted. Note that

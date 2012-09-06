@@ -12,8 +12,8 @@
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\TempStore\UserTempStore;
 use Drupal\views\View;
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\views\Plugin\Type\ViewsPluginManager;
+use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
  * Views API version string.
@@ -1264,7 +1264,7 @@ function views_include_handlers($reset = FALSE) {
  *   The name of the table this handler is from.
  * @param $field
  *   The name of the field this handler is from.
- * @param $key
+ * @param $type
  *   The type of handler. i.e, sort, field, argument, filter, relationship
  * @param $override
  *   Override the actual handler object with this class. Used for
@@ -1274,7 +1274,7 @@ function views_include_handlers($reset = FALSE) {
  * @return views_handler
  *   An instance of a handler object. May be views_handler_broken.
  */
-function views_get_handler($table, $field, $key, $override = NULL) {
+function views_get_handler($table, $field, $type, $override = NULL) {
   static $recursion_protection = array();
 
   $data = views_fetch_data($table, FALSE);
@@ -1292,11 +1292,11 @@ function views_get_handler($table, $field, $key, $override = NULL) {
     $moved = $data[$field]['moved to'];
   }
   // Support conversion on handler level.
-  if (isset($data[$field][$key]['moved to'])) {
-    $moved = $data[$field][$key]['moved to'];
+  if (isset($data[$field][$type]['moved to'])) {
+    $moved = $data[$field][$type]['moved to'];
   }
 
-  if (isset($data[$field][$key]) || !empty($moved)) {
+  if (isset($data[$field][$type]) || !empty($moved)) {
     if (!empty($moved)) {
       list($moved_table, $moved_field) = $moved;
       if (!empty($recursion_protection[$moved_table][$moved_field])) {
@@ -1305,7 +1305,7 @@ function views_get_handler($table, $field, $key, $override = NULL) {
       }
 
       $recursion_protection[$moved_table][$moved_field] = TRUE;
-      $handler = views_get_handler($moved_table, $moved_field, $key, $override);
+      $handler = views_get_handler($moved_table, $moved_field, $type, $override);
       $recursion_protection = array();
       if ($handler) {
         // store these values so we know what we were originally called.
@@ -1321,16 +1321,15 @@ function views_get_handler($table, $field, $key, $override = NULL) {
 
     // @fixme: temporary.
     // Set up a default handler, if both handler and id is not specified.
-    if (empty($data[$field][$key]['handler']) && empty($data[$field][$key]['id'])) {
-      $data[$field][$key]['id'] = 'standard';
+    if (empty($data[$field][$type]['handler']) && empty($data[$field][$type]['id'])) {
+      $data[$field][$type]['id'] = 'standard';
     }
 
     if ($override) {
-      $data[$field][$key]['override handler'] = $override;
+      $data[$field][$type]['override handler'] = $override;
     }
 
-    $definition = $data[$field][$key];
-    $type = $key;
+    $definition = $data[$field][$type];
     foreach (array('group', 'title', 'title short', 'help', 'real field') as $key) {
       if (!isset($definition[$key])) {
         // First check the field level
@@ -1347,32 +1346,24 @@ function views_get_handler($table, $field, $key, $override = NULL) {
     // @todo This is crazy. Find a way to remove the override functionality.
     $manager = new ViewsPluginManager($type);
     $plugin_id = !empty($definition['override handler']) ? $definition['override handler'] : $definition['id'];
+    // Try to use the overridden handler.
     try {
-      return $manager->createPluginFromId($plugin_id, $definition);
+      return $manager->createInstance($plugin_id, $definition);
     }
     catch (PluginException $e) {
-      return $manager->createPluginFromId($definition['id'], $definition);
+      // If that fails, use the original handler.
+      try {
+        return $manager->createInstance($definition['id'], $definition);
+      }
+      catch (PluginException $e) {
+        // Deliberately empty, this case is handled generically below.
+      }
     }
   }
 
-  if ($handler) {
-    return $handler;
-  }
-
-  // DEBUG -- identify missing handlers
-  debug(t("Missing handler: @table @field @key", array('@table' => $table, '@field' => $field, '@key' => $key)));
-  $broken = array(
-    'title' => t('Broken handler @table.@field', array('@table' => $table, '@field' => $field)),
-    'id' => 'broken',
-    'table' => $table,
-    'field' => $field,
-  );
-
-  // In case the manager was already initialized above, try to reuse it.
-  if (!isset($manager)) {
-    $manager = new ViewsPluginManager($key);
-  }
-  return $manager->createPluginFromId('broken');
+  // Finally, use the 'broken' handler.
+  debug(t("Missing handler: @table @field @type", array('@table' => $table, '@field' => $field, '@type' => $type)));
+  return views_get_plugin($type, 'broken');
 }
 
 /**
@@ -1442,7 +1433,7 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
  */
 function views_get_plugin($type, $plugin_id) {
   $manager = new ViewsPluginManager($type);
-  return $manager->createPluginFromId($plugin_id);
+  return $manager->createInstance($plugin_id);
 }
 
 /**
