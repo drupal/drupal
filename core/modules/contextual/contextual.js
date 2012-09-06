@@ -21,6 +21,7 @@ Drupal.behaviors.contextualLinks = {
       var $trigger = $('<a class="trigger" href="#" />').text(Drupal.t('Configure')).click(
         function (e) {
           e.preventDefault();
+          e.stopPropagation();
           $links.stop(true, true).slideToggle(100);
           $wrapper.toggleClass('contextual-active');
         }
