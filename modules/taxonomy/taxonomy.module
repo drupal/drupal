@@ -323,8 +323,8 @@ function taxonomy_menu() {
   );
 
   $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name'] = array(
-    'title callback' => 'taxonomy_admin_vocabulary_title_callback',
-    'title arguments' => array(3),
+    'title callback' => 'entity_label',
+    'title arguments' => array('taxonomy_vocabulary', 3),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_overview_terms', 3),
     'access arguments' => array('administer taxonomy'),
@@ -375,7 +375,13 @@ function taxonomy_term_edit_access($term) {
 }
 
 /**
- * Return the vocabulary name given the vocabulary object.
+ * Returns the sanitized name of a vocabulary.
+ *
+ * Deprecated. This function was previously used as a menu item title callback
+ * but has been replaced by using entity_label() (which does not
+ * sanitize the title, since the menu system does that automatically). In
+ * Drupal 7, use that function for title callbacks, and call check_plain()
+ * directly if you need a sanitized title.
  */
 function taxonomy_admin_vocabulary_title_callback($vocabulary) {
   return check_plain($vocabulary->name);
