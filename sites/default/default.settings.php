@@ -363,7 +363,7 @@ ini_set('session.cookie_lifetime', 2000000);
  * - anonymous: Defines the human-readable name of anonymous users.
  * Remove the leading hash signs to enable.
  */
-# $conf['site_name'] = 'My Drupal site';
+# $conf['system.site']['name'] = 'My Drupal site';
 # $conf['theme_default'] = 'stark';
 # $conf['anonymous'] = 'Visitor';
 
