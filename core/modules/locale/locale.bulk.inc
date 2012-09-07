@@ -105,7 +105,7 @@ function locale_translate_import_form($form, &$form_state) {
  */
 function locale_translate_import_form_submit($form, &$form_state) {
   // Ensure we have the file uploaded.
-  if ($file = file_save_upload('file', $form['file']['#upload_validators'])) {
+  if ($file = file_save_upload('file', $form['file']['#upload_validators'], 'translations://')) {
 
     // Add language, if not yet supported.
     $language = language_load($form_state['values']['langcode']);
@@ -357,7 +357,14 @@ function locale_translate_batch_import_files($options, $force = FALSE) {
  */
 function locale_translate_get_interface_translation_files($langcode = NULL) {
   $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
-  return file_scan_directory($directory, '!' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '') . '\.po$!', array('recurse' => FALSE));
+  $return = file_scan_directory($directory, '!' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '') . '\.po$!', array('recurse' => FALSE));
+
+  foreach ($return as $filepath => $file) {
+    $file->uri = 'translations://' . $file->filename;
+    $return[$file->uri] = $file;
+    unset($return[$filepath]);
+  }
+  return $return;
 }
 
 /**
@@ -440,8 +447,10 @@ function locale_translate_batch_import($filepath, $options, &$context) {
   );
   // The filename is either {langcode}.po or {prefix}.{langcode}.po, so
   // we can extract the language code to use for the import from the end.
-  if ($options['langcode'] || preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $matches)) {
-    $file = entity_create('file', array('filename' => drupal_basename($filepath), 'uri' => $filepath));
+  if (isset($options['langcode']) && $options['langcode'] ||
+      preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $matches)) {
+    $basename = drupal_basename($filepath);
+    $file = entity_create('file', array('filename' => $basename, 'uri' => 'translations://'. $basename));
     // We need only the last match, but only if the langcode is not explicitly
     // specified in the $options array.
     if (!$options['langcode'] && is_array($matches)) {
@@ -450,7 +459,7 @@ function locale_translate_batch_import($filepath, $options, &$context) {
     try {
       if (empty($context['sandbox'])) {
         $context['sandbox']['parse_state'] = array(
-          'filesize' => filesize($file->uri),
+          'filesize' => filesize(drupal_realpath($file->uri)),
           'chunk_size' => 200,
           'seek' => 0,
         );
@@ -551,7 +560,7 @@ function locale_translate_file_create($filepath) {
   $file = new stdClass();
   $file->filename = drupal_basename($filepath);
   $file->uri = $filepath;
-  $file->timestamp = filemtime($file->uri);
+  $file->timestamp = filemtime(drupal_realpath($file->uri));
   return $file;
 }
 

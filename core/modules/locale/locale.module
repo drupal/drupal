@@ -13,6 +13,7 @@
 
 use Drupal\locale\LocaleLookup;
 use Drupal\locale\LocaleConfigSubscriber;
+use Drupal\locale\TranslationsStream;
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
@@ -168,6 +169,21 @@ function locale_theme() {
       'file' => 'locale.pages.inc',
     ),
   );
+}
+
+/**
+ * Implements hook_stream_wrappers().
+ */
+function locale_stream_wrappers() {
+  $wrappers = array(
+    'translations' => array(
+      'name' => t('Translation files'),
+      'class' => 'Drupal\locale\TranslationsStream',
+      'description' => t('Translation files'),
+      'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
+    ),
+  );
+  return $wrappers;
 }
 
 /**

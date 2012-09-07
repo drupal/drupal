@@ -165,7 +165,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    */
   public function open() {
     if (!empty($this->_uri)) {
-      $this->_fd = fopen($this->_uri, 'rb');
+      $this->_fd = fopen(drupal_realpath($this->_uri), 'rb');
       $this->_size = ftell($this->_fd);
       $this->readHeader();
     }

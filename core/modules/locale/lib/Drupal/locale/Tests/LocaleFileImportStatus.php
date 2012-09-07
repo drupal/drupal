@@ -35,8 +35,13 @@ class LocaleFileImportStatus extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages'));
     $this->drupalLogin($admin_user);
 
-    // Set the translation file directory.
-    variable_set('locale_translate_file_directory', drupal_get_path('module', 'locale') . '/tests');
+    // Set the translation file directory to something writable.
+    $destination = 'translations://';
+    file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
+
+    // Copy test po files to the same directory.
+    file_unmanaged_copy(drupal_get_path('module', 'locale') . '/tests/test.de.po', $destination, FILE_EXISTS_REPLACE);
+    file_unmanaged_copy(drupal_get_path('module', 'locale') . '/tests/test.xx.po', $destination, FILE_EXISTS_REPLACE);
   }
 
   /**
@@ -79,8 +84,7 @@ class LocaleFileImportStatus extends WebTestBase {
    *   A file object of type stdClass.
    */
   function mockImportedPoFile($langcode, $timestamp_difference = 0) {
-    $dir = variable_get('locale_translate_file_directory', drupal_get_path('module', 'locale') . '/tests');
-    $testfile_uri = $dir . '/test.' . $langcode . '.po';
+    $testfile_uri = 'translations://test.' . $langcode . '.po';
 
     $file = locale_translate_file_create($testfile_uri);
     $file->original_timestamp = $file->timestamp;
@@ -189,13 +193,10 @@ class LocaleFileImportStatus extends WebTestBase {
    * Delete translation files after deleting a language.
    */
   function testDeleteLanguage() {
-    $dir = conf_path() . '/files/translations';
-    file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
-    variable_set('locale_translate_file_directory', $dir);
     $langcode = 'de';
     $this->addLanguage($langcode);
-    $file_uri = $dir . '/po_' . $this->randomName() . '.' . $langcode . '.po';
-    file_put_contents($file_uri, $this->randomName());
+    $file_uri = 'translations://po_' . $this->randomName() . '.' . $langcode . '.po';
+    file_put_contents(drupal_realpath($file_uri), $this->randomName());
     $this->assertTrue(is_file($file_uri), 'Translation file is created.');
     language_delete($langcode);
     $this->assertTrue($file_uri);
