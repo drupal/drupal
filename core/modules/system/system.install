@@ -1225,68 +1225,6 @@ function system_schema() {
     ),
   );
 
-  $schema['registry'] = array(
-    'description' => "Each record is a function, class, or interface name and the file it is in.",
-    'fields' => array(
-      'name'   => array(
-        'description' => 'The name of the function, class, or interface.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'type'   => array(
-        'description' => 'Either function or class or interface.',
-        'type' => 'varchar',
-        'length' => 9,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'filename'   => array(
-        'description' => 'Name of the file.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'module' => array(
-        'description' => 'Name of the module the file belongs to.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => ''
-      ),
-      'weight' => array(
-        'description' => "The order in which this module's hooks should be invoked relative to other modules. Equal-weighted modules are ordered by name.",
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('name', 'type'),
-    'indexes' => array(
-      'hook' => array('type', 'weight', 'module'),
-    ),
-  );
-
-  $schema['registry_file'] = array(
-    'description' => "Files parsed to build the registry.",
-    'fields' => array(
-      'filename'   => array(
-        'description' => 'Path to the file.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'hash'  => array(
-        'description' => "sha-256 hash of the file's contents when last parsed.",
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-      ),
-    ),
-    'primary key' => array('filename'),
-  );
-
   $schema['router'] = array(
     'description' => 'Maps paths to various callbacks (access, page and title)',
     'fields' => array(
