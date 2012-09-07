@@ -6,7 +6,6 @@ dependencies[] = node
 dependencies[] = block
 dependencies[] = color
 dependencies[] = comment
-dependencies[] = config
 dependencies[] = contextual
 dependencies[] = help
 dependencies[] = image
