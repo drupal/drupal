@@ -8,26 +8,6 @@
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Error reporting level: display no errors.
- */
-const ERROR_REPORTING_HIDE = 'hide';
-
-/**
- * Error reporting level: display errors and warnings.
- */
-const ERROR_REPORTING_DISPLAY_SOME = 'some';
-
-/**
- * Error reporting level: display all messages.
- */
-const ERROR_REPORTING_DISPLAY_ALL = 'all';
-
-/**
- * Error reporting level: display all messages, plus backtrace information.
- */
-const ERROR_REPORTING_DISPLAY_VERBOSE = 'verbose';
-
-/**
  * Maps PHP error constants to watchdog severity levels.
  *
  * The error constants are documented at

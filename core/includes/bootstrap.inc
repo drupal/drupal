@@ -37,6 +37,26 @@ const DRUPAL_MINIMUM_PHP = '5.3.3';
 const DRUPAL_MINIMUM_PHP_MEMORY_LIMIT = '32M';
 
 /**
+ * Error reporting level: display no errors.
+ */
+const ERROR_REPORTING_HIDE = 'hide';
+
+/**
+ * Error reporting level: display errors and warnings.
+ */
+const ERROR_REPORTING_DISPLAY_SOME = 'some';
+
+/**
+ * Error reporting level: display all messages.
+ */
+const ERROR_REPORTING_DISPLAY_ALL = 'all';
+
+/**
+ * Error reporting level: display all messages, plus backtrace information.
+ */
+const ERROR_REPORTING_DISPLAY_VERBOSE = 'verbose';
+
+/**
  * @defgroup logging_severity_levels Logging severity levels
  * @{
  * Logging severity levels as defined in RFC 3164.
