@@ -2,25 +2,25 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\Plugin\PluginInstanceTest.
+ * Definition of Drupal\views\Tests\PluginInstanceTest.
  */
 
-namespace Drupal\views\Tests\Plugin;
+namespace Drupal\views\Tests;
 
-use Drupal\simpletest\UnitTestBase;
+use ReflectionClass;
 use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * Checks general plugin data and instances for all plugin types.
  */
- class PluginInstanceTest extends UnitTestBase {
+class PluginInstanceTest extends ViewTestBase {
 
   /**
    * All views plugin types.
    *
    * @var array
    */
-  protected $plugin_types = array(
+  protected $pluginTypes = array(
     'access',
     'area',
     'argument',
@@ -43,31 +43,43 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
     'wizard',
   );
 
+  /**
+   * An array of plugin definitions, keyed by plugin type.
+   *
+   * @var array
+   */
+  protected $definitions;
+
   public static function getInfo() {
     return array(
-      'name' => 'Plugin instance unit tests',
+      'name' => 'Plugin instantiation',
       'description' => 'Tests that an instance of all views plugins can be created.',
-      'group' => 'Views Plugins',
+      'group' => 'Views',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    views_include('handlers');
+    $this->definitions = views_get_plugin_definitions();
   }
 
   /**
    * Confirms that there is plugin data for all views plugin types.
    */
   public function testPluginData() {
-    $plugin_data = $this->getViewsPluginData();
-
-    // Check we have an array of data.
-    $this->assertTrue(is_array($plugin_data), 'Plugin data is an array.');
+    // Check that we have an array of data.
+    $this->assertTrue(is_array($this->definitions), 'Plugin data is an array.');
 
     // Check all plugin types.
-    foreach ($this->plugin_types as $type) {
-      $this->assertTrue(array_key_exists($type, $plugin_data), format_string('Key for plugin type @type found.', array('@type' => $type)));
-      $this->assertTrue(is_array($plugin_data[$type]) && !empty($plugin_data[$type]), format_string('Plugin type @type has an array of plugins.', array('@type' => $type)));
+    foreach ($this->pluginTypes as $type) {
+      $this->assertTrue(array_key_exists($type, $this->definitions), format_string('Key for plugin type @type found.', array('@type' => $type)));
+      $this->assertTrue(is_array($this->definitions[$type]) && !empty($this->definitions[$type]), format_string('Plugin type @type has an array of plugins.', array('@type' => $type)));
     }
 
     // Tests that the plugin list has not missed any types.
-    $diff = array_diff(array_keys($plugin_data), $this->plugin_types);
+    $diff = array_diff(array_keys($this->definitions), $this->pluginTypes);
     $this->assertTrue(empty($diff), 'All plugins were found and matched.');
   }
 
@@ -77,13 +89,13 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
    * This will iterate through all plugins from _views_fetch_plugin_data().
    */
   public function testPluginInstances() {
-    foreach ($this->getViewsPluginData() as $type => $plugins) {
+    foreach ($this->definitions as $type => $plugins) {
       // Get a plugin manager for this type.
       $manager = new ViewsPluginManager($type);
       foreach ($plugins as $definition) {
         // Get a reflection class for this plugin.
         // We only want to test true plugins, i.e. They extend PluginBase.
-        $reflection = new \ReflectionClass($definition['class']);
+        $reflection = new ReflectionClass($definition['class']);
         if ($reflection->isSubclassOf('Drupal\views\Plugin\views\PluginBase')) {
           // Create a plugin instance and check what it is. This is not just
           // good to check they can be created but for throwing any notices for
@@ -93,17 +105,6 @@ use Drupal\views\Plugin\Type\ViewsPluginManager;
         }
       }
     }
-  }
-
-  /**
-   * Gets all views plugin definition data.
-   *
-   * @return array
-   *   A nested array of plugin data, keyed by plugin type.
-   */
-  public function getViewsPluginData() {
-    include_once drupal_get_path('module', 'views') . '/views.module';
-    return views_get_plugin_definitions();
   }
 
 }
