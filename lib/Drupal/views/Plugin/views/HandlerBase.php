@@ -104,7 +104,7 @@ abstract class HandlerBase extends PluginBase {
       $options['field'] = $this->actual_field;
     }
 
-    $types = View::viewsObjectTypes();
+    $types = View::viewsHandlerTypes();
     $plural = $this->plugin_type;
     if (isset($types[$this->plugin_type]['plural'])) {
       $plural = $types[$this->plugin_type]['plural'];
@@ -324,7 +324,7 @@ abstract class HandlerBase extends PluginBase {
   public function buildGroupByForm(&$form, &$form_state) {
     $view = &$form_state['view'];
     $display_id = $form_state['display_id'];
-    $types = View::viewsObjectTypes();
+    $types = View::viewsHandlerTypes();
     $type = $form_state['type'];
     $id = $form_state['id'];
 

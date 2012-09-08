@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\views\View;
+
 /**
  * Views class tests.
  */
@@ -66,6 +68,25 @@ class ViewTest extends ViewTestBase {
     $this->assertEqual($view->build_info, array());
     $this->assertEqual($view->attachment_before, '');
     $this->assertEqual($view->attachment_after, '');
+  }
+
+  /**
+   * Tests view::viewsHandlerTypes().
+   */
+  public function testViewshandlerTypes() {
+    $types = View::viewsHandlerTypes();
+    foreach (array('field', 'filter', 'argument', 'sort', 'header', 'footer', 'empty') as $type) {
+      $this->assertTrue(isset($types[$type]));
+      // @todo The key on the display should be footers, headers and empties
+      // or something similar instead of the singular, but so long check for
+      // this special case.
+      if (isset($types[$type]['type']) && $types[$type]['type'] == 'area') {
+        $this->assertEqual($types[$type]['plural'], $type);
+      }
+      else {
+        $this->assertEqual($types[$type]['plural'], $type . 's');
+      }
+    }
   }
 
   function testValidate() {

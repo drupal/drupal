@@ -217,7 +217,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    *   The unique ID for this handler instance.
    */
   public function addItem($display_id, $type, $table, $field, $options = array(), $id = NULL) {
-    $types = View::viewsObjectTypes();
+    $types = View::viewsHandlerTypes();
     $this->setDisplay($display_id);
 
     $fields = $this->display[$display_id]->handler->getOption($types[$type]['plural']);
@@ -263,7 +263,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
     }
 
     // Get info about the types so we can get the right data.
-    $types = View::viewsObjectTypes();
+    $types = View::viewsHandlerTypes();
     return $this->display[$display_id]->handler->getOption($types[$type]['plural']);
   }
 
@@ -283,7 +283,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function getItem($display_id, $type, $id) {
     // Get info about the types so we can get the right data.
-    $types = View::viewsObjectTypes();
+    $types = View::viewsHandlerTypes();
     // Initialize the display
     $this->setDisplay($display_id);
 
@@ -309,7 +309,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function setItem($display_id, $type, $id, $item) {
     // Get info about the types so we can get the right data.
-    $types = View::viewsObjectTypes();
+    $types = View::viewsHandlerTypes();
     // Initialize the display.
     $this->setDisplay($display_id);
 

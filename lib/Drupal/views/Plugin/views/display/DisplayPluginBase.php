@@ -866,7 +866,7 @@ abstract class DisplayPluginBase extends PluginBase {
   public function getHandlers($type) {
     if (!isset($this->handlers[$type])) {
       $this->handlers[$type] = array();
-      $types = View::viewsObjectTypes();
+      $types = View::viewsHandlerTypes();
       $plural = $types[$type]['plural'];
 
       foreach ($this->getOption($plural) as $id => $info) {
@@ -2665,7 +2665,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     // Validate handlers
-    foreach (View::viewsObjectTypes() as $type => $info) {
+    foreach (View::viewsHandlerTypes() as $type => $info) {
       foreach ($this->getHandlers($type) as $handler) {
         $result = $handler->validate();
         if (!empty($result) && is_array($result)) {
@@ -2690,7 +2690,7 @@ abstract class DisplayPluginBase extends PluginBase {
    *
    */
   public function isIdentifierUnique($id, $identifier) {
-    foreach (View::viewsObjectTypes() as $type => $info) {
+    foreach (View::viewsHandlerTypes() as $type => $info) {
       foreach ($this->getHandlers($type) as $key => $handler) {
         if ($handler->canExpose() && $handler->isExposed()) {
           if ($handler->isAGroup()) {
@@ -2794,7 +2794,7 @@ abstract class DisplayPluginBase extends PluginBase {
     else {
       $type = $option;
     }
-    $types = View::viewsObjectTypes();
+    $types = View::viewsHandlerTypes();
     foreach ($storage[$option] as $id => $info) {
       if (!empty($types[$type]['type'])) {
         $handler_type = $types[$type]['type'];
@@ -2952,7 +2952,7 @@ abstract class DisplayPluginBase extends PluginBase {
     else {
       $type = $option;
     }
-    $types = View::viewsObjectTypes();
+    $types = View::viewsHandlerTypes();
     foreach ($storage[$option] as $id => $info) {
       if (!empty($types[$type]['type'])) {
         $handler_type = $types[$type]['type'];

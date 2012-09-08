@@ -742,7 +742,7 @@ class View extends ViewStorage {
     $base_tables = array_keys($base_tables);
     $missing_base_tables = array();
 
-    $types = View::viewsObjectTypes();
+    $types = View::viewsHandlerTypes();
     foreach ($types as $key => $info) {
       foreach ($this->display_handler->getOption($info['plural']) as $id => $options) {
         $options['table'] = views_move_table($options['table']);
@@ -801,7 +801,7 @@ class View extends ViewStorage {
   public function initHandlers() {
     if (empty($this->inited)) {
       $this->fixMissingRelationships();
-      foreach (View::viewsObjectTypes() as $key => $info) {
+      foreach (View::viewsHandlerTypes() as $key => $info) {
         $this->_initHandler($key, $info);
       }
       $this->inited = TRUE;
@@ -865,7 +865,7 @@ class View extends ViewStorage {
    * Run the preQuery() on all active handlers.
    */
   protected function _preQuery() {
-    foreach (View::viewsObjectTypes() as $key => $info) {
+    foreach (View::viewsHandlerTypes() as $key => $info) {
       $handlers = &$this->$key;
       $position = 0;
       foreach ($handlers as $id => $handler) {
@@ -880,7 +880,7 @@ class View extends ViewStorage {
    * Run the postExecute() on all active handlers.
    */
   protected function _postExecute() {
-    foreach (View::viewsObjectTypes() as $key => $info) {
+    foreach (View::viewsHandlerTypes() as $key => $info) {
       $handlers = &$this->$key;
       foreach ($handlers as $id => $handler) {
         $handlers[$id]->postExecute($this->result);
@@ -894,7 +894,7 @@ class View extends ViewStorage {
    * @param $key
    *   One of 'argument', 'field', 'sort', 'filter', 'relationship'
    * @param $info
-   *   The $info from viewsObjectTypes for this object.
+   *   The $info from viewsHandlerTypes for this object.
    */
   protected function _initHandler($key, $info) {
     // Load the requested items from the display onto the object.
@@ -1973,7 +1973,7 @@ class View extends ViewStorage {
       }
     }
 
-    foreach (View::viewsObjectTypes() as $type => $info) {
+    foreach (View::viewsHandlerTypes() as $type => $info) {
       if (isset($this->$type)) {
         $handlers = &$this->$type;
         foreach ($handlers as $id => $item) {
@@ -2124,10 +2124,20 @@ class View extends ViewStorage {
   }
 
   /**
-   * Providea a list of views object types used in a view, with some information
+   * Provide a list of views handler types used in a view, with some information
    * about them.
+   *
+   * @return array
+   *   An array of associative arrays containing:
+   *   - title: The title of the handler type.
+   *   - ltitle: The lowercase title of the handler type.
+   *   - stitle: A singular title of the handler type.
+   *   - lstitle: A singular lowercase title of the handler type.
+   *   - plural: Plural version of the handler type.
+   *   - (optional) type: The actual internal used handler type. This key is
+   *     just used for header,footer,empty to link to the internal type: area.
    */
-  public static function viewsObjectTypes() {
+  public static function viewsHandlerTypes() {
     static $retval = NULL;
 
     // Statically cache this so t() doesn't run a bajillion times.
