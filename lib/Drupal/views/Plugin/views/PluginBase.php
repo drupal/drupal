@@ -33,11 +33,6 @@ abstract class PluginBase extends ComponentPluginBase {
    */
   public $definition;
 
-  /**
-   * The plugin type of this plugin, for example style or query.
-   */
-  public $pluginType = NULL;
-
    /**
    * Denotes whether the plugin has an additional options form.
    *
@@ -52,9 +47,6 @@ abstract class PluginBase extends ComponentPluginBase {
     parent::__construct($configuration, $plugin_id, $discovery);
 
     $this->definition = $this->discovery->getDefinition($plugin_id) + $configuration;
-
-    // @todo Change calls to $this->pluginType to use the definition directly.
-    $this->pluginType = $this->definition['plugin_type'];
 
     // @todo Change calls to $this->real_field to use the definition directly.
     if (isset($this->definition['field'])) {

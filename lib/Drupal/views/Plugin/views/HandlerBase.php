@@ -105,9 +105,9 @@ abstract class HandlerBase extends PluginBase {
     }
 
     $types = View::viewsHandlerTypes();
-    $plural = $this->pluginType;
-    if (isset($types[$this->pluginType]['plural'])) {
-      $plural = $types[$this->pluginType]['plural'];
+    $plural = $this->definition['plugin_type'];
+    if (isset($types[$plural]['plural'])) {
+      $plural = $types[$plural]['plural'];
     }
     if ($this->view->display_handler->isDefaulted($plural)) {
       $display_id = 'default';
