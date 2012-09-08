@@ -370,7 +370,7 @@ class FieldTest extends HandlerTestBase {
     $id_field = $view->field['id'];
 
     // Don't check the rewrite checkbox, so the text shouldn't appear.
-    $id_field->options['alter']['text'] = $random_text = $this->randomString();
+    $id_field->options['alter']['text'] = $random_text = $this->randomName();
     $output = $id_field->theme($row);
     $this->assertNotSubString($output, $random_text);
 
