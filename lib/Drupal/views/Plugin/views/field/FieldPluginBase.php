@@ -295,7 +295,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $classes = explode(' ', $this->options['element_class']);
     foreach ($classes as &$class) {
       $class = $this->tokenize_value($class, $row_index);
-      $class = views_clean_css_identifier($class);
+      $class = drupal_clean_css_identifier($class);
     }
     return implode(' ', $classes);
   }
@@ -345,7 +345,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $classes = explode(' ', $this->options['element_label_class']);
     foreach ($classes as &$class) {
       $class = $this->tokenize_value($class, $row_index);
-      $class = views_clean_css_identifier($class);
+      $class = drupal_clean_css_identifier($class);
     }
     return implode(' ', $classes);
   }
@@ -357,7 +357,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $classes = explode(' ', $this->options['element_wrapper_class']);
     foreach ($classes as &$class) {
       $class = $this->tokenize_value($class, $row_index);
-      $class = views_clean_css_identifier($class);
+      $class = drupal_clean_css_identifier($class);
     }
     return implode(' ', $classes);
   }

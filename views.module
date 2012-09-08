@@ -2300,39 +2300,6 @@ function views_get_view_result($name, $display_id = NULL) {
 }
 
 /**
- * Prepare a string for use as a valid CSS identifier (element, class or ID name).
- * This function is similar to a core version but with more sane filter values.
- *
- * http://www.w3.org/TR/CSS21/syndata.html#characters shows the syntax for valid
- * CSS identifiers (including element names, classes, and IDs in selectors.)
- *
- * @param $identifier
- *   The identifier to clean.
- * @param $filter
- *   An array of string replacements to use on the identifier.
- * @return
- *   The cleaned identifier.
- *
- * @see drupal_clean_css_identifier()
- */
-function views_clean_css_identifier($identifier, $filter = array(' ' => '-', '/' => '-', '[' => '-', ']' => '')) {
-  // By default, we filter using Drupal's coding standards.
-  $identifier = strtr($identifier, $filter);
-
-  // Valid characters in a CSS identifier are:
-  // - the hyphen (U+002D)
-  // - a-z (U+0030 - U+0039)
-  // - A-Z (U+0041 - U+005A)
-  // - the underscore (U+005F)
-  // - 0-9 (U+0061 - U+007A)
-  // - ISO 10646 characters U+00A1 and higher
-  // We strip out any character not in the above list.
-  $identifier = preg_replace('/[^\x{002D}\x{0030}-\x{0039}\x{0041}-\x{005A}\x{005F}\x{0061}-\x{007A}\x{00A1}-\x{FFFF}]/u', '', $identifier);
-
-  return $identifier;
-}
-
-/**
  * #process callback to see if we need to check_plain() the options.
  *
  * Since FAPI is inconsistent, the #options are sanitized for you in all cases
