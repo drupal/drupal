@@ -1907,15 +1907,19 @@ class View extends ViewStorage {
   }
 
   /**
-   * Make a copy of this view that has been sanitized of all database IDs
-   * and handlers and other stuff.
+   * Overrides Drupal\entity\Entity::createDuplicate().
    *
-   * I'd call this clone() but it's reserved.
+   * Makes a copy of this view that has been sanitized of handlers, any runtime
+   *  data, ID, and UUID.
    */
-  public function copy() {
-    $code = $this->export();
-    eval($code);
-    return $view;
+  public function createDuplicate() {
+    $data = config('views.view.' . $this->id())->get();
+
+    // Reset the name and UUID.
+    unset($data['name']);
+    unset($data['uuid']);
+
+    return entity_create('view', $data);
   }
 
   /**

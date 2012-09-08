@@ -106,6 +106,45 @@ class ViewTest extends ViewTestBase {
   }
 
   /**
+   * Tests the createDuplicate() View method.
+   */
+  public function testCreateDuplicate() {
+    $view = views_get_view('archive');
+    $copy = $view->createDuplicate();
+
+    $this->assertTrue($copy instanceof View, 'The copied object is a View.');
+
+    // Check that the original view and the copy have different uuids.
+    $this->assertNotIdentical($view->uuid(), $copy->uuid(), 'The copied view has a new uuid.');
+
+    // Check the 'name' (id) is using the View objects default value ('') as it
+    // gets unset.
+    $this->assertIdentical($copy->id(), '', 'The ID has been reset.');
+
+    // Check the other properties.
+    // @todo Create a reusable property on the base test class for these?
+    $config_properties = array(
+      'disabled',
+      'api_version',
+      'description',
+      'tag',
+      'base_table',
+      'human_name',
+      'core',
+    );
+
+    foreach ($config_properties as $property) {
+      $this->assertIdentical($view->{$property}, $copy->{$property}, format_string('@property property is identical.', array('@property' => $property)));
+    }
+
+    // Check the displays are the same.
+    foreach ($view->display as $id => $display) {
+      // assertIdentical will not work here.
+      $this->assertEqual($display, $copy->display[$id], format_string('The @display display has been copied correctly.', array('@display' => $id)));
+    }
+  }
+
+  /**
    * Overrides Drupal\views\Tests\ViewTestBase::getBasicView().
    */
   protected function getBasicView() {
