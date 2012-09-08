@@ -1448,7 +1448,7 @@ function views_get_plugin($type, $plugin_id) {
  */
 function views_get_plugin_definitions($type = FALSE) {
   $plugins = array();
-  $plugin_types = $type ? array($type) : array('access', 'area', 'argument', 'argument_default', 'argument_validator', 'cache', 'display_extender', 'display', 'exposed_form', 'field', 'filter', 'join', 'localization', 'pager', 'query', 'relationship', 'row', 'sort', 'style', 'wizard');
+  $plugin_types = $type ? array($type) : array('access', 'area', 'argument', 'argument_default', 'argument_validator', 'cache', 'display_extender', 'display', 'exposed_form', 'field', 'filter', 'join', 'pager', 'query', 'relationship', 'row', 'sort', 'style', 'wizard');
   foreach ($plugin_types as $plugin_type) {
     $manager = new ViewsPluginManager($plugin_type);
     $plugins[$plugin_type] = $manager->getDefinitions();
@@ -1473,26 +1473,6 @@ function views_get_plugin_definitions($type = FALSE) {
 function views_get_plugin_definition($type, $plugin_id) {
   $manager = new ViewsPluginManager($type);
   return $manager->getDefinition($plugin_id);
-}
-
-/**
- * Load the current enabled localization plugin.
- *
- * @return The name of the localization plugin.
- */
-function views_get_localization_plugin() {
-  $plugin = config('views.settings')->get('localization_plugin');
-  // Provide sane default values for the localization plugin.
-  if (empty($plugin)) {
-    if (module_exists('locale')) {
-      $plugin = 'core';
-    }
-    else {
-      $plugin = 'none';
-    }
-  }
-
-  return $plugin;
 }
 
 /**
@@ -1814,21 +1794,6 @@ function views_save_view(&$view) {
  */
 function views_delete_view(&$view) {
   return $view->delete(TRUE);
-}
-
-/**
- * Export CRUD callback to export a view.
- */
-function views_export_view(&$view, $indent = '') {
-  return $view->export($indent);
-}
-
-/**
- * Export callback to change view status.
- */
-function views_export_status($view, $status) {
-  ctools_export_set_object_status($view, $status);
-  views_invalidate_cache();
 }
 
 // ------------------------------------------------------------------
@@ -2332,47 +2297,6 @@ function views_get_view_result($name, $display_id = NULL) {
   else {
     return array();
   }
-}
-
-/**
- * Export a field.
- */
-function views_var_export($var, $prefix = '', $init = TRUE) {
-  if (is_array($var)) {
-    if (empty($var)) {
-      $output = 'array()';
-    }
-    else {
-      $output = "array(\n";
-      foreach ($var as $key => $value) {
-        $output .= "  " . views_var_export($key, '', FALSE) . " => " . views_var_export($value, '  ', FALSE) . ",\n";
-      }
-      $output .= ')';
-    }
-  }
-  elseif (is_bool($var)) {
-    $output = $var ? 'TRUE' : 'FALSE';
-  }
-  elseif (is_string($var) && strpos($var, "\n") !== FALSE) {
-    // Replace line breaks in strings with a token for replacement
-    // at the very end. This protects multi-line strings from
-    // unintentional indentation.
-    $var = str_replace("\n", "***BREAK***", $var);
-    $output = var_export($var, TRUE);
-  }
-  else {
-    $output = var_export($var, TRUE);
-  }
-
-  if ($prefix) {
-    $output = str_replace("\n", "\n$prefix", $output);
-  }
-
-  if ($init) {
-    $output = str_replace("***BREAK***", "\n", $output);
-  }
-
-  return $output;
 }
 
 /**

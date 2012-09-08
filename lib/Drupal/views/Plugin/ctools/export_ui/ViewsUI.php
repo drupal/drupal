@@ -55,8 +55,6 @@ class ViewsUI extends ExportUIPluginBase {
     $plugin['menu']['items']['edit']['path'] = 'view/%ctools_export_ui/edit';
     $plugin['menu']['items']['clone']['path'] = 'view/%ctools_export_ui/clone';
     $plugin['menu']['items']['clone']['type'] = MENU_VISIBLE_IN_BREADCRUMB;
-    $plugin['menu']['items']['export']['path'] = 'view/%ctools_export_ui/export';
-    $plugin['menu']['items']['export']['type'] = MENU_VISIBLE_IN_BREADCRUMB;
     $plugin['menu']['items']['enable']['path'] = 'view/%ctools_export_ui/enable';
     $plugin['menu']['items']['disable']['path'] = 'view/%ctools_export_ui/disable';
     $plugin['menu']['items']['delete']['path'] = 'view/%ctools_export_ui/delete';

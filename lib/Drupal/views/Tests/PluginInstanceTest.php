@@ -33,7 +33,6 @@ class PluginInstanceTest extends ViewTestBase {
     'field',
     'filter',
     'join',
-    'localization',
     'pager',
     'query',
     'relationship',

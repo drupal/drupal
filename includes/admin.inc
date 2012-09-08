@@ -1210,10 +1210,6 @@ function views_ui_render_display_top($view, $display_id) {
         'title' => t('clone view'),
         'href' => "admin/structure/views/view/$view->name/clone",
       ),
-      'export' => array(
-        'title' => t('export view'),
-        'href' => "admin/structure/views/view/$view->name/export",
-      ),
       'reorder' => array(
         'title' => t('reorder displays'),
         'href' => "admin/structure/views/nojs/reorder-displays/$view->name/$display_id",
@@ -4895,19 +4891,6 @@ function views_ui_admin_settings_advanced() {
     '#default_value' => $config->get('debug.output'),
   );
 
-  $form['locale'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Localization'),
-  );
-
-  $form['locale']['localization_plugin'] =  array(
-    '#type' => 'radios',
-    '#title' => t('Translation method'),
-    '#options' => views_fetch_plugin_names('localization', NULL, array()),
-    '#default_value' => views_get_localization_plugin(),
-    '#description' => t('Select a translation method to use for Views data like header, footer, and empty text.'),
-  );
-
   $regions = array();
   $regions['watchdog'] = t('Watchdog');
   if (module_exists('devel')) {
@@ -4963,7 +4946,6 @@ function views_ui_admin_settings_advanced_submit(&$form, &$form_state) {
     ->set('sql_signature', $form_state['values']['sql_signature'])
     ->set('no_javascript', $form_state['values']['no_javascript'])
     ->set('debug.output', $form_state['values']['debug_output'])
-    ->set('localization_plugin', $form_state['values']['localization_plugin'])
     ->set('debug.region', $form_state['values']['debug_region'])
     ->set('display_extenders', isset($form_state['values']['display_extenders']) ? $form_state['values']['display_extenders'] : array())
     ->save();

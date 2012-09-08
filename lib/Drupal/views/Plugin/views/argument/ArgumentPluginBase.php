@@ -134,25 +134,25 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $options['title'] = array('default' => '', 'translatable' => TRUE);
     $options['breadcrumb_enable'] = array('default' => FALSE, 'bool' => TRUE);
     $options['breadcrumb'] = array('default' => '', 'translatable' => TRUE);
-    $options['default_argument_type'] = array('default' => 'fixed', 'export' => 'export_plugin');
-    $options['default_argument_options'] = array('default' => array(), 'export' => FALSE);
+    $options['default_argument_type'] = array('default' => 'fixed');
+    $options['default_argument_options'] = array('default' => array());
     $options['default_argument_skip_url'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['summary_options'] = array('default' => array(), 'export' => FALSE);
+    $options['summary_options'] = array('default' => array());
     $options['summary'] = array(
       'contains' => array(
         'sort_order' => array('default' => 'asc'),
         'number_of_records' => array('default' => 0),
-        'format' => array('default' => 'default_summary', 'export' => 'export_summary'),
+        'format' => array('default' => 'default_summary'),
       ),
     );
     $options['specify_validation'] = array('default' => FALSE, 'bool' => TRUE);
     $options['validate'] = array(
       'contains' => array(
-        'type' => array('default' => 'none', 'export' => 'export_validation'),
+        'type' => array('default' => 'none'),
         'fail' => array('default' => 'not found'),
       ),
     );
-    $options['validate_options'] = array('default' => array(), 'export' => FALSE);
+    $options['validate_options'] = array('default' => array());
 
     return $options;
   }
@@ -1052,81 +1052,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
     }
     unset($argument);
     return $value;
-  }
-
-  /**
-   * Export handler for summary export.
-   *
-   * Arguments can have styles for the summary view. This special export
-   * handler makes sure this works properly.
-   */
-  function export_summary($indent, $prefix, $storage, $option, $definition, $parents) {
-    $output = '';
-    $name = $this->options['summary'][$option];
-    $options = $this->options['summary_options'];
-
-    $plugin = views_get_plugin('style', $name);
-    if ($plugin) {
-      $plugin->init($this->view, $this->view->display_handler->display, $options);
-      // Write which plugin to use.
-      $output .= $indent . $prefix . "['summary']['$option'] = '$name';\n";
-
-      // Pass off to the plugin to export itself.
-      $output .= $plugin->exportOptions($indent, $prefix . "['summary_options']");
-    }
-
-    return $output;
-  }
-
-  /**
-   * Export handler for validation export.
-   *
-   * Arguments use validation plugins. This special export handler makes sure
-   * this works properly.
-   */
-  function export_validation($indent, $prefix, $storage, $option, $definition, $parents) {
-    $output = '';
-    $name = $this->options['validate'][$option];
-    $options = $this->options['validate_options'];
-
-    $plugin = views_get_plugin('argument_validator', $name);
-    if ($plugin) {
-      $plugin->init($this->view, $this->display, $options);
-      // Write which plugin to use.
-      $output .= $indent . $prefix . "['validate']['$option'] = '$name';\n";
-
-      // Pass off to the plugin to export itself.
-      $output .= $plugin->exportOptions($indent, $prefix . "['validate_options']");
-    }
-
-    return $output;
-  }
-
-  /**
-   * Generic plugin export handler.
-   *
-   * Since style and validation plugins have their own export handlers, this
-   * one is currently only used for default argument plugins.
-   */
-  function export_plugin($indent, $prefix, $storage, $option, $definition, $parents) {
-    $output = '';
-    if ($option == 'default_argument_type') {
-      $type = 'argument_default';
-      $option_name = 'default_argument_options';
-    }
-
-    $plugin = $this->get_plugin($type);
-    $name = $this->options[$option];
-
-    if ($plugin) {
-      // Write which plugin to use.
-      $output .= $indent . $prefix . "['$option'] = '$name';\n";
-
-      // Pass off to the plugin to export itself.
-      $output .= $plugin->exportOptions($indent, $prefix . "['$option_name']");
-    }
-
-    return $output;
   }
 
   /**

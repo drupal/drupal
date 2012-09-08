@@ -2,7 +2,6 @@ debug:
   output: '0'
   region: 'footer'
 display_extenders: { }
-localization_plugin: ''
 no_javascript: '0'
 skip_cache: '0'
 sql_signature: '0'

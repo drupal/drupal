@@ -35,7 +35,6 @@ function views_schema() {
       'create callback' => 'views_new_view',
       'save callback' => 'views_save_view',
       'delete callback' => 'views_delete_view',
-      'export callback' => 'views_export_view',
     ),
     'fields' => array(
       'vid' => array(
@@ -213,7 +212,6 @@ function views_update_8000() {
     'views_sql_signature' => 'sql_signature',
     'views_no_javascript' => 'no_javascript',
     'views_devel_output' => 'debug.output',
-    'views_localization_plugin' => 'localization_plugin',
     'views_devel_region' => 'debug.region',
     'views_display_extenders' => 'display_extenders',
   ));

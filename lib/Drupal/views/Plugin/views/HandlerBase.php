@@ -113,13 +113,6 @@ abstract class HandlerBase extends PluginBase {
       $display_id = 'default';
     }
 
-    $this->localization_keys = array(
-      $display_id,
-      $this->plugin_type,
-      $options['table'],
-      $options['id']
-    );
-
     $this->unpackOptions($this->options, $options);
 
     // This exist on most handlers, but not all. So they are still optional.

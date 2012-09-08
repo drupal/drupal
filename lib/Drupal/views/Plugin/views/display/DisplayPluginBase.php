@@ -454,7 +454,6 @@ abstract class DisplayPluginBase extends PluginBase {
           'filters' => TRUE,
           'filter_groups' => TRUE,
         ),
-        'export' => FALSE,
       ),
 
       'title' => array(
@@ -496,7 +495,6 @@ abstract class DisplayPluginBase extends PluginBase {
       'use_more_always' => array(
         'default' => FALSE,
         'bool' => TRUE,
-        'export' => 'export_option_always',
       ),
       'use_more_text' => array(
         'default' => 'more',
@@ -524,18 +522,18 @@ abstract class DisplayPluginBase extends PluginBase {
       // and therefore need special handling.
       'access' => array(
         'contains' => array(
-          'type' => array('default' => 'none', 'export' => 'exportPlugin', 'unpack_translatable' => 'unpackPlugin'),
+          'type' => array('default' => 'none'),
          ),
       ),
       'cache' => array(
         'contains' => array(
-          'type' => array('default' => 'none', 'export' => 'exportPlugin', 'unpack_translatable' => 'unpackPlugin'),
+          'type' => array('default' => 'none'),
          ),
       ),
       'query' => array(
         'contains' => array(
-          'type' => array('default' => 'views_query', 'export' => 'exportPlugin'),
-          'options' => array('default' => array(), 'export' => FALSE),
+          'type' => array('default' => 'views_query'),
+          'options' => array('default' => array()),
          ),
       ),
       // Note that exposed_form plugin has options in a separate array,
@@ -546,14 +544,14 @@ abstract class DisplayPluginBase extends PluginBase {
       // should be copied.
       'exposed_form' => array(
         'contains' => array(
-          'type' => array('default' => 'basic', 'export' => 'exportPlugin', 'unpack_translatable' => 'unpackPlugin'),
-          'options' => array('default' => array(), 'export' => FALSE),
+          'type' => array('default' => 'basic'),
+          'options' => array('default' => array()),
          ),
       ),
       'pager' => array(
         'contains' => array(
-          'type' => array('default' => 'full', 'export' => 'exportPlugin', 'unpack_translatable' => 'unpackPlugin'),
-          'options' => array('default' => array(), 'export' => FALSE),
+          'type' => array('default' => 'full'),
+          'options' => array('default' => array()),
          ),
       ),
 
@@ -562,21 +560,15 @@ abstract class DisplayPluginBase extends PluginBase {
       // should not be repeated.
       'style_plugin' => array(
         'default' => 'default',
-        'export' => 'exportStyle',
-        'unpack_translatable' => 'unpackStyle',
       ),
       'style_options' => array(
         'default' => array(),
-        'export' => FALSE,
       ),
       'row_plugin' => array(
         'default' => 'fields',
-        'export' => 'exportStyle',
-        'unpack_translatable' => 'unpackStyle',
       ),
       'row_options' => array(
         'default' => array(),
-        'export' => FALSE,
       ),
 
       'exposed_block' => array(
@@ -585,42 +577,27 @@ abstract class DisplayPluginBase extends PluginBase {
 
       'header' => array(
         'default' => array(),
-        'export' => 'exportHandler',
-        'unpack_translatable' => 'unpackHandler',
       ),
       'footer' => array(
         'default' => array(),
-        'export' => 'exportHandler',
-        'unpack_translatable' => 'unpackHandler',
       ),
       'empty' => array(
         'default' => array(),
-        'export' => 'exportHandler',
-        'unpack_translatable' => 'unpackHandler',
       ),
 
       // We want these to export last.
       // These are the 5 handler types.
       'relationships' => array(
         'default' => array(),
-        'export' => 'exportHandler',
-        'unpack_translatable' => 'unpackHandler',
-
       ),
       'fields' => array(
         'default' => array(),
-        'export' => 'exportHandler',
-        'unpack_translatable' => 'unpackHandler',
       ),
       'sorts' => array(
         'default' => array(),
-        'export' => 'exportHandler',
-        'unpack_translatable' => 'unpackHandler',
       ),
       'arguments' => array(
         'default' => array(),
-        'export' => 'exportHandler',
-        'unpack_translatable' => 'unpackHandler',
       ),
       'filter_groups' => array(
         'contains' => array(
@@ -630,8 +607,6 @@ abstract class DisplayPluginBase extends PluginBase {
       ),
       'filters' => array(
         'default' => array(),
-        'export' => 'exportHandler',
-        'unpack_translatable' => 'unpackHandler',
       ),
     );
 
@@ -829,7 +804,6 @@ abstract class DisplayPluginBase extends PluginBase {
       }
       else {
         $display_id = $this->isDefaulted($option_name) ? $this->display->id : 'default';
-        $plugin->localization_keys = array($display_id, $type);
 
         if (!isset($this->base_field)) {
           $views_data = views_fetch_data($this->view->base_table);
@@ -2746,231 +2720,6 @@ abstract class DisplayPluginBase extends PluginBase {
         );
       }
     }
-  }
-
-  /**
-   * Override of exportOption()
-   *
-   * Because displays do not want to export options that are NOT overridden from the
-   * default display, we need some special handling during the export process.
-   */
-  public function exportOption($indent, $prefix, $storage, $option, $definition, $parents) {
-    // The $prefix is wrong because we store our actual options a little differently:
-    $prefix = '$handler->display->display_options';
-    $output = '';
-    if (!$parents && !$this->isDefaultDisplay()) {
-      // Do not export items that are not overridden.
-      if ($this->isDefaulted($option)) {
-        return;
-      }
-
-      // If this is not defaulted and is overrideable, flip the switch to say this
-      // is overridden.
-      if ($this->defaultableSections($option)) {
-        $output .= $indent . $prefix . "['defaults']['$option'] = FALSE;\n";
-      }
-    }
-
-    $output .= parent::exportOption($indent, $prefix, $storage, $option, $definition, $parents);
-    return $output;
-  }
-
-  /**
-   * Special method to export items that have handlers.
-   *
-   * This method was specified in the defineOptions() as the method to utilize to
-   * export fields, filters, sort criteria, relationships and arguments. This passes
-   * the export off to the individual handlers so that they can export themselves
-   * properly.
-   */
-  public function exportHandler($indent, $prefix, $storage, $option, $definition, $parents) {
-    $output = '';
-
-    // cut the 's' off because the data is stored as the plural form but we need
-    // the singular form. Who designed that anyway? Oh yeah, I did. :(
-    if ($option != 'header' && $option != 'footer' && $option != 'empty') {
-      $type = substr($option, 0, -1);
-    }
-    else {
-      $type = $option;
-    }
-    $types = View::viewsHandlerTypes();
-    foreach ($storage[$option] as $id => $info) {
-      if (!empty($types[$type]['type'])) {
-        $handler_type = $types[$type]['type'];
-      }
-      else {
-        $handler_type = $type;
-      }
-      // If aggregation is on, the group type might override the actual
-      // handler that is in use. This piece of code checks that and,
-      // if necessary, sets the override handler.
-      $override = NULL;
-      if ($this->useGroupBy() && !empty($info['group_type'])) {
-        if (empty($this->view->query)) {
-          $this->view->initQuery();
-        }
-        $aggregate = $this->view->query->get_aggregation_info();
-        if (!empty($aggregate[$info['group_type']]['handler'][$type])) {
-          $override = $aggregate[$info['group_type']]['handler'][$type];
-        }
-      }
-      $handler = views_get_handler($info['table'], $info['field'], $handler_type, $override);
-      if ($handler) {
-        $handler->init($this->view, $info);
-        $output .= $indent . '/* ' . $types[$type]['stitle'] . ': ' . $handler->adminLabel() . " */\n";
-        $output .= $handler->exportOptions($indent, $prefix . "['$option']['$id']");
-      }
-
-      // Prevent reference problems.
-      unset($handler);
-    }
-
-    return $output;
-  }
-
-  /**
-   * Special handling for the style export.
-   *
-   * Styles are stored as style_plugin and style_options or row_plugin and
-   * row_options accordingly. The options are told not to export, and the
-   * export for the plugin should export both.
-   */
-  public function exportStyle($indent, $prefix, $storage, $option, $definition, $parents) {
-    $output = '';
-    $name = $this->getOption('style_plugin');
-    $style_plugin = $this->getPlugin('style', $name);
-    if ($option == 'style_plugin') {
-      $type = 'style';
-      $options_field = 'style_options';
-      $plugin = $style_plugin;
-    }
-    else {
-      if (!$style_plugin || !$style_plugin->usesRowPlugin()) {
-        return;
-      }
-
-      $type = 'row';
-      $options_field = 'row_options';
-      $name = $this->getOption('row_plugin');
-      $plugin = $this->getPlugin('row', $name);
-      // If the style plugin doesn't use row plugins, don't even bother.
-    }
-
-    if ($plugin) {
-      // Write which plugin to use.
-      $value = $this->getOption($option);
-      $output .= $indent . $prefix . "['$option'] = '$value';\n";
-
-      // Pass off to the plugin to export itself.
-      $output .= $plugin->exportOptions($indent, $prefix . "['$options_field']");
-    }
-
-    return $output;
-  }
-
-  /**
-   * Special handling for plugin export
-   *
-   * Plugins other than styles are stored in array with 'type' being the key
-   * to the plugin. For modern plugins, the options are stored in the 'options'
-   * array, but for legacy plugins (access and cache) options are stored as
-   * siblings to the type.
-   */
-  public function exportPlugin($indent, $prefix, $storage, $option, $definition, $parents) {
-    $output = '';
-    $plugin_type = end($parents);
-    $plugin = $this->getPlugin($plugin_type);
-    if ($plugin) {
-      // Write which plugin to use.
-      $value = $storage[$option];
-      $new_prefix = $prefix . "['$plugin_type']";
-
-      $output .= $indent . $new_prefix . "['$option'] = '$value';\n";
-
-      if ($plugin_type != 'access' && $plugin_type!= 'cache') {
-        $new_prefix .= "['options']";
-      }
-
-      // Pass off to the plugin to export itself.
-      $output .= $plugin->exportOptions($indent, $new_prefix);
-    }
-
-    return $output;
-  }
-
-  public function unpackStyle($indent, $prefix, $storage, $option, $definition, $parents) {
-    $output = '';
-    $name = $this->getOption('style_plugin');
-    $style_plugin = $this->getPlugin('style', $name);
-    if ($option == 'style_plugin') {
-      $plugin = $style_plugin;
-    }
-    else {
-      if (!$style_plugin || !$style_plugin->usesRowPlugin()) {
-        return;
-      }
-
-      $name = $this->getOption('row_plugin');
-      $plugin = $this->getPlugin('row', $name);
-      // If the style plugin doesn't use row plugins, don't even bother.
-    }
-
-    if ($plugin) {
-      return $plugin->unpackTranslatables($translatable, $parents);
-    }
-  }
-
-  /**
-   * Special handling for plugin unpacking.
-   */
-  public function unpackPlugin(&$translatable, $storage, $option, $definition, $parents) {
-    $plugin_type = end($parents);
-    $plugin = $this->getPlugin($plugin_type);
-    if ($plugin) {
-      // Write which plugin to use.
-      return $plugin->unpackTranslatables($translatable, $parents);
-    }
-  }
-
-    /**
-   * Special method to unpack items that have handlers.
-   *
-   * This method was specified in the defineOptions() as the method to utilize to
-   * export fields, filters, sort criteria, relationships and arguments. This passes
-   * the export off to the individual handlers so that they can export themselves
-   * properly.
-   */
-  public function unpackHandler(&$translatable, $storage, $option, $definition, $parents) {
-    $output = '';
-
-    // cut the 's' off because the data is stored as the plural form but we need
-    // the singular form. Who designed that anyway? Oh yeah, I did. :(
-    if ($option != 'header' && $option != 'footer' && $option != 'empty') {
-      $type = substr($option, 0, -1);
-    }
-    else {
-      $type = $option;
-    }
-    $types = View::viewsHandlerTypes();
-    foreach ($storage[$option] as $id => $info) {
-      if (!empty($types[$type]['type'])) {
-        $handler_type = $types[$type]['type'];
-      }
-      else {
-        $handler_type = $type;
-      }
-      $handler = views_get_handler($info['table'], $info['field'], $handler_type);
-      if ($handler) {
-        $handler->init($this->view, $info);
-        $handler->unpackTranslatables($translatable, array_merge($parents, array($type, $info['table'], $info['id'])));
-      }
-
-      // Prevent reference problems.
-      unset($handler);
-    }
-
-    return $output;
   }
 
   /**

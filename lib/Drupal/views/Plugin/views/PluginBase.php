@@ -38,15 +38,6 @@ abstract class PluginBase extends ComponentPluginBase {
    */
   public $plugin_type = NULL;
 
-  /**
-   * An array which identifies the instance in the views plugin hierarchy.
-   *
-   * For handlers this is for example display_id, type, table, id.
-   *
-   * @var array
-   */
-  public $localization_keys;
-
    /**
    * Denotes whether the plugin has an additional options form.
    *
@@ -84,17 +75,10 @@ abstract class PluginBase extends ComponentPluginBase {
    *      assumed to be array().
    *  - 'bool' => (optional) TRUE/FALSE Is the value a boolean value. This will
    *      change the export format to TRUE/FALSE instead of 1/0.
-   *  - 'export' => (optional) FALSE or a callback for special export handling
-   *      if necessary.
-   *  - 'unpack_translatable' => (optional) callback for special handling for
-   *      translating data within the option, if necessary.
    *  ),
    *
    * @return array
    *   Returns the options of this handler/plugin.
-   *
-   * @see Drupal\views\Plugin\views\PluginBase::exportOption()
-   * @see Drupal\views\Plugin\views\PluginBase::unpackTranslatable()
    */
   protected function defineOptions() { return array(); }
 
@@ -124,30 +108,13 @@ abstract class PluginBase extends ComponentPluginBase {
    * Unpack options over our existing defaults, drilling down into arrays
    * so that defaults don't get totally blown away.
    */
-  public function unpackOptions(&$storage, $options, $definition = NULL, $all = TRUE, $check = TRUE, $localization_keys = array()) {
+  public function unpackOptions(&$storage, $options, $definition = NULL, $all = TRUE, $check = TRUE) {
     if ($check && !is_array($options)) {
       return;
     }
 
     if (!isset($definition)) {
       $definition = $this->defineOptions();
-    }
-
-    if (!empty($this->view)) {
-      // Ensure we have a localization plugin.
-      $this->view->initLocalization();
-
-      // Set up default localization keys. Handlers and such set this for us
-      if (empty($localization_keys) && isset($this->localization_keys)) {
-        $localization_keys = $this->localization_keys;
-      }
-      // but plugins don't because there isn't a common init() these days.
-      else if (empty($this->is_handler)) {
-        if ($this->plugin_type != 'display') {
-          $localization_keys = array($this->view->current_display);
-          $localization_keys[] = $this->plugin_type;
-        }
-      }
     }
 
     foreach ($options as $key => $value) {
@@ -169,31 +136,7 @@ abstract class PluginBase extends ComponentPluginBase {
           continue;
         }
 
-        $this->unpackOptions($storage[$key], $value, isset($definition[$key]['contains']) ? $definition[$key]['contains'] : array(), $all, FALSE, array_merge($localization_keys, array($key)));
-      }
-      // Don't localize strings during editing. When editing, we need to work with
-      // the original data, not the translated version.
-      else if (empty($this->view->editing) && !empty($definition[$key]['translatable']) && !empty($value) || !empty($definition['contains'][$key]['translatable']) && !empty($value)) {
-        if (!empty($this->view) && $this->view->isTranslatable()) {
-          // Allow other modules to make changes to the string before it's
-          // sent for translation.
-          // The $keys array is built from the view name, any localization keys
-          // sent in, and the name of the property being processed.
-          $format = NULL;
-          if (isset($definition[$key]['format_key']) && isset($options[$definition[$key]['format_key']])) {
-            $format = $options[$definition[$key]['format_key']];
-          }
-          $translation_data = array(
-            'value' => $value,
-            'format' => $format,
-            'keys' => array_merge(array($this->view->name), $localization_keys, array($key)),
-          );
-          $storage[$key] = $this->view->localization_plugin->translate($translation_data);
-        }
-        // Otherwise, this is a code-based string, so we can use t().
-        else {
-          $storage[$key] = t($value);
-        }
+        $this->unpackOptions($storage[$key], $value, isset($definition[$key]['contains']) ? $definition[$key]['contains'] : array(), $all, FALSE);
       }
       else if ($all || !empty($definition[$key])) {
         $storage[$key] = $value;
@@ -212,152 +155,6 @@ abstract class PluginBase extends ComponentPluginBase {
 
     if (isset($this->query)) {
       unset($this->query);
-    }
-  }
-
-  public function exportOptions($indent, $prefix) {
-    $output = '';
-    foreach ($this->defineOptions() as $option => $definition) {
-      $output .= $this->exportOption($indent, $prefix, $this->options, $option, $definition, array());
-    }
-
-    return $output;
-  }
-
-  protected function exportOption($indent, $prefix, $storage, $option, $definition, $parents) {
-    // Do not export options for which we have no settings.
-    if (!isset($storage[$option])) {
-      return;
-    }
-
-    if (isset($definition['export'])) {
-      if ($definition['export'] === FALSE) {
-        return;
-      }
-
-      // Special handling for some items
-      if (method_exists($this, $definition['export'])) {
-        return $this->{$definition['export']}($indent, $prefix, $storage, $option, $definition, $parents);
-      }
-    }
-
-    // Add the current option to the parents tree.
-    $parents[] = $option;
-    $output = '';
-
-    // If it has child items, export those separately.
-    if (isset($definition['contains'])) {
-      foreach ($definition['contains'] as $sub_option => $sub_definition) {
-        $output .= $this->exportOption($indent, $prefix, $storage[$option], $sub_option, $sub_definition, $parents);
-      }
-    }
-    // Otherwise export just this item.
-    else {
-      $default = isset($definition['default']) ? $definition['default'] : NULL;
-      $value = $storage[$option];
-      if (isset($definition['bool'])) {
-        $value = (bool) $value;
-      }
-
-      if ($value !== $default) {
-        $output .= $indent . $prefix . "['" . implode("']['", $parents) . "'] = ";
-        if (isset($definition['bool'])) {
-          $output .= empty($storage[$option]) ? 'FALSE' : 'TRUE';
-        }
-        else {
-          $output .= views_var_export($storage[$option], $indent);
-        }
-
-        $output .= ";\n";
-      }
-    }
-    return $output;
-  }
-
-  /**
-   * Unpacks each handler to store translatable texts.
-   */
-  public function unpackTranslatables(&$translatable, $parents = array()) {
-    foreach ($this->defineOptions() as $option => $definition) {
-      $this->unpackTranslatable($translatable, $this->options, $option, $definition, $parents, array());
-    }
-  }
-
-  /**
-   * Unpack a single option definition.
-   *
-   * This function run's through all suboptions recursive.
-   *
-   * @param $translatable
-   *   Stores all available translatable items.
-   * @param $storage
-   * @param $option
-   * @param $definition
-   * @param $parents
-   * @param $keys
-   */
-  protected function unpackTranslatable(&$translatable, $storage, $option, $definition, $parents, $keys = array()) {
-    // Do not export options for which we have no settings.
-    if (!isset($storage[$option])) {
-      return;
-    }
-
-    // Special handling for some items
-    if (isset($definition['unpack_translatable']) && method_exists($this, $definition['unpack_translatable'])) {
-      return $this->{$definition['unpack_translatable']}($translatable, $storage, $option, $definition, $parents, $keys);
-    }
-
-    if (isset($definition['translatable'])) {
-      if ($definition['translatable'] === FALSE) {
-        return;
-      }
-    }
-
-    // Add the current option to the parents tree.
-    $parents[] = $option;
-
-    // If it has child items, unpack those separately.
-    if (isset($definition['contains'])) {
-      foreach ($definition['contains'] as $sub_option => $sub_definition) {
-        $translation_keys = array_merge($keys, array($sub_option));
-        $this->unpackTranslatable($translatable, $storage[$option], $sub_option, $sub_definition, $parents, $translation_keys);
-      }
-    }
-
-    // @todo Figure out this double definition stuff.
-    $options = $storage[$option];
-    if (is_array($options)) {
-      foreach ($options as $key => $value) {
-        $translation_keys = array_merge($keys, array($key));
-        if (is_array($value)) {
-          $this->unpackTranslatable($translatable, $options, $key, $definition, $parents, $translation_keys);
-        }
-        else if (!empty($definition[$key]['translatable']) && !empty($value)) {
-          // Build source data and add to the array
-          $format = NULL;
-          if (isset($definition['format_key']) && isset($options[$definition['format_key']])) {
-            $format = $options[$definition['format_key']];
-          }
-          $translatable[] = array(
-            'value' => $value,
-            'keys' => $translation_keys,
-            'format' => $format,
-          );
-        }
-      }
-    }
-    else if (!empty($definition['translatable']) && !empty($options)) {
-      $value = $options;
-      // Build source data and add to the array
-      $format = NULL;
-      if (isset($definition['format_key']) && isset($options[$definition['format_key']])) {
-        $format = $options[$definition['format_key']];
-      }
-      $translatable[] = array(
-        'value' => $value,
-        'keys' => isset($translation_keys) ? $translation_keys : $parents,
-        'format' => $format,
-      );
     }
   }
 
