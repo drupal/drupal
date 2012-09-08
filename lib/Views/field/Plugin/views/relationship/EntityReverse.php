@@ -39,7 +39,7 @@ class EntityReverse extends RelationshipPluginBase  {
     $left_field = $views_data['table']['base']['field'];
 
     $first = array(
-      'left_table' => $this->table_alias,
+      'left_table' => $this->tableAlias,
       'left_field' => $left_field,
       'table' => $this->definition['field table'],
       'field' => $this->definition['field field'],

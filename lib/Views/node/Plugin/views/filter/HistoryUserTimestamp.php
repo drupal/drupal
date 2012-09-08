@@ -73,7 +73,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
     $limit = REQUEST_TIME - NODE_NEW_LIMIT;
 
     $this->ensureMyTable();
-    $field = "$this->table_alias.$this->real_field";
+    $field = "$this->tableAlias.$this->realField";
     $node = $this->query->ensure_table('node', $this->relationship);
 
     $clause = '';

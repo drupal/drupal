@@ -28,17 +28,17 @@ class NcsLastCommentName extends FieldPluginBase {
     $this->ensureMyTable();
     // join 'users' to this table via vid
     $join = views_get_plugin('join', 'standard');
-    $join->construct('users', $this->table_alias, 'last_comment_uid', 'uid');
+    $join->construct('users', $this->tableAlias, 'last_comment_uid', 'uid');
     $join->extra = array(array('field' => 'uid', 'operator' => '!=', 'value' => '0'));
 
     // ncs_user alias so this can work with the sort handler, below.
 //    $this->user_table = $this->query->add_relationship(NULL, $join, 'users', $this->relationship);
     $this->user_table = $this->query->ensure_table('ncs_users', $this->relationship, $join);
 
-    $this->field_alias = $this->query->add_field(NULL, "COALESCE($this->user_table.name, $this->table_alias.$this->field)", $this->table_alias . '_' . $this->field);
+    $this->field_alias = $this->query->add_field(NULL, "COALESCE($this->user_table.name, $this->tableAlias.$this->field)", $this->tableAlias . '_' . $this->field);
 
     $this->user_field = $this->query->add_field($this->user_table, 'name');
-    $this->uid = $this->query->add_field($this->table_alias, 'last_comment_uid');
+    $this->uid = $this->query->add_field($this->tableAlias, 'last_comment_uid');
   }
 
   protected function defineOptions() {

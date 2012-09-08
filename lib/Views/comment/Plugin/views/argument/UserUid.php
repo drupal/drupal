@@ -60,10 +60,10 @@ class UserUid extends ArgumentPluginBase {
     $subselect = db_select('comment', 'c');
     $subselect->addField('c', 'cid');
     $subselect->condition('c.uid', $this->argument);
-    $subselect->where("c.nid = $this->table_alias.nid");
+    $subselect->where("c.nid = $this->tableAlias.nid");
 
     $condition = db_or()
-      ->condition("$this->table_alias.uid", $this->argument, '=')
+      ->condition("$this->tableAlias.uid", $this->argument, '=')
       ->exists($subselect);
 
     $this->query->add_where(0, $condition);

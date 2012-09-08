@@ -107,15 +107,15 @@ class Numeric extends ArgumentPluginBase {
     }
 
     $placeholder = $this->placeholder();
-    $null_check = empty($this->options['not']) ? '' : "OR $this->table_alias.$this->real_field IS NULL";
+    $null_check = empty($this->options['not']) ? '' : "OR $this->tableAlias.$this->realField IS NULL";
 
     if (count($this->value) > 1) {
       $operator = empty($this->options['not']) ? 'IN' : 'NOT IN';
-      $this->query->add_where_expression(0, "$this->table_alias.$this->real_field $operator($placeholder) $null_check", array($placeholder => $this->value));
+      $this->query->add_where_expression(0, "$this->tableAlias.$this->realField $operator($placeholder) $null_check", array($placeholder => $this->value));
     }
     else {
       $operator = empty($this->options['not']) ? '=' : '!=';
-      $this->query->add_where_expression(0, "$this->table_alias.$this->real_field $operator $placeholder $null_check", array($placeholder => $this->argument));
+      $this->query->add_where_expression(0, "$this->tableAlias.$this->realField $operator $placeholder $null_check", array($placeholder => $this->argument));
     }
   }
 

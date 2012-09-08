@@ -27,7 +27,7 @@ class CreatedFullDate extends Date {
     parent::construct();
     $this->format = 'F j, Y';
     $this->arg_format = 'Ymd';
-    $this->formula = views_date_sql_format($this->arg_format, "***table***.$this->real_field");
+    $this->formula = views_date_sql_format($this->arg_format, "***table***.$this->realField");
   }
 
   /**

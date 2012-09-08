@@ -25,7 +25,7 @@ class CreatedMonth extends Date {
    */
   public function construct() {
     parent::construct();
-    $this->formula = views_date_sql_extract('MONTH', "***table***.$this->real_field");
+    $this->formula = views_date_sql_extract('MONTH', "***table***.$this->realField");
     $this->format = 'F';
     $this->arg_format = 'm';
   }

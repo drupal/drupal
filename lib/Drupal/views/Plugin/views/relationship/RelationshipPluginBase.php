@@ -54,9 +54,9 @@ abstract class RelationshipPluginBase extends HandlerBase {
       $this->table = $this->definition['relationship table'];
     }
     if (isset($this->definition['relationship field'])) {
-      // Set both real_field and field so custom handler
-      // can rely on the old field value.
-      $this->real_field = $this->field = $this->definition['relationship field'];
+      // Set both realField and field so custom handler can rely on the old
+      // field value.
+      $this->realField = $this->field = $this->definition['relationship field'];
     }
   }
 
@@ -123,8 +123,8 @@ abstract class RelationshipPluginBase extends HandlerBase {
     $def = $this->definition;
     $def['table'] = $this->definition['base'];
     $def['field'] = $base_field;
-    $def['left_table'] = $this->table_alias;
-    $def['left_field'] = $this->real_field;
+    $def['left_table'] = $this->tableAlias;
+    $def['left_field'] = $this->realField;
     if (!empty($this->options['required'])) {
       $def['type'] = 'INNER';
     }

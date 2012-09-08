@@ -1369,7 +1369,7 @@ abstract class FilterPluginBase extends HandlerBase {
    */
   public function query() {
     $this->ensureMyTable();
-    $this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field", $this->value, $this->operator);
+    $this->query->add_where($this->options['group'], "$this->tableAlias.$this->realField", $this->value, $this->operator);
   }
 
   /**

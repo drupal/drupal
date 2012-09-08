@@ -380,7 +380,7 @@ class InOperator extends FilterPluginBase {
 
     // We use array_values() because the checkboxes keep keys and that can cause
     // array addition problems.
-    $this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field", array_values($this->value), $this->operator);
+    $this->query->add_where($this->options['group'], "$this->tableAlias.$this->realField", array_values($this->value), $this->operator);
   }
 
   function op_empty() {
@@ -392,7 +392,7 @@ class InOperator extends FilterPluginBase {
       $operator = "IS NOT NULL";
     }
 
-    $this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field", NULL, $operator);
+    $this->query->add_where($this->options['group'], "$this->tableAlias.$this->realField", NULL, $operator);
   }
 
   public function validate() {

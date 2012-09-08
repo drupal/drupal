@@ -77,7 +77,7 @@ class NodeTermData extends RelationshipPluginBase  {
     }
     else {
       // If vocabularies are supplied join a subselect instead
-      $def['left_table'] = $this->table_alias;
+      $def['left_table'] = $this->tableAlias;
       $def['left_field'] = 'nid';
       $def['field'] = 'nid';
       $def['type'] = empty($this->options['required']) ? 'LEFT' : 'INNER';

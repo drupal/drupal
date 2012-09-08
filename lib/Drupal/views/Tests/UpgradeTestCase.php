@@ -53,7 +53,7 @@ class UpgradeTestCase extends ViewTestBase {
   }
 
   function debugField($field) {
-    $keys = array('id', 'table', 'field', 'actual_field', 'original_field', 'real_field');
+    $keys = array('id', 'table', 'field', 'actualField', 'original_field', 'realField');
     $info = array();
     foreach ($keys as $key) {
       $info[$key] = $field->{$key};
@@ -72,7 +72,7 @@ class UpgradeTestCase extends ViewTestBase {
 
 //     $this->assertEqual('old_field_1', $view->field['old_field_1']->options['id'], "Id shouldn't change during conversion");
 //     $this->assertEqual('id', $view->field['old_field_1']->field, 'The field should change during conversion');
-    $this->assertEqual('id', $view->field['old_field_1']->real_field);
+    $this->assertEqual('id', $view->field['old_field_1']->realField);
     $this->assertEqual('views_test', $view->field['old_field_1']->table);
     $this->assertEqual('old_field_1', $view->field['old_field_1']->original_field, 'The field should have stored the original_field');
 
@@ -82,11 +82,11 @@ class UpgradeTestCase extends ViewTestBase {
     $view->build();
 
 //     $this->assertEqual('old_field_2', $view->field['old_field_2']->options['id']);
-    $this->assertEqual('name', $view->field['old_field_2']->real_field);
+    $this->assertEqual('name', $view->field['old_field_2']->realField);
     $this->assertEqual('views_test', $view->field['old_field_2']->table);
 
 //     $this->assertEqual('old_field_3', $view->filter['old_field_3']->options['id']);
-    $this->assertEqual('age', $view->filter['old_field_3']->real_field);
+    $this->assertEqual('age', $view->filter['old_field_3']->realField);
     $this->assertEqual('views_test', $view->filter['old_field_3']->table);
 
     // Test moving on table level.
@@ -96,7 +96,7 @@ class UpgradeTestCase extends ViewTestBase {
 
     $this->assertEqual('views_test', $view->base_table, 'Make sure that view->base_table gets automatically converted.');
 //     $this->assertEqual('id', $view->field['id']->field, 'If we move a whole table fields of this table should work, too.');
-    $this->assertEqual('id', $view->field['id']->real_field, 'To run the query right the real_field has to be set right.');
+    $this->assertEqual('id', $view->field['id']->realField, 'To run the query right the realField has to be set right.');
     $this->assertEqual('views_test', $view->field['id']->table);
   }
 

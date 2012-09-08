@@ -30,7 +30,7 @@ class Current extends BooleanOperator {
   public function query() {
     $this->ensureMyTable();
 
-    $field = $this->table_alias . '.' . $this->real_field . ' ';
+    $field = $this->tableAlias . '.' . $this->realField . ' ';
     $or = db_or();
 
     if (empty($this->value)) {

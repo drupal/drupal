@@ -32,14 +32,14 @@ abstract class HandlerBase extends PluginBase {
    *
    * @var string
    */
-  public $table_alias;
+  public $tableAlias;
 
   /**
    * When a table has been moved this property is set.
    *
    * @var string
    */
-  public $actual_table;
+  public $actualTable;
 
   /**
    * The actual field in the database table, maybe different
@@ -47,10 +47,10 @@ abstract class HandlerBase extends PluginBase {
    *
    * @var string
    */
-  public $real_field;
+  public $realField;
 
   /**
-   * With field you can override the real_field if the real field is not set.
+   * With field you can override the realField if the real field is not set.
    *
    * @var string
    */
@@ -61,7 +61,7 @@ abstract class HandlerBase extends PluginBase {
    *
    * @var string
    */
-  public $actual_field;
+  public $actualField;
 
   /**
    * The relationship used for this field.
@@ -96,18 +96,18 @@ abstract class HandlerBase extends PluginBase {
     // option is stored as the plural.
 
     // If the 'moved to' keyword moved our handler, let's fix that now.
-    if (isset($this->actual_table)) {
-      $options['table'] = $this->actual_table;
+    if (isset($this->actualTable)) {
+      $options['table'] = $this->actualTable;
     }
 
-    if (isset($this->actual_field)) {
-      $options['field'] = $this->actual_field;
+    if (isset($this->actualField)) {
+      $options['field'] = $this->actualField;
     }
 
     $types = View::viewsHandlerTypes();
-    $plural = $this->plugin_type;
-    if (isset($types[$this->plugin_type]['plural'])) {
-      $plural = $types[$this->plugin_type]['plural'];
+    $plural = $this->pluginType;
+    if (isset($types[$this->pluginType]['plural'])) {
+      $plural = $types[$this->pluginType]['plural'];
     }
     if ($this->view->display_handler->isDefaulted($plural)) {
       $display_id = 'default';
@@ -121,17 +121,17 @@ abstract class HandlerBase extends PluginBase {
     }
 
     if (isset($this->definition['real field'])) {
-      $this->real_field = $this->definition['real field'];
+      $this->realField = $this->definition['real field'];
     }
 
     if (isset($this->definition['field'])) {
-      $this->real_field = $this->definition['field'];
+      $this->realField = $this->definition['field'];
     }
 
     if (isset($options['field'])) {
       $this->field = $options['field'];
-      if (!isset($this->real_field)) {
-        $this->real_field = $options['field'];
+      if (!isset($this->realField)) {
+        $this->realField = $options['field'];
       }
     }
 
@@ -176,7 +176,7 @@ abstract class HandlerBase extends PluginBase {
         $field = $this->get_formula();
       }
       else {
-        $field = $this->table_alias . '.' . $this->real_field;
+        $field = $this->tableAlias . '.' . $this->realField;
       }
     }
 
@@ -528,10 +528,10 @@ abstract class HandlerBase extends PluginBase {
    * a lot.
    */
   public function ensureMyTable() {
-    if (!isset($this->table_alias)) {
-      $this->table_alias = $this->query->ensure_table($this->table, $this->relationship);
+    if (!isset($this->tableAlias)) {
+      $this->tableAlias = $this->query->ensure_table($this->table, $this->relationship);
     }
-    return $this->table_alias;
+    return $this->tableAlias;
   }
 
   /**

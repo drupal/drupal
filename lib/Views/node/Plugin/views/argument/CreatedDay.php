@@ -25,7 +25,7 @@ class CreatedDay extends Date {
    */
   public function construct() {
     parent::construct();
-    $this->formula = views_date_sql_extract('DAY', "***table***.$this->real_field");
+    $this->formula = views_date_sql_extract('DAY', "***table***.$this->realField");
     $this->format = 'j';
     $this->arg_format = 'd';
   }

@@ -47,7 +47,7 @@ class MenuHierarchy extends SortPluginBase {
     for ($i = 1; $i <= $max_depth; ++$i) {
       if ($this->options['sort_within_level']) {
         $join = views_get_plugin('join', 'standard');
-        $join->construct('menu_links', $this->table_alias, $this->field . $i, 'mlid');
+        $join->construct('menu_links', $this->tableAlias, $this->field . $i, 'mlid');
         $menu_links = $this->query->add_table('menu_links', NULL, $join);
         $this->query->add_orderby($menu_links, 'weight', $this->options['order']);
         $this->query->add_orderby($menu_links, 'link_title', $this->options['order']);
@@ -56,7 +56,7 @@ class MenuHierarchy extends SortPluginBase {
       // We need this even when also sorting by weight and title, to make sure
       // that children of two parents with the same weight and title are
       // correctly separated.
-      $this->query->add_orderby($this->table_alias, $this->field . $i, $this->options['order']);
+      $this->query->add_orderby($this->tableAlias, $this->field . $i, $this->options['order']);
     }
   }
 

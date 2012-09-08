@@ -39,7 +39,7 @@ class Formula extends ArgumentPluginBase {
   }
 
   function get_formula() {
-    return str_replace('***table***', $this->table_alias, $this->formula);
+    return str_replace('***table***', $this->tableAlias, $this->formula);
   }
 
   /**

@@ -147,13 +147,13 @@ class String extends ArgumentPluginBase {
       $this->ensureMyTable();
     }
     else {
-      $this->table_alias = $this->helper->summary_join();
+      $this->tableAlias = $this->helper->summary_join();
     }
 
     if (empty($this->options['glossary'])) {
       // Add the field.
-      $this->base_alias = $this->query->add_field($this->table_alias, $this->real_field);
-      $this->query->set_count_field($this->table_alias, $this->real_field);
+      $this->base_alias = $this->query->add_field($this->tableAlias, $this->realField);
+      $this->query->set_count_field($this->tableAlias, $this->realField);
     }
     else {
       // Add the field.
@@ -172,7 +172,7 @@ class String extends ArgumentPluginBase {
    * $this->ensureMyTable() MUST have been called prior to this.
    */
   function get_formula() {
-    return "SUBSTRING($this->table_alias.$this->real_field, 1, " . intval($this->options['limit']) . ")";
+    return "SUBSTRING($this->tableAlias.$this->realField, 1, " . intval($this->options['limit']) . ")";
   }
 
   /**
@@ -204,7 +204,7 @@ class String extends ArgumentPluginBase {
     $this->ensureMyTable();
     $formula = FALSE;
     if (empty($this->options['glossary'])) {
-      $field = "$this->table_alias.$this->real_field";
+      $field = "$this->tableAlias.$this->realField";
     }
     else {
       $formula = TRUE;

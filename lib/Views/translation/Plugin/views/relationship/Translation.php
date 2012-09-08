@@ -64,7 +64,7 @@ class Translation extends RelationshipPluginBase {
     $def = $this->definition;
     $def['table'] = $this->definition['base'];
     $def['field'] = $base_field;
-    $def['left_table'] = $this->table_alias;
+    $def['left_table'] = $this->tableAlias;
     $def['left_field'] = $this->field;
     if (!empty($this->options['required'])) {
       $def['type'] = 'INNER';

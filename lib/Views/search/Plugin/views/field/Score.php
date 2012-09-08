@@ -67,7 +67,7 @@ class Score extends Numeric {
     foreach ($this->view->filter as $handler) {
       if (isset($handler->search_score) && $handler->relationship == $this->relationship) {
         $this->field_alias = $handler->search_score;
-        $this->table_alias = $handler->table_alias;
+        $this->tableAlias = $handler->tableAlias;
         return;
       }
     }
@@ -85,7 +85,7 @@ class Score extends Numeric {
 
   function render($values) {
     // Only render if we exist.
-    if (isset($this->table_alias)) {
+    if (isset($this->tableAlias)) {
       return parent::render($values);
     }
   }

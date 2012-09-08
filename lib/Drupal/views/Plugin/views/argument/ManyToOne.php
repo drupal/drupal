@@ -111,7 +111,7 @@ class ManyToOne extends ArgumentPluginBase {
     }
     if ($empty) {
       parent::ensureMyTable();
-      $this->query->add_where(0, "$this->table_alias.$this->real_field", NULL, 'IS NULL');
+      $this->query->add_where(0, "$this->tableAlias.$this->realField", NULL, 'IS NULL');
       return;
     }
 
@@ -166,14 +166,14 @@ class ManyToOne extends ArgumentPluginBase {
     }
 
     if (empty($this->options['add_table']) || empty($this->view->many_to_one_tables[$field])) {
-      $this->table_alias = $this->query->ensure_table($this->table, $this->relationship, $join);
+      $this->tableAlias = $this->query->ensure_table($this->table, $this->relationship, $join);
     }
     else {
-      $this->table_alias = $this->helper->summary_join();
+      $this->tableAlias = $this->helper->summary_join();
     }
 
     // Add the field.
-    $this->base_alias = $this->query->add_field($this->table_alias, $this->real_field);
+    $this->base_alias = $this->query->add_field($this->tableAlias, $this->realField);
 
     $this->summary_name_field();
 

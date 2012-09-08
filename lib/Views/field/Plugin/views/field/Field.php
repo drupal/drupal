@@ -180,7 +180,7 @@ class Field extends FieldPluginBase {
       // Filter by langcode, if field translation is enabled.
       $field = $this->field_info;
       if (field_is_translatable($entity_type, $field) && !empty($this->view->display_handler->options['field_langcode_add_to_query'])) {
-        $column = $this->table_alias . '.langcode';
+        $column = $this->tableAlias . '.langcode';
         // By the same reason as field_language the field might be LANGUAGE_NOT_SPECIFIED in reality so allow it as well.
         // @see this::field_langcode()
         $default_langcode = language_default()->langcode;
@@ -246,7 +246,7 @@ class Field extends FieldPluginBase {
     $column = _field_sql_storage_columnname($this->definition['field_name'], $this->options['click_sort_column']);
     if (!isset($this->aliases[$column])) {
       // Column is not in query; add a sort on it (without adding the column).
-      $this->aliases[$column] = $this->table_alias . '.' . $column;
+      $this->aliases[$column] = $this->tableAlias . '.' . $column;
     }
     $this->query->add_orderby(NULL, NULL, $order, $this->aliases[$column]);
   }

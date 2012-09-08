@@ -34,11 +34,11 @@ The only thing you have to do is to remove views_process_dependency.
 <h3>Changed add_where api</h3>
 If your field is a plain sql field:
 <pre>
-$this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field " . $this->operator . " '%s'", $this->value);
+$this->query->add_where($this->options['group'], "$this->tableAlias.$this->realField " . $this->operator . " '%s'", $this->value);
 </pre>
 has to be converted to
 <pre>
-$this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field", $this->value, $this->operator);
+$this->query->add_where($this->options['group'], "$this->tableAlias.$this->realField", $this->value, $this->operator);
 </pre>
 If your field is a complex where condition:
 <pre>

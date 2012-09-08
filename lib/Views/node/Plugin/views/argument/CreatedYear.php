@@ -26,7 +26,7 @@ class CreatedYear extends Date {
   public function construct() {
     parent::construct();
     $this->arg_format = 'Y';
-    $this->formula = views_date_sql_extract('YEAR', "***table***.$this->real_field");
+    $this->formula = views_date_sql_extract('YEAR', "***table***.$this->realField");
   }
 
 }

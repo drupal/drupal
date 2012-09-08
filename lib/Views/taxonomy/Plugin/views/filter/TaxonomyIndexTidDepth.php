@@ -70,11 +70,11 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
     // See http://drupal.org/node/271833
     // If a relationship is set, we must use the alias it provides.
     if (!empty($this->relationship)) {
-      $this->table_alias = $this->relationship;
+      $this->tableAlias = $this->relationship;
     }
     // If no relationship, then use the alias of the base table.
     elseif (isset($this->query->table_queue[$this->query->base_table]['alias'])) {
-      $this->table_alias = $this->query->table_queue[$this->query->base_table]['alias'];
+      $this->tableAlias = $this->query->table_queue[$this->query->base_table]['alias'];
     }
     // This should never happen, but if it does, we fail quietly.
     else {
@@ -105,7 +105,7 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
     }
 
     $subquery->condition($where);
-    $this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field", $subquery, 'IN');
+    $this->query->add_where($this->options['group'], "$this->tableAlias.$this->realField", $subquery, 'IN');
   }
 
 }

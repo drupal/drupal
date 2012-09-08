@@ -56,27 +56,27 @@ class Date extends SortPluginBase {
     switch ($this->options['granularity']) {
       case 'second':
       default:
-        $this->query->add_orderby($this->table_alias, $this->real_field, $this->options['order']);
+        $this->query->add_orderby($this->tableAlias, $this->realField, $this->options['order']);
         return;
       case 'minute':
-        $formula = views_date_sql_format('YmdHi', "$this->table_alias.$this->real_field");
+        $formula = views_date_sql_format('YmdHi', "$this->tableAlias.$this->realField");
         break;
       case 'hour':
-        $formula = views_date_sql_format('YmdH', "$this->table_alias.$this->real_field");
+        $formula = views_date_sql_format('YmdH', "$this->tableAlias.$this->realField");
         break;
       case 'day':
-        $formula = views_date_sql_format('Ymd', "$this->table_alias.$this->real_field");
+        $formula = views_date_sql_format('Ymd', "$this->tableAlias.$this->realField");
         break;
       case 'month':
-        $formula = views_date_sql_format('Ym', "$this->table_alias.$this->real_field");
+        $formula = views_date_sql_format('Ym', "$this->tableAlias.$this->realField");
         break;
       case 'year':
-        $formula = views_date_sql_format('Y', "$this->table_alias.$this->real_field");
+        $formula = views_date_sql_format('Y', "$this->tableAlias.$this->realField");
         break;
     }
 
     // Add the field.
-    $this->query->add_orderby(NULL, $formula, $this->options['order'], $this->table_alias . '_' . $this->field . '_' . $this->options['granularity']);
+    $this->query->add_orderby(NULL, $formula, $this->options['order'], $this->tableAlias . '_' . $this->field . '_' . $this->options['granularity']);
   }
 
 }

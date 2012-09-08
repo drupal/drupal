@@ -163,7 +163,7 @@ class BooleanOperator extends FilterPluginBase {
 
   public function query() {
     $this->ensureMyTable();
-    $field = "$this->table_alias.$this->real_field";
+    $field = "$this->tableAlias.$this->realField";
 
     if (empty($this->value)) {
       if ($this->accept_null) {

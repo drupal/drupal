@@ -28,12 +28,12 @@ class BooleanOperatorString extends BooleanOperator {
 
   public function query() {
     $this->ensureMyTable();
-    $where = "$this->table_alias.$this->real_field ";
+    $where = "$this->tableAlias.$this->realField ";
 
     if (empty($this->value)) {
       $where .= "= ''";
       if ($this->accept_null) {
-        $where = '(' . $where . " OR $this->table_alias.$this->real_field IS NULL)";
+        $where = '(' . $where . " OR $this->tableAlias.$this->realField IS NULL)";
       }
     }
     else {

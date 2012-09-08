@@ -26,7 +26,7 @@ class NcsLastUpdated extends Date {
     $this->ensureMyTable();
     $this->node_table = $this->query->ensure_table('node', $this->relationship);
 
-    $field = "GREATEST(" . $this->node_table . ".changed, " . $this->table_alias . ".last_comment_timestamp)";
+    $field = "GREATEST(" . $this->node_table . ".changed, " . $this->tableAlias . ".last_comment_timestamp)";
 
     $info = $this->operators();
     if (!empty($info[$this->operator]['method'])) {

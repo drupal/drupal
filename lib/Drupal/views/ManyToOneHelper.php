@@ -51,7 +51,7 @@ class ManyToOneHelper {
       return $this->handler->get_formula();
     }
     else {
-      return $this->handler->table_alias . '.' . $this->handler->real_field;
+      return $this->handler->tableAlias . '.' . $this->handler->realField;
     }
   }
 
@@ -138,7 +138,7 @@ class ManyToOneHelper {
         foreach ($view->many_to_one_tables[$field] as $value) {
           $join->extra = array(
             array(
-              'field' => $this->handler->real_field,
+              'field' => $this->handler->realField,
               'operator' => '!=',
               'value' => $value,
               'numeric' => !empty($this->definition['numeric']),
@@ -155,7 +155,7 @@ class ManyToOneHelper {
    * The operator actually has influence over joining.
    */
   public function ensureMyTable() {
-    if (!isset($this->handler->table_alias)) {
+    if (!isset($this->handler->tableAlias)) {
       // Case 1: Operator is an 'or' and we're not reducing duplicates.
       // We hence get the absolute simplest:
       $field = $this->handler->relationship . '_' . $this->handler->table . '.' . $this->handler->field;
@@ -167,7 +167,7 @@ class ManyToOneHelper {
           if (isset($join)) {
             $join->type = 'INNER';
           }
-          $this->handler->table_alias = $this->handler->query->ensure_table($this->handler->table, $this->handler->relationship, $join);
+          $this->handler->tableAlias = $this->handler->query->ensure_table($this->handler->table, $this->handler->relationship, $join);
           $this->handler->view->many_to_one_tables[$field] = $this->handler->value;
         }
         else {
@@ -177,7 +177,7 @@ class ManyToOneHelper {
             foreach ($this->handler->view->many_to_one_tables[$field] as $value) {
               $join->extra = array(
                 array(
-                  'field' => $this->handler->real_field,
+                  'field' => $this->handler->realField,
                   'operator' => '!=',
                   'value' => $value,
                   'numeric' => !empty($this->handler->definition['numeric']),
@@ -186,17 +186,17 @@ class ManyToOneHelper {
             }
           }
 
-          $this->handler->table_alias = $this->add_table($join);
+          $this->handler->tableAlias = $this->add_table($join);
         }
 
-        return $this->handler->table_alias;
+        return $this->handler->tableAlias;
       }
 
       // Case 2: it's an 'and' or an 'or'.
       // We do one join per selected value.
       if ($this->handler->operator != 'not') {
         // Clone the join for each table:
-        $this->handler->table_aliases = array();
+        $this->handler->tableAliases = array();
         foreach ($this->handler->value as $value) {
           $join = $this->getJoin();
           if ($this->handler->operator == 'and') {
@@ -204,7 +204,7 @@ class ManyToOneHelper {
           }
           $join->extra = array(
             array(
-              'field' => $this->handler->real_field,
+              'field' => $this->handler->realField,
               'value' => $value,
               'numeric' => !empty($this->handler->definition['numeric']),
             ),
@@ -218,11 +218,11 @@ class ManyToOneHelper {
             }
             $this->handler->view->many_to_one_aliases[$field][$value] = $this->handler->table . '_value_' . ($this->handler->view->many_to_one_count[$this->handler->table]++);
           }
-          $alias = $this->handler->table_aliases[$value] = $this->add_table($join, $this->handler->view->many_to_one_aliases[$field][$value]);
+          $alias = $this->handler->tableAliases[$value] = $this->add_table($join, $this->handler->view->many_to_one_aliases[$field][$value]);
 
           // and set table_alias to the first of these.
-          if (empty($this->handler->table_alias)) {
-            $this->handler->table_alias = $alias;
+          if (empty($this->handler->tableAlias)) {
+            $this->handler->tableAlias = $alias;
           }
         }
       }
@@ -236,16 +236,16 @@ class ManyToOneHelper {
         $join->extra_type = 'OR';
         foreach ($this->handler->value as $value) {
           $join->extra[] = array(
-            'field' => $this->handler->real_field,
+            'field' => $this->handler->realField,
             'value' => $value,
             'numeric' => !empty($this->handler->definition['numeric']),
           );
         }
 
-        $this->handler->table_alias = $this->add_table($join);
+        $this->handler->tableAlias = $this->add_table($join);
       }
     }
-    return $this->handler->table_alias;
+    return $this->handler->tableAlias;
   }
 
   /**
@@ -310,9 +310,9 @@ class ManyToOneHelper {
     }
 
     if ($add_condition) {
-      $field = $this->handler->real_field;
+      $field = $this->handler->realField;
       $clause = $operator == 'or' ? db_or() : db_and();
-      foreach ($this->handler->table_aliases as $value => $alias) {
+      foreach ($this->handler->tableAliases as $value => $alias) {
         $clause->condition("$alias.$field", $value);
       }
 

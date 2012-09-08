@@ -67,7 +67,7 @@ class Combine extends String {
       // Always add the table of the selected fields to be sure a table alias exists.
       $field->ensureMyTable();
       if (!empty($field->field_alias) && !empty($field->field_alias)) {
-        $fields[] = "$field->table_alias.$field->real_field";
+        $fields[] = "$field->tableAlias.$field->realField";
       }
     }
     if ($fields) {

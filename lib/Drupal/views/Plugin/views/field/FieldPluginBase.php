@@ -99,7 +99,7 @@ abstract class FieldPluginBase extends HandlerBase {
     $this->ensureMyTable();
     // Add the field.
     $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
-    $this->field_alias = $this->query->add_field($this->table_alias, $this->real_field, NULL, $params);
+    $this->field_alias = $this->query->add_field($this->tableAlias, $this->realField, NULL, $params);
 
     $this->add_additional_fields();
   }
@@ -137,7 +137,7 @@ abstract class FieldPluginBase extends HandlerBase {
             $table_alias = $this->query->ensure_table($info['table'], $this->relationship);
           }
           else {
-            $table_alias = $this->table_alias;
+            $table_alias = $this->tableAlias;
           }
 
           if (empty($table_alias)) {
@@ -155,7 +155,7 @@ abstract class FieldPluginBase extends HandlerBase {
           $this->aliases[$identifier] = $this->query->add_field($table_alias, $info['field'], NULL, $params);
         }
         else {
-          $this->aliases[$info] = $this->query->add_field($this->table_alias, $info, NULL, $group_params);
+          $this->aliases[$info] = $this->query->add_field($this->tableAlias, $info, NULL, $group_params);
         }
       }
     }

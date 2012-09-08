@@ -804,7 +804,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
   function summary_query() {
     $this->ensureMyTable();
     // Add the field.
-    $this->base_alias = $this->query->add_field($this->table_alias, $this->real_field);
+    $this->base_alias = $this->query->add_field($this->tableAlias, $this->realField);
 
     $this->summary_name_field();
     return $this->summary_basics();
@@ -821,11 +821,11 @@ abstract class ArgumentPluginBase extends HandlerBase {
     if (isset($this->name_table)) {
       // if the alias is different then we're probably added, not ensured,
       // so look up the join and add it instead.
-      if ($this->table_alias != $this->name_table) {
+      if ($this->tableAlias != $this->name_table) {
         $j = views_get_table_join($this->name_table, $this->table);
         if ($j) {
           $join = clone $j;
-          $join->left_table = $this->table_alias;
+          $join->left_table = $this->tableAlias;
           $this->name_table_alias = $this->query->add_table($this->name_table, $this->relationship, $join);
         }
       }
@@ -834,7 +834,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
       }
     }
     else {
-      $this->name_table_alias = $this->table_alias;
+      $this->name_table_alias = $this->tableAlias;
     }
 
     if (isset($this->name_field)) {
@@ -857,7 +857,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $this->query->add_groupby($this->name_alias);
 
     if ($count_field) {
-      $this->query->set_count_field($this->table_alias, $this->real_field);
+      $this->query->set_count_field($this->tableAlias, $this->realField);
     }
 
     $this->count_alias = $count_alias;
@@ -908,7 +908,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    */
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
-    $this->query->add_where(0, "$this->table_alias.$this->real_field", $this->argument);
+    $this->query->add_where(0, "$this->tableAlias.$this->realField", $this->argument);
   }
 
   /**

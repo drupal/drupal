@@ -1311,9 +1311,9 @@ function views_get_handler($table, $field, $type, $override = NULL) {
         // store these values so we know what we were originally called.
         $handler->original_table = $table;
         $handler->original_field = $field;
-        if (empty($handler->actual_table)) {
-          $handler->actual_table = $moved_table;
-          $handler->actual_field = $moved_field;
+        if (empty($handler->actualTable)) {
+          $handler->actualTable = $moved_table;
+          $handler->actualField = $moved_field;
         }
       }
       return $handler;

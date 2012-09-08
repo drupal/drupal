@@ -245,7 +245,7 @@ class Numeric extends FilterPluginBase {
 
   public function query() {
     $this->ensureMyTable();
-    $field = "$this->table_alias.$this->real_field";
+    $field = "$this->tableAlias.$this->realField";
 
     $info = $this->operators();
     if (!empty($info[$this->operator]['method'])) {

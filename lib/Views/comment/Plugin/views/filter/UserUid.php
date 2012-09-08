@@ -29,10 +29,10 @@ class UserUid extends FilterPluginBase {
     $subselect = db_select('comment', 'c');
     $subselect->addField('c', 'cid');
     $subselect->condition('c.uid', $this->value, $this->operator);
-    $subselect->where("c.nid = $this->table_alias.nid");
+    $subselect->where("c.nid = $this->tableAlias.nid");
 
     $condition = db_or()
-      ->condition("$this->table_alias.uid", $this->value, $this->operator)
+      ->condition("$this->tableAlias.uid", $this->value, $this->operator)
       ->exists($subselect);
 
     $this->query->add_where($this->options['group'], $condition);
