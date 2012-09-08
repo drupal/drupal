@@ -5,6 +5,8 @@
  * Handles the server side AJAX interactions of Views.
  */
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 /**
  * @defgroup ajax Views AJAX library
  * @{
