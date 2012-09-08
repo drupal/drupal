@@ -268,6 +268,7 @@ abstract class FieldPluginBase extends HandlerBase {
   function get_elements() {
     static $elements = NULL;
     if (!isset($elements)) {
+      // @todo Add possible html5 elements.
       $elements = variable_get('views_field_rewrite_elements', array(
         '' => t('- Use default -'),
         '0' => t('- None -'),

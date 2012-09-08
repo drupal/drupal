@@ -2382,7 +2382,6 @@ function _field_view_formatter_options($field_type = NULL) {
 function views_trim_text($alter, $value) {
   if (drupal_strlen($value) > $alter['max_length']) {
     $value = drupal_substr($value, 0, $alter['max_length']);
-    // TODO: replace this with cleanstring of ctools
     if (!empty($alter['word_boundary'])) {
       $regex = "(.*)\b.+";
       if (function_exists('mb_ereg')) {
@@ -2400,6 +2399,7 @@ function views_trim_text($alter, $value) {
     $value = rtrim(preg_replace('/(?:<(?!.+>)|&(?!.+;)).*$/us', '', $value));
 
     if (!empty($alter['ellipsis'])) {
+      // @todo: What about changing this to a real ellipsis?
       $value .= t('...');
     }
   }

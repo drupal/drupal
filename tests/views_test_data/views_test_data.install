@@ -11,3 +11,27 @@
 function views_test_data_schema() {
   return variable_get('views_test_schema', array());
 }
+
+/**
+ * Implements hook_install().
+ */
+function views_test_data_install() {
+  // Add the marquee tag to possible html elements to test the field handler.
+  $default_values = array(
+    '' => t('- Use default -'),
+    '0' => t('- None -'),
+    'div' => 'DIV',
+    'span' => 'SPAN',
+    'h1' => 'H1',
+    'h2' => 'H2',
+    'h3' => 'H3',
+    'h4' => 'H4',
+    'h5' => 'H5',
+    'h6' => 'H6',
+    'p' => 'P',
+    'strong' => 'STRONG',
+    'em' => 'EM',
+  );
+  $default_values['marquee'] = 'MARQUEE';
+  variable_set('views_field_rewrite_elements', $default_values);
+}
