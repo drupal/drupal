@@ -48,11 +48,6 @@ abstract class PluginBase extends ComponentPluginBase {
 
     $this->definition = $this->discovery->getDefinition($plugin_id) + $configuration;
 
-    // @todo Change calls to $this->real_field to use the definition directly.
-    if (isset($this->definition['field'])) {
-      $this->realField = $this->definition['field'];
-    }
-
     $this->construct();
   }
 
