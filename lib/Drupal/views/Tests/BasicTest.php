@@ -38,8 +38,8 @@ class BasicTest extends ViewTestBase {
     // Verify the result.
     $this->assertEqual(5, count($view->result), t('The number of returned rows match.'));
     $this->assertIdenticalResultset($view, $this->dataSet(), array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
   }
 
@@ -65,7 +65,7 @@ class BasicTest extends ViewTestBase {
           'label' => '',
         ),
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
       ),
@@ -96,8 +96,8 @@ class BasicTest extends ViewTestBase {
     // Verify the result.
     $this->assertEqual(3, count($view->result), t('The number of returned rows match.'));
     $this->assertIdenticalResultSet($view, $dataset, array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
   }
 
@@ -126,7 +126,7 @@ class BasicTest extends ViewTestBase {
         'break_phrase' => 0,
         'not' => 0,
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'validate_user_argument_type' => 'uid',
         'validate_user_roles' => array(
@@ -169,8 +169,8 @@ class BasicTest extends ViewTestBase {
     // Verify the result.
     $this->assertEqual(1, count($view->result), t('The number of returned rows match.'));
     $this->assertIdenticalResultSet($view, $dataset, array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
 
     // Test "show all" if no argument is present.
@@ -182,8 +182,8 @@ class BasicTest extends ViewTestBase {
 
     $this->assertEqual(5, count($view->result), t('The number of returned rows match.'));
     $this->assertIdenticalResultSet($view, $dataset, array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
   }
 

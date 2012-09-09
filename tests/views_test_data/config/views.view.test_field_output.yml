@@ -1,5 +1,5 @@
 api_version: '3.0'
-base_table: views_test
+base_table: views_test_data
 core: '8'
 description: ''
 disabled: '0'
@@ -13,7 +13,7 @@ display:
       fields:
         name:
           id: name
-          table: views_test
+          table: views_test_data
           field: name
       style_plugin: html_list
     display_plugin: default

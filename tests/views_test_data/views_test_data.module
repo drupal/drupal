@@ -12,9 +12,9 @@ use Drupal\views\View;
  */
 function views_test_data_permission() {
   return array(
-    'views_test test permission' => array(
+    'views_test_data test permission' => array(
       'title' => t('Test permission'),
-      'description' => t('views_test test permission'),
+      'description' => t('views_test_data test permission'),
     ),
   );
 }
@@ -33,7 +33,7 @@ function views_test_data_views_api() {
  * Implements hook_views_data().
  */
 function views_test_data_views_data() {
-  return variable_get('views_test_views_data', array());
+  return variable_get('views_test_data_views_data', array());
 }
 
 function views_test_data_test_static_access_callback($access) {
@@ -49,8 +49,8 @@ function views_test_data_test_dynamic_access_callback($access, $argument1, $argu
  */
 function views_test_data_views_pre_render(&$view) {
   if ($view->name == 'test_cache_header_storage') {
-    drupal_add_js(drupal_get_path('module', 'views_test') . '/views_cache.test.js');
-    drupal_add_css(drupal_get_path('module', 'views_test') . '/views_cache.test.css');
+    drupal_add_js(drupal_get_path('module', 'views_test_data') . '/views_cache.test.js');
+    drupal_add_css(drupal_get_path('module', 'views_test_data') . '/views_cache.test.css');
     $view->pre_render_called = TRUE;
   }
 }

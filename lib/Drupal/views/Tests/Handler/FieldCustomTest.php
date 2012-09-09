@@ -28,7 +28,7 @@ class FieldCustomTest extends HandlerTestBase {
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['name']['field']['id'] = 'custom';
+    $data['views_test_data']['name']['field']['id'] = 'custom';
     return $data;
   }
 
@@ -40,7 +40,7 @@ class FieldCustomTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'alter' => array(

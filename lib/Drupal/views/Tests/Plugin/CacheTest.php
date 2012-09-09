@@ -31,7 +31,7 @@ class CacheTest extends PluginTestBase {
   }
 
   /**
-   * Build and return a basic view of the views_test table.
+   * Build and return a basic view of the views_test_data table.
    *
    * @return Drupal\views\View
    */
@@ -40,26 +40,26 @@ class CacheTest extends PluginTestBase {
     $view = new View(array(), 'view');
     $view->name = 'test_view';
     $view->addDisplay('default');
-    $view->base_table = 'views_test';
+    $view->base_table = 'views_test_data';
 
     // Set up the fields we need.
     $display = $view->newDisplay('default', 'Master', 'default');
     $display->overrideOption('fields', array(
       'id' => array(
         'id' => 'id',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'id',
         'relationship' => 'none',
       ),
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
       ),
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
       ),
@@ -70,7 +70,7 @@ class CacheTest extends PluginTestBase {
       'id' => array(
         'order' => 'ASC',
         'id' => 'id',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'id',
         'relationship' => 'none',
       ),
@@ -103,7 +103,7 @@ class CacheTest extends PluginTestBase {
       'age' => 29,
       'job' => 'Banjo',
     );
-    drupal_write_record('views_test', $record);
+    drupal_write_record('views_test_data', $record);
 
     // The Result should be the same as before, because of the caching.
     $view = $this->getView();
@@ -141,7 +141,7 @@ class CacheTest extends PluginTestBase {
       'job' => 'Banjo',
     );
 
-    drupal_write_record('views_test', $record);
+    drupal_write_record('views_test_data', $record);
 
     // The Result changes, because the view is not cached.
     $view = $this->getView();
@@ -159,7 +159,7 @@ class CacheTest extends PluginTestBase {
    */
   function testHeaderStorage() {
     // Create a view with output caching enabled.
-    // Some hook_views_pre_render in views_test.module adds the test css/js file.
+    // Some hook_views_pre_render in views_test_data.module adds the test css/js file.
     // so they should be added to the css/js storage.
     $view = $this->getView();
     $view->name = 'test_cache_header_storage';
@@ -177,8 +177,8 @@ class CacheTest extends PluginTestBase {
     $view->initDisplay();
     $view->preview();
     $css = drupal_add_css();
-    $css_path = drupal_get_path('module', 'views_test') . '/views_cache.test.css';
-    $js_path = drupal_get_path('module', 'views_test') . '/views_cache.test.js';
+    $css_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.css';
+    $js_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.js';
     $js = drupal_add_js();
 
     $this->assertTrue(isset($css[$css_path]), 'Make sure the css is added for cached views.');

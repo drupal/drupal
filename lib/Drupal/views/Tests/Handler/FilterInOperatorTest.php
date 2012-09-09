@@ -28,7 +28,7 @@ class FilterInOperatorTest extends HandlerTestBase {
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['age']['filter']['id'] = 'in_operator';
+    $data['views_test_data']['age']['filter']['id'] = 'in_operator';
 
     return $data;
   }
@@ -41,7 +41,7 @@ class FilterInOperatorTest extends HandlerTestBase {
       'age' => array(
         'id' => 'age',
         'field' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'value' => array(26, 30),
         'operator' => 'in',
       ),
@@ -62,8 +62,8 @@ class FilterInOperatorTest extends HandlerTestBase {
 
     $this->assertEqual(2, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
 
     $view = $this->getView();
@@ -73,7 +73,7 @@ class FilterInOperatorTest extends HandlerTestBase {
       'age' => array(
         'id' => 'age',
         'field' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'value' => array(26, 30),
         'operator' => 'not in',
       ),
@@ -98,8 +98,8 @@ class FilterInOperatorTest extends HandlerTestBase {
 
     $this->assertEqual(3, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
   }
 
@@ -127,8 +127,8 @@ class FilterInOperatorTest extends HandlerTestBase {
 
     $this->assertEqual(2, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
   }
 
@@ -160,8 +160,8 @@ class FilterInOperatorTest extends HandlerTestBase {
 
     $this->assertEqual(3, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
   }
 
@@ -169,7 +169,7 @@ class FilterInOperatorTest extends HandlerTestBase {
     $filters = array(
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'exposed' => TRUE,

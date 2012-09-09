@@ -160,13 +160,13 @@ class SortDateTest extends HandlerTestBase {
         $view->display['default']->handler->overrideOption('fields', array(
           'name' => array(
             'id' => 'name',
-            'table' => 'views_test',
+            'table' => 'views_test_data',
             'field' => 'name',
             'relationship' => 'none',
           ),
           'created' => array(
             'id' => 'created',
-            'table' => 'views_test',
+            'table' => 'views_test_data',
             'field' => 'created',
             'relationship' => 'none',
           ),
@@ -176,7 +176,7 @@ class SortDateTest extends HandlerTestBase {
         $view->display['default']->handler->overrideOption('sorts', array(
           'created' => array(
             'id' => 'created',
-            'table' => 'views_test',
+            'table' => 'views_test_data',
             'field' => 'created',
             'relationship' => 'none',
             'granularity' => $granularity,
@@ -184,7 +184,7 @@ class SortDateTest extends HandlerTestBase {
           ),
           'id' => array(
             'id' => 'id',
-            'table' => 'views_test',
+            'table' => 'views_test_data',
             'field' => 'id',
             'relationship' => 'none',
             'order' => 'ASC',
@@ -197,7 +197,7 @@ class SortDateTest extends HandlerTestBase {
         // Verify the result.
         $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
         $this->assertIdenticalResultset($view, $this->expectedResultSet($granularity, $reverse), array(
-          'views_test_name' => 'name',
+          'views_test_data_name' => 'name',
         ), t('Result is returned correctly when ordering by granularity @granularity, @reverse.', array('@granularity' => $granularity, '@reverse' => $reverse ? t('reverse') : t('forward'))));
         $view->destroy();
         unset($view);

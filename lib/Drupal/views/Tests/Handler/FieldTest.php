@@ -30,7 +30,7 @@ class FieldTest extends HandlerTestBase {
     $this->enableViewsTestModule();
 
     $this->column_map = array(
-      'views_test_name' => 'name',
+      'views_test_data_name' => 'name',
     );
   }
 
@@ -39,7 +39,7 @@ class FieldTest extends HandlerTestBase {
    */
   protected function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['job']['field']['id'] = 'test_field';
+    $data['views_test_data']['job']['field']['id'] = 'test_field';
 
     return $data;
   }
@@ -68,12 +68,12 @@ class FieldTest extends HandlerTestBase {
     $id_field = $view->field['id'];
     $id_field->additional_fields['job'] = 'job';
     // Choose also a field alias key which doesn't match to the table field.
-    $id_field->additional_fields['created_test'] = array('table' => 'views_test', 'field' => 'created');
+    $id_field->additional_fields['created_test'] = array('table' => 'views_test_data', 'field' => 'created');
     $view->build();
 
     // Make sure the field aliases have the expected value.
-    $this->assertEqual($id_field->aliases['job'], 'views_test_job');
-    $this->assertEqual($id_field->aliases['created_test'], 'views_test_created');
+    $this->assertEqual($id_field->aliases['job'], 'views_test_data_job');
+    $this->assertEqual($id_field->aliases['created_test'], 'views_test_data_created');
 
     $this->executeView($view);
     // Tests the get_value method with and without a field aliases.
@@ -499,9 +499,9 @@ class FieldTest extends HandlerTestBase {
     $name_field_2->options['alter']['text'] = '[name_2] [name_1]';
 
     foreach ($view->result as $row) {
-      $expected_output_0 = $row->views_test_name;
-      $expected_output_1 = "$row->views_test_name $row->views_test_name";
-      $expected_output_2 = "$row->views_test_name $row->views_test_name $row->views_test_name";
+      $expected_output_0 = $row->views_test_data_name;
+      $expected_output_1 = "$row->views_test_data_name $row->views_test_data_name";
+      $expected_output_2 = "$row->views_test_data_name $row->views_test_data_name $row->views_test_data_name";
 
       $output = $name_field_0->advanced_render($row);
       $this->assertEqual($output, $expected_output_0);
@@ -581,18 +581,18 @@ class FieldTest extends HandlerTestBase {
 
     // Tests for removing whitespace and the beginning and the end.
     $name_field->options['alter']['alter_text'] = FALSE;
-    $views_test_name = $row->views_test_name;
-    $row->views_test_name = '  ' . $views_test_name . '     ';
+    $views_test_data_name = $row->views_test_data_name;
+    $row->views_test_data_name = '  ' . $views_test_data_name . '     ';
     $name_field->options['alter']['trim_whitespace'] = TRUE;
     $output = $name_field->advanced_render($row);
 
-    $this->assertSubString($output, $views_test_name, 'Make sure the trimmed text can be found if trimming is enabled.');
-    $this->assertNotSubString($output, $row->views_test_name, 'Make sure the untrimmed text can be found if trimming is enabled.');
+    $this->assertSubString($output, $views_test_data_name, 'Make sure the trimmed text can be found if trimming is enabled.');
+    $this->assertNotSubString($output, $row->views_test_data_name, 'Make sure the untrimmed text can be found if trimming is enabled.');
 
     $name_field->options['alter']['trim_whitespace'] = FALSE;
     $output = $name_field->advanced_render($row);
-    $this->assertSubString($output, $views_test_name, 'Make sure the trimmed text can be found if trimming is disabled.');
-    $this->assertSubString($output, $row->views_test_name, 'Make sure the untrimmed text can be found  if trimming is disabled.');
+    $this->assertSubString($output, $views_test_data_name, 'Make sure the trimmed text can be found if trimming is disabled.');
+    $this->assertSubString($output, $row->views_test_data_name, 'Make sure the untrimmed text can be found  if trimming is disabled.');
 
 
     // Tests for trimming to a maximum length.
@@ -600,13 +600,13 @@ class FieldTest extends HandlerTestBase {
     $name_field->options['alter']['word_boundary'] = FALSE;
 
     // Tests for simple trimming by string length.
-    $row->views_test_name = $this->randomName(8);
+    $row->views_test_data_name = $this->randomName(8);
     $name_field->options['alter']['max_length'] = 5;
-    $trimmed_name = drupal_substr($row->views_test_name, 0, 5);
+    $trimmed_name = drupal_substr($row->views_test_data_name, 0, 5);
 
     $output = $name_field->advanced_render($row);
     $this->assertSubString($output, $trimmed_name, format_string('Make sure the trimmed output (!trimmed) appears in the rendered output (!output).', array('!trimmed' => $trimmed_name, '!output' => $output)));
-    $this->assertNotSubString($output, $row->views_test_name, format_string("Make sure the untrimmed value (!untrimmed) shouldn't appear in the rendered output (!output).", array('!untrimmed' => $row->views_test_name, '!output' => $output)));
+    $this->assertNotSubString($output, $row->views_test_data_name, format_string("Make sure the untrimmed value (!untrimmed) shouldn't appear in the rendered output (!output).", array('!untrimmed' => $row->views_test_data_name, '!output' => $output)));
 
     $name_field->options['alter']['max_length'] = 9;
     $output = $name_field->advanced_render($row);
@@ -648,7 +648,7 @@ class FieldTest extends HandlerTestBase {
     );
 
     foreach ($touples as $touple) {
-      $row->views_test_name = $touple['value'];
+      $row->views_test_data_name = $touple['value'];
       $output = $name_field->advanced_render($row);
 
       if ($touple['trimmed']) {
@@ -660,7 +660,7 @@ class FieldTest extends HandlerTestBase {
     }
 
     // Tests for displaying a readmore link when the output got trimmed.
-    $row->views_test_name = $this->randomName(8);
+    $row->views_test_data_name = $this->randomName(8);
     $name_field->options['alter']['max_length'] = 5;
     $name_field->options['alter']['more_link'] = TRUE;
     $name_field->options['alter']['more_link_text'] = $more_text = $this->randomName();
@@ -676,7 +676,7 @@ class FieldTest extends HandlerTestBase {
     $this->assertFalse($this->xpathContent($output, '//a[contains(@href, :path)]', array(':path' => $more_path)), 'Make sure no read more link appears.');
 
     // Check for the ellipses.
-    $row->views_test_name = $this->randomName(8);
+    $row->views_test_data_name = $this->randomName(8);
     $name_field->options['alter']['max_length'] = 5;
     $output = $name_field->advanced_render($row);
     $this->assertSubString($output, '...', 'An ellipsis should appear if the output is trimmed');

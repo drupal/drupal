@@ -26,13 +26,13 @@ class FilterEqualityTest extends HandlerTestBase {
     $this->enableViewsTestModule();
 
     $this->column_map = array(
-      'views_test_name' => 'name',
+      'views_test_data_name' => 'name',
     );
   }
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['name']['filter']['id'] = 'equality';
+    $data['views_test_data']['name']['filter']['id'] = 'equality';
 
     return $data;
   }
@@ -44,7 +44,7 @@ class FilterEqualityTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'operator' => '=',
@@ -86,7 +86,7 @@ class FilterEqualityTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'operator' => '!=',
@@ -144,7 +144,7 @@ class FilterEqualityTest extends HandlerTestBase {
     $filters = array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'group' => 1,

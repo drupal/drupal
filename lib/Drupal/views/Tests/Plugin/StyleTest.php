@@ -43,13 +43,13 @@ class StyleTest extends StyleTestBase {
     $view->display['default']->handler->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
       ),
       'job' => array(
         'id' => 'job',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'job',
         'relationship' => 'none',
       ),
@@ -65,18 +65,18 @@ class StyleTest extends StyleTestBase {
     // Use Job: as label, so be sure that the label is used for groupby as well.
     $expected['Job: Singer'] = array();
     $expected['Job: Singer'][0] = new stdClass();
-    $expected['Job: Singer'][0]->views_test_name = 'John';
-    $expected['Job: Singer'][0]->views_test_job = 'Singer';
-    $expected['Job: Singer'][0]->views_test_id = '1';
+    $expected['Job: Singer'][0]->views_test_data_name = 'John';
+    $expected['Job: Singer'][0]->views_test_data_job = 'Singer';
+    $expected['Job: Singer'][0]->views_test_data_id = '1';
     $expected['Job: Singer'][1] = new stdClass();
-    $expected['Job: Singer'][1]->views_test_name = 'George';
-    $expected['Job: Singer'][1]->views_test_job = 'Singer';
-    $expected['Job: Singer'][1]->views_test_id = '2';
+    $expected['Job: Singer'][1]->views_test_data_name = 'George';
+    $expected['Job: Singer'][1]->views_test_data_job = 'Singer';
+    $expected['Job: Singer'][1]->views_test_data_id = '2';
     $expected['Job: Drummer'] = array();
     $expected['Job: Drummer'][2] = new stdClass();
-    $expected['Job: Drummer'][2]->views_test_name = 'Ringo';
-    $expected['Job: Drummer'][2]->views_test_job = 'Drummer';
-    $expected['Job: Drummer'][2]->views_test_id = '3';
+    $expected['Job: Drummer'][2]->views_test_data_name = 'Ringo';
+    $expected['Job: Drummer'][2]->views_test_data_job = 'Drummer';
+    $expected['Job: Drummer'][2]->views_test_data_id = '3';
 
     $this->assertEqual($sets, $expected, t('The style plugin should proper group the results with grouping by the rendered output.'));
 
@@ -84,19 +84,19 @@ class StyleTest extends StyleTestBase {
     $expected['Job: Singer'] = array();
     $expected['Job: Singer']['group'] = 'Job: Singer';
     $expected['Job: Singer']['rows'][0] = new stdClass();
-    $expected['Job: Singer']['rows'][0]->views_test_name = 'John';
-    $expected['Job: Singer']['rows'][0]->views_test_job = 'Singer';
-    $expected['Job: Singer']['rows'][0]->views_test_id = '1';
+    $expected['Job: Singer']['rows'][0]->views_test_data_name = 'John';
+    $expected['Job: Singer']['rows'][0]->views_test_data_job = 'Singer';
+    $expected['Job: Singer']['rows'][0]->views_test_data_id = '1';
     $expected['Job: Singer']['rows'][1] = new stdClass();
-    $expected['Job: Singer']['rows'][1]->views_test_name = 'George';
-    $expected['Job: Singer']['rows'][1]->views_test_job = 'Singer';
-    $expected['Job: Singer']['rows'][1]->views_test_id = '2';
+    $expected['Job: Singer']['rows'][1]->views_test_data_name = 'George';
+    $expected['Job: Singer']['rows'][1]->views_test_data_job = 'Singer';
+    $expected['Job: Singer']['rows'][1]->views_test_data_id = '2';
     $expected['Job: Drummer'] = array();
     $expected['Job: Drummer']['group'] = 'Job: Drummer';
     $expected['Job: Drummer']['rows'][2] = new stdClass();
-    $expected['Job: Drummer']['rows'][2]->views_test_name = 'Ringo';
-    $expected['Job: Drummer']['rows'][2]->views_test_job = 'Drummer';
-    $expected['Job: Drummer']['rows'][2]->views_test_id = '3';
+    $expected['Job: Drummer']['rows'][2]->views_test_data_name = 'Ringo';
+    $expected['Job: Drummer']['rows'][2]->views_test_data_job = 'Drummer';
+    $expected['Job: Drummer']['rows'][2]->views_test_data_id = '3';
 
     // The newer api passes the value of the grouping as well.
     $sets_new_rendered = $view->style_plugin->render_grouping($view->result, $view->style_plugin->options['grouping'], TRUE);
@@ -142,19 +142,19 @@ class StyleTest extends StyleTestBase {
     $view->display['default']->handler->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
       ),
       'job' => array(
         'id' => 'job',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'job',
         'relationship' => 'none',
       ),
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
       ),
@@ -169,26 +169,26 @@ class StyleTest extends StyleTestBase {
     $expected['Job: Singer']['rows']['Age: 25'] = array();
     $expected['Job: Singer']['rows']['Age: 25']['group'] = 'Age: 25';
     $expected['Job: Singer']['rows']['Age: 25']['rows'][0] = new stdClass();
-    $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_name = 'John';
-    $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_job = 'Singer';
-    $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_age = '25';
-    $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_id = '1';
+    $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_name = 'John';
+    $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_job = 'Singer';
+    $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_age = '25';
+    $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_id = '1';
     $expected['Job: Singer']['rows']['Age: 27'] = array();
     $expected['Job: Singer']['rows']['Age: 27']['group'] = 'Age: 27';
     $expected['Job: Singer']['rows']['Age: 27']['rows'][1] = new stdClass();
-    $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_name = 'George';
-    $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_job = 'Singer';
-    $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_age = '27';
-    $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_id = '2';
+    $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_name = 'George';
+    $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_job = 'Singer';
+    $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_age = '27';
+    $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_id = '2';
     $expected['Job: Drummer'] = array();
     $expected['Job: Drummer']['group'] = 'Job: Drummer';
     $expected['Job: Drummer']['rows']['Age: 28'] = array();
     $expected['Job: Drummer']['rows']['Age: 28']['group'] = 'Age: 28';
     $expected['Job: Drummer']['rows']['Age: 28']['rows'][2] = new stdClass();
-    $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_name = 'Ringo';
-    $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_job = 'Drummer';
-    $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_age = '28';
-    $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_id = '3';
+    $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_name = 'Ringo';
+    $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_job = 'Drummer';
+    $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_age = '28';
+    $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_id = '3';
 
 
     // Alter the results to support the stripped case.
@@ -196,15 +196,15 @@ class StyleTest extends StyleTestBase {
 
       // Add some html to the result and expected value.
       $rand = '<a data="' . $this->randomName() . '" />';
-      $view->result[0]->views_test_job .= $rand;
-      $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_job = 'Singer' . $rand;
+      $view->result[0]->views_test_data_job .= $rand;
+      $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_job = 'Singer' . $rand;
       $expected['Job: Singer']['group'] = 'Job: Singer';
       $rand = '<a data="' . $this->randomName() . '" />';
-      $view->result[1]->views_test_job .= $rand;
-      $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_job = 'Singer' . $rand;
+      $view->result[1]->views_test_data_job .= $rand;
+      $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_job = 'Singer' . $rand;
       $rand = '<a data="' . $this->randomName() . '" />';
-      $view->result[2]->views_test_job .= $rand;
-      $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_job = 'Drummer' . $rand;
+      $view->result[2]->views_test_data_job .= $rand;
+      $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_job = 'Drummer' . $rand;
       $expected['Job: Drummer']['group'] = 'Job: Drummer';
 
       $view->style_plugin->options['grouping'][0] = array('field' => 'job', 'rendered' => TRUE, 'rendered_strip' => TRUE);

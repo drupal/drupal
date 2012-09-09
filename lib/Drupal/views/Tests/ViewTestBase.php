@@ -39,22 +39,22 @@ abstract class ViewTestBase extends WebTestBase {
 
 
   /**
-   * Sets up the views_test.module.
+   * Sets up the views_test_data.module.
    *
-   * Because the schema of views_test.module is dependent on the test using it,
+   * Because the schema of views_test_data.module is dependent on the test using it,
    * it cannot be enabled normally.
    */
   protected function enableViewsTestModule() {
     // Define the schema and views data variable before enabling the test module.
-    variable_set('views_test_schema', $this->schemaDefinition());
-    variable_set('views_test_views_data', $this->viewsData());
+    variable_set('views_test_data_schema', $this->schemaDefinition());
+    variable_set('views_test_data_views_data', $this->viewsData());
 
     module_enable(array('views_test_data'));
     $this->resetAll();
 
     // Load the test dataset.
     $data_set = $this->dataSet();
-    $query = db_insert('views_test')
+    $query = db_insert('views_test_data')
       ->fields(array_keys($data_set[0]));
     foreach ($data_set as $record) {
       $query->values($record);
@@ -180,7 +180,7 @@ abstract class ViewTestBase extends WebTestBase {
   }
 
   /**
-   * Build and return a Page view of the views_test table.
+   * Build and return a Page view of the views_test_data table.
    *
    * @return view
    */
@@ -199,7 +199,7 @@ abstract class ViewTestBase extends WebTestBase {
    * The schema definition.
    */
   protected function schemaDefinition() {
-    $schema['views_test'] = array(
+    $schema['views_test_data'] = array(
       'description' => 'Basic test table for Views tests.',
       'fields' => array(
         'id' => array(
@@ -251,17 +251,17 @@ abstract class ViewTestBase extends WebTestBase {
    */
   protected function viewsData() {
     // Declaration of the base table.
-    $data['views_test']['table'] = array(
+    $data['views_test_data']['table'] = array(
       'group' => t('Views test'),
       'base' => array(
         'field' => 'id',
-        'title' => t('Views test'),
+        'title' => t('Views test data'),
         'help' => t('Users who have created accounts on your site.'),
       ),
     );
 
     // Declaration of fields.
-    $data['views_test']['id'] = array(
+    $data['views_test_data']['id'] = array(
       'title' => t('ID'),
       'help' => t('The test data ID'),
       'field' => array(
@@ -278,7 +278,7 @@ abstract class ViewTestBase extends WebTestBase {
         'id' => 'standard',
       ),
     );
-    $data['views_test']['name'] = array(
+    $data['views_test_data']['name'] = array(
       'title' => t('Name'),
       'help' => t('The name of the person'),
       'field' => array(
@@ -295,7 +295,7 @@ abstract class ViewTestBase extends WebTestBase {
         'id' => 'standard',
       ),
     );
-    $data['views_test']['age'] = array(
+    $data['views_test_data']['age'] = array(
       'title' => t('Age'),
       'help' => t('The age of the person'),
       'field' => array(
@@ -312,7 +312,7 @@ abstract class ViewTestBase extends WebTestBase {
         'id' => 'standard',
       ),
     );
-    $data['views_test']['job'] = array(
+    $data['views_test_data']['job'] = array(
       'title' => t('Job'),
       'help' => t('The job of the person'),
       'field' => array(
@@ -329,7 +329,7 @@ abstract class ViewTestBase extends WebTestBase {
         'id' => 'standard',
       ),
     );
-    $data['views_test']['created'] = array(
+    $data['views_test_data']['created'] = array(
       'title' => t('Created'),
       'help' => t('The creation date of this record'),
       'field' => array(
@@ -388,7 +388,7 @@ abstract class ViewTestBase extends WebTestBase {
   }
 
   /**
-   * Build and return a basic view of the views_test table.
+   * Build and return a basic view of the views_test_data table.
    *
    * @return Drupal\views\View
    */

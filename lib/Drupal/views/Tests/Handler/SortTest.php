@@ -37,7 +37,7 @@ class SortTest extends HandlerTestBase {
       'age' => array(
         'order' => 'ASC',
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
       ),
@@ -49,8 +49,8 @@ class SortTest extends HandlerTestBase {
     // Verify the result.
     $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
     $this->assertIdenticalResultset($view, $this->orderResultSet($this->dataSet(), 'age'), array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
 
     $view = $this->getView();
@@ -60,7 +60,7 @@ class SortTest extends HandlerTestBase {
       'age' => array(
         'order' => 'DESC',
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
       ),
@@ -72,8 +72,8 @@ class SortTest extends HandlerTestBase {
     // Verify the result.
     $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
     $this->assertIdenticalResultset($view, $this->orderResultSet($this->dataSet(), 'age', TRUE), array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
   }
 
@@ -88,7 +88,7 @@ class SortTest extends HandlerTestBase {
       'name' => array(
         'order' => 'ASC',
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
       ),
@@ -100,8 +100,8 @@ class SortTest extends HandlerTestBase {
     // Verify the result.
     $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
     $this->assertIdenticalResultset($view, $this->orderResultSet($this->dataSet(), 'name'), array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
 
     $view = $this->getView();
@@ -111,7 +111,7 @@ class SortTest extends HandlerTestBase {
       'name' => array(
         'order' => 'DESC',
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
       ),
@@ -123,8 +123,8 @@ class SortTest extends HandlerTestBase {
     // Verify the result.
     $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
     $this->assertIdenticalResultset($view, $this->orderResultSet($this->dataSet(), 'name', TRUE), array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
   }
 

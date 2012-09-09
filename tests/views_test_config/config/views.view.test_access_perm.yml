@@ -7,7 +7,7 @@ display:
   default:
     display_options:
       access:
-        perm: 'views_test test permission'
+        perm: 'views_test_data test permission'
         type: perm
       cache:
         type: none

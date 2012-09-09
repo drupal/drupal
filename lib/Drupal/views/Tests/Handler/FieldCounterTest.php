@@ -37,7 +37,7 @@ class FieldCounterTest extends HandlerTestBase {
       ),
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
       ),
@@ -61,7 +61,7 @@ class FieldCounterTest extends HandlerTestBase {
       ),
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
       ),

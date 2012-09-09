@@ -28,7 +28,7 @@ class FieldDateTest extends HandlerTestBase {
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['created']['field']['id'] = 'date';
+    $data['views_test_data']['created']['field']['id'] = 'date';
     return $data;
   }
 
@@ -38,7 +38,7 @@ class FieldDateTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('fields', array(
       'created' => array(
         'id' => 'created',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'created',
         'relationship' => 'none',
         // c is iso 8601 date format @see http://php.net/manual/en/function.date.php

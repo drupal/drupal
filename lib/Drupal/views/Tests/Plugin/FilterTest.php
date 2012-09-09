@@ -42,7 +42,7 @@ class FilterTest extends PluginTestBase {
    */
   protected function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['name']['filter']['id'] = 'test_filter';
+    $data['views_test_data']['name']['filter']['id'] = 'test_filter';
 
     return $data;
   }
@@ -62,7 +62,7 @@ class FilterTest extends PluginTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'test_filter' => array(
         'id' => 'test_filter',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'operator' => '=',
         'value' => 'John',
@@ -77,7 +77,7 @@ class FilterTest extends PluginTestBase {
 
     // Check the data added.
     $where = $view->query->where;
-    $this->assertIdentical($where[0]['conditions'][0]['field'], 'views_test.name', 'Where condition field matches');
+    $this->assertIdentical($where[0]['conditions'][0]['field'], 'views_test_data.name', 'Where condition field matches');
     $this->assertIdentical($where[0]['conditions'][0]['value'], 'John', 'Where condition value matches');
     $this->assertIdentical($where[0]['conditions'][0]['operator'], '=', 'Where condition operator matches');
 
@@ -98,7 +98,7 @@ class FilterTest extends PluginTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'test_filter' => array(
         'id' => 'test_filter',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'operator' => '<>',
         'value' => 'John',
@@ -124,7 +124,7 @@ class FilterTest extends PluginTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'test_filter' => array(
         'id' => 'test_filter',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'operator' => '<>',
         'value' => 'John',

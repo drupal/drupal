@@ -1,5 +1,5 @@
 api_version: '3.0'
-base_table: views_test
+base_table: views_test_data
 core: '8'
 description: ''
 disabled: '0'
@@ -10,7 +10,7 @@ display:
         old_field_1:
           field: old_field_1
           id: old_field_1
-          table: views_test
+          table: views_test_data
     display_plugin: default
     display_title: Master
     id: default

@@ -40,7 +40,7 @@ class FieldFileSizeTest extends HandlerTestBase {
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['age']['field']['id'] = 'file_size';
+    $data['views_test_data']['age']['field']['id'] = 'file_size';
 
     return $data;
   }
@@ -51,7 +51,7 @@ class FieldFileSizeTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('fields', array(
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
       ),
     ));

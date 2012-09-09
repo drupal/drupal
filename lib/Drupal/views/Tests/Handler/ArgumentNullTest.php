@@ -28,7 +28,7 @@ class ArgumentNullTest extends HandlerTestBase {
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['id']['argument']['id'] = 'null';
+    $data['views_test_data']['id']['argument']['id'] = 'null';
 
     return $data;
   }
@@ -67,7 +67,7 @@ class ArgumentNullTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('arguments', array(
       'id' => array(
         'id' => 'id',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'id',
       ),
     ));

@@ -36,7 +36,7 @@ class FieldBooleanTest extends HandlerTestBase {
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['age']['field']['id'] = 'boolean';
+    $data['views_test_data']['age']['field']['id'] = 'boolean';
     return $data;
   }
 
@@ -46,7 +46,7 @@ class FieldBooleanTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('fields', array(
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
       ),

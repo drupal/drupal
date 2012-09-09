@@ -35,7 +35,7 @@ abstract class LanguageTestBase extends ViewTestBase {
 
   protected function schemaDefinition() {
     $schema = parent::schemaDefinition();
-    $schema['views_test']['fields']['langcode'] = array(
+    $schema['views_test_data']['fields']['langcode'] = array(
       'description' => 'The {language}.langcode of this beatle.',
       'type' => 'varchar',
       'length' => 12,
@@ -47,7 +47,7 @@ abstract class LanguageTestBase extends ViewTestBase {
 
   protected function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['langcode'] = array(
+    $data['views_test_data']['langcode'] = array(
       'title' => t('Langcode'),
       'help' => t('Langcode'),
       'field' => array(

@@ -1,5 +1,5 @@
 api_version: '3.0'
-base_table: views_test
+base_table: views_test_data
 core: 8
 disabled: false
 display:
@@ -19,12 +19,12 @@ display:
           field: name
           id: name
           label: ''
-          table: views_test
+          table: views_test_data
       filters:
         type:
           field: name
           id: test_filter
-          table: views_test
+          table: views_test_data
       query:
         type: views_query
       row_plugin: fields

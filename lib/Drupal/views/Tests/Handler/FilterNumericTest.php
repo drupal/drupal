@@ -28,15 +28,15 @@ class FilterNumericTest extends HandlerTestBase {
     $this->enableViewsTestModule();
 
     $this->column_map = array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     );
   }
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['age']['filter']['allow empty'] = TRUE;
-    $data['views_test']['id']['filter']['allow empty'] = FALSE;
+    $data['views_test_data']['age']['filter']['allow empty'] = TRUE;
+    $data['views_test_data']['id']['filter']['allow empty'] = FALSE;
 
     return $data;
   }
@@ -48,7 +48,7 @@ class FilterNumericTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'operator' => '=',
@@ -92,7 +92,7 @@ class FilterNumericTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'operator' => 'between',
@@ -128,7 +128,7 @@ class FilterNumericTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'operator' => 'not between',
@@ -221,7 +221,7 @@ class FilterNumericTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'operator' => 'empty',
@@ -240,7 +240,7 @@ class FilterNumericTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'operator' => 'not empty',
@@ -333,13 +333,13 @@ class FilterNumericTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'id' => array(
         'id' => 'id',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'id',
         'relationship' => 'none',
       ),
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
       ),
@@ -360,7 +360,7 @@ class FilterNumericTest extends HandlerTestBase {
     $filters = array(
       'age' => array(
         'id' => 'age',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'exposed' => TRUE,

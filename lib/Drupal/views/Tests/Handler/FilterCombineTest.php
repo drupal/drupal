@@ -28,8 +28,8 @@ class FilterCombineTest extends HandlerTestBase {
     $this->enableViewsTestModule();
 
     $this->column_map = array(
-      'views_test_name' => 'name',
-      'views_test_job' => 'job',
+      'views_test_data_name' => 'name',
+      'views_test_data_job' => 'job',
     );
   }
 
@@ -37,7 +37,7 @@ class FilterCombineTest extends HandlerTestBase {
     $view = parent::getBasicView();
     $view->display['default']->display_options['fields']['job'] = array(
       'id' => 'job',
-      'table' => 'views_test',
+      'table' => 'views_test_data',
       'field' => 'job',
       'relationship' => 'none',
     );
@@ -100,11 +100,11 @@ class FilterCombineTest extends HandlerTestBase {
   }
 
   /**
-   * Allow {views_test}.job to be NULL.
+   * Allow {views_test_data}.job to be NULL.
    */
   protected function schemaDefinition() {
     $schema = parent::schemaDefinition();
-    unset($schema['views_test']['fields']['job']['not null']);
+    unset($schema['views_test_data']['fields']['job']['not null']);
     return $schema;
   }
 

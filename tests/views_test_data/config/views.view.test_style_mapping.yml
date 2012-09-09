@@ -1,5 +1,5 @@
 api_version: '3.0'
-base_table: views_test
+base_table: views_test_data
 core: '8'
 description: ''
 disabled: '0'
@@ -16,17 +16,17 @@ display:
           field: age
           id: age
           relationship: none
-          table: views_test
+          table: views_test_data
         job:
           field: job
           id: job
           relationship: none
-          table: views_test
+          table: views_test_data
         name:
           field: name
           id: name
           relationship: none
-          table: views_test
+          table: views_test_data
       pager:
         options:
           offset: '0'
@@ -38,7 +38,7 @@ display:
           id: id
           order: ASC
           relationship: none
-          table: views_test
+          table: views_test_data
       style_options:
         mapping:
           name_field: name

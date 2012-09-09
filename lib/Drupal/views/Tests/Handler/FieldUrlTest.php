@@ -28,7 +28,7 @@ class FieldUrlTest extends HandlerTestBase {
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['name']['field']['id'] = 'url';
+    $data['views_test_data']['name']['field']['id'] = 'url';
     return $data;
   }
 
@@ -38,7 +38,7 @@ class FieldUrlTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'display_as_link' => FALSE,
@@ -56,7 +56,7 @@ class FieldUrlTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
       ),

@@ -41,7 +41,7 @@ class FieldXssTest extends HandlerTestBase {
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['name']['field']['id'] = 'xss';
+    $data['views_test_data']['name']['field']['id'] = 'xss';
 
     return $data;
   }
@@ -52,7 +52,7 @@ class FieldXssTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('fields', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
       ),
     ));
@@ -61,7 +61,7 @@ class FieldXssTest extends HandlerTestBase {
 
     $counter = 0;
     foreach ($this->dataHelper() as $input => $expected_result) {
-      $view->result[$counter]->views_test_name = $input;
+      $view->result[$counter]->views_test_data_name = $input;
       $this->assertEqual($view->field['name']->advanced_render($view->result[$counter]), $expected_result);
       $counter++;
     }

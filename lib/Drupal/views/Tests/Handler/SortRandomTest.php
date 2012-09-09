@@ -73,8 +73,8 @@ class SortRandomTest extends HandlerTestBase {
     // Verify the result.
     $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
     $this->assertIdenticalResultset($view, $this->dataSet(), array(
-      'views_test_name' => 'name',
-      'views_test_age' => 'age',
+      'views_test_data_name' => 'name',
+      'views_test_data_age' => 'age',
     ));
 
     // Execute a random view, we expect the result set to be different.
@@ -82,8 +82,8 @@ class SortRandomTest extends HandlerTestBase {
     $this->executeView($view_random);
     $this->assertEqual(count($this->dataSet()), count($view_random->result), t('The number of returned rows match.'));
     $this->assertNotIdenticalResultset($view_random, $view->result, array(
-      'views_test_name' => 'views_test_name',
-      'views_test_age' => 'views_test_name',
+      'views_test_data_name' => 'views_test_data_name',
+      'views_test_data_age' => 'views_test_data_name',
     ));
 
     // Execute a second random view, we expect the result set to be different again.
@@ -91,8 +91,8 @@ class SortRandomTest extends HandlerTestBase {
     $this->executeView($view_random_2);
     $this->assertEqual(count($this->dataSet()), count($view_random_2->result), t('The number of returned rows match.'));
     $this->assertNotIdenticalResultset($view_random, $view->result, array(
-      'views_test_name' => 'views_test_name',
-      'views_test_age' => 'views_test_name',
+      'views_test_data_name' => 'views_test_data_name',
+      'views_test_data_age' => 'views_test_data_name',
     ));
   }
 

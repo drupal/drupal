@@ -29,13 +29,13 @@ class ModuleTest extends ViewTestBase {
 
   public function viewsData() {
     $data = parent::viewsData();
-    $data['views_test_previous'] = array();
-    $data['views_test_previous']['id']['field']['moved to'] = array('views_test', 'id');
-    $data['views_test_previous']['id']['filter']['moved to'] = array('views_test', 'id');
-    $data['views_test']['age_previous']['field']['moved to'] = array('views_test', 'age');
-    $data['views_test']['age_previous']['sort']['moved to'] = array('views_test', 'age');
-    $data['views_test_previous']['name_previous']['field']['moved to'] = array('views_test', 'name');
-    $data['views_test_previous']['name_previous']['argument']['moved to'] = array('views_test', 'name');
+    $data['views_test_data_previous'] = array();
+    $data['views_test_data_previous']['id']['field']['moved to'] = array('views_test_data', 'id');
+    $data['views_test_data_previous']['id']['filter']['moved to'] = array('views_test_data', 'id');
+    $data['views_test_data']['age_previous']['field']['moved to'] = array('views_test_data', 'age');
+    $data['views_test_data']['age_previous']['sort']['moved to'] = array('views_test_data', 'age');
+    $data['views_test_data_previous']['name_previous']['field']['moved to'] = array('views_test_data', 'name');
+    $data['views_test_data_previous']['name_previous']['argument']['moved to'] = array('views_test_data', 'name');
 
     return $data;
   }
@@ -114,7 +114,7 @@ class ModuleTest extends ViewTestBase {
     }
 
     $views_data = $this->viewsData();
-    $test_tables = array('views_test' => array('id', 'name'));
+    $test_tables = array('views_test_data' => array('id', 'name'));
     foreach ($test_tables as $table => $fields) {
       foreach ($fields as $field) {
         $data = $views_data[$table][$field];
@@ -130,25 +130,25 @@ class ModuleTest extends ViewTestBase {
     // Test the automatic conversion feature.
 
     // Test the automatic table renaming.
-    $handler = views_get_handler('views_test_previous', 'id', 'field');
-    $this->assertInstanceHandler($handler, 'views_test', 'id', 'field');
-    $handler = views_get_handler('views_test_previous', 'id', 'filter');
-    $this->assertInstanceHandler($handler, 'views_test', 'id', 'filter');
+    $handler = views_get_handler('views_test_data_previous', 'id', 'field');
+    $this->assertInstanceHandler($handler, 'views_test_data', 'id', 'field');
+    $handler = views_get_handler('views_test_data_previous', 'id', 'filter');
+    $this->assertInstanceHandler($handler, 'views_test_data', 'id', 'filter');
 
     // Test the automatic field renaming.
-    $handler = views_get_handler('views_test', 'age_previous', 'field');
-    $this->assertInstanceHandler($handler, 'views_test', 'age', 'field');
-    $handler = views_get_handler('views_test', 'age_previous', 'sort');
-    $this->assertInstanceHandler($handler, 'views_test', 'age', 'sort');
+    $handler = views_get_handler('views_test_data', 'age_previous', 'field');
+    $this->assertInstanceHandler($handler, 'views_test_data', 'age', 'field');
+    $handler = views_get_handler('views_test_data', 'age_previous', 'sort');
+    $this->assertInstanceHandler($handler, 'views_test_data', 'age', 'sort');
 
     // Test the automatic table and field renaming.
-    $handler = views_get_handler('views_test_previous', 'name_previous', 'field');
-    $this->assertInstanceHandler($handler, 'views_test', 'name', 'field');
-    $handler = views_get_handler('views_test_previous', 'name_previous', 'argument');
-    $this->assertInstanceHandler($handler, 'views_test', 'name', 'argument');
+    $handler = views_get_handler('views_test_data_previous', 'name_previous', 'field');
+    $this->assertInstanceHandler($handler, 'views_test_data', 'name', 'field');
+    $handler = views_get_handler('views_test_data_previous', 'name_previous', 'argument');
+    $this->assertInstanceHandler($handler, 'views_test_data', 'name', 'argument');
 
     // Test the override handler feature.
-    $handler = views_get_handler('views_test', 'job', 'filter', 'string');
+    $handler = views_get_handler('views_test_data', 'job', 'filter', 'string');
     $this->assertEqual('Drupal\\views\\Plugin\\views\\filter\\String', get_class($handler));
   }
 

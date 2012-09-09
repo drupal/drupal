@@ -28,22 +28,22 @@ class FilterStringTest extends HandlerTestBase {
     $this->enableViewsTestModule();
 
     $this->column_map = array(
-      'views_test_name' => 'name',
+      'views_test_data_name' => 'name',
     );
   }
 
   function viewsData() {
     $data = parent::viewsData();
-    $data['views_test']['name']['filter']['allow empty'] = TRUE;
-    $data['views_test']['job']['filter']['allow empty'] = FALSE;
-    $data['views_test']['description'] = $data['views_test']['name'];
+    $data['views_test_data']['name']['filter']['allow empty'] = TRUE;
+    $data['views_test_data']['job']['filter']['allow empty'] = FALSE;
+    $data['views_test_data']['description'] = $data['views_test_data']['name'];
 
     return $data;
   }
 
   protected function schemaDefinition() {
     $schema = parent::schemaDefinition();
-    $schema['views_test']['fields']['description'] = array(
+    $schema['views_test_data']['fields']['description'] = array(
       'description' => "A person's description",
       'type' => 'text',
       'not null' => FALSE,
@@ -71,7 +71,7 @@ class FilterStringTest extends HandlerTestBase {
     $view = parent::getBasicView();
     $view->display['default']->options['fields']['description'] = array(
       'id' => 'description',
-      'table' => 'views_test',
+      'table' => 'views_test_data',
       'field' => 'description',
       'relationship' => 'none',
     );
@@ -85,7 +85,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'operator' => '=',
@@ -129,7 +129,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'operator' => '!=',
@@ -192,7 +192,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'operator' => 'contains',
@@ -238,7 +238,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'description',
         'relationship' => 'none',
         'operator' => 'word',
@@ -264,7 +264,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'description',
         'relationship' => 'none',
         'operator' => 'allwords',
@@ -329,7 +329,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'description',
         'relationship' => 'none',
         'operator' => 'starts',
@@ -372,7 +372,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'description',
         'relationship' => 'none',
         'operator' => 'not_starts',
@@ -429,7 +429,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'description',
         'relationship' => 'none',
         'operator' => 'ends',
@@ -478,7 +478,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'description',
         'relationship' => 'none',
         'operator' => 'not_ends',
@@ -529,7 +529,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'description',
         'relationship' => 'none',
         'operator' => 'not',
@@ -582,7 +582,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'operator' => 'shorterthan',
@@ -630,7 +630,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'operator' => 'longerthan',
@@ -673,7 +673,7 @@ class FilterStringTest extends HandlerTestBase {
     $view->display['default']->handler->overrideOption('filters', array(
       'description' => array(
         'id' => 'description',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'description',
         'relationship' => 'none',
         'operator' => 'empty',
@@ -711,7 +711,7 @@ class FilterStringTest extends HandlerTestBase {
     $filters = array(
       'name' => array(
         'id' => 'name',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'exposed' => TRUE,
@@ -756,7 +756,7 @@ class FilterStringTest extends HandlerTestBase {
       ),
       'description' => array(
         'id' => 'description',
-        'table' => 'views_test',
+        'table' => 'views_test_data',
         'field' => 'description',
         'relationship' => 'none',
         'exposed' => TRUE,

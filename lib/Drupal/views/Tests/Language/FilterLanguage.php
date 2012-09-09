@@ -30,7 +30,7 @@ class FilterLanguage extends LanguageTestBase {
       $view->display['default']->handler->overrideOption('filters', array(
         'langcode' => array(
           'id' => 'langcode',
-          'table' => 'views_test',
+          'table' => 'views_test_data',
           'field' => 'langcode',
           'value' => array($langcode),
         ),
@@ -40,7 +40,7 @@ class FilterLanguage extends LanguageTestBase {
       $expected = array(array(
         'name' => $name,
       ));
-      $this->assertIdenticalResultset($view, $expected, array('views_test_name' => 'name'));
+      $this->assertIdenticalResultset($view, $expected, array('views_test_data_name' => 'name'));
       $view->destroy();
     }
   }
