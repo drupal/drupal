@@ -707,7 +707,7 @@ abstract class FilterPluginBase extends HandlerBase {
     if (!empty($this->options['group_info']['optional']) && !$this->multipleExposedInput()) {
 
       $old_any = $this->options['group_info']['widget'] == 'select' ? '<Any>' : '&lt;Any&gt;';
-      $any_label = variable_get('views_exposed_filter_any_label', 'new_any') == 'old_any' ? $old_any : t('- Any -');
+      $any_label = config('views.settings')->get('ui.exposed_filter_any_label') == 'old_any' ? $old_any : t('- Any -');
       $groups = array('All' => $any_label);
     }
     foreach ($this->options['group_info']['group_items'] as $id => $group) {

@@ -3519,7 +3519,7 @@ function theme_views_ui_build_group_filter_form($variables) {
     drupal_render($form['default_group']['All']),
     '',
     array(
-      'data' => variable_get('views_exposed_filter_any_label', 'new_any') == 'old_any' ? t('&lt;Any&gt;') : t('- Any -'),
+      'data' => config('views.settings')->get('ui.exposed_filter_any_label') == 'old_any' ? t('&lt;Any&gt;') : t('- Any -'),
       'colspan' => 4,
       'class' => array('class' => 'any-default-radios-row'),
     ),
