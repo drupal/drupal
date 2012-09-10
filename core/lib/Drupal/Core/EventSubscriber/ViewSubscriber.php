@@ -63,7 +63,7 @@ class ViewSubscriber implements EventSubscriberInterface {
       }
     }
     else {
-      $event->setResponse(new Response($event->getControllerResult()));
+      $event->setResponse($this->onHtml($event));
     }
   }
 
