@@ -1820,7 +1820,7 @@ function install_check_requirements($install_state) {
 }
 
 /**
- * Returns a Forms API array definition for site configuration.
+ * Returns a Form API array definition for site configuration.
  *
  * @see install_configure_form()
  * @see install_configure_form_validate()

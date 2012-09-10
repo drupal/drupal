@@ -520,7 +520,7 @@ Drupal 5.0, 2007-01-15
 - Removed the archive module.
 - Upgrade system:
     * Created space for update branches.
-- Forms API:
+- Form API:
     * Made it possible to programmatically submit forms.
     * Improved api for multistep forms.
 - Theme system:
