@@ -51,6 +51,13 @@ class ViewDisplay {
   public $display_title;
 
   /**
+   * The position (weight) of the display.
+   *
+   * @var int
+   */
+  public $position;
+
+  /**
    * Constructs a ViewDisplay object.
    *
    * @param array $values
@@ -86,6 +93,7 @@ class ViewDisplay {
     $this->display_plugin = $values['display_plugin'];
     $this->id = $values['id'];
     $this->display_title = $values['display_title'];
+    $this->position = $values['position'];
   }
 
 }

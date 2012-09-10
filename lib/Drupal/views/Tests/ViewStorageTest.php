@@ -92,6 +92,7 @@ class ViewStorageTest extends WebTestBase {
    */
   protected function loadTests() {
     $view = $this->loadView('archive');
+    $data = config('views.view.archive')->get();
 
     // Confirm that an actual view object is loaded and that it returns all of
     // expected properties.
@@ -104,13 +105,18 @@ class ViewStorageTest extends WebTestBase {
     $expected_displays = array('default', 'page', 'block');
     $this->assertEqual(array_keys($view->display), $expected_displays, 'The correct display names are present.');
 
-    // Check each ViewDisplay object and confirm that it has the correct key.
+    // Check each ViewDisplay object and confirm that it has the correct key and
+    // property values.
     foreach ($view->display as $key => $display) {
       $this->assertTrue($display instanceof ViewDisplay, format_string('Display: @display is instance of ViewDisplay.', array('@display' => $key)));
-      $this->assertEqual($key, $display->id, 'The display has the correct ID.');
-      // Confirm that the display options array exists.
-      $display_options = $display->display_options;
-      $this->assertTrue(!empty($display_options) && is_array($display_options), 'Display options exist.');
+      $this->assertEqual($key, $display->id, 'The display has the correct ID assigned.');
+
+      // Get original display data and confirm that the display options array
+      // exists.
+      $original_options = $data['display'][$key];
+      foreach ($original_options as $orig_key => $value) {
+        $this->assertIdentical($display->{$orig_key}, $value, format_string('@key is identical to saved data', array('@key' => $key)));
+      }
     }
 
     // Fetch data for all configuration entities and default view configurations.
