@@ -266,12 +266,8 @@ function drupal_install_config_directories() {
   if (empty($config_directories)) {
     $settings['config_directories'] = array(
       'value' => array(
-        CONFIG_ACTIVE_DIRECTORY => array(
-          'path' => 'config/active_' . drupal_hash_base64(drupal_random_bytes(55)),
-        ),
-        CONFIG_STAGING_DIRECTORY => array(
-          'path' => 'config/staging_' . drupal_hash_base64(drupal_random_bytes(55)),
-        ),
+        CONFIG_ACTIVE_DIRECTORY => 'config/active_' . drupal_hash_base64(drupal_random_bytes(55)),
+        CONFIG_STAGING_DIRECTORY => 'config/staging_' . drupal_hash_base64(drupal_random_bytes(55)),
       ),
       'required' => TRUE,
     );

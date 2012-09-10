@@ -508,13 +508,7 @@ function config_get_config_directory($type = CONFIG_ACTIVE_DIRECTORY) {
     $path = conf_path() . '/files/simpletest/' . substr($test_prefix, 10) . '/config_' . $type;
   }
   elseif (!empty($config_directories[$type])) {
-    // Allow a configuration directory path to be outside of webroot.
-    if (empty($config_directories[$type]['absolute'])) {
-      $path = conf_path() . '/files/' . $config_directories[$type]['path'];
-    }
-    else {
-      $path = $config_directories[$type]['path'];
-    }
+    $path = conf_path() . '/files/' . $config_directories[$type];
   }
   else {
     throw new Exception(format_string('The configuration directory type %type does not exist.', array('%type' => $type)));
