@@ -1175,31 +1175,34 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
 
   // Custom display settings.
   if ($view_mode == 'default') {
-    $form['modes'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Custom display settings'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-    );
-    // Collect options and default values for the 'Custom display settings'
-    // checkboxes.
-    $options = array();
-    $default = array();
     $entity_info = entity_get_info($entity_type);
     $view_modes = $entity_info['view modes'];
-    $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
-    foreach ($view_modes as $view_mode_name => $view_mode_info) {
-      $options[$view_mode_name] = $view_mode_info['label'];
-      if (!empty($view_mode_settings[$view_mode_name]['custom_settings'])) {
-        $default[] = $view_mode_name;
+    // Only show the settings if there is more than one view mode.
+    if (count($view_modes) > 1) {
+      $form['modes'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Custom display settings'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+      );
+      // Collect options and default values for the 'Custom display settings'
+      // checkboxes.
+      $options = array();
+      $default = array();
+      $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
+      foreach ($view_modes as $view_mode_name => $view_mode_info) {
+        $options[$view_mode_name] = $view_mode_info['label'];
+        if (!empty($view_mode_settings[$view_mode_name]['custom_settings'])) {
+          $default[] = $view_mode_name;
+        }
       }
+      $form['modes']['view_modes_custom'] = array(
+        '#type' => 'checkboxes',
+        '#title' => t('Use custom display settings for the following view modes'),
+        '#options' => $options,
+        '#default_value' => $default,
+      );
     }
-    $form['modes']['view_modes_custom'] = array(
-      '#type' => 'checkboxes',
-      '#title' => t('Use custom display settings for the following view modes'),
-      '#options' => $options,
-      '#default_value' => $default,
-    );
   }
 
   // In overviews involving nested rows from contributed modules (i.e
