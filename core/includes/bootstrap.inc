@@ -2669,9 +2669,9 @@ function drupal_language_initialize() {
  *
  * @see Drupal\Core\Language\LanguageManager
  *
- * @param $type
+ * @param string $type
  *   The type of language object needed, e.g. LANGUAGE_TYPE_INTERFACE.
- * @param $reset
+ * @param bool $reset
  *   TRUE to reset the statically cached language object for the type, or for
  *   all types if $type is NULL.
  */
@@ -2720,6 +2720,10 @@ function language($type, $reset = FALSE) {
 
 /**
  * Returns an array of the available language types.
+ *
+ * @return array
+ *   An array of all language types where the keys of each are the language type
+ *   name and its value is its configurability (TRUE/FALSE).
  */
 function language_types_get_all() {
   return array_keys(variable_get('language_types', language_types_get_default()));
@@ -2727,7 +2731,7 @@ function language_types_get_all() {
 /**
  * Returns a list of the built-in language types.
  *
- * @return
+ * @return array
  *   An array of key-values pairs where the key is the language type name and
  *   the value is its configurability (TRUE/FALSE).
  */
@@ -2741,6 +2745,9 @@ function language_types_get_default() {
 
 /**
  * Returns TRUE if there is more than one language enabled.
+ *
+ * @return bool
+ *   TRUE if more than one language is enabled.
  */
 function language_multilingual() {
   // The "language_count" variable stores the number of enabled languages to
@@ -2756,7 +2763,7 @@ function language_multilingual() {
  *   (optional) Specifies the state of the languages that have to be returned.
  *   It can be: LANGUAGE_CONFIGURABLE, LANGUAGE_LOCKED, LANGUAGE_ALL.
  *
- * @return
+ * @return array
  *   An associative array of languages, keyed by the language code, ordered by
  *   weight ascending and name ascending.
  */
@@ -2811,7 +2818,7 @@ function language_list($flags = LANGUAGE_CONFIGURABLE) {
  *   An integer value that is used as the start value for the weights of the
  *   locked languages.
  *
- * @return
+ * @return array
  *   An array of language objects.
  */
 function language_default_locked_languages($weight = 0) {
@@ -2843,10 +2850,10 @@ function language_default_locked_languages($weight = 0) {
 /**
  * Loads a language object from the database.
  *
- * @param $langcode
+ * @param string $langcode
  *   The language code.
  *
- * @return
+ * @return Drupal\core\Language\Language | FALSE
  *   A fully-populated language object or FALSE.
  */
 function language_load($langcode) {
@@ -2857,10 +2864,10 @@ function language_load($langcode) {
 /**
  * Produced the printed name for a language for display.
  *
- * @param $langcode
+ * @param string $langcode
  *   The language code.
  *
- * @return
+ * @return string
  *   The printed name of the language.
  */
 function language_name($langcode) {
@@ -2880,8 +2887,11 @@ function language_name($langcode) {
 /**
  * Checks if a language is locked.
  *
- * @param $langcode
+ * @param string $langcode
  *   The language code.
+ *
+ * @return bool
+ *   Returns whether the language is locked.
  */
 function language_is_locked($langcode) {
   $language = language_load($langcode);
@@ -2891,7 +2901,7 @@ function language_is_locked($langcode) {
 /**
  * Returns the default language used on the site.
  *
- * @return
+ * @return Drupal\Core\Language\Language
  *   A language object.
  */
 function language_default() {
