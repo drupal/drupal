@@ -1674,7 +1674,7 @@ function install_check_requirements($install_state) {
 }
 
 /**
- * Forms API array definition for site configuration.
+ * Form API array definition for site configuration.
  */
 function _install_configure_form($form, &$form_state, &$install_state) {
   include_once DRUPAL_ROOT . '/includes/locale.inc';
@@ -1787,7 +1787,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
 }
 
 /**
- * Forms API validate for the site configuration form.
+ * Form API validate for the site configuration form.
  */
 function install_configure_form_validate($form, &$form_state) {
   if ($error = user_validate_name($form_state['values']['account']['name'])) {
@@ -1802,7 +1802,7 @@ function install_configure_form_validate($form, &$form_state) {
 }
 
 /**
- * Forms API submit for the site configuration form.
+ * Form API submit for the site configuration form.
  */
 function install_configure_form_submit($form, &$form_state) {
   global $user;

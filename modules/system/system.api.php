@@ -623,7 +623,7 @@ function hook_cron_queue_info_alter(&$queues) {
 }
 
 /**
- * Allows modules to declare their own Forms API element types and specify their
+ * Allows modules to declare their own Form API element types and specify their
  * default values.
  *
  * This hook allows modules to declare their own form element types and to
@@ -1041,7 +1041,7 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  * This 'abc' object will then be passed into the callback functions defined
  * for the menu item, such as the page callback function mymodule_abc_edit()
  * to replace the integer 1 in the argument array. Note that a load function
- * should return FALSE when it is unable to provide a loadable object. For 
+ * should return FALSE when it is unable to provide a loadable object. For
  * example, the node_load() function for the 'node/%node/edit' menu item will
  * return FALSE for the path 'node/999/edit' if a node with a node ID of 999
  * does not exist. The menu routing system will return a 404 error in this case.
