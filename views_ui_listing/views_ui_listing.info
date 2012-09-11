@@ -1,0 +1,4 @@
+name = Views UI Listing
+description = temporary replacement for export UI.
+package = Views
+core = 8.x

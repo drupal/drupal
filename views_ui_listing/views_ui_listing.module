@@ -1,0 +1,85 @@
+<?php
+
+use Drupal\views_ui_listing\EntityListControllerInterface;
+use Drupal\config\ConfigEntityInterface;
+
+/**
+ * Implements hook_menu().
+ */
+function views_ui_listing_menu() {
+  $items = array();
+  foreach (entity_get_info() as $entity_type => $type_info) {
+    if (isset($type_info['list controller class'])) {
+      $controller = views_ui_listing_get_list_controller($entity_type);
+      $items += $controller->hookMenu();
+    }
+  }
+  return $items;
+}
+
+/**
+ * Gets the entity list controller class for an entity type.
+ *
+ * @return Drupal\entity\EntityListControllerInterface
+ */
+function views_ui_listing_get_list_controller($entity_type) {
+  $controllers = &drupal_static(__FUNCTION__, array());
+  if (!isset($controllers[$entity_type])) {
+    $type_info = entity_get_info($entity_type);
+    $class = $type_info['list controller class'];
+    $controllers[$entity_type] = new $class($entity_type);
+  }
+  return $controllers[$entity_type];
+}
+
+/**
+ * Page callback: Displays a config listing page.
+ *
+ * @param string $entity_id
+ *   The entity type.
+ *
+ * @return string
+ *   The page markup for the page.
+ */
+function views_ui_listing_entity_listing_page($entity_id) {
+  $controller = views_ui_listing_get_list_controller($entity_id);
+  return $controller->renderList();
+}
+
+/**
+ * Page callback: Calls a method on a config entity and reloads the listing page.
+ *
+ * @param Drupal\views_ui_listing\EntityListControllerInterface $controller
+ *   The list controller for this entity.
+ * @param Drupal\config\ConfigEntityInterface $entity
+ *   The config entity being acted upon.
+ * @param string $op
+ *   The action to perform, e.g., 'enable' or 'disable'.
+ *
+ * @return mixed
+ *   Either returns the listing page as JSON, or calls drupal_goto() to
+ *   redirect back to the listing page.
+ */
+function views_ui_listing_ajax_callback(EntityListControllerInterface $controller, ConfigEntityInterface $entity, $op) {
+  // Perform the operation.
+  $entity->$op();
+
+  // If the request is via AJAX, return the rendered list as JSON.
+  if (drupal_container()->get('request')->request->get('js')) {
+    return $controller->renderListAJAX();
+  }
+  // Otherwise, redirect back to the page.
+  else {
+    drupal_goto($controller->getPath());
+  }
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function views_ui_listing_entity_info_alter(&$entity_info) {
+  if (isset($entity_info['config_test'])) {
+    $entity_info['config_test']['list path'] = 'config-listing-test';
+    $entity_info['config_test']['list controller class'] = 'Drupal\views_ui_listing_test\ConfigTestListController';
+  }
+}

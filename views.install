@@ -20,29 +20,12 @@ function views_install() {
 function views_schema() {
   $schema['views_view'] = array(
     'description' => 'Stores the general data for a view.',
-    'export' => array(
-      'identifier' => 'view',
-      'bulk export' => TRUE,
-      'primary key' => 'vid',
-      'admin_title' => 'human_name',
-      'admin_description' => 'description',
-      'object' => 'Drupal\views\View',
-      'load all callback' => 'views_get_all_views',
-      'load callback' => 'views_storage_load',
-      'save callback' => 'views_storage_save',
-      'status callback' => 'views_storage_status',
-      // CRUD callbacks
-      'create callback' => 'views_new_view',
-      'save callback' => 'views_save_view',
-      'delete callback' => 'views_delete_view',
-    ),
     'fields' => array(
       'vid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'The view ID of the field, defined by the database.',
-        'no export' => TRUE,
       ),
       'name' => array(
         'type' => 'varchar',
@@ -95,7 +78,6 @@ function views_schema() {
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The view this display is attached to.',
-        'no export' => TRUE,
       ),
       'id' => array(
         'type' => 'varchar',

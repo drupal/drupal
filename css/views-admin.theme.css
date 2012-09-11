@@ -235,6 +235,10 @@ input.form-radio {
   font-weight: bold;
 }
 
+tr.views-ui-list-disabled td {
+  color: #999;
+}
+
 /* @end */
 
 /* @group Messages */

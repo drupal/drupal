@@ -92,18 +92,6 @@ class ModuleTest extends ViewTestBase {
   }
 
   /**
-   * Tests the dynamic includes of templates via module feature.
-   */
-  function testModuleTemplates() {
-    $existing = array();
-    $type = array();
-    $theme = array();
-    $path = array();
-    $registry = views_theme($existing, $type, $theme, $path);
-    $this->assertTrue(isset($registry['views_view__frontpage']));
-  }
-
-  /**
    * Tests the views_get_handler method.
    */
   function testviews_get_handler() {

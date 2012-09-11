@@ -89,6 +89,8 @@ function views_entity_info() {
       'label' => t('View'),
       'entity class' => 'Drupal\views\View',
       'controller class' => 'Drupal\views\ViewStorageController',
+      'list controller class' => 'Drupal\views\ViewListController',
+      'list path' => 'admin/structure/views',
       'form controller class' => array(
         'default' => 'Drupal\node\NodeFormController',
       ),
@@ -246,12 +248,6 @@ function views_theme($existing, $type, $theme, $path) {
     'variables' => array('more_url' => NULL, 'link_text' => 'more', 'view' => NULL),
   );
 
-  // Add theme suggestions which are part of modules.
-  foreach (views_get_module_apis() as $info) {
-    if (isset($info['template path'])) {
-      $hooks += _views_find_module_templates($hooks, $info['template path']);
-    }
-  }
   return $hooks;
 }
 
@@ -1185,24 +1181,8 @@ function views_module_include($api, $reset = FALSE) {
   }
 
   // @todo Replace with http://drupal.org/node/1760284.
-  ctools_include('plugins');
+  module_load_include('inc', 'ctools', 'includes/plugins');
   return ctools_plugin_api_include('views', $api, views_api_minimum_version(), views_api_version());
-}
-
-/**
- * Get a list of modules that support the current views API.
- */
-function views_get_module_apis($api = 'views', $reset = FALSE) {
-  if ($reset) {
-    $cache = &drupal_static('ctools_plugin_api_info');
-    if (isset($cache['views']['views'])) {
-      unset($cache['views']['views']);
-    }
-  }
-
-  // @todo Replace with http://drupal.org/node/1760284.
-  ctools_include('plugins');
-  return ctools_plugin_api_info('views', $api, views_api_minimum_version(), views_api_version());
 }
 
 /**
@@ -1583,51 +1563,6 @@ function views_get_applicable_views($type) {
  */
 function views_get_all_views($reset = FALSE) {
   return entity_get_controller('view')->load();
-}
-
-/**
- * Loads a view with the storage controller.
- *
- * @param string $id
- *   The view name to load.
- *
- * @return Drupal\views\View
- *   The view which is loaded.
- */
-function views_storage_load($id) {
-  $result = entity_get_controller('view')->load(array($id));
-  return reset($result);
-}
-
-/**
- * Saves a view with the storage controller.
- *
- * @param Drupal\views\View $view
- *   The view which is saved.
- *
- * @return int
- *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation
- *   performed.
- */
-function views_storage_save(View $view) {
-  return entity_get_controller('view')->save($view);
-}
-
-/**
- * Toggles the view status between enabled and disabled.
- *
- * @param Drupal\views\View $view
- *   The view which gets a different status.
- * @param bool $status
- *   Whether to enable or disable the view.
- */
-function views_storage_status(View $view, $status) {
-  if (!$status) {
-    $view->enable();
-  }
-  else {
-    $view->disable();
-  }
 }
 
 /**

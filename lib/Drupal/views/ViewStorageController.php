@@ -36,8 +36,6 @@ class ViewStorageController extends ConfigStorageController {
         }
         $entity->{$this->uuidKey} = $this->uuidFactory->generate();
       }
-      // @todo This property is left in for CTools export UI.
-      $entity->type = t('Normal');
       $this->attachDisplays($entity);
     }
   }

@@ -29,7 +29,8 @@ class SettingsTest extends UITestBase {
 
   /**
    * Tests the settings for the views listing page.
-   */
+   *
+   * @todo Decide if this functionality should be implemented.
   function testViewsListing() {
     $this->drupalLogin($this->adminUser);
 
@@ -51,6 +52,7 @@ class SettingsTest extends UITestBase {
 
     $this->assertNoFieldByXPath("//div[contains(@class, 'ctools-export-ui-row')][contains(@class, 'element-invisible')]");
   }
+   */
 
   /**
    * Tests the settings for the edit ui.

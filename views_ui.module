@@ -27,6 +27,7 @@ function views_ui_menu() {
     'type' => MENU_LOCAL_ACTION,
   ) + $base;
 
+  /*
   // Top-level Views module pages (not tied to a particular View).
   $items['admin/structure/views/add-template'] = array(
     'title' => 'Add view from template',
@@ -34,6 +35,7 @@ function views_ui_menu() {
     // Don't show a local action link if there aren't any templates.
     'type' => views_get_all_templates() ? MENU_LOCAL_ACTION : MENU_VISIBLE_IN_BREADCRUMB,
   ) + $base;
+  */
 
   $items['admin/structure/views/import'] = array(
     'title' => 'Import',
@@ -349,19 +351,6 @@ function views_ui_cache_set(&$view) {
 }
 
 /**
- * Specialized menu callback to load a view that is only a default
- * view.
- */
-function views_ui_default_load($name) {
-  $view = views_get_view($name);
-  if ($view->type == t('Default')) {
-    return $view;
-  }
-
-  return FALSE;
-}
-
-/**
  * Theme preprocess for views-view.tpl.php.
  */
 function views_ui_preprocess_views_view(&$vars) {
@@ -532,17 +521,6 @@ function views_ui_view_preview_section_rows_links($view) {
 }
 
 /**
- * Implments hook_ctools_plugin_directory().
- *
- * Views UI provides wizard plugins on behalf of core base tables.
- */
-function views_ui_ctools_plugin_directory($module, $plugin) {
-  if ($module == 'views_ui' || ($module == 'ctools' && $plugin == 'export_ui')) {
-    return 'plugins/' . $plugin;
-  }
-}
-
-/**
  * Fetch metadata on a specific views ui wizard plugin.
  *
  * @param $wizard_type
@@ -608,18 +586,6 @@ function views_ui_views_wizard_defaults() {
     // so they are documented.
     'title' => '',
     'base_table' => NULL,
-  );
-}
-
-/**
- * Inform CTools that the Views wizard plugin can have child plugins.
- */
-function views_ui_ctools_plugin_type() {
-  return array(
-    'views_wizard' => array(
-      'child plugins' => TRUE,
-      'defaults' => views_ui_views_wizard_defaults(),
-    ),
   );
 }
 
@@ -742,66 +708,6 @@ function views_ui_ajax_get_form($form_id) {
     return $callback($form, $form_state);
   }
 }
-// @todo move these when we can
-
-/**
- * Helper function to get a list of paths assigned to a view.
- *
- * @param $view
- *   The view.
- *
- * @return
- *   An array of links to this view's display paths.
- */
-function _views_ui_get_paths($view) {
-  $all_paths = array();
-  if (empty($view->display)) {
-    $all_paths[] = t('Edit this view to add a display.');
-  }
-  else {
-    $view->initDisplay();   // Make sure all the handlers are set up
-    foreach ($view->display as $display) {
-      if (!empty($display->handler) && $display->handler->hasPath()) {
-        $one_path = $display->handler->getOption('path');
-        if (empty($path_sort)) {
-          $path_sort = strtolower($one_path);
-        }
-        if (empty($view->disabled) && strpos($one_path, '%') === FALSE) {
-          $all_paths[] = l('/' . $one_path, $one_path);
-        }
-        else {
-          $all_paths[] = check_plain('/' . $one_path);
-        }
-      }
-    }
-  }
-
-  return array_unique($all_paths);
-}
-
-/**
- * Helper function to get a list of displays included in a view.
- *
- * @param $view
- *   The view.
- *
- * @return
- *   An array of display types that this view includes.
- */
-function _views_ui_get_displays_list($view) {
-  $displays = array();
-  foreach ($view->display as $display) {
-    if (!empty($display->handler->definition['admin'])) {
-      $displays[$display->handler->definition['admin']] = TRUE;
-    }
-  }
-
-  if ($displays) {
-    ksort($displays);
-    $displays = array_keys($displays);
-  }
-  return $displays;
-}
 
 /**
  * This is part of a patch to address a jQueryUI bug.  The bug is responsible
@@ -839,4 +745,11 @@ function views_ui_truncate($string, $length) {
   }
 
   return $string;
+}
+
+/**
+ * Magic load function. Wrapper to load a view.
+ */
+function views_ui_view_load($name) {
+  return views_get_view($name);
 }

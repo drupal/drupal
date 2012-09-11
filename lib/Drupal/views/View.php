@@ -2152,4 +2152,53 @@ class View extends ViewStorage {
     return $retval;
   }
 
+  /**
+   * Gets a list of paths assigned to the view.
+   *
+   * @return array
+   *   An array of paths for this view.
+   */
+  public function getPaths() {
+    $all_paths = array();
+    if (empty($this->display)) {
+      $all_paths[] = t('Edit this view to add a display.');
+    }
+    else {
+      $this->initDisplay();   // Make sure all the handlers are set up
+      foreach ($this->display as $display) {
+        if (!empty($display->handler) && $display->handler->hasPath()) {
+          $path = $display->handler->getOption('path');
+          if ($this->isEnabled() && strpos($path, '%') === FALSE) {
+            $all_paths[] = l('/' . $path, $path);
+          }
+          else {
+            $all_paths[] = check_plain('/' . $path);
+          }
+        }
+      }
+    }
+
+    return array_unique($all_paths);
+  }
+
+  /**
+   * Gets a list of displays included in the view.
+   *
+   * @return array
+   *   An array of display types that this view includes.
+   */
+  function getDisplaysList() {
+    $this->initDisplay();
+
+    $displays = array();
+    foreach ($this->display as $display) {
+      if (!empty($display->handler->definition['admin'])) {
+        $displays[$display->handler->definition['admin']] = TRUE;
+      }
+    }
+
+    ksort($displays);
+    return array_keys($displays);
+  }
+
 }

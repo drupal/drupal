@@ -26,6 +26,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function enable() {
     $this->disabled = FALSE;
+    $this->save();
   }
 
   /**
@@ -33,6 +34,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function disable() {
     $this->disabled = TRUE;
+    $this->save();
   }
 
   /**
