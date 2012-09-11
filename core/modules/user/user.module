@@ -117,9 +117,6 @@ function user_theme() {
       'template' => 'user-profile',
       'file' => 'user.pages.inc',
     ),
-    'user_list' => array(
-      'variables' => array('users' => NULL, 'title' => NULL),
-    ),
     'user_admin_permissions' => array(
       'render element' => 'form',
       'file' => 'user.admin.inc',
@@ -848,10 +845,15 @@ function user_block_view($delta = '') {
       if (user_access('access content')) {
         // Retrieve a list of new users who have subsequently accessed the site successfully.
         $items = db_query_range('SELECT uid, name FROM {users} WHERE status <> 0 AND access <> 0 ORDER BY created DESC', 0, variable_get('user_block_whois_new_count', 5))->fetchAll();
-        $output = theme('user_list', array('users' => $items));
 
         $block['subject'] = t('Who\'s new');
-        $block['content'] = $output;
+        $block['content'] = array(
+          '#theme' => 'item_list__user__new',
+          '#items' => array(),
+        );
+        foreach ($items as $account) {
+          $block['content']['#items'][] = theme('username', array('account' => $account));
+        }
       }
       return $block;
 
@@ -864,17 +866,22 @@ function user_block_view($delta = '') {
         // rather than u.access because it is much faster.
         $authenticated_count = db_query("SELECT COUNT(DISTINCT s.uid) FROM {sessions} s WHERE s.timestamp >= :timestamp AND s.uid > 0", array(':timestamp' => $interval))->fetchField();
 
-        $output = '<p>' . format_plural($authenticated_count, 'There is currently 1 user online.', 'There are currently @count users online.') . '</p>';
+        $block['subject'] = t('Who\'s online');
+        $block['content'] = array(
+          '#theme' => 'item_list__user__online',
+          '#items' => array(),
+          '#prefix' => '<p>' . format_plural($authenticated_count, 'There is currently 1 user online.', 'There are currently @count users online.') . '</p>',
+        );
 
         // Display a list of currently online users.
         $max_users = variable_get('user_block_max_list_count', 10);
         if ($authenticated_count && $max_users) {
           $items = db_query_range('SELECT u.uid, u.name, MAX(s.timestamp) AS max_timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= :interval AND s.uid > 0 GROUP BY u.uid, u.name ORDER BY max_timestamp DESC', 0, $max_users, array(':interval' => $interval))->fetchAll();
-          $output .= theme('user_list', array('users' => $items));
-        }
 
-        $block['subject'] = t('Who\'s online');
-        $block['content'] = $output;
+          foreach ($items as $account) {
+            $block['content']['#items'][] = theme('username', array('account' => $account));
+          }
+        }
       }
       return $block;
   }
@@ -1080,30 +1087,6 @@ function theme_username($variables) {
     $output = '<span' . new Attribute($variables['attributes']) . '>' . $variables['name'] . $variables['extra'] . '</span>';
   }
   return $output;
-}
-
-/**
- * Returns HTML for a list of users.
- *
- * @param $variables
- *   An associative array containing:
- *   - users: An array with user objects. Should contain at least the name and
- *     uid.
- *   - title: (optional) Title to pass on to theme_item_list().
- *
- * @ingroup themeable
- */
-function theme_user_list($variables) {
-  $users = $variables['users'];
-  $title = $variables['title'];
-  $items = array();
-
-  if (!empty($users)) {
-    foreach ($users as $user) {
-      $items[] = theme('username', array('account' => $user));
-    }
-  }
-  return theme('item_list', array('items' => $items, 'title' => $title));
 }
 
 function user_is_anonymous() {

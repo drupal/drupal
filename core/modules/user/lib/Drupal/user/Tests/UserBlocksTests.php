@@ -107,6 +107,7 @@ class UserBlocksTests extends WebTestBase {
 
     // Test block output.
     $block = user_block_view('online');
+    $block['content'] = render($block['content']);
     $this->drupalSetContent($block['content']);
     $this->assertRaw(t('2 users'), t('Correct number of online users (2 users).'));
     $this->assertText($user1->name, t('Active user 1 found in online list.'));
