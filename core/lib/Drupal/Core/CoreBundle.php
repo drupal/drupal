@@ -35,7 +35,8 @@ class CoreBundle extends Bundle
 
     $container->register('dispatcher', 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher')
       ->addArgument(new Reference('service_container'));
-    $container->register('resolver', 'Symfony\Component\HttpKernel\Controller\ControllerResolver');
+    $container->register('resolver', 'Drupal\Core\ControllerResolver')
+      ->addArgument(new Reference('service_container'));
     $container->register('http_kernel', 'Drupal\Core\HttpKernel')
       ->addArgument(new Reference('dispatcher'))
       ->addArgument(new Reference('service_container'))
@@ -69,6 +70,7 @@ class CoreBundle extends Bundle
     $dispatcher->addSubscriber(new \Drupal\Core\EventSubscriber\ConfigGlobalOverrideSubscriber());
     $container->set('content_negotiation', $content_negotation);
     $dispatcher->addSubscriber(\Drupal\Core\ExceptionController::getExceptionListener($container));
+
     /*
     $container->register('matcher', 'Drupal\Core\LegacyUrlMatcher');
     $container->register('router_listener', 'Drupal\Core\EventSubscriber\RouterListener')
