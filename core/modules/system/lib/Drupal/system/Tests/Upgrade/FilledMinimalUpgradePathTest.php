@@ -78,7 +78,7 @@ class FilledMinimalUpgradePathTest extends UpgradePathTestBase {
     $this->assertText(t('Configuration'));
     $this->assertText(t('Reports'));
     $this->assertText(t('Structure'));
-    $this->assertText(t('Modules'));
+    $this->assertText(t('Extend'));
 
     // Confirm that no {menu_links} entry exists for user/autocomplete.
     $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();

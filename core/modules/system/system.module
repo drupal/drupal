@@ -718,8 +718,8 @@ function system_menu() {
 
   // Modules.
   $items['admin/modules'] = array(
-    'title' => 'Modules',
-    'description' => 'Extend site functionality.',
+    'title' => 'Extend',
+    'description' => 'Add and enable modules to extend site functionality.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_modules'),
     'access arguments' => array('administer modules'),
