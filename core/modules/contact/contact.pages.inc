@@ -79,22 +79,21 @@ function contact_site_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  // Do not allow authenticated usrs to alter the name or e-mail values to
+  // Do not allow authenticated users to alter the name or e-mail values to
   // prevent the impersonation of other users.
-  if ($user->uid){
-    // Change form elements to values.
-    $form['name']['#type'] = $form['mail']['#type'] = 'value';
-
-    // Display read-only name and e-mail address to the user.
+  if ($user->uid) {
+    // Hide the original name and e-mail address fields and display read-only
+    // versions in their place.
+    $form['name']['#access'] = $form['mail']['#access'] = FALSE;
     $form['name_display'] = array(
       '#type' => 'item',
       '#title' => t('Your name'),
-      '#markup' => user_format_name($user),
+      '#markup' => $form['name']['#default_value'],
     );
     $form['mail_display'] = array(
       '#type' => 'item',
       '#title' => t('Your e-mail address'),
-      '#markup' => $user->mail,
+      '#markup' => $form['mail']['#default_value'],
     );
   }
   $form['subject'] = array(
@@ -158,9 +157,9 @@ function contact_site_form_submit($form, &$form_state) {
   $values['sender']->mail = $values['mail'];
   $values['category'] = contact_load($values['cid']);
 
-  // Save the anonymous user information to a cookie for reuse.
   if (!$user->uid) {
-    $values['sender']->name .= ' (' . t('Unverified') . ')';
+    $values['sender']->name .= ' (' . t('not verified') . ')';
+    // Save the anonymous user information to a cookie for reuse.
     user_cookie_save(array_intersect_key($values, array_flip(array('name', 'mail'))));
   }
 
@@ -237,20 +236,19 @@ function contact_personal_form($form, &$form_state, $recipient) {
   );
   // Do not allow authenticated users to alter the name or e-mail values to
   // prevent the impersonation of other users.
-  if ($user->uid){
-    // Change form elements to values.
-    $form['name']['#type'] = $form['mail']['#type'] = 'value';
-
-    // Display read-only name and e-mail address to the user.
+  if ($user->uid) {
+    // Hide the original name and e-mail address fields and display read-only
+    // versions in their place.
+    $form['name']['#access'] = $form['mail']['#access'] = FALSE;
     $form['name_display'] = array(
       '#type' => 'item',
       '#title' => t('Your name'),
-      '#markup' => user_format_name($user),
+      '#markup' => $form['name']['#default_value'],
     );
     $form['mail_display'] = array(
       '#type' => 'item',
       '#title' => t('Your e-mail address'),
-      '#markup' => $user->mail,
+      '#markup' => $form['mail']['#default_value'],
     );
   }
   $form['to'] = array(
@@ -299,9 +297,9 @@ function contact_personal_form_submit($form, &$form_state) {
   $values['sender']->name = $values['name'];
   $values['sender']->mail = $values['mail'];
 
-  // Save the anonymous user information to a cookie for reuse.
   if (!$user->uid) {
-    $values['sender']->name .= ' (' . t('Unverified') . ')';
+    $values['sender']->name .= ' (' . t('not verified') . ')';
+    // Save the anonymous user information to a cookie for reuse.
     user_cookie_save(array_intersect_key($values, array_flip(array('name', 'mail'))));
   }
 
