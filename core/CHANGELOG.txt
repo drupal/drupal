@@ -12,7 +12,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
     * Added a centralized file-based configuration system.
     * Allows module authors to provide configuration in a standard format.
     * Implements functionality to get, set, add and remove configuration.
-    * Includes ability to override configuration values with language variants 
+    * Includes ability to override configuration values with language variants
       and other runtime values.
 - Included the HTML5 Shiv library to support HTML5 elements in IE 8 and below.
 - Included the following Symfony2 components:
@@ -51,6 +51,8 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Added HTML 5 language markup; language information added in markup in
         several more places.
       * Made it possible to assign external language codes to local languages.
+      * Introduced the possibility of an administration-specific language
+        preference for users.
     * Simplified and added new features in interface translation:
       * Made interface translation directly accessible from language list.
       * Centralized interface translation import to one directory.
@@ -68,6 +70,8 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Node type specific default language assignment is much more versatile.
       * Added entity language variance support to search module.
       * Search indexing and query preprocessors now get language information.
+      * Unified content translation permission granularity with content editing
+        permissions.
     * Better language based configuration
       * Added language options to block visibility.
     * Much improved language APIs for developers:
@@ -85,6 +89,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Removed textgroups support from interface translation in favor of
         native configuration language support.
       * Reworked Gettext PO support to use pluggable read/write handlers.
+      * Added language select form element in the Form API.
 - Added E-mail field type to core.
 
 Drupal 7.0, 2011-01-05
