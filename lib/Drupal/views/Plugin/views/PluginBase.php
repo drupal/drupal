@@ -131,18 +131,11 @@ abstract class PluginBase extends ComponentPluginBase {
     }
   }
 
+  /**
+   * Clears a plugin.
+   */
   public function destroy() {
-    if (isset($this->view)) {
-      unset($this->view);
-    }
-
-    if (isset($this->display)) {
-      unset($this->display);
-    }
-
-    if (isset($this->query)) {
-      unset($this->query);
-    }
+    unset($this->view, $this->display, $this->query);
   }
 
   /**
