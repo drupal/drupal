@@ -14,6 +14,8 @@ use Drupal\Core\Annotation\Plugin;
  * Field handler to provide simple renderer that allows linking to a taxonomy
  * term.
  *
+ * @todo This handler should use entities directly.
+ *
  * @ingroup views_field_handlers
  *
  * @Plugin(

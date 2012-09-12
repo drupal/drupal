@@ -162,10 +162,10 @@ function user_views_data() {
       'id' => 'standard',
     ),
     'filter' => array(
-      'id' => 'node_language',
+      'id' => 'language',
     ),
     'argument' => array(
-      'id' => 'node_language',
+      'id' => 'language',
     ),
   );
 

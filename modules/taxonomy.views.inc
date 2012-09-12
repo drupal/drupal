@@ -252,6 +252,24 @@ function taxonomy_views_data() {
     ),
   );
 
+  $data['taxonomy_term_data']['langcode'] = array(
+    'title' => t('Language'), // The item it appears as on the UI,
+    'help' => t('Language of the term'),
+    'field' => array(
+      'id' => 'taxonomy_term_language',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'id' => 'standard',
+    ),
+    'filter' => array(
+      'id' => 'language',
+    ),
+    'argument' => array(
+      'id' => 'language',
+    ),
+  );
+
   // Link to edit the term
   $data['taxonomy_term_data']['edit_term'] = array(
     'field' => array(
