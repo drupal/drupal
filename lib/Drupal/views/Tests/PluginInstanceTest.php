@@ -8,7 +8,6 @@
 namespace Drupal\views\Tests;
 
 use ReflectionClass;
-use Drupal\views\Plugin\Type\ViewsPluginManager;
 
 /**
  * Checks general plugin data and instances for all plugin types.
@@ -88,9 +87,10 @@ class PluginInstanceTest extends ViewTestBase {
    * This will iterate through all plugins from _views_fetch_plugin_data().
    */
   public function testPluginInstances() {
+    $container = drupal_container();
     foreach ($this->definitions as $type => $plugins) {
       // Get a plugin manager for this type.
-      $manager = new ViewsPluginManager($type);
+      $manager = $container->get("plugin.manager.views.$type");
       foreach ($plugins as $definition) {
         // Get a reflection class for this plugin.
         // We only want to test true plugins, i.e. They extend PluginBase.

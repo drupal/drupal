@@ -12,7 +12,7 @@
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\TempStore\UserTempStore;
 use Drupal\views\View;
-use Drupal\views\Plugin\Type\ViewsPluginManager;
+use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
@@ -1324,7 +1324,7 @@ function views_get_handler($table, $field, $type, $override = NULL) {
     }
 
     // @todo This is crazy. Find a way to remove the override functionality.
-    $manager = new ViewsPluginManager($type);
+    $manager = drupal_container()->get("plugin.manager.views.$type");
     $plugin_id = !empty($definition['override handler']) ? $definition['override handler'] : $definition['id'];
     // Try to use the overridden handler.
     try {
@@ -1412,8 +1412,7 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
  *   The created plugin instance.
  */
 function views_get_plugin($type, $plugin_id) {
-  $manager = new ViewsPluginManager($type);
-  return $manager->createInstance($plugin_id);
+  return drupal_container()->get("plugin.manager.views.$type")->createInstance($plugin_id);
 }
 
 /**
@@ -1428,10 +1427,10 @@ function views_get_plugin($type, $plugin_id) {
  */
 function views_get_plugin_definitions($type = FALSE) {
   $plugins = array();
-  $plugin_types = $type ? array($type) : array('access', 'area', 'argument', 'argument_default', 'argument_validator', 'cache', 'display_extender', 'display', 'exposed_form', 'field', 'filter', 'join', 'pager', 'query', 'relationship', 'row', 'sort', 'style', 'wizard');
+  $plugin_types = $type ? array($type) : PluginBase::getTypes();
+  $container = drupal_container();
   foreach ($plugin_types as $plugin_type) {
-    $manager = new ViewsPluginManager($plugin_type);
-    $plugins[$plugin_type] = $manager->getDefinitions();
+    $plugins[$plugin_type] = $container->get("plugin.manager.views.$plugin_type")->getDefinitions();
   }
   if ($type) {
     return $plugins[$type];
@@ -1451,8 +1450,7 @@ function views_get_plugin_definitions($type = FALSE) {
  *   A plugin definition.
  */
 function views_get_plugin_definition($type, $plugin_id) {
-  $manager = new ViewsPluginManager($type);
-  return $manager->getDefinition($plugin_id);
+  return drupal_container()->get("plugin.manager.views.$type")->getDefinition($plugin_id);
 }
 
 /**
