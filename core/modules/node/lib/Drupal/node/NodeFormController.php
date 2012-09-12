@@ -7,8 +7,8 @@
 
 namespace Drupal\node;
 
-use Drupal\entity\EntityInterface;
-use Drupal\entity\EntityFormController;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityFormController;
 
 /**
  * Form controller for the node edit forms.
@@ -21,7 +21,7 @@ class NodeFormController extends EntityFormController {
    * Fills in a few default values, and then invokes hook_prepare() on the node
    * type module, and hook_node_prepare() on all modules.
    *
-   * Overrides Drupal\entity\EntityFormController::prepareEntity().
+   * Overrides Drupal\Core\Entity\EntityFormController::prepareEntity().
    */
   protected function prepareEntity(EntityInterface $node) {
     // Set up default values, if required.
@@ -51,7 +51,7 @@ class NodeFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::form().
+   * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $node) {
     $user_config = config('user.settings');
@@ -243,7 +243,7 @@ class NodeFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::actions().
+   * Overrides Drupal\Core\Entity\EntityFormController::actions().
    */
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
@@ -269,7 +269,7 @@ class NodeFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::validate().
+   * Overrides Drupal\Core\Entity\EntityFormController::validate().
    */
   public function validate(array $form, array &$form_state) {
     $node = $this->buildEntity($form, $form_state);
@@ -314,7 +314,7 @@ class NodeFormController extends EntityFormController {
    * form state's entity with the current step's values before proceeding to the
    * next step.
    *
-   * Overrides Drupal\entity\EntityFormController::submit().
+   * Overrides Drupal\Core\Entity\EntityFormController::submit().
    */
   public function submit(array $form, array &$form_state) {
     $this->submitNodeLanguage($form, $form_state);
@@ -376,7 +376,7 @@ class NodeFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::save().
+   * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
     $node = $this->getEntity($form_state);
@@ -412,7 +412,7 @@ class NodeFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::delete().
+   * Overrides Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
     $destination = array();

@@ -7,7 +7,7 @@
 
 namespace Drupal\user;
 
-use Drupal\entity\Entity;
+use Drupal\Core\Entity\Entity;
 
 /**
  * Defines the user entity class.
@@ -150,7 +150,7 @@ class User extends Entity {
   public $roles = array();
 
   /**
-   * Implements Drupal\entity\EntityInterface::id().
+   * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
     return $this->uid;

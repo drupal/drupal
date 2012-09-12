@@ -16,7 +16,7 @@ use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\node\Node;
 use Drupal\file\File;
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Denotes that the node is not published.
@@ -1022,7 +1022,7 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  *   An array of node entities indexed by nid.
  *
  * @see entity_load_multiple()
- * @see Drupal\entity\EntityFieldQuery
+ * @see Drupal\Core\Entity\EntityFieldQuery
  */
 function node_load_multiple(array $nids = NULL, $reset = FALSE) {
   return entity_load_multiple('node', $nids, $reset);

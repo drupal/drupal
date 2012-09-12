@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\entity\EntityFieldQuery;
+use Drupal\Core\Entity\EntityFieldQuery;
 
 /**
  * Unit test class for field bulk delete and batch purge functionality.

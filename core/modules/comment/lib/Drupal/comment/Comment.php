@@ -7,8 +7,8 @@
 
 namespace Drupal\comment;
 
-use Drupal\entity\ContentEntityInterface;
-use Drupal\entity\Entity;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\Entity;
 
 /**
  * Defines the comment entity class.
@@ -86,14 +86,14 @@ class Comment extends Entity implements ContentEntityInterface {
   public $homepage;
 
   /**
-   * Implements Drupal\entity\EntityInterface::id().
+   * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
     return $this->cid;
   }
 
   /**
-   * Implements Drupal\entity\EntityInterface::bundle().
+   * Implements Drupal\Core\Entity\EntityInterface::bundle().
    */
   public function bundle() {
     return $this->node_type;

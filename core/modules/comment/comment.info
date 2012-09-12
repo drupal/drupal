@@ -5,6 +5,5 @@ version = VERSION
 core = 8.x
 dependencies[] = node
 dependencies[] = text
-dependencies[] = entity
 configure = admin/content/comment
 stylesheets[all][] = comment.theme.css

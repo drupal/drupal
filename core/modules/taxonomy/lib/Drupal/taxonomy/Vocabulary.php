@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\entity\Entity;
+use Drupal\Core\Entity\Entity;
 
 /**
  * Defines the taxonomy vocabulary entity.
@@ -62,7 +62,7 @@ class Vocabulary extends Entity {
   public $weight = 0;
 
   /**
-   * Implements Drupal\entity\EntityInterface::id().
+   * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
     return $this->vid;

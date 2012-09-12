@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * @file
@@ -531,7 +531,7 @@ function hook_node_insert(Drupal\node\Node $node) {
  * Act on nodes being loaded from the database.
  *
  * This hook is invoked during node loading, which is handled by entity_load(),
- * via classes NodeController and Drupal\entity\DatabaseStorageController.
+ * via classes NodeController and Drupal\Core\Entity\DatabaseStorageController.
  * After the node information is read from the database or the entity cache,
  * hook_load() is invoked on the node's content type module, then
  * field_attach_node_revision() or field_attach_load() is called, then
@@ -1168,7 +1168,7 @@ function hook_insert(Drupal\node\Node $node) {
  * (use hook_node_load() to respond to all node loads).
  *
  * This hook is invoked during node loading, which is handled by entity_load(),
- * via classes NodeController and Drupal\entity\DatabaseStorageController.
+ * via classes NodeController and Drupal\Core\Entity\DatabaseStorageController.
  * After the node information is read from the database or the entity cache,
  * hook_load() is invoked on the node's content type module, then
  * field_attach_node_revision() or field_attach_load() is called, then

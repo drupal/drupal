@@ -5,7 +5,7 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
-use Drupal\entity\EntityFieldQuery;
+use Drupal\Core\Entity\EntityFieldQuery;
 use Drupal\file\File;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -116,7 +116,7 @@ function file_entity_info() {
  * @see hook_file_load()
  * @see file_load()
  * @see entity_load()
- * @see Drupal\entity\EntityFieldQuery
+ * @see Drupal\Core\Entity\EntityFieldQuery
  */
 function file_load_multiple(array $fids = NULL) {
   return entity_load_multiple('file', $fids);

@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\file\File;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -289,7 +289,7 @@ function user_external_load($authname) {
  * @see user_load()
  * @see user_load_by_mail()
  * @see user_load_by_name()
- * @see Drupal\entity\EntityFieldQuery
+ * @see Drupal\Core\Entity\EntityFieldQuery
  */
 function user_load_multiple(array $uids = NULL, $reset = FALSE) {
   return entity_load_multiple('user', $uids, $reset);

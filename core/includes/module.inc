@@ -476,6 +476,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       }
 
       // Allow modules to react prior to the enabling of a module.
+      entity_info_cache_clear();
       module_invoke_all('modules_preenable', array($module));
 
       // Enable the module.
@@ -560,6 +561,7 @@ function module_disable($module_list, $disable_dependents = TRUE) {
     // Refresh the module list to exclude the disabled modules.
     system_list_reset();
     module_implements_reset();
+    entity_info_cache_clear();
     // Invoke hook_modules_disabled before disabling modules,
     // so we can still call module hooks to get information.
     module_invoke_all('modules_disabled', $invoke_modules);

@@ -38,9 +38,6 @@ class FilledMinimalUpgradePathTest extends UpgradePathTestBase {
   public function testFilledMinimalUpgrade() {
     $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
 
-    // Ensure that the new Entity module is enabled after upgrade.
-    $this->assertTrue(module_exists('entity'), 'Entity module enabled after upgrade.');
-
     // Hit the frontpage.
     $this->drupalGet('');
     $this->assertResponse(200);

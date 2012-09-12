@@ -7,8 +7,8 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\entity\ContentEntityInterface;
-use Drupal\entity\Entity;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\Entity;
 
 /**
  * Defines the taxonomy term entity.
@@ -92,14 +92,14 @@ class Term extends Entity implements ContentEntityInterface {
   public $vocabulary_machine_name;
 
   /**
-   * Implements Drupal\entity\EntityInterface::id().
+   * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
     return $this->tid;
   }
 
   /**
-   * Implements Drupal\entity\EntityInterface::bundle().
+   * Implements Drupal\Core\Entity\EntityInterface::bundle().
    */
   public function bundle() {
     return $this->vocabulary_machine_name;

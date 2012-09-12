@@ -2099,9 +2099,9 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  *     Defaults to empty string when clean URLs are in effect, and to
  *     'index.php/' when they are not.
  *   - 'entity_type': The entity type of the object that called url(). Only
- *     set if url() is invoked by Drupal\entity\Entity::uri().
+ *     set if url() is invoked by Drupal\Core\Entity\Entity::uri().
  *   - 'entity': The entity object (such as a node) for which the URL is being
- *     generated. Only set if url() is invoked by Drupal\entity\Entity::uri().
+ *     generated. Only set if url() is invoked by Drupal\Core\Entity\Entity::uri().
  *
  * @return
  *   A string containing a URL to the given path.
@@ -4871,6 +4871,7 @@ function _drupal_bootstrap_code() {
   require_once DRUPAL_ROOT . '/core/includes/token.inc';
   require_once DRUPAL_ROOT . '/core/includes/errors.inc';
   require_once DRUPAL_ROOT . '/core/includes/schema.inc';
+  require_once DRUPAL_ROOT . '/core/includes/entity.inc';
 
   // Load all enabled modules
   module_load_all();

@@ -13,7 +13,7 @@
  * test helper functions
  */
 
-use Drupal\entity\EntityFieldQuery;
+use Drupal\Core\Entity\EntityFieldQuery;
 
 require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.entity.inc';
 require_once DRUPAL_ROOT . '/core/modules/field/tests/modules/field_test/field_test.field.inc';
@@ -278,7 +278,7 @@ function field_test_field_widget_form_alter(&$element, &$form_state, $context) {
 /**
  * Implements hook_query_TAG_alter() for tag 'efq_table_prefixing_test'.
  *
- * @see Drupal\entity\Tests\EntityFieldQueryTest::testTablePrefixing()
+ * @see Drupal\system\Tests\Entity\EntityFieldQueryTest::testTablePrefixing()
  */
 function field_test_query_efq_table_prefixing_test_alter(&$query) {
   // Add an additional join onto the entity base table. This will cause an

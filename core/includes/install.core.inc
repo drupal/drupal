@@ -273,6 +273,7 @@ function install_begin_request(&$install_state) {
   // Load module basics (needed for hook invokes).
   include_once DRUPAL_ROOT . '/core/includes/module.inc';
   include_once DRUPAL_ROOT . '/core/includes/session.inc';
+  require_once DRUPAL_ROOT . '/core/includes/entity.inc';
 
   // Determine whether the configuration system is ready to operate.
   $install_state['config_verified'] = install_verify_config_directory(CONFIG_ACTIVE_DIRECTORY) && install_verify_config_directory(CONFIG_STAGING_DIRECTORY);
@@ -320,11 +321,9 @@ function install_begin_request(&$install_state) {
   require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
   // Override the module list with a minimal set of modules.
   $module_list['system']['filename'] = 'core/modules/system/system.module';
-  $module_list['entity']['filename'] = 'core/modules/entity/entity.module';
   $module_list['user']['filename']   = 'core/modules/user/user.module';
   module_list(NULL, $module_list);
   drupal_load('module', 'system');
-  drupal_load('module', 'entity');
   drupal_load('module', 'user');
 
   // Load the cache infrastructure using a "fake" cache implementation that

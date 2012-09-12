@@ -6,7 +6,7 @@
  */
 
 use Drupal\field\FieldValidationException;
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * @defgroup field_storage Field Storage API
@@ -123,7 +123,7 @@ const FIELD_STORAGE_INSERT = 'insert';
  *   - prepare translation
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The fully formed $entity_type entity.
  * @param $a
  *   - The $form in the 'form' operation.
@@ -519,7 +519,7 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity for which to load form elements, used to initialize
  *   default form values.
  * @param $form
@@ -739,7 +739,7 @@ function field_attach_load_revision($entity_type, $entities, $options = array())
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to validate.
  * @throws Drupal\field\FieldValidationException
  *   If validation errors are found, a FieldValidationException is thrown. The
@@ -784,7 +784,7 @@ function field_attach_validate($entity_type, $entity) {
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity being submitted. The 'bundle', 'id' and (if applicable)
  *   'revision' keys should be present. The actual field values will be read
  *   from $form_state['values'].
@@ -824,7 +824,7 @@ function field_attach_form_validate($entity_type, EntityInterface $entity, $form
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity being submitted. The 'bundle', 'id' and (if applicable)
  *   'revision' keys should be present. The actual field values will be read
  *   from $form_state['values'].
@@ -876,7 +876,7 @@ function field_attach_presave($entity_type, $entity) {
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
  * @return
  *   Default values (if any) will be added to the $entity parameter for fields
@@ -925,7 +925,7 @@ function field_attach_insert($entity_type, EntityInterface $entity) {
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
  */
 function field_attach_update($entity_type, EntityInterface $entity) {
@@ -978,7 +978,7 @@ function field_attach_update($entity_type, EntityInterface $entity) {
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity whose field data to delete.
  */
 function field_attach_delete($entity_type, $entity) {
@@ -1013,7 +1013,7 @@ function field_attach_delete($entity_type, $entity) {
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to save.
  */
 function field_attach_delete_revision($entity_type, $entity) {
@@ -1128,7 +1128,7 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode, $langcod
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to render.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
@@ -1181,7 +1181,7 @@ function field_attach_view($entity_type, EntityInterface $entity, $view_mode, $l
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to render.
  * @param $element
  *   The structured array containing the values ready for rendering.
@@ -1221,7 +1221,7 @@ function field_attach_preprocess($entity_type, EntityInterface $entity, $element
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
- * @param Drupal\entity\EntityInterface $entity
+ * @param Drupal\Core\Entity\EntityInterface $entity
  *   The entity to be prepared for translation.
  * @param $langcode
  *   The language the entity has to be translated in.

@@ -7,7 +7,7 @@
 
 namespace Drupal\field_test;
 
-use Drupal\entity\Entity;
+use Drupal\Core\Entity\Entity;
 
 /**
  * Test entity class.
@@ -36,21 +36,21 @@ class TestEntity extends Entity {
   public $fttype;
 
   /**
-   * Overrides Drupal\entity\Entity::id().
+   * Overrides Drupal\Core\Entity\Entity::id().
    */
   public function id() {
     return $this->ftid;
   }
 
   /**
-   * Overrides Drupal\entity\Entity::getRevisionId().
+   * Overrides Drupal\Core\Entity\Entity::getRevisionId().
    */
   public function getRevisionId() {
     return $this->ftvid;
   }
 
   /**
-   * Overrides Drupal\entity\Entity::bundle().
+   * Overrides Drupal\Core\Entity\Entity::bundle().
    */
   public function bundle() {
     return !empty($this->fttype) ? $this->fttype : $this->entityType();

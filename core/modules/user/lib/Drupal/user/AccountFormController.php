@@ -7,8 +7,8 @@
 
 namespace Drupal\user;
 
-use Drupal\entity\EntityInterface;
-use Drupal\entity\EntityFormController;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityFormController;
 
 /**
  * Form controller for the user account forms.
@@ -16,7 +16,7 @@ use Drupal\entity\EntityFormController;
 abstract class AccountFormController extends EntityFormController {
 
   /**
-   * Overrides Drupal\entity\EntityFormController::form().
+   * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $account) {
     global $user;
@@ -255,7 +255,7 @@ abstract class AccountFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::submit().
+   * Overrides Drupal\Core\Entity\EntityFormController::submit().
    */
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);

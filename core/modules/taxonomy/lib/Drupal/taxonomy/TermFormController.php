@@ -7,8 +7,8 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\entity\EntityInterface;
-use Drupal\entity\EntityFormController;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityFormController;
 
 /**
  * Base for controller for taxonomy term edit forms.
@@ -16,7 +16,7 @@ use Drupal\entity\EntityFormController;
 class TermFormController extends EntityFormController {
 
   /**
-   * Overrides Drupal\entity\EntityFormController::form().
+   * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $term) {
     $vocabulary = taxonomy_vocabulary_load($term->vid);
@@ -123,7 +123,7 @@ class TermFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::validate().
+   * Overrides Drupal\Core\Entity\EntityFormController::validate().
    */
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
@@ -135,7 +135,7 @@ class TermFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::submit().
+   * Overrides Drupal\Core\Entity\EntityFormController::submit().
    */
   public function submit(array $form, array &$form_state) {
     $term = parent::submit($form, $form_state);
@@ -152,7 +152,7 @@ class TermFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::save().
+   * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
     $term = $this->getEntity($form_state);
@@ -196,7 +196,7 @@ class TermFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::delete().
+   * Overrides Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
     $destination = array();

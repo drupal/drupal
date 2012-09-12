@@ -7,7 +7,7 @@
 
 namespace Drupal\config;
 
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Defines the interface common for all configuration entities.

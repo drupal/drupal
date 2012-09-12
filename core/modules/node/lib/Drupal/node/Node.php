@@ -7,8 +7,8 @@
 
 namespace Drupal\node;
 
-use Drupal\entity\ContentEntityInterface;
-use Drupal\entity\Entity;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\Entity;
 
 /**
  * Defines the node entity class.
@@ -163,21 +163,21 @@ class Node extends Entity implements ContentEntityInterface {
   public $revision_uid;
 
   /**
-   * Implements Drupal\entity\EntityInterface::id().
+   * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
     return $this->nid;
   }
 
   /**
-   * Implements Drupal\entity\EntityInterface::bundle().
+   * Implements Drupal\Core\Entity\EntityInterface::bundle().
    */
   public function bundle() {
     return $this->type;
   }
 
   /**
-   * Overrides Drupal\entity\Entity::createDuplicate().
+   * Overrides Drupal\Core\Entity\Entity::createDuplicate().
    */
   public function createDuplicate() {
     $duplicate = parent::createDuplicate();
@@ -186,7 +186,7 @@ class Node extends Entity implements ContentEntityInterface {
   }
 
   /**
-   * Overrides Drupal\entity\Entity::getRevisionId().
+   * Overrides Drupal\Core\Entity\Entity::getRevisionId().
    */
   public function getRevisionId() {
     return $this->vid;

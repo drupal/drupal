@@ -1496,13 +1496,6 @@ function system_update_last_removed() {
  */
 
 /**
- * Enable entity module.
- */
-function system_update_8000() {
-  update_module_enable(array('entity'));
-}
-
-/**
  * Move from the Garland theme.
  */
 function system_update_8001() {

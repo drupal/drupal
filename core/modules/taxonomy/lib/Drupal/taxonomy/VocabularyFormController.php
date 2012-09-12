@@ -7,8 +7,8 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\entity\EntityInterface;
-use Drupal\entity\EntityFormController;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityFormController;
 
 /**
  * Base form controller for vocabulary edit forms.
@@ -16,7 +16,7 @@ use Drupal\entity\EntityFormController;
 class VocabularyFormController extends EntityFormController {
 
   /**
-   * Overrides Drupal\entity\EntityFormController::form().
+   * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $vocabulary) {
 
@@ -80,7 +80,7 @@ class VocabularyFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::validate().
+   * Overrides Drupal\Core\Entity\EntityFormController::validate().
    */
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
@@ -100,7 +100,7 @@ class VocabularyFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::submit().
+   * Overrides Drupal\Core\Entity\EntityFormController::submit().
    */
   public function submit(array $form, array &$form_state) {
     // @todo We should not be calling taxonomy_vocabulary_confirm_delete() from
@@ -117,7 +117,7 @@ class VocabularyFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::save().
+   * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
     $vocabulary = $this->getEntity($form_state);

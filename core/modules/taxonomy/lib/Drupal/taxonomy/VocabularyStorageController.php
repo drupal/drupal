@@ -7,8 +7,8 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\entity\EntityInterface;
-use Drupal\entity\DatabaseStorageController;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\DatabaseStorageController;
 
 /**
  * Defines a controller class for taxonomy vocabularies.
@@ -16,7 +16,7 @@ use Drupal\entity\DatabaseStorageController;
 class VocabularyStorageController extends DatabaseStorageController {
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::buildQuery().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::buildQuery().
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
     $query = parent::buildQuery($ids, $revision_id);
@@ -27,7 +27,7 @@ class VocabularyStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::postSave().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::postSave().
    */
   protected function postSave(EntityInterface $entity, $update) {
     if (!$update) {
@@ -39,7 +39,7 @@ class VocabularyStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::preDelete().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::preDelete().
    */
   protected function preDelete($entities) {
     // Only load terms without a parent, child terms will get deleted too.
@@ -48,7 +48,7 @@ class VocabularyStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::postDelete().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::postDelete().
    */
   protected function postDelete($entities) {
     // Load all Taxonomy module fields and delete those which use only this
@@ -79,7 +79,7 @@ class VocabularyStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DrupalDatabaseStorageController::resetCache().
+   * Overrides Drupal\Core\Entity\DrupalDatabaseStorageController::resetCache().
    */
   public function resetCache(array $ids = NULL) {
     drupal_static_reset('taxonomy_vocabulary_get_names');

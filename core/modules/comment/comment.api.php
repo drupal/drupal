@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * @file

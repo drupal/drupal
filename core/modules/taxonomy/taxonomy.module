@@ -8,7 +8,7 @@
 use Drupal\node\Node;
 use Drupal\taxonomy\Term;
 use Drupal\taxonomy\Vocabulary;
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Denotes that no term in the vocabulary has a parent.
@@ -1031,7 +1031,7 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
  * database access if loaded again during the same page request.
  *
  * @see entity_load_multiple()
- * @see Drupal\entity\EntityFieldQuery
+ * @see Drupal\Core\Entity\EntityFieldQuery
  *
  * @param array $tids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.

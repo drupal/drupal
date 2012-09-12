@@ -5,7 +5,7 @@
  * Provides File module pages for testing purposes.
  */
 
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\file\File;
 
 /**

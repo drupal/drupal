@@ -7,7 +7,7 @@
 
 namespace Drupal\file;
 
-use Drupal\entity\Entity;
+use Drupal\Core\Entity\Entity;
 
 /**
  * Defines the file entity class.
@@ -92,7 +92,7 @@ class File extends Entity {
   public $timestamp;
 
   /**
-   * Overrides Drupal\entity\Entity::id().
+   * Overrides Drupal\Core\Entity\Entity::id().
    */
   public function id() {
     return $this->fid;

@@ -7,8 +7,8 @@
 
 namespace Drupal\field_test;
 
-use Drupal\entity\EntityInterface;
-use Drupal\entity\EntityFormController;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityFormController;
 
 /**
  * Form controller for the test entity edit forms.
@@ -16,7 +16,7 @@ use Drupal\entity\EntityFormController;
 class TestEntityFormController extends EntityFormController {
 
   /**
-   * Overrides Drupal\entity\EntityFormController::form().
+   * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $entity) {
     $form = parent::form($form, $form_state, $entity);
@@ -33,7 +33,7 @@ class TestEntityFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::save().
+   * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
     $entity = $this->getEntity($form_state);

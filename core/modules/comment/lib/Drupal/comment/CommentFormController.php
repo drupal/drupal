@@ -7,8 +7,8 @@
 
 namespace Drupal\comment;
 
-use Drupal\entity\EntityInterface;
-use Drupal\entity\EntityFormController;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityFormController;
 
 /**
  * Base for controller for comment forms.
@@ -16,7 +16,7 @@ use Drupal\entity\EntityFormController;
 class CommentFormController extends EntityFormController {
 
   /**
-   * Overrides Drupal\entity\EntityFormController::form().
+   * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state, EntityInterface $comment) {
     global $user;
@@ -193,7 +193,7 @@ class CommentFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::actions().
+   * Overrides Drupal\Core\Entity\EntityFormController::actions().
    */
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
@@ -227,7 +227,7 @@ class CommentFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::validate().
+   * Overrides Drupal\Core\Entity\EntityFormController::validate().
    */
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
@@ -264,7 +264,7 @@ class CommentFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::submit().
+   * Overrides Drupal\Core\Entity\EntityFormController::submit().
    */
   public function submit(array $form, array &$form_state) {
     $comment = parent::submit($form, $form_state);
@@ -328,7 +328,7 @@ class CommentFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::save().
+   * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
     $node = node_load($form_state['values']['nid']);

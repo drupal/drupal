@@ -7,7 +7,7 @@
 
 namespace Drupal\config;
 
-use Drupal\entity\Entity;
+use Drupal\Core\Entity\Entity;
 
 /**
  * Defines a base configuration entity class.

@@ -7,8 +7,8 @@
 
 namespace Drupal\field_test;
 
-use Drupal\entity\DatabaseStorageController;
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller class for the test entity entity types.
@@ -16,7 +16,7 @@ use Drupal\entity\EntityInterface;
 class TestEntityController extends DatabaseStorageController {
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::preSave().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
    */
   public function preSave(EntityInterface $entity) {
     // Prepare for a new revision.
@@ -27,7 +27,7 @@ class TestEntityController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::postSave().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::postSave().
    */
   public function postSave(EntityInterface $entity, $update) {
     // Only the test_entity entity type has revisions.

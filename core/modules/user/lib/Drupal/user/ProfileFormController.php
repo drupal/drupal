@@ -7,7 +7,7 @@
 
 namespace Drupal\user;
 
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Form controller for the profile forms.
@@ -15,7 +15,7 @@ use Drupal\entity\EntityInterface;
 class ProfileFormController extends AccountFormController {
 
   /**
-   * Overrides Drupal\entity\EntityFormController::actions().
+   * Overrides Drupal\Core\Entity\EntityFormController::actions().
    */
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
@@ -36,7 +36,7 @@ class ProfileFormController extends AccountFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::submit().
+   * Overrides Drupal\Core\Entity\EntityFormController::submit().
    */
   public function submit(array $form, array &$form_state) {
     // @todo Consider moving this into the parent method.
@@ -46,7 +46,7 @@ class ProfileFormController extends AccountFormController {
   }
 
   /**
-   * Overrides Drupal\entity\EntityFormController::save().
+   * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
     $account = $this->getEntity($form_state);

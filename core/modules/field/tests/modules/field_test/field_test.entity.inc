@@ -5,7 +5,7 @@
  * Defines an entity type.
  */
 
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\field_test\TestEntity;
 
 /**

@@ -7,21 +7,21 @@
 
 namespace Drupal\node;
 
-use Drupal\entity\DatabaseStorageController;
-use Drupal\entity\EntityInterface;
-use Drupal\entity\EntityStorageException;
+use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Exception;
 
 /**
  * Controller class for nodes.
  *
- * This extends the Drupal\entity\DatabaseStorageController class, adding
+ * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for node entities.
  */
 class NodeStorageController extends DatabaseStorageController {
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::create().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::create().
    */
   public function create(array $values) {
     $node = parent::create($values);
@@ -35,7 +35,7 @@ class NodeStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::delete().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::delete().
    */
   public function delete($ids) {
     $entities = $ids ? $this->load($ids) : FALSE;
@@ -80,7 +80,7 @@ class NodeStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::save().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::save().
    */
   public function save(EntityInterface $entity) {
     $transaction = db_transaction();
@@ -138,7 +138,7 @@ class NodeStorageController extends DatabaseStorageController {
   /**
    * Saves a node revision.
    *
-   * @param Drupal\entity\EntityInterface $node
+   * @param Drupal\Core\Entity\EntityInterface $node
    *   The node entity.
    */
   protected function saveRevision(EntityInterface $entity) {
@@ -164,7 +164,7 @@ class NodeStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::attachLoad().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
    */
   protected function attachLoad(&$nodes, $load_revision = FALSE) {
     // Create an array of nodes for each content type and pass this to the
@@ -189,7 +189,7 @@ class NodeStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::buildQuery().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::buildQuery().
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
     // Ensure that uid is taken from the {node} table,
@@ -204,7 +204,7 @@ class NodeStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::invokeHook().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::invokeHook().
    */
   protected function invokeHook($hook, EntityInterface $node) {
     if ($hook == 'insert' || $hook == 'update') {
@@ -253,7 +253,7 @@ class NodeStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::preSave().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
    */
   protected function preSave(EntityInterface $node) {
     // Before saving the node, set changed and revision times.
@@ -269,7 +269,7 @@ class NodeStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::postSave().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::postSave().
    */
   function postSave(EntityInterface $node, $update) {
     // Update the node access table for this node, but only if it is the
@@ -280,7 +280,7 @@ class NodeStorageController extends DatabaseStorageController {
     }
   }
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::preDelete().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::preDelete().
    */
   function preDelete($entities) {
     if (module_exists('search')) {
@@ -291,7 +291,7 @@ class NodeStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::postDelete().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::postDelete().
    */
   protected function postDelete($nodes) {
     // Delete values from other tables also referencing this node.

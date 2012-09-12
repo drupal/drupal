@@ -7,20 +7,20 @@
 
 namespace Drupal\user;
 
-use Drupal\entity\EntityInterface;
-use Drupal\entity\EntityMalformedException;
-use Drupal\entity\DatabaseStorageController;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityMalformedException;
+use Drupal\Core\Entity\DatabaseStorageController;
 
 /**
  * Controller class for users.
  *
- * This extends the Drupal\entity\DatabaseStorageController class, adding
+ * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for user objects.
  */
 class UserStorageController extends DatabaseStorageController {
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::attachLoad().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
    */
   function attachLoad(&$queried_users, $load_revision = FALSE) {
     // Build an array of user picture IDs so that these can be fetched later.
@@ -60,7 +60,7 @@ class UserStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::create().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::create().
    */
   public function create(array $values) {
     if (!isset($values['created'])) {
@@ -73,7 +73,7 @@ class UserStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::save().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::save().
    */
   public function save(EntityInterface $entity) {
     if (empty($entity->uid)) {
@@ -84,7 +84,7 @@ class UserStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::preSave().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
    */
   protected function preSave(EntityInterface $entity) {
     // Update the user password if it has changed.
@@ -158,7 +158,7 @@ class UserStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::postSave().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::postSave().
    */
   protected function postSave(EntityInterface $entity, $update) {
 
@@ -223,7 +223,7 @@ class UserStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::postDelete().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::postDelete().
    */
   protected function postDelete($entities) {
     db_delete('users_roles')

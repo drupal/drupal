@@ -11,7 +11,7 @@
 
 use Drupal\node\Node;
 use Drupal\file\File;
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -1542,7 +1542,7 @@ function comment_delete_multiple($cids) {
  *   An array of comment objects, indexed by comment ID.
  *
  * @see entity_load()
- * @see Drupal\entity\EntityFieldQuery
+ * @see Drupal\Core\Entity\EntityFieldQuery
  */
 function comment_load_multiple(array $cids = NULL, $reset = FALSE) {
   return entity_load_multiple('comment', $cids, $reset);

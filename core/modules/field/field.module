@@ -4,7 +4,7 @@
  * Attach custom data fields to Drupal entities.
  */
 
-use Drupal\entity\EntityFieldQuery;
+use Drupal\Core\Entity\EntityFieldQuery;
 use Drupal\Core\Template\Attribute;
 
 /*

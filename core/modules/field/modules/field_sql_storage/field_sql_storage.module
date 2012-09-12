@@ -7,8 +7,8 @@
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Select;
-use Drupal\entity\EntityFieldQuery;
-use Drupal\entity\EntityFieldQueryException;
+use Drupal\Core\Entity\EntityFieldQuery;
+use Drupal\Core\Entity\EntityFieldQueryException;
 use Drupal\field\FieldUpdateForbiddenException;
 
 /**
@@ -620,7 +620,7 @@ function _field_sql_storage_query_join_entity(Select $select_query, $entity_type
 /**
  * Adds field (meta) conditions to the given query objects respecting groupings.
  *
- * @param Drupal\entity\EntityFieldQuery $query
+ * @param Drupal\Core\Entity\EntityFieldQuery $query
  *   The field query object to be processed.
  * @param SelectQuery $select_query
  *   The SelectQuery that should get grouping conditions.

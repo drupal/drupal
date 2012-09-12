@@ -8,8 +8,8 @@
 namespace Drupal\config;
 
 use Drupal\Component\Uuid\Uuid;
-use Drupal\entity\EntityInterface;
-use Drupal\entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**
  * Defines the storage controller class for configuration entities.
@@ -56,7 +56,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   protected $uuidKey = 'uuid';
 
   /**
-   * Implements Drupal\entity\EntityStorageControllerInterface::__construct().
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::__construct().
    *
    * Sets basic variables.
    */
@@ -68,7 +68,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\entity\EntityStorageControllerInterface::resetCache().
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::resetCache().
    */
   public function resetCache(array $ids = NULL) {
     // The configuration system is fast enough and/or implements its own
@@ -76,7 +76,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\entity\EntityStorageControllerInterface::load().
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::load().
    */
   public function load(array $ids = NULL) {
     $entities = array();
@@ -115,14 +115,14 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\entity\EntityStorageControllerInterface::loadRevision().
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::loadRevision().
    */
   public function loadRevision($revision_id) {
     return FALSE;
   }
 
   /**
-   * Implements Drupal\entity\EntityStorageControllerInterface::loadByProperties().
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::loadByProperties().
    */
   public function loadByProperties(array $values = array()) {
     return array();
@@ -209,10 +209,10 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\entity\EntityStorageControllerInterface::create().
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::create().
    */
   public function create(array $values) {
-    $class = isset($this->entityInfo['entity class']) ? $this->entityInfo['entity class'] : 'Drupal\entity\Entity';
+    $class = isset($this->entityInfo['entity class']) ? $this->entityInfo['entity class'] : 'Drupal\Core\Entity\Entity';
 
     $entity = new $class($values, $this->entityType);
 
@@ -226,7 +226,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\entity\EntityStorageControllerInterface::delete().
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::delete().
    */
   public function delete($ids) {
     $entities = $ids ? $this->load($ids) : FALSE;
@@ -252,7 +252,7 @@ class ConfigStorageController implements EntityStorageControllerInterface {
   }
 
   /**
-   * Implements Drupal\entity\EntityStorageControllerInterface::save().
+   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::save().
    */
   public function save(EntityInterface $entity) {
     $prefix = $this->entityInfo['config prefix'] . '.';

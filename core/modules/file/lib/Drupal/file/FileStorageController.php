@@ -7,8 +7,8 @@
 
 namespace Drupal\file;
 
-use Drupal\entity\DatabaseStorageController;
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * File storage controller for files.
@@ -16,7 +16,7 @@ use Drupal\entity\EntityInterface;
 class FileStorageController extends DatabaseStorageController {
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::create().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::create().
    */
   public function create(array $values) {
     // Automatically detect filename if not set.
@@ -32,7 +32,7 @@ class FileStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::presave().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::presave().
    */
   protected function preSave(EntityInterface $entity) {
     $entity->timestamp = REQUEST_TIME;
@@ -47,7 +47,7 @@ class FileStorageController extends DatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\entity\DatabaseStorageController::preDelete().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::preDelete().
    */
   public function preDelete($entities) {
     foreach ($entities as $entity) {
