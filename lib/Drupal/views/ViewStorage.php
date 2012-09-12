@@ -15,7 +15,7 @@ use Drupal\config\ConfigEntityBase;
 class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
 
   /**
-   * Overrides Drupal\entity\EntityInterface::id().
+   * Overrides Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
     return $this->name;

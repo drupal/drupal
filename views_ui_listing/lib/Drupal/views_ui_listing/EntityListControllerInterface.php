@@ -7,7 +7,7 @@
 
 namespace Drupal\views_ui_listing;
 
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Defines an interface for Configuration entity listing plugins.

@@ -8,7 +8,7 @@
 namespace Drupal\views;
 
 use Drupal\config\ConfigStorageController;
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Uuid\Uuid;
 
 /**
@@ -148,7 +148,7 @@ class ViewStorageController extends ConfigStorageController {
   /**
    * Attaches an array of ViewDisplay objects to the view display property.
    *
-   * @param Drupal\entity\EntityInterface $entity
+   * @param Drupal\Core\Entity\EntityInterface $entity
    */
   protected function attachDisplays(EntityInterface $entity) {
     if (isset($entity->display) && is_array($entity->display)) {

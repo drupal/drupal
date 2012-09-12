@@ -7,7 +7,7 @@
 namespace Drupal\views_ui_listing_test;
 
 use Drupal\views_ui_listing\EntityListControllerBase;
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Views config entity listing controller.

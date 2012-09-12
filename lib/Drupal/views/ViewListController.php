@@ -8,7 +8,7 @@
 namespace Drupal\views;
 
 use Drupal\views_ui_listing\EntityListControllerBase;
-use Drupal\entity\EntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Provides a listing of Views.
