@@ -1705,6 +1705,7 @@ function install_check_requirements($install_state) {
 
   // If Drupal is not set up already, we need to create a settings file.
   if (!$install_state['settings_verified']) {
+    $readable = FALSE;
     $writable = FALSE;
     $conf_path = './' . conf_path(FALSE, TRUE);
     $settings_file = $conf_path . '/settings.php';
@@ -1717,7 +1718,8 @@ function install_check_requirements($install_state) {
       $file = $settings_file;
       if (drupal_verify_install_file($settings_file, FILE_EXIST)) {
         // If it does, make sure it is writable.
-        $writable = drupal_verify_install_file($settings_file, FILE_READABLE|FILE_WRITABLE);
+        $readable = drupal_verify_install_file($settings_file, FILE_READABLE);
+        $writable = drupal_verify_install_file($settings_file, FILE_WRITABLE);
         $exists = TRUE;
       }
     }
@@ -1790,6 +1792,15 @@ function install_check_requirements($install_state) {
         'title'       => st('Settings file'),
         'value'       => st('The %file file exists.', array('%file' => $file)),
       );
+      // If settings.php is not readable, throw an error.
+      if (!$readable) {
+        $requirements['settings file readable'] = array(
+          'title'       => st('Settings file'),
+          'value'       => st('The settings file is not readable.'),
+          'severity'    => REQUIREMENT_ERROR,
+          'description' => st('@drupal requires read permissions to %file at all times. If you are unsure how to grant file permissions, consult the <a href="@handbook_url">online handbook</a>.', array('@drupal' => drupal_install_profile_distribution_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')),
+        );
+      }
       // If settings.php is not writable, throw an error.
       if (!$writable) {
         $requirements['settings file writable'] = array(

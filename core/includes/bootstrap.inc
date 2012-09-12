@@ -709,7 +709,7 @@ function drupal_settings_initialize() {
 
   // Make conf_path() available as local variable in settings.php.
   $conf_path = conf_path();
-  if (file_exists(DRUPAL_ROOT . '/' . $conf_path . '/settings.php')) {
+  if (is_readable(DRUPAL_ROOT . '/' . $conf_path . '/settings.php')) {
     include_once DRUPAL_ROOT . '/' . $conf_path . '/settings.php';
   }
   $is_https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on';
