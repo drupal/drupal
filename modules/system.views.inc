@@ -76,7 +76,7 @@ function system_views_data() {
       'name field' => 'type', // the field to display in the summary.
     ),
     'filter' => array(
-      'id' => 'filter_system_type',
+      'id' => 'system_type',
     ),
     'sort' => array(
       'id' => 'standard',

@@ -113,7 +113,7 @@ function file_views_data() {
     'help' => t('The extension of the file.'),
     'real field' => 'filename',
     'field' => array(
-      'id' => 'field_file_extension',
+      'id' => 'file_extension',
       'click sortable' => FALSE,
      ),
   );
@@ -123,7 +123,7 @@ function file_views_data() {
     'title' => t('Size'),
     'help' => t('The size of the file.'),
     'field' => array(
-      'id' => 'field_file_size',
+      'id' => 'file_size',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -139,14 +139,14 @@ function file_views_data() {
     'title' => t('Status'),
     'help' => t('The status of the file.'),
     'field' => array(
-      'id' => 'field_file_status',
+      'id' => 'file_status',
       'click sortable' => TRUE,
      ),
     'sort' => array(
       'id' => 'standard',
     ),
     'filter' => array(
-      'id' => 'filter_file_status',
+      'id' => 'file_status',
     ),
   );
 
