@@ -525,6 +525,32 @@ function user_update_8005() {
   );
   db_add_field('users', 'preferred_admin_langcode', $spec);
 }
+
+/**
+ * Moves user mail settings from variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function user_update_8006() {
+  update_variables_to_config('user.mail', array(
+    'register_admin_created_subject' => 'register_admin_created.subject',
+    'register_admin_created_body' => 'register_admin_created.body',
+    'register_pending_approval_subject' => 'register_pending_approval.subject',
+    'register_pending_approval_body' => 'register_pending_approval.body',
+    'register_no_approval_required_subject' => 'register_no_approval_required.subject',
+    'register_no_approval_required_body' => 'register_no_approval_required.body',
+    'password_reset_subject' => 'password_reset.subject',
+    'password_reset_body' => 'password_reset.body',
+    'status_activated_subject' => 'status_activated.subject',
+    'status_activated_body' => 'status_activated.body',
+    'status_blocked_subject' => 'status_blocked.subject',
+    'status_blocked_body' => 'status_blocked.body',
+    'cancel_confirm_subject' => 'cancel_confirm.subject',
+    'cancel_confirm_body' => 'cancel_confirm.body',
+    'status_canceled_subject' => 'status_canceled.subject',
+    'status_canceled_body' => 'status_canceled.body',
+  ));
+}
 /**
  * @} End of "addtogroup updates-7.x-to-8.x".
  */
