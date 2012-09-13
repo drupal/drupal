@@ -1170,18 +1170,42 @@ function views_include($file) {
 
 /**
  * Load views files on behalf of modules.
+ *
+ * @todo Remove this function once the views integration got moved into the
+ *   core modules itself.
  */
-function views_module_include($api, $reset = FALSE) {
-  if ($reset) {
-    $cache = &drupal_static('ctools_plugin_api_info');
-    if (isset($cache['views']['views'])) {
-      unset($cache['views']['views']);
+function views_module_include() {
+  $loaded_files = &drupal_static(__FUNCTION__, array());
+
+  $minimum_version = views_api_minimum_version();
+  $current_version = views_api_version();
+  foreach (module_implements('views_api') as $module) {
+    if (isset($loaded_files[$module])) {
+      continue;
+    }
+    $info = module_invoke($module, 'views_api');
+    $version = $info['api'];
+    $path = isset($info['path']) ? $info['path'] : drupal_get_path('module', $module);
+    // Only process if version is between minimum and current, inclusive.
+    if (version_compare($version, $minimum_version, '>=') && version_compare($version, $current_version, '<=')) {
+      $path = $path . "/$module.views.inc";
+      if (file_exists($path)) {
+        include_once $path;
+        $loaded_files[$module] = TRUE;
+      }
     }
   }
+}
 
-  // @todo Replace with http://drupal.org/node/1760284.
-  module_load_include('inc', 'ctools', 'includes/plugins');
-  return ctools_plugin_api_include('views', $api, views_api_minimum_version(), views_api_version());
+/**
+ * Implements hook_hook_info().
+ */
+function views_hook_info() {
+  $hooks['views_data'] = array(
+    'group' => 'views',
+  );
+
+  return $hooks;
 }
 
 /**
@@ -1229,7 +1253,7 @@ function views_include_handlers($reset = FALSE) {
 
   views_include('handlers');
   views_include('cache');
-  views_module_include('views', $reset);
+  views_module_include();
   $finished = TRUE;
 }
 
