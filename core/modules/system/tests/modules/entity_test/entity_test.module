@@ -13,6 +13,9 @@ function entity_test_entity_info() {
     'label' => t('Test entity'),
     'entity class' => 'Drupal\entity_test\EntityTest',
     'controller class' => 'Drupal\entity_test\EntityTestStorageController',
+    'form controller class' => array(
+      'default' => 'Drupal\entity_test\EntityTestFormController',
+    ),
     'base table' => 'entity_test',
     'fieldable' => TRUE,
     'entity keys' => array(
@@ -25,6 +28,65 @@ function entity_test_entity_info() {
     $items['entity_test']['translation']['entity_test'] = TRUE;
   }
   return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function entity_test_permission() {
+  $permissions = array(
+    'administer entity_test content' => array(
+      'title' => t('Administer entity_test content'),
+      'description' => t('Manage entity_test content'),
+    ),
+  );
+  return $permissions;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function entity_test_menu() {
+  $items = array();
+
+  $items['entity-test/add'] = array(
+    'title' => 'Add an entity_test',
+    'page callback' => 'entity_test_add',
+    'access arguments' => array('administer entity_test content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['entity-test/manage/%entity_test'] = array(
+    'title' => 'Edit test entity',
+    'page callback' => 'entity_test_edit',
+    'page arguments' => array(2),
+    'access arguments' => array('administer entity_test content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['entity-test/manage/%entity_test/edit'] = array(
+    'title' => 'Edit',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Menu callback: displays the 'Add new entity_test' form.
+ */
+function entity_test_add() {
+  drupal_set_title(t('Create an entity_test'));
+  $entity = entity_create('entity_test', array());
+  return entity_get_form($entity);
+}
+
+/**
+ * Menu callback: displays the 'Edit existing entity_test' form.
+ */
+function entity_test_edit($entity) {
+  drupal_set_title(t('entity_test @id', array('@id' => $entity->id)), PASS_THROUGH);
+  return entity_get_form($entity);
 }
 
 /**
