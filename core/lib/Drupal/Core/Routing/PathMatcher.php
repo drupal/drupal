@@ -57,7 +57,10 @@ class PathMatcher implements InitialMatcherInterface {
 
     $collection = new RouteCollection();
     foreach ($routes as $name => $route) {
-      $collection->add($name, unserialize($route));
+      $route = unserialize($route);
+      if (preg_match($route->compile()->getRegex(), $path, $matches)) {
+        $collection->add($name, $route);
+      }
     }
 
     if (!count($collection->all())) {
