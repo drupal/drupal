@@ -31,7 +31,7 @@ abstract class CachePluginBase extends PluginBase {
   /**
    * What table to store data in.
    */
-  var $table = 'views_data';
+  var $table = 'views_results';
 
   /**
    * Stores the cache id used for the results cache, once get_results_key() got

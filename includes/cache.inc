@@ -104,7 +104,7 @@ function views_cache_set($cid, $data, $use_language = FALSE) {
     $cid .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
 
-  cache('cache_views')->set($cid, $data);
+  cache('views_info')->set($cid, $data);
 }
 
 /**
@@ -128,5 +128,5 @@ function views_cache_get($cid, $use_language = FALSE) {
     $cid .= ':' . language(LANGUAGE_TYPE_INTERFACE)->langcode;
   }
 
-  return cache('cache_views')->get($cid);
+  return cache('views_info')->get($cid);
 }

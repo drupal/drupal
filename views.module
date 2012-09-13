@@ -989,31 +989,31 @@ function views_language_list($field = 'name', $all = FALSE) {
  * Implements hook_cache_flush().
  */
 function views_cache_flush() {
-  return array('cache_views', 'cache_views_data');
+  return array('views_info', 'views_results');
 }
 
 /**
  * Implements hook_field_create_instance.
  */
 function views_field_create_instance($instance) {
-  cache('cache_views')->flush();
-  cache('cache_views_data')->flush();
+  cache('views_info')->flush();
+  cache('views_results')->flush();
 }
 
 /**
  * Implements hook_field_update_instance.
  */
 function views_field_update_instance($instance, $prior_instance) {
-  cache('cache_views')->flush();
-  cache('cache_views_data')->flush();
+  cache('views_info')->flush();
+  cache('views_results')->flush();
 }
 
 /**
  * Implements hook_field_delete_instance.
  */
 function views_field_delete_instance($instance) {
-  cache('cache_views')->flush();
-  cache('cache_views_data')->flush();
+  cache('views_info')->flush();
+  cache('views_results')->flush();
 }
 
 /**
@@ -1021,7 +1021,7 @@ function views_field_delete_instance($instance) {
  */
 function views_invalidate_cache() {
   // Clear the views cache.
-  cache('cache_views')->flush();
+  cache('views_info')->flush();
 
   // Clear the page and block cache.
   cache_invalidate(array('content' => TRUE));

@@ -117,11 +117,11 @@ function views_schema() {
     'indexes' => array('vid' => array('vid', 'position')),
   );
 
-  $schema['cache_views'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_views_info'] = drupal_get_schema_unprocessed('system', 'cache');
 
-  $schema['cache_views_data'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_views_data']['description'] = 'Cache table for views to store pre-rendered queries, results, and display output.';
-  $schema['cache_views_data']['fields']['serialized']['default'] = 1;
+  $schema['cache_views_results'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_views_results']['description'] = 'Cache table for views to store pre-rendered queries, results, and display output.';
+  $schema['cache_views_results']['fields']['serialized']['default'] = 1;
 
   $schema['temp_store'] = array(
     'description' => t('A temporary data store for objects that are being edited. Allows state to be saved in a stateless environment.'),
