@@ -142,7 +142,7 @@ class BookTest extends WebTestBase {
 
     // Check outline structure.
     if ($nodes !== NULL) {
-      $this->assertPattern($this->generateOutlinePattern($nodes), t('Node ' . $number . ' outline confirmed.'));
+      $this->assertPattern($this->generateOutlinePattern($nodes), format_string('Node @number outline confirmed.', array('@number' => $number)));
     }
     else {
       $this->pass(t('Node ' . $number . ' doesn\'t have outline.'));
@@ -150,15 +150,15 @@ class BookTest extends WebTestBase {
 
     // Check previous, up, and next links.
     if ($previous) {
-      $this->assertRaw(l('<b>‹</b> ' . $previous->label(), 'node/' . $previous->nid, array('html' => TRUE, 'attributes' => array('rel' => array('prev'), 'title' => t('Go to previous page')))), t('Previous page link found.'));
+      $this->assertRaw(l('<b>‹</b> ' . $previous->label(), 'node/' . $previous->nid, array('html' => TRUE, 'attributes' => array('rel' => array('prev'), 'title' => t('Go to previous page')))), 'Previous page link found.');
     }
 
     if ($up) {
-      $this->assertRaw(l('up', 'node/' . $up->nid, array('html'=> TRUE, 'attributes' => array('title' => t('Go to parent page')))), t('Up page link found.'));
+      $this->assertRaw(l('up', 'node/' . $up->nid, array('html'=> TRUE, 'attributes' => array('title' => t('Go to parent page')))), 'Up page link found.');
     }
 
     if ($next) {
-      $this->assertRaw(l($next->label() . ' <b>›</b>', 'node/' . $next->nid, array('html'=> TRUE, 'attributes' => array('rel' => array('next'), 'title' => t('Go to next page')))), t('Next page link found.'));
+      $this->assertRaw(l($next->label() . ' <b>›</b>', 'node/' . $next->nid, array('html'=> TRUE, 'attributes' => array('rel' => array('next'), 'title' => t('Go to next page')))), 'Next page link found.');
     }
 
     // Compute the expected breadcrumb.
@@ -176,12 +176,12 @@ class BookTest extends WebTestBase {
     }
 
     // Compare expected and got breadcrumbs.
-    $this->assertIdentical($expected_breadcrumb, $got_breadcrumb, t('The breadcrumb is correctly displayed on the page.'));
+    $this->assertIdentical($expected_breadcrumb, $got_breadcrumb, 'The breadcrumb is correctly displayed on the page.');
 
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->nid);
-    $this->assertText($node->label(), t('Printer friendly title found.'));
-    $this->assertRaw(check_markup($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], $node->body[LANGUAGE_NOT_SPECIFIED][0]['format']), t('Printer friendly body found.'));
+    $this->assertText($node->label(), 'Printer friendly title found.');
+    $this->assertRaw(check_markup($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], $node->body[LANGUAGE_NOT_SPECIFIED][0]['format']), 'Printer friendly body found.');
 
     $number++;
   }
@@ -229,7 +229,7 @@ class BookTest extends WebTestBase {
 
     // Check to make sure the book node was created.
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertNotNull(($node === FALSE ? NULL : $node), t('Book node found in database.'));
+    $this->assertNotNull(($node === FALSE ? NULL : $node), 'Book node found in database.');
     $number++;
 
     return $node;
@@ -249,28 +249,28 @@ class BookTest extends WebTestBase {
 
     // Make sure each part of the book is there.
     foreach ($nodes as $node) {
-      $this->assertText($node->label(), t('Node title found in printer friendly version.'));
-      $this->assertRaw(check_markup($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], $node->body[LANGUAGE_NOT_SPECIFIED][0]['format']), t('Node body found in printer friendly version.'));
+      $this->assertText($node->label(), 'Node title found in printer friendly version.');
+      $this->assertRaw(check_markup($node->body[LANGUAGE_NOT_SPECIFIED][0]['value'], $node->body[LANGUAGE_NOT_SPECIFIED][0]['format']), 'Node body found in printer friendly version.');
     }
 
     // Make sure we can't export an unsupported format.
     $this->drupalGet('book/export/foobar/' . $this->book->nid);
-    $this->assertResponse('404', t('Unsupported export format returned "not found".'));
+    $this->assertResponse('404', 'Unsupported export format returned "not found".');
 
     // Make sure we get a 404 on a not existing book node.
     $this->drupalGet('book/export/html/123');
-    $this->assertResponse('404', t('Not existing book node returned "not found".'));
+    $this->assertResponse('404', 'Not existing book node returned "not found".');
 
     // Make sure an anonymous user cannot view printer-friendly version.
     $this->drupalLogout();
 
     // Load the book and verify there is no printer-friendly version link.
     $this->drupalGet('node/' . $this->book->nid);
-    $this->assertNoLink(t('Printer-friendly version'), t('Anonymous user is not shown link to printer-friendly version.'));
+    $this->assertNoLink(t('Printer-friendly version'), 'Anonymous user is not shown link to printer-friendly version.');
 
     // Try getting the URL directly, and verify it fails.
     $this->drupalGet('book/export/html/' . $this->book->nid);
-    $this->assertResponse('403', t('Anonymous user properly forbidden.'));
+    $this->assertResponse('403', 'Anonymous user properly forbidden.');
   }
 
   /**
@@ -282,26 +282,26 @@ class BookTest extends WebTestBase {
     // Set block title to confirm that the interface is available.
     $block_title = $this->randomName(16);
     $this->drupalPost('admin/structure/block/manage/book/navigation/configure', array('title' => $block_title), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
 
     // Set the block to a region to confirm block is available.
     $edit = array();
     $edit['blocks[book_navigation][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
 
      // Give anonymous users the permission 'node test view'.
      $edit = array();
      $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
      $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
-     $this->assertText(t('The changes have been saved.'), t("Permission 'node test view' successfully assigned to anonymous users."));
+     $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
 
     // Test correct display of the block.
     $nodes = $this->createBook();
     $this->drupalGet('<front>');
-    $this->assertText($block_title, t('Book navigation block is displayed.'));
-    $this->assertText($this->book->label(), t('Link to book root (@title) is displayed.', array('@title' => $nodes[0]->label())));
-    $this->assertNoText($nodes[0]->label(), t('No links to individual book pages are displayed.'));
+    $this->assertText($block_title, 'Book navigation block is displayed.');
+    $this->assertText($this->book->label(), format_string('Link to book root (@title) is displayed.', array('@title' => $nodes[0]->label())));
+    $this->assertNoText($nodes[0]->label(), 'No links to individual book pages are displayed.');
   }
 
   /**
@@ -318,19 +318,19 @@ class BookTest extends WebTestBase {
      // Set block display to 'Show block only on book pages'.
      $edit['book_block_mode'] = 'book pages';
      $this->drupalPost('admin/structure/block/manage/book/navigation/configure', $edit, t('Save block'));
-     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+     $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
 
      // Set the block to a region to confirm block is available.
      $edit = array();
      $edit['blocks[book_navigation][region]'] = 'footer';
      $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+     $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
 
      // Give anonymous users the permission 'node test view'.
      $edit = array();
      $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
      $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
-     $this->assertText(t('The changes have been saved.'), t('Permission \'node test view\' successfully assigned to anonymous users.'));
+     $this->assertText(t('The changes have been saved.'), 'Permission \'node test view\' successfully assigned to anonymous users.');
 
      // Create a book.
      $this->createBook();
@@ -338,12 +338,12 @@ class BookTest extends WebTestBase {
      // Test correct display of the block to registered users.
      $this->drupalLogin($this->web_user);
      $this->drupalGet('node/' . $this->book->nid);
-     $this->assertText($block_title, t('Book navigation block is displayed to registered users.'));
+     $this->assertText($block_title, 'Book navigation block is displayed to registered users.');
      $this->drupalLogout();
 
      // Test correct display of the block to anonymous users.
      $this->drupalGet('node/' . $this->book->nid);
-     $this->assertText($block_title, t('Book navigation block is displayed to anonymous users.'));
+     $this->assertText($block_title, 'Book navigation block is displayed to anonymous users.');
    }
 
   /**
@@ -359,7 +359,7 @@ class BookTest extends WebTestBase {
      $this->assertResponse('403', t('Deleting top-level book node properly forbidden.'));
      $this->drupalPost('node/' . $nodes[4]->nid . '/outline/remove', $edit, t('Remove'));
      $node4 = node_load($nodes[4]->nid, TRUE);
-     $this->assertTrue(empty($node4->book), t('Deleting child book node properly allowed.'));
+     $this->assertTrue(empty($node4->book), 'Deleting child book node properly allowed.');
 
      // Delete all child book nodes and retest top-level node deletion.
      foreach ($nodes as $node) {
@@ -368,7 +368,7 @@ class BookTest extends WebTestBase {
      node_delete_multiple($nids);
      $this->drupalPost('node/' . $this->book->nid . '/outline/remove', $edit, t('Remove'));
      $node = node_load($this->book->nid, TRUE);
-     $this->assertTrue(empty($node->book), t('Deleting childless top-level book node properly allowed.'));
+     $this->assertTrue(empty($node->book), 'Deleting childless top-level book node properly allowed.');
    }
 }
 
