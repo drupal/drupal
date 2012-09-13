@@ -431,6 +431,7 @@ function _field_info_prepare_extra_fields($extra_fields, $entity_type, $bundle) 
   $data = $extra_fields['display'];
   foreach ($extra_fields['display'] as $name => $field_data) {
     $settings = isset($bundle_settings['extra_fields']['display'][$name]) ? $bundle_settings['extra_fields']['display'][$name] : array();
+    $field_data['visible'] = isset($field_data['visible']) ? $field_data['visible'] : TRUE;
     $view_modes = array_merge(array('default'), array_keys($entity_type_info['view modes']));
     foreach ($view_modes as $view_mode) {
       if (isset($settings[$view_mode])) {
@@ -439,7 +440,7 @@ function _field_info_prepare_extra_fields($extra_fields, $entity_type, $bundle) 
       else {
         $field_data['display'][$view_mode] = array(
           'weight' => $field_data['weight'],
-          'visible' => TRUE,
+          'visible' => $field_data['visible'],
         );
       }
     }

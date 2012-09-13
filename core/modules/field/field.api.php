@@ -33,6 +33,8 @@ use Drupal\field\FieldUpdateForbiddenException;
  *   - label: The human readable name of the component.
  *   - description: A short description of the component contents.
  *   - weight: The default weight of the element.
+ *   - visible: The default visibility of the element. Only for 'display'
+ *     context.
  */
 function hook_field_extra_fields() {
   $extra['node']['poll'] = array(

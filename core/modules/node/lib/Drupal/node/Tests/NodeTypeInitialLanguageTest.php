@@ -78,6 +78,13 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     $language_field = $this->xpath('//*[@id="language"]');
     $this->assert(!empty($language_field), 'Language field is visible on manage fields tab.');
 
+    // Tests if the language field can be rearranged on the manage display tab.
+    $this->drupalGet('admin/structure/types/manage/article/display');
+    $language_display = $this->xpath('//*[@id="language"]');
+    $this->assert(!empty($language_display), 'Language field is visible on manage display tab.');
+    // Tests if the language field is hidden by default.
+    $this->assertOptionSelected('edit-fields-language-type', 'hidden', 'Language is hidden by default on manage display tab.');
+
     // Changes the inital language settings.
     $edit = array(
       'node_type_language_default' => 'en',
@@ -85,5 +92,43 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalGet('node/add/article');
     $this->assertOptionSelected('edit-langcode', 'en', 'The inital language is the defined language.');
+  }
+
+  /**
+   * Tests Language field visibility features.
+   */
+  function testLanguageFieldVisibility() {
+    $langcode = LANGUAGE_NOT_SPECIFIED;
+
+    // Creates a node to test Language field visibility feature.
+    $edit = array(
+      'title' => $this->randomName(8),
+      "body[$langcode][0][value]" => $this->randomName(16),
+    );
+    $this->drupalPost('node/add/article', $edit, t('Save'));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $this->assertTrue($node, 'Node found in database.');
+
+    // Loads node page and check if Language field is hidden by default.
+    $this->drupalGet('node/' . $node->nid);
+    $language_field = $this->xpath('//div[@id=:id]/div', array(
+      ':id' => 'field-language-display',
+    ));
+    $this->assertTrue(empty($language_field), 'Language field value is not shown by default on node page.');
+
+    // Changes Language field visibility to true and check if it is saved.
+    $edit = array(
+      'fields[language][type]' => 'visible',
+    );
+    $this->drupalPost('admin/structure/types/manage/article/display', $edit, t('Save'));
+    $this->drupalGet('admin/structure/types/manage/article/display');
+    $this->assertOptionSelected('edit-fields-language-type', 'visible', 'Language field has been set to visible.');
+
+    // Loads node page and check if Language field is shown.
+    $this->drupalGet('node/' . $node->nid);
+    $language_field = $this->xpath('//div[@id=:id]/div', array(
+      ':id' => 'field-language-display',
+    ));
+    $this->assertFalse(empty($language_field), 'Language field value is shown on node page.');
   }
 }
