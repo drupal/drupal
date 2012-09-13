@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Routing\PathMatcher.
+ */
+
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -9,9 +14,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Drupal\Core\Database\Connection;
 
 /**
- * Description of PathMatcher
- *
- * @author crell
+ * Initial matcher to match a route against a built database, by path.
  */
 class PathMatcher implements InitialMatcherInterface {
   /**
@@ -28,6 +31,14 @@ class PathMatcher implements InitialMatcherInterface {
    */
   protected $tableName;
 
+  /**
+   * Constructs a new PathMatcher.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   A database connection object.
+   * @param string $table
+   *   The table in the database to use for matching.
+   */
   public function __construct(Connection $connection, $table = 'router') {
     $this->connection = $connection;
     $this->tableName = $table;
@@ -36,10 +47,10 @@ class PathMatcher implements InitialMatcherInterface {
   /**
    * Matches a request against multiple routes.
    *
-   * @param Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   A Request object against which to match.
    *
-   * @return RouteCollection
+   * @return \Symfony\Component\Routing\RouteCollection
    *   A RouteCollection of matched routes.
    */
   public function matchRequestPartial(Request $request) {

@@ -1,12 +1,17 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\Core\Routing\RouteCompiler.
+ */
+
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\Routing\RouteCompilerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Description of RouteCompiler
+ * Compiler to generate derived information from a Route necessary for matching.
  */
 class RouteCompiler implements RouteCompilerInterface {
 
@@ -15,12 +20,15 @@ class RouteCompiler implements RouteCompilerInterface {
    */
   const MAX_PARTS = 9;
 
+  /**
+   * Utility constant to use for regular expressions against the path.
+*/
   const REGEX_DELIMITER = '#';
 
   /**
     * Compiles the current route instance.
     *
-    * @param Route $route
+    * @param \Symfony\Component\Routing\Route $route
     *   A Route instance
     *
     * @return CompiledRoute
@@ -50,7 +58,7 @@ class RouteCompiler implements RouteCompilerInterface {
    * It is not factored out nicely there, so we cannot simply subclass it.
    * @todo Refactor Symfony's RouteCompiler so that it's useful to subclass.
    *
-   * @param Route $route
+   * @param \Symfony\Component\Routing\Route $route
    *   The route object.
    * @param string $pattern
    *   The pattern for which we want a matching regex.
@@ -208,7 +216,7 @@ class RouteCompiler implements RouteCompilerInterface {
    * with default values don't make sense anyway, so that should not be a
    * problem.
    *
-   * @param Route $route
+   * @param \Symfony\Component\Routing\Route $route
    *
    * @return string
    *   The path string, stripped of placeholders that have default values.
