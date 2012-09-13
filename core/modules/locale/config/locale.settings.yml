@@ -1,0 +1,3 @@
+translation:
+  check_disabled_modules: false
+  default_server_pattern: 'http://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po'

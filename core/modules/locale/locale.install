@@ -32,9 +32,6 @@ function locale_uninstall() {
   variable_del('locale_cache_length');
   variable_del('locale_translation_plurals');
   variable_del('locale_translation_javascript');
-  variable_del('locale_translation_test_system_info_alter');
-  variable_del('locale_translation_check_disabled');
-  variable_del('locale_translation_default_server_pattern');
 
   // Remove all node type language variables. Node module might have been
   // enabled, but may be disabled, so use a wildcard delete.
@@ -172,20 +169,22 @@ function locale_schema() {
         'not null' => TRUE,
       ),
       'project_type' => array(
-        'description' => 'Project type, may be core, module, theme',
+        'description' => 'Project type: core, module, or theme.',
         'type' => 'varchar',
         'length' => 15,
         'not null' => TRUE,
       ),
       'core' => array(
-        'description' => 'Core compatibility string for this project.',
+        // http://drupal.org/node/542202#core has an example.
+        'description' => 'Core compatibility string for this project, for example: 8.x',
         'type' => 'varchar',
         'length' => 4,
         'not null' => TRUE,
         'default' => '',
       ),
       'version' => array(
-        'description' => 'The version release of the project.',
+        // http://drupal.org/node/467026 has examples.
+        'description' => 'The version release of the project, for example: 8.x-2.1 or 8.x-1.0-dev',
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
@@ -199,7 +198,8 @@ function locale_schema() {
         'default' => '',
       ),
       'status' => array(
-        'description' => 'The update status of the project.',
+        // locale.compare.inc gives possible values for status.
+        'description' => 'The status of the project. Possible values are: 1 = enabled, 0 = disabled.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
@@ -679,59 +679,9 @@ function locale_update_8010() {
  */
 function locale_update_8011() {
   // Add a 'locale' cache table.
-  db_create_table('cache_locale', array(
-    'description' => 'Cache table for the locale module to store various data.',
-    'fields' => array(
-      'cid' => array(
-        'description' => 'Primary Key: Unique cache ID.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'data' => array(
-        'description' => 'A collection of data to cache.',
-        'type' => 'blob',
-        'not null' => FALSE,
-        'size' => 'big',
-      ),
-      'expire' => array(
-        'description' => 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'created' => array(
-        'description' => 'A Unix timestamp indicating when the cache entry was created.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'serialized' => array(
-        'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
-        'type' => 'int',
-        'size' => 'small',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'tags' => array(
-        'description' => 'Space-separated list of cache tags for this entry.',
-        'type' => 'text',
-        'size' => 'big',
-        'not null' => FALSE,
-      ),
-      'checksum' => array(
-        'description' => 'The tag invalidation sum when this entry was saved.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'expire' => array('expire'),
-    ),
-    'primary key' => array('cid'),
-  ));
+  $locale_cache_schema = system_schema_cache_8007();
+  $locale_cache_schema['description'] = 'Cache table for the locale module to store various data.';
+  db_create_table('cache_locale', $locale_cache_schema);
 
   // Add locale_project table.
   db_create_table('locale_project', array(

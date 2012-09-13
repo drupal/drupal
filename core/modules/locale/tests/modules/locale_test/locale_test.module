@@ -21,7 +21,7 @@ function locale_test_system_info_alter(&$info, $file, $type) {
   }
 
   if ($file->name == 'locale_test' || $file->name == 'locale_test_disabled') {
-    // Make the module appear as not-disabled.
+    // Make the module appear as unhidden.
     $info['hidden'] = FALSE;
   }
 }

@@ -11,15 +11,15 @@
  *
  * .info file properties for interface translation settings.
  *
- * Modules hosted on drupal.org, a project definition is automatically added to
- * the .info file. Only modules with this project definition are discovered by
- * the update module and use it to check for new releases. Locale module uses
- * the same data to build a list of module to check for new translations.
+ * For modules hosted on drupal.org, a project definition is automatically added
+ * to the .info file. Only modules with this project definition are discovered
+ * by the update module and use it to check for new releases. Locale module uses
+ * the same data to build a list of modules to check for new translations.
  * Therefore modules not hosted at drupal.org, such as custom modules, custom
  * themes, features and distributions, need a way to identify themselves to
  * the Locale module if they have translations that require to be updated.
  *
- * Custom module which contain new strings should provide po file(s) containing
+ * Custom modules which contain new strings should provide po file(s) containing
  * source strings and string translations in gettext format. The translation
  * file can be located both local and remote. Use the following .info file
  * properties to inform Locale module to load and import the translations.
@@ -78,11 +78,13 @@
  * Alter the list of projects to be updated by locale's interface translation.
  *
  * Locale module attempts to update the translation of those modules returned
- * by update_get_projects(). Using this hook the data returned by
+ * by update_get_projects(). Using this hook, the data returned by
  * update_get_projects() can be altered or extended.
  *
  * Modules or distributions that use a dedicated translation server should use
- * this hook to specify the interface translation server pattern.
+ * this hook to specify the interface translation server pattern, or to add
+ * additional custom/non-Drupal.org modules to the list of modules known to
+ * locale.
  * - "interface translation server pattern": URL of the .po translation files
  *   used to download the files from. The URL contains tokens which will be
  *   replaced by appropriate values.

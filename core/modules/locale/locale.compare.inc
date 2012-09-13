@@ -37,14 +37,15 @@ function locale_translation_get_projects() {
 
   if (empty($projects)) {
     // Get project data from the database.
-    $projects = array();
-    $result = db_query('SELECT * FROM {locale_project}');
+    $result = db_query('SELECT name, project_type, core, version, server_pattern, status FROM {locale_project}');
 
+    // http://drupal.org/node/1777106 is a follow-up issue to make the check for
+    // possible out-of-date project information more robust.
     if ($result->rowCount() == 0 && module_exists('update')) {
       // At least the core project should be in the database, so we build the
       // data if none are found.
       locale_translation_build_projects();
-      $result = db_query('SELECT * FROM {locale_project}');
+      $result = db_query('SELECT name, project_type, core, version, server_pattern, status FROM {locale_project}');
     }
 
     foreach ($result as $project) {
@@ -77,6 +78,8 @@ function locale_translation_flush_projects() {
  *   - "project_type": Project type, e.g. 'module', 'theme'.
  *   - "core": Core release version, e.g. 8.x
  *   - "version": Project release version, e.g. 8.x-1.0
+ *     See http://drupalcode.org/project/drupalorg.git/blob/refs/heads/7.x-3.x:/drupalorg_project/plugins/release_packager/DrupalorgProjectPackageRelease.class.php#l219
+ *     for how the version strings are created.
  *   - "server_pattern": Translation server po file pattern.
  *   - "status": Project status, 1 = enabled.
  */
@@ -98,6 +101,7 @@ function locale_translation_build_projects() {
 
   $default_server = locale_translation_default_translation_server();
 
+  // If project is a dev release, or core, find the latest available release.
   $project_updates = update_get_available(TRUE);
   foreach ($projects as $name => $data) {
     if (isset($project_updates[$name]['releases']) && $project_updates[$name]['project_status'] != 'not-fetched') {
@@ -107,6 +111,7 @@ function locale_translation_build_projects() {
         foreach ($project_updates[$name]['releases'] as $project_release) {
           // The first release with the same major release number which is not a
           // dev release is the one. Releases are sorted the most recent first.
+          // @todo http://drupal.org/node/1774024 Make a helper function.
           if ($project_release['version_major'] == $matches[1] &&
               (!isset($project_release['version_extra']) || $project_release['version_extra'] != 'dev')) {
             $release = $project_release;
@@ -114,7 +119,8 @@ function locale_translation_build_projects() {
           }
         }
       }
-      elseif ($name == "drupal" || preg_match("/HEAD/", $data['info']['version'], $matches)) {
+      // If project is not a dev version, but is core, pick latest release.
+      elseif ($name == "drupal") {
         // Pick latest available release.
         $release = array_shift($project_updates[$name]['releases']);
       }
@@ -126,13 +132,14 @@ function locale_translation_build_projects() {
       unset($release);
     }
 
+    // For every project store information.
     $data += array(
       'version' => isset($data['info']['version']) ? $data['info']['version'] : '',
       'core' => isset($data['info']['core']) ? $data['info']['core'] : DRUPAL_CORE_COMPATIBILITY,
       // A project can provide the path and filename pattern to download the
       // gettext file. Use the default if not.
       'server_pattern' => isset($data['info']['interface translation server pattern']) ? $data['info']['interface translation server pattern'] : $default_server['pattern'],
-      'status' => $data['project_status'] ? 1 : 0,
+      'status' => !empty($data['project_status']) ? 1 : 0,
     );
     $project = (object) $data;
     $projects[$name] = $project;
@@ -168,6 +175,7 @@ function locale_translation_project_list() {
   $projects = &drupal_static(__FUNCTION__, array());
   if (empty($projects)) {
     module_load_include('compare.inc', 'update');
+    $config = config('locale.settings');
     $projects = array();
 
     $additional_whitelist = array(
@@ -178,7 +186,7 @@ function locale_translation_project_list() {
     $theme_data = _locale_translation_prepare_project_list(system_rebuild_theme_data(), 'theme');
     update_process_info_list($projects, $module_data, 'module', TRUE, $additional_whitelist);
     update_process_info_list($projects, $theme_data, 'theme', TRUE, $additional_whitelist);
-    if (variable_get('locale_translation_check_disabled', 0)) {
+    if ($config->get('translation.check_disabled_modules')) {
       update_process_info_list($projects, $module_data, 'module', FALSE, $additional_whitelist);
       update_process_info_list($projects, $theme_data, 'theme', FALSE, $additional_whitelist);
     }
@@ -195,6 +203,7 @@ function locale_translation_project_list() {
  * Modify .info file data before it is processed by update_process_info_list().
  * In order for update_process_info_list() to recognize a project, it requires
  * the 'project' parameter in the .info file data.
+ *
  * Custom modules or themes can bring their own gettext translation file. To
  * enable import of this file the module or theme defines "interface translation
  * project = myproject" in its .info file. This function will add a project
@@ -210,13 +219,9 @@ function locale_translation_project_list() {
  */
 function _locale_translation_prepare_project_list($data, $type) {
   foreach ($data as $name => $file) {
-    // Include interface translation projects.
-    // Custom modules can bring their own gettext translation file.
-    // To enable import of this file the module must define
-    // 'interface translation project = myproject' in its .info file.
-    // To allow update_process_info_list() to identify this as a project
-    // the 'project' property is filled with the 'interface translation project'
-    // value.
+    // Include interface translation projects. To allow
+    // update_process_info_list() to identify this as a project the 'project'
+    // property is filled with the 'interface translation project' value.
     if (isset($file->info['interface translation project'])) {
       $data[$name]->info['project'] = $file->info['interface translation project'];
     }
@@ -232,8 +237,9 @@ function _locale_translation_prepare_project_list($data, $type) {
  *   - "server_pattern": URL containing po file pattern.
  */
 function locale_translation_default_translation_server() {
+  $config = config('locale.settings');
   return array(
-    'pattern' => variable_get('locale_translation_default_server_pattern', LOCALE_TRANSLATION_DEFAULT_SERVER_PATTERN),
+    'pattern' => $config->get('translation.default_server_pattern'),
   );
 }
 

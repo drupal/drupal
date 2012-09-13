@@ -54,21 +54,24 @@ class LocaleCompareTest extends WebTestBase {
     $this->assertEqual($projects['locale_test']['info']['interface translation server pattern'], 'core/modules/locale/test/modules/locale_test/%project-%version.%language.po', 'Interface translation parameter found in project info.');
     $this->assertEqual($projects['locale_test']['name'] , 'locale_test', format_string('%key found in project info.', array('%key' => 'interface translation project')));
 
+    // Get the locale settings.
+    $config = config('locale.settings');
+
     // Check if disabled modules are detected.
-    variable_set('locale_translation_check_disabled', TRUE);
+    $config->set('translation.check_disabled_modules', TRUE)->save();
     drupal_static_reset('locale_translation_project_list');
     $projects = locale_translation_project_list();
     $this->assertTrue(isset($projects['locale_test_disabled']), 'Disabled module found');
 
     // Check the fully processed list of project data of both enabled and
     // disabled modules.
-    variable_set('locale_translation_check_disabled', TRUE);
+    $config->set('translation.check_disabled_modules', TRUE)->save();
     drupal_static_reset('locale_translation_project_list');
     $projects = locale_translation_get_projects();
     $this->assertEqual($projects['drupal']->name, 'drupal', 'Core project found');
     $this->assertEqual($projects['locale_test']->server_pattern, 'core/modules/locale/test/modules/locale_test/%project-%version.%language.po', 'Interface translation parameter found in project info.');
     $this->assertEqual($projects['locale_test_disabled']->status, '0', 'Disabled module found');
-    variable_del('locale_translation_check_disabled');
+    $config->delete('translation.check_disabled_modules');
 
     // Return the locale test modules back to their hidden state.
     variable_del('locale_translation_test_system_info_alter');
