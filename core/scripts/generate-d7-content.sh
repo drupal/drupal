@@ -128,8 +128,7 @@ for ($i = 0; $i < 24; $i++) {
     }
     else {
       $instance['widget'] = array(
-        'type' => 'select',
-        'module' => 'options',
+        'type' => 'options_select',
         'settings' => array(),
       );
     }
