@@ -366,15 +366,15 @@ function _update_cron_notify() {
   if (!empty($params)) {
     $notify_list = $update_config->get('notification.emails');
     if (!empty($notify_list)) {
-      $default_language = language_default();
+      $default_langcode = language_default()->langcode;
       foreach ($notify_list as $target) {
         if ($target_user = user_load_by_mail($target)) {
-          $target_language = user_preferred_language($target_user);
+          $target_langcode = user_preferred_langcode($target_user);
         }
         else {
-          $target_language = $default_language;
+          $target_langcode = $default_langcode;
         }
-        $message = drupal_mail('update', 'status_notify', $target, $target_language, $params);
+        $message = drupal_mail('update', 'status_notify', $target, $target_langcode, $params);
         // Track when the last mail was successfully sent to avoid sending
         // too many e-mails.
         if ($message['result']) {

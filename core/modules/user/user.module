@@ -1812,13 +1812,8 @@ function user_external_login_register($name, $module) {
  */
 function user_pass_reset_url($account, $options = array()) {
   $timestamp = REQUEST_TIME;
-  $url_options = array('absolute' => TRUE);
-  if (isset($options['langcode'])) {
-    $url_options['language'] = language_load($options['langcode']);
-  }
-  else {
-    $url_options['language'] = user_preferred_language($account);
-  }
+  $langcode = isset($options['langcode']) ? $options['langcode'] : user_preferred_langcode($account);
+  $url_options = array('absolute' => TRUE, 'language' => language_load($langcode));
   return url("user/reset/$account->uid/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), $url_options);
 }
 
@@ -1845,13 +1840,8 @@ function user_pass_reset_url($account, $options = array()) {
  */
 function user_cancel_url($account, $options = array()) {
   $timestamp = REQUEST_TIME;
-  $url_options = array('absolute' => TRUE);
-  if (isset($options['langcode'])) {
-    $url_options['language'] = language_load($options['langcode']);
-  }
-  else {
-    $url_options['language'] = user_preferred_language($account);
-  }
+  $langcode = isset($options['langcode']) ? $options['langcode'] : user_preferred_langcode($account);
+  $url_options = array('absolute' => TRUE, 'language' => language_load($langcode));
   return url("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), $url_options);
 }
 
@@ -2105,10 +2095,10 @@ function user_build_content($account, $view_mode = 'full', $langcode = NULL) {
  * Implements hook_mail().
  */
 function user_mail($key, &$message, $params) {
-  $language = $message['language'];
+  $langcode = $message['langcode'];
   $variables = array('user' => $params['account']);
-  $message['subject'] .= _user_mail_text($key . '.subject', $language, $variables);
-  $message['body'][] = _user_mail_text($key . '.body', $language, $variables);
+  $message['subject'] .= _user_mail_text($key . '.subject', $langcode, $variables);
+  $message['body'][] = _user_mail_text($key . '.body', $langcode, $variables);
 }
 
 /**
@@ -2116,16 +2106,15 @@ function user_mail($key, &$message, $params) {
  *
  * @param string $key
  *   The config key that provides the mail text.
- * @param object $language
- *   A language object.
+ * @param string $langcode
+ *   (optional) A language code to use to generate the e-mail text.
  * @param array $variables
- *   An array of token keys and values.
+ *   (optional) An array of token keys and values.
  *
  * @return
  *   A string value containing the text for the user.mail config key.
  */
-function _user_mail_text($key, $language = NULL, $variables = array()) {
-  $langcode = isset($language) ? $language->langcode : NULL;
+function _user_mail_text($key, $langcode = NULL, $variables = array()) {
   // We do not sanitize the token replacement, since the output of this
   // replacement is intended for an e-mail message, not a web browser.
   return token_replace(config('user.mail')->get($key), $variables, array('langcode' => $langcode, 'callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
@@ -2795,10 +2784,10 @@ function theme_user_signature($variables) {
  *   Default to 'preferred_langcode' property.
  *   If set 'preferred_$type_langcode' is used.
  * @param $default
- *   Optional default language object to return if the account
+ *   Optional default language code to return if the account
  *   has no valid language.
  */
-function user_preferred_language($account, $type = NULL, $default = NULL) {
+function user_preferred_langcode($account, $type = NULL, $default = NULL) {
   $language_list = language_list();
   if (isset($type)) {
     $preferred_langcode = $account->{'preferred_' . $type . '_langcode'};
@@ -2807,10 +2796,10 @@ function user_preferred_language($account, $type = NULL, $default = NULL) {
     $preferred_langcode = $account->preferred_langcode;
   }
   if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {
-    return $language_list[$preferred_langcode];
+    return $language_list[$preferred_langcode]->langcode;
   }
   else {
-    return $default ? $default : language_default();
+    return $default ? $default : language_default()->langcode;
   }
 }
 
@@ -2837,20 +2826,21 @@ function user_preferred_language($account, $type = NULL, $default = NULL) {
  * @param $account
  *   The user object of the account being notified. Must contain at
  *   least the fields 'uid', 'name', and 'mail'.
- * @param $language
- *   Optional language to use for the notification, overriding account language.
+ * @param $langcode
+ *   Optional language code to use for the notification, overriding account
+ *   language.
  *
  * @return
  *   The return value from drupal_mail_system()->mail(), if ends up being
  *   called.
  */
-function _user_mail_notify($op, $account, $language = NULL) {
+function _user_mail_notify($op, $account, $langcode = NULL) {
   // By default, we always notify except for canceled and blocked.
   $notify = config('user.settings')->get('notify.' . $op);
   if ($notify || ($op != 'status_canceled' && $op != 'status_blocked')) {
     $params['account'] = $account;
-    $language = $language ? $language : user_preferred_language($account);
-    $mail = drupal_mail('user', $op, $account->mail, $language, $params);
+    $langcode = $langcode ? $langcode : user_preferred_langcode($account);
+    $mail = drupal_mail('user', $op, $account->mail, $langcode, $params);
     if ($op == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.
@@ -2858,7 +2848,7 @@ function _user_mail_notify($op, $account, $language = NULL) {
       if (empty($site_mail)) {
         $site_mail = ini_get('sendmail_from');
       }
-      drupal_mail('user', 'register_pending_approval_admin', $site_mail, language_default(), $params);
+      drupal_mail('user', 'register_pending_approval_admin', $site_mail, language_default()->langcode, $params);
     }
   }
   return empty($mail) ? NULL : $mail['result'];

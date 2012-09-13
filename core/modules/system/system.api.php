@@ -1945,7 +1945,7 @@ function hook_watchdog(array $log_entry) {
     '@message'       => strip_tags($log_entry['message']),
   ));
 
-  drupal_mail('emaillog', 'entry', $to, $language_interface, $params);
+  drupal_mail('emaillog', 'entry', $to, $language_interface->langcode, $params);
 }
 
 /**

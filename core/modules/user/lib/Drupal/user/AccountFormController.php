@@ -204,9 +204,9 @@ abstract class AccountFormController extends EntityFormController {
 
     $form['#validate'][] = 'user_validate_picture';
 
-    $user_preferred_language = $register ? $language_interface : user_preferred_language($account);
+    $user_preferred_langcode = $register ? $language_interface->langcode : user_preferred_langcode($account);
 
-    $user_preferred_admin_language = $register ? $language_interface : user_preferred_language($account, 'admin');
+    $user_preferred_admin_langcode = $register ? $language_interface->langcode : user_preferred_langcode($account, 'admin');
 
     // Is default the interface language?
     include_once DRUPAL_ROOT . '/core/includes/language.inc';
@@ -223,7 +223,7 @@ abstract class AccountFormController extends EntityFormController {
       '#type' => 'language_select',
       '#title' => t('Site language'),
       '#languages' => LANGUAGE_CONFIGURABLE,
-      '#default_value' => $user_preferred_language->langcode,
+      '#default_value' => $user_preferred_langcode,
       '#description' => $interface_language_is_default ? t("This account's preferred language for e-mails and site presentation.") : t("This account's preferred language for e-mails."),
     );
 
@@ -231,7 +231,7 @@ abstract class AccountFormController extends EntityFormController {
       '#type' => 'language_select',
       '#title' => t('Administration pages language'),
       '#languages' => LANGUAGE_CONFIGURABLE,
-      '#default_value' => $user_preferred_admin_language->langcode,
+      '#default_value' => $user_preferred_admin_langcode,
       '#access' => user_access('access administration pages', $account),
     );
 

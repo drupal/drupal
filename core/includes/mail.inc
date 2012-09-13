@@ -26,13 +26,13 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *
  * Finding out what language to send the e-mail with needs some consideration.
  * If you send e-mail to a user, her preferred language should be fine, so
- * use user_preferred_language(). If you send email based on form values
+ * use user_preferred_langcode(). If you send email based on form values
  * filled on the page, there are two additional choices if you are not
  * sending the e-mail to a user on the site. You can either use the language
- * used to generate the page ($language global variable) or the site default
- * language. See language_default(). The former is good if sending e-mail to
- * the person filling the form, the later is good if you send e-mail to an
- * address previously set up (like contact addresses in a contact form).
+ * used to generate the page or the site default language. See
+ * language_default(). The former is good if sending e-mail to the person
+ * filling the form, the later is good if you send e-mail to an address
+ * previously set up (like contact addresses in a contact form).
  *
  * Taking care of always using the proper language is even more important
  * when sending e-mails in a row to multiple users. Hook_mail() abstracts
@@ -47,13 +47,13 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *     foreach ($accounts as $account) {
  *       $params['account'] = $account;
  *       // example_mail() will be called based on the first drupal_mail() parameter.
- *       drupal_mail('example', 'notice', $account->mail, user_preferred_language($account), $params);
+ *       drupal_mail('example', 'notice', $account->mail, user_preferred_langcode($account), $params);
  *     }
  *   }
  *
  *   function example_mail($key, &$message, $params) {
  *     $data['user'] = $params['account'];
- *     $options['langcode'] = $message['language'];
+ *     $options['langcode'] = $message['langcode'];
  *     user_mail_tokens($variables, $data, $options);
  *     switch($key) {
  *       case 'notice':
@@ -63,9 +63,8 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *           $message['send'] = FALSE;
  *           break;
  *         }
- *         $langcode = $message['language']->langcode;
- *         $message['subject'] = t('Notification from !site', $variables, array('langcode' => $langcode));
- *         $message['body'][] = t("Dear !username\n\nThere is new content available on the site.", $variables, array('langcode' => $langcode));
+ *         $message['subject'] = t('Notification from !site', $variables, $options);
+ *         $message['body'][] = t("Dear !username\n\nThere is new content available on the site.", $variables, $options);
  *         break;
  *     }
  *   }
@@ -77,7 +76,7 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  * @code
  *   $params = array('current_conditions' => $data);
  *   $to = 'user@example.com';
- *   $message = drupal_mail('example', 'notice', $to, $language, $params, FALSE);
+ *   $message = drupal_mail('example', 'notice', $to, $langcode, $params, FALSE);
  *   // Only add to the spool if sending was not canceled.
  *   if ($message['send']) {
  *     example_spool_message($message);
@@ -98,10 +97,10 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *   - user@example.com, anotheruser@example.com
  *   - User <user@example.com>
  *   - User <user@example.com>, Another User <anotheruser@example.com>
- * @param $language
- *   Language object to use to compose the e-mail.
+ * @param $langcode
+ *   Language code to use to compose the e-mail.
  * @param $params
- *   Optional parameters to build the e-mail.
+ *   (optional) parameters to build the e-mail.
  * @param $from
  *   Sets From to this value, if given.
  * @param $send
@@ -117,7 +116,7 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *   written to the watchdog. (Success means nothing more than the message being
  *   accepted at php-level, which still doesn't guarantee it to be delivered.)
  */
-function drupal_mail($module, $key, $to, $language, $params = array(), $from = NULL, $send = TRUE) {
+function drupal_mail($module, $key, $to, $langcode, $params = array(), $from = NULL, $send = TRUE) {
   $site_mail = config('system.site')->get('mail');
   if (empty($site_mail)) {
     $site_mail = ini_get('sendmail_from');
@@ -131,7 +130,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
     'key'      => $key,
     'to'       => $to,
     'from'     => isset($from) ? $from : $default_from,
-    'language' => $language,
+    'langcode' => $langcode,
     'params'   => $params,
     'send'     => TRUE,
     'subject'  => '',

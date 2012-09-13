@@ -168,7 +168,7 @@ function contact_load($cid) {
  * Implements hook_mail().
  */
 function contact_mail($key, &$message, $params) {
-  $language = $message['language'];
+  $language = language_load($message['langcode']);
   $variables = array(
     '!site-name' => config('system.site')->get('name'),
     '!subject' => $params['subject'],

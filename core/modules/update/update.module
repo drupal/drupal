@@ -510,11 +510,10 @@ function _update_get_cached_available_releases() {
  * @see _update_message_text()
  */
 function update_mail($key, &$message, $params) {
-  $language = $message['language'];
-  $langcode = $language->langcode;
+  $langcode = $message['langcode'];
   $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => config('system.site')->get('name')), array('langcode' => $langcode));
   foreach ($params as $msg_type => $msg_reason) {
-    $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $language);
+    $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $langcode);
   }
   $message['body'][] = t('See the available updates page for more information:', array(), array('langcode' => $langcode)) . "\n" . url('admin/reports/updates', array('absolute' => TRUE, 'language' => $language));
   if (update_manager_access()) {
@@ -544,14 +543,13 @@ function update_mail($key, &$message, $params) {
  * @param $report_link
  *   (optional) Boolean that controls if a link to the updates report should be
  *   added. Defaults to FALSE.
- * @param $language
- *   (optional) A language object to use. Defaults to NULL.
+ * @param $langcode
+ *   (optional) A language code to use. Defaults to NULL.
  *
  * @return
  *   The properly translated error message for the given key.
  */
-function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $language = NULL) {
-  $langcode = isset($language) ? $language->langcode : NULL;
+function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $langcode = NULL) {
   $text = '';
   switch ($msg_reason) {
     case UPDATE_NOT_SECURE:
@@ -602,7 +600,12 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
       }
       break;
   }
-
+  if (!empty($langcode)) {
+    $language = language_load(langcode);
+  }
+  else {
+    $language = NULL;
+  }
   if ($report_link) {
     if (update_manager_access()) {
       $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information and to install your missing updates.', array('@available_updates' => url('admin/reports/updates/update', array('language' => $language))), array('langcode' => $langcode));

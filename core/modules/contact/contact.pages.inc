@@ -168,16 +168,16 @@ function contact_site_form_submit($form, &$form_state) {
   $from = $values['sender']->mail;
 
   // Send the e-mail to the recipients using the site default language.
-  drupal_mail('contact', 'page_mail', $to, language_default(), $values, $from);
+  drupal_mail('contact', 'page_mail', $to, language_default()->langcode, $values, $from);
 
   // If the user requests it, send a copy using the current language.
   if ($values['copy']) {
-    drupal_mail('contact', 'page_copy', $from, $language_interface, $values, $from);
+    drupal_mail('contact', 'page_copy', $from, $language_interface->langcode, $values, $from);
   }
 
   // Send an auto-reply if necessary using the current language.
   if ($values['category']['reply']) {
-    drupal_mail('contact', 'page_autoreply', $from, $language_interface, $values, $to);
+    drupal_mail('contact', 'page_autoreply', $from, $language_interface->langcode, $values, $to);
   }
 
   flood_register_event('contact', config('contact.settings')->get('flood.interval'));
@@ -308,11 +308,11 @@ function contact_personal_form_submit($form, &$form_state) {
   $from = $values['sender']->mail;
 
   // Send the e-mail in the requested user language.
-  drupal_mail('contact', 'user_mail', $to, user_preferred_language($values['recipient']), $values, $from);
+  drupal_mail('contact', 'user_mail', $to, user_preferred_langcode($values['recipient']), $values, $from);
 
   // Send a copy if requested, using current page language.
   if ($values['copy']) {
-    drupal_mail('contact', 'user_copy', $from, $language_interface, $values, $from);
+    drupal_mail('contact', 'user_copy', $from, $language_interface->langcode, $values, $from);
   }
 
   flood_register_event('contact', config('contact.settings')->get('flood.interval'));

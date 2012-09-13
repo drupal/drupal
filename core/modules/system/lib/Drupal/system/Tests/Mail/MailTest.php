@@ -52,7 +52,7 @@ class MailTest extends WebTestBase implements MailInterface {
     $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
     // Use MailTestCase for sending a message.
-    $message = drupal_mail('simpletest', 'mail_test', 'testing@example.com', $language_interface);
+    $message = drupal_mail('simpletest', 'mail_test', 'testing@example.com', $language_interface->langcode);
 
     // Assert whether the message was sent through the send function.
     $this->assertEqual(self::$sent_message['to'], 'testing@example.com', t('Pluggable mail system is extendable.'));
@@ -64,13 +64,13 @@ class MailTest extends WebTestBase implements MailInterface {
    * @see simpletest_mail_alter()
    */
   public function testCancelMessage() {
-    global $language;
+    $language_interface = language(LANGUAGE_TYPE_INTERFACE);
 
     // Reset the class variable holding a copy of the last sent message.
     self::$sent_message = NULL;
 
     // Send a test message that simpletest_mail_alter should cancel.
-    $message = drupal_mail('simpletest', 'cancel_test', 'cancel@example.com', $language);
+    $message = drupal_mail('simpletest', 'cancel_test', 'cancel@example.com', $language_interface->langcode);
 
     // Assert that the message was not actually sent.
     $this->assertNull(self::$sent_message, 'Message was canceled.');
