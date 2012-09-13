@@ -104,10 +104,11 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
     $this->drupalGet(image_style_url('thumbnail', $image_uri));
-    $image_info['uri'] = image_style_path('thumbnail', $image_uri);
+    $image_info['uri'] = $image_uri;
     $image_info['width'] = 100;
     $image_info['height'] = 50;
-    $default_output = theme('image', $image_info);
+    $image_info['style_name'] = 'thumbnail';
+    $default_output = theme('image_style', $image_info);
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, t('Image style thumbnail formatter displaying correctly on full node view.'));
 
@@ -158,11 +159,12 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // style.
     $node = node_load($nid, TRUE);
     $image_info = array(
-      'uri' => image_style_url('medium', file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri),
+      'uri' => file_load($node->{$field_name}[LANGUAGE_NOT_SPECIFIED][0]['fid'])->uri,
       'width' => 220,
       'height' => 110,
+      'style_name' => 'medium',
     );
-    $default_output = theme('image', $image_info);
+    $default_output = theme('image_style', $image_info);
     $this->assertRaw($default_output, t("Preview image is displayed using 'medium' style."));
 
     // Add alt/title fields to the image and verify that they are displayed.

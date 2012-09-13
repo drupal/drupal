@@ -56,7 +56,7 @@ class ImageThemeFunctionTest extends WebTestBase {
       ),
     );
     $rendered_element = render($element);
-    $expected_result = '<a href="' . base_path() . $path . '"><img src="' . $url . '" alt="" /></a>';
+    $expected_result = '<a href="' . base_path() . $path . '"><img class="image-style-test" src="' . $url . '" alt="" /></a>';
     $this->assertEqual($expected_result, $rendered_element, 'theme_image_formatter() correctly renders without title, alt, or path options.');
 
     // Link the image to a fragment on the page, and not a full URL.
@@ -67,7 +67,7 @@ class ImageThemeFunctionTest extends WebTestBase {
       'fragment' => $fragment,
     );
     $rendered_element = render($element);
-    $expected_result = '<a href="#' . $fragment . '"><img src="' . $url . '" alt="" /></a>';
+    $expected_result = '<a href="#' . $fragment . '"><img class="image-style-test" src="' . $url . '" alt="" /></a>';
     $this->assertEqual($expected_result, $rendered_element, 'theme_image_formatter() correctly renders a link fragment.');
   }
 
@@ -81,17 +81,17 @@ class ImageThemeFunctionTest extends WebTestBase {
     $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
 
     // Create a style.
-    image_style_save(array('name' => 'test'));
-    $url = image_style_url('test', $original_uri);
+    image_style_save(array('name' => 'image_test'));
+    $url = image_style_url('image_test', $original_uri);
 
     $path = $this->randomName();
     $element = array(
       '#theme' => 'image_style',
-      '#style_name' => 'test',
+      '#style_name' => 'image_test',
       '#uri' => $original_uri,
     );
     $rendered_element = render($element);
-    $expected_result = '<img src="' . $url . '" alt="" />';
+    $expected_result = '<img class="image-style-image-test" src="' . $url . '" alt="" />';
     $this->assertEqual($expected_result, $rendered_element, 'theme_image_style() renders an image correctly.');
   }
 
