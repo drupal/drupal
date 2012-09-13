@@ -12,7 +12,6 @@
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\views\TempStore\UserTempStore;
 use Drupal\views\View;
-use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
@@ -1427,7 +1426,7 @@ function views_get_plugin($type, $plugin_id) {
  */
 function views_get_plugin_definitions($type = FALSE) {
   $plugins = array();
-  $plugin_types = $type ? array($type) : PluginBase::getTypes();
+  $plugin_types = $type ? array($type) : View::getPluginTypes();
   $container = drupal_container();
   foreach ($plugin_types as $plugin_type) {
     $plugins[$plugin_type] = $container->get("plugin.manager.views.$plugin_type")->getDefinitions();

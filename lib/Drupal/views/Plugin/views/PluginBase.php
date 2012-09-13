@@ -52,36 +52,6 @@ abstract class PluginBase extends ComponentPluginBase {
   }
 
   /**
-   * Returns the valid types of plugins that can be used.
-   *
-   * @return array
-   *   An array of plugin type strings.
-   */
-  public static function getTypes() {
-    return array(
-      'access',
-      'area',
-      'argument',
-      'argument_default',
-      'argument_validator',
-      'cache',
-      'display_extender',
-      'display',
-      'exposed_form',
-      'field',
-      'filter',
-      'join',
-      'pager',
-      'query',
-      'relationship',
-      'row',
-      'sort',
-      'style',
-      'wizard',
-    );
-  }
-
-  /**
    * Information about options for all kinds of purposes will be held here.
    * @code
    * 'option_name' => array(
