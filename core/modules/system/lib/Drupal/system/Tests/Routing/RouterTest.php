@@ -1,8 +1,12 @@
 <?php
 
+/**
+ * @file
+ * Definition of Drupal\system\Tests\Routing\RouterTest.
+ */
+
 namespace Drupal\system\Tests\Routing;
 
-use Drupal\Core\Database\Database;
 use Drupal\simpletest\WebTestBase;
 
 /**
