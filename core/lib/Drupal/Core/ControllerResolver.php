@@ -60,5 +60,7 @@ class ControllerResolver extends BaseControllerResolver {
     if ($controller[0] instanceof ContainerAwareInterface) {
       $controller[0]->setContainer($this->container);
     }
+
+    return $controller;
   }
 }
