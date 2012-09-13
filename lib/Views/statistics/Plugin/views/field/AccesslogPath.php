@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Plugin;
  * @ingroup views_field_handlers
  *
  * @Plugin(
- *   id = "statistics_accesslog_path",
+ *   id = "accesslog_path",
  *   module = "statistics"
  * )
  */
