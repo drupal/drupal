@@ -63,8 +63,13 @@ class ViewSubscriber implements EventSubscriberInterface {
       }
     }
     else {
-      $page_callback_result = $event->getControllerResult();
-      $event->setResponse(new Response(drupal_render($page_callback_result)));
+      $page_result = $event->getControllerResult();
+      if (!is_array($page_result)) {
+        $page_result = array(
+          '#markup' => $page_result,
+        );
+      }
+      $event->setResponse(new Response(drupal_render($page_result)));
     }
   }
 
