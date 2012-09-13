@@ -428,7 +428,7 @@ function openid_discovery($claimed_id) {
 }
 
 /**
- * Implementation of hook_openid_discovery_method_info().
+ * Implements hook_openid_discovery_method_info().
  *
  * Define standard discovery methods.
  */
@@ -566,7 +566,7 @@ function _openid_xrds_discovery($claimed_id) {
 }
 
 /**
- * Implementation of hook_openid_normalization_method_info().
+ * Implements hook_openid_normalization_method_info().
  *
  * Define standard normalization methods.
  */
@@ -1010,7 +1010,7 @@ function openid_verify_assertion_return_url($service, $response) {
 /**
  * Remove expired nonces from the database.
  *
- * Implementation of hook_cron().
+ * Implements hook_cron().
  */
 function openid_cron() {
   db_delete('openid_nonce')
