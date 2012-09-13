@@ -727,7 +727,7 @@ abstract class TestBase {
     // @see config_get_config_directory()
     $GLOBALS['config_directories'] = array();
     foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
-      $GLOBALS['config_directories'][$type] = 'simpletest/' . substr($this->databasePrefix, 10) . '/config_' . $type;
+      $GLOBALS['config_directories'][$type]['path'] = 'simpletest/' . substr($this->databasePrefix, 10) . '/config_' . $type;
     }
 
     // Reset and create a new service container.
@@ -735,11 +735,11 @@ abstract class TestBase {
 
     $this->configDirectories = array();
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    foreach ($GLOBALS['config_directories'] as $type => $path) {
+    foreach ($GLOBALS['config_directories'] as $type => $directory) {
       if (!install_ensure_config_directory($type)) {
         return FALSE;
       }
-      $this->configDirectories[$type] = $this->originalFileDirectory . '/' . $path;
+      $this->configDirectories[$type] = $this->originalFileDirectory . '/' . $directory['path'];
     }
 
     // Unset globals.
