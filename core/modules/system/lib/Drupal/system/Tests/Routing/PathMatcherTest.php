@@ -128,6 +128,35 @@ class PathMatcherTest extends UnitTestBase {
   }
 
   /**
+   * Confirms that a trailing slash on the request doesn't result in a 404.
+   */
+  function testOutlinePathMatchTrailingSlash() {
+    $connection = Database::getConnection();
+    $matcher = new PathMatcher($connection, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper->addRoutes($this->fixtures->complexRouteCollection());
+    $dumper->dump();
+
+    $path = '/path/1/one/';
+
+    $request = Request::create($path, 'GET');
+
+    $routes = $matcher->matchRequestPartial($request);
+
+    // All of the matching paths have the correct pattern.
+    foreach ($routes as $route) {
+      $this->assertEqual($route->compile()->getPatternOutline(), '/path/%/one', 'Found path has correct pattern');
+    }
+
+    $this->assertEqual(count($routes->all()), 2, 'The correct number of routes was found.');
+    $this->assertNotNull($routes->get('route_a'), 'The first matching route was found.');
+    $this->assertNotNull($routes->get('route_b'), 'The second matching route was not found.');
+  }
+
+  /**
    * Confirms that we can find routes whose pattern would match the request.
    */
   function testOutlinePathMatchDefaults() {

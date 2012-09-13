@@ -55,7 +55,7 @@ class PathMatcher implements InitialMatcherInterface {
    */
   public function matchRequestPartial(Request $request) {
 
-    $path = $request->getPathInfo();
+    $path = rtrim($request->getPathInfo(), '/');
 
     $parts = array_slice(array_filter(explode('/', $path)), 0, MatcherDumper::MAX_PARTS);
 
