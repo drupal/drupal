@@ -26,6 +26,21 @@ define('DRUPAL_MINIMUM_PHP', '5.2.4');
 define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT', '32M');
 
 /**
+ * Error reporting level: display no errors.
+ */
+define('ERROR_REPORTING_HIDE', 0);
+
+/**
+ * Error reporting level: display errors and warnings.
+ */
+define('ERROR_REPORTING_DISPLAY_SOME', 1);
+
+/**
+ * Error reporting level: display all messages.
+ */
+define('ERROR_REPORTING_DISPLAY_ALL', 2);
+
+/**
  * Indicates that the item should never be removed unless explicitly selected.
  *
  * The item may be removed using cache_clear_all() with a cache ID.
