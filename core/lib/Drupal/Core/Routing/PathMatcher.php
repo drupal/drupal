@@ -79,20 +79,26 @@ class PathMatcher implements InitialMatcherInterface {
    *   An array of outlines that could match the specified path parts.
    */
   public function getCandidateOutlines(array $parts) {
-
     $number_parts = count($parts);
+    $ancestors = array();
     $length =  $number_parts - 1;
     $end = (1 << $number_parts) - 1;
-    $candidates = array();
-
-    $start = pow($number_parts-1, 2);
 
     // The highest possible mask is a 1 bit for every part of the path. We will
     // check every value down from there to generate a possible outline.
-    $masks = range($end, $start);
+    $masks = range($end, pow($number_parts - 1, 2));
 
+    // Only examine patterns that actually exist as router items (the masks).
     foreach ($masks as $i) {
-      $current = '/';
+      if ($i > $end) {
+        // Only look at masks that are not longer than the path of interest.
+        continue;
+      }
+      elseif ($i < (1 << $length)) {
+        // We have exhausted the masks of a given length, so decrease the length.
+        --$length;
+      }
+      $current = '';
       for ($j = $length; $j >= 0; $j--) {
         // Check the bit on the $j offset.
         if ($i & (1 << $j)) {
@@ -108,10 +114,9 @@ class PathMatcher implements InitialMatcherInterface {
           $current .= '/';
         }
       }
-      $candidates[] = $current;
+      $ancestors[] = '/' . $current;
     }
-
-    return $candidates;
+    return $ancestors;
   }
 }
 

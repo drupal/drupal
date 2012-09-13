@@ -28,9 +28,11 @@ class RouteCompiler implements RouteCompilerInterface {
     */
   public function compile(Route $route) {
 
-    $fit = $this->getFit($route->getPattern());
+    $stripped_path = $this->getPathWithoutDefaults($route);
 
-    $pattern_outline = $this->getPatternOutline($route->getPattern());
+    $fit = $this->getFit($stripped_path);
+
+    $pattern_outline = $this->getPatternOutline($stripped_path);
 
     $num_parts = count(explode('/', trim($pattern_outline, '/')));
 
@@ -159,10 +161,10 @@ class RouteCompiler implements RouteCompilerInterface {
    * Returns the pattern outline.
    *
    * The pattern outline is the path pattern but normalized so that all
-   * placeholders are equal strings.
+   * placeholders are equal strings and default values are removed.
    *
    * @param string $path
-   *   The path pattern to normalize to an outline.
+   *   The path for which we want the normalized outline.
    *
    * @return string
    *   The path pattern outline.
@@ -181,7 +183,6 @@ class RouteCompiler implements RouteCompilerInterface {
    *   The fitness of the path, as an integer.
    */
   public function getFit($path) {
-
     $parts = explode('/', trim($path, '/'), static::MAX_PARTS);
     $number_parts = count($parts);
     // We store the highest index of parts here to save some work in the fit
@@ -197,5 +198,34 @@ class RouteCompiler implements RouteCompilerInterface {
 
     return $fit;
   }
+
+  /**
+   * Returns the path of the route, without placeholders with a default value.
+   *
+   * When computing the path outline and fit, we want to skip default-value
+   * placeholders.  If we didn't, the path would never match.  Note that this
+   * only works for placeholders at the end of the path. Infix placeholders
+   * with default values don't make sense anyway, so that should not be a
+   * problem.
+   *
+   * @param Route $route
+   *
+   * @return string
+   *   The path string, stripped of placeholders that have default values.
+   */
+  protected function getPathWithoutDefaults(Route $route) {
+    $path = $route->getPattern();
+    $defaults = $route->getDefaults();
+
+    // Remove placeholders with default values from the outline, so that they
+    // will still match.
+    $remove = array_map(function($a) {
+      return '/{' . $a . '}';
+    }, array_keys($defaults));
+    $path = str_replace($remove, '', $path);
+
+    return $path;
+  }
+
 }
 
