@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Definition of Drupal\views\Tests\HandlersTest.
+ * Definition of Drupal\views\Tests\Handler\HandlerTest.
  */
 
-namespace Drupal\views\Tests;
+namespace Drupal\views\Tests\Handler;
 
 use stdClass;
+use Drupal\views\Tests\ViewTestBase;
 
 /**
  * Tests abstract handlers of views.
  */
-class HandlersTest extends ViewTestBase {
+class HandlerTest extends ViewTestBase {
 
   /**
    * Modules to enable.
