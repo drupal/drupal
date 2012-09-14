@@ -146,7 +146,7 @@ Documentation
 - Jennifer Hodgdon 'jhodgdon' http://drupal.org/user/155601
 
 Security
-- Heine Deelstra 'Heine' http://drupal.org/user/17943
+- Greg Knaddison 'greggles' <http://drupal.org/user/36762>
 
 Translations
 - Gerhard Killesreiter 'killes' http://drupal.org/user/83
@@ -226,7 +226,6 @@ Node module
 
 OpenID module
 - Vojtech Kusy 'wojtha' http://drupal.org/user/56154
-- Heine Deelstra 'Heine' http://drupal.org/user/17943
 - Christian Schmidt 'c960657' http://drupal.org/user/216078
 - Damien Tournoud 'DamZ' http://drupal.org/user/22211
 
