@@ -57,7 +57,7 @@ M: Sammy Spets <sammys-drupal@synerger.com>
 S: maintained
 
 SECURITY COORDINATOR
-M: Heine Deelstra <hdeelstra@gmail.com>
+M: Greg Knaddison <http://drupal.org/user/36762>
 S: maintained
 
 STATISTICS MODULE
