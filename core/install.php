@@ -9,16 +9,16 @@
 chdir('..');
 
 /**
- * Root directory of Drupal installation.
+ * Defines the root directory of the Drupal installation.
  */
 define('DRUPAL_ROOT', getcwd());
 
 /**
- * Global flag to indicate that site is in installation mode.
+ * Global flag to indicate the site is in installation mode.
  *
- * This constant is defined using define() instead of const so that PHP
- * versions older than 5.3 can display the proper PHP requirements instead of
- * causing a fatal error.
+ * The constant is defined using define() instead of const so that PHP
+ * versions prior to 5.3 can display proper PHP requirements instead of causing
+ * a fatal error.
  */
 define('MAINTENANCE_MODE', 'install');
 

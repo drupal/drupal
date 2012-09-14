@@ -21,11 +21,11 @@ use Symfony\Component\HttpFoundation\Response;
 chdir('..');
 
 /**
- * Root directory of Drupal installation.
+ * Defines the root directory of the Drupal installation.
  */
 define('DRUPAL_ROOT', getcwd());
 
-// Exit early if running an incompatible PHP version to avoid fatal errors.
+// Exit early if an incompatible PHP version would cause fatal errors.
 // The minimum version is specified explicitly, as DRUPAL_MINIMUM_PHP is not
 // yet available. It is defined in bootstrap.inc, but it is not possible to
 // load that file yet as it would cause a fatal error on older versions of PHP.
@@ -46,6 +46,9 @@ if (version_compare(PHP_VERSION, '5.3.3') < 0) {
  */
 define('MAINTENANCE_MODE', 'update');
 
+/**
+ * Renders form with a list of available database updates.
+ */
 function update_selection_page() {
   drupal_set_title('Drupal database update');
   $elements = drupal_get_form('update_script_selection_form');
@@ -56,6 +59,9 @@ function update_selection_page() {
   return $output;
 }
 
+/**
+ * Form constructor for the list of available database module updates.
+ */
 function update_script_selection_form($form, &$form_state) {
   $count = 0;
   $incompatible_count = 0;
@@ -157,6 +163,9 @@ function update_script_selection_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Provides links to the homepage and administration pages.
+ */
 function update_helpful_links() {
   $links['front'] = array(
     'title' => t('Front page'),
@@ -171,6 +180,9 @@ function update_helpful_links() {
   return $links;
 }
 
+/**
+ * Displays results of the update script with any accompanying errors.
+ */
 function update_results_page() {
   drupal_set_title('Drupal database update');
 
@@ -313,7 +325,7 @@ function update_access_allowed() {
 }
 
 /**
- * Add the update task list to the current page.
+ * Adds the update task list to the current page.
  */
 function update_task_list($active = NULL) {
   // Default list of tasks.
@@ -329,8 +341,7 @@ function update_task_list($active = NULL) {
 }
 
 /**
- * Returns (and optionally stores) extra requirements that only apply during
- * particular parts of the update.php process.
+ * Returns and stores extra requirements that apply during the update process.
  */
 function update_extra_requirements($requirements = NULL) {
   static $extra_requirements = array();
@@ -341,7 +352,7 @@ function update_extra_requirements($requirements = NULL) {
 }
 
 /**
- * Check update requirements and report any errors or (optionally) warnings.
+ * Checks update requirements and reports errors and (optionally) warnings.
  *
  * @param $skip_warnings
  *   (optional) If set to TRUE, requirement warnings will be ignored, and a
@@ -507,5 +518,4 @@ if (isset($output) && $output) {
   else {
     print theme('update_page', array('content' => $output, 'show_messages' => !$progress_page));
   }
-
 }
