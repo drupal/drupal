@@ -55,6 +55,7 @@
  *       viewed.
  *     - DRUPAL_CACHE_GLOBAL: The block is the same for every user on every page
  *       where it is visible.
+ *     - DRUPAL_CACHE_CUSTOM: The module implements its own caching system.
  *     - DRUPAL_NO_CACHE: The block should not get cached.
  *   - properties: (optional) Array of additional metadata to add to the block.
  *     Common properties include:
