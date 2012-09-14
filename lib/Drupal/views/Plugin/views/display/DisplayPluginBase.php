@@ -2102,7 +2102,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $fixed[] = $template;
     }
 
-    return implode(', ', array_reverse($fixed));
+    return theme('item_list', array('items' => array_reverse($fixed)));
   }
 
   /**
