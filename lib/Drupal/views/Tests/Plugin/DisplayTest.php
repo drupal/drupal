@@ -7,10 +7,20 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\ViewDisplay;
+use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin;
+
 /**
  * Tests the basic display plugin.
  */
 class DisplayTest extends PluginTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('views_ui');
 
   public static function getInfo() {
     return array(
@@ -20,10 +30,83 @@ class DisplayTest extends PluginTestBase {
     );
   }
 
+  public function setUp() {
+    parent::setUp();
+
+    $this->enableViewsTestModule();
+
+    $this->adminUser = $this->drupalCreateUser(array('administer views'));
+    $this->drupalLogin($this->adminUser);
+
+    // Create 10 nodes.
+    $this->nodes = array();
+    for ($i = 0; $i < 11; $i++) {
+      $this->drupalCreateNode(array('promote' => TRUE));
+    }
+  }
+
+  /**
+   * Tests the display test plugin.
+   *
+   * @see Drupal\views_test_data\Plugin\views\display\DisplayTest
+   */
+  function testDisplayPlugin() {
+    $view = views_get_view('frontpage');
+
+    // Add a new 'display_test' display and test it's there.
+    $view->addDisplay('display_test');
+
+    $this->assertTrue(isset($view->display['display_test_1']), 'Added display has been assigned to "display_test_1"');
+
+    // Create an expected ViewDisplay and check that it's equal.
+    $options = array(
+      'display_options' => array(),
+      'display_plugin' => 'display_test',
+      'id' => 'display_test_1',
+      'display_title' => 'Display test',
+      'position' => NULL,
+    );
+    $expected_display = new ViewDisplay($options);
+    $this->assertEqual($view->display['display_test_1'], $expected_display);
+
+    $view->setDisplay('display_test_1');
+
+    $this->assertTrue($view->display_handler instanceof DisplayTestPlugin, 'The correct display handler instance is on the view object.');
+
+    // Check the test option.
+    $this->assertIdentical($view->display_handler->getOption('test_option'), '');
+
+    $output = $view->preview();
+
+    $this->assertTrue(strpos($output, '<h1></h1>') !== FALSE, 'An empty value for test_option found in output.');
+
+    // Change this option and check the title of out output.
+    $view->display_handler->overrideOption('test_option', 'Test option title');
+
+    $view->save();
+    $output = $view->preview();
+
+    // Test we have our custom <h1> tag in the output of the view.
+    $this->assertTrue(strpos($output, '<h1>Test option title</h1>') !== FALSE, 'The test_option value found in display output title.');
+
+    // Test that the display category/summary is in the UI.
+    $this->drupalGet('admin/structure/views/view/frontpage/edit/display_test_1');
+    $this->assertText('Display test settings');
+
+    $this->clickLink('Test option title');
+
+    $this->randomString = $this->randomString();
+    $this->drupalPost(NULL, array('test_option' => $this->randomString), t('Apply'));
+
+    // Check the new value has been saved by checking the UI summary text.
+    $this->drupalGet('admin/structure/views/view/frontpage/edit/display_test_1');
+    $this->assertText($this->randomString);
+  }
+
   /**
    * Tests the overriding of filter_groups.
    */
-  function testFilterGroupsOverriding() {
+  public function testFilterGroupsOverriding() {
     $view = $this->createViewFromConfig('test_filter_groups');
     $view->initDisplay();
 
