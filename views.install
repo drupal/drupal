@@ -198,3 +198,11 @@ function views_update_8000() {
     'views_display_extenders' => 'display_extenders',
   ));
 }
+
+/**
+ * Rename the {cache_views} and {cache_views_data} tables.
+ */
+function views_update_8001() {
+  db_rename_table('cache_views', 'cache_views_info');
+  db_rename_table('cache_views_data', 'cache_views_results');
+}
