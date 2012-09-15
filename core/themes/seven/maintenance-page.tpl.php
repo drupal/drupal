@@ -32,9 +32,14 @@
 
   <div id="page">
 
-    <?php if ($logo): ?>
-      <img id="logo" src="<?php print $logo ?>" alt="<?php print $site_name ?>" />
-    <?php endif; ?>
+    <div id="sidebar-first" class="sidebar">
+      <?php if ($logo): ?>
+        <img id="logo" src="<?php print $logo ?>" alt="<?php print $site_name ?>" />
+      <?php endif; ?>
+      <?php if ($sidebar_first): ?>
+        <?php print $sidebar_first ?>
+      <?php endif; ?>
+    </div>
 
     <div id="content" class="clearfix">
       <?php if ($messages): ?>

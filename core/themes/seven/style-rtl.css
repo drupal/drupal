@@ -169,11 +169,11 @@ div.admin-options div.form-item {
 }
 
 /* Maintenance theming */
-body.in-maintenance #logo {
+body.in-maintenance #sidebar-first {
   float: right;
-  padding: 0 0 0 20px;
 }
 body.in-maintenance #content {
+  float: left;
   padding-left: 20px;
   padding-right: 0;
 }

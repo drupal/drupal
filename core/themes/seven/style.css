@@ -786,24 +786,29 @@ div.admin-options div.form-item {
 }
 
 /* Maintenance theming */
-body.in-maintenance #logo {
-  float: left;
-  padding: 0 20px 0 0;
+body.in-maintenance #sidebar-first {
+  float: left; /* LTR */
+  max-width: 200px;
+  width: 25%;
 }
 body.in-maintenance #content {
-  padding-right: 20px; /* LTR */
+  float: right; /* LTR */
+  max-width: 550px;
   clear: none;
+  width: 72%;
 }
 body.in-maintenance #page {
   overflow: auto;
-  max-width: 730px;
+  max-width: 770px;
   margin: 0 auto;
-  padding: 2em 20px 40px;
+  padding-top: 2em;
+  width: 90%;
 }
 body.in-maintenance #branding h1 {
-  max-width: 730px;
+  max-width: 770px;
   margin: 0 auto;
   float: none;
+  width: 90%;
 }
 body.in-maintenance .form-radios .form-type-radio {
   padding: 2px 0;
@@ -819,6 +824,14 @@ body.in-maintenance .form-submit {
 body.in-maintenance #logo {
   margin-bottom: 1.5em;
   max-width: 180px;
+}
+@media all and (max-width: 768px) {
+  body.in-maintenance #sidebar-first,
+  body.in-maintenance #content {
+    float: left;
+    max-width: none;
+    width: auto;
+  }
 }
 ol.task-list {
   margin-left: 0; /* LTR */
@@ -837,6 +850,11 @@ ol.task-list li.active {
 ol.task-list li.done {
   background: transparent url(images/task-check.png) no-repeat 0 50%;
   color: green;
+}
+@media all and (max-width: 768px) {
+  ol.task-list li {
+    float: left;
+  }
 }
 
 /* Overlay theming */
