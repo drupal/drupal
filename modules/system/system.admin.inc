@@ -691,7 +691,15 @@ function _system_theme_settings_validate_path($path) {
  * Process system_theme_settings form submissions.
  */
 function system_theme_settings_submit($form, &$form_state) {
+  // Exclude unnecessary elements before saving.
+  form_state_values_clean($form_state);
+
   $values = $form_state['values'];
+
+  // Extract the name of the theme from the submitted form values, then remove
+  // it from the array so that it is not saved as part of the variable.
+  $key = $values['var'];
+  unset($values['var']);
 
   // If the user uploaded a new logo or favicon, save it to a permanent location
   // and use it in place of the default theme-provided file.
@@ -722,10 +730,7 @@ function system_theme_settings_submit($form, &$form_state) {
   if (empty($values['default_favicon']) && !empty($values['favicon_path'])) {
     $values['favicon_mimetype'] = file_get_mimetype($values['favicon_path']);
   }
-  $key = $values['var'];
 
-  // Exclude unnecessary elements before saving.
-  unset($values['var'], $values['submit'], $values['reset'], $values['form_id'], $values['op'], $values['form_build_id'], $values['form_token']);
   variable_set($key, $values);
   drupal_set_message(t('The configuration options have been saved.'));
 

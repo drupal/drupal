@@ -1,6 +1,8 @@
 
 Drupal 7.16, xxxx-xx-xx (development version)
 -----------------------
+- Fixed the theme settings form to properly clean up submitted values in
+  $form_state['values'] when the form is submitted (data structure change).
 - Updated various admin tables to use the default "empty table" text UX
   pattern.
 - Added proxy server support to drupal_http_request().
