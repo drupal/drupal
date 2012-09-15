@@ -2489,7 +2489,7 @@ function file_get_content_headers($file) {
   }
 
   return array(
-    'Content-Type' => $type . '; name="' . $name . '"',
+    'Content-Type' => $type,
     'Content-Length' => $file->filesize,
     'Content-Disposition' => $disposition . '; filename="' . $name . '"',
     'Cache-Control' => 'private',
