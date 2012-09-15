@@ -64,28 +64,24 @@ function locale_views_data() {
     ),
   );
 
-  // Group field
-  $data['locales_source']['textgroup'] = array(
-    'group' => t('Locale source'),
-    'title' => t('Group'),
-    'help' => t('The group the translation is in.'),
-    'field' => array(
-      'id' => 'locale_group',
-      'click sortable' => TRUE,
-    ),
-    'filter' => array(
-      'id' => 'locale_group',
-    ),
-    'argument' => array(
-      'id' => 'locale_group',
-    ),
-  );
-
   // Source field
   $data['locales_source']['source'] = array(
     'group' => t('Locale source'),
     'title' => t('Source'),
     'help' => t('The full original string.'),
+    'field' => array(
+      'id' => 'standard',
+    ),
+    'filter' => array(
+      'id' => 'string',
+    ),
+  );
+
+  // Source field
+  $data['locales_source']['context'] = array(
+    'group' => t('Locale source'),
+    'title' => t('Context'),
+    'help' => t('The context this string applies to.'),
     'field' => array(
       'id' => 'standard',
     ),
