@@ -540,13 +540,6 @@ abstract class HandlerBase extends PluginBase {
   public function adminSummary() { }
 
   /**
-   * Determine if the argument needs a style plugin.
-   *
-   * @return TRUE/FALSE
-   */
-  public function needsStylePlugin() { return FALSE; }
-
-  /**
    * Determine if this item is 'exposed', meaning it provides form elements
    * to let users modify the view.
    *
