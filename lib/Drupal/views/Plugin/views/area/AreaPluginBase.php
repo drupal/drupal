@@ -33,7 +33,7 @@ abstract class AreaPluginBase extends HandlerBase {
   public function init(&$view, &$options) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     parent::init($view, $options);
-    if ($this->handler_type == 'empty') {
+    if ($this->definition['plugin_type'] == 'empty') {
       $this->options['empty'] = TRUE;
     }
   }
@@ -43,7 +43,7 @@ abstract class AreaPluginBase extends HandlerBase {
    */
   public function label() {
     if (!isset($this->options['label'])) {
-      return $this->admin_label();
+      return $this->adminLabel();
     }
     return $this->options['label'];
   }

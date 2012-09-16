@@ -1,0 +1,34 @@
+api_version: '3.0'
+base_table: node
+core: '8'
+description: ''
+disabled: '0'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      header:
+        test_example:
+          field: test_example
+          id: test_example
+          table: views
+      footer:
+        test_example:
+          field: test_example
+          id: test_example
+          table: views
+      empty:
+        test_example:
+          field: test_example
+          id: test_example
+          table: views
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+human_name: {  }
+name: test_example_area
+tag: ''

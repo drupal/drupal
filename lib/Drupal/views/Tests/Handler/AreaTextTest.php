@@ -10,7 +10,7 @@ namespace Drupal\views\Tests\Handler;
 /**
  * Tests the text area handler.
  *
- * @see views_handler_area_text
+ * @see Drupal\views\Plugin\views\area\Text
  */
 class AreaTextTest extends HandlerTestBase {
 

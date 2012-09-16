@@ -9,6 +9,9 @@ namespace Drupal\views\Tests\Plugin;
 
 /**
  * Basic test for pluggable access.
+ *
+ * @todo It probably make sense to split the test up by one for role/perm/none
+ *   and the two generic ones.
  */
 class AccessTest extends PluginTestBase {
 
@@ -83,6 +86,8 @@ class AccessTest extends PluginTestBase {
 
   /**
    * Tests static access check.
+   *
+   * @see Drupal\views_test\Plugin\views\access\StaticTest
    */
   function testStaticAccessPlugin() {
     $view = $this->createViewFromConfig('test_access_static');
@@ -109,6 +114,8 @@ class AccessTest extends PluginTestBase {
 
   /**
    * Tests dynamic access plugin.
+   *
+   * @see Drupal\views_test\Plugin\views\access\DyamicTest
    */
   function testDynamicAccessPlugin() {
     $view = $this->createViewFromConfig('test_access_dynamic');
