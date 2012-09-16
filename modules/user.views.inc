@@ -26,21 +26,6 @@ function user_views_data() {
   );
   $data['users']['table']['entity type'] = 'user';
 
-  $data['users']['table']['default_relationship'] = array(
-    'node' => array(
-      'table' => 'node',
-      'field' => 'uid',
-    ),
-    'node_revision' => array(
-      'table' => 'node_revision',
-      'field' => 'uid',
-    ),
-    'file' => array(
-      'table' => 'file',
-      'field' => 'uid',
-    ),
-  );
-
   // uid
   $data['users']['uid'] = array(
     'title' => t('Uid'),
@@ -373,17 +358,6 @@ function user_views_data() {
     ),
   );
 
-  $data['users_roles']['table']['default_relationship'] = array(
-    'node' => array(
-      'table' => 'node',
-      'field' => 'uid',
-    ),
-    'node_revision' => array(
-      'table' => 'node_revision',
-      'field' => 'uid',
-    ),
-  );
-
   $data['users_roles']['rid'] = array(
     'title' => t('Roles'),
     'help' => t('Roles that a user belongs to.'),
@@ -422,17 +396,6 @@ function user_views_data() {
     ),
   );
 
-  $data['role']['table']['default_relationship'] = array(
-    'node' => array(
-      'table' => 'node',
-      'field' => 'uid',
-    ),
-    'node_revision' => array(
-      'table' => 'node_revision',
-      'field' => 'uid',
-    ),
-  );
-
   // permission table
   $data['role_permission']['table']['group']  = t('User');
   $data['role_permission']['table']['join'] = array(
@@ -464,17 +427,6 @@ function user_views_data() {
      // Directly links to users table.
     'users' => array(
       'left_field' => 'uid',
-      'field' => 'uid',
-    ),
-  );
-
-  $data['authmap']['table']['default_relationship'] = array(
-    'node' => array(
-      'table' => 'node',
-      'field' => 'uid',
-    ),
-    'node_revision' => array(
-      'table' => 'node_revision',
       'field' => 'uid',
     ),
   );

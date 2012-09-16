@@ -43,25 +43,4 @@ class UserTest extends UserTestBase {
     $this->nodes[] = $this->drupalCreateNode(array('uid' => 1));
   }
 
-  /**
-   * Add a view which has no explicit relationship to the author and check the result.
-   *
-   * @todo: Remove the following comment once the relationship is required.
-   * One day a view will require the relationship so it should still work
-   */
-  public function testRelationship() {
-    $view = $this->createViewFromConfig('test_user_relationship');
-
-    $this->executeView($view);
-    $expected = array();
-    for ($i = 0; $i <= 1; $i++) {
-      $expected[$i] = array(
-        'node_title' => $this->nodes[$i]->label(),
-        'users_uid' => $this->nodes[$i]->uid,
-        'users_name' => $this->users[$i]->name,
-      );
-    }
-    $this->assertIdenticalResultset($view, $expected);
-  }
-
 }

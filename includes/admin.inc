@@ -928,8 +928,6 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
       $form['#markup'] = t('Invalid display id @display', array('@display' => $display_id));
       return $form;
     }
-
-    $view->fixMissingRelationships();
   }
 
   $form['#attached']['js'][] = drupal_get_path('module', 'ctools') . '/js/collapsible-div.js';

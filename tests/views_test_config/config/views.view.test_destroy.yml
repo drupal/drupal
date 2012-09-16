@@ -117,18 +117,20 @@ display:
       query:
         type: views_query
       relationships:
-        nid:
-          field: nid
-          id: nid
-          table: comments
+        cid:
+          field: cid
+          id: cid
+          table: node
         pid:
           field: pid
           id: pid
-          table: comments
+          table: comment
+          relationship: cid
         uid:
           field: uid
           id: uid
-          table: comments
+          table: comment
+          relationship: cid
       row_plugin: fields
       sorts:
         last_comment_name:

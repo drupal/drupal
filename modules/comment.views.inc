@@ -23,15 +23,6 @@ function comment_views_data() {
   );
   $data['comment']['table']['entity type'] = 'comment';
 
-  // Provide a "default relationship" to keep older views from choking.
-  $data['comment']['table']['default_relationship'] = array(
-    'node' => array(
-      'table' => 'node',
-      'field' => 'cid',
-    ),
-  );
-
-  // ----------------------------------------------------------------
   // Fields
 
   // subject

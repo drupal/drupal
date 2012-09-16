@@ -32,14 +32,6 @@ function node_views_data() {
   );
   $data['node']['table']['entity type'] = 'node';
 
-  $data['node']['table']['default_relationship'] = array(
-    'node_revision' => array(
-      'table' => 'node_revision',
-      'field' => 'vid',
-    ),
-  );
-
-  // ----------------------------------------------------------------
   // node table -- fields
 
   // nid
@@ -450,13 +442,6 @@ function node_views_data() {
     'node' => array(
       'left_field' => 'vid',
       'field' => 'vid',
-    ),
-  );
-
-  $data['node_revision']['table']['default_relationship'] = array(
-    'node' => array(
-      'table' => 'node',
-      'field' => 'nid',
     ),
   );
 
