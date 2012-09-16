@@ -39,8 +39,7 @@ class DisplayTest extends PluginTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Create 10 nodes.
-    $this->nodes = array();
-    for ($i = 0; $i < 11; $i++) {
+    for ($i = 0; $i <= 10; $i++) {
       $this->drupalCreateNode(array('promote' => TRUE));
     }
   }
@@ -100,7 +99,7 @@ class DisplayTest extends PluginTestBase {
 
     // Check the new value has been saved by checking the UI summary text.
     $this->drupalGet('admin/structure/views/view/frontpage/edit/display_test_1');
-    $this->assertText($this->randomString);
+    $this->assertRaw($this->randomString);
   }
 
   /**
