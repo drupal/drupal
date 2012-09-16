@@ -456,7 +456,7 @@ function node_views_data() {
   $data['node_revision']['table']['default_relationship'] = array(
     'node' => array(
       'table' => 'node',
-      'field' => 'vid',
+      'field' => 'nid',
     ),
   );
 
@@ -473,24 +473,56 @@ function node_views_data() {
   );
 
   // nid
-  $data['node_revision']['vid'] = array(
-    'title' => t('Vid'),
-    'help' => t('The revision ID of the content revision.'), // The help that appears on the UI,
-    // Information for displaying the nid
+  $data['node_revision']['nid'] = array(
+    'title' => t('Nid'),
+    // The help that appears on the UI.
+    'help' => t('The revision NID of the content revision.'),
+    // Information for displaying the nid.
     'field' => array(
       'click sortable' => TRUE,
     ),
-    // Information for accepting a nid as an argument
+    // Information for accepting a nid as an argument.
+    'argument' => array(
+      'id' => 'node_nid',
+      'click sortable' => TRUE,
+      'numeric' => TRUE,
+    ),
+    // Information for accepting a nid as a filter.
+    'filter' => array(
+      'id' => 'numeric',
+    ),
+    // Information for sorting on a nid.
+    'sort' => array(
+      'id' => 'standard',
+    ),
+    'relationship' => array(
+      'id' => 'standard',
+      'base' => 'node',
+      'base field' => 'nid',
+      'title' => t('Content'),
+      'label' => t('Get the actual content from a content revision.'),
+    ),
+  );
+
+  // vid
+  $data['node_revision']['vid'] = array(
+    'title' => t('Vid'),
+    'help' => t('The revision ID of the content revision.'),
+    // Information for displaying the vid
+    'field' => array(
+      'click sortable' => TRUE,
+    ),
+    // Information for accepting a vid as an argument
     'argument' => array(
       'id' => 'node_vid',
       'click sortable' => TRUE,
       'numeric' => TRUE,
     ),
-    // Information for accepting a nid as a filter
+    // Information for accepting a vid as a filter
     'filter' => array(
       'id' => 'numeric',
     ),
-    // Information for sorting on a nid.
+    // Information for sorting on a vid.
     'sort' => array(
       'id' => 'standard',
     ),
