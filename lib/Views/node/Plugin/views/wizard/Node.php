@@ -167,7 +167,7 @@ class Node extends WizardPluginBase {
   /**
    * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::default_display_filters_user().
    */
-  protected function default_display_filters_user($form, $form_state) {
+  protected function default_display_filters_user(array $form, array &$form_state) {
     $filters = parent::default_display_filters_user($form, $form_state);
 
     if (!empty($form_state['values']['show']['tagged_with']['tids'])) {
@@ -191,7 +191,10 @@ class Node extends WizardPluginBase {
     return $filters;
   }
 
-  protected function page_display_options($form, $form_state) {
+  /**
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::page_display_options().
+   */
+  protected function page_display_options(array $form, array &$form_state) {
     $display_options = parent::page_display_options($form, $form_state);
     $row_plugin = isset($form_state['values']['page']['style']['row_plugin']) ? $form_state['values']['page']['style']['row_plugin'] : NULL;
     $row_options = isset($form_state['values']['page']['style']['row_options']) ? $form_state['values']['page']['style']['row_options'] : array();
@@ -199,7 +202,10 @@ class Node extends WizardPluginBase {
     return $display_options;
   }
 
-  protected function block_display_options($form, $form_state) {
+  /**
+   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::page_display_options().
+   */
+  protected function block_display_options(array $form, array &$form_state) {
     $display_options = parent::block_display_options($form, $form_state);
     $row_plugin = isset($form_state['values']['block']['style']['row_plugin']) ? $form_state['values']['block']['style']['row_plugin'] : NULL;
     $row_options = isset($form_state['values']['block']['style']['row_options']) ? $form_state['values']['block']['style']['row_options'] : array();

@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\wizard;
 
 use Drupal\views\View;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 
@@ -696,7 +697,19 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * @todo
+   * Retrieves all filter information used by the default display.
+   *
+   * Additional to the one provided by the plugin this method takes care about
+   * adding additional filters based on user input.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   *
+   * @return array
+   *   An array of filter arrays keyed by ID. A sort array contains the options
+   *   accepted by a filter handler.
    */
   protected function default_display_filters($form, $form_state) {
     $filters = array();
@@ -713,9 +726,18 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * @todo
+   * Retrieves filter information based on user input for the default display.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   *
+   * @return array
+   *   An array of filter arrays keyed by ID. A sort array contains the options
+   *   accepted by a filter handler.
    */
-  protected function default_display_filters_user($form, $form_state) {
+  protected function default_display_filters_user(array $form, array &$form_state) {
     $filters = array();
 
     if (!empty($form_state['values']['show']['type']) && $form_state['values']['show']['type'] != 'all') {
@@ -759,7 +781,19 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * @todo
+   * Retrieves all sort information used by the default display.
+   *
+   * Additional to the one provided by the plugin this method takes care about
+   * adding additional sorts based on user input.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   *
+   * @return array
+   *   An array of sort arrays keyed by ID. A sort array contains the options
+   *   accepted by a sort handler.
    */
   protected function default_display_sorts($form, $form_state) {
     $sorts = array();
@@ -776,7 +810,16 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * @todo
+   * Retrieves sort information based on user input for the default display.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   *
+   * @return array
+   *   An array of sort arrays keyed by ID. A sort array contains the options
+   *   accepted by a sort handler.
    */
   protected function default_display_sorts_user($form, $form_state) {
     $sorts = array();
@@ -814,10 +857,20 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     return $sorts;
   }
 
+
   /**
-   * @todo
+   * Retrieves the page display options.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   *
+   * @return array
+   *   Returns an array of display options, which are used in
+   *   ViewDisplay::$display_options.
    */
-  protected function page_display_options($form, $form_state) {
+  protected function page_display_options(array $form, array &$form_state) {
     $display_options = array();
     $page = $form_state['values']['page'];
     $display_options['title'] = $page['title'];
@@ -827,16 +880,23 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // Make sure that the selected row plugin is a valid one.
     $options = $this->row_style_options();
     $display_options['row_plugin'] = (isset($page['style']['row_plugin']) && isset($options[$page['style']['row_plugin']])) ? $page['style']['row_plugin'] : 'fields';
+
+    // If the specific 0 items per page, use no pager.
     if (empty($page['items_per_page'])) {
       $display_options['pager']['type'] = 'none';
     }
+    // If the user checked the pager checkbox use a full pager.
     elseif (isset($page['pager'])) {
       $display_options['pager']['type'] = 'full';
     }
+    // If the user doesn't have checked the checkbox use the pager which just
+    // displays a certain amount of items.
     else {
       $display_options['pager']['type'] = 'some';
     }
     $display_options['pager']['options']['items_per_page'] = $page['items_per_page'];
+
+    // Generate the menu links settings if the user checked the link checkbox.
     if (!empty($page['link'])) {
       $display_options['menu']['type'] = 'normal';
       $display_options['menu']['title'] = $page['link_properties']['title'];
@@ -846,9 +906,18 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * @todo
+   * Retrieves the block display options.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   *
+   * @return array
+   *   Returns an array of display options, which are used in
+   *   ViewDisplay::$display_options.
    */
-  protected function block_display_options($form, $form_state) {
+  protected function block_display_options(array $form, array &$form_state) {
     $display_options = array();
     $block = $form_state['values']['block'];
     $display_options['title'] = $block['title'];
@@ -860,7 +929,16 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * @todo
+   * Retrieves the feed display options.
+   *
+   * @param array $form
+   *   The full wizard form array.
+   * @param array $form_state
+   *   The current state of the wizard form.
+   *
+   * @return array
+   *   Returns an array of display options, which are used in
+   *   ViewDisplay::$display_options.
    */
   protected function page_feed_display_options($form, $form_state) {
     $display_options = array();
@@ -885,18 +963,20 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * so that new displays which the user adds later will be similar to this
    * one.
    *
-   * @param $options
+   * @param array $options
    *   An array whose keys are the name of each option and whose values are the
    *   desired values to set.
-   * @param $display
-   *   The display which the options will be applied to. The default display
-   *   will actually be assigned the options (and this display will inherit
-   *   them) when possible.
-   * @param $default_display
-   *   The default display, which will store the options when possible.
+   * @param Drupal\views\View\plugin\display\DisplayPluginBase $display
+   *   The display handler which the options will be applied to. The default
+   *   display will actually be assigned the options (and this display will
+   *   inherit them) when possible.
+   * @param Drupal\views\View\plugin\display\DisplayPluginBase $default_display
+   *   The default display handler, which will store the options when possible.
    */
-  protected function setDefaultOptions($options, $display, $default_display) {
+  protected function setDefaultOptions($options, DisplayPluginBase $display, DisplayPluginBase $default_display) {
     foreach ($options as $option => $value) {
+      // @todo: Wouldn't it be possible to call set_override and set_option
+      //   instead.
       // If the default display supports this option, set the value there.
       // Otherwise, set it on the provided display.
       $default_value = $default_display->getOption($option);
@@ -921,17 +1001,17 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * the views wizard, then the view will wind up with the title stored as the
    * default (with the page and block both inheriting from it).
    *
-   * @param $options
+   * @param array $options
    *   An array whose keys are the name of each option and whose values are the
-   *   desired values.
-   * @param $display
-   *   The display which the options will apply to. It will get the options by
-   *   inheritance from the default display when possible.
-   * @param $default_display
-   *   The default display, from which the options will be inherited when
-   *   possible.
+   *   desired values to set.
+   * @param Drupal\views\View\plugin\display\DisplayPluginBase $display
+   *   The display handler which the options will be applied to. The default
+   *   display will actually be assigned the options (and this display will
+   *   inherit them) when possible.
+   * @param Drupal\views\View\plugin\display\DisplayPluginBase $default_display
+   *   The default display handler, which will store the options when possible.
    */
-  protected function set_override_options($options, $display, $default_display) {
+  protected function set_override_options(array $options, DisplayPluginBase $display, DisplayPluginBase $default_display) {
     foreach ($options as $option => $value) {
       // Only override the default value if it is different from the value that
       // was provided.
