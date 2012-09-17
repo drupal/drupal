@@ -2212,13 +2212,8 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
   if (!isset($relationships)) {
     // Get relationship labels
     $relationships = array();
-    // @todo: getHandlers()
-    $handlers = $display->handler->getOption('relationships');
-    if ($handlers) {
-      foreach ($handlers as $id => $info) {
-        $handler = $display->handler->getHandler('relationship', $id);
-        $relationships[$id] = $handler->label();
-      }
+    foreach ($display->handler->getHandlers('relationship') as $id => $handler) {
+      $relationships[$id] = $handler->label();
     }
   }
 
@@ -3318,13 +3313,6 @@ function views_ui_rearrange_form($form, &$form_state) {
   $relationships = array();
   foreach ($display->handler->getHandlers('relationship') as $id => $handler) {
     $relationships[$id] = $handler->label();
-    $handlers = $display->handler->getOption('relationships');
-    if ($handlers) {
-      foreach ($handlers as $id => $info) {
-        $handler = $display->handler->getHandler('relationship', $id);
-        $relationships[$id] = $handler->label();
-      }
-    }
   }
 
   // Filters can now be grouped so we do a little bit extra:
