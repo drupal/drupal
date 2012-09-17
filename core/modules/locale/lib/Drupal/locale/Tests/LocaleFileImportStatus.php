@@ -156,7 +156,8 @@ class LocaleFileImportStatus extends WebTestBase {
     $this->checkTranslations($strings, $langcode);
 
     $timestamp = db_query('SELECT timestamp FROM {locale_file} WHERE uri = :uri', array(':uri' => $file->uri))->fetchField();
-    $this->assertEqual($timestamp, $file->original_timestamp);
+    // Ensure that $timestamp is now greater than the manipulated timestamp.
+    $this->assertTrue($timestamp > $file->timestamp, 'Timestamp on locale_file updated.');
   }
 
   /**

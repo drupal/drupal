@@ -560,7 +560,7 @@ function locale_translate_file_create($filepath) {
   $file = new stdClass();
   $file->filename = drupal_basename($filepath);
   $file->uri = $filepath;
-  $file->timestamp = filemtime(drupal_realpath($file->uri));
+  $file->timestamp = filemtime($file->uri);
   return $file;
 }
 
