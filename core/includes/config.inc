@@ -144,7 +144,7 @@ function config_import() {
     return;
   }
 
-  if (!lock_acquire(__FUNCTION__)) {
+  if (!lock()->acquire(__FUNCTION__)) {
     // Another request is synchronizing configuration.
     // Return a negative result for UI purposes. We do not differentiate between
     // an actual synchronization error and a failed lock, because concurrent
@@ -164,7 +164,7 @@ function config_import() {
     watchdog_exception('config_import', $e);
     $success = FALSE;
   }
-  lock_release(__FUNCTION__);
+  lock()->release(__FUNCTION__);
   return $success;
 }
 

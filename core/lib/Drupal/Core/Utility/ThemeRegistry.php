@@ -99,7 +99,7 @@ class ThemeRegistry extends CacheArray {
 
   public function set($data, $lock = TRUE) {
     $lock_name = $this->cid . ':' . $this->bin;
-    if (!$lock || lock_acquire($lock_name)) {
+    if (!$lock || lock()->acquire($lock_name)) {
       if ($cached = cache($this->bin)->get($this->cid)) {
         // Use array merge instead of union so that filled in values in $data
         // overwrite empty values in the current cache.
@@ -111,7 +111,7 @@ class ThemeRegistry extends CacheArray {
       }
       cache($this->bin)->set($this->cid, $data);
       if ($lock) {
-        lock_release($lock_name);
+        lock()->release($lock_name);
       }
     }
   }

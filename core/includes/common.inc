@@ -5018,7 +5018,7 @@ function drupal_cron_run() {
   drupal_alter('queue_info', $queues);
 
   // Try to acquire cron lock.
-  if (!lock_acquire('cron', 240.0)) {
+  if (!lock()->acquire('cron', 240.0)) {
     // Cron is still running normally.
     watchdog('cron', 'Attempting to re-run cron while it is already running.', array(), WATCHDOG_WARNING);
   }
@@ -5049,7 +5049,7 @@ function drupal_cron_run() {
     watchdog('cron', 'Cron run completed.', array(), WATCHDOG_NOTICE);
 
     // Release cron lock.
-    lock_release('cron');
+    lock()->release('cron');
 
     // Return TRUE so other functions can check if it did run successfully
     $return = TRUE;

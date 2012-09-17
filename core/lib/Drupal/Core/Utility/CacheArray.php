@@ -181,13 +181,13 @@ abstract class CacheArray implements ArrayAccess {
     // Lock cache writes to help avoid stampedes.
     // To implement locking for cache misses, override __construct().
     $lock_name = $this->cid . ':' . $this->bin;
-    if (!$lock || lock_acquire($lock_name)) {
+    if (!$lock || lock()->acquire($lock_name)) {
       if ($cached = cache($this->bin)->get($this->cid)) {
         $data = $cached->data + $data;
       }
       cache($this->bin)->set($this->cid, $data);
       if ($lock) {
-        lock_release($lock_name);
+        lock()->release($lock_name);
       }
     }
   }

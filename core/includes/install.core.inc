@@ -345,7 +345,6 @@ function install_begin_request(&$install_state) {
   // requests but, except for a WSOD, there is no chance for a a lock to stall
   // (as opposed to the cache backend) so we can afford having a null
   // implementation here.
-  require_once DRUPAL_ROOT . '/core/includes/lock.inc';
   $conf['lock_backend'] = 'Drupal\Core\Lock\NullLockBackend';
 
   // Prepare for themed output. We need to run this at the beginning of the

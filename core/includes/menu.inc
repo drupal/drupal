@@ -2648,11 +2648,11 @@ function menu_reset_static_cache() {
  *   in parallel and the current thread just waited for completion.
  */
 function menu_router_rebuild() {
-  if (!lock_acquire(__FUNCTION__)) {
+  if (!lock()->acquire(__FUNCTION__)) {
     // Wait for another request that is already doing this work.
     // We choose to block here since otherwise the router item may not
     // be available during routing resulting in a 404.
-    lock_wait(__FUNCTION__);
+    lock()->wait(__FUNCTION__);
     return FALSE;
   }
 
@@ -2673,7 +2673,7 @@ function menu_router_rebuild() {
     watchdog_exception('menu', $e);
   }
 
-  lock_release(__FUNCTION__);
+  lock()->release(__FUNCTION__);
   return TRUE;
 }
 

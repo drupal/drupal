@@ -281,8 +281,8 @@ function system_test_system_info_alter(&$info, $file, $type) {
  * Try to acquire a named lock and report the outcome.
  */
 function system_test_lock_acquire() {
-  if (lock_acquire('system_test_lock_acquire')) {
-    lock_release('system_test_lock_acquire');
+  if (lock()->acquire('system_test_lock_acquire')) {
+    lock()->release('system_test_lock_acquire');
     return 'TRUE: Lock successfully acquired in system_test_lock_acquire()';
   }
   else {
@@ -294,7 +294,7 @@ function system_test_lock_acquire() {
  * Try to acquire a specific lock, and then exit.
  */
 function system_test_lock_exit() {
-  if (lock_acquire('system_test_lock_exit', 900)) {
+  if (lock()->acquire('system_test_lock_exit', 900)) {
     echo 'TRUE: Lock successfully acquired in system_test_lock_exit()';
     // The shut-down function should release the lock.
     exit();

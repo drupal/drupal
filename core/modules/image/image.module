@@ -763,7 +763,7 @@ function image_style_deliver($style, $scheme) {
   // generation is in progress in another thread.
   $lock_name = 'image_style_deliver:' . $style['name'] . ':' . drupal_hash_base64($image_uri);
   if (!file_exists($derivative_uri)) {
-    $lock_acquired = lock_acquire($lock_name);
+    $lock_acquired = lock()->acquire($lock_name);
     if (!$lock_acquired) {
       // Tell client to retry again in 3 seconds. Currently no browsers are known
       // to support Retry-After.
@@ -779,7 +779,7 @@ function image_style_deliver($style, $scheme) {
   $success = file_exists($derivative_uri) || image_style_create_derivative($style, $image_uri, $derivative_uri);
 
   if (!empty($lock_acquired)) {
-    lock_release($lock_name);
+    lock()->release($lock_name);
   }
 
   if ($success) {

@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException as DependencyInjectionRuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Lock\DatabaseLockBackend;
+use Drupal\Core\Lock\LockBackendInterface;
 
 /**
  * @file
@@ -953,17 +955,17 @@ function variable_initialize($conf = array()) {
   else {
     // Cache miss. Avoid a stampede.
     $name = 'variable_init';
-    if (!lock_acquire($name, 1)) {
+    if (!lock()->acquire($name, 1)) {
       // Another request is building the variable cache.
       // Wait, then re-run this function.
-      lock_wait($name);
+      lock()->wait($name);
       return variable_initialize($conf);
     }
     else {
       // Proceed with variable rebuild.
       $variables = array_map('unserialize', db_query('SELECT name, value FROM {variable}')->fetchAllKeyed());
       cache('bootstrap')->set('variables', $variables);
-      lock_release($name);
+      lock()->release($name);
     }
   }
 
@@ -2405,9 +2407,6 @@ function _drupal_bootstrap_database() {
 function _drupal_bootstrap_variables() {
   global $conf;
 
-  // Initialize the lock system.
-  require_once DRUPAL_ROOT . '/core/includes/lock.inc';
-
   // Load variables from the database, but do not overwrite variables set in settings.php.
   $conf = variable_initialize(isset($conf) ? $conf : array());
   // Load bootstrap modules.
@@ -3486,3 +3485,87 @@ function drupal_php_storage($name = 'default') {
   }
   return $storage_controllers[$name];
 }
+
+/**
+ * @defgroup lock Locking mechanisms
+ * @{
+ * Functions to coordinate long-running operations across requests.
+ *
+ * In most environments, multiple Drupal page requests (a.k.a. threads or
+ * processes) will execute in parallel. This leads to potential conflicts or
+ * race conditions when two requests execute the same code at the same time. A
+ * common example of this is a rebuild like menu_router_rebuild() where we
+ * invoke many hook implementations to get and process data from all active
+ * modules, and then delete the current data in the database to insert the new
+ * afterwards.
+ *
+ * This is a cooperative, advisory lock system. Any long-running operation
+ * that could potentially be attempted in parallel by multiple requests should
+ * try to acquire a lock before proceeding. By obtaining a lock, one request
+ * notifies any other requests that a specific operation is in progress which
+ * must not be executed in parallel.
+ *
+ * To use this API, pick a unique name for the lock. A sensible choice is the
+ * name of the function performing the operation. A very simple example use of
+ * this API:
+ * @code
+ * function mymodule_long_operation() {
+ *   if (lock()->acquire('mymodule_long_operation')) {
+ *     // Do the long operation here.
+ *     // ...
+ *     lock()->release('mymodule_long_operation');
+ *   }
+ * }
+ * @endcode
+ *
+ * If a function acquires a lock it should always release it when the
+ * operation is complete by calling lock()->release(), as in the example.
+ *
+ * A function that has acquired a lock may attempt to renew a lock (extend the
+ * duration of the lock) by calling lock()->acquire() again during the operation.
+ * Failure to renew a lock is indicative that another request has acquired
+ * the lock, and that the current operation may need to be aborted.
+ *
+ * If a function fails to acquire a lock it may either immediately return, or
+ * it may call lock()->wait() if the rest of the current page request requires
+ * that the operation in question be complete. After lock()->wait() returns,
+ * the function may again attempt to acquire the lock, or may simply allow the
+ * page request to proceed on the assumption that a parallel request completed
+ * the operation.
+ *
+ * lock()->acquire() and lock()->wait() will automatically break (delete) a lock
+ * whose duration has exceeded the timeout specified when it was acquired.
+ */
+
+/**
+ * Get locking layer instance.
+ *
+ * @return Drupal\Core\Lock\LockBackendInterface
+ */
+function lock() {
+  $lock_backend = &drupal_static(__FUNCTION__);
+
+  if (!isset($lock_backend)) {
+    $class_name = variable_get('lock_backend', 'Drupal\Core\Lock\DatabaseLockBackend');
+
+    // Do not allow a WSOD here, if the class does not exists use the default
+    // one.
+    // @todo We should log failed class loading for debugging, but for that we
+    //   need an early watchdog function that logs into a file if the database
+    //   is not present.
+    if (class_exists($class_name)) {
+      $lock_backend = new $class_name();
+    }
+    else {
+      $lock_backend = new DatabaseLockBackend();
+    }
+
+    drupal_register_shutdown_function(array($lock_backend, 'releaseAll'));
+  }
+
+  return $lock_backend;
+}
+
+/**
+ * @} End of "defgroup lock".
+ */

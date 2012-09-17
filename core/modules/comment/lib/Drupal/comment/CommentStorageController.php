@@ -128,7 +128,7 @@ class CommentStorageController extends DatabaseStorageController {
         // has the lock, just move to the next integer.
         do {
           $thread = $prefix . comment_int_to_alphadecimal(++$n) . '/';
-        } while (!lock_acquire("comment:$comment->nid:$thread"));
+        } while (!lock()->acquire("comment:$comment->nid:$thread"));
         $this->threadLock = $thread;
       }
       if (empty($comment->created)) {
@@ -242,7 +242,7 @@ class CommentStorageController extends DatabaseStorageController {
    */
   protected function releaseThreadLock() {
     if ($this->threadLock) {
-      lock_release($this->threadLock);
+      lock()->release($this->threadLock);
       $this->threadLock = '';
     }
   }
