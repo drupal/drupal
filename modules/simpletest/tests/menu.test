@@ -599,7 +599,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Get a url and assert the title given a case number. If override is true,
+   * Get a URL and assert the title given a case number. If override is true,
    * the title is asserted to begin with "Alternative".
    */
   private function menuItemTitlesCasesHelper($case_no, $override = FALSE) {

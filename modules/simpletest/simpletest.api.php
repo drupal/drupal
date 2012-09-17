@@ -20,7 +20,7 @@
  */
 function hook_simpletest_alter(&$groups) {
   // An alternative session handler module would not want to run the original
-  // Session https handling test because it checks the sessions table in the
+  // Session HTTPS handling test because it checks the sessions table in the
   // database.
   unset($groups['Session']['testHttpsSession']);
 }

@@ -1033,7 +1033,7 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
       include_once DRUPAL_ROOT . '/includes/language.inc';
 
       foreach (language_types_configurable() as $type) {
-        // Get url rewriter callbacks only from enabled language providers.
+        // Get URL rewriter callbacks only from enabled language providers.
         $negotiation = variable_get("language_negotiation_$type", array());
 
         foreach ($negotiation as $id => $provider) {

@@ -85,8 +85,8 @@ function hook_hook_info_alter(&$hooks) {
  *   - load hook: The name of the hook which should be invoked by
  *     DrupalDefaultEntityController:attachLoad(), for example 'node_load'.
  *   - uri callback: A function taking an entity as argument and returning the
- *     uri elements of the entity, e.g. 'path' and 'options'. The actual entity
- *     uri can be constructed by passing these elements to url().
+ *     URI elements of the entity, e.g. 'path' and 'options'. The actual entity
+ *     URI can be constructed by passing these elements to url().
  *   - label callback: (optional) A function taking an entity and an entity type
  *     as arguments and returning the label of the entity. The entity label is
  *     the main string associated with an entity; for example, the title of a
@@ -3742,7 +3742,7 @@ function hook_drupal_goto_alter(&$path, &$options, &$http_response_code) {
 function hook_html_head_alter(&$head_elements) {
   foreach ($head_elements as $key => $element) {
     if (isset($element['#attributes']['rel']) && $element['#attributes']['rel'] == 'canonical') {
-      // I want a custom canonical url.
+      // I want a custom canonical URL.
       $head_elements[$key]['#attributes']['href'] = mymodule_canonical_url();
     }
   }

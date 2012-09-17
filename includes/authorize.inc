@@ -18,7 +18,7 @@ function authorize_filetransfer_form($form, &$form_state) {
   global $base_url, $is_https;
   $form = array();
 
-  // If possible, we want to post this form securely via https.
+  // If possible, we want to post this form securely via HTTPS.
   $form['#https'] = TRUE;
 
   // CSS we depend on lives in modules/system/maintenance.css, which is loaded

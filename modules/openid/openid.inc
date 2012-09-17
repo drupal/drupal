@@ -835,7 +835,7 @@ function _openid_invalid_openid_transition($identity, $response) {
     $fallback_account = user_external_load($fallback_identity);
   }
 
-  // Try to replace https with http. OpenID providers often redirect
+  // Try to replace HTTPS with HTTP. OpenID providers often redirect
   // from http to https, but Drupal didn't follow the redirect.
   if (!$fallback_account && strpos($fallback_identity, 'https://') !== FALSE) {
     $fallback_identity = str_replace('https://', 'http://', $fallback_identity);

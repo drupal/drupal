@@ -339,7 +339,7 @@ Drupal.overlay.setFocusBefore = function ($element, document) {
  * Check if the given link is in the administrative section of the site.
  *
  * @param url
- *   The url to be tested.
+ *   The URL to be tested.
  *
  * @return boolean
  *   TRUE if the URL represents an administrative link, FALSE otherwise.
@@ -374,7 +374,7 @@ Drupal.overlay.isAdminLink = function (url) {
  * Determine whether a link is external to the site.
  *
  * @param url
- *   The url to be tested.
+ *   The URL to be tested.
  *
  * @return boolean
  *   TRUE if the URL is external to the site, FALSE otherwise.
@@ -560,7 +560,7 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
 
   var target = $target[0];
   var href = target.href;
-  // Only handle links that have an href attribute and use the http(s) protocol.
+  // Only handle links that have an href attribute and use the HTTP(S) protocol.
   if (href != undefined && href != '' && target.protocol.match(/^https?\:/)) {
     var anchor = href.replace(target.ownerDocument.location.href, '');
     // Skip anchor links.

@@ -2793,7 +2793,7 @@ function system_update_7061(&$sandbox) {
     $scheme = file_default_scheme() . '://';
     foreach ($node_revisions as $vid => $revision) {
       foreach ($revision['file'][LANGUAGE_NONE] as $delta => $file) {
-        // We will convert filepaths to uri using the default scheme
+        // We will convert filepaths to URI using the default scheme
         // and stripping off the existing file directory path.
         $file['uri'] = $scheme . preg_replace('!^' . preg_quote($basename) . '!', '', $file['filepath']);
         $file['uri'] = file_stream_wrapper_uri_normalize($file['uri']);

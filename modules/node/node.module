@@ -243,7 +243,7 @@ function node_field_display_node_alter(&$display, $context) {
 }
 
 /**
- * Entity uri callback.
+ * Entity URI callback.
  */
 function node_uri($node) {
   return array(

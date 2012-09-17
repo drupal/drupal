@@ -167,12 +167,12 @@ class AggregatorTestCase extends DrupalWebTestCase {
 
 
   /**
-   * Check if the feed name and url is unique.
+   * Check if the feed name and URL is unique.
    *
    * @param $feed_name
    *   String containing the feed name to check.
    * @param $feed_url
-   *   String containing the feed url to check.
+   *   String containing the feed URL to check.
    * @return
    *   TRUE if feed is unique.
    */
