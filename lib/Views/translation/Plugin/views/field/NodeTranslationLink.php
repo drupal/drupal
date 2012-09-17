@@ -9,6 +9,7 @@ namespace Views\translation\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to present a link to the node.
@@ -22,8 +23,12 @@ use Drupal\Core\Annotation\Plugin;
  */
 class NodeTranslationLink extends FieldPluginBase {
 
-  public function construct() {
-    parent::construct();
+  /**
+   * Constructs a NodeTranslationLink object.
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->additional_fields['nid'] = 'nid';
     $this->additional_fields['tnid'] = 'tnid';
     $this->additional_fields['title'] = 'title';

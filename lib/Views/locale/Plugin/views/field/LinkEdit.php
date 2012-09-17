@@ -9,6 +9,7 @@ namespace Views\locale\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to present a link to edit a translation.
@@ -22,8 +23,12 @@ use Drupal\Core\Annotation\Plugin;
  */
 class LinkEdit extends FieldPluginBase {
 
-  public function construct() {
-    parent::construct();
+  /**
+   * Constructs a LinkEdit object.
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->additional_fields['lid'] = 'lid';
   }
 

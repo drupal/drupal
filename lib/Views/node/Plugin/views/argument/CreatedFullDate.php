@@ -9,6 +9,7 @@ namespace Views\node\Plugin\views\argument;
 
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\argument\Date;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Argument handler for a full date (CCYYMMDD)
@@ -21,10 +22,11 @@ use Drupal\views\Plugin\views\argument\Date;
 class CreatedFullDate extends Date {
 
   /**
-   * Constructor implementation
+   * Constructs a CreatedFullDate object.
    */
-  public function construct() {
-    parent::construct();
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->format = 'F j, Y';
     $this->arg_format = 'Ymd';
     $this->formula = views_date_sql_format($this->arg_format, "***table***.$this->realField");

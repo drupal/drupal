@@ -9,6 +9,7 @@ namespace Views\node\Plugin\views\argument;
 
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\argument\Date;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Argument handler for a month (MM)
@@ -21,10 +22,11 @@ use Drupal\views\Plugin\views\argument\Date;
 class CreatedMonth extends Date {
 
   /**
-   * Constructor implementation
+   * Constructs a CreatedMonth object.
    */
-  public function construct() {
-    parent::construct();
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->formula = views_date_sql_extract('MONTH', "***table***.$this->realField");
     $this->format = 'F';
     $this->arg_format = 'm';

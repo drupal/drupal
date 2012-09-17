@@ -9,6 +9,7 @@ namespace Views\node\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to present the path to the node.
@@ -22,16 +23,20 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Path extends FieldPluginBase {
 
+  /**
+   * Constructs a Path object.
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
+    $this->additional_fields['nid'] = 'nid';
+  }
+
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['absolute'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
-  }
-
-  public function construct() {
-    parent::construct();
-    $this->additional_fields['nid'] = 'nid';
   }
 
   public function buildOptionsForm(&$form, &$form_state) {

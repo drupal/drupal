@@ -9,6 +9,7 @@ namespace Views\aggregator\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler that turns an item's title into a clickable link to the original
@@ -23,8 +24,12 @@ use Drupal\Core\Annotation\Plugin;
  */
 class TitleLink extends FieldPluginBase {
 
-  public function construct() {
-    parent::construct();
+  /**
+   * Constructs a Category object.
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->additional_fields['link'] = 'link';
   }
 

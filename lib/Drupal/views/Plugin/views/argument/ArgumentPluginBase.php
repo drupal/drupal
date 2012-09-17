@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * @defgroup views_argument_handlers Views argument handlers
@@ -61,10 +62,10 @@ abstract class ArgumentPluginBase extends HandlerBase {
   var $name_field;
 
   /**
-   * Constructor
+   * Constructs a ArgumentPluginBase object.
    */
-  public function construct() {
-    parent::construct();
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
 
     if (!empty($this->definition['name field'])) {
       $this->name_field = $this->definition['name field'];

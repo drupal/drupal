@@ -9,6 +9,7 @@ namespace Views\user\Plugin\views\field;
 
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to provide simple renderer that allows using a themed user link.
@@ -22,8 +23,12 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  */
 class Picture extends FieldPluginBase {
 
-  public function construct() {
-    parent::construct();
+  /**
+   * Constructs a Picture object.
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->additional_fields['uid'] = 'uid';
     $this->additional_fields['name'] = 'name';
     $this->additional_fields['mail'] = 'mail';

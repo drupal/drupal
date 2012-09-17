@@ -24,10 +24,11 @@ use Drupal\Core\Annotation\Plugin;
 class Category extends FieldPluginBase {
 
   /**
-   * Constructor to provide additional field to add.
+   * Constructs a Category object.
    */
-  public function construct() {
-    parent::construct();
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->additional_fields['cid'] = 'cid';
   }
 

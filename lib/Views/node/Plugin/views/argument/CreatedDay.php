@@ -9,6 +9,7 @@ namespace Views\node\Plugin\views\argument;
 
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\Plugin\views\argument\Date;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Argument handler for a day (DD)
@@ -21,10 +22,11 @@ use Drupal\views\Plugin\views\argument\Date;
 class CreatedDay extends Date {
 
   /**
-   * Constructor implementation
+   * Constructs a CreatedDay object.
    */
-  public function construct() {
-    parent::construct();
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->formula = views_date_sql_extract('DAY', "***table***.$this->realField");
     $this->format = 'j';
     $this->arg_format = 'd';

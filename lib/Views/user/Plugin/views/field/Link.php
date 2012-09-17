@@ -9,6 +9,7 @@ namespace Views\user\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Field handler to present a link to the user.
@@ -22,8 +23,12 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Link extends FieldPluginBase {
 
-  public function construct() {
-    parent::construct();
+  /**
+   * Constructs a Link object.
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->additional_fields['uid'] = 'uid';
   }
 

@@ -9,6 +9,7 @@ namespace Views\taxonomy\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;;
 
 /**
  * Field handler to provide simple renderer that allows linking to a taxonomy
@@ -26,13 +27,14 @@ use Drupal\Core\Annotation\Plugin;
 class Taxonomy extends FieldPluginBase {
 
   /**
-   * Constructor to provide additional field to add.
+   * Constructs a Taxonomy object.
    *
    * This constructer assumes the taxonomy_term_data table. If using another
    * table, we'll need to be more specific.
    */
-  public function construct() {
-    parent::construct();
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->additional_fields['vid'] = 'vid';
     $this->additional_fields['tid'] = 'tid';
     $this->additional_fields['vocabulary_machine_name'] = array(

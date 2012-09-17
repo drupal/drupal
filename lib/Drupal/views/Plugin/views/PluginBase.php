@@ -47,8 +47,6 @@ abstract class PluginBase extends ComponentPluginBase {
     parent::__construct($configuration, $plugin_id, $discovery);
 
     $this->definition = $this->discovery->getDefinition($plugin_id) + $configuration;
-
-    $this->construct();
   }
 
   /**
@@ -68,13 +66,6 @@ abstract class PluginBase extends ComponentPluginBase {
    *   Returns the options of this handler/plugin.
    */
   protected function defineOptions() { return array(); }
-
-  /**
-   * Views handlers use a special construct function so that we can more
-   * easily construct them with variable arguments.
-   */
-  public function construct() {
-  }
 
   protected function setOptionDefaults(&$storage, $options, $level = 0) {
     foreach ($options as $option => $definition) {

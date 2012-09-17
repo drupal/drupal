@@ -20,10 +20,6 @@ use Drupal\Core\Annotation\Plugin;
  */
 class Type extends String {
 
-  public function construct() {
-    parent::construct('type');
-  }
-
   /**
    * Override the behavior of summary_name(). Get the user friendly version
    * of the node type.

@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * @defgroup views_field_handlers Views field handlers
@@ -67,10 +68,10 @@ abstract class FieldPluginBase extends HandlerBase {
   var $additional_fields = array();
 
   /**
-   * Construct a new field handler.
+   * Constructs a FieldPluginBase object.
    */
-  public function construct() {
-    parent::construct();
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
 
     $this->additional_fields = array();
     if (!empty($this->definition['additional fields'])) {

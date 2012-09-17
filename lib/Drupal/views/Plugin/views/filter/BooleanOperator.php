@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Simple filter to handle matching of boolean values
@@ -38,7 +39,12 @@ class BooleanOperator extends FilterPluginBase {
   // Whether to accept NULL as a false value or not
   var $accept_null = FALSE;
 
-  public function construct() {
+  /**
+   * Constructs a BooleanOperator object.
+   */
+  public function __construct(array $configuration, $plugin_id, DiscoveryInterface $discovery) {
+    parent::__construct($configuration, $plugin_id, $discovery);
+
     $this->value_value = t('True');
     if (isset($this->definition['label'])) {
       $this->value_value = $this->definition['label'];
@@ -50,7 +56,6 @@ class BooleanOperator extends FilterPluginBase {
       $this->accept_null = (bool) $this->definition['accept_null'];
     }
     $this->value_options = NULL;
-    parent::construct();
   }
 
   /**
