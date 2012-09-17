@@ -1084,8 +1084,8 @@ function hook_field_formatter_info() {
  * Perform alterations on Field API formatter types.
  *
  * @param $info
- *   Array of informations on formatter types exposed by
- *   hook_field_field_formatter_info() implementations.
+ *   An array of information on formatter types exposed by
+ *   hook_field_formatter_info() implementations.
  */
 function hook_field_formatter_info_alter(&$info) {
   // Add a setting to a formatter type.
