@@ -5,6 +5,8 @@
  */
 
 namespace Drupal\views\Tests;
+
+use Drupal\views\ViewExecutable;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -413,6 +415,7 @@ abstract class ViewTestBase extends WebTestBase {
     $data = config("views.view.$view_name")->get();
 
     $view = entity_create('view', $data);
+    $view = new ViewExecutable($view);
     $view->setDisplay();
 
     return $view;
@@ -425,7 +428,7 @@ abstract class ViewTestBase extends WebTestBase {
    *   (optional) The view to clone. If not specified, the default view for the
    *   test will be used.
    *
-   * @return Drupal\views\ViewStorage
+   * @return Drupal\views\ViewExecutable
    *   A clone of the view.
    */
   protected function getView($original_view = NULL) {

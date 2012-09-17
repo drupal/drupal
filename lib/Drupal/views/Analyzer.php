@@ -32,7 +32,7 @@ class Analyzer {
    * @param Drupal\views\ViewExecutable $view
    *   (optional) The view to analyze.
    */
-  function __construct(View $view = NULL) {
+  function __construct(ViewExecutable $view = NULL) {
     if (isset($view)) {
       $this->view = $view;
     }
@@ -44,7 +44,7 @@ class Analyzer {
    * @param Drupal\views\ViewExecutable
    *   The view to analyze.
    */
-  public function setView(View $view = NULL) {
+  public function setView(ViewExecutable $view = NULL) {
     $this->view = $view;
   }
 

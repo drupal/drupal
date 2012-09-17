@@ -244,7 +244,6 @@ class Attachment extends DisplayPluginBase {
     // Get a fresh view because our current one has a lot of stuff on it because it's
     // already been executed.
     $view = $this->view->cloneView();
-    $view->original_args = $view->args;
 
     $args = $this->getOption('inherit_arguments') ? $this->view->args : array();
     $view->setArguments($args);

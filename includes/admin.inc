@@ -1722,9 +1722,6 @@ function views_ui_edit_form_get_build_from_option($id, $option, $view, $display)
     }
   }
   $option_build['#attributes']['class'][] = drupal_clean_css_identifier($display_id . '-' . $id);
-  if (!empty($view->changed_sections[$display_id . '-' . $id])) {
-    $option_build['#changed'] = TRUE;
-  }
   return $option_build;
 }
 
@@ -2259,10 +2256,6 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
     }
     $build['fields'][$id]['#link'] = l($link_text, "admin/structure/views/nojs/config-item/$view->name/$display->id/$type/$id", array('attributes' => $link_attributes, 'html' => TRUE));
     $build['fields'][$id]['#class'][] = drupal_clean_css_identifier($display->id . '-' . $type . '-' . $id);
-    if (!empty($view->changed_sections[$display->id . '-' . $type . '-' . $id])) {
-      // @TODO: #changed is no longer being used?
-      $build['fields'][$id]['#changed'] = TRUE;
-    }
 
     if ($display->handler->useGroupBy() && $handler->usesGroupBy()) {
       $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/$view->name/$display->id/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => t('Aggregation settings')), 'html' => TRUE));
@@ -2457,12 +2450,6 @@ function views_ui_standard_submit($form, &$form_state) {
   // the current display or the default display.
 
   list($was_defaulted, $is_defaulted, $revert) = views_ui_standard_override_values($form, $form_state);
-
-  // Mark the changed section of the view as changed.
-  // TODO: Document why we are doing this, and see if we still need it.
-  if (!empty($form['#section'])) {
-    $form_state['view']->changed_sections[$form['#section']] = TRUE;
-  }
 
   // Based on the user's choice in the display dropdown, determine which display
   // these changes apply to.

@@ -739,10 +739,6 @@ function views_block_info() {
   if ($hashes != $old_hashes) {
     variable_set('views_block_hashes', $hashes);
   }
-  // Save memory: Destroy those views.
-  foreach ($views as $view) {
-    $view->destroy();
-  }
 
   views_cache_set('views_block_items', $items, TRUE);
 
@@ -1546,12 +1542,13 @@ function views_get_applicable_views($type) {
   $views = views_get_all_views();
 
   foreach ($views as $view) {
+    $view = new ViewExecutable($view);
     // Skip disabled views.
-    if (!empty($view->disabled)) {
+    if (!empty($view->storage->disabled)) {
       continue;
     }
 
-    if (empty($view->display)) {
+    if (empty($view->storage->display)) {
       // Skip this view as it is broken.
       continue;
     }
@@ -1580,8 +1577,11 @@ function views_get_applicable_views($type) {
 /**
  * Return an array of all views as fully loaded $view objects.
  *
+ * @todo Figure out whether you expect to return config entities or
+ *   view executables.
  * @param $reset
  *   If TRUE, reset the static cache forcing views to be reloaded.
+ *
  */
 function views_get_all_views($reset = FALSE) {
   return entity_get_controller('view')->load();

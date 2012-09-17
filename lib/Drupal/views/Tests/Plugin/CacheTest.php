@@ -37,8 +37,7 @@ class CacheTest extends PluginTestBase {
    */
   protected function getBasicView() {
     // Create the basic view.
-    $view = new View(array(), 'view');
-    $view->name = 'test_view';
+    $view = $this->createViewFromConfig('test_view');
     $view->addDisplay('default');
     $view->base_table = 'views_test_data';
 
@@ -169,12 +168,11 @@ class CacheTest extends PluginTestBase {
     ));
 
     $view->preview();
-    $view->destroy();
     unset($view->pre_render_called);
     drupal_static_reset('drupal_add_css');
     drupal_static_reset('drupal_add_js');
 
-    $view->initDisplay();
+    $view = $this->getView($view);
     $view->preview();
     $css = drupal_add_css();
     $css_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.css';
@@ -183,8 +181,7 @@ class CacheTest extends PluginTestBase {
 
     $this->assertTrue(isset($css[$css_path]), 'Make sure the css is added for cached views.');
     $this->assertTrue(isset($js[$js_path]), 'Make sure the js is added for cached views.');
-    $this->assertFalse(!empty($view->pre_render_called), 'Make sure hook_views_pre_render is not called for the cached view.');
-    $view->destroy();
+    $this->assertFalse(!empty($view->build_info['pre_render_called']), 'Make sure hook_views_pre_render is not called for the cached view.');
 
     // Now add some css/jss before running the view.
     // Make sure that this css is not added when running the cached view.
@@ -195,13 +192,12 @@ class CacheTest extends PluginTestBase {
     $system_js_path = drupal_get_path('module', 'system') . '/system.cron.js';
     drupal_add_js($system_js_path);
 
-    $view->initDisplay();
+    $view = $this->getView($view);
     $view->preview();
-    $view->destroy();
     drupal_static_reset('drupal_add_css');
     drupal_static_reset('drupal_add_js');
 
-    $view->initDisplay();
+    $view = $this->getView($view);
     $view->preview();
 
     $css = drupal_add_css();
@@ -209,7 +205,6 @@ class CacheTest extends PluginTestBase {
 
     $this->assertFalse(isset($css[$system_css_path]), 'Make sure that unrelated css is not added.');
     $this->assertFalse(isset($js[$system_js_path]), 'Make sure that unrelated js is not added.');
-
   }
 
 }

@@ -786,7 +786,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
     // Summaries have their own sorting and fields, so tell the View not
     // to build these.
-    $this->view->build_sort = $this->view->build_fields = FALSE;
+    $this->view->build_sort = FALSE;
     return TRUE;
   }
 

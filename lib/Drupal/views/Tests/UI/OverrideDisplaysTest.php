@@ -62,6 +62,7 @@ class OverrideDisplaysTest extends UITestBase {
 
     // Make sure the title appears in both the page and the block.
     $this->drupalGet($view_path);
+    $this->assertResponse(200);
     $this->assertText($original_title);
     $this->drupalGet('');
     $this->assertText($original_title);
@@ -74,6 +75,7 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalPost("admin/structure/views/nojs/display/{$view['name']}/page/title", $edit, t('Apply'));
     $this->drupalPost("admin/structure/views/view/{$view['name']}/edit/page", array(), t('Save'));
     $this->drupalGet($view_path);
+    $this->assertResponse(200);
     $this->assertText($new_title);
     $this->assertNoText($original_title);
     $this->drupalGet('');
@@ -119,9 +121,11 @@ class OverrideDisplaysTest extends UITestBase {
     // Make sure that the feed, page and block all start off with the correct
     // titles.
     $this->drupalGet($view['page[path]']);
+    $this->assertResponse(200);
     $this->assertText($view['page[title]']);
     $this->assertNoText($view['block[title]']);
     $this->drupalGet($view['page[feed_properties][path]']);
+    $this->assertResponse(200);
     $this->assertText($view['page[title]']);
     $this->assertNoText($view['block[title]']);
     $this->drupalGet('');
@@ -135,10 +139,12 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalPost("admin/structure/views/nojs/display/{$view['name']}/page/title", $edit, t('Apply'));
     $this->drupalPost("admin/structure/views/view/{$view['name']}/edit/page", array(), t('Save'));
     $this->drupalGet($view['page[path]']);
+    $this->assertResponse(200);
     $this->assertText($new_default_title);
     $this->assertNoText($view['page[title]']);
     $this->assertNoText($view['block[title]']);
     $this->drupalGet($view['page[feed_properties][path]']);
+    $this->assertResponse(200);
     $this->assertText($new_default_title);
     $this->assertNoText($view['page[title]']);
     $this->assertNoText($view['block[title]']);
@@ -154,9 +160,11 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalPost("admin/structure/views/nojs/display/{$view['name']}/block/title", $edit, t('Apply'));
     $this->drupalPost("admin/structure/views/view/{$view['name']}/edit/block", array(), t('Save'));
     $this->drupalGet($view['page[path]']);
+    $this->assertResponse(200);
     $this->assertText($new_default_title);
     $this->assertNoText($new_block_title);
     $this->drupalGet($view['page[feed_properties][path]']);
+    $this->assertResponse(200);
     $this->assertText($new_default_title);
     $this->assertNoText($new_block_title);
     $this->drupalGet('');

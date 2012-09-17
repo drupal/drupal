@@ -1061,7 +1061,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @param Drupal\views\ViewExecutable $view
    *   The validated view object.
    */
-  protected function set_validated_view(array $form, array &$form_state, View $view) {
+  protected function set_validated_view(array $form, array &$form_state, ViewExecutable $view) {
     $key = hash('sha256', serialize($form_state['values']));
     $this->validated_views[$key] = $view;
   }

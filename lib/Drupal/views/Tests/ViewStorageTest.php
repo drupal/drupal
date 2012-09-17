@@ -9,7 +9,7 @@ namespace Drupal\views\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewStorageController;
-use Drupal\views\ViewExecutable;
+use Drupal\views\ViewStorage;
 use Drupal\views\ViewDisplay;
 use Drupal\views\Plugin\views\display\Page;
 
@@ -91,8 +91,7 @@ class ViewStorageTest extends WebTestBase {
    * Tests loading configuration entities.
    */
   protected function loadTests() {
-    $storage = $this->loadView('archive');
-    $view = new ViewExecutable();
+    $view = $this->loadView('archive');
     $data = config('views.view.archive')->get();
 
     // Confirm that an actual view object is loaded and that it returns all of
@@ -150,7 +149,7 @@ class ViewStorageTest extends WebTestBase {
     // Create a new View instance with empty values.
     $created = $this->controller->create(array());
 
-    $this->assertTrue($created instanceof View, 'Created object is a View.');
+    $this->assertTrue($created instanceof ViewStorage, 'Created object is a View.');
     // Check that the View contains all of the properties.
     foreach ($this->config_properties as $property) {
       $this->assertTrue(property_exists($created, $property), format_string('Property: @property created on View.', array('@property' => $property)));
@@ -160,7 +159,7 @@ class ViewStorageTest extends WebTestBase {
     $values = config('views.view.glossary')->get();
     $created = $this->controller->create($values);
 
-    $this->assertTrue($created instanceof View, 'Created object is a View.');
+    $this->assertTrue($created instanceof ViewStorage, 'Created object is a View.');
     // Check that the View contains all of the properties.
     $properties = $this->config_properties;
     // Remove display from list.
@@ -251,7 +250,6 @@ class ViewStorageTest extends WebTestBase {
 
     // Ensure the right display_plugin is created/instantiated.
     $this->assertEqual($new_display->display_plugin, 'page', 'New page display "test" uses the right display plugin.');
-    $view->initDisplay();
     $this->assertTrue($new_display->handler instanceof Page, 'New page display "test" uses the right display plugin.');
 
 

@@ -2,6 +2,7 @@
 
 use Drupal\views_ui_listing\EntityListControllerInterface;
 use Drupal\config\ConfigEntityInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_menu().
@@ -51,7 +52,7 @@ function views_ui_listing_entity_listing_page($entity_id) {
  *
  * @param Drupal\views_ui_listing\EntityListControllerInterface $controller
  *   The list controller for this entity.
- * @param Drupal\config\ConfigEntityInterface $entity
+ * @param Drupal\views\ViewExecutable $entity
  *   The config entity being acted upon.
  * @param string $op
  *   The action to perform, e.g., 'enable' or 'disable'.
@@ -60,7 +61,7 @@ function views_ui_listing_entity_listing_page($entity_id) {
  *   Either returns the listing page as JSON, or calls drupal_goto() to
  *   redirect back to the listing page.
  */
-function views_ui_listing_ajax_callback(EntityListControllerInterface $controller, ConfigEntityInterface $entity, $op) {
+function views_ui_listing_ajax_callback(EntityListControllerInterface $controller, ViewExecutable $entity, $op) {
   // Perform the operation.
   $entity->$op();
 

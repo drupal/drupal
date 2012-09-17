@@ -61,8 +61,7 @@ class ViewExecutableTest extends ViewTestBase {
     $view = $this->getView();
     $storage = $view->storage;
     foreach ($this->configProperties as $property) {
-      $this->assertTrue(isset($view->{$property}));
-      $this->assertIdentical($view->{$property}, $storage->{$storage});
+      $this->assertIdentical($view->{$property}, $storage->{$property}, format_string("Property '%property' is set on the stored view.", array('%property' => $property)));
     }
     foreach ($this->executableProperties as $property) {
       $this->assertTrue(isset($view->{$property}));

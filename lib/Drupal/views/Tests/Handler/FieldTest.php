@@ -92,6 +92,7 @@ class FieldTest extends HandlerTestBase {
    */
   public function testClickSorting() {
     $this->drupalGet('test_click_sort');
+    $this->assertResponse(200);
     // Only the id and name should be click sortable, but not the name.
     $this->assertLinkByHref(url('test_click_sort', array('query' => array('order' => 'id', 'sort' => 'asc'))));
     $this->assertLinkByHref(url('test_click_sort', array('query' => array('order' => 'name', 'sort' => 'desc'))));

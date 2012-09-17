@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\views\ViewExecutable;
+use Drupal\views\ViewStorage;
 
 /**
  * Views class tests.
@@ -112,7 +113,7 @@ class ViewTest extends ViewTestBase {
     $view = views_get_view('archive');
     $copy = $view->createDuplicate();
 
-    $this->assertTrue($copy instanceof View, 'The copied object is a View.');
+    $this->assertTrue($copy instanceof ViewStorage, 'The copied object is a View.');
 
     // Check that the original view and the copy have different uuids.
     $this->assertNotIdentical($view->uuid(), $copy->uuid(), 'The copied view has a new uuid.');

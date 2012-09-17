@@ -21,15 +21,18 @@ use Symfony\Component\HttpFoundation\Response;
  * functions to build the view query, execute the query and render the output.
  */
 class ViewExecutable {
+
   /**
    * The config entity in which the view is stored.
    *
    * @var Drupal\views\ViewStorage
    */
-  protected $storage;
+  public $storage;
 
   /**
    * Whether or not the view has been built.
+   *
+   * @todo Group with other static properties.
    *
    * @var bool
    */
@@ -38,12 +41,16 @@ class ViewExecutable {
   /**
    * Whether the view has been executed/query has been run.
    *
+   * @todo Group with other static properties.
+   *
    * @var bool
    */
   public $executed = FALSE;
 
   /**
    * Indicates if a view is currently being edited.
+   *
+   * @todo Group with other UI-only properties.
    *
    * @var bool
    */
@@ -209,14 +216,6 @@ class ViewExecutable {
   public $style_plugin;
 
   /**
-   * Stored the changed options of the style plugin.
-   *
-   * @deprecated Better use $view->style_plugin->options
-   * @var array
-   */
-  public $style_options;
-
-  /**
    * Stores the current active row while rendering.
    *
    * @var int
@@ -330,41 +329,216 @@ class ViewExecutable {
   protected $response = NULL;
 
   /**
+   * Stores an array of errors for any displays.
+   *
+   * @todo Group with other UI-only properties.
+   *
+   * @var array
+   */
+  public $display_errors;
+
+  /**
+   * Stores an array of displays that have been changed.
+   *
+   * @todo Group with other UI-only properties.
+   *
+   * @var array
+   */
+  public $changed_display;
+
+  /**
+   * Does this view already have loaded it's handlers.
+   *
+   * @todo Group with other static properties.
+   *
+   * @var bool
+   */
+  public $inited;
+
+  /**
+   * The name of the active style plugin of the view.
+   *
+   * @todo remove this and just use $this->style_plugin
+   *
+   * @var string
+   */
+  public $plugin_name;
+
+  /**
+   * The options used by the style plugin of this running view.
+   *
+   * @todo To be able to remove it, Drupal\views\Plugin\views\argument\ArgumentPluginBase::default_summary()
+   *   should instantiate the style plugin.
+   * @var array
+   */
+  public $style_options;
+
+  /**
+   * The rendered output of the exposed form.
+   *
+   * @var string
+   */
+  public $exposed_widgets;
+
+  /**
+   * If this view has been previewed.
+   *
+   * @var bool
+   */
+  public $preview;
+
+  /**
+   * Force the query to calculate the total number of results.
+   *
+   * @todo Move to the query.
+   *
+   * @var bool
+   */
+  public $get_total_rows;
+
+  /**
+   * Indicates if the sorts have been built.
+   *
+   * @todo Group with other static properties.
+   *
+   * @var bool
+   */
+  public $build_sort;
+
+  /**
+   * How long the view takes to build.
+   *
+   * @todo Group with other UI-only properties.
+   *
+   * @var int
+   */
+  public $build_time;
+
+  /**
+   * How long the view takes to render.
+   *
+   * @todo Group with other UI-only properties.
+   *
+   * @var int
+   */
+  public $render_time;
+
+  /**
+   * How long the view takes to execute.
+   *
+   * @todo Group with other UI-only properties.
+   *
+   * @var int
+   */
+  public $execute_time;
+
+  /**
+   * If this view is locked for editing.
+   *
+   * @todo Group with other UI-only properties.
+   *
+   * @var bool
+   */
+  public $locked;
+
+  /**
+   * If this view has been changed.
+   *
+   * @todo Group with other UI-only properties.
+   *
+   * @var bool
+   */
+  public $changed;
+
+  /**
+   * Stores options temporarily while editing.
+   *
+   * @todo Group with other UI-only properties.
+   *
+   * @var array
+   */
+  public $temporary_options;
+
+  /**
+   * Stores a stack of UI forms to display.
+   *
+   * @todo Group with other UI-only properties.
+   *
+   * @var array
+   */
+  public $stack;
+
+  /**
+   * Stores the many-to-one tables for performance.
+   *
+   * @var array
+   */
+  public $many_to_one_tables;
+
+  /**
+   * Is the view runned in a context of the preview in the admin interface.
+   *
+   * @todo Group with other UI-only properties.
+   *
+   * @var bool
+   */
+  public $live_preview;
+
+  /**
+   * A unique identifier which allows to update multiple views output via js.
+   *
+   * @var string
+   */
+  public $dom_id;
+
+  /**
    * Constructs a new ViewExecutable object.
    *
    * @param Drupal\views\ViewStorage $storage
    *   The view config entity the actual information is stored on.
    */
-  function __construct(ViewStorage $storage) {
+  public function __construct(ViewStorage $storage) {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
     $this->storage->setExecutable($this);
   }
 
   /**
-   * @todo
+   * Implements the magic __get() method.
+   *
+   * @todo Remove this once all calls are changed to use storage directly.
    */
-  function __get($name) {
+  public function &__get($name) {
     if (property_exists($this->storage, $name)) {
       return $this->storage->{$name};
+    }
+    elseif (property_exists($this, $name)) {
+      return $this->{$name};
     }
   }
 
   /**
-   * @todo
+   * Implements the magic __set() method.
+   *
+   * @todo Remove this once all calls are changed to use storage directly.
    */
-  function __set($name, $value) {
-    if (property_exists($this->storage, $name)) {
+  public function __set($name, $value) {
+    if (property_exists($this, $name)) {
+      $this->{$name} = $value;
+    }
+    elseif (property_exists($this->storage, $name)) {
       $this->storage->{$name} = $value;
     }
   }
 
   /**
-   * @todo
+   * Implements the magic __call() method.
+   *
+   * @todo Remove this once all calls are changed to use storage directly.
    */
-  function __call($name, $arguments) {
+  public function __call($name, $arguments) {
     if (method_exists($this->storage, $name)) {
-      call_user_func_array(array($this->storage, $name), $arguments);
+      return call_user_func_array(array($this->storage, $name), $arguments);
     }
   }
 
@@ -378,9 +552,8 @@ class ViewExecutable {
   public function update() {
     // When views are converted automatically the base_table should be renamed
     // to have a working query.
-    $this->base_table = views_move_table($this->base_table);
+    $this->storage->base_table = views_move_table($this->storage->base_table);
   }
-
 
   /**
    * Returns a list of the sub-object types used by this view. These types are
@@ -525,8 +698,8 @@ class ViewExecutable {
       // remember settings.
       $display_id = ($this->display_handler->isDefaulted('filters')) ? 'default' : $this->current_display;
 
-      if (empty($this->exposed_input) && !empty($_SESSION['views'][$this->name][$display_id])) {
-        $this->exposed_input = $_SESSION['views'][$this->name][$display_id];
+      if (empty($this->exposed_input) && !empty($_SESSION['views'][$this->storage->name][$display_id])) {
+        $this->exposed_input = $_SESSION['views'][$this->storage->name][$display_id];
       }
     }
 
@@ -569,7 +742,7 @@ class ViewExecutable {
     }
 
     $this->current_display = 'default';
-    $this->display_handler = &$this->display['default']->handler;
+    $this->display_handler = $this->storage->display['default']->handler;
 
     return TRUE;
   }
@@ -639,7 +812,7 @@ class ViewExecutable {
     }
 
     // Set a shortcut
-    $this->display_handler = &$this->display[$display_id]->handler;
+    $this->display_handler = $this->storage->display[$display_id]->handler;
 
     return TRUE;
   }
@@ -700,7 +873,7 @@ class ViewExecutable {
       // These overrides may have been set earlier via $view->set_*
       // functions.
       if (isset($this->items_per_page)) {
-        $this->pager->setItemsPerPage($this->items_per_page);
+        $this->pager->set_items_per_page($this->items_per_page);
       }
 
       if (isset($this->offset)) {
@@ -726,7 +899,7 @@ class ViewExecutable {
    */
   public function getBaseTables() {
     $base_tables = array(
-      $this->base_table => TRUE,
+      $this->storage->base_table => TRUE,
       '#global' => TRUE,
     );
 
@@ -910,7 +1083,7 @@ class ViewExecutable {
     }
 
     // Create and initialize the query object.
-    $views_data = views_fetch_data($this->base_table);
+    $views_data = views_fetch_data($this->storage->base_table);
     $this->base_field = !empty($views_data['table']['base']['field']) ? $views_data['table']['base']['field'] : '';
     if (!empty($views_data['table']['base']['database'])) {
       $this->base_database = $views_data['table']['base']['database'];
@@ -927,7 +1100,7 @@ class ViewExecutable {
       return FALSE;
     }
 
-    $this->query->init($this->base_table, $this->base_field, $query_options['options']);
+    $this->query->init($this->storage->base_table, $this->base_field, $query_options['options']);
     return TRUE;
   }
 
@@ -1205,7 +1378,7 @@ class ViewExecutable {
     if (!empty($this->build_info['fail'])) {
       return;
     }
-    if (!empty($this->view->build_info['denied'])) {
+    if (!empty($this->build_info['denied'])) {
       return;
     }
 
@@ -1495,7 +1668,7 @@ class ViewExecutable {
    */
   public function access($displays = NULL, $account = NULL) {
     // Noone should have access to disabled views.
-    if (!empty($this->disabled)) {
+    if (!empty($this->storage->disabled)) {
       return FALSE;
     }
 
@@ -1797,14 +1970,13 @@ class ViewExecutable {
    *    The cloned view.
    */
   public function cloneView() {
-    $clone = clone $this;
+    $clone = clone $this->storage;
 
     $keys = array('current_display', 'display_handler', 'build_info', 'built', 'executed', 'attachment_before', 'attachment_after', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'exposed_widgets', 'many_to_one_tables', 'feed_icon');
     foreach ($keys as $key) {
-      if (isset($clone->$key)) {
-        unset($clone->$key);
-      }
+      unset($clone->$key);
     }
+    $clone = new ViewExecutable($clone);
     $clone->built = $clone->executed = FALSE;
     $clone->build_info = array();
     $clone->attachment_before = '';
@@ -1849,27 +2021,11 @@ class ViewExecutable {
 
     if (isset($this->style_plugin)) {
       $this->style_plugin->destroy();
-      unset($this->style_plugin);
     }
 
-    // Clear these to make sure the view can be processed/used again.
-    if (isset($this->display_handler)) {
-      unset($this->display_handler);
-    }
-
-    if (isset($this->current_display)) {
-      unset($this->current_display);
-    }
-
-    if (isset($this->query)) {
-      unset($this->query);
-    }
-
-    $keys = array('current_display', 'display_handler', 'build_info', 'built', 'executed', 'attachment_before', 'attachment_after', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'result', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'many_to_one_tables');
+    $keys = array('current_display', 'display_handler', 'field', 'argument', 'filter', 'sort', 'relationship', 'header', 'footer', 'empty', 'query', 'result', 'inited', 'style_plugin', 'plugin_name', 'exposed_data', 'exposed_input', 'many_to_one_tables');
     foreach ($keys as $key) {
-      if (isset($this->$key)) {
-        unset($this->$key);
-      }
+      unset($this->$key);
     }
 
     // These keys are checked by the next init, so instead of unsetting them,
@@ -1917,15 +2073,6 @@ class ViewExecutable {
 
     $this->setDisplay($current_display);
     return $errors ? $errors : TRUE;
-  }
-
-  /**
-   * Determine whether a view supports admin string translation.
-   */
-  public function isTranslatable() {
-    // If the view is normal or overridden, use admin string translation.
-    // A newly created view won't have a type. Accept this.
-    return (!isset($this->type) || in_array($this->type, array(t('Normal'), t('Overridden')))) ? TRUE : FALSE;
   }
 
   /**

@@ -52,6 +52,7 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalPost('admin/structure/views/nojs/display/frontpage/page/title', $edit, t('Apply'));
     $this->drupalPost('admin/structure/views/view/frontpage/edit/page', array(), t('Save'));
     $this->drupalGet('frontpage');
+    $this->assertResponse(200);
     $this->assertText($new_title);
 
     // It should now be possible to revert the view. Do that, and make sure the

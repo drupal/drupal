@@ -13,13 +13,22 @@ use Drupal\config\ConfigEntityBase;
  * Defines a ViewStorage configuration entity class.
  */
 class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
+
+  /**
+   * Provide direct access to the UUID.
+   *
+   * @todo Change usage of this to the uuid() method.
+   *
+   * @var string
+   */
+  public $uuid;
+
   /**
    * The name of the base table this view will use.
    *
    * @var string
    */
   public $base_table = 'node';
-
 
   /**
    * The name of the view.
@@ -94,17 +103,84 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
   public $disabled = FALSE;
 
   /**
-   * @todo
+   * Stores a reference to the executable version of this view.
+   *
+   * @var Drupal\views\ViewExecutable
    */
   public $executable;
 
-  public function setExecutable($executable) {
+  /**
+   * A copy of the original entity.
+   *
+   * @todo This should be moved to Drupal\Core\Entity\Entity.
+   *
+   * @var Drupal\Core\Entity\EntityInterface
+   */
+  public $original;
+
+  /**
+   * Stores the executable version of this view.
+   *
+   * @param Drupal\views\ViewExecutable $executable
+   *   The executable version of this view.
+   */
+  public function setExecutable(ViewExecutable $executable) {
     $this->executable = $executable;
   }
 
-  function __call($name, $arguments) {
-    if (isset($executable) && method_exists($this->executable, $name)) {
+  /**
+   * Initializes the display.
+   *
+   * @todo Inspect calls to this and attempt to clean up.
+   *
+   * @param bool $reset
+   *   If the display should be reset. Defaults to FALSE.
+   *
+   * @see Drupal\views\ViewExecutable::initDisplay()
+   */
+  public function initDisplay($reset = FALSE) {
+    if (!isset($this->executable)) {
+      $this->setExecutable(new ViewExecutable($this));
+    }
+    $this->executable->initDisplay($reset);
+  }
+
+  /**
+   * Implements the magic __call() method.
+   *
+   * @todo Remove this once all calls are changed to use executable directly.
+   */
+  public function __call($name, $arguments) {
+    if (method_exists($this->executable, $name)) {
       return call_user_func_array(array($this->executable, $name), $arguments);
+    }
+  }
+
+  /**
+   * Implements the magic __get() method.
+   *
+   * @todo Remove this once all calls are changed to use executable directly.
+   */
+  public function &__get($name) {
+    if (property_exists($this->executable, $name)) {
+      return $this->executable->{$name};
+    }
+    if (property_exists($this, $name)) {
+      return $this->{$name};
+    }
+  }
+
+  /**
+   * Implements the magic __set() method.
+   *
+   * @todo Remove this once all calls are changed to use executable directly.
+   */
+  public function __set($name, $value) {
+    if (property_exists($this, $name)) {
+      $this->{$name} = $value;
+    }
+    elseif (property_exists($this->executable, $name)) {
+      $this->executable->{$name} = $value;
     }
   }
 
@@ -324,8 +400,6 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
     ksort($displays);
     return array_keys($displays);
   }
-
-
 
   /**
    * Gets a list of paths assigned to the view.

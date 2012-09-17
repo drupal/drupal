@@ -62,6 +62,7 @@ class ExposedFormTest extends PluginTestBase {
 
     // Look whether ther reset button label changed.
     $this->drupalGet('test_rename_reset_button');
+    $this->assertResponse(200);
 
     $this->helperButtonHasLabel('edit-reset', $expected_label);
   }
