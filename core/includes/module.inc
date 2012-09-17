@@ -475,8 +475,8 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
       }
 
-      // Allow modules to react prior to the enabling of a module.
       entity_info_cache_clear();
+      // Allow modules to react prior to the enabling of a module.
       module_invoke_all('modules_preenable', array($module));
 
       // Enable the module.
