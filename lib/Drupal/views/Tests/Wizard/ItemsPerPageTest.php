@@ -54,6 +54,7 @@ class ItemsPerPageTest extends WizardTestBase {
     $view['block[title]'] = $this->randomName(16);
     $view['block[items_per_page]'] = 3;
     $this->drupalPost('admin/structure/views/add', $view, t('Save & exit'));
+    $this->assertResponse(200);
 
     // Make sure the page display shows the nodes we expect, and that they
     // appear in the expected order.

@@ -40,6 +40,7 @@ class SortingTest extends WizardTestBase {
     $view1['page[title]'] = $this->randomName(16);
     $view1['page[path]'] = $this->randomName(16);
     $this->drupalPost('admin/structure/views/add', $view1, t('Save & exit'));
+    $this->assertResponse(200);
 
     // Make sure the view shows the nodes in the expected order.
     $this->assertUrl($view1['page[path]']);
@@ -63,6 +64,7 @@ class SortingTest extends WizardTestBase {
     $view2['page[title]'] = $this->randomName(16);
     $view2['page[path]'] = $this->randomName(16);
     $this->drupalPost('admin/structure/views/add', $view2, t('Save & exit'));
+    $this->assertResponse(200);
 
     // Make sure the view shows the nodes in the expected order.
     $this->assertUrl($view2['page[path]']);
