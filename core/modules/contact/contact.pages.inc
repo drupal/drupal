@@ -88,12 +88,12 @@ function contact_site_form($form, &$form_state) {
     $form['name_display'] = array(
       '#type' => 'item',
       '#title' => t('Your name'),
-      '#markup' => $form['name']['#default_value'],
+      '#markup' => check_plain($form['name']['#default_value']),
     );
     $form['mail_display'] = array(
       '#type' => 'item',
       '#title' => t('Your e-mail address'),
-      '#markup' => $form['mail']['#default_value'],
+      '#markup' => check_plain($form['mail']['#default_value']),
     );
   }
   $form['subject'] = array(
@@ -243,12 +243,12 @@ function contact_personal_form($form, &$form_state, $recipient) {
     $form['name_display'] = array(
       '#type' => 'item',
       '#title' => t('Your name'),
-      '#markup' => $form['name']['#default_value'],
+      '#markup' => check_plain($form['name']['#default_value']),
     );
     $form['mail_display'] = array(
       '#type' => 'item',
       '#title' => t('Your e-mail address'),
-      '#markup' => $form['mail']['#default_value'],
+      '#markup' => check_plain($form['mail']['#default_value']),
     );
   }
   $form['to'] = array(
