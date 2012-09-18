@@ -642,8 +642,7 @@ function taxonomy_term_build_content(Term $term, $view_mode = 'full', $langcode 
   $context = array('langcode' => $langcode);
   drupal_alter('entity_view_mode', $view_mode, $term, $context);
 
-  // Try to add in the core taxonomy pieces like description and nodes
-  $type = 'taxonomy_term';
+  // Try to add in the core taxonomy pieces like description and nodes.
   $settings = field_view_mode_settings($term->entityType(), $term->bundle());
   $fields = field_extra_fields_get_display($term->entityType(), $term->bundle(), $view_mode);
   if (!empty($term->description) && isset($fields['description']) && $fields['description']['visible']) {
