@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\View.
+ * Definition of Drupal\views\ViewExecutable.
  */
 
 namespace Drupal\views;
@@ -20,78 +20,13 @@ use Symfony\Component\HttpFoundation\Response;
  * An object to contain all of the data to generate a view, plus the member
  * functions to build the view query, execute the query and render the output.
  */
-class View extends ViewStorage {
-
+class ViewExecutable {
   /**
-   * The name of the base table this view will use.
+   * The config entity in which the view is stored.
    *
-   * @var string
+   * @var Drupal\views\ViewStorage
    */
-  public $base_table = 'node';
-
-  /**
-   * The name of the base field to use.
-   *
-   * @var string
-   */
-  public $base_field = 'nid';
-
-  /**
-   * The name of the view.
-   *
-   * @var string
-   */
-  public $name = '';
-
-  /**
-   * The description of the view, which is used only in the interface.
-   *
-   * @var string
-   */
-  public $description = '';
-
-  /**
-   * The "tags" of a view.
-   *
-   * The tags are stored as a single string, though it is used as multiple tags
-   * for example in the views overview.
-   *
-   * @var string
-   */
-  public $tag = '';
-
-  /**
-   * The human readable name of the view.
-   *
-   * @var string
-   */
-  public $human_name = '';
-
-  /**
-   * The core version the view was created for.
-   *
-   * @var int
-   */
-  public $core = DRUPAL_CORE_COMPATIBILITY;
-
-  /**
-   * The views API version this view was created by.
-   *
-   * @var string
-   */
-  public $api_version = VIEWS_API_VERSION;
-
-  /**
-   * Returns whether the view's status is disabled or not.
-   *
-   * This value is used for exported view, to provide some default views which
-   * aren't enabled.
-   *
-   * @var bool
-   */
-  public $disabled = FALSE;
-
-  // State variables
+  protected $storage;
 
   /**
    * Whether or not the view has been built.
@@ -267,16 +202,6 @@ class View extends ViewStorage {
   public $display_handler;
 
   /**
-   * Stores all display handlers of this view.
-   *
-   * An array containing Drupal\views\Plugin\views\display\DisplayPluginBase
-   * objects.
-   *
-   * @var array
-   */
-  public $display;
-
-  /**
    * The current used style plugin.
    *
    * @var Drupal\views\Plugin\views\style\StylePluginBase
@@ -403,6 +328,45 @@ class View extends ViewStorage {
    * @var Symfony\Component\HttpFoundation\Response
    */
   protected $response = NULL;
+
+  /**
+   * Constructs a new ViewExecutable object.
+   *
+   * @param Drupal\views\ViewStorage $storage
+   *   The view config entity the actual information is stored on.
+   */
+  function __construct(ViewStorage $storage) {
+    // Reference the storage and the executable to each other.
+    $this->storage = $storage;
+    $this->storage->setExecutable($this);
+  }
+
+  /**
+   * @todo
+   */
+  function __get($name) {
+    if (property_exists($this->storage, $name)) {
+      return $this->storage->{$name};
+    }
+  }
+
+  /**
+   * @todo
+   */
+  function __set($name, $value) {
+    if (property_exists($this->storage, $name)) {
+      $this->storage->{$name} = $value;
+    }
+  }
+
+  /**
+   * @todo
+   */
+  function __call($name, $arguments) {
+    if (method_exists($this->storage, $name)) {
+      call_user_func_array(array($this->storage, $name), $arguments);
+    }
+  }
 
   /**
    * Perform automatic updates when loading or importing a view.
@@ -712,7 +676,7 @@ class View extends ViewStorage {
    */
   public function initHandlers() {
     if (empty($this->inited)) {
-      foreach (View::viewsHandlerTypes() as $key => $info) {
+      foreach (ViewExecutable::viewsHandlerTypes() as $key => $info) {
         $this->_initHandler($key, $info);
       }
       $this->inited = TRUE;
@@ -776,7 +740,7 @@ class View extends ViewStorage {
    * Run the preQuery() on all active handlers.
    */
   protected function _preQuery() {
-    foreach (View::viewsHandlerTypes() as $key => $info) {
+    foreach (ViewExecutable::viewsHandlerTypes() as $key => $info) {
       $handlers = &$this->$key;
       $position = 0;
       foreach ($handlers as $id => $handler) {
@@ -791,7 +755,7 @@ class View extends ViewStorage {
    * Run the postExecute() on all active handlers.
    */
   protected function _postExecute() {
-    foreach (View::viewsHandlerTypes() as $key => $info) {
+    foreach (ViewExecutable::viewsHandlerTypes() as $key => $info) {
       $handlers = &$this->$key;
       foreach ($handlers as $id => $handler) {
         $handlers[$id]->postExecute($this->result);
@@ -1617,21 +1581,6 @@ class View extends ViewStorage {
   }
 
   /**
-   * Return the human readable name for a view.
-   *
-   * When a certain view doesn't have a human readable name return the machine readable name.
-   */
-  public function getHumanName() {
-    if (!empty($this->human_name)) {
-      $human_name = $this->human_name;
-    }
-    else {
-      $human_name = $this->name;
-    }
-    return $human_name;
-  }
-
-  /**
    * Force the view to build a title.
    */
   public function buildTitle() {
@@ -1844,7 +1793,7 @@ class View extends ViewStorage {
    *
    * This will completely wipe a view clean so it can be considered fresh.
    *
-   * @return Drupal\views\View
+   * @return Drupal\views\ViewExecutable
    *    The cloned view.
    */
   public function cloneView() {
@@ -1888,7 +1837,7 @@ class View extends ViewStorage {
       }
     }
 
-    foreach (View::viewsHandlerTypes() as $type => $info) {
+    foreach (ViewExecutable::viewsHandlerTypes() as $type => $info) {
       if (isset($this->$type)) {
         $handlers = &$this->$type;
         foreach ($handlers as $id => $item) {
@@ -1980,36 +1929,6 @@ class View extends ViewStorage {
   }
 
   /**
-   * Returns the valid types of plugins that can be used.
-   *
-   * @return array
-   *   An array of plugin type strings.
-   */
-  public static function getPluginTypes() {
-    return array(
-      'access',
-      'area',
-      'argument',
-      'argument_default',
-      'argument_validator',
-      'cache',
-      'display_extender',
-      'display',
-      'exposed_form',
-      'field',
-      'filter',
-      'join',
-      'pager',
-      'query',
-      'relationship',
-      'row',
-      'sort',
-      'style',
-      'wizard',
-    );
-  }
-
-  /**
    * Provide a list of views handler types used in a view, with some information
    * about them.
    *
@@ -2095,52 +2014,33 @@ class View extends ViewStorage {
   }
 
   /**
-   * Gets a list of paths assigned to the view.
+   * Returns the valid types of plugins that can be used.
    *
    * @return array
-   *   An array of paths for this view.
+   *   An array of plugin type strings.
    */
-  public function getPaths() {
-    $all_paths = array();
-    if (empty($this->display)) {
-      $all_paths[] = t('Edit this view to add a display.');
-    }
-    else {
-      $this->initDisplay();   // Make sure all the handlers are set up
-      foreach ($this->display as $display) {
-        if (!empty($display->handler) && $display->handler->hasPath()) {
-          $path = $display->handler->getOption('path');
-          if ($this->isEnabled() && strpos($path, '%') === FALSE) {
-            $all_paths[] = l('/' . $path, $path);
-          }
-          else {
-            $all_paths[] = check_plain('/' . $path);
-          }
-        }
-      }
-    }
-
-    return array_unique($all_paths);
-  }
-
-  /**
-   * Gets a list of displays included in the view.
-   *
-   * @return array
-   *   An array of display types that this view includes.
-   */
-  function getDisplaysList() {
-    $this->initDisplay();
-
-    $displays = array();
-    foreach ($this->display as $display) {
-      if (!empty($display->handler->definition['admin'])) {
-        $displays[$display->handler->definition['admin']] = TRUE;
-      }
-    }
-
-    ksort($displays);
-    return array_keys($displays);
+  public static function getPluginTypes() {
+    return array(
+      'access',
+      'area',
+      'argument',
+      'argument_default',
+      'argument_validator',
+      'cache',
+      'display_extender',
+      'display',
+      'exposed_form',
+      'field',
+      'filter',
+      'join',
+      'pager',
+      'query',
+      'relationship',
+      'row',
+      'sort',
+      'style',
+      'wizard',
+    );
   }
 
 }

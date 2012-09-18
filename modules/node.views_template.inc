@@ -10,7 +10,7 @@ function node_views_templates() {
   if (variable_get('install_profile', 'standard') != 'standard') {
     return array();
   }
-  $view = new Drupal\views\View(array(), 'view');
+  $view = new Drupal\views\ViewExecutable(array(), 'view');
   $view->name = 'image_gallery';
   $view->description = 'Shows all images which was uploaded on the "field_image" field';
   $view->tag = '';

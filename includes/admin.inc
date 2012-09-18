@@ -7,7 +7,7 @@
 
 use Drupal\Core\Database\Database;
 use Drupal\views\TempStore\UserTempStore;
-use Drupal\views\View;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Analyzer;
 use Drupal\views\Plugin\views\wizard\WizardException;
 
@@ -2001,7 +2001,7 @@ function views_ui_import_validate($form, &$form_state) {
         }
       }
 
-      foreach (View::viewsHandlerTypes() as $type => $info) {
+      foreach (ViewExecutable::viewsHandlerTypes() as $type => $info) {
         $handlers = $display->handler->getHandlers($type);
         if ($handlers) {
           foreach ($handlers as $id => $handler) {
@@ -2129,7 +2129,7 @@ function views_ui_edit_form_get_bucket($type, $view, $display) {
   $build = array(
     '#theme_wrappers' => array('views_ui_display_tab_bucket'),
   );
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
 
   $build['#overridden'] = FALSE;
   $build['#defaulted'] = FALSE;
@@ -3247,7 +3247,7 @@ function views_ui_config_type_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $type = $form_state['type'];
 
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
   if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
@@ -3279,7 +3279,7 @@ function views_ui_config_type_form($form, &$form_state) {
  * Submit handler for type configuration form
  */
 function views_ui_config_type_form_submit($form, &$form_state) {
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
   $display = &$form_state['view']->display[$form_state['display_id']];
 
   // Store in cache
@@ -3294,7 +3294,7 @@ function views_ui_rearrange_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $type = $form_state['type'];
 
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
   if (!$view->setDisplay($display_id)) {
     views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
   }
@@ -3519,7 +3519,7 @@ function theme_views_ui_build_group_filter_form($variables) {
  * Submit handler for rearranging form.
  */
 function views_ui_rearrange_form_submit($form, &$form_state) {
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
   $display = &$form_state['view']->display[$form_state['display_id']];
 
   $old_fields = $display->handler->getOption($types[$form_state['type']]['plural']);
@@ -3555,7 +3555,7 @@ function views_ui_rearrange_filter_form($form, &$form_state) {
   $display_id = $form_state['display_id'];
   $type = $form_state['type'];
 
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
   if (!$view->setDisplay($display_id)) {
     views_ajax_render(t('Invalid display id @display', array('@display' => $display_id)));
   }
@@ -3821,7 +3821,7 @@ function theme_views_ui_rearrange_filter_form(&$vars) {
  * Submit handler for rearranging form
  */
 function views_ui_rearrange_filter_form_submit($form, &$form_state) {
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
   $display = &$form_state['view']->display[$form_state['display_id']];
   $remember_groups = array();
 
@@ -3944,7 +3944,7 @@ function views_ui_add_item_form($form, &$form_state) {
   }
   $display = &$view->display[$display_id];
 
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
   $ltitle = $types[$type]['ltitle'];
   $section = $types[$type]['plural'];
 
@@ -4060,7 +4060,7 @@ function views_ui_add_item_form($form, &$form_state) {
  */
 function views_ui_add_item_form_submit($form, &$form_state) {
   $type = $form_state['type'];
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
   $section = $types[$type]['plural'];
 
   // Handle the override select.
@@ -4187,7 +4187,7 @@ function views_ui_config_item_form($form, &$form_state) {
       $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
     }
     else {
-      $types = View::viewsHandlerTypes();
+      $types = ViewExecutable::viewsHandlerTypes();
 
       // If this item can come from the default display, show a dropdown
       // that lets the user choose which display the changes should apply to.
@@ -4307,7 +4307,7 @@ function views_ui_config_item_form_submit_temporary($form, &$form_state) {
   // Run it through the handler's submit function.
   $form_state['handler']->submitOptionsForm($form['options'], $form_state);
   $item = $form_state['handler']->options;
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
 
   // For footer/header $handler_type is area but $type is footer/header.
   // For all other handle types it's the same.
@@ -4361,7 +4361,7 @@ function views_ui_config_item_form_submit($form, &$form_state) {
   // Run it through the handler's submit function.
   $form_state['handler']->submitOptionsForm($form['options'], $form_state);
   $item = $form_state['handler']->options;
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
 
   // For footer/header $handler_type is area but $type is footer/header.
   // For all other handle types it's the same.
@@ -4437,7 +4437,7 @@ function views_ui_config_item_group_form($type, &$form_state) {
     }
     else {
       $handler->init($view, $item);
-      $types = View::viewsHandlerTypes();
+      $types = ViewExecutable::viewsHandlerTypes();
 
       $form['#title'] = t('Configure group settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
@@ -4538,7 +4538,7 @@ function views_ui_config_item_extra_form($form, &$form_state) {
     }
     else {
       $handler->init($view, $item);
-      $types = View::viewsHandlerTypes();
+      $types = ViewExecutable::viewsHandlerTypes();
 
       $form['#title'] = t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
@@ -4609,7 +4609,7 @@ function views_ui_config_style_form($form, &$form_state) {
     }
     else {
       $handler->init($view, $item);
-      $types = View::viewsHandlerTypes();
+      $types = ViewExecutable::viewsHandlerTypes();
 
       $form['#title'] = t('Configure summary style for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
@@ -5321,7 +5321,7 @@ function views_ui_field_list() {
   foreach ($views as $view) {
     foreach ($view->display as $display_id => $display) {
       if ($view->setDisplay($display_id)) {
-        foreach (View::viewsHandlerTypes() as $type => $info) {
+        foreach (ViewExecutable::viewsHandlerTypes() as $type => $info) {
           foreach ($view->getItems($type, $display_id) as $item) {
             $data = views_fetch_data($item['table']);
             if (isset($data[$item['field']]) && isset($data[$item['field']][$type])

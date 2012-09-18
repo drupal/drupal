@@ -7,7 +7,7 @@
 
 namespace Drupal\views;
 
-use Drupal\views\View;
+use Drupal\views\ViewExecutable;
 
 /**
  * This tool is a small plugin manager to perform analysis on a view and
@@ -22,14 +22,14 @@ class Analyzer {
   /**
    * The view to analyze.
    *
-   * @var Drupal\views\View.
+   * @var Drupal\views\ViewExecutable.
    */
   protected $view;
 
   /**
    * Constructs the analyzer object.
    *
-   * @param Drupal\views\View $view
+   * @param Drupal\views\ViewExecutable $view
    *   (optional) The view to analyze.
    */
   function __construct(View $view = NULL) {
@@ -41,7 +41,7 @@ class Analyzer {
   /**
    * Sets the view which is analyzed by this analyzer.
    *
-   * @param Drupal\views\View
+   * @param Drupal\views\ViewExecutable
    *   The view to analyze.
    */
   public function setView(View $view = NULL) {

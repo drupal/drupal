@@ -22,7 +22,7 @@ abstract class ViewTestBase extends WebTestBase {
   /**
    * The view to use for the test.
    *
-   * @var Drupal\views\View
+   * @var Drupal\views\ViewExecutable
    */
   protected $view;
 
@@ -390,7 +390,7 @@ abstract class ViewTestBase extends WebTestBase {
   /**
    * Build and return a basic view of the views_test_data table.
    *
-   * @return Drupal\views\View
+   * @return Drupal\views\ViewExecutable
    */
   protected function getBasicView() {
     return $this->createViewFromConfig('test_view');
@@ -402,7 +402,7 @@ abstract class ViewTestBase extends WebTestBase {
    * @param string $view_name
    *   The name of the test view to create.
    *
-   * @return Drupal\views\View
+   * @return Drupal\views\ViewExecutable
    *   A View instance.
    */
   protected function createViewFromConfig($view_name) {
@@ -421,11 +421,11 @@ abstract class ViewTestBase extends WebTestBase {
   /**
    * Clones the view used in this test and sets the default display.
    *
-   * @param Drupal\views\View $original_view
+   * @param Drupal\views\ViewStorage $original_view
    *   (optional) The view to clone. If not specified, the default view for the
    *   test will be used.
    *
-   * @return Drupal\views\View
+   * @return Drupal\views\ViewStorage
    *   A clone of the view.
    */
   protected function getView($original_view = NULL) {

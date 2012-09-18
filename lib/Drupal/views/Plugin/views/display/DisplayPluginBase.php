@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
-use Drupal\views\View;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 
 /**
@@ -32,7 +32,7 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * The top object of a view.
    *
-   * @var Drupal\views\View
+   * @var Drupal\views\ViewExecutable
    */
   var $view = NULL;
 
@@ -840,7 +840,7 @@ abstract class DisplayPluginBase extends PluginBase {
   public function getHandlers($type) {
     if (!isset($this->handlers[$type])) {
       $this->handlers[$type] = array();
-      $types = View::viewsHandlerTypes();
+      $types = ViewExecutable::viewsHandlerTypes();
       $plural = $types[$type]['plural'];
 
       foreach ($this->getOption($plural) as $id => $info) {
@@ -2639,7 +2639,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     // Validate handlers
-    foreach (View::viewsHandlerTypes() as $type => $info) {
+    foreach (ViewExecutable::viewsHandlerTypes() as $type => $info) {
       foreach ($this->getHandlers($type) as $handler) {
         $result = $handler->validate();
         if (!empty($result) && is_array($result)) {
@@ -2664,7 +2664,7 @@ abstract class DisplayPluginBase extends PluginBase {
    *
    */
   public function isIdentifierUnique($id, $identifier) {
-    foreach (View::viewsHandlerTypes() as $type => $info) {
+    foreach (ViewExecutable::viewsHandlerTypes() as $type => $info) {
       foreach ($this->getHandlers($type) as $key => $handler) {
         if ($handler->canExpose() && $handler->isExposed()) {
           if ($handler->isAGroup()) {

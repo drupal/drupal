@@ -13,6 +13,100 @@ use Drupal\config\ConfigEntityBase;
  * Defines a ViewStorage configuration entity class.
  */
 class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
+  /**
+   * The name of the base table this view will use.
+   *
+   * @var string
+   */
+  public $base_table = 'node';
+
+
+  /**
+   * The name of the view.
+   *
+   * @var string
+   */
+  public $name = '';
+
+  /**
+   * The description of the view, which is used only in the interface.
+   *
+   * @var string
+   */
+  public $description = '';
+
+  /**
+   * The "tags" of a view.
+   *
+   * The tags are stored as a single string, though it is used as multiple tags
+   * for example in the views overview.
+   *
+   * @var string
+   */
+  public $tag = '';
+
+  /**
+   * The human readable name of the view.
+   *
+   * @var string
+   */
+  public $human_name = '';
+
+  /**
+   * The core version the view was created for.
+   *
+   * @var int
+   */
+  public $core = DRUPAL_CORE_COMPATIBILITY;
+
+  /**
+   * The views API version this view was created by.
+   *
+   * @var string
+   */
+  public $api_version = VIEWS_API_VERSION;
+
+  /**
+   * Stores all display handlers of this view.
+   *
+   * An array containing Drupal\views\Plugin\views\display\DisplayPluginBase
+   * objects.
+   *
+   * @var array
+   */
+  public $display;
+
+  /**
+   * The name of the base field to use.
+   *
+   * @var string
+   */
+  public $base_field = 'nid';
+
+  /**
+   * Returns whether the view's status is disabled or not.
+   *
+   * This value is used for exported view, to provide some default views which
+   * aren't enabled.
+   *
+   * @var bool
+   */
+  public $disabled = FALSE;
+
+  /**
+   * @todo
+   */
+  public $executable;
+
+  public function setExecutable($executable) {
+    $this->executable = $executable;
+  }
+
+  function __call($name, $arguments) {
+    if (isset($executable) && method_exists($this->executable, $name)) {
+      return call_user_func_array(array($this->executable, $name), $arguments);
+    }
+  }
 
   /**
    * Overrides Drupal\Core\Entity\EntityInterface::id().
@@ -42,6 +136,21 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function isEnabled() {
     return !$this->disabled;
+  }
+
+  /**
+   * Return the human readable name for a view.
+   *
+   * When a certain view doesn't have a human readable name return the machine readable name.
+   */
+  public function getHumanName() {
+    if (!empty($this->human_name)) {
+      $human_name = $this->human_name;
+    }
+    else {
+      $human_name = $this->name;
+    }
+    return $human_name;
   }
 
   /**
@@ -197,6 +306,57 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
+   * Gets a list of displays included in the view.
+   *
+   * @return array
+   *   An array of display types that this view includes.
+   */
+  function getDisplaysList() {
+    $this->initDisplay();
+
+    $displays = array();
+    foreach ($this->display as $display) {
+      if (!empty($display->handler->definition['admin'])) {
+        $displays[$display->handler->definition['admin']] = TRUE;
+      }
+    }
+
+    ksort($displays);
+    return array_keys($displays);
+  }
+
+
+
+  /**
+   * Gets a list of paths assigned to the view.
+   *
+   * @return array
+   *   An array of paths for this view.
+   */
+  public function getPaths() {
+    $all_paths = array();
+    if (empty($this->display)) {
+      $all_paths[] = t('Edit this view to add a display.');
+    }
+    else {
+      $this->initDisplay();   // Make sure all the handlers are set up
+      foreach ($this->display as $display) {
+        if (!empty($display->handler) && $display->handler->hasPath()) {
+          $path = $display->handler->getOption('path');
+          if ($this->isEnabled() && strpos($path, '%') === FALSE) {
+            $all_paths[] = l('/' . $path, $path);
+          }
+          else {
+            $all_paths[] = check_plain('/' . $path);
+          }
+        }
+      }
+    }
+
+    return array_unique($all_paths);
+  }
+
+  /**
    * Adds an instance of a handler to the view.
    *
    * Items may be fields, filters, sort criteria, or arguments.
@@ -219,7 +379,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    *   The unique ID for this handler instance.
    */
   public function addItem($display_id, $type, $table, $field, $options = array(), $id = NULL) {
-    $types = View::viewsHandlerTypes();
+    $types = ViewExecutable::viewsHandlerTypes();
     $this->setDisplay($display_id);
 
     $fields = $this->display[$display_id]->handler->getOption($types[$type]['plural']);
@@ -265,7 +425,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
     }
 
     // Get info about the types so we can get the right data.
-    $types = View::viewsHandlerTypes();
+    $types = ViewExecutable::viewsHandlerTypes();
     return $this->display[$display_id]->handler->getOption($types[$type]['plural']);
   }
 
@@ -285,7 +445,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function getItem($display_id, $type, $id) {
     // Get info about the types so we can get the right data.
-    $types = View::viewsHandlerTypes();
+    $types = ViewExecutable::viewsHandlerTypes();
     // Initialize the display
     $this->setDisplay($display_id);
 
@@ -311,7 +471,7 @@ class ViewStorage extends ConfigEntityBase implements ViewStorageInterface {
    */
   public function setItem($display_id, $type, $id, $item) {
     // Get info about the types so we can get the right data.
-    $types = View::viewsHandlerTypes();
+    $types = ViewExecutable::viewsHandlerTypes();
     // Initialize the display.
     $this->setDisplay($display_id);
 

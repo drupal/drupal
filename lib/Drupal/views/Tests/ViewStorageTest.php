@@ -9,7 +9,7 @@ namespace Drupal\views\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewStorageController;
-use Drupal\views\View;
+use Drupal\views\ViewExecutable;
 use Drupal\views\ViewDisplay;
 use Drupal\views\Plugin\views\display\Page;
 
@@ -91,12 +91,13 @@ class ViewStorageTest extends WebTestBase {
    * Tests loading configuration entities.
    */
   protected function loadTests() {
-    $view = $this->loadView('archive');
+    $storage = $this->loadView('archive');
+    $view = new ViewExecutable();
     $data = config('views.view.archive')->get();
 
     // Confirm that an actual view object is loaded and that it returns all of
     // expected properties.
-    $this->assertTrue($view instanceof View, 'Single View instance loaded.');
+    $this->assertTrue($view instanceof ViewStorage, 'Single View instance loaded.');
     foreach ($this->config_properties as $property) {
       $this->assertTrue(isset($view->{$property}), format_string('Property: @property loaded onto View.', array('@property' => $property)));
     }
@@ -293,7 +294,7 @@ class ViewStorageTest extends WebTestBase {
    * @param string $view_name
    *   The machine name of the view.
    *
-   * @return object Drupal\views\View.
+   * @return object Drupal\views\ViewExecutable.
    *   The loaded view object.
    */
   protected function loadView($view_name) {

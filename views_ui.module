@@ -5,7 +5,7 @@
  * Provide structure for the administrative interface to Views.
  */
 
-use Drupal\views\View;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_menu().
@@ -465,7 +465,7 @@ function views_ui_view_preview_section_handler_links($view, $type, $title = FALS
   $handlers = $view->display_handler->getHandlers($type);
   $links = array();
 
-  $types = View::viewsHandlerTypes();
+  $types = ViewExecutable::viewsHandlerTypes();
   if ($title) {
     $links[$type . '-title'] = array(
       'title' => $types[$type]['title'],

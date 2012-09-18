@@ -22,7 +22,7 @@ abstract class PluginBase extends ComponentPluginBase {
   /**
    * The top object of a view.
    *
-   * @var Drupal\views\View
+   * @var Drupal\views\ViewExecutable
    */
   public $view = NULL;
 

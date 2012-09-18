@@ -44,7 +44,7 @@ class StyleMappingTest extends StyleTestBase {
   /**
    * Tests the mapping of fields.
    *
-   * @param Drupal\views\View $view
+   * @param Drupal\views\ViewExecutable $view
    *   The view to test.
    *
    * @return string

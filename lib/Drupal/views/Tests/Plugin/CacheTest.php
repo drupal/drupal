@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\views\View;
+use Drupal\views\ViewExecutable;
 
 /**
  * Basic test for pluggable caching.
@@ -33,7 +33,7 @@ class CacheTest extends PluginTestBase {
   /**
    * Build and return a basic view of the views_test_data table.
    *
-   * @return Drupal\views\View
+   * @return Drupal\views\ViewExecutable
    */
   protected function getBasicView() {
     // Create the basic view.

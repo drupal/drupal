@@ -5,7 +5,7 @@
  * Helper module for Views tests.
  */
 
-use Drupal\views\View;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_permission().

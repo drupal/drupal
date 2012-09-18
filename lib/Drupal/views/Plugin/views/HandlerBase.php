@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\views\Plugin\views\PluginBase;
-use Drupal\views\View;
+use Drupal\views\ViewExecutable;
 
 abstract class HandlerBase extends PluginBase {
 
@@ -81,7 +81,7 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Init the handler with necessary data.
    *
-   * @param Drupal\views\View $view
+   * @param Drupal\views\ViewExecutable $view
    *   The $view object this handler is attached to.
    * @param array $options
    *   The item from the database; the actual contents of this will vary
@@ -104,7 +104,7 @@ abstract class HandlerBase extends PluginBase {
       $options['field'] = $this->actualField;
     }
 
-    $types = View::viewsHandlerTypes();
+    $types = ViewExecutable::viewsHandlerTypes();
     $plural = $this->definition['plugin_type'];
     if (isset($types[$plural]['plural'])) {
       $plural = $types[$plural]['plural'];
@@ -317,7 +317,7 @@ abstract class HandlerBase extends PluginBase {
   public function buildGroupByForm(&$form, &$form_state) {
     $view = &$form_state['view'];
     $display_id = $form_state['display_id'];
-    $types = View::viewsHandlerTypes();
+    $types = ViewExecutable::viewsHandlerTypes();
     $type = $form_state['type'];
     $id = $form_state['id'];
 

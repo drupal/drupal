@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests;
 
-use Drupal\views\View;
+use Drupal\views\ViewExecutable;
 
 /**
  * Views class tests.
@@ -71,10 +71,10 @@ class ViewTest extends ViewTestBase {
   }
 
   /**
-   * Tests view::viewsHandlerTypes().
+   * Tests ViewExecutable::viewsHandlerTypes().
    */
   public function testViewshandlerTypes() {
-    $types = View::viewsHandlerTypes();
+    $types = ViewExecutable::viewsHandlerTypes();
     foreach (array('field', 'filter', 'argument', 'sort', 'header', 'footer', 'empty') as $type) {
       $this->assertTrue(isset($types[$type]));
       // @todo The key on the display should be footers, headers and empties
