@@ -2747,7 +2747,7 @@ abstract class WebTestBase extends TestBase {
   protected function assertMailString($field_name, $string, $email_depth) {
     $mails = $this->drupalGetMails();
     $string_found = FALSE;
-    for ($i = sizeof($mails) -1; $i >= sizeof($mails) - $email_depth && $i >= 0; $i--) {
+    for ($i = count($mails) -1; $i >= count($mails) - $email_depth && $i >= 0; $i--) {
       $mail = $mails[$i];
       // Normalize whitespace, as we don't know what the mail system might have
       // done. Any run of whitespace becomes a single space.
@@ -2787,7 +2787,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function verboseEmail($count = 1) {
     $mails = $this->drupalGetMails();
-    for ($i = sizeof($mails) -1; $i >= sizeof($mails) - $count && $i >= 0; $i--) {
+    for ($i = count($mails) -1; $i >= count($mails) - $count && $i >= 0; $i--) {
       $mail = $mails[$i];
       $this->verbose(t('Email:') . '<pre>' . print_r($mail, TRUE) . '</pre>');
     }

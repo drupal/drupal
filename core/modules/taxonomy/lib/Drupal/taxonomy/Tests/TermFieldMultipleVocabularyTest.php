@@ -121,7 +121,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
     // Verify that field and instance settings are correct.
     $field_info = field_info_field($this->field_name);
-    $this->assertEqual(sizeof($field_info['settings']['allowed_values']), 1, 'Only one vocabulary is allowed for the field.');
+    $this->assertEqual(count($field_info['settings']['allowed_values']), 1, 'Only one vocabulary is allowed for the field.');
 
     // The widget should still be displayed.
     $this->drupalGet('test-entity/add/test_bundle');
