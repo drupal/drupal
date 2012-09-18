@@ -507,13 +507,15 @@ function system_requirements($phase) {
  * Implements hook_install().
  */
 function system_install() {
-  // Enable the default theme.
+  // Enable the default theme. Can't use theme_enable() this early in
+  // installation.
   variable_set('theme_default', 'stark');
   db_update('system')
     ->fields(array('status' => 1))
     ->condition('type', 'theme')
     ->condition('name', 'stark')
     ->execute();
+  config_install_default_config('theme', 'stark');
 
   // Populate the cron key variable.
   $cron_key = drupal_hash_base64(drupal_random_bytes(55));
