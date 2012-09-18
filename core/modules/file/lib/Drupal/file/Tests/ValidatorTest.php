@@ -133,13 +133,6 @@ class ValidatorTest extends FileManagedTestBase {
     $original_user = $user;
     drupal_save_session(FALSE);
 
-    // Run these test as uid = 1.
-    $user = user_load(1);
-
-    $file = entity_create('file', array('filesize' => 999999));
-    $errors = file_validate_size($file, 1, 1);
-    $this->assertEqual(count($errors), 0, t('No size limits enforced on uid=1.'), 'File');
-
     // Run these tests as a regular user.
     $user = $this->drupalCreateUser();
 
