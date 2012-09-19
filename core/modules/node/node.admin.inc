@@ -492,7 +492,7 @@ function node_admin_nodes() {
           '#suffix' => ' ' . theme('mark', array('type' => node_mark($node->nid, $node->changed))),
         ),
       ),
-      'type' => check_plain(node_type_get_name($node)),
+      'type' => check_plain(node_get_type_label($node)),
       'author' => theme('username', array('account' => $node)),
       'status' => $node->status ? t('published') : t('not published'),
       'changed' => format_date($node->changed, 'short'),

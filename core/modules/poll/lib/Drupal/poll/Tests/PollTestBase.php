@@ -74,7 +74,7 @@ abstract class PollTestBase extends WebTestBase {
 
     $this->drupalPost(NULL, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertText(t('@type @title has been created.', array('@type' => node_type_get_name('poll'), '@title' => $title)), 'Poll has been created.');
+    $this->assertText(t('@type @title has been created.', array('@type' => node_type_get_label('poll'), '@title' => $title)), 'Poll has been created.');
     $this->assertTrue($node->nid, t('Poll has been found in the database.'));
 
     return isset($node->nid) ? $node->nid : FALSE;
@@ -188,6 +188,6 @@ abstract class PollTestBase extends WebTestBase {
   function pollUpdate($nid, $title, $edit) {
     // Edit the poll node.
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
-    $this->assertText(t('@type @title has been updated.', array('@type' => node_type_get_name('poll'), '@title' => $title)), 'Poll has been updated.');
+    $this->assertText(t('@type @title has been updated.', array('@type' => node_type_get_label('poll'), '@title' => $title)), 'Poll has been updated.');
   }
 }

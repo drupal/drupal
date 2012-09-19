@@ -88,8 +88,8 @@ class NodeFormController extends EntityFormController {
     // because hook_form() needs to be able to receive $form_state by reference.
     // @todo hook_form() implementations are unable to add #validate or #submit
     //   handlers to the form buttons below. Remove hook_form() entirely.
-    $function = node_type_get_base($node) . '_form';
-    if (function_exists($function) && ($extra = $function($node, $form_state))) {
+    $function = node_hook($node->type, 'form');
+    if ($function && ($extra = $function($node, $form_state))) {
       $form = array_merge_recursive($form, $extra);
     }
     // If the node type has a title, and the node type form defined no special
@@ -295,8 +295,7 @@ class NodeFormController extends EntityFormController {
     // hook_node_validate() for miscellaneous validation needed by modules.
     // Can't use node_invoke() or module_invoke_all(), because $form_state must
     // be receivable by reference.
-    $function = node_type_get_base($node) . '_validate';
-    if (function_exists($function)) {
+    if ($function = node_hook($node->type, 'validate')) {
       $function($node, $form, $form_state);
     }
     foreach (module_implements('node_validate') as $module) {
@@ -384,7 +383,7 @@ class NodeFormController extends EntityFormController {
     $node->save();
     $node_link = l(t('view'), 'node/' . $node->nid);
     $watchdog_args = array('@type' => $node->type, '%title' => $node->label());
-    $t_args = array('@type' => node_type_get_name($node), '%title' => $node->label());
+    $t_args = array('@type' => node_get_type_label($node), '%title' => $node->label());
 
     if ($insert) {
       watchdog('content', '@type: added %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);

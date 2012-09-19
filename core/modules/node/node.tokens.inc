@@ -125,7 +125,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'type-name':
-          $type_name = node_type_get_name($node);
+          $type_name = node_get_type_label($node);
           $replacements[$original] = $sanitize ? check_plain($type_name) : $type_name;
           break;
 

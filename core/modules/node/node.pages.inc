@@ -17,8 +17,7 @@ use Drupal\node\Node;
  * @see node_menu()
  */
 function node_page_edit($node) {
-  $type_name = node_type_get_name($node);
-  drupal_set_title(t('<em>Edit @type</em> @title', array('@type' => $type_name, '@title' => $node->label())), PASS_THROUGH);
+  drupal_set_title(t('<em>Edit @type</em> @title', array('@type' => node_get_type_label($node), '@title' => $node->label())), PASS_THROUGH);
   return entity_get_form($node);
 }
 
@@ -210,7 +209,7 @@ function node_delete_confirm_submit($form, &$form_state) {
     $node = node_load($form_state['values']['nid']);
     node_delete($form_state['values']['nid']);
     watchdog('content', '@type: deleted %title.', array('@type' => $node->type, '%title' => $node->label()));
-    drupal_set_message(t('@type %title has been deleted.', array('@type' => node_type_get_name($node), '%title' => $node->label())));
+    drupal_set_message(t('@type %title has been deleted.', array('@type' => node_get_type_label($node), '%title' => $node->label())));
   }
 
   $form_state['redirect'] = '<front>';
@@ -303,7 +302,7 @@ function node_revision_revert_confirm_submit($form, &$form_state) {
   $node_revision->save();
 
   watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->label(), '%revision' => $node_revision->vid));
-  drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_type_get_name($node_revision), '%title' => $node_revision->label(), '%revision-date' => format_date($original_revision_timestamp))));
+  drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_get_type_label($node_revision), '%title' => $node_revision->label(), '%revision-date' => format_date($original_revision_timestamp))));
   $form_state['redirect'] = 'node/' . $node_revision->nid . '/revisions';
 }
 
@@ -328,7 +327,7 @@ function node_revision_delete_confirm_submit($form, &$form_state) {
   node_revision_delete($node_revision->vid);
 
   watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->label(), '%revision' => $node_revision->vid));
-  drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_type_get_name($node_revision), '%title' => $node_revision->label())));
+  drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_get_type_label($node_revision), '%title' => $node_revision->label())));
   $form_state['redirect'] = 'node/' . $node_revision->nid;
   if (db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid', array(':nid' => $node_revision->nid))->fetchField() > 1) {
     $form_state['redirect'] .= '/revisions';

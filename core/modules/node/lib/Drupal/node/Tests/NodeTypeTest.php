@@ -42,7 +42,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertEqual($node_types['article']->name, $node_names['article'], t('Correct node type base has been returned.'));
 
     $this->assertEqual($node_types['article'], node_type_load('article'), t('Correct node type has been returned.'));
-    $this->assertEqual($node_types['article']->name, node_type_get_name('article'), t('Correct node type name has been returned.'));
+    $this->assertEqual($node_types['article']->name, node_type_get_label('article'), t('Correct node type name has been returned.'));
     $this->assertEqual($node_types['page']->base, node_type_get_base('page'), t('Correct node type base has been returned.'));
   }
 

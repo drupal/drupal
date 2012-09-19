@@ -176,8 +176,9 @@ class NodeStorageController extends DatabaseStorageController {
 
     // Call object type specific callbacks on each typed array of nodes.
     foreach ($typed_nodes as $node_type => $nodes_of_type) {
-      if (node_hook($node_type, 'load')) {
-        $function = node_type_get_base($node_type) . '_load';
+      // Retrieve the node type 'base' hook implementation based on a Node in
+      // the type-specific stack.
+      if ($function = node_hook($node_type, 'load')) {
         $function($nodes_of_type);
       }
     }

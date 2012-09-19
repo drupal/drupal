@@ -131,7 +131,7 @@ function node_help($path, $arg) {
 
     case 'admin/structure/types/manage/%/display':
       return '<p>' . t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' .
-        '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', array('%type' => node_type_get_name($arg[4]))) . '</p>';
+        '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', array('%type' => node_type_get_label($arg[4]))) . '</p>';
 
     case 'node/%/revisions':
       return '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert back to older versions.') . '</p>';
@@ -402,19 +402,6 @@ function node_mark($nid, $timestamp) {
 }
 
 /**
- * Extracts the type name.
- *
- * @param Drupal\node\Node|string $node
- *   Either a string or object, containing the node type information.
- *
- * @return
- *   Node type of the passed-in data.
- */
-function _node_extract_type($node) {
-  return is_object($node) ? $node->type : $node;
-}
-
-/**
  * Returns a list of all the available node types.
  *
  * This list can include types that are queued for addition or deletion.
@@ -436,16 +423,15 @@ function node_type_get_types() {
  * execute node-type-specific hooks. For types defined in the user interface
  * and managed by node.module, the base is 'node_content'.
  *
- * @param Drupal\node\Node|string $node
- *   A node entity or string that indicates the node type to return.
+ * @param string $type
+ *   A string that indicates the node type to return.
  *
- * @return
+ * @return string|false
  *   The node type base or FALSE if the node type is not found.
  *
  * @see node_invoke()
  */
-function node_type_get_base($node) {
-  $type = _node_extract_type($node);
+function node_type_get_base($type) {
   $types = _node_types_build()->types;
   return isset($types[$type]) && isset($types[$type]->base) ? $types[$type]->base : FALSE;
 }
@@ -457,25 +443,38 @@ function node_type_get_base($node) {
  * See _node_types_build() for details.
  *
  * @return
- *   An array of node type names, keyed by the type.
+ *   An array of node type labels, keyed by the node type name.
  */
 function node_type_get_names() {
   return _node_types_build()->names;
 }
 
 /**
- * Returns the node type name of the passed node or node type string.
+ * Returns the node type label for the passed node type name.
  *
- * @param Drupal\node\Node|string $node
- *   A node entity or string that indicates the node type to return.
+ * @param string $name
+ *   The machine name of a node type.
  *
- * @return
- *   The node type name or FALSE if the node type is not found.
+ * @return string|false
+ *   The node type label or FALSE if the node type is not found.
  */
-function node_type_get_name($node) {
-  $type = _node_extract_type($node);
+function node_type_get_label($name) {
   $types = _node_types_build()->names;
-  return isset($types[$type]) ? $types[$type] : FALSE;
+  return isset($types[$name]) ? $types[$name] : FALSE;
+}
+
+/**
+ * Returns the node type label for the passed node.
+ *
+ * @param Drupal\node\Node $node
+ *   A node entity to return the node type's label for.
+ *
+ * @return string|false
+ *   The node type label or FALSE if the node type is not found.
+ */
+function node_get_type_label($node) {
+  $types = _node_types_build()->names;
+  return isset($types[$node->type]) ? $types[$node->type] : FALSE;
 }
 
 /**
@@ -980,24 +979,24 @@ function node_rdf_mapping() {
 /**
  * Determines whether a node hook exists.
  *
- * @param Drupal\node\Node|string $node
- *   A node entity or a string containing the node type.
+ * @param string $type
+ *   A string containing the node type.
  * @param $hook
  *   A string containing the name of the hook.
  *
- * @return
- *   TRUE if the $hook exists in the node type of $node.
+ * @return string|false
+ *   A string containing the function name or FALSE if it isn't found.
  */
-function node_hook($node, $hook) {
-  $base = node_type_get_base($node);
-  return module_hook($base, $hook);
+function node_hook($type, $hook) {
+  $base = node_type_get_base($type);
+  return module_hook($base, $hook) ? $base . '_' . $hook : FALSE;
 }
 
 /**
  * Invokes a node hook.
  *
- * @param Drupal\node\Node|string $node
- *   A node entity or a string containing the node type.
+ * @param Drupal\node\Node $node
+ *   A Node entity.
  * @param $hook
  *   A string containing the name of the hook.
  * @param $a2, $a3, $a4
@@ -1007,10 +1006,8 @@ function node_hook($node, $hook) {
  *   The returned value of the invoked hook.
  */
 function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
-  if (node_hook($node, $hook)) {
-    $base = node_type_get_base($node);
-    $function = $base . '_' . $hook;
-    return ($function($node, $a2, $a3, $a4));
+  if ($function = node_hook($node->type, $hook)) {
+    return $function($node, $a2, $a3, $a4);
   }
 }
 
@@ -1254,7 +1251,7 @@ function node_build_content(Node $node, $view_mode = 'full', $langcode = NULL) {
 
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
-  if (node_hook($node, 'view')) {
+  if (node_hook($node->type, 'view')) {
     $node = node_invoke($node, 'view', $view_mode, $langcode);
   }
 
@@ -1621,7 +1618,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
     $uri = $node->uri();
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),
-      'type' => check_plain(node_type_get_name($node)),
+      'type' => check_plain(node_get_type_label($node)),
       'title' => $node->label($item->langcode),
       'user' => theme('username', array('account' => $node)),
       'date' => $node->get('changed', $item->langcode),
@@ -3728,7 +3725,7 @@ function node_action_info() {
  */
 function node_publish_action(Node $node, $context = array()) {
   $node->status = NODE_PUBLISHED;
-  watchdog('action', 'Set @type %title to published.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
+  watchdog('action', 'Set @type %title to published.', array('@type' => node_get_type_label($node), '%title' => $node->label()));
 }
 
 /**
@@ -3744,7 +3741,7 @@ function node_publish_action(Node $node, $context = array()) {
  */
 function node_unpublish_action(Node $node, $context = array()) {
   $node->status = NODE_NOT_PUBLISHED;
-  watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
+  watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_get_type_label($node), '%title' => $node->label()));
 }
 
 /**
@@ -3760,7 +3757,7 @@ function node_unpublish_action(Node $node, $context = array()) {
  */
 function node_make_sticky_action(Node $node, $context = array()) {
   $node->sticky = NODE_STICKY;
-  watchdog('action', 'Set @type %title to sticky.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
+  watchdog('action', 'Set @type %title to sticky.', array('@type' => node_get_type_label($node), '%title' => $node->label()));
 }
 
 /**
@@ -3776,7 +3773,7 @@ function node_make_sticky_action(Node $node, $context = array()) {
  */
 function node_make_unsticky_action(Node $node, $context = array()) {
   $node->sticky = NODE_NOT_STICKY;
-  watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
+  watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_get_type_label($node), '%title' => $node->label()));
 }
 
 /**
@@ -3792,7 +3789,7 @@ function node_make_unsticky_action(Node $node, $context = array()) {
  */
 function node_promote_action(Node $node, $context = array()) {
   $node->promote = NODE_PROMOTED;
-  watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
+  watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_get_type_label($node), '%title' => $node->label()));
 }
 
 /**
@@ -3808,7 +3805,7 @@ function node_promote_action(Node $node, $context = array()) {
  */
 function node_unpromote_action(Node $node, $context = array()) {
   $node->promote = NODE_NOT_PROMOTED;
-  watchdog('action', 'Removed @type %title from front page.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
+  watchdog('action', 'Removed @type %title from front page.', array('@type' => node_get_type_label($node), '%title' => $node->label()));
 }
 
 /**
@@ -3821,7 +3818,7 @@ function node_unpromote_action(Node $node, $context = array()) {
  */
 function node_save_action(Node $node) {
   $node->save();
-  watchdog('action', 'Saved @type %title', array('@type' => node_type_get_name($node), '%title' => $node->label()));
+  watchdog('action', 'Saved @type %title', array('@type' => node_get_type_label($node), '%title' => $node->label()));
 }
 
 /**
@@ -3842,7 +3839,7 @@ function node_save_action(Node $node) {
 function node_assign_owner_action(Node $node, $context) {
   $node->uid = $context['owner_uid'];
   $owner_name = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $context['owner_uid']))->fetchField();
-  watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' =>  node_type_get_name($node), '%title' => $node->label(), '%name' => $owner_name));
+  watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' =>  node_get_type_label($node), '%title' => $node->label(), '%name' => $owner_name));
 }
 
 /**
@@ -3958,7 +3955,7 @@ function node_unpublish_by_keyword_action(Node $node, $context) {
     $elements = node_view(clone $node);
     if (strpos(drupal_render($elements), $keyword) !== FALSE || strpos($node->label(), $keyword) !== FALSE) {
       $node->status = NODE_NOT_PUBLISHED;
-      watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->label()));
+      watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_get_type_label($node), '%title' => $node->label()));
       break;
     }
   }
