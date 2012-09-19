@@ -528,40 +528,43 @@ function hook_node_insert(Drupal\node\Node $node) {
 }
 
 /**
- * Act on nodes being loaded from the database.
+ * Act on arbitrary nodes being loaded from the database.
  *
- * This hook is invoked during node loading, which is handled by entity_load(),
- * via classes NodeController and Drupal\Core\Entity\DatabaseStorageController.
- * After the node information is read from the database or the entity cache,
- * hook_load() is invoked on the node's content type module, then
- * field_attach_node_revision() or field_attach_load() is called, then
- * hook_entity_load() is invoked on all implementing modules, and finally
- * hook_node_load() is invoked on all implementing modules.
- *
- * This hook should only be used to add information that is not in the node or
+ * This hook should be used to add information that is not in the node or
  * node revisions table, not to replace information that is in these tables
  * (which could interfere with the entity cache). For performance reasons,
  * information for all available nodes should be loaded in a single query where
  * possible.
  *
- * The $types parameter allows for your module to have an early return (for
- * efficiency) if your module only supports certain node types. However, if your
- * module defines a content type, you can use hook_load() to respond to loading
- * of just that content type.
+ * This hook is invoked during node loading, which is handled by entity_load(),
+ * via classes NodeController and Drupal\Core\Entity\DatabaseStorageController.
+ * After the node information is read from the database or the entity cache,
+ * hook_load() is invoked on the node's content type module, then
+ * field_attach_load_revision() or field_attach_load() is called, then
+ * hook_entity_load() is invoked on all implementing modules, and finally
+ * hook_node_load() is invoked on all implementing modules.
  *
  * @param $nodes
  *   An array of the nodes being loaded, keyed by nid.
  * @param $types
- *   An array containing the types of the nodes.
+ *   An array containing the node types present in $nodes. Allows for an early
+ *   return for modules that only support certain node types. However, if your
+ *   module defines a content type, you can use hook_load() to respond to
+ *   loading of just that content type.
  *
  * For a detailed usage example, see nodeapi_example.module.
  *
  * @ingroup node_api_hooks
  */
 function hook_node_load($nodes, $types) {
-  $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
-  foreach ($result as $record) {
-    $nodes[$record->nid]->foo = $record->foo;
+  // Decide whether any of $types are relevant to our purposes.
+  if (count(array_intersect($types_we_want_to_process, $types))) {
+    // Gather our extra data for each of these nodes.
+    $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
+    // Add our extra data to the node objects.
+    foreach ($result as $record) {
+      $nodes[$record->nid]->foo = $record->foo;
+    }
   }
 }
 
